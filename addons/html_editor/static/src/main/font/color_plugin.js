@@ -33,13 +33,13 @@ export class ColorPlugin extends Plugin {
                 run: this.applyColor.bind(this),
             },
         ],
-        toolbarCategory: withSequence(25, {
+        toolbarGroups: withSequence(25, {
             id: "color",
         }),
         toolbarItems: [
             {
                 id: "forecolor",
-                category: "color",
+                groupId: "color",
                 label: _t("Font Color"),
                 Component: ColorSelector,
                 props: {
@@ -54,7 +54,7 @@ export class ColorPlugin extends Plugin {
             },
             {
                 id: "backcolor",
-                category: "color",
+                groupId: "color",
                 label: _t("Background Color"),
                 Component: ColorSelector,
                 props: {

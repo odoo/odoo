@@ -17,7 +17,7 @@ export class ImageCropPlugin extends Plugin {
                 icon: "fa-crop",
             },
         ],
-        toolbarCategory: withSequence(27, {
+        toolbarGroups: withSequence(27, {
             id: "image_crop",
             namespace: "image",
         }),
@@ -25,7 +25,7 @@ export class ImageCropPlugin extends Plugin {
             {
                 id: "image_crop",
                 commandId: "cropImage",
-                categoryId: "image_crop",
+                groupId: "image_crop",
             },
         ],
     };

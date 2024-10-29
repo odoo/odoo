@@ -17,10 +17,10 @@ export class SignaturePlugin extends Plugin {
                 run: this.insertSignature.bind(this),
             },
         ],
-        powerboxCategory: withSequence(100, { id: "basic_block", name: _t("Basic Bloc") }),
+        powerboxCategories: withSequence(100, { id: "basic_block", name: _t("Basic Bloc") }),
         powerboxItems: [
             {
-                category: "basic_block",
+                categoryId: "basic_block",
                 commandId: "insertSignature",
             },
         ],

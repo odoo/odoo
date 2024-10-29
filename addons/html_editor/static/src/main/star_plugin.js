@@ -23,7 +23,7 @@ export class StarPlugin extends Plugin {
             {
                 label: _t("3 Stars"),
                 description: _t("Insert a rating over 3 stars"),
-                category: "widget",
+                categoryId: "widget",
                 icon: "fa-star-o",
                 commandId: "addStars",
                 commandParams: { length: 3 },
@@ -31,7 +31,7 @@ export class StarPlugin extends Plugin {
             {
                 label: _t("5 Stars"),
                 description: _t("Insert a rating over 5 stars"),
-                category: "widget",
+                categoryId: "widget",
                 commandId: "addStars",
                 commandParams: { length: 5 },
             },

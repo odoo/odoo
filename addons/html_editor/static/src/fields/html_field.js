@@ -256,12 +256,12 @@ export class HtmlField extends Component {
                         run: this.toggleCodeView.bind(this),
                     },
                 ],
-                toolbarCategory: withSequence(100, {
+                toolbarGroups: withSequence(100, {
                     id: "codeview",
                 }),
                 toolbarItems: {
                     id: "codeview",
-                    category: "codeview",
+                    groupId: "codeview",
                     commandId: "codeview",
                 },
             };

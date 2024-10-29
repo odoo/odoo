@@ -123,7 +123,7 @@ export class LinkPlugin extends Plugin {
             },
         ],
         beforeinput_handlers: withSequence(5, this.onBeforeInput.bind(this)),
-        toolbarCategory: [
+        toolbarGroups: [
             withSequence(40, {
                 id: "link",
             }),
@@ -135,38 +135,38 @@ export class LinkPlugin extends Plugin {
         toolbarItems: [
             {
                 id: "link",
-                category: "link",
+                groupId: "link",
                 commandId: "toggleLinkTools",
                 isFormatApplied: isLinkActive,
             },
             {
                 id: "unlink",
-                category: "link",
+                groupId: "link",
                 commandId: "removeLinkFromSelection",
             },
             {
                 id: "link",
-                category: "image_link",
+                groupId: "image_link",
                 commandId: "toggleLinkTools",
                 isFormatApplied: isLinkActive,
             },
             {
                 id: "unlink",
-                category: "image_link",
+                groupId: "image_link",
                 commandId: "removeLinkFromSelection",
             },
         ],
 
-        powerboxCategory: withSequence(50, { id: "navigation", name: _t("Navigation") }),
+        powerboxCategories: withSequence(50, { id: "navigation", name: _t("Navigation") }),
         powerboxItems: [
             {
-                category: "navigation",
+                categoryId: "navigation",
                 commandId: "toggleLinkTools",
             },
             {
                 label: _t("Button"),
                 description: _t("Add a button"),
-                category: "navigation",
+                categoryId: "navigation",
                 commandId: "toggleLinkTools",
             },
         ],

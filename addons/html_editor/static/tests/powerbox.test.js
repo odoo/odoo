@@ -115,17 +115,17 @@ describe("search", () => {
         class TestPlugin extends Plugin {
             static id = "test";
             resources = {
-                powerboxCategory: { id: "test", name: "Test" },
+                powerboxCategories: { id: "test", name: "Test" },
                 powerboxItems: [
                     {
                         label: "Test1",
                         description: "Test1",
-                        category: "test",
+                        categoryId: "test",
                     },
                     {
                         label: "Test12",
                         description: "Test12",
-                        category: "test",
+                        categoryId: "test",
                     },
                 ],
             };
@@ -255,18 +255,18 @@ describe("search", () => {
             class TestPlugin extends Plugin {
                 static id = "test";
                 resources = {
-                    powerboxCategory: { id: "test", name: "Test" },
+                    powerboxCategories: { id: "test", name: "Test" },
                     powerboxItems: [
                         {
                             label: "Test1",
                             description: "Test1",
-                            category: "test",
-                            searchKeywords: ["apple", "orange"],
+                            categoryId: "test",
+                            keywords: ["apple", "orange"],
                         },
                         {
                             label: "Test2",
                             description: "Test2 has apples and oranges in its description",
-                            category: "test",
+                            categoryId: "test",
                         },
                     ],
                 };
@@ -302,23 +302,23 @@ describe("search", () => {
             class TestPlugin extends Plugin {
                 static id = "test";
                 resources = {
-                    powerboxCategory: { id: "test", name: "Test" },
+                    powerboxCategories: { id: "test", name: "Test" },
                     powerboxItems: [
                         {
                             label: "Change direction", // "icon" fuzzy matches this
                             description: "test",
-                            category: "test",
+                            categoryId: "test",
                         },
                         {
                             label: "Some command",
                             description: "add a big section", // "icon" fuzzy matches this
-                            category: "test",
+                            categoryId: "test",
                         },
                         {
                             label: "Insert a pictogram",
                             description: "test",
-                            category: "test",
-                            searchKeywords: ["icon"],
+                            categoryId: "test",
+                            keywords: ["icon"],
                         },
                     ],
                 };
@@ -504,12 +504,12 @@ class NoOpPlugin extends Plugin {
                 run: () => {},
             },
         ],
-        powerboxCategory: { id: "no_op", name: "No-op" },
+        powerboxCategories: { id: "no_op", name: "No-op" },
         powerboxItems: [
             {
                 label: "No-op",
                 description: "No-op",
-                category: "no_op",
+                categoryId: "no_op",
                 icon: "fa-header",
                 commandId: "noOp",
             },
@@ -728,12 +728,12 @@ test.todo("add plugins with the same powerboxCategory should crash", async () =>
     });
     class Plugin1 extends Plugin {
         resources = {
-            powerboxCategory: withSequence(10, { id: "test", name: "Test" }),
+            powerboxCategories: withSequence(10, { id: "test", name: "Test" }),
         };
     }
     class Plugin2 extends Plugin {
         resources = {
-            powerboxCategory: withSequence(10, { id: "test", name: "Test" }),
+            powerboxCategories: withSequence(10, { id: "test", name: "Test" }),
         };
     }
     await expect(

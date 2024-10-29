@@ -187,7 +187,7 @@ test("restore a selection when you are not in the editable shouldn't move the fo
             ],
             powerboxItems: [
                 {
-                    category: "widget",
+                    categoryId: "widget",
                     commandId: "testShowOverlay",
                 },
             ],

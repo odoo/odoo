@@ -17,7 +17,7 @@ export class ExcalidrawPlugin extends Plugin {
         ],
         powerboxItems: [
             {
-                category: "navigation",
+                categoryId: "navigation",
                 commandId: "insertDrawingBoard",
             },
         ],

@@ -33,7 +33,7 @@ export class FilePlugin extends Plugin {
         ],
         powerboxItems: [
             {
-                category: "media",
+                categoryId: "media",
                 commandId: "openMediaDialog",
             },
         ],

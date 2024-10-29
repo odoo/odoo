@@ -14,7 +14,7 @@ import { withSequence } from "@html_editor/utils/resource";
  * @typedef {Object} Command
  * @property {string} label
  * @property {string} description
- * @property {string} category
+ * @property {string} categoryId
  * @property {string} icon
  * @property {string} commandId
  * @property {string} commandParams
@@ -55,7 +55,7 @@ export class PowerboxPlugin extends Plugin {
             text: _t('Type "/" for commands'),
             target,
         },
-        powerboxCategory: [
+        powerboxCategories: [
             withSequence(10, { id: "structure", name: _t("Structure") }),
             withSequence(60, { id: "widget", name: _t("Widget") }),
         ],
@@ -88,7 +88,7 @@ export class PowerboxPlugin extends Plugin {
     makeDefaultPowerboxItems() {
         const powerboxItems = this.getResource("powerboxItems");
         const userCommands = this.dependencies.userCommand.getCommands();
-        const categories = this.getResource("powerboxCategory");
+        const categories = this.getResource("powerboxCategories");
         const categoryDict = Object.fromEntries(
             categories.map((category) => [category.id, category])
         );
@@ -97,7 +97,7 @@ export class PowerboxPlugin extends Plugin {
             return {
                 ...userCommand,
                 ...item,
-                categoryName: categoryDict[item.category].name,
+                categoryName: categoryDict[item.categoryId].name,
                 run: () =>
                     this.dependencies.userCommand.execCommand(item.commandId, item.commandParams),
             };
@@ -123,7 +123,7 @@ export class PowerboxPlugin extends Plugin {
             const orderCommands = [];
             for (const category of categories) {
                 orderCommands.push(
-                    ...commands.filter((command) => command.category === category.id)
+                    ...commands.filter((command) => command.categoryId === category.id)
                 );
             }
             commands = orderCommands;

@@ -19,7 +19,7 @@ export class TextDirectionPlugin extends Plugin {
         ],
         powerboxItems: [
             {
-                category: "format",
+                categoryId: "format",
                 commandId: "switchDirection",
             },
         ],

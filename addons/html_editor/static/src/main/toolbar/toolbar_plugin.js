@@ -21,12 +21,12 @@ export class ToolbarPlugin extends Plugin {
     };
 
     setup() {
-        const categoryIds = new Set();
-        for (const category of this.getResource("toolbarCategory")) {
-            if (categoryIds.has(category.id)) {
-                throw new Error(`Duplicate toolbar category id: ${category.id}`);
+        const groupIds = new Set();
+        for (const group of this.getResource("toolbarGroups")) {
+            if (groupIds.has(group.id)) {
+                throw new Error(`Duplicate toolbar group id: ${group.id}`);
             }
-            categoryIds.add(category.id);
+            groupIds.add(group.id);
         }
 
         this.buttonGroups = this.getButtonGroups();
@@ -157,11 +157,11 @@ export class ToolbarPlugin extends Plugin {
 
     getButtonGroups() {
         const buttons = this.getButtons();
-        const categories = this.getResource("toolbarCategory");
+        const groups = this.getResource("toolbarGroups");
 
-        return categories.map((category) => ({
-            ...category,
-            buttons: buttons.filter((button) => button.category === category.id),
+        return groups.map((group) => ({
+            ...group,
+            buttons: buttons.filter((button) => button.groupId === group.id),
         }));
     }
 

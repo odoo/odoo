@@ -151,7 +151,7 @@ export class FontPlugin extends Plugin {
         input_handlers: this.onInput.bind(this),
         delete_backward_overrides: withSequence(20, this.handleDeleteBackward.bind(this)),
         delete_backward_word_overrides: this.handleDeleteBackward.bind(this),
-        toolbarCategory: [
+        toolbarGroups: [
             withSequence(10, {
                 id: "font",
             }),
@@ -162,7 +162,7 @@ export class FontPlugin extends Plugin {
         toolbarItems: [
             {
                 id: "font",
-                category: "font",
+                groupId: "font",
                 label: _t("Font style"),
                 Component: FontSelector,
                 props: {
@@ -177,7 +177,7 @@ export class FontPlugin extends Plugin {
             },
             {
                 id: "font-size",
-                category: "font-size",
+                groupId: "font-size",
                 label: _t("Font size"),
                 Component: FontSelector,
                 props: {
@@ -192,30 +192,30 @@ export class FontPlugin extends Plugin {
                 },
             },
         ],
-        powerboxCategory: withSequence(30, { id: "format", name: _t("Format") }),
+        powerboxCategories: withSequence(30, { id: "format", name: _t("Format") }),
         powerboxItems: [
             {
-                category: "format",
+                categoryId: "format",
                 commandId: "setTagHeading1",
             },
             {
-                category: "format",
+                categoryId: "format",
                 commandId: "setTagHeading2",
             },
             {
-                category: "format",
+                categoryId: "format",
                 commandId: "setTagHeading3",
             },
             {
-                category: "format",
+                categoryId: "format",
                 commandId: "setTagParagraph",
             },
             {
-                category: "structure",
+                categoryId: "structure",
                 commandId: "setTagQuote",
             },
             {
-                category: "structure",
+                categoryId: "structure",
                 commandId: "setTagPre",
             },
         ],

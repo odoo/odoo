@@ -21,7 +21,7 @@ export class TableOfContentPlugin extends Plugin {
         ],
         powerboxItems: [
             {
-                category: "navigation",
+                categoryId: "navigation",
                 commandId: "insertTableOfContent",
             },
         ],

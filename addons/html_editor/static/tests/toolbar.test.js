@@ -368,11 +368,11 @@ test("toolbar correctly show namespace button group and stop showing when namesp
                     },
                 },
             ],
-            toolbarCategory: withSequence(24, { id: "test_group", namespace: "aNamespace" }),
+            toolbarGroups: withSequence(24, { id: "test_group", namespace: "aNamespace" }),
             toolbarItems: [
                 {
                     id: "test_btn",
-                    category: "test_group",
+                    groupId: "test_group",
                     label: "Test Button",
                     icon: "fa-square",
                     run: () => null,
@@ -394,18 +394,18 @@ test("toolbar correctly process inheritance buttons chain", async () => {
     class TestPlugin extends Plugin {
         static id = "TestPlugin";
         resources = {
-            toolbarCategory: withSequence(24, { id: "test_group" }),
+            toolbarGroups: withSequence(24, { id: "test_group" }),
             toolbarItems: [
                 {
                     id: "test_btn",
-                    category: "test_group",
+                    groupId: "test_group",
                     label: "Test Button",
                     icon: "fa-square",
                     run: () => null,
                 },
                 {
                     id: "test_btn2",
-                    category: "test_group",
+                    groupId: "test_group",
                     inherit: "test_btn",
                     label: "Test Button 2",
                 },
@@ -430,11 +430,11 @@ test("toolbar does not evaluate isFormatApplied when namespace does not match", 
     class TestPlugin extends Plugin {
         static id = "TestPlugin";
         resources = {
-            toolbarCategory: withSequence(24, { id: "test_group", namespace: "image" }),
+            toolbarGroups: withSequence(24, { id: "test_group", namespace: "image" }),
             toolbarItems: [
                 {
                     id: "test_btn",
-                    category: "test_group",
+                    groupId: "test_group",
                     commandId: "test_cmd",
                     label: "Test Button",
                     icon: "fa-square",
@@ -465,11 +465,11 @@ test("plugins can create buttons with text in toolbar", async () => {
     class TestPlugin extends Plugin {
         static id = "TestPlugin";
         resources = {
-            toolbarCategory: withSequence(24, { id: "test_group" }),
+            toolbarGroups: withSequence(24, { id: "test_group" }),
             toolbarItems: [
                 {
                     id: "test_btn",
-                    category: "test_group",
+                    groupId: "test_group",
                     commandId: "test_cmd",
                     label: "Test Button",
                     text: "Text button",

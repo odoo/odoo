@@ -53,7 +53,7 @@ export class IconPlugin extends Plugin {
                     ),
             },
         ],
-        toolbarCategory: [
+        toolbarGroups: [
             withSequence(1, {
                 id: "icon_color",
                 namespace: "icon",
@@ -67,52 +67,52 @@ export class IconPlugin extends Plugin {
         toolbarItems: [
             {
                 id: "icon_forecolor",
-                category: "icon_color",
+                groupId: "icon_color",
                 inherit: "forecolor",
             },
             {
                 id: "icon_backcolor",
-                category: "icon_color",
+                groupId: "icon_color",
                 inherit: "backcolor",
             },
             {
                 id: "icon_size_1",
-                category: "icon_size",
+                groupId: "icon_size",
                 commandId: "resizeIcon1",
                 text: "1x",
                 isFormatApplied: () => this.hasIconSize("1"),
             },
             {
                 id: "icon_size_2",
-                category: "icon_size",
+                groupId: "icon_size",
                 commandId: "resizeIcon2",
                 text: "2x",
                 isFormatApplied: () => this.hasIconSize("2"),
             },
             {
                 id: "icon_size_3",
-                category: "icon_size",
+                groupId: "icon_size",
                 commandId: "resizeIcon3",
                 text: "3x",
                 isFormatApplied: () => this.hasIconSize("3"),
             },
             {
                 id: "icon_size_4",
-                category: "icon_size",
+                groupId: "icon_size",
                 commandId: "resizeIcon4",
                 text: "4x",
                 isFormatApplied: () => this.hasIconSize("4"),
             },
             {
                 id: "icon_size_5",
-                category: "icon_size",
+                groupId: "icon_size",
                 commandId: "resizeIcon5",
                 text: "5x",
                 isFormatApplied: () => this.hasIconSize("5"),
             },
             {
                 id: "icon_spin",
-                category: "icon_spin",
+                groupId: "icon_spin",
                 commandId: "toggleSpinIcon",
                 isFormatApplied: () => this.hasSpinIcon(),
             },

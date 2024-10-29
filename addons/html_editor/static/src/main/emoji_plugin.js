@@ -18,7 +18,7 @@ export class EmojiPlugin extends Plugin {
         ],
         powerboxItems: [
             {
-                category: "widget",
+                categoryId: "widget",
                 commandId: "addEmoji",
             },
         ],

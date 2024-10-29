@@ -46,7 +46,7 @@ export class ColumnPlugin extends Plugin {
             {
                 label: _t("2 columns"),
                 description: _t("Convert into 2 columns"),
-                category: "structure",
+                categoryId: "structure",
                 isAvailable: columnisAvailable(2),
                 commandId: "columnize",
                 commandParams: { numberOfColumns: 2 },
@@ -54,7 +54,7 @@ export class ColumnPlugin extends Plugin {
             {
                 label: _t("3 columns"),
                 description: _t("Convert into 3 columns"),
-                category: "structure",
+                categoryId: "structure",
                 isAvailable: columnisAvailable(3),
                 commandId: "columnize",
                 commandParams: { numberOfColumns: 3 },
@@ -62,7 +62,7 @@ export class ColumnPlugin extends Plugin {
             {
                 label: _t("4 columns"),
                 description: _t("Convert into 4 columns"),
-                category: "structure",
+                categoryId: "structure",
                 isAvailable: columnisAvailable(4),
                 commandId: "columnize",
                 commandParams: { numberOfColumns: 4 },
@@ -70,7 +70,7 @@ export class ColumnPlugin extends Plugin {
             {
                 label: _t("Remove columns"),
                 description: _t("Back to one column"),
-                category: "structure",
+                categoryId: "structure",
                 isAvailable(node) {
                     const row = closestElement(node, ".o_text_columns .row");
                     return !row;

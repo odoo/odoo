@@ -23,7 +23,7 @@ export class Toolbar extends Component {
                                     validate: (button) => {
                                         const base = {
                                             id: String,
-                                            category: String,
+                                            groupId: String,
                                             label: String,
                                             inherit: { type: String, optional: true },
                                         };

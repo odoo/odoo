@@ -41,7 +41,7 @@ export class DomPlugin extends Plugin {
             },
         ],
         powerboxItems: {
-            category: "structure",
+            categoryId: "structure",
             commandId: "insertSeparator",
         },
         clean_handlers: this.removeEmptyClassAndStyleAttributes.bind(this),

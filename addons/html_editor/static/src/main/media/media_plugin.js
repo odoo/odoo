@@ -21,13 +21,13 @@ const getPowerboxItems = (plugin) => {
     const powerboxItems = [];
     if (!plugin.config.disableImage) {
         powerboxItems.push({
-            category: "media",
+            categoryId: "media",
             commandId: "insertImage",
         });
     }
     if (!plugin.config.disableVideo) {
         powerboxItems.push({
-            category: "media",
+            categoryId: "media",
             commandId: "insertVideo",
         });
     }
@@ -67,16 +67,16 @@ export class MediaPlugin extends Plugin {
                 },
             },
         ],
-        powerboxCategory: withSequence(40, { id: "media", name: _t("Media") }),
+        powerboxCategories: withSequence(40, { id: "media", name: _t("Media") }),
         powerboxItems: getPowerboxItems(this),
-        toolbarCategory: withSequence(29, {
+        toolbarGroups: withSequence(29, {
             id: "replace_image",
             namespace: "image",
         }),
         toolbarItems: [
             {
                 id: "replace_image",
-                category: "replace_image",
+                groupId: "replace_image",
                 commandId: "replaceImage",
                 text: "Replace",
             },

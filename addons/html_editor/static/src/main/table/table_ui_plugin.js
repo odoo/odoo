@@ -30,7 +30,7 @@ export class TableUIPlugin extends Plugin {
         ],
         powerboxItems: [
             {
-                category: "structure",
+                categoryId: "structure",
                 commandId: "openPickerOrInsertTable",
             },
         ],

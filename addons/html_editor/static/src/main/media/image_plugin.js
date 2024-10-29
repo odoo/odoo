@@ -75,7 +75,7 @@ export class ImagePlugin extends Plugin {
                     ),
             },
         ],
-        toolbarCategory: [
+        toolbarGroups: [
             withSequence(23, {
                 id: "image_preview",
                 namespace: "image",
@@ -93,13 +93,13 @@ export class ImagePlugin extends Plugin {
         toolbarItems: [
             {
                 id: "image_preview",
-                category: "image_preview",
+                groupId: "image_preview",
                 commandId: "previewImage",
             },
             {
                 id: "image_description",
                 label: _t("Edit media description"),
-                category: "image_description",
+                groupId: "image_description",
                 Component: ImageDescription,
                 props: {
                     getDescription: () => this.getImageAttribute("alt"),
@@ -109,31 +109,31 @@ export class ImagePlugin extends Plugin {
             },
             {
                 id: "shape_rounded",
-                category: "image_shape",
+                groupId: "image_shape",
                 commandId: "setImageShapeRounded",
                 isFormatApplied: hasShape(this, "rounded"),
             },
             {
                 id: "shape_circle",
-                category: "image_shape",
+                groupId: "image_shape",
                 commandId: "setImageShapeCircle",
                 isFormatApplied: hasShape(this, "rounded-circle"),
             },
             {
                 id: "shape_shadow",
-                category: "image_shape",
+                groupId: "image_shape",
                 commandId: "setImageShapeShadow",
                 isFormatApplied: hasShape(this, "shadow"),
             },
             {
                 id: "shape_thumbnail",
-                category: "image_shape",
+                groupId: "image_shape",
                 commandId: "setImageShapeThumbnail",
                 isFormatApplied: hasShape(this, "img-thumbnail"),
             },
             {
                 id: "image_padding",
-                category: "image_padding",
+                groupId: "image_padding",
                 label: _t("Image padding"),
                 Component: ImagePadding,
                 props: {
@@ -142,7 +142,7 @@ export class ImagePlugin extends Plugin {
             },
             {
                 id: "resize_default",
-                category: "image_size",
+                groupId: "image_size",
                 commandId: "resizeImage",
                 label: _t("Resize Default"),
                 text: _t("Default"),
@@ -150,7 +150,7 @@ export class ImagePlugin extends Plugin {
             },
             {
                 id: "resize_100",
-                category: "image_size",
+                groupId: "image_size",
                 commandId: "resizeImage",
                 commandParams: { size: "100%" },
                 label: _t("Resize Full"),
@@ -159,7 +159,7 @@ export class ImagePlugin extends Plugin {
             },
             {
                 id: "resize_50",
-                category: "image_size",
+                groupId: "image_size",
                 commandId: "resizeImage",
                 commandParams: { size: "50%" },
                 label: _t("Resize Half"),
@@ -168,7 +168,7 @@ export class ImagePlugin extends Plugin {
             },
             {
                 id: "resize_25",
-                category: "image_size",
+                groupId: "image_size",
                 commandId: "resizeImage",
                 commandParams: { size: "25%" },
                 label: _t("Resize Quarter"),
@@ -177,13 +177,13 @@ export class ImagePlugin extends Plugin {
             },
             {
                 id: "image_transform",
-                category: "image_transform",
+                groupId: "image_transform",
                 commandId: "transformImage",
                 isFormatApplied: () => this.isImageTransformationOpen(),
             },
             {
                 id: "image_delete",
-                category: "image_delete",
+                groupId: "image_delete",
                 commandId: "deleteImage",
             },
         ],

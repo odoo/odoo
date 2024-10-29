@@ -67,40 +67,40 @@ export class ListPlugin extends Plugin {
         tab_overrides: this.handleTab.bind(this),
         shift_tab_overrides: this.handleShiftTab.bind(this),
         split_element_block_overrides: this.handleSplitBlock.bind(this),
-        toolbarCategory: withSequence(30, {
+        toolbarGroups: withSequence(30, {
             id: "list",
         }),
         toolbarItems: [
             {
                 id: "bulleted_list",
-                category: "list",
+                groupId: "list",
                 commandId: "toggleListUL",
                 isFormatApplied: isListActive("UL"),
             },
             {
                 id: "numbered_list",
-                category: "list",
+                groupId: "list",
                 commandId: "toggleListOL",
                 isFormatApplied: isListActive("OL"),
             },
             {
                 id: "checklist",
-                category: "list",
+                groupId: "list",
                 commandId: "toggleListCL",
                 isFormatApplied: isListActive("CL"),
             },
         ],
         powerboxItems: [
             {
-                category: "structure",
+                categoryId: "structure",
                 commandId: "toggleListUL",
             },
             {
-                category: "structure",
+                categoryId: "structure",
                 commandId: "toggleListOL",
             },
             {
-                category: "structure",
+                categoryId: "structure",
                 commandId: "toggleListCL",
             },
         ],

@@ -19,9 +19,12 @@ export class DynamicPlaceholderPlugin extends Plugin {
                 },
             },
         ],
-        powerboxCategory: withSequence(60, { id: "marketing_tools", name: _t("Marketing Tools") }),
+        powerboxCategories: withSequence(60, {
+            id: "marketing_tools",
+            name: _t("Marketing Tools"),
+        }),
         powerboxItems: {
-            category: "marketing_tools",
+            categoryId: "marketing_tools",
             commandId: "openDynamicPlaceholder",
         },
         powerButtons: ["openDynamicPlaceholder"],

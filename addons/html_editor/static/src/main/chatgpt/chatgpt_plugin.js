@@ -20,13 +20,13 @@ export class ChatGPTPlugin extends Plugin {
                 run: this.openDialog.bind(this),
             },
         ],
-        toolbarCategory: withSequence(50, {
+        toolbarGroups: withSequence(50, {
             id: "ai",
         }),
         toolbarItems: [
             {
                 id: "translate",
-                category: "ai",
+                groupId: "ai",
                 label: _t("Translate with AI"),
                 isAvailable: (selection) => {
                     return !selection.isCollapsed;
@@ -42,16 +42,16 @@ export class ChatGPTPlugin extends Plugin {
             },
             {
                 id: "chatgpt",
-                category: "ai",
+                groupId: "ai",
                 commandId: "openChatGPTDialog",
                 text: "AI",
             },
         ],
 
-        powerboxCategory: withSequence(70, { id: "ai", name: _t("AI Tools") }),
+        powerboxCategories: withSequence(70, { id: "ai", name: _t("AI Tools") }),
         powerboxItems: {
-            searchKeywords: [_t("AI")],
-            category: "ai",
+            keywords: [_t("AI")],
+            categoryId: "ai",
             commandId: "openChatGPTDialog",
             // isAvailable: () => !this.odooEditor.isSelectionInBlockRoot(), // TODO!
         },
