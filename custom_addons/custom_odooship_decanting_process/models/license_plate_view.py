@@ -21,6 +21,7 @@ class LicensePlateOrders(models.Model):
         ('available', 'Available'),
         ('not_available', 'Not Available')], string='License Plate State')
     automation_manual = fields.Selection([('automation', 'Automation'),
+                                          ('automation_bulk', 'Automation Bulk'),
                                           ('manual', 'Manual')], string='Automation Manual')
     delivery_receipt_order_id = fields.Many2one('delivery.receipt.orders',
                                                 string='Delivery Receipt Order')
@@ -79,7 +80,6 @@ class LicensePlateOrdersLine(models.Model):
             ('license_plate_ids', '=', self.license_plate_orders_id.name),
             ('state', 'in', ['in_progress', 'done'])  # Check if decanting process is ongoing
         ], limit=1)
-
         if decanting_process:
             raise ValidationError(
                 _("The License Plate '%s' is currently in a decanting process and cannot be edited.")

@@ -103,6 +103,10 @@ class AutomationDecantingOrdersProcess(models.Model):
                         _("All selected License Plates must belong to the same Picking Order. "
                           "License Plate '%s' does not belong to the same picking order." % license_plate.name)
                     )
+                if license_plate.automation_manual != 'automation':
+                    raise ValidationError(
+                        _("License Plate '%s' is not of type 'automation'. Please select only automation type license plates." % license_plate.name)
+                    )
 
             # Set picking_id based on the first license plate
             self.picking_id = first_picking_id
@@ -125,21 +129,6 @@ class AutomationDecantingOrdersProcess(models.Model):
                         f"Crate Barcode '{record.crate_barcode}' is already in progress. "
                         "Please complete or close the existing record before creating a new one."
                     )
-
-    # @api.onchange('license_plate_ids')
-    # def _onchange_license_plate_ids(self):
-    #     """Allow only closed license plates with done delivery receipt order."""
-    #     for license_plate in self.license_plate_ids:
-    #         if license_plate.state != 'closed' or license_plate.automation_manual != 'manual':
-    #             raise ValidationError(
-    #                 f"The selected License Plate '{license_plate.name}' is not available or its status is not 'closed'."
-    #             )
-    #         delivery_order = self.license_plate_id.delivery_receipt_order_id
-    #         if delivery_order and delivery_order.state != 'done':
-    #             raise ValidationError(
-    #                 f"The related Delivery Receipt Order '{delivery_order.name}' is still in progress. "
-    #                 "Please complete the order (Manual/Automation Order Process) before proceeding."
-    #             )
 
 
     def check_crate_status(self):

@@ -15,8 +15,47 @@ class DeliveryReceiptWizard(models.TransientModel):
         ('closed', 'Closed'),
     ], string='State', default='open')
     automation_manual = fields.Selection([('automation', 'Automation'),
+                                          ('automation_bulk', 'Automation Bulk'),
                                           ('manual', 'Manual')], string='Automation Manual')
-    location_dest_id = fields.Many2one(related='picking_id.location_dest_id', string='Destination location')
+    available_location_ids = fields.Many2many(
+        'stock.location', compute='_compute_available_locations', store=False
+    )
+
+    # Define location_dest_id with domain linked to available_location_ids
+    location_dest_id = fields.Many2one(
+        'stock.location',
+        string='Destination Location',
+        domain="[('id', 'in', available_location_ids)]"
+    )
+
+    @api.depends('automation_manual', 'picking_id')
+    def _compute_available_locations(self):
+        """
+        Computes available locations for location_dest_id based on the automation_manual selection.
+        """
+        for record in self:
+            location_ids = []
+
+            if record.automation_manual == 'automation' and record.picking_id:
+                # If automation is selected, use locations from the picking's move records
+                location_ids = record.picking_id.move_ids_without_package.mapped('location_dest_id.id')
+            elif record.automation_manual == 'manual':
+                # Filter locations by system_type 'manual' and storage category 'Manual Bulk'
+                locations = self.env['stock.location'].search([
+                    ('system_type', '=', 'manual'),
+                    ('storage_category_id.name', '=', 'Manual Bulk')
+                ])
+                location_ids = locations.ids
+            elif record.automation_manual == 'automation_bulk':
+                # Filter locations by system_type 'geek' and storage category 'geek'
+                locations = self.env['stock.location'].search([
+                    ('system_type', '=', 'geek'),
+                    ('storage_category_id.name', '=', 'geek')
+                ])
+                location_ids = locations.ids
+
+            # Assign the filtered location IDs to available_location_ids
+            record.available_location_ids = [(6, 0, location_ids)]
 
     @api.onchange('license_plate_barcode')
     def _onchange_license_plate_barcode(self):
@@ -47,7 +86,6 @@ class DeliveryReceiptWizard(models.TransientModel):
         if active_id:
             delivery_order = self.env['delivery.receipt.orders'].browse(active_id)
             res['picking_id'] = delivery_order.picking_id.id  # Automatically set the picking_id
-            res['location_dest_id'] = delivery_order.location_dest_id.id
         return res
 
     def action_add_lines(self):
@@ -103,6 +141,9 @@ class DeliveryReceiptWizard(models.TransientModel):
                 'remaining_quantity': line.remaining_quantity,
                 'license_plate_closed': True,
                 'state': 'closed',
+                'automation_manual': self.automation_manual,
+                'location_dest_id': line.location_dest_id.id,
+                'picking_id': line.picking_id.id,
             })
             # Check if the product already exists in the license_plate_product_map
             if line.product_id.id in license_plate_product_map:
@@ -156,6 +197,8 @@ class DeliveryReceiptWizardLine(models.TransientModel):
     available_quantity = fields.Float(string='Expected Quantity', compute='_compute_available_quantity')
     remaining_quantity = fields.Float(string='Remaining Quantity', compute='_compute_remaining_quantity')
     available_product_ids = fields.Many2many('product.product', string='Available Products', compute='_compute_available_products')
+    location_dest_id = fields.Many2one('stock.location', string='Destination location')
+    picking_id = fields.Many2one('stock.picking', string='Receipt')
 
     @api.depends('wizard_id.picking_id')
     def _compute_available_products(self):
@@ -204,7 +247,8 @@ class DeliveryReceiptWizardLine(models.TransientModel):
         """
         if self.wizard_id and self.wizard_id.picking_id:
             product_ids = self.wizard_id.picking_id.move_ids_without_package.mapped('product_id.id')
-
+            self.picking_id = self.wizard_id.picking_id
+            self.location_dest_id = self.wizard_id.location_dest_id
             if self.product_id and self.product_id.id not in product_ids:
                 return {
                     'warning': {
