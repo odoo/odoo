@@ -40,6 +40,9 @@ class PdfReader(_Reader):
     def getDocumentInfo(self):
         return self.metadata
 
+    def getFormTextFields(self):
+        return self.get_form_text_fields()
+
 
 class PdfWriter(_Writer):
     def getPage(self, pageNumber):

@@ -178,10 +178,11 @@ def fill_form_fields_pdf(writer, form_fields):
 
         for raw_annot in page.get('/Annots', []):
             annot = raw_annot.getObject()
-            for field in form_fields:
+            field_name = annot.get('/T')
+            if form_fields.get(field_name):
                 # Mark filled fields as readonly to avoid the blue overlay:
-                if annot.get('/T') == field:
-                    annot.update({NameObject("/Ff"): NumberObject(1)})
+                field_flags = annot.get('/Ff', 0)
+                annot.update({NameObject('/Ff'): NumberObject(1 | field_flags)})
 
 
 def rotate_pdf(pdf):
