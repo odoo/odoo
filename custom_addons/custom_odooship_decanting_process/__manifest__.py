@@ -23,6 +23,7 @@
         'views/tenant_code_configuration_views.xml',
         'views/stock_picking_inherit_views.xml',
         'views/res_partner_inherit_views.xml',
+        'views/stock_location_inherit_views.xml',
         'views/menuitem_view.xml',
         # 'views/sales_order_inherit_view.xml',
         'wizard/receipt_wizard_view.xml',
