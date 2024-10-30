@@ -4524,7 +4524,7 @@ class AccountMove(models.Model):
         # We remove all the analytics entries for this journal
         self.mapped('line_ids.analytic_line_ids').unlink()
         self.mapped('line_ids').remove_move_reconcile()
-        self.write({'state': 'draft', 'is_move_sent': False})
+        self.state = 'draft'
 
     def _check_draftable(self):
         exchange_move_ids = set()
