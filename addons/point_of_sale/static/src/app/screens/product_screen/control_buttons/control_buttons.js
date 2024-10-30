@@ -1,7 +1,7 @@
 import { Component, useState, xml } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
-import { SelectionPopup } from "@point_of_sale/app/utils/input_popups/selection_popup";
+import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_popup/selection_popup";
 import { OrderlineNoteButton } from "@point_of_sale/app/screens/product_screen/control_buttons/customer_note_button/customer_note_button";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { _t } from "@web/core/l10n/translation";

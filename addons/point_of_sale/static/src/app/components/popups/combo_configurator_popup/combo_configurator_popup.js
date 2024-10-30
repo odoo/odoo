@@ -1,6 +1,6 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { Component, useState, onMounted } from "@odoo/owl";
-import { usePos } from "../pos_hook";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { ProductCard } from "@point_of_sale/app/generic_components/product_card/product_card";
 import { floatIsZero } from "@web/core/utils/numbers";
 

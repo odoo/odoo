@@ -5,8 +5,8 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
 import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { NumberPopup } from "@point_of_sale/app/utils/input_popups/number_popup";
-import { DatePickerPopup } from "@point_of_sale/app/utils/date_picker_popup/date_picker_popup";
+import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
+import { DatePickerPopup } from "@point_of_sale/app/components/popups/date_picker_popup/date_picker_popup";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 
 import { PaymentScreenPaymentLines } from "@point_of_sale/app/screens/payment_screen/payment_lines/payment_lines";

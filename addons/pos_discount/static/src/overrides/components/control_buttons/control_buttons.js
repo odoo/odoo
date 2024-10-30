@@ -1,5 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
-import { NumberPopup } from "@point_of_sale/app/utils/input_popups/number_popup";
+import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { ControlButtons } from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons";
 import { patch } from "@web/core/utils/patch";
