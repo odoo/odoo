@@ -53,7 +53,7 @@ export class SplitBillScreen extends Component {
     }
 
     _getOrderName(order) {
-        return order.table_id?.table_number.toString() || order.getFloatingOrderName() || "";
+        return order.table_id?.table_number.toString() || order.floatingOrderName || "";
     }
 
     _getLatestOrderNameStartingWith(name) {
@@ -86,7 +86,7 @@ export class SplitBillScreen extends Component {
         const originalOrderName = this._getOrderName(originalOrder);
         const newOrderName = this._getSplitOrderName(originalOrderName);
 
-        const newOrder = this.pos.createNewOrder(await this.pos.getNextOrderRefs());
+        const newOrder = this.pos.createNewOrder();
         newOrder.floating_order_name = newOrderName;
         newOrder.uiState.splittedOrderUuid = curOrderUuid;
         newOrder.originalSplittedOrder = originalOrder;

@@ -1046,7 +1046,7 @@ export class PosOrder extends Base {
             generalNote: this.general_note || "",
         };
     }
-    getFloatingOrderName() {
+    get floatingOrderName() {
         return this.floating_order_name || this.tracking_number.toString() || "";
     }
 
@@ -1085,7 +1085,7 @@ export class PosOrder extends Base {
         }
     }
     getName() {
-        return this.getFloatingOrderName() || "";
+        return this.floatingOrderName || "";
     }
 }
 

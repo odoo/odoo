@@ -171,8 +171,8 @@ patch(PosStore.prototype, {
         return await super.afterProcessServerData(...arguments);
     },
     //@override
-    async add_new_order() {
-        const order = await super.add_new_order(...arguments);
+    add_new_order() {
+        const order = super.add_new_order(...arguments);
         this.addPendingOrder([order.id]);
         return order;
     },
@@ -233,7 +233,7 @@ patch(PosStore.prototype, {
                 currentOrder.update({ table_id: table });
                 this.selectedOrderUuid = currentOrder.uuid;
             } else {
-                await this.add_new_order({ table_id: table });
+                this.add_new_order({ table_id: table });
             }
         }
         try {
@@ -277,7 +277,7 @@ patch(PosStore.prototype, {
                 }
                 this.showScreen(orders[0].get_screen_data().name, props);
             } else {
-                await this.add_new_order({ table_id: table });
+                this.add_new_order({ table_id: table });
                 this.showScreen("ProductScreen");
             }
         }

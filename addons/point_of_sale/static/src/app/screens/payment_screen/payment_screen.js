@@ -377,7 +377,7 @@ export class PaymentScreen extends Component {
                     nextScreen = "ProductScreen";
 
                     if (switchScreen) {
-                        await this.pos.add_new_order();
+                        this.pos.add_new_order();
                     }
                 }
             }
