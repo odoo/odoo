@@ -13,7 +13,7 @@ class Warehouse(models.Model):
         sequence_values.update({
             'pos_type_id': {
                 'name': _('%(name)s Picking POS', name=self.name),
-                'prefix': self.code + '/POS/',
+                'prefix': self.code + '/' + (self.pos_type_id.sequence_code or 'POS') + '/',
                 'padding': 5,
                 'company_id': self.company_id.id,
             }
