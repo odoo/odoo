@@ -20726,4 +20726,50 @@ QUnit.module("Views", (hooks) => {
             "pager should be updated to 1-2 / 5"
         );
     });
+
+    QUnit.test("properties do not disappear after domain change", async (assert) => {
+        const definition0 = {
+            type: "char",
+            name: "property_char",
+            string: "Property char",
+        };
+        serverData.models.bar.records[0].definitions = [definition0];
+        for (const record of serverData.models.foo.records) {
+            if (record.m2o === 1) {
+                record.properties = [{ ...definition0, value: "AA" }];
+            }
+        }
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="bottom">
+                    <field name="m2o"/>
+                    <field name="properties"/>
+                </tree>
+            `,
+            searchViewArch: `
+                <search>
+                    <filter name="properties_filter" string="My filter" domain="[['properties.property_char', '=', 'AA']]"/>
+                    <group>
+                        <!-- important -->
+                        <filter name="properties_groupby" string="My groupby" context="{'group_by':'properties'}"/>
+                    </group>
+                </search>
+            `,
+        });
+
+        await click(target, ".o_optional_columns_dropdown_toggle");
+        await click(target, ".o_optional_columns_dropdown input[type='checkbox']");
+        assert.containsOnce(target, ".o_list_renderer th[data-name='properties.property_char']");
+
+        await toggleSearchBarMenu(target);
+        await toggleMenuItem(target, "My filter");
+        assert.containsOnce(target, ".o_list_renderer th[data-name='properties.property_char']");
+
+        await toggleMenuItem(target, "My filter");
+        assert.containsOnce(target, ".o_list_renderer th[data-name='properties.property_char']");
+    });
 });
