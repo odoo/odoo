@@ -10,6 +10,8 @@ import { getMockEnv, makeMockEnv } from "./env_test_helpers";
 
 /**
  * @typedef {import("@odoo/owl").Component} Component
+ *
+ * @typedef {import("@odoo/hoot-dom").Target} Target
  */
 
 patch(MainComponentsContainer.prototype, {
@@ -48,7 +50,7 @@ export function findComponent(parent, predicate) {
 /**
  * Returns the dropdown menu for a specific toggler.
  *
- * @param {import("@odoo/hoot-dom").Target} togglerSelector
+ * @param {Target} togglerSelector
  * @returns {HTMLElement | undefined}
  */
 export function getDropdownMenu(togglerSelector) {
@@ -78,7 +80,7 @@ export function getDropdownMenu(togglerSelector) {
  *  getTemplate?: Document;
  *  noMainContainer?: boolean;
  *  props?: P;
- *  target?: HTMLElement;
+ *  target?: Target;
  * }} [options]
  */
 export async function mountWithCleanup(ComponentClass, options) {
