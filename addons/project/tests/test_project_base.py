@@ -523,3 +523,20 @@ class TestProjectBase(TestProjectCommon):
         task.active = False
         copy_task2 = task.copy()
         self.assertTrue(copy_task2.active, "Archived task should be active when duplicating an archived task")
+
+    def test_duplicate_doesnt_copy_date(self):
+        project = self.env['project.project'].create({
+            'name': 'Project',
+            'date_start': '2021-09-20',
+            'date': '2021-09-28',
+        })
+        task = self.env['project.task'].create({
+            'name': 'Task',
+            'project_id': project.id,
+            'date_deadline': '2021-09-26',
+        })
+        project_copy = project.copy()
+        self.assertFalse(project_copy.date_start, "The project's date fields shouldn't be copied on project duplication")
+        self.assertFalse(project_copy.date, "The project's date fields shouldn't be copied on project duplication")
+        self.assertFalse(project_copy.task_ids.date_deadline, "The task's date fields shouldn't be copied on project duplication")
+        self.assertFalse(task.copy().date_deadline, "The task's date fields shouldn't be copied on task duplication")

@@ -137,7 +137,6 @@ class TestTaskDependencies(TestProjectCommon):
 
         self.assertEqual(task1_copy.depend_on_ids.ids, [task2_copy.id],
                          "Copy should only create a relation between both copy if they are both part of the project")
-        self.assertEqual(task1_copy.date_deadline, self.task_1.date_deadline, "date_deadline should be copied")
 
         task1_copy.depend_on_ids = self.task_1
 
