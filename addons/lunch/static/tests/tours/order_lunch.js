@@ -48,4 +48,8 @@ registry.category("web_tour.tours").add('order_lunch_tour', {
     content: _t("Validate your order"),
     position: 'left',
     run: 'click',
+}, {
+    trigger: '.o_lunch_widget_lines .badge:contains("Ordered")',
+    content: 'Check that order is ordered',
+    run: () => {}
 }]});
