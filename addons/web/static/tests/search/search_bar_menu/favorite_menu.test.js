@@ -1,34 +1,28 @@
 import { after, expect, test } from "@odoo/hoot";
 import { queryFirst } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
-import { Component, onWillUpdateProps, xml } from "@odoo/owl";
 import { editValue } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
 import {
     contains,
-    deleteFavorite,
+    editFavorite,
     editFavoriteName,
     getFacetTexts,
-    getService,
     isItemSelected,
-    mountWithCleanup,
+    mockService,
     mountWithSearch,
     onRpc,
-    patchWithCleanup,
     saveFavorite,
-    serverState,
     toggleMenuItem,
     toggleSaveFavorite,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
-import { Foo, defineSearchBarModels } from "./models";
+import { defineSearchBarModels } from "./models";
 
 import { registry } from "@web/core/registry";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { SearchBarMenu } from "@web/search/search_bar_menu/search_bar_menu";
-import { WebClient } from "@web/webclient/webclient";
 
 const favoriteMenuRegistry = registry.category("favoriteMenu");
-const viewsRegistry = registry.category("views");
 
 defineSearchBarModels();
 
@@ -79,31 +73,8 @@ test("simple rendering with no favorite", async () => {
     expect(`.o_favorite_menu .o_add_favorite`).toHaveCount(1);
 });
 
-test("delete an active favorite", async () => {
-    class ToyController extends Component {
-        static components = { SearchBar };
-        static template = xml`<div><SearchBar/></div>`;
-        static props = ["*"];
-
-        setup() {
-            expect(this.props.domain).toEqual([["foo", "=", "qsdf"]]);
-            onWillUpdateProps((nextProps) => {
-                expect.step("props updated");
-                expect(nextProps.domain).toEqual([]);
-            });
-        }
-    }
-
-    patchWithCleanup(serverState.view_info, {
-        toy: { multi_record: true, display_name: "Toy", icon: "fab fa-android" },
-    });
-    viewsRegistry.add("toy", {
-        type: "toy",
-        Controller: ToyController,
-    });
-    after(() => viewsRegistry.remove("toy"));
-    Foo._views.toy = `<toy/>`;
-    Foo._filters = [
+test("edit an active favorite", async () => {
+    const irFilters = [
         {
             context: "{}",
             domain: "[['foo', '=', 'qsdf']]",
@@ -114,24 +85,29 @@ test("delete an active favorite", async () => {
             user_id: [2, "Mitchell Admin"],
         },
     ];
-
-    onRpc("unlink", () => {
-        expect.step("deleteFavorite");
-        return true;
+    mockService("action", {
+        doAction(action) {
+            expect.step("edit favorite");
+            expect(action).toEqual({
+                context: {
+                    form_view_ref: "base.ir_filters_view_edit_form",
+                },
+                type: "ir.actions.act_window",
+                res_model: "ir.filters",
+                views: [[false, "form"]],
+                res_id: 7,
+            });
+        },
     });
-
-    const webClient = await mountWithCleanup(WebClient);
-
-    const clearCacheListener = () => expect.step("CLEAR-CACHES");
-    webClient.env.bus.addEventListener("CLEAR-CACHES", clearCacheListener);
-    after(() => webClient.env.bus.removeEventListener("CLEAR-CACHES", clearCacheListener));
-
-    await getService("action").doAction({
-        name: "Action",
-        res_model: "foo",
-        type: "ir.actions.act_window",
-        views: [[false, "toy"]],
+    await mountWithSearch(SearchBar, {
+        resModel: "foo",
+        searchMenuTypes: ["favorite"],
+        searchViewId: false,
+        searchViewArch: `<search/>`,
+        irFilters,
     });
+    expect(getFacetTexts()).toEqual(["My favorite"]);
+
     await toggleSearchBarMenu();
     const favorite = queryFirst`.o_favorite_menu .dropdown-item`;
     expect(favorite).toHaveText("My favorite");
@@ -140,14 +116,8 @@ test("delete an active favorite", async () => {
     expect(getFacetTexts()).toEqual(["My favorite"]);
     expect(queryFirst`.o_favorite_menu .o_menu_item`).toHaveClass("selected");
 
-    await deleteFavorite("My favorite");
-    expect.verifySteps([]);
-
-    await contains(`div.o_dialog footer button`).click();
-    expect(getFacetTexts()).toEqual([]);
-    expect(".o_favorite_menu .o_menu_item").toHaveCount(1);
-    expect(".o_favorite_menu .o_add_favorite").toHaveCount(1);
-    expect.verifySteps(["deleteFavorite", "CLEAR-CACHES", "props updated"]);
+    await editFavorite("My favorite");
+    expect.verifySteps(["edit favorite"]);
 });
 
 test("default favorite is not activated if activateFavorite is set to false", async () => {
