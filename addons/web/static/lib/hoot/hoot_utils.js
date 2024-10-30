@@ -916,10 +916,15 @@ export function makePublicListeners(target, types) {
                 return listener;
             },
             set(value) {
+                if (listener) {
+                    target.removeEventListener(type, listener);
+                }
                 listener = value;
+                if (listener) {
+                    target.addEventListener(type, listener);
+                }
             },
         });
-        target.addEventListener(type, (...args) => listener?.(...args));
     }
 }
 
@@ -1423,6 +1428,12 @@ export const INCLUDE_LEVEL = {
     url: 1,
     tag: 2,
     preset: 3,
+};
+
+export const MIME_TYPE = {
+    blob: "application/octet-stream",
+    json: "application/json",
+    text: "text/plain",
 };
 
 export const STORAGE = {
