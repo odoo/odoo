@@ -9,7 +9,7 @@ import { isIosApp } from "@web/core/browser/feature_detection";
 import { EventBus } from "@odoo/owl";
 
 // List of worker events that should not be broadcasted.
-const INTERNAL_EVENTS = new Set(["initialized", "outdated", "notification"]);
+const INTERNAL_EVENTS = new Set(["initialized", "outdated", "notification", "log_debug"]);
 /**
  * Communicate with a SharedWorker in order to provide a single websocket
  * connection shared across multiple tabs.
@@ -74,6 +74,10 @@ export const busService = {
                 case "initialized": {
                     isInitialized = true;
                     connectionInitializedDeferred.resolve();
+                    break;
+                }
+                case "log_debug": {
+                    console.debug(...data);
                     break;
                 }
                 case "outdated": {
