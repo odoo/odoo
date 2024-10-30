@@ -91,6 +91,8 @@ class ResBank(models.Model):
                 "cliTrxAmount": int(amount)
             }
             response = _l10n_id_make_qris_request('show_qris.php', params)
+            if response.get("status") == "failed":
+                raise ValidationError(response.get("data"))
             data = response.get('data')
 
             # create a new transaction line while also converting the qris_request_date to UTC time
