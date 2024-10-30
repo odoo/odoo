@@ -196,11 +196,6 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         )
 
         if request.is_frontend:
-            strikethrough_price = self._get_strikethrough_price(
-                product_or_template.with_context(
-                    **product_or_template._get_product_price_context(combination)
-                ), currency, date, basic_product_information['price']
-            )
             price = self._apply_taxes_to_price(
                 basic_product_information['price'], product_or_template, currency
             )
@@ -214,6 +209,16 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
                 'category_name': product_or_template.categ_id.name,
                 'currency_name': currency.name,
             })
+            # Don't compute the strikethrough price if there's a custom price (i.e. if `price_info`
+            # is populated).
+            strikethrough_price = self._get_strikethrough_price(
+                product_or_template.with_context(
+                    **product_or_template._get_product_price_context(combination)
+                ),
+                currency,
+                date,
+                price,
+            ) if 'price_info' not in basic_product_information else None
             if strikethrough_price:
                 basic_product_information['strikethrough_price'] = strikethrough_price
         return basic_product_information
@@ -243,7 +248,6 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         :param recordset product_or_template: The product for which to compute the strikethrough
                                               price, as a `product.product` or `product.template`
                                               record.
-        :param recordset pricelist: The pricelist to use, as a `product.pricelist` record.
         :param recordset currency: The currency to compute the strikethrough price in, as a
                                    `res.currency` record.
         :param datetime date: The date to compute the strikethrough price at.
@@ -251,27 +255,25 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         :rtype: float|None
         :return: The strikethrough price of the product, if there is one.
         """
-        sales_price = request.env['product.pricelist.item']._compute_base_price(
+        # First, try to use the base price as the strikethrough price.
+        # Apply taxes before comparing it to the actual price.
+        base_price = self._apply_taxes_to_price(
+            request.env['product.pricelist.item']._compute_base_price(
+                product_or_template, 1.0, product_or_template.uom_id, date, currency
+            ),
             product_or_template,
-            1.0,
-            product_or_template.uom_id,
-            date,
             currency,
         )
-        if currency.compare_amounts(sales_price, price) == 1:
-            # apply taxes
-            return self._apply_taxes_to_price(
-                sales_price,
-                product_or_template,
-                currency,
-            )
+        # Only show the base price if it's greater than the actual price.
+        if currency.compare_amounts(base_price, price) == 1:
+            return base_price
 
-        # First, try to use `compare_list_price` as the strikethrough price.
+        # Second, try to use `compare_list_price` as the strikethrough price.
+        # Don't apply taxes since this price should always be displayed as is.
         if (
             request.env.user.has_group('website_sale.group_product_price_comparison')
             and product_or_template.compare_list_price
         ):
-            # Don't apply taxes to `compare_list_price`, it should be displayed as is.
             compare_list_price = product_or_template.currency_id._convert(
                 from_amount=product_or_template.compare_list_price,
                 to_currency=currency,
@@ -279,7 +281,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
                 date=date,
                 round=False,
             )
-            # If `compare_list_price` is lower than `price`, don't show it.
+            # Only show `compare_list_price` if it's greater than the actual price.
             if currency.compare_amounts(compare_list_price, price) == 1:
                 return compare_list_price
         return None
