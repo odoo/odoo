@@ -26,10 +26,10 @@ setRunner(runner);
 //-----------------------------------------------------------------------------
 
 /**
- * @param {unknown} value
+ * @param {...unknown} values
  */
-export function registerDebugInfo(value) {
-    logger.logDebug("debug context provided:", value);
+export function registerDebugInfo(...values) {
+    logger.logDebug("debug context provided:", ...values);
 }
 
 // Main test API

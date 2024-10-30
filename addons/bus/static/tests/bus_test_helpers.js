@@ -1,6 +1,6 @@
 import { busService } from "@bus/services/bus_service";
 
-import { after, expect } from "@odoo/hoot";
+import { after, expect, registerDebugInfo } from "@odoo/hoot";
 import { Deferred } from "@odoo/hoot-mock";
 import { MockServer, defineModels, webModels } from "@web/../tests/web_test_helpers";
 import { BusBus } from "./mock_server/mock_models/bus_bus";
@@ -8,11 +8,10 @@ import { IrWebSocket } from "./mock_server/mock_models/ir_websocket";
 
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
-import { logger } from "@web/../lib/hoot/core/logger";
 
 patch(busService, {
     _onMessage(id, type, payload) {
-        logger.logDebug("bus:", id, type, payload);
+        registerDebugInfo("bus:", id, type, payload);
     },
 });
 
