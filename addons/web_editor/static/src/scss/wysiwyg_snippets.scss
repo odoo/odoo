@@ -1316,24 +1316,29 @@
                 background-color: $o-we-bg-lighter;
 
                 we-button {
+                    --PreviewAlphaBg-background-size: 16px;
+
                     @extend %o-preview-alpha-background;
                     padding: $o-we-item-spacing;
                     background-color: transparent;
                 }
                 // For background shapes
                 we-button[data-shape] {
-                    grid-column: span 4;
+                    grid-column: span 2;
                     padding: 0;
 
                     div {
                         width: 100%;
-                        height: 75px;
+                        height: 50px;
                     }
                 }
                 we-button.active {
-                    outline: 4px solid $o-we-color-success;
-                    outline-offset: -4px;
-                    background-color: rgba($o-we-color-success, 0.2);
+                    background-color: rgba($o-we-toolbar-color-accent, 0.2);
+
+                    .o_we_shape {
+                        outline: 4px solid $o-we-toolbar-color-accent;
+                        outline-offset: -2px;
+                    }
                 }
                 img {
                     width: 100%;
@@ -2702,7 +2707,7 @@ we-select.o_we_border_preview_aligned_select {
 .o_we_shape_animated_label {
     @include o-position-absolute(0, 0);
     padding: 0 4px;
-    background: $o-we-color-success;
+    background: $o-we-toolbar-color-accent;
     color: white;
 
     > span {
