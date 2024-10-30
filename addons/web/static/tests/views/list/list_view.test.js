@@ -981,7 +981,7 @@ test(`list view: buttons handler is called once on double click`, async () => {
 });
 
 test(`list view: click on an action button saves the record before executing the action`, async () => {
-    onRpc("/web/dataset/call_button", () => true);
+    onRpc("/web/dataset/call_button/*", () => true);
     stepAllNetworkCalls();
 
     await mountView({
@@ -6973,7 +6973,7 @@ test(`list view, editable, with a button`, async () => {
     onRpc("web_save", () => {
         expect.step("web_save");
     });
-    onRpc("/web/dataset/call_button", () => {
+    onRpc("/web/dataset/call_button/*", () => {
         expect.step("call_button");
         return true;
     });
@@ -15807,7 +15807,7 @@ test(`Invisible Properties`, async () => {
 });
 
 test(`header buttons in list view`, async () => {
-    onRpc("/web/dataset/call_button", async (request) => {
+    onRpc("/web/dataset/call_button/*", async (request) => {
         const { params } = await request.json();
         expect.step(params.method);
         return true;
@@ -15964,10 +15964,8 @@ test(`context keys not passed down the stack and not to fields`, async () => {
         Bar._records.push({ id: i, name: `Value ${i}` });
     }
 
-    onRpc(({ model, method, kwargs }) => {
-        if (["foo", "bar"].includes(model) && method) {
-            expect.step({ model, method, context: kwargs.context });
-        }
+    onRpc(["foo", "bar"], "*", ({ model, method, kwargs }) => {
+        expect.step({ model, method, context: kwargs.context });
     });
 
     await mountWithCleanup(WebClient);

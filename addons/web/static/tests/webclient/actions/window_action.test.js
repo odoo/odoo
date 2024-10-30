@@ -875,7 +875,7 @@ test.tags("desktop")("execute_action of type object are handled", async () => {
     expect.assertions(4);
     serverState.userContext = { some_key: 2 };
 
-    onRpc("/web/dataset/call_button", async (request) => {
+    onRpc("/web/dataset/call_button/*", async (request) => {
         const { params } = await request.json();
         expect(params).toEqual(
             {
@@ -1011,7 +1011,7 @@ test.tags("desktop")("view button: block ui attribute", async () => {
 test("execute_action of type object raises error: re-enables buttons", async () => {
     expect.errors(1);
 
-    onRpc("/web/dataset/call_button", () => {
+    onRpc("/web/dataset/call_button/*", () => {
         throw makeServerError({ message: "This is a user error" });
     });
 
@@ -1039,7 +1039,7 @@ test("execute_action of type object raises error in modal: re-enables buttons", 
                 </footer>
             </form>`;
 
-    onRpc("/web/dataset/call_button", () => {
+    onRpc("/web/dataset/call_button/*", () => {
         throw makeServerError();
     });
 
@@ -1174,7 +1174,7 @@ test.tags("mobile")("execute smart button and fails on mobile", async () => {
 test.tags("desktop")("requests for execute_action of type object: disable buttons", async () => {
     let def = undefined;
     onRpc("web_read", () => def); // block the 'read' call
-    onRpc("/web/dataset/call_button", () => false);
+    onRpc("/web/dataset/call_button/*", () => false);
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(3);
@@ -1202,7 +1202,7 @@ test.tags("desktop")("requests for execute_action of type object: disable button
 });
 
 test.tags("desktop")("action with html help returned by a call_button", async () => {
-    onRpc("/web/dataset/call_button", () => {
+    onRpc("/web/dataset/call_button/*", () => {
         return {
             res_model: "partner",
             type: "ir.actions.act_window",
@@ -2310,7 +2310,7 @@ test.tags("desktop")("do not restore after action button clicked on desktop", as
             </sheet>
         </form>`;
 
-    onRpc("/web/dataset/call_button", () => true);
+    onRpc("/web/dataset/call_button/*", () => true);
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(3, { viewType: "form", props: { resId: 1 } });
@@ -2333,7 +2333,7 @@ test.tags("mobile")("do not restore after action button clicked on mobile", asyn
             </sheet>
         </form>`;
 
-    onRpc("/web/dataset/call_button", () => true);
+    onRpc("/web/dataset/call_button/*", () => true);
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(3, { viewType: "form", props: { resId: 1 } });
