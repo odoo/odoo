@@ -11,12 +11,10 @@ GNU Public Licence.
 """
 
 import atexit
-import csv # pylint: disable=deprecated-module
 import logging
 import os
 import re
 import sys
-from pathlib import Path
 
 from psycopg2.errors import InsufficientPrivilege
 
@@ -140,11 +138,6 @@ def main(args):
 
     config = odoo.tools.config
 
-    # the default limit for CSV fields in the module is 128KiB, which is not
-    # quite sufficient to import images to store in attachment. 500MiB is a
-    # bit overkill, but better safe than sorry I guess
-    csv.field_size_limit(500 * 1024 * 1024)
-
     for db_name in config['db_name']:
         try:
             odoo.service.db._create_empty_database(db_name)
@@ -172,8 +165,10 @@ def main(args):
     rc = odoo.service.server.start(preload=config['db_name'], stop=stop)
     sys.exit(rc)
 
+
 class Server(Command):
     """Start the odoo server (default command)"""
+
     def run(self, args):
-        odoo.tools.config.parser.prog = f'{Path(sys.argv[0]).name} {self.name}'
+        odoo.tools.config.parser.prog = self.prog_name
         main(args)
