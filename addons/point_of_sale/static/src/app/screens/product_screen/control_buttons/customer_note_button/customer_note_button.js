@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { Component } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
-import { TextInputPopup } from "@point_of_sale/app/utils/input_popups/text_input_popup";
+import { TextInputPopup } from "@point_of_sale/app/components/popups/text_input_popup/text_input_popup";
 import { useService } from "@web/core/utils/hooks";
 import { makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
 

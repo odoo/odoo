@@ -3,8 +3,8 @@ import { sprintf } from "@web/core/utils/strings";
 import { debounce } from "@web/core/utils/timing";
 import { registry } from "@web/core/registry";
 
-import { TextInputPopup } from "@point_of_sale/app/utils/input_popups/text_input_popup";
-import { NumberPopup } from "@point_of_sale/app/utils/input_popups/number_popup";
+import { TextInputPopup } from "@point_of_sale/app/components/popups/text_input_popup/text_input_popup";
+import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { useService } from "@web/core/utils/hooks";

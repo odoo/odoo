@@ -1,6 +1,6 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { Component, onMounted, useRef, useState, useSubEnv } from "@odoo/owl";
-import { usePos } from "../pos_hook";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { useRefListener, useService } from "@web/core/utils/hooks";
 import { ProductInfoBanner } from "@point_of_sale/app/components/product_info_banner/product_info_banner";
 
