@@ -1,5 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestBlock } from "@html_editor/utils/blocks";
+import { splitTextNode } from "@html_editor/utils/dom";
 import { isEditorTab, isTextNode, isZWS } from "@html_editor/utils/dom_info";
 import { descendants, getAdjacentPreviousSiblings } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
@@ -23,7 +24,7 @@ function isIndentationTab(tab) {
 
 export class TabulationPlugin extends Plugin {
     static name = "tabulation";
-    static dependencies = ["dom", "selection", "history", "delete", "split"];
+    static dependencies = ["dom", "selection", "history", "delete"];
     static shared = ["indentBlocks", "outdentBlocks"];
     resources = {
         user_commands: [
@@ -104,7 +105,7 @@ export class TabulationPlugin extends Plugin {
             tab.nextSibling.nodeType === Node.TEXT_NODE &&
             tab.nextSibling.textContent.startsWith("\u200B")
         ) {
-            this.shared.splitTextNode(tab.nextSibling, 1, DIRECTIONS.LEFT);
+            splitTextNode(tab.nextSibling, 1, DIRECTIONS.LEFT);
             tab.nextSibling.remove();
             zwsRemoved++;
         }
