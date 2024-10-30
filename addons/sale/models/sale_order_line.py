@@ -289,7 +289,7 @@ class SaleOrderLine(models.Model):
         compute='_compute_untaxed_amount_to_invoice',
         store=True)
     amount_to_invoice = fields.Monetary(
-        string="Amount to invoice",
+        string="Un-invoiced Balance",
         compute='_compute_amount_to_invoice')
 
     # Technical computed fields for UX purposes (hide/make fields readonly, ...)
