@@ -2362,10 +2362,10 @@ class APIKeys(models.Model):
         if self.env.is_system():
             return
         if not date:
-            raise UserError(_("The API key must have an expiration date"))
+            raise ValidationError(_("The API key must have an expiration date"))
         max_duration = max(group.api_key_duration for group in self.env.user.groups_id) or 1.0
         if date > datetime.datetime.now() + datetime.timedelta(days=max_duration):
-            raise UserError(_("You cannot exceed %(duration)s days.", duration=max_duration))
+            raise ValidationError(_("You cannot exceed %(duration)s days.", duration=max_duration))
 
     def _generate(self, scope, name, expiration_date):
         """Generates an api key.
@@ -2457,6 +2457,11 @@ class APIKeyDescription(models.TransientModel):
                 'message': error.args[0]
             }
             return {'warning': warning}
+
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        self.env['res.users.apikeys']._check_expiration_date(res.expiration_date)
+        return res
 
     @check_identity
     def make_key(self):

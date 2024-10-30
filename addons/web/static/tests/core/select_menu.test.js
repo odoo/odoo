@@ -1155,7 +1155,7 @@ test("Fetch choices", async () => {
             this.state = useState({ choices: [] }, { value: "" });
         }
         loadChoice(searchString) {
-            if (searchString === 'test') {
+            if (searchString === "test") {
                 this.state.choices = [{ label: "test", value: "test" }];
             } else {
                 this.state.choices = [];

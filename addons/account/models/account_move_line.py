@@ -1219,9 +1219,13 @@ class AccountMoveLine(models.Model):
         for line in self:
             account_type = line.account_id.account_type
             if line.move_id.is_sale_document(include_receipts=True):
+                if account_type == 'liability_payable':
+                    raise UserError(_("Account %s is of payable type, but is used in a sale operation.", line.account_id.code))
                 if (line.display_type == 'payment_term') ^ (account_type == 'asset_receivable'):
                     raise UserError(_("Any journal item on a receivable account must have a due date and vice versa."))
             if line.move_id.is_purchase_document(include_receipts=True):
+                if account_type == 'asset_receivable':
+                    raise UserError(_("Account %s is of receivable type, but is used in a purchase operation.", line.account_id.code))
                 if (line.display_type == 'payment_term') ^ (account_type == 'liability_payable'):
                     raise UserError(_("Any journal item on a payable account must have a due date and vice versa."))
 
@@ -1463,10 +1467,11 @@ class AccountMoveLine(models.Model):
         before = existing()
         yield
         after = existing()
-
+        protected = container.get('protected', {})
         for line in after:
             if (
                 (changed('amount_currency') or changed('currency_rate') or changed('move_type'))
+                and 'balance' not in protected.get(line, {})
                 and (not changed('balance') or (line not in before and not line.balance))
             ):
                 balance = line.company_id.currency_id.round(line.amount_currency / line.currency_rate)
@@ -1488,6 +1493,7 @@ class AccountMoveLine(models.Model):
              self._sync_invoice(container):
             lines = super().create([self._sanitize_vals(vals) for vals in vals_list])
             container['records'] = lines
+            container['protected'] = {line: set(vals.keys()) for line, vals in zip(lines, vals_list)}
 
         lines._check_tax_lock_date()
 
@@ -1556,7 +1562,7 @@ class AccountMoveLine(models.Model):
         move_container = {'records': self.move_id}
         with self.move_id._check_balanced(move_container),\
              self.move_id._sync_dynamic_lines(move_container),\
-             self._sync_invoice({'records': self}):
+             self._sync_invoice({'records': self, 'protected': {line: set(vals.keys()) for line in self}}):
             self = line_to_write
             if not self:
                 return True

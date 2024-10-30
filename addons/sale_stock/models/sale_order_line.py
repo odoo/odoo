@@ -299,8 +299,8 @@ class SaleOrderLine(models.Model):
                            If False, consider the moves that were created through the initial rule of the delivery route,
                            to support the new push mechanism.
         """
-        outgoing_moves = self.env['stock.move']
-        incoming_moves = self.env['stock.move']
+        outgoing_moves_ids = set()
+        incoming_moves_ids = set()
 
         moves = self.move_ids.filtered(lambda r: r.state != 'cancel' and not r.scrapped and self.product_id == r.product_id)
         if moves and not strict:
@@ -319,11 +319,11 @@ class SaleOrderLine(models.Model):
             if (strict and move.location_dest_id._is_outgoing()) or \
                (not strict and move.rule_id.id in triggering_rule_ids and (move.location_final_id or move.location_dest_id)._is_outgoing()):
                 if not move.origin_returned_move_id or (move.origin_returned_move_id and move.to_refund):
-                    outgoing_moves |= move
+                    outgoing_moves_ids.add(move.id)
             elif move.location_id._is_outgoing() and move.to_refund:
-                incoming_moves |= move
+                incoming_moves_ids.add(move.id)
 
-        return outgoing_moves, incoming_moves
+        return self.env['stock.move'].browse(outgoing_moves_ids), self.env['stock.move'].browse(incoming_moves_ids)
 
     def _get_procurement_group(self):
         return self.order_id.procurement_group_id

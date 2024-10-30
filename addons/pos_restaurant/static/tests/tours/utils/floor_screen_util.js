@@ -132,7 +132,6 @@ patch(TourHelpers.prototype, {
             await new Promise((resolve) => setTimeout(resolve, this.delay));
         };
         const element = this.anchor;
-        this._ensureEnabled(element, "drag and drop");
         const { drop, moveTo } = await hoot.drag(element);
         await dragEffectDelay();
         await hoot.hover(element, {

@@ -254,7 +254,7 @@ test.tags("desktop")("Can pass domain to search more", async () => {
         { id: 6, name: "Frank" },
         { id: 7, name: "Grace" },
         { id: 8, name: "Helen" },
-        { id: 9, name: "Ivy" },
+        { id: 9, name: "Ivy" }
     );
     Partner._views["list,false"] = /* xml */ `<list><field name="name"/></list>`;
     Partner._views["search,false"] = /* xml */ `<search/>`;
