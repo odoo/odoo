@@ -186,7 +186,7 @@ export class PosOrder extends Base {
                 const printingChanges = {
                     new: changes["new"],
                     cancelled: changes["cancelled"],
-                    table_name: this.table_id?.name,
+                    table_name: this.table_id?.getName(),
                     floor_name: this.table_id?.floor_id?.name,
                     name: this.pos_reference || "unknown order",
                     time: {
