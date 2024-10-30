@@ -73,7 +73,7 @@ const templateIncludeWidget = (tagName) => /* xml */ `
 
     <${tagName}
         class="flex items-center gap-1 cursor-pointer select-none"
-        t-on-click="() => this.toggleInclude(category, job.id)"
+        t-on-click.stop="() => this.toggleInclude(category, job.id)"
     >
         <div
             class="hoot-include-widget h-5 p-px flex items-center relative border rounded-full"
@@ -215,7 +215,7 @@ const TEMPLATE_SEARCH_DASHBOARD = /* xml */ `
                         <button
                             class="w-full px-2 hover:bg-gray-300 dark:hover:bg-gray-700"
                             type="button"
-                            t-on-click="() => this.setQuery(text)"
+                            t-on-click.stop="() => this.setQuery(text)"
                             t-esc="text"
                         />
                     </li>
@@ -389,7 +389,15 @@ export class HootSearch extends Component {
         });
         this.runnerState = useState(runner.state);
 
-        useWindowListener("click", (ev) => this.onWindowClick(ev));
+        useWindowListener(
+            "click",
+            (ev) => {
+                if (this.runnerState.status !== "running") {
+                    this.state.showDropdown = ev.composedPath().includes(this.rootRef.el);
+                }
+            },
+            { capture: true }
+        );
     }
 
     /**
@@ -622,15 +630,6 @@ export class HootSearch extends Component {
 
         if (this.config.fun) {
             this.verifySecretSequenceStep(ev);
-        }
-    }
-
-    /**
-     * @param {PointerEvent} ev
-     */
-    onWindowClick(ev) {
-        if (this.runnerState.status !== "running") {
-            this.state.showDropdown = ev.composedPath().includes(this.rootRef.el);
         }
     }
 

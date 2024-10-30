@@ -159,7 +159,7 @@ export class HootReporting extends Component {
                                     <li class="flex gap-1">
                                         <button
                                             class="flex items-center gap-1 text-pass"
-                                            t-on-click="() => this.filterResults('passed')"
+                                            t-on-click.stop="() => this.filterResults('passed')"
                                         >
                                             <i class="fa fa-check-circle" />
                                             <strong t-esc="runnerReporting.passed" />
@@ -171,7 +171,7 @@ export class HootReporting extends Component {
                                     <li class="flex gap-1">
                                         <button
                                             class="flex items-center gap-1 text-fail"
-                                            t-on-click="() => this.filterResults('failed')"
+                                            t-on-click.stop="() => this.filterResults('failed')"
                                         >
                                             <i class="fa fa-times-circle" />
                                             <strong t-esc="runnerReporting.failed" />
@@ -183,7 +183,7 @@ export class HootReporting extends Component {
                                     <li class="flex gap-1">
                                         <button
                                             class="flex items-center gap-1 text-skip"
-                                            t-on-click="() => this.filterResults('skipped')"
+                                            t-on-click.stop="() => this.filterResults('skipped')"
                                         >
                                             <i class="fa fa-pause-circle" />
                                             <strong t-esc="runnerReporting.skipped" />
@@ -195,7 +195,7 @@ export class HootReporting extends Component {
                                     <li class="flex gap-1">
                                         <button
                                             class="flex items-center gap-1 text-todo"
-                                            t-on-click="() => this.filterResults('todo')"
+                                            t-on-click.stop="() => this.filterResults('todo')"
                                         >
                                             <i class="fa fa-exclamation-circle" />
                                             <strong t-esc="runnerReporting.todo" />
