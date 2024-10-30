@@ -97,7 +97,7 @@ export { serverState } from "./_framework/mock_server_state.hoot";
 export { patchWithCleanup } from "./_framework/patch_test_helpers";
 export { preventResizeObserverError } from "./_framework/resize_observer_error_catcher";
 export {
-    deleteFavorite,
+    editFavorite,
     editFavoriteName,
     editPager,
     editSearch,

@@ -11,6 +11,7 @@ from . import test_base_document_layout
 from . import test_load_menus
 from . import test_partner
 from . import test_profiler
+from . import test_favorite
 from . import test_session_info
 from . import test_assets
 from . import test_login

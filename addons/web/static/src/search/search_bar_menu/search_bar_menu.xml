@@ -161,9 +161,9 @@
         >
             <span class="d-flex p-0 align-items-center justify-content-between">
                 <span t-esc="item.description" t-att-title="item.description.length > 15 ? item.description : ''" class="text-truncate flex-grow-1"/>
-                <i class="ms-1 fa fa-trash-o"
-                    title="Delete item"
-                    t-on-click.stop="() => this.openConfirmationDialog(item.id, item.userId)"
+                <i class="ms-1 fa fa-pencil"
+                    title="Edit favorite"
+                    t-on-click.stop="() => this.editFavorite(item.id)"
                 />
             </span>
         </CheckboxItem>
