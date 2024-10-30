@@ -147,7 +147,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
 
             await attachComponent(this, selectMenuWrapperEl, WebsiteForumTagsWrapper, {
                 defaulValue: defaulValue,
-                disabled: isReadOnly,
+                isReadOnly: isReadOnly,
             });
         }
 
