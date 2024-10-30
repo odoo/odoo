@@ -112,6 +112,8 @@ class TestProjectRecurrence(TransactionCase):
             form.repeat_type = 'until'
             form.repeat_until = self.date_01_01 + relativedelta(months=1, days=1)
             form.date_deadline = self.date_01_01
+            with form.child_ids.new() as subtask_form:
+                subtask_form.name = 'test subtask'
             task = form.save()
 
         task.state = '1_done'
@@ -120,6 +122,7 @@ class TestProjectRecurrence(TransactionCase):
         last_recurring_task = task.recurrence_id.task_ids.filtered(lambda t: t != task)
         last_recurring_task.state = '1_done'
         self.assertEqual(len(task.recurrence_id.task_ids), 2, "Since this is after repeat_until, next occurrence shouldn't have been created")
+        self.assertEqual(len(task.recurrence_id.task_ids.child_ids), 2, "2 subtasks should have been created")
 
     def test_recurring_settings_change(self):
         self.env['res.config.settings'] \
