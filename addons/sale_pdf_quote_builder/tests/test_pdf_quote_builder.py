@@ -1,18 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
-import datetime
-import os
-
-from freezegun import freeze_time
+from base64 import b64encode
+from functools import partial
 
 from odoo import Command
 from odoo.tests import HttpCase, tagged
 from odoo.tools.misc import file_open
 
 from odoo.addons.sale.tests.common import SaleCommon
-
-directory = os.path.dirname(__file__)
+from .files import forms_pdf, plain_pdf
 
 
 @tagged('-at_install', 'post_install')
@@ -20,35 +16,45 @@ class TestPDFQuoteBuilder(HttpCase, SaleCommon):
 
     @classmethod
     def setUpClass(cls):
-        with freeze_time('2020-10-05 15:15:15'):  # So the validity date is a month later
-            super().setUpClass()
+        super().setUpClass()
 
-            cls.env['quotation.document'].search([]).action_archive()
-            cls.env['product.document'].search([]).action_archive()
+        cls.sale_order.validity_date = '2020-11-04'
+        cls.sale_order.partner_id.tz = 'Europe/Brussels'
+        cls.env['product.document'].search([]).action_archive()
+        cls.env['quotation.document'].search([]).action_archive()
 
-            with file_open(os.path.join(directory, 'test_pdf', 'test.pdf'), 'rb') as f:
-                document = base64.b64encode(f.read())
-                IrAttachment = cls.env['ir.attachment']
-                attachment_1 = IrAttachment.create({'name': "Header", 'datas': document})
-                attachment_2 = IrAttachment.create({'name': "Footer", 'datas': document})
-                cls.header, cls.footer = cls.env['quotation.document'].create([{
-                    'name': "Header", 'ir_attachment_id': attachment_1.id
-                }, {
-                    'name': "Footer",
-                    'ir_attachment_id': attachment_2.id,
-                    'document_type': 'footer',
-                }])
+        with file_open(forms_pdf, 'rb') as file:
+            forms_pdf_data = b64encode(file.read())
 
-                attachment_3 = cls.env['ir.attachment'].create(
-                    {'name': "Product Document", 'datas': document}
-                )
-                cls.product_document = cls.env['product.document'].create({
-                    'name': "product doc",
-                    'ir_attachment_id': attachment_3.id,
-                    'attached_on_sale': 'inside',
-                    'res_model': 'product.product',
-                    'res_id': cls.product.id,
-                })
+        with file_open(plain_pdf, 'rb') as file:
+            plain_pdf_data = b64encode(file.read())
+
+        att_header, att_footer, att_prod_doc = cls.env['ir.attachment'].create([{
+            'name': "Header",
+            'datas': plain_pdf_data,
+        }, {
+            'name': "Footer",
+            'datas': forms_pdf_data,
+        }, {
+            'name': "Product Document",
+            'datas': forms_pdf_data,
+        }])
+        cls.header, cls.footer = cls.env['quotation.document'].create([{
+            'name': "Header",
+            'ir_attachment_id': att_header.id,
+            'document_type': 'header',
+        }, {
+            'name': "Footer",
+            'ir_attachment_id': att_footer.id,
+            'document_type': 'footer',
+        }])
+        cls.product_document = cls.env['product.document'].create({
+            'name': "Product Document",
+            'ir_attachment_id': att_prod_doc.id,
+            'attached_on_sale': 'inside',
+            'res_model': 'product.product',
+            'res_id': cls.product.id,
+        })
 
     def test_compute_customizable_pdf_form_fields_when_no_file(self):
         self.env['quotation.document'].search([]).action_archive()
@@ -57,20 +63,20 @@ class TestPDFQuoteBuilder(HttpCase, SaleCommon):
 
     def test_dynamic_fields_mapping_for_quotation_document(self):
         FormField = self.env['sale.pdf.form.field']
-        doc_type = 'quotation_document'
+        new_form_field = partial(dict, document_type='quotation_document')
         new_form_fields = FormField.create([
-            {'name': "boolean_test", 'document_type': doc_type, 'path': 'locked'},
-            {'name': "char_test", 'document_type': doc_type, 'path': 'name'},
-            {'name': "date_test", 'document_type': doc_type, 'path': 'validity_date'},
-            {'name': "datetime_test", 'document_type': doc_type, 'path': 'commitment_date'},
-            {'name': "float_test", 'document_type': doc_type, 'path': 'prepayment_percent'},
-            {'name': "integer_test", 'document_type': doc_type, 'path': 'company_id.color'},
-            {'name': "selection_test", 'document_type': doc_type, 'path': 'state'},
-            {'name': "monetary_test", 'document_type': doc_type, 'path': 'amount_total'},
+            new_form_field(name="boolean_test", path='locked'),
+            new_form_field(name="char_test", path='name'),
+            new_form_field(name="date_test", path='validity_date'),
+            new_form_field(name="datetime_test", path='commitment_date'),
+            new_form_field(name="float_test", path='prepayment_percent'),
+            new_form_field(name="integer_test", path='company_id.color'),
+            new_form_field(name="selection_test", path='state'),
+            new_form_field(name="monetary_test", path='amount_total'),
 
-            {'name': "one2many_test", 'document_type': doc_type, 'path': 'order_line'},
-            {'name': "many2one_test", 'document_type': doc_type, 'path': 'company_id'},
-            {'name': "many2many_test", 'document_type': doc_type, 'path': 'company_id.parent_ids'},
+            new_form_field(name="one2many_test", path='order_line'),
+            new_form_field(name="many2one_test", path='company_id'),
+            new_form_field(name="many2many_test", path='company_id.parent_ids'),
         ])
         sol_1, sol_2 = self.sale_order.order_line
         form_field_expected_value_map = {
@@ -94,48 +100,49 @@ class TestPDFQuoteBuilder(HttpCase, SaleCommon):
             self.assertEqual(result, expected_value)
 
     def test_dynamic_fields_mapping_for_product_document(self):
-        FormField = self.env['sale.pdf.form.field']
-        doc_type = 'product_document'
-        new_form_fields = FormField.create([
-            {'name': "boolean_test", 'document_type': doc_type, 'path': 'order_id.locked'},
-            {'name': "char_test", 'document_type': doc_type, 'path': 'order_id.name'},
-            {'name': "date_test", 'document_type': doc_type, 'path': 'order_id.validity_date'},
-            {'name': "dt_test", 'document_type': doc_type, 'path': 'order_id.commitment_date'},
-            {'name': "float_test", 'document_type': doc_type, 'path': 'discount'},
-            {'name': "integer_test", 'document_type': doc_type, 'path': 'sequence'},
-            {'name': "selection_test", 'document_type': doc_type, 'path': 'order_id.state'},
-            {'name': "monetary_test", 'document_type': doc_type, 'path': 'order_id.amount_total'},
-
-            {'name': "one2many_test", 'document_type': doc_type, 'path': 'order_id.order_line'},
-            {'name': "many2one_test", 'document_type': doc_type, 'path': 'order_id.company_id'},
-            {'name': "many2many_test", 'document_type': doc_type, 'path': 'tax_id'},
-        ])
+        self.sale_order.commitment_date = '2121-12-21 12:21:12'
         sol_1, sol_2 = self.sale_order.order_line
         sol_1.update({
-            'discount': 4.99, 'tax_id': [
-                Command.create({'name': 'test tax'}), Command.create({'name': 'test tax2'})
-            ]
+            'discount': 4.99,
+            'tax_id': [
+                Command.create({'name': "test tax1"}),
+                Command.create({'name': "test tax2"}),
+            ],
         })
-        self.sale_order.commitment_date = datetime.datetime(2121, 12, 21, 12, 21, 12)
-        expected_values = [
-            "No",  # boolean
-            self.sale_order.name,  # char
-            "11/04/2020",  # date
-            "Dec 21, 2121, 1:21:12 PM",  # datetime
-            "4.99",  # float
-            "10",  # integer
-            "Quotation",  # selection
-            "$ 720.01",  # monetary
+        new_form_field = partial(dict, document_type='product_document')
+        new_form_fields = self.env['sale.pdf.form.field'].create([
+            new_form_field(name="boolean_test", path='order_id.locked'),
+            new_form_field(name="char_test", path='order_id.name'),
+            new_form_field(name="date_test", path='order_id.validity_date'),
+            new_form_field(name="datetime_test", path='order_id.commitment_date'),
+            new_form_field(name="float_test", path='discount'),
+            new_form_field(name="integer_test", path='sequence'),
+            new_form_field(name="selection_test", path='order_id.state'),
+            new_form_field(name="monetary_test", path='order_id.amount_total'),
 
-            f"{sol_1.display_name}, {sol_2.display_name}",  # one2many
-            f"{self.sale_order.company_id.display_name}",  # many2one
-            "test tax, test tax2",  # many2many
-        ]
-        for form_field, expected_value in zip(new_form_fields, expected_values):
+            new_form_field(name="one2many_test", path='order_id.order_line'),
+            new_form_field(name="many2one_test", path='order_id.company_id'),
+            new_form_field(name="many2many_test", path='tax_id'),
+        ])
+        expected = {
+            'boolean_test': "No",
+            'char_test': self.sale_order.name,
+            'date_test': "11/04/2020",
+            'datetime_test': "Dec 21, 2121, 1:21:12 PM",
+            'float_test': "4.99",
+            'integer_test': "10",
+            'selection_test': "Quotation",
+            'monetary_test': self.sale_order.currency_id.format(720.01),
+
+            'one2many_test': f"{sol_1.display_name}, {sol_2.display_name}",
+            'many2one_test': self.sale_order.company_id.display_name,
+            'many2many_test': "test tax1, test tax2",
+        }
+        for form_field in new_form_fields:
             result = self.env['ir.actions.report']._get_value_from_path(
                 form_field, self.sale_order, sol_1
             )
-            self.assertEqual(' '.join(result.split()), expected_value)
+            self.assertEqual(result, expected[form_field.name])
 
     def _test_custom_content_kanban_like(self):
         # TODO VCR finish tour and uncomment

@@ -184,7 +184,7 @@ class IrActionsReport(models.Model):
 
     @api.model
     def _add_pages_to_writer(self, writer, document, prefix=None):
-        """Add a PDF doc to the writer and fill the form fields present in the pages if needed.
+        """Add a PDF doc to the writer and fill the form text fields present in the pages if needed.
 
         :param PdfFileWriter writer: the writer to which pages needs to be added
         :param bytes document: the document to add in the final pdf
@@ -198,7 +198,7 @@ class IrActionsReport(models.Model):
 
         field_names = set()
         if prefix:
-            field_names = reader.getFields()
+            field_names = reader.getFormTextFields()
 
         for page_id in range(reader.getNumPages()):
             page = reader.getPage(page_id)
@@ -213,14 +213,15 @@ class IrActionsReport(models.Model):
                         new_key = prefix + form_key
 
                         # Modifying the form flags to force some characteristics
-                        initial_ff_value = reader_annot.get('/Ff', 0)
-                        b = 1  # 1st bit to 1: mark as visible, to avoid the blue overlay
-                        new_ff_value = initial_ff_value | b
-                        b = 1 << 12  # 13th bit to 1: allow multiline
-                        new_ff_value |= b
+                        # 1. text fields that are already filled get marked as readonly
+                        # 2. make all text fields support multiline
+                        form_flags = reader_annot.get('/Ff', 0)
+                        readonly_flag = 1 if field_names[form_key] else 0  # 1st bit sets readonly
+                        multiline_flag = 1 << 12  # 13th bit sets multiline text
+                        new_flags = form_flags | readonly_flag | multiline_flag
 
                         reader_annot.update({
                             NameObject("/T"): createStringObject(new_key),
-                            NameObject("/Ff"): NumberObject(new_ff_value)
+                            NameObject("/Ff"): NumberObject(new_flags),
                         })
             writer.addPage(page)
