@@ -488,21 +488,18 @@ class TestProjectBase(TestProjectCommon):
                 Command.create({'name': 'subtask1', 'project_id': project1.id}),
                 Command.create({'name': 'subtask2', 'project_id': project1.id, 'state': '1_canceled'}),
                 Command.create({'name': 'subtask3', 'project_id': project2.id}),
-                Command.create({'name': 'subtask4', 'project_id': project1.id, 'display_in_project': True}),
-                Command.create({'name': 'subtask5', 'project_id': project1.id, 'state': '1_canceled', 'display_in_project': True}),
-                Command.create({'name': 'subtask6', 'project_id': project1.id, 'child_ids': [
-                    Command.create({'name': 'subsubtask1', 'project_id': project2.id}),
-                    Command.create({'name': 'subsubtask1', 'project_id': project1.id, 'display_in_project': True})
+                Command.create({'name': 'subtask4', 'project_id': project1.id, 'child_ids': [
+                    Command.create({'name': 'subsubtask41', 'project_id': project2.id}),
+                    Command.create({'name': 'subsubtask42', 'project_id': project1.id})
                 ]}),
-                Command.create({'name': 'subtask7', 'state': '1_done', 'project_id': project1.id, 'child_ids': [
-                    Command.create({'name': 'subsubtask1', 'project_id': project1.id, 'state': '1_done'}),
-                    Command.create({'name': 'subsubtask1', 'project_id': project1.id, 'display_in_project': True, 'state': '1_done'}),
+                Command.create({'name': 'subtask5', 'state': '1_done', 'project_id': project1.id, 'child_ids': [
+                    Command.create({'name': 'subsubtask51', 'project_id': project1.id, 'state': '1_done'}),
                 ]}),
             ]}
         ])
-        self.assertEqual(project1.task_count, 7)
-        self.assertEqual(project1.open_task_count, 4)
-        self.assertEqual(project1.closed_task_count, 3)
+        self.assertEqual(project1.task_count, 3)
+        self.assertEqual(project1.open_task_count, 2)
+        self.assertEqual(project1.closed_task_count, 1)
         self.assertEqual(project2.task_count, 2)
         self.assertEqual(project2.open_task_count, 2)
         self.assertEqual(project2.closed_task_count, 0)
