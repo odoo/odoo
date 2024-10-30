@@ -76,7 +76,7 @@ export class ReceiptScreen extends Component {
         this.currentOrder.uiState.screen_data.value = "";
         this.currentOrder.uiState.locked = true;
         if (!this.pos.config.module_pos_restaurant) {
-            await this.pos.add_new_order();
+            this.pos.add_new_order();
         }
         this.pos.searchProductWord = "";
         const { name, props } = this.nextScreen;

@@ -69,7 +69,7 @@ patch(Navbar.prototype, {
                 }
                 const floating_order = this.pos
                     .get_open_orders()
-                    .find((o) => o.getFloatingOrderName() === table_number);
+                    .find((o) => o.floatingOrderName === table_number);
                 if (floating_order) {
                     return this.setFloatingOrder(floating_order);
                 }

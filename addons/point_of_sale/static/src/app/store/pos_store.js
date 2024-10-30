@@ -354,9 +354,7 @@ export class PosStore extends Reactive {
         }
     }
     async afterOrderDeletion() {
-        this.set_order(
-            this.get_open_orders().at(-1) || this.createNewOrder(await this.getNextOrderRefs())
-        );
+        this.set_order(this.get_open_orders().at(-1) || this.createNewOrder());
     }
 
     async deleteOrders(orders, serverIds = []) {
@@ -452,7 +450,7 @@ export class PosStore extends Reactive {
         if (!this.config.module_pos_restaurant) {
             this.selectedOrderUuid = openOrders.length
                 ? openOrders[openOrders.length - 1].uuid
-                : (await this.add_new_order()).uuid;
+                : this.add_new_order().uuid;
         }
 
         this.markReady();
@@ -942,10 +940,6 @@ export class PosStore extends Reactive {
         return !this.config.restrict_price_control || this.get_cashier()._role == "manager";
     }
     createNewOrder(data = {}) {
-        if (!(data.pos_reference && data.sequence_number && data.tracking_number)) {
-            throw new Error("pos_reference, sequence_number and tracking_number are required");
-        }
-
         const fiscalPosition = this.models["account.fiscal.position"].find((fp) => {
             return fp.id === this.config.default_fiscal_position_id?.id;
         });
@@ -959,49 +953,57 @@ export class PosStore extends Reactive {
             access_token: uuidv4(),
             ticket_code: random5Chars(),
             fiscal_position_id: fiscalPosition,
+            tracking_number: "",
+            sequence_number: 0,
+            pos_reference: "",
             ...data,
         });
 
+        this.getNextOrderRefs(order);
         order.set_pricelist(this.config.pricelist_id);
         order.recomputeOrderData();
 
         return order;
     }
-    async add_new_order(data = {}) {
+    add_new_order(data = {}) {
         if (this.get_order()) {
             this.get_order().updateSavedQuantity();
         }
-        Object.assign(data, await this.getNextOrderRefs());
         const order = this.createNewOrder(data);
         this.selectedOrderUuid = order.uuid;
         this.searchProductWord = "";
         return order;
     }
-    async getNextOrderRefs() {
+    async getNextOrderRefs(order) {
         try {
             const [pos_reference, sequence_number, tracking_number] = await this.data.call(
                 "pos.session",
                 "get_next_order_refs",
                 [[this.session.id], parseInt(odoo.login_number, 10), null, ""]
             );
-            return { pos_reference, sequence_number, tracking_number };
+            order.pos_reference = pos_reference;
+            order.sequence_number = sequence_number;
+            order.tracking_number = tracking_number;
+            return true;
         } catch (error) {
             if (
                 error instanceof ConnectionLostError ||
                 error instanceof ConnectionAbortedError ||
                 error instanceof RPCError
             ) {
-                return this.getNextOrderRefsLocal(_t("Order"));
+                return this.getNextOrderRefsLocal(_t("Order"), order);
             } else {
                 throw error;
             }
+        } finally {
+            this.data.syncDataWithIndexedDB(this.data.records);
         }
     }
     /**
      * Return value of this method is used when the client is offline.
      * Side-effect: increments the order counter.
      */
-    getNextOrderRefsLocal(refPrefix) {
+    getNextOrderRefsLocal(refPrefix, order) {
         const sequenceNumber = this.orderCounter.next();
         const trackingNumber = sequenceNumber.toString().padStart(3, "0");
         const YY = new Date().getFullYear().toString().slice(-2);
@@ -1010,12 +1012,10 @@ export class PosStore extends Reactive {
         const F = "1";
         const OOOO = sequenceNumber.toString().padStart(4, "0");
         const posReference = `${refPrefix} ${YY}${LL}-${SSS}-${F}${OOOO}`;
-        return {
-            pos_reference: posReference,
-            // Return negative sequence number to indicate that the value is generated from the client.
-            sequence_number: -sequenceNumber,
-            tracking_number: trackingNumber,
-        };
+        order.pos_reference = posReference;
+        order.sequence_number = sequenceNumber;
+        order.tracking_number = trackingNumber;
+        return true;
     }
     selectNextOrder() {
         const orders = this.models["pos.order"].filter((order) => !order.finalized);
