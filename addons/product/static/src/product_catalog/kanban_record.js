@@ -7,6 +7,7 @@ import { ProductCatalogOrderLine } from "./order_line/order_line";
 
 export class ProductCatalogKanbanRecord extends KanbanRecord {
     static template = "ProductCatalogKanbanRecord";
+    static props = [...KanbanRecord.props, "pushCatalogKanbanUpdate?"];
     static components = {
         ...KanbanRecord.components,
         ProductCatalogOrderLine,
@@ -14,7 +15,7 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
 
     setup() {
         super.setup();
-        this.debouncedUpdateQuantity = useDebounced(this._updateQuantity, 500, {
+        this.debouncedUpdateQuantity = useDebounced(this._updateQuantityAndPushUpdate, 500, {
             execBeforeUnmount: true,
         });
 
@@ -59,8 +60,14 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
     // Data Exchanges
     //--------------------------------------------------------------------------
 
+    _updateQuantityAndPushUpdate() {
+        const result = this._updateQuantity();
+        this.props.pushCatalogKanbanUpdate?.(result);
+    }
+
     async _updateQuantity() {
-        const price = await this._updateQuantityAndGetPrice();
+        this.updateRecords = this._updateQuantityAndGetPrice();
+        const price = await this.updateRecords;
         this.productCatalogData.price = parseFloat(price);
     }
 

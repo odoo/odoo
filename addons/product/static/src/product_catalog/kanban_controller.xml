@@ -4,5 +4,8 @@
         <xpath expr="//button[hasclass('o-kanban-button-new')]" position="replace">
             <button t-out="this.buttonString" type="button" class="btn btn-secondary o-kanban-button-back" t-on-click="this.backToQuotationDebounced"/>
         </xpath>
+        <xpath expr="//t[@t-component='props.Renderer']" position="attributes">
+            <attribute name="pushCatalogKanbanUpdate">this.pushCatalogKanbanUpdate.bind(this)</attribute>
+        </xpath>
     </t>
 </templates>

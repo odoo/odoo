@@ -18,5 +18,11 @@
                 </div>
             </t>
         </t>
+        <xpath expr="//t[@t-if='groupOrRecord.group']//KanbanRecord" position="attributes">
+            <attribute name="pushCatalogKanbanUpdate">props.pushCatalogKanbanUpdate?.bind(this)</attribute>
+        </xpath>
+        <xpath expr="//t[@t-else='']//KanbanRecord" position="attributes">
+            <attribute name="pushCatalogKanbanUpdate">props.pushCatalogKanbanUpdate?.bind(this)</attribute>
+        </xpath>
     </t>
 </templates>

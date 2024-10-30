@@ -7,6 +7,7 @@ import { ProductCatalogKanbanRecord } from "./kanban_record";
 
 export class ProductCatalogKanbanRenderer extends KanbanRenderer {
     static template = "ProductCatalogKanbanRenderer";
+    static props = [...KanbanRenderer.props, "pushCatalogKanbanUpdate?"];
     static components = {
         ...KanbanRenderer.components,
         KanbanRecord: ProductCatalogKanbanRecord,
