@@ -6,7 +6,7 @@
     </record>
 
     <record id="project.action_view_my_task" model="ir.actions.act_window">
-        <field name="context">{'search_default_open_tasks': 1, 'all_task': 0, 'default_user_ids': [(4, uid)], 'sale_show_partner_name': True}</field>
+        <field name="context">{'search_default_open_tasks': 1, 'my_tasks': 1, 'default_user_ids': [(4, uid)], 'sale_show_partner_name': True}</field>
     </record>
 
     <record id="project.action_view_all_task" model="ir.actions.act_window">
@@ -14,7 +14,7 @@
     </record>
 
     <record id="project.action_project_task_user_tree" model="ir.actions.act_window">
-        <field name="context">{'group_by':[], 'graph_measure': '__count__', 'sale_show_partner_name': True}</field>
+        <field name="context">{'group_by': [], 'graph_measure': '__count__', 'sale_show_partner_name': True}</field>
     </record>
 
     <record id="project_project_view_inherit_project_filter" model="ir.ui.view">

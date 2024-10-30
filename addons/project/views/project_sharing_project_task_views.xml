@@ -127,7 +127,6 @@
                             invisible="not id or subtask_count == 0" context="{
                                 'default_user_ids': [(6, 0, [uid])],
                                 'default_project_id': project_id,
-                                'default_display_in_project': False,
                             }"
                         >
                             <field name="subtask_count" widget="statinfo" string="Sub-tasks"/>
@@ -201,7 +200,7 @@
                         </page>
                         <page name="sub_tasks_page" string="Sub-tasks">
                             <field name="child_ids" context="{
-                                'default_project_id': project_id, 'default_display_in_project': False, 'default_parent_id': id,
+                                'default_project_id': project_id, 'default_parent_id': id,
                                 'default_milestone_id': allow_milestones and milestone_id, 'default_partner_id': partner_id,
                                 'form_view_ref' : 'project.project_sharing_project_task_view_form',
                             }">

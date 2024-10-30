@@ -405,17 +405,10 @@ class ProjectProject(models.Model):
         defaults = self._map_tasks_default_values(project)
         new_tasks = tasks.with_context(copy_project=True).copy(defaults)
         all_subtasks = new_tasks._get_all_subtasks()
-        project.write({'tasks': [Command.set(new_tasks.ids)]})
-        subtasks_not_displayed = all_subtasks.filtered(
-            lambda task: not task.display_in_project
-        )
         all_subtasks.filtered(
             lambda child: child.project_id == self
         ).write({
             'project_id': project.id
-        })
-        subtasks_not_displayed.write({
-            'display_in_project': False
         })
         return True
 

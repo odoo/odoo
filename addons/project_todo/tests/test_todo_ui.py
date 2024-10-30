@@ -35,7 +35,6 @@ class TestTodoUi(HttpCaseWithUserDemo):
                 Command.create({
                     'name': 'New Sub-Task!',
                     'project_id': project.id,
-                    'display_in_project': False,
                 }),
             ]
         }])
