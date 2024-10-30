@@ -79,10 +79,16 @@ class HrEmployeeBase(models.AbstractModel):
             employee.remaining_leaves = value
 
     def _compute_allocation_count(self):
+        # Don't get allocations that are expired
+        current_date = datetime.date.today()
         data = self.env['hr.leave.allocation'].read_group([
             ('employee_id', 'in', self.ids),
             ('holiday_status_id.active', '=', True),
+            ('holiday_status_id.requires_allocation', '=', 'yes'),
             ('state', '=', 'validate'),
+            '|',
+            ('date_to', '=', False),
+            ('date_to', '>=', current_date),
         ], ['number_of_days:sum', 'employee_id'], ['employee_id'])
         rg_results = dict((d['employee_id'][0], {"employee_id_count": d['employee_id_count'], "number_of_days": d['number_of_days']}) for d in data)
         for employee in self:
@@ -92,8 +98,20 @@ class HrEmployeeBase(models.AbstractModel):
             employee.allocations_count = result['employee_id_count'] if result else 0.0
 
     def _compute_total_allocation_used(self):
+        current_date = datetime.date.today()
+        data_leave = self.env['hr.leave'].read_group([
+            ('employee_id', 'in', self.ids),
+            ('holiday_status_id.active', '=', True),
+            ('holiday_status_id.requires_allocation', '=', 'yes'),
+            ('state', '=', 'validate'),
+            '|',
+            ('holiday_allocation_id.date_to', '=', False),
+            ('holiday_allocation_id.date_to', '>=', current_date),
+        ], ['number_of_days:sum', 'employee_id'], ['employee_id'])
+        results_leave = dict((d['employee_id'][0], {"employee_id_count": d['employee_id_count'], "number_of_days": d['number_of_days']}) for d in data_leave)
         for employee in self:
-            employee.allocation_used_count = float_round(employee.allocation_count - employee.remaining_leaves, precision_digits=2)
+            result = results_leave.get(employee.id)
+            employee.allocation_used_count = float_round(result['number_of_days'], precision_digits=2) if result else 0.0
             employee.allocation_used_display = "%g" % employee.allocation_used_count
 
     def _compute_presence_state(self):
