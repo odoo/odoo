@@ -16,6 +16,7 @@ Manage your mailing lists from Odoo.
         'data/ir_cron_data.xml',
         'data/mail_templates.xml',
         'data/mail_template_data.xml',
+        'data/mail_template_email_layouts.xml',
         'data/res_groups.xml',
         'security/ir.model.access.csv',
         'security/mail_group_security.xml',
