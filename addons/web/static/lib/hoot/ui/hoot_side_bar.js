@@ -1,7 +1,6 @@
 /** @odoo-module */
 
 import { Component, onWillRender, useRef, useState, xml } from "@odoo/owl";
-import { FOCUSABLE_SELECTOR } from "../../hoot-dom/helpers/dom";
 import { Suite } from "../core/suite";
 import { createUrlFromId } from "../core/url";
 import { lookup, normalize } from "../hoot_utils";
@@ -131,7 +130,7 @@ export class HootSideBar extends Component {
     static template = xml`
         <div
             class="${HootSideBar.name} flex-col w-64 h-full resize-x shadow bg-gray-200 dark:bg-gray-800 z-1 hidden md:flex"
-            t-on-click="onClick"
+            t-on-click.stop="onClick"
         >
             <form class="flex p-2 items-center gap-1">
                 <div class="hoot-search-bar border rounded bg-base w-full">
@@ -149,7 +148,7 @@ export class HootSideBar extends Component {
                     type="button"
                     class="text-primary p-1 transition-colors"
                     t-attf-title="{{ expanded ? 'Collapse' : 'Expand' }} all"
-                    t-on-click="() => this.toggleExpand(expanded)"
+                    t-on-click.stop="() => this.toggleExpand(expanded)"
                 >
                     <i t-attf-class="fa fa-{{ expanded ? 'compress' : 'expand' }}" />
                 </button>
@@ -162,7 +161,7 @@ export class HootSideBar extends Component {
                             t-att-class="{ 'bg-gray-300 dark:bg-gray-700': uiState.selectedSuiteId === suite.id }"
                             t-attf-style="margin-left: {{ (suite.path.length - 1) + 'rem' }};"
                             t-attf-title="{{ suite.fullName }}\n- {{ suite.totalTestCount }} tests\n- {{ suite.totalSuiteCount }} suites"
-                            t-on-click="() => this.toggleItem(suite)"
+                            t-on-click.stop="(ev) => this.toggleItem(suite)"
                             t-on-keydown="(ev) => this.onSuiteKeydown(ev, suite)"
                         >
                             <div class="flex items-center truncate gap-1 flex-1">
@@ -292,15 +291,10 @@ export class HootSideBar extends Component {
         return job.jobs.some((subJob) => subJob instanceof Suite);
     }
 
-    /**
-     * @param {PointerEvent} ev
-     */
-    onClick(ev) {
-        if (!ev.target.closest(FOCUSABLE_SELECTOR)) {
-            // Unselect suite when clicking outside of a suite & in the side bar
-            this.uiState.selectedSuiteId = null;
-            this.uiState.resultsPage = 0;
-        }
+    onClick() {
+        // Unselect suite when clicking outside of a suite & in the side bar
+        this.uiState.selectedSuiteId = null;
+        this.uiState.resultsPage = 0;
     }
 
     /**
