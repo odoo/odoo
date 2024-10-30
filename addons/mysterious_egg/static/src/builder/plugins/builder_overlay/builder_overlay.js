@@ -24,115 +24,138 @@ export class BuilderOverlay extends Component {
             height: this.target.clientHeight,
             width: this.target.clientWidth,
         });
+        this.spacingConfig = this.buildSpacingConfig();
+
         usePosition("root", () => this.target, {
             position: "center",
             container: () => this.props.container,
-            onPositioned: () => {
-                this.size.height = this.target.clientHeight;
-                this.size.width = this.target.clientWidth;
-                this.size.paddingBottom = window
-                    .getComputedStyle(this.target)
-                    .getPropertyValue("padding-bottom");
-                this.size.paddingTop = window
-                    .getComputedStyle(this.target)
-                    .getPropertyValue("padding-top");
-            },
+            onPositioned: this.updateOverlaySize.bind(this),
         });
-        //WIP
-        this.currentDraggable = {
-            initialX: 0,
-            initialY: 0,
-            direction: "",
-        };
+
         useDraggableWithoutFollow({
             ref: { el: window.document.body },
             elements: ".o_handle",
-            onWillStartDrag: ({ x, y, element }) => {
-                this.currentDraggable.intialX = x;
-                this.currentDraggable.intialY = y;
-                this.currentDraggable.direction = this.getCurrentDirection(element);
-                this.currentDraggable.sizes = this.getSize()[this.currentDraggable.direction];
+            onDragStart: ({ x, y, element }) => {
+                const direction = this.getCurrentDirection(element);
+                const spacingConfigIndex = this.getSpacingIndexFromTarget(direction);
+                this.currentDraggable = {
+                    initialX: x,
+                    initialY: y,
+                    direction,
+                    spacingConfigIndex,
+                    initialSpacingConfigIndex: spacingConfigIndex,
+                };
+            },
+            onDrag: ({ y }) => {
+                // TODO: handle x
+                const spacingConfig = this.spacingConfig[this.currentDraggable.direction];
+                const spacingConfigIndex = this.currentDraggable.spacingConfigIndex;
+                const isLastSize = spacingConfigIndex + 1 === spacingConfig.classes.length;
+                const nextSizeIndex = isLastSize ? spacingConfigIndex : spacingConfigIndex + 1;
+                const prevSizeIndex = spacingConfigIndex ? spacingConfigIndex - 1 : 0;
+                const deltaY =
+                    y -
+                    this.currentDraggable.initialY +
+                    spacingConfig.values[this.currentDraggable.initialSpacingConfigIndex];
+                let indexToApply;
 
-                // Find the index of the current padding class applied to the target
-                const paddingDirection = this.currentDraggable.sizes[2];
-                for (let i = 0; i < this.currentDraggable.sizes[0].length; i++) {
-                    const paddingClass = this.currentDraggable.sizes[0][i];
-                    const paddingValue = this.currentDraggable.sizes[1][i];
-                    if (this.target.classList.contains(paddingClass)) {
-                        this.currentDraggable.currentSizeIndex = i;
-                    } else if (
-                        window.getComputedStyle(this.target).getPropertyValue(paddingDirection) ===
-                        paddingValue + "px"
-                    ) {
-                        this.currentDraggable.currentSizeIndex = i;
-                    }
+                // If the mouse moved to the right/down by at least 2/3 of
+                // the space between the previous and the next steps, the
+                // handle is snapped to the next step and the class is
+                // replaced by the one matching this step.
+                if (
+                    deltaY >
+                    (2 * spacingConfig.values[nextSizeIndex] +
+                        spacingConfig.values[spacingConfigIndex]) /
+                        3
+                ) {
+                    indexToApply = nextSizeIndex;
                 }
-            },
-            onDragStart: (test) => {
-                console.log("onDragStart", test);
-            },
-            onDrag: ({ x, y }) => {
-                console.log("onDrag", x, y);
-                const deltaX = x - this.currentDraggable.initialX;
-                const deltaY = y - this.currentDraggable.initialY;
-                const currentSizeIndex = this.currentDraggable.currentSizeIndex;
-                // const nextSizeIndex = currentSizeIndex + (deltaX > 0 ? 1 : -1);
-                    // const dd = ev['page' + dir.XY] - dir.xy + dir.resize[1][dir.begin];
-                    // const next = dir.current + (dir.current + 1 === dir.resize[1].length ? 0 : 1);
-                    // const prev = dir.current ? (dir.current - 1) : 0;
-            },
-            onDrop: (test) => {
-                console.log("onDrop", test);
-            },
-            onDragEnd: (test) => {
-                console.log("onDragEnd", test);
+
+                // Same as above but to the left/up.
+                if (
+                    deltaY <
+                    (2 * spacingConfig.values[prevSizeIndex] +
+                        spacingConfig.values[spacingConfigIndex]) /
+                        3
+                ) {
+                    indexToApply = prevSizeIndex;
+                }
+
+                if (indexToApply) {
+                    this.props.target.classList.remove(spacingConfig.classes[spacingConfigIndex]);
+                    this.props.target.classList.add(spacingConfig.classes[indexToApply]);
+                    this.currentDraggable.spacingConfigIndex = indexToApply;
+                    this.updateOverlaySize();
+                }
             },
         });
     }
 
-    getSize() {
-        var nClass = "pt";
-        var nProp = "padding-top";
-        var sClass = "pb";
-        var sProp = "padding-bottom";
+    updateOverlaySize() {
+        this.size.height = this.target.clientHeight;
+        this.size.width = this.target.clientWidth;
+        this.size.paddingBottom = window
+            .getComputedStyle(this.target)
+            .getPropertyValue("padding-bottom");
+        this.size.paddingTop = window.getComputedStyle(this.target).getPropertyValue("padding-top");
+    }
+
+    buildSpacingConfig() {
+        let topClass = "pt";
+        let topStyleName = "padding-top";
+        let bottomClass = "pb";
+        let bottomStyleName = "padding-bottom";
 
         if (this.target.tagName === "HR") {
-            nClass = "mt";
-            nProp = "margin-top";
-            sClass = "mb";
-            sProp = "margin-bottom";
+            topClass = "mt";
+            topStyleName = "margin-top";
+            bottomClass = "mb";
+            bottomStyleName = "margin-bottom";
         }
 
-        var grid = [];
-        for (var i = 0; i <= 256 / 8; i++) {
-            grid.push(i * 8);
+        const values = [0, 4];
+        for (let i = 1; i <= 256 / 8; i++) {
+            values.push(i * 8);
         }
-        grid.splice(1, 0, 4);
-        this.grid = {
-            n: [grid.map((v) => nClass + v), grid, nProp],
-            s: [grid.map((v) => sClass + v), grid, sProp],
+
+        return {
+            top: { classes: values.map((v) => topClass + v), values, styleName: topStyleName },
+            bottom: {
+                classes: values.map((v) => bottomClass + v),
+                values,
+                styleName: bottomStyleName,
+            },
         };
-        return this.grid;
+    }
+
+    getSpacingIndexFromTarget(direction) {
+        // Find the index of the current padding class applied to the target
+        const spacingConfig = this.spacingConfig[direction];
+        const styleName = spacingConfig.styleName;
+        for (let i = 0; i < spacingConfig.classes.length; i++) {
+            const paddingClass = spacingConfig.classes[i];
+            const paddingValue = spacingConfig.values[i];
+            if (
+                this.target.classList.contains(paddingClass) ||
+                window.getComputedStyle(this.target).getPropertyValue(styleName) ===
+                    paddingValue + "px"
+            ) {
+                return i;
+            }
+        }
     }
 
     getCurrentDirection(handleElement) {
         const handleClasses = handleElement.classList;
-        if (handleClasses.contains("n")) {
-            return "n";
-        } else if (handleClasses.contains("s")) {
-            return "s";
-        } else if (handleClasses.contains("e")) {
-            return "e";
-        } else if (handleClasses.contains("w")) {
-            return "w";
-        } else if (handleClasses.contains("nw")) {
-            return "nw";
-        } else if (handleClasses.contains("ne")) {
-            return "ne";
-        } else if (handleClasses.contains("sw")) {
-            return "sw";
-        } else if (handleClasses.contains("se")) {
-            return "se";
+        if (handleClasses.contains("top")) {
+            return "top";
+        } else if (handleClasses.contains("bottom")) {
+            return "bottom";
+        } else if (handleClasses.contains("end")) {
+            return "end";
+        } else if (handleClasses.contains("start")) {
+            return "start";
         } else {
             return "";
         }
