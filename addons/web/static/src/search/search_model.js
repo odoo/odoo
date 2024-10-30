@@ -262,6 +262,7 @@ export class SearchModel extends EventBus {
             this._importState(config.state);
             this.__legacyParseSearchPanelArchAnyway(searchViewDescription, searchViewFields);
             this.display = this._getDisplay(config.display);
+            this._reconciliateFavorites();
             if (!this.searchPanelInfo.loaded) {
                 return this._reloadSections();
             }
@@ -598,31 +599,6 @@ export class SearchModel extends EventBus {
         });
         this._checkOrderByCountStatus();
         this._notify();
-    }
-
-    /**
-     * Delete a filter of type 'favorite' with given this.nextId server side and
-     * in control panel model. Of course the filter is also removed
-     * from the search query.
-     */
-    async deleteFavorite(favoriteId) {
-        const searchItem = this.searchItems[favoriteId];
-        if (searchItem.type !== "favorite") {
-            return;
-        }
-        await this._deleteIrFilters(searchItem);
-        const index = this.query.findIndex((queryElem) => queryElem.searchItemId === favoriteId);
-        delete this.searchItems[favoriteId];
-        if (index >= 0) {
-            this.query.splice(index, 1);
-        }
-        this._notify();
-    }
-
-    async _deleteIrFilters(searchItem) {
-        const { serverSideId } = searchItem;
-        await this.orm.unlink("ir.filters", [serverSideId]);
-        this.env.bus.trigger("CLEAR-CACHES");
     }
 
     /**
@@ -2178,6 +2154,32 @@ export class SearchModel extends EventBus {
         await this._reloadSections();
 
         this.trigger("update");
+    }
+
+    /**
+     * Reconciliate the search items with the ir.filters.
+     * @private
+     */
+    _reconciliateFavorites() {
+        const irFilters = this.irFilters || [];
+        const mapping = Object.fromEntries(irFilters.map((i) => [i.id, i]));
+        for (const item of Object.values(this.searchItems)) {
+            if (item.type !== "favorite") {
+                continue;
+            }
+            const irFilter = mapping[item.serverSideId];
+            if (irFilter) {
+                Object.assign(item, this._irFilterToFavorite(irFilter));
+                delete mapping[item.serverSideId];
+            } else {
+                const queryIndex = this.query.findIndex((q) => q.searchItemId === item.id);
+                if (queryIndex !== -1) {
+                    this.query.splice(queryIndex, 1);
+                }
+                delete this.searchItems[item.id];
+            }
+        }
+        this._createGroupOfFavorites(Object.values(mapping));
     }
 
     /**

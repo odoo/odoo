@@ -5,22 +5,39 @@
             <field name="model">ir.filters</field>
             <field name="arch" type="xml">
                 <form string="Filters">
-                  <sheet>
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="user_id" string="Available for User"/>
-                        <field name="model_id"/>
-                        <field name="is_default"/>
-                        <field name="action_id"/>
-                        <field name="active" widget="boolean_toggle"/>
-                    </group>
-                    <group>
-                        <field name="domain" widget="domain" options="{'model': 'model_id'}"/>
-                        <field name="context"/>
-                        <field name="sort"/>
-                    </group>
-                   </sheet>
+                    <field name="model_id" invisible="1"/> <!-- required for the domain widget model option when the user is not in debug -->
+                    <sheet>
+                        <div class="ribbon ribbon-top-right" invisible="active">
+                            <span class="text-bg-primary">Archived</span>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="user_id" string="Owner" placeholder="All users"/>
+                                <field name="is_default" widget="boolean_toggle"/>
+                                <field name="model_id" groups="base.group_no_one"/>
+                                <field name="action_id" groups="base.group_no_one"/>
+                            </group>
+                            <group>
+                                <field name="domain" widget="domain" options="{'foldable': True, 'model': 'model_id'}"/>
+                                <field name="context" groups="base.group_no_one"/>
+                                <field name="sort" groups="base.group_no_one"/>
+                            </group>
+                        </group>
+                    </sheet>
                 </form>
+            </field>
+        </record>
+        <record id="ir_filters_view_edit_form" model="ir.ui.view">
+            <field name="model">ir.filters</field>
+            <field name="inherit_id" ref="base.ir_filters_view_form"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="attributes">
+                    <attribute name="create">0</attribute>
+                </xpath>
+                <field name="action_id" position="replace"/>
+                <xpath expr="//group/field[@name='model_id']" position="replace"/>
             </field>
         </record>
         <record id="ir_filters_view_tree" model="ir.ui.view">

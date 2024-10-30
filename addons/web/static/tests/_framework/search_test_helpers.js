@@ -215,9 +215,9 @@ export async function toggleFavoriteMenu() {
 /**
  * @param {string} text
  */
-export async function deleteFavorite(text) {
+export async function editFavorite(text) {
     await ensureSearchBarMenu();
-    await contains(`.o_favorite_menu .o_menu_item:contains(/^${text}$/) i.fa-trash-o`).click();
+    await contains(`.o_favorite_menu .o_menu_item:contains(/^${text}$/) i.fa-pencil`).click();
 }
 
 export async function toggleSaveFavorite() {
