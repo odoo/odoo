@@ -1,4 +1,3 @@
-import { DynamicPlaceholderPlugin } from "@html_editor/others/dynamic_placeholder/dynamic_placeholder";
 import { ClipboardPlugin } from "./core/clipboard_plugin";
 import { CommentPlugin } from "./core/comment_plugin";
 import { DeletePlugin } from "./core/delete_plugin";
@@ -16,6 +15,7 @@ import { SelectionPlugin } from "./core/selection_plugin";
 import { ShortCutPlugin } from "./core/shortcut_plugin";
 import { SplitPlugin } from "./core/split_plugin";
 import { UserCommandPlugin } from "./core/user_command_plugin";
+import { AlignPlugin } from "./main/align_plugin";
 import { BannerPlugin } from "./main/banner_plugin";
 import { ChatGPTPlugin } from "./main/chatgpt/chatgpt_plugin";
 import { ColumnPlugin } from "./main/column_plugin";
@@ -24,7 +24,6 @@ import { ColorPlugin } from "./main/font/color_plugin";
 import { FontPlugin } from "./main/font/font_plugin";
 import { HintPlugin } from "./main/hint_plugin";
 import { InlineCodePlugin } from "./main/inline_code";
-import { AlignPlugin } from "./main/justify_plugin";
 import { LinkPastePlugin } from "./main/link/link_paste_plugin";
 import { LinkPlugin } from "./main/link/link_plugin";
 import { OdooLinkSelectionPlugin } from "./main/link/link_selection_odoo_plugin";
@@ -53,6 +52,7 @@ import { CollaborationOdooPlugin } from "./others/collaboration/collaboration_od
 import { CollaborationPlugin } from "./others/collaboration/collaboration_plugin";
 import { CollaborationSelectionAvatarPlugin } from "./others/collaboration/collaboration_selection_avatar_plugin";
 import { CollaborationSelectionPlugin } from "./others/collaboration/collaboration_selection_plugin";
+import { DynamicPlaceholderPlugin } from "./others/dynamic_placeholder_plugin";
 import { EmbeddedComponentPlugin } from "./others/embedded_component_plugin";
 import { ExcalidrawPlugin } from "@html_editor/others/embedded_components/plugins/excalidraw_plugin/excalidraw_plugin";
 import { FilePlugin } from "@html_editor/others/embedded_components/plugins/file_plugin/file_plugin";
