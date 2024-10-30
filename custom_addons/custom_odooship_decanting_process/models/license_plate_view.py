@@ -27,17 +27,17 @@ class LicensePlateOrders(models.Model):
                                                 string='Delivery Receipt Order')
     picking_id = fields.Many2one(
         comodel_name='stock.picking',
-        string='Receipt Order'
+        string='Receipt Order',
+        store=True
     )
-    partner_id = fields.Many2one(related='picking_id.partner_id', string='Customer')
+    partner_id = fields.Many2one(related='picking_id.partner_id', string='Customer', store=True)
     tenant_code_id = fields.Many2one(
-        'tenant.code.configuration',
         string='Tenant Code',
-        related='partner_id.tenant_code_id',
-        readonly=True
+        related='picking_id.tenant_code_id',
+        store=True
     )
-    site_code_id = fields.Many2one('site.code.configuration',
-                                   related='picking_id.site_code_id', string='Site Code')
+    site_code_id = fields.Many2one(related='picking_id.site_code_id', string='Site Code',
+                                   store=True)
     location_dest_id = fields.Many2one(related='picking_id.location_dest_id', string='Destination location')
 
 

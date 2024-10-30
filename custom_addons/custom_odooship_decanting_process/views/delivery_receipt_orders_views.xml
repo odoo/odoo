@@ -88,12 +88,12 @@
         <field name="model">delivery.receipt.orders</field>
         <field name="arch" type="xml">
             <search string="Delivery Receipt Orders">
+                <field name="name" string="Delivery Receipt Number"/>
+                <field name="picking_id" string="Receipt Number"/>
                 <!-- Filters -->
                 <filter name="filter_draft" string="Draft" domain="[('state', '=', 'draft')]"/>
                 <filter name="filter_in_progress" string="In Progress" domain="[('state', '=', 'in_progress')]"/>
                 <filter name="filter_done" string="Done" domain="[('state', '=', 'done')]"/>
-                <filter name="filter_automation_process" string="Automation Process" domain="[('process_type', '=', 'automation')]"/>
-                <filter name="filter_manual_process" string="Manual Process" domain="[('process_type', '=', 'manual')]"/>
 
                 <!-- Group By Options -->
                 <group expand="1" string="Group By">

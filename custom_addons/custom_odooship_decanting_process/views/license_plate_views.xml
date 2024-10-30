@@ -117,6 +117,8 @@
             <field name="model">license.plate.orders</field>
             <field name="arch" type="xml">
                 <search string="License Plate Orders">
+                    <field name="name" string="License Plate Barcode"/>
+                    <field name="picking_id" string="Receipt Number"/>
                     <!-- Filters -->
                     <filter name="filter_draft" string="Draft" domain="[('state', '=', 'draft')]"/>
                     <filter name="filter_in_progress" string="In Progress" domain="[('state', '=', 'in_progress')]"/>
