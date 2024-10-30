@@ -50,6 +50,9 @@ const {
         getPrototypeOf: $getPrototypeOf,
         hasOwn: $hasOwn,
     },
+    ontouchcancel,
+    ontouchend,
+    ontouchmove,
     ontouchstart,
     Reflect: { ownKeys: $ownKeys },
     Set,
@@ -57,6 +60,8 @@ const {
     Window,
     Worker,
 } = globalThis;
+
+const touchFunctions = { ontouchcancel, ontouchend, ontouchmove, ontouchstart };
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -217,7 +222,9 @@ export function cleanupWindow() {
     mockTitle = "";
 
     // Touch
-    globalThis.ontouchstart = ontouchstart;
+    for (const [fnName, originalFn] of $entries(touchFunctions)) {
+        globalThis[fnName] = originalFn;
+    }
 }
 
 export function getTitle() {
@@ -252,9 +259,13 @@ export function getViewPortWidth() {
  */
 export function mockTouch(setTouch) {
     if (setTouch) {
-        globalThis.ontouchstart ||= null;
+        for (const fnName in touchFunctions) {
+            globalThis[fnName] ||= null;
+        }
     } else {
-        delete globalThis.ontouchstart;
+        for (const fnName in touchFunctions) {
+            delete globalThis[fnName];
+        }
     }
 }
 
