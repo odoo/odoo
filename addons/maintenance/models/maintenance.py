@@ -145,7 +145,6 @@ class MaintenanceEquipment(models.Model):
                                   tracking=True, group_expand='_read_group_category_ids')
     partner_id = fields.Many2one('res.partner', string='Vendor', check_company=True)
     partner_ref = fields.Char('Vendor Reference')
-    location = fields.Char('Location')
     model = fields.Char('Model')
     serial_no = fields.Char('Serial Number', copy=False)
     assign_date = fields.Date('Assigned Date', tracking=True)
