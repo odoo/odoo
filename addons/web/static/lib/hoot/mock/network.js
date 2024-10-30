@@ -223,8 +223,6 @@ export async function mockedFetch(input, init) {
  * The return value of `fetchFn` is used as the response of the mocked fetch, or
  * wrapped in a {@link MockResponse} object if it does not meet the required format.
  *
- * Returns the function to restore the original behavior.
- *
  * @param {typeof mockFetchFn} [fetchFn]
  * @example
  *  mockFetch((input, init) => {
@@ -232,7 +230,7 @@ export async function mockedFetch(input, init) {
  *          return { records: [{ id: 3, name: "john" }] };
  *      }
  *      // ...
- *  }));
+ *  });
  * @example
  *  mockFetch((input, init) => {
  *      if (input === "/translations") {
@@ -242,7 +240,7 @@ export async function mockedFetch(input, init) {
  *          };
  *          return new Response(JSON.stringify(translations));
  *      }
- *  }));
+ *  });
  */
 export function mockFetch(fetchFn) {
     mockFetchFn = fetchFn;
@@ -252,9 +250,6 @@ export function mockFetch(fetchFn) {
  * Activates mock WebSocket classe:
  *  - websocket connections will be handled by `window.fetch` (see {@link mockFetch});
  *  - the `onWebSocketConnected` callback will be called after a websocket has been created.
- *
- * Returns a function to close all remaining websockets and to restore the original
- * behavior.
  *
  * @param {typeof mockWebSocketConnection} [onWebSocketConnected]
  */
@@ -267,8 +262,6 @@ export function mockWebSocket(onWebSocketConnected) {
  *  - actual code fetched by worker URLs will then be handled by `window.fetch`
  *  (see {@link mockFetch});
  *  - the `onWorkerConnected` callback will be called after a worker has been created.
- *
- * Returns a function to close all remaining workers and restore the original behavior.
  *
  * @param {typeof mockWorkerConnection} [onWorkerConnected]
  * @example
