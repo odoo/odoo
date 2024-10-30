@@ -86,6 +86,11 @@ export class ChatWindow extends Component {
     }
 
     onKeydown(ev) {
+        if (ev.key === "Escape" && this.threadActions.activeAction) {
+            this.threadActions.activeAction.close();
+            ev.stopPropagation();
+            return;
+        }
         if (ev.target.closest(".o-dropdown")) {
             return;
         }
