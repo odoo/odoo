@@ -14,7 +14,9 @@
                     <field string="Serial Number" name="serial_no" widget="statinfo"/>
                 </button>
             </button>
+            <xpath expr="//group[@name='service_info_group']/group[last()]" position="inside">
+                <field name="location_id" string="Used in location"/>
+            </xpath>
         </field>
     </record>
-
 </odoo>
