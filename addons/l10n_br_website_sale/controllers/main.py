@@ -39,7 +39,7 @@ class L10nBRWebsiteSale(WebsiteSale):
         rendering_values = super()._prepare_address_form_values(
             order_sudo, partner_sudo, *args, address_type=address_type, **kwargs
         )
-        if address_type == 'billing' and request.website.sudo().company_id.account_fiscal_country_id.code == 'BR':
+        if (kwargs.get('use_delivery_as_billing') and address_type == 'delivery' or address_type == 'billing') and request.website.sudo().company_id.account_fiscal_country_id.code == 'BR':
             can_edit_vat = rendering_values['can_edit_vat']
             LatamIdentificationType = request.env['l10n_latam.identification.type'].sudo()
             rendering_values.update({
