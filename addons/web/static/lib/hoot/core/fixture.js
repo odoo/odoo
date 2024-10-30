@@ -8,8 +8,11 @@ import {
 } from "@web/../lib/hoot-dom/helpers/dom";
 import { setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
 import { HootError } from "../hoot_utils";
+import { queryOne } from "@odoo/hoot-dom";
 
 /**
+ * @typedef {Parameters<typeof import("@odoo/owl").mount>} MountParameters
+ *
  * @typedef {{
  *  component: import("@odoo/owl").ComponentConstructor;
  *  props: unknown;
@@ -100,9 +103,9 @@ export function makeFixtureManager(runner) {
     };
 
     /**
-     * @param {Parameters<typeof import("@odoo/owl").mount>[0]} ComponentClass
-     * @param {Parameters<typeof import("@odoo/owl").mount>[2]} config
-     * @param {Parameters<typeof import("@odoo/owl").mount>[1]} [target]
+     * @param {MountParameters[0] | string} ComponentClass
+     * @param {MountParameters[2]} config
+     * @param {import("@odoo/hoot-dom").Target} [target]
      */
     const mountOnFixture = (ComponentClass, config, target) => {
         if (target && !fixture) {
@@ -125,7 +128,7 @@ export function makeFixtureManager(runner) {
 
         runner.after(() => destroy(app));
 
-        return app.mount(target || getFixture());
+        return app.mount(target ? queryOne(target) : getFixture());
     };
 
     const setupFixture = () => {
