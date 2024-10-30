@@ -9,8 +9,14 @@
         </QuantityButtons>
         <button name="sale_product_configurator_add_button" position="attributes">
             <attribute name="t-if">this.props.can_be_sold</attribute>
-            <attribute name="class" remove="btn-secondary" add="btn-light" separator=" "/>
+            <attribute name="class" remove="btn-secondary" add="btn-primary" separator=" "/>
         </button>
+        <xpath
+            expr="//button[@name='sale_product_configurator_add_button']/*[hasclass('fa-plus')]"
+            position="attributes"
+        >
+            <attribute name="class" remove="fa-plus" add="fa-shopping-cart" separator=" "/>
+        </xpath>
         <button name="sale_product_configurator_add_button" position="after">
             <t t-call="website_sale.not_for_sale"/>
         </button>
