@@ -116,7 +116,7 @@ class TestPDFQuoteBuilder(HttpCase, SaleCommon):
                 Command.create({'name': 'test tax'}), Command.create({'name': 'test tax2'})
             ]
         })
-        self.sale_order.commitment_date = datetime.datetime(2121, 12, 21, 12, 21, 12)
+        self.sale_order.commitment_date = datetime.datetime(2121, 12, 21, 1, 21, 12)
         expected_values = [
             "No",  # boolean
             self.sale_order.name,  # char
