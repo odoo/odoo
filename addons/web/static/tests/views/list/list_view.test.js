@@ -16246,3 +16246,48 @@ test("Pass context when duplicating data in list view", async () => {
     await toggleMenuItem("Duplicate");
     expect.verifySteps(["copy"]);
 });
+
+test(`properties do not disappear after domain change`, async () => {
+    const definition0 = {
+        type: "char",
+        name: "property_char",
+        string: "Property char",
+    };
+    Bar._records[0].definitions = [definition0];
+    for (const record of Foo._records) {
+        if (record.m2o === 1) {
+            record.properties = [{ ...definition0, value: "AA" }];
+        }
+    }
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list editable="bottom">
+                <field name="m2o"/>
+                <field name="properties"/>
+            </list>
+        `,
+        searchViewArch: `
+            <search>
+                <filter name="properties_filter" string="My filter" domain="[['properties.property_char', '=', 'AA']]"/>
+                <group>
+                    <!-- important -->
+                    <filter name="properties_groupby" string="My groupby" context="{'group_by':'properties'}"/>
+                </group>
+            </search>
+        `,
+    });
+
+    await contains(`.o_optional_columns_dropdown_toggle`).click();
+    await contains(`.o-dropdown-item input[type="checkbox"]`).click();
+    expect(`.o_list_renderer th[data-name="properties.property_char"]`).toHaveCount(1);
+
+    await toggleSearchBarMenu();
+    await toggleMenuItem("My filter");
+    expect(`.o_list_renderer th[data-name="properties.property_char"]`).toHaveCount(1);
+
+    await toggleMenuItem("My filter");
+    expect(`.o_list_renderer th[data-name="properties.property_char"]`).toHaveCount(1);
+});
