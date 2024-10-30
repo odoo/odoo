@@ -250,7 +250,11 @@ export const PublicRoot = publicWidget.Widget.extend({
      * @param {OdooEvent} ev
      */
     _onWidgetsStartRequest: function (ev) {
-        this._startWidgets(ev.data.$target, ev.data.options)
+        let $target = ev.data.$target;
+        if ($target && !($target instanceof jQuery)) {
+            $target = $($target);
+        }
+        this._startWidgets($target, ev.data.options)
             .then(ev.data.onSuccess)
             .catch((e) => {
                 if (ev.data.onFailure) {
