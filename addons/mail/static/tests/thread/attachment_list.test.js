@@ -68,6 +68,49 @@ test("layout with card details and filename and extension", async () => {
     await contains(".o-mail-AttachmentCard small", { text: "txt" });
 });
 
+test("link-type attachment should have open button instead of download button", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "channel1",
+    });
+    const attachment_ids = pyEnv["ir.attachment"].create([
+        {
+            name: "url.example",
+            mimetype: "text/plain",
+            type: "url",
+            url: "https://www.odoo.com",
+        },
+        {
+            name: "test.txt",
+            mimetype: "text/plain",
+        },
+    ]);
+    pyEnv["mail.message"].create({
+        attachment_ids,
+        body: "<p>Test</p>",
+        model: "discuss.channel",
+        res_id: channelId,
+        message_type: "comment",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-AttachmentCard", { count: 2 });
+    await contains(".o-mail-AttachmentCard:eq(0)", { text: "url.example" });
+    await contains(".o-mail-AttachmentCard:eq(1)", { text: "test.txt" });
+    await contains(
+        ".o-mail-AttachmentCard:eq(0) .o-mail-AttachmentCard-aside a[title='Open Link']"
+    );
+    await contains(
+        ".o-mail-AttachmentCard:eq(0) .o-mail-AttachmentCard-aside button[title='Download']",
+        { count: 0 }
+    );
+    await contains(
+        ".o-mail-AttachmentCard:eq(1) .o-mail-AttachmentCard-aside button[title='Download']"
+    );
+    await contains(`.o-mail-AttachmentCard-aside a[title='Open Link'][target='_blank']`);
+});
+
 test("clicking on the delete attachment button multiple times should do the rpc only once", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({

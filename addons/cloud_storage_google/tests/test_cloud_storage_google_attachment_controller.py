@@ -60,6 +60,8 @@ class TestCloudStorageAttachmentController(
                                 "size": 0,
                                 "thread": False,
                                 "voice": False,
+                                "type": "cloud_storage",
+                                "url": "[url]",
                             }
                         ],
                     },
