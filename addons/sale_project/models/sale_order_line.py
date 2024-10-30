@@ -274,6 +274,12 @@ class SaleOrderLine(models.Model):
         task.message_post(body=task_msg)
         return task
 
+    def _get_so_lines_task_global_project(self):
+        return self.filtered(lambda sol: sol.is_service and sol.product_id.service_tracking == 'task_global_project')
+
+    def _get_so_lines_new_project(self):
+        return self.filtered(lambda sol: sol.is_service and sol.product_id.service_tracking in ['project_only', 'task_in_project'])
+
     def _timesheet_service_generation(self):
         """ For service lines, create the task or the project. If already exists, it simply links
             the existing one to the line.
@@ -281,8 +287,8 @@ class SaleOrderLine(models.Model):
             new project/task. This explains the searches on 'sale_line_id' on project/task. This also
             implied if so line of generated task has been modified, we may regenerate it.
         """
-        so_line_task_global_project = self.filtered(lambda sol: sol.is_service and sol.product_id.service_tracking == 'task_global_project')
-        so_line_new_project = self.filtered(lambda sol: sol.is_service and sol.product_id.service_tracking in ['project_only', 'task_in_project'])
+        so_line_task_global_project = self._get_so_lines_task_global_project()
+        so_line_new_project = self._get_so_lines_new_project()
 
         # search so lines from SO of current so lines having their project generated, in order to check if the current one can
         # create its own project, or reuse the one of its order.
