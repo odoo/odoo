@@ -1331,7 +1331,7 @@ export function getActiveElement(node) {
  *  getFocusableElements();
  */
 export function getFocusableElements(options) {
-    const parent = options?.root || getDefaultRoot();
+    const parent = queryOne(options?.root || getDefaultRoot());
     if (typeof parent.querySelectorAll !== "function") {
         return [];
     }
@@ -1352,6 +1352,14 @@ export function getFocusableElements(options) {
 }
 
 /**
+ * @param {Target} target
+ * @returns {Element | null}
+ */
+export function getFocusableParent(target) {
+    return queryOne(target).closest(FOCUSABLE_SELECTOR);
+}
+
+/**
  * Returns the next focusable element after the current active element if it is
  * contained in the given parent.
  *
@@ -1362,8 +1370,8 @@ export function getFocusableElements(options) {
  *  getPreviousFocusableElement();
  */
 export function getNextFocusableElement(options) {
-    const parent = options?.root || getDefaultRoot();
-    const focusableEls = getFocusableElements(parent, options);
+    const parent = queryOne(options?.root || getDefaultRoot());
+    const focusableEls = getFocusableElements({ ...options, parent });
     const index = focusableEls.indexOf(getActiveElement(parent));
     return focusableEls[index + 1] || null;
 }
@@ -1398,8 +1406,8 @@ export function getParentFrame(node) {
  *  getPreviousFocusableElement();
  */
 export function getPreviousFocusableElement(options) {
-    const parent = options?.root || getDefaultRoot();
-    const focusableEls = getFocusableElements(parent, options);
+    const parent = queryOne(options?.root || getDefaultRoot());
+    const focusableEls = getFocusableElements({ ...options, parent });
     const index = focusableEls.indexOf(getActiveElement(parent));
     return index < 0 ? focusableEls.at(-1) : focusableEls[index - 1] || null;
 }

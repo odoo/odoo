@@ -1,7 +1,7 @@
 /** @odoo-module */
 
+import { getFocusableParent } from "@odoo/hoot-dom";
 import { Component, onWillRender, useRef, useState, xml } from "@odoo/owl";
-import { FOCUSABLE_SELECTOR } from "../../hoot-dom/helpers/dom";
 import { Suite } from "../core/suite";
 import { createUrlFromId } from "../core/url";
 import { lookup, normalize } from "../hoot_utils";
@@ -162,7 +162,7 @@ export class HootSideBar extends Component {
                             t-att-class="{ 'bg-gray-300 dark:bg-gray-700': uiState.selectedSuiteId === suite.id }"
                             t-attf-style="margin-left: {{ (suite.path.length - 1) + 'rem' }};"
                             t-attf-title="{{ suite.fullName }}\n- {{ suite.totalTestCount }} tests\n- {{ suite.totalSuiteCount }} suites"
-                            t-on-click="() => this.toggleItem(suite)"
+                            t-on-click="(ev) => this.onSuiteClick(ev, suite)"
                             t-on-keydown="(ev) => this.onSuiteKeydown(ev, suite)"
                         >
                             <div class="flex items-center truncate gap-1 flex-1">
@@ -296,7 +296,7 @@ export class HootSideBar extends Component {
      * @param {PointerEvent} ev
      */
     onClick(ev) {
-        if (!ev.target.closest(FOCUSABLE_SELECTOR)) {
+        if (!getFocusableParent(ev.target)) {
             // Unselect suite when clicking outside of a suite & in the side bar
             this.uiState.selectedSuiteId = null;
             this.uiState.resultsPage = 0;
@@ -314,6 +314,16 @@ export class HootSideBar extends Component {
                     suiteElements[0]?.focus();
                 }
             }
+        }
+    }
+
+    /**
+     * @param {PointerEvent} ev
+     * @param {Suite} suite
+     */
+    onSuiteClick({ currentTarget, target }, suite) {
+        if (getFocusableParent(target) === currentTarget) {
+            this.toggleItem(suite);
         }
     }
 

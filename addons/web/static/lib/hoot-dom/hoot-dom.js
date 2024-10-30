@@ -21,6 +21,7 @@ export {
     formatXml,
     getActiveElement,
     getFocusableElements,
+    getFocusableParent,
     getNextFocusableElement,
     getParentFrame,
     getPreviousFocusableElement,

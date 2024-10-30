@@ -40,7 +40,7 @@ export class HootConfigDropdown extends Component {
                 class="flex bg-btn rounded p-2 transition-colors"
                 title="Configuration"
             >
-                <i class="fa fa-cog" />
+                <i class="fa fa-cog transition" t-att-class="{ 'rotate-90': state.open }" />
             </button>
             <t t-if="state.open">
                 <form
