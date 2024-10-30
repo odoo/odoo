@@ -22,7 +22,7 @@ import { ColorPlugin } from "./main/font/color_plugin";
 import { FontPlugin } from "./main/font/font_plugin";
 import { HintPlugin } from "./main/hint_plugin";
 import { InlineCodePlugin } from "./main/inline_code";
-import { AlignPlugin } from "./main/justify_plugin";
+import { AlignPlugin } from "./main/align_plugin";
 import { LinkPastePlugin } from "./main/link/link_paste_plugin";
 import { LinkPlugin } from "./main/link/link_plugin";
 import { OdooLinkSelectionPlugin } from "./main/link/link_selection_odoo_plugin";
