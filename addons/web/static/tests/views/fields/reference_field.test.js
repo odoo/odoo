@@ -584,13 +584,8 @@ test("ReferenceField on char field, reset by onchange", async () => {
     Partner._records[0].foo = "product,37";
     Partner._onChanges.int_field = (obj) => (obj.foo = "product," + obj.int_field);
     let nbNameGet = 0;
-    onRpc(({ model, method, args }) => {
-        if (
-            model === "product" &&
-            method === "read" &&
-            args[1].length === 1 &&
-            args[1][0] === "display_name"
-        ) {
+    onRpc("product", "read", ({ args }) => {
+        if (args[1].length === 1 && args[1][0] === "display_name") {
             nbNameGet++;
         }
     });

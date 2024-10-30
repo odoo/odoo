@@ -252,7 +252,7 @@ test.tags("desktop")("execute a new action while loading a lazy-loaded controlle
 
 test.tags("desktop")("execute a new action while handling a call_button", async () => {
     const def = new Deferred();
-    onRpc("/web/dataset/call_button", async () => {
+    onRpc("/web/dataset/call_button/*", async () => {
         await def;
         return {
             name: "Partners Action 1",

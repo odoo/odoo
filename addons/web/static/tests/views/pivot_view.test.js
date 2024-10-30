@@ -3634,12 +3634,10 @@ test.tags("desktop")("pivot is reloaded when leaving and coming back", async () 
     Partner._views["search,false"] = `<search/>`;
     Partner._views["list,false"] = `<list><field name="foo"/></list>`;
 
-    onRpc(({ method, model }) => {
-        if (model === "partner") {
-            expect.step(method);
-        }
+    onRpc("partner", "*", ({ method }) => {
+        expect.step(method);
     });
-    onRpc("/web/webclient/load_menus", () => {
+    onRpc("/web/webclient/load_menus/*", () => {
         expect.step("/web/webclient/load_menus");
     });
 

@@ -1794,7 +1794,7 @@ test.tags("desktop")("quick created records in grouped kanban are on displayed t
 
 test.tags("desktop")("quick create record without quick_create_view", async () => {
     stepAllNetworkCalls();
-    onRpc("name_create", ({ args, method }) => {
+    onRpc("name_create", ({ args }) => {
         expect(args[0]).toBe("new partner");
     });
 
@@ -2099,7 +2099,7 @@ test.tags("desktop")("quick create record in grouped on m2o (no quick_create_vie
     expect.assertions(6);
 
     stepAllNetworkCalls();
-    onRpc("name_create", ({ method, args, kwargs }) => {
+    onRpc("name_create", ({ args, kwargs }) => {
         expect(args[0]).toBe("new partner");
         const { default_product_id, default_float_field } = kwargs.context;
         expect(default_product_id).toBe(3);
@@ -2212,7 +2212,7 @@ test.tags("desktop")("quick create record in grouped on m2o (with quick_create_v
 
 test("quick create record in grouped on m2m (no quick_create_view)", async () => {
     stepAllNetworkCalls();
-    onRpc("name_create", ({ method, args, kwargs }) => {
+    onRpc("name_create", ({ args, kwargs }) => {
         expect(args[0]).toBe("new partner");
         expect(kwargs.context.default_category_ids).toEqual([6]);
     });
@@ -2256,7 +2256,7 @@ test("quick create record in grouped on m2m (no quick_create_view)", async () =>
 
 test.tags("desktop")("quick create record in grouped on m2m in the None column", async () => {
     stepAllNetworkCalls();
-    onRpc("name_create", ({ method, args, kwargs }) => {
+    onRpc("name_create", ({ args, kwargs }) => {
         expect(args[0]).toBe("new partner");
         expect(kwargs.context.default_category_ids).toBe(false);
     });
@@ -4011,11 +4011,7 @@ test("quick create record in grouped by selection field (within quick_create_vie
 
 test.tags("desktop")("quick create record while adding a new column", async () => {
     const def = new Deferred();
-    onRpc(({ method, model }) => {
-        if (method === "name_create" && model === "product") {
-            return def;
-        }
-    });
+    onRpc("product", "name_create", () => def);
 
     await mountView({
         type: "kanban",
@@ -4643,10 +4639,8 @@ test.tags("desktop")("drag and drop a record, grouped by selection", async () =>
         expect.step("resequence");
         return true;
     });
-    onRpc(({ model, method, args }) => {
-        if (model === "partner" && method === "web_save") {
-            expect(args[1]).toEqual({ state: "abc" });
-        }
+    onRpc("partner", "web_save", ({ args }) => {
+        expect(args[1]).toEqual({ state: "abc" });
     });
 
     await mountView({
@@ -4693,10 +4687,8 @@ test.tags("desktop")("prevent drag and drop of record if grouped by readonly", a
     Partner._fields.product_id = fields.Many2one({ relation: "product", readonly: true });
 
     onRpc("/web/dataset/resequence", () => true);
-    onRpc(({ model, method }) => {
-        if (model === "partner" && method === "write") {
-            expect.step("should not be called");
-        }
+    onRpc("partner", "write", () => {
+        expect.step("should not be called");
     });
 
     await mountView({
@@ -5045,10 +5037,8 @@ test("completely prevent drag and drop if records_draggable set to false", async
 test.tags("desktop")("prevent drag and drop of record if save fails", async () => {
     expect.errors(1);
 
-    onRpc(({ model, method }) => {
-        if (model === "partner" && method === "web_save") {
-            throw new Error("Save failed");
-        }
+    onRpc("partner", "web_save", () => {
+        throw new Error("Save failed");
     });
     await mountView({
         type: "kanban",
@@ -6102,13 +6092,6 @@ test("quick create column with x_name as _rec_name", async () => {
         { id: 5, x_name: "xmo" },
     ];
 
-    onRpc(({ model, method, args }) => {
-        if (model == "product" && method === "name_create") {
-            Product._records.push({ id: 6, x_name: args[0] });
-            return Promise.resolve([6, args[0]]);
-        }
-    });
-
     await mountView({
         type: "kanban",
         resModel: "partner",
@@ -6190,10 +6173,8 @@ test.tags("desktop")("quick create column and examples: with folded columns", as
     Partner._records = [];
     Product._fields.folded = fields.Boolean();
 
-    onRpc(({ model, method, args }) => {
-        if (method === "name_create" || method == "write") {
-            expect.step(`${method} (model: ${model}):${JSON.stringify(args)}`);
-        }
+    onRpc(["name_create", "write"], ({ model, method, args }) => {
+        expect.step(`${method} (model: ${model}):${JSON.stringify(args)}`);
     });
 
     await mountView({
@@ -10236,11 +10217,10 @@ test.tags("desktop")("set cover image", async () => {
         relation: "ir.attachment",
     });
 
-    onRpc(({ model, method, args }) => {
-        if (model === "partner" && method === "web_save") {
-            expect.step(String(args[0][0]));
-        }
+    onRpc("partner", "web_save", ({ args }) => {
+        expect.step(args[0][0]);
     });
+
     await mountView({
         type: "kanban",
         resModel: "partner",
@@ -10301,7 +10281,7 @@ test.tags("desktop")("set cover image", async () => {
     await contains(".o_kanban_record:first-child .o_attachment_image").click(); //Not sure, to discuss
 
     // should writes on both kanban records
-    expect.verifySteps(["1", "2"]);
+    expect.verifySteps([1, 2]);
 });
 
 test.tags("desktop")("open file explorer if no cover image", async () => {
@@ -10382,12 +10362,11 @@ test.tags("desktop")("unset cover image", async () => {
     Partner._records[0].displayed_image_id = 1;
     Partner._records[1].displayed_image_id = 2;
 
-    onRpc(({ model, method, args }) => {
-        if (model === "partner" && method === "web_save") {
-            expect.step(String(args[0][0]));
-            expect(args[1].displayed_image_id).toBe(false);
-        }
+    onRpc("partner", "web_save", ({ args }) => {
+        expect.step(args[0][0]);
+        expect(args[1].displayed_image_id).toBe(false);
     });
+
     await mountView({
         type: "kanban",
         resModel: "partner",
@@ -10440,7 +10419,7 @@ test.tags("desktop")("unset cover image", async () => {
         message: "The cover image should be removed.",
     });
     // should writes on both kanban records
-    expect.verifySteps(["1", "2"]);
+    expect.verifySteps([1, 2]);
 });
 
 test.tags("desktop")("ungrouped kanban with handle field", async () => {

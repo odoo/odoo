@@ -196,7 +196,7 @@ describe("new", () => {
             },
         ]);
 
-        onRpc("/web/dataset/call_button", async (request) => {
+        onRpc("/web/dataset/call_button/*", async (request) => {
             const { params } = await request.json();
             if (params.method === "some_method") {
                 return {
@@ -253,7 +253,7 @@ describe("new", () => {
             },
         ]);
 
-        onRpc("/web/dataset/call_button", async (request) => {
+        onRpc("/web/dataset/call_button/*", async (request) => {
             const { params } = await request.json();
             if (params.method === "some_method") {
                 return {
