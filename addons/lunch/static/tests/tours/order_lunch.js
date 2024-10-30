@@ -41,10 +41,13 @@ tour.register('order_lunch_tour', {
     trigger: 'button[name="add_to_cart"]',
     content: _t("Add your order to the cart."),
     position: 'bottom',
-},
-{
+}, {
     trigger: 'button:contains("Order Now")',
     content: _t("Validate your order"),
     position: 'left',
     run: 'click',
+}, {
+    trigger: '.o_lunch_widget_lines .badge:contains("Ordered")',
+    content: 'Check that order is ordered',
+    run: () => {}
 }]);
