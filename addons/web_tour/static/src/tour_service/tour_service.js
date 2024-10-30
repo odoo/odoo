@@ -93,16 +93,27 @@ export const tourService = {
         }
 
         function getTourFromRegistry(tourName) {
-            const tour = tourRegistry.getEntries().findLast(([n, t]) => t.saveAs == tourName) || [
-                tourName,
-                tourRegistry.get(tourName),
-            ];
+            let tour = null;
+            if (tourRegistry.contains(tourName)) {
+                tour = tourRegistry.get(tourName);
+            }
+            const tourFromSaveAs = tourRegistry
+                .getEntries()
+                .findLast(([n, t]) => t.saveAs == tourName);
+            if (tourFromSaveAs) {
+                tourName = tourFromSaveAs[0];
+                tour = tourFromSaveAs[1];
+            }
+
+            if (!tour) {
+                return;
+            }
 
             return {
-                ...tour[1],
-                steps: tour[1].steps(),
-                name: tour[0],
-                wait_for: tour[1].wait_for || Promise.resolve(),
+                ...tour,
+                steps: tour.steps(),
+                name: tourName,
+                wait_for: tour.wait_for || Promise.resolve(),
             };
         }
 
@@ -133,10 +144,15 @@ export const tourService = {
 
         async function startTour(tourName, options = {}) {
             pointer.stop();
-            const tour = options.fromDB
-                ? { name: tourName, url: options.url }
-                : getTourFromRegistry(tourName);
+            const tourFromRegistry = getTourFromRegistry(tourName);
 
+            if (!tourFromRegistry && !options.fromDB) {
+                // Sometime tours are not loaded depending on the modules.
+                // For example, point_of_sale do not load all tours assets.
+                return;
+            }
+
+            const tour = options.fromDB ? { name: tourName, url: options.url } : tourFromRegistry;
             if (!session.is_public && !toursEnabled && options.mode === "manual") {
                 toursEnabled = await orm.call("res.users", "switch_tour_enabled", [!toursEnabled]);
             }
