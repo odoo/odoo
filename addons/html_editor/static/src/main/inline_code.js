@@ -1,10 +1,11 @@
 import { Plugin } from "@html_editor/plugin";
+import { splitTextNode } from "@html_editor/utils/dom";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { DIRECTIONS } from "@html_editor/utils/position";
 
 export class InlineCodePlugin extends Plugin {
     static name = "inline_code";
-    static dependencies = ["selection", "history", "split"];
+    static dependencies = ["selection", "history"];
     resources = {
         input_handlers: this.onInput.bind(this),
     };
@@ -57,10 +58,10 @@ export class InlineCodePlugin extends Plugin {
             // Split around the backticks if needed so text starts
             // and ends with a backtick.
             if (endOffset && endOffset < textNode.textContent.length) {
-                this.shared.splitTextNode(textNode, endOffset + 1, DIRECTIONS.LEFT);
+                splitTextNode(textNode, endOffset + 1, DIRECTIONS.LEFT);
             }
             if (startOffset) {
-                this.shared.splitTextNode(textNode, startOffset);
+                splitTextNode(textNode, startOffset);
             }
             // Remove ticks.
             textNode.textContent = textNode.textContent.substring(
