@@ -1,6 +1,11 @@
 import { describe, expect, test } from "@odoo/hoot";
-
-import { defineModels, fields, makeMockServer, models } from "@web/../tests/web_test_helpers";
+import {
+    defineModels,
+    fields,
+    makeMockServer,
+    models,
+    onRpc,
+} from "@web/../tests/web_test_helpers";
 
 class Partner extends models.Model {
     _name = "res.partner";
@@ -171,6 +176,72 @@ const ormRequest = async (params) => {
 };
 
 describe.current.tags("headless");
+
+test("onRpc: normal result", async () => {
+    onRpc("/get_result", () => "result");
+
+    await makeMockServer();
+
+    const response = await fetch("/get_result");
+
+    expect(response).toBeInstanceOf(Response);
+
+    await expect(response.json()).resolves.toEqual({ result: "result", error: null });
+});
+
+test("onRpc: error handling", async () => {
+    class CustomError extends Error {
+        name = "CustomError";
+    }
+
+    onRpc("/boom", () => {
+        throw new CustomError("boom");
+    });
+
+    await makeMockServer();
+
+    const response = await fetch("/boom");
+
+    expect(response).toBeInstanceOf(Response);
+
+    await expect(response.json()).resolves.toEqual({
+        result: null,
+        error: {
+            code: 418,
+            data: {
+                name: "CustomError",
+            },
+            message: "boom",
+            type: "CustomError",
+        },
+    });
+});
+
+test("onRpc: pure, normal result", async () => {
+    onRpc("/get_result", () => "result", { pure: true });
+
+    await makeMockServer();
+
+    const response = await fetch("/get_result");
+
+    expect(response).toBeInstanceOf(Response);
+
+    await expect(response.text()).resolves.toBe("result");
+});
+
+test("onRpc: pure, error handling", async () => {
+    onRpc(
+        "/boom",
+        () => {
+            throw new Error("boom");
+        },
+        { pure: true }
+    );
+
+    await makeMockServer();
+
+    await expect(fetch("/boom")).rejects.toThrow("boom");
+});
 
 test("performRPC: search with active_test=false", async () => {
     await makeMockServer();

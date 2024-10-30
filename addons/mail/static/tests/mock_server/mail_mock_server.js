@@ -744,7 +744,7 @@ async function mail_message_update_content(request) {
     ).get_result();
 }
 
-registerRoute("/discuss/channel/:cid/partner/:pid/avatar_128", partnerAvatar128);
+registerRoute("/discuss/channel/<int:cid>/partner/<int:pid>/avatar_128", partnerAvatar128);
 /** @type {RouteCallback} */
 async function partnerAvatar128(request, { cid, pid }) {
     return [cid, pid];
