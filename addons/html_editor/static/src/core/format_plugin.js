@@ -26,7 +26,7 @@ function isFormatted(formatPlugin, format) {
 
 export class FormatPlugin extends Plugin {
     static id = "format";
-    static dependencies = ["selection", "history", "split", "delete"];
+    static dependencies = ["selection", "history", "split"];
     // TODO ABD: refactor to handle Knowledge comments inside this plugin without sharing mergeAdjacentInlines.
     static shared = ["isSelectionFormat", "insertAndSelectZws", "mergeAdjacentInlines"];
     resources = {
@@ -489,10 +489,12 @@ export class FormatPlugin extends Plugin {
     }
 
     shouldBeMergedWithPreviousSibling(node) {
+        const isMergeable = (node) =>
+            !this.getResource("isUnsplittable").some((predicate) => predicate(node));
         return (
             !isSelfClosingElement(node) &&
             areSimilarElements(node, node.previousSibling) &&
-            !this.dependencies.delete.isUnmergeable(node)
+            isMergeable(node)
         );
     }
 }

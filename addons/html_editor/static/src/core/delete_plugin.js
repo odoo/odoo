@@ -53,7 +53,7 @@ import { withSequence } from "@html_editor/utils/resource";
 export class DeletePlugin extends Plugin {
     static dependencies = ["selection", "history"];
     static id = "delete";
-    static shared = ["deleteRange", "isUnmergeable", "deleteSelection"];
+    static shared = ["deleteRange", "deleteSelection"];
     resources = {
         beforeinput_handlers: [
             withSequence(5, this.onBeforeInputInsertText.bind(this)),
