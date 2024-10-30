@@ -383,7 +383,7 @@
                         <label for="name"/>
                         <h1><field name="name" string="Name" placeholder="e.g. LED Monitor"/></h1>
                     </div>
-                    <group>
+                    <group name="service_info_group">
                         <group>
                             <field name="active" invisible="1"/>
                             <field name="category_id" options="{&quot;no_open&quot;: True}" context="{'default_company_id':company_id}"/>
@@ -395,7 +395,6 @@
                             <field name="technician_user_id" domain="[('share', '=', False)]"/>
                             <field name="assign_date" groups="base.group_no_one"/>
                             <field name="scrap_date" groups="base.group_no_one"/>
-                            <field name="location" string="Used in location"/>
                         </group>
                     </group>
                     <field name="equipment_properties" nolabel="1" columns="2"/>
