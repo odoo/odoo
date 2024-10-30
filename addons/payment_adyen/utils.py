@@ -1,4 +1,3 @@
-
 from odoo.addons.payment import utils as payment_utils
 
 

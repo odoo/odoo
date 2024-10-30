@@ -9,10 +9,11 @@ from wsgiref.handlers import format_date_time
 
 import requests
 
-from odoo import _, fields, models
-from odoo.exceptions import ValidationError
+from odoo import fields, models
 from odoo.fields import Datetime
 
+from odoo.addons.payment import const as payment_const
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_worldline import const
 
 
@@ -59,7 +60,6 @@ class PaymentProvider(models.Model):
         :param str idempotency_key: The idempotency key to pass in the request.
         :return: The JSON-formatted content of the response.
         :rtype: dict
-        :raise ValidationError: If an HTTP error occurs.
         """
         self.ensure_one()
 
@@ -79,25 +79,20 @@ class PaymentProvider(models.Model):
         if method == 'POST' and idempotency_key:
             headers['X-GCS-Idempotence-Key'] = idempotency_key
         try:
-            response = requests.request(method, url, json=payload, headers=headers, timeout=10)
-            try:
-                if response.status_code not in const.VALID_RESPONSE_CODES:
-                    response.raise_for_status()
-            except requests.exceptions.HTTPError:
-                _logger.exception(
-                    "Invalid API request at %s with data:\n%s", url, pprint.pformat(payload)
-                )
-                msg = ', '.join(
-                    [error.get('message', '') for error in response.json().get('errors', [])]
-                )
-                raise ValidationError(
-                    "Worldline: " + _("The communication with the API failed. Details: %s", msg)
-                )
-        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
-            _logger.exception("Unable to reach endpoint at %s", url)
-            raise ValidationError(
-                "Worldline: " + _("Could not establish the connection to the API.")
+            response = requests.request(
+                method, url, json=payload, headers=headers, timeout=payment_const.TIMEOUT
             )
+            if response.status_code not in const.VALID_RESPONSE_CODES:
+                response.raise_for_status()
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
+            _logger.exception(payment_const.UNABLE_TO_REACH_ENDPOINT, url)
+            return payment_utils.format_error_response(payment_const.API_CONNECTION_ERROR)
+        except requests.exceptions.HTTPError as err:
+            msg = ', '.join(
+                [error.get('message', '') for error in err.response.json().get('errors', [])]
+            )
+            _logger.exception(payment_const.INVALID_API_REQUEST, url, payload, msg)
+            return payment_utils.format_error_response(payment_const.API_COMMUNICATION_ERROR + msg)
         return response.json()
 
     def _worldline_get_api_url(self):

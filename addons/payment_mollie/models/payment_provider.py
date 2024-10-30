@@ -7,8 +7,9 @@ import requests
 from werkzeug import urls
 
 from odoo import _, fields, models, service
-from odoo.exceptions import ValidationError
 
+from odoo.addons.payment import const as payment_const
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_mollie import const
 
 
@@ -65,23 +66,17 @@ class PaymentProvider(models.Model):
         }
 
         try:
-            response = requests.request(method, url, json=data, headers=headers, timeout=60)
-            try:
-                response.raise_for_status()
-            except requests.exceptions.HTTPError:
-                _logger.exception(
-                    "Invalid API request at %s with data:\n%s", url, pprint.pformat(data)
-                )
-                raise ValidationError(
-                    "Mollie: " + _(
-                        "The communication with the API failed. Mollie gave us the following "
-                        "information: %s", response.json().get('detail', '')
-                    ))
-        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
-            _logger.exception("Unable to reach endpoint at %s", url)
-            raise ValidationError(
-                "Mollie: " + _("Could not establish the connection to the API.")
+            response = requests.request(
+                method, url, json=data, headers=headers, timeout=payment_const.TIMEOUT
             )
+            response.raise_for_status()
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
+            _logger.exception(payment_const.UNABLE_TO_REACH_ENDPOINT, url)
+            return payment_utils.format_error_response(payment_const.API_CONNECTION_ERROR)
+        except requests.exceptions.HTTPError as err:
+            _logger.exception(payment_const.INVALID_API_REQUEST, url, data, err.response.text)
+            msg = err.response.json().get('detail', '')
+            return payment_utils.format_error_response(payment_const.API_COMMUNICATION_ERROR + msg)
         return response.json()
 
     def _get_default_payment_method_codes(self):

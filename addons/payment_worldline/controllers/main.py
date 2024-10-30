@@ -9,9 +9,9 @@ from base64 import b64encode
 from werkzeug.exceptions import Forbidden
 
 from odoo import http
-from odoo.exceptions import ValidationError
 from odoo.http import request
 
+from odoo.addons.payment import utils as payment_utils
 
 _logger = logging.getLogger(__name__)
 
@@ -39,17 +39,18 @@ class WorldlineController(http.Controller):
         checkout_session_data = provider_sudo._worldline_make_request(
             f'hostedcheckouts/{data["hostedCheckoutId"]}', method='GET'
         )
-        _logger.info(
-            "Response of '/hostedcheckouts/<hostedCheckoutId>' request:\n%s",
-            pprint.pformat(checkout_session_data)
-        )
-        notification_data = checkout_session_data.get('createdPaymentOutput', {})
+        if not payment_utils.get_request_error(checkout_session_data):
+            _logger.info(
+                "Response of '/hostedcheckouts/<hostedCheckoutId>' request:\n%s",
+                pprint.pformat(checkout_session_data)
+            )
+            notification_data = checkout_session_data.get('createdPaymentOutput', {})
 
-        # Handle the notification data.
-        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
-            'worldline', notification_data
-        )
-        tx_sudo._handle_notification_data('worldline', notification_data)
+            # Handle the notification data.
+            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+                'worldline', notification_data
+            )
+            tx_sudo._handle_notification_data('worldline', notification_data)
         return request.redirect('/payment/status')
 
     @http.route(_webhook_url, type='http', auth='public', methods=['POST'], csrf=False)
@@ -65,19 +66,17 @@ class WorldlineController(http.Controller):
         _logger.info(
             "Notification received from Worldline with data:\n%s", pprint.pformat(notification_data)
         )
-        try:
-            # Check the integrity of the notification.
-            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
-                'worldline', notification_data
-            )
+        # Check the integrity of the notification.
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+            'worldline', notification_data
+        )
+        if tx_sudo:
             received_signature = request.httprequest.headers.get('X-GCS-Signature')
             request_data = request.httprequest.data
             self._verify_notification_signature(request_data, received_signature, tx_sudo)
 
             # Handle the notification data.
             tx_sudo._handle_notification_data('worldline', notification_data)
-        except ValidationError:  # Acknowledge the notification to avoid getting spammed.
-            _logger.exception("Unable to handle the notification data; skipping to acknowledge.")
 
         return request.make_json_response('')  # Acknowledge the notification.
 

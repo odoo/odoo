@@ -253,9 +253,10 @@ class PaymentTransaction(models.Model):
         :return: The action to open the partial capture wizard, if supported.
         :rtype: action.act_window|None
         """
+        self.ensure_one()
         payment_utils.check_rights_on_recordset(self)
 
-        if any(tx.provider_id.sudo().support_manual_capture == 'partial' for tx in self):
+        if self.provider_id.sudo().support_manual_capture == 'partial':
             return {
                 'name': _("Capture"),
                 'type': 'ir.actions.act_window',
@@ -269,24 +270,32 @@ class PaymentTransaction(models.Model):
                 },
             }
         else:
-            for tx in self.filtered(lambda tx: tx.state == 'authorized'):
+            if self.state == 'authorized':
                 # In sudo mode because we need to be able to read on provider fields.
-                tx.sudo()._send_capture_request()
+                child_tx = self.sudo()._send_capture_request()
+                if child_tx.state == 'error':
+                    return child_tx._get_failed_tx_notification_action()
 
     def action_void(self):
         """ Check the state of the transaction and request to have them voided. """
+        self.ensure_one()
         payment_utils.check_rights_on_recordset(self)
 
-        if any(tx.state != 'authorized' for tx in self):
-            raise ValidationError(_("Only authorized transactions can be voided."))
+        if self.state != 'authorized':
+            return payment_utils.get_user_notification_action(
+                _("Only authorized transactions can be voided.")
+            )
 
-        for tx in self:
-            # Consider all the confirmed partial capture (same operation as parent) child txs.
-            captured_amount = sum(child_tx.amount for child_tx in tx.child_transaction_ids.filtered(
-                lambda t: t.state == 'done' and t.operation == tx.operation
-            ))
-            # In sudo mode because we need to be able to read on provider fields.
-            tx.sudo()._send_void_request(amount_to_void=tx.amount - captured_amount)
+        # Consider all the confirmed partial capture (same operation as parent) child txs.
+        captured_amount = sum(
+            child_tx.amount for child_tx in self.child_transaction_ids.filtered(
+                lambda t: t.state == 'done' and t.operation == self.operation
+            )
+        )
+        # In sudo mode because we need to be able to read on provider fields.
+        void_tx = self.sudo()._send_void_request(amount_to_void=self.amount - captured_amount)
+        if void_tx.state == 'error':
+            return void_tx._get_failed_tx_notification_action()
 
     def action_refund(self, amount_to_refund=None):
         """ Check the state of the transactions and request their refund.
@@ -294,13 +303,23 @@ class PaymentTransaction(models.Model):
         :param float amount_to_refund: The amount to be refunded.
         :return: None
         """
-        if any(tx.state != 'done' for tx in self):
-            raise ValidationError(_("Only confirmed transactions can be refunded."))
+        self.ensure_one()
+        if self.state != 'done':
+            return payment_utils.get_user_notification_action(
+                _("Only confirmed transactions can be refunded.")
+            )
 
         payment_utils.check_rights_on_recordset(self)
-        for tx in self:
-            # In sudo mode because we need to be able to read on provider fields.
-            tx.sudo()._send_refund_request(amount_to_refund=amount_to_refund)
+        refund_tx = self.sudo()._send_refund_request(amount_to_refund=amount_to_refund)
+        if refund_tx.state == 'error':
+            return refund_tx._get_failed_tx_notification_action()
+
+    def _get_failed_tx_notification_action(self):
+        msg = _(
+            "Transaction with reference: %(ref)s failed.\nError: %(msg)s",
+            ref=self.reference, msg=self.state_message
+        )
+        return payment_utils.get_user_notification_action(msg)
 
     #=== BUSINESS METHODS - PAYMENT FLOW ===#
 
@@ -453,6 +472,14 @@ class PaymentTransaction(models.Model):
                 redirect_form_html = self.env['ir.qweb']._render(redirect_form_view.id, rendering_values)
                 processing_values.update(redirect_form_html=redirect_form_html)
 
+        # Include `state` and `state_message` after fetching all specific data
+        # if API call fails the tx state is 'error'
+        processing_values.update(
+            {
+                'state': self.state,
+                'state_message': self.state_message,
+            }
+        )
         return processing_values
 
     def _get_specific_processing_values(self, processing_values):
@@ -543,15 +570,17 @@ class PaymentTransaction(models.Model):
         Note: `self.ensure_one()`
 
         :param float amount_to_capture: The amount to capture.
-        :return: The created capture child transaction, if any.
+        :return: The created capture child transaction.
         :rtype: `payment.transaction`
         """
         self.ensure_one()
         self._ensure_provider_is_not_disabled()
 
-        if amount_to_capture and amount_to_capture != self.amount:
-            return self._create_child_transaction(amount_to_capture)
-        return self.env['payment.transaction']
+        capture_tx = self._create_child_transaction(amount_to_capture or self.amount)
+        # Do not log if there is only one child tx captured full amount to avoid polluting logs.
+        if capture_tx.source_transaction_id.amount != capture_tx.amount:
+            capture_tx._log_sent_message()
+        return capture_tx
 
     def _send_void_request(self, amount_to_void=None):
         """ Request the provider handling the transaction to void the payment.
@@ -564,16 +593,17 @@ class PaymentTransaction(models.Model):
         Note: `self.ensure_one()`
 
         :param float amount_to_void: The amount to be voided.
-        :return: The created void child transaction, if any.
-        :rtype: payment.transaction
+        :return: The created void child transaction.
+        :rtype: `payment.transaction`
         """
         self.ensure_one()
         self._ensure_provider_is_not_disabled()
 
-        if amount_to_void and amount_to_void != self.amount:
-            return self._create_child_transaction(amount_to_void)
-
-        return self.env['payment.transaction']
+        void_tx = self._create_child_transaction(amount_to_void or self.amount)
+        # Do not log if there is only one child tx voided full amount to avoid polluting logs.
+        if void_tx.source_transaction_id.amount != void_tx.amount:
+            void_tx._log_sent_message()
+        return void_tx
 
     def _ensure_provider_is_not_disabled(self):
         """ Ensure that the provider's state is not `disabled` before sending a request to its
@@ -633,7 +663,8 @@ class PaymentTransaction(models.Model):
         :rtype: recordset of `payment.transaction`
         """
         tx = self._get_tx_from_notification_data(provider_code, notification_data)
-        tx._process_notification_data(notification_data)
+        if tx:
+            tx._process_notification_data(notification_data)
         return tx
 
     def _get_tx_from_notification_data(self, provider_code, notification_data):
@@ -674,7 +705,7 @@ class PaymentTransaction(models.Model):
         :return: The updated transactions.
         :rtype: recordset of `payment.transaction`
         """
-        allowed_states = ('draft',)
+        allowed_states = ('draft', 'error')
         target_state = 'pending'
         txs_to_process = self._update_state(
             allowed_states + extra_allowed_states, target_state, state_message
@@ -691,7 +722,7 @@ class PaymentTransaction(models.Model):
         :return: The updated transactions.
         :rtype: recordset of `payment.transaction`
         """
-        allowed_states = ('draft', 'pending')
+        allowed_states = ('draft', 'pending', 'error')
         target_state = 'authorized'
         txs_to_process = self._update_state(
             allowed_states + extra_allowed_states, target_state, state_message
@@ -713,8 +744,11 @@ class PaymentTransaction(models.Model):
         txs_to_process = self._update_state(
             allowed_states + extra_allowed_states, target_state, state_message
         )
+        # Do not log if there is only one child tx voided full amount to avoid polluting logs.
+        txs_to_process.filtered(
+            lambda tx: tx.source_transaction_id.amount != tx.amount
+        )._log_received_message()
         txs_to_process._update_source_transaction_state()
-        txs_to_process._log_received_message()
         return txs_to_process
 
     def _set_canceled(self, state_message=None, extra_allowed_states=()):
@@ -726,13 +760,16 @@ class PaymentTransaction(models.Model):
         :return: The updated transactions.
         :rtype: recordset of `payment.transaction`
         """
-        allowed_states = ('draft', 'pending', 'authorized')
+        allowed_states = ('draft', 'pending', 'authorized', 'error')
         target_state = 'cancel'
         txs_to_process = self._update_state(
             allowed_states + extra_allowed_states, target_state, state_message
         )
+        # Do not log if there is only one child tx voided full amount to avoid polluting logs.
+        txs_to_process.filtered(
+            lambda tx: tx.source_transaction_id.amount != tx.amount
+        )._log_received_message()
         txs_to_process._update_source_transaction_state()
-        txs_to_process._log_received_message()
         return txs_to_process
 
     def _set_error(self, state_message, extra_allowed_states=()):
@@ -819,20 +856,23 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         for child_tx in self.filtered('source_transaction_id'):
-            sibling_txs = child_tx.source_transaction_id.child_transaction_ids.filtered(
+            source_tx = child_tx.source_transaction_id
+            sibling_txs = source_tx.child_transaction_ids.filtered(
                 lambda tx: tx.state in ['done', 'cancel'] and tx.operation == child_tx.operation
             )
             processed_amount = round(
                 sum(tx.amount for tx in sibling_txs), child_tx.currency_id.decimal_places
             )
-            if child_tx.source_transaction_id.amount == processed_amount:
-                state_message = _(
-                    "This transaction has been confirmed following the processing of its partial "
-                    "capture and partial void transactions (%(provider)s).",
-                    provider=child_tx.provider_id.name,
-                )
+            if source_tx.amount == processed_amount:
+                # Determine the target state based on child txs. If there is at least one capture tx
+                # among them set the source_tx to `done` else to `cancel`.
+                if any(sibling_tx.state == 'done' for sibling_tx in sibling_txs):
+                    target_state = 'done'
+                else:
+                    target_state = 'cancel'
                 # Call `_update_state` directly instead of `_set_authorized` to avoid looping.
-                child_tx.source_transaction_id._update_state(('authorized',), 'done', state_message)
+                source_tx._update_state(('authorized',), target_state, '')
+                source_tx._log_received_message()
 
     #=== BUSINESS METHODS - POST-PROCESSING ===#
 
@@ -927,30 +967,28 @@ class PaymentTransaction(models.Model):
         # Choose the message based on the payment flow.
         if self.operation in ('online_redirect', 'online_direct'):
             message = _(
-                "A transaction with reference %(ref)s has been initiated (%(provider_name)s).",
-                ref=self.reference, provider_name=self.provider_id.name
+                "A transaction with reference %(link)s has been initiated.",
+                link=self._get_html_link(),
             )
         elif self.operation == 'refund':
             formatted_amount = format_amount(self.env, -self.amount, self.currency_id)
             message = _(
                 "A refund request of %(amount)s has been sent. The payment will be created soon. "
-                "Refund transaction reference: %(ref)s (%(provider_name)s).",
-                amount=formatted_amount, ref=self.reference, provider_name=self.provider_id.name
+                "Refund transaction reference: %(link)s.",
+                amount=formatted_amount,
+                link=self._get_html_link(),
             )
         elif self.operation in ('online_token', 'offline'):
             message = _(
-                "A transaction with reference %(ref)s has been initiated using the payment method "
-                "%(token)s (%(provider_name)s).",
-                ref=self.reference,
+                "A transaction with reference %(link)s has been initiated using the payment method "
+                "%(token)s.",
+                link=self._get_html_link(),
                 token=self.token_id._build_display_name(),
-                provider_name=self.provider_id.name
             )
         else:  # 'validation'
             message = _(
-                "A transaction with reference %(ref)s has been initiated to save a new payment "
-                "method (%(provider_name)s)",
-                ref=self.reference,
-                provider_name=self.provider_id.name,
+                "A transaction with reference %(link)s has been initiated to save a new payment"
+                " method.", link=self._get_html_link()
             )
         return message
 
@@ -967,39 +1005,33 @@ class PaymentTransaction(models.Model):
         formatted_amount = format_amount(self.env, self.amount, self.currency_id)
         if self.state == 'pending':
             message = _(
-                ("The transaction with reference %(ref)s for %(amount)s "
-                "is pending (%(provider_name)s)."),
+                "The transaction with reference %(ref)s for %(amount)s is pending: (%(link)s).",
                 ref=self.reference,
                 amount=formatted_amount,
-                provider_name=self.provider_id.name
+                link=self._get_html_link(),
             )
         elif self.state == 'authorized':
             message = _(
-                "The transaction with reference %(ref)s for %(amount)s has been authorized "
-                "(%(provider_name)s).", ref=self.reference, amount=formatted_amount,
-                provider_name=self.provider_id.name
+                "The transaction with reference %(link)s for %(amount)s has been authorized.",
+                link=self._get_html_link(), amount=formatted_amount
             )
         elif self.state == 'done':
             message = _(
-                "The transaction with reference %(ref)s for %(amount)s has been confirmed "
-                "(%(provider_name)s).", ref=self.reference, amount=formatted_amount,
-                provider_name=self.provider_id.name
+                "The transaction with reference %(link)s for %(amount)s has been confirmed.",
+                link=self._get_html_link(), amount=formatted_amount
             )
         elif self.state == 'error':
             message = _(
-                "The transaction with reference %(ref)s for %(amount)s encountered an error"
-                " (%(provider_name)s).",
-                ref=self.reference, amount=formatted_amount, provider_name=self.provider_id.name
+                "The transaction with reference %(link)s for %(amount)s encountered an error.",
+                link=self._get_html_link(), amount=formatted_amount
             )
             if self.state_message:
                 message += Markup("<br/>") + _("Error: %s", self.state_message)
         else:
             message = _(
-                ("The transaction with reference %(ref)s for %(amount)s is canceled "
-                "(%(provider_name)s)."),
-                ref=self.reference,
+                "The transaction with reference %(link)s for %(amount)s is canceled.",
+                link=self._get_html_link(),
                 amount=formatted_amount,
-                provider_name=self.provider_id.name
             )
             if self.state_message:
                 message += Markup("<br/>") + _("Reason: %s", self.state_message)

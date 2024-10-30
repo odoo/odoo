@@ -4,8 +4,8 @@ import logging
 import pprint
 
 from odoo import _, fields, models
-from odoo.exceptions import ValidationError
 
+from odoo.addons.payment import const as payment_const
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_paypal import utils as paypal_utils
 from odoo.addons.payment_paypal.const import PAYMENT_STATUS_MAPPING
@@ -107,11 +107,10 @@ class PaymentTransaction(models.Model):
     def _get_tx_from_notification_data(self, provider_code, notification_data):
         """ Override of `payment` to find the transaction based on Paypal data.
 
-        :param str provider_code: The code of the provider that handled the transaction.
-        :param dict notification_data: The notification data sent by the provider.
-        :return: The transaction if found.
-        :rtype: payment.transaction
-        :raise ValidationError: If the data match no transaction.
+        :param str provider_code: The code of the provider that handled the transaction
+        :param dict notification_data: The notification data sent by the provider
+        :return: The transaction if found
+        :rtype: recordset of `payment.transaction`
         """
         tx = super()._get_tx_from_notification_data(provider_code, notification_data)
         if provider_code != 'paypal' or len(tx) == 1:
@@ -120,9 +119,7 @@ class PaymentTransaction(models.Model):
         reference = notification_data.get('reference_id')
         tx = self.search([('reference', '=', reference), ('provider_code', '=', 'paypal')])
         if not tx:
-            raise ValidationError(
-                "PayPal: " + _("No transaction found matching reference %s.", reference)
-            )
+            _logger.warning(payment_const.NO_TX_FOUND_EXCEPTION, reference)
         return tx
 
     def _process_notification_data(self, notification_data):
@@ -132,7 +129,6 @@ class PaymentTransaction(models.Model):
 
         :param dict notification_data: The notification data sent by the provider.
         :return: None
-        :raise ValidationError: If inconsistent data were received.
         """
         super()._process_notification_data(notification_data)
         if self.provider_code != 'paypal':
@@ -153,12 +149,11 @@ class PaymentTransaction(models.Model):
         txn_id = notification_data.get('id')
         txn_type = notification_data.get('txn_type')
         if not all((txn_id, txn_type)):
-            raise ValidationError(
-                "PayPal: " + _(
-                    "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s).",
-                    txn_id=txn_id, txn_type=txn_type
-                )
-            )
+            self._set_error(_(
+                "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s).",
+                txn_id=txn_id, txn_type=txn_type
+            ))
+            return
         self.provider_reference = txn_id
         self.paypal_type = txn_type
 
@@ -177,10 +172,5 @@ class PaymentTransaction(models.Model):
         elif payment_status in PAYMENT_STATUS_MAPPING['cancel']:
             self._set_canceled()
         else:
-            _logger.info(
-                "received data with invalid payment status (%s) for transaction with reference %s",
-                payment_status, self.reference
-            )
-            self._set_error(
-                "PayPal: " + _("Received data with invalid payment status: %s", payment_status)
-            )
+            _logger.info(payment_const.INVALID_PAYMENT_STATUS, payment_status, self.reference)
+            self._set_error(_("Received data with invalid payment status: %s", payment_status))

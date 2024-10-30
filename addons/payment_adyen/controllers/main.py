@@ -11,7 +11,6 @@ from werkzeug import urls
 from werkzeug.exceptions import Forbidden
 
 from odoo import _, http
-from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tools import py_to_js_locale
 
@@ -82,7 +81,7 @@ class AdyenController(http.Controller):
         if not payment_utils.check_access_token(
             access_token, reference, converted_amount, currency_id, partner_id
         ):
-            raise ValidationError("Adyen: " + _("Received tampered payment request data."))
+            return payment_utils.format_error_response(_("Received tampered payment request data."))
 
         # Prepare the payment request to Adyen
         provider_sudo = request.env['payment.provider'].sudo().browse(provider_id).exists()
@@ -136,6 +135,8 @@ class AdyenController(http.Controller):
         response_content = provider_sudo._adyen_make_request(
             endpoint='/payments', payload=data, method='POST', idempotency_key=idempotency_key
         )
+        if payment_utils.get_request_error(response_content):
+            return response_content
 
         # Handle the payment request response
         _logger.info(
@@ -165,6 +166,8 @@ class AdyenController(http.Controller):
         response_content = provider_sudo._adyen_make_request(
             endpoint='/payments/details', payload=payment_details, method='POST'
         )
+        if payment_utils.get_request_error(response_content):
+            return response_content
 
         # Handle the payment details request response
         _logger.info(
@@ -238,16 +241,12 @@ class AdyenController(http.Controller):
             _logger.info(
                 "notification received from Adyen with data:\n%s", pprint.pformat(notification_data)
             )
-            try:
-                # Check the integrity of the notification
-                tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
-                    'adyen', notification_data
-                )
-            except ValidationError:
-                # Warn rather than log the traceback to avoid noise when a POS payment notification
-                # is received and the corresponding `payment.transaction` record is not found.
-                _logger.warning("unable to find the transaction; skipping to acknowledge")
-            else:
+
+            # Check the integrity of the notification
+            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+                'adyen', notification_data
+            )
+            if tx_sudo:
                 self._verify_notification_signature(notification_data, tx_sudo)
 
                 # Check whether the event of the notification succeeded and reshape the notification
@@ -265,13 +264,8 @@ class AdyenController(http.Controller):
                     notification_data['resultCode'] = 'Error'
                 else:
                     continue  # Don't handle unsupported event codes and failed events
-                try:
-                    # Handle the notification data as if they were feedback of a S2S payment request
-                    tx_sudo._handle_notification_data('adyen', notification_data)
-                except ValidationError:  # Acknowledge the notification to avoid getting spammed
-                    _logger.exception(
-                        "unable to handle the notification data;skipping to acknowledge"
-                    )
+                # Handle the notification data as if they were feedback of a S2S payment request
+                tx_sudo._handle_notification_data('adyen', notification_data)
 
         return request.make_json_response('[accepted]')  # Acknowledge the notification
 

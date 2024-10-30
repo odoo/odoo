@@ -6,9 +6,9 @@ import pprint
 from werkzeug import urls
 
 from odoo import _, models
-from odoo.exceptions import ValidationError
 from odoo.tools import float_round
 
+from odoo.addons.payment import const as payment_const
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_xendit import const
 
@@ -115,14 +115,14 @@ class PaymentTransaction(models.Model):
         Note: self.ensure_one()
 
         :return: None
-        :raise UserError: If the transaction is not linked to a token.
         """
         super()._send_payment_request()
         if self.provider_code != 'xendit':
             return
 
         if not self.token_id:
-            raise ValidationError("Xendit: " + _("The transaction is not linked to a token."))
+            self._set_error(payment_const.TX_NOT_LINKED_TO_TOKEN_ERROR)
+            return
 
         self._xendit_create_charge(self.token_id.provider_ref)
 
@@ -146,7 +146,8 @@ class PaymentTransaction(models.Model):
         charge_notification_data = self.provider_id._xendit_make_request(
             'credit_card_charges', payload=payload
         )
-        self._handle_notification_data('xendit', charge_notification_data)
+        if not payment_utils.set_tx_error_from_response(self, charge_notification_data):
+            self._handle_notification_data('xendit', charge_notification_data)
 
     def _get_tx_from_notification_data(self, provider_code, notification_data):
         """ Override of `payment` to find the transaction based on the notification data.
@@ -155,8 +156,6 @@ class PaymentTransaction(models.Model):
         :param dict notification_data: The notification data sent by the provider.
         :return: The transaction if found.
         :rtype: payment.transaction
-        :raise ValidationError: If inconsistent data were received.
-        :raise ValidationError: If the data match no transaction.
         """
         tx = super()._get_tx_from_notification_data(provider_code, notification_data)
         if provider_code != 'xendit' or len(tx) == 1:
@@ -164,13 +163,12 @@ class PaymentTransaction(models.Model):
 
         reference = notification_data.get('external_id')
         if not reference:
-            raise ValidationError("Xendit: " + _("Received data with missing reference."))
+            _logger.warning(payment_const.MISSING_REFERENCE_ERROR)
+            return tx
 
         tx = self.search([('reference', '=', reference), ('provider_code', '=', 'xendit')])
         if not tx:
-            raise ValidationError(
-                "Xendit: " + _("No transaction found matching reference %s.", reference)
-            )
+            _logger.warning(payment_const.NO_TX_FOUND_EXCEPTION, reference)
         return tx
 
     def _process_notification_data(self, notification_data):
@@ -180,7 +178,6 @@ class PaymentTransaction(models.Model):
 
         :param dict notification_data: The notification data sent by the provider.
         :return: None
-        :raise ValidationError: If inconsistent data were received.
         """
         self.ensure_one()
 

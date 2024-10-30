@@ -129,26 +129,34 @@ class PaymentCaptureWizard(models.TransientModel):
     #=== ACTION METHODS ===#
 
     def action_capture(self):
-        for wizard in self:
-            remaining_amount_to_capture = wizard.amount_to_capture
-            for source_tx in wizard.transaction_ids.filtered(lambda tx: tx.state == 'authorized'):
-                partial_capture_child_txs = wizard.transaction_ids.child_transaction_ids.filtered(
-                    lambda tx: tx.source_transaction_id == source_tx and tx.state == 'done'
-                )  # We can void all the remaining amount only at once => don't check cancel state.
-                source_tx_remaining_amount = source_tx.currency_id.round(
-                    source_tx.amount - sum(partial_capture_child_txs.mapped('amount'))
+        self.ensure_one()
+        remaining_amount_to_capture = self.amount_to_capture
+        for source_tx in self.transaction_ids.filtered(lambda tx: tx.state == 'authorized'):
+            partial_capture_child_txs = self.transaction_ids.child_transaction_ids.filtered(
+                lambda tx: tx.source_transaction_id == source_tx and tx.state == 'done'
+            )  # We can void all the remaining amount only at once => don't check cancel state.
+            source_tx_remaining_amount = source_tx.currency_id.round(
+                source_tx.amount - sum(partial_capture_child_txs.mapped('amount'))
+            )
+            if remaining_amount_to_capture:
+                amount_to_capture = min(source_tx_remaining_amount, remaining_amount_to_capture)
+                # In sudo mode because we need to be able to read on provider fields.
+                capture_tx = source_tx.sudo()._send_capture_request(
+                    amount_to_capture=amount_to_capture
                 )
-                if remaining_amount_to_capture:
-                    amount_to_capture = min(source_tx_remaining_amount, remaining_amount_to_capture)
-                    # In sudo mode because we need to be able to read on provider fields.
-                    source_tx.sudo()._send_capture_request(amount_to_capture=amount_to_capture)
-                    remaining_amount_to_capture -= amount_to_capture
-                    source_tx_remaining_amount -= amount_to_capture
+                if capture_tx.state == 'error':
+                    return capture_tx._get_failed_tx_notification_action()
+                remaining_amount_to_capture -= amount_to_capture
+                source_tx_remaining_amount -= amount_to_capture
 
-                if source_tx_remaining_amount and wizard.void_remaining_amount:
-                    # The source tx isn't fully captured and the user wants to void the remaining.
-                    # In sudo mode because we need to be able to read on provider fields.
-                    source_tx.sudo()._send_void_request(amount_to_void=source_tx_remaining_amount)
-                elif not remaining_amount_to_capture and not wizard.void_remaining_amount:
-                    # The amount to capture has been completely captured.
-                    break  # Skip the remaining transactions.
+            if source_tx_remaining_amount and self.void_remaining_amount:
+                # The source tx isn't fully captured and the user wants to void the remaining.
+                # In sudo mode because we need to be able to read on provider fields.
+                void_tx = source_tx.sudo()._send_void_request(
+                    amount_to_void=source_tx_remaining_amount
+                )
+                if void_tx.state == 'error':
+                    return void_tx._get_failed_tx_notification_action()
+            elif not remaining_amount_to_capture and not self.void_remaining_amount:
+                # The amount to capture has been completely captured.
+                break  # Skip the remaining transactions.

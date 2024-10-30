@@ -6,7 +6,6 @@ import pprint
 from werkzeug.exceptions import Forbidden
 
 from odoo import http
-from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tools import consteq
 
@@ -38,18 +37,16 @@ class XenditController(http.Controller):
         data = request.get_json_data()
         _logger.info("Notification received from Xendit with data:\n%s", pprint.pformat(data))
 
-        try:
-            # Check the integrity of the notification.
-            received_token = request.httprequest.headers.get('x-callback-token')
-            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
-                'xendit', data
-            )
+        # Check the integrity of the notification.
+        received_token = request.httprequest.headers.get('x-callback-token')
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+            'xendit', data
+        )
+        if tx_sudo:
             self._verify_notification_token(received_token, tx_sudo)
 
             # Handle the notification data.
             tx_sudo._handle_notification_data('xendit', data)
-        except ValidationError:
-            _logger.exception("Unable to handle notification data; skipping to acknowledge.")
 
         return request.make_json_response(['accepted'], status=200)
 

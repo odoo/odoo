@@ -2,20 +2,22 @@
 
 import json
 import logging
-import pprint
-from datetime import timedelta
-
 import requests
+
+from datetime import timedelta
 from werkzeug import urls
 
-from odoo import _, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo import fields, models
+from odoo.tools.translate import LazyTranslate
 
+from odoo.addons.payment import const as payment_const
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_paypal import const
 from odoo.addons.payment_paypal.controllers.main import PaypalController
 
 
 _logger = logging.getLogger(__name__)
+_lt = LazyTranslate(__name__, default_lang='en_US')
 
 
 class PaymentProvider(models.Model):
@@ -52,20 +54,29 @@ class PaymentProvider(models.Model):
 
         Note: This action only works for instances using a public URL.
 
-        :return: None
-        :raise UserError: If the base URL is not in HTTPS.
+        :return: The feedback notification
+        :rtype: dict
         """
         base_url = self.get_base_url()
         if 'localhost' in base_url:
-            raise UserError(
-                "PayPal: " + _("You must have an HTTPS connection to generate a webhook.")
+            notification_type = 'danger'
+            message = _lt("You must have an HTTPS connection to generate a webhook.")
+        else:
+            data = {
+                'url': urls.url_join(base_url, PaypalController._webhook_url),
+                'event_types': [{'name': event_type} for event_type in const.HANDLED_WEBHOOK_EVENTS]
+            }
+            webhook_data = self._paypal_make_request(
+                '/v1/notifications/webhooks', json_payload=data
             )
-        data = {
-            'url': urls.url_join(base_url, PaypalController._webhook_url),
-            'event_types': [{'name': event_type} for event_type in const.HANDLED_WEBHOOK_EVENTS]
-        }
-        webhook_data = self._paypal_make_request('/v1/notifications/webhooks', json_payload=data)
-        self.paypal_webhook_id = webhook_data.get('id')
+            if error_msg := payment_utils.get_request_error(webhook_data):
+                notification_type = 'danger'
+                message = error_msg
+            else:
+                self.paypal_webhook_id = webhook_data.get('id')
+                message = _lt("Paypal Webhook was successfully set up!")
+                notification_type = 'info'
+        return payment_utils.get_user_notification_action(message, notification_type)
 
     #=== BUSINESS METHODS ===#
 
@@ -86,33 +97,39 @@ class PaymentProvider(models.Model):
         :param str idempotency_key: The idempotency key to pass in the request.
         :return: The JSON-formatted content of the response.
         :rtype: dict
-        :raise ValidationError: If an HTTP error occurs.
         """
         url = self._paypal_get_api_url() + endpoint
         headers = {'Content-Type': 'application/json'}  # PayPal always wants JSON content-type.
         if idempotency_key:
             headers['PayPal-Request-Id'] = idempotency_key
         if not is_refresh_token_request:
-            headers['Authorization'] = f'Bearer {self._paypal_fetch_access_token()}'
+            token = self._paypal_fetch_access_token()
+            if not token:
+                return payment_utils.format_error_response(
+                    _lt("Could not generate a new access token.")
+                )
+            headers['Authorization'] = f'Bearer {token}'
         try:
             response = requests.post(
-                url, headers=headers, data=data, json=json_payload, auth=auth, timeout=10
+                url,
+                headers=headers,
+                data=data,
+                json=json_payload,
+                auth=auth,
+                timeout=payment_const.TIMEOUT,
             )
-            try:
-                response.raise_for_status()
-            except requests.exceptions.HTTPError:
-                payload = data or json_payload
-                # PayPal errors https://developer.paypal.com/api/rest/reference/orders/v2/errors/
-                _logger.exception(
-                    "Invalid API request at %s with data:\n%s", url, pprint.pformat(payload)
-                )
-                msg = response.json().get('message', '')
-                raise ValidationError(
-                    "PayPal: " + _("The communication with the API failed. Details: %s", msg)
-                )
+            response.raise_for_status()
         except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
-            _logger.exception("Unable to reach endpoint at %s", url)
-            raise ValidationError("PayPal: " + _("Could not establish the connection to the API."))
+            _logger.exception(payment_const.UNABLE_TO_REACH_ENDPOINT, url)
+            return payment_utils.format_error_response(payment_const.API_CONNECTION_ERROR)
+        except requests.exceptions.HTTPError as err:
+            payload = data or json_payload
+            # PayPal errors https://developer.paypal.com/api/rest/reference/orders/v2/errors/
+            err_msg = err.response.json().get('message', '')
+            _logger.exception(payment_const.INVALID_API_REQUEST, url, payload, err.response.text)
+            return payment_utils.format_error_response(
+                payment_const.API_COMMUNICATION_ERROR + err_msg
+            )
         return response.json()
 
     def _paypal_fetch_access_token(self):
@@ -120,7 +137,6 @@ class PaymentProvider(models.Model):
 
         :return: A valid access token.
         :rtype: str
-        :raise ValidationError: If the access token can not be fetched.
         """
         if fields.Datetime.now() > self.paypal_access_token_expiry - timedelta(minutes=5):
             response_content = self._paypal_make_request(
@@ -129,9 +145,13 @@ class PaymentProvider(models.Model):
                 auth=(self.paypal_client_id, self.paypal_client_secret),
                 is_refresh_token_request=True,
             )
+            if payment_utils.get_request_error(response_content):
+                return ''
+
             access_token = response_content['access_token']
             if not access_token:
-                raise ValidationError("PayPal: " + _("Could not generate a new access token."))
+                return ''
+
             self.write({
                 'paypal_access_token': access_token,
                 'paypal_access_token_expiry': fields.Datetime.now() + timedelta(

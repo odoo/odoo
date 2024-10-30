@@ -4,7 +4,6 @@ import logging
 import pprint
 
 from odoo import http
-from odoo.exceptions import ValidationError
 from odoo.http import request
 
 
@@ -54,11 +53,8 @@ class MercadoPagoController(http.Controller):
         # other types of events.
         if data.get('action') in ('payment.created', 'payment.updated'):
             # Handle the notification data.
-            try:
-                payment_id = data.get('data', {}).get('id')
-                request.env['payment.transaction'].sudo()._handle_notification_data(
-                    'mercado_pago', {'external_reference': reference, 'payment_id': payment_id}
-                )  # Use 'external_reference' as the reference key like in the redirect data.
-            except ValidationError:  # Acknowledge the notification to avoid getting spammed.
-                _logger.exception("Unable to handle the notification data; skipping to acknowledge")
+            payment_id = data.get('data', {}).get('id')
+            request.env['payment.transaction'].sudo()._handle_notification_data(
+                'mercado_pago', {'external_reference': reference, 'payment_id': payment_id}
+            )  # Use 'external_reference' as the reference key like in the redirect data.
         return ''  # Acknowledge the notification.

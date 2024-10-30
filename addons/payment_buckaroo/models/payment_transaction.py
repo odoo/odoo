@@ -5,8 +5,8 @@ import logging
 from werkzeug import urls
 
 from odoo import _, models
-from odoo.exceptions import ValidationError
 
+from odoo.addons.payment import const as payment_const
 from odoo.addons.payment_buckaroo import const
 from odoo.addons.payment_buckaroo.controllers.main import BuckarooController
 
@@ -57,7 +57,6 @@ class PaymentTransaction(models.Model):
         :param dict notification_data: The normalized notification data sent by the provider
         :return: The transaction if found
         :rtype: recordset of `payment.transaction`
-        :raise: ValidationError if the data match no transaction
         """
         tx = super()._get_tx_from_notification_data(provider_code, notification_data)
         if provider_code != 'buckaroo' or len(tx) == 1:
@@ -66,10 +65,7 @@ class PaymentTransaction(models.Model):
         reference = notification_data.get('brq_invoicenumber')
         tx = self.search([('reference', '=', reference), ('provider_code', '=', 'buckaroo')])
         if not tx:
-            raise ValidationError(
-                "Buckaroo: " + _("No transaction found matching reference %s.", reference)
-            )
-
+            _logger.warning(payment_const.NO_TX_FOUND_EXCEPTION, reference)
         return tx
 
     def _process_notification_data(self, notification_data):
@@ -79,7 +75,6 @@ class PaymentTransaction(models.Model):
 
         :param dict notification_data: The normalized notification data sent by the provider
         :return: None
-        :raise: ValidationError if inconsistent data were received
         """
         super()._process_notification_data(notification_data)
         if self.provider_code != 'buckaroo':
@@ -88,7 +83,8 @@ class PaymentTransaction(models.Model):
         # Update the provider reference.
         transaction_keys = notification_data.get('brq_transactions')
         if not transaction_keys:
-            raise ValidationError("Buckaroo: " + _("Received data with missing transaction keys"))
+            self._set_error(_("Received data with missing transaction keys"))
+            return
         # BRQ_TRANSACTIONS can hold multiple, comma-separated, tx keys. In practice, it holds only
         # one reference. So we split for semantic correctness and keep the first transaction key.
         self.provider_reference = transaction_keys.split(',')[0]
@@ -116,8 +112,5 @@ class PaymentTransaction(models.Model):
                 status_code,
             ))
         else:
-            _logger.warning(
-                "received data with invalid payment status (%s) for transaction with reference %s",
-                status_code, self.reference
-            )
-            self._set_error("Buckaroo: " + _("Unknown status code: %s", status_code))
+            _logger.warning(payment_const.INVALID_PAYMENT_STATUS, status_code, self.reference)
+            self._set_error(_("Unknown status code: %s", status_code))

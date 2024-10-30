@@ -7,7 +7,6 @@ import pprint
 from werkzeug.exceptions import Forbidden
 
 from odoo import http
-from odoo.exceptions import ValidationError
 from odoo.http import request
 
 
@@ -35,17 +34,7 @@ class BuckarooController(http.Controller):
         :param dict raw_data: The un-formatted notification data
         """
         _logger.info("handling redirection from Buckaroo with data:\n%s", pprint.pformat(raw_data))
-        data = self._normalize_data_keys(raw_data)
-
-        # Check the integrity of the notification
-        received_signature = data.get('brq_signature')
-        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
-            'buckaroo', data
-        )
-        self._verify_notification_signature(raw_data, received_signature, tx_sudo)
-
-        # Handle the notification data
-        tx_sudo._handle_notification_data('buckaroo', data)
+        self._verify_and_handle_notification_data(raw_data)
         return request.redirect('/payment/status')
 
     @http.route(_webhook_url, type='http', auth='public', methods=['POST'], csrf=False)
@@ -59,20 +48,27 @@ class BuckarooController(http.Controller):
         :rtype: str
         """
         _logger.info("notification received from Buckaroo with data:\n%s", pprint.pformat(raw_data))
+        self._verify_and_handle_notification_data(raw_data)
+        return ''
+
+    def _verify_and_handle_notification_data(self, raw_data):
+        """ Verify a signature from the response and handle notification data.
+
+        :param dict raw_data: The un-formatted notification data
+        :return: None
+        """
         data = self._normalize_data_keys(raw_data)
-        try:
-            # Check the integrity of the notification
-            received_signature = data.get('brq_signature')
-            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
-                'buckaroo', data
-            )
+
+        # Check the integrity of the notification
+        received_signature = data.get('brq_signature')
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+            'buckaroo', data
+        )
+        if tx_sudo:
             self._verify_notification_signature(raw_data, received_signature, tx_sudo)
 
             # Handle the notification data
             tx_sudo._handle_notification_data('buckaroo', data)
-        except ValidationError:  # Acknowledge the notification to avoid getting spammed
-            _logger.exception("unable to handle the notification data; skipping to acknowledge")
-        return ''
 
     @staticmethod
     def _normalize_data_keys(data):

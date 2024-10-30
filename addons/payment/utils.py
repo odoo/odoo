@@ -236,3 +236,51 @@ def generate_idempotency_key(tx, scope=None):
     """
     database_uuid = tx.env['ir.config_parameter'].sudo().get_param('database.uuid')
     return sha1(f'{database_uuid}{tx.reference}{scope or ""}'.encode()).hexdigest()
+
+
+def get_request_error(response_content):
+    """ Return request error from response content if any.
+
+    :param dict response_content: Request response content.
+    :return: Response error message.
+    :rtype: string
+    """
+    return response_content.get('error')
+
+
+def format_error_response(error_message):
+    """ Format an error response and return it as a dict.
+
+    :param string error_message: Error message to format.
+    :return: Formatted error message.
+    :rtype: dict
+    """
+    return {'error': error_message}
+
+
+def set_tx_error_from_response(tx, response_content):
+    """ Set an error message on transaction if there is an error response.
+
+    :param recordset of `payment.transaction` tx: The transaction to set an error message for.
+    :param dict response_content: Request response content.
+    :return: Whether there is an error response.
+    :rtype: bool
+    """
+    if error_msg := get_request_error(response_content):
+        tx._set_error(error_msg)  # Log the error message on linked documents' chatter.
+        return True
+    return False
+
+
+def get_user_notification_action(message, notification_type='danger'):
+    return {
+        'type': 'ir.actions.client',
+        'tag': 'display_notification',
+        'params': {
+            'title': "User Error",
+            'message': message,
+            'sticky': True,
+            'type': notification_type,
+            'next': {'type': 'ir.actions.act_window_close'},
+        }
+    }

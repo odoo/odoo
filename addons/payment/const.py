@@ -297,3 +297,18 @@ REPORT_REASONS_MAPPING = {
     'tokenization_not_supported': _lt("tokenization not supported"),
     'validation_not_supported': _lt("tokenization without payment no supported"),
 }
+
+API_CONNECTION_ERROR = _lt("Could not establish the connection to the API.")
+API_COMMUNICATION_ERROR = _lt("The communication with the API failed. Details: ")
+MISSING_REFERENCE_ERROR = _lt("Received data with missing merchant reference.")
+MISSING_PAYMENT_STATUS = _lt("Received data with missing payment state.")
+TX_NOT_LINKED_TO_TOKEN_ERROR = _lt("The transaction is not linked to a token.")
+
+# Logging
+NO_TX_FOUND_EXCEPTION = "No transaction found matching reference %s."
+UNABLE_TO_REACH_ENDPOINT = "Unable to reach the endpoint at %s."
+INVALID_API_REQUEST = "Invalid API request at %s with data %s: %s"
+INVALID_PAYMENT_STATUS = ("Received data with invalid payment status (%s) for transaction with"
+                          " reference %s")
+
+TIMEOUT = 10

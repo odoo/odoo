@@ -1,14 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import pprint
 
 import requests
 from werkzeug import urls
 
-from odoo import _, fields, models
-from odoo.exceptions import ValidationError
+from odoo import fields, models
 
+from odoo.addons.payment import const as payment_const
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_mercado_pago import const
 
 
@@ -48,7 +48,6 @@ class PaymentProvider(models.Model):
         :param str method: The HTTP method of the request.
         :return The JSON-formatted content of the response.
         :rtype: dict
-        :raise ValidationError: If an HTTP error occurs.
         """
         self.ensure_one()
 
@@ -59,34 +58,25 @@ class PaymentProvider(models.Model):
         }
         try:
             if method == 'GET':
-                response = requests.get(url, params=payload, headers=headers, timeout=10)
+                response = requests.get(
+                    url, params=payload, headers=headers, timeout=payment_const.TIMEOUT
+                )
             else:
-                response = requests.post(url, json=payload, headers=headers, timeout=10)
-                try:
-                    response.raise_for_status()
-                except requests.exceptions.HTTPError:
-                    _logger.exception(
-                        "Invalid API request at %s with data:\n%s", url, pprint.pformat(payload),
-                    )
-                    try:
-                        response_content = response.json()
-                        error_code = response_content.get('error')
-                        error_message = response_content.get('message')
-                        raise ValidationError("Mercado Pago: " + _(
-                            "The communication with the API failed. Mercado Pago gave us the"
-                            " following information: '%(error_message)s' (code %(error_code)s)",
-                            error_message=error_message, error_code=error_code,
-                        ))
-                    except ValueError:  # The response can be empty when the access token is wrong.
-                        raise ValidationError("Mercado Pago: " + _(
-                            "The communication with the API failed. The response is empty. Please"
-                            " verify your access token."
-                        ))
+                response = requests.post(
+                    url, json=payload, headers=headers, timeout=payment_const.TIMEOUT
+                )
+            response.raise_for_status()
         except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
-            _logger.exception("Unable to reach endpoint at %s", url)
-            raise ValidationError(
-                "Mercado Pago: " + _("Could not establish the connection to the API.")
+            _logger.exception(payment_const.UNABLE_TO_REACH_ENDPOINT, url)
+            return payment_utils.format_error_response(payment_const.API_CONNECTION_ERROR)
+        except requests.exceptions.HTTPError as err:
+            _logger.exception(payment_const.INVALID_API_REQUEST, url, payload, err.response.text)
+            response_content = err.response.json()
+            response_error = payment_utils.format_error_response(
+                payment_const.API_COMMUNICATION_ERROR
+                + response_content.get("code") + ' ' + response_content.get("message")
             )
+            return response_error
         return response.json()
 
     def _get_default_payment_method_codes(self):

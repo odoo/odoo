@@ -1,9 +1,8 @@
 /* global AdyenCheckout */
 
 import paymentForm from '@payment/js/payment_form';
-import { _t } from '@web/core/l10n/translation';
 import { pyToJsLocale } from '@web/core/l10n/utils';
-import { rpc, RPCError } from '@web/core/network/rpc';
+import {rpc} from '@web/core/network/rpc';
 
 paymentForm.include({
 
@@ -52,41 +51,33 @@ paymentForm.include({
 
         // Create the checkout object if not already done for another payment method.
         if (!this.adyenCheckout) {
-            try {
-                // Await the RPC to let it create AdyenCheckout before using it.
-                const response = await rpc('/payment/adyen/payment_methods', {
-                    'provider_id': providerId,
-                    'partner_id': parseInt(this.paymentContext['partnerId']),
-                    'formatted_amount': formattedAmount,
-                });
-                // Create the Adyen Checkout SDK.
-                const providerState = this._getProviderState(radio);
-                const configuration = {
-                    paymentMethodsResponse: response,
-                    clientKey: inlineFormValues['client_key'],
-                    amount: formattedAmount,
-                    locale: pyToJsLocale(this._getContext().lang) || 'en-US',
-                    environment: providerState === 'enabled' ? 'live' : 'test',
-                    onAdditionalDetails: this._adyenOnSubmitAdditionalDetails.bind(this),
-                    onError: this._adyenOnError.bind(this),
-                    onSubmit: this._adyenOnSubmit.bind(this),
-                    paymentMethodsConfiguration: {
-                        card: {hasHolderName: true, holderNameRequired: true},
-                    }
-                };
-                this.adyenCheckout = await AdyenCheckout(configuration);
-            } catch (error) {
-                if (error instanceof RPCError) {
-                    this._displayErrorDialog(
-                        _t("Cannot display the payment form"), error.data.message
-                    );
-                    this._enableButton();
-                    return;
-                }
-                else {
-                    return Promise.reject(error);
-                }
+            // Await the RPC to let it create AdyenCheckout before using it.
+            const response = await rpc('/payment/adyen/payment_methods', {
+                'provider_id': providerId,
+                'partner_id': parseInt(this.paymentContext['partnerId']),
+                'formatted_amount': formattedAmount,
+            });
+            if (response.error) {
+                this._displayErrorDialog(this.errorMapping['displayFormError'], response.error);
+                this._enableButton();
+                return;
             }
+            // Create the Adyen Checkout SDK.
+            const providerState = this._getProviderState(radio);
+            const configuration = {
+                paymentMethodsResponse: response,
+                clientKey: inlineFormValues['client_key'],
+                amount: formattedAmount,
+                locale: pyToJsLocale(this._getContext().lang) || 'en-US',
+                environment: providerState === 'enabled' ? 'live' : 'test',
+                onAdditionalDetails: this._adyenOnSubmitAdditionalDetails.bind(this),
+                onError: this._adyenOnError.bind(this),
+                onSubmit: this._adyenOnSubmit.bind(this),
+                paymentMethodsConfiguration: {
+                    card: {hasHolderName: true, holderNameRequired: true},
+                }
+            };
+            this.adyenCheckout = await AdyenCheckout(configuration);
         }
 
         // Instantiate and mount the component.
@@ -156,7 +147,7 @@ paymentForm.include({
 
         // The `onError` event handler is not used to validate inputs anymore since v5.0.0.
         if (!this.adyenComponents[paymentOptionId].isValid) {
-            this._displayErrorDialog(_t("Incorrect payment details"));
+            this._displayErrorDialog(this.errorMapping['incorrectPaymentDetails']);
             this._enableButton();
         }
     },
@@ -169,40 +160,38 @@ paymentForm.include({
      * @param {object} component - The component.
      * @return {void}
      */
-    _adyenOnSubmit(state, component) {
+    async _adyenOnSubmit(state, component) {
         // Create the transaction and retrieve the processing values.
-        rpc(
+        const processingValues = await rpc(
             this.paymentContext['transactionRoute'],
             this._prepareTransactionRouteParams(),
-        ).then(processingValues => {
-            component.reference = processingValues.reference; // Store final reference.
-            // Initiate the payment.
-            return rpc('/payment/adyen/payments', {
-                'provider_id': processingValues.provider_id,
-                'reference': processingValues.reference,
-                'converted_amount': processingValues.converted_amount,
-                'currency_id': processingValues.currency_id,
-                'partner_id': processingValues.partner_id,
-                'payment_method': state.data.paymentMethod,
-                'access_token': processingValues.access_token,
-                'browser_info': state.data.browserInfo,
-            });
-        }).then(paymentResponse => {
-            if (paymentResponse.action) { // An additional action is required from the shopper.
-                this._hideInputs(); // Only the inputs of the inline form should be used.
-                this.call('ui', 'unblock'); // The page is blocked at this point, unblock it.
-                component.handleAction(paymentResponse.action);
-            } else { // The payment reached a final state; redirect to the status page.
-                window.location = '/payment/status';
-            }
-        }).catch((error) => {
-            if (error instanceof RPCError) {
-                this._displayErrorDialog(_t("Payment processing failed"), error.data.message);
-                this._enableButton();
-            } else {
-                return Promise.reject(error);
-            }
+        )
+        component.reference = processingValues.reference; // Store final reference.
+        // Initiate the payment.
+        const paymentResponse = await rpc('/payment/adyen/payments', {
+            'provider_id': processingValues.provider_id,
+            'reference': processingValues.reference,
+            'converted_amount': processingValues.converted_amount,
+            'currency_id': processingValues.currency_id,
+            'partner_id': processingValues.partner_id,
+            'payment_method': state.data.paymentMethod,
+            'access_token': processingValues.access_token,
+            'browser_info': state.data.browserInfo,
         });
+        if (paymentResponse.error) {
+            this._displayErrorDialog(
+                this.errorMapping['paymentProcessingError'], paymentResponse.error
+            );
+            this._enableButton();
+            return;
+        }
+        if (paymentResponse.action) { // An additional action is required from the shopper.
+            this._hideInputs(); // Only the inputs of the inline form should be used.
+            this.call('ui', 'unblock'); // The page is blocked at this point, unblock it.
+            component.handleAction(paymentResponse.action);
+        } else { // The payment reached a final state; redirect to the status page.
+            window.location = '/payment/status';
+        }
     },
 
     /**
@@ -213,25 +202,24 @@ paymentForm.include({
      * @param {object} component - The component.
      * @return {void}
      */
-    _adyenOnSubmitAdditionalDetails(state, component) {
-        rpc('/payment/adyen/payments/details', {
+    async _adyenOnSubmitAdditionalDetails(state, component) {
+        const paymentDetails = await rpc('/payment/adyen/payments/details', {
             'provider_id': this.paymentContext['providerId'],
             'reference': component.reference,
             'payment_details': state.data,
-        }).then(paymentDetails => {
-            if (paymentDetails.action) { // Additional action required from the shopper.
-                component.handleAction(paymentDetails.action);
-            } else { // The payment reached a final state; redirect to the status page.
-                window.location = '/payment/status';
-            }
-        }).catch((error) => {
-            if (error instanceof RPCError) {
-                this._displayErrorDialog(_t("Payment processing failed"), error.data.message);
-                this._enableButton();
-            } else {
-                return Promise.reject(error);
-            }
-        });
+        })
+        if (paymentDetails.error) {
+            this._displayErrorDialog(
+                this.errorMapping['paymentProcessingError'], paymentDetails.error
+            );
+            this._enableButton();
+            return;
+        }
+        if (paymentDetails.action) { // Additional action required from the shopper.
+            component.handleAction(paymentDetails.action);
+        } else { // The payment reached a final state; redirect to the status page.
+            window.location = '/payment/status';
+        }
     },
 
     /**
@@ -245,7 +233,7 @@ paymentForm.include({
      * @return {void}
      */
     _adyenOnError(error) {
-        this._displayErrorDialog(_t("Payment processing failed"), error.message);
+        this._displayErrorDialog(this.errorMapping['paymentProcessingError'], error.message);
         this._enableButton();
     },
 

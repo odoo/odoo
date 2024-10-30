@@ -5,8 +5,8 @@ import logging
 from werkzeug import urls
 
 from odoo import _, api, models
-from odoo.exceptions import ValidationError
 
+from odoo.addons.payment import const as payment_const
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_aps import utils as aps_utils
 from odoo.addons.payment_aps.const import PAYMENT_STATUS_MAPPING
@@ -84,8 +84,6 @@ class PaymentTransaction(models.Model):
         :param dict notification_data: The notification data sent by the provider.
         :return: The transaction if found.
         :rtype: recordset of `payment.transaction`
-        :raise ValidationError: If inconsistent data are received.
-        :raise ValidationError: If the data match no transaction.
         """
         tx = super()._get_tx_from_notification_data(provider_code, notification_data)
         if provider_code != 'aps' or len(tx) == 1:
@@ -93,15 +91,12 @@ class PaymentTransaction(models.Model):
 
         reference = notification_data.get('merchant_reference')
         if not reference:
-            raise ValidationError(
-                "APS: " + _("Received data with missing reference %(ref)s.", ref=reference)
-            )
+            _logger.warning(payment_const.MISSING_REFERENCE_ERROR)
+            return tx
 
         tx = self.search([('reference', '=', reference), ('provider_code', '=', 'aps')])
         if not tx:
-            raise ValidationError(
-                "APS: " + _("No transaction found matching reference %s.", reference)
-            )
+            _logger.warning(payment_const.NO_TX_FOUND_EXCEPTION, reference)
 
         return tx
 
@@ -129,19 +124,16 @@ class PaymentTransaction(models.Model):
         # Update the payment state.
         status = notification_data.get('status')
         if not status:
-            raise ValidationError("APS: " + _("Received data with missing payment state."))
+            self._set_error(payment_const.MISSING_PAYMENT_STATUS)
+            return
         if status in PAYMENT_STATUS_MAPPING['pending']:
             self._set_pending()
         elif status in PAYMENT_STATUS_MAPPING['done']:
             self._set_done()
         else:  # Classify unsupported payment state as `error` tx state.
             status_description = notification_data.get('response_message')
-            _logger.info(
-                "Received data with invalid payment status (%(status)s) and reason '%(reason)s' "
-                "for transaction with reference %(ref)s",
-                {'status': status, 'reason': status_description, 'ref': self.reference},
-            )
-            self._set_error("APS: " + _(
+            _logger.info(payment_const.INVALID_PAYMENT_STATUS, status, self.reference)
+            self._set_error(_(
                 "Received invalid transaction status %(status)s and reason '%(reason)s'.",
                 status=status, reason=status_description
             ))

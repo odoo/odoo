@@ -3,8 +3,8 @@
 import logging
 
 from odoo import _, models
-from odoo.exceptions import ValidationError
 
+from odoo.addons.payment import const as payment_const
 from odoo.addons.payment_custom.controllers.main import CustomController
 
 
@@ -66,9 +66,7 @@ class PaymentTransaction(models.Model):
         reference = notification_data.get('reference')
         tx = self.search([('reference', '=', reference), ('provider_code', '=', 'custom')])
         if not tx:
-            raise ValidationError(
-                "Wire Transfer: " + _("No transaction found matching reference %s.", reference)
-            )
+            _logger.warning(payment_const.NO_TX_FOUND_EXCEPTION, reference)
         return tx
 
     def _process_notification_data(self, notification_data):

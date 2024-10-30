@@ -9,7 +9,6 @@ from datetime import datetime
 from werkzeug.exceptions import Forbidden
 
 from odoo import http
-from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tools.misc import file_open
 
@@ -41,6 +40,8 @@ class StripeController(http.Controller):
         tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
             'stripe', data
         )
+        if not tx_sudo:
+            request.redirect('/payment/status')
 
         if tx_sudo.operation != 'validation':
             # Fetch the PaymentIntent and PaymentMethod objects from Stripe.
@@ -49,6 +50,9 @@ class StripeController(http.Controller):
                 payload={'expand[]': 'payment_method'},  # Expand all required objects.
                 method='GET',
             )
+            if payment_utils.set_tx_error_from_response(tx_sudo, payment_intent):
+                return request.redirect('/payment/status')
+
             _logger.info("Received payment_intents response:\n%s", pprint.pformat(payment_intent))
             self._include_payment_intent_in_notification_data(payment_intent, data)
         else:
@@ -58,6 +62,9 @@ class StripeController(http.Controller):
                 payload={'expand[]': 'payment_method'},  # Expand all required objects.
                 method='GET',
             )
+            if payment_utils.set_tx_error_from_response(tx_sudo, setup_intent):
+                return request.redirect('/payment/status')
+
             _logger.info("Received setup_intents response:\n%s", pprint.pformat(setup_intent))
             self._include_setup_intent_in_notification_data(setup_intent, data)
 
@@ -75,82 +82,89 @@ class StripeController(http.Controller):
         :rtype: str
         """
         event = request.get_json_data()
+        response = request.make_json_response('')
         _logger.info("Notification received from Stripe with data:\n%s", pprint.pformat(event))
-        try:
-            if event['type'] in HANDLED_WEBHOOK_EVENTS:
-                stripe_object = event['data']['object']  # {Payment,Setup}Intent, Charge, or Refund.
+        if event['type'] in HANDLED_WEBHOOK_EVENTS:
+            stripe_object = event['data']['object']  # {Payment,Setup}Intent, Charge, or Refund.
 
-                # Check the integrity of the event.
-                data = {
-                    'reference': stripe_object.get('description'),
-                    'event_type': event['type'],
-                    'object_id': stripe_object['id'],
-                }
-                tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
-                    'stripe', data
-                )
-                self._verify_notification_signature(tx_sudo)
+            # Check the integrity of the event.
+            data = {
+                'reference': stripe_object.get('description'),
+                'event_type': event['type'],
+                'object_id': stripe_object['id'],
+            }
+            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+                'stripe', data
+            )
+            if not tx_sudo:
+                return response
 
-                # Handle the notification data.
-                if event['type'].startswith('payment_intent'):  # Payment operation.
-                    if tx_sudo.tokenize:
-                        payment_method = tx_sudo.provider_id._stripe_make_request(
-                            f'payment_methods/{stripe_object["payment_method"]}', method='GET'
-                        )
-                        _logger.info(
-                            "Received payment_methods response:\n%s", pprint.pformat(payment_method)
-                        )
-                        stripe_object['payment_method'] = payment_method
-                    self._include_payment_intent_in_notification_data(stripe_object, data)
-                elif event['type'].startswith('setup_intent'):  # Validation operation.
-                    # Fetch the missing PaymentMethod object.
+            self._verify_notification_signature(tx_sudo)
+
+            # Handle the notification data.
+            if event['type'].startswith('payment_intent'):  # Payment operation.
+                if tx_sudo.tokenize:
                     payment_method = tx_sudo.provider_id._stripe_make_request(
                         f'payment_methods/{stripe_object["payment_method"]}', method='GET'
                     )
+                    if payment_utils.set_tx_error_from_response(tx_sudo, payment_method):
+                        return response
                     _logger.info(
                         "Received payment_methods response:\n%s", pprint.pformat(payment_method)
                     )
                     stripe_object['payment_method'] = payment_method
-                    self._include_setup_intent_in_notification_data(stripe_object, data)
-                elif event['type'] == 'charge.refunded':  # Refund operation (refund creation).
-                    refunds = stripe_object['refunds']['data']
+                self._include_payment_intent_in_notification_data(stripe_object, data)
+            elif event['type'].startswith('setup_intent'):  # Validation operation.
+                # Fetch the missing PaymentMethod object.
+                payment_method = tx_sudo.provider_id._stripe_make_request(
+                    f'payment_methods/{stripe_object["payment_method"]}', method='GET'
+                )
+                if payment_utils.set_tx_error_from_response(tx_sudo, payment_method):
+                    return response
+                _logger.info(
+                    "Received payment_methods response:\n%s", pprint.pformat(payment_method)
+                )
+                stripe_object['payment_method'] = payment_method
+                self._include_setup_intent_in_notification_data(stripe_object, data)
+            elif event['type'] == 'charge.refunded':  # Refund operation (refund creation).
+                refunds = stripe_object['refunds']['data']
 
-                    # The refunds linked to this charge are paginated, fetch the remaining refunds.
-                    has_more = stripe_object['refunds']['has_more']
-                    while has_more:
-                        payload = {
-                            'charge': stripe_object['id'],
-                            'starting_after': refunds[-1]['id'],
-                            'limit': 100,
-                        }
-                        additional_refunds = tx_sudo.provider_id._stripe_make_request(
-                            'refunds', payload=payload, method='GET'
-                        )
-                        refunds += additional_refunds['data']
-                        has_more = additional_refunds['has_more']
+                # The refunds linked to this charge are paginated, fetch the remaining refunds.
+                has_more = stripe_object['refunds']['has_more']
+                while has_more:
+                    payload = {
+                        'charge': stripe_object['id'],
+                        'starting_after': refunds[-1]['id'],
+                        'limit': 100,
+                    }
+                    additional_refunds = tx_sudo.provider_id._stripe_make_request(
+                        'refunds', payload=payload, method='GET'
+                    )
+                    if payment_utils.set_tx_error_from_response(tx_sudo, additional_refunds):
+                        return response
+                    refunds += additional_refunds['data']
+                    has_more = additional_refunds['has_more']
 
-                    # Process the refunds for which a refund transaction has not been created yet.
-                    processed_refund_ids = tx_sudo.child_transaction_ids.filtered(
-                        lambda tx: tx.operation == 'refund'
-                    ).mapped('provider_reference')
-                    for refund in filter(lambda r: r['id'] not in processed_refund_ids, refunds):
-                        refund_tx_sudo = self._create_refund_tx_from_refund(tx_sudo, refund)
-                        self._include_refund_in_notification_data(refund, data)
-                        refund_tx_sudo._handle_notification_data('stripe', data)
-                    # Don't handle the notification data for the source transaction.
-                    return request.make_json_response('')
-                elif event['type'] == 'charge.refund.updated':  # Refund operation (with update).
-                    # A refund was updated by Stripe after it was already processed (possibly to
-                    # cancel it). This can happen when the customer's payment method can no longer
-                    # be topped up (card expired, account closed...). The `tx_sudo` record is the
-                    # refund transaction to update.
-                    self._include_refund_in_notification_data(stripe_object, data)
+                # Process the refunds for which a refund transaction has not been created yet.
+                processed_refund_ids = tx_sudo.child_transaction_ids.filtered(
+                    lambda tx: tx.operation == 'refund'
+                ).mapped('provider_reference')
+                for refund in filter(lambda r: r['id'] not in processed_refund_ids, refunds):
+                    refund_tx_sudo = self._create_refund_tx_from_refund(tx_sudo, refund)
+                    self._include_refund_in_notification_data(refund, data)
+                    refund_tx_sudo._handle_notification_data('stripe', data)
+                # Don't handle the notification data for the source transaction.
+                return response
+            elif event['type'] == 'charge.refund.updated':  # Refund operation (with update).
+                # A refund was updated by Stripe after it was already processed (possibly to
+                # cancel it). This can happen when the customer's payment method can no longer
+                # be topped up (card expired, account closed...). The `tx_sudo` record is the
+                # refund transaction to update.
+                self._include_refund_in_notification_data(stripe_object, data)
 
-                # Handle the notification data crafted with Stripe API objects
-                tx_sudo._handle_notification_data('stripe', data)
-        except ValidationError:  # Acknowledge the notification to avoid getting spammed
-            _logger.exception("unable to handle the notification data; skipping to acknowledge")
-        return request.make_json_response('')
+            # Handle the notification data crafted with Stripe API objects
+            tx_sudo._handle_notification_data('stripe', data)
+        return response
 
     @staticmethod
     def _include_payment_intent_in_notification_data(payment_intent, notification_data):

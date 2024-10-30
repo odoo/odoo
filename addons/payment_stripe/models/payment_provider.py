@@ -10,6 +10,7 @@ from werkzeug.urls import url_encode, url_join, url_parse
 from odoo import _, api, fields, models
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 
+from odoo.addons.payment import const as payment_const
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_stripe import const
 from odoo.addons.payment_stripe import utils as stripe_utils
@@ -200,20 +201,15 @@ class PaymentProvider(models.Model):
                     'api_version': const.API_VERSION,
                 }
             )
-            self.stripe_webhook_secret = webhook.get('secret')
-            message = _("You Stripe Webhook was successfully set up!")
-            notification_type = 'info'
+            if error_msg := payment_utils.get_request_error(webhook):
+                notification_type = 'danger'
+                message = error_msg
+            else:
+                self.stripe_webhook_secret = webhook.get('secret')
+                message = _("Stripe Webhook was successfully set up!")
+                notification_type = 'info'
 
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'message': message,
-                'sticky': False,
-                'type': notification_type,
-                'next': {'type': 'ir.actions.act_window_close'},  # Refresh the form to show the key
-            }
-        }
+        return payment_utils.get_user_notification_action(message, notification_type)
 
     def action_stripe_verify_apple_pay_domain(self):
         """ Verify the web domain with Stripe to enable Apple Pay.
@@ -232,17 +228,24 @@ class PaymentProvider(models.Model):
         response_content = self._stripe_make_request('apple_pay/domains', payload={
             'domain_name': web_domain
         })
-        if not response_content['livemode']:
+        if error_msg := payment_utils.get_request_error(response_content):
+            msg = error_msg
+            notif_type = 'danger'
+        elif not response_content['livemode']:
             # If test keys are used to make the request, Stripe will respond with an HTTP 200 but
             # will not register the domain. Ask the user to use live credentials.
-            raise UserError(_("Please use live credentials to enable Apple Pay."))
+            msg = _("Please use live credentials to enable Apple Pay.")
+            notif_type = 'warning'
+        else:
+            msg = _("Your web domain was successfully verified.")
+            notif_type = 'success'
 
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
-                'message': _("Your web domain was successfully verified."),
-                'type': 'success',
+                'message': msg,
+                'type': notif_type,
             },
         }
 
@@ -251,21 +254,17 @@ class PaymentProvider(models.Model):
 
     # === BUSINESS METHODS - PAYMENT FLOW === #
 
-    def _stripe_make_request(
-        self, endpoint, payload=None, method='POST', offline=False, idempotency_key=None
-    ):
+    def _stripe_make_request(self, endpoint, payload=None, method='POST', idempotency_key=None):
         """ Make a request to Stripe API at the specified endpoint.
 
         Note: self.ensure_one()
 
-        :param str endpoint: The endpoint to be reached by the request
-        :param dict payload: The payload of the request
-        :param str method: The HTTP method of the request
-        :param bool offline: Whether the operation of the transaction being processed is 'offline'
+        :param str endpoint: The endpoint to be reached by the request.
+        :param dict payload: The payload of the request.
+        :param str method: The HTTP method of the request.
         :param str idempotency_key: The idempotency key to pass in the request.
-        :return The JSON-formatted content of the response
+        :return The JSON-formatted content of the response or error.
         :rtype: dict
-        :raise: ValidationError if an HTTP error occurs
         """
         self.ensure_one()
 
@@ -278,30 +277,27 @@ class PaymentProvider(models.Model):
         if method == 'POST' and idempotency_key:
             headers['Idempotency-Key'] = idempotency_key
         try:
-            response = requests.request(method, url, data=payload, headers=headers, timeout=60)
+            response = requests.request(
+                method, url, data=payload, headers=headers, timeout=payment_const.TIMEOUT
+            )
             # Stripe can send 4XX errors for payment failures (not only for badly-formed requests).
             # Check if an error code is present in the response content and raise only if not.
             # See https://stripe.com/docs/error-codes.
-            # If the request originates from an offline operation, don't raise to avoid a cursor
-            # rollback and return the response as-is for flow-specific handling.
-            if not response.ok \
-                    and not offline \
-                    and 400 <= response.status_code < 500 \
-                    and response.json().get('error'):  # The 'code' entry is sometimes missing
-                try:
+            if (
+                not response.ok
+                and 400 <= response.status_code < 500
+                and response.json().get('error')
+            ):  # The 'code' entry is sometimes missing
                     response.raise_for_status()
-                except requests.exceptions.HTTPError:
-                    _logger.exception("invalid API request at %s with data %s", url, payload)
-                    error_msg = response.json().get('error', {}).get('message', '')
-                    raise ValidationError(
-                        "Stripe: " + _(
-                            "The communication with the API failed.\n"
-                            "Stripe gave us the following info about the problem:\n'%s'", error_msg
-                        )
-                    )
-        except requests.exceptions.ConnectionError:
-            _logger.exception("unable to reach endpoint at %s", url)
-            raise ValidationError("Stripe: " + _("Could not establish the connection to the API."))
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
+            _logger.exception(payment_const.UNABLE_TO_REACH_ENDPOINT, url)
+            return payment_utils.format_error_response(payment_const.API_CONNECTION_ERROR)
+        except requests.exceptions.HTTPError as err:
+            _logger.exception(payment_const.INVALID_API_REQUEST, url, payload, err.response.text)
+            error_content = err.response.json().get('error', {})
+            return payment_utils.format_error_response(
+                payment_const.API_COMMUNICATION_ERROR + error_content.get('message', '')
+            )
         return response.json()
 
     def _get_stripe_extra_request_headers(self):
@@ -405,16 +401,14 @@ class PaymentProvider(models.Model):
         }
         url = url_join(const.PROXY_URL, f'{version}/{endpoint}')
         try:
-            response = requests.post(url=url, json=proxy_payload, timeout=60)
+            response = requests.post(url=url, json=proxy_payload, timeout=payment_const.TIMEOUT)
             response.raise_for_status()
         except requests.exceptions.ConnectionError:
-            _logger.exception("unable to reach endpoint at %s", url)
-            raise ValidationError(_("Stripe Proxy: Could not establish the connection."))
-        except requests.exceptions.HTTPError:
-            _logger.exception("invalid API request at %s with data %s", url, payload)
-            raise ValidationError(
-                _("Stripe Proxy: An error occurred when communicating with the proxy.")
-            )
+            _logger.exception(payment_const.UNABLE_TO_REACH_ENDPOINT, url)
+            raise ValidationError(payment_const.API_CONNECTION_ERROR)
+        except requests.exceptions.HTTPError as err:
+            _logger.exception(payment_const.INVALID_API_REQUEST, url, payload, err.response.text)
+            raise ValidationError(payment_const.API_COMMUNICATION_ERROR)
 
         # Stripe proxy endpoints always respond with HTTP 200 as they implement JSON-RPC 2.0
         response_content = response.json()

@@ -7,10 +7,9 @@ import requests
 from werkzeug.urls import url_join
 
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
 
+from odoo.addons.payment import const as payment_const
 from odoo.addons.payment import utils as payment_utils
-from odoo.addons.payment.const import REPORT_REASONS_MAPPING
 from odoo.addons.payment_flutterwave import const
 
 
@@ -64,7 +63,7 @@ class PaymentProvider(models.Model):
                 report,
                 unfiltered_providers - providers,
                 available=False,
-                reason=REPORT_REASONS_MAPPING['validation_not_supported'],
+                reason=payment_const.REPORT_REASONS_MAPPING['validation_not_supported'],
             )
 
         return providers
@@ -88,7 +87,6 @@ class PaymentProvider(models.Model):
         :param str method: The HTTP method of the request.
         :return The JSON-formatted content of the response.
         :rtype: dict
-        :raise ValidationError: If an HTTP error occurs.
         """
         self.ensure_one()
 
@@ -96,24 +94,21 @@ class PaymentProvider(models.Model):
         headers = {'Authorization': f'Bearer {self.flutterwave_secret_key}'}
         try:
             if method == 'GET':
-                response = requests.get(url, params=payload, headers=headers, timeout=10)
-            else:
-                response = requests.post(url, json=payload, headers=headers, timeout=10)
-            try:
-                response.raise_for_status()
-            except requests.exceptions.HTTPError:
-                _logger.exception(
-                    "Invalid API request at %s with data:\n%s", url, pprint.pformat(payload),
+                response = requests.get(
+                    url, params=payload, headers=headers, timeout=payment_const.TIMEOUT
                 )
-                raise ValidationError("Flutterwave: " + _(
-                    "The communication with the API failed. Flutterwave gave us the following "
-                    "information: '%s'", response.json().get('message', '')
-                ))
+            else:
+                response = requests.post(
+                    url, json=payload, headers=headers, timeout=payment_const.TIMEOUT
+                )
+            response.raise_for_status()
         except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
-            _logger.exception("Unable to reach endpoint at %s", url)
-            raise ValidationError(
-                "Flutterwave: " + _("Could not establish the connection to the API.")
-            )
+            _logger.exception(payment_const.UNABLE_TO_REACH_ENDPOINT, url)
+            return payment_utils.format_error_response(payment_const.API_CONNECTION_ERROR)
+        except requests.exceptions.HTTPError as err:
+            _logger.exception(payment_const.INVALID_API_REQUEST, url, payload, err.response.text)
+            msg = err.response.json().get('message', '')
+            return payment_utils.format_error_response(payment_const.API_COMMUNICATION_ERROR + msg)
         return response.json()
 
     def _get_default_payment_method_codes(self):

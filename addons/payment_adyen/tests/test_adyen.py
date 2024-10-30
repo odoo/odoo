@@ -71,6 +71,22 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
                 "the source transaction."
         )
 
+    @mute_logger('odoo.addons.payment_adyen.models.payment_transaction')
+    def test_tx_state_after_send_refund_request_when_request_error(self):
+        self.provider.support_refund = 'full_only'  # Should simply not be False
+        tx = self._create_transaction(
+            'redirect', state='done', provider_reference='source_reference'
+        )
+        tx._post_process()  # Create the payment
+        with patch(
+            'odoo.addons.payment_adyen.models.payment_provider.PaymentProvider._adyen_make_request',
+            return_value=self.response_error,
+        ):
+            refund_tx = tx._send_refund_request()
+        self.assertEqual(
+            refund_tx.state, 'error', msg="When request failed tx state should be changed to error."
+        )
+
     def test_get_tx_from_notification_data_returns_refund_tx(self):
         source_tx = self._create_transaction(
             'direct', state='done', provider_reference=self.original_reference
@@ -207,7 +223,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         self.assertNotEqual(void_tx, source_tx)
         self.assertEqual(void_tx.source_transaction_id, source_tx)
 
-    def test_send_full_capture_request_does_not_create_capture_tx(self):
+    def test_send_full_capture_request_create_capture_tx(self):
         self.provider.capture_manually = True
         source_tx = self._create_transaction(flow='direct', state='authorized')
         with patch(
@@ -215,8 +231,25 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             return_value={'status': 'received', 'pspreference': 'dummy ref'},
         ):
             child_tx = source_tx._send_capture_request()
-        self.assertFalse(
-            child_tx, msg="Full capture should not create a child transaction."
+        self.assertTrue(
+            source_tx.child_transaction_ids,
+            msg="Full capture should create a child transaction and linked it to the source tx.",
+        )
+        self.assertEqual(
+            child_tx.state, 'draft', msg="Child transaction are created in draft until confirmed."
+        )
+
+    @mute_logger('odoo.addons.payment_adyen.models.payment_transaction')
+    def test_tx_state_after_send_capture_request_when_request_error(self):
+        self.provider.capture_manually = True
+        source_tx = self._create_transaction(flow='direct', state='authorized')
+        with patch(
+            'odoo.addons.payment_adyen.models.payment_provider.PaymentProvider._adyen_make_request',
+            return_value=self.response_error,
+        ):
+            child_tx = source_tx._send_capture_request()
+        self.assertEqual(
+            child_tx.state, 'error', msg="When request failed, tx state should be changed to error."
         )
 
     def test_send_partial_capture_request_creates_capture_tx(self):
@@ -254,6 +287,12 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             msg="A capture request as been made, but the state of the transaction stays as "
                 "'authorized' until a success notification is sent",
         )
+        self.assertEqual(
+            tx.child_transaction_ids[0].state,
+            'draft',
+            msg="A full capture request as been made, but the state of the child transaction"
+                " stays as 'draft' until a success notification is sent.",
+        )
 
     @mute_logger('odoo.addons.payment_adyen.models.payment_transaction')
     def test_tx_state_after_send_partial_capture_request(self):
@@ -286,8 +325,12 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             return_value={'status': 'received', 'pspreference': 'dummy ref'},
         ):
             child_tx = source_tx._send_void_request()
-        self.assertFalse(
-            child_tx, msg="Full void should not create a child transaction."
+        self.assertTrue(
+            source_tx.child_transaction_ids,
+            msg="Full void should create a child transaction and linked it to the source tx.",
+        )
+        self.assertEqual(
+            child_tx.state, 'draft', msg="Child transactions are created in draft until confirmed."
         )
 
     def test_send_partial_void_request_creates_void_tx(self):
@@ -324,6 +367,25 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             'authorized',
             msg="A void request as been made, but the state of the transaction stays as"
                 " 'authorized' until a success notification is sent",
+        )
+        self.assertEqual(
+            tx.child_transaction_ids[0].state,
+            'draft',
+            msg="A full void request has been made, but the state of the child transaction"
+                " stays as 'draft' until a success notification is sent.",
+        )
+
+    @mute_logger('odoo.addons.payment_adyen.models.payment_transaction')
+    def test_tx_state_after_send_void_request_when_request_error(self):
+        self.provider.capture_manually = True
+        source_tx = self._create_transaction(flow='direct', state='authorized')
+        with patch(
+            'odoo.addons.payment_adyen.models.payment_provider.PaymentProvider._adyen_make_request',
+            return_value=self.response_error,
+        ):
+            void_tx = source_tx._send_void_request()
+        self.assertEqual(
+            void_tx.state, 'error', msg="When request failed tx state should be changed to error."
         )
 
     def test_webhook_notification_confirms_transaction(self):
@@ -422,6 +484,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             msg="The capture failed, the tx state should still be 'authorized'.",
         )
 
+    @mute_logger('odoo.addons.payment_adyen.models.payment_transaction')
     def test_failed_webhook_cancellation_notification_leaves_transaction_authorized(self):
         tx = self._create_transaction('direct', state='authorized')
         payload = dict(self.webhook_notification_batch_data, notificationItems=[{
