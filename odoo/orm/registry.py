@@ -154,7 +154,7 @@ class Registry(Mapping):
         _logger.info("Registry loaded in %.3fs", time.time() - t0)
         return registry
 
-    def init(self, db_name):
+    def init(self, db_name: str):
         self.models: dict[str, type[BaseModel]] = {}    # model name/model instance mapping
         self._sql_constraints = set()
         self._init = True
