@@ -20,7 +20,7 @@ class AutomationDecantingOrdersProcess(models.Model):
                                        ('crate', 'Crate'),])
     pallet_barcode = fields.Char(string='License Plate Barcode')
     hu_barcode = fields.Char(string='Handling Unit Barcode')
-    crate_barcode = fields.Char(string='Crate Barcode')
+    crate_barcode = fields.Char(string='Crate Barcode', tracking=True)
     container_id = fields.Many2one('crate.container.configuration', string='Container')
     container_partition = fields.Integer(related='container_id.crate_container_partition', string='Container Partition')
     container_code = fields.Char(related='container_id.crate_code', string='Container Code')
@@ -36,7 +36,7 @@ class AutomationDecantingOrdersProcess(models.Model):
         ('in_progress', 'In Progress'),
         ('done', 'Done'),
     ], string='State', default='draft')
-    license_plate_ids = fields.Many2many('license.plate.orders', string='License Plate Barcodes')
+    license_plate_ids = fields.Many2many('license.plate.orders', string='License Plate Barcodes', tracking=True)
     picking_id = fields.Many2one(
         comodel_name='stock.picking',
         string='Receipt Order'
