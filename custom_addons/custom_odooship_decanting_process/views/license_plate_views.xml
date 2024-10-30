@@ -111,6 +111,30 @@
             </field>
         </record>
 
+        <!-- Search view for License Plate Orders -->
+        <record id="view_license_plate_orders_search" model="ir.ui.view">
+            <field name="name">license.plate.orders.search</field>
+            <field name="model">license.plate.orders</field>
+            <field name="arch" type="xml">
+                <search string="License Plate Orders">
+                    <!-- Filters -->
+                    <filter name="filter_draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                    <filter name="filter_in_progress" string="In Progress" domain="[('state', '=', 'in_progress')]"/>
+                    <filter name="filter_done" string="Done" domain="[('state', '=', 'done')]"/>
+                    <filter name="filter_available" string="Available" domain="[('license_plate_state', '=', 'available')]"/>
+                    <filter name="filter_not_available" string="Not Available" domain="[('license_plate_state', '=', 'not_available')]"/>
+
+                    <!-- Group By Options -->
+                    <group expand="1" string="Group By">
+                        <filter name="group_by_partner" string="Customer" context="{'group_by': 'partner_id'}"/>
+                        <filter name="group_by_tenant_code" string="Tenant Code" context="{'group_by': 'tenant_code_id'}"/>
+                        <filter name="group_by_site_code" string="Site Code" context="{'group_by': 'site_code_id'}"/>
+                        <filter name="group_by_state" string="State" context="{'group_by': 'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <!-- Action for License Plate Orders -->
         <record id="action_license_plate_orders" model="ir.actions.act_window">
             <field name="name">License Plate Orders</field>

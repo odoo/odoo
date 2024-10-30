@@ -75,7 +75,34 @@
                 <field name="name"/>
                 <field name="date"/>
                 <field name="partner_id"/>
+                <field name="picking_id"/>
+                <field name="site_code_id"/>
+                <field name="tenant_code_id"/>
+                <field name="state"/>
             </tree>
+        </field>
+    </record>
+    <!-- Search view for Shiperoo Delivery Receipt Orders -->
+    <record id="view_delivery_receipt_orders_search" model="ir.ui.view">
+        <field name="name">delivery.receipt.orders.search</field>
+        <field name="model">delivery.receipt.orders</field>
+        <field name="arch" type="xml">
+            <search string="Delivery Receipt Orders">
+                <!-- Filters -->
+                <filter name="filter_draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <filter name="filter_in_progress" string="In Progress" domain="[('state', '=', 'in_progress')]"/>
+                <filter name="filter_done" string="Done" domain="[('state', '=', 'done')]"/>
+                <filter name="filter_automation_process" string="Automation Process" domain="[('process_type', '=', 'automation')]"/>
+                <filter name="filter_manual_process" string="Manual Process" domain="[('process_type', '=', 'manual')]"/>
+
+                <!-- Group By Options -->
+                <group expand="1" string="Group By">
+                    <filter name="group_by_partner" string="Customer" context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_by_tenant_code" string="Tenant Code" context="{'group_by': 'tenant_code_id'}"/>
+                    <filter name="group_by_site_code" string="Site Code" context="{'group_by': 'site_code_id'}"/>
+                    <filter name="group_by_state" string="State" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
         </field>
     </record>
 

@@ -9,7 +9,7 @@ class DeliveryReceiptOrders(models.Model):
     _description = 'Delivery Receipt Orders'
 
     name = fields.Char(string='Reference', required=True,default=lambda self: _('New'))
-    receipt_number = fields.Char(string="Scan Barcode of receipt")
+    receipt_number = fields.Char(string="Scan Barcode of receipt", tracking=True)
     process_type = fields.Selection([
         ('automation', 'Automation Process'),
         ('manual', 'Manual Process'),
@@ -74,7 +74,6 @@ class DeliveryReceiptOrders(models.Model):
             # Log the status of each line for debugging
             for line in order.delivery_receipt_orders_line_ids:
                 line_states.append((line.id, line.license_plate_closed))
-                print("\n\n\n")
                 # Check the automation_manual field to decide if quantity should be updated
                 if line.automation_manual in ('automation_bulk', 'manual'):
                     # Update the quantity in stock.quant
