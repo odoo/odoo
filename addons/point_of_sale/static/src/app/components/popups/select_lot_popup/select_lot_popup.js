@@ -1,7 +1,7 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { useAutoFocusToLast } from "@point_of_sale/app/utils/hooks";
 import { Component, useState, useRef } from "@odoo/owl";
-import { EditListInput } from "@point_of_sale/app/store/select_lot_popup/edit_list_input/edit_list_input";
+import { EditListInput } from "@point_of_sale/app/components/popups/select_lot_popup/edit_list_input/edit_list_input";
 
 /**
  * Given a array of { id, text }, we show the user this popup to be able to modify this given array.

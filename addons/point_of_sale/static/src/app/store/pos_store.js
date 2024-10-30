@@ -11,13 +11,13 @@ import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
 import { ConnectionAbortedError, ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 import { _t } from "@web/core/l10n/translation";
-import { OpeningControlPopup } from "@point_of_sale/app/store/opening_control_popup/opening_control_popup";
+import { OpeningControlPopup } from "@point_of_sale/app/components/popups/opening_control_popup/opening_control_popup";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
-import { EditListPopup } from "@point_of_sale/app/store/select_lot_popup/select_lot_popup";
-import { ProductConfiguratorPopup } from "./product_configurator_popup/product_configurator_popup";
-import { ComboConfiguratorPopup } from "./combo_configurator_popup/combo_configurator_popup";
+import { EditListPopup } from "@point_of_sale/app/components/popups/select_lot_popup/select_lot_popup";
+import { ProductConfiguratorPopup } from "@point_of_sale/app/components/popups/product_configurator_popup/product_configurator_popup";
+import { ComboConfiguratorPopup } from "@point_of_sale/app/components/popups/combo_configurator_popup/combo_configurator_popup";
 import {
     makeAwaitable,
     ask,
@@ -28,11 +28,11 @@ import { ScaleScreen } from "../screens/scale_screen/scale_screen";
 import { computeComboItems } from "../models/utils/compute_combo_items";
 import { changesToOrder, getOrderChanges } from "../models/utils/order_change";
 import { getTaxesAfterFiscalPosition, getTaxesValues } from "../models/utils/tax_utils";
-import { QRPopup } from "@point_of_sale/app/utils/qr_code_popup/qr_code_popup";
+import { QRPopup } from "@point_of_sale/app/components/popups/qr_code_popup/qr_code_popup";
 import { ActionScreen } from "@point_of_sale/app/screens/action_screen";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
-import { CashMovePopup } from "@point_of_sale/app/navbar/cash_move_popup/cash_move_popup";
-import { ClosePosPopup } from "../navbar/closing_popup/closing_popup";
+import { CashMovePopup } from "@point_of_sale/app/components/popups/cash_move_popup/cash_move_popup";
+import { ClosePosPopup } from "@point_of_sale/app/components/popups/closing_popup/closing_popup";
 
 export class PosStore extends Reactive {
     loadingSkipButtonIsShown = false;

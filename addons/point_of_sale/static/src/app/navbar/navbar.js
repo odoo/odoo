@@ -4,7 +4,7 @@ import { isDisplayStandalone, isMobileOS } from "@web/core/browser/feature_detec
 
 import { CashierName } from "@point_of_sale/app/navbar/cashier_name/cashier_name";
 import { ProxyStatus } from "@point_of_sale/app/navbar/proxy_status/proxy_status";
-import { SyncPopup } from "@point_of_sale/app/navbar/sync_popup/sync_popup";
+import { SyncPopup } from "@point_of_sale/app/components/popups/sync_popup/sync_popup";
 import {
     SaleDetailsButton,
     handleSaleDetails,

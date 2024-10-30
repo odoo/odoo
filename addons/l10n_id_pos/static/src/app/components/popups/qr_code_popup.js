@@ -1,4 +1,4 @@
-import { QRPopup } from "@point_of_sale/app/utils/qr_code_popup/qr_code_popup";
+import { QRPopup } from "@point_of_sale/app/components/popups/qr_code_popup/qr_code_popup";
 import { patch } from "@web/core/utils/patch";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useService } from "@web/core/utils/hooks";
