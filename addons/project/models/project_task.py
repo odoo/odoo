@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
@@ -182,9 +181,7 @@ class ProjectTask(models.Model):
 
     project_id = fields.Many2one('project.project', string='Project', domain="['|', ('company_id', '=', False), ('company_id', '=?',  company_id)]",
                                  compute="_compute_project_id", store=True, precompute=True, recursive=True, readonly=False, index=True, tracking=True, change_default=True)
-    display_in_project = fields.Boolean(compute='_compute_display_in_project', store=True, readonly=False, export_string_translation=False)
-    # Technical field to display the 'Display in Project' button in the form view, depending on the project
-    show_display_in_project = fields.Boolean(compute='_compute_show_display_in_project')
+    display_in_project = fields.Boolean(compute='_compute_display_in_project', store=True, export_string_translation=False)
     task_properties = fields.Properties('Properties', definition='project_id.task_properties_definition', copy=True)
     allocated_hours = fields.Float("Allocated Time", tracking=True)
     subtask_allocated_hours = fields.Float("Sub-tasks Allocated Time", compute='_compute_subtask_allocated_hours', export_string_translation=False,
@@ -344,27 +341,12 @@ class ProjectTask(models.Model):
             if not task.display_in_project and task.parent_id and task.parent_id.project_id != task.project_id:
                 task.project_id = task.parent_id.project_id
 
-    @api.onchange('parent_id')
-    def _onchange_parent_id(self):
-        if self.display_in_project:
-            return
-        if not self.parent_id:
-            self.display_in_project = True
-        elif self.project_id != self.parent_id.project_id:
-            self.project_id = self.parent_id.project_id
-
-    @api.depends('project_id')
-    def _compute_display_in_project(self):
-        self.filtered(
-            lambda t: not t.display_in_project and (
-                not t.project_id or t.project_id != t.parent_id.project_id
-            )
-        ).display_in_project = True
-
     @api.depends('project_id', 'parent_id')
-    def _compute_show_display_in_project(self):
-        for task in self:
-            task.show_display_in_project = bool(task.parent_id) and task.project_id == task.parent_id.project_id
+    def _compute_display_in_project(self):
+        for record in self:
+            record.display_in_project = record.project_id and (
+                not record.parent_id or record.project_id != record.parent_id.project_id
+            )
 
     @api.depends('stage_id', 'depend_on_ids.state', 'project_id.allow_task_dependencies')
     def _compute_state(self):
@@ -1355,6 +1337,15 @@ class ProjectTask(models.Model):
             if task.id == last_task_id_per_recurrence_id.get(task.recurrence_id.id):
                 task.recurrence_id.unlink()
         return super().unlink()
+
+    def _where_calc(self, domain, active_test=True):
+        """ Tasks views don't show the sub-tasks / ('display_in_project', '=', True).
+            The pseudo-filter "Show Sub-tasks" adds the key 'show_subtasks' in the context.
+            In that case, we pop the leaf from the domain.
+        """
+        if self.env.context.get('show_subtasks'):
+            domain = filter_domain_leaf(domain, lambda field: field != 'display_in_project')
+        return super()._where_calc(domain, active_test)
 
     def update_date_end(self, stage_id):
         project_task_type = self.env['project.task.type'].browse(stage_id)
