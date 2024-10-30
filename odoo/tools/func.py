@@ -15,6 +15,7 @@ __all__ = [
 ]
 
 T = typing.TypeVar("T")
+P = typing.ParamSpec("P")
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable
@@ -57,7 +58,7 @@ class lazy_property(typing.Generic[T]):
                 obj_dict.pop(name)
 
 
-def conditional(condition, decorator):
+def conditional(condition: typing.Any, decorator: Callable[[T], T]) -> Callable[[T], T]:
     """ Decorator for a conditionally applied decorator.
 
         Example::
@@ -90,7 +91,7 @@ def filter_kwargs(func: Callable, kwargs: dict[str, typing.Any]) -> dict[str, ty
     return {key: kwargs[key] for key in kwargs if key not in leftovers}
 
 
-def synchronized(lock_attr: str = '_lock'):
+def synchronized(lock_attr: str = '_lock') -> Callable[[Callable[P, T]], Callable[P, T]]:
     @decorator
     def locked(func, inst, *args, **kwargs):
         with getattr(inst, lock_attr):

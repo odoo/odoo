@@ -1,39 +1,45 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 # decorator makes wrappers that have the same API as their wrapped function
+from __future__ import annotations
+
 from collections import Counter, defaultdict
 from decorator import decorator
 from inspect import signature, Parameter
 import logging
 import time
-import warnings
+import typing
+
+if typing.TYPE_CHECKING:
+    from collections.abc import Callable
+    from odoo.models import BaseModel
+    C = typing.TypeVar('C', bound=Callable)
 
 unsafe_eval = eval
 
 _logger = logging.getLogger(__name__)
 
 
-class ormcache_counter(object):
+class ormcache_counter:
     """ Statistic counters for cache entries. """
     __slots__ = ['hit', 'miss', 'err', 'gen_time', 'cache_name']
 
     def __init__(self):
-        self.hit = 0
-        self.miss = 0
-        self.err = 0
-        self.gen_time = 0
-        self.cache_name = None
+        self.hit: int = 0
+        self.miss: int = 0
+        self.err: int = 0
+        self.gen_time: float = 0.0
+        self.cache_name: str = ''
 
     @property
-    def ratio(self):
+    def ratio(self) -> float:
         return 100.0 * self.hit / (self.hit + self.miss or 1)
 
-# statistic counters dictionary, maps (dbname, modelname, method) to counter
-STAT = defaultdict(ormcache_counter)
+
+STAT: defaultdict[tuple[str, str, Callable], ormcache_counter] = defaultdict(ormcache_counter)
+"""statistic counters dictionary, maps (dbname, modelname, method) to counter"""
 
 
-class ormcache(object):
+class ormcache:
     """ LRU cache decorator for model methods.
     The parameters are strings that represent expressions referring to the
     signature of the decorated method, and are used to compute a cache key::
@@ -53,26 +59,30 @@ class ormcache(object):
     because the underlying cursor will eventually be closed and raise a
     `psycopg2.InterfaceError`.
     """
-    def __init__(self, *args, **kwargs):
-        self.args = args
-        self.skiparg = kwargs.get('skiparg')
-        self.cache_name = kwargs.get('cache', 'default')
+    key: Callable[..., tuple]
 
-    def __call__(self, method):
+    def __init__(self, *args: str, cache: str = 'default', skiparg: int | None = None, **kwargs):
+        self.args = args
+        self.skiparg = skiparg
+        self.cache_name = cache
+
+    def __call__(self, method: C) -> C:
+        assert not hasattr(self, 'method'), "ormcache is already bound to a method"
         self.method = method
         self.determine_key()
-        lookup = decorator(self.lookup, method)
-        lookup.__cache__ = self
+        assert self.key is not None, "ormcache.key not initialized"
+        lookup: C = decorator(self.lookup, method)  # type: ignore
+        lookup.__cache__ = self  # type: ignore
         return lookup
 
-    def add_value(self, *args, cache_value=None, **kwargs):
+    def add_value(self, *args, cache_value=None, **kwargs) -> None:
         model = args[0]
         d, key0, counter = self.lru(model)
         counter.cache_name = self.cache_name
         key = key0 + self.key(*args, **kwargs)
         d[key] = cache_value
 
-    def determine_key(self):
+    def determine_key(self) -> None:
         """ Determine the function that computes a cache key from arguments. """
         if self.skiparg is None:
             # build a string that represents function code and evaluate it
@@ -92,9 +102,11 @@ class ormcache(object):
             # backward-compatible function that uses self.skiparg
             self.key = lambda *args, **kwargs: args[self.skiparg:]
 
-    def lru(self, model):
-        counter = STAT[(model.pool.db_name, model._name, self.method)]
-        return model.pool._Registry__caches[self.cache_name], (model._name, self.method), counter
+    def lru(self, model: BaseModel) -> tuple[typing.Any, tuple, ormcache_counter]:
+        model_name = model._name or ''
+        counter = STAT[model.pool.db_name, model_name, self.method]
+        cache = model.pool._Registry__caches[self.cache_name]  # type: ignore
+        return cache, (model_name, self.method), counter
 
     def lookup(self, method, *args, **kwargs):
         d, key0, counter = self.lru(args[0])
@@ -122,13 +134,13 @@ class ormcache_context(ormcache):
     keys are looked up in the ``context`` parameter and combined to the cache
     key made by :class:`ormcache`.
     """
-    def __init__(self, *args, **kwargs):
-        super(ormcache_context, self).__init__(*args, **kwargs)
-        self.keys = kwargs['keys']
+    def __init__(self, *args: str, keys, skiparg=None, **kwargs):
+        assert skiparg is None, "ormcache_context() no longer supports skiparg"
+        super().__init__(*args, **kwargs)
+        self.keys = keys
 
-    def determine_key(self):
+    def determine_key(self) -> None:
         """ Determine the function that computes a cache key from arguments. """
-        assert self.skiparg is None, "ormcache_context() no longer supports skiparg"
         # build a string that represents function code and evaluate it
         sign = signature(self.method)
         args = ', '.join(
@@ -169,12 +181,12 @@ def log_ormcache_stats(sig=None, frame=None):   # noqa: ARG001 (arguments are th
     _logger.info('\n'.join(cache_stats))
 
 
-def get_cache_key_counter(bound_method, *args, **kwargs):
+def get_cache_key_counter(bound_method: Callable, *args, **kwargs):
     """ Return the cache, key and stat counter for the given call. """
-    model = bound_method.__self__
-    ormcache = bound_method.__cache__
-    cache, key0, counter = ormcache.lru(model)
-    key = key0 + ormcache.key(model, *args, **kwargs)
+    model: BaseModel = bound_method.__self__  # type: ignore
+    ormcache_instance: ormcache = bound_method.__cache__  # type: ignore
+    cache, key0, counter = ormcache_instance.lru(model)
+    key = key0 + ormcache_instance.key(model, *args, **kwargs)
     return cache, key, counter
 
 # For backward compatibility
