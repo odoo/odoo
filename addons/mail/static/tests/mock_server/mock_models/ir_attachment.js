@@ -49,6 +49,8 @@ export class IrAttachment extends webModels.IrAttachment {
                 "res_name",
                 "size",
                 "thread",
+                "type",
+                "url",
             ];
         }
 
