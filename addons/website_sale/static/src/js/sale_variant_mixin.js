@@ -580,10 +580,10 @@ var VariantMixin = {
                 combination.carousel,
                 isCombinationPossible
             );
-            $parent
-                .find('.o_product_tags')
-                .first()
-                .html(combination.product_tags);
+            const productTagEl = parentEl.querySelector(".o_product_tags");
+            if (productTagEl) {
+                productTagEl.innerHTML = combination.product_tags;
+            }
         }
 
         const productIdElement = parentEl.querySelector(".product_id");
@@ -613,6 +613,7 @@ var VariantMixin = {
         const { thousandsSep, decimalPoint, grouping } = localization;
         formatted[0] = insertThousandsSep(formatted[0], thousandsSep, grouping);
         return formatted.join(decimalPoint);
+    },
     /**
      *
      * The leading execution is to keep good reactivity on the first call, for
