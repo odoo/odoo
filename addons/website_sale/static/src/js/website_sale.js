@@ -60,7 +60,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         // Triggered when selecting a variant of a product in a carousel element
         window.addEventListener("hashchange", (ev) => {
             this._applyHash();
-            this.triggerVariantChange(this.$el);
+            this.triggerVariantChange(this.el);
         });
 
         // This allows conditional styling for the filmstrip

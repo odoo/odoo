@@ -175,13 +175,13 @@ var VariantMixin = {
     /**
      * Triggers the price computation and other variant specific changes
      *
-     * @param {Element} container
+     * @param {Element} containerEl
      */
-    triggerVariantChange(container) {
-        container
+    triggerVariantChange(containerEl) {
+        containerEl
             .querySelector("ul[data-attribute_exclusions]")
             ?.dispatchEvent(new Event("change", { bubbles: true }));
-        container
+        containerEl
             .querySelectorAll("input.js_variant_change:checked, select.js_variant_change")
             .forEach((el) => {
                 VariantMixin.handleCustomValues(el);
