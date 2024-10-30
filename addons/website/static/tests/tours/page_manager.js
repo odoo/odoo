@@ -46,13 +46,13 @@ const checkWebsiteFilter = [{
 	trigger: ".o_searchview_dropdown_toggler",
     run: "click",
 }, {
-	content: "Select My Website 2",
-	trigger: ".o_dropdown_container.o_website_menu > .dropdown-item:contains('My Website 2')",
+	content: "Select Test Website",
+	trigger: ".o_dropdown_container.o_website_menu > .dropdown-item:contains('Test Website')",
     run: "click",
 }, {
-	content: "Check that the homepage is now the one of My Website 2",
+	content: "Check that the homepage is now the one of Test Website",
 	trigger: ".o_list_table .o_data_row .o_data_cell[name=name]:contains('Home') " +
-			 "~ .o_data_cell[name=website_id]:contains('My Website 2')",
+			 "~ .o_data_cell[name=website_id]:contains('Test Website')",
 }, {
 	content: "Check that the search options are still open",
 	trigger: ".o_search_bar_menu",
@@ -208,7 +208,7 @@ wTourUtils.registerWebsitePreviewTour('website_page_manager', {
 wTourUtils.registerWebsitePreviewTour('website_page_manager_session_forced', {
     test: true,
     url: '/',
-}, () => [...wTourUtils.switchWebsite(2, 'My Website 2'), {
+}, () => [...wTourUtils.testSwitchWebsite('Test Website'), {
     content: "Click on Site",
     trigger: 'button.dropdown-toggle[data-menu-xmlid="website.menu_site"]',
     run:" click",
@@ -217,32 +217,32 @@ wTourUtils.registerWebsitePreviewTour('website_page_manager_session_forced', {
     trigger: 'a.dropdown-item[data-menu-xmlid="website.menu_website_pages_list"]',
     run:" click",
 }, {
-    content: "Check that the homepage is the one of My Website 2",
+    content: "Check that the homepage is the one of Test Website",
     trigger: ".o_list_table .o_data_row .o_data_cell[name=name]:contains('Home') " +
-             "~ .o_data_cell[name=website_id]:contains('My Website 2')",
+             "~ .o_data_cell[name=website_id]:contains('Test Website')",
 }, {
 	content: "Click on the search options",
 	trigger: ".o_searchview_dropdown_toggler",
     run:" click",
 }, {
-	content: "Check that the selected website is My Website 2",
-	trigger: ".o_dropdown_container.o_website_menu > .dropdown-item:contains('My Website 2')",
+	content: "Check that the selected website is Test Website",
+	trigger: ".o_dropdown_container.o_website_menu > .dropdown-item:contains('Test Website')",
 }]);
 
 registry.category("web_tour.tours").add('website_page_manager_direct_access', {
     test: true,
     url: '/web#action=website.action_website_pages_list',
     steps: () => [{
-    content: "Check that the homepage is the one of My Website 2",
+    content: "Check that the homepage is the one of Test Website",
     trigger: ".o_list_table .o_data_row .o_data_cell[name=name]:contains('Home') " +
-             "~ .o_data_cell[name=website_id]:contains('My Website 2')",
+             "~ .o_data_cell[name=website_id]:contains('Test Website')",
 }, {
 	content: "Click on the search options",
 	trigger: ".o_searchview_dropdown_toggler",
     run:" click",
 }, {
-	content: "Check that the selected website is My Website 2",
-	trigger: ".o_dropdown_container.o_website_menu > .dropdown-item:contains('My Website 2')",
+	content: "Check that the selected website is Test Website",
+	trigger: ".o_dropdown_container.o_website_menu > .dropdown-item:contains('Test Website')",
 }]});
 
 wTourUtils.registerWebsitePreviewTour(
