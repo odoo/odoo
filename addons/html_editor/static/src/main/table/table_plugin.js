@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { isBlock } from "@html_editor/utils/blocks";
-import { removeClass } from "@html_editor/utils/dom";
+import { removeClass, splitTextNode } from "@html_editor/utils/dom";
 import {
     getDeepestPosition,
     isProtected,
@@ -119,8 +119,7 @@ export class TablePlugin extends Plugin {
             const anchorNode = sel.anchorNode;
             const isTextNode = anchorNode.nodeType === Node.TEXT_NODE;
             const newAnchorNode = isTextNode
-                ? this.shared.splitTextNode(anchorNode, sel.anchorOffset, DIRECTIONS.LEFT) + 1 &&
-                  anchorNode
+                ? splitTextNode(anchorNode, sel.anchorOffset, DIRECTIONS.LEFT) + 1 && anchorNode
                 : this.shared.splitElement(anchorNode, sel.anchorOffset).shift();
             const newPosition = rightPos(newAnchorNode);
             sel = this.shared.setSelection(

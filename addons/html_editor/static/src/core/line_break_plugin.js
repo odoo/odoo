@@ -1,10 +1,11 @@
+import { splitTextNode } from "@html_editor/utils/dom";
 import { Plugin } from "../plugin";
 import { CTYPES } from "../utils/content_types";
 import { getState, isFakeLineBreak, prepareUpdate } from "../utils/dom_state";
 import { DIRECTIONS, leftPos, rightPos } from "../utils/position";
 
 export class LineBreakPlugin extends Plugin {
-    static dependencies = ["selection", "history", "split", "delete"];
+    static dependencies = ["selection", "history", "delete"];
     static name = "line_break";
     static shared = ["insertLineBreak", "insertLineBreakNode", "insertLineBreakElement"];
     resources = {
@@ -30,7 +31,7 @@ export class LineBreakPlugin extends Plugin {
     }
     insertLineBreakNode({ targetNode, targetOffset }) {
         if (targetNode.nodeType === Node.TEXT_NODE) {
-            targetOffset = this.shared.splitTextNode(targetNode, targetOffset);
+            targetOffset = splitTextNode(targetNode, targetOffset);
             targetNode = targetNode.parentElement;
         }
 

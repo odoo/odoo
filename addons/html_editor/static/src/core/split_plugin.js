@@ -1,6 +1,6 @@
 import { Plugin } from "../plugin";
 import { isBlock } from "../utils/blocks";
-import { fillEmpty } from "../utils/dom";
+import { fillEmpty, splitTextNode } from "../utils/dom";
 import { isTextNode, isVisible } from "../utils/dom_info";
 import { prepareUpdate } from "../utils/dom_state";
 import { childNodes, closestElement, firstLeaf, lastLeaf } from "../utils/dom_traversal";
@@ -8,7 +8,7 @@ import { DIRECTIONS, childNodeIndex, nodeSize } from "../utils/position";
 import { isProtected, isProtecting } from "@html_editor/utils/dom_info";
 
 export class SplitPlugin extends Plugin {
-    static dependencies = ["selection", "history", "delete"];
+    static dependencies = ["selection", "history", "delete", "lineBreak"];
     static name = "split";
     static shared = [
         "splitBlock",
@@ -16,7 +16,6 @@ export class SplitPlugin extends Plugin {
         "splitElementBlock",
         "splitElement",
         "splitAroundUntil",
-        "splitTextNode",
         "splitSelection",
         "isUnsplittable",
     ];
@@ -63,7 +62,7 @@ export class SplitPlugin extends Plugin {
      */
     splitBlockNode({ targetNode, targetOffset }) {
         if (targetNode.nodeType === Node.TEXT_NODE) {
-            targetOffset = this.splitTextNode(targetNode, targetOffset);
+            targetOffset = splitTextNode(targetNode, targetOffset);
             targetNode = targetNode.parentElement;
         }
         const blockToSplit = closestElement(targetNode, isBlock);
@@ -89,13 +88,7 @@ export class SplitPlugin extends Plugin {
             // unsplittable.  The check must be done from the targetNode up to
             // the block for unsplittables. There are apparently no tests for
             // this.
-
-            // @todo: instead of calling a resource, we should directly use the
-            // method `insertLineBreakElement` of the linebreak plugin. The
-            // reason we don't do it now is because there is a dependency cycle.
-            // We should resolve this todo by resolving the dependency cycle
-            // somehow.
-            this.dispatchTo("split_unsplittable_handlers", { targetNode, targetOffset });
+            this.dependencies.lineBreak.insertLineBreakElement({ targetNode, targetOffset });
             return [undefined, undefined];
         }
         const restore = prepareUpdate(targetNode, targetOffset);
@@ -228,53 +221,13 @@ export class SplitPlugin extends Plugin {
         return beforeSplit || afterSplit || limitAncestor;
     }
 
-    /**
-     * Splits a text node in two parts.
-     * If the split occurs at the beginning or the end, the text node stays
-     * untouched and unsplit. If a split actually occurs, the original text node
-     * still exists and become the right part of the split.
-     *
-     * Note: if split after or before whitespace, that whitespace may become
-     * invisible, it is up to the caller to replace it by nbsp if needed.
-     *
-     * @param {Text} textNode
-     * @param {number} offset
-     * @param {boolean} originalNodeSide Whether the original node ends up on left
-     * or right after the split
-     * @returns {number} The parentOffset if the cursor was between the two text
-     *          node parts after the split.
-     */
-    splitTextNode(textNode, offset, originalNodeSide = DIRECTIONS.RIGHT) {
-        const document = textNode.ownerDocument;
-        let parentOffset = childNodeIndex(textNode);
-
-        if (offset > 0) {
-            parentOffset++;
-
-            if (offset < textNode.length) {
-                const left = textNode.nodeValue.substring(0, offset);
-                const right = textNode.nodeValue.substring(offset);
-                if (originalNodeSide === DIRECTIONS.LEFT) {
-                    const newTextNode = document.createTextNode(right);
-                    textNode.after(newTextNode);
-                    textNode.nodeValue = left;
-                } else {
-                    const newTextNode = document.createTextNode(left);
-                    textNode.before(newTextNode);
-                    textNode.nodeValue = right;
-                }
-            }
-        }
-        return parentOffset;
-    }
-
     splitSelection() {
         let { startContainer, startOffset, endContainer, endOffset, direction } =
             this.shared.getEditableSelection();
         const isInSingleContainer = startContainer === endContainer;
         if (isTextNode(endContainer) && endOffset > 0 && endOffset < nodeSize(endContainer)) {
             const endParent = endContainer.parentNode;
-            const splitOffset = this.splitTextNode(endContainer, endOffset);
+            const splitOffset = splitTextNode(endContainer, endOffset);
             endContainer = endParent.childNodes[splitOffset - 1] || endParent.firstChild;
             if (isInSingleContainer) {
                 startContainer = endContainer;
@@ -286,7 +239,7 @@ export class SplitPlugin extends Plugin {
             startOffset > 0 &&
             startOffset < nodeSize(startContainer)
         ) {
-            this.splitTextNode(startContainer, startOffset);
+            splitTextNode(startContainer, startOffset);
             startOffset = 0;
             if (isInSingleContainer) {
                 endOffset = startContainer.textContent.length;

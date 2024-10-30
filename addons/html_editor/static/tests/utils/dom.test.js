@@ -1,6 +1,11 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { setupEditor } from "../_helpers/editor";
-import { cleanTextNode, fillEmpty, wrapInlinesInBlocks } from "@html_editor/utils/dom";
+import {
+    cleanTextNode,
+    fillEmpty,
+    splitTextNode,
+    wrapInlinesInBlocks,
+} from "@html_editor/utils/dom";
 import { getContent } from "../_helpers/selection";
 import { parseHTML } from "@html_editor/utils/html";
 import { unformat } from "../_helpers/format";
@@ -11,9 +16,9 @@ describe("splitAroundUntil", () => {
         const [p] = el.childNodes;
         const cde = p.childNodes[1].childNodes[1].firstChild;
         // We want to test with "cde" being three separate text nodes.
-        editor.shared.splitTextNode(cde, 2);
+        splitTextNode(cde, 2);
         const cd = cde.previousSibling;
-        editor.shared.splitTextNode(cd, 1);
+        splitTextNode(cd, 1);
         const d = cd;
         const result = editor.shared.splitAroundUntil(d, p.childNodes[1]);
         expect(result.tagName === "FONT").toBe(true);
@@ -27,13 +32,13 @@ describe("splitAroundUntil", () => {
         const [p] = el.childNodes;
         const cdefg = p.childNodes[1].childNodes[1].firstChild;
         // We want to test with "cdefg" being five separate text nodes.
-        editor.shared.splitTextNode(cdefg, 4);
+        splitTextNode(cdefg, 4);
         const cdef = cdefg.previousSibling;
-        editor.shared.splitTextNode(cdef, 3);
+        splitTextNode(cdef, 3);
         const cde = cdef.previousSibling;
-        editor.shared.splitTextNode(cde, 2);
+        splitTextNode(cde, 2);
         const cd = cde.previousSibling;
-        editor.shared.splitTextNode(cd, 1);
+        splitTextNode(cd, 1);
         const d = cd;
         const result = editor.shared.splitAroundUntil(
             [d, d.nextSibling.nextSibling],

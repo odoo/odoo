@@ -8,6 +8,7 @@ import {
     makeContentsInline,
     removeClass,
     setTagName,
+    splitTextNode,
     unwrapContents,
 } from "../utils/dom";
 import {
@@ -73,11 +74,7 @@ export class DomPlugin extends Plugin {
         }
         if (selection.startContainer.nodeType === Node.TEXT_NODE) {
             insertBefore = !selection.startOffset;
-            this.shared.splitTextNode(
-                selection.startContainer,
-                selection.startOffset,
-                DIRECTIONS.LEFT
-            );
+            splitTextNode(selection.startContainer, selection.startOffset, DIRECTIONS.LEFT);
             startNode = selection.startContainer;
         }
 
