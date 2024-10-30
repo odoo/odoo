@@ -81,7 +81,7 @@
         @include o-position-absolute(0, 0, 0, 0);
         z-index: -1;
         background-image: url('/web/static/img/transparent.png');
-        background-size: 10px auto;
+        background-size: var(--PreviewAlphaBg-background-size, 10px) auto;
         border-radius: inherit;
     }
     &::after {
