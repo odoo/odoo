@@ -795,7 +795,7 @@ class Users(models.Model):
         if lang not in langs:
             lang = request.best_lang if request else None
             if lang not in langs:
-                lang = self.env.user.company_id.partner_id.lang
+                lang = self.env.user.with_context(prefetch_fields=False).company_id.partner_id.lang
                 if lang not in langs:
                     lang = DEFAULT_LANG
                     if lang not in langs:
