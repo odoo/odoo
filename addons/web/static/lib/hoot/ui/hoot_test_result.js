@@ -32,22 +32,25 @@ export class HootTestResult extends Component {
     };
 
     static template = xml`
-        <details
+        <div
             class="${HootTestResult.name} flex flex-col border-b border-gray-300 dark:border-gray-600"
             t-att-class="getClassName()"
-            t-att-open="props.open"
         >
-            <summary class="px-3 flex items-center justify-between">
+            <button
+                type="button"
+                class="px-3 flex items-center justify-between"
+                t-on-click.stop="toggleDetails"
+            >
                 <t t-slot="default" />
-            </summary>
-            <t t-if="!props.test.config.skip">
+            </button>
+            <t t-if="state.showDetails and !props.test.config.skip">
                 <t t-foreach="results" t-as="result" t-key="result_index">
                     <t t-if="results.length > 1">
                         <div t-attf-class="text-{{ result.pass ? 'pass' : 'fail' }} mx-2 mb-1" >
                             <t t-esc="ordinal(result_index + 1)" /> run:
                         </div>
                     </t>
-                    <div class="hoot-result-detail grid gap-1 rounded overflow-x-auto p-1 mx-2 mb-1">
+                    <div class="hoot-result-detail grid gap-1 rounded overflow-x-auto p-1 mx-2 mb-1 animate-slide-down">
                         <t t-foreach="result.assertions || []" t-as="assertion" t-key="assertion.id">
                             <div
                                 t-attf-class="text-{{ assertion.pass ? 'pass' : 'fail' }} flex items-center gap-1 px-2 truncate"
@@ -126,7 +129,11 @@ export class HootTestResult extends Component {
                     </div>
                 </t>
                 <div class="m-2 mt-0 flex flex-col">
-                    <button class="hoot-link text-muted text-sm px-1" t-on-click="() => state.showCode = !state.showCode">
+                    <button
+                        type="button"
+                        class="hoot-link text-muted text-sm px-1"
+                        t-on-click.stop="toggleCode"
+                    >
                         <t t-if="state.showCode">
                             Hide source code
                         </t>
@@ -141,7 +148,7 @@ export class HootTestResult extends Component {
                     </t>
                 </div>
             </t>
-        </details>
+        </div>
     `;
 
     Tag = Tag;
@@ -157,6 +164,7 @@ export class HootTestResult extends Component {
         this.results = useState(this.props.test.results);
         this.state = useState({
             showCode: false,
+            showDetails: this.props.open,
         });
     }
 
@@ -188,5 +196,13 @@ export class HootTestResult extends Component {
                 return "bg-skip-900";
             }
         }
+    }
+
+    toggleCode() {
+        this.state.showCode = !this.state.showCode;
+    }
+
+    toggleDetails() {
+        this.state.showDetails = !this.state.showDetails;
     }
 }

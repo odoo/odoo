@@ -110,7 +110,7 @@ export class HootMain extends Component {
             this.state.debugTest = null;
         });
 
-        useWindowListener("keydown", (ev) => this.onWindowKeyDown(ev), { capture: true });
+        useWindowListener("keydown", (ev) => this.onWindowKeyDown(ev));
         useWindowListener("resize", (ev) => this.onWindowResize(ev));
     }
 
