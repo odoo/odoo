@@ -19,7 +19,7 @@ class DeliveryReceiptOrders(models.Model):
         comodel_name='stock.picking',
         string='Select Receipt'
     )
-    partner_id = fields.Many2one(related='picking_id.partner_id', string='Customer')
+    partner_id = fields.Many2one(related='picking_id.partner_id', string='Customer', store=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('in_progress', 'In Progress'),
@@ -35,10 +35,12 @@ class DeliveryReceiptOrders(models.Model):
         'tenant.code.configuration',
         string='Tenant Code',
         related='partner_id.tenant_code_id',
-        readonly=True
+        readonly=True,
+        store=True
     )
     site_code_id = fields.Many2one('site.code.configuration',
-                                   related='picking_id.site_code_id', string='Site Code')
+                                   related='picking_id.site_code_id', string='Site Code',
+                                   store=True)
     location_dest_id = fields.Many2one(related='picking_id.location_dest_id', string='Destination location')
 
 

@@ -41,14 +41,16 @@ class AutomationDecantingOrdersProcess(models.Model):
         comodel_name='stock.picking',
         string='Receipt Order'
     )
-    partner_id = fields.Many2one(related='picking_id.partner_id', string='Customer')
+    partner_id = fields.Many2one(related='picking_id.partner_id', string='Customer', store=True)
     tenant_code_id = fields.Many2one(
         'tenant.code.configuration',
         string='Tenant Code',
         related='partner_id.tenant_code_id',
+        store=True
     )
     site_code_id = fields.Many2one('site.code.configuration',
-                                   related='picking_id.site_code_id', string='Site Code')
+                                   related='picking_id.site_code_id', string='Site Code',
+                                   store=True)
     location_dest_id = fields.Many2one(related='picking_id.location_dest_id', string='Destination location')
     count_lines = fields.Integer(string='Count Lines')
 
