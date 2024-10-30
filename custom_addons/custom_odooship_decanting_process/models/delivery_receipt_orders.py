@@ -66,6 +66,7 @@ class DeliveryReceiptOrders(models.Model):
         for order in self:
             # Initialize a list to hold the line states
             line_states = []
+            stock_quant_obj = self.env['stock.quant']
 
             # Check if all related delivery receipt order lines have the license plate closed
             all_closed = all(line.license_plate_closed for line in order.delivery_receipt_orders_line_ids)
@@ -73,6 +74,18 @@ class DeliveryReceiptOrders(models.Model):
             # Log the status of each line for debugging
             for line in order.delivery_receipt_orders_line_ids:
                 line_states.append((line.id, line.license_plate_closed))
+                print("\n\n\n")
+                # Check the automation_manual field to decide if quantity should be updated
+                if line.automation_manual in ('automation_bulk', 'manual'):
+                    # Update the quantity in stock.quant
+                    stock_quant_obj._update_available_quantity(
+                        product_id=line.product_id,
+                        location_id=line.location_dest_id,
+                        quantity=line.quantity,
+                        # Add additional fields if needed, such as lot_id, package_id, owner_id
+                    )
+
+                    # Log the update for debugging
 
             if not all_closed:
                 raise UserError(_("All license plates must be closed before marking as done."))
@@ -115,7 +128,7 @@ class DeliveryReceiptOrdersLine(models.Model):
         comodel_name='product.product',
         string='Product',
     )
-    quantity = fields.Float(string='Quantity', required=True)
+    quantity = fields.Float(string='Quantity')
     sku_code = fields.Char(related='product_id.default_code',string='SKU')
     state = fields.Selection([
         ('open', 'Open'),
@@ -131,6 +144,13 @@ class DeliveryReceiptOrdersLine(models.Model):
     remaining_quantity = fields.Float(string='Remaining Quantity')
     license_plate_closed = fields.Boolean(string='License Plate Closed', default=False)
     display_type_line_section = fields.Boolean(string='Display Type Line Section', default=False)
+    picking_id = fields.Many2one('stock.picking',
+        string='Receipt Order'
+    )
+    location_dest_id = fields.Many2one('stock.location',string='Destination location')
+    automation_manual = fields.Selection([('automation', 'Automation'),
+                                          ('automation_bulk', 'Automation Bulk'),
+                                          ('manual', 'Manual')], string='Automation Manual')
 
     def button_close_license_plate(self):
         """
