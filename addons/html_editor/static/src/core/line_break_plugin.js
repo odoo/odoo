@@ -1,15 +1,15 @@
+import { splitTextNode } from "@html_editor/utils/dom";
 import { Plugin } from "../plugin";
 import { CTYPES } from "../utils/content_types";
 import { getState, isFakeLineBreak, prepareUpdate } from "../utils/dom_state";
 import { DIRECTIONS, leftPos, rightPos } from "../utils/position";
 
 export class LineBreakPlugin extends Plugin {
-    static dependencies = ["selection", "history", "split", "delete"];
+    static dependencies = ["selection", "history", "delete"];
     static id = "lineBreak";
     static shared = ["insertLineBreak", "insertLineBreakNode", "insertLineBreakElement"];
     resources = {
         beforeinput_handlers: this.onBeforeInput.bind(this),
-        split_unsplittable_overrides: this.insertLineBreakElement.bind(this),
     };
 
     insertLineBreak() {
@@ -30,7 +30,7 @@ export class LineBreakPlugin extends Plugin {
     }
     insertLineBreakNode({ targetNode, targetOffset }) {
         if (targetNode.nodeType === Node.TEXT_NODE) {
-            targetOffset = this.dependencies.split.splitTextNode(targetNode, targetOffset);
+            targetOffset = splitTextNode(targetNode, targetOffset);
             targetNode = targetNode.parentElement;
         }
 

@@ -1,7 +1,7 @@
 import { Plugin } from "../plugin";
 import { isBlock } from "../utils/blocks";
 import { hasAnyNodesColor } from "@html_editor/utils/color";
-import { cleanTextNode, unwrapContents } from "../utils/dom";
+import { cleanTextNode, splitTextNode, unwrapContents } from "../utils/dom";
 import {
     areSimilarElements,
     isContentEditable,
@@ -412,10 +412,7 @@ export class FormatPlugin extends Plugin {
             selection = this.dependencies.selection.setSelection(
                 {
                     anchorNode: selection.anchorNode.parentElement,
-                    anchorOffset: this.dependencies.split.splitTextNode(
-                        selection.anchorNode,
-                        selection.anchorOffset
-                    ),
+                    anchorOffset: splitTextNode(selection.anchorNode, selection.anchorOffset),
                 },
                 { normalize: false }
             );
@@ -446,7 +443,7 @@ export class FormatPlugin extends Plugin {
     insertAndSelectZws() {
         const selection = this.dependencies.selection.getEditableSelection();
         const zws = this.insertText(selection, "\u200B");
-        this.dependencies.split.splitTextNode(zws, selection.anchorOffset);
+        splitTextNode(zws, selection.anchorOffset);
         return zws;
     }
 
