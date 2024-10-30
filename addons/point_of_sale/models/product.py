@@ -347,7 +347,7 @@ class UomCateg(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return [('uom_ids', 'in', [uom['category_id'] for uom in data['uom.uom']['data']])]
+        return [('id', 'in', [uom['category_id'] for uom in data['uom.uom']['data']])]
 
     @api.model
     def _load_pos_data_fields(self, config_id):
