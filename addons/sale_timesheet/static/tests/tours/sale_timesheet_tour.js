@@ -191,6 +191,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
 }, {
     trigger: '[name=sale_line_id] ul.ui-autocomplete > li:first-child > a:not(:has(i.fa))',
     content: 'Select the first Sales Order Item in the autocomplete dropdown.',
+    run: 'click'
 }, {
     trigger: 'h1 > div[name="name"] > div > textarea',
     content: 'Set Project name',
