@@ -51,7 +51,7 @@ class ProjectProject(models.Model):
     warning_employee_rate = fields.Boolean(compute='_compute_warning_employee_rate', compute_sudo=True, export_string_translation=False)
     partner_id = fields.Many2one(
         compute='_compute_partner_id', store=True, readonly=False)
-    allocated_hours = fields.Float(copy=False)
+    allocated_hours = fields.Float()
     billing_type = fields.Selection(
         compute="_compute_billing_type",
         selection=[
