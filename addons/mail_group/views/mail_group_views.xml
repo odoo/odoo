@@ -24,14 +24,15 @@
                             <field name="image_128" widget="image" alt="Group"/>
                         </aside>
                         <main>
+                            <widget name="web_ribbon" title="Closed" bg_color="text-bg-danger" invisible="not is_closed"/>
                             <span class="fw-bold fs-5">#<field name="name"/></span>
                             <field class="text-truncate text-nowrap" name="description"/>
                             <span>
-                                <field name="member_count"/>
+                                <field name="member_count" class="me-1"/>
                                 <t t-if="record.member_count.raw_value > 1">Members</t>
                                 <t t-else="">Member</t>
                             </span>
-                            <button type="object" invisible="is_member" class="btn btn-primary ms-auto" name="action_join">Join</button>
+                            <button type="object" invisible="is_member or is_closed" class="btn btn-primary ms-auto" name="action_join">Join</button>
                             <button type="object" invisible="not is_member" class="btn btn-secondary ms-auto" name="action_leave">Leave</button>
                         </main>
                     </t>
@@ -45,13 +46,19 @@
         <field name="arch" type="xml">
             <form string="Mail Group">
                 <header>
-                    <button type="object" invisible="is_member"
-                        class="btn btn-primary" name="action_join" string="Join"/>
+                    <button type="object" class="btn btn-primary" name="action_join"
+                        string="Join" invisible="is_member or is_closed"/>
                     <button type="object" invisible="not is_member"
                         class="btn btn-secondary" name="action_leave" string="Leave"/>
-                    <button name="action_send_guidelines" type="object" class="btn btn-secondary" string="Send Guidelines"/>
+                    <button name="action_send_guidelines" type="object" class="btn btn-secondary"
+                        string="Send Guidelines" invisible="is_closed"/>
+                    <button name="action_close" type="object" class="btn btn-secondary"
+                        string="Close" invisible="is_closed"/>
+                    <button name="action_open" type="object" class="btn btn-secondary"
+                        string="Re-Open" invisible="not is_closed"/>
                 </header>
                 <sheet>
+                    <widget name="web_ribbon" title="Closed" bg_color="text-bg-danger" invisible="not is_closed"/>
                     <div class="oe_button_box" name="button_box" groups="base.group_user" invisible="not can_manage_group">
                         <button name="%(mail_group.mail_group_member_action)d"
                                 type="action"
