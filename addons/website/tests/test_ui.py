@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import json
 
 from werkzeug.urls import url_encode
 
@@ -459,12 +460,11 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_24_snippet_cache_across_websites(self):
         default_website = self.env.ref('website.default_website')
-        if self.env['website'].search_count([]) == 1:
-            self.env['website'].create({
-                'name': 'My Website 2',
-                'domain': '',
-                'sequence': 20,
-            })
+        website = self.env['website'].create({
+            'name': 'Test Website',
+            'domain': '',
+            'sequence': 20
+        })
         self.env['ir.ui.view'].with_context(website_id=default_website.id).save_snippet(
             name='custom_snippet_test',
             arch="""
@@ -475,7 +475,9 @@ class TestUi(odoo.tests.HttpCase):
             thumbnail_url='/website/static/src/img/snippets_thumbs/s_text_block.svg',
             snippet_key='s_text_block',
             template_key='website.snippets')
-        self.start_tour('/@/', 'snippet_cache_across_websites', login='admin')
+        self.start_tour('/@/', 'snippet_cache_across_websites', login='admin', cookies={
+            'websiteIdMapping': json.dumps({'Test Website': website.id})
+        })
 
     def test_25_website_edit_discard(self):
         self.start_tour('/web', 'homepage_edit_discard', login='admin')

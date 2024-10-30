@@ -4,6 +4,7 @@ odoo.define("website.tour_utils", function (require) {
 const {_t} = require("web.core");
 const {Markup} = require('web.utils');
 var tour = require("web_tour.tour");
+const { getCookie } = require('web.utils.cookies');
 
 function addMedia(position = "right") {
     return {
@@ -454,7 +455,7 @@ function switchWebsite(websiteId, websiteName) {
     }, {
         content: `Switch to website '${websiteName}'`,
         extra_trigger: `iframe html:not([data-website-id="${websiteId}"])`,
-        trigger: `.o_website_switcher_container .dropdown-item:contains("${websiteName}")`,
+        trigger: `.o_website_switcher_container .dropdown-item[data-website-id=${websiteId}]:contains("${websiteName}")`,
     }, {
         content: "Wait for the iframe to be loaded",
         // The page reload generates assets for the new website, it may take
@@ -463,6 +464,20 @@ function switchWebsite(websiteId, websiteName) {
         trigger: `iframe html[data-website-id="${websiteId}"]`,
         isCheck: true,
     }];
+}
+
+/**
+ * Switches to a different website by clicking on the website switcher.
+ * This function can only be used during test tours as it requires
+ * specific cookies to properly function.
+ *
+ * @param {string} websiteName - The name of the website to switch to.
+ * @returns {Array} - The steps required to perform the website switch.
+ */
+function testSwitchWebsite(websiteName) {
+    const websiteIdMapping = JSON.parse(getCookie('websiteIdMapping') || '{}');
+    const websiteId = websiteIdMapping[websiteName];
+    return switchWebsite(websiteId, websiteName)
 }
 
 return {
@@ -496,5 +511,6 @@ return {
     selectNested,
     selectSnippetColumn,
     switchWebsite,
+    testSwitchWebsite
 };
 });
