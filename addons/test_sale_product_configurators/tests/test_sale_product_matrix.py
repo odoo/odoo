@@ -2,7 +2,7 @@
 
 import logging
 
-from odoo.tests import tagged, loaded_demo_data
+from odoo.tests import tagged
 
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.product_matrix.tests.common import TestMatrixCommon
@@ -35,10 +35,9 @@ class TestSaleMatrixUi(TestMatrixCommon):
         cls.currency.action_unarchive()
 
     def test_sale_matrix_ui(self):
-        # TODO: Adapt to work without demo data
-        if not loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
+        self.env.ref('base.group_user').implied_ids += (
+            self.env.ref('sale_management.group_sale_order_template')
+        )
 
         # Set the template as configurable by matrix.
         self.matrix_template.product_add_mode = "matrix"
