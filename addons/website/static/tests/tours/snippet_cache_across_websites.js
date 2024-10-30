@@ -14,7 +14,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_cache_across_websites', {
     },
     // There's no need to save, but canceling might or might not show a popup...
     ...wTourUtils.clickOnSave(),
-    ...wTourUtils.switchWebsite(2, 'My Website 2'),
+    ...wTourUtils.testSwitchWebsite('Test Website'),
     ...wTourUtils.clickOnEditAndWaitEditMode(),
     {
         trigger: '#oe_snippets:not(:has(#snippet_custom_body span:contains("custom_snippet_test")))',
