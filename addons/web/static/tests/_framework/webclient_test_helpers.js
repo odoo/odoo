@@ -24,7 +24,7 @@ export function useTestClientAction() {
 }
 
 /**
- * @param {{ env: import("@web/env").OdooEnv }} [options]
+ * @param {Parameters<typeof mountWithCleanup>[1]} [options]
  */
 export async function mountWebClient(options) {
     await mountWithCleanup(WebClient, options);
