@@ -218,7 +218,7 @@ class PosSession(models.Model):
                 'fields': ['id', 'name', 'category_id', 'factor_inv', 'factor', 'is_pos_groupable', 'uom_type', 'rounding'],
             },
             'uom.category': {
-                'domain': lambda data: [('uom_ids', 'in', [uom['category_id'] for uom in data['uom.uom']])],
+                'domain': lambda data: [('id', 'in', [uom['category_id'] for uom in data['uom.uom']])],
                 'fields': ['id', 'name', 'uom_ids'],
             },
             'res.country.state': {
