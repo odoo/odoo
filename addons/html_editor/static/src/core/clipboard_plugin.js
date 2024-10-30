@@ -104,9 +104,15 @@ export class ClipboardPlugin extends Plugin {
     onCopy(ev) {
         ev.preventDefault();
         const selection = this.shared.getEditableSelection();
-
+        const commonAncestor = selection.commonAncestorContainer;
+        if (commonAncestor && commonAncestor.nodeType === Node.ELEMENT_NODE) {
+            this.dispatch("CLEAN", { root: commonAncestor });
+        }
         let clonedContents = selection.cloneContents();
         if (!clonedContents.hasChildNodes()) {
+            if (commonAncestor && commonAncestor.nodeType === Node.ELEMENT_NODE) {
+                this.dispatch("NORMALIZE", { node: commonAncestor });
+            }
             return;
         }
         // Repair the copied range.
@@ -192,6 +198,9 @@ export class ClipboardPlugin extends Plugin {
         ev.clipboardData.setData("text/plain", odooText);
         ev.clipboardData.setData("text/html", odooHtml);
         ev.clipboardData.setData("application/vnd.odoo.odoo-editor", odooHtml);
+        if (commonAncestor && commonAncestor.nodeType === Node.ELEMENT_NODE) {
+            this.dispatch("NORMALIZE", { node: commonAncestor });
+        }
     }
 
     /**

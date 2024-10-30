@@ -22,7 +22,7 @@ patch(ActionpadWidget.prototype, {
         hasChange =
             hasChange.generalNote == ""
                 ? true // for the case when removed all general note
-                : hasChange.count || hasChange.generalNote;
+                : hasChange.count || hasChange.generalNote || hasChange.modeUpdate;
         return hasChange;
     },
     get swapButtonClasses() {

@@ -410,14 +410,16 @@ actual arch.
                     ))
                     err.context = e.context
                     raise err.with_traceback(e.__traceback__) from None
-                elif err.__context__:
+                elif e.__context__:
                     err = ValidationError(_(
                         "Error while validating view (%(view)s):\n\n%(error)s", view=view.key or view.id, error=e.__context__,
                     ))
                     err.context = {'name': 'invalid view'}
                     raise err.with_traceback(e.__context__.__traceback__) from None
                 else:
-                    raise
+                    raise ValidationError(_(
+                        "Error while validating view (%(view)s):\n\n%(error)s", view=view.key or view.id, error=e,
+                    ))
 
         return True
 

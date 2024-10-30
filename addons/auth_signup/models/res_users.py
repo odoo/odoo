@@ -219,12 +219,13 @@ class ResUsers(models.Model):
                         user.id, force_send=True,
                         raise_exception=True, email_values=email_values)
                 else:
-                    body = self.env['mail.render.mixin']._render_template(
+                    user_lang = user.lang or self.env.lang or 'en_US'
+                    body = self.env['mail.render.mixin'].with_context(lang=user_lang)._render_template(
                         self.env.ref('auth_signup.reset_password_email'),
                         model='res.users', res_ids=user.ids,
                         engine='qweb_view', options={'post_process': True})[user.id]
                     mail = self.env['mail.mail'].sudo().create({
-                        'subject': _('Password reset'),
+                        'subject': self.with_context(lang=user_lang).env._('Password reset'),
                         'email_from': user.company_id.email_formatted or user.email_formatted,
                         'body_html': body,
                         **email_values,
