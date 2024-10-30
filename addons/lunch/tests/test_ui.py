@@ -41,5 +41,11 @@ class TestUi(HttpCase):
             'supplier_id': self.supplier_pizza_inn.id,
         })
 
+        user_admin = self.env.ref('base.user_admin')
+        self.env['lunch.cashmove'].create({
+            'user_id': user_admin.id,
+            'amount': 10,
+        })
+
         with freeze_time("2022-04-19 10:00"):
             self.start_tour("/", 'order_lunch_tour', login='admin', timeout=180)
