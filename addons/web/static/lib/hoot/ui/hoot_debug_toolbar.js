@@ -34,18 +34,26 @@ export class HootDebugToolBar extends Component {
             <div class="flex items-center gap-2 px-2">
                 <i class="fa fa-bug text-skip" />
                 <div class="flex gap-px rounded my-1 overflow-hidden min-w-fit">
-                    <button class="bg-btn px-2 py-1" title="Exit debug mode (Ctrl + Esc)" t-on-click="exitDebugMode">
+                    <button
+                        class="bg-btn px-2 py-1"
+                        title="Exit debug mode (Ctrl + Esc)"
+                        t-on-click.stop="exitDebugMode"
+                    >
                         <i class="fa fa-sign-out" />
                     </button>
                     <t t-if="done">
-                        <button class="bg-btn px-2 py-1 animate-slide-left" title="Restart test (F5)" t-on-click="restart">
+                        <button
+                            class="bg-btn px-2 py-1 animate-slide-left"
+                            title="Restart test (F5)"
+                            t-on-click.stop="restart"
+                        >
                             <i class="fa fa-refresh" />
                         </button>
                     </t>
                 </div>
                 <button
                     class="flex items-center gap-1 truncate"
-                    t-on-click="() => state.open = !state.open"
+                    t-on-click.stop="() => state.open = !state.open"
                     title="Click to toggle details"
                 >
                     status:

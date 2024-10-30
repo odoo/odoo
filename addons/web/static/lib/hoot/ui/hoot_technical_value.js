@@ -73,7 +73,10 @@ export class HootTechnicalValue extends Component {
         </t>
         <t t-elif="isNode(value)">
             <t t-set="elParts" t-value="toSelector(value, { object: true })" />
-            <button class="hoot-html" t-on-click="log">
+            <button
+                class="hoot-html"
+                t-on-click.stop="log"
+            >
                 <t>&lt;<t t-esc="elParts.tag" /></t>
                 <t t-if="elParts.id">
                     <span class="hoot-html-id" t-esc="elParts.id" />
@@ -87,7 +90,10 @@ export class HootTechnicalValue extends Component {
         <t t-elif="value and typeof value === 'object'">
             <t t-set="labelSize" t-value="getLabelAndSize()" />
             <pre class="hoot-technical">
-                <button class="hoot-object inline-flex items-center gap-1 me-1" t-on-click="onClick">
+                <button
+                    class="hoot-object inline-flex items-center gap-1 me-1"
+                    t-on-click.stop="onClick"
+                >
                     <t t-if="labelSize[1] > 0">
                         <i
                             class="fa fa-caret-right flex justify-center w-2 transition"
