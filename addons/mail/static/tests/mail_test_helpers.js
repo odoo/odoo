@@ -2,7 +2,7 @@ import { busService } from "@bus/services/bus_service";
 import { busModels } from "@bus/../tests/bus_test_helpers";
 
 import { mailGlobal } from "@mail/utils/common/misc";
-import { after, before, getFixture } from "@odoo/hoot";
+import { after, before, getFixture, registerDebugInfo } from "@odoo/hoot";
 import { hover as hootHover, resize } from "@odoo/hoot-dom";
 import { Component, onMounted, onPatched, onWillDestroy, status } from "@odoo/owl";
 import {
@@ -70,7 +70,6 @@ import { contains } from "./mail_test_helpers_contains";
 
 export { SIZES } from "@web/core/ui/ui_service";
 import { patch } from "@web/core/utils/patch";
-import { logger } from "@web/../lib/hoot/core/logger";
 
 export * from "./mail_test_helpers_contains";
 
@@ -88,7 +87,7 @@ patch(busService, {
             const recordsByModelName = Object.entries(payload);
             for (const [modelName, records] of recordsByModelName) {
                 for (const record of Array.isArray(records) ? records : [records]) {
-                    logger.logDebug(modelName, record);
+                    registerDebugInfo(modelName, record);
                 }
             }
         }
@@ -334,7 +333,7 @@ export async function start(options) {
         patchWithCleanup(session, {
             storeData: store.get_result(),
         });
-        logger.logDebug("session.storeData", session.storeData);
+        registerDebugInfo("session.storeData", session.storeData);
     }
     let env;
     if (options?.asTab) {
