@@ -48,14 +48,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
         string="Already invoiced",
         compute="_compute_invoice_amounts",
         help="Only confirmed down payments are considered.")
-    amount_to_invoice = fields.Monetary(
-        string="Amount to invoice",
-        compute="_compute_invoice_amounts",
-        help="The amount to invoice = Sale Order Total - Confirmed Down Payments.")
 
     # UI
     display_draft_invoice_warning = fields.Boolean(compute="_compute_display_draft_invoice_warning")
-    display_invoice_amount_warning = fields.Boolean(compute="_compute_display_invoice_amount_warning")
     consolidated_billing = fields.Boolean(
         string="Consolidated Billing", default=True,
         help="Create one invoice for all orders related to same customer and same invoicing address"
@@ -91,14 +86,6 @@ class SaleAdvancePaymentInv(models.TransientModel):
             if wizard.count == 1:
                 wizard.company_id = wizard.sale_order_ids.company_id
 
-    @api.depends('amount', 'fixed_amount', 'advance_payment_method', 'amount_to_invoice')
-    def _compute_display_invoice_amount_warning(self):
-        for wizard in self:
-            invoice_amount = wizard.fixed_amount
-            if wizard.advance_payment_method == 'percentage':
-                invoice_amount = wizard.amount / 100 * sum(wizard.sale_order_ids.mapped('amount_total'))
-            wizard.display_invoice_amount_warning = invoice_amount > wizard.amount_to_invoice
-
     @api.depends('sale_order_ids')
     def _compute_display_draft_invoice_warning(self):
         for wizard in self:
@@ -108,7 +95,6 @@ class SaleAdvancePaymentInv(models.TransientModel):
     def _compute_invoice_amounts(self):
         for wizard in self:
             wizard.amount_invoiced = sum(wizard.sale_order_ids._origin.mapped('amount_invoiced'))
-            wizard.amount_to_invoice = sum(wizard.sale_order_ids._origin.mapped('amount_to_invoice'))
 
     #=== ONCHANGE METHODS ===#
 

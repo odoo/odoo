@@ -28,7 +28,6 @@
                     <label for="amount"/>
                     <div id="payment_method_details">
                         <field name="currency_id" invisible="1"/>
-                        <field name="display_invoice_amount_warning" invisible="1"/>
                         <field name="fixed_amount"
                             invisible="advance_payment_method != 'fixed'"
                             required="advance_payment_method == 'fixed'"
@@ -39,16 +38,10 @@
                             class="oe_inline"/>
                         <span invisible="advance_payment_method != 'percentage'"
                             class="oe_inline">% </span>
-                        <span invisible="not display_invoice_amount_warning"
-                              class="oe_inline text-danger"
-                              title="The Down Payment is greater than the amount remaining to be invoiced.">
-                            <i class="fa fa-warning"/>
-                        </span>
                     </div>
                 </group>
                 <group invisible="not has_down_payments">
                     <field name="amount_invoiced"/>
-                    <field name="amount_to_invoice"/>
                 </group>
                 <footer>
                     <button name="create_invoices" type="object"
