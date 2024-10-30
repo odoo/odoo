@@ -13,17 +13,17 @@
         &.o_side_x {
             width: $o-we-handle-edge-size;
         }
-        &.w {
+        &.start {
             inset: $o-we-handles-offset-to-hide auto $o-we-handles-offset-to-hide * -1 $o-we-handle-border-width * 0.5;
             transform: translateX(-50%);
             cursor: ew-resize;
         }
-        &.e {
+        &.end {
             inset: $o-we-handles-offset-to-hide $o-we-handle-border-width * 0.5 $o-we-handles-offset-to-hide * -1 auto;
             transform: translateX(50%);
             cursor: ew-resize;
         }
-        &.n {
+        &.top {
             inset: $o-we-handles-offset-to-hide 0 auto 0;
             cursor: ns-resize;
 
@@ -35,7 +35,7 @@
                 }
             }
         }
-        &.s {
+        &.bottom {
             inset: auto 0 $o-we-handles-offset-to-hide * -1 0;
             cursor: ns-resize;
 
@@ -98,7 +98,7 @@
                 position: absolute;
                 height: $o-we-handles-btn-size;
             }
-            &.n {
+            &.top {
                 border-bottom: dashed $o-we-handle-border-width * 0.5 rgba($o-we-handles-accent-color, 0.5);
 
                 &::after {
@@ -106,7 +106,7 @@
                     transform: translateY(-50%);
                 }
             }
-            &.s {
+            &.bottom {
                 border-top: dashed $o-we-handle-border-width * 0.5 rgba($o-we-handles-accent-color, 0.5);
 
                 &::after {
@@ -138,11 +138,11 @@
             }
             &.o_column_handle {
 
-                &.n::before {
+                &.top::before {
                     margin: 0 auto auto;
                 }
 
-                &.s::before {
+                &.bottom::before {
                     margin: auto auto 0;
                 }
             }
