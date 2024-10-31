@@ -4,7 +4,7 @@ import logging
 
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
-from odoo.tests import HttpCase, loaded_demo_data, tagged
+from odoo.tests import HttpCase, tagged
 
 from odoo.addons.website.tools import MockRequest
 from odoo.addons.website_sale.controllers.main import WebsiteSale
@@ -241,15 +241,31 @@ class TestWebsiteSaleEditor(HttpCase):
         })
 
     def test_category_page_and_products_snippet(self):
-        if not loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
-        SHOP_CATEGORY_ID = 2
-        self.start_tour(self.env['website'].get_client_action_url(f'/shop/category/{SHOP_CATEGORY_ID}'), 'category_page_and_products_snippet_edition', login='restricted')
-        self.start_tour(f'/shop/category/{SHOP_CATEGORY_ID}', 'category_page_and_products_snippet_use', login=None)
+        category = self.env['product.public.category'].create({
+            'name': 'Test Category',
+        })
+        self.env['product.public.category'].create({
+            'parent_id': category.id,
+            'name': 'Test Category - Child',
+        })
+        self.env['product.template'].create({
+            'name': 'Test Product',
+            'website_published': True,
+            'public_categ_ids': [
+                Command.link(category.id)
+            ]
+        })
+        self.env['product.template'].create({
+            'name': 'Test Product Outside Category',
+            'website_published': True,
+        })
+        self.start_tour(self.env['website'].get_client_action_url('/shop'), 'category_page_and_products_snippet_edition', login='restricted')
+        self.start_tour('/shop', 'category_page_and_products_snippet_use', login=None)
 
     def test_website_sale_restricted_editor_ui(self):
-        if not loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
+        self.env['product.template'].create({
+            'name': 'Test Product',
+            'website_sequence': 0,
+            'website_published': True,
+        })
         self.start_tour(self.env['website'].get_client_action_url('/shop'), 'website_sale_restricted_editor_ui', login='restricted')

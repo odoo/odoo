@@ -264,7 +264,9 @@ class TestWebsiteSaleProductConfigurator(TestProductConfiguratorCommon, HttpCase
 
     def test_product_configurator_strikethrough_price(self):
         """ Test that the strikethrough price is applied correctly. """
-        self.env['res.config.settings'].create({'group_product_price_comparison': True}).execute()
+        self.env.ref('base.group_public').implied_ids += (
+            self.env.ref('website_sale.group_product_price_comparison')
+        )
         optional_product = self.env['product.template'].create({
             'name': "Optional product",
             'website_published': True,
