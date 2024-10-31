@@ -1220,6 +1220,7 @@ class AccountMove(models.Model):
                         new_pmt_state = 'partial'
                     elif invoice.matched_payment_ids.filtered(lambda p: not p.move_id and p.state == 'paid'):
                         new_pmt_state = invoice._get_invoice_in_payment_state()
+
             invoice.payment_state = new_pmt_state
 
     @api.depends('payment_state', 'state')
@@ -4985,11 +4986,6 @@ class AccountMove(models.Model):
             (partner | partner.commercial_partner_id)._increase_rank('customer_rank', count)
         for partner, count in supplier_count.items():
             (partner | partner.commercial_partner_id)._increase_rank('supplier_rank', count)
-
-        # Trigger action for paid invoices if amount is zero
-        to_post.filtered(
-            lambda m: m.is_invoice(include_receipts=True) and m.currency_id.is_zero(m.amount_total)
-        )._invoice_paid_hook()
 
         return to_post
 
