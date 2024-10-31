@@ -87,6 +87,7 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             'InvoiceType_template': 'l10n_my_edi.ubl_21_InvoiceType_my',
             'CreditNoteType_template': 'l10n_my_edi.ubl_21_InvoiceType_my',
             'DebitNoteType_template': 'l10n_my_edi.ubl_21_InvoiceType_my',
+            'main_template': 'account_edi_ubl_cii.ubl_20_Invoice',
 
             'InvoiceLineType_template': 'l10n_my_edi.ubl_20_InvoiceLineType_my',
             'CreditNoteLineType_template': 'l10n_my_edi.ubl_20_InvoiceLineType_my',
@@ -134,8 +135,8 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         if original_document:
             vals['vals'].update({
                 'billing_reference_vals': {
-                    'id': 'Document Internal ID',
-                    'uuid': original_document,
+                    'id': original_document.name,
+                    'uuid': original_document.l10n_my_edi_external_uuid,
                 },
             })
 
@@ -416,9 +417,9 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
     def _l10n_my_edi_get_document_type_code(self, invoice):
         """ Returns the code matching the invoice type, as well as the original document if any. """
         if 'debit_origin_id' in self.env['account.move']._fields and invoice.debit_origin_id:
-            return '03', invoice.debit_origin_id.l10n_my_edi_external_uuid
+            return '03', invoice.debit_origin_id
         elif invoice.move_type == 'out_refund':
-            return '02', invoice.reversed_entry_id.l10n_my_edi_external_uuid
+            return '02', invoice.reversed_entry_id
         else:
             return '01', None
 
