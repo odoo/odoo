@@ -9,7 +9,7 @@ odoo.define('website_sale_tour.website_sale_shop_pricelist_tour', function (requ
     }, [
     {
         content: "Check pricelist",
-        trigger: ".o_pricelist_dropdown:contains('Public Pricelist')",
+        trigger: ".o_pricelist_dropdown:contains('Public Pricelist 1')",
         run: function() {} // Check
     },
     {
