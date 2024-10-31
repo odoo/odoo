@@ -2,7 +2,7 @@
 
 import { __debug__, after, afterEach, expect, getFixture } from "@odoo/hoot";
 import { queryAll, queryFirst } from "@odoo/hoot-dom";
-import { Deferred, tick } from "@odoo/hoot-mock";
+import { Deferred, animationFrame, tick } from "@odoo/hoot-mock";
 import { isMacOS } from "@web/core/browser/feature_detection";
 import { isVisible } from "@web/core/utils/ui";
 
@@ -415,6 +415,7 @@ export async function insertText(selector, content, options = {}) {
     const { replace = false } = options;
     delete options.replace;
     await contains(selector, { ...options, insertText: { content, replace } });
+    await animationFrame(); // wait for t-model synced with new value
 }
 
 /**

@@ -2,7 +2,6 @@ import { describe, expect, test } from "@odoo/hoot";
 
 import { addLink, parseAndTransform } from "@mail/utils/common/format";
 import {
-    click,
     contains,
     defineMailModels,
     insertText,
@@ -11,6 +10,7 @@ import {
     startServer,
 } from "./mail_test_helpers";
 import { useSequential } from "@mail/utils/common/hooks";
+import { press } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -121,7 +121,7 @@ test("url", async () => {
     // see: https://www.ietf.org/rfc/rfc1738.txt
     const messageBody = "https://odoo.com?test=~^|`{}[]#";
     await insertText(".o-mail-Composer-input", messageBody);
-    await click("button[aria-label='Send']:enabled");
+    await press("Enter");
     await contains(`.o-mail-Message a:contains(${messageBody})`);
 });
 
@@ -132,7 +132,7 @@ test("url with comma at the end", async () => {
     await openDiscuss(channelId);
     const messageBody = "Go to https://odoo.com, it's great!";
     await insertText(".o-mail-Composer-input", messageBody);
-    await click("button[aria-label='Send']:enabled");
+    await press("Enter");
     await contains(".o-mail-Message a:contains(https://odoo.com)");
     await contains(`.o-mail-Message-content:contains(${messageBody}`);
 });
@@ -144,7 +144,7 @@ test("url with dot at the end", async () => {
     await openDiscuss(channelId);
     const messageBody = "Go to https://odoo.com. It's great!";
     await insertText(".o-mail-Composer-input", messageBody);
-    await click("button[aria-label='Send']:enabled");
+    await press("Enter");
     await contains(".o-mail-Message a:contains(https://odoo.com)");
     await contains(`.o-mail-Message-content:contains(${messageBody})`);
 });
@@ -156,7 +156,7 @@ test("url with semicolon at the end", async () => {
     await openDiscuss(channelId);
     const messageBody = "Go to https://odoo.com; it's great!";
     await insertText(".o-mail-Composer-input", messageBody);
-    await click("button[aria-label='Send']:enabled");
+    await press("Enter");
     await contains(".o-mail-Message a:contains(https://odoo.com)");
     await contains(`.o-mail-Message-content:contains(${messageBody})`);
 });
@@ -168,7 +168,7 @@ test("url with ellipsis at the end", async () => {
     await openDiscuss(channelId);
     const messageBody = "Go to https://odoo.com... it's great!";
     await insertText(".o-mail-Composer-input", messageBody);
-    await click("button[aria-label='Send']:enabled");
+    await press("Enter");
     await contains(".o-mail-Message a:contains(https://odoo.com)");
     await contains(`.o-mail-Message-content:contains(${messageBody})`);
 });
@@ -180,7 +180,7 @@ test("url with number in subdomain", async () => {
     await openDiscuss(channelId);
     const messageBody = "https://www.45017478-master-all.runbot134.odoo.com/odoo";
     await insertText(".o-mail-Composer-input", messageBody);
-    await click("button[aria-label='Send']:enabled");
+    await press("Enter");
     await contains(
         ".o-mail-Message a:contains(https://www.45017478-master-all.runbot134.odoo.com/odoo)"
     );

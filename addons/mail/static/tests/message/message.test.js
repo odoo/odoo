@@ -101,7 +101,7 @@ test("Editing message keeps the mentioned channels", async () => {
     await openDiscuss(channelId1);
     await insertText(".o-mail-Composer-input", "#");
     await click(".o-mail-Composer-suggestion strong", { text: "other" });
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(".o_channel_redirect", { count: 1, text: "other" });
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
@@ -149,7 +149,7 @@ test("Can edit message comment in chatter (mobile)", async () => {
     await click(".o-mail-Message-moreMenu [title='Edit']");
     await contains("button", { text: "Discard editing" });
     await insertText(".o-mail-Message .o-mail-Composer-input", "edited message", { replace: true });
-    await click("button[aria-label='Save editing']");
+    await click("button[title='Save editing']");
     await contains(".o-mail-Message-content", { text: "edited message (edited)" });
 });
 
@@ -276,7 +276,7 @@ test("Do not stop edition on click away when clicking on emoji", async () => {
     await openDiscuss(channelId);
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
-    await click(".o-mail-Composer button[aria-label='Emojis']");
+    await click(".o-mail-Composer button[title='Add Emojis']");
     await click(".o-EmojiPicker-content :nth-child(1 of .o-Emoji)");
     await contains(".o-mail-Message.o-editing .o-mail-Composer");
 });
@@ -473,7 +473,7 @@ test("Parent message body is displayed on replies", async () => {
     await openDiscuss(channelId);
     await click(".o-mail-Message [title='Reply']");
     await insertText(".o-mail-Composer-input", "FooBarFoo");
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(".o-mail-MessageInReply-message", { text: "Hello world" });
 });
 
@@ -750,7 +750,7 @@ test("should not be able to reply to temporary/transient messages", async () => 
     await openDiscuss(channelId);
     // these user interactions is to forge a transient message response from channel command "/who"
     await insertText(".o-mail-Composer-input", "/who");
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(".o-mail-Message [title='Reply']", { count: 0 });
 });
 
@@ -778,10 +778,10 @@ test.skip("squashed transient message should not have date in the sidebar", asyn
         text: "11:00", // FIXME: should be 10:00
     });
     await insertText(".o-mail-Composer-input", "/who");
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(".o-mail-Message", { text: "You are alone in this channel." });
     await insertText(".o-mail-Composer-input", "/who");
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await click(":nth-child(2 of .o-mail-Message.o-squashed");
     await tick();
     await contains(":nth-child(2 of .o-mail-Message.o-squashed) .o-mail-Message-sidebar", {
@@ -1636,7 +1636,8 @@ test("Can reply to chatter messages from history", async () => {
     await openDiscuss("mail.box_history");
     await contains(".o-mail-Message [title='Reply']");
     await click(".o-mail-Message [title='Reply']");
-    await contains("button[title='Full composer']");
+    await click(".o-mail-Composer button[title='More Actions']");
+    await contains(".dropdown-item:contains('Open Full Composer')");
 });
 
 test("Can't reply to user notifications", async () => {
@@ -1858,10 +1859,10 @@ test("discuss - bigger font size when there is only emoji", async () => {
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "🥳");
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(".o-mail-Message-body", { text: "🥳" });
     await insertText(".o-mail-Composer-input", "not only emoji!! 😅");
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(".o-mail-Message-body", { text: "not only emoji!! 😅" });
     const [emojiMessage, textMessage] = document.querySelectorAll(".o-mail-Message-body");
     expect(
@@ -1955,6 +1956,6 @@ test("Copy Message Link", async () => {
     await click("[title='Copy Link']");
     await waitForSteps([url(`/mail/message/${messageId_2}`)]);
     await press(["ctrl", "v"]);
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(".o-mail-Message", { text: url(`/mail/message/${messageId_2}`) });
 });

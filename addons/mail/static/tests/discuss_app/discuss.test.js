@@ -34,6 +34,7 @@ import {
 
 import { OutOfFocusService } from "@mail/core/common/out_of_focus_service";
 import { rpc } from "@web/core/network/rpc";
+import { press } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -142,7 +143,7 @@ test("Message following a notification should not be squashed", async () => {
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Hello world!");
-    await click(".o-mail-Composer button:enabled[aria-label='Send']");
+    await press("Enter");
     await contains(".o-mail-Message-sidebar .o-mail-Message-avatarContainer");
 });
 
@@ -155,7 +156,7 @@ test("Posting message should transform links.", async () => {
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "test https://www.odoo.com/");
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains("a[href='https://www.odoo.com/']");
 });
 
@@ -168,7 +169,7 @@ test("Posting message should transform relevant data to emoji.", async () => {
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "test :P :laughing:");
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(".o-mail-Message-body", { text: "test 😛 😆" });
 });
 
@@ -181,10 +182,10 @@ test("posting a message immediately after another one is displayed in 'simple' m
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "abc");
-    await click(".o-mail-Composer button[aria-label='Send']:enabled");
+    await press("Enter");
     await contains(".o-mail-Message", { count: 1 });
     await insertText(".o-mail-Composer-input", "def");
-    await click(".o-mail-Composer button[aria-label='Send']:enabled");
+    await press("Enter");
     await contains(".o-mail-Message", { count: 2 });
     await contains(".o-mail-Message-header"); // just 1, because 2nd message is squashed
 });
@@ -242,7 +243,7 @@ test("Can use channel command /who", async () => {
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "/who");
-    await click(".o-mail-Composer button[aria-label='Send']:enabled");
+    await press("Enter");
     await contains(".o_mail_notification", { text: "You are alone in this channel." });
 });
 
@@ -382,7 +383,7 @@ test("reply to message from inbox (message linked to document)", async () => {
     await contains(".o-mail-Composer");
     await contains(".o-mail-Composer-coreHeader", { text: "on: Refactoring" });
     await insertText(".o-mail-Composer-input:focus", "Hello");
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(".o-mail-Composer", { count: 0 });
     await contains(".o-mail-Message:not(.o-selected)");
     await contains(".o_notification:has(.o_notification_bar.bg-info)", {
@@ -407,8 +408,7 @@ test("Can reply to starred message", async () => {
     await click("[title='Reply']");
     await contains(".o-mail-Composer-coreHeader", { text: "RandomName" });
     await insertText(".o-mail-Composer-input", "abc");
-    await click(".o-mail-Composer-send:enabled");
-    await contains(".o-mail-Composer-send", { count: 0 });
+    await press("Enter");
     await contains(".o_notification", { text: 'Message posted on "RandomName"' });
     await click(".o-mail-DiscussSidebarChannel", { text: "RandomName" });
     await contains(".o-mail-Message-content", { text: "abc" });
@@ -433,8 +433,7 @@ test("Can reply to history message", async () => {
     await click("[title='Reply']");
     await contains(".o-mail-Composer-coreHeader", { text: "RandomName" });
     await insertText(".o-mail-Composer-input", "abc");
-    await click(".o-mail-Composer-send:enabled");
-    await contains(".o-mail-Composer-send", { count: 0 });
+    await press("Enter");
     await contains(".o_notification", { text: 'Message posted on "RandomName"' });
     await click(".o-mail-DiscussSidebarChannel", { text: "RandomName" });
     await contains(".o-mail-Message-content", { text: "abc" });
@@ -921,7 +920,7 @@ test("post a simple message", async () => {
     await contains(".o-mail-Thread", { text: "The conversation is empty." });
     await contains(".o-mail-Message", { count: 0 });
     await insertText(".o-mail-Composer-input", "Test");
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await waitForSteps(["message_post"]);
     // optimistically show posted message
     await contains(".o-mail-Composer-input", { value: "" });
@@ -950,13 +949,13 @@ test("post several messages with failures", async () => {
     await contains(".o-mail-Thread", { text: "The conversation is empty." });
     await contains(".o-mail-Message", { count: 0 });
     await insertText(".o-mail-Composer-input", "0");
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(".o-mail-Composer-input", { value: "" });
     await insertText(".o-mail-Composer-input", "1");
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(".o-mail-Composer-input", { value: "" });
     await insertText(".o-mail-Composer-input", "2");
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(".o-mail-Composer-input", { value: "" });
     await contains(".o-mail-Message-author", { text: "Mitchell Admin" });
     await contains(".o-mail-Thread", {
@@ -1713,7 +1712,7 @@ test("composer should be focused automatically after clicking on the send button
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Dummy Message");
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     expect(".o-mail-Composer-input").toBeFocused();
 });
 
@@ -1774,9 +1773,7 @@ test("warning on send with shortcut when attempting to post message with still-u
     await editInput(document.body, ".o-mail-Composer input[type=file]", [file]);
     await contains(".o-mail-AttachmentCard");
     await contains(".o-mail-AttachmentCard .fa.fa-spinner");
-    await contains(".o-mail-Composer-send:disabled");
-    // Try to send message
-    triggerHotkey("Enter");
+    await press("Enter"); // Try to send message
     await contains(".o_notification", { text: "Please wait while the file is uploading." });
 });
 

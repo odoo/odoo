@@ -202,10 +202,10 @@ export function useOnBottomScrolled(refName, callback, threshold = 1) {
         }
     }
     onMounted(() => {
-        ref.el.addEventListener("scroll", onScroll);
+        ref.el?.addEventListener("scroll", onScroll);
     });
     onWillUnmount(() => {
-        ref.el.removeEventListener("scroll", onScroll);
+        ref.el?.removeEventListener("scroll", onScroll);
     });
 }
 

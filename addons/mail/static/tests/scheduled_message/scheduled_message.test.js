@@ -39,11 +39,13 @@ test("Scheduled messages basic layout", async () => {
     await contains(
         `.o-mail-Message-avatarContainer img.cursor-pointer[data-src='${getOrigin()}/web/image/res.partner/${partnerId}/avatar_128?unique=${
             deserializeDateTime(partner.write_date).ts
-        }']`,
+        }']`
     );
     await contains(
-        `.o-mail-Message-date[title='${deserializeDateTime(scheduled_date).toLocaleString(luxon.DateTime.DATETIME_SHORT)}']`,
-        { text: "in 3 hours" }, // 3 hours because luxon toRelative rounds down
+        `.o-mail-Message-date[title='${deserializeDateTime(scheduled_date).toLocaleString(
+            luxon.DateTime.DATETIME_SHORT
+        )}']`,
+        { text: "in 3 hours" } // 3 hours because luxon toRelative rounds down
     );
     await contains(".o-mail-Message-body em", { text: "Subject: Greetings" });
     await contains(".o-mail-Message-body p", { text: "Hello There" });
@@ -277,7 +279,7 @@ test("Scheduling a message", async () => {
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Chatter");
     await click(".o-mail-Chatter-sendMessage");
-    await click(".o-mail-Composer-fullComposer");
+    await click(".o-mail-Composer button[title='Open Full Composer']");
     await contains(".o-mail-Scheduled-Message");
     await contains(".o-mail-Message-body", { text: "New scheduled message" });
 });

@@ -1,4 +1,4 @@
-import { Component, toRaw, useComponent, useState, xml } from "@odoo/owl";
+import { toRaw, useComponent, useState } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { download } from "@web/core/network/download";
@@ -6,9 +6,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { discussComponentRegistry } from "./discuss_component_registry";
 import { Deferred } from "@web/core/utils/concurrency";
-import { EMOJI_PICKER_PROPS, EmojiPicker } from "@web/core/emoji_picker/emoji_picker";
-import { Dialog } from "@web/core/dialog/dialog";
-import { onExternalClick } from "@mail/utils/common/hooks";
+import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { convertBrToLineBreak } from "@mail/utils/common/format";
 import { QuickReactionMenu } from "@mail/core/common/quick_reaction_menu";
 
@@ -16,36 +14,9 @@ const { DateTime } = luxon;
 
 export const messageActionsRegistry = registry.category("mail.message/actions");
 
-class EmojiPickerMobile extends Component {
-    static components = { Dialog, EmojiPicker };
-    static props = [...EMOJI_PICKER_PROPS, "onClose?"];
-    static template = xml`
-        <Dialog size="'lg'" header="false" footer="false" contentClass="'o-discuss-mobileContextMenu d-flex position-absolute bottom-0 rounded-0 h-50 bg-100'">
-            <div t-ref="root">
-                <EmojiPicker t-props="emojiPickerProps"/>
-            </div>
-        </Dialog>
-    `;
-
-    get emojiPickerProps() {
-        return {
-            ...this.props,
-            onSelect: (...args) => {
-                this.props.onSelect(...args);
-                this.props.close?.();
-            },
-        };
-    }
-
-    setup() {
-        super.setup();
-        onExternalClick("root", () => this.props.close?.());
-    }
-}
-
 messageActionsRegistry
     .add("reaction", {
-        callComponent: QuickReactionMenu,
+        component: QuickReactionMenu,
         props: (component) => ({
             message: component.props.message,
             action: messageActionsRegistry.get("reaction"),
@@ -54,26 +25,24 @@ messageActionsRegistry
         condition: (component) => component.props.message.canAddReaction(component.props.thread),
         icon: "oi oi-smile-add",
         title: _t("Add a Reaction"),
-        onClick: async (component) => {
-            const def = new Deferred();
-            component.dialog.add(
-                EmojiPickerMobile,
-                {
-                    onSelect: (emoji) => {
-                        const reaction = component.props.message.reactions.find(
-                            ({ content, personas }) =>
-                                content === emoji &&
-                                personas.find((persona) => persona.eq(component.store.self))
-                        );
-                        if (!reaction) {
-                            component.props.message.react(emoji);
-                        }
-                        def.resolve(true);
-                    },
+        onClick: async (component, action) =>
+            component.reactionPicker.open({
+                el: component.root?.el?.querySelector(`[name="${action.id}"]`),
+            }),
+        setup() {
+            const component = useComponent();
+            component.reactionPicker = useEmojiPicker(undefined, {
+                onSelect: (emoji) => {
+                    const reaction = component.props.message.reactions.find(
+                        ({ content, personas }) =>
+                            content === emoji &&
+                            personas.find((persona) => persona.eq(component.store.self))
+                    );
+                    if (!reaction) {
+                        component.props.message.react(emoji);
+                    }
                 },
-                { context: component, onClose: () => def.resolve(false) }
-            );
-            return def;
+            });
         },
         sequence: 10,
     })
@@ -225,20 +194,11 @@ function transformAction(component, id, action) {
         get title() {
             return typeof action.title === "function" ? action.title(component) : action.title;
         },
-        callComponent: action.callComponent,
         get props() {
             return action.props(component);
         },
-        /**
-         * Action to execute when this action is click.
-         *
-         * @param {object} [param0]
-         * @param {boolean} [param0.keepPrevious] Whether the previous action
-         * should be kept so that closing the current action goes back
-         * to the previous one.
-         * */
-        onClick() {
-            return action.onClick?.(component);
+        onClick(ev) {
+            return action.onClick?.(component, this, ev);
         },
         /** Determines the order of this action (smaller first). */
         get sequence() {

@@ -17,7 +17,7 @@ import {
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
 import { describe, expect, test } from "@odoo/hoot";
-import { queryFirst, queryValue } from "@odoo/hoot-dom";
+import { press, queryFirst, queryValue } from "@odoo/hoot-dom";
 import { Deferred, mockDate, tick } from "@odoo/hoot-mock";
 import {
     asyncStep,
@@ -256,7 +256,7 @@ test("thread is still scrolling after scrolling up then to bottom", async () => 
     await scroll(".o-mail-Thread", queryFirst(".o-mail-Thread").scrollHeight / 2);
     await scroll(".o-mail-Thread", "bottom");
     await insertText(".o-mail-Composer-input", "123");
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(".o-mail-Message", { count: 21 });
     await contains(".o-mail-Thread", { scroll: "bottom" });
 });
@@ -269,7 +269,7 @@ test("mention a channel with space in the name", async () => {
     await insertText(".o-mail-Composer-input", "#");
     await click(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "#General good boy " });
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(".o-mail-Message-body .o_channel_redirect", { text: "General good boy" });
 });
 
@@ -281,7 +281,7 @@ test('mention a channel with "&" in the name', async () => {
     await insertText(".o-mail-Composer-input", "#");
     await click(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "#General & good " });
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(".o-mail-Message-body .o_channel_redirect", { text: "General & good" });
 });
 
@@ -521,7 +521,7 @@ test("Mention a partner with special character (e.g. apostrophe ')", async () =>
     await insertText(".o-mail-Composer-input", "Pyn");
     await click(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "@Pynya's spokesman " });
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(
         `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId}"][data-oe-model="res.partner"]`,
         { text: "@Pynya's spokesman" }
@@ -556,7 +556,7 @@ test("mention 2 different partners that have the same name", async () => {
     await insertText(".o-mail-Composer-input", "@Te");
     await click(":nth-child(2 of .o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "@TestPartner @TestPartner " });
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(
         `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId_1}"][data-oe-model="res.partner"]`,
         { text: "@TestPartner" }
@@ -575,7 +575,7 @@ test("mention a channel on a second line when the first line contains #", async 
     await insertText(".o-mail-Composer-input", "#blabla\n#");
     await click(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "#blabla\n#General good " });
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(".o-mail-Message-body .o_channel_redirect", { text: "General good" });
 });
 
@@ -590,7 +590,7 @@ test("mention a channel when replacing the space after the mention by another ch
     const text = queryValue(".o-mail-Composer-input:first");
     queryFirst(".o-mail-Composer-input").value = text.slice(0, -1);
     await insertText(".o-mail-Composer-input", ", test");
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(".o-mail-Message-body .o_channel_redirect", { text: "General good" });
 });
 
@@ -615,7 +615,7 @@ test("mention 2 different channels that have the same name", async () => {
     await insertText(".o-mail-Composer-input", "#m");
     await click(":nth-child(2 of .o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "#my channel #my channel " });
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(
         `.o-mail-Message-body .o_channel_redirect[data-oe-id="${channelId_1}"][data-oe-model="discuss.channel"]`,
         { text: "my channel" }
@@ -644,7 +644,7 @@ test("Post a message containing an email address followed by a mention on anothe
     await insertText(".o-mail-Composer-input", "email@odoo.com\n@Te");
     await click(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "email@odoo.com\n@TestPartner " });
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(
         `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId}"][data-oe-model="res.partner"]`,
         { text: "@TestPartner" }
@@ -700,11 +700,11 @@ test("first unseen message should be directly preceded by the new message separa
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "not empty");
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(".o-mail-Message", { text: "not empty" });
     // send a command that leads to receiving a transient message
     await insertText(".o-mail-Composer-input", "/who");
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(".o-mail-Message", { count: 2 });
     // composer is focused by default, we remove that focus
     queryFirst(".o-mail-Composer-input").blur();
@@ -728,7 +728,7 @@ test("composer should be focused automatically after clicking on the send button
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Dummy Message");
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(".o-mail-Composer-input:focus");
 });
 
@@ -937,10 +937,10 @@ test("Transient messages are added at the end of the thread", async () => {
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Dummy Message");
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(".o-mail-Message");
     await insertText(".o-mail-Composer-input", "/help");
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(".o-mail-Message", { count: 2 });
     await contains(":nth-child(1 of .o-mail-Message)", { text: "Mitchell Admin" });
     await contains(":nth-child(2 of .o-mail-Message)", { text: "OdooBot" });

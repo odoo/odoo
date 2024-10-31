@@ -11,7 +11,7 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { queryFirst } from "@odoo/hoot-dom";
+import { press, queryFirst } from "@odoo/hoot-dom";
 import { Deferred, mockDate } from "@odoo/hoot-mock";
 import {
     asyncStep,
@@ -1059,7 +1059,7 @@ test("chat should be sorted by last activity time", async () => {
     await click(".o-mail-DiscussSidebarChannel", { text: "Demo" });
     // post a new message on the last channel
     await insertText(".o-mail-Composer-input[placeholder='Message Demo…']", "Blabla");
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(".o-mail-Message", { text: "Blabla" });
     await contains(
         ".o-mail-DiscussSidebarChannel",

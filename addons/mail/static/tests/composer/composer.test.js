@@ -29,7 +29,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { Composer } from "@mail/core/common/composer";
-import { queryFirst } from "@odoo/hoot-dom";
+import { press, queryFirst } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -98,7 +98,7 @@ test("add an emoji", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "swamp-safari" });
     await start();
     await openDiscuss(channelId);
-    await click("button[aria-label='Emojis']");
+    await click("button[title='Add Emojis']");
     await click(".o-Emoji", { text: "😤" });
     await contains(".o-mail-Composer-input", { value: "😤" });
 });
@@ -109,13 +109,13 @@ test("emojis are auto-substituted from text", async () => {
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", ":)");
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(".o-mail-Message-body", { text: "😊" });
     await insertText(".o-mail-Composer-input", "x'D");
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(".o-mail-Message-body", { text: "😂" });
     await insertText(".o-mail-Composer-input", ">:)");
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(".o-mail-Message-body", { text: "😈" });
 });
 
@@ -125,7 +125,7 @@ test("Exiting emoji picker brings the focus back to the Composer textarea", asyn
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     await start();
     await openDiscuss(channelId);
-    await click("button[aria-label='Emojis']");
+    await click("button[title='Add Emojis']");
     await contains(".o-mail-Composer-input:not(:focus)");
     triggerHotkey("Escape");
     await contains(".o-mail-Composer-input:focus");
@@ -138,7 +138,7 @@ test("add an emoji after some text", async () => {
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Blabla");
     await contains(".o-mail-Composer-input", { value: "Blabla" });
-    await click("button[aria-label='Emojis']");
+    await click("button[title='Add Emojis']");
     await click(".o-Emoji", { text: "🤑" });
     await contains(".o-mail-Composer-input", { value: "Blabla🤑" });
 });
@@ -154,7 +154,8 @@ test("add emoji replaces (keyboard) text selection", async () => {
     document
         .querySelector(".o-mail-Composer-input")
         .setSelectionRange(0, document.querySelector(".o-mail-Composer-input").value.length);
-    await click("button[aria-label='Emojis']");
+    await animationFrame(); // wait synced with model selection
+    await click("button[title='Add Emojis']");
     await click(".o-Emoji", { text: "🤠" });
     await contains(".o-mail-Composer-input", { value: "🤠" });
 });
@@ -167,8 +168,10 @@ test("Cursor is positioned after emoji after adding it", async () => {
     await insertText(".o-mail-Composer-input", "Blabla");
     const textarea = document.querySelector(".o-mail-Composer-input");
     textarea.setSelectionRange(2, 2);
-    await click("button[aria-label='Emojis']");
+    await animationFrame(); // wait synced with model selection
+    await click("button[title='Add Emojis']");
     await click(".o-Emoji", { text: "🤠" });
+    await contains(".o-mail-Composer-input", { value: "Bl🤠abla" });
     const expectedPos = 2 + "🤠".length;
     expect(textarea.selectionStart).toBe(expectedPos);
     expect(textarea.selectionEnd).toBe(expectedPos);
@@ -185,8 +188,10 @@ test("selected text is not replaced after cancelling the selection", async () =>
     document
         .querySelector(".o-mail-Composer-input")
         .setSelectionRange(0, document.querySelector(".o-mail-Composer-input").value.length);
+    await animationFrame(); // wait synced with model selection
     await click(".o-mail-Discuss-content");
-    await click("button[aria-label='Emojis']");
+    await animationFrame(); // wait t-model of Composer input synced with selection reset
+    await click("button[title='Add Emojis']");
     await click(".o-Emoji", { text: "🤠" });
     await contains(".o-mail-Composer-input", { value: "Blabla🤠" });
 });
@@ -203,7 +208,7 @@ test("Selection is kept when changing channel and going back to original channel
     // simulate selection of all the content by keyboard
     const textarea = queryFirst(".o-mail-Composer-input");
     textarea.setSelectionRange(0, textarea.value.length);
-    await tick();
+    await animationFrame(); // synced with model selection
     await click(":nth-child(2 of .o-mail-DiscussSidebarChannel-container)");
     await click(":nth-child(1 of .o-mail-DiscussSidebarChannel-container)");
     expect(textarea.selectionStart).toBe(0);
@@ -215,9 +220,9 @@ test("click on emoji button, select emoji, then re-click on button should show e
     const channelId = pyEnv["discuss.channel"].create({ name: "roblox-skateboarding" });
     await start();
     await openDiscuss(channelId);
-    await click("button[aria-label='Emojis']");
+    await click("button[title='Add Emojis']");
     await click(".o-Emoji", { text: "👺" });
-    await click("button[aria-label='Emojis']");
+    await click("button[title='Add Emojis']");
     await contains(".o-EmojiPicker");
 });
 
@@ -226,10 +231,10 @@ test("keep emoji picker scroll value when re-opening it", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "roblox-carsurfing" });
     await start();
     await openDiscuss(channelId);
-    await click("button[aria-label='Emojis']");
+    await click("button[title='Add Emojis']");
     await scroll(".o-EmojiPicker-content", 150);
-    await click("button[aria-label='Emojis']");
-    await click("button[aria-label='Emojis']");
+    await click("button[title='Add Emojis']");
+    await click("button[title='Add Emojis']");
     await contains(".o-EmojiPicker-content", { scroll: 150 });
 });
 
@@ -238,10 +243,10 @@ test("reset emoji picker scroll value after an emoji is picked", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "roblox-fingerskating" });
     await start();
     await openDiscuss(channelId);
-    await click("button[aria-label='Emojis']");
+    await click("button[title='Add Emojis']");
     await scroll(".o-EmojiPicker-content", 150);
     await click(".o-Emoji", { text: "😎" });
-    await click("button[aria-label='Emojis']");
+    await click("button[title='Add Emojis']");
     await contains(".o-EmojiPicker-content", { scroll: 0 });
 });
 
@@ -258,24 +263,24 @@ test("keep emoji picker scroll value independent if two or more different emoji 
         { name: "Sales", channel_member_ids },
     ]);
     await start();
-    await click("button[aria-label='Emojis']", {
+    await click("button[title='Add Emojis']", {
         parent: [".o-mail-ChatWindow", { text: "Sales" }],
     });
     await scroll(".o-EmojiPicker-content", 200);
     await contains(".o-EmojiPicker-content", { scroll: 200 });
-    await click("button[aria-label='Emojis']", {
+    await click("button[title='Add Emojis']", {
         parent: [".o-mail-ChatWindow", { text: "Sales" }],
     });
     await contains(".o-EmojiPicker-content", { count: 0 });
-    await click("button[aria-label='Emojis']", {
+    await click("button[title='Add Emojis']", {
         parent: [".o-mail-ChatWindow", { text: "roblox-jaywalking" }],
     });
     await scroll(".o-EmojiPicker-content", 150);
     await contains(".o-EmojiPicker-content", { scroll: 150 });
-    await click("button[aria-label='Emojis']", {
+    await click("button[title='Add Emojis']", {
         parent: [".o-mail-ChatWindow", { text: "roblox-jaywalking" }],
     });
-    await click("button[aria-label='Emojis']", {
+    await click("button[title='Add Emojis']", {
         parent: [".o-mail-ChatWindow", { text: "Sales" }],
     });
     await contains(".o-EmojiPicker-content", { scroll: 200 });
@@ -288,19 +293,19 @@ test("composer text input cleared on message post", async () => {
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "test message");
     await contains(".o-mail-Composer-input", { value: "test message" });
-    await click(".o-mail-Composer-send:not([disabled])");
+    await press("Enter");
     await contains(".o-mail-Message");
     await contains(".o-mail-Composer-input", { value: "" });
 });
 
-test("send message only once when button send is clicked twice quickly", async () => {
+test("send message only once when ENTER twice quickly", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "nether-picnic" });
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "test message");
-    await click(".o-mail-Composer-send:enabled");
-    await click(".o-mail-Composer-send:enabled");
+    press("Enter");
+    press("Enter");
     await contains(".o-mail-Message");
 });
 
@@ -313,8 +318,8 @@ test("Show send button in mobile", async () => {
     await contains("button.active", { text: "Inbox" });
     await click("button", { text: "Channel" });
     await click(".o-mail-NotificationItem", { text: "minecraft-wii-u" });
-    await contains(".o-mail-Composer button[aria-label='Send']");
-    await contains(".o-mail-Composer button[aria-label='Send'] i.fa-paper-plane-o");
+    await contains(".o-mail-Composer button[title='Send']");
+    await contains(".o-mail-Composer button[title='Send'] i.fa-paper-plane-o");
 });
 
 test("composer textarea content is retained when changing channel then going back", async () => {
@@ -354,7 +359,7 @@ test("add an emoji after a partner mention", async () => {
     await insertText(".o-mail-Composer-input", "@Te");
     await click(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "@TestPartner " });
-    await click("button[aria-label='Emojis']");
+    await click("button[title='Add Emojis']");
     await click(".o-Emoji", { text: "😊" });
     await contains(".o-mail-Composer-input", { value: "@TestPartner 😊" });
 });
@@ -387,7 +392,7 @@ test("add an emoji after a channel mention", async () => {
     await insertText(".o-mail-Composer-input", "#");
     await click(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "#General " });
-    await click("button[aria-label='Emojis']");
+    await click("button[title='Add Emojis']");
     await click(".o-Emoji", { text: "😊" });
     await contains(".o-mail-Composer-input", { value: "#General 😊" });
 });
@@ -631,7 +636,7 @@ test("composer: add an attachment", async () => {
     const text = new File(["hello, world"], "text.txt", { type: "text/plain" });
     await start();
     await openDiscuss(channelId);
-    await inputFiles(".o-mail-Composer-coreMain .o_input_file", [text]);
+    await inputFiles(".o-mail-Composer .o_input_file", [text]);
     await contains(".o-mail-AttachmentCard .fa-check");
     await contains(".o-mail-Composer-footer .o-mail-AttachmentList");
     await contains(".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentCard");
@@ -655,7 +660,7 @@ test("composer: add an attachment in reply to message in history", async () => {
     await start();
     await openDiscuss("mail.box_history");
     await click("[title='Reply']");
-    await inputFiles(".o-mail-Composer-coreMain .o_input_file", [text]);
+    await inputFiles(".o-mail-Composer .o_input_file", [text]);
     await contains(".o-mail-AttachmentCard .fa-check");
     await contains(".o-mail-Composer-footer .o-mail-AttachmentList");
     await contains(".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentCard");
@@ -669,14 +674,14 @@ test("composer: send button is disabled if attachment upload is not finished", a
     onRpcBefore("/mail/attachment/upload", async () => await attachmentUploadedDef);
     await start();
     await openDiscuss(channelId);
-    await inputFiles(".o-mail-Composer-coreMain .o_input_file", [text]);
+    await inputFiles(".o-mail-Composer .o_input_file", [text]);
     await contains(".o-mail-AttachmentCard.o-isUploading");
-    await contains(".o-mail-Composer-send:disabled");
+    await press("Enter");
     // simulates attachment finishes uploading
     attachmentUploadedDef.resolve();
     await contains(".o-mail-AttachmentCard");
     await contains(".o-mail-AttachmentCard.o-isUploading", { count: 0 });
-    await contains(".o-mail-Composer-send:enabled");
+    await press("Enter");
 });
 
 test("remove an attachment from composer does not need any confirmation", async () => {
@@ -685,7 +690,7 @@ test("remove an attachment from composer does not need any confirmation", async 
     const text = new File(["hello, world"], "text.txt", { type: "text/plain" });
     await start();
     await openDiscuss(channelId);
-    await inputFiles(".o-mail-Composer-coreMain .o_input_file", [text]);
+    await inputFiles(".o-mail-Composer .o_input_file", [text]);
     await contains(".o-mail-AttachmentCard .fa-check");
     await contains(".o-mail-Composer-footer .o-mail-AttachmentList");
     await contains(".o-mail-AttachmentList .o-mail-AttachmentCard");
@@ -730,7 +735,7 @@ test("remove an uploading attachment", async () => {
     onRpc("/mail/attachment/upload", () => new Deferred()); // simulates uploading indefinitely
     await start();
     await openDiscuss(channelId);
-    await inputFiles(".o-mail-Composer-coreMain .o_input_file", [text]);
+    await inputFiles(".o-mail-Composer .o_input_file", [text]);
     await contains(".o-mail-AttachmentCard.o-isUploading");
     await click(".o-mail-AttachmentCard-unlink");
     await contains(".o-mail-Composer .o-mail-AttachmentCard", { count: 0 });
@@ -786,7 +791,7 @@ test("Uploading multiple files in the composer create multiple temporary attachm
     onRpc("/mail/attachment/upload", () => new Deferred());
     await start();
     await openDiscuss(channelId);
-    await inputFiles(".o-mail-Composer-coreMain .o_input_file", [text1, text2]);
+    await inputFiles(".o-mail-Composer .o_input_file", [text1, text2]);
     await contains(".o-mail-AttachmentCard", { text: "text1.txt" });
     await contains(".o-mail-AttachmentCard", { text: "text2.txt" });
     await contains(".o-mail-AttachmentCard-aside div[title='Uploading']", { count: 2 });
@@ -805,7 +810,7 @@ test("[technical] does not crash when an attachment is removed before its upload
     onRpcBefore("/mail/attachment/upload", async () => await uploadDef);
     await start();
     await openDiscuss(channelId);
-    await inputFiles(".o-mail-Composer-coreMain .o_input_file", [text1, text2]);
+    await inputFiles(".o-mail-Composer .o_input_file", [text1, text2]);
     await contains(".o-mail-AttachmentCard.o-isUploading", { text: "text1.txt" });
     await click(".o-mail-AttachmentCard-unlink", {
         parent: [".o-mail-AttachmentCard.o-isUploading", { text: "text2.txt" }],
@@ -921,7 +926,7 @@ test("add an emoji after a canned response", async () => {
     await insertText(".o-mail-Composer-input", ":");
     await click(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "Hello! How are you? " });
-    await click("button[aria-label='Emojis']");
+    await click("button[title='Add Emojis']");
     await click(".o-Emoji", { text: "😊" });
     await contains(".o-mail-Composer-input", { value: "Hello! How are you? 😊" });
 });
@@ -1029,7 +1034,7 @@ test("Canned response last used changes on posting", async () => {
     await click(".o-mail-NavigableList-item", { text: "testTest a canned response?" });
     await contains(".o-mail-Composer-input", { value: "Test a canned response? " });
     expect(cannedResponse.last_used).toBeEmpty();
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(".o-mail-Message");
     cannedResponse = pyEnv["mail.canned.response"].search_read([["id", "=", cannedResponseId]])[0];
     expect(cannedResponse.last_used).not.toBeEmpty();

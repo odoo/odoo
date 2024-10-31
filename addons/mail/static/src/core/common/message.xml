@@ -86,7 +86,7 @@
                                                             'align-self-start rounded-end-3 rounded-bottom-3': !state.isEditing and !message.is_note,
                                                             'flex-grow-1': state.isEditing,
                                                             }" t-ref="body">
-                                                    <Composer t-if="state.isEditing" autofocus="true" composer="message.composer" onDiscardCallback.bind="exitEditMode" onPostCallback.bind="exitEditMode" mode="env.inChatter ? 'extended' : 'compact'" sidebar="false"/>
+                                                    <Composer t-if="state.isEditing" autofocus="true" composer="message.composer" onDiscardCallback.bind="exitEditMode" onPostCallback.bind="exitEditMode" mode="'compact'" sidebar="false"/>
                                                     <t t-else="">
                                                         <em t-if="message.subject and !message.isSubjectSimilarToThreadName and !message.isSubjectDefault" class="d-block text-muted smaller">Subject: <t t-out="props.messageSearch?.highlight(message.subject) ?? message.subject"/></em>
                                                         <div class="overflow-x-auto" t-if="message.message_type and message.message_type.includes('email')" t-ref="shadowBody"/>
@@ -151,7 +151,7 @@
                 <t t-foreach="quickActions" t-as="action" t-key="action.id">
                     <t t-set="isStart" t-value="(!isReverse and action.isFirst) or (isReverse and action.isLast)"/>
                     <t t-set="isEnd" t-value="(!isReverse and action.isLast) or (isReverse and action.isFirst)"/>
-                    <t t-if="action.callComponent" t-component="action.callComponent" t-props="action.props" classNames="{
+                    <t t-if="action.component" t-component="action.component" t-props="action.props" classNames="{
                         'rounded-start-1': isStart,
                         'rounded-end-1': isEnd,
                     }"/>

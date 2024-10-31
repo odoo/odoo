@@ -73,7 +73,7 @@ test.tags("focus required")("reply: discard on pressing escape", async () => {
     await click("[title='Reply']");
     await contains(".o-mail-Composer");
     // Escape on emoji picker does not stop replying
-    await click(".o-mail-Composer button[aria-label='Emojis']");
+    await click(".o-mail-Composer button[title='Add Emojis']");
     await contains(".o-EmojiPicker");
     triggerHotkey("Escape");
     await contains(".o-EmojiPicker", { count: 0 });
@@ -91,7 +91,7 @@ test.tags("focus required")("reply: discard on pressing escape", async () => {
 
 test('"reply to" composer should log note if message replied to is a note', async () => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({});
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const messageId = pyEnv["mail.message"].create({
         body: "not empty",
         is_note: true,
@@ -116,7 +116,7 @@ test('"reply to" composer should log note if message replied to is a note', asyn
     await click("[title='Reply']");
     await contains(".o-mail-Composer [placeholder='Log an internal note…']");
     await insertText(".o-mail-Composer-input", "Test");
-    await click(".o-mail-Composer-send:enabled", { text: "Log" });
+    await click(".o-mail-Composer button[title='Log']");
     await contains(".o-mail-Composer", { count: 0 });
     await waitForSteps(["/mail/message/post"]);
 });
@@ -148,8 +148,8 @@ test('"reply to" composer should send message if message replied to is not a not
     await click("[title='Reply']");
     await contains(".o-mail-Composer [placeholder='Send a message to followers…']");
     await insertText(".o-mail-Composer-input", "Test");
-    await click(".o-mail-Composer-send[aria-label='Send']:enabled");
-    await contains(".o-mail-Composer-send", { count: 0 });
+    await click(".o-mail-Composer button[title='Send']:enabled");
+    await contains(".o-mail-Composer button[title='Send']", { count: 0 });
     await waitForSteps(["/mail/message/post"]);
 });
 

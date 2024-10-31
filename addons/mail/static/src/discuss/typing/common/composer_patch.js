@@ -83,7 +83,8 @@ patch(Composer.prototype, {
         }
     },
     addEmoji(str) {
-        super.addEmoji(str);
+        const res = super.addEmoji(str);
         this.detectTyping();
+        return res;
     },
 });

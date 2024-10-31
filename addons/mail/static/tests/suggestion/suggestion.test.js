@@ -20,6 +20,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { Composer } from "@mail/core/common/composer";
+import { press } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -81,7 +82,7 @@ test('post a first message then display partner mention suggestions on typing "@
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input");
     await insertText(".o-mail-Composer-input", "first message");
-    await click("button[aria-label='Send']:enabled");
+    await press("Enter");
     await contains(".o-mail-Message");
     await insertText(".o-mail-Composer-input", "@");
     await contains(".o-mail-Composer-suggestion strong", { count: 3 });
@@ -227,7 +228,7 @@ test("mention a channel thread", async () => {
     });
     await click(".o-mail-Composer-suggestion:eq(1)");
     await contains(".o-mail-Composer-input", { value: "#General > ThreadOne " });
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(".o-mail-Message a.o_channel_redirect:has(i.fa-comments-o)", {
         text: "General > ThreadOne",
     });
@@ -384,6 +385,6 @@ test("Mention with @everyone", async () => {
     await insertText(".o-mail-Composer-input", "@ever");
     await click(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "@everyone " });
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(".o-mail-Message-bubble.o-orange");
 });

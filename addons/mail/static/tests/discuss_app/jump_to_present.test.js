@@ -16,7 +16,7 @@ import { describe, expect, test } from "@odoo/hoot";
 
 import { PRESENT_VIEWPORT_THRESHOLD } from "@mail/core/common/thread";
 import { serverState } from "@web/../tests/web_test_helpers";
-import { queryFirst } from "@odoo/hoot-dom";
+import { press, queryFirst } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -202,7 +202,7 @@ test("Post message when seeing old message should jump to present", async () => 
     await click(".o-mail-MessageInReply .cursor-pointer");
     await contains("[title='Jump to Present']");
     await insertText(".o-mail-Composer-input", "Newly posted");
-    await click(".o-mail-Composer button[aria-label='Send']:enabled");
+    await press("Enter");
     await contains("[title='Jump to Present']", { count: 0 });
     await contains(".o-mail-Thread", { scroll: "bottom" });
     await contains(".o-mail-Message-content", {

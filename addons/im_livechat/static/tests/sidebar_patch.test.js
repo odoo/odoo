@@ -16,6 +16,7 @@ import { deserializeDateTime } from "@web/core/l10n/dates";
 import { rpc } from "@web/core/network/rpc";
 import { url } from "@web/core/utils/urls";
 import { defineLivechatModels } from "./livechat_test_helpers";
+import { press } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineLivechatModels();
@@ -406,7 +407,7 @@ test("unknown livechat can be displayed and interacted with", async () => {
     await waitForChannels([`discuss.channel_${channelId}`]);
     await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Jane" });
     await insertText(".o-mail-Composer-input", "Hello", { replace: true });
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(".o-mail-Message", { text: "Hello" });
     await waitNotifications([env, "discuss.channel/new_message"]);
     await click("button", { text: "Inbox" });

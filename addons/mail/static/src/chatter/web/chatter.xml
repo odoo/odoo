@@ -78,7 +78,7 @@
             </div>
             <t t-if="state.composerType">
                 <t t-if="state.composerType === 'message'">
-                    <div class="d-flex flex-shrink-0 pt-3 text-truncate small mb-2 ms-5 gap-1">
+                    <div class="d-flex flex-shrink-0 text-truncate small ms-5 gap-1" t-att-class="{ 'my-1': state.thread.recipients.length > 0 }">
                         <span class="fw-bold">To: </span>
                         <BaseRecipientsList
                             t-if="state.thread.recipients.length > 0"

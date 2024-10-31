@@ -46,10 +46,10 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             run: `edit SomeText_${new Date().getTime()}`,
         },
         {
-            trigger: ".o-mail-Composer-send:enabled",
+            trigger: ".o-mail-Composer-input",
             content: _t("Post your message on the thread"),
             tooltipPosition: "top",
-            run: "click",
+            run: "press Enter",
         },
         {
             trigger: ".o-mail-Message",

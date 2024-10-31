@@ -13,7 +13,7 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
-import { queryFirst } from "@odoo/hoot-dom";
+import { press, queryFirst } from "@odoo/hoot-dom";
 import { mockDate, tick } from "@odoo/hoot-mock";
 import {
     asyncStep,
@@ -165,7 +165,7 @@ test("keep new message separator until current user sends a message", async () =
     await click(".o-mail-Message-moreMenu [title='Mark as Unread']");
     await contains(".o-mail-Thread-newMessage hr + span", { count: 1, text: "New" });
     await insertText(".o-mail-Composer-input", "hey!");
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(".o-mail-Message", { count: 2 });
     await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New" });
 });
