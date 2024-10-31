@@ -71,6 +71,7 @@ class WebsiteEventBoothController(WebsiteEventController):
              'default_contact': default_contact,
              'booth_category': booth_category,
              'event_booths': event_booths,
+             'redirect_url': werkzeug.urls.url_quote(request.httprequest.full_path),
             }
         )
 
@@ -90,12 +91,31 @@ class WebsiteEventBoothController(WebsiteEventController):
     def event_booth_registration_confirm(self, event, booth_category_id, event_booth_ids, **kwargs):
         booths = self._get_requested_booths(event, event_booth_ids)
 
-        if not booths:
-            return json.dumps({'error': 'boothError'})
+        error_code = self._check_booth_registration_values(booths, kwargs['contact_email'])
+        if error_code:
+            return json.dumps({'error': error_code})
+
         booth_values = self._prepare_booth_registration_values(event, kwargs)
         booths.action_confirm(booth_values)
 
         return self._prepare_booth_registration_success_values(event.name, booth_values)
+
+    def _check_booth_registration_values(self, booths, contact_email, booth_category=False):
+        if not booths:
+            return 'boothError'
+
+        if booth_category and not booth_category.exists():
+            return 'boothCategoryError'
+
+        email_normalized = tools.email_normalize(contact_email)
+        if request.env.user._is_public() and email_normalized:
+            partner = request.env['res.partner'].sudo().search([
+                ('email_normalized', '=', email_normalized)
+            ], limit=1)
+            if partner:
+                return 'existingPartnerError'
+
+        return False
 
     def _prepare_booth_registration_values(self, event, kwargs):
         return self._prepare_booth_registration_partner_values(event, kwargs)
