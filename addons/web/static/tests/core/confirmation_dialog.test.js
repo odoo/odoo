@@ -186,6 +186,7 @@ test("hotkey on 'Ok'", async () => {
     });
     expect.verifySteps([]);
     await press("alt+q");
+    await tick();
     expect.verifySteps(["Confirm action", "Close action"]);
 });
 
@@ -209,6 +210,7 @@ test("hotkey on 'Cancel'", async () => {
     });
     expect.verifySteps([]);
     await press("alt+x");
+    await tick();
     expect.verifySteps(["Cancel action", "Close action"]);
 });
 
