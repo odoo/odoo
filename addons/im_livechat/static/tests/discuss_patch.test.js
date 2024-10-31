@@ -13,6 +13,7 @@ import { Command, serverState } from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
 import { defineLivechatModels } from "./livechat_test_helpers";
+import { press } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineLivechatModels();
@@ -120,7 +121,7 @@ test("livechats are sorted by last activity time in the sidebar: most recent at 
     });
     await click(".o-mail-DiscussSidebarChannel", { text: "Visitor 11" });
     await insertText(".o-mail-Composer-input", "Blabla");
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(":nth-child(1 of .o-mail-DiscussSidebarChannel-container)", {
         text: "Visitor 11",
     });

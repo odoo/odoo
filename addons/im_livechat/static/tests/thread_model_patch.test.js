@@ -11,6 +11,7 @@ import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
 import { defineLivechatModels } from "./livechat_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
+import { press } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineLivechatModels();
@@ -64,7 +65,7 @@ test("Display livechat custom username if defined", async () => {
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "hello");
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(".o-mail-Message-author", { text: "livechat custom username" });
 });
 

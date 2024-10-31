@@ -1,7 +1,6 @@
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { useDropzone } from "@web/core/dropzone/dropzone_hook";
-import { Picker, usePicker } from "@mail/core/common/picker";
 import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
 import { NavigableList } from "@mail/core/common/navigable_list";
 import { useSuggestion } from "@mail/core/common/suggestion_hook";
@@ -30,6 +29,9 @@ import { useService } from "@web/core/utils/hooks";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { escape, sprintf } from "@web/core/utils/strings";
 import { isDisplayStandalone, isIOS, isMobileOS } from "@web/core/browser/feature_detection";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { useComposerActions } from "./composer_actions";
 
 const EDIT_CLICK_TYPE = {
     CANCEL: "cancel",
@@ -54,7 +56,8 @@ const EDIT_CLICK_TYPE = {
 export class Composer extends Component {
     static components = {
         AttachmentList,
-        Picker,
+        Dropdown,
+        DropdownItem,
         FileUploader,
         NavigableList,
     };
@@ -88,6 +91,7 @@ export class Composer extends Component {
         super.setup();
         this.isMobileOS = isMobileOS();
         this.isIosPwa = isIOS() && isDisplayStandalone();
+        this.composerActions = useComposerActions();
         this.OR_PRESS_SEND_KEYBIND = markup(
             _t("or press %(send_keybind)s", {
                 send_keybind: this.sendKeybinds
@@ -101,14 +105,11 @@ export class Composer extends Component {
             { composer: this.props.composer }
         );
         this.ui = useState(useService("ui"));
-        this.mainActionsRef = useRef("main-actions");
         this.ref = useRef("textarea");
         this.fakeTextarea = useRef("fakeTextarea");
-        this.emojiButton = useRef("emoji-button");
         this.inputContainerRef = useRef("input-container");
-        this.state = useState({
-            active: true,
-        });
+        this.pickerContainerRef = useRef("picker-container");
+        this.state = useState({ active: true });
         this.selection = useSelection({
             refName: "textarea",
             model: this.props.composer.selection,
@@ -132,6 +133,22 @@ export class Composer extends Component {
             execBeforeUnmount: true,
         });
         useExternalListener(window, "beforeunload", this.saveContent.bind(this));
+        useExternalListener(
+            window,
+            "click",
+            (ev) => {
+                if (
+                    this.ui.isSmall &&
+                    this.composerActions.activePicker &&
+                    this.pickerContainerRef.el &&
+                    ev.target !== this.pickerContainerRef.el &&
+                    !this.pickerContainerRef.el.contains(ev.target)
+                ) {
+                    this.composerActions.activePicker.close?.();
+                }
+            },
+            { capture: true }
+        );
         if (this.props.dropzoneRef) {
             useDropzone(
                 this.props.dropzoneRef,
@@ -143,10 +160,7 @@ export class Composer extends Component {
         if (this.props.messageEdition) {
             this.props.messageEdition.composerOfThread = this;
         }
-        useChildSubEnv({
-            inComposer: true,
-        });
-        this.picker = usePicker(this.pickerSettings);
+        useChildSubEnv({ inComposer: true });
         useEffect(
             (focus) => {
                 if (focus && this.ref.el) {
@@ -191,24 +205,12 @@ export class Composer extends Component {
         });
     }
 
-    get pickerSettings() {
-        return {
-            anchor: this.props.mode === "extended" ? undefined : this.mainActionsRef,
-            buttons: [this.emojiButton],
-            close: () => {
-                if (!this.ui.isSmall) {
-                    this.props.composer.autofocus++;
-                }
-            },
-            pickers: { emoji: (emoji) => this.addEmoji(emoji) },
-            position:
-                this.props.mode === "extended"
-                    ? "bottom-start"
-                    : this.props.composer.message
-                    ? "bottom-start"
-                    : "top-end",
-            fixed: !this.props.composer.message,
-        };
+    get areAllActionsDisabled() {
+        return false;
+    }
+
+    get isMultiUpload() {
+        return true;
     }
 
     get placeholder() {
@@ -494,12 +496,6 @@ export class Composer extends Component {
         }
     }
 
-    onClickAddAttachment(ev) {
-        const composer = toRaw(this.props.composer);
-        markEventHandled(ev, "composer.clickOnAddAttachment");
-        composer.autofocus++;
-    }
-
     async onClickFullComposer(ev) {
         if (this.props.type !== "note") {
             // auto-create partners of checked suggested partners
@@ -597,10 +593,6 @@ export class Composer extends Component {
         });
     }
 
-    onClickAddEmoji(ev) {
-        markEventHandled(ev, "Composer.onClickAddEmoji");
-    }
-
     isEventTrusted(ev) {
         // Allow patching during tests
         return ev.isTrusted;
@@ -634,6 +626,7 @@ export class Composer extends Component {
 
     async sendMessage() {
         const composer = toRaw(this.props.composer);
+        this.composerActions.activePicker?.close?.();
         if (composer.message) {
             this.editMessage();
             return;
@@ -713,7 +706,9 @@ export class Composer extends Component {
         const secondPart = text.slice(composer.selection.end, text.length);
         composer.text = firstPart + str + secondPart;
         this.selection.moveCursor((firstPart + str).length);
-        if (!this.ui.isSmall) {
+        if (this.ui.isSmall && !this.env.inChatter) {
+            return false;
+        } else {
             composer.autofocus++;
         }
     }

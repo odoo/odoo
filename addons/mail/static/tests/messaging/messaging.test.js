@@ -1,5 +1,4 @@
 import {
-    click,
     contains,
     defineMailModels,
     insertText,
@@ -17,6 +16,7 @@ import {
     waitForSteps,
     withUser,
 } from "@web/../tests/web_test_helpers";
+import { press } from "@odoo/hoot-dom";
 
 import { rpc } from "@web/core/network/rpc";
 
@@ -113,7 +113,7 @@ test("Posting a message in discuss app should not open a chat window after leavi
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "test https://www.odoo.com/");
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     // leaving discuss.
     await openFormView("res.partner", partnerId);
     // weak test, no guarantee that we waited long enough for the potential chat window to open
