@@ -1,10 +1,11 @@
 odoo.define('website_sale.cart', function (require) {
 'use strict';
 
+const { browser } = require("@web/core/browser/browser");
+const sessionStorage = browser.sessionStorage;
 var publicWidget = require('web.public.widget');
 var core = require('web.core');
 var _t = core._t;
-
 var timeout;
 
 publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
