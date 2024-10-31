@@ -28,7 +28,7 @@ import { convertList, getListMode } from "@html_editor/utils/list";
 export class DomPlugin extends Plugin {
     static id = "dom";
     static dependencies = ["selection", "history", "split", "delete", "lineBreak"];
-    static shared = ["domInsert", "copyAttributes"];
+    static shared = ["insert", "copyAttributes"];
     resources = {
         user_commands: [
             { id: "insertFontAwesome", run: this.insertFontAwesome.bind(this) },
@@ -61,7 +61,7 @@ export class DomPlugin extends Plugin {
     /**
      * @param {string | DocumentFragment | null} content
      */
-    domInsert(content) {
+    insert(content) {
         if (!content) {
             return;
         }
@@ -387,7 +387,7 @@ export class DomPlugin extends Plugin {
     insertFontAwesome({ faClass = "fa fa-star" } = {}) {
         const fontAwesomeNode = document.createElement("i");
         fontAwesomeNode.className = faClass;
-        this.domInsert(fontAwesomeNode);
+        this.insert(fontAwesomeNode);
         this.dependencies.history.addStep();
         const [anchorNode, anchorOffset] = rightPos(fontAwesomeNode);
         this.dependencies.selection.setSelection({ anchorNode, anchorOffset });

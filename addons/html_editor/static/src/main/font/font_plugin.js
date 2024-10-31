@@ -105,43 +105,42 @@ export class FontPlugin extends Plugin {
                 label: _t("Heading 1"),
                 description: _t("Big section heading"),
                 icon: "fa-header",
-                run: () => this.dependencies.userCommand.execCommand("setTag", { tagName: "H1" }),
+                run: () => this.dependencies.userCommand.run("setTag", { tagName: "H1" }),
             },
             {
                 id: "setTagHeading2",
                 label: _t("Heading 2"),
                 description: _t("Medium section heading"),
                 icon: "fa-header",
-                run: () => this.dependencies.userCommand.execCommand("setTag", { tagName: "H2" }),
+                run: () => this.dependencies.userCommand.run("setTag", { tagName: "H2" }),
             },
             {
                 id: "setTagHeading3",
                 label: _t("Heading 3"),
                 description: _t("Small section heading"),
                 icon: "fa-header",
-                run: () => this.dependencies.userCommand.execCommand("setTag", { tagName: "H3" }),
+                run: () => this.dependencies.userCommand.run("setTag", { tagName: "H3" }),
             },
             {
                 id: "setTagParagraph",
                 label: _t("Text"),
                 description: _t("Paragraph block"),
                 icon: "fa-paragraph",
-                run: () => this.dependencies.userCommand.execCommand("setTag", { tagName: "P" }),
+                run: () => this.dependencies.userCommand.run("setTag", { tagName: "P" }),
             },
             {
                 id: "setTagQuote",
                 label: _t("Quote"),
                 description: _t("Add a blockquote section"),
                 icon: "fa-quote-right",
-                run: () =>
-                    this.dependencies.userCommand.execCommand("setTag", { tagName: "blockquote" }),
+                run: () => this.dependencies.userCommand.run("setTag", { tagName: "blockquote" }),
             },
             {
                 id: "setTagPre",
                 label: _t("Code"),
                 description: _t("Add a code section"),
                 icon: "fa-code",
-                run: () => this.dependencies.userCommand.execCommand("setTag", { tagName: "pre" }),
+                run: () => this.dependencies.userCommand.run("setTag", { tagName: "pre" }),
             },
         ],
         split_element_block_overrides: [
@@ -168,7 +167,7 @@ export class FontPlugin extends Plugin {
                 props: {
                     getItems: () => fontItems,
                     onSelected: (item) => {
-                        this.dependencies.userCommand.execCommand("setTag", {
+                        this.dependencies.userCommand.run("setTag", {
                             tagName: item.tagName,
                             extraClass: item.extraClass,
                         });
@@ -183,7 +182,7 @@ export class FontPlugin extends Plugin {
                 props: {
                     getItems: () => this.fontSizeItems,
                     onSelected: (item) => {
-                        this.dependencies.userCommand.execCommand("formatFontSizeClassName", {
+                        this.dependencies.userCommand.run("formatFontSizeClassName", {
                             className: item.className,
                         });
                     },
@@ -367,7 +366,7 @@ export class FontPlugin extends Plugin {
                 this.dependencies.selection.getEditableSelection()
             );
             fillEmpty(blockEl);
-            this.dependencies.userCommand.execCommand("setTag", { tagName: headingToBe });
+            this.dependencies.userCommand.run("setTag", { tagName: headingToBe });
         }
     }
 }

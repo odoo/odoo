@@ -2,7 +2,7 @@ import { Plugin } from "../plugin";
 
 export class UserCommandPlugin extends Plugin {
     static id = "userCommand";
-    static shared = ["execCommand", "getCommands"];
+    static shared = ["run", "getCommands"];
 
     setup() {
         this.commands = {};
@@ -14,7 +14,7 @@ export class UserCommandPlugin extends Plugin {
         }
     }
 
-    execCommand(commandId, params) {
+    run(commandId, params) {
         const command = this.commands[commandId];
         if (!command) {
             throw new Error(`Unknown user command id: ${commandId}`);

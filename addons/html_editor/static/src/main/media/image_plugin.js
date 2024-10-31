@@ -319,7 +319,7 @@ export class ImagePlugin extends Plugin {
             const restoreSavepoint = this.dependencies.history.makeSavePoint();
             // Open powerbox with commands to embed media or paste as link.
             // Insert URL as text, revert it later if a command is triggered.
-            this.dependencies.dom.domInsert(text);
+            this.dependencies.dom.insert(text);
             this.dependencies.history.addStep();
             const embedImageCommand = {
                 label: _t("Embed Image"),
@@ -328,7 +328,7 @@ export class ImagePlugin extends Plugin {
                 run: () => {
                     const img = document.createElement("IMG");
                     img.setAttribute("src", url);
-                    this.dependencies.dom.domInsert(img);
+                    this.dependencies.dom.insert(img);
                     this.dependencies.history.addStep();
                 },
             };

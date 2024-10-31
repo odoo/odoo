@@ -3,7 +3,7 @@ import { setupEditor, testEditor } from "../_helpers/editor";
 import { getContent } from "../_helpers/selection";
 
 async function insertSeparator(editor) {
-    editor.shared.userCommand.execCommand("insertSeparator");
+    editor.shared.userCommand.run("insertSeparator");
 }
 
 describe("insert separator", () => {

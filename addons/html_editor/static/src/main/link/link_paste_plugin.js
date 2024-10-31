@@ -64,9 +64,9 @@ export class LinkPastePlugin extends Plugin {
         if (isImageUrl(url)) {
             const img = this.document.createElement("IMG");
             img.setAttribute("src", url);
-            this.dependencies.dom.domInsert(img);
+            this.dependencies.dom.insert(img);
         } else {
-            this.dependencies.dom.domInsert(text);
+            this.dependencies.dom.insert(text);
         }
     }
     /**
@@ -82,7 +82,7 @@ export class LinkPastePlugin extends Plugin {
             // Even indexes will always be plain text, and odd indexes will always be URL.
             // A url cannot be transformed inside an existing link.
             if (i % 2 && !selectionIsInsideALink) {
-                this.dependencies.dom.domInsert(
+                this.dependencies.dom.insert(
                     this.dependencies.link.createLink(url, splitAroundUrl[i])
                 );
             } else if (splitAroundUrl[i] !== "") {

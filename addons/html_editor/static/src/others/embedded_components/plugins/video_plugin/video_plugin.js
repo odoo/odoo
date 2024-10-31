@@ -40,7 +40,7 @@ export class VideoPlugin extends Plugin {
                 params: media.params || {},
             }),
         });
-        this.dependencies.dom.domInsert(videoBlock);
+        this.dependencies.dom.insert(videoBlock);
         this.dependencies.history.addStep();
     }
 

@@ -78,7 +78,7 @@ describe("not collapsed selection", () => {
         const { editor, el } = await setupEditor("<p>[abc]def</p>");
         await insertText(editor, "x");
         expect(getContent(el)).toBe("<p>x[]def</p>");
-        editor.shared.userCommand.execCommand("historyUndo");
+        editor.shared.userCommand.run("historyUndo");
         expect(getContent(el)).toBe("<p>[abc]def</p>");
     });
 });

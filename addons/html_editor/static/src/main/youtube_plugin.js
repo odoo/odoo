@@ -25,7 +25,7 @@ export class YoutubePlugin extends Plugin {
             const restoreSavepoint = this.dependencies.history.makeSavePoint();
             // Open powerbox with commands to embed media or paste as link.
             // Insert URL as text, revert it later if a command is triggered.
-            this.dependencies.dom.domInsert(text);
+            this.dependencies.dom.insert(text);
             this.dependencies.history.addStep();
             // URL is a YouTube video.
             const embedVideoCommand = {
@@ -34,7 +34,7 @@ export class YoutubePlugin extends Plugin {
                 icon: "fa-youtube-play",
                 run: async () => {
                     const videoElement = await this.getYoutubeVideoElement(youtubeUrl[0]);
-                    this.dependencies.dom.domInsert(videoElement);
+                    this.dependencies.dom.insert(videoElement);
                     this.dependencies.history.addStep();
                 },
             };

@@ -71,7 +71,7 @@ export class FilePlugin extends Plugin {
 
     onSaveMediaDialog(element, { restoreSelection }) {
         restoreSelection();
-        this.dependencies.dom.domInsert(element);
+        this.dependencies.dom.insert(element);
         this.dependencies.history.addStep();
     }
 

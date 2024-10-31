@@ -156,7 +156,7 @@ export class MediaPlugin extends Plugin {
                 node.replaceWith(element);
             }
         } else {
-            this.dependencies.dom.domInsert(element);
+            this.dependencies.dom.insert(element);
         }
         // Collapse selection after the inserted/replaced element.
         const [anchorNode, anchorOffset] = rightPos(element);

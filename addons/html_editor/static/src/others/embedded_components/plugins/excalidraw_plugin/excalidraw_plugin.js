@@ -38,7 +38,7 @@ export class ExcalidrawPlugin extends Plugin {
                             embeddedProps: JSON.stringify({ source: href }),
                         }
                     );
-                    this.dependencies.dom.domInsert(templateBlock);
+                    this.dependencies.dom.insert(templateBlock);
                     this.dependencies.history.addStep();
 
                     restoreSelection = () => {};

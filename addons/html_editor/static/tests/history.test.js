@@ -74,7 +74,7 @@ describe("undo", () => {
     test("should discard draft mutations", async () => {
         const { el, editor } = await setupEditor(`<p>[]c</p>`);
         const p = el.querySelector("p");
-        editor.shared.dom.domInsert("a");
+        editor.shared.dom.insert("a");
         editor.shared.history.addStep();
         p.prepend(document.createTextNode("b"));
         undo(editor);
@@ -197,7 +197,7 @@ describe("redo", () => {
     test("should discard draft mutations", async () => {
         const { el, editor } = await setupEditor(`<p>[]c</p>`);
         const p = el.querySelector("p");
-        editor.shared.dom.domInsert("a");
+        editor.shared.dom.insert("a");
         editor.shared.history.addStep();
         undo(editor);
         expect(getContent(el)).toBe(`<p>[]c</p>`);
@@ -333,7 +333,7 @@ describe("makeSavePoint", () => {
         // feature to trigger the stageSelection.
         editor.shared.history.stageSelection();
         const restore = editor.shared.history.makeSavePoint();
-        editor.shared.userCommand.execCommand("formatBold");
+        editor.shared.userCommand.run("formatBold");
         restore();
         expect(getContent(el)).toBe(`<p>a[b<span style="color: tomato;">c</span>d]e</p>`);
     });
@@ -362,7 +362,7 @@ describe("makeSavePoint", () => {
         expect(getContent(el)).toBe(`<p>[]cd</p>`);
         const savepoint = editor.shared.history.makeSavePoint();
         // step to consume
-        editor.shared.dom.domInsert("z");
+        editor.shared.dom.insert("z");
         editor.shared.history.addStep();
         let steps = editor.shared.history.getHistorySteps();
         expect(steps.length).toBe(2);
@@ -510,11 +510,11 @@ describe("shortcut", () => {
         expect(state).toEqual({});
         await insertText(editor, "a");
         expect(state).toEqual({ canUndo: true, canRedo: false });
-        editor.shared.userCommand.execCommand("historyUndo");
+        editor.shared.userCommand.run("historyUndo");
         expect(state).toEqual({ canUndo: false, canRedo: true });
-        editor.shared.userCommand.execCommand("historyRedo");
+        editor.shared.userCommand.run("historyRedo");
         expect(state).toEqual({ canUndo: true, canRedo: false });
-        editor.shared.userCommand.execCommand("historyUndo");
+        editor.shared.userCommand.run("historyUndo");
         expect(state).toEqual({ canUndo: false, canRedo: true });
         await insertText(editor, "b");
         expect(state).toEqual({ canUndo: true, canRedo: false });
@@ -571,7 +571,7 @@ describe("destroy", () => {
                 return true;
             }
             destroy() {
-                this.dependencies.dom.domInsert(
+                this.dependencies.dom.insert(
                     parseHTML(this.document, `<div class="test">destroyed</div>`)
                 );
             }
@@ -579,9 +579,7 @@ describe("destroy", () => {
         const Plugins = [...MAIN_PLUGINS, TestPlugin];
         const { editor } = await setupEditor(`<div>a[]b</div>`, { config: { Plugins } });
         // Ensure dispatch when plugins are alive.
-        editor.shared.dom.domInsert(
-            parseHTML(editor.document, `<div class="test">destroyed</div>`)
-        );
+        editor.shared.dom.insert(parseHTML(editor.document, `<div class="test">destroyed</div>`));
         await animationFrame();
         expect.verifySteps(["dispatch"]);
         editor.destroy();

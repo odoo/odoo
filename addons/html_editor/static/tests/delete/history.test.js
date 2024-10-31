@@ -10,10 +10,10 @@ describe("delete backward", () => {
         await press("Backspace");
         expect(getContent(el)).toBe("<p>a[]cd</p>");
 
-        editor.shared.userCommand.execCommand("historyUndo");
+        editor.shared.userCommand.run("historyUndo");
         expect(getContent(el)).toBe("<p>ab[]cd</p>");
 
-        editor.shared.userCommand.execCommand("historyRedo");
+        editor.shared.userCommand.run("historyRedo");
         expect(getContent(el)).toBe("<p>a[]cd</p>");
     });
 
@@ -23,10 +23,10 @@ describe("delete backward", () => {
         await press("Backspace");
         expect(getContent(el)).toBe("<p>ab[]ef</p>");
 
-        editor.shared.userCommand.execCommand("historyUndo");
+        editor.shared.userCommand.run("historyUndo");
         expect(getContent(el)).toBe("<p>ab[cd]ef</p>");
 
-        editor.shared.userCommand.execCommand("historyRedo");
+        editor.shared.userCommand.run("historyRedo");
         expect(getContent(el)).toBe("<p>ab[]ef</p>");
     });
 });
@@ -38,10 +38,10 @@ describe("delete forward", () => {
         await press("Delete");
         expect(getContent(el)).toBe("<p>ab[]d</p>");
 
-        editor.shared.userCommand.execCommand("historyUndo");
+        editor.shared.userCommand.run("historyUndo");
         expect(getContent(el)).toBe("<p>ab[]cd</p>");
 
-        editor.shared.userCommand.execCommand("historyRedo");
+        editor.shared.userCommand.run("historyRedo");
         expect(getContent(el)).toBe("<p>ab[]d</p>");
     });
 
@@ -51,10 +51,10 @@ describe("delete forward", () => {
         await press("Delete");
         expect(getContent(el)).toBe("<p>ab[]ef</p>");
 
-        editor.shared.userCommand.execCommand("historyUndo");
+        editor.shared.userCommand.run("historyUndo");
         expect(getContent(el)).toBe("<p>ab[cd]ef</p>");
 
-        editor.shared.userCommand.execCommand("historyRedo");
+        editor.shared.userCommand.run("historyRedo");
         expect(getContent(el)).toBe("<p>ab[]ef</p>");
     });
 });

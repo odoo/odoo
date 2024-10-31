@@ -71,7 +71,7 @@ describe("Mount and Destroy embedded components", () => {
             config: getConfig([embedding("counter", Counter)]),
         });
         expect(getContent(el)).toBe(`<div>a[]b</div>`);
-        editor.shared.dom.domInsert(
+        editor.shared.dom.insert(
             parseHTML(editor.document, `<span data-embedded="counter"></span>`)
         );
         editor.shared.history.addStep();
@@ -166,7 +166,7 @@ describe("Mount and Destroy embedded components", () => {
         const { el, editor } = await setupEditor(`<div>a[]</div>`, {
             config: getConfig([embedding("counter", Test)]),
         });
-        editor.shared.dom.domInsert(
+        editor.shared.dom.insert(
             parseHTML(editor.document, `<span data-embedded="counter"></span>`)
         );
         editor.shared.history.addStep();
@@ -265,7 +265,7 @@ describe("Mount and Destroy embedded components", () => {
         deleteBackward(editor);
         expect.verifySteps(["willunmount"]);
         expect(getContent(el)).toBe(`<div>a[]</div>`);
-        editor.shared.dom.domInsert(
+        editor.shared.dom.insert(
             parseHTML(editor.document, `<span data-embedded="counter"></span>`)
         );
         editor.shared.history.addStep();
@@ -355,7 +355,7 @@ describe("Mount and Destroy embedded components", () => {
                 }),
             ]),
         });
-        editor.shared.dom.domInsert(
+        editor.shared.dom.insert(
             parseHTML(
                 editor.document,
                 unformat(`
@@ -529,7 +529,7 @@ describe("Selection after embedded component insertion", () => {
         const { el, editor } = await setupEditor(`<p>[]<br></p>`, {
             config: getConfig([embedding("counter", Counter)]),
         });
-        editor.shared.dom.domInsert(
+        editor.shared.dom.insert(
             parseHTML(editor.document, `<span data-embedded="counter">a</span>`)
         );
         editor.shared.history.addStep();
@@ -542,7 +542,7 @@ describe("Selection after embedded component insertion", () => {
         const { el, editor } = await setupEditor(`<p>a[]</p>`, {
             config: getConfig([embedding("counter", Counter)]),
         });
-        editor.shared.dom.domInsert(
+        editor.shared.dom.insert(
             parseHTML(editor.document, `<span data-embedded="counter"></span>`)
         );
         editor.shared.history.addStep();
@@ -555,7 +555,7 @@ describe("Selection after embedded component insertion", () => {
         const { el, editor } = await setupEditor(`<p>[]a</p>`, {
             config: getConfig([embedding("counter", Counter)]),
         });
-        editor.shared.dom.domInsert(
+        editor.shared.dom.insert(
             parseHTML(editor.document, `<span data-embedded="counter"></span>`)
         );
         editor.shared.history.addStep();
@@ -568,7 +568,7 @@ describe("Selection after embedded component insertion", () => {
         const { el, editor } = await setupEditor(`<p>a[]b</p>`, {
             config: getConfig([embedding("counter", Counter)]),
         });
-        editor.shared.dom.domInsert(
+        editor.shared.dom.insert(
             parseHTML(editor.document, `<span data-embedded="counter"></span>`)
         );
         editor.shared.history.addStep();
@@ -581,7 +581,7 @@ describe("Selection after embedded component insertion", () => {
         const { el, editor } = await setupEditor(`<p>[]<br></p>`, {
             config: getConfig([embedding("counter", Counter)]),
         });
-        editor.shared.dom.domInsert(
+        editor.shared.dom.insert(
             parseHTML(editor.document, `<div data-embedded="counter"></div>`)
         );
         editor.shared.history.addStep();
@@ -597,7 +597,7 @@ describe("Selection after embedded component insertion", () => {
         const { el, editor } = await setupEditor(`<p>a[]</p>`, {
             config: getConfig([embedding("counter", Counter)]),
         });
-        editor.shared.dom.domInsert(
+        editor.shared.dom.insert(
             parseHTML(editor.document, `<div data-embedded="counter"></div>`)
         );
         editor.shared.history.addStep();
@@ -614,7 +614,7 @@ describe("Selection after embedded component insertion", () => {
         const { el, editor } = await setupEditor(`<p>[]a</p>`, {
             config: getConfig([embedding("counter", Counter)]),
         });
-        editor.shared.dom.domInsert(
+        editor.shared.dom.insert(
             parseHTML(editor.document, `<div data-embedded="counter"></div>`)
         );
         editor.shared.history.addStep();
@@ -630,7 +630,7 @@ describe("Selection after embedded component insertion", () => {
         const { el, editor } = await setupEditor(`<p>a[]b</p>`, {
             config: getConfig([embedding("counter", Counter)]),
         });
-        editor.shared.dom.domInsert(
+        editor.shared.dom.insert(
             parseHTML(editor.document, `<div data-embedded="counter"></div>`)
         );
         editor.shared.history.addStep();
@@ -867,7 +867,7 @@ describe("Mount processing", () => {
 
             insertElement(element) {
                 const html = parseHTML(this.document, element);
-                this.dependencies.dom.domInsert(html);
+                this.dependencies.dom.insert(html);
                 this.dependencies.history.addStep();
             }
         }

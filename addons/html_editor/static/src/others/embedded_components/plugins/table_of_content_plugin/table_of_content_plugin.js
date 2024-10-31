@@ -45,7 +45,7 @@ export class TableOfContentPlugin extends Plugin {
 
     insertTableOfContent() {
         const tableOfContentBlueprint = renderToElement("html_editor.TableOfContentBlueprint");
-        this.dependencies.dom.domInsert(tableOfContentBlueprint);
+        this.dependencies.dom.insert(tableOfContentBlueprint);
         this.dependencies.history.addStep();
     }
 

@@ -98,8 +98,7 @@ export class PowerboxPlugin extends Plugin {
                 ...userCommand,
                 ...item,
                 categoryName: categoryDict[item.categoryId].name,
-                run: () =>
-                    this.dependencies.userCommand.execCommand(item.commandId, item.commandParams),
+                run: () => this.dependencies.userCommand.run(item.commandId, item.commandParams),
             };
         });
     }

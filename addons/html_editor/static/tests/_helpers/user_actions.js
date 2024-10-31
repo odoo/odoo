@@ -57,7 +57,7 @@ export async function insertText(editor, text) {
 
 /** @param {Editor} editor */
 export function deleteForward(editor) {
-    editor.shared.userCommand.execCommand("deleteForward");
+    editor.shared.userCommand.run("deleteForward");
 }
 
 /**
@@ -67,7 +67,7 @@ export function deleteForward(editor) {
 export function deleteBackward(editor, isMobileTest = false) {
     // TODO phoenix: find a strategy for test mobile and desktop. (check legacy code)
 
-    editor.shared.userCommand.execCommand("deleteBackward");
+    editor.shared.userCommand.run("deleteBackward");
 }
 
 // history
@@ -77,24 +77,24 @@ export function addStep(editor) {
 }
 /** @param {Editor} editor */
 export function undo(editor) {
-    editor.shared.userCommand.execCommand("historyUndo");
+    editor.shared.userCommand.run("historyUndo");
 }
 /** @param {Editor} editor */
 export function redo(editor) {
-    editor.shared.userCommand.execCommand("historyRedo");
+    editor.shared.userCommand.run("historyRedo");
 }
 
 // list
 export function toggleOrderedList(editor) {
-    editor.shared.userCommand.execCommand("toggleListOL");
+    editor.shared.userCommand.run("toggleListOL");
 }
 /** @param {Editor} editor */
 export function toggleUnorderedList(editor) {
-    editor.shared.userCommand.execCommand("toggleListUL");
+    editor.shared.userCommand.run("toggleListUL");
 }
 /** @param {Editor} editor */
 export function toggleCheckList(editor) {
-    editor.shared.userCommand.execCommand("toggleListCL");
+    editor.shared.userCommand.run("toggleListCL");
 }
 
 /**
@@ -122,26 +122,26 @@ export function insertLineBreak(editor) {
 
 /** @param {Editor} editor */
 export function bold(editor) {
-    editor.shared.userCommand.execCommand("formatBold");
+    editor.shared.userCommand.run("formatBold");
 }
 /** @param {Editor} editor */
 export function italic(editor) {
-    editor.shared.userCommand.execCommand("formatItalic");
+    editor.shared.userCommand.run("formatItalic");
 }
 /** @param {Editor} editor */
 export function underline(editor) {
-    editor.shared.userCommand.execCommand("formatUnderline");
+    editor.shared.userCommand.run("formatUnderline");
 }
 /** @param {Editor} editor */
 export function strikeThrough(editor) {
-    editor.shared.userCommand.execCommand("formatStrikethrough");
+    editor.shared.userCommand.run("formatStrikethrough");
 }
 export function setFontSize(size) {
-    return (editor) => editor.shared.userCommand.execCommand("formatFontSize", { size });
+    return (editor) => editor.shared.userCommand.run("formatFontSize", { size });
 }
 /** @param {Editor} editor */
 export function switchDirection(editor) {
-    return editor.shared.userCommand.execCommand("switchDirection");
+    return editor.shared.userCommand.run("switchDirection");
 }
 /** @param {Editor} editor */
 export function splitBlock(editor) {
@@ -162,7 +162,7 @@ export async function simulateArrowKeyPress(editor, keys) {
 }
 
 export function unlinkByCommand(editor) {
-    editor.shared.userCommand.execCommand("removeLinkFromSelection");
+    editor.shared.userCommand.run("removeLinkFromSelection");
 }
 
 export async function unlinkFromToolbar() {
@@ -193,19 +193,19 @@ export function resetSize(editor) {
 }
 /** @param {Editor} editor */
 export function alignLeft(editor) {
-    editor.shared.userCommand.execCommand("alignLeft");
+    editor.shared.userCommand.run("alignLeft");
 }
 /** @param {Editor} editor */
 export function alignCenter(editor) {
-    editor.shared.userCommand.execCommand("alignCenter");
+    editor.shared.userCommand.run("alignCenter");
 }
 /** @param {Editor} editor */
 export function alignRight(editor) {
-    editor.shared.userCommand.execCommand("alignRight");
+    editor.shared.userCommand.run("alignRight");
 }
 /** @param {Editor} editor */
 export function justify(editor) {
-    editor.shared.userCommand.execCommand("justify");
+    editor.shared.userCommand.run("justify");
 }
 
 /**
@@ -215,7 +215,7 @@ export function justify(editor) {
 export function setColor(color, mode) {
     /** @param {Editor} editor */
     return (editor) => {
-        editor.shared.userCommand.execCommand("applyColor", { color, mode });
+        editor.shared.userCommand.run("applyColor", { color, mode });
     };
 }
 

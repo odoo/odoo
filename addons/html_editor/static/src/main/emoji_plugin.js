@@ -49,7 +49,7 @@ export class EmojiPlugin extends Plugin {
                         onSelect(str);
                         return;
                     }
-                    this.dependencies.dom.domInsert(str);
+                    this.dependencies.dom.insert(str);
                     this.dependencies.history.addStep();
                 },
             },

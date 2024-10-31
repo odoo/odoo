@@ -194,7 +194,7 @@ describe("wrapInlinesInBlocks", () => {
         const div = el.querySelector("div");
         editor.shared.selection.setSelection({ anchorNode: div, anchorOffset: 0 });
         editor.shared.selection.focusEditable();
-        editor.shared.dom.domInsert(
+        editor.shared.dom.insert(
             parseHTML(
                 editor.document,
                 `<div contenteditable="false" style="display: inline;">inline</div>`
@@ -223,7 +223,7 @@ describe("wrapInlinesInBlocks", () => {
         const div = el.querySelector("div");
         editor.shared.selection.setSelection({ anchorNode: div, anchorOffset: 0 });
         editor.shared.selection.focusEditable();
-        editor.shared.dom.domInsert(
+        editor.shared.dom.insert(
             parseHTML(
                 editor.document,
                 `text<div contenteditable="false" style="display: inline;">inline</div><span class="a">span</span>`
@@ -251,7 +251,7 @@ describe("wrapInlinesInBlocks", () => {
         );
         const div = el.querySelector("div");
         editor.shared.selection.setSelection({ anchorNode: div, anchorOffset: 0 });
-        editor.shared.dom.domInsert(
+        editor.shared.dom.insert(
             parseHTML(
                 editor.document,
                 `text<br><div contenteditable="false" style="display: inline;">inline</div><br><span class="a">span</span>`

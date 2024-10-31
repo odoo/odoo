@@ -150,7 +150,7 @@ test("typing '[] ' should create checklist and restore the original text when un
         `<ul class="o_checklist"><li placeholder="List" class="o-we-hint">[]<br></li></ul>`
     );
 
-    editor.shared.userCommand.execCommand("historyUndo");
+    editor.shared.userCommand.run("historyUndo");
     expect(getContent(el)).toBe(`<p>\[\] []</p>`);
 });
 
@@ -159,7 +159,7 @@ test("Typing '[] ' at the start of existing text should create a checklist and r
     await insertText(editor, "[] ");
     expect(getContent(el)).toBe(`<ul class="o_checklist"><li>[]abc</li></ul>`);
 
-    editor.shared.userCommand.execCommand("historyUndo");
+    editor.shared.userCommand.run("historyUndo");
     expect(getContent(el)).toBe(`<p>\[\] []abc</p>`);
 });
 

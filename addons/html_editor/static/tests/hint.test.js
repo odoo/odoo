@@ -100,7 +100,7 @@ test("hint should only Be display for focused empty block element", async () => 
     expect(getContent(el)).toBe(
         `<p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
     );
-    editor.shared.userCommand.execCommand("setTag", { tagName: "H1" });
+    editor.shared.userCommand.run("setTag", { tagName: "H1" });
     await animationFrame();
     // @todo @phoenix: getContent does not place the selection when anchor is BR
     expect(el.innerHTML).toBe(`<h1 placeholder="Heading 1" class="o-we-hint"><br></h1>`);

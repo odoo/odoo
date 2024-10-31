@@ -6,7 +6,7 @@ import { insertText, tripleClick, undo } from "./_helpers/user_actions";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 
 function setTag(tagName) {
-    return (editor) => editor.shared.userCommand.execCommand("setTag", { tagName });
+    return (editor) => editor.shared.userCommand.run("setTag", { tagName });
 }
 
 describe("to paragraph", () => {

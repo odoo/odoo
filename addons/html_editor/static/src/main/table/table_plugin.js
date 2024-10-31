@@ -127,7 +127,7 @@ export class TablePlugin extends Plugin {
                 { normalize: false }
             );
         }
-        const [table] = this.dependencies.dom.domInsert(newTable);
+        const [table] = this.dependencies.dom.insert(newTable);
         return table;
     }
     insertTable({ rows = 2, cols = 2 } = {}) {

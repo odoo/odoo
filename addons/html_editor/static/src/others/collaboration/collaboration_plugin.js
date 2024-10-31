@@ -239,7 +239,7 @@ export class CollaborationPlugin extends Plugin {
         const historySteps = this.dependencies.history.getHistorySteps();
         // If the current snapshot has no time, it means that there is the no
         // other snapshot that have been made (either it is the one created upon
-        // initialization or reseted by historyResetFromSteps).
+        // initialization or reseted by history's resetFromSteps).
         if (!this.snapshots[0].time) {
             return { steps: historySteps, historyIds: this.getBranchIds() };
         }
@@ -267,7 +267,7 @@ export class CollaborationPlugin extends Plugin {
     }
     resetFromSteps(steps, branchStepIds) {
         this.dependencies.selection.resetSelection();
-        this.dependencies.history.historyResetFromSteps(steps);
+        this.dependencies.history.resetFromSteps(steps);
         this.snapshots = [{ step: steps[0] }];
         this.branchStepIds = branchStepIds;
         this.postProcessExternalSteps();

@@ -15,7 +15,7 @@ function column(size, contents) {
 
 function columnize(numberOfColumns) {
     return (editor) => {
-        editor.shared.userCommand.execCommand("columnize", { numberOfColumns });
+        editor.shared.userCommand.run("columnize", { numberOfColumns });
     };
 }
 

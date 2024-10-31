@@ -91,7 +91,7 @@ export class HistoryPlugin extends Plugin {
         "enableObserver",
         "addExternalStep",
         "getHistorySteps",
-        "historyResetFromSteps",
+        "resetFromSteps",
         "serializeSelection",
         "getNodeById",
         "stageSelection",
@@ -161,7 +161,7 @@ export class HistoryPlugin extends Plugin {
     /**
      * @param { HistoryStep[] } steps
      */
-    historyResetFromSteps(steps) {
+    resetFromSteps(steps) {
         this.disableObserver();
         this.editable.replaceChildren();
         this.clean();

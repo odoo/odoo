@@ -70,7 +70,7 @@ export class TabulationPlugin extends Plugin {
     }
 
     insertTab() {
-        this.dependencies.dom.domInsert(parseHTML(this.document, tabHtml));
+        this.dependencies.dom.insert(parseHTML(this.document, tabHtml));
     }
 
     indentBlocks(blocks) {

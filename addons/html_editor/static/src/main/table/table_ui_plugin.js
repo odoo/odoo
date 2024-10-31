@@ -96,15 +96,14 @@ export class TableUIPlugin extends Plugin {
                 editable: this.editable,
                 overlay: this.picker,
                 direction: this.config.direction || "ltr",
-                insertTable: (params) =>
-                    this.dependencies.userCommand.execCommand("insertTable", params),
+                insertTable: (params) => this.dependencies.userCommand.run("insertTable", params),
             },
         });
     }
 
     openPickerOrInsertTable() {
         if (this.services.ui.isSmall) {
-            this.dependencies.userCommand.execCommand("insertTable", { cols: 3, rows: 3 });
+            this.dependencies.userCommand.run("insertTable", { cols: 3, rows: 3 });
         } else {
             this.openPicker();
         }

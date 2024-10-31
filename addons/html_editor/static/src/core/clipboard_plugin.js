@@ -247,7 +247,7 @@ export class ClipboardPlugin extends Plugin {
         const targetSupportsHtmlContent = isHtmlContentSupported(selection.anchorNode);
         if (!targetSupportsHtmlContent) {
             const text = clipboardData.getData("text/plain");
-            this.dependencies.dom.domInsert(text);
+            this.dependencies.dom.insert(text);
             return true;
         }
     }
@@ -260,7 +260,7 @@ export class ClipboardPlugin extends Plugin {
             const fragment = parseHTML(this.document, odooEditorHtml);
             this.dependencies.sanitize.sanitize(fragment);
             if (fragment.hasChildNodes()) {
-                this.dependencies.dom.domInsert(fragment);
+                this.dependencies.dom.insert(fragment);
             }
             return true;
         }
@@ -282,14 +282,14 @@ export class ClipboardPlugin extends Plugin {
             if (files.length && !clipboardElem.querySelector("table")) {
                 // @phoenix @todo: should it be handled in image plugin?
                 return this.addImagesFiles(files).then((html) => {
-                    this.dependencies.dom.domInsert(html);
+                    this.dependencies.dom.insert(html);
                     this.dependencies.history.addStep();
                 });
             } else {
                 if (closestElement(selection.anchorNode, "a")) {
-                    this.dependencies.dom.domInsert(clipboardElem.textContent);
+                    this.dependencies.dom.insert(clipboardElem.textContent);
                 } else {
-                    this.dependencies.dom.domInsert(clipboardElem);
+                    this.dependencies.dom.insert(clipboardElem);
                 }
             }
             return true;
@@ -324,7 +324,7 @@ export class ClipboardPlugin extends Plugin {
                     return replaceContent;
                 });
             });
-            this.dependencies.dom.domInsert(modifiedTextFragment);
+            this.dependencies.dom.insert(modifiedTextFragment);
             if (textIndex < textFragments.length) {
                 // Break line by inserting new paragraph and
                 // remove current paragraph's bottom margin.
@@ -606,15 +606,15 @@ export class ClipboardPlugin extends Plugin {
         if (image) {
             const fragment = this.document.createDocumentFragment();
             fragment.append(image);
-            this.dependencies.dom.domInsert(fragment);
+            this.dependencies.dom.insert(fragment);
             this.dependencies.history.addStep();
         } else if (fileTransferItems.length) {
             const html = await this.addImagesFiles(fileTransferItems);
-            this.dependencies.dom.domInsert(html);
+            this.dependencies.dom.insert(html);
             this.dependencies.history.addStep();
         } else if (htmlTransferItem) {
             htmlTransferItem.getAsString((pastedText) => {
-                this.dependencies.dom.domInsert(this.prepareClipboardData(pastedText));
+                this.dependencies.dom.insert(this.prepareClipboardData(pastedText));
                 this.dependencies.history.addStep();
             });
         }

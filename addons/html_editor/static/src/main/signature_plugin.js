@@ -33,7 +33,7 @@ export class SignaturePlugin extends Plugin {
             ["signature"]
         );
         if (currentUser && currentUser.signature) {
-            this.dependencies.dom.domInsert(parseHTML(this.document, currentUser.signature));
+            this.dependencies.dom.insert(parseHTML(this.document, currentUser.signature));
             this.dependencies.history.addStep();
         }
     }

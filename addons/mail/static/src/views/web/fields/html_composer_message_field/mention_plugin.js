@@ -34,7 +34,7 @@ export class MentionPlugin extends Plugin {
         );
         mentionBlock.appendChild(nameNode);
         this.historySavePointRestore();
-        this.dependencies.dom.domInsert(mentionBlock);
+        this.dependencies.dom.insert(mentionBlock);
         this.dependencies.history.addStep();
     }
 

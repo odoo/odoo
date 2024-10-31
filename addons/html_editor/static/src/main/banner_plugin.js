@@ -93,7 +93,7 @@ export class BannerPlugin extends Plugin {
                 </div>
             </div`
         ).childNodes[0];
-        this.dependencies.dom.domInsert(bannerElement);
+        this.dependencies.dom.insert(bannerElement);
         // If the first child of editable is contenteditable false element
         // a chromium bug prevents selecting the container. Prepend a
         // zero-width space so it's no longer the first child.

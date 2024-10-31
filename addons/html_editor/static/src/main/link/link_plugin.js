@@ -239,7 +239,7 @@ export class LinkPlugin extends Plugin {
             link.innerText = label;
         } else {
             link = this.createLink(url, label);
-            this.dependencies.dom.domInsert(link);
+            this.dependencies.dom.insert(link);
         }
         this.dependencies.history.addStep();
         const linkParent = link.parentElement;
@@ -259,7 +259,7 @@ export class LinkPlugin extends Plugin {
             description: _t("Create an URL."),
             icon: "fa-link",
             run: () => {
-                this.dependencies.dom.domInsert(this.createLink(url, text));
+                this.dependencies.dom.insert(this.createLink(url, text));
                 this.dependencies.history.addStep();
             },
         };
@@ -442,7 +442,7 @@ export class LinkPlugin extends Plugin {
                 link.append(content);
                 link.normalize();
             }
-            this.dependencies.dom.domInsert(link);
+            this.dependencies.dom.insert(link);
             if (!imageNode) {
                 this.dependencies.selection.setCursorEnd(link);
             } else {

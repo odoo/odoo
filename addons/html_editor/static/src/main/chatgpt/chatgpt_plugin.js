@@ -34,7 +34,7 @@ export class ChatGPTPlugin extends Plugin {
                 Component: LanguageSelector,
                 props: {
                     onSelected: (language) => {
-                        this.dependencies.userCommand.execCommand("openChatGPTDialog", {
+                        this.dependencies.userCommand.run("openChatGPTDialog", {
                             language,
                         });
                     },
@@ -61,7 +61,7 @@ export class ChatGPTPlugin extends Plugin {
         const selection = this.dependencies.selection.getEditableSelection();
         const dialogParams = {
             insert: (content) => {
-                const insertedNodes = this.dependencies.dom.domInsert(content);
+                const insertedNodes = this.dependencies.dom.insert(content);
                 this.dependencies.history.addStep();
                 // Add a frame around the inserted content to highlight it for 2
                 // seconds.

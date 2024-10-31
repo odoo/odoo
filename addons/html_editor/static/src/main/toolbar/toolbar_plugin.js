@@ -144,8 +144,7 @@ export class ToolbarPlugin extends Plugin {
         const buttonsWithRun = buttonsWithInheritance.map((button) => {
             if (!button.Component) {
                 const { commandId, commandParams } = button;
-                button.run = () =>
-                    this.dependencies.userCommand.execCommand(commandId, commandParams);
+                button.run = () => this.dependencies.userCommand.run(commandId, commandParams);
             }
             delete button.commandId;
             delete button.commandParams;

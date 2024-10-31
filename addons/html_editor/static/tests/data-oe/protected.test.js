@@ -21,7 +21,7 @@ test("should ignore protected elements children mutations (true)", async () => {
             );
             protectedParagraph.append(document.createTextNode("b"));
             editor.shared.history.addStep();
-            editor.shared.userCommand.execCommand("historyUndo");
+            editor.shared.userCommand.run("historyUndo");
         },
         contentAfterEdit: unformat(`
                 <div><p>ab[]</p></div>
@@ -43,7 +43,7 @@ test("should not ignore unprotected elements children mutations (false)", async 
             );
             setSelection({ anchorNode: unProtectedParagraph, anchorOffset: 1 });
             await insertText(editor, "bc");
-            editor.shared.userCommand.execCommand("historyUndo");
+            editor.shared.userCommand.run("historyUndo");
         },
         contentAfterEdit: unformat(`
                 <div><p>abc</p></div>
@@ -79,9 +79,7 @@ test("should not normalize protected elements children (true)", async () => {
 
 test("should not remove/merge empty (identical) protecting nodes", async () => {
     const { el, editor } = await setupEditor(`<p><span data-oe-protected="true"></span>[]</p>`);
-    editor.shared.dom.domInsert(
-        parseHTML(editor.document, `<span data-oe-protected="true"></span>`)
-    );
+    editor.shared.dom.insert(parseHTML(editor.document, `<span data-oe-protected="true"></span>`));
     editor.shared.history.addStep();
     expect(getContent(el)).toBe(
         unformat(

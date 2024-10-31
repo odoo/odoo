@@ -80,7 +80,7 @@ export class DynamicPlaceholderPlugin extends Plugin {
             t.innerText = defaultValue;
         }
 
-        this.dependencies.dom.domInsert(t);
+        this.dependencies.dom.insert(t);
         this.dependencies.history.addStep();
     }
 

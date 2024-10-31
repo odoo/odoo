@@ -141,7 +141,7 @@ export class Plugin {
 
     /**
      * @param {string} resourceId
-     * @returns {[]}
+     * @returns {any[]}
      */
     getResource(resourceId) {
         return this._resources[resourceId] || [];
