@@ -88,7 +88,7 @@ test("Opening full composer in 'send message' mode should copy selected suggeste
         text: "John Jane",
         contains: ["input[type=checkbox]:checked"],
     });
-    await click("button[title='Full composer']");
+    await click("button[title='Open Full Composer']");
     await def;
     await waitForSteps(["do-action"]);
 });
@@ -128,7 +128,7 @@ test("Opening full composer in 'log note' mode should not copy selected suggeste
         contains: ["input[type=checkbox]:checked"],
     });
     await click("button", { text: "Log note" });
-    await click("button[title='Full composer']");
+    await click("button[title='Open Full Composer']");
     await def;
     await waitForSteps(["do-action"]);
 });

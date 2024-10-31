@@ -415,7 +415,7 @@ test("Close emoji picker in chat window with ESCAPE does not also close the chat
         ],
     });
     await start();
-    await click("button[aria-label='Emojis']");
+    await click("button[title='Add Emojis']");
     triggerHotkey("Escape");
     await contains(".o-EmojiPicker", { count: 0 });
     await contains(".o-mail-ChatWindow");
@@ -765,7 +765,7 @@ test("chat window: composer state conservation on toggle discuss", async () => {
         count: 0,
     });
     // Set attachments of the composer
-    await inputFiles(".o-mail-Composer-coreMain .o_input_file", [textFile1, textFile2]);
+    await inputFiles(".o-mail-Composer .o_input_file", [textFile1, textFile2]);
     await contains(".o-mail-AttachmentCard .fa-check", { count: 2 });
     await openDiscuss();
     await contains(".o-mail-ChatWindow", { count: 0 });

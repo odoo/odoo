@@ -53,7 +53,7 @@ test("send is_typing on adding emoji", async () => {
     onRpcBefore("/discuss/channel/notify_typing", () => asyncStep("notify_typing"));
     await start();
     await openDiscuss(channelId);
-    await click("button[aria-label='Emojis']");
+    await click("button[title='Add Emojis']");
     await insertText("input[placeholder='Search for an emoji']", "Santa Claus");
     await click(".o-Emoji", { text: "🎅" });
     await waitForSteps(["notify_typing"]);
@@ -71,7 +71,7 @@ test("add an emoji after a command", async () => {
     await insertText(".o-mail-Composer-input", "/");
     await click(":nth-child(1 of .o-mail-Composer-suggestion)");
     await contains(".o-mail-Composer-input", { value: "/who " });
-    await click("button[aria-label='Emojis']");
+    await click("button[title='Add Emojis']");
     await click(".o-Emoji", { text: "😊" });
     await contains(".o-mail-Composer-input", { value: "/who 😊" });
 });

@@ -33,10 +33,10 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         },
         {
             content: "Add one file in composer",
-            trigger: ".o-mail-Composer button[aria-label='Attach files']",
+            trigger: ".o-mail-Composer button[title='Attach Files']",
             async run() {
                 const text = new File(["hello, world"], "text.txt", { type: "text/plain" });
-                await inputFiles(".o-mail-Composer-coreMain .o_input_file", [text]);
+                await inputFiles(".o-mail-Composer .o_input_file", [text]);
             },
         },
         {
@@ -44,7 +44,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         },
         {
             content: "Open full composer",
-            trigger: "button[aria-label='Full composer']",
+            trigger: "button[title='Open Full Composer']",
             run: "click",
         },
         {
@@ -93,11 +93,12 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         {
             content: "Click on the mail template selector",
             trigger: ".mail-composer-template-dropdown-btn",
-            run: "click"
+            run: "click",
         },
         {
             content: "Check a template is listed",
-            trigger: '.mail-composer-template-dropdown.popover .o-dropdown-item:contains("Test template")',
+            trigger:
+                '.mail-composer-template-dropdown.popover .o-dropdown-item:contains("Test template")',
         },
         {
             content: "Send message",
@@ -121,7 +122,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         },
         {
             content: "Open full composer",
-            trigger: "button[aria-label='Full composer']",
+            trigger: "button[title='Open Full Composer']",
             run: "click",
         },
         {

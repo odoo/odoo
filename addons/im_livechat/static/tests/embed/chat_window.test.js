@@ -67,8 +67,9 @@ test("internal users can upload file to temporary thread", async () => {
     await click(".o-livechat-LivechatButton");
     const file = new File(["hello, world"], "text.txt", { type: "text/plain" });
     await contains(".o-mail-Composer");
-    await contains("button[title='Attach files']");
-    await inputFiles(".o-mail-Composer-coreMain .o_input_file", [file]);
+    await click(".o-mail-Composer button[title='More Actions']");
+    await contains(".dropdown-item:contains('Attach files')");
+    await inputFiles(".o-mail-Composer .o_input_file", [file]);
     await contains(".o-mail-AttachmentCard", { text: "text.txt", contains: [".fa-check"] });
     await triggerHotkey("Enter");
     await contains(".o-mail-Message .o-mail-AttachmentCard", { text: "text.txt" });

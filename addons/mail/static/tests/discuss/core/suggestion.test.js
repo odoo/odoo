@@ -12,6 +12,7 @@ import { mockDate } from "@odoo/hoot-mock";
 import { Command, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 
 import { Composer } from "@mail/core/common/composer";
+import { press } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -129,7 +130,7 @@ test("Sort partner suggestions by recent chats", async () => {
     await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel", { text: "User 2" });
     await insertText(".o-mail-Composer-input", "This is a test");
-    await click(".o-mail-Composer-send:enabled");
+    await press("Enter");
     await contains(".o-mail-Message-content", { text: "This is a test" });
     await click(".o-mail-DiscussSidebarChannel", { text: "General" });
     await insertText(".o-mail-Composer-input[placeholder='Message #General…']", "@");
