@@ -19,11 +19,6 @@
                 </cac:AdditionalDocumentReference>
             </t>
         </xpath>
-        <xpath expr="//*[local-name()='InvoiceDocumentReference']" position="inside">
-            <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
-                <cbc:UUID t-out="billing_reference_vals.get('uuid')"/>
-            </t>
-        </xpath>
     </template>
 
     <!-- They are not using the same template at all, so we make a new one. They basically want the same data as supplier/customer party -->
@@ -47,17 +42,6 @@
                     <cbc:Amount t-att-currencyID="vals['currency'].name"
                                 t-out="format_float(vals.get('item_price_extension_amount'), vals.get('currency_dp'))"/>
                 </cac:ItemPriceExtension>
-            </t>
-        </xpath>
-    </template>
-
-    <template id="ubl_20_AddressType_my" inherit_id="account_edi_ubl_cii.ubl_20_AddressType" primary="True">
-        <xpath expr="//*[local-name()='CountrySubentityCode']" position="after">
-            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
-               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
-                <cac:AddressLine t-foreach="vals.get('address_lines', [])" t-as="address_line">
-                    <cbc:Line t-out="address_line"/>
-                </cac:AddressLine>
             </t>
         </xpath>
     </template>
