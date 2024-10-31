@@ -40,7 +40,6 @@ export class CollaborationPlugin extends Plugin {
         "setInitialBranchStepId",
     ];
 
-    externalStepsBuffer = [];
     /** @type { CollaborationPluginConfig['peerId'] } */
     peerId = null;
 
@@ -112,17 +111,11 @@ export class CollaborationPlugin extends Plugin {
     }
 
     /**
-     * Apply external steps coming from the collaboration. Buffer them if
-     * postProcessExternalStepsPromise is not null until it is resolved (since
-     * steps could potentially concern elements currently being rendered
-     * asynchronously).
+     * Apply external steps coming from the collaboration.
      *
      * @param {Object} newSteps External steps to be applied
      */
     onExternalHistorySteps(newSteps) {
-        if (this.postProcessExternalStepsPromise) {
-            this.externalStepsBuffer.push(...newSteps);
-        }
         this.dependencies.history.disableObserver();
         const selectionData = this.dependencies.selection.getSelectionData();
 
@@ -137,18 +130,6 @@ export class CollaborationPlugin extends Plugin {
             }
             this.dependencies.history.addExternalStep(newStep, insertIndex);
             stepIndex++;
-
-            this.postProcessExternalSteps();
-            if (this.postProcessExternalStepsPromise) {
-                this.postProcessExternalStepsPromise = this.postProcessExternalStepsPromise.then(
-                    () => {
-                        this.postProcessExternalStepsPromise = undefined;
-                        this.onExternalHistorySteps(this.externalStepsBuffer);
-                    }
-                );
-                this.externalStepsBuffer = newSteps.slice(stepIndex);
-                break;
-            }
         }
 
         this.dependencies.history.enableObserver();
@@ -279,7 +260,6 @@ export class CollaborationPlugin extends Plugin {
         this.dependencies.history.resetFromSteps(steps);
         this.snapshots = [{ step: steps[0] }];
         this.branchStepIds = branchStepIds;
-        this.postProcessExternalSteps();
         this.dependencies.history.enableObserver();
 
         // @todo @phoenix: test that the hint are proprely handeled
@@ -288,14 +268,6 @@ export class CollaborationPlugin extends Plugin {
         // this.multiselectionRefresh();
         // @todo @phoenix: check it is still relevant
         // this.dispatchEvent(new Event("resetFromSteps"));
-    }
-    postProcessExternalSteps() {
-        const postProcessExternalSteps = this.getResource("post_process_external_steps")
-            ?.map((cb) => cb(this.editable))
-            ?.filter(Boolean);
-        if (postProcessExternalSteps?.length) {
-            this.postProcessExternalStepsPromise = Promise.all(postProcessExternalSteps);
-        }
     }
 
     makeSnapshot() {
