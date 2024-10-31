@@ -15,3 +15,6 @@ class StockPicking(models.Model):
         store=True
     )
     site_code_id = fields.Many2one(related='location_dest_id.site_code_id', string='Site Code', store=True)
+    tenant_id = fields.Char(related='tenant_code_id.name',string='Tenant ID', store=True)
+    site_code = fields.Char(related='site_code_id.name',string='Site Code', store=True)
+    
