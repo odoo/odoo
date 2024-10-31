@@ -1604,6 +1604,29 @@ test("Thread avatar image is displayed in top bar of channels of type 'group'", 
     await contains(".o-mail-Discuss-header .o-mail-Discuss-threadAvatar");
 });
 
+test("Thread avatar is not editable in DM chat", async () => {
+    const pyEnv = await startServer();
+    const demoUid = pyEnv["res.users"].create({ name: "Demo" });
+    const demoPid = pyEnv["res.partner"].create({ name: "Demo", user_ids: [demoUid] });
+    const [groupChatId] = pyEnv["discuss.channel"].create([
+        { channel_type: "group", name: "GroupChat" },
+        {
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId }),
+                Command.create({ partner_id: demoPid }),
+            ],
+            channel_type: "chat",
+        },
+    ]);
+    await start();
+    await openDiscuss(groupChatId);
+    await contains(".o-mail-Discuss-threadName[title='GroupChat']");
+    await contains(".o-mail-Discuss-threadAvatar .fa-pencil");
+    await click(".o-mail-DiscussSidebar-item:contains('Demo')");
+    await contains(".o-mail-Discuss-threadName[title='Demo']");
+    await contains(".o-mail-Discuss-threadAvatar .fa-pencil", { count: 0 });
+});
+
 test("Do not trigger chat name server update when it is unchanged", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
