@@ -1126,109 +1126,6 @@ registry.backgroundVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin
     },
 });
 
-registry.anchorSlide = publicWidget.Widget.extend({
-    selector: 'a[href^="/"][href*="#"], a[href^="#"]',
-    events: {
-        'click': '_onAnimateClick',
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {jQuery} $el the element to scroll to.
-     * @param {string} [scrollValue='true'] scroll value
-     * @returns {Promise}
-     */
-    async _scrollTo($el, scrollValue = 'true') {
-        return scrollTo($el[0], {
-            duration: scrollValue === "true" ? 500 : 0,
-            extraOffset: this._computeExtraOffset(),
-        });
-    },
-    /**
-     * @private
-     */
-    _computeExtraOffset() {
-        return 0;
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _onAnimateClick: function (ev) {
-        const ensureSlash = path => path.endsWith("/") ? path : path + "/";
-        if (ensureSlash(this.el.pathname) !== ensureSlash(window.location.pathname)) {
-            return;
-        }
-        // Avoid flicker at destination in case of ending "/" difference.
-        if (this.el.pathname !== window.location.pathname) {
-            this.el.pathname = window.location.pathname;
-        }
-        var hash = this.el.hash;
-        if (!hash.length) {
-            return;
-        }
-        // Escape special characters to make the jQuery selector to work.
-        hash = '#' + $.escapeSelector(hash.substring(1));
-        var $anchor = $(hash);
-        const scrollValue = $anchor.attr('data-anchor');
-        if (!$anchor.length || !scrollValue) {
-            return;
-        }
-
-        const offcanvasEl = this.el.closest('.offcanvas.o_navbar_mobile');
-        if (offcanvasEl && offcanvasEl.classList.contains('show')) {
-            // Special case for anchors in offcanvas in mobile: we can't just
-            // _scrollTo() after preventDefault because preventDefault would
-            // prevent the offcanvas to be closed. The choice is then to close
-            // it ourselves manually and once it's fully closed, then start our
-            // own smooth scrolling.
-            ev.preventDefault();
-            Offcanvas.getInstance(offcanvasEl).hide();
-            offcanvasEl.addEventListener('hidden.bs.offcanvas',
-                () => {
-                    this._manageScroll(hash, $anchor, scrollValue);
-                },
-                // the listener must be automatically removed when invoked
-                { once: true }
-            );
-        } else {
-            ev.preventDefault();
-            this._manageScroll(hash, $anchor, scrollValue);
-        }
-    },
-    /**
-     *
-     * @param {string} hash
-     * @param {jQuery} $el the element to scroll to.
-     * @param {string} [scrollValue='true'] scroll value
-     * @private
-     */
-    _manageScroll(hash, $anchor, scrollValue = "true") {
-        if (hash === "#top" || hash === "#bottom") {
-            // If the anchor targets #top or #bottom, directly call the
-            // "scrollTo" function. The reason is that the header or the footer
-            // could have been removed from the DOM. By receiving a string as
-            // parameter, the "scrollTo" function handles the scroll to the top
-            // or to the bottom of the document even if the header or the
-            // footer is removed from the DOM.
-            scrollTo(hash, {
-                duration: 500,
-                extraOffset: this._computeExtraOffset(),
-            });
-        } else {
-            this._scrollTo($anchor, scrollValue);
-        }
-    },
-});
-
 registry.FullScreenHeight = publicWidget.Widget.extend({
     selector: '.o_full_screen_height',
     disabledInEditableMode: false,
@@ -1285,27 +1182,6 @@ registry.FullScreenHeight = publicWidget.Widget.extend({
         const firstContentEl = $('#wrapwrap > main > :first-child')[0]; // first child to consider the padding-top of main
         const mainTopPos = firstContentEl.getBoundingClientRect().top + document.documentElement.scrollTop;
         return (windowHeight - mainTopPos);
-    },
-});
-
-registry.ScrollButton = registry.anchorSlide.extend({
-    selector: '.o_scroll_button',
-
-    /**
-     * @override
-     */
-    _onAnimateClick: function (ev) {
-        ev.preventDefault();
-        // Scroll to the next visible element after the current one.
-        const currentSectionEl = this.el.closest('section');
-        let nextEl = currentSectionEl.nextElementSibling;
-        while (nextEl) {
-            if ($(nextEl).is(':visible')) {
-                this._scrollTo($(nextEl));
-                return;
-            }
-            nextEl = nextEl.nextElementSibling;
-        }
     },
 });
 

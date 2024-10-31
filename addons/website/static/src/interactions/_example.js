@@ -34,9 +34,11 @@ class TogglableBackgroundSection extends Interaction {
     }
 }
 
+/*
 registry
     .category("website.active_elements")
     .add("website.toggle_background", TogglableBackgroundSection);
+*/
 
 // -----------------------------------------------------------------------------
 // Example of interaction
@@ -53,9 +55,11 @@ class FunNotificationThing extends Interaction {
     }
 }
 
+/*
 registry
     .category("website.active_elements")
     .add("website.fun_notification", FunNotificationThing);
+*/
 
 // -----------------------------------------------------------------------------
 // Example of mounted component
@@ -79,4 +83,6 @@ class Counter extends Component {
     }
 }
 
+/*
 registry.category("website.active_elements").add("website.counter", Counter);
+*/
