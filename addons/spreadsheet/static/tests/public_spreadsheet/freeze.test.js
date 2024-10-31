@@ -36,7 +36,7 @@ test("odoo pivot functions are replaced with their value", async function () {
     const cells = data.sheets[0].cells;
     expect(cells.A3.content).toBe("No", { message: "the content is replaced with the value" });
     expect(cells.C3.content).toBe("15", { message: "the content is replaced with the value" });
-    expect(data.formats[cells.C3.format]).toBe("#,##0.00");
+    expect(data.formats[data.sheets[0].formats.C3]).toBe("#,##0.00");
 });
 
 test("Pivot with a type different of ODOO is not converted", async function () {
@@ -128,9 +128,11 @@ test("computed format is exported", async function () {
     expect(getCell(model, "A1").format).toBe(undefined);
     expect(getEvaluatedCell(model, "A1").format).toBe("#,##0.00[$€]");
     const data = await freezeOdooData(model);
-    const A1 = data.sheets[0].cells.A1;
-    const format = data.formats[A1.format];
+    const formatId = data.sheets[0].formats.A1;
+    const format = data.formats[formatId];
     expect(format).toBe("#,##0.00[$€]");
+    const sharedModel = await createModelWithDataSource({ spreadsheetData: data });
+    expect(getCell(sharedModel, "A1").format).toBe("#,##0.00[$€]");
 });
 
 test("odoo charts are replaced with an image", async function () {
@@ -274,7 +276,7 @@ test("spilled pivot table", async function () {
     expect(cells.B10.content).toBe("Total");
     expect(cells.B11.content).toBe("Probability");
     expect(cells.B12.content).toBe("131");
-    expect(data.formats[cells.B12.format]).toBe("#,##0.00");
+    expect(data.formats[sheet.formats.B12]).toBe("#,##0.00");
     expect(data.pivots).toEqual({});
     expect(sheet.styles).toEqual({ B12: 1 });
     expect(data.styles[sheet.styles["B12"]]).toEqual(
