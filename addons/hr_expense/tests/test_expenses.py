@@ -130,13 +130,13 @@ class TestExpenses(TestExpenseCommon):
             # own_account expense 1 move
             {'balance':  1391.30, 'account_id': self.expense_account.id,    'name': 'expense_employee: Employee PA 2*800 + 15%', 'date': date(2021, 10, 31), 'invoice_date': date(2021, 10, 10)},
             {'balance':   208.70, 'account_id': tax_account_id,             'name': '15%',                                       'date': date(2021, 10, 31), 'invoice_date': date(2021, 10, 10)},
-            {'balance': -1600.00, 'account_id': default_account_payable_id, 'name': '',                                          'date': date(2021, 10, 31), 'invoice_date': date(2021, 10, 10)},
+            {'balance': -1600.00, 'account_id': default_account_payable_id, 'name': False,                                       'date': date(2021, 10, 31), 'invoice_date': date(2021, 10, 10)},
 
             # own_account expense 2 move
             {'balance':   123.08, 'account_id': product_b_account_id,       'name': 'expense_employee: Employee PB 160 + 2*15%', 'date': date(2021, 10, 31), 'invoice_date': date(2021, 10, 31)},
             {'balance':    18.46, 'account_id': tax_account_id,             'name': '15%',                                       'date': date(2021, 10, 31), 'invoice_date': date(2021, 10, 31)},
             {'balance':    18.46, 'account_id': tax_account_id,             'name': '15% (Copy)',                                'date': date(2021, 10, 31), 'invoice_date': date(2021, 10, 31)},
-            {'balance':  -160.00, 'account_id': default_account_payable_id, 'name': '',                                          'date': date(2021, 10, 31), 'invoice_date': date(2021, 10, 31)},
+            {'balance':  -160.00, 'account_id': default_account_payable_id, 'name': False,                                       'date': date(2021, 10, 31), 'invoice_date': date(2021, 10, 31)},
 
             # company_account expense 1 move
             {'balance':   869.57, 'account_id': product_c_account_id,       'name': 'expense_employee: Company PC 1000 + 15%',   'date': date(2021, 10, 12), 'invoice_date': False},
