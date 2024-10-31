@@ -247,7 +247,7 @@ class AutomationDecantingOrdersProcess(models.Model):
         _logger.info(f"Generated data for crate close: {json_data}")
 
         # Define the URLs for Shiperoo Connect
-        url_automation_putaway = "https://shiperooconnect.automation.shiperoo.com/api/interface/automationputaway"
+        url_automation_putaway = "https://shiperooconnect-prod.automation.shiperoo.com/api/interface/automationputaway"
 
         headers = {
             'Content-Type': 'application/json'
