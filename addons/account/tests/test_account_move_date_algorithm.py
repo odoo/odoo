@@ -177,6 +177,7 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
         amls = (invoice + refund).line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
         amls.reconcile()
         exchange_move = amls.matched_debit_ids.exchange_move_id
+        self.assertEqual(exchange_move.state, 'posted')
 
         self._set_lock_date('2017-01-31')
         (invoice + refund).line_ids.remove_move_reconcile()
