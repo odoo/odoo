@@ -77,14 +77,18 @@ export const tourService = {
         }));
 
         function endTour({ name }) {
-            // Used to signal the python test runner that the tour finished without error.
-            browser.console.log("tour succeeded");
-            // Used to see easily in the python console and to know which tour has been succeeded in suite tours case.
-            const succeeded = `║ TOUR ${name} SUCCEEDED ║`;
-            const msg = [succeeded];
-            msg.unshift("╔" + "═".repeat(succeeded.length - 2) + "╗");
-            msg.push("╚" + "═".repeat(succeeded.length - 2) + "╝");
-            browser.console.log(`\n\n${msg.join("\n")}\n`);
+            if (tourState.getCurrentTourOnError()) {
+                console.error("tour not succeeded");
+            } else {
+                // Used to signal the python test runner that the tour finished without error.
+                browser.console.log("tour succeeded");
+                // Used to see easily in the python console and to know which tour has been succeeded in suite tours case.
+                const succeeded = `║ TOUR ${name} SUCCEEDED ║`;
+                const msg = [succeeded];
+                msg.unshift("╔" + "═".repeat(succeeded.length - 2) + "╗");
+                msg.push("╚" + "═".repeat(succeeded.length - 2) + "╝");
+                browser.console.log(`\n\n${msg.join("\n")}\n`);
+            }
             tourState.clear();
         }
 
