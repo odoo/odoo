@@ -46,11 +46,12 @@ class ProductTemplateAttributeValue(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        loaded_product_tmpl_ids = list({p['id'] for p in data['product.template']})
+        ptav_ids = {ptav_id for p in data['product.product'] for ptav_id in p['product_template_variant_value_ids']}
+        ptav_ids.update({ptav_id for ptal in data['product.template.attribute.line'] for ptav_id in ptal['product_template_value_ids']})
         return AND([
             [('ptav_active', '=', True)],
             [('attribute_id', 'in', [attr['id'] for attr in data['product.attribute']])],
-            [('product_tmpl_id', 'in', loaded_product_tmpl_ids)]
+            [('id', 'in', list(ptav_ids))]
         ])
 
     @api.model
