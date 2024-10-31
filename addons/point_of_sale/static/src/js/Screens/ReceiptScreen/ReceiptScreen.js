@@ -129,6 +129,7 @@ odoo.define('point_of_sale.ReceiptScreen', function (require) {
             }
             async _sendReceiptToCustomer() {
                 const printer = new Printer(null, this.env.pos);
+                printer.isEmail = true;
                 const receiptString = this.orderReceipt.el.innerHTML;
                 const ticketImage = await printer.htmlToImg(receiptString);
                 const order = this.currentOrder;
