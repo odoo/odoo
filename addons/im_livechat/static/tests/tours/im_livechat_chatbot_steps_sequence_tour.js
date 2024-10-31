@@ -78,6 +78,7 @@ registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_tour
  */
 registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_with_move_tour", {
     url: "/odoo",
+    checkDelay: 50,
     steps: () => [
         ...commonSteps,
         {

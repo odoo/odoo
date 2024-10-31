@@ -4,20 +4,24 @@ import { TourStepAutomatic } from "./tour_step_automatic";
 import { MacroEngine } from "@web/core/macro";
 import { browser } from "@web/core/browser/browser";
 import { setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
-
+import * as hoot from "@odoo/hoot-dom";
 export class TourAutomatic {
     mode = "auto";
     paused = false;
     pointer = null;
+    paused = false;
     constructor(data) {
         Object.assign(this, data);
         this.steps = this.steps.map((step, index) => new TourStepAutomatic(step, this, index));
         this.macroEngine = new MacroEngine({
             target: document,
-            defaultCheckDelay: 500,
         });
         const tourConfig = tourState.getCurrentConfig();
-        this.stepDelay = tourConfig.stepDelay;
+        this.stepDelay = tourConfig.stepDelay || 0;
+
+        window.addEventListener("beforeunload", () => {
+            this.macroEngine.stop();
+        });
     }
 
     get currentIndex() {
@@ -62,6 +66,16 @@ export class TourAutomatic {
                         },
                     },
                     {
+                        initialDelay: () => {
+                            return this.previousStepIsJustACheck ? 0 : null;
+                        },
+                        timeout: step.timeout,
+                        onTimeout: () => {
+                            return this.throwError([
+                                `TIMEOUT: Step has failed within ${step.timeout} ms.`,
+                                step.describeWhyIFailed,
+                            ]);
+                        },
                         trigger: () => step.findTrigger(),
                         timeout,
                         onTimeout: () => {
@@ -70,6 +84,7 @@ export class TourAutomatic {
                             );
                         },
                         action: async () => {
+                            this.previousStepIsJustACheck = !this.currentStep.hasAction;
                             if (this.debugMode) {
                                 this.paused = step.pause;
                                 if (!step.skipped && this.showPointerDuration > 0 && step.element) {
@@ -98,7 +113,7 @@ export class TourAutomatic {
 
         const macro = {
             name: this.name,
-            checkDelay: this.checkDelay,
+            debounceDelay: this.checkDelay,
             steps: macroSteps,
             onError: (error) => {
                 this.throwError(error);
@@ -109,6 +124,7 @@ export class TourAutomatic {
                 transitionConfig.disabled = false;
                 callback();
             },
+            stepDelay: this.stepDelay,
         };
 
         transitionConfig.disabled = true;

@@ -1,13 +1,13 @@
 import { browser } from "@web/core/browser/browser";
 import { isVisible } from "@web/core/utils/ui";
-import { delay, Mutex } from "@web/core/utils/concurrency";
 import { validate } from "@odoo/owl";
+import { Mutex } from "./utils/concurrency";
 
 const macroSchema = {
     name: { type: String, optional: true },
-    checkDelay: { type: Number, optional: true }, //Delay before checking if element is in DOM.
-    stepDelay: { type: Number, optional: true }, //Wait this delay between steps
     timeout: { type: Number, optional: true },
+    debounceDelay: { type: Number, optional: true }, //Delay before checking if element is in DOM.
+    stepDelay: { type: Number, optional: true }, //Wait this delay between steps
     steps: {
         type: Array,
         element: {
@@ -59,6 +59,7 @@ export const ACTION_HELPERS = {
 const mutex = new Mutex();
 
 class Macro {
+    debouncedFindTrigger = null;
     currentIndex = 0;
     isComplete = false;
     errored = false;
@@ -72,67 +73,80 @@ class Macro {
         }
         Object.assign(this, descr);
         this.name = this.name || "anonymous";
+        this.timerDuration = this.timeout || 0;
+        this.debounceDelay = Math.max(this.debounceDelay || 100, 50);
         this.onComplete = this.onComplete || (() => {});
         this.onStep = this.onStep || (() => {});
+
         this.stepElFound = new Array(this.steps.length).fill(false);
+        this.stepHasStarted = new Array(this.steps.length).fill(false);
+        this.observer = new MacroMutationObserver(() => this.continue("mutation"));
     }
 
-    async advance() {
+    async continue(from) {
         //Only one case, when browser refresh just after the last step.
         if (!this.currentStep && this.currentIndex === 0) {
             await delay(300);
             this.stop();
         }
-        if (this.isComplete) {
+        // Make sure to take the only possible path.
+        // A step always starts with "next".
+        // A step can only be continued with "mutation".
+        // We abort when the macro is finished or if a mutex occurs afterwards.
+        if (
+            this.isComplete ||
+            (from === "next" && this.stepHasStarted[this.currentIndex]) ||
+            (from === "mutation" && !this.stepHasStarted[this.currentIndex]) ||
+            (from === "mutation" && this.currentElement)
+        ) {
             return;
         }
-        this.setTimer();
-        let proceedToAction = true;
-        if (this.currentStep.trigger) {
-            proceedToAction = this.findTrigger();
-        }
-        if (proceedToAction) {
-            this.safeCall(this.onStep, this.currentElement, this.currentStep);
-            const actionResult = await this.performAction();
-            this.clearTimer();
-            if (!actionResult) {
-                // If falsy action result, it means the action worked properly.
-                // So we can proceed to the next step.
-                this.increment();
-                await this.advance();
+        let delay = this.debounceDelay;
+        // Called only once per step.
+        if (!this.stepHasStarted[this.currentIndex]) {
+            this.setTimer();
+            this.stepHasStarted[this.currentIndex] = true;
+            if (!this.currentStep.trigger) {
+                await this.doAction();
             }
+            delay = 150;
+            if (this.currentStep?.initialDelay) {
+                const initialDelay = parseFloat(this.currentStep.initialDelay());
+                delay = initialDelay >= 0 ? initialDelay : delay;
+            }
+        }
+        if (this.currentStep?.trigger && !this.currentElement) {
+            this.debounceFindTrigger(delay);
         }
     }
 
-    /**
-     * Find the trigger and assess whether it can continue on performing the actions.
-     * @returns {boolean}
-     */
-    findTrigger() {
+    async findTrigger() {
         if (this.isComplete) {
             return;
         }
         const trigger = this.currentStep.trigger;
+        if (!trigger) {
+            this.stop(`A trigger is needed to find trigger !`);
+        }
         try {
             if (typeof trigger === "function") {
                 this.currentElement = this.safeCall(trigger);
             } else if (typeof trigger === "string") {
                 const triggerEl = document.querySelector(trigger);
                 this.currentElement = isVisible(triggerEl) && triggerEl;
-            } else {
-                throw new Error(`Trigger can only be string or function.`);
             }
         } catch (error) {
             this.stop(`Error when trying to find trigger: ${error.message}`);
         }
-        return !!this.currentElement;
+        // RUN ACTION
+        if (this.currentElement) {
+            await this.doAction();
+        }
     }
 
-    /**
-     * Calls the `step.action` expecting no return to be successful.
-     */
-    async performAction() {
-        let actionResult;
+    async doAction() {
+        this.clearTimer();
+        let actionResult = false;
         try {
             const action = this.currentStep.action;
             if (action in ACTION_HELPERS) {
@@ -141,9 +155,32 @@ class Macro {
                 actionResult = await this.safeCall(action, this.currentElement);
             }
         } catch (error) {
-            this.stop(`ERROR IN ACTION: ${error.message}`);
+            this.stop(`Step failed when try to run action : ${error.message}`);
         }
-        return actionResult;
+        this.increment();
+        await this.waitStepDelay();
+        if (!actionResult) {
+            await this.continue("next");
+        }
+    }
+
+    get currentStep() {
+        return this.steps[this.currentIndex];
+    }
+
+    get currentElement() {
+        return this.stepElFound[this.currentIndex];
+    }
+
+    set currentElement(value) {
+        this.stepElFound[this.currentIndex] = value;
+    }
+
+    increment() {
+        this.currentIndex++;
+        if (this.currentIndex >= this.steps.length) {
+            this.stop();
+        }
     }
 
     get currentStep() {
@@ -181,38 +218,64 @@ class Macro {
      */
     setTimer() {
         this.clearTimer();
-        const timeout = this.currentStep.timeout || this.timeout;
-        if (timeout > 0) {
-            this.timer = browser.setTimeout(() => {
-                if (this.currentStep.onTimeout) {
-                    this.safeCall(this.currentStep.onTimeout, this.currentStep, this.currentIndex);
-                } else {
-                    this.stop("Step timeout");
-                }
-            }, timeout);
-        }
+        const timeout = this.currentStep.timeout || 10000;
+        this.timer = browser.setTimeout(() => {
+            if (this.currentStep.onTimeout) {
+                this.safeCall(this.currentStep.onTimeout, this.currentStep, this.currentIndex);
+            } else {
+                this.stop("Step timeout");
+            }
+        }, timeout);
     }
 
     clearTimer() {
+        this.resetDebounce();
         if (this.timer) {
             browser.clearTimeout(this.timer);
         }
     }
 
+    resetDebounce() {
+        if (this.debouncedFindTrigger) {
+            browser.clearTimeout(this.debouncedFindTrigger);
+        }
+    }
+
+    debounceFindTrigger(delay) {
+        this.resetDebounce();
+        this.debouncedFindTrigger = browser.setTimeout(
+            () => mutex.exec(() => this.findTrigger()),
+            delay
+        );
+    }
+
+    start(target) {
+        this.observer.observe(target);
+        this.continue("next");
+    }
+
     stop(error) {
         this.clearTimer();
+        this.observer.disconnect();
         this.isComplete = true;
         if (error) {
-            this.errored = true;
             if (this.onError) {
                 this.onError(error, this.currentStep, this.currentIndex);
             } else {
                 console.error(error);
             }
-        } else if (this.currentIndex === this.steps.length && !this.errored) {
+        } else if (this.currentIndex === this.steps.length) {
             mutex.getUnlockedDef().then(() => {
                 this.onComplete();
             });
+        }
+        return;
+    }
+
+    async waitStepDelay() {
+        // await new Promise((resolve) => requestAnimationFrame(resolve));
+        if (this.stepDelay) {
+            await new Promise((resolve) => browser.setTimeout(resolve, this.stepDelay));
         }
         return;
     }
@@ -221,11 +284,8 @@ class Macro {
 export class MacroEngine {
     constructor(params = {}) {
         this.isRunning = false;
-        this.timeout = null;
         this.target = params.target || document.body;
-        this.defaultCheckDelay = params.defaultCheckDelay ?? 750;
         this.macros = new Set();
-        this.macroMutationObserver = new MacroMutationObserver(() => this.delayedCheck());
     }
 
     async activate(descr, exclusive = false) {
@@ -248,50 +308,31 @@ export class MacroEngine {
     start() {
         if (!this.isRunning) {
             this.isRunning = true;
-            this.macroMutationObserver.observe(this.target);
         }
-        this.delayedCheck();
+        this.advanceMacros();
     }
 
-    stop() {
+    async stop() {
         if (this.isRunning) {
             this.isRunning = false;
-            browser.clearTimeout(this.timeout);
-            this.timeout = null;
-            this.macroMutationObserver.disconnect();
         }
-    }
-
-    delayedCheck() {
-        if (this.timeout) {
-            browser.clearTimeout(this.timeout);
+        for (const macro of this.macros) {
+            macro.stop();
         }
-        this.timeout = browser.setTimeout(
-            () => mutex.exec(this.advanceMacros.bind(this)),
-            this.getCheckDelay() || this.defaultCheckDelay
-        );
+        this.clean();
     }
 
-    getCheckDelay() {
-        // If a macro has a checkDelay different from 0, use it. Select the minimum.
-        // For example knowledge has a macro with a delay of 10ms. We don't want to wait
-        // longer because of other running tours.
-        return [...this.macros]
-            .map((m) => m.checkDelay)
-            .filter((delay) => delay > 0)
-            .reduce((m, v) => Math.min(m, v), this.defaultCheckDelay);
-    }
-
-    async advanceMacros() {
-        await Promise.all([...this.macros].map((macro) => macro.advance()));
+    clean() {
         for (const macro of this.macros) {
             if (macro.isComplete) {
                 this.macros.delete(macro);
             }
         }
-        if (this.macros.size === 0) {
-            this.stop();
-        }
+    }
+
+    async advanceMacros() {
+        await Promise.all([...this.macros].map((macro) => macro.start(this.target)));
+        this.clean();
     }
 }
 

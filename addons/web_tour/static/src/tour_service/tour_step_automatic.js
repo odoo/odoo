@@ -1,5 +1,4 @@
 import { _legacyIsVisible } from "@web/core/utils/ui";
-import { tourState } from "./tour_state";
 import * as hoot from "@odoo/hoot-dom";
 import { callWithUnloadCheck } from "./tour_utils";
 import { TourHelpers } from "./tour_helpers";
@@ -12,7 +11,6 @@ export class TourStepAutomatic extends TourStep {
     constructor(data, tour, index) {
         super(data, tour);
         this.index = index;
-        this.tourConfig = tourState.getCurrentConfig();
     }
 
     get describeWhyIFailed() {
@@ -42,17 +40,9 @@ export class TourStepAutomatic extends TourStep {
         return errors;
     }
 
-    /**
-     * When return true, macroEngine stops.
-     * @returns {Boolean}
-     */
     async doAction() {
-        clearTimeout(this._timeout);
-        let result = false;
         if (!this.skipped) {
-            // TODO: Delegate the following routine to the `ACTION_HELPERS` in the macro module.
             const actionHelper = new TourHelpers(this.element);
-
             if (typeof this.run === "function") {
                 const willUnload = await callWithUnloadCheck(async () => {
                     await this.run.call({ anchor: this.element }, actionHelper);
@@ -67,7 +57,6 @@ export class TourStepAutomatic extends TourStep {
                 }
             }
         }
-        return result;
     }
 
     /**
@@ -78,6 +67,7 @@ export class TourStepAutomatic extends TourStep {
     findTrigger() {
         if (!this.active) {
             this.skipped = true;
+            console.log("This step has been skipped !");
             return true;
         }
         let nodes;
