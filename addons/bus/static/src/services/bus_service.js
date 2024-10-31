@@ -8,7 +8,13 @@ import { EventBus } from "@odoo/owl";
 import { user } from "@web/core/user";
 
 // List of worker events that should not be broadcasted.
-const INTERNAL_EVENTS = new Set(["initialized", "outdated", "notification", "update_state"]);
+const INTERNAL_EVENTS = new Set([
+    "initialized",
+    "outdated",
+    "log_debug",
+    "notification",
+    "update_state",
+]);
 /**
  * Communicate with a SharedWorker in order to provide a single websocket
  * connection shared across multiple tabs.
@@ -83,6 +89,9 @@ export const busService = {
                 }
                 case "update_state":
                     workerState = data;
+                    break;
+                case "log_debug":
+                    console.debug(...data);
                     break;
                 case "outdated": {
                     multiTab.unregister();
