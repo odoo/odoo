@@ -414,14 +414,12 @@ export class HistoryPlugin extends Plugin {
                         value: record.target.getAttribute(record.attributeName),
                         oldValue: record.oldValue,
                     });
-                    for (const cb of this.getResource("on_change_attribute")) {
-                        cb({
-                            target: record.target,
-                            attributeName: record.attributeName,
-                            oldValue: record.oldValue,
-                            value: record.target.getAttribute(record.attributeName),
-                        });
-                    }
+                    this.dispatchTo("attribute_change_handlers", {
+                        target: record.target,
+                        attributeName: record.attributeName,
+                        oldValue: record.oldValue,
+                        value: record.target.getAttribute(record.attributeName),
+                    });
                     break;
                 }
                 case "childList": {
@@ -720,17 +718,16 @@ export class HistoryPlugin extends Plugin {
                     const node = this.idToNodeMap.get(mutation.id);
                     if (node) {
                         let value = this.getAttributeValue(mutation.attributeName, mutation.value);
-                        for (const cb of this.getResource("on_change_attribute")) {
-                            value =
-                                cb(
-                                    {
-                                        target: node,
-                                        attributeName: mutation.attributeName,
-                                        oldValue: mutation.oldValue,
-                                        value,
-                                    },
-                                    { forNewStep }
-                                ) || value;
+                        for (const cb of this.getResource("attribute_change_processors")) {
+                            value = cb(
+                                {
+                                    target: node,
+                                    attributeName: mutation.attributeName,
+                                    oldValue: mutation.oldValue,
+                                    value,
+                                },
+                                { forNewStep }
+                            );
                         }
                         this.setAttribute(node, mutation.attributeName, value);
                     }
@@ -789,18 +786,17 @@ export class HistoryPlugin extends Plugin {
                             mutation.attributeName,
                             mutation.oldValue
                         );
-                        for (const cb of this.getResource("on_change_attribute")) {
-                            value =
-                                cb(
-                                    {
-                                        target: node,
-                                        attributeName: mutation.attributeName,
-                                        oldValue: mutation.value,
-                                        value,
-                                        reverse: true,
-                                    },
-                                    { forNewStep }
-                                ) || value;
+                        for (const cb of this.getResource("attribute_change_processors")) {
+                            value = cb(
+                                {
+                                    target: node,
+                                    attributeName: mutation.attributeName,
+                                    oldValue: mutation.value,
+                                    value,
+                                    reverse: true,
+                                },
+                                { forNewStep }
+                            );
                         }
                         this.setAttribute(node, mutation.attributeName, value);
                     }
