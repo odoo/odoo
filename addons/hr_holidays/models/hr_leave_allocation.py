@@ -605,7 +605,7 @@ class HolidaysAllocation(models.Model):
         if self.type_request_unit in ['hour']:
             return float_round(fake_allocation.number_of_hours_display - self.number_of_hours_display, precision_digits=2)
         res = round((fake_allocation.number_of_days - self.number_of_days), 2)
-        fake_allocation._invalidate_cache(['number_of_days', 'number_of_days_display', 'lastcall', 'nextcall', 'number_of_hours_display'])
+        fake_allocation.invalidate_recordset()
         return res
 
     ####################################################
