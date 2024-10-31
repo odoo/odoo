@@ -55,6 +55,21 @@ class TestHrContracts(TestContractCommon):
             end = datetime.strptime('2015-12-30', '%Y-%m-%d').date()
             self.create_contract('draft', 'done', start, end)
 
+    def test_incoming_overlapping_contract_same_start_date(self):
+        start = datetime.strptime('2015-11-01', '%Y-%m-%d').date()
+        end = datetime.strptime('2015-11-30', '%Y-%m-%d').date()
+        end2 = datetime.strptime('2015-12-30', '%Y-%m-%d').date()
+
+        # Contract 2 incoming after contract 1
+        with self.assertRaises(ValidationError, msg="It should not create two contract in state open or incoming"):
+            self.create_contract('open', 'normal', start, end)
+            self.create_contract('draft', 'done', end, end2)
+
+        # Contract 2 incoming before contract 1
+        with self.assertRaises(ValidationError, msg="It should not create two contract in state open or incoming"):
+            self.create_contract('draft', 'done', end, end2)
+            self.create_contract('open', 'normal', start, end)
+
     def test_pending_overlapping_contract(self):
         start = datetime.strptime('2015-11-01', '%Y-%m-%d').date()
         end = datetime.strptime('2015-11-30', '%Y-%m-%d').date()
