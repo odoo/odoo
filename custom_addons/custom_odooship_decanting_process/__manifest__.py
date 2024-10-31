@@ -8,7 +8,7 @@
     'description': """Increase Quantity of Product by entering Barcode.""",
     'author': 'Drishti Joshi',
     'company': 'Shiperoo',
-    'depends': ['stock', 'base', 'sale'],
+    'depends': ['stock', 'base', 'sale', 'ash_test'],
     'data': [
         'data/delivery_receipt_sequence.xml',
         'data/crate_container_configuration_data.xml',
