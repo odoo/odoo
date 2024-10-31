@@ -119,7 +119,8 @@ test("emojis are auto-substituted from text", async () => {
     await contains(".o-mail-Message-body", { text: "😈" });
 });
 
-test("Exiting emoji picker brings the focus back to the Composer textarea [REQUIRE FOCUS]", async () => {
+test.tags("focus required");
+test("Exiting emoji picker brings the focus back to the Composer textarea", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     await start();
@@ -142,7 +143,7 @@ test("add an emoji after some text", async () => {
     await contains(".o-mail-Composer-input", { value: "Blabla🤑" });
 });
 
-test("add emoji replaces (keyboard) text selection [REQUIRE FOCUS]", async () => {
+test("add emoji replaces (keyboard) text selection", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "pétanque-tournament-14" });
     await start();
@@ -535,7 +536,7 @@ test("composer text input placeholder should contain correspondent name when thr
     await contains("textarea.o-mail-Composer-input[placeholder='Message Marc Demo…']");
 });
 
-test("quick edit last self-message from UP arrow [REQUIRE FOCUS]", async () => {
+test.tags("focus required")("quick edit last self-message from UP arrow", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     pyEnv["mail.message"].create({
@@ -693,7 +694,7 @@ test("composer: paste attachments", async () => {
     await contains(".o-mail-AttachmentList .o-mail-AttachmentCard");
 });
 
-test("Replying on a channel should focus composer initially [REQUIRE FOCUS]", async () => {
+test.tags("focus required")("Replying on a channel should focus composer initially", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",

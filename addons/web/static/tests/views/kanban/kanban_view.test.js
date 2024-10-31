@@ -1066,14 +1066,13 @@ test("pager, ungrouped, with limit set on arch and given in options", async () =
     });
 });
 
-test.tags("desktop")(
-    "pager, ungrouped, with limit set on arch and given in options on desktop",
-    async () => {
-        // the limit given in the arch should take the priority over the one given in options
-        await mountView({
-            type: "kanban",
-            resModel: "partner",
-            arch: `
+test.tags("desktop");
+test("pager, ungrouped, with limit set on arch and given in options on desktop", async () => {
+    // the limit given in the arch should take the priority over the one given in options
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
             <kanban limit="3">
                 <templates>
                     <t t-name="card">
@@ -1081,13 +1080,12 @@ test.tags("desktop")(
                     </t>
                 </templates>
             </kanban>`,
-            limit: 2,
-        });
+        limit: 2,
+    });
 
-        expect(getPagerValue()).toEqual([1, 3]);
-        expect(getPagerLimit()).toBe(4);
-    }
-);
+    expect(getPagerValue()).toEqual([1, 3]);
+    expect(getPagerLimit()).toBe(4);
+});
 
 test.tags("desktop")("pager, ungrouped, with count limit reached", async () => {
     patchWithCleanup(RelationalModel, { DEFAULT_COUNT_LIMIT: 3 });
@@ -1157,15 +1155,14 @@ test("pager, ungrouped, with count limit reached, click next", async () => {
     expect.verifySteps(["web_search_read"]);
 });
 
-test.tags("desktop")(
-    "pager, ungrouped, with count limit reached, click next on desktop",
-    async () => {
-        patchWithCleanup(RelationalModel, { DEFAULT_COUNT_LIMIT: 3 });
+test.tags("desktop");
+test("pager, ungrouped, with count limit reached, click next on desktop", async () => {
+    patchWithCleanup(RelationalModel, { DEFAULT_COUNT_LIMIT: 3 });
 
-        await mountView({
-            type: "kanban",
-            resModel: "partner",
-            arch: `
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
             <kanban limit="2">
                 <templates>
                     <t t-name="card">
@@ -1173,17 +1170,16 @@ test.tags("desktop")(
                     </t>
                 </templates>
             </kanban>`,
-        });
+    });
 
-        expect(".o_pager_value").toHaveText("1-2");
-        expect(".o_pager_limit").toHaveText("3+");
+    expect(".o_pager_value").toHaveText("1-2");
+    expect(".o_pager_limit").toHaveText("3+");
 
-        await contains(".o_pager_next").click();
+    await contains(".o_pager_next").click();
 
-        expect(".o_pager_value").toHaveText("3-4");
-        expect(".o_pager_limit").toHaveText("4");
-    }
-);
+    expect(".o_pager_value").toHaveText("3-4");
+    expect(".o_pager_limit").toHaveText("4");
+});
 
 test("pager, ungrouped, with count limit reached, click next (2)", async () => {
     patchWithCleanup(RelationalModel, { DEFAULT_COUNT_LIMIT: 3 });
@@ -1224,17 +1220,16 @@ test("pager, ungrouped, with count limit reached, click next (2)", async () => {
     expect.verifySteps(["web_search_read"]);
 });
 
-test.tags("desktop")(
-    "pager, ungrouped, with count limit reached, click next (2) on desktop",
-    async () => {
-        patchWithCleanup(RelationalModel, { DEFAULT_COUNT_LIMIT: 3 });
+test.tags("desktop");
+test("pager, ungrouped, with count limit reached, click next (2) on desktop", async () => {
+    patchWithCleanup(RelationalModel, { DEFAULT_COUNT_LIMIT: 3 });
 
-        Partner._records.push({ id: 5, foo: "xxx" });
+    Partner._records.push({ id: 5, foo: "xxx" });
 
-        await mountView({
-            type: "kanban",
-            resModel: "partner",
-            arch: `
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
             <kanban limit="2">
                 <templates>
                     <t t-name="card">
@@ -1242,22 +1237,21 @@ test.tags("desktop")(
                     </t>
                 </templates>
             </kanban>`,
-        });
+    });
 
-        expect(".o_pager_value").toHaveText("1-2");
-        expect(".o_pager_limit").toHaveText("3+");
+    expect(".o_pager_value").toHaveText("1-2");
+    expect(".o_pager_limit").toHaveText("3+");
 
-        await contains(".o_pager_next").click();
+    await contains(".o_pager_next").click();
 
-        expect(".o_pager_value").toHaveText("3-4");
-        expect(".o_pager_limit").toHaveText("4+");
+    expect(".o_pager_value").toHaveText("3-4");
+    expect(".o_pager_limit").toHaveText("4+");
 
-        await contains(".o_pager_next").click();
+    await contains(".o_pager_next").click();
 
-        expect(".o_pager_value").toHaveText("5-5");
-        expect(".o_pager_limit").toHaveText("5");
-    }
-);
+    expect(".o_pager_value").toHaveText("5-5");
+    expect(".o_pager_limit").toHaveText("5");
+});
 
 test("pager, ungrouped, with count limit reached, click previous", async () => {
     patchWithCleanup(RelationalModel, { DEFAULT_COUNT_LIMIT: 3 });
@@ -1293,17 +1287,16 @@ test("pager, ungrouped, with count limit reached, click previous", async () => {
     expect.verifySteps(["search_count", "web_search_read"]);
 });
 
-test.tags("desktop")(
-    "pager, ungrouped, with count limit reached, click previous on desktop",
-    async () => {
-        patchWithCleanup(RelationalModel, { DEFAULT_COUNT_LIMIT: 3 });
+test.tags("desktop");
+test("pager, ungrouped, with count limit reached, click previous on desktop", async () => {
+    patchWithCleanup(RelationalModel, { DEFAULT_COUNT_LIMIT: 3 });
 
-        Partner._records.push({ id: 5, foo: "xxx" });
+    Partner._records.push({ id: 5, foo: "xxx" });
 
-        await mountView({
-            type: "kanban",
-            resModel: "partner",
-            arch: `
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
             <kanban limit="2">
                 <templates>
                     <t t-name="card">
@@ -1311,17 +1304,16 @@ test.tags("desktop")(
                     </t>
                 </templates>
             </kanban>`,
-        });
+    });
 
-        expect(".o_pager_value").toHaveText("1-2");
-        expect(".o_pager_limit").toHaveText("3+");
+    expect(".o_pager_value").toHaveText("1-2");
+    expect(".o_pager_limit").toHaveText("3+");
 
-        await contains(".o_pager_previous").click();
+    await contains(".o_pager_previous").click();
 
-        expect(".o_pager_value").toHaveText("5-5");
-        expect(".o_pager_limit").toHaveText("5");
-    }
-);
+    expect(".o_pager_value").toHaveText("5-5");
+    expect(".o_pager_limit").toHaveText("5");
+});
 
 test.tags("desktop")("pager, ungrouped, with count limit reached, edit pager", async () => {
     patchWithCleanup(RelationalModel, { DEFAULT_COUNT_LIMIT: 3 });
@@ -4503,19 +4495,18 @@ test.tags("desktop")("can drag and drop a record from one column to the next", a
     expect.verifySteps(["resequence"]);
 });
 
-test.tags("desktop")(
-    "user without permission cannot drag and drop a column thus sequence remains unchanged on drag and drop attempt",
-    async () => {
-        expect.errors(1);
+test.tags("desktop");
+test("user without permission cannot drag and drop a column thus sequence remains unchanged on drag and drop attempt", async () => {
+    expect.errors(1);
 
-        onRpc("/web/dataset/resequence", () => {
-            throw makeServerError({ message: "No Permission" }); // Simulate user without permission
-        });
+    onRpc("/web/dataset/resequence", () => {
+        throw makeServerError({ message: "No Permission" }); // Simulate user without permission
+    });
 
-        await mountView({
-            type: "kanban",
-            resModel: "partner",
-            arch: `
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
                 <kanban>
                     <templates>
                         <t t-name="card">
@@ -4523,33 +4514,31 @@ test.tags("desktop")(
                         </t>
                     </templates>
                 </kanban>`,
-            groupBy: ["product_id"],
-        });
+        groupBy: ["product_id"],
+    });
 
-        expect(queryAllTexts(".o_column_title")).toEqual(["hello\n(2)", "xmo\n(2)"]);
+    expect(queryAllTexts(".o_column_title")).toEqual(["hello\n(2)", "xmo\n(2)"]);
 
-        const groups = queryAll(".o_column_title");
-        await contains(groups[0]).dragAndDrop(groups[1]);
+    const groups = queryAll(".o_column_title");
+    await contains(groups[0]).dragAndDrop(groups[1]);
 
-        expect(queryAllTexts(".o_column_title")).toEqual(["hello\n(2)", "xmo\n(2)"]);
+    expect(queryAllTexts(".o_column_title")).toEqual(["hello\n(2)", "xmo\n(2)"]);
 
-        expect.verifyErrors(["No Permission"]);
-    }
-);
+    expect.verifyErrors(["No Permission"]);
+});
 
-test.tags("desktop")(
-    "user without permission cannot drag and drop a record thus sequence remains unchanged on drag and drop attempt",
-    async () => {
-        expect.errors(1);
+test.tags("desktop");
+test("user without permission cannot drag and drop a record thus sequence remains unchanged on drag and drop attempt", async () => {
+    expect.errors(1);
 
-        onRpc("partner", "web_save", () => {
-            throw makeServerError({ message: "No Permission" }); // Simulate user without permission
-        });
+    onRpc("partner", "web_save", () => {
+        throw makeServerError({ message: "No Permission" }); // Simulate user without permission
+    });
 
-        await mountView({
-            type: "kanban",
-            resModel: "partner",
-            arch: `
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
                 <kanban>
                     <templates>
                         <t t-name="card">
@@ -4557,28 +4546,27 @@ test.tags("desktop")(
                         </t>
                     </templates>
                 </kanban>`,
-            groupBy: ["product_id"],
-        });
+        groupBy: ["product_id"],
+    });
 
-        expect(".o_kanban_record:first").toHaveText("yop", {
-            message: "Checking the initial state of the view",
-        });
+    expect(".o_kanban_record:first").toHaveText("yop", {
+        message: "Checking the initial state of the view",
+    });
 
-        await contains(".o_kanban_record").dragAndDrop(".o_kanban_group:nth-child(2)");
+    await contains(".o_kanban_record").dragAndDrop(".o_kanban_group:nth-child(2)");
 
-        expect(".o_kanban_record:first").toHaveText("yop", {
-            message: "Do not let the user d&d the record without permission",
-        });
+    expect(".o_kanban_record:first").toHaveText("yop", {
+        message: "Do not let the user d&d the record without permission",
+    });
 
-        await contains(".o_kanban_record").dragAndDrop(".o_kanban_record:nth-child(3)");
+    await contains(".o_kanban_record").dragAndDrop(".o_kanban_record:nth-child(3)");
 
-        expect(".o_kanban_record:first").toHaveText("gnap", {
-            message: "Check that the record does not become static after d&d",
-        });
+    expect(".o_kanban_record:first").toHaveText("gnap", {
+        message: "Check that the record does not become static after d&d",
+    });
 
-        expect.verifyErrors(["No Permission"]);
-    }
-);
+    expect.verifyErrors(["No Permission"]);
+});
 
 test.tags("desktop")("drag and drop highlight on hover", async () => {
     await mountView({
@@ -5494,7 +5482,7 @@ test.tags("desktop")("auto fold group when reach the limit (2)", async () => {
     ]);
 });
 
-test.tags("desktop")("show/hide help message (ESC) in quick create [REQUIRE FOCUS]", async () => {
+test.tags("desktop", "focus required")("show/hide help message (ESC) in quick create", async () => {
     await mountView({
         type: "kanban",
         resModel: "partner",

@@ -373,42 +373,40 @@ test("field with enable_formatting option as false", async () => {
     });
 });
 
-test.tags("desktop")(
-    "field with enable_formatting option as false in editable list view",
-    async () => {
-        await mountView({
-            type: "list",
-            resModel: "partner",
-            arch: `
+test.tags("desktop");
+test("field with enable_formatting option as false in editable list view", async () => {
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: `
             <list editable="bottom">
                 <field name="float_field" widget="float" digits="[5,3]" options="{'enable_formatting': false}" />
             </list>`,
-        });
+    });
 
-        // switch to edit mode
-        await contains("tr.o_data_row td:not(.o_list_record_selector)").click();
+    // switch to edit mode
+    await contains("tr.o_data_row td:not(.o_list_record_selector)").click();
 
-        expect('div[name="float_field"] input').toHaveCount(1, {
-            message: "The view should have 1 input for editable float.",
-        });
+    expect('div[name="float_field"] input').toHaveCount(1, {
+        message: "The view should have 1 input for editable float.",
+    });
 
-        await contains('div[name="float_field"] input').edit("108.2458938598598", {
-            confirm: "blur",
-        });
-        expect(".o_field_widget:eq(0)").toHaveText("108.2458938598598", {
-            message: "The value should not be formatted on blur.",
-        });
+    await contains('div[name="float_field"] input').edit("108.2458938598598", {
+        confirm: "blur",
+    });
+    expect(".o_field_widget:eq(0)").toHaveText("108.2458938598598", {
+        message: "The value should not be formatted on blur.",
+    });
 
-        await contains("tr.o_data_row td:not(.o_list_record_selector)").click();
-        await contains('div[name="float_field"] input').edit("18.8958938598598", {
-            confirm: false,
-        });
-        await contains(".o_control_panel_main_buttons .o_list_button_save").click();
-        expect(".o_field_widget:eq(0)").toHaveText("18.8958938598598", {
-            message: "The new value should not be rounded as well.",
-        });
-    }
-);
+    await contains("tr.o_data_row td:not(.o_list_record_selector)").click();
+    await contains('div[name="float_field"] input').edit("18.8958938598598", {
+        confirm: false,
+    });
+    await contains(".o_control_panel_main_buttons .o_list_button_save").click();
+    expect(".o_field_widget:eq(0)").toHaveText("18.8958938598598", {
+        message: "The new value should not be rounded as well.",
+    });
+});
 
 test("float_field field with placeholder", async () => {
     await mountView({

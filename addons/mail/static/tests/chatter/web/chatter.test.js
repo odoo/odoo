@@ -347,7 +347,7 @@ test("show attachment box", async () => {
     await contains(".o-mail-AttachmentBox");
 });
 
-test("composer show/hide on log note/send message [REQUIRE FOCUS]", async () => {
+test("composer show/hide on log note/send message", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     await start();

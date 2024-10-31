@@ -332,7 +332,8 @@ test("mark channel as fetched when a new message is loaded", async () => {
     await assertSteps(["rpc:mark_as_read"]);
 });
 
-test("mark channel as fetched when a new message is loaded and thread is focused [REQUIRE FOCUS]", async () => {
+test.tags("focus required");
+test("mark channel as fetched when a new message is loaded and thread is focused", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
@@ -670,7 +671,7 @@ test("basic rendering of canceled notification", async () => {
     await contains(".o-mail-MessageNotificationPopover", { text: "Someone" });
 });
 
-test("first unseen message should be directly preceded by the new message separator if there is a transient message just before it while composer is not focused [REQUIRE FOCUS]", async () => {
+test("first unseen message should be directly preceded by the new message separator if there is a transient message just before it while composer is not focused", async () => {
     // The goal of removing the focus is to ensure the thread is not marked as seen automatically.
     // Indeed that would trigger set_last_seen_message no matter what, which is already covered by other tests.
     // The goal of this test is to cover the conditions specific to transient messages,
@@ -714,7 +715,8 @@ test("first unseen message should be directly preceded by the new message separa
     await contains(".o-mail-Message[aria-label='Note'] + .o-mail-Thread-newMessage");
 });
 
-test("composer should be focused automatically after clicking on the send button [REQUIRE FOCUS]", async () => {
+test.tags("focus required");
+test("composer should be focused automatically after clicking on the send button", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     await start();
@@ -807,7 +809,8 @@ test("Thread messages are only loaded once", async () => {
     await assertSteps([`load messages - ${channelIds[0]}`, `load messages - ${channelIds[1]}`]);
 });
 
-test("Opening thread with needaction messages should mark all messages of thread as read [REQUIRE FOCUS]", async () => {
+test.tags("focus required");
+test("Opening thread with needaction messages should mark all messages of thread as read", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
@@ -874,7 +877,7 @@ test("[technical] Opening thread without needaction messages should not mark all
     await assertSteps([]);
 });
 
-test("can be marked as read while loading [REQUIRE FOCUS]", async () => {
+test.tags("focus required")("can be marked as read while loading", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["discuss.channel"].create({

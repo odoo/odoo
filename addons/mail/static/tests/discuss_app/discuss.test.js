@@ -1,6 +1,5 @@
 import { waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
 
-import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 import {
     SIZES,
     assertSteps,
@@ -19,6 +18,7 @@ import {
     step,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
+import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 import { describe, expect, test } from "@odoo/hoot";
 import { Deferred, mockDate, tick } from "@odoo/hoot-mock";
 import {
@@ -32,8 +32,8 @@ import {
     withUser,
 } from "@web/../tests/web_test_helpers";
 
-import { rpc } from "@web/core/network/rpc";
 import { OutOfFocusService } from "@mail/core/common/out_of_focus_service";
+import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -66,7 +66,7 @@ test("sanity check", async () => {
     await contains("h4:contains(Your inbox is empty)");
 });
 
-test("can change the thread name of #general [REQUIRE FOCUS]", async () => {
+test.tags("focus required")("can change the thread name of #general", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
@@ -103,7 +103,7 @@ test("can active change thread from messaging menu", async () => {
     await contains(".o-mail-DiscussSidebar-item:contains(team)");
 });
 
-test("can change the thread description of #general [REQUIRE FOCUS]", async () => {
+test.tags("focus required")("can change the thread description of #general", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
@@ -355,7 +355,8 @@ test("sidebar: chat custom name", async () => {
     await contains(".o-mail-DiscussSidebarChannel", { text: "Marc" });
 });
 
-test("reply to message from inbox (message linked to document) [REQUIRE FOCUS]", async () => {
+test.tags("focus required");
+test("reply to message from inbox (message linked to document)", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Refactoring" });
     const messageId = pyEnv["mail.message"].create({
@@ -1016,7 +1017,7 @@ test("starred: unstar all", async () => {
     await contains("button:disabled", { text: "Unstar all" });
 });
 
-test("auto-focus composer on opening thread [REQUIRE FOCUS]", async () => {
+test.tags("focus required")("auto-focus composer on opening thread", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo User" });
     pyEnv["discuss.channel"].create([
@@ -1706,7 +1707,7 @@ test('auto-select "Inbox nav bar" when discuss had inbox as active thread', asyn
     await contains("h4", { text: "Your inbox is empty" });
 });
 
-test("composer should be focused automatically after clicking on the send button [REQUIRE FOCUS]", async () => {
+test("composer should be focused automatically after clicking on the send button", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     await start();
@@ -1716,7 +1717,8 @@ test("composer should be focused automatically after clicking on the send button
     expect(".o-mail-Composer-input").toBeFocused();
 });
 
-test("mark channel as seen if last message is visible when switching channels when the previous channel had a more recent last message than the current channel [REQUIRE FOCUS]", async () => {
+test.tags("focus required");
+test("mark channel as seen if last message is visible when switching channels when the previous channel had a more recent last message than the current channel", async () => {
     const pyEnv = await startServer();
     const [channelId_1, channelId_2] = pyEnv["discuss.channel"].create([
         {
@@ -2075,7 +2077,8 @@ test("Chatter notification in messaging menu should open the form view even when
     });
 });
 
-test("Escape key should focus the composer if it's not focused [REQUIRE FOCUS]", async () => {
+test.tags("focus required");
+test("Escape key should focus the composer if it's not focused", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -2206,7 +2209,8 @@ test("Newly created chat is at the top of the DM list", async () => {
     });
 });
 
-test("Read of unread chat where new message is deleted should mark as read [REQUIRE FOCUS]", async () => {
+test.tags("focus required");
+test("Read of unread chat where new message is deleted should mark as read", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Marc Demo" });
     const channelId = pyEnv["discuss.channel"].create({
