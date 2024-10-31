@@ -6,7 +6,7 @@ import logging
 from unittest.mock import patch
 
 from odoo.fields import Command
-from odoo.tests import tagged, TransactionCase, loaded_demo_data
+from odoo.tests import tagged, TransactionCase
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.addons.website.tools import MockRequest
@@ -656,15 +656,20 @@ class TestWebsiteSaleSession(HttpCaseWithUserPortal):
             The objective is to verify that the pricelist
             changes correctly according to the user.
         """
-        if not loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
         website = self.env.ref('website.default_website')
         test_user = self.env['res.users'].create({
             'name': 'Toto',
             'login': 'toto',
             'password': 'long_enough_password',
         })
+        # We need at least two selectable pricelists to display the dropdown
+        self.env['product.pricelist'].create([{
+            'name': 'Public Pricelist 1',
+            'selectable': True
+        }, {
+            'name': 'Public Pricelist 2',
+            'selectable': True
+        }])
         user_pricelist = self.env['product.pricelist'].create({
             'name': 'User Pricelist',
             'website_id': website.id,
