@@ -3,9 +3,11 @@ import { config as transitionConfig } from "@web/core/transition";
 import { TourStepAutomatic } from "./tour_step_automatic";
 import { MacroEngine } from "@web/core/macro";
 import { browser } from "@web/core/browser/browser";
+import { setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
 
 export class TourAutomatic {
     mode = "auto";
+    paused = false;
     pointer = null;
     constructor(data) {
         Object.assign(this, data);
@@ -35,51 +37,146 @@ export class TourAutomatic {
         const macroSteps = this.steps
             .filter((step) => step.index >= this.currentIndex)
             .flatMap((step) => {
+                const timeout = (step.timeout || 10000) + this.stepDelay;
                 return [
                     {
-                        action: () => step.log(),
-                    },
-                    {
-                        trigger: () => step.findTrigger(),
                         action: async () => {
-                            tourState.setCurrentIndex(step.index + 1);
-                            if (!step.skipped && this.showPointerDuration > 0 && step.element) {
-                                // Useful in watch mode.
-                                pointer.pointTo(step.element, this);
-                                await new Promise((r) =>
-                                    browser.setTimeout(r, this.showPointerDuration)
-                                );
-                                pointer.hide();
+                            await this.pause();
+                            setupEventActions(document.createElement("div"));
+                            if (this.debugMode) {
+                                console.groupCollapsed(step.describeMe);
+                                console.log(step.stringify);
+                            } else {
+                                console.log(step.describeMe);
                             }
-                            return step.doAction();
+                            if (step.break && this.debugMode) {
+                                // eslint-disable-next-line no-debugger
+                                debugger;
+                            }
+                            // This delay is important for making the current set of tour tests pass.
+                            // IMPROVEMENT: Find a way to remove this delay.
+                            await new Promise((resolve) => requestAnimationFrame(resolve));
+                            await new Promise((resolve) =>
+                                browser.setTimeout(resolve, this.stepDelay)
+                            );
                         },
                     },
                     {
-                        action: () => step.waitForPause(),
+                        trigger: () => step.findTrigger(),
+                        timeout,
+                        onTimeout: () => {
+                            this.throwError(
+                                `TIMEOUT: The step failed to complete within ${timeout} ms.`
+                            );
+                        },
+                        action: async () => {
+                            if (this.debugMode) {
+                                this.paused = step.pause;
+                                if (!step.skipped && this.showPointerDuration > 0 && step.element) {
+                                    // Useful in watch mode.
+                                    pointer.pointTo(step.element, this);
+                                    await new Promise((r) =>
+                                        browser.setTimeout(r, this.showPointerDuration)
+                                    );
+                                    pointer.hide();
+                                }
+                                console.log(step.element);
+                                if (step.skipped) {
+                                    console.log("This step has been skipped");
+                                } else {
+                                    console.log("This step has run successfully");
+                                }
+                                console.groupEnd();
+                            }
+                            const result = await step.doAction();
+                            tourState.setCurrentIndex(step.index + 1);
+                            return result;
+                        },
                     },
                 ];
-            })
-            .concat([
-                {
-                    action: () => {
-                        if (tourState.getCurrentTourOnError()) {
-                            console.error("tour not succeeded");
-                        } else {
-                            transitionConfig.disabled = false;
-                            callback();
-                        }
-                    },
-                },
-            ]);
+            });
 
         const macro = {
             name: this.name,
             checkDelay: this.checkDelay,
             steps: macroSteps,
+            onError: (error) => {
+                this.throwError(error);
+                transitionConfig.disabled = false;
+                callback();
+            },
+            onComplete: () => {
+                transitionConfig.disabled = false;
+                callback();
+            },
         };
 
         transitionConfig.disabled = true;
         //Activate macro in exclusive mode (only one macro per MacroEngine)
         this.macroEngine.activate(macro, true);
+    }
+
+    get describeWhereIFailed() {
+        const offset = 3;
+        const start = Math.max(this.currentIndex - offset, 0);
+        const end = Math.min(this.currentIndex + offset, this.steps.length - 1);
+        const result = [];
+        for (let i = start; i <= end; i++) {
+            const step = this.steps[i];
+            const stepString = step.stringify;
+            const text = [stepString];
+            if (i === this.currentIndex) {
+                const line = "-".repeat(10);
+                const failing_step = `${line} FAILED: ${step.describeMe} ${line}`;
+                text.unshift(failing_step);
+                text.push("-".repeat(failing_step.length));
+            }
+            result.push(...text);
+        }
+        return result.join("\n");
+    }
+
+    /**
+     * @param {string} [error]
+     */
+    throwError(error = ``) {
+        console.groupEnd();
+        tourState.setCurrentTourOnError();
+        // console.error notifies the test runner that the tour failed.
+        const errors = [
+            `FAILED: ${this.currentStep.describeMe}.`,
+            ...this.currentStep.describeWhyIFailed,
+            error,
+        ];
+        browser.console.error(errors.filter(Boolean).join("\n"));
+        // The logged text shows the relative position of the failed step.
+        // Useful for finding the failed step.
+        browser.console.dir(this.describeWhereIFailed);
+        if (this.debugMode) {
+            // eslint-disable-next-line no-debugger
+            debugger;
+        }
+    }
+
+    async pause() {
+        if (this.paused) {
+            this.paused = false;
+            const styles = [
+                "background: black; color: white; font-size: 14px",
+                "background: black; color: orange; font-size: 14px",
+            ];
+            console.log(
+                `%cTour is paused. Use %cplay()%c to continue.`,
+                styles[0],
+                styles[1],
+                styles[0]
+            );
+            await new Promise((resolve) => {
+                window.play = () => {
+                    resolve();
+                    delete window.play;
+                };
+            });
+        }
     }
 }

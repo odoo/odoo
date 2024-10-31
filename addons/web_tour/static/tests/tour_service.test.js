@@ -394,6 +394,7 @@ test("a failing tour logs the step that failed", async () => {
             {
                 content: "content",
                 trigger: ".wrong_selector",
+                timeout: 111,
                 run: "click",
             },
             {
@@ -429,12 +430,13 @@ test("a failing tour logs the step that failed", async () => {
     expect.verifySteps(["log: [4/9] Tour tour1 → Step content (trigger: .button3)"]);
     await advanceTime(750);
     expect.verifySteps(["log: [5/9] Tour tour1 → Step content (trigger: .wrong_selector)"]);
-    await advanceTime(10000);
+    await advanceTime(750);
+    await advanceTime(111);
     expect.verifySteps([
         `error: FAILED: [5/9] Tour tour1 → Step content (trigger: .wrong_selector).
 The cause is that trigger (.wrong_selector) element cannot be found in DOM. TIP: You can use :not(:visible) to force the search for an invisible element.
-TIMEOUT: The step failed to complete within 10000 ms.`,
-        `runbot: {"content":"content","trigger":".button1","run":"click"},{"content":"content","trigger":".button2","run":"click"},{"content":"content","trigger":".button3","run":"click"},FAILED:[5/9]Tourtour1→Stepcontent(trigger:.wrong_selector){"content":"content","trigger":".wrong_selector","run":"click"},{"content":"content","trigger":".button4","run":"click"},{"content":"content","trigger":".button5","run":"click"},{"content":"content","trigger":".button6","run":"click"},`,
+TIMEOUT: The step failed to complete within 111 ms.`,
+        `runbot: {"content":"content","trigger":".button1","run":"click"},{"content":"content","trigger":".button2","run":"click"},{"content":"content","trigger":".button3","run":"click"},FAILED:[5/9]Tourtour1→Stepcontent(trigger:.wrong_selector){"content":"content","trigger":".wrong_selector","run":"click","timeout":111},{"content":"content","trigger":".button4","run":"click"},{"content":"content","trigger":".button5","run":"click"},{"content":"content","trigger":".button6","run":"click"},`,
     ]);
 });
 
@@ -1487,5 +1489,49 @@ test("check not possible to click below modal", async () => {
 Element has been found.
 BUT: It is not allowed to do action on an element that's below a modal.
 TIMEOUT: The step failed to complete within 10000 ms.`,
+    ]);
+});
+
+test("a tour where hoot trigger failed", async () => {
+    patchWithCleanup(browser.console, {
+        error: (s) => expect.step(`error: ${s}`),
+    });
+
+    class Root extends Component {
+        static components = {};
+        static template = xml/*html*/ `
+            <t>
+                <button class="button0">Button 0</button>
+                <button class="button1">Button 1</button>
+                <button class="button2">Button 2</button>
+            </t>
+        `;
+        static props = ["*"];
+    }
+
+    await mountWithCleanup(Root);
+    tourRegistry.add("tour_hoot_failed", {
+        steps: () => [
+            {
+                content: "content",
+                trigger: ".button0",
+                run: "click",
+            },
+            {
+                content: "content",
+                trigger: ".button1:brol(:machin)",
+                run: "click",
+            },
+        ],
+    });
+    await odoo.startTour("tour_hoot_failed", { mode: "auto" });
+    await advanceTime(750);
+    await advanceTime(750);
+    await advanceTime(750);
+    expect.verifySteps([
+        `error: FAILED: [2/2] Tour tour_hoot_failed → Step content (trigger: .button1:brol(:machin)).
+HOOT: Failed to execute 'querySelectorAll' on 'Element': '.button1:brol(:machin)' is not a valid selector.
+TypeError: Cannot read properties of undefined (reading 'find')`,
+        "error: tour not succeeded",
     ]);
 });
