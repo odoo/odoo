@@ -36,10 +36,10 @@ test("simplest layout", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message .o-mail-AttachmentList");
-    expect($(".o-mail-AttachmentCard")[0]).toHaveAttribute("title", "test.txt");
+    expect(".o-mail-AttachmentCard:first").toHaveAttribute("title", "test.txt");
     await contains(".o-mail-AttachmentCard-image");
-    expect($(".o-mail-AttachmentCard-image")[0]).toHaveClass("o_image"); // required for mimetype.scss style
-    expect($(".o-mail-AttachmentCard-image")[0]).toHaveAttribute("data-mimetype", "text/plain"); // required for mimetype.scss style
+    expect(".o-mail-AttachmentCard-image:first").toHaveClass("o_image"); // required for mimetype.scss style
+    expect(".o-mail-AttachmentCard-image:first").toHaveAttribute("data-mimetype", "text/plain"); // required for mimetype.scss style
     await contains(".o-mail-AttachmentCard-aside button", { count: 2 });
     await contains(".o-mail-AttachmentCard-unlink");
     await contains(".o-mail-AttachmentCard-aside button[title='Download']");

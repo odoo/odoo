@@ -32,7 +32,7 @@ test("base rendering editable", async () => {
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Followers");
     await contains(".o-mail-Followers-button");
-    expect($(".o-mail-Followers-button")[0]).toBeEnabled();
+    expect(".o-mail-Followers-button:first").toBeEnabled();
     await contains(".o-mail-Followers-dropdown", { count: 0 });
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Followers-dropdown");
