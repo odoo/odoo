@@ -3,14 +3,26 @@ import { registry } from "./registry";
 import { session } from "@web/session";
 import { Component, xml, onWillStart, whenReady } from "@odoo/owl";
 
-const computeCacheMap = () => {
-    for (const script of document.head.querySelectorAll("script[src]")) {
+const cacheMapByDocument = new Map();
+
+function getCacheMap(targetDoc) {
+    if (!cacheMapByDocument.has(targetDoc)) {
+        cacheMapByDocument.set(targetDoc, new Map());
+    }
+    return cacheMapByDocument.get(targetDoc);
+}
+
+export function computeBundleCacheMap(targetDoc) {
+    const cacheMap = getCacheMap(targetDoc);
+    for (const script of targetDoc.head.querySelectorAll("script[src]")) {
         cacheMap.set(script.src, Promise.resolve(true));
     }
-    for (const link of document.head.querySelectorAll("link[rel=stylesheet][href]")) {
+    for (const link of targetDoc.head.querySelectorAll("link[rel=stylesheet][href]")) {
         cacheMap.set(link.href, Promise.resolve(true));
     }
-};
+}
+
+whenReady(() => computeBundleCacheMap(document));
 
 /**
  * @param {HTMLLinkElement | HTMLScriptElement} el
@@ -50,10 +62,6 @@ export const assets = {
     },
 };
 
-const cacheMap = new Map();
-
-whenReady(computeCacheMap);
-
 export class AssetsLoadingError extends Error {}
 
 /**
@@ -63,6 +71,7 @@ export class AssetsLoadingError extends Error {}
  * @returns {Promise<true>} resolved when the script has been loaded
  */
 assets.loadJS = async function loadJS(url, targetDoc = document) {
+    const cacheMap = getCacheMap(targetDoc);
     if (cacheMap.has(url)) {
         return cacheMap.get(url);
     }
@@ -87,6 +96,7 @@ assets.loadJS = async function loadJS(url, targetDoc = document) {
  * @returns {Promise<true>} resolved when the stylesheet has been loaded
  */
 assets.loadCSS = async function loadCSS(url, { retryCount = 0, targetDoc = document } = {}) {
+    const cacheMap = getCacheMap(targetDoc);
     if (cacheMap.has(url)) {
         return cacheMap.get(url);
     }
@@ -129,7 +139,8 @@ assets.loadCSS = async function loadCSS(url, { retryCount = 0, targetDoc = docum
  * @param {string} bundleName Name of the bundle containing the list of files
  * @returns {Promise<{cssLibs, jsLibs}>}
  */
-assets.getBundle = async function getBundle(bundleName) {
+assets.getBundle = async function getBundle(bundleName, targetDoc = document) {
+    const cacheMap = getCacheMap(targetDoc);
     if (!cacheMap.has(bundleName)) {
         const url = new URL(`/web/bundle/${bundleName}`, location.origin);
         for (const [key, value] of Object.entries(session.bundle_params || {})) {
