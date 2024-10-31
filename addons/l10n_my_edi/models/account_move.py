@@ -362,14 +362,14 @@ class AccountMove(models.Model):
                     else:
                         result = move._l10n_my_edi_fetch_status()
                         if 'error' in result:
-                            errors[move] = self._l10n_my_edi_map_error(result['error'])
+                            errors[move] = [self._l10n_my_edi_map_error(result['error'])]
                         elif 'validation_errors' in result:
-                            errors[move] = self.env['account.move.send']._format_error_html({
+                            errors[move] = [self.env['account.move.send']._format_error_html({
                                 'error_title': _('The validation failed with the following errors:'),
                                 'errors': result['validation_errors'],
-                            })
+                            })]
                         elif result['status_reason']:
-                            errors[move] = result['status_reason']
+                            errors[move] = [result['status_reason']]
                 elif move.l10n_my_edi_state == 'valid':
                     # We receive a timezone_aware datetime, but it should always be in UTC.
                     # Odoo expect a timezone unaware datetime in UTC, so we can safely remove the info without any more work needed.
