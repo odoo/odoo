@@ -17,7 +17,7 @@ defineBaseIbanModels();
 const validIban = "BE12651194580992";
 const invalidIban = "invalidIban!";
 
-test("Iban Widget full flow [REQUIRE FOCUS]", async () => {
+test.tags("focus required")("Iban Widget full flow", async () => {
     const pyEnv = await startServer();
     const bankId = pyEnv["res.partner.bank"].create({ acc_number: "" });
     const partnerId = pyEnv["res.partner"].create({

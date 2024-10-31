@@ -66,7 +66,7 @@ test("sanity check", async () => {
     await contains("h4:contains(Your inbox is empty)");
 });
 
-test("can change the thread name of #general [REQUIRE FOCUS]", async () => {
+test.tags("focus required")("can change the thread name of #general", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
@@ -103,7 +103,7 @@ test("can active change thread from messaging menu", async () => {
     await contains(".o-mail-DiscussSidebar-item:contains(team)");
 });
 
-test("can change the thread description of #general [REQUIRE FOCUS]", async () => {
+test.tags("focus required")("can change the thread description of #general", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
@@ -355,42 +355,45 @@ test("sidebar: chat custom name", async () => {
     await contains(".o-mail-DiscussSidebarChannel", { text: "Marc" });
 });
 
-test("reply to message from inbox (message linked to document) [REQUIRE FOCUS]", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Refactoring" });
-    const messageId = pyEnv["mail.message"].create({
-        body: "<p>Test</p>",
-        date: "2019-04-20 11:00:00",
-        message_type: "comment",
-        needaction: true,
-        model: "res.partner",
-        res_id: partnerId,
-    });
-    pyEnv["mail.notification"].create({
-        mail_message_id: messageId,
-        notification_type: "inbox",
-        res_partner_id: serverState.partnerId,
-    });
-    await start();
-    await openDiscuss();
-    await contains(".o-mail-Message");
-    await contains(".o-mail-Message-header small", { text: "on Refactoring" });
-    await click("[title='Expand']");
-    await click("[title='Reply']");
-    await contains(".o-mail-Message.o-selected");
-    await contains(".o-mail-Composer");
-    await contains(".o-mail-Composer-coreHeader", { text: "on: Refactoring" });
-    await insertText(".o-mail-Composer-input:focus", "Hello");
-    await click(".o-mail-Composer-send:enabled");
-    await contains(".o-mail-Composer", { count: 0 });
-    await contains(".o-mail-Message:not(.o-selected)");
-    await contains(".o_notification:has(.o_notification_bar.bg-info)", {
-        text: 'Message posted on "Refactoring"',
-    });
-    await openFormView("res.partner", partnerId);
-    await contains(".o-mail-Message", { count: 2 });
-    await contains(".o-mail-Message-content", { text: "Hello" });
-});
+test.tags("focus required")(
+    "reply to message from inbox (message linked to document)",
+    async () => {
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({ name: "Refactoring" });
+        const messageId = pyEnv["mail.message"].create({
+            body: "<p>Test</p>",
+            date: "2019-04-20 11:00:00",
+            message_type: "comment",
+            needaction: true,
+            model: "res.partner",
+            res_id: partnerId,
+        });
+        pyEnv["mail.notification"].create({
+            mail_message_id: messageId,
+            notification_type: "inbox",
+            res_partner_id: serverState.partnerId,
+        });
+        await start();
+        await openDiscuss();
+        await contains(".o-mail-Message");
+        await contains(".o-mail-Message-header small", { text: "on Refactoring" });
+        await click("[title='Expand']");
+        await click("[title='Reply']");
+        await contains(".o-mail-Message.o-selected");
+        await contains(".o-mail-Composer");
+        await contains(".o-mail-Composer-coreHeader", { text: "on: Refactoring" });
+        await insertText(".o-mail-Composer-input:focus", "Hello");
+        await click(".o-mail-Composer-send:enabled");
+        await contains(".o-mail-Composer", { count: 0 });
+        await contains(".o-mail-Message:not(.o-selected)");
+        await contains(".o_notification:has(.o_notification_bar.bg-info)", {
+            text: 'Message posted on "Refactoring"',
+        });
+        await openFormView("res.partner", partnerId);
+        await contains(".o-mail-Message", { count: 2 });
+        await contains(".o-mail-Message-content", { text: "Hello" });
+    }
+);
 
 test("Can reply to starred message", async () => {
     const pyEnv = await startServer();
@@ -1016,7 +1019,7 @@ test("starred: unstar all", async () => {
     await contains("button:disabled", { text: "Unstar all" });
 });
 
-test("auto-focus composer on opening thread [REQUIRE FOCUS]", async () => {
+test.tags("focus required")("auto-focus composer on opening thread", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo User" });
     pyEnv["discuss.channel"].create([
@@ -1683,7 +1686,7 @@ test('auto-select "Inbox nav bar" when discuss had inbox as active thread', asyn
     await contains("h4", { text: "Your inbox is empty" });
 });
 
-test("composer should be focused automatically after clicking on the send button [REQUIRE FOCUS]", async () => {
+test("composer should be focused automatically after clicking on the send button", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     await start();
@@ -1693,49 +1696,52 @@ test("composer should be focused automatically after clicking on the send button
     expect(".o-mail-Composer-input").toBeFocused();
 });
 
-test("mark channel as seen if last message is visible when switching channels when the previous channel had a more recent last message than the current channel [REQUIRE FOCUS]", async () => {
-    const pyEnv = await startServer();
-    const [channelId_1, channelId_2] = pyEnv["discuss.channel"].create([
-        {
-            channel_member_ids: [
-                Command.create({
-                    message_unread_counter: 1,
-                    partner_id: serverState.partnerId,
-                }),
-            ],
-            name: "Bla",
-        },
-        {
-            channel_member_ids: [
-                Command.create({
-                    message_unread_counter: 1,
-                    partner_id: serverState.partnerId,
-                }),
-            ],
-            name: "Blu",
-        },
-    ]);
-    onRpcBefore("/discuss/channel/mark_as_read", (args) => {
-        step(`rpc:mark_as_read - ${args.channel_id}`);
-    });
-    pyEnv["mail.message"].create([
-        {
-            body: "oldest message",
-            model: "discuss.channel",
-            res_id: channelId_1,
-        },
-        {
-            body: "newest message",
-            model: "discuss.channel",
-            res_id: channelId_2,
-        },
-    ]);
-    await start();
-    await openDiscuss(channelId_2);
-    await assertSteps([`rpc:mark_as_read - ${channelId_2}`]);
-    await click("button", { text: "Bla" });
-    await assertSteps([`rpc:mark_as_read - ${channelId_1}`]);
-});
+test.tags("focus required")(
+    "mark channel as seen if last message is visible when switching channels when the previous channel had a more recent last message than the current channel",
+    async () => {
+        const pyEnv = await startServer();
+        const [channelId_1, channelId_2] = pyEnv["discuss.channel"].create([
+            {
+                channel_member_ids: [
+                    Command.create({
+                        message_unread_counter: 1,
+                        partner_id: serverState.partnerId,
+                    }),
+                ],
+                name: "Bla",
+            },
+            {
+                channel_member_ids: [
+                    Command.create({
+                        message_unread_counter: 1,
+                        partner_id: serverState.partnerId,
+                    }),
+                ],
+                name: "Blu",
+            },
+        ]);
+        onRpcBefore("/discuss/channel/mark_as_read", (args) => {
+            step(`rpc:mark_as_read - ${args.channel_id}`);
+        });
+        pyEnv["mail.message"].create([
+            {
+                body: "oldest message",
+                model: "discuss.channel",
+                res_id: channelId_1,
+            },
+            {
+                body: "newest message",
+                model: "discuss.channel",
+                res_id: channelId_2,
+            },
+        ]);
+        await start();
+        await openDiscuss(channelId_2);
+        await assertSteps([`rpc:mark_as_read - ${channelId_2}`]);
+        await click("button", { text: "Bla" });
+        await assertSteps([`rpc:mark_as_read - ${channelId_1}`]);
+    }
+);
 
 test("warning on send with shortcut when attempting to post message with still-uploading attachments", async () => {
     const pyEnv = await startServer();
@@ -2052,15 +2058,18 @@ test("Chatter notification in messaging menu should open the form view even when
     });
 });
 
-test("Escape key should focus the composer if it's not focused [REQUIRE FOCUS]", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    await start();
-    await openDiscuss(channelId);
-    await click("button[title='Pinned Messages']");
-    triggerHotkey("escape");
-    await contains(".o-mail-Composer-input:focus");
-});
+test.tags("focus required")(
+    "Escape key should focus the composer if it's not focused",
+    async () => {
+        const pyEnv = await startServer();
+        const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+        await start();
+        await openDiscuss(channelId);
+        await click("button[title='Pinned Messages']");
+        triggerHotkey("escape");
+        await contains(".o-mail-Composer-input:focus");
+    }
+);
 
 test("Notification settings: basic rendering", async () => {
     const pyEnv = await startServer();
@@ -2183,46 +2192,49 @@ test("Newly created chat is at the top of the DM list", async () => {
     });
 });
 
-test("Read of unread chat where new message is deleted should mark as read [REQUIRE FOCUS]", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Marc Demo" });
-    const channelId = pyEnv["discuss.channel"].create({
-        channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ partner_id: partnerId }),
-        ],
-        channel_type: "chat",
-    });
-    const messageId = pyEnv["mail.message"].create({
-        author_id: partnerId,
-        body: "Heyo",
-        model: "discuss.channel",
-        res_id: channelId,
-        message_type: "comment",
-    });
-    const [memberId] = pyEnv["discuss.channel.member"].search([
-        ["channel_id", "=", channelId],
-        ["partner_id", "=", serverState.partnerId],
-    ]);
-    pyEnv["discuss.channel.member"].write([memberId], {
-        seen_message_id: messageId,
-        message_unread_counter: 1,
-    });
-    await start();
-    await openDiscuss();
-    await contains(".o-mail-DiscussSidebar-item", {
-        text: "Marc Demo",
-        contains: [".badge", { text: "1" }],
-    });
-    // simulate deleted message
-    rpc("/mail/message/update_content", {
-        message_id: messageId,
-        body: "",
-        attachment_ids: [],
-    });
-    await click("button", { text: "Marc Demo" });
-    await contains(".o-mail-DiscussSidebar-item", {
-        text: "Marc Demo",
-        contains: [".badge", { count: 0 }],
-    });
-});
+test.tags("focus required")(
+    "Read of unread chat where new message is deleted should mark as read",
+    async () => {
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({ name: "Marc Demo" });
+        const channelId = pyEnv["discuss.channel"].create({
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId }),
+                Command.create({ partner_id: partnerId }),
+            ],
+            channel_type: "chat",
+        });
+        const messageId = pyEnv["mail.message"].create({
+            author_id: partnerId,
+            body: "Heyo",
+            model: "discuss.channel",
+            res_id: channelId,
+            message_type: "comment",
+        });
+        const [memberId] = pyEnv["discuss.channel.member"].search([
+            ["channel_id", "=", channelId],
+            ["partner_id", "=", serverState.partnerId],
+        ]);
+        pyEnv["discuss.channel.member"].write([memberId], {
+            seen_message_id: messageId,
+            message_unread_counter: 1,
+        });
+        await start();
+        await openDiscuss();
+        await contains(".o-mail-DiscussSidebar-item", {
+            text: "Marc Demo",
+            contains: [".badge", { text: "1" }],
+        });
+        // simulate deleted message
+        rpc("/mail/message/update_content", {
+            message_id: messageId,
+            body: "",
+            attachment_ids: [],
+        });
+        await click("button", { text: "Marc Demo" });
+        await contains(".o-mail-DiscussSidebar-item", {
+            text: "Marc Demo",
+            contains: [".badge", { count: 0 }],
+        });
+    }
+);

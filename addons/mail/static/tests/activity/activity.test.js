@@ -351,23 +351,26 @@ test("activity click on mark as done", async () => {
     await contains(".o-mail-ActivityMarkAsDone", { count: 0 });
 });
 
-test("activity mark as done popover should focus feedback input on open [REQUIRE FOCUS]", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({});
-    const activityTypeId = pyEnv["mail.activity.type"].search([["name", "=", "Email"]])[0];
-    pyEnv["mail.activity"].create({
-        activity_category: "default",
-        activity_type_id: activityTypeId,
-        can_write: true,
-        res_id: partnerId,
-        res_model: "res.partner",
-    });
-    await start();
-    await openFormView("res.partner", partnerId);
-    await contains(".o-mail-Activity");
-    await click(".btn", { text: "Mark Done" });
-    await contains(".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']:focus");
-});
+test.tags("focus required")(
+    "activity mark as done popover should focus feedback input on open",
+    async () => {
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({});
+        const activityTypeId = pyEnv["mail.activity.type"].search([["name", "=", "Email"]])[0];
+        pyEnv["mail.activity"].create({
+            activity_category: "default",
+            activity_type_id: activityTypeId,
+            can_write: true,
+            res_id: partnerId,
+            res_model: "res.partner",
+        });
+        await start();
+        await openFormView("res.partner", partnerId);
+        await contains(".o-mail-Activity");
+        await click(".btn", { text: "Mark Done" });
+        await contains(".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']:focus");
+    }
+);
 
 test("activity click on edit", async () => {
     const pyEnv = await startServer();

@@ -5494,7 +5494,7 @@ test.tags("desktop")("auto fold group when reach the limit (2)", async () => {
     ]);
 });
 
-test.tags("desktop")("show/hide help message (ESC) in quick create [REQUIRE FOCUS]", async () => {
+test.tags("desktop", "focus required")("show/hide help message (ESC) in quick create", async () => {
     await mountView({
         type: "kanban",
         resModel: "partner",

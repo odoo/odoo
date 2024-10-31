@@ -416,7 +416,7 @@ test("Close emoji picker in chat window with ESCAPE does not also close the chat
     await contains(".o-mail-ChatWindow");
 });
 
-test("open 2 different chat windows: enough screen width [REQUIRE FOCUS]", async () => {
+test.tags("focus required")("open 2 different chat windows: enough screen width", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([{ name: "Channel_1" }, { name: "Channel_2" }]);
     patchUiSize({ width: 1920 });
@@ -443,49 +443,52 @@ test("open 2 different chat windows: enough screen width [REQUIRE FOCUS]", async
     });
 });
 
-test("focus next visible chat window when closing current chat window with ESCAPE [REQUIRE FOCUS]", async () => {
-    const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create([
-        {
-            name: "General",
-            channel_member_ids: [
-                Command.create({
-                    fold_state: "open",
-                    partner_id: serverState.partnerId,
-                }),
-            ],
-        },
-        {
-            name: "MyTeam",
-            channel_member_ids: [
-                Command.create({
-                    fold_state: "open",
-                    partner_id: serverState.partnerId,
-                }),
-            ],
-        },
-    ]);
-    patchUiSize({ width: 1920 });
-    await start();
-    const store = getService("mail.store");
-    expect(
-        store.chatHub.WINDOW_GAP * 2 + store.chatHub.WINDOW * 2 + store.chatHub.WINDOW_INBETWEEN
-    ).toBeLessThan(1920, {
-        message: "should have enough space to open 2 chat windows simultaneously",
-    });
-    await contains(".o-mail-ChatWindow .o-mail-Composer-input", { count: 2 });
-    await focus(".o-mail-Composer-input", {
-        parent: [".o-mail-ChatWindow", { text: "MyTeam" }],
-    });
-    triggerHotkey("Escape");
-    await contains(".o-mail-ChatWindow");
-    await contains(".o-mail-ChatWindow", {
-        text: "General",
-        contains: [".o-mail-Composer-input:focus"],
-    });
-});
+test.tags("focus required")(
+    "focus next visible chat window when closing current chat window with ESCAPE",
+    async () => {
+        const pyEnv = await startServer();
+        pyEnv["discuss.channel"].create([
+            {
+                name: "General",
+                channel_member_ids: [
+                    Command.create({
+                        fold_state: "open",
+                        partner_id: serverState.partnerId,
+                    }),
+                ],
+            },
+            {
+                name: "MyTeam",
+                channel_member_ids: [
+                    Command.create({
+                        fold_state: "open",
+                        partner_id: serverState.partnerId,
+                    }),
+                ],
+            },
+        ]);
+        patchUiSize({ width: 1920 });
+        await start();
+        const store = getService("mail.store");
+        expect(
+            store.chatHub.WINDOW_GAP * 2 + store.chatHub.WINDOW * 2 + store.chatHub.WINDOW_INBETWEEN
+        ).toBeLessThan(1920, {
+            message: "should have enough space to open 2 chat windows simultaneously",
+        });
+        await contains(".o-mail-ChatWindow .o-mail-Composer-input", { count: 2 });
+        await focus(".o-mail-Composer-input", {
+            parent: [".o-mail-ChatWindow", { text: "MyTeam" }],
+        });
+        triggerHotkey("Escape");
+        await contains(".o-mail-ChatWindow");
+        await contains(".o-mail-ChatWindow", {
+            text: "General",
+            contains: [".o-mail-Composer-input:focus"],
+        });
+    }
+);
 
-test("chat window: switch on TAB [REQUIRE FOCUS]", async () => {
+test.tags("focus required")("chat window: switch on TAB", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([{ name: "channel1" }, { name: "channel2" }]);
     patchUiSize({ width: 1920 });
@@ -522,7 +525,7 @@ test("chat window: switch on TAB [REQUIRE FOCUS]", async () => {
     });
 });
 
-test("chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]", async () => {
+test.tags("focus required")("chat window: TAB cycle with 3 open chat windows", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([
         {
@@ -897,27 +900,30 @@ test("Open chat window of new inviter", async () => {
     });
 });
 
-test("keyboard navigation ArrowUp/ArrowDown on message action dropdown in chat window [REQUIRE FOCUS]", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    pyEnv["mail.message"].create({
-        author_id: serverState.partnerId,
-        body: "not empty",
-        model: "discuss.channel",
-        res_id: channelId,
-    });
-    await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem");
-    await contains(".o-mail-ChatWindow .o-mail-Composer-input:focus");
-    await click(".o-mail-Message [title='Expand']");
-    await contains(".o-mail-Message-moreMenu.dropdown-menu");
-    await focus(".o-mail-Message [title='Expand']"); // necessary otherwise focus is in composer input
-    triggerHotkey("ArrowDown");
-    await contains(".o-mail-Message-moreMenu :nth-child(1 of .dropdown-item).focus");
-    triggerHotkey("ArrowDown");
-    await contains(".o-mail-Message-moreMenu :nth-child(2 of .dropdown-item).focus");
-});
+test.tags("focus required")(
+    "keyboard navigation ArrowUp/ArrowDown on message action dropdown in chat window",
+    async () => {
+        const pyEnv = await startServer();
+        const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+        pyEnv["mail.message"].create({
+            author_id: serverState.partnerId,
+            body: "not empty",
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+        await start();
+        await click(".o_menu_systray i[aria-label='Messages']");
+        await click(".o-mail-NotificationItem");
+        await contains(".o-mail-ChatWindow .o-mail-Composer-input:focus");
+        await click(".o-mail-Message [title='Expand']");
+        await contains(".o-mail-Message-moreMenu.dropdown-menu");
+        await focus(".o-mail-Message [title='Expand']"); // necessary otherwise focus is in composer input
+        triggerHotkey("ArrowDown");
+        await contains(".o-mail-Message-moreMenu :nth-child(1 of .dropdown-item).focus");
+        triggerHotkey("ArrowDown");
+        await contains(".o-mail-Message-moreMenu :nth-child(2 of .dropdown-item).focus");
+    }
+);
 
 test("Close dropdown in chat window with ESCAPE does not also close the chat window", async () => {
     const pyEnv = await startServer();
