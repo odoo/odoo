@@ -98,6 +98,9 @@ export const htmlToCanvas = async (el, options) => {
     if (options.addClass) {
         el.classList.add(options.addClass);
     }
+    if (options.addEmailMargins === true) {
+        $(".pos-receipt-print").css({ padding: "15px", "padding-bottom": "30px" });
+    }
     return await applyWhenMounted({
         el,
         container: document.querySelector(".render-container"),
