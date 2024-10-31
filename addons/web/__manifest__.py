@@ -443,8 +443,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/owl/owl.js',
             'web/static/lib/owl/odoo_module.js',
 
-            'web/static/lib/jquery/jquery.js',
-
             'web/static/lib/hoot/**/*',
             'web/static/lib/hoot-dom/**/*',
             ('remove', 'web/static/lib/hoot/ui/hoot_style.css'),
