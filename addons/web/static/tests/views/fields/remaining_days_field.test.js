@@ -126,47 +126,45 @@ test.tags("desktop")("RemainingDaysField on a date field in multi edit list view
     });
 });
 
-test.tags("desktop")(
-    "RemainingDaysField, enter wrong value manually in multi edit list view",
-    async () => {
-        mockDate("2017-10-08 15:35:11"); // October 8 2017, 15:35:11
-        Partner._records = [
-            { id: 1, date: "2017-10-08" }, // today
-            { id: 2, date: "2017-10-09" }, // tomorrow
-            { id: 8, date: false },
-        ];
+test.tags("desktop");
+test("RemainingDaysField, enter wrong value manually in multi edit list view", async () => {
+    mockDate("2017-10-08 15:35:11"); // October 8 2017, 15:35:11
+    Partner._records = [
+        { id: 1, date: "2017-10-08" }, // today
+        { id: 2, date: "2017-10-09" }, // tomorrow
+        { id: 8, date: false },
+    ];
 
-        await mountView({
-            type: "list",
-            resModel: "partner",
-            arch: /* xml */ `<list multi_edit="1"><field name="date" widget="remaining_days" /></list>`,
-        });
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: /* xml */ `<list multi_edit="1"><field name="date" widget="remaining_days" /></list>`,
+    });
 
-        const cells = queryAll(".o_data_cell");
-        const rows = queryAll(".o_data_row");
+    const cells = queryAll(".o_data_cell");
+    const rows = queryAll(".o_data_row");
 
-        expect(cells[0]).toHaveText("Today");
-        expect(cells[1]).toHaveText("Tomorrow");
+    expect(cells[0]).toHaveText("Today");
+    expect(cells[1]).toHaveText("Tomorrow");
 
-        // select two records and edit them
-        await click(".o_list_record_selector input", { root: rows[0] });
-        await animationFrame();
-        await click(".o_list_record_selector input", { root: rows[1] });
-        await animationFrame();
+    // select two records and edit them
+    await click(".o_list_record_selector input", { root: rows[0] });
+    await animationFrame();
+    await click(".o_list_record_selector input", { root: rows[1] });
+    await animationFrame();
 
-        await click(".o_data_cell", { root: rows[0] });
-        await animationFrame();
+    await click(".o_data_cell", { root: rows[0] });
+    await animationFrame();
 
-        expect(".o_field_remaining_days input").toHaveCount(1);
+    expect(".o_field_remaining_days input").toHaveCount(1);
 
-        await click(".o_field_remaining_days input");
-        await edit("blabla", { confirm: "enter" });
-        await animationFrame();
-        expect(".modal").toHaveCount(0);
-        expect(cells[0]).toHaveText("Today");
-        expect(cells[1]).toHaveText("Tomorrow");
-    }
-);
+    await click(".o_field_remaining_days input");
+    await edit("blabla", { confirm: "enter" });
+    await animationFrame();
+    expect(".modal").toHaveCount(0);
+    expect(cells[0]).toHaveText("Today");
+    expect(cells[1]).toHaveText("Tomorrow");
+});
 
 test("RemainingDaysField on a date field in form view", async () => {
     mockDate("2017-10-08 15:35:11"); // October 8 2017, 15:35:11

@@ -879,61 +879,59 @@ test("doesn't autosave when in dialog (beacon)", async () => {
     expect.verifySteps([]);
 });
 
-test.tags("desktop")(
-    `doesn't autosave when a many2one search more is open (visibility change)`,
-    async () => {
-        Partner._fields.product_id = fields.Many2one({ relation: "product" });
+test.tags("desktop");
+test(`doesn't autosave when a many2one search more is open (visibility change)`, async () => {
+    Partner._fields.product_id = fields.Many2one({ relation: "product" });
 
-        class Product extends models.Model {
-            name = fields.Char();
-            _records = [
-                { id: 37, name: "xphone" },
-                { id: 41, name: "xpad" },
-            ];
-        }
+    class Product extends models.Model {
+        name = fields.Char();
+        _records = [
+            { id: 37, name: "xphone" },
+            { id: 41, name: "xpad" },
+        ];
+    }
 
-        Product._views = {
-            form: `
+    Product._views = {
+        form: `
                 <form>
                     <group>
                         <field name="name"/>
                     </group>
                 </form>
             `,
-            list: `
+        list: `
                 <list>
                     <field name="name"/>
                 </list>
             `,
-            search: `<search/>`,
-        };
+        search: `<search/>`,
+    };
 
-        defineModels([Product]);
+    defineModels([Product]);
 
-        onRpc("web_save", () => {
-            expect.step("should not call web_save");
-        });
-        await mountView({
-            resModel: "partner",
-            type: "form",
-            arch: `
+    onRpc("web_save", () => {
+        expect.step("should not call web_save");
+    });
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
                 <form>
                     <sheet>
                         <field name="product_id" domain="[]" context="{'lang': 'en_US'}" widget="many2one"/>
                     </sheet>
                 </form>
             `,
-            resId: 1,
-        });
-        await contains(`.o_field_many2one_selection .o-autocomplete--input`).click();
-        await contains(`.o_m2o_dropdown_option_search_more`).click();
-        expect(`.modal`).toHaveCount(1);
-        await contains(`.o_create_button`).click();
-        expect(`.modal`).toHaveCount(2);
-        await hideTab();
-        expect.verifySteps([]);
-    }
-);
+        resId: 1,
+    });
+    await contains(`.o_field_many2one_selection .o-autocomplete--input`).click();
+    await contains(`.o_m2o_dropdown_option_search_more`).click();
+    expect(`.modal`).toHaveCount(1);
+    await contains(`.o_create_button`).click();
+    expect(`.modal`).toHaveCount(2);
+    await hideTab();
+    expect.verifySteps([]);
+});
 
 test(`doesn't autosave when a x2many is in openned (visibility change)`, async () => {
     Partner._fields.child_ids = fields.One2many({ string: "one2many field", relation: "partner" });

@@ -655,79 +655,77 @@ test(`check the avatar of the attendee in the calendar filter panel`, async () =
     expect(".o_calendar_filter_item:eq(-2)").toHaveText("partner 3");
 });
 
-test.tags("desktop")(
-    `Select multiple attendees in the calendar filter panel autocomplete on desktop`,
-    async () => {
-        CalendarPartner._views = {
-            list: `<list><field name="name"/></list>`,
-            search: `<search/>`,
-        };
-        CalendarPartner._records.push(
-            { id: 5, name: "foo partner 5" },
-            { id: 6, name: "foo partner 6" },
-            { id: 7, name: "foo partner 7" },
-            { id: 8, name: "foo partner 8" },
-            { id: 9, name: "foo partner 9" },
-            { id: 10, name: "foo partner 10" },
-            { id: 11, name: "foo partner 11" },
-            { id: 12, name: "foo partner 12" },
-            { id: 13, name: "foo partner 13" },
-            { id: 14, name: "foo partner 14" }
-        );
+test.tags("desktop");
+test(`Select multiple attendees in the calendar filter panel autocomplete on desktop`, async () => {
+    CalendarPartner._views = {
+        list: `<list><field name="name"/></list>`,
+        search: `<search/>`,
+    };
+    CalendarPartner._records.push(
+        { id: 5, name: "foo partner 5" },
+        { id: 6, name: "foo partner 6" },
+        { id: 7, name: "foo partner 7" },
+        { id: 8, name: "foo partner 8" },
+        { id: 9, name: "foo partner 9" },
+        { id: 10, name: "foo partner 10" },
+        { id: 11, name: "foo partner 11" },
+        { id: 12, name: "foo partner 12" },
+        { id: 13, name: "foo partner 13" },
+        { id: 14, name: "foo partner 14" }
+    );
 
-        await mountView({
-            resModel: "event",
-            type: "calendar",
-            arch: `
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
             <calendar date_start="start" date_stop="stop">
                 <field name="attendee_ids" write_model="filter.partner" write_field="partner_id"/>
             </calendar>
         `,
-        });
+    });
 
-        const section = `.o_calendar_filter[data-name="attendee_ids"]`;
-        expect(`.o_calendar_sidebar .o_calendar_filter`).toHaveCount(1);
-        await checkFilterItems(3);
-        expect(queryAllTexts`.o_calendar_filter_item`).toEqual([
-            "partner 1",
-            "partner 2",
-            "Everything",
-        ]);
+    const section = `.o_calendar_filter[data-name="attendee_ids"]`;
+    expect(`.o_calendar_sidebar .o_calendar_filter`).toHaveCount(1);
+    await checkFilterItems(3);
+    expect(queryAllTexts`.o_calendar_filter_item`).toEqual([
+        "partner 1",
+        "partner 2",
+        "Everything",
+    ]);
 
-        expect(`.o_calendar_filter:eq(0) .o-autocomplete`).toHaveCount(1);
-        await contains(`${section} .o-autocomplete--input`).click();
-        await runAllTimers();
-        expect(`.dropdown-item`).toHaveCount(9);
-        expect(queryAllTexts`.o-autocomplete--dropdown-item`).toEqual([
-            "partner 3",
-            "partner 4",
-            "foo partner 5",
-            "foo partner 6",
-            "foo partner 7",
-            "foo partner 8",
-            "foo partner 9",
-            "foo partner 10",
-            "Search More...",
-        ]);
+    expect(`.o_calendar_filter:eq(0) .o-autocomplete`).toHaveCount(1);
+    await contains(`${section} .o-autocomplete--input`).click();
+    await runAllTimers();
+    expect(`.dropdown-item`).toHaveCount(9);
+    expect(queryAllTexts`.o-autocomplete--dropdown-item`).toEqual([
+        "partner 3",
+        "partner 4",
+        "foo partner 5",
+        "foo partner 6",
+        "foo partner 7",
+        "foo partner 8",
+        "foo partner 9",
+        "foo partner 10",
+        "Search More...",
+    ]);
 
-        await contains(`.o-autocomplete--dropdown-item:last-child`).click();
-        expect(`.modal .o_data_row`).toHaveCount(12);
-        await contains(".o_data_row:nth-child(1) .o_list_record_selector").click();
-        await contains(".o_data_row:nth-child(2) .o_list_record_selector").click();
-        await contains(".o_dialog .o_select_button").click();
-        expect("o_dialog").toHaveCount(0);
+    await contains(`.o-autocomplete--dropdown-item:last-child`).click();
+    expect(`.modal .o_data_row`).toHaveCount(12);
+    await contains(".o_data_row:nth-child(1) .o_list_record_selector").click();
+    await contains(".o_data_row:nth-child(2) .o_list_record_selector").click();
+    await contains(".o_dialog .o_select_button").click();
+    expect("o_dialog").toHaveCount(0);
 
-        expect(`.o_calendar_sidebar .o_calendar_filter`).toHaveCount(1);
-        await checkFilterItems(5);
-        expect(queryAllTexts`.o_calendar_filter_item`).toEqual([
-            "partner 1",
-            "partner 2",
-            "partner 3",
-            "partner 4",
-            "Everything",
-        ]);
-    }
-);
+    expect(`.o_calendar_sidebar .o_calendar_filter`).toHaveCount(1);
+    await checkFilterItems(5);
+    expect(queryAllTexts`.o_calendar_filter_item`).toEqual([
+        "partner 1",
+        "partner 2",
+        "partner 3",
+        "partner 4",
+        "Everything",
+    ]);
+});
 
 test.tags("desktop")(`add a filter with the search more dialog on desktop`, async () => {
     CalendarPartner._views = {
@@ -2514,27 +2512,25 @@ test(`Colors: cycling through available colors`, async () => {
     ).toHaveClass("o_cw_filter_color_1");
 });
 
-test.tags("desktop")(
-    `Colors: use available colors when attr is not number on desktop`,
-    async () => {
-        await mountView({
-            resModel: "event",
-            type: "calendar",
-            arch: `
+test.tags("desktop");
+test(`Colors: use available colors when attr is not number on desktop`, async () => {
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
             <calendar date_start="start" date_stop="stop" color="name">
                 <field name="attendee_ids" write_model="filter.partner" write_field="partner_id" filter_field="is_checked" />
             </calendar>
         `,
-        });
-        const colorClass = Array.from(queryFirst`.o_event[data-event-id="1"]`.classList).find(
-            (className) => className.startsWith("o_calendar_color_")
-        );
-        expect(isNaN(Number(colorClass.split("_").at(-1)))).toBe(false);
+    });
+    const colorClass = Array.from(queryFirst`.o_event[data-event-id="1"]`.classList).find(
+        (className) => className.startsWith("o_calendar_color_")
+    );
+    expect(isNaN(Number(colorClass.split("_").at(-1)))).toBe(false);
 
-        await clickEvent(1);
-        expect(`.o_cw_popover`).toHaveClass(colorClass);
-    }
-);
+    await clickEvent(1);
+    expect(`.o_cw_popover`).toHaveClass(colorClass);
+});
 
 test.tags("mobile")(`Colors: use available colors when attr is not number on mobile`, async () => {
     await mountView({

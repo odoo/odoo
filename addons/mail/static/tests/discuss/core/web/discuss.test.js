@@ -19,7 +19,7 @@ import { pick } from "@web/core/utils/objects";
 describe.current.tags("desktop");
 defineMailModels();
 
-test("can create a new channel [REQUIRE FOCUS]", async () => {
+test("can create a new channel", async () => {
     const pyEnv = await startServer();
     onRpcBefore((route, args) => {
         if (route.startsWith("/mail") || route.startsWith("/discuss/channel/messages")) {
