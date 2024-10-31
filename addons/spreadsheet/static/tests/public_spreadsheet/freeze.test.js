@@ -195,8 +195,8 @@ test("from/to global filters are exported", async function () {
     const filterSheet = data.sheets[1];
     expect(filterSheet.cells.B2.content).toBe("43831");
     expect(filterSheet.cells.C2.content).toBe("44197");
-    expect(filterSheet.cells.B2.format).toBe(1);
-    expect(filterSheet.cells.C2.format).toBe(1);
+    expect(filterSheet.formats.B2).toBe(1);
+    expect(filterSheet.formats.C2).toBe(1);
     expect(data.formats[1]).toBe("m/d/yyyy");
     expect(data.globalFilters.length).toBe(1);
     expect(data.globalFilters[0].label).toBe("Date Filter");
@@ -214,8 +214,10 @@ test("from/to global filter without value is exported", async function () {
     const data = await freezeOdooData(model);
     const filterSheet = data.sheets[1];
     expect(filterSheet.cells.A2.content).toBe("Date Filter");
-    expect(filterSheet.cells.B2).toEqual({ content: "", format: 1 });
-    expect(filterSheet.cells.C2).toEqual({ content: "", format: 1 });
+    expect(filterSheet.cells.B2).toEqual({ content: "" });
+    expect(filterSheet.cells.B2).toEqual({ content: "" });
+    expect(filterSheet.formats.B2).toEqual(1);
+    expect(filterSheet.formats.C2).toEqual(1);
     expect(data.formats[1]).toBe("m/d/yyyy");
     expect(data.globalFilters.length).toBe(1);
     expect(data.globalFilters[0].label).toBe("Date Filter");

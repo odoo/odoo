@@ -579,9 +579,11 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
         }
         const styleId = getItemId({ bold: true }, data.styles);
 
-        const cells = {};
-        cells["A1"] = { content: "Filter", style: styleId };
-        cells["B1"] = { content: "Value", style: styleId };
+        const cells = {
+            A1: { content: "Filter" },
+            B1: { content: "Value" },
+        };
+        const formats = {};
         let numberOfCols = 2; // at least 2 cols (filter title and filter value)
         let filterRowIndex = 1; // first row is the column titles
         for (const filter of this.getters.getGlobalFilters()) {
@@ -598,7 +600,7 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
                     cells[xc] = { content: cell.value.toString() };
                     if (cell.format) {
                         const formatId = getItemId(cell.format, data.formats);
-                        cells[xc].format = formatId;
+                        formats[xc] = formatId;
                     }
                 }
             }
@@ -607,6 +609,11 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
         const sheet = {
             ...createEmptySheet(uuidGenerator.uuidv4(), _t("Active Filters")),
             cells,
+            formats,
+            styles: {
+                A1: styleId,
+                B1: styleId,
+            },
             colNumber: numberOfCols,
             rowNumber: filterRowIndex,
         };
