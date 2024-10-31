@@ -1260,7 +1260,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
             if is_new_address and order_sudo.only_services:
                 # The delivery address is required to make the order.
                 partner_fnames.add('partner_shipping_id')
-            callback = callback or self._get_extra_billing_info_route(order_sudo)
         elif address_type == 'delivery':
             partner_fnames.add('partner_shipping_id')
             if use_delivery_as_billing:
@@ -1546,15 +1545,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         return request.env['res.partner'].sudo().with_context(
             creation_context
         ).create(address_values)
-
-    def _get_extra_billing_info_route(self, order_sudo):
-        """ Hook for localizations to request additional billing details in a specific page.
-
-        :param sale.order order_sudo: The current cart.
-        :return: The route to redirect the customer to.
-        :rtype: str
-        """
-        return ''
 
     def _handle_extra_form_data(self, extra_form_data, address_values):
         """ Handling extra form data that were not processed on the address from.
