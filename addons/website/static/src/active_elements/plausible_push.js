@@ -16,3 +16,4 @@ class PlausiblePush extends Component {
 }
 
 registry.category("website.active_elements").add("website.plausible_push", PlausiblePush);
+
