@@ -636,12 +636,13 @@ export class HistoryPlugin extends Plugin {
      * @param { number } index
      */
     isReversibleStep(index) {
-        const cbs = this.getResource("is_reversible_step");
-        if (cbs.length) {
-            return cbs.every((cb) => cb(index));
-        } else {
-            return Boolean(this.steps[index]);
+        const step = this.steps[index];
+        if (!step) {
+            return false;
         }
+        return !this.getResource("unreversible_step_predicates").some((predicate) =>
+            predicate(step)
+        );
     }
     /**
      * Get the step index in the history to redo.
