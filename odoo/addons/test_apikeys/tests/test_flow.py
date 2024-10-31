@@ -2,7 +2,7 @@ import logging
 import json
 
 from odoo import api
-from odoo.tests import tagged, get_db_name, loaded_demo_data
+from odoo.tests import tagged, get_db_name
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.auth_totp.tests.test_totp import TestTOTPMixin
 
