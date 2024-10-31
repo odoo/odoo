@@ -2518,7 +2518,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertEqual(payment_term_line.name, 'test')
         with Form(self.invoice) as move_form:
             move_form.payment_reference = False
-        self.assertEqual(payment_term_line.name, '', 'Payment term line was not changed')
+        self.assertEqual(payment_term_line.name, False, 'Payment term line was not changed')
 
     def test_purchase_uom_on_vendor_bills(self):
         uom_gram = self.env.ref('uom.product_uom_gram')
