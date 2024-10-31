@@ -55,6 +55,8 @@
                                     <field name="remaining_quantity"/>
                                     <field name="partition_code" readonly="True"/>
                                     <field name="bin_code" readonly="True"/>
+                                    <field name="picking_id" column_invisible="True"/>
+                                    <field name="location_dest_id" column_invisible="True"/>
                                     <field name="available_product_ids" column_invisible="1"/>
                                 </tree>
                             </field>
@@ -73,9 +75,39 @@
             <tree string="Automation Decanting Orders Process">
                 <field name="name"/>
                 <field name="license_plate_ids"/>
+                <field name="partner_id"/>
                 <field name="crate_barcode"/>
                 <field name="container_id"/>
+                <field name="picking_id"/>
             </tree>
+        </field>
+    </record>
+
+    <!-- Search view for Automation Decanting Orders Process -->
+    <record id="view_automation_decanting_process_search" model="ir.ui.view">
+        <field name="name">automation.decanting.orders.process.search</field>
+        <field name="model">automation.decanting.orders.process</field>
+        <field name="arch" type="xml">
+            <search string="Automation Decanting Orders Process">
+                <field name="name" string="Automation Decanting Number"/>
+                <field name="picking_id" string="Receipt Number"/>
+                <field name="crate_barcode" string="Crate Barcode"/>
+                <!-- Filters -->
+                <filter name="filter_draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <filter name="filter_in_progress" string="In Progress" domain="[('state', '=', 'in_progress')]"/>
+                <filter name="filter_done" string="Done" domain="[('state', '=', 'done')]"/>
+                <filter name="filter_open_crate" string="Open Crate" domain="[('crate_status', '=', 'open')]"/>
+                <filter name="filter_partially_filled" string="Partially Filled" domain="[('crate_status', '=', 'partially_filled')]"/>
+                <filter name="filter_fully_filled" string="Fully Filled" domain="[('crate_status', '=', 'fully_filled')]"/>
+
+                <!-- Group By Options -->
+                <group expand="1" string="Group By">
+                    <filter name="group_by_partner" string="Customer" context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_by_container" string="Container" context="{'group_by': 'container_id'}"/>
+                    <filter name="group_by_state" string="State" context="{'group_by': 'state'}"/>
+                    <filter name="group_by_crate_status" string="Crate Status" context="{'group_by': 'crate_status'}"/>
+                </group>
+            </search>
         </field>
     </record>
 

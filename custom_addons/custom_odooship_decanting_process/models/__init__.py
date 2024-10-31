@@ -9,3 +9,4 @@ from . import site_code_configuration
 from . import tenant_code_configuration
 from . import stock_picking_inherit
 from . import res_partner_inherit
+from . import stock_location_inherit

@@ -47,6 +47,9 @@
                                     <field name="quantity"/>
                                     <field name="available_quantity" column_invisible="1"/>
                                     <field name="remaining_quantity" column_invisible="1"/>
+                                     <field name="picking_id" column_invisible="False"/>
+                                    <field name="location_dest_id" column_invisible="False"/>
+                                    <field name="automation_manual"/>
                                     <field name="state"/>
                                     <field name="display_type" column_invisible="1"/>
                                     <field name="display_type_line_section" column_invisible="True"/>
@@ -72,7 +75,34 @@
                 <field name="name"/>
                 <field name="date"/>
                 <field name="partner_id"/>
+                <field name="picking_id"/>
+                <field name="site_code_id"/>
+                <field name="tenant_code_id"/>
+                <field name="state"/>
             </tree>
+        </field>
+    </record>
+    <!-- Search view for Shiperoo Delivery Receipt Orders -->
+    <record id="view_delivery_receipt_orders_search" model="ir.ui.view">
+        <field name="name">delivery.receipt.orders.search</field>
+        <field name="model">delivery.receipt.orders</field>
+        <field name="arch" type="xml">
+            <search string="Delivery Receipt Orders">
+                <field name="name" string="Delivery Receipt Number"/>
+                <field name="picking_id" string="Receipt Number"/>
+                <!-- Filters -->
+                <filter name="filter_draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <filter name="filter_in_progress" string="In Progress" domain="[('state', '=', 'in_progress')]"/>
+                <filter name="filter_done" string="Done" domain="[('state', '=', 'done')]"/>
+
+                <!-- Group By Options -->
+                <group expand="1" string="Group By">
+                    <filter name="group_by_partner" string="Customer" context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_by_tenant_code" string="Tenant Code" context="{'group_by': 'tenant_code_id'}"/>
+                    <filter name="group_by_site_code" string="Site Code" context="{'group_by': 'site_code_id'}"/>
+                    <filter name="group_by_state" string="State" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
         </field>
     </record>
 

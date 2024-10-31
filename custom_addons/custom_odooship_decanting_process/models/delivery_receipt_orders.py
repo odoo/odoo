@@ -2,14 +2,14 @@
 from email.policy import default
 
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError,ValidationError
 
 class DeliveryReceiptOrders(models.Model):
     _name = 'delivery.receipt.orders'
     _description = 'Delivery Receipt Orders'
 
     name = fields.Char(string='Reference', required=True,default=lambda self: _('New'))
-    receipt_number = fields.Char(string="Scan Barcode of receipt")
+    receipt_number = fields.Char(string="Scan Barcode of receipt", tracking=True)
     process_type = fields.Selection([
         ('automation', 'Automation Process'),
         ('manual', 'Manual Process'),
@@ -19,7 +19,7 @@ class DeliveryReceiptOrders(models.Model):
         comodel_name='stock.picking',
         string='Select Receipt'
     )
-    partner_id = fields.Many2one(related='picking_id.partner_id', string='Customer')
+    partner_id = fields.Many2one(related='picking_id.partner_id', string='Customer', store=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('in_progress', 'In Progress'),
@@ -35,10 +35,12 @@ class DeliveryReceiptOrders(models.Model):
         'tenant.code.configuration',
         string='Tenant Code',
         related='partner_id.tenant_code_id',
-        readonly=True
+        readonly=True,
+        store=True
     )
     site_code_id = fields.Many2one('site.code.configuration',
-                                   related='picking_id.site_code_id', string='Site Code')
+                                   related='picking_id.site_code_id', string='Site Code',
+                                   store=True)
     location_dest_id = fields.Many2one(related='picking_id.location_dest_id', string='Destination location')
 
 
@@ -66,6 +68,7 @@ class DeliveryReceiptOrders(models.Model):
         for order in self:
             # Initialize a list to hold the line states
             line_states = []
+            stock_quant_obj = self.env['stock.quant']
 
             # Check if all related delivery receipt order lines have the license plate closed
             all_closed = all(line.license_plate_closed for line in order.delivery_receipt_orders_line_ids)
@@ -73,6 +76,17 @@ class DeliveryReceiptOrders(models.Model):
             # Log the status of each line for debugging
             for line in order.delivery_receipt_orders_line_ids:
                 line_states.append((line.id, line.license_plate_closed))
+                # Check the automation_manual field to decide if quantity should be updated
+                if line.automation_manual in ('automation_bulk', 'manual'):
+                    # Update the quantity in stock.quant
+                    stock_quant_obj._update_available_quantity(
+                        product_id=line.product_id,
+                        location_id=line.location_dest_id,
+                        quantity=line.quantity,
+                        # Add additional fields if needed, such as lot_id, package_id, owner_id
+                    )
+
+                    # Log the update for debugging
 
             if not all_closed:
                 raise UserError(_("All license plates must be closed before marking as done."))
@@ -86,6 +100,16 @@ class DeliveryReceiptOrders(models.Model):
             if not vals.get('name') or vals['name'] == _('New'):
                 vals['name'] = self.env['ir.sequence'].next_by_code('delivery.receipt.orders') or _('New')
         return super().create(vals_list)
+
+    @api.onchange('picking_id')
+    def _onchange_picking_id(self):
+        """
+        Validate that the selected picking_id (receipt) is not in 'draft' state.
+        If it is, raise a ValidationError.
+        """
+        if self.picking_id and self.picking_id.state == 'draft':
+            raise ValidationError(_("The selected receipt is in 'Draft' state and cannot be used. "
+                                    "Please select a receipt that is in 'Ready' or 'Done' state."))
 
 
 class DeliveryReceiptOrdersLine(models.Model):
@@ -105,7 +129,7 @@ class DeliveryReceiptOrdersLine(models.Model):
         comodel_name='product.product',
         string='Product',
     )
-    quantity = fields.Float(string='Quantity', required=True)
+    quantity = fields.Float(string='Quantity')
     sku_code = fields.Char(related='product_id.default_code',string='SKU')
     state = fields.Selection([
         ('open', 'Open'),
@@ -121,6 +145,13 @@ class DeliveryReceiptOrdersLine(models.Model):
     remaining_quantity = fields.Float(string='Remaining Quantity')
     license_plate_closed = fields.Boolean(string='License Plate Closed', default=False)
     display_type_line_section = fields.Boolean(string='Display Type Line Section', default=False)
+    picking_id = fields.Many2one('stock.picking',
+        string='Receipt Order'
+    )
+    location_dest_id = fields.Many2one('stock.location',string='Destination location')
+    automation_manual = fields.Selection([('automation', 'Automation'),
+                                          ('automation_bulk', 'Automation Bulk'),
+                                          ('manual', 'Manual')], string='Automation Manual')
 
     def button_close_license_plate(self):
         """

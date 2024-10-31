@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 
 
@@ -21,22 +21,23 @@ class LicensePlateOrders(models.Model):
         ('available', 'Available'),
         ('not_available', 'Not Available')], string='License Plate State')
     automation_manual = fields.Selection([('automation', 'Automation'),
+                                          ('automation_bulk', 'Automation Bulk'),
                                           ('manual', 'Manual')], string='Automation Manual')
     delivery_receipt_order_id = fields.Many2one('delivery.receipt.orders',
                                                 string='Delivery Receipt Order')
     picking_id = fields.Many2one(
         comodel_name='stock.picking',
-        string='Receipt Order'
+        string='Receipt Order',
+        store=True
     )
-    partner_id = fields.Many2one(related='picking_id.partner_id', string='Customer')
+    partner_id = fields.Many2one(related='picking_id.partner_id', string='Customer', store=True)
     tenant_code_id = fields.Many2one(
-        'tenant.code.configuration',
         string='Tenant Code',
-        related='partner_id.tenant_code_id',
-        readonly=True
+        related='picking_id.tenant_code_id',
+        store=True
     )
-    site_code_id = fields.Many2one('site.code.configuration',
-                                   related='picking_id.site_code_id', string='Site Code')
+    site_code_id = fields.Many2one(related='picking_id.site_code_id', string='Site Code',
+                                   store=True)
     location_dest_id = fields.Many2one(related='picking_id.location_dest_id', string='Destination location')
 
 
@@ -62,8 +63,8 @@ class LicensePlateOrdersLine(models.Model):
     name = fields.Char(string='Name')
     license_plate_orders_id = fields.Many2one('license.plate.orders', string='License Plate Orders', required=True, ondelete='cascade')
     sequence = fields.Integer(string="Sequence")
-    product_id = fields.Many2one('product.product', string='Product')
-    quantity = fields.Float(string='Quantity', required=True)
+    product_id = fields.Many2one('product.product', string='Product', tracking=True)
+    quantity = fields.Float(string='Quantity', required=True, tracking=True)
     sku_code = fields.Char(string='SKU')
     state = fields.Selection([('open', 'Open'), ('closed', 'Closed')], string='State', default='open')
     remaining_qty = fields.Float('Remaining Quantity')
@@ -74,6 +75,16 @@ class LicensePlateOrdersLine(models.Model):
         This method opens the wizard for updating the quantity.
         It passes the default picking_id and license_plate_orders_line_id to the context.
         """
+        # Check if License Plate is in an active decanting process
+        decanting_process = self.env['automation.decanting.orders.process'].search([
+            ('license_plate_ids', '=', self.license_plate_orders_id.name),
+            ('state', 'in', ['in_progress', 'done'])  # Check if decanting process is ongoing
+        ], limit=1)
+        if decanting_process:
+            raise ValidationError(
+                _("The License Plate '%s' is currently in a decanting process and cannot be edited.")
+                % self.license_plate_orders_id.name
+            )
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'update.qty.wizard',

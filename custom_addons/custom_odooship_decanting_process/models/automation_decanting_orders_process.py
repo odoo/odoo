@@ -14,13 +14,13 @@ class AutomationDecantingOrdersProcess(models.Model):
     _name = 'automation.decanting.orders.process'
     _description = 'Automation Decanting Orders Process'
 
-    name = fields.Char(string='Name', required=True,default=lambda self: _('New'))
+    name = fields.Char(string='Reference', required=True, default=lambda self: _('New'))
     barcode_option = fields.Selection([('pallet', 'Pallet'),
                                        ('Box', 'Box'),
                                        ('crate', 'Crate'),])
     pallet_barcode = fields.Char(string='License Plate Barcode')
     hu_barcode = fields.Char(string='Handling Unit Barcode')
-    crate_barcode = fields.Char(string='Crate Barcode')
+    crate_barcode = fields.Char(string='Crate Barcode', tracking=True)
     container_id = fields.Many2one('crate.container.configuration', string='Container')
     container_partition = fields.Integer(related='container_id.crate_container_partition', string='Container Partition')
     container_code = fields.Char(related='container_id.crate_code', string='Container Code')
@@ -36,19 +36,21 @@ class AutomationDecantingOrdersProcess(models.Model):
         ('in_progress', 'In Progress'),
         ('done', 'Done'),
     ], string='State', default='draft')
-    license_plate_ids = fields.Many2many('license.plate.orders', string='License Plate Barcodes')
+    license_plate_ids = fields.Many2many('license.plate.orders', string='License Plate Barcodes', tracking=True)
     picking_id = fields.Many2one(
         comodel_name='stock.picking',
         string='Receipt Order'
     )
-    partner_id = fields.Many2one(related='picking_id.partner_id', string='Customer')
+    partner_id = fields.Many2one(related='picking_id.partner_id', string='Customer', store=True)
     tenant_code_id = fields.Many2one(
         'tenant.code.configuration',
         string='Tenant Code',
         related='partner_id.tenant_code_id',
+        store=True
     )
     site_code_id = fields.Many2one('site.code.configuration',
-                                   related='picking_id.site_code_id', string='Site Code')
+                                   related='picking_id.site_code_id', string='Site Code',
+                                   store=True)
     location_dest_id = fields.Many2one(related='picking_id.location_dest_id', string='Destination location')
     count_lines = fields.Integer(string='Count Lines')
 
@@ -81,6 +83,7 @@ class AutomationDecantingOrdersProcess(models.Model):
                 'default_license_plate_ids': self.license_plate_ids.ids,
                 'default_container_id': self.container_id.id,
                 'default_crate_barcode': self.crate_barcode,
+                'default_picking_id': self.picking_id.id,
             }
         }
 
@@ -101,6 +104,10 @@ class AutomationDecantingOrdersProcess(models.Model):
                     raise ValidationError(
                         _("All selected License Plates must belong to the same Picking Order. "
                           "License Plate '%s' does not belong to the same picking order." % license_plate.name)
+                    )
+                if license_plate.automation_manual != 'automation':
+                    raise ValidationError(
+                        _("License Plate '%s' is not of type 'automation'. Please select only automation type license plates." % license_plate.name)
                     )
 
             # Set picking_id based on the first license plate
@@ -124,22 +131,6 @@ class AutomationDecantingOrdersProcess(models.Model):
                         f"Crate Barcode '{record.crate_barcode}' is already in progress. "
                         "Please complete or close the existing record before creating a new one."
                     )
-
-    # @api.onchange('license_plate_ids')
-    # def _onchange_license_plate_ids(self):
-    #     """Allow only closed license plates with done delivery receipt order."""
-    #     for license_plate in self.license_plate_ids:
-    #         if license_plate.state != 'closed' or license_plate.automation_manual != 'automation':
-    #             raise ValidationError(
-    #                 f"The selected License Plate '{license_plate.name}' is not available or its status is not 'closed'."
-    #             )
-            # Check the related delivery receipt order
-            # delivery_order = self.license_plate_id.delivery_receipt_order_id
-            # if delivery_order and delivery_order.state != 'done':
-            #     raise ValidationError(
-            #         f"The related Delivery Receipt Order '{delivery_order.name}' is still in progress. "
-            #         "Please complete the order (Manual/Automation Order Process) before proceeding."
-            #     )
 
 
     def check_crate_status(self):
@@ -185,9 +176,8 @@ class AutomationDecantingOrdersProcess(models.Model):
                 raise ValidationError(
                     f"The scanned Crate Barcode '{self.crate_barcode}' is not available for use. Please check the barcode and try again.")
 
-
     def action_button_close(self):
-        """ Action button close method is to update status and close crate status."""
+        """ Action button close method to update status, move stock, and close crate status."""
         self.state = 'done'
         self.crate_status = 'closed'
 
@@ -204,8 +194,11 @@ class AutomationDecantingOrdersProcess(models.Model):
         # Prepare data in the required format
         receipt_list = []
         sku_list = []
+
+        stock_move_obj = self.env['stock.move']
         stock_quant_obj = self.env['stock.quant']
-        # Loop through decanting process lines
+
+        # Loop through decanting process lines to handle stock movement
         for line in self.automation_decanting_process_line_ids:
             sku_list.append({
                 "amount": line.quantity,  # Quantity
@@ -219,37 +212,15 @@ class AutomationDecantingOrdersProcess(models.Model):
                 "batch_property07": 'yyy',  # Assuming Color is stored here
                 "batch_property08": 'zzz',
             })
-            # Create stock move to update inventory location
-            quant = stock_quant_obj.search([
-                ('product_id', '=', line.product_id.id),
-                ('location_id', '=', self.picking_id.location_dest_id.id)
-            ], limit=1)
-
-            if quant:
-                # If the quant exists, adjust the quantity
-                quant.sudo().quantity -= line.quantity  # Reduce the quantity from the current location
-            else:
-                raise UserError(f"No quant found for product '{line.product_id.name}' in the current location.")
-
-            # Now update the destination location with the new quantity
-            destination_quant = stock_quant_obj.search([
-                ('product_id', '=', line.product_id.id),
-                ('location_id', '=', self.location_dest_id.id)
-            ], limit=1)
-
-            if destination_quant:
-                # If quant exists in the destination, increase the quantity
-                destination_quant.sudo().quantity += line.quantity
-            else:
-                # If no quant exists, create a new one in the destination location
-                stock_quant_obj.sudo().create({
-                    'product_id': line.product_id.id,
-                    'location_id': self.location_dest_id.id,
-                    'quantity': line.quantity,
-                    'in_date': fields.Datetime.now(),  # Optional: to track the update time
-                })
-
-        # Add the receipt entry
+            stock_quant_obj._update_available_quantity(
+                product_id=line.product_id,
+                location_id=line.location_dest_id,
+                quantity=line.quantity,
+                # lot_id=line.lot_id,
+                # package_id=line.package_id,
+                # owner_id=line.owner_id
+            )
+        # Add the receipt entry (for external systems or integration purposes)
         receipt_list.append({
             "warehouse_code": self.site_code_id.name,  # Site Code
             "receipt_code": self.name,  # Decanting Order Name as Receipt Code
@@ -271,24 +242,18 @@ class AutomationDecantingOrdersProcess(models.Model):
 
         # Convert data to JSON format
         json_data = json.dumps(data, indent=4)
-        #
-        # # Log the generated data
+
+        # Log the generated data
         _logger.info(f"Generated data for crate close: {json_data}")
-        #
-        # # Define the URLs for Shiperoo Connect
-        # # url_geekplus = "https://shiperooconnect.automation.shiperoo.com/api/interface/geekplus/"
+
+        # Define the URLs for Shiperoo Connect
         url_automation_putaway = "https://shiperooconnect.automation.shiperoo.com/api/interface/automationputaway"
-        #
+
         headers = {
             'Content-Type': 'application/json'
         }
 
         try:
-            # Send the data to the Geekplus URL
-            # response_geekplus = requests.post(url_geekplus, headers=headers, data=json_data)
-            # if response_geekplus.status_code != 200:
-            #     raise UserError(f"Failed to send data to Geekplus: {response_geekplus.content.decode()}")
-
             # Send the data to the Automation Putaway URL
             response_putaway = requests.post(url_automation_putaway, headers=headers, data=json_data)
             if response_putaway.status_code != 200:
@@ -299,15 +264,12 @@ class AutomationDecantingOrdersProcess(models.Model):
 
         return {'type': 'ir.actions.act_window_close'}
 
-
     @api.model_create_multi
     def create(self, vals_list):
-        records = super(AutomationDecantingOrdersProcess, self).create(vals_list)
         for vals in vals_list:
             if not vals.get('name') or vals['name'] == _('New'):
                 vals['name'] = self.env['ir.sequence'].next_by_code('automation.decanting.orders.process') or _('New')
-
-        return records
+        return super().create(vals_list)
 
 
 
@@ -329,6 +291,11 @@ class AutomationDecantingOrdersProcessLine(models.Model):
     available_product_ids = fields.Many2many('product.product', string='Available Products')
     available_quantity = fields.Float(string='Available Quantity')
     remaining_quantity = fields.Float(string='Remaining Quantity')
+    picking_id = fields.Many2one(
+        string='Receipt Order',
+        related = 'automation_decanting_process_id.picking_id'
+    )
+    location_dest_id = fields.Many2one(related='picking_id.location_dest_id', string='Destination location')
 
 
     @api.model
@@ -361,8 +328,22 @@ class AutomationDecantingOrdersProcessLine(models.Model):
             else:
                 line.bin_code = False
 
+
     def _generate_partition_code(self, line_index, container_partition):
         """Generate partition code based on line index and container partition."""
-        partition_group = (line_index // 2) + 1  # Determine the group number (1A, 1B, etc.)
-        partition_letter = chr(65 + (line_index % 2))  # 65 is the ASCII for 'A'
-        return "{}{}".format(partition_group, partition_letter)
+        # Calculate half of the container partition to determine how many items are in each group ('A' or 'B')
+        half_partition = container_partition // 2
+
+        if container_partition == 1:
+            # Only 1 partition, return 1A
+            return "1A"
+
+        if container_partition == 2:
+            # Two partitions, return 1A, 2A
+            return f"{line_index + 1}A"
+
+        # For 4 or 8 partitions
+        partition_letter = 'A' if line_index < half_partition else 'B'  # First half 'A', second half 'B'
+        partition_number = (line_index % half_partition) + 1  # Cycle through numbers up to half_partition
+        return f"{partition_number}{partition_letter}"
+
