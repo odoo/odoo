@@ -37,15 +37,12 @@
                     <ImageActions actions="getActions(attachment)" imagesHeight="props.imagesHeight"/>
                 </div>
             </div>
-            <div class="grid row-gap-0 column-gap-0">
+            <div class="d-flex flex-wrap mt-1 mx-1">
                 <!-- t-attf-class overridden in extensions -->
                 <div
                     t-foreach="cards" t-as="attachment" t-key="attachment.id"
                     class="o-mail-AttachmentCard d-flex rounded mb-1 me-1 mw-100 overflow-auto"
                     t-att-class="{
-                               'g-col-12': env.inChatWindow,
-                               'g-col-3': env.inComposer or attachment.message?.thread?.model === 'discuss.channel' and !env.inChatWindow,
-                               'g-col-4': !env.inComposer and attachment.message?.thread?.model !== 'discuss.channel' and !env.inChatWindow,
                                'ms-1': isInChatWindowAndIsAlignedRight,
                                'me-1': !isInChatWindowAndIsAlignedRight,
                                'o-viewable': attachment.isViewable,
