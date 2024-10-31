@@ -126,11 +126,33 @@ class TestExpenses(TestExpenseCommon):
         product_c_account_id = self.product_c.property_account_expense_id.id
         company_payment_account_id = self.outbound_payment_method_line.payment_account_id.id
         # One payment per expense
+<<<<<<< saas-18.2
         self.assertRecordValues(all_expenses.account_move_id.line_ids.sorted(lambda line: (line.move_id, line)), [
             # own_account expense 1 move
             {'balance':  1391.30, 'account_id': self.expense_account.id,    'name': 'expense_employee: Employee PA 2*800 + 15%', 'date': date(2021, 10, 31), 'invoice_date': date(2021, 10, 10)},
             {'balance':   208.70, 'account_id': tax_account_id,             'name': '15%',                                       'date': date(2021, 10, 31), 'invoice_date': date(2021, 10, 10)},
             {'balance': -1600.00, 'account_id': default_account_payable_id, 'name': '',                                          'date': date(2021, 10, 31), 'invoice_date': date(2021, 10, 10)},
+||||||| 69b5acc0ff9ec29e0b61a6b8d089a784dbe5cee6
+        self.assertRecordValues(expense_sheets.account_move_ids.line_ids.sorted(lambda line: (line.move_id.expense_sheet_id, line)), [
+            # own_account expense sheet move
+            # Invoice date should be the one set as accounting date in the expense sheet
+            {'balance':  1391.30, 'account_id': self.expense_account.id,    'name': 'expense_employee: PA 2*800 + 15%',   'date': date(2021, 10, 31),           'invoice_date': date(2021, 10, 10)},
+            {'balance':   123.08, 'account_id': product_b_account_id,       'name': 'expense_employee: PB 160 + 2*15%',   'date': date(2021, 10, 31),           'invoice_date': date(2021, 10, 10)},
+            {'balance':   208.70, 'account_id': tax_account_id,             'name': '15%',                                'date': date(2021, 10, 31),           'invoice_date': date(2021, 10, 10)},
+            {'balance':    18.46, 'account_id': tax_account_id,             'name': '15%',                                'date': date(2021, 10, 31),           'invoice_date': date(2021, 10, 10)},
+            {'balance':    18.46, 'account_id': tax_account_id,             'name': '15% (Copy)',                         'date': date(2021, 10, 31),           'invoice_date': date(2021, 10, 10)},
+            {'balance': -1760.00, 'account_id': default_account_payable_id, 'name': '',                                   'date': date(2021, 10, 31),           'invoice_date': date(2021, 10, 10)},
+=======
+        self.assertRecordValues(expense_sheets.account_move_ids.line_ids.sorted(lambda line: (line.move_id.expense_sheet_id, line)), [
+            # own_account expense sheet move
+            # Invoice date should be the one set as accounting date in the expense sheet
+            {'balance':  1391.30, 'account_id': self.expense_account.id,    'name': 'expense_employee: PA 2*800 + 15%',   'date': date(2021, 10, 31),           'invoice_date': date(2021, 10, 10)},
+            {'balance':   123.08, 'account_id': product_b_account_id,       'name': 'expense_employee: PB 160 + 2*15%',   'date': date(2021, 10, 31),           'invoice_date': date(2021, 10, 10)},
+            {'balance':   208.70, 'account_id': tax_account_id,             'name': '15%',                                'date': date(2021, 10, 31),           'invoice_date': date(2021, 10, 10)},
+            {'balance':    18.46, 'account_id': tax_account_id,             'name': '15%',                                'date': date(2021, 10, 31),           'invoice_date': date(2021, 10, 10)},
+            {'balance':    18.46, 'account_id': tax_account_id,             'name': '15% (Copy)',                         'date': date(2021, 10, 31),           'invoice_date': date(2021, 10, 10)},
+            {'balance': -1760.00, 'account_id': default_account_payable_id, 'name': False,                                   'date': date(2021, 10, 31),           'invoice_date': date(2021, 10, 10)},
+>>>>>>> ab671076a9f61ca4bcfb4a3167f56e243c5433a6
 
             # own_account expense 2 move
             {'balance':   123.08, 'account_id': product_b_account_id,       'name': 'expense_employee: Employee PB 160 + 2*15%', 'date': date(2021, 10, 31), 'invoice_date': date(2021, 10, 31)},
