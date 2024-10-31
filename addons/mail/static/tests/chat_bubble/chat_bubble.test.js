@@ -1,22 +1,22 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { leave } from "@odoo/hoot-dom";
 
+import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { rpc } from "@web/core/network/rpc";
 import {
+    assertSteps,
     click,
     contains,
     defineMailModels,
+    hover,
     insertText,
     onRpcBefore,
     start,
     startServer,
-    triggerHotkey,
-    hover,
     step,
-    assertSteps,
+    triggerHotkey,
 } from "../mail_test_helpers";
-import { Command, serverState } from "@web/../tests/web_test_helpers";
-import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
-import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -44,7 +44,7 @@ test("Folded chat windows are displayed as chat bubbles", async () => {
     await contains(".o-mail-ChatWindow", { count: 1 });
 });
 
-test("'New message' chat window can only be open [REQUIRE FOCUS]", async () => {
+test.tags("focus required")("'New message' chat window can only be open", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John" });
     pyEnv["res.users"].create({ partner_id: partnerId });
@@ -62,7 +62,7 @@ test("'New message' chat window can only be open [REQUIRE FOCUS]", async () => {
     await contains(".o-mail-ChatBubble", { count: 1 }); // can fold chat
 });
 
-test("No duplicated chat bubbles [REQUIRE FOCUS]", async () => {
+test("No duplicated chat bubbles", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John" });
     pyEnv["res.users"].create({ partner_id: partnerId });

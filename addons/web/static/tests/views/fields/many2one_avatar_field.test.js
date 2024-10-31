@@ -229,32 +229,30 @@ test("click on many2one_avatar in an editable list view", async () => {
     expect.verifySteps(["openRecord"]);
 });
 
-test.tags("desktop")(
-    "click on many2one_avatar in an editable list view (editable top)",
-    async () => {
-        const listView = registry.category("views").get("list");
-        patchWithCleanup(listView.Controller.prototype, {
-            openRecord() {
-                expect.step("openRecord");
-            },
-        });
+test.tags("desktop");
+test("click on many2one_avatar in an editable list view (editable top)", async () => {
+    const listView = registry.category("views").get("list");
+    patchWithCleanup(listView.Controller.prototype, {
+        openRecord() {
+            expect.step("openRecord");
+        },
+    });
 
-        await mountView({
-            type: "list",
-            resModel: "partner",
-            arch: `
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: `
             <list editable="top">
                 <field name="user_id" widget="many2one_avatar"/>
             </list>`,
-        });
+    });
 
-        await contains(".o_data_row:eq(0) .o_list_record_selector input").click();
-        await contains(".o_data_row .o_data_cell [name='user_id']").click();
-        expect(".o_data_row:eq(0)").toHaveClass("o_selected_row");
+    await contains(".o_data_row:eq(0) .o_list_record_selector input").click();
+    await contains(".o_data_row .o_data_cell [name='user_id']").click();
+    expect(".o_data_row:eq(0)").toHaveClass("o_selected_row");
 
-        expect.verifySteps([]);
-    }
-);
+    expect.verifySteps([]);
+});
 
 test("readonly many2one_avatar in form view should contain a link", async () => {
     await mountView({

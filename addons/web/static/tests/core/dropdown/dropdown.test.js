@@ -1326,14 +1326,13 @@ test("multi-level dropdown: submenu keeps position when patched", async () => {
     expect.verifySteps(["submenu patched"]);
 });
 
-test.tags("desktop")(
-    "multi-level dropdown: mouseentering a dropdown item should close any subdropdown",
-    async () => {
-        expect.assertions(4);
-        class Parent extends Component {
-            static components = { Dropdown, DropdownItem };
-            static props = [];
-            static template = xml`
+test.tags("desktop");
+test("multi-level dropdown: mouseentering a dropdown item should close any subdropdown", async () => {
+    expect.assertions(4);
+    class Parent extends Component {
+        static components = { Dropdown, DropdownItem };
+        static props = [];
+        static template = xml`
                     <Dropdown>
                         <button class="main">Main</button>
                         <t t-set-slot="content">
@@ -1347,32 +1346,31 @@ test.tags("desktop")(
                         </t>
                     </Dropdown>
                 `;
-        }
-        await mountWithCleanup(Parent);
-        expect(DROPDOWN_MENU).toHaveCount(0, {
-            message: "menus are closed at the start",
-        });
-
-        // Open main dropdown
-        await click(".main");
-        await animationFrame();
-        expect(DROPDOWN_MENU).toHaveCount(1, {
-            message: "1st menu is opened",
-        });
-
-        // Mouse enter sub dropdown
-        await hover(".sub");
-        await animationFrame();
-        expect(DROPDOWN_MENU).toHaveCount(2);
-
-        // Mouse enter the adjacent dropdown item
-        await hover(".item");
-        await animationFrame();
-        expect(DROPDOWN_MENU).toHaveCount(1, {
-            message: "only 1st menu is opened",
-        });
     }
-);
+    await mountWithCleanup(Parent);
+    expect(DROPDOWN_MENU).toHaveCount(0, {
+        message: "menus are closed at the start",
+    });
+
+    // Open main dropdown
+    await click(".main");
+    await animationFrame();
+    expect(DROPDOWN_MENU).toHaveCount(1, {
+        message: "1st menu is opened",
+    });
+
+    // Mouse enter sub dropdown
+    await hover(".sub");
+    await animationFrame();
+    expect(DROPDOWN_MENU).toHaveCount(2);
+
+    // Mouse enter the adjacent dropdown item
+    await hover(".item");
+    await animationFrame();
+    expect(DROPDOWN_MENU).toHaveCount(1, {
+        message: "only 1st menu is opened",
+    });
+});
 
 test.tags("desktop")("multi-level dropdown: unsubscribe all keynav when root close", async () => {
     class Parent extends Component {

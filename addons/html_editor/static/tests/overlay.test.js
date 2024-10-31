@@ -86,44 +86,42 @@ test.tags("desktop")("Toolbar should not overflow scroll container", async () =>
     expect(toolbar).toBeVisible();
 });
 
-test.tags("desktop")(
-    "Table column control should always be displayed on top of the table",
-    async () => {
-        const top = (el) => el.getBoundingClientRect().top;
-        const bottom = (el) => el.getBoundingClientRect().bottom;
+test.tags("desktop");
+test("Table column control should always be displayed on top of the table", async () => {
+    const top = (el) => el.getBoundingClientRect().top;
+    const bottom = (el) => el.getBoundingClientRect().bottom;
 
-        await mountView({
-            type: "form",
-            resId: 2,
-            resModel: "test",
-            arch: `
+    await mountView({
+        type: "form",
+        resId: 2,
+        resModel: "test",
+        arch: `
             <form>
                 <field name="name"/>
                 <field name="txt" widget="html"/>
             </form>`,
-        });
+    });
 
-        const scrollableElement = queryOne(".o_content");
-        const table = queryOne(".odoo-editor-editable table");
-        await hover(".odoo-editor-editable td");
-        const columnControl = await waitFor(".o-we-table-menu[data-type='column']");
+    const scrollableElement = queryOne(".o_content");
+    const table = queryOne(".odoo-editor-editable table");
+    await hover(".odoo-editor-editable td");
+    const columnControl = await waitFor(".o-we-table-menu[data-type='column']");
 
-        // Table column control displayed on hover should be above the table
-        expect(bottom(columnControl)).toBeLessThan(top(table));
+    // Table column control displayed on hover should be above the table
+    expect(bottom(columnControl)).toBeLessThan(top(table));
 
-        // Scroll down so that the table is close to the top
-        const distanceToTop = top(table) - top(scrollableElement);
-        scrollableElement.scrollTop += distanceToTop;
-        await animationFrame();
+    // Scroll down so that the table is close to the top
+    const distanceToTop = top(table) - top(scrollableElement);
+    scrollableElement.scrollTop += distanceToTop;
+    await animationFrame();
 
-        await hover(".odoo-editor-editable td");
-        await animationFrame();
+    await hover(".odoo-editor-editable td");
+    await animationFrame();
 
-        // Table control should not be displayed (it should not overflow the scroll
-        // container, nor be placed below the first row).
-        expect(queryAll(".o-we-table-menu[data-type='column']")).toHaveCount(0);
-    }
-);
+    // Table control should not be displayed (it should not overflow the scroll
+    // container, nor be placed below the first row).
+    expect(queryAll(".o-we-table-menu[data-type='column']")).toHaveCount(0);
+});
 
 test.tags("desktop")("Table menu should close on scroll", async () => {
     await mountView({
