@@ -352,7 +352,7 @@ describe("new", () => {
 
         await contains(".modal button[name=method]").click();
         expect(".modal").toHaveCount(2);
-        expect($(".modal:last .modal-body").text()).toBe("Are you sure?");
+        expect(".modal:last .modal-body").toHaveText("Are you sure?");
 
         await contains(".modal:last .modal-footer .btn-primary").click();
         // needs two renderings to close the ConfirmationDialog:
