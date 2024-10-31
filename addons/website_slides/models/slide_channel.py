@@ -978,7 +978,7 @@ class SlideChannel(models.Model):
 
     def _add_groups_members(self):
         for channel in self:
-            channel._action_add_members(channel.mapped('enroll_group_ids.users.partner_id'))
+            channel._action_add_members(channel.mapped('enroll_group_ids.all_user_ids.partner_id'))
 
     def _get_earned_karma(self, partner_ids):
         """ Compute the number of karma earned by partners on a channel

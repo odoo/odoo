@@ -163,7 +163,7 @@ class TestIRRuleFeedback(Feedback):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env.ref('base.group_user').write({'users': [Command.link(cls.user.id)]})
+        cls.env.ref('base.group_user').write({'user_ids': [Command.link(cls.user.id)]})
         cls.model = cls.env['ir.model'].search([('model', '=', 'test_access_right.some_obj')])
         cls.record = cls.env['test_access_right.some_obj'].create({
             'val': 0,

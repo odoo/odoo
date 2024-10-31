@@ -171,7 +171,7 @@ class TestHasGroup(TransactionCase):
                 'groups_id': [Command.set([self.grp_portal.id])]
              })
         with self.assertRaises(ValidationError):
-            self.grp_internal.users = [Command.link(test_user.id)]
+            self.grp_internal.user_ids = [Command.link(test_user.id)]
 
     def test_two_user_types_implied_groups(self):
         """Contrarily to test_two_user_types, we simply add an implied_id to a group.

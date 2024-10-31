@@ -223,7 +223,7 @@ class HrEmployeeBase(models.AbstractModel):
             if approver_group and vals.get('leave_manager_id'):
                 group_updates.append((4, vals['leave_manager_id']))
         if group_updates:
-            approver_group.sudo().write({'users': group_updates})
+            approver_group.sudo().write({'all_user_ids': group_updates})
         return super().create(vals_list)
 
     def write(self, values):

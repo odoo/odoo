@@ -181,7 +181,9 @@ class ResGroups(models.Model):
     _allow_sudo_commands = False
 
     name = fields.Char(required=True, translate=True)
-    users = fields.Many2many('res.users', 'res_groups_users_rel', 'gid', 'uid')
+    user_ids = fields.Many2many('res.users', 'res_groups_users_rel', 'gid', 'uid')
+    all_user_ids = fields.Many2many('res.users', compute='_compute_all_user_ids', compute_sudo=True, search='_search_all_user_ids', string='Users and implied users')
+
     model_access = fields.One2many('ir.model.access', 'group_id', string='Access Controls', copy=True)
     rule_groups = fields.Many2many('ir.rule', 'rule_group_rel',
         'group_id', 'rule_group_id', string='Rules', domain="[('global', '=', False)]")
@@ -297,6 +299,14 @@ class ResGroups(models.Model):
             result.update(missings)
 
         return result
+
+    @api.depends('user_ids', 'all_implied_ids.user_ids')
+    def _compute_all_user_ids(self):
+        for g in self:
+            g.all_user_ids = g.user_ids
+
+    def _search_all_user_ids(self, operator, operand):
+        return [('all_implied_by_ids.user_ids', operator, operand)]
 
 
 class ResUsersLog(models.Model):
@@ -793,7 +803,7 @@ class ResUsers(models.Model):
             # that needs to be added to existing ones as well for consistency
             added_groups = self._default_groups() - old_groups
             if added_groups:
-                internal_users = self.env.ref('base.group_user').users - self
+                internal_users = self.env.ref('base.group_user').all_user_ids - self
                 internal_users.write({'groups_id': [Command.link(gid) for gid in added_groups.ids]})
 
         if 'company_id' in values:
@@ -1906,9 +1916,9 @@ class UsersView(models.Model):
         group_multi_company = self.env.ref('base.group_multi_company', False)
         if group_multi_company:
             for user in self:
-                if len(user.company_ids) <= 1 and user.id in group_multi_company.users.ids:
+                if len(user.company_ids) <= 1 and user.id in group_multi_company.all_user_ids.ids:
                     user.write({'groups_id': [Command.unlink(group_multi_company.id)]})
-                elif len(user.company_ids) > 1 and user.id not in group_multi_company.users.ids:
+                elif len(user.company_ids) > 1 and user.id not in group_multi_company.all_user_ids.ids:
                     user.write({'groups_id': [Command.link(group_multi_company.id)]})
         return res
 
@@ -1920,9 +1930,9 @@ class UsersView(models.Model):
         user = super().new(values=values, origin=origin, ref=ref)
         group_multi_company = self.env.ref('base.group_multi_company', False)
         if group_multi_company and 'company_ids' in values:
-            if len(user.company_ids) <= 1 and user.id in group_multi_company.users.ids:
+            if len(user.company_ids) <= 1 and user.id in group_multi_company.all_user_ids.ids:
                 user.update({'groups_id': [Command.unlink(group_multi_company.id)]})
-            elif len(user.company_ids) > 1 and user.id not in group_multi_company.users.ids:
+            elif len(user.company_ids) > 1 and user.id not in group_multi_company.all_user_ids.ids:
                 user.update({'groups_id': [Command.link(group_multi_company.id)]})
         return user
 

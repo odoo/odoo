@@ -13,7 +13,7 @@ class TestGamificationCommon(TransactionCaseGamification):
     def setUp(self):
         super(TestGamificationCommon, self).setUp()
         employees_group = self.env.ref('base.group_user')
-        self.user_ids = employees_group.users
+        self.user_ids = employees_group.all_user_ids
 
         # Push demo user into the challenge before creating a new one
         self.env.ref('gamification.challenge_base_discover')._update_all()

@@ -167,10 +167,10 @@ class TestORM(TransactionCase):
         })
         self.assertTrue(user.share)
 
-        group_user.write({'users': [Command.link(user.id)]})
+        group_user.write({'user_ids': [Command.link(user.id)]})
         self.assertFalse(user.share)
 
-        group_user.write({'users': [Command.unlink(user.id)]})
+        group_user.write({'user_ids': [Command.unlink(user.id)]})
         self.assertTrue(user.share)
 
     def test_create_multi(self):
