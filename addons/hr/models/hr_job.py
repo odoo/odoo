@@ -14,9 +14,9 @@ class HrJob(models.Model):
     active = fields.Boolean(default=True)
     name = fields.Char(string='Job Position', required=True, index='trigram', translate=True)
     sequence = fields.Integer(default=10)
-    expected_employees = fields.Integer(compute='_compute_employees', string='Total Forecasted Employees', store=True,
+    expected_employees = fields.Integer(compute='_compute_employees', string='Total Forecasted Employees',
         help='Expected number of employees for this job position after new recruitment.')
-    no_of_employee = fields.Integer(compute='_compute_employees', string="Current Number of Employees", store=True,
+    no_of_employee = fields.Integer(compute='_compute_employees', string="Current Number of Employees",
         help='Number of employees currently occupying this job position.')
     no_of_recruitment = fields.Integer(string='Target', copy=False,
         help='Number of new employees you expect to recruit.', default=1)
