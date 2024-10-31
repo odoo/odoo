@@ -323,3 +323,53 @@ class TestMarketingCardSecurity(MarketingCardCommon):
         with self.assertRaises(exceptions.AccessError):
             campaign_as_other.unlink()
         campaign_as_owner.unlink()
+
+    def test_mail_render_security_body_html(self):
+        """Asserts body_html of card.campaign cannot be written to.
+
+        See _check_access_right_dynamic_template override.
+        """
+        campaign = self.campaign.with_user(self.marketing_card_manager)
+        arbitrary_qweb = """
+        <img t-attf-src="data:image/png;base64,{{object.env.ref('base.user_admin').sudo().image_128}}"/>
+        """
+
+        campaign.body_html = arbitrary_qweb
+        # Normally, this should raise an AccessError, as `body_html` is a related to `card_template_id.body`
+        # and the user does not have the write rights on `card.template`.
+        # However, the ORM doesn't forward the new value to the related,
+        # and the new value is put in the cache without error.
+        # In the real world, using the web client or the XMLRPC API,
+        # a user would have to do this operation in two requests:
+        # First set the body_html on the campaign,
+        # Then trigger the render (e.g. with `action_update_cards`),
+        # and the cache would have changed between the two operations, hence setting an arbitrary value on body_html
+        # on a campaign wouldn't work.
+        # Just ensure that the value is well not written in db, nor on the current campaign, nor on the related.
+        # Force a cache invalidation to force a re-fetch from database
+        campaign.invalidate_recordset(fnames=['body_html'])
+        self.assertTrue(arbitrary_qweb not in campaign.body_html)
+        self.assertTrue(arbitrary_qweb not in campaign.card_template_id.body)
+
+        with self.assertRaisesRegex(exceptions.AccessError, 'You are not allowed to modify'):
+            campaign.card_template_id.body = arbitrary_qweb
+
+    def test_mail_render_security_render_field_write_access(self):
+        """Check the rendered fields on card.campaign are not both rendered and writeable.
+
+        See _check_access_right_dynamic_template override.
+        """
+        CardCampaign = self.env['card.campaign'].with_user(self.marketing_card_manager)
+        # Asserts all render fields are related to card.template, not stored on the campaign itself, and readonly
+        # If one of the render fields doesn't fulfil this assumption, the `_unrestricted_rendering = True` must be
+        # reconsidered for security reasons.
+        self.assertTrue(
+            all(
+                field.related_field.model_name == 'card.template'
+                and not field.store
+                and field.readonly
+                for field in CardCampaign._fields.values() if hasattr(field, 'render_engine')
+            )
+        )
+        # Asserts the manager doesn't have write access to card.template
+        self.assertFalse(CardCampaign.card_template_id.has_access('write'))

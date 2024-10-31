@@ -88,6 +88,8 @@ class IrAttachment(models.Model):
                 "res_name",
                 "size",
                 "thread",
+                "type",
+                "url",
             ]
         if extra_fields:
             fields.extend(extra_fields)

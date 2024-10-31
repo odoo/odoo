@@ -12,6 +12,7 @@ import {
     useState,
     useRef,
 } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 import { deduceURLfromText } from "@web_editor/js/editor/odoo-editor/src/utils/sanitize";
 
 const { getDeepRange, getInSelection, EMAIL_REGEX, PHONE_REGEX } = OdooEditorLib;
@@ -47,12 +48,15 @@ export class Link extends Component {
         // all btn-* classes anyway.
     ];
     setup() {
+        this.orm = useService("orm");
         this.state = useState({});
         // We need to wait for the `onMounted` changes to be done before
         // accessing `this.$el`.
         this.mountedPromise = new Promise(resolve => this.mountedResolve = resolve);
 
-        onWillStart(() => this._updateState(this.props));
+        onWillStart(async () => {
+            await this._updateState(this.props);
+        });
         let started = false;
         onMounted(async () => {
             if (started) {
@@ -87,12 +91,7 @@ export class Link extends Component {
             await this.start();
             this.mountedResolve();
         });
-        onWillUpdateProps(async (newProps) => {
-            await this.mountedPromise;
-            this._updateState(newProps);
-            this.state.url = newProps.link.getAttribute('href') || '';
-            this._setUrl({ shouldFocus: newProps.shouldFocusUrl });
-        });
+        onWillUpdateProps(this.willUpdateProps);
     }
     /**
      * @override
@@ -104,6 +103,12 @@ export class Link extends Component {
 
         this.$el[0].querySelector('#o_link_dialog_label_input').value = this.state.originalText;
         this._setUrl({ shouldFocus: this.props.shouldFocusUrl });
+    }
+    async willUpdateProps(newProps) {
+        await this.mountedPromise;
+        await this._updateState(newProps);
+        this.state.url = newProps.link.getAttribute("href") || "";
+        this._setUrl({ shouldFocus: newProps.shouldFocusUrl });
     }
 
     //--------------------------------------------------------------------------
@@ -305,7 +310,7 @@ export class Link extends Component {
         let isDocument = false;
         let directDownload = true;
         if (urlWithoutDomain && urlWithoutDomain.startsWith("/web/content/")) {
-            isDocument = true;
+            isDocument = !this.isLastAttachmentUrl;
             directDownload = urlWithoutDomain.includes("&download=true");
         } 
         
@@ -319,11 +324,11 @@ export class Link extends Component {
             customBorderWidth: customBorderWidth,
             customBorderStyle: customBorderStyle,
             oldAttributes: this.state.oldAttributes,
-            isNewWindow: isNewWindow,
+            isNewWindow: isDocument || isNewWindow,
             doStripDomain: doStripDomain,
             isImage,
             isDocument,
-            directDownload,
+            directDownload: directDownload && isDocument,
         };
     }
     /**
@@ -506,6 +511,8 @@ export class Link extends Component {
      * @private
      */
     async _updateState(props) {
+        // TODO In master move to link_tools.
+        this.initialIsNewWindowFromProps = props.initialIsNewWindow;
         this.initialNewWindow = props.initialIsNewWindow;
 
         this.state.className = "";
@@ -559,6 +566,7 @@ export class Link extends Component {
 
         if (this.linkEl) {
             this.initialNewWindow = this.initialNewWindow || this.linkEl.target === '_blank';
+            await this._determineAttachmentType(this.linkEl.pathname);
         }
 
         const classesToKeep = [
@@ -579,6 +587,28 @@ export class Link extends Component {
         // 'o_submit' class will force anchor to be handled as a button in linkdialog.
         if (/(?:s_website_form_send|o_submit)/.test(this.state.className)) {
             this.state.isButton = true;
+        }
+    }
+    /**
+     * If the current link is an attachment: stores the attachment id in
+     * lastAttachmentId, and if not yet known fetches the type of the
+     * attachment and stores true in isLastAttachmentUrl if its type is URL.
+     */
+    async _determineAttachmentType(pathname) {
+        if (pathname?.startsWith("/web/content/")) {
+            const attachmentId = parseInt(pathname.substr("/web/content/".length));
+            if (this.lastAttachmentId === attachmentId) {
+                return;
+            }
+            this.lastAttachmentId = attachmentId;
+            // Find out about attachment type.
+            try {
+                const fetched = await this.orm.read("ir.attachment", [attachmentId], ["type"]);
+                this.isLastAttachmentUrl = fetched[0].type === "url";
+            } catch {
+                // Not a reachable attachment
+                this.isLastAttachmentUrl = undefined;
+            }
         }
     }
     /**
@@ -655,6 +685,11 @@ export class Link extends Component {
      */
     _onURLInputChange() {
         this._adaptPreview();
+        // Make sure that if an entered URL is for an attachment, its related
+        // fields visibility ultimately gets applied.
+        this._determineAttachmentType(this.state.url).then(() => {
+            this.__onURLInput();
+        });
     }
 }
 
