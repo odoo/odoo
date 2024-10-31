@@ -57,7 +57,7 @@ class HrEmployee(models.Model):
             if officer_group and vals.get('attendance_manager_id'):
                 group_updates.append((4, vals['attendance_manager_id']))
         if group_updates:
-            officer_group.sudo().write({'users': group_updates})
+            officer_group.sudo().write({'user_ids': group_updates})
         return super().create(vals_list)
 
     def write(self, values):

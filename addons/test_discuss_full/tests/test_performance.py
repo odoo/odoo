@@ -577,7 +577,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "is_editable": True,
                 "is_pinned": True,
                 "last_interest_dt": last_interest_dt,
-                "member_count": len(self.group_user.users),
+                "member_count": len(self.group_user.all_user_ids),
                 "message_needaction_counter": 0,
                 "message_needaction_counter_bus_id": bus_last_id,
                 "name": "general",
