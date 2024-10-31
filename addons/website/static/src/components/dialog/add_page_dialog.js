@@ -17,19 +17,8 @@ export class AddPageConfirmDialog extends Component {
     static template = "website.AddPageConfirmDialog";
     static props = {
         close: Function,
-        onAddPage: {
-            type: Function,
-            optional: true,
-        },
-        websiteId: Number,
-        sectionsArch: {
-            type: String,
-            optional: true,
-        },
+        createPage: Function,
         name: String,
-    };
-    static defaultProps = {
-        onAddPage: NO_OP,
     };
     static components = {
         Switch,
@@ -39,10 +28,6 @@ export class AddPageConfirmDialog extends Component {
     setup() {
         super.setup();
         useAutofocus();
-
-        this.website = useService('website');
-        this.http = useService('http');
-        this.action = useService('action');
 
         this.state = useState({
             addMenu: true,
@@ -55,27 +40,7 @@ export class AddPageConfirmDialog extends Component {
     }
 
     async addPage() {
-        const params = {'add_menu': this.state.addMenu || '', csrf_token: odoo.csrf_token};
-        if (this.props.sectionsArch) {
-            params.sections_arch = this.props.sectionsArch;
-        }
-        // Remove any leading slash.
-        const pageName = this.state.name.replace(/^\/*/, "") || _t("New Page");
-        const url = `/website/add/${encodeURIComponent(pageName)}`;
-        params['website_id'] = this.props.websiteId;
-        const data = await this.http.post(url, params);
-        if (data.view_id) {
-            this.action.doAction({
-                'res_model': 'ir.ui.view',
-                'res_id': data.view_id,
-                'views': [[false, 'form']],
-                'type': 'ir.actions.act_window',
-                'view_mode': 'form',
-            });
-        } else {
-            this.website.goToWebsite({path: data.url, edition: true, websiteId: this.props.websiteId});
-        }
-        this.props.onAddPage(this.state);
+        await this.props.createPage(this.state.name, this.state.addMenu);
     }
 }
 
@@ -409,6 +374,10 @@ export class AddPageDialog extends Component {
         websiteId: {
             type: Number,
         },
+        forcedURL: {
+            type: String,
+            optional: true,
+        },
     };
     static defaultProps = {
         onAddPage: NO_OP,
@@ -427,7 +396,6 @@ export class AddPageDialog extends Component {
         this.switchLabel = _t("Add to menu");
         this.website = useService('website');
         this.dialogs = useService("dialog");
-        this.orm = useService('orm');
         this.http = useService('http');
         this.action = useService('action');
 
@@ -445,16 +413,44 @@ export class AddPageDialog extends Component {
     }
 
     async addPage(sectionsArch, name) {
-        const props = this.props;
-        this.dialogs.add(AddPageConfirmDialog, {
-            onAddPage: () => {
-                props.onAddPage();
-                props.close();
-            },
-            websiteId: this.props.websiteId,
-            sectionsArch: sectionsArch,
-            name: name || this.lastTabName,
+        if (this.props.forcedURL) {
+            // We also skip the possibility to choose to add in menu in that
+            // case (e.g. in creation from 404 page button). The user can still
+            // create its menu afterwards if needed.
+            await this.createPage(sectionsArch, this.props.forcedURL);
+        } else {
+            this.dialogs.add(AddPageConfirmDialog, {
+                createPage: (...args) => this.createPage(sectionsArch, ...args),
+                name: name || this.lastTabName,
+            });
+        }
+    }
+
+    async createPage(sectionsArch, name = "", addMenu = false) {
+        // Remove any leading slash.
+        const pageName = name.replace(/^\/*/, "") || _t("New Page");
+        const data = await this.http.post(`/website/add/${encodeURIComponent(pageName)}`, {
+            // Needed to be passed as a (falsy) string because false would be
+            // converted to 'false' with a POST.
+            'sections_arch': sectionsArch || '',
+            'add_menu': addMenu || '',
+
+            'website_id': this.props.websiteId,
+            'csrf_token': odoo.csrf_token,
         });
+        if (data.view_id) {
+            this.action.doAction({
+                'res_model': 'ir.ui.view',
+                'res_id': data.view_id,
+                'views': [[false, 'form']],
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+            });
+        } else {
+            this.website.goToWebsite({path: data.url, edition: true, websiteId: this.props.websiteId});
+        }
+        this.props.onAddPage();
+        this.props.close();
     }
 
     getCssLinkEls() {
