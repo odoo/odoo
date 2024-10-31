@@ -3477,3 +3477,47 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time("2024-10-01"):
             allocation._update_accrual()
             self.assertAlmostEqual(allocation.number_of_days, 2.46, 2, 'Days for the upcoming month should be granted on the 1st')
+
+    def test_cache_invalidation_with_future_leaves(self):
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': '1 days every last day of the month',
+            'transition_mode': 'immediately',
+            'carryover_date': 'year_start',
+            'accrued_gain_time': 'end',
+            'level_ids':
+                [(0, 0, {
+                    'start_type': 'day',
+                    'start_count': 0,
+                    'added_value_type': 'day',
+                    'added_value': 1,
+                    'frequency': 'monthly',
+                    'cap_accrued_time': False,
+                    'action_with_unused_accruals': 'all',
+                    'first_day': 31,
+                })
+            ],
+        })
+
+        with freeze_time('2024-06-30'):
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp_id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+            })
+            allocation.action_validate()
+            allocation._update_accrual()
+
+            leave = self.env['hr.leave'].create({
+                'employee_id': self.employee_emp_id,
+                'holiday_status_id': self.leave_type.id,
+                'request_date_from': '2024-09-02',
+                'request_date_to': '2024-09-03',
+            })
+            leave.action_validate()
+
+        with freeze_time('2024-07-31'):
+            allocation._update_accrual()
+            self.assertEqual(allocation.number_of_days, 1, 'Days should be allocated even when leave is taken in the future')
