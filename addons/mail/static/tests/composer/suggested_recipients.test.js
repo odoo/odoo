@@ -228,10 +228,10 @@ test("suggest recipient on 'Send message' composer (all checked by default)", as
     await click("button", { text: "Send message" });
     await contains(".o-mail-SuggestedRecipient input:checked", { count: 2 });
     expect(
-        $(".o-mail-SuggestedRecipient:not([data-partner-id]) input[type=checkbox]")[0]
+        ".o-mail-SuggestedRecipient:not([data-partner-id]) input[type=checkbox]:first"
     ).toBeChecked();
     expect(
-        $(`.o-mail-SuggestedRecipient[data-partner-id="${partnerId}"] input[type=checkbox]`)[0]
+        `.o-mail-SuggestedRecipient[data-partner-id="${partnerId}"] input[type=checkbox]:first`
     ).toBeChecked();
     // Ensure that partner `john@test.be` is created while sending the message (not before)
     let partners = pyEnv["res.partner"].search_read([["email", "=", "john@test.be"]]);
@@ -252,7 +252,7 @@ test("suggest recipient on 'Send message' composer (recipient checked/unchecked)
     await click("button", { text: "Send message" });
     await contains(".o-mail-SuggestedRecipient input:checked", { count: 1 });
     expect(
-        $(".o-mail-SuggestedRecipient:not([data-partner-id]) input[type=checkbox]")[0]
+        ".o-mail-SuggestedRecipient:not([data-partner-id]) input[type=checkbox]:first"
     ).toBeChecked();
     // Ensure that partner `john@test.be` is created before sending the message
     await click(".o-mail-SuggestedRecipient input");

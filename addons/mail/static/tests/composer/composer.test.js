@@ -29,6 +29,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { Composer } from "@mail/core/common/composer";
+import { queryFirst } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -199,7 +200,7 @@ test("Selection is kept when changing channel and going back to original channel
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Foo");
     // simulate selection of all the content by keyboard
-    const textarea = $(".o-mail-Composer-input")[0];
+    const textarea = queryFirst(".o-mail-Composer-input");
     textarea.setSelectionRange(0, textarea.value.length);
     await tick();
     await click(":nth-child(2 of .o-mail-DiscussSidebarChannel-container)");
@@ -416,9 +417,9 @@ test("composer suggestion should match with input selection", async () => {
     await contains(".o-mail-Composer-input", { value: "#Mario Party " });
     await insertText(".o-mail-Composer-input", "@");
     await contains(".o-mail-Composer-suggestion", { text: "Luigi" });
-    $(".o-mail-Composer-input")[0].setSelectionRange(3, 3);
+    queryFirst(".o-mail-Composer-input").setSelectionRange(3, 3);
     await contains(".o-mail-Composer-suggestion", { text: "Mario Party" });
-    const textarea = $(".o-mail-Composer-input")[0];
+    const textarea = queryFirst(".o-mail-Composer-input");
     textarea.setSelectionRange(textarea.value.length, textarea.value.length);
     await contains(".o-mail-Composer-suggestion", { text: "Luigi" });
 });
