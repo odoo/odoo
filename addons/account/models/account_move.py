@@ -196,6 +196,13 @@ class AccountMove(models.Model):
         copy=True,
     )
 
+    # === Link to the partial that created this exchange move === #
+    exchange_diff_partial_ids = fields.One2many(
+        comodel_name='account.partial.reconcile',
+        inverse_name='exchange_move_id',
+        string='Related reconciliation',
+    )
+
     # === Payment fields === #
     origin_payment_id = fields.Many2one(  # the payment this is the journal entry of
         comodel_name='account.payment',
@@ -1162,8 +1169,7 @@ class AccountMove(models.Model):
                 reconciliation_vals = [x for x in reconciliation_vals if x['source_line_account_type'] in ('asset_receivable', 'liability_payable')]
 
             new_pmt_state = 'not_paid' if invoice.payment_state != 'blocked' else 'blocked'
-            if invoice.state == 'posted':
-
+            if invoice.state == 'posted' or (invoice.state == 'draft' and not currency.is_zero(invoice.amount_total)):
                 # Posted invoice/expense entry.
                 if payment_state_matters:
 
@@ -1192,18 +1198,18 @@ class AccountMove(models.Model):
                                             and reverse_move_types == {'entry'})
                             if in_reverse or out_reverse or misc_reverse:
                                 new_pmt_state = 'reversed'
-                    elif invoice.matched_payment_ids.filtered(lambda p: not p.move_id and p.state == 'in_process'):
+                    elif invoice.state == 'posted' and invoice.matched_payment_ids.filtered(lambda p: not p.move_id and p.state == 'in_process'):
                         new_pmt_state = invoice._get_invoice_in_payment_state()
                     elif reconciliation_vals:
                         new_pmt_state = 'partial'
-                    elif invoice.matched_payment_ids.filtered(lambda p: not p.move_id and p.state == 'paid'):
+                    elif invoice.state == 'posted' and invoice.matched_payment_ids.filtered(lambda p: not p.move_id and p.state == 'paid'):
                         new_pmt_state = invoice._get_invoice_in_payment_state()
             invoice.payment_state = new_pmt_state
 
     @api.depends('payment_state', 'state')
     def _compute_status_in_payment(self):
         for move in self:
-            move.status_in_payment = move.state if move.state in ('draft', 'cancel') else move.payment_state
+            move.status_in_payment = move.state if move.state == 'cancel' else move.payment_state
 
     @api.depends('matched_payment_ids')
     def _compute_payment_count(self):
@@ -3356,6 +3362,7 @@ class AccountMove(models.Model):
         self._set_next_made_sequence_gap(True)
         self = self.with_context(skip_invoice_sync=True, dynamic_unlink=True)  # no need to sync to delete everything
         logger_message = self._get_unlink_logger_message()
+        self.line_ids.remove_move_reconcile()
         self.line_ids.unlink()
         res = super().unlink()
         if logger_message:
@@ -4803,7 +4810,9 @@ class AccountMove(models.Model):
         self.ensure_one()
         lock_date = self.company_id._get_user_fiscal_lock_date(self.journal_id)
         is_part_of_audit_trail = self.posted_before and self.company_id.check_account_audit_trail
-        return not self.inalterable_hash and self.date > lock_date and not is_part_of_audit_trail
+        posted_caba_entry = self.state == 'posted' and (self.tax_cash_basis_rec_id or self.tax_cash_basis_origin_move_id)
+        posted_exchange_diff_entry = self.state == 'posted' and self.exchange_diff_partial_ids
+        return not self.inalterable_hash and self.date > lock_date and not is_part_of_audit_trail and not posted_caba_entry and not posted_exchange_diff_entry
 
     def _is_protected_by_audit_trail(self):
         return any(move.posted_before and move.company_id.check_account_audit_trail for move in self)
@@ -4947,6 +4956,35 @@ class AccountMove(models.Model):
 
         # reconcile if state is in draft and move has reversal_entry_id set
         draft_reverse_moves = to_post.filtered(lambda move: move.reversed_entry_id and move.reversed_entry_id.state == 'posted')
+
+        # deal with the eventually related draft moves to the ones we want to post
+        partials_to_unlink = self.env['account.partial.reconcile']
+
+        for aml in self.line_ids:
+            for partials, counterpart_field in [(aml.matched_debit_ids, 'debit_move_id'), (aml.matched_credit_ids, 'credit_move_id')]:
+                for partial in partials:
+                    counterpart_move =  partial[counterpart_field].move_id
+                    if counterpart_move.state == 'posted' or counterpart_move in to_post:
+                        if partial.exchange_move_id:
+                            to_post |= partial.exchange_move_id
+                            # If the draft invoice changed since it was reconciled, in a way that would affect the exchange diff,
+                            # any existing reconcilation and draft exchange move would be deleted already (to force the user to 
+                            # re-do the reconciliation).
+                            # This is ensured by the the checks in env['account.move.line'].write(): 
+                            #     see env[account.move.line]._get_lock_date_protected_fields()['reconciliation']
+
+                        if partial._get_draft_caba_move_vals() != partial.draft_caba_move_vals:
+                            # draft invoice changed since it was reconciled, the cash basis entry isn't correct anymore
+                            # and the user has to re-do the reconciliation. Existing draft cash basis move will be unlinked
+                            partials_to_unlink |= partial
+
+                        elif move.tax_cash_basis_created_move_ids:
+                            to_post |= move.tax_cash_basis_created_move_ids.filtered(lambda m: m.tax_cash_basis_rec_id == partial)
+                        elif counterpart_move.tax_cash_basis_created_move_ids:
+                            to_post |= counterpart_move.tax_cash_basis_created_move_ids.filtered(lambda m: m.tax_cash_basis_rec_id == partial)
+
+        if partials_to_unlink:
+            partials_to_unlink.unlink()
 
         to_post.write({
             'state': 'posted',
