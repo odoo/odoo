@@ -363,7 +363,17 @@
                 <div class="col-4">
                     <img t-if="company.logo" class="o_company_logo_big" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
                 </div>
+<<<<<<< 18.0
                 <div class="col-8 text-end mb4">
+||||||| 77dd53c93642f92427d0289c13446684e06c6e07
+                <div class="col-6 text-end mb4">
+                    <div class="mt0 h4" t-if="company.report_header" t-field="company.report_header">Company tagline</div>
+=======
+                <div class="col-6 text-end mb4">
+                    <t t-if="company.report_header and company.report_header.strip() != '&lt;p&gt;&lt;br&gt;&lt;/p&gt;'">
+                        <div class="mt0 h4" t-field="company.report_header"/>
+                    </t>
+>>>>>>> 64f5f45f0792ff37e82f8bbd671f7743860cbd1e
                     <div name="company_address" class="float-end mb4">
                         <ul class="list-unstyled" name="company_address_list">
                             <li t-if="company.is_company_details_empty"><span t-field="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'>
