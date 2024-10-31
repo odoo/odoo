@@ -26,6 +26,11 @@ export class BoothRegistration extends Interaction {
                 "d-none": !this.inError,
             }),
         },
+        ".o_wbooth_registration_error_signin": {
+            "t-att-class": () => ({
+                "d-none": !this.inSigninError,
+            }),
+        },
         "button.o_wbooth_registration_submit": {
             "t-att-disabled": () => this.isSelectionEmpty,
         },
@@ -128,6 +133,12 @@ export class BoothRegistration extends Interaction {
         }
         if (errors.includes("boothCategoryError")) {
             errorMessages.push(_t("The booth category doesn't exist."));
+        }
+        if (errors.includes('existingPartnerError')) {
+            errorMessages.push(_t("It looks like your email is linked to an existing account."));
+            this.inSigninError = true;
+        } else {
+            this.inSigninError = false;
         }
 
         const errorMessageEl = this.el.querySelector(".o_wbooth_registration_error_message");
