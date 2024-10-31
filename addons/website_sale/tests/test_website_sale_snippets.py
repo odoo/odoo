@@ -2,7 +2,7 @@
 
 import logging
 
-from odoo.tests import HttpCase, loaded_demo_data, tagged
+from odoo.tests import HttpCase, tagged
 
 from odoo.addons.website.tools import MockRequest
 
@@ -14,9 +14,30 @@ _logger = logging.getLogger(__name__)
 class TestSnippets(HttpCase):
 
     def test_01_snippet_products_edition(self):
-        if not loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
+        self.env['product.product'].create({
+            'name': 'Test Product',
+            'website_published': True,
+            'sale_ok': True,
+            'list_price': 500,
+        })
+        self.env['product.product'].create({
+            'name': 'Test Product 2',
+            'website_published': True,
+            'sale_ok': True,
+            'list_price': 500,
+        })
+        self.env['product.product'].create({
+            'name': 'Test Product 3',
+            'website_published': True,
+            'sale_ok': True,
+            'list_price': 500,
+        })
+        self.env['product.product'].create({
+            'name': 'Test Product 4',
+            'website_published': True,
+            'sale_ok': True,
+            'list_price': 500,
+        })
         self.start_tour('/', 'website_sale.snippet_products', login='admin')
 
     def test_02_snippet_products_remove(self):
