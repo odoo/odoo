@@ -253,7 +253,7 @@ class L10nMyEDITestSubmission(AccountTestInvoicingCommon):
         self._assert_node_values(
             root,
             'cac:BillingReference/cac:InvoiceDocumentReference/cbc:ID',
-            'Document Internal ID',
+            basic_invoice.name,
         )
         self._assert_node_values(
             root,
