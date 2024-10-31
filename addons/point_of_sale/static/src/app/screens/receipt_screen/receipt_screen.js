@@ -106,6 +106,7 @@ export class ReceiptScreen extends Component {
             });
             return Promise.reject();
         }
+<<<<<<< 18.0
         const fullTicketImage = await this.generateTicketImage();
         const basicTicketImage = await this.generateTicketImage(true);
         await this.pos.data.call("pos.order", action, [
@@ -114,6 +115,33 @@ export class ReceiptScreen extends Component {
             fullTicketImage,
             this.pos.config.basic_receipt ? basicTicketImage : null,
         ]);
+||||||| 4992b8036f8d213616de1f5c0ee4876396c1c51a
+        const ticketImage = await this.renderer.toJpeg(
+            OrderReceipt,
+            {
+                data: this.pos.orderExportForPrinting(this.pos.get_order()),
+                formatCurrency: this.env.utils.formatCurrency,
+            },
+            { addClass: "pos-receipt-print" }
+        );
+        await this.pos.data.call("pos.order", action, [[order.id], this.state.input, ticketImage]);
+    }
+    isValidEmail(email) {
+        return email && /^.+@.+$/.test(email);
+=======
+        const ticketImage = await this.renderer.toJpeg(
+            OrderReceipt,
+            {
+                data: this.pos.orderExportForPrinting(this.pos.get_order()),
+                formatCurrency: this.env.utils.formatCurrency,
+            },
+            { addClass: "pos-receipt-print", addEmailMargins: true }
+        );
+        await this.pos.data.call("pos.order", action, [[order.id], this.state.input, ticketImage]);
+    }
+    isValidEmail(email) {
+        return email && /^.+@.+$/.test(email);
+>>>>>>> 99d37be84b8ff40b477655c34449263af7c30af0
     }
 }
 
