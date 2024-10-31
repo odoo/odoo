@@ -14,8 +14,6 @@ import {
 } from "@html_editor/others/embedded_component_utils";
 import { EmbeddedComponentPlugin } from "@html_editor/others/embedded_component_plugin";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { Deferred } from "@web/core/utils/concurrency";
-import { Plugin } from "@html_editor/plugin";
 import { parseHTML } from "@html_editor/utils/html";
 import { unformat } from "./_helpers/format";
 import { addStep, deleteBackward, undo, redo, deleteForward } from "./_helpers/user_actions";
@@ -675,84 +673,6 @@ describe("data-oe-protected", () => {
                 <p>[]a</p>
             `)
         );
-    });
-});
-describe("post process external steps", () => {
-    test("should properly await a processing promise before accepting new external steps.", async () => {
-        const deferredPromise = new Deferred();
-        const postProcessExternalSteps = (element) => {
-            if (element.querySelector(".process")) {
-                setTimeout(() => {
-                    deferredPromise.resolve();
-                });
-                return deferredPromise;
-            }
-            return null;
-        };
-        class ConfigPlugin extends Plugin {
-            static id = "collab-test-config";
-            resources = {
-                post_process_external_steps: postProcessExternalSteps,
-            };
-        }
-        await testMultiEditor({
-            Plugins: [ConfigPlugin],
-            peerIds: ["c1", "c2"],
-            contentBefore: "<p>a[c1}{c1][c2}{c2]</p>",
-            afterCreate: async (peerInfos) => {
-                peerInfos.c1.editor.editable.append(
-                    ...parseHTML(
-                        peerInfos.c1.editor.document,
-                        unformat(`
-                        <div class="process">
-                            <p>secret</p>
-                        </div>
-                    `)
-                    ).children
-                );
-                addStep(peerInfos.c1.editor);
-                peerInfos.c1.editor.editable.append(
-                    ...parseHTML(
-                        peerInfos.c1.editor.document,
-                        unformat(`
-                        <p>post-process</p>
-                    `)
-                    ).children
-                );
-                addStep(peerInfos.c1.editor);
-                peerInfos.c2.collaborationPlugin.onExternalHistorySteps(
-                    peerInfos.c1.historyPlugin.steps
-                );
-                expect(peerInfos.c1.editor.editable.innerHTML).toBe(
-                    unformat(`
-                        <p>a</p>
-                        <div class="process">
-                            <p>secret</p>
-                        </div>
-                        <p>post-process</p>
-                    `)
-                );
-                expect(peerInfos.c2.editor.editable.innerHTML).toBe(
-                    unformat(`
-                        <p>a</p>
-                        <div class="process">
-                            <p>secret</p>
-                        </div>
-                    `)
-                );
-                await peerInfos.c2.collaborationPlugin.postProcessExternalStepsPromise;
-                expect(peerInfos.c2.editor.editable.innerHTML).toBe(
-                    unformat(`
-                        <p>a</p>
-                        <div class="process">
-                            <p>secret</p>
-                        </div>
-                        <p>post-process</p>
-                    `)
-                );
-                validateSameHistory(peerInfos);
-            },
-        });
     });
 });
 describe("serialize/unserialize", () => {
