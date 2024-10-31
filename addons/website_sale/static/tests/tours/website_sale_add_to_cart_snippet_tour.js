@@ -20,27 +20,27 @@ wTourUtils.registerWebsitePreviewTour('add_to_cart_snippet_tour', {
 
         // Basic product with no variants
         ...wTourUtils.clickOnSnippet({id: 's_add_to_cart'}),
-        ...wTourUtils.selectElementInWeSelectWidget('product_template_picker_opt', 'Pedal Bin', true),
+        ...wTourUtils.selectElementInWeSelectWidget('product_template_picker_opt', 'Product No Variant', true),
         ...wTourUtils.clickOnSave(),
         wTourUtils.clickOnElement('add to cart button', ':iframe .s_add_to_cart_btn'),
 
         // Product with 2 variants with visitor choice (will open modal)
         ...editAddToCartSnippet(),
-        ...wTourUtils.selectElementInWeSelectWidget('product_template_picker_opt', 'Conference Chair', true),
+        ...wTourUtils.selectElementInWeSelectWidget('product_template_picker_opt', 'Product Yes Variant 1', true),
         ...wTourUtils.clickOnSave(),
         wTourUtils.clickOnElement('add to cart button', ':iframe .s_add_to_cart_btn'),
         wTourUtils.clickOnElement('continue shopping', ':iframe span:contains(Continue Shopping)'),
 
         // Product with 2 variants with a variant selected
         ...editAddToCartSnippet(),
-        ...wTourUtils.selectElementInWeSelectWidget('product_template_picker_opt', 'Conference Chair', true),
-        ...wTourUtils.selectElementInWeSelectWidget('product_variant_picker_opt', 'Conference Chair (Aluminium)'),
+        ...wTourUtils.selectElementInWeSelectWidget('product_template_picker_opt', 'Product Yes Variant 2', true),
+        ...wTourUtils.selectElementInWeSelectWidget('product_variant_picker_opt', 'Product Yes Variant 2 (Pink)'),
         ...wTourUtils.clickOnSave(),
         wTourUtils.clickOnElement('add to cart button', ':iframe .s_add_to_cart_btn'),
 
         // Basic product with no variants and action=buy now
         ...editAddToCartSnippet(),
-        ...wTourUtils.selectElementInWeSelectWidget('product_template_picker_opt', 'Pedal Bin', true),
+        ...wTourUtils.selectElementInWeSelectWidget('product_template_picker_opt', 'Product No Variant', true),
         ...wTourUtils.selectElementInWeSelectWidget('action_picker_opt', 'Buy Now'),
         ...wTourUtils.clickOnSave(),
         wTourUtils.clickOnElement('add to cart button', ':iframe .s_add_to_cart_btn'),
@@ -52,8 +52,8 @@ wTourUtils.registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         wTourUtils.assertPathName('/shop/payment', ':iframe a[href="/shop/cart"]'),
 
         wsTourUtils.goToCart({quantity: 4, backend: true}),
-        wsTourUtils.assertCartContains({productName: 'Pedal Bin', backend: true}),
-        wsTourUtils.assertCartContains({productName: 'Conference Chair (Steel)', backend: true}),
-        wsTourUtils.assertCartContains({productName: 'Conference Chair (Aluminium)', backend: true}),
+        wsTourUtils.assertCartContains({productName: 'Product No Variant', backend: true}),
+        wsTourUtils.assertCartContains({productName: 'Product Yes Variant 1 (Red)', backend: true}),
+        wsTourUtils.assertCartContains({productName: 'Product Yes Variant 2 (Pink)', backend: true}),
     ],
 );
