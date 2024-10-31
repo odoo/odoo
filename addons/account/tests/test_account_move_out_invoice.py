@@ -4016,6 +4016,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
                 # Date of the exchange move should be the end of the month/year of the payment
                 self.assertEqual(exchange_move.date, fields.Date.to_date(expected_date))
+                self.assertEqual(exchange_move.state, 'posted')
 
                 line_receivable.remove_move_reconcile()
 

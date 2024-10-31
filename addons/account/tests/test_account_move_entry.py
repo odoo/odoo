@@ -698,6 +698,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
             },
         ]
         self.assertRecordValues(caba_move.line_ids, expected_values)
+        self.assertEqual(caba_move.state, 'posted')
         # unreconcile
         debit_aml = move.line_ids.filtered('debit')
         debit_aml.remove_move_reconcile()
@@ -709,6 +710,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
                 'credit': value['debit'],
             })
         self.assertRecordValues(reversed_caba_move.line_ids, expected_values)
+        self.assertEqual(reversed_caba_move.state, 'posted')
 
     def _get_cache_count(self, model_name='account.move', field_name='name'):
         model = self.env[model_name]

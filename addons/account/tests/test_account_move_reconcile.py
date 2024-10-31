@@ -2657,15 +2657,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
     # Test creation of extra journal entries during the reconciliation to
     # deal with taxes that are exigible on payment (cash basis).
     # -------------------------------------------------------------------------
-
-    def test_reconcile_cash_basis_workflow_single_currency(self):
-        ''' Test the generated journal entries during the reconciliation to manage the cash basis taxes.
-        Also,
-        - Test the case when there is multiple receivable/payable accounts.
-        - Test the reconciliation with tiny amounts.
-        - Check there is no rounding issue when making the percentage.
-        - Check there is no lost cents when the journal entry is fully reconciled.
-        '''
+    def _prepare_cash_basis_move(self):
         self.env.company.tax_exigibility = True
         self.cash_basis_tax_tiny_amount.amount = 0.01
         cash_basis_move = self.env['account.move'].with_context(skip_invoice_sync=True).create({
@@ -2718,8 +2710,10 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             ]
         })
         cash_basis_move.line_ids.flush_model()
+        return cash_basis_move
 
-        payment_move = self.env['account.move'].create({
+    def _prepare_cash_basis_payment(self):
+        return self.env['account.move'].create({
             'move_type': 'entry',
             'date': '2017-01-01',
             'line_ids': [
@@ -2732,6 +2726,20 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             ]
         })
 
+    def _prepare_cash_basis_move_and_payment(self):
+        cash_basis_move = self._prepare_cash_basis_move()
+        payment_move = self._prepare_cash_basis_payment()
+        return cash_basis_move, payment_move
+
+    def test_reconcile_cash_basis_workflow_single_currency(self):
+        ''' Test the generated journal entries during the reconciliation to manage the cash basis taxes.
+        Also,
+        - Test the case when there is multiple receivable/payable accounts.
+        - Test the reconciliation with tiny amounts.
+        - Check there is no rounding issue when making the percentage.
+        - Check there is no lost cents when the journal entry is fully reconciled.
+        '''
+        cash_basis_move, payment_move = self._prepare_cash_basis_move_and_payment()
         (cash_basis_move + payment_move).action_post()
 
         # Initial amounts by accounts:
@@ -2875,6 +2883,289 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             (self.tax_account_1,                    -33.33,     -33.33),
             (self.tax_account_2,                    -0.01,      -0.01),
         ])
+
+    def test_reconcile_draft_cash_basis_surprise_use_case(self):
+        ''' Use case: a reconciliation is made on a draft invoice, with no caba move created, but a cash basis tax is added
+            later on the invoice. When it gets posted, the reconciliation should be removed so that redoing the reconcilation 
+            will create the caba move.
+        '''
+        self.env.company.tax_exigibility = True
+        caba_tax = self.env['account.tax'].create({
+            'name': 'cash basis 20%',
+            'type_tax_use': 'purchase',
+            'amount': 20,
+            'tax_exigibility': 'on_payment',
+            'analytic': True,
+            'cash_basis_transition_account_id': self.cash_basis_transfer_account.id,
+            'invoice_repartition_line_ids': [
+                Command.create({
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                Command.create({
+                    'factor_percent': 30,
+                    'account_id': self.tax_account_1.id,
+                    'repartition_type': 'tax',
+                    'use_in_tax_closing': True,
+                }),
+                Command.create({
+                    'factor_percent': 70,
+                    'account_id': self.tax_account_2.id,
+                    'repartition_type': 'tax',
+                    'use_in_tax_closing': False,
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                Command.create({
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                Command.create({
+                    'factor_percent': 30,
+                    'account_id': self.tax_account_1.id,
+                    'repartition_type': 'tax',
+                    'use_in_tax_closing': True,
+                }),
+                Command.create({
+                    'factor_percent': 70,
+                    'account_id': self.tax_account_2.id,
+                    'repartition_type': 'tax',
+                    'use_in_tax_closing': False,
+                }),
+            ],
+        })
+        tax = self.env['account.tax'].create({
+            'name': 'tax 20%',
+            'type_tax_use': 'purchase',
+            'amount': 20,
+            'tax_exigibility': 'on_invoice',
+            'analytic': True,
+            'invoice_repartition_line_ids': [
+                Command.create({
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                Command.create({
+                    'factor_percent': 30,
+                    'account_id': self.tax_account_1.id,
+                    'repartition_type': 'tax',
+                    'use_in_tax_closing': True,
+                }),
+                Command.create({
+                    'factor_percent': 70,
+                    'account_id': self.tax_account_2.id,
+                    'repartition_type': 'tax',
+                    'use_in_tax_closing': False,
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                Command.create({
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                Command.create({
+                    'factor_percent': 30,
+                    'account_id': self.tax_account_1.id,
+                    'repartition_type': 'tax',
+                    'use_in_tax_closing': True,
+                }),
+                Command.create({
+                    'factor_percent': 70,
+                    'account_id': self.tax_account_2.id,
+                    'repartition_type': 'tax',
+                    'use_in_tax_closing': False,
+                }),
+            ],
+        })
+        inv = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2019-06-20',
+            'date': '2019-06-20',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.company_data['currency'].id,
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 100,
+                'tax_ids': [Command.set(tax.ids)],
+            })],
+        })
+        payment = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=inv.ids).create({
+            'payment_date': inv.date,
+        })._create_payments()
+
+        # initially, no caba move is created because the tax on the draft invoice isn't cash basis
+        inv_rec_line = inv.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
+        self.assertTrue(inv_rec_line.full_reconcile_id)
+        tax_cash_basis_moves = self._get_caba_moves(inv)
+        self.assertEqual(len(tax_cash_basis_moves), 0)
+
+        # modify the tax on the invoice and set a cash basis one. Then post
+        inv.invoice_line_ids[0].tax_ids = [Command.set(caba_tax.ids)]
+        inv.action_post()
+
+        # that should have broken the reconciliation, and after it's redone the caba should be created
+        self.assertFalse(inv_rec_line.full_reconcile_id)
+        receivable_lines = (inv + payment.move_id).line_ids\
+            .filtered(lambda line: line.account_id.account_type == 'asset_receivable')
+        receivable_lines.reconcile()
+        self.assertTrue(inv_rec_line.full_reconcile_id)
+        tax_cash_basis_moves = self._get_caba_moves(inv)
+        self.assertEqual(len(tax_cash_basis_moves), 1)
+        self.assertEqual(tax_cash_basis_moves.state, 'posted')
+
+    def test_reconcile_draft_cash_basis_use_case(self):
+        ''' Test that no user error is raised when trying to generate cash basis entries from reconciling draft moves, 
+            instead the cash basis entry is created normally but stays in draft until all the moves are posted.
+        '''
+        cash_basis_move = self._prepare_cash_basis_move()
+        payment_move_1 = self.env['account.move'].create({
+            'move_type': 'entry',
+            'date': '2017-01-01',
+            'line_ids': [
+                Command.create({'debit': 0.0,       'credit': 33.34,    'account_id': self.extra_receivable_account_1.id}),
+                Command.create({'debit': 33.34,     'credit': 0.0,      'account_id': self.company_data['default_account_revenue'].id}),
+            ]
+        })
+        payment_move_1.action_post()
+        payment_move_2 = self.env['account.move'].create({
+            'move_type': 'entry',
+            'date': '2017-01-01',
+            'line_ids': [
+                Command.create({'debit': 0.0,       'credit': 11.11,    'account_id': self.extra_receivable_account_1.id}),
+                Command.create({'debit': 11.11,     'credit': 0.0,      'account_id': self.company_data['default_account_revenue'].id}),
+            ]
+        })
+
+        # Initial amounts by accounts:
+        self.assertAmountsGroupByAccount([
+            # Account                               Balance     Amount Currency
+            (self.cash_basis_transfer_account,      -33.34,     -33.34),
+            (self.tax_account_1,                    0.0,        0.0),
+            (self.tax_account_2,                    0.0,        0.0),
+            (self.cash_basis_base_account,          0.0,        0.0),
+        ])
+
+        # There is 44.45 + 44.45 + 44.45 + 0.01 = 133.36 to reconcile on 'cash_basis_move'.
+        # Reconciling all the amount in extra_receivable_account_1 should compute 2 percentages:
+        # 33.34 / 133.36 = 0.25
+        # 11.11 / 133.36 = 0.083308338
+
+        receivable_lines_1 = (cash_basis_move + payment_move_1 + payment_move_2).line_ids\
+            .filtered(lambda line: line.account_id == self.extra_receivable_account_1)
+        receivable_lines_1.reconcile()
+        tax_cash_basis_moves = self._get_caba_moves(receivable_lines_1.move_id)
+
+        self.assertFullReconcile(receivable_lines_1.full_reconcile_id, receivable_lines_1)
+        self.assertEqual(len(tax_cash_basis_moves), 2)
+        self.assertEqual(len(tax_cash_basis_moves.filtered(lambda m: m.state == 'posted')), 0)
+        self.assertRecordValues(tax_cash_basis_moves[0].line_ids, [
+            # Base amount of tax_1 & tax_2:
+            {'debit': 8.33,     'credit': 0.0,      'account_id': self.cash_basis_base_account.id},
+            {'debit': 0.0,      'credit': 8.33,     'account_id': self.cash_basis_base_account.id},
+            # tax_1:
+            {'debit': 2.78,     'credit': 0.0,      'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 0.0,      'credit': 2.78,     'account_id': self.tax_account_1.id},
+            # tax_2:
+            {'debit': 0.0,      'credit': 0.0,      'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 0.0,      'credit': 0.0,      'account_id': self.tax_account_2.id},
+        ])
+        self.assertRecordValues(tax_cash_basis_moves[1].line_ids, [
+            # Base amount of tax_1 & tax_2:
+            {'debit': 25.0,     'credit': 0.0,      'account_id': self.cash_basis_base_account.id},
+            {'debit': 0.0,      'credit': 25.0,     'account_id': self.cash_basis_base_account.id},
+            # tax_1:
+            {'debit': 8.33,     'credit': 0.0,      'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 0.0,      'credit': 8.33,     'account_id': self.tax_account_1.id},
+            # tax_2:
+            {'debit': 0.0,      'credit': 0.0,      'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 0.0,      'credit': 0.0,      'account_id': self.tax_account_2.id},
+        ])
+
+        self.assertAmountsGroupByAccount([
+            # Account                               Balance     Amount Currency
+            (self.cash_basis_transfer_account,      -22.23,     -22.23),
+            (self.tax_account_1,                    -11.11,     -11.11),
+            (self.tax_account_2,                    0.0,        0.0),
+        ])
+
+        cash_basis_move.action_post()
+        self.assertEqual(len(tax_cash_basis_moves.filtered(lambda m: m.state == 'posted')), 1)
+        payment_move_2.action_post()
+        self.assertEqual(len(tax_cash_basis_moves.filtered(lambda m: m.state == 'posted')), 2)
+
+    def test_reconcile_draft_exchange_diff_use_case(self):
+        comp_curr = self.company_data['currency']
+        foreign_curr = self.other_currency
+        invoice = self.create_line_for_reconciliation(40.0, 40.0, comp_curr, '2016-01-01')
+        payment_1 = self.create_line_for_reconciliation(-30.0, -60.0, foreign_curr, '2017-01-01')
+        payment_2 = self.create_line_for_reconciliation(-30.0, -60.0, foreign_curr, '2017-01-01')
+        (invoice.move_id + payment_2.move_id).button_draft()
+        amls = invoice + payment_1 + payment_2
+        amls.reconcile()
+        partials = self._get_partials(amls)
+        self.assertEqual(len(partials), 4) # 2 payments + 2 exchange diff
+        self.assertRecordValues(partials, [
+            {
+                'amount': 20.0,
+                'debit_amount_currency': 20.0,
+                'credit_amount_currency': 60.0,
+                'debit_move_id': invoice.id,
+                'credit_move_id': payment_1.id,
+            },
+            {
+                'amount': 20.0,
+                'debit_amount_currency': 20.0,
+                'credit_amount_currency': 60.0,
+                'debit_move_id': invoice.id,
+                'credit_move_id': payment_2.id,
+            },
+            {
+                'amount': 10.0,
+                'debit_amount_currency': 0.0,
+                'credit_amount_currency': 0.0,
+                'debit_move_id': partials[0].exchange_move_id.line_ids[0].id,
+                'credit_move_id': payment_1.id,
+            },
+            {
+                'amount': 10.0,
+                'debit_amount_currency': 0.0,
+                'credit_amount_currency': 0.0,
+                'debit_move_id': partials[1].exchange_move_id.line_ids[0].id,
+                'credit_move_id': payment_2.id,
+            },
+        ])
+        # we only check the first exchange move but the 2 are the same
+        self.assertRecordValues(partials[0].exchange_move_id, [{'date': fields.Date.from_string('2017-01-31'), 'state': 'draft'}])
+        self.assertRecordValues(partials[0].exchange_move_id.line_ids, [
+            {
+                'debit': 10.0,
+                'credit': 0.0,
+                'amount_currency': 0.0,
+                'currency_id': foreign_curr.id,
+                'account_id': payment_1.account_id.id,
+            },
+            {
+                'debit': 0.0,
+                'credit': 10.0,
+                'amount_currency': 0.0,
+                'currency_id': foreign_curr.id,
+                'account_id': self.exch_income_account.id,
+            },
+        ])
+        self.assertRecordValues(amls, [
+            {'amount_residual': 0.0,        'amount_residual_currency': 0.0,    'reconciled': True},
+            {'amount_residual': 0.0,        'amount_residual_currency': 0.0,    'reconciled': True},
+            {'amount_residual': 0.0,        'amount_residual_currency': 0.0,    'reconciled': True},
+        ])
+        # only payment_1 is posted so far, both exchange moves are draft
+        exchange_moves = partials.exchange_move_id
+        self.assertEqual(exchange_moves.mapped('state'), ['draft', 'draft'])
+        # posting the invoice should trigger the first exchange move to be posted
+        invoice.move_id.action_post()
+        self.assertEqual(exchange_moves.mapped('state'), ['posted', 'draft'])
+        # posting the payment_2 should trigger the second exchange move to be posted
+        payment_2.move_id.action_post()
+        self.assertEqual(exchange_moves.mapped('state'), ['posted', 'posted'])
 
     def test_reconcile_cash_basis_workflow_multi_currency(self):
         ''' Same as before with a foreign currency. '''
