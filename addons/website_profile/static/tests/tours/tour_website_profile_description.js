@@ -8,7 +8,7 @@ odoo.define('website_profile.tour_website_profile_description', function (requir
             url: "/profile/users",
         }, [{
             content: "Click on one user profile card",
-            trigger: "div[onclick]",
+            trigger: "div[onclick]:contains(\"test_user\")",
         },{
             content: "Edit profile",
             trigger: "a:contains('EDIT PROFILE')",
