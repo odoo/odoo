@@ -271,6 +271,7 @@ class MrpProduction(models.Model):
         string='Date Category', store=False,
         search='_search_date_category', readonly=True
     )
+    log_note = fields.Html(string="Additional Notes", compute='_compute_log_note', store=True)
 
     _name_uniq = models.Constraint(
         'unique(name, company_id)',
@@ -796,6 +797,16 @@ class MrpProduction(models.Model):
             qty_none_or_all = production.qty_producing in (0, production.product_qty)
             production.show_produce_all = state_ok and qty_none_or_all
             production.show_produce = state_ok and not qty_none_or_all
+
+    @api.depends('bom_id', 'bom_id.additional_notes')
+    def _compute_log_note(self):
+        for record in self:
+            if record.log_note:
+                continue
+            if record.bom_id:
+                record.log_note = record.bom_id.additional_notes
+            else:
+                record.log_note = False
 
     def _search_is_delayed(self, operator, value):
         if operator not in ['=', '!='] or not isinstance(value, bool):
