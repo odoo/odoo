@@ -1168,7 +1168,7 @@ class AccountMove(models.Model):
 
         for invoice in self:
             if invoice.payment_state == 'invoicing_legacy':
-                # invoicing_legacy state is set via SQL when setting setting field
+                # invoicing_legacy state is set via SQL when setting field
                 # invoicing_switch_threshold (defined in account_accountant).
                 # The only way of going out of this state is through this setting,
                 # so we don't recompute it here.
