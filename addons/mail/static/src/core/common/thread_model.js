@@ -1102,6 +1102,14 @@ export class Thread extends Record {
         if (pushState) {
             router.pushState({ active_id: activeId });
         }
+        if (
+            this.store.action_discuss_id &&
+            this.store.env.services.action?.currentController?.action.id ===
+                this.store.action_discuss_id
+        ) {
+            // Keep the action stack up to date (used by breadcrumbs).
+            this.store.env.services.action.currentController.action.context.active_id = activeId;
+        }
     }
 
     /** @param {number} index */
