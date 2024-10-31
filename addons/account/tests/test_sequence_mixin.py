@@ -546,6 +546,42 @@ class TestSequenceMixin(TestSequenceMixinCommon):
             {'name': 'XMISC/23-24/00002', 'state': 'posted'},
         ))
 
+    def test_resequence_update_payment_references(self):
+        """ Resequence the journal entries and
+            update the payment references to reflect the new sequences.
+        """
+        invoice_1 = self.env['account.move'].create({
+            'name': 'INV/2024/00001',
+            'partner_id': 1,
+            'move_type': 'out_invoice',
+            'date': '2024-01-01',
+            'line_ids': [
+                Command.create({
+                    'name': 'line',
+                    'account_id': self.company_data['default_account_revenue'].id,
+                }),
+            ]})
+
+        invoice_2 = invoice_1.copy()
+        invoice_2.name = 'INV/2024/00002'
+        invoice_1.action_post()
+        invoice_2.action_post()
+
+        invoices = self.env['account.move'].browse([invoice_1.id, invoice_2.id])
+        self.assertRecordValues(invoices, (
+            {'name': 'INV/2024/00001', 'state': 'posted', 'payment_reference': 'INV/2024/00001'},
+            {'name': 'INV/2024/00002', 'state': 'posted', 'payment_reference': 'INV/2024/00002'},
+        ))
+
+        resequence_wizard = Form(self.env['account.resequence.wizard'].with_context(active_ids=invoices.ids, active_model='account.move'))
+        resequence_wizard.update_payment_references = True
+        resequence_wizard.first_name = "FAC/2024/00001"
+        resequence_wizard.save().resequence()
+        self.assertRecordValues(invoices, (
+            {'name': 'FAC/2024/00001', 'state': 'posted', 'payment_reference': 'FAC/2024/00001'},
+            {'name': 'FAC/2024/00002', 'state': 'posted', 'payment_reference': 'FAC/2024/00002'},
+        ))
+
     def test_sequence_staggered_year(self):
         """The sequence is correctly computed when the year is staggered."""
         self.env.company.quick_edit_mode = "out_and_in_invoices"

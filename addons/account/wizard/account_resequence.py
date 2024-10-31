@@ -16,6 +16,8 @@ class AccountResequenceWizard(models.TransientModel):
     end_date = fields.Date(help="Date (inclusive) to which the numbers are resequenced. If not set, all Journal Entries up to the end of the period are resequenced.")
     first_name = fields.Char(compute="_compute_first_name", readonly=False, store=True, required=True, string="First New Sequence")
     ordering = fields.Selection([('keep', 'Keep current order'), ('date', 'Reorder by accounting date')], required=True, default='keep')
+    update_payment_references = fields.Boolean(help="Update payment references to match the newly resequenced journal entries", default=False)
+    show_update_payment_references = fields.Boolean(compute="_compute_show_update_payment_references")
     move_ids = fields.Many2many('account.move')
     new_values = fields.Text(compute='_compute_new_values')
     preview_moves = fields.Text(compute='_compute_preview_moves')
@@ -151,6 +153,12 @@ class AccountResequenceWizard(models.TransientModel):
 
             record.new_values = json.dumps(new_values)
 
+    @api.depends('move_ids.move_type')
+    def _compute_show_update_payment_references(self):
+        for record in self:
+            move_type = set(record.move_ids.mapped('move_type'))
+            record.show_update_payment_references = 'entry' not in move_type
+
     def resequence(self):
         new_values = json.loads(self.new_values)
         if self.move_ids.journal_id and self.move_ids.journal_id.restrict_mode_hash_table:
@@ -167,3 +175,7 @@ class AccountResequenceWizard(models.TransientModel):
                     move_id.name = new_values[str(move_id.id)]['new_by_name']
                 else:
                     move_id.name = new_values[str(move_id.id)]['new_by_date']
+
+                if self.update_payment_references:
+                    move_id.payment_reference = move_id.name
+                    move_id.line_ids.filtered(lambda l: l.display_type == 'payment_term').name = move_id.name
