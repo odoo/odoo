@@ -96,6 +96,14 @@ class ProductTemplate(models.Model):
         relation='product_public_category_product_template_rel',
     )
 
+    publish_date = fields.Datetime(
+        string="Publish Date",
+        compute='_compute_publish_date',
+        store=True,
+        required=True,
+        default=fields.Datetime.now,
+    )
+
     product_template_image_ids = fields.One2many(
         string="Extra Product Media",
         comodel_name='product.image',
@@ -134,6 +142,11 @@ class ProductTemplate(models.Model):
     )
 
     #=== COMPUTE METHODS ===#
+
+    @api.depends('is_published')
+    def _compute_publish_date(self):
+        """Set `publish_date` to the moment of (re-)publishing."""
+        self.filtered('is_published').publish_date = fields.Datetime.now()
 
     @api.depends('product_variant_ids', 'product_variant_ids.base_unit_count')
     def _compute_base_unit_count(self):
