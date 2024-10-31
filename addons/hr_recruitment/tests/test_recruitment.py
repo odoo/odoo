@@ -113,3 +113,32 @@ class TestRecruitment(TransactionCase):
         self.env['hr.applicant'].create(applicant_data)
         partner_count = self.env['res.partner'].search_count([('email', '=', 'test@thisisatest.com')])
         self.assertEqual(partner_count, 1)
+
+    def test_target_on_application_hiring(self):
+        """
+        Test that the target is updated when hiring an applicant
+        """
+        job = self.env['hr.job'].create({
+            'name': 'Test Job',
+            'no_of_recruitment': 1,
+        })
+        applicant = self.env['hr.applicant'].create({
+            'candidate_id': self.env['hr.candidate'].create({'partner_name': 'Test Applicant'}).id,
+            'job_id': job.id,
+        })
+        stage_new = self.env['hr.recruitment.stage'].create({
+            'name': 'New',
+            'sequence': 0,
+            'hired_stage': False,
+        })
+        stage_hired = self.env['hr.recruitment.stage'].create({
+            'name': 'Hired',
+            'sequence': 1,
+            'hired_stage': True,
+        })
+        self.assertEqual(job.no_of_recruitment, 1)
+        applicant.stage_id = stage_hired 
+        self.assertEqual(job.no_of_recruitment, 0)
+
+        applicant.stage_id = stage_new
+        self.assertEqual(job.no_of_recruitment, 1)
