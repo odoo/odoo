@@ -475,12 +475,12 @@ class AccountMoveLine(models.Model):
             elif line.journal_id.type == 'purchase':
                 if product.description_purchase:
                     values.append(product.description_purchase)
-            return '\n'.join(values)
+            return '\n'.join(values) if values else False
 
         for line in self:
             if line.display_type == 'payment_term':
                 if not line.name or line._origin.name == line._origin.move_id.payment_reference:
-                    line.name = line.move_id.payment_reference or ''
+                    line.name = line.move_id.payment_reference or False
                 continue
             if not line.product_id or line.display_type in ('line_section', 'line_note'):
                 continue
