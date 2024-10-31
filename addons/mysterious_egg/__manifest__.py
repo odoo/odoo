@@ -57,6 +57,10 @@
         'mysterious_egg.iframe_add_dialog': [
             ('include', 'web.assets_frontend'),
             'mysterious_egg/static/src/builder/add_snippet_dialog/snippet_viewer.scss'
-        ]
+        ],
+        'web.assets_unit_tests': [
+            'mysterious_egg/static/tests/**/*',
+            ('include', 'website.assets_builder'),
+        ],
     },
 }
