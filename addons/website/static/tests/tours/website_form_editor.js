@@ -8,6 +8,7 @@ import {
     insertSnippet,
     goBackToBlocks,
     registerWebsitePreviewTour,
+    selectElementInWeSelectWidget,
 } from '@website/js/tours/tour_utils';
 
 // Visibility possible values:
@@ -199,11 +200,13 @@ registerWebsitePreviewTour("website_form_editor_tour", {
         content: 'Edit the Phone Number field',
         trigger: ':iframe input[name="phone"]',
         run: "click",
-    }, {
-        content: 'Change the label position of the phone field',
-        trigger: 'we-button[data-select-label-position="right"]',
+    },
+    {
+        content: "Open the collapse to edit the label position of the phone field",
+        trigger: "we-collapse:has(we-input[data-set-label-text]) we-toggler",
         run: "click",
     },
+    ...selectElementInWeSelectWidget("input_label_position_opt", "Right"),
     ...addCustomField("char", "text", "Conditional Visibility Check 1", false),
     ...addCustomField("char", "text", "Conditional Visibility Check 2", false),
     ...selectButtonByData("data-set-visibility='conditional'"),

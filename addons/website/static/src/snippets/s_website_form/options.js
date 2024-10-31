@@ -11,6 +11,11 @@ import { _t } from "@web/core/l10n/translation";
 import { memoize } from "@web/core/utils/functions";
 import { renderToElement } from "@web/core/utils/render";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
+import {
+    canSetFloatingLabel,
+    canSetLabelAfterCheckbox,
+    getWebsiteLabelPosition,
+} from "@website/js/content/form_processing";
 import wUtils from '@website/js/utils';
 
 let currentActionName;
@@ -161,9 +166,9 @@ const FormEditor = options.Class.extend({
      */
     _getDefaultFormat: function () {
         return {
-            labelWidth: this.$target[0].querySelector('.s_website_form_label')?.style.width || "200px",
-            labelPosition: 'left',
-            multiPosition: 'horizontal',
+            labelWidth: weUtils.getCSSVariableValue("input-label-width"),
+            labelPosition: weUtils.getCSSVariableValue("input-label-position").replaceAll("'", ""),
+            multiPosition: "horizontal",
         };
     },
     /**
@@ -282,6 +287,7 @@ const FieldEditor = FormEditor.extend({
             labelWidth: this.$target[0].querySelector('.s_website_form_label').style.width,
             multiPosition: multipleInput && multipleInput.dataset.display || 'horizontal',
             col: [...this.$target[0].classList].filter(el => el.match(/^col-/g)).join(' '),
+            customLabelPosition: this.$target[0].classList.contains("o_custom_label_position"),
         };
         return format;
     },
@@ -309,13 +315,9 @@ const FieldEditor = FormEditor.extend({
      * @private
      * @returns {string}
      */
-    _getLabelPosition: function () {
-        const label = this.$target[0].querySelector('.s_website_form_label');
-        if (this.$target[0].querySelector('.row:not(.s_website_form_multiple)')) {
-            return label.classList.contains('text-end') ? 'right' : 'left';
-        } else {
-            return label.classList.contains('d-none') ? 'none' : 'top';
-        }
+    _getLabelPosition() {
+        const label = this.$target[0].querySelector(".s_website_form_label");
+        return getWebsiteLabelPosition(label);
     },
     /**
      * Returns the multiple checkbox/radio element if it exist else null
@@ -619,6 +621,14 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
             });
             legal.setAttribute('contentEditable', true);
             this.$target.find('.s_website_form_submit').before(legal);
+        }
+    },
+    /**
+     * Mark the updated form so it won't use the default width option.
+     */
+    setLabelWidth(previewMode, widgetValue, params) {
+        if (widgetValue) {
+            this.$target[0].closest(".s_website_form").classList.add("o_custom_label_width");
         }
     },
 
@@ -1036,8 +1046,16 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
      */
     selectLabelPosition: async function (previewMode, value, params) {
         const field = this._getActiveField();
+        if (!previewMode && !field.formatInfo.customLabelPosition) {
+            // Mark the updated field so it won't use the default position.
+            field.formatInfo.customLabelPosition = true;
+        }
         field.formatInfo.labelPosition = value;
         await this._replaceField(field);
+        if (value === "after-checkbox") {
+            const labelEl = this.$target[0].querySelector("label");
+            this.$target[0].querySelector(".form-check")?.append(labelEl);
+        }
     },
     selectType: async function (previewMode, value, params) {
         const field = this._getActiveField();
@@ -1260,6 +1278,12 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                 return fieldEl.classList.contains("s_website_form_custom") ||
                     ["one2many", "many2many"].includes(fieldEl.dataset.type);
             }
+            case "input_label_position_floating_opt":
+                return canSetFloatingLabel(this.$target[0].dataset.type);
+            case "input_label_position_after_opt":
+                return canSetLabelAfterCheckbox(this.$target[0].dataset.type);
+            case "input_placeholder_opt":
+                return !this.$target[0].closest(".form-floating");
         }
         return this._super(...arguments);
     },
@@ -1494,6 +1518,10 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         const activeField = this._getActiveField();
         if (activeField.type !== field.type) {
             field.value = '';
+        }
+        // Reset the label position if the field doesn't support the "floating" option.
+        if (field.formatInfo.labelPosition === "floating" && !canSetFloatingLabel(field.type)) {
+            field.formatInfo.labelPosition = "left";
         }
         const fieldEl = this._renderField(field);
         this._replaceFieldElement(fieldEl);
