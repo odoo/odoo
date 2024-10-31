@@ -37,7 +37,7 @@ odoo.define('website_forum.tour_forum_question', function (require) {
         trigger: ".modal-header button.btn-close",
     }, {
         content: "Check that the code still exists as it was written.",
-        trigger: 'div[data-oe-field="content"]:contains("First Question <p>code here</p>")',
+        trigger: 'div.o_wforum_post_content:contains("First Question <p>code here</p>")',
     }, {
         content: "Open dropdown to edit the post",
         trigger: 'div.dropdown a#dropdownMenuLink',
