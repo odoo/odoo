@@ -100,11 +100,6 @@ export class Editor {
             }
         }
         this.preparePlugins();
-        // apply preprocessing, if necessary
-        for (const cb of this.resources.preprocessDom || []) {
-            cb(editable);
-        }
-
         editable.setAttribute("contenteditable", true);
         initElementForEdition(editable, { allowInlineAtRoot: !!this.config.allowInlineAtRoot });
         editable.classList.add("odoo-editor-editable");
