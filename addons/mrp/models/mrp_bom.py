@@ -96,6 +96,8 @@ class MrpBom(models.Model):
     batch_size = fields.Float('Batch Size', default=1.0, digits='Product Unit', help="All automatically generated manufacturing orders for this product will be of this size.")
     enable_batch_size = fields.Boolean(default=False)
 
+    note = fields.Html(string="Additional Notes", help="Add this note on the manufacturing order to share any additional information")
+
     _qty_positive = models.Constraint(
         'check (product_qty > 0)',
         'The quantity to produce must be positive!',

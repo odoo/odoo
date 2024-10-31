@@ -301,6 +301,7 @@ class MrpProduction(models.Model):
         search='_search_date_category', readonly=True
     )
     serial_numbers_count = fields.Integer("Count of serial numbers", compute='_compute_serial_numbers_count')
+    note = fields.Html(string="Additional Notes", compute='_compute_note', store=True, help="Add this note on the manufacturing order to share any additional information")
 
     _name_uniq = models.Constraint(
         'unique(name, company_id)',
@@ -873,6 +874,16 @@ class MrpProduction(models.Model):
             qty_none_or_all = production.qty_producing in (0, production.product_qty)
             production.show_produce_all = state_ok and qty_none_or_all
             production.show_produce = state_ok and not qty_none_or_all
+
+    @api.depends('bom_id', 'bom_id.note')
+    def _compute_note(self):
+        for record in self:
+            if record.note:
+                continue
+            if record.bom_id:
+                record.note = record.bom_id.note
+            else:
+                record.note = False
 
     def _search_is_delayed(self, operator, value):
         if operator not in ('in', 'not in'):
