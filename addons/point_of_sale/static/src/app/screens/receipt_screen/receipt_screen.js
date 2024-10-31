@@ -110,7 +110,7 @@ export class ReceiptScreen extends Component {
                 data: this.pos.orderExportForPrinting(this.pos.get_order()),
                 formatCurrency: this.env.utils.formatCurrency,
             },
-            { addClass: "pos-receipt-print" }
+            { addClass: "pos-receipt-print", addEmailMargins: true }
         );
         await this.pos.data.call("pos.order", action, [[order.id], this.state.input, ticketImage]);
     }
