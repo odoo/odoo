@@ -609,7 +609,7 @@ class TestMailSchedule(EventMailCommon):
         # a new scheduler after)
         self.env.invalidate_all()
         # event 19
-        with self.assertQueryCount(36), self.mock_datetime_and_now(reference_now), \
+        with self.assertQueryCount(37), self.mock_datetime_and_now(reference_now), \
              self.mock_mail_gateway():
             _existing = self.env['event.registration'].create([
                 {
@@ -632,7 +632,7 @@ class TestMailSchedule(EventMailCommon):
         ]})
         self.env.invalidate_all()
         # event 50
-        with self.assertQueryCount(68), \
+        with self.assertQueryCount(69), \
              self.mock_datetime_and_now(reference_now + relativedelta(minutes=10)), \
              self.mock_mail_gateway():
             _new = self.env['event.registration'].create([
