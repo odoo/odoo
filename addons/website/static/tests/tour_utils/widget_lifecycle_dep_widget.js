@@ -1,16 +1,18 @@
 /** @odoo-module **/
+import { browser } from "@web/core/browser/browser";
+const localStorage = browser.localStorage;
 
 import publicWidget from "web.public.widget";
 
 const localStorageKey = 'widgetAndWysiwygLifecycle';
-if (!window.localStorage.getItem(localStorageKey)) {
-    window.localStorage.setItem(localStorageKey, '[]');
+if (!localStorage.getItem(localStorageKey)) {
+    localStorage.setItem(localStorageKey, '[]');
 }
 
 export function addLifecycleStep(step) {
-    const oldValue = window.localStorage.getItem(localStorageKey);
+    const oldValue = localStorage.getItem(localStorageKey);
     const newValue = JSON.stringify(JSON.parse(oldValue).concat(step));
-    window.localStorage.setItem(localStorageKey, newValue);
+    localStorage.setItem(localStorageKey, newValue);
 }
 
 publicWidget.registry.CountdownPatch = publicWidget.Widget.extend({
