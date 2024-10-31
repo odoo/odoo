@@ -37,6 +37,7 @@ class ResCompany(models.Model):
         # Nothing will happen until the user register, so it can be set by default.
         default="test",
     )
+    # /!\ this was a planned feature that got scrapped due to API limitations. It may come back if their system provides better support for it.
     l10n_my_edi_default_import_journal_id = fields.Many2one(
         comodel_name="account.journal",
         domain="[('type', '=', 'purchase')]",
