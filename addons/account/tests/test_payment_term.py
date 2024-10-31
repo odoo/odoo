@@ -491,7 +491,7 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
         invoice.invoice_payment_term_id = immediate_term
         # check the payment term labels
         invoice_terms = invoice.line_ids.filtered(lambda l: l.display_type == 'payment_term')
-        self.assertEqual(invoice_terms[0].name, '')
+        self.assertEqual(invoice_terms[0].name, False)
         # change the payment term to the multiple installment term
         invoice.invoice_payment_term_id = multiple_installment_term
         invoice_terms = invoice.line_ids.filtered(lambda l: l.display_type == 'payment_term').sorted('date_maturity')
