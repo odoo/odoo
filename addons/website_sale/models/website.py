@@ -197,7 +197,7 @@ class Website(models.Model):
     def _get_product_sort_mapping():
         return [
             ('website_sequence asc', _("Featured")),
-            ('create_date desc', _("Newest Arrivals")),
+            ('publish_date desc', _("Newest Arrivals")),
             ('name asc', _("Name (A-Z)")),
             ('list_price asc', _("Price - Low to High")),
             ('list_price desc', _("Price - High to Low")),
