@@ -9,7 +9,6 @@ class AccountChartTemplate(models.AbstractModel):
     @template('mc')
     def _get_mc_template_data(self):
         return {
-            'name': 'Monaco',
             'code_digits': '6',
             'parent': 'fr',
         }
