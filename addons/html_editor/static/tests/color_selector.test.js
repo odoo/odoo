@@ -198,31 +198,29 @@ test("Can reset a color", async () => {
     expect(".tested").not.toHaveInnerHTML("test");
 });
 
-test.tags("desktop")(
-    "selected text color is shown in the toolbar and update when hovering",
-    async () => {
-        await setupEditor(
-            `<p>
+test.tags("desktop");
+test("selected text color is shown in the toolbar and update when hovering", async () => {
+    await setupEditor(
+        `<p>
             <font style="color: rgb(255, 0, 0);">[test]</font>
         </p>`
-        );
+    );
 
-        await waitFor(".o-we-toolbar");
-        expect(".o_font_color_selector").toHaveCount(0);
-        await animationFrame();
-        expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
-        await click(".o-we-toolbar .o-select-color-foreground");
-        await animationFrame();
-        // Hover a color
-        await hover(queryOne("button[data-color='#FF00FF']"));
-        await animationFrame();
-        expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 0, 255)" });
-        // Hover out
-        await hover(queryOne(".o-we-toolbar .o-select-color-foreground"));
-        await animationFrame();
-        expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
-    }
-);
+    await waitFor(".o-we-toolbar");
+    expect(".o_font_color_selector").toHaveCount(0);
+    await animationFrame();
+    expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    // Hover a color
+    await hover(queryOne("button[data-color='#FF00FF']"));
+    await animationFrame();
+    expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 0, 255)" });
+    // Hover out
+    await hover(queryOne(".o-we-toolbar .o-select-color-foreground"));
+    await animationFrame();
+    expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
+});
 
 test("selected text color is shown in the toolbar and update when clicking", async () => {
     await setupEditor(

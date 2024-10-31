@@ -305,7 +305,7 @@ test("sidebar: unpin chat from bus", async () => {
     await contains(".o-mail-Discuss-threadName", { count: 0, value: "Demo" });
 });
 
-test("chat - channel should count unread message [REQUIRE FOCUS]", async () => {
+test.tags("focus required")("chat - channel should count unread message", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         name: "Demo",
@@ -331,7 +331,7 @@ test("chat - channel should count unread message [REQUIRE FOCUS]", async () => {
     await contains(".o-discuss-badge", { count: 0 });
 });
 
-test("mark channel as seen on last message visible [REQUIRE FOCUS]", async () => {
+test.tags("focus required")("mark channel as seen on last message visible", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",
@@ -1023,7 +1023,7 @@ test("chat - avatar: should have correct avatar", async () => {
     );
 });
 
-test("chat should be sorted by last activity time [REQUIRE FOCUS]", async () => {
+test("chat should be sorted by last activity time", async () => {
     const pyEnv = await startServer();
     const [demo_id, yoshi_id] = pyEnv["res.partner"].create([{ name: "Demo" }, { name: "Yoshi" }]);
     pyEnv["res.users"].create([{ partner_id: demo_id }, { partner_id: yoshi_id }]);
@@ -1141,7 +1141,8 @@ test("Do no channel_info after unpin", async () => {
     await assertSteps([]);
 });
 
-test("Group unread counter up to date after mention is marked as seen [REQUIRE FOCUS]", async () => {
+test.tags("focus required");
+test("Group unread counter up to date after mention is marked as seen", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Chuck" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -1188,7 +1189,7 @@ test("Unpinning channel closes its chat window", async () => {
     await contains(".o-mail-ChatWindow", { count: 0, text: "Sales" });
 });
 
-test("Update channel data via bus notification [REQUIRE FOCUS]", async () => {
+test.tags("focus required")("Update channel data via bus notification", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "Sales",

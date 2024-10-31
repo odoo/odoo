@@ -782,43 +782,41 @@ test("Direct export grouped list", async () => {
     await exportAllAction();
 });
 
-test.tags("desktop")(
-    "Direct export list take optional fields into account on desktop",
-    async () => {
-        patchWithCleanup(download, {
-            _download: (options) => {
-                expect(JSON.parse(options.data.data).fields).toEqual([
-                    { label: "Bar", name: "bar", store: true, type: "boolean" },
-                ]);
-                return Promise.resolve();
-            },
-        });
-        onRpc("/web/export/formats", () => {
-            return Promise.resolve([{ tag: "xls", label: "Excel" }]);
-        });
-        onRpc("/web/export/get_fields", () => {
-            return Promise.resolve(fetchedFields.root);
-        });
+test.tags("desktop");
+test("Direct export list take optional fields into account on desktop", async () => {
+    patchWithCleanup(download, {
+        _download: (options) => {
+            expect(JSON.parse(options.data.data).fields).toEqual([
+                { label: "Bar", name: "bar", store: true, type: "boolean" },
+            ]);
+            return Promise.resolve();
+        },
+    });
+    onRpc("/web/export/formats", () => {
+        return Promise.resolve([{ tag: "xls", label: "Excel" }]);
+    });
+    onRpc("/web/export/get_fields", () => {
+        return Promise.resolve(fetchedFields.root);
+    });
 
-        await mountView({
-            type: "list",
-            resModel: "partner",
-            arch: `
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: `
         <list>
             <field name="foo" optional="show"/>
             <field name="bar" optional="show"/>
         </list>`,
-            loadActionMenus: true,
-        });
+        loadActionMenus: true,
+    });
 
-        await contains("table .o_optional_columns_dropdown .dropdown-toggle").click();
-        await contains("span.dropdown-item:first-child").click();
-        expect("th").toHaveCount(3, {
-            message: "should have 3 th, 1 for selector, 1 for columns, 1 for optional columns",
-        });
-        await exportAllAction();
-    }
-);
+    await contains("table .o_optional_columns_dropdown .dropdown-toggle").click();
+    await contains("span.dropdown-item:first-child").click();
+    expect("th").toHaveCount(3, {
+        message: "should have 3 th, 1 for selector, 1 for columns, 1 for optional columns",
+    });
+    await exportAllAction();
+});
 
 test.tags("mobile")("Direct export list take optional fields into account on mobile", async () => {
     patchWithCleanup(download, {

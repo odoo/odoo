@@ -78,7 +78,7 @@ test("new message from operator displays unread counter", async () => {
     await contains(".o-mail-ChatBubble-counter", { text: "1" });
 });
 
-test("focus on unread livechat marks it as read [REQUIRE FOCUS]", async () => {
+test.tags("focus required")("focus on unread livechat marks it as read", async () => {
     const pyEnv = await startServer();
     await loadDefaultEmbedConfig();
     onRpcBefore("/mail/action", (args) => {
