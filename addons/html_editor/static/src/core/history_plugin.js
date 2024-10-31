@@ -1050,15 +1050,9 @@ export class HistoryPlugin extends Plugin {
         if (node.nodeType === Node.TEXT_NODE) {
             result.textValue = node.nodeValue;
         } else if (node.nodeType === Node.ELEMENT_NODE) {
-            let childrenToSerialize;
-            for (const cb of this.getResource("filter_descendants_to_serialize")) {
-                childrenToSerialize = cb(node);
-                if (childrenToSerialize) {
-                    break;
-                }
-            }
-            if (!childrenToSerialize) {
-                childrenToSerialize = childNodes(node);
+            let childrenToSerialize = childNodes(node);
+            for (const cb of this.getResource("serializable_descendants_processors")) {
+                childrenToSerialize = cb(node, childrenToSerialize);
             }
             result.tagName = node.tagName;
             result.children = [];

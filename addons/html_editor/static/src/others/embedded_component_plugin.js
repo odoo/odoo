@@ -10,7 +10,7 @@ export class EmbeddedComponentPlugin extends Plugin {
     static id = "embeddedComponents";
     static dependencies = ["history", "protectedNode"];
     resources = {
-        filter_descendants_to_serialize: this.filterDescendantsToSerialize.bind(this),
+        serializable_descendants_processors: this.processDescendantsToSerialize.bind(this),
         is_mutation_record_savable: this.isMutationRecordSavable.bind(this),
         on_change_attribute: this.onChangeAttribute.bind(this),
         clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
@@ -56,10 +56,10 @@ export class EmbeddedComponentPlugin extends Plugin {
         return true;
     }
 
-    filterDescendantsToSerialize(elem) {
+    processDescendantsToSerialize(elem, serializableDescendants) {
         const embedding = this.getEmbedding(elem);
         if (!embedding) {
-            return;
+            return serializableDescendants;
         }
         return Object.values(embedding.getEditableDescendants?.(elem) || {});
     }
