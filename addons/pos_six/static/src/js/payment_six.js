@@ -57,7 +57,21 @@ var PaymentSix = PaymentInterface.extend({
         this.terminalListener.transactionCompleted = this._onTransactionComplete.bind(this);
         this.terminalListener.balanceCompleted = this._onBalanceComplete.bind(this);
         this.terminal.addListener(this.terminalListener);
-
+        // Add a retry mechanism if the connection fails
+        this.terminalListener.connectionClosed = function (event) {
+        console.log("WebSocket closed, retrying connection...");
+        setTimeout(function () {
+            this.terminal.connect();  // or reinitialize the connection
+        }.bind(this), 5000);  // Retry after 5 seconds
+        };
+        // Add the setInterval here to send a "ping" every 30 seconds
+        setInterval(() => {
+            if (this.terminal && this.terminal.readyState === WebSocket.OPEN) {
+                // Send a keep-alive ping message
+                this.terminal.send(JSON.stringify({ type: 'ping' }));
+                console.log("WebSocket ping...");
+            }
+        }, 30000);  // Send ping every 30 seconds
         var recipients = [timapi.constants.Recipient.merchant, timapi.constants.Recipient.cardholder];
         var options = [];
         _.forEach(recipients, (recipient) => {
