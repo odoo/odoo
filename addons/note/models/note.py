@@ -139,6 +139,6 @@ class Note(models.Model):
         return self.write({'open': True})
 
     def write(self, vals):
-        if len(self) == 1:
-            handle_history_divergence(self, 'memo', vals)
+        # if len(self) == 1:
+        #     handle_history_divergence(self, 'memo', vals)
         return super(Note, self).write(vals)
