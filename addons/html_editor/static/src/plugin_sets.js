@@ -1,4 +1,3 @@
-import { DynamicPlaceholderPlugin } from "@html_editor/others/dynamic_placeholder/dynamic_placeholder";
 import { ClipboardPlugin } from "./core/clipboard_plugin";
 import { CommentPlugin } from "./core/comment_plugin";
 import { DeletePlugin } from "./core/delete_plugin";
@@ -51,6 +50,7 @@ import { CollaborationOdooPlugin } from "./others/collaboration/collaboration_od
 import { CollaborationPlugin } from "./others/collaboration/collaboration_plugin";
 import { CollaborationSelectionAvatarPlugin } from "./others/collaboration/collaboration_selection_avatar_plugin";
 import { CollaborationSelectionPlugin } from "./others/collaboration/collaboration_selection_plugin";
+import { DynamicPlaceholderPlugin } from "./others/dynamic_placeholder_plugin";
 import { EmbeddedComponentPlugin } from "./others/embedded_component_plugin";
 import { ExcalidrawPlugin } from "@html_editor/others/embedded_components/plugins/excalidraw_plugin/excalidraw_plugin";
 import { FilePlugin } from "@html_editor/others/embedded_components/plugins/file_plugin/file_plugin";
