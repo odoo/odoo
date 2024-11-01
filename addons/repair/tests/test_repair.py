@@ -495,6 +495,9 @@ class TestRepair(AccountTestInvoicingCommon):
         """
         Check that the lot_id field is cleared after updating the product in the repair order.
         """
+        self.env.ref('base.group_user').implied_ids += (
+            self.env.ref('stock.group_production_lot')
+        )
         self.product_a.tracking = 'serial'
         sn_1 = self.env['stock.lot'].create({'name': 'sn_1', 'product_id': self.product_a.id})
         ro_form = Form(self.env['repair.order'])
