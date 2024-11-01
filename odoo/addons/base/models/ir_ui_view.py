@@ -1121,7 +1121,7 @@ actual arch.
         is_base_model = self.env.context.get('base_model_name', model._name) == model._name
 
         if node.tag in ('kanban', 'tree', 'form', 'activity', 'calendar'):
-            for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):
+            for action, operation in (('create', 'create'), ('duplicate', 'create'), ('delete', 'unlink'), ('edit', 'write')):
                 if (not node.get(action) and
                         not model.check_access_rights(operation, raise_exception=False) or
                         not self._context.get(action, True) and is_base_model):
