@@ -309,3 +309,20 @@ class TestSaleProject(TransactionCaseWithUserDemo):
         project_B.write({'active': False})
         action = sale_order.action_view_project_ids()
         self.assertEqual(len(action['domain'][0][2]), 2, "Domain should contain 2 projects. (one archived, one not)")
+
+    def test_update_sol_project_on_task_project_change(self):
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({
+                'product_id': self.product_order_service3.id,
+                'product_uom_qty': hours,
+            }) for hours in (2.0, 5.0)],
+        })
+        sale_order.action_confirm()
+        project1 = sale_order.order_line.project_id
+        project2 = project1.copy()
+        project2.task_ids.sale_line_id = False
+        project2.task_ids.unlink()
+        project1.task_ids[1].project_id = project2
+        self.assertEqual(project1.task_ids.sale_line_id.project_id, project1)
+        self.assertEqual(project2.task_ids.sale_line_id.project_id, project2)
