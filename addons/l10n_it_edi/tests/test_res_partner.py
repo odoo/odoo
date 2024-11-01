@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.exceptions import UserError
-from odoo.tests.common import Form, TransactionCase, tagged
+from odoo.tests import Form
+from odoo.tests.common import TransactionCase, tagged
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -60,14 +61,21 @@ class TestResPartner(TransactionCase):
 
         self.assertEqual(len(partners), len(valid_codes))
 
-    def test_non_italian_partner_codice_fiscale(self):
-        mexican_partner = self.env['res.partner'].create({
-            'name': 'Mexican Customer',
-            'country_id': self.env.ref('base.mx').id,
+    def test_partner_l10n_it_codice_fiscale(self):
+        vat_partner = self.env['res.partner'].create({
+            'name': 'Customer with VAT',
         })
 
-        partner_form = Form(mexican_partner)
-        partner_form.vat = "ITR230522NW8"
-        mexican_partner = partner_form.save()
+        partner_form = Form(vat_partner)
 
-        self.assertFalse(mexican_partner.l10n_it_codice_fiscale, "A non-italian partner should not be given an l10n_it_codice_fiscale")
+        partner_form.vat = 'IT12345676017'
+        self.assertEqual(partner_form.l10n_it_codice_fiscale, '12345676017', "We give the Parnter a VAT, l10n_it_codice_fiscale is given accordingly")
+
+        partner_form.country_id = self.env.ref('base.ir')
+        self.assertFalse(partner_form.l10n_it_codice_fiscale, "Partner is given Iran as country, l10n_it_codice_fiscale is removed")
+
+        partner_form.country_id = self.env.ref('base.it')
+        self.assertEqual(partner_form.l10n_it_codice_fiscale, '12345676017', "The partner was given the wrong country, we correct it to Italy")
+
+        partner_form.vat = 'IT12345670017'
+        self.assertEqual(partner_form.l10n_it_codice_fiscale, '12345670017', "There was a typo in the VAT, changing it should change l10n_it_codice_fiscale as well")
