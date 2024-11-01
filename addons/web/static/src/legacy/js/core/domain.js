@@ -90,10 +90,10 @@ var Domain = collections.Tree.extend({
             switch (this._data[1]) {
                 case "=":
                 case "==":
-                    return _.isEqual(fieldValue, this._data[2]);
+                    return _.isEqual(fieldValue, this._data[2]) || _.isEqual(fieldValue, _.unescape(this._data[2]));
                 case "!=":
                 case "<>":
-                    return !_.isEqual(fieldValue, this._data[2]);
+                    return !_.isEqual(fieldValue, this._data[2]) && !_.isEqual(fieldValue, _.unescape(this._data[2]));
                 case "<":
                     return (fieldValue < this._data[2]);
                 case ">":
@@ -116,7 +116,7 @@ var Domain = collections.Tree.extend({
                     if (fieldValue === false) {
                         return false;
                     }
-                    return (fieldValue.indexOf(this._data[2]) >= 0);
+                    return (fieldValue.indexOf(this._data[2]) >= 0) || (fieldValue.indexOf(_.unescape(this._data[2])) >= 0);
                 case "=like":
                     if (fieldValue === false) {
                         return false;
@@ -126,7 +126,7 @@ var Domain = collections.Tree.extend({
                     if (fieldValue === false) {
                         return false;
                     }
-                    return (fieldValue.toLowerCase().indexOf(this._data[2].toLowerCase()) >= 0);
+                    return (fieldValue.toLowerCase().indexOf(this._data[2].toLowerCase()) >= 0) || (fieldValue.toLowerCase().indexOf(_.unescape(this._data[2]).toLowerCase()) >= 0);
                 case "=ilike":
                     if (fieldValue === false) {
                         return false;
