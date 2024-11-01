@@ -32,6 +32,7 @@ from odoo.modules.module import get_module_resource
 from odoo.osv import expression
 from odoo.service.db import check_super
 from odoo.tools import partition, collections, frozendict, lazy_property, image_process
+from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -541,11 +542,20 @@ class Users(models.Model):
         # Prevent using reload actions.
         # We use sudo() because  "Access rights" admins can't read action models
         for user in self.sudo():
-            if user.action_id.type == "ir.actions.client":
-                action = self.env["ir.actions.client"].browse(user.action_id.id)  # magic
+            action_type = user.action_id.type
+            if not user.action_id.type:
+                continue
+            action = self.env[action_type].browse(user.action_id.id)  # magic
+            if action_type == "ir.actions.client":
                 if action.tag == "reload":
                     raise ValidationError(_('The "%s" action cannot be selected as home action.', action.name))
 
+            if action_type in ('ir.actions.client', 'ir.actions.act_window'):
+                user_context = self.with_user(user).context_get()
+                try:
+                    safe_eval(action.context, dict(user_context))
+                except Exception as e:
+                    raise ValidationError(_('The "%s" action cannot be selected as home action.\n%s', action.name, e)) from None
 
     @api.constrains('groups_id')
     def _check_one_user_type(self):
