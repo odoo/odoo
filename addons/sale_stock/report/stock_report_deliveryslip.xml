@@ -7,5 +7,14 @@
                 <p t-field="o.sudo().sale_id.client_order_ref"/>
             </div>
         </xpath>
+        <xpath expr="//div[@name='div_incoming_address']" position="inside">
+            <div name="customer_address" t-if="o.picking_type_id.code=='outgoing' and o.sale_id.partner_shipping_id and o.sale_id.partner_id.commercial_partner_id != o.sale_id.partner_shipping_id.commercial_partner_id">
+                <span><strong>Customer Address:</strong></span>
+                <div name="partner_header">
+                    <div t-field="o.sale_id.partner_id.commercial_partner_id"
+                         t-options='{"widget": "contact", "fields": ["address", "name", "phone", "vat"], "no_marker": True, "phone_icons": True}'/>
+                </div>
+            </div>
+        </xpath>
     </template>
 </odoo>
