@@ -436,6 +436,19 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
             this.$target.removeClass('d-none');
             this.$message.addClass("d-none");
         }
+
+        // The "data-for" values are always correctly added to the form on start
+        // But if we make any change to it in "edit" mode, we need to be sure it
+        // will not be saved with the new values.
+        const dataForValues = wUtils.getParsedDataFor(this.$target[0].id);
+        if (dataForValues) {
+            const dataForValuesFieldEls = Object.keys(dataForValues)
+                .map(name => this.$target[0].querySelector(`[name="${CSS.escape(name)}"]`))
+                .filter(dataForValuesFieldEl => dataForValuesFieldEl && dataForValuesFieldEl.name !== "email_to");
+            for (const fieldEl of dataForValuesFieldEls) {
+                fieldEl.removeAttribute("value");
+            }
+        }
     },
     /**
      * @override
