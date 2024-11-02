@@ -1,62 +1,72 @@
-import { Component, useState, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
+import { Interaction } from "@website/core/interaction";
+import { Component, xml, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
+/**
+ * This is just a few examples. This should be removed in the future, before
+ * merging this to master
+ */
+
 // -----------------------------------------------------------------------------
-// Example of attached component
+// Example of interaction
 // -----------------------------------------------------------------------------
-class TogglableBackgroundSection extends Component {
+class TogglableBackgroundSection extends Interaction {
     static selector = "section";
     static dynamicContent = {
-        "root:t-att-style": "'background-color: ' + state.bgColor",
-        "h1,h2:t-on-click": "toggleBackground",
+        "_root": {
+            "t-att-style": "'background-color:' + this.bgColor",
+            "t-att-data-bg-color": "this.bgColor",
+        },
+        h2: {
+            "t-on-click": "toggleBackground",
+            "t-out": "this.bgColor",
+        },
     };
-    
+
     setup() {
-        this.state = useState({ bgColor: "white" });
-        this.notification = useService("notification");
+        this.bgColor = this.el.dataset.bgColor || "white";
     }
 
     toggleBackground() {
-        this.state.bgColor = this.state.bgColor === "white" ? "red" : "white";
-        this.notification.add(`Example of a service: ${this.state.bgColor}`);
+        this.bgColor = this.bgColor === "white" ? "red" : "white";
+        this.services.notification.add(`Example of a service: ${this.bgColor}`);
     }
 }
 
-registry.category("website.active_elements").add("website.togglebackground", TogglableBackgroundSection);
+registry
+    .category("website.active_elements")
+    .add("website.toggle_background", TogglableBackgroundSection);
 
 // -----------------------------------------------------------------------------
-// Example of attached component, simple interaction
+// Example of interaction
 // -----------------------------------------------------------------------------
-class FunNotificationThing extends Component {
+class FunNotificationThing extends Interaction {
     static selector = "#wrapwrap";
     static dynamicContent = {
-        "b,strong:t-on-click": "onClick"
+        "b,strong:t-on-click": "onClick",
     };
-
-    setup() {
-        this.notification = useService("notification");
-    }
 
     onClick(ev) {
         const text = ev.target.innerText;
-        this.notification.add(`Look at this => ${text}`);
+        this.services.notification.add(`Look at this => ${text}`);
     }
 }
 
-registry.category("website.active_elements").add("funnotification", FunNotificationThing);
-
+registry
+    .category("website.active_elements")
+    .add("website.fun_notification", FunNotificationThing);
 
 // -----------------------------------------------------------------------------
 // Example of mounted component
 // -----------------------------------------------------------------------------
 class Counter extends Component {
-    static selector = "#wrapwrap h1,h2";
+    static selector = "#wrapwrap h1";
     static template = xml`
         <div class="btn btn-primary" t-on-click="increment">
             Counter. Value=<t t-esc="state.value"/>
         </div>`;
-    
+
     setup() {
         this.state = useState({ value: 1 });
         this.notification = useService("notification");
@@ -69,4 +79,4 @@ class Counter extends Component {
     }
 }
 
-registry.category("website.active_elements").add("website.Counter", Counter);
+registry.category("website.active_elements").add("website.counter", Counter);
