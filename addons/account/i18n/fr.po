@@ -8,6 +8,7 @@
 # Yassine KHATTABI, 2024
 # Rémi CAZENAVE, 2024
 # Wil Odoo, 2024
+# allanot nicolas <n.allanot@free.fr>, 2024
 # Manon Rondou, 2024
 # 
 msgid ""
@@ -1616,6 +1617,24 @@ msgid ""
 msgstr ""
 "Le compte %s ne permet pas le lettrage. Modifiez sa configuration pour "
 "pouvoir lettrer des écritures."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "Account %s is of payable type, but is used in a sale operation."
+msgstr ""
+"Le compte %s est de type créditeur, mais est utilisé dans une opération de "
+"vente."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "Account %s is of receivable type, but is used in a purchase operation."
+msgstr ""
+"Le compte %s est de type débiteur, mais est utilisé dans une opération "
+"d'achat."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_avatax
@@ -14145,7 +14164,7 @@ msgstr ""
 msgid ""
 "The Availability is set to 'Country Matches' but the field Country is not "
 "set."
-msgstr ""
+msgstr "Translation placeholder"
 
 #. module: account
 #. odoo-python
