@@ -95,6 +95,9 @@ class TestAccountMergeWizard(TestAccountMergeCommon):
         self.accounts[2].with_context({'lang': 'fr_FR'}).name = "Mon troisième compte"
         self.accounts[2].with_context({'lang': 'nl_NL'}).name = "Mijn derde conto"
 
+        # Set an "ir.default" for an "account.account" field to a value that will be merged
+        self.env['ir.default'].set('res.partner', 'property_account_receivable_id', self.accounts[2].id)
+
         # 2. Check that the merge wizard groups accounts 1 and 3 together, and accounts 2 and 4 together.
         wizard = self._create_account_merge_wizard(self.accounts)
         expected_wizard_line_vals = [
@@ -185,6 +188,9 @@ class TestAccountMergeWizard(TestAccountMergeCommon):
         # 8. Check that the name translations are merged correctly
         self.assertRecordValues(self.accounts[0].with_context({'lang': 'fr_FR'}), [{'name': "Mon premier compte"}])
         self.assertRecordValues(self.accounts[0].with_context({'lang': 'nl_NL'}), [{'name': "Mijn derde conto"}])
+
+        # 9. Check that the "ir.default" has been updated correctly
+        self.assertEqual(self.env['ir.default']._get('res.partner', 'property_account_receivable_id'), self.accounts[0].id)
 
     def test_cannot_merge_same_company(self):
         """ Check that you cannot merge two accounts belonging to the same company. """

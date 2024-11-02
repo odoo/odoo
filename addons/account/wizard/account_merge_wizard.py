@@ -191,6 +191,21 @@ class AccountMergeWizard(models.TransientModel):
             account_to_merge_into_id=account_to_merge_into.id,
         ))
 
+        # 3.4: Update reference of "account.account" in "ir.default"
+        self.env.cr.execute(SQL(
+            """
+             UPDATE ir_default d
+                SET json_value = %(account_to_merge_into_id)s
+               FROM ir_model_fields f
+              WHERE d.field_id = f.id
+                AND f.relation = 'account.account'
+                AND f.ttype = 'many2one'
+                AND d.json_value IN %(accounts_to_remove_ids)s
+            """,
+            account_to_merge_into_id=str(account_to_merge_into.id),
+            accounts_to_remove_ids=tuple(map(str, accounts_to_remove.ids)),
+        ))
+
         # Step 4: Remove merged accounts
         self.env.invalidate_all()
         self.env.cr.execute(SQL(
