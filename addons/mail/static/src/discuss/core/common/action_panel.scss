@@ -3,7 +3,7 @@
 }
 
 .o-mail-ActionPanel:not(.o-mail-ActionPanel-chatter) {
-    @media (min-width: 800px) {
+    @media (min-width: 750px) {
         max-width: 30vw;
     }
     @media (min-width: 1000px) {
@@ -18,12 +18,12 @@
     @media (min-width: 2300px) {
         max-width: 75vw;
     }
+    .popover & {
+        width: 475px;
+        max-width: unset;
+    }
 }
 
 .o-mail-ActionPanel-header {
     z-index: $o-mail-NavigableList-zIndex - 1;
-
-    button:hover {
-        background-color: $gray-200;
-    }
 }
