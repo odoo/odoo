@@ -8435,6 +8435,18 @@ msgid ""
 "    * Integrated with Leaves Management\n"
 "    * Compute payslips according to ELM 5 standard\n"
 msgstr ""
+"\n"
+"กฎบัญชีเงินเดือนของประเทศสวิตเซอร์แลนด์\n"
+"===========================\n"
+"\n"
+"   * รายละเอียดพนักงาน\n"
+"   * สัญญาพนักงาน\n"
+"   * สัญญาตามหนังสือเดินทาง\n"
+"   * ค่าเผื่อ/ค่าหักเงิน\n"
+"   * อนุญาตให้กำหนดค่าเงินเดือนพื้นฐาน/รวม/สุทธิ\n"
+"   * สลิปเงินเดือนพนักงาน\n"
+"   * รวมระบบกับการจัดการระบบการลา\n"
+"   * คำนวณสลิปเงินเดือนตามมาตรฐาน ELM 5\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_appointment_hr
@@ -8618,6 +8630,12 @@ msgid ""
 "Passkeys are a secure alternative to a username and a password.\n"
 "When a user logs in with a Passkey, MFA will not be required.\n"
 msgstr ""
+"\n"
+"การใช้งาน Passkeys โดยใช้โปรโตคอล webauthn\n"
+"===========================================================\n"
+"\n"
+"รหัสผ่านเป็นทางเลือกที่ปลอดภัยแทนชื่อผู้ใช้และรหัสผ่าน\n"
+"เมื่อผู้ใช้เข้าสู่ระบบด้วยรหัสผ่าน จะไม่จำเป็นต้องใช้ MFA\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base
@@ -9134,6 +9152,13 @@ msgid ""
 "    - Fiscal positions\n"
 "    - Default settings\n"
 msgstr ""
+"\n"
+"นี่คือโมดูลพื้นฐานสำหรับการจัดการผังบัญชีสำหรับสาธารณรัฐมอริเชียสใน Odoo\n"
+"================================================================================\n"
+"    - ผังบัญชี\n"
+"    - ภาษี\n"
+"    - สถานะการบัญชี\n"
+"    - การตั้งค่าเริ่มต้น\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ug
@@ -29143,6 +29168,8 @@ msgid ""
 "Module for synchronization of Inventory Documents between several companies.\n"
 "   For example, this allows you to have a delivery receipt created automatically in the receiving company when another company of the system confirms a delivery order.\n"
 msgstr ""
+"โมดูลสำหรับการซิงโครไนซ์เอกสารสต็อกสินค้าระหว่างบริษัทต่างๆ\n"
+"   ตัวอย่างเช่น ช่วยให้คุณสามารถสร้างใบเสร็จรับเงินการจัดส่งโดยอัตโนมัติในบริษัทผู้รับเมื่อบริษัทอื่นในระบบยืนยันคำสั่งซื้อการจัดส่ง\n"
 
 #. module: base
 #. odoo-python
@@ -35091,6 +35118,9 @@ msgid ""
 "\n"
 "Cannot separate file to save as attachment because the report's template does not contain the attributes 'data-oe-model' and 'data-oe-id' as part of the div with 'article' classname."
 msgstr ""
+"รายงานเทมเพลต “%s” มีปัญหา โปรดติดต่อผู้ดูแลระบบของคุณ\n"
+"\n"
+"ไม่สามารถแยกไฟล์เพื่อบันทึกเป็นเอกสารแนบได้ เนื่องจากเทมเพลตของรายงานไม่มีแอตทริบิวต์ 'data-oe-model' และ 'data-oe-id' เป็นส่วนหนึ่งของ div ที่มีชื่อคลาส 'article'"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view_tree
@@ -38226,6 +38256,15 @@ msgstr ""
 #: code:addons/base/models/res_company.py:0
 msgid "The %s of a subsidiary must be the same as it's root company."
 msgstr "%s ของบริษัทในเครือจะต้องเหมือนกับบริษัทแม่"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"The action \"%s\" cannot be set as the home action because it requires a "
+"record to be selected beforehand."
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__country_code

@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2024
-# Wil Odoo, 2024
 # Maitê Dietze, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-06 10:23+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Maitê Dietze, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -259,18 +259,6 @@ msgstr "%s (modelo de e-mail)"
 #: code:addons/mail/models/mail_template.py:0
 msgid "%s (copy)"
 msgstr "%s (cópia)"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/public_web/out_of_focus_service_patch.js:0
-msgid "%s Message"
-msgstr "%s Mensagem"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/public_web/out_of_focus_service_patch.js:0
-msgid "%s Messages"
-msgstr "%s Mensagens"
 
 #. module: mail
 #. odoo-python
@@ -677,6 +665,12 @@ msgstr "Requer ação"
 #: model:ir.model,name:mail.model_ir_actions_act_window_view
 msgid "Action Window View"
 msgstr "Exibição da janela de ação"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+msgid "Actions"
+msgstr "Ações"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__activity_category
@@ -1674,11 +1668,12 @@ msgstr "Devolvido"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/webclient/web/webclient.js:0
-#, python-format
 msgid ""
 "Brave: enable 'Google Services for Push Messaging' to enable push "
 "notifications"
 msgstr ""
+"Brave: ative \"Google Services for Push Messaging\" para ativar as "
+"notificações por push"
 
 #. module: mail
 #. odoo-javascript
@@ -3126,6 +3121,7 @@ msgstr "Concluir e agendar próxima"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/attachment_list.js:0
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "Download"
@@ -3612,9 +3608,8 @@ msgstr "Falhou"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/webclient/web/webclient.js:0
-#, python-format
 msgid "Failed to enable push notifications"
-msgstr ""
+msgstr "Falha ao ativar as notificações por push"
 
 #. module: mail
 #. odoo-javascript
@@ -6734,6 +6729,14 @@ msgid "Open Form View"
 msgstr "Visualização de formulário aberto"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+#, python-format
+msgid "Open Link"
+msgstr "Abrir link"
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_tree
 msgid "Open Owner"
 msgstr "Dono aberto"
@@ -7606,6 +7609,7 @@ msgstr "Campo da relação"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/attachment_list.js:0
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 #: code:addons/mail/static/src/core/common/link_preview.xml:0
 #: code:addons/mail/static/src/core/common/message_reaction_menu.xml:0

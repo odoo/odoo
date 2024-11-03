@@ -1570,6 +1570,18 @@ msgid ""
 msgstr "勘定科目%sは消込を許可していません。許可するには、まずこの勘定科目の設定を変更して下さい。"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "Account %s is of payable type, but is used in a sale operation."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "Account %s is of receivable type, but is used in a purchase operation."
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
 msgid "Account Cash Rounding"
 msgstr "勘定科目現金丸め"
@@ -4093,7 +4105,7 @@ msgstr "会社文書レイアウト"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__fiscal_country_codes
 msgid "Company Fiscal Country Code"
-msgstr "会社の税法上の居住地国コード"
+msgstr "会社の会計上の国コード"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_storno
@@ -13673,7 +13685,7 @@ msgstr ""
 msgid ""
 "The Availability is set to 'Country Matches' but the field Country is not "
 "set."
-msgstr ""
+msgstr "可用性は '国一致' に設定されていますが、国フィールドは設定されていません。"
 
 #. module: account
 #. odoo-python

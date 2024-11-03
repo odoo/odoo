@@ -30,12 +30,12 @@
 # Umur Akın <umura@projetgrup.com>, 2024
 # Levent Karakaş <levent@mektup.at>, 2024
 # Murat Durmuş <muratd@projetgrup.com>, 2024
-# Nadir Gazioglu <nadirgazioglu@gmail.com>, 2024
 # Halil, 2024
-# Ediz Duman <neps1192@gmail.com>, 2024
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2024
 # Murat Kaplan <muratk@projetgrup.com>, 2024
 # Martin Trigaux, 2024
+# Nadir Gazioglu <nadirgazioglu@gmail.com>, 2024
+# Ediz Duman <neps1192@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -43,7 +43,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-06 10:23+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Martin Trigaux, 2024\n"
+"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2024\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -260,18 +260,6 @@ msgstr "%s (E-posta Şablonu)"
 #: code:addons/mail/models/mail_template.py:0
 msgid "%s (copy)"
 msgstr "%s (kopya)"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/public_web/out_of_focus_service_patch.js:0
-msgid "%s Message"
-msgstr "%s Mesaj"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/public_web/out_of_focus_service_patch.js:0
-msgid "%s Messages"
-msgstr "%s Mesajlar"
 
 #. module: mail
 #. odoo-python
@@ -660,6 +648,12 @@ msgstr "Aksiyon Gerekiyor"
 #: model:ir.model,name:mail.model_ir_actions_act_window_view
 msgid "Action Window View"
 msgstr "Pencere Aksiyon Görünümü"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+msgid "Actions"
+msgstr "Aksiyonlar"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__activity_category
@@ -1634,7 +1628,6 @@ msgstr "İletilmeyen"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/webclient/web/webclient.js:0
-#, python-format
 msgid ""
 "Brave: enable 'Google Services for Push Messaging' to enable push "
 "notifications"
@@ -3060,6 +3053,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/attachment_list.js:0
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "Download"
@@ -3543,7 +3537,6 @@ msgstr "Başarısız"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/webclient/web/webclient.js:0
-#, python-format
 msgid "Failed to enable push notifications"
 msgstr ""
 
@@ -6595,6 +6588,14 @@ msgid "Open Form View"
 msgstr ""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+#, python-format
+msgid "Open Link"
+msgstr "Bağlantıyı Aç"
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_tree
 msgid "Open Owner"
 msgstr ""
@@ -7460,6 +7461,7 @@ msgstr "İlişkili alanı"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/attachment_list.js:0
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 #: code:addons/mail/static/src/core/common/link_preview.xml:0
 #: code:addons/mail/static/src/core/common/message_reaction_menu.xml:0

@@ -1562,9 +1562,21 @@ msgid ""
 msgstr "賬戶 \"%s\" 不容許進行對賬。請先變更賬戶設定，設為允許對賬。"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "Account %s is of payable type, but is used in a sale operation."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "Account %s is of receivable type, but is used in a purchase operation."
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
 msgid "Account Cash Rounding"
-msgstr "科目現金捨入"
+msgstr "賬戶現金捨入"
 
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
@@ -1645,7 +1657,7 @@ msgstr "賬戶配對"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__account_ids
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Account Mapping"
-msgstr "項目映射"
+msgstr "賬戶配對"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_reversal
@@ -8109,7 +8121,7 @@ msgstr "發票：向外發送"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Invoiced"
-msgstr "已開立應收憑單"
+msgstr "已開立發票"
 
 #. module: account
 #. odoo-python
@@ -13643,7 +13655,7 @@ msgstr ""
 msgid ""
 "The Availability is set to 'Country Matches' but the field Country is not "
 "set."
-msgstr ""
+msgstr "此項目的可用性已設為「符合國家/地區」，但未設定「國家/地區」欄位。"
 
 #. module: account
 #. odoo-python
@@ -15121,7 +15133,7 @@ msgstr "借方總計"
 #: model:ir.model.fields,field_description:account.field_res_partner__total_invoiced
 #: model:ir.model.fields,field_description:account.field_res_users__total_invoiced
 msgid "Total Invoiced"
-msgstr "已開立應收憑單合計"
+msgstr "已開立發票總額"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__debit

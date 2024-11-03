@@ -1572,6 +1572,18 @@ msgid ""
 msgstr "账户%s不允许对账。首先应更改账户配置，设为允许对账。"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "Account %s is of payable type, but is used in a sale operation."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "Account %s is of receivable type, but is used in a purchase operation."
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
 msgid "Account Cash Rounding"
 msgstr "账户现金舍入"
@@ -13657,7 +13669,7 @@ msgstr ""
 msgid ""
 "The Availability is set to 'Country Matches' but the field Country is not "
 "set."
-msgstr ""
+msgstr "可用性设置为 “国家/地区匹配”，但未设置 “国家/地区 ”字段。"
 
 #. module: account
 #. odoo-python

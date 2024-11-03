@@ -3,8 +3,8 @@
 # 	* point_of_sale
 # 
 # Translators:
-# Tony Ng, 2024
 # Wil Odoo, 2024
+# Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-07-15 18:10+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -552,7 +552,7 @@ msgstr "帳戶"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_cash_rounding
 msgid "Account Cash Rounding"
-msgstr "科目現金捨入"
+msgstr "賬戶現金捨入"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__account_move_id
@@ -3359,7 +3359,7 @@ msgstr "發票付款：訂單 %(order)s (%(account_move)s)，以 %(payment_metho
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Invoiced"
-msgstr "已開立應收憑單"
+msgstr "已開立發票"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -5382,7 +5382,7 @@ msgstr "官方技術支援"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 msgid "Powered by Odoo"
-msgstr ""
+msgstr "由 Odoo 驅動"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6071,7 +6071,7 @@ msgstr "已發送請求"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Rescue Sessions"
-msgstr ""
+msgstr "挽救操作時段"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6471,7 +6471,7 @@ msgstr "序列號／批次號碼"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
 msgid "Served by %s"
-msgstr ""
+msgstr "服務員：%s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6573,7 +6573,7 @@ msgstr "設定每個產品的多個價格，自動折扣等。"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid "Set the new discount"
-msgstr ""
+msgstr "設定新的折扣"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7805,6 +7805,9 @@ msgid ""
 "\n"
 "Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"
 msgstr ""
+"若要刪除產品，請確保所有銷售點操作時段都已關閉。\n"
+"\n"
+"刪除在操作時段中仍然可用的產品，就像試圖從顧客手中，搶走咬了一半的漢堡包一樣，會引起大混亂！"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice
@@ -8449,7 +8452,7 @@ msgstr "不可在多種現金支付方式中使用同一日記賬。"
 msgid ""
 "You do not have permission to open a POS session. Please try opening a "
 "session with a different user"
-msgstr ""
+msgstr "您沒有權限開啟 POS 銷售點操作時段。請嘗試使用不同的使用者帳戶去開啟。"
 
 #. module: point_of_sale
 #. odoo-python
