@@ -85,6 +85,14 @@ patch(Thread.prototype, {
         const activeId =
             typeof this.id === "string" ? `mail.box_${this.id}` : `discuss.channel_${this.id}`;
         router.pushState({ active_id: activeId });
+        if (
+            this.store.action_discuss_id &&
+            this.store.env.services.action?.currentController?.action.id ===
+                this.store.action_discuss_id
+        ) {
+            // Keep the action stack up to date (used by breadcrumbs).
+            this.store.env.services.action.currentController.action.context.active_id = activeId;
+        }
     },
     open(options) {
         if (this.store.env.services.ui.isSmall) {
