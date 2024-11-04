@@ -275,7 +275,10 @@ export class ListController extends Component {
     }
 
     async openRecord(record, force = false) {
-        await record.save();
+        const dirty = await record.isDirty();
+        if (dirty) {
+            await record.save();
+        }
         if (this.archInfo.openAction) {
             this.actionService.doActionButton({
                 name: this.archInfo.openAction.action,
