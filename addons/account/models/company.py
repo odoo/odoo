@@ -846,6 +846,9 @@ class ResCompany(models.Model):
 
         # Update the opening move's lines.
         balancing_account = self.get_unaffected_earnings_account()
+        # TODO: lost upgrade script to deprecate this account
+        balancing_account.deprecated = True
+
         open_balance = (
             sum(corresponding_lines_per_account[(balancing_account, 'credit')].mapped('credit'))
             -sum(corresponding_lines_per_account[(balancing_account, 'debit')].mapped('debit'))
