@@ -240,7 +240,7 @@ test("Data reloaded strictly upon domain update", async () => {
     model.dispatch("UPDATE_CHART", {
         definition: {
             ...newDefinition,
-            type: "odoo_bar",
+            background: "#00FF00",
         },
         id: chartId,
         sheetId,
@@ -943,4 +943,22 @@ test("Can configure the chart datasets", async () => {
     definition = model.getters.getChartDefinition(chartId);
     // the second dataset was dropped from the definition since there is now only a single dataset in the data source
     expect(definition.dataSets).toEqual([{ label: "My dataset" }]);
+});
+
+test("Chart data source is recreated when chart type is updated", async () => {
+    const { model } = await createSpreadsheetWithChart({ type: "odoo_bar" });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    const chartDataSource = model.getters.getChartDataSource(chartId);
+    model.dispatch("UPDATE_CHART", {
+        definition: {
+            ...model.getters.getChartDefinition(chartId),
+            type: "odoo_line",
+        },
+        id: chartId,
+        sheetId,
+    });
+    expect(chartDataSource !== model.getters.getChartDataSource(chartId)).toBe(true, {
+        message: "The data source should have been recreated",
+    });
 });
