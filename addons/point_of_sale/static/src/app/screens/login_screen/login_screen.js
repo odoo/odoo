@@ -1,8 +1,8 @@
 import { registry } from "@web/core/registry";
-import { usePos } from "@point_of_sale/app/store/pos_hook";
+import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Component, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { useTime } from "@point_of_sale/app/utils/time_hook";
+import { useTime } from "@point_of_sale/app/hooks/time_hook";
 import { _t } from "@web/core/l10n/translation";
 
 export class LoginScreen extends Component {

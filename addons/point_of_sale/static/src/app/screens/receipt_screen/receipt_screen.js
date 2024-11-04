@@ -1,9 +1,9 @@
 import { _t } from "@web/core/l10n/translation";
-import { useErrorHandlers, useTrackedAsync } from "@point_of_sale/app/utils/hooks";
+import { useErrorHandlers, useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
 import { registry } from "@web/core/registry";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 import { useState, Component, onMounted } from "@odoo/owl";
-import { usePos } from "@point_of_sale/app/store/pos_hook";
+import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 

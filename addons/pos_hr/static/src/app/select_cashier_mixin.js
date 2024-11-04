@@ -4,8 +4,8 @@ import { _t } from "@web/core/l10n/translation";
 
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_popup/selection_popup";
-import { useBarcodeReader } from "@point_of_sale/app/barcode/barcode_reader_hook";
-import { usePos } from "@point_of_sale/app/store/pos_hook";
+import { useBarcodeReader } from "@point_of_sale/app/hooks/barcode_reader_hook";
+import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import { makeAwaitable, ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 

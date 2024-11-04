@@ -1,5 +1,5 @@
 import { useService } from "@web/core/utils/hooks";
-import { usePos } from "@point_of_sale/app/store/pos_hook";
+import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { MoneyDetailsPopup } from "@point_of_sale/app/components/popups/money_details_popup/money_details_popup";
 import { Component, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";

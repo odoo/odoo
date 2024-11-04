@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { usePos } from "@point_of_sale/app/store/pos_hook";
+import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Component } from "@odoo/owl";
 import { ask, makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
 import { PartnerList } from "../../partner_list/partner_list";

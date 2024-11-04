@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { parseFloat } from "@web/views/fields/parsers";
-import { useErrorHandlers, useAsyncLockedMethod } from "@point_of_sale/app/utils/hooks";
+import { useErrorHandlers, useAsyncLockedMethod } from "@point_of_sale/app/hooks/hooks";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
@@ -11,7 +11,7 @@ import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 
 import { PaymentScreenPaymentLines } from "@point_of_sale/app/screens/payment_screen/payment_lines/payment_lines";
 import { PaymentScreenStatus } from "@point_of_sale/app/screens/payment_screen/payment_status/payment_status";
-import { usePos } from "@point_of_sale/app/store/pos_hook";
+import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Component, useState, onMounted } from "@odoo/owl";
 import { Numpad, enhancedButtons } from "@point_of_sale/app/generic_components/numpad/numpad";
 import { floatIsZero, roundPrecision as round_pr } from "@web/core/utils/numbers";

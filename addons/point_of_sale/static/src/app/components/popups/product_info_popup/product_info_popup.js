@@ -1,5 +1,5 @@
 import { Dialog } from "@web/core/dialog/dialog";
-import { usePos } from "@point_of_sale/app/store/pos_hook";
+import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Component } from "@odoo/owl";
 import { ProductInfoBanner } from "@point_of_sale/app/components/product_info_banner/product_info_banner";
 

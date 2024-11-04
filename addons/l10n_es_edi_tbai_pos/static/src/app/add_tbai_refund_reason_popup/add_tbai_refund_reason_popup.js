@@ -1,5 +1,5 @@
 import { Dialog } from "@web/core/dialog/dialog";
-import { usePos } from "@point_of_sale/app/store/pos_hook";
+import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Component, useState } from "@odoo/owl";
 
 export class AddTbaiRefundReasonPopup extends Component {

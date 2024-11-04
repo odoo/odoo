@@ -1,5 +1,5 @@
 import { Component } from "@odoo/owl";
-import { usePos } from "@point_of_sale/app/store/pos_hook";
+import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 
 export class BalanceButton extends Component {
     static template = "pos_six.BalanceButton";

@@ -11,7 +11,7 @@ import { Orderline } from "@point_of_sale/app/generic_components/orderline/order
 import { OrderWidget } from "@point_of_sale/app/generic_components/order_widget/order_widget";
 import { CenteredIcon } from "@point_of_sale/app/generic_components/centered_icon/centered_icon";
 import { SearchBar } from "@point_of_sale/app/screens/ticket_screen/search_bar/search_bar";
-import { usePos } from "@point_of_sale/app/store/pos_hook";
+import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Component, onMounted, useState } from "@odoo/owl";
 import {
     BACKSPACE,
@@ -22,7 +22,7 @@ import {
 import { PosOrderLineRefund } from "@point_of_sale/app/models/pos_order_line_refund";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { parseUTCString } from "@point_of_sale/utils";
-import { useTrackedAsync } from "@point_of_sale/app/utils/hooks";
+import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
 
 const NBR_BY_PAGE = 30;
 

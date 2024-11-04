@@ -1,7 +1,7 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { SaleDetailsButton } from "@point_of_sale/app/navbar/sale_details_button/sale_details_button";
 import { Component } from "@odoo/owl";
-import { usePos } from "@point_of_sale/app/store/pos_hook";
+import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Input } from "@point_of_sale/app/generic_components/inputs/input/input";
 import { useService } from "@web/core/utils/hooks";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";

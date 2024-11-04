@@ -1,7 +1,7 @@
 import { Transition } from "@web/core/transition";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { Navbar } from "@point_of_sale/app/navbar/navbar";
-import { usePos } from "@point_of_sale/app/store/pos_hook";
+import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { reactive, Component, onMounted, onWillStart } from "@odoo/owl";
 import { effect } from "@web/core/utils/reactive";
 import { batched } from "@web/core/utils/timing";
