@@ -613,6 +613,20 @@ class TestRepair(common.TransactionCase):
         repair_order.action_repair_end()
         self.assertEqual(repair_order.state, 'done')
 
+    def test_sn_with_no_tracked_product(self):
+        """
+        Check that the lot_id field is cleared after updating the product in the repair order.
+        """
+        sn_1 = self.env['stock.lot'].create({'name': 'sn_1', 'product_id': self.product_storable_serial.id})
+        ro_form = Form(self.env['repair.order'])
+        ro_form.product_id = self.product_storable_serial
+        ro_form.lot_id = sn_1
+        repair_order = ro_form.save()
+        ro_form = Form(repair_order)
+        ro_form.product_id = self.product_storable_no
+        repair_order = ro_form.save()
+        self.assertFalse(repair_order.lot_id)
+
     def test_repair_multi_unit_order_with_serial_tracking(self):
         """
         Test that a sale order with a single order line with quantity > 1 for a product that creates a repair order and

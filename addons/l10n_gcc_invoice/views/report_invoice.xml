@@ -57,7 +57,7 @@
                                 فاتورة ملغاة
                             </span>
                             <span t-elif="o.move_type == 'out_refund' and o.state == 'posted'">
-                                إشعار خصم
+                                إشعار دائن
                             </span>
                             <span t-elif="o.move_type == 'out_refund' and o.state == 'draft'">
                                 إشعار خصم المسودة
@@ -66,7 +66,7 @@
                                 إشعار خصم ملغاة
                             </span>
                             <span t-elif="o.move_type == 'in_refund'">
-                                إشعار خصم المورد
+                                إشعار مدين
                             </span>
                             <span t-elif="o.move_type == 'in_invoice'">
                                 فاتورة المورد
@@ -140,7 +140,7 @@
                             <strong style="white-space:nowrap">Reference:
                             </strong>
                         </div>
-                        <div class="col-2">
+                        <div class="col-8">
                             <span t-field="o.ref"/>
                         </div>
                         <div class="col-2 text-end">

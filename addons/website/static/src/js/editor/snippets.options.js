@@ -10,7 +10,6 @@ import { NavbarLinkPopoverWidget } from "@website/js/widgets/link_popover_widget
 import wUtils from "@website/js/utils";
 import {
     applyModifications,
-    isImageCorsProtected,
     isImageSupportedForStyle,
     loadImageInfo,
 } from "@web_editor/js/editor/image_processing";
@@ -3779,7 +3778,7 @@ options.registry.WebsiteAnimate = options.Class.extend({
                     const imageToolsOpt = hoverEffectWidget.getParent();
                     return (
                         imageToolsOpt._canHaveHoverEffect() && imageToolsOpt._isImageSupportedForShapes()
-                        && !await isImageCorsProtected(this.$target[0])
+                        && !await weUtils.isImageCorsProtected(this.$target[0])
                     );
                 }
                 return false;
