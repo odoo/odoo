@@ -1040,6 +1040,7 @@ class MrpProduction(models.Model):
         self.ensure_one()
         update_info = []
         moves_to_assign = self.env['stock.move']
+        procurements = []
         for move in self.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel')):
             old_qty = move.product_uom_qty
             new_qty = float_round(old_qty * factor, precision_rounding=move.product_uom.rounding, rounding_method='UP')
@@ -1049,8 +1050,17 @@ class MrpProduction(models.Model):
                         or move.picking_type_id.reservation_method == 'at_confirm' \
                         or (move.reservation_date and move.reservation_date <= fields.Date.today()):
                     moves_to_assign |= move
+                if move.procure_method == 'make_to_order':
+                    procurement_qty = new_qty - old_qty
+                    values = move._prepare_procurement_values()
+                    origin = move._prepare_procurement_origin()
+                    procurements.append(self.env['procurement.group'].Procurement(
+                        move.product_id, procurement_qty, move.product_uom,
+                        move.location_id, move.name, origin, move.company_id, values))
                 update_info.append((move, old_qty, new_qty))
         moves_to_assign._action_assign()
+        if procurements:
+            self.env['procurement.group'].run(procurements)
         return update_info
 
     def _get_ready_to_produce_state(self):
