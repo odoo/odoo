@@ -67,7 +67,7 @@ patch(PosStore.prototype, {
                 tables
                     .map((t) => t["<-pos.order.table_id"])
                     .flat()
-                    .filter((o) => !o.finalized)
+                    .filter((o) => !o.finalized && typeof o.id === "number")
             ),
         ];
         await this.loadServerOrders([
