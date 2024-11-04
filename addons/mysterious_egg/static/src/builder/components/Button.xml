@@ -3,9 +3,9 @@
 
 <t t-name="mysterious_egg.Button">
     <button type="button" class="btn btn-primary"
-        t-att-class="{'active': this.isActive?.(props.id, this.activeState)}"
+        t-att-class="{'active': this.state.isActive}"
         t-att-title="props.title"
-        t-on-click="() => props.onClick ? props.onClick() : onClick?.(props.id)"
+        t-on-click="() => props.onClick ? props.onClick() : this.onClick()"
         t-on-mouseenter="() => this.onMouseenter?.(props.id)"
         t-on-mouseleave="() => this.onMouseleave?.(props.id)">
         <img t-if="props.iconImg" t-att-src="props.iconImg" t-att-alt="props.iconImgAlt"/>

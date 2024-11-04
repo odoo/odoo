@@ -1,4 +1,4 @@
-import { Component, useSubEnv } from "@odoo/owl";
+import { Component, EventBus, useSubEnv } from "@odoo/owl";
 
 export class ButtonGroup extends Component {
     static template = "mysterious_egg.ButtonGroup";
@@ -6,20 +6,13 @@ export class ButtonGroup extends Component {
         activeState: { type: Object, optional: true },
         isActive: { type: Boolean, optional: true },
         onClick: { type: Function, optional: true },
-        onMouseenter: { type: Function, optional: true },
-        onMouseleave: { type: Function, optional: true },
         slots: { type: Object, optional: true },
     };
 
     setup() {
+        const bus = new EventBus();
         useSubEnv({
-            buttonMetadatas: {
-                activeState: this.props.activeState,
-                isActive: this.props.isActive,
-                onClick: this.props.onClick,
-                onMouseenter: this.props.onMouseenter,
-                onMouseleave: this.props.onMouseleave,
-            },
+            buttonGroupBus: bus,
         });
     }
 }

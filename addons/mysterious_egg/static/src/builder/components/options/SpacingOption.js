@@ -6,21 +6,14 @@ export class SpacingOption extends Component {
     static components = {
         ...defaultOptionComponents,
     };
-    static props = {
-        toolboxElement: Object,
-    };
     setup() {
-        this.target = this.props.toolboxElement.querySelector(".o_grid_mode");
+        this.target = this.env.editingElement.querySelector(".o_grid_mode");
         this.targetComputedStyle = getComputedStyle(this.target);
 
         this.state = useState(this.setState({}));
         this.env.editorBus.addEventListener("STEP_ADDED", () => {
             this.setState(this.state);
         });
-        this.layoutButtonsProps = {
-            activeState: this.state,
-            isActive: (button, activeState) => button.id === activeState.elementLayout,
-        };
     }
     setState(object) {
         Object.assign(object, {

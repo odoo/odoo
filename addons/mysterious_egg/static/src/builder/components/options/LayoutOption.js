@@ -6,7 +6,6 @@ import {
     _toggleGridMode,
 } from "@web_editor/js/common/grid_layout_utils";
 import { AddElementOption } from "./AddElementOption";
-import { HorizontalAlignmentOption } from "./HorizontalAlignmentOption";
 import { SpacingOption } from "./SpacingOption";
 
 export class LayoutOption extends Component {
@@ -15,48 +14,35 @@ export class LayoutOption extends Component {
         ...defaultOptionComponents,
         AddElementOption,
         SpacingOption,
-        HorizontalAlignmentOption,
-    };
-    static props = {
-        toolboxElement: Object,
     };
     setup() {
         this.state = useState(this.setState({}));
         this.env.editorBus.addEventListener("STEP_ADDED", () => {
             this.setState(this.state);
         });
-        this.layoutButtonsProps = {
-            buttons: [
-                { id: "grid", label: "Grid" },
-                { id: "column", label: "Column" },
-            ],
-            activeState: this.state,
-            isActive: (buttonId, activeState) => buttonId === activeState.elementLayout,
-        };
     }
     setState(object) {
         Object.assign(object, {
             elementLayout: this.isGrid() ? "grid" : "column",
             columnCount: this.getRow()?.children.length,
         });
-        console.warn(`elementLayout:`, object.elementLayout);
 
         return object;
     }
     getRow() {
-        return this.props.toolboxElement.querySelector(".row");
+        return this.env.editingElement.querySelector(".row");
     }
     isGrid() {
         const rowEl = this.getRow();
         return rowEl && rowEl.classList.contains("o_grid_mode");
     }
     setGridLayout() {
-        const rowEl = this.props.toolboxElement.querySelector(".row");
+        const rowEl = this.env.editingElement.querySelector(".row");
         if (rowEl && rowEl.classList.contains("o_grid_mode")) {
             // Prevent toggling grid mode twice.
             return;
         }
-        _toggleGridMode(this.props.toolboxElement.querySelector(".container"));
+        _toggleGridMode(this.env.editingElement.querySelector(".container"));
         this.env.editor.dispatch("ADD_STEP");
     }
     setColumnLayout() {
