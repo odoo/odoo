@@ -55,6 +55,8 @@ class HttpCaseWithUserDemo(HttpCase):
                 'password': 'demo',
                 'partner_id': cls.partner_demo.id,
                 'groups_id': [Command.set([cls.env.ref('base.group_user').id, cls.env.ref('base.group_partner_manager').id])],
+                'signup_token': False,
+                'tz': 'Europe/Brussels',
             })
 
 
