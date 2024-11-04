@@ -96,5 +96,13 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             NumberPopup.isShown("5"),
             Dialog.confirm(),
             ProductScreen.guestNumberIs("5"),
+
+            // Test Cancel Order Button
+            Dialog.cancel(),
+            Order.hasLine({ productName: "Water", quantity: "5" }),
+            ProductScreen.clickControlButton("Cancel Order"),
+            Dialog.confirm(),
+            Order.doesNotHaveLine(),
+            FloorScreen.isShown(),
         ].flat(),
 });
