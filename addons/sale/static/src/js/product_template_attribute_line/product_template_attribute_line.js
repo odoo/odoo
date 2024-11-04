@@ -1,5 +1,4 @@
-/** @odoo-module */
-
+import { _t } from "@web/core/l10n/translation";
 import { Component } from "@odoo/owl";
 import { formatCurrency } from "@web/core/currency";
 import { BadgeExtraPrice } from "../badge_extra_price/badge_extra_price";
@@ -135,6 +134,10 @@ export class ProductTemplateAttributeLine extends Component {
     get showValuesChoice() {
         return this.props.attribute_values.length > 1
             || this.props.attribute.display_type == 'multi'
+    }
+
+    get customValuePlaceholder() {
+        return _t("Enter a customized value");
     }
 
     /**

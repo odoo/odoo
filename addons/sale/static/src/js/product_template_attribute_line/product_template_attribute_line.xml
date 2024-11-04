@@ -19,7 +19,7 @@
             <input
                 class="o_input w-lg-75 mb-4 ms-lg-auto"
                 type="text"
-                placeholder="Enter a customized value"
+                t-att-placeholder="customValuePlaceholder"
                 t-if="hasPTAVCustom &amp;&amp; isSelectedPTAVCustom()"
                 t-att-value="this.props.customValue"
                 t-on-change="updateCustomValue"
