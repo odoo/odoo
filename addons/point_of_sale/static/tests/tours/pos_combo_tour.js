@@ -96,6 +96,9 @@ registry.category("web_tour.tours").add("PosComboPriceCheckTour", {
             ProductScreen.selectedOrderlineHas("Whiteboard Pen", "1.0", "0.96"),
             ProductScreen.totalAmountIs("7.00"),
             ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
         ].flat(),
 });
 
