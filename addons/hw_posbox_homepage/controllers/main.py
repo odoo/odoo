@@ -387,7 +387,7 @@ class IoTboxHomepage(Home):
         except subprocess.CalledProcessError as e:
             raise Exception(e.output)
         except Exception as e:
-            _logger.error('A error encountered : %s ' % e)
+            _logger.exception("Flashing create partition failed")
             return Response(str(e), status=500)
 
     @http.route('/hw_proxy/perform_flashing_download_raspios', type='http', auth='none')
@@ -401,7 +401,7 @@ class IoTboxHomepage(Home):
             raise Exception(e.output)
         except Exception as e:
             self.clean_partition()
-            _logger.error('A error encountered : %s ' % e)
+            _logger.exception("Flashing download raspios failed")
             return Response(str(e), status=500)
 
     @http.route('/hw_proxy/perform_flashing_copy_raspios', type='http', auth='none')
@@ -415,7 +415,7 @@ class IoTboxHomepage(Home):
             raise Exception(e.output)
         except Exception as e:
             self.clean_partition()
-            _logger.error('A error encountered : %s ' % e)
+            _logger.exception("Flashing copy raspios failed")
             return Response(str(e), status=500)
 
     @http.route('/iot_restart_odoo_or_reboot', type='json', auth='none', cors='*', csrf=False)
@@ -428,7 +428,7 @@ class IoTboxHomepage(Home):
                 subprocess.call(['sudo', 'reboot'])
             return 'success'
         except Exception as e:
-            _logger.error('An error encountered : %s ', e)
+            _logger.exception("Failed to restart/reboot the IoT")
             return str(e)
 
     def _get_logger_effective_level_str(self, logger):
