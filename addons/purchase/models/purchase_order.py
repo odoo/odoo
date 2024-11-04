@@ -243,6 +243,14 @@ class PurchaseOrder(models.Model):
                 currency=order.currency_id or order.company_id.currency_id,
                 company=order.company_id,
             )
+<<<<<<< 18.0
+||||||| 9b64094d261feee757360f117730f61cac3c2133
+            if order.currency_id != order.company_currency_id:
+                order.tax_totals['amount_total_cc'] = f"({formatLang(self.env, self.amount_total_cc, currency_obj=self.company_currency_id)})"
+=======
+            if order.currency_id != order.company_currency_id:
+                order.tax_totals['amount_total_cc'] = f"({formatLang(self.env, order.amount_total_cc, currency_obj=self.company_currency_id)})"
+>>>>>>> 7467d68309c039c50e39b6ec0b8645ef7ff42ad4
 
     @api.depends('company_id.account_fiscal_country_id', 'fiscal_position_id.country_id', 'fiscal_position_id.foreign_vat')
     def _compute_tax_country_id(self):
