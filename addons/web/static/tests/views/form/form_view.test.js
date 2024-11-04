@@ -2159,7 +2159,7 @@ test(`two mutually exclusive labels with a dynamic invisible attribute`, async (
     });
     expect(`label.o_form_label`).toHaveCount(1);
     expect(`label.o_form_label`).toHaveText("label2");
-    expect(`.o_inner_group > div`).toHaveCount(1);
+    expect(`.o_cell`).toHaveCount(2);
 });
 
 test(`label is not rendered when invisible and not at top-level in a group`, async () => {
@@ -4783,8 +4783,9 @@ test(`nolabel`, async () => {
     expect(`label.o_form_label:eq(0)`).toHaveText("Product");
     expect(`label.o_form_label:eq(1)`).toHaveText("Bar");
     expect(`.firstgroup div`).toHaveStyle("");
-    expect(`.secondgroup div.o_wrap_field`).toHaveCount(2);
-    expect(`.secondgroup div.o_wrap_field:first div.o_cell`).toHaveCount(2);
+    expect(`.secondgroup div.o_wrap_label`).toHaveCount(1);
+    expect(`.secondgroup div.o_wrap_input`).toHaveCount(1);
+    expect(`.secondgroup div.o_cell`).toHaveCount(4);
 });
 
 test(`many2one in a one2many`, async () => {
@@ -8407,52 +8408,26 @@ test(`form rendering with groups with col/colspan`, async () => {
     expect(`.parent_group > *:eq(1)`).toHaveClass("col-lg-8");
 
     // Verify .group_4 content
-    expect(`.group_4 > div.o_wrap_field`).toHaveCount(3);
-    expect(`.group_4 > div.o_wrap_field:eq(0) div.o_cell`).toHaveCount(1);
-    expect(`.group_4 > div.o_wrap_field:eq(0) div.o_cell`).toHaveAttribute(
-        "style",
-        "grid-column: span 3;"
-    );
-    expect(`.group_4 > div.o_wrap_field:eq(1) div.o_cell`).toHaveCount(2);
-    expect(`.group_4 > div.o_wrap_field:eq(1) div.o_cell:eq(0)`).toHaveAttribute(
-        "style",
-        "grid-column: span 2;"
-    );
-    expect(`.group_4 > div.o_wrap_field:eq(2) div.o_cell`).toHaveCount(1);
-    expect(`.group_4 > div.o_wrap_field:eq(2) div.o_cell`).toHaveAttribute(
-        "style",
-        "grid-column: span 4;"
-    );
+    expect(`.group_4 > div.o_cell`).toHaveCount(4);
+    expect(`.group_4 > div.o_cell:first-child`).toHaveAttribute("style", "grid-column: span 3;");
+    expect(`.group_4 > div.o_cell:nth-child(2)`).toHaveAttribute("style", "grid-column: span 2;");
+    expect(`.group_4 > div.o_cell:last-child`).toHaveAttribute("style", "grid-column: span 4;");
 
     // Verify .group_3 content
     expect(`.group_3 > *`).toHaveCount(3);
     expect(`.group_3 > .col-lg-4`).toHaveCount(3);
 
     // Verify .group_1 content
-    expect(`.group_1 > .o_wrap_field`).toHaveCount(3);
+    expect(`.group_1 > .o_cell`).toHaveCount(3);
 
     // Verify .field_group content
-    expect(`.field_group > .o_wrap_field`).toHaveCount(5);
-    expect(`.field_group > .o_wrap_field:eq(0) .o_cell`).toHaveCount(2);
-    expect(`.field_group > .o_wrap_field:eq(0) .o_cell:eq(0)`).toHaveClass("o_wrap_label");
-    expect(`.field_group > .o_wrap_field:eq(0) .o_cell:eq(1)`).toHaveAttribute(
-        "style",
-        "grid-column: span 2;"
-    );
+    expect(`.field_group > .o_cell`).toHaveCount(10);
+    expect(`.field_group > .o_cell:first-child`).toHaveClass("o_wrap_label");
+    expect(`.field_group > .o_cell:nth-child(2)`).toHaveAttribute("style", "grid-column: span 2;");
 
-    expect(`.field_group > .o_wrap_field:eq(1) .o_cell`).toHaveCount(2);
+    expect(`.field_group > .o_cell:nth-child(5)`).toHaveClass("o_wrap_label");
 
-    expect(`.field_group > .o_wrap_field:eq(2) .o_cell`).toHaveCount(2);
-    expect(`.field_group > .o_wrap_field:eq(2) .o_cell:eq(0)`).toHaveClass("o_wrap_label");
-
-    expect(`.field_group > .o_wrap_field:eq(3) .o_cell`).toHaveCount(1);
-    expect(`.field_group > .o_wrap_field:eq(3) .o_cell`).toHaveAttribute(
-        "style",
-        "grid-column: span 3;"
-    );
-
-    expect(`.field_group > .o_wrap_field:eq(4) .o_cell`).toHaveCount(3);
-    expect(`.field_group > .o_wrap_field:eq(4) .o_cell:eq(1)`).toHaveClass("o_wrap_label");
+    expect(`.field_group > .o_cell:nth-child(9)`).toHaveClass("o_wrap_label");
 });
 
 test(`form rendering innergroup: separator should take one line`, async () => {
@@ -8476,11 +8451,10 @@ test(`form rendering innergroup: separator should take one line`, async () => {
         `,
         resId: 1,
     });
-    expect(`.o_inner_group > div:eq(0) > .o_cell`).toHaveCount(1);
-    expect(`.o_inner_group > div:eq(0) .o_horizontal_separator`).toHaveCount(1);
-    expect(`.o_inner_group > div:eq(1) > .o_cell`).toHaveCount(2);
-    expect(`.o_inner_group > div:eq(1) label[for=display_name_0]`).toHaveCount(1);
-    expect(`.o_inner_group > div:eq(1) div[name=display_name]`).toHaveCount(1);
+    expect(`.o_inner_group > .o_cell`).toHaveCount(3);
+    expect(`.o_inner_group > .o_cell:first-child .o_horizontal_separator`).toHaveCount(1);
+    expect(`.o_inner_group > .o_cell:nth-child(2) label[for=display_name_0]`).toHaveCount(1);
+    expect(`.o_inner_group > .o_cell:last-child div[name=display_name]`).toHaveCount(1);
 });
 
 test(`outer and inner groups string attribute`, async () => {
@@ -8526,19 +8500,16 @@ test(`inner group with invisible cells`, async () => {
     });
 
     await contains(`[name='foo'] input`).edit("1");
-    expect(`.o_wrap_field`).toHaveCount(1);
-    expect(`.o_wrap_field .cell1`).toHaveCount(0);
-    expect(`.o_wrap_field .cell2`).toHaveCount(1);
+    expect(`.cell1`).toHaveCount(0);
+    expect(`.cell2`).toHaveCount(1);
 
     await contains(`[name='foo'] input`).edit("2");
-    expect(`.o_wrap_field`).toHaveCount(1);
-    expect(`.o_wrap_field .cell1`).toHaveCount(1);
-    expect(`.o_wrap_field .cell2`).toHaveCount(0);
+    expect(`.cell1`).toHaveCount(1);
+    expect(`.cell2`).toHaveCount(0);
 
     await contains(`[name='foo'] input`).edit("3");
-    expect(`.o_wrap_field`).toHaveCount(1);
-    expect(`.o_wrap_field .cell1`).toHaveCount(1);
-    expect(`.o_wrap_field .cell2`).toHaveCount(1);
+    expect(`.cell1`).toHaveCount(1);
+    expect(`.cell2`).toHaveCount(1);
 });
 
 test(`form group with newline tag inside`, async () => {
@@ -8578,11 +8549,14 @@ test(`form group with newline tag inside`, async () => {
     });
 
     // Inner group
-    expect(`.main_inner_group > .o_wrap_field`).toHaveCount(2);
-    expect(`.main_inner_group > .o_wrap_field:first > .o_wrap_label`).toHaveCount(1);
-    expect(`.main_inner_group > .o_wrap_field:first .o_field_widget`).toHaveCount(1);
-    expect(`.main_inner_group > .o_wrap_field:last .o_wrap_label`).toHaveCount(2);
-    expect(`.main_inner_group > .o_wrap_field:last .o_field_widget`).toHaveCount(2);
+    expect(`.main_inner_group .o_cell`).toHaveCount(6);
+    expect(`.main_inner_group > .o_cell.o_wrap_label:first-child`).toHaveCount(1);
+    expect(`.main_inner_group > .o_cell.o_wrap_input:nth-child(2)`).toHaveCount(1);
+    expect(`.main_inner_group > .o_wrap_field_boolean:nth-child(3)`).toHaveCount(1);
+    expect(`.main_inner_group > .o_wrap_field_boolean:nth-child(3) > .o_wrap_label`).toHaveCount(1);
+    expect(`.main_inner_group > .o_wrap_field_boolean:nth-child(3) > .o_wrap_input`).toHaveCount(1);
+    expect(`.main_inner_group > .o_cell.o_wrap_label:nth-child(4)`).toHaveCount(1);
+    expect(`.main_inner_group > .o_cell.o_wrap_input:nth-child(5)`).toHaveCount(1);
 
     // Outer group
     const bottomGroupRect = queryFirst(`.bottom_group`).getBoundingClientRect();
