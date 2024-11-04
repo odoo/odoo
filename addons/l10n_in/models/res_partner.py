@@ -257,3 +257,18 @@ class ResPartner(models.Model):
             self.state_id = state_id
         if self.ref_company_ids:
             self.ref_company_ids._update_l10n_in_fiscal_position()
+
+    def _update_l10n_in_gst_treatment_from_iap_autocomplete(self):
+        """
+            This method is used to update the GST treatment of the partner based on the response from
+            IAP autocomplete API.
+        """
+        response = self.env['res.partner'].enrich_by_gst(self.vat) if self.vat else {}
+        # Response is empty when GSTIN is invalid or removed.
+        if not response:
+            self.l10n_in_gst_treatment = 'unregistered'
+            return
+        # In case of any error from IAP side, don't do anything
+        if response.get('error'):
+            return
+        self.l10n_in_gst_treatment = response.get('l10n_in_gst_treatment', 'regular')
