@@ -2,17 +2,17 @@
 <odoo>
 
 <template id="s_rating" name="Rating">
-    <div class="s_rating pt16 pb16" data-vcss="001" data-icon="fa-star">
-        <h4 class="s_rating_title">Quality</h4>
+    <div class="s_rating s_rating_no_title pt16 pb16" data-vcss="001" data-icon="fa-star" aria-label="3 out of 5 stars">
+        <h4 class="s_rating_title">Rating</h4>
         <div class="s_rating_icons o_not_editable">
-            <span class="s_rating_active_icons">
-                <i class="fa fa-star"/>
-                <i class="fa fa-star"/>
-                <i class="fa fa-star"/>
+            <span class="s_rating_active_icons" style="color: #f3cc00;">
+                <i class="fa fa-star" role="presentation"/>
+                <i class="fa fa-star" role="presentation"/>
+                <i class="fa fa-star" role="presentation"/>
             </span>
-            <span class="s_rating_inactive_icons">
-                <i class="fa fa-star-o"/>
-                <i class="fa fa-star-o"/>
+            <span class="s_rating_inactive_icons" style="color: var(--border-color);">
+                <i class="fa fa-star" role="presentation"/>
+                <i class="fa fa-star" role="presentation"/>
             </span>
         </div>
     </div>
@@ -48,13 +48,22 @@
             </we-row>
             <we-button-group string="Size" data-apply-to=".s_rating_icons">
                 <we-button data-select-class="" title="Small" data-img="/website/static/src/img/snippets_options/size_small.svg"/>
-                <we-button data-select-class="fa-2x" title="Medium" data-img="/website/static/src/img/snippets_options/size_medium.svg"/>
-                <we-button data-select-class="fa-3x" title="Large" data-img="/website/static/src/img/snippets_options/size_large.svg"/>
+                <we-button data-select-class="fa-lg" title="Medium" data-img="/website/static/src/img/snippets_options/size_medium.svg"/>
+
+                <!--
+                This one is hidden and only there for compatibility (allowing to
+                remove the fa-3x class. Note that it is put in the middle to
+                make sure rounded corners are properly applied on the first and
+                last buttons of the group.
+                -->
+                <we-button data-select-class="fa-3x" data-name="rating_icon_xl"/>
+
+                <we-button data-select-class="fa-2x" title="Large" data-img="/website/static/src/img/snippets_options/size_large.svg"/>
             </we-button-group>
             <we-select string="Title Position">
                 <we-button data-select-class="">Top</we-button>
                 <we-button data-select-class="s_rating_inline">Left</we-button>
-                <we-button data-select-class="s_rating_no_title">None</we-button>
+                <we-button data-select-class="s_rating_no_title">Hidden</we-button>
             </we-select>
         </div>
     </xpath>
