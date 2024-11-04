@@ -257,3 +257,16 @@ class StockMove(models.Model):
 
     def _get_all_related_sm(self, product):
         return super()._get_all_related_sm(product) | self.filtered(lambda m: m.purchase_line_id.product_id == product)
+
+    def _create_in_svl(self, forced_quantity=None):
+        res = super(StockMove, self)._create_in_svl(forced_quantity=forced_quantity)
+        for move in self:
+            if move and not move.company_id.anglo_saxon_accounting and move._is_in() and move.product_id.cost_method != 'standard':
+                valued_lines = self.env['account.move.line'].sudo()
+                valued_lines |= move._get_all_related_aml().filtered(
+                    lambda line: line.parent_state == "posted" and line.move_id.is_purchase_document(True)
+                )
+                if valued_lines:
+                    svls, _amls = valued_lines._apply_price_difference()
+                    res |= svls
+        return res

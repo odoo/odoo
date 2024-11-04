@@ -3468,3 +3468,105 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         move_line.qty_done = 2.
         delivery.button_validate()
         self.assertEqual(delivery.state, 'done')
+
+    def test_invoice_first_receipt_later_date_exchange_rate_for_price_diff(self):
+        company = self.env.user.company_id
+        company.anglo_saxon_accounting = False
+        company.currency_id = self.usd_currency
+
+        self.product1.detailed_type = 'product'
+        self.product1.purchase_method = 'purchase'
+
+        self.product1.with_company(company).categ_id.property_cost_method = 'fifo'
+        self.product1.with_company(company).categ_id.property_valuation = 'real_time'
+
+
+        po_date = '2023-10-01'
+        bill_date = '2023-10-15'
+        receipt_date = '2023-10-31'
+
+        po_rate = 2.0
+        bill_rate = 3.0
+        receipt_rate = 4.0
+
+        self.env['res.currency.rate'].search([]).unlink()
+        self.env['res.currency.rate'].create([
+            {
+                'name': po_date,
+                'rate': po_rate,
+                'currency_id': self.eur_currency.id,
+                'company_id': company.id,
+            },
+            {
+                'name': bill_date,
+                'rate': bill_rate,
+                'currency_id': self.eur_currency.id,
+                'company_id': company.id,
+            },
+            {
+                'name': receipt_date,
+                'rate': receipt_rate,
+                'currency_id': self.eur_currency.id,
+                'company_id': company.id,
+            },
+        ])
+
+        with freeze_time(po_date):
+            purchase_price = 100
+            po = self.env['purchase.order'].create({
+                'partner_id': self.partner_id.id,
+                'currency_id': self.eur_currency.id,
+                'order_line': [
+                    Command.create({
+                        'product_id': self.product1.id,
+                        'product_qty': 1.0,
+                        'price_unit': purchase_price,
+                        'taxes_id': False,
+                    }),
+                ]
+            })
+            po.button_confirm()
+
+        with freeze_time(bill_date):
+            po.action_create_invoice()
+            bill = po.invoice_ids
+            bill.invoice_date = bill_date
+            bill.action_post()
+
+        with freeze_time(receipt_date):
+            receipt = po.picking_ids
+            receipt.move_line_ids.qty_done = 1
+            receipt.button_validate()
+
+        product_accounts = self.product1.product_tmpl_id.get_product_accounts()
+        payable_id = self.company_data['default_account_payable'].id
+        stock_in_id = product_accounts['stock_input'].id
+        expense_id = product_accounts['expense'].id
+        stock_valuation = product_accounts['stock_valuation'].id
+
+        self.assertRecordValues(bill.line_ids, [
+            # pylint: disable=bad-whitespace
+            {'debit': 33.33,    'credit': 0.0,    'account_id': expense_id,   'reconciled': False,    'amount_currency':  100.0},
+            {'debit': 0,        'credit': 33.33,  'account_id': payable_id,   'reconciled': False,    'amount_currency': -100.0},
+        ])
+
+        stock_move = receipt.move_ids
+        related_amls = stock_move._get_all_related_aml()
+        account_moves = related_amls.move_id
+
+        self.assertTrue(len(account_moves - bill) == 2)
+
+        layer_receipt = (account_moves - bill).stock_valuation_layer_ids.filtered('stock_move_id')
+        layer_receipt_diff = (account_moves - bill).stock_valuation_layer_ids.filtered(lambda l: not l.stock_move_id)
+
+        self.assertRecordValues(layer_receipt.account_move_id.line_ids, [
+            # pylint: disable=bad-whitespace
+            {'debit': 0,   'credit': 25,    'account_id': stock_in_id,  'reconciled': False, 'amount_currency': -100.0},
+            {'debit': 25,   'credit': 0,    'account_id': stock_valuation,  'reconciled': False, 'amount_currency': 100.0},
+        ])
+
+        self.assertRecordValues(layer_receipt_diff.account_move_id.line_ids, [
+            # pylint: disable=bad-whitespace
+            {'debit': 0,   'credit': 8.33,    'account_id': stock_in_id,  'reconciled': False, 'amount_currency': 0},
+            {'debit': 8.33,   'credit': 0,    'account_id': stock_valuation,  'reconciled': False, 'amount_currency': 0},
+        ])
