@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import FormEditorRegistry from "@website/js/form_editor_registry";
 

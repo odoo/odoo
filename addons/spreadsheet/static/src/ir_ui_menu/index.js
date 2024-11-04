@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { registry } from "@web/core/registry";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 

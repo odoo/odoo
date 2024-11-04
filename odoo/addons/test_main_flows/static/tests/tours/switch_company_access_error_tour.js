@@ -1,4 +1,3 @@
-/** @odoo-module **/
 import { router } from "@web/core/browser/router";
 import { registry } from "@web/core/registry";
 

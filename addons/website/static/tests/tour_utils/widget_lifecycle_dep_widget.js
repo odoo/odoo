@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 odoo.loader.bus.addEventListener("module-started", (e) => {
     if (e.detail.moduleName !== "@web/legacy/js/public/public_widget") {
         return;

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import { BarcodeScanner } from "@barcodes/components/barcode_scanner";
 import { Component, onWillStart } from "@odoo/owl";

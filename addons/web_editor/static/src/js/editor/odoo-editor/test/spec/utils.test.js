@@ -1,4 +1,3 @@
-/** @odoo-module */
 /* global afterEach */
 
 import {

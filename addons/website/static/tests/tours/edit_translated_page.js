@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { registry } from "@web/core/registry";
 import { clickOnEditAndWaitEditModeInTranslatedPage } from "@website/js/tours/tour_utils";
 

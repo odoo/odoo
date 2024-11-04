@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { registry } from "@web/core/registry";
 import { fillTemporalService } from "@crm/views/fill_temporal_service";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";

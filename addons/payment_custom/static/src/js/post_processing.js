@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import paymentPostProcessing from '@payment/js/post_processing';
 
 paymentPostProcessing.include({

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import { ActivityMenu } from "@mail/core/web/activity_menu";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";

@@ -1,4 +1,3 @@
-/** @odoo-module **/
 /* global checkVATNumber */
 
 import { loadJS } from "@web/core/assets";

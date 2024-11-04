@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { OdooCorePlugin } from "@spreadsheet/plugins";
 const { tokenize, parse, convertAstNodes, astToFormula } = spreadsheet;

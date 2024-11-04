@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { AttendeeCalendarCommonRenderer } from "@calendar/views/attendee_calendar/common/attendee_calendar_common_renderer";
 import { AttendeeCalendarRenderer } from "@calendar/views/attendee_calendar/attendee_calendar_renderer";
 import { user } from "@web/core/user";

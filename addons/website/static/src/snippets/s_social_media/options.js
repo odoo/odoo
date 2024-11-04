@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import fonts from '@web_editor/js/wysiwyg/fonts';
 import weUtils from '@web_editor/js/common/utils';
 import options from '@web_editor/js/editor/snippets.options';

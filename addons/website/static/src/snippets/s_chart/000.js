@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { loadBundle } from "@web/core/assets";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import weUtils from "@web_editor/js/common/utils";

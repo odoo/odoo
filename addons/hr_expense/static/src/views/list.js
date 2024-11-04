@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { ExpenseDashboard } from '../components/expense_dashboard';
 import { ExpenseMobileQRCode } from '../mixins/qrcode';
 import { ExpenseDocumentUpload, ExpenseDocumentDropZone } from '../mixins/document_upload';

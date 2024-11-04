@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { MockServer } from "@web/../tests/helpers/mock_server";
 import testUtils from "@web/../tests/legacy_tests/helpers/test_utils";
 import { patch } from "@web/core/utils/patch";

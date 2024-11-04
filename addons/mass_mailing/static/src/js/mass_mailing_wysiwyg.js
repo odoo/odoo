@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { loadBundle } from "@web/core/assets";
 import { Wysiwyg } from "@web_editor/js/wysiwyg/wysiwyg";
 import { closestElement } from "@web_editor/js/editor/odoo-editor/src/OdooEditor";

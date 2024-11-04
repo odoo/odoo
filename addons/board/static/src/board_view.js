@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { registry } from "@web/core/registry";
 import { BoardController } from "./board_controller";
 import { visitXML } from "@web/core/utils/xml";

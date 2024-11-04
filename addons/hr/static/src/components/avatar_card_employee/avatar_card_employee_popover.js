@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { AvatarCardResourcePopover } from "@resource_mail/components/avatar_card_resource/avatar_card_resource_popover";
 
 export class AvatarCardEmployeePopover extends AvatarCardResourcePopover {

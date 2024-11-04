@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import { CalendarModel } from '@web/views/calendar/calendar_model';
 

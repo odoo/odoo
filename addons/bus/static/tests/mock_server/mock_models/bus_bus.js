@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { before } from "@odoo/hoot";
 import { MockServer, models } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";

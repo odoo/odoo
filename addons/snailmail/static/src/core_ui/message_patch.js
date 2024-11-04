@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Message } from "@mail/core/common/message";
 
 import { SnailmailError } from "./snailmail_error";

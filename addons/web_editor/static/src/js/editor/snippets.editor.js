@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { clamp } from "@web/core/utils/numbers";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useService, useBus } from "@web/core/utils/hooks";

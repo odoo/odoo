@@ -1,4 +1,3 @@
-/** @odoo-module */
 // @ts-check
 
 import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";

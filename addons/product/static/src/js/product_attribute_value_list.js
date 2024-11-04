@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { _t } from '@web/core/l10n/translation';
 import { ConfirmationDialog, deleteConfirmationMessage } from '@web/core/confirmation_dialog/confirmation_dialog';
 import { ListRenderer } from '@web/views/list/list_renderer';

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { queryOne } from "@odoo/hoot-dom";
 import {
     changeOption,

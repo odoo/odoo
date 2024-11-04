@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { ChatGPTDialog } from '@web_editor/js/wysiwyg/widgets/chatgpt_dialog';
 import { useState, useEffect, useRef } from "@odoo/owl";
 import { useAutofocus } from "@web/core/utils/hooks";

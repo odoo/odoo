@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import WebsiteSale from '@website_sale_stock/js/website_sale';
 
 WebsiteSale.include({

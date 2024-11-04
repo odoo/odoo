@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Component, onWillStart, markup } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { rpc } from "@web/core/network/rpc";

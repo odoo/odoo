@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { getRawValue } from "@web/views/kanban/kanban_record";
 

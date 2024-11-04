@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { queryAll, queryText } from "@odoo/hoot-dom";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";

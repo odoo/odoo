@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { EventBus } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";

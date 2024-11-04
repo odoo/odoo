@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import {SIZES, MEDIAS_BREAKPOINTS} from "@web/core/ui/ui_service";
 import {
     normalizeCSSColor,

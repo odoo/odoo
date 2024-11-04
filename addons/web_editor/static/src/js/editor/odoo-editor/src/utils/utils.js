@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 export const DIRECTIONS = {
     LEFT: false,
     RIGHT: true,

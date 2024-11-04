@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { OdooEditor } from '../../src/OdooEditor.js';
 import {
     childNodeIndex,

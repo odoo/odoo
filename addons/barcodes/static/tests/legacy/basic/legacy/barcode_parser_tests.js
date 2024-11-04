@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { BarcodeParser } from "@barcodes/js/barcode_parser";
 
 

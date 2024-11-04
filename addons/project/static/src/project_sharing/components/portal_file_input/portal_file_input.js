@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { FileInput } from '@web/core/file_input/file_input';
 
 export class PortalFileInput extends FileInput {

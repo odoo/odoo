@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 const { DateTime } = luxon;
 import { Domain } from "@web/core/domain";
 import { expect } from "@odoo/hoot";

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { insertSnippet, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 
 import { FileSelectorControlPanel } from "@web_editor/components/media_dialog/file_selector";

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import { computeScore } from "./password_policy";
 import { Component, xml } from "@odoo/owl";

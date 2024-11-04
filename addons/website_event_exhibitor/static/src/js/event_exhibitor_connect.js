@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { debounce } from "@web/core/utils/timing";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { redirect } from "@web/core/utils/urls";

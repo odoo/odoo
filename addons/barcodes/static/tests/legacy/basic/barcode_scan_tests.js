@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { BarcodeScanner } from "@barcodes/components/barcode_scanner";
 import { getFixture, mount } from "@web/../tests/helpers/utils";
 import { contains } from "@web/../tests/utils";

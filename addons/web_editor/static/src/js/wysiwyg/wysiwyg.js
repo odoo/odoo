@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { session } from "@web/session";
 import { user } from "@web/core/user";
 import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";

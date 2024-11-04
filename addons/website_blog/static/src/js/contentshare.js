@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { sprintf, escape } from "@web/core/utils/strings";
 import { scrollTo } from "@web_editor/js/common/scrolling";
 

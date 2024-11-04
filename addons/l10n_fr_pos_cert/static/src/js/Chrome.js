@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Chrome } from "@point_of_sale/app/pos_app";
 import { patch } from "@web/core/utils/patch";
 import { ClosePosPopup } from "@point_of_sale/app/components/popups/closing_popup/closing_popup";

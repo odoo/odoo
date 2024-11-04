@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Component, useRef } from "@odoo/owl";
 
 import { useBus } from "@web/core/utils/hooks";

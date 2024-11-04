@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import { helpers, registries, EvaluationError } from "@odoo/o-spreadsheet";
 import { sprintf } from "@web/core/utils/strings";

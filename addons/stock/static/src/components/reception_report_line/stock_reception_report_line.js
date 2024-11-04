@@ -1,4 +1,3 @@
-/** @odoo-module **/
 import { useService } from "@web/core/utils/hooks";
 import { formatFloat } from "@web/views/fields/formatters";
 import { Component } from "@odoo/owl";

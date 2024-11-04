@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import publicWidget from '@web/legacy/js/public/public_widget';
 import { SlideShareDialog } from './public/components/slide_share_dialog/slide_share_dialog';
 import { browser } from '@web/core/browser/browser';

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { clickOnSave, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
 
 function assertEqual(actual, expected) {

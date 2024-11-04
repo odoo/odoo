@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { kanbanView } from "@web/views/kanban/kanban_view";
 import { KanbanController } from "@web/views/kanban/kanban_controller";

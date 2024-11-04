@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { registry } from '@web/core/registry';
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";

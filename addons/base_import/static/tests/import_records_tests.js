@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { importRecordsItem } from "@base_import/import_records/import_records";
 
 import { registry } from "@web/core/registry";

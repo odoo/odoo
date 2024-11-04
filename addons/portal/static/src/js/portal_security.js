@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { ConfirmationDialog } from '@web/core/confirmation_dialog/confirmation_dialog';
 import { renderToMarkup } from "@web/core/utils/render";
 import publicWidget from '@web/legacy/js/public/public_widget';

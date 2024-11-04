@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 document.addEventListener('DOMContentLoaded', () => {
     const htmlEl = document.documentElement;
     const editTranslations = !!htmlEl.dataset.edit_translations;

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import publicWidget from "@web/legacy/js/public/public_widget";
 import DynamicSnippet from "@website/snippets/s_dynamic_snippet/000";
 

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import { useBus, useRefListener, useService } from '@web/core/utils/hooks';
 import { onWillStart, useRef, useEffect, useState } from "@odoo/owl";

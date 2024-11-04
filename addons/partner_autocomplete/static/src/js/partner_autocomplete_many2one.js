@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { Many2XAutocomplete } from '@web/views/fields/relational_utils';
 import { Many2OneField, many2OneField } from '@web/views/fields/many2one/many2one_field';
 import { _t } from "@web/core/l10n/translation";

@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 import { useBus, useService } from "@web/core/utils/hooks";

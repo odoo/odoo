@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { patch } from "@web/core/utils/patch";
 import { AttachmentView } from "@mail/core/common/attachment_view";
 

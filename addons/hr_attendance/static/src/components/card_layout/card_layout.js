@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { Component, useState, onWillUnmount } from "@odoo/owl";
 
 const { DateTime } = luxon;

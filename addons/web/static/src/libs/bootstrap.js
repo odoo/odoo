@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { compensateScrollbar, getScrollingElement } from "@web/core/utils/scrolling";
 
 /**

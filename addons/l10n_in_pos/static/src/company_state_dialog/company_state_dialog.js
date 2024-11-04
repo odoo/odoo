@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Dialog } from "@web/core/dialog/dialog";
 import { Component } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";

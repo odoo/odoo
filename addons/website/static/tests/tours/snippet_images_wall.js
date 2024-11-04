@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import {clickOnSnippet, insertSnippet, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 
 const wallRaceConditionClass = "image_wall_race_condition";

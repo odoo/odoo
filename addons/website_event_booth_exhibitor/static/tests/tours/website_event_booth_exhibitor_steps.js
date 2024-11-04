@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 class FinalSteps {
 
     _getSteps() {

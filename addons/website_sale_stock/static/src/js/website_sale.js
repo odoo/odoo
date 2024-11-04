@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { WebsiteSale } from '@website_sale/js/website_sale';
 import { rpc } from "@web/core/network/rpc";
 import { isEmail } from '@web/core/utils/strings';

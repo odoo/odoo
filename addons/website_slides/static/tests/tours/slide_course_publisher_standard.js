@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import slidesTourTools from '@website_slides/../tests/tours/slides_tour_tools';
 import { clickOnEditAndWaitEditMode, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
 

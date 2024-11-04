@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { helpers } from "@odoo/o-spreadsheet";
 
 const { toUnboundedZone } = helpers;

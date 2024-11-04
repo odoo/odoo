@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { listView } from '@web/views/list/list_view';
 import { registry } from "@web/core/registry";
 import { StockOrderpointListController as Controller } from './stock_orderpoint_list_controller';

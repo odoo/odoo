@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { EditHeadBodyDialog } from "../edit_head_body_dialog/edit_head_body_dialog";
 import { Component, useState } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";

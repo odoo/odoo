@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { registry } from "@web/core/registry";
 
 const commandCategoryRegistry = registry.category("command_categories");

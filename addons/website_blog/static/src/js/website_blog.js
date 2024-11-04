@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import { scrollTo } from "@web_editor/js/common/scrolling";
 import publicWidget from "@web/legacy/js/public/public_widget";

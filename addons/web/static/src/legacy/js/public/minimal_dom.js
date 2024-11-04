@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { addLoadingEffect } from '@web/core/utils/ui';
 
 export const DEBOUNCE = 400;

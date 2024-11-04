@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { ActivityMenu } from "@mail/core/web/activity_menu";
 import { patch } from "@web/core/utils/patch";
 

@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { CommandResult } from "../../o_spreadsheet/cancelled_reason";
 import { helpers } from "@odoo/o-spreadsheet";
 import { _t } from "@web/core/l10n/translation";

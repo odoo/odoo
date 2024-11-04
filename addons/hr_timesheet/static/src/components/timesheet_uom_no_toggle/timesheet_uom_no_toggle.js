@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { registry } from "@web/core/registry";
 
 import { TimesheetUOM, timesheetUOM } from "../timesheet_uom/timesheet_uom";

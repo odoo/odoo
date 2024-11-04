@@ -1,4 +1,3 @@
-/** @odoo-module */
 // @ts-check
 
 import { astToFormula, helpers } from "@odoo/o-spreadsheet";

@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { getAdjacentPreviousSiblings, isBlock, rgbToHex, commonParentGet } from '../editor/odoo-editor/src/utils/utils';
 
 //--------------------------------------------------------------------------

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { TourPointer } from "@web_tour/tour_pointer/tour_pointer";

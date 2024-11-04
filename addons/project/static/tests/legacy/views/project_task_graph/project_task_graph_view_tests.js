@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { getFixture } from "@web/../tests/helpers/utils";
 import { checkLabels, checkLegend, selectMode } from "@web/../tests/views/graph_view_tests";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";

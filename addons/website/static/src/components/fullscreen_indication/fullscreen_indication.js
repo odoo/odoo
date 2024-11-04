@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { useBus } from "@web/core/utils/hooks";
 import { EventBus, Component, useState, markup } from "@odoo/owl";
 import { escape, sprintf } from "@web/core/utils/strings";

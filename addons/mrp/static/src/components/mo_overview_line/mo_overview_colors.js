@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 const PRODUCTION_DECORATORS = {
     draft: "muted",
     confirmed: "info",
