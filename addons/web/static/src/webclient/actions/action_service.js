@@ -48,6 +48,84 @@ class BlankComponent extends Component {
     }
 }
 
+class ControllerComponent extends Component {
+    static template = xml`<t t-component="props.Component" t-props="componentProps"/>`;
+    static props = {
+        "*": true,
+    };
+
+    setup() {
+        this.titleService = useService("title");
+        useDebugCategory("action", { action: this.props.action });
+        useChildSubEnv({
+            config: {
+                ...this.props.config,
+                breadcrumbs: [],
+            },
+            pushStateBeforeReload: () => {
+                if (this.isMounted) {
+                    return;
+                }
+                this.props.pushState();
+            },
+        });
+        if (this.props.action.target !== "new") {
+            useBus(this.env.bus, "CLEAR-UNCOMMITTED-CHANGES", (ev) => {
+                const callbacks = ev.detail;
+                const beforeLeaveFns = this.props.callbacks.beforeLeave.callbacks;
+                callbacks.push(...beforeLeaveFns);
+            });
+            if (this.props.Component !== View) {
+                useChildSubEnv({
+                    __beforeLeave__: this.props.callbacks.beforeLeave,
+                    __getGlobalState__: this.props.callbacks.getGlobalState,
+                    __getLocalState__: this.props.callbacks.getLocalState,
+                });
+            }
+        }
+        this.isMounted = false;
+
+        onMounted(this.onMounted);
+        onWillUnmount(this.onWillUnmount);
+        onError(this.onError);
+    }
+
+    onError(error) {
+        if (this.isMounted) {
+            // the error occurred on the controller which is
+            // already in the DOM, so simply show the error
+            Promise.reject(error);
+            return;
+        }
+        this.props.onError(error);
+    }
+
+    onMounted() {
+        if (this.props.action.target !== "new") {
+            this.titleService.setParts({ action: this.props.displayName });
+        }
+        this.props.onMounted();
+        this.isMounted = true;
+    }
+
+    onWillUnmount() {
+        this.isMounted = false;
+        this.props.onWillUnmount();
+    }
+
+    get componentProps() {
+        const componentProps = { ...this.props.subProps };
+        const updateActionState = componentProps.updateActionState;
+        componentProps.updateActionState = (newState) => updateActionState(this, newState);
+        if (this.props.Component === View) {
+            componentProps.__beforeLeave__ = this.props.callbacks.beforeLeave;
+            componentProps.__getGlobalState__ = this.props.callbacks.getGlobalState;
+            componentProps.__getLocalState__ = this.props.callbacks.getLocalState;
+        }
+        return componentProps;
+    }
+}
+
 const actionHandlersRegistry = registry.category("action_handlers");
 const actionRegistry = registry.category("actions");
 
@@ -124,7 +202,7 @@ const CTX_KEY_REGEX =
     /^(?:(?:default_|search_default_|show_).+|.+_view_ref|group_by|active_id|active_ids|orderedBy)$/;
 
 // only register this template once for all dynamic classes ControllerComponent
-const ControllerComponentTemplate = xml`<t t-component="Component" t-props="componentProps"/>`;
+// const ControllerComponentTemplate = xml`<t t-component="Component" t-props="componentProps"/>`;
 
 export function makeActionManager(env, router = _router) {
     const breadcrumbCache = {};
@@ -420,25 +498,22 @@ export function makeActionManager(env, router = _router) {
      * @returns {Breadcrumbs}
      */
     function _getBreadcrumbs(stack) {
-        return stack
-            .filter((controller) => controller.action.tag !== "menu")
-            .map((controller) => {
-                return {
+        const breadcrumbs = [];
+        for (const controller of stack) {
+            if (controller.action.tag !== "menu") {
+                breadcrumbs.push({
                     jsId: controller.jsId,
-                    get name() {
-                        return controller.displayName;
-                    },
-                    get isFormView() {
-                        return controller.props?.type === "form";
-                    },
+                    name: controller.displayName,
+                    isFormView: controller.props?.type === "form",
                     get url() {
+                        // leaks here
                         return stateToUrl(controller.state);
                     },
-                    onSelected() {
-                        restore(controller.jsId);
-                    },
-                };
-            });
+                    onSelected: restore.bind(null, controller.jsId),
+                });
+            }
+        }
+        return breadcrumbs;
     }
 
     /**
@@ -786,10 +861,11 @@ export function makeActionManager(env, router = _router) {
             controllerStack = options.newStack;
         }
         const index = _computeStackIndex(options);
-        const nextStack = [...controllerStack.slice(0, index), controller];
+        const buildNextStack = () => [...controllerStack.slice(0, index), controller];
+        // const nextStack = [...controllerStack.slice(0, index), controller];
         // Compute breadcrumbs
         controller.config.breadcrumbs = reactive(
-            action.target === "new" ? [] : _getBreadcrumbs(nextStack)
+            action.target === "new" ? [] : _getBreadcrumbs(buildNextStack())
         );
         controller.config.getDisplayName = () => controller.displayName;
         controller.config.setDisplayName = (displayName) => {
@@ -819,141 +895,10 @@ export function makeActionManager(env, router = _router) {
             }
         };
 
-        class ControllerComponent extends Component {
-            static template = ControllerComponentTemplate;
-            static Component = controller.Component;
-            static props = {
-                "*": true,
-            };
-            setup() {
-                this.Component = controller.Component;
-                this.titleService = useService("title");
-                useDebugCategory("action", { action });
-                useChildSubEnv({
-                    config: controller.config,
-                    pushStateBeforeReload: () => {
-                        if (this.isMounted) {
-                            return;
-                        }
-                        pushState(nextStack);
-                    },
-                });
-                if (action.target !== "new") {
-                    this.__beforeLeave__ = new CallbackRecorder();
-                    this.__getGlobalState__ = new CallbackRecorder();
-                    this.__getLocalState__ = new CallbackRecorder();
-                    useBus(env.bus, "CLEAR-UNCOMMITTED-CHANGES", (ev) => {
-                        const callbacks = ev.detail;
-                        const beforeLeaveFns = this.__beforeLeave__.callbacks;
-                        callbacks.push(...beforeLeaveFns);
-                    });
-                    if (this.constructor.Component !== View) {
-                        useChildSubEnv({
-                            __beforeLeave__: this.__beforeLeave__,
-                            __getGlobalState__: this.__getGlobalState__,
-                            __getLocalState__: this.__getLocalState__,
-                        });
-                    }
-                }
-                this.isMounted = false;
-
-                onMounted(this.onMounted);
-                onWillUnmount(this.onWillUnmount);
-                onError(this.onError);
-            }
-            onError(error) {
-                if (this.isMounted) {
-                    // the error occurred on the controller which is
-                    // already in the DOM, so simply show the error
-                    Promise.reject(error);
-                    return;
-                }
-                // forward the error to the _updateUI caller then restore the action container
-                // to an unbroken state
-                reject(error);
-                if (action.target === "new") {
-                    removeDialogFn?.();
-                    return;
-                }
-                const index = controllerStack.findIndex((ct) => ct.jsId === controller.jsId);
-                if (index > 0) {
-                    // The error occurred while rendering an existing controller,
-                    // so go back to the previous controller, of the current faulty one.
-                    // This occurs when clicking on a breadcrumbs.
-                    return restore(controllerStack[index - 1].jsId);
-                }
-                if (index === 0) {
-                    // No previous controller to restore, so do nothing but display the error
-                    return;
-                }
-                const lastController = controllerStack.at(-1);
-                if (lastController) {
-                    if (lastController.jsId !== controller.jsId) {
-                        // the error occurred while rendering a new controller,
-                        // so go back to the last non faulty controller
-                        // (the error will be shown anyway as the promise
-                        // has been rejected)
-                        return restore(lastController.jsId);
-                    }
-                } else {
-                    env.bus.trigger("ACTION_MANAGER:UPDATE", {});
-                }
-            }
-            onMounted() {
-                if (action.target === "new") {
-                    dialogCloseProm = new Promise((_r) => {
-                        dialogCloseResolve = _r;
-                    }).then(() => {
-                        dialogCloseProm = undefined;
-                    });
-                    dialog = nextDialog;
-                } else {
-                    controller.getGlobalState = () => {
-                        const exportFns = this.__getGlobalState__.callbacks;
-                        if (exportFns.length) {
-                            return Object.assign({}, ...exportFns.map((fn) => fn()));
-                        }
-                    };
-                    controller.getLocalState = () => {
-                        const exportFns = this.__getLocalState__.callbacks;
-                        if (exportFns.length) {
-                            return Object.assign({}, ...exportFns.map((fn) => fn()));
-                        }
-                    };
-
-                    controllerStack = nextStack; // the controller is mounted, commit the new stack
-                    pushState();
-                    this.titleService.setParts({ action: controller.displayName });
-                    browser.sessionStorage.setItem(
-                        "current_action",
-                        action._originalAction || "{}"
-                    );
-                }
-                resolve();
-                env.bus.trigger("ACTION_MANAGER:UI-UPDATED", _getActionMode(action));
-                this.isMounted = true;
-            }
-            onWillUnmount() {
-                this.isMounted = false;
-                if (action.target === "new" && dialogCloseResolve) {
-                    dialogCloseResolve();
-                }
-            }
-            get componentProps() {
-                const componentProps = { ...this.props };
-                const updateActionState = componentProps.updateActionState;
-                componentProps.updateActionState = (newState) => updateActionState(this, newState);
-                if (this.constructor.Component === View) {
-                    componentProps.__beforeLeave__ = this.__beforeLeave__;
-                    componentProps.__getGlobalState__ = this.__getGlobalState__;
-                    componentProps.__getLocalState__ = this.__getLocalState__;
-                }
-                return componentProps;
-            }
-        }
         if (action.target === "new") {
             const actionDialogProps = {
                 ActionComponent: ControllerComponent,
+                // todo: update props
                 actionProps: controller.props,
                 actionType: action.type,
             };
@@ -982,6 +927,24 @@ export function makeActionManager(env, router = _router) {
                 onClose: onClose || options.onClose,
             };
             return currentActionProm;
+        } else if (!controller.callbacks) {
+            controller.callbacks = {
+                beforeLeave: new CallbackRecorder(),
+                getGlobalState: new CallbackRecorder(),
+                getLocalState: new CallbackRecorder(),
+            };
+            controller.getGlobalState = () => {
+                const exportFns = controller.callbacks.getGlobalState.callbacks;
+                if (exportFns.length) {
+                    return Object.assign({}, ...exportFns.map((fn) => fn()));
+                }
+            };
+            controller.getLocalState = () => {
+                const exportFns = controller.callbacks.getLocalState.callbacks;
+                if (exportFns.length) {
+                    return Object.assign({}, ...exportFns.map((fn) => fn()));
+                }
+            };
         }
 
         const currentController = _getCurrentController();
@@ -1041,7 +1004,74 @@ export function makeActionManager(env, router = _router) {
         controller.__info__ = {
             id: ++id,
             Component: ControllerComponent,
-            componentProps: controller.props,
+            componentProps: {
+                action: controller.action,
+                config: controller.config,
+                callbacks: controller.callbacks,
+                Component: controller.Component,
+                subProps: controller.props,
+                displayName: controller.displayName,
+                pushState() {
+                    pushState(buildNextStack());
+                },
+                onMounted() {
+                    if (action.target === "new") {
+                        dialogCloseProm = new Promise((_r) => {
+                            dialogCloseResolve = _r;
+                        }).then(() => {
+                            dialogCloseProm = undefined;
+                        });
+                        dialog = nextDialog;
+                    } else {
+                        controllerStack.splice(index, controllerStack.length, controller); // the controller is mounted, commit the new stack
+                        pushState();
+                        browser.sessionStorage.setItem(
+                            "current_action",
+                            action._originalAction || "{}"
+                        );
+                    }
+
+                    resolve();
+                    env.bus.trigger("ACTION_MANAGER:UI-UPDATED", _getActionMode(action));
+                },
+                onWillUnmount() {
+                    if (action.target === "new" && dialogCloseResolve) {
+                        dialogCloseResolve();
+                    }
+                },
+                onError(error) {
+                    // forward the error to the _updateUI caller then restore the action container
+                    // to an unbroken state
+                    reject(error);
+                    if (action.target === "new") {
+                        removeDialogFn?.();
+                        return;
+                    }
+                    const index = controllerStack.findIndex((ct) => ct.jsId === controller.jsId);
+                    if (index > 0) {
+                        // The error occurred while rendering an existing controller,
+                        // so go back to the previous controller, of the current faulty one.
+                        // This occurs when clicking on a breadcrumbs.
+                        return restore(controllerStack[index - 1].jsId);
+                    }
+                    if (index === 0) {
+                        // No previous controller to restore, so do nothing but display the error
+                        return;
+                    }
+                    const lastController = controllerStack.at(-1);
+                    if (lastController) {
+                        if (lastController.jsId !== controller.jsId) {
+                            // the error occurred while rendering a new controller,
+                            // so go back to the last non faulty controller
+                            // (the error will be shown anyway as the promise
+                            // has been rejected)
+                            return restore(lastController.jsId);
+                        }
+                    } else {
+                        env.bus.trigger("ACTION_MANAGER:UPDATE", {});
+                    }
+                },
+            },
         };
         env.services.dialog.closeAll();
         env.bus.trigger("ACTION_MANAGER:UPDATE", controller.__info__);
