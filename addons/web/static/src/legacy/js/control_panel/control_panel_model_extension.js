@@ -1059,10 +1059,18 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
             const domains = filterQueryElements.map(({ label, value, operator }) => {
                 let domain;
                 if (filter.filterDomain) {
+                    let self;
+                    // Dates from the search panel can come in a variety of formats, but
+                    // we want the universal formatted value to use it in the domain
+                    if (filter.type === "field" && ["datetime", "date"].includes(filter.fieldType)) {
+                        self = value;
+                    } else {
+                        self = label;
+                    }
                     domain = Domain.prototype.stringToArray(
                         filter.filterDomain,
                         {
-                            self: label,
+                            self: self,
                             raw_value: value,
                         }
                     );
