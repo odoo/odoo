@@ -196,6 +196,7 @@ export class BlockTab extends Component {
                         break;
                     case "snippet_structure":
                         snippet.groupName = snippetEl.dataset.oGroup;
+                        snippet.keyWords = snippetEl.dataset.oeKeywords;
                         break;
                 }
                 snippets.push(snippet);

@@ -12,7 +12,7 @@
                 <aside class="border-end overflow-auto">
                     <div class="d-block position-relative p-2 bg-100 border-bottom">
                         <input type="search" class="form-control bg-white pe-4" placeholder="Search for a block"
-                            aria-label="Search for a block" t-model="state.search" t-ref="search-input"/>
+                            aria-label="Search for a block" t-on-input="onInputSearch"/>
                         <span class="input-group-text position-absolute top-50 end-0 translate-middle-y me-2 border-0 bg-transparent text-muted">
                             <i class="oi oi-search" aria-hidden="true"></i>
                         </span>
