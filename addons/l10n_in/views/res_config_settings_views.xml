@@ -91,6 +91,10 @@
                                      help="Enable this to check the GST Number status"
                                      documentation="/applications/finance/fiscal_localizations/india.html#indian-check-gstin-status">
                                 <field name="l10n_in_gstin_status_feature" class="oe_inline"/>
+                                <div invisible="not l10n_in_gstin_status_feature">
+                                    <field name="module_l10n_in_website_sale"/>
+                                    <label for="module_l10n_in_website_sale"/>
+                                </div>
                             </setting>
                             <setting name="india_gstr_api"
                                      help="This feature helps you to quickly create draft vendor bills using the data your vendor submitted during E-invoicing on the GST portal."
