@@ -71,7 +71,7 @@ export function onExternalClick(refName, cb) {
 }
 
 /**
- * @param {string | string[]} refNames
+ * @param {string | string[] | Function} refNames
  * @param {(boolean) => void} callback
  * @returns {({ isHover: boolean })}
  */
@@ -79,6 +79,11 @@ export function useHover(refNames, callback = () => {}) {
     refNames = Array.isArray(refNames) ? refNames : [refNames];
     const targets = [];
     for (const refName of refNames) {
+        if (typeof refName === "function") {
+            // Special case for using a child ref
+            targets.push({ ref: refName });
+            continue;
+        }
         const withDirectParent = refName.endsWith("*");
         targets.push({
             ref: refName.endsWith("*")
