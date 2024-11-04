@@ -63,7 +63,32 @@ class IrModule(models.Model):
         was_installed = len(self) == 1 and self.state in ('installed', 'to upgrade', 'to remove')
         res = super().write(vals)
         is_installed = len(self) == 1 and self.state == 'installed'
+<<<<<<< saas-17.4
         if not was_installed and is_installed and not self.env.company.chart_template and self.account_templates:
+||||||| 1c6007445841f907eac57f4b2ec43b28dbacb5ff
+        if (
+            not was_installed and is_installed
+            and not self.env.company.chart_template
+            and self.account_templates
+            and (guessed := next((
+                tname
+                for tname, tvals in self.account_templates.items()
+                if tvals['country_id'] == self.env.company.country_id.id
+            ), None))
+        ):
+=======
+        if (
+            not was_installed and is_installed
+            and not self.env.company.chart_template
+            and self.account_templates
+            and (guessed := next((
+                tname
+                for tname, tvals in self.account_templates.items()
+                if tvals['country_id'] == self.env.company.country_id.id
+                or not tvals['country_id']
+            ), None))
+        ):
+>>>>>>> c648d28bc42404e17f40a4423545ad78a327727b
             def try_loading(env):
                 env['account.chart.template'].try_loading(
                     next(iter(self.account_templates)),
