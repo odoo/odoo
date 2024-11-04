@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+
+<t t-name="mysterious_egg.SnippetViewer">
+    <div class="row g-0 o_snippets_preview_row">
+        <t t-set="snippetsColumns" t-value="this.getSnippetColumns()"></t>
+        <div class="col-lg-6">
+            <t t-foreach="snippetsColumns[0]" t-as="snippet" t-key="snippet.id">
+                <div class="o_snippet_preview_wrap position-relative" t-on-click="() => this.onClick(snippet)" t-out="this.getContent(snippet.content)"/>
+            </t>
+        </div>
+        <div class="col-lg-6">
+            <t t-foreach="snippetsColumns[1]" t-as="snippet" t-key="snippet.id">
+                <div class="o_snippet_preview_wrap position-relative" t-on-click="() => this.onClick(snippet)" t-out="this.getContent(snippet.content)"/>
+            </t>
+        </div>
+    </div>
+</t>
+
+</templates>

@@ -5,8 +5,8 @@
     <div>Categories</div>
     <div class="container">
         <div class="row">
-            <div t-foreach="this.snippetCategories" t-as="snippet" t-key="snippet.id" class="col-4 p-1 o_draggable" t-att-data-category="'snippet_groups'" t-att-data-id="snippet.id">
-                <div class="w-100 h-100 d-flex flex-column block" t-att-class="snippet.moduleId ? 'to_install' : '' ">
+            <div t-foreach="this.snippetGroups" t-as="snippet" t-key="snippet.id" class="col-4 p-1 o_draggable" t-att-data-category="'snippet_groups'" t-att-data-id="snippet.id">
+                <div class="w-100 h-100 d-flex flex-column block" t-att-class="snippet.moduleId ? 'to_install' : '' " t-on-click="() => this.openSnippetDialog(snippet)">
                     <div class="img-container">
                         <img t-att-src="snippet.thumbnailSrc" class="w-100"/>
                         <button t-if="snippet.moduleId" class="btn btn-primary" t-on-click="() => this.onClickInstall(snippet)">install</button>

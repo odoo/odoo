@@ -6,6 +6,7 @@ import { useDraggable } from "@web/core/utils/draggable";
 import { uniqueId } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
 import { escape } from "@web/core/utils/strings";
+import { AddSnippetDialog } from "../add_snippet_dialog/add_snippet_dialog";
 
 const cacheSnippetTemplate = {};
 
@@ -79,7 +80,7 @@ export class BlockTab extends Component {
         });
     }
 
-    get snippetCategories() {
+    get snippetGroups() {
         return this.snippetsByCategory.snippet_groups;
     }
 
@@ -89,6 +90,25 @@ export class BlockTab extends Component {
 
     getSnippet(category, id) {
         return this.snippetsByCategory[category].filter((snippet) => snippet.id === id)[0];
+    }
+
+    openSnippetDialog(snippet) {
+        this.props.editor.shared.displayDropZone("section");
+
+        this.dialog.add(
+            AddSnippetDialog,
+            {
+                selectedSnippet: snippet,
+                snippetGroups: this.snippetGroups,
+                snippetStructures: this.snippetsByCategory.snippet_structure,
+                selectSnippet: (snippet) => {
+                    this.props.editor.shared.addElementToCenter(snippet.content.cloneNode(true));
+                },
+            },
+            {
+                onClose: () => this.props.editor.shared.clearDropZone(),
+            }
+        );
     }
 
     onClickInstall(snippet) {
@@ -155,6 +175,7 @@ export class BlockTab extends Component {
             for (const snippetEl of snippetCategory.children) {
                 const snippet = {
                     title: snippetEl.getAttribute("name"),
+                    name: snippetEl.children[0].dataset.snippet,
                     thumbnailSrc: escape(snippetEl.dataset.oeThumbnail),
                 };
                 const moduleId = snippetEl.dataset.moduleId;
@@ -168,6 +189,14 @@ export class BlockTab extends Component {
                         id: parseInt(snippetEl.dataset.oeSnippetId),
                         content: snippetEl.children[0],
                     });
+                }
+                switch (snippetCategory.id) {
+                    case "snippet_groups":
+                        snippet.groupName = snippetEl.dataset.oSnippetGroup;
+                        break;
+                    case "snippet_structure":
+                        snippet.groupName = snippetEl.dataset.oGroup;
+                        break;
                 }
                 snippets.push(snippet);
             }
