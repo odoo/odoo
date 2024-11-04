@@ -252,7 +252,6 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
     _direct = False                     # whether self may be used directly (shared)
     _toplevel = False                   # whether self is on the model's registry class
 
-    automatic = False                   # whether the field is automatically created ("magic" field)
     inherited = False                   # whether the field is inherited (_inherits)
     inherited_field = None              # the corresponding inherited field
 
@@ -546,12 +545,6 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
             deps = getattr(func, '_depends', ())
             depends.extend(deps(model) if callable(deps) else deps)
             depends_context.extend(getattr(func, '_depends_context', ()))
-
-        # display_name may depend on context['lang'] (`test_lp1071710`)
-        if self.automatic and self.name == 'display_name' and model._rec_name:
-            if model._fields[model._rec_name].base_field.translate:
-                if 'lang' not in depends_context:
-                    depends_context.append('lang')
 
         return depends, depends_context
 

@@ -17,7 +17,7 @@ class ResUsersSettings(models.Model):
     @api.model
     def _get_fields_blacklist(self):
         """ Get list of fields that won't be formatted. """
-        return []
+        return ['display_name']
 
     @api.model
     def _find_or_create_for_user(self, user):
@@ -32,7 +32,7 @@ class ResUsersSettings(models.Model):
         if fields_to_format:
             fields_to_format = [field for field in fields_to_format if field not in fields_blacklist]
         else:
-            fields_to_format = [name for name, field in self._fields.items() if name == 'id' or (not field.automatic and name not in fields_blacklist)]
+            fields_to_format = [name for name, field in self._fields.items() if name == 'id' or (name not in models.MAGIC_COLUMNS and name not in fields_blacklist)]
         res = self._format_settings(fields_to_format)
         return res
 
