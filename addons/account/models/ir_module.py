@@ -71,6 +71,7 @@ class IrModule(models.Model):
                 tname
                 for tname, tvals in self.account_templates.items()
                 if tvals['country_id'] == self.env.company.country_id.id
+                or not tvals['country_id']
             ), None))
         ):
             def try_loading(env):
