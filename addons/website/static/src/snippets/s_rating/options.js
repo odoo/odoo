@@ -1,4 +1,5 @@
 import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
+import { _t } from "@web/core/l10n/translation";
 
 import options from "@web_editor/js/editor/snippets.options";
 
@@ -99,6 +100,13 @@ options.registry.Rating = options.Class.extend({
         }
         return this._super(...arguments);
     },
+
+    async _computeWidgetVisibility(widgetName, params) {
+        if (widgetName === "rating_icon_xl") {
+            return false;
+        }
+        return this._super(...arguments);
+    },
     /**
      * Creates the icons.
      *
@@ -110,9 +118,9 @@ options.registry.Rating = options.Class.extend({
         this.$target.find('.s_rating_icons i').remove();
         for (let i = 0; i < this.nbTotalIcons; i++) {
             if (i < this.nbActiveIcons) {
-                $activeIcons.append('<i></i> ');
+                $activeIcons.append('<i role="presentation"></i> ');
             } else {
-                $inactiveIcons.append('<i></i> ');
+                $inactiveIcons.append('<i role="presentation"></i> ');
             }
         }
         this._renderIcons();
@@ -123,18 +131,15 @@ options.registry.Rating = options.Class.extend({
      * @private
      */
     _renderIcons: function () {
-        const icons = {
-            'fa-star': 'fa-star-o',
-            'fa-thumbs-up': 'fa-thumbs-o-up',
-            'fa-circle': 'fa-circle-o',
-            'fa-square': 'fa-square-o',
-            'fa-heart': 'fa-heart-o'
-        };
         const faClassActiveIcons = (this.iconType === "custom") ? this.faClassActiveCustomIcons : 'fa ' + this.iconType;
-        const faClassInactiveIcons = (this.iconType === "custom") ? this.faClassInactiveCustomIcons : 'fa ' + icons[this.iconType];
+        const faClassInactiveIcons = (this.iconType === "custom") ? this.faClassInactiveCustomIcons : 'fa ' + this.iconType;
         const $activeIcons = this.$target.find('.s_rating_active_icons > i');
         const $inactiveIcons = this.$target.find('.s_rating_inactive_icons > i');
         $activeIcons.removeClass().addClass(faClassActiveIcons);
         $inactiveIcons.removeClass().addClass(faClassInactiveIcons);
+        this.$target[0].setAttribute("aria-label", _t("%(amount)s out of %(total)s stars", {
+            amount: this.nbActiveIcons || 0,
+            total: this.nbTotalIcons,
+        }));
     },
 });
