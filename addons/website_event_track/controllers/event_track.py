@@ -15,7 +15,7 @@ import operator
 import pytz
 
 from odoo import exceptions, http, fields, tools, _
-from odoo.http import request
+from odoo.http import content_disposition, request
 from odoo.osv import expression
 from odoo.tools import is_html_empty, plaintext2html
 from odoo.tools.misc import babel_locale_parse
@@ -197,7 +197,7 @@ class EventTrackController(http.Controller):
 
         vals.update(self._prepare_calendar_values(event))
 
-        return request.render("website_event_track.agenda_online", vals)
+        return request.render("website_event_track.agenda_online", vals, headers={'Cache-Control': 'no-store'})
 
     def _prepare_calendar_values(self, event):
         """ This methods slit the day (max end time - min start time) into
@@ -361,7 +361,8 @@ class EventTrackController(http.Controller):
 
         return request.render(
             "website_event_track.event_track_main",
-            self._event_track_page_get_values(event, track.sudo(), **options)
+            self._event_track_page_get_values(event, track.sudo(), **options),
+            headers={'Cache-Control': 'no-store'}
         )
 
     def _event_track_page_get_values(self, event, track, **options):
@@ -532,3 +533,42 @@ class EventTrackController(http.Controller):
             utc.localize(dt, is_dst=False).astimezone(timezone(tz_name))
             for dt in datetimes
         ]
+
+    @http.route('/event/send_email_reminder', type="jsonrpc", auth="public", website=True)
+    def send_email_reminder(self, track_id, email_to):
+        template = self.env.ref("website_event_track.email_reminder", raise_if_not_found=False)
+        if not template:
+            return {'success': False, 'error': 'missing_template'}
+
+        valid_email_to = tools.email_normalize(email_to)
+        if not track_id or not valid_email_to:
+            return {'success': False, 'message': _('Invalid data.')}
+        request.session['website_event_track.email_reminder'] = valid_email_to
+        track = request.env['event.track'].sudo().browse(track_id)
+
+        agenda_urls = track._get_event_track_resource_urls()
+        context = {
+            'google_url': agenda_urls.get('google_url'),
+            'iCal_url': agenda_urls.get('iCal_url'),
+            'yahoo_url': agenda_urls.get('yahoo_url'),
+            'lang': request.cookies.get('frontend_lang') if request.env.user._is_public() else request.context.get('lang', request.env.user.lang)
+        }
+
+        template.sudo().with_context(context).send_mail(track.id, email_values={"email_to": valid_email_to})
+        return {'success': True}
+
+    @http.route(['''/event/<model("event.event"):event>/track/<model("event.track"):track>/ics'''], type='http', auth="public")
+    def event_track_ics_file(self, event, track, **kwargs):
+        lang = request.context.get('lang', request.env.user.lang)
+        if request.env.user._is_public():
+            lang = request.cookies.get('frontend_lang')
+        track = track.with_context(lang=lang)
+        files = track._get_ics_file()
+        if not track.id in files:
+            return NotFound()
+        content = files[track.id]
+        return request.make_response(content, [
+            ('Content-Type', 'application/octet-stream'),
+            ('Content-Length', len(content)),
+            ('Content-Disposition', content_disposition(f'{event.name}-{track.name}.ics'))
+        ])
