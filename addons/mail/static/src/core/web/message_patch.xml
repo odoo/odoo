@@ -14,8 +14,10 @@
                             <t name="trackingValues" t-foreach="message.trackingValues" t-as="trackingValue" t-key="trackingValue.id">
                                 <li class="o-mail-Message-tracking mb-1" role="group">
                                     <span class="o-mail-Message-trackingOld me-1 px-1 text-muted fw-bold" t-esc="formatTrackingOrNone(trackingValue.fieldType, trackingValue.oldValue)"/>
-                                    <i class="o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-1 text-600"/>
-                                    <span class="o-mail-Message-trackingNew me-1 fw-bold text-info" t-esc="formatTrackingOrNone(trackingValue.fieldType, trackingValue.newValue)"/>
+                                    <t t-if="!trackingValue.isPropertyField">
+                                        <i class="o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-1 text-600"/>
+                                        <span class="o-mail-Message-trackingNew me-1 fw-bold text-info" t-esc="formatTrackingOrNone(trackingValue.fieldType, trackingValue.newValue)"/>
+                                    </t>
                                     <span class="o-mail-Message-trackingField ms-1 fst-italic text-muted">(<t t-esc="trackingValue.changedField"/>)</span>
                                 </li>
                             </t>
