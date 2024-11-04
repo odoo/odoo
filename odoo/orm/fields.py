@@ -354,7 +354,7 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
         :param owner: the owner class of the field (the model's definition or registry class)
         :param name: the name of the field
         """
-        assert issubclass(owner, _models.BaseModel)
+        assert isinstance(owner, _models.MetaModel)
         self.model_name = owner._name
         self.name = name
         if getattr(owner, 'pool', None) is None:  # models.is_definition_class(owner)
