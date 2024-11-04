@@ -808,7 +808,7 @@ stepUtils.autoExpandMoreButtons(),
     trigger: "td[name='product_uom'][data-tooltip='Hours']",
 }, {
     isActive: ["desktop"],
-    trigger: 'label:contains("Untaxed Amount")',
+    trigger: "body",
     run: "click",
     // click somewhere else to exit cell focus
 },
