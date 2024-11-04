@@ -35,7 +35,7 @@ class TestMailTemplate(MailCommon):
 
     @users('employee')
     def test_mail_compose_message_content_from_template(self):
-        form = Form(self.env['mail.compose.message'].with_context(active_ids=self.test_partner.ids))
+        form = Form(self.env['mail.compose.message'].with_context(default_model='res.partner', active_ids=self.test_partner.ids))
         form.template_id = self.mail_template
         mail_compose_message = form.save()
 

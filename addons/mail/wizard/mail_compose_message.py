@@ -499,14 +499,19 @@ class MailComposeMessage(models.TransientModel):
             else:
                 composer.reply_to = False
 
-    @api.depends('model')
+    @api.depends('model', 'reply_to')
     def _compute_reply_to_force_new(self):
         """ If model does not inherit from MailThread, avoid replies to be
         considered as thread updates, they will instead follow the routing
-        rules (alias, ...). """
-        self.filtered(
+        rules (alias, ...). Other models by default collect replies in the
+        same thread, unless a reply_to is forced, usually either throuh a
+        template, either because of mailing mode. """
+        non_thread = self.filtered(
             lambda composer: not composer.model or not composer.model_is_thread
-        ).reply_to_force_new = True
+        )
+        non_thread.reply_to_force_new = True
+        for composer in (self - non_thread):
+            composer.reply_to_force_new = bool(composer.reply_to)
 
     @api.depends('reply_to_force_new')
     def _compute_reply_to_mode(self):
@@ -516,6 +521,8 @@ class MailComposeMessage(models.TransientModel):
     def _inverse_reply_to_mode(self):
         for composer in self:
             composer.reply_to_force_new = composer.reply_to_mode == 'new'
+            if composer.reply_to_mode != 'new':
+                composer.reply_to = False
 
     @api.depends('composition_mode', 'model', 'parent_id', 'res_domain',
                  'res_ids', 'template_id')
@@ -1014,7 +1021,7 @@ class MailComposeMessage(models.TransientModel):
             'message_type': 'email_outgoing' if email_mode else self.message_type,
             'parent_id': self.parent_id.id,
             'record_name': False if email_mode else self.record_name,
-            'reply_to_force_new': self.reply_to_force_new,
+            'reply_to_force_new': self.reply_to_force_new and bool(self.reply_to),  # if manually voided, fallback on thread-based reply-to computation
             'subtype_id': subtype_id,
         }
         # specific to mass mailing mode
@@ -1184,11 +1191,12 @@ class MailComposeMessage(models.TransientModel):
                 recipient_ids_all = set(mail_values.pop('partner_ids', [])) | set(self.partner_ids.ids)
                 mail_values['recipient_ids'] = [(4, pid) for pid in recipient_ids_all]
 
-            # when having no specific reply_to -> fetch rendered email_from
-            if email_mode:
-                reply_to = reply_to_values.get(res_id)
-                if not reply_to:
-                    reply_to = mail_values.get('email_from', False)
+            # when having no specific reply_to -> fetch rendered email_from in mailing mode
+            # and don't add anything in comment mode
+            reply_to = reply_to_values.get(res_id)
+            if not reply_to and email_mode:
+                reply_to = mail_values.get('email_from', False)
+            if reply_to:
                 mail_values['reply_to'] = reply_to
 
             # body: render layout in email mode (comment mode is managed by the
@@ -1278,6 +1286,8 @@ class MailComposeMessage(models.TransientModel):
                         'force_email_lang': self.lang,
                     } if not email_mode else {}
                 ),
+                # do not send void reply_to, force only given value
+                **({'reply_to': self.reply_to} if self.reply_to else {}),
             }
             for res_id in res_ids
         }
