@@ -4,7 +4,13 @@ import { closest, touching } from "@web/core/utils/ui";
 export class DropZonePlugin extends Plugin {
     static name = "dropzone";
     static dependencies = ["history"];
-    static shared = ["displayDropZone", "dropElement", "dragElement"];
+    static shared = [
+        "displayDropZone",
+        "dropElement",
+        "dragElement",
+        "clearDropZone",
+        "addElementToCenter",
+    ];
 
     displayDropZone(selector) {
         this.clearDropZone();
@@ -56,6 +62,21 @@ export class DropZonePlugin extends Plugin {
             this.clearDropZone();
             return;
         }
+
+        let target = dropZone.previousSibling;
+        let addAfter = true;
+        if (!target) {
+            addAfter = false;
+            target = dropZone.nextSibling;
+        }
+        this.clearDropZone();
+        addAfter ? target.after(elementToAdd) : target.before(elementToAdd);
+        this.dispatch("ADD_STEP");
+    }
+
+    addElementToCenter(elementToAdd) {
+        const position = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+        const dropZone = closest(this.dropZoneElements, position);
 
         let target = dropZone.previousSibling;
         let addAfter = true;
