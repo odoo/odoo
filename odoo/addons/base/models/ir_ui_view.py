@@ -2411,7 +2411,7 @@ class Base(models.AbstractModel):
         left_group = E.group()
         right_group = E.group()
         for fname, field in self._fields.items():
-            if field.automatic:
+            if fname in models.MAGIC_COLUMNS or (fname == 'display_name' and field.readonly):
                 continue
             elif field.type in ('one2many', 'many2many', 'text', 'html'):
                 # append to sheet left and right group if needed

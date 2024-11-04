@@ -266,7 +266,6 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
     def test_10_display_name(self):
         """ test definition of automatic field 'display_name' """
         field = type(self.env['test_new_api.discussion']).display_name
-        self.assertTrue(field.automatic)
         self.assertTrue(field.compute)
         self.assertEqual(self.registry.field_depends[field], ('name',))
 
@@ -3831,14 +3830,12 @@ class TestMagicFields(TransactionCase):
         self.patch(registry, 'models', OrderedDict(sorted(models.items())))
         registry.setup_models(self.cr)
         field = registry['test_new_api.display'].display_name
-        self.assertFalse(field.automatic)
         self.assertTrue(field.store)
 
         # check setup of models in reverse alphanumeric order
         self.patch(registry, 'models', OrderedDict(sorted(models.items(), reverse=True)))
         registry.setup_models(self.cr)
         field = registry['test_new_api.display'].display_name
-        self.assertFalse(field.automatic)
         self.assertTrue(field.store)
 
 

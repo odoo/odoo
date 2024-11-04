@@ -254,13 +254,13 @@ class MetaModel(api.Meta):
             if attrs.get('_log_access', self._auto):
                 from .fields_relational import Many2one  # noqa: PLC0415
                 add_default('create_uid', Many2one(
-                    'res.users', string='Created by', automatic=True, readonly=True))
+                    'res.users', string='Created by', readonly=True))
                 add_default('create_date', Datetime(
-                    string='Created on', automatic=True, readonly=True))
+                    string='Created on', readonly=True))
                 add_default('write_uid', Many2one(
-                    'res.users', string='Last Updated by', automatic=True, readonly=True))
+                    'res.users', string='Last Updated by', readonly=True))
                 add_default('write_date', Datetime(
-                    string='Last Updated on', automatic=True, readonly=True))
+                    string='Last Updated on', readonly=True))
 
 
 # special columns automatically created by the ORM
@@ -559,12 +559,11 @@ class BaseModel(metaclass=MetaModel):
     _transient_max_hours = lazy_classproperty(lambda _: config.get('transient_age_limit'))
     "maximum idle lifetime (in hours), unlimited if ``0``"
 
-    id = Id(automatic=True)
+    id = Id()
     display_name = Char(
         string='Display Name',
         compute='_compute_display_name',
         search='_search_display_name',
-        automatic=True,
     )
 
     def _valid_field_parameter(self, field, name):

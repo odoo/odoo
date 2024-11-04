@@ -38,7 +38,8 @@ class TestORM(TransactionCase):
     def test_access_partial_deletion(self):
         """ Check accessing a record from a recordset where another record has been deleted. """
         Model = self.env['res.country']
-        self.assertTrue(type(Model).display_name.automatic, "test assumption not satisfied")
+        display_name_field = Model._fields['display_name']
+        self.assertTrue(display_name_field.compute and not display_name_field.store, "test assumption not satisfied")
 
         # access regular field when another record from the same prefetch set has been deleted
         records = Model.create([{'name': name[0], 'code': name[1]} for name in (['Foo', 'ZV'], ['Bar', 'ZX'], ['Baz', 'ZY'])])

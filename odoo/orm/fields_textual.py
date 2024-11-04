@@ -324,6 +324,22 @@ class Char(_String):
     _description_size = property(attrgetter('size'))
     _description_trim = property(attrgetter('trim'))
 
+    def get_depends(self, model):
+        depends, depends_context = super().get_depends(model)
+
+        # display_name may depend on context['lang'] (`test_lp1071710`)
+        if (
+            self.name == 'display_name'
+            and self.compute
+            and not self.store
+            and model._rec_name
+            and model._fields[model._rec_name].base_field.translate
+            and 'lang' not in depends_context
+        ):
+            depends_context.append('lang')
+
+        return depends, depends_context
+
 
 class Text(_String):
     """ Very similar to :class:`Char` but used for longer contents, does not
