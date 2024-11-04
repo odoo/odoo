@@ -304,7 +304,7 @@
 
                 <div t-if="track.website_image_url" class="card-img-top"
                     t-attf-style="padding-top: 50%; background-image: url(#{track.website_image_url}); background-size: cover; background-position:center">
-                    <span t-if="option_track_wishlist and not track.is_track_live" class="position-absolute h3 mt-2 me-2 text-white" style="right: 0; top: 0;">
+                    <span t-if="option_track_wishlist and (track.is_track_upcoming or track.is_reminder_on or (not track.date and not track.event_id.is_finished))" class="position-absolute h3 mt-2 me-2 text-white" style="right: 0; top: 0;">
                         <t t-call="website_event_track.track_widget_reminder">
                             <t t-set="reminder_light" t-value="True"/>
                         </t>
@@ -312,7 +312,7 @@
                 </div>
                 <div t-else="" class="o_wesession_gradient card-img-top position-relative"
                     style="padding-top: 50%;">
-                    <span t-if="option_track_wishlist" class="position-absolute h3 mt-2 me-2" style="right: 0; top: 0;">
+                    <span t-if="option_track_wishlist and (track.is_track_upcoming or track.is_reminder_on or (not track.date and not track.event_id.is_finished))" class="position-absolute h3 mt-2 me-2" style="right: 0; top: 0;">
                         <t t-call="website_event_track.track_widget_reminder">
                             <t t-set="reminder_light" t-value="True"/>
                         </t>
@@ -384,8 +384,8 @@
                 </div>
             </div>
             <!-- reminder -->
-            <div t-if="not event.is_done and (not track.date or today_tz &lt;= tracks_date) and option_track_wishlist"
-                class="d-none d-md-block py-1">
+            <div t-if="option_track_wishlist and (track.is_track_upcoming or track.is_reminder_on or (not track.date and not track.event_id.is_finished))"
+                 class="d-none d-md-block py-1">
                 <t t-call="website_event_track.track_widget_reminder">
                     <t t-set="reminder_small" t-value="False"/>
                     <t t-set="reminder_light" t-value="False"/>
