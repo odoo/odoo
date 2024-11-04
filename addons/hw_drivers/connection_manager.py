@@ -49,9 +49,8 @@ class ConnectionManager(Thread):
                 self._refresh_displays()
             elif all(key in result for key in ['url', 'token', 'db_uuid', 'enterprise_code']):
                 self._connect_to_server(result['url'], result['token'], result['db_uuid'], result['enterprise_code'])
-        except Exception as e:
-            _logger.error('Could not reach iot-proxy.odoo.com')
-            _logger.error('A error encountered : %s ' % e)
+        except Exception:
+            _logger.exception('Could not reach iot-proxy.odoo.com')
 
     def _connect_to_server(self, url, token, db_uuid, enterprise_code):
         # Save DB URL and token
