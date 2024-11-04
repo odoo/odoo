@@ -6,9 +6,6 @@ export class AddElementOption extends Component {
     static components = {
         ...defaultOptionComponents,
     };
-    static props = {
-        toolboxElement: Object,
-    };
     addText() {
         console.log("addText");
     }

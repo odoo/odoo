@@ -9,7 +9,7 @@
     </t>
     <t t-else="">
         <t t-foreach="props.selectedToolboxes" t-as="selectedToolbox" t-key="selectedToolbox.toolbox.selector">
-            <t t-component="selectedToolbox.toolbox.ToolboxComponent" toolboxElement="selectedToolbox.element" />
+            <t t-component="selectedToolbox.toolbox.ToolboxComponent" editingElement="selectedToolbox.element" />
         </t>
         <Toolbar class="'flex-wrap h-auto'" toolbar="props.editor.shared.getToolbarInfo()"/>
     </t>
