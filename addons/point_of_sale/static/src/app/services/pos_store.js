@@ -352,6 +352,7 @@ export class PosStore extends Reactive {
             order.uiState.displayed = false;
             await this.afterOrderDeletion();
         }
+        return orderIsDeleted;
     }
     async afterOrderDeletion() {
         this.set_order(this.get_open_orders().at(-1) || this.createNewOrder());
