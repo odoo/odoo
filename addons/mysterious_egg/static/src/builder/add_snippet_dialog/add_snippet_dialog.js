@@ -18,7 +18,7 @@ export class AddSnippetDialog extends Component {
             showIframe: false,
         });
         this.snippetViewerProps = {
-            state: reactive({ snippets: [] }),
+            state: reactive({ snippets: this.getSelectedSnippets() }),
             selectSnippet: (...args) => {
                 this.props.selectSnippet(...args);
                 this.props.close();
@@ -29,22 +29,23 @@ export class AddSnippetDialog extends Component {
         let root;
         onMounted(async () => {
             const isFirefox = isBrowserFirefox();
-            const iframeDocument = this.iframeRef.el.contentDocument;
             if (isFirefox) {
                 // Make sure empty preview iframe is loaded.
                 // This event is never triggered on Chrome.
                 await new Promise((resolve) => {
-                    iframeDocument.body.onload = resolve;
+                    this.iframeRef.el.addEventListener("load", resolve, { once: true });
                 });
             }
+
+            const iframeDocument = this.iframeRef.el.contentDocument;
+            iframeDocument.body.parentElement.classList.add("o_add_snippets_preview");
+            iframeDocument.body.style.setProperty("direction", localization.direction);
 
             root = this.__owl__.app.createRoot(SnippetViewer, {
                 props: this.snippetViewerProps,
             });
             root.mount(iframeDocument.body);
 
-            iframeDocument.body.parentElement.classList.add("o_add_snippets_preview");
-            iframeDocument.body.style.setProperty("direction", localization.direction);
             await loadBundle("mysterious_egg.iframe_add_dialog", iframeDocument);
             this.state.showIframe = true;
         });
@@ -54,10 +55,14 @@ export class AddSnippetDialog extends Component {
         });
     }
 
-    selectGroup(snippetGroup) {
-        this.state.groupSelected = snippetGroup.groupName;
-        this.snippetViewerProps.state.snippets = this.props.snippetStructures.filter(
+    getSelectedSnippets() {
+        return this.props.snippetStructures.filter(
             (snippet) => snippet.groupName === this.state.groupSelected
         );
+    }
+
+    selectGroup(snippetGroup) {
+        this.state.groupSelected = snippetGroup.groupName;
+        this.snippetViewerProps.state.snippets = this.getSelectedSnippets();
     }
 }
