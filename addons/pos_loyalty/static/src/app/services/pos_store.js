@@ -4,7 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_popup/selection_popup";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Domain, InvalidDomainError } from "@web/core/domain";
-import { ask, makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
+import { ask, makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { Mutex } from "@web/core/utils/concurrency";
 import { effect } from "@web/core/utils/reactive";
 import { batched } from "@web/core/utils/timing";

@@ -1,4 +1,4 @@
-import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
+import { HWPrinter } from "@point_of_sale/app/utils/printer/hw_printer";
 import { EventBus, reactive } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { rpc } from "@web/core/network/rpc";

@@ -7,7 +7,7 @@ import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_p
 import { useBarcodeReader } from "@point_of_sale/app/hooks/barcode_reader_hook";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
-import { makeAwaitable, ask } from "@point_of_sale/app/store/make_awaitable_dialog";
+import { makeAwaitable, ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 
 export function useCashierSelector({ exclusive, onScan } = { onScan: () => {}, exclusive: false }) {
     const pos = usePos();

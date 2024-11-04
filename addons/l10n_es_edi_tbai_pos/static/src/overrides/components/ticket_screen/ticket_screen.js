@@ -1,6 +1,6 @@
 import { patch } from "@web/core/utils/patch";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
-import { makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
+import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { AddTbaiRefundReasonPopup } from "@l10n_es_edi_tbai_pos/app/add_tbai_refund_reason_popup/add_tbai_refund_reason_popup";
 
 patch(TicketScreen.prototype, {
