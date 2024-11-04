@@ -21,22 +21,17 @@ class AccountFiscalPosition(models.Model):
         string='Interstate Fiscal Position Type',
     )
 
-    @api.model
-    def _get_fiscal_position(self, partner, delivery=None):
-        if not delivery:
-            delivery = partner
+    def _get_fpos_ranking_functions(self, partner):
+        if self.env.company.account_fiscal_country_id.code != "BR" or partner.country_id.code != 'BR':
+            return super()._get_fpos_ranking_functions(partner)
+        company_state = self.env.company.state_id
+        delivery_state = partner.state_id
+        if company_state == delivery_state:
+            fp_type = 'internal'
+        elif company_state in SOUTH_SOUTHEAST and delivery_state in NORTH_NORTHEAST_MIDWEST:
+            fp_type = 'ss_nnm'
+        else:
+            fp_type = 'interstate'
+        return super()._get_fpos_ranking_functions(partner) + [
+            ('l10n_br_fp_type', lambda fpos: (not fpos.l10n_br_fp_type or (fpos.l10n_br_fp_type == fp_type and 2)))]
 
-        if self.env.company.country_id.code != "BR" or delivery.country_id.code != 'BR':
-            return super()._get_fiscal_position(partner, delivery=delivery)
-
-        # manually set fiscal position on partner has a higher priority
-        manual_fiscal_position = delivery.property_account_position_id or partner.property_account_position_id
-        if manual_fiscal_position:
-            return manual_fiscal_position
-
-        # Taxation in Brazil depends on both the state of the partner and the state of the company
-        if self.env.company.state_id == delivery.state_id:
-            return self.search([('l10n_br_fp_type', '=', 'internal'), ('company_id', '=', self.env.company.id)], limit=1)
-        if self.env.company.state_id.code in SOUTH_SOUTHEAST and delivery.state_id.code in NORTH_NORTHEAST_MIDWEST:
-            return self.search([('l10n_br_fp_type', '=', 'ss_nnm'), ('company_id', '=', self.env.company.id)], limit=1)
-        return self.search([('l10n_br_fp_type', '=', 'interstate'), ('company_id', '=', self.env.company.id)], limit=1)
