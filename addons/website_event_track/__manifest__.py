@@ -51,9 +51,13 @@
             'website_event_track/static/src/xml/event_track_proposal_templates.xml',
             'website_event_track/static/src/xml/website_event_pwa.xml',
             'website_event_track/static/src/xml/website_event_track_form_tags_wrapper.xml',
+            'website_event_track/static/src/xml/website_event_track_email_reminder.xml',
             'website_event_track/static/src/snippets/**/*.js',
             'website_event_track/static/src/interactions/*',
         ],
+        'web.assets_tests': [
+            'website_event_track/static/tests/tours/*.js',
+        ]
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

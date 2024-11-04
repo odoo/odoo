@@ -486,7 +486,7 @@ class EventEvent(models.Model):
             params.update(location=self.address_inline)
         encoded_params = werkzeug.urls.url_encode(params)
         google_url = GOOGLE_CALENDAR_URL + encoded_params
-        iCal_url = f'/event/{self.id:d}/ics?{encoded_params}'
+        iCal_url = f'/event/{self.id:d}/ics'
         return {'google_url': google_url, 'iCal_url': iCal_url}
 
     def _default_website_meta(self):
