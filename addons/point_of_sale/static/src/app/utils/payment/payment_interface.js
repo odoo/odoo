@@ -1,7 +1,7 @@
 /**
  * Implement this interface to support a new payment method in the POS:
  *
- * import { PaymentInterface } from "@point_of_sale/app/payment/payment_interface";
+ * import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
  * class MyPayment extends PaymentInterface {}
  *
  * To connect the interface to the right payment methods register it:

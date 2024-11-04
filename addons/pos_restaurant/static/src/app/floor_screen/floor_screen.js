@@ -17,7 +17,7 @@ import {
     useEffect,
     useExternalListener,
 } from "@odoo/owl";
-import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
+import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { loadImage } from "@point_of_sale/utils";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 import { hasTouch } from "@web/core/browser/feature_detection";

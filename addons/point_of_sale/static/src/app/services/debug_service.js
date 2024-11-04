@@ -1,7 +1,7 @@
 import { reactive } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { withComputedProperties } from "@web/core/utils/reactive";
-import { DebugWidget } from "@point_of_sale/app/debug/debug_widget";
+import { DebugWidget } from "@point_of_sale/app/utils/debug/debug_widget";
 
 export const debugService = {
     /**

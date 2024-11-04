@@ -4,7 +4,7 @@ import { patch } from "@web/core/utils/patch";
 import { OnlinePaymentPopup } from "@pos_online_payment/app/online_payment_popup/online_payment_popup";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { qrCodeSrc } from "@point_of_sale/utils";
-import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
+import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 
 patch(PaymentScreen.prototype, {
     async addNewPaymentLine(paymentMethod) {
