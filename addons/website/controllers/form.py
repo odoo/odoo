@@ -251,8 +251,9 @@ class WebsiteForm(http.Controller):
 
         return data
 
+    # TODO: Remove in master
     def _should_log_authenticate_message(self, record):
-        return True
+        pass
 
     def insert_record(self, request, model, values, custom, meta=None):
         model_name = model.sudo().model
@@ -263,39 +264,15 @@ class WebsiteForm(http.Controller):
             mail_create_nosubscribe=True,
         ).create(values)
 
-        authenticate_message = False
-        email_field_name = request.env[model_name]._mail_get_primary_email_field()
-        if email_field_name and hasattr(record, '_message_log') and email_field_name in values:
-            warning_icon = ""
-            if request.session.uid:
-                user_email = request.env.user.email
-                form_email = values[email_field_name]
-                if user_email != form_email:
-                    authenticate_message = _("This %(model_name)s was submitted by %(user_name)s (%(user_email)s) on behalf of %(form_email)s",
-                        model_name=model.name, user_name=request.env.user.name, user_email=user_email, form_email=form_email)
-            elif self._should_log_authenticate_message(record):
-                warning_icon = "/!\\ "
-                authenticate_message = _("EXTERNAL SUBMISSION - Customer not verified")
-            if authenticate_message:
-                record._message_log(
-                    body=Markup('<div class="alert alert-info" role="alert">{warning_icon}{message}</div>').format(warning_icon=warning_icon, message=authenticate_message),
-                )
-
-        if custom or meta or authenticate_message:
+        if custom or meta:
             _custom_label = "%s\n___________\n\n" % _("Other Information:")  # Title for custom fields
             if model_name == 'mail.mail':
                 _custom_label = "%s\n___________\n\n" % _("This message has been posted on your website!")
             default_field = model.website_form_default_field_id
             default_field_data = values.get(default_field.name, '')
-            custom_label = _custom_label + custom if custom else ''
-            meta_label = self._meta_label + "\n________\n\n" + meta if meta else ''
-            custom_content = ''
-            for text in [authenticate_message, default_field_data, custom_label, meta_label]:
-                if not text:
-                    continue
-                if custom_content:
-                    custom_content += '\n\n'
-                custom_content += text
+            custom_content = (default_field_data + "\n\n" if default_field_data else '') \
+                + (_custom_label + custom + "\n\n" if custom else '') \
+                + (self._meta_label + "\n________\n\n" + meta if meta else '')
 
             # If there is a default field configured for this model, use it.
             # If there isn't, put the custom data in a message instead

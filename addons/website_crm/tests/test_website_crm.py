@@ -16,7 +16,7 @@ class TestWebsiteCrm(odoo.tests.HttpCase):
         self.start_tour("/?utm_source=Source&utm_medium=Medium&utm_campaign=New campaign", 'website_crm_tour')
 
         # check result
-        record = self.env['crm.lead'].search([('description', '=', '<p>EXTERNAL SUBMISSION - Customer not verified<br>\n<br>\n</p><p>### TOUR DATA ###</p>')])
+        record = self.env['crm.lead'].search([('description', '=', '### TOUR DATA ###')])
         self.assertEqual(len(record), 1)
         self.assertEqual(record.contact_name, 'John Smith')
         self.assertEqual(record.email_from, 'john@smith.com')
