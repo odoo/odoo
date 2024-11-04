@@ -9866,10 +9866,11 @@ registry.CarouselHandler = registry.GalleryHandler.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Update the carousel indicator and activate the snippet.
+     * Update the carousel indicator.
      *
      * @private
-     * @param {integer} position - The position of the indicator to activate on the carousel.
+     * @param {integer} position - the position of the indicator to activate on
+     * the carousel.
      */
     _updateIndicatorAndActivateSnippet(position) {
         const carouselEl = this.$target[0].classList.contains("carousel") ? this.$target[0]
