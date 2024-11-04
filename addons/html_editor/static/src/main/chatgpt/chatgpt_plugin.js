@@ -10,7 +10,7 @@ import { user } from "@web/core/user";
 
 export class ChatGPTPlugin extends Plugin {
     static id = "chatgpt";
-    static dependencies = ["selection", "history", "dom", "sanitize", "dialog"];
+    static dependencies = ["selection", "history", "dom", "sanitize", "dialog", "delete"];
     resources = {
         user_commands: [
             {
@@ -63,6 +63,17 @@ export class ChatGPTPlugin extends Plugin {
         const selection = this.dependencies.selection.getEditableSelection();
         const dialogParams = {
             insert: (content) => {
+                if ([...(content.children || [])].filter(isBlock).length > 1) {
+                    // If several blocks are to be inserted, replace the
+                    // original element with a paragraph so as not to leave an
+                    // empty block before the insertion.
+                    let selection = this.dependencies.selection.getEditableSelection();
+                    if (!selection.isCollapsed) {
+                        this.dependencies.delete.deleteSelection(selection);
+                        selection = this.dependencies.selection.getEditableSelection();
+                    }
+                        this.dependencies.dom.setTag({ tagName: "P" });
+                }
                 const insertedNodes = this.dependencies.dom.insert(content);
                 this.dependencies.history.addStep();
                 // Add a frame around the inserted content to highlight it for 2
