@@ -106,7 +106,7 @@
                                 />
                                 <field name="trigger_field_ids" string="When updating" placeholder="Select fields..."
                                     options="{'no_open': True, 'no_create': True}"
-                                    domain="[('model_id', '=', model_id)]"
+                                    domain="[('model_id', '=', model_id),('store','=',True)]"
                                     context="{'hide_model': 1}"
                                     invisible="trigger != 'on_create_or_write'" widget="many2many_tags" />
                                 <field name="on_change_field_ids" string="When updating" placeholder="Select fields..."
