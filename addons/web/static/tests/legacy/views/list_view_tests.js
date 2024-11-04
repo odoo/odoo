@@ -20973,4 +20973,35 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_data_row", 3);
         assert.containsNone(target, ".o_group_header .o_pager");
     });
+    
+    QUnit.test("open record, with invalid record in list", async function (assert) {
+        // in this scenario, the record is already invalid in db, so we should be allowed to
+        // leave it
+        serverData.models.foo.records[0].foo = false;
+        serverData.views = {
+            "foo,false,form": `<form><field name="foo"/><field name="int_field"/></form>`,
+            "foo,false,list": `<tree><field name="foo" required="1"/><field name="int_field"/></tree>`,
+            "foo,false,search": `<search/>`,
+        };
+
+        const wc = await createWebClient({ serverData });
+        await doAction(wc, {
+            res_model: "foo",
+            type: "ir.actions.act_window",
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+        });
+
+        patchWithCleanup(wc.env.services.notification, {
+            add: () => {
+                throw new Error("should not display a notification");
+            },
+        });
+
+        await click(target.querySelector(".o_data_cell"));
+
+        assert.containsOnce(target, ".o_form_view");
+    });
 });
