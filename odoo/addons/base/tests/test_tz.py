@@ -1,4 +1,5 @@
 import datetime
+from freezegun import freeze_time
 import logging
 import pytz
 from unittest.mock import patch
@@ -55,6 +56,7 @@ class TestTZ(TransactionCase):
             with self.assertRaises(ValueError):
                 self.env.user.tz = "US/Eastern"
 
+    @freeze_time('2024-11-01')
     def test_partner_with_old_tz(self):
         # this test makes sence after ubuntu noble without tzdata-legacy installed
         partner = self.env['res.partner'].create({'name': 'test', 'tz': 'UTC'})
