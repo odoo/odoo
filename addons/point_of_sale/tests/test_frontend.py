@@ -1394,6 +1394,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             {
                 "available_in_pos": True,
                 "list_price": 7,
+                "standard_price": 10,
                 "name": "Desk Combo",
                 "type": "combo",
                 "taxes_id": False,
@@ -1406,6 +1407,9 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'ProductComboPriceCheckTour', login="pos_user")
+        order = self.env['pos.order'].search([], limit=1)
+        self.assertEqual(order.lines.filtered(lambda l: l.product_id.type == 'combo').margin, 0)
+        self.assertEqual(order.lines.filtered(lambda l: l.product_id.type == 'combo').margin_percent, 0)
 
     def test_customer_display_as_public(self):
         self.main_pos_config.customer_display_type = 'remote'
