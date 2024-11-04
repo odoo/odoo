@@ -355,7 +355,7 @@
 <template id="header_welcome_message" inherit_id="website_forum.header" name="Forum Welcome Message (oe_structure_forum_top)">
     <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_website_forum_header_1']" position="replace">
         <div t-if="forum" class="oe_structure oe_empty" id="oe_structure_website_forum_header_1">
-            <section t-if="editable or (is_public_user and not forum_welcome_message)" t-attf-class="s_cover parallax s_parallax_is_fixed bg-black-50 pt48 pb48 #{'css_non_editable_mode_hidden' if editable else 'forum_intro'}" data-scroll-background-ratio="1" data-snippet="s_cover">
+            <section t-if="editable or (is_public_user and not forum_welcome_message)" t-attf-class="s_cover parallax s_parallax_is_fixed bg-black-50 pt48 pb48 #{'forum_intro'}" data-scroll-background-ratio="1" data-snippet="s_cover">
                 <span t-if="forum.image_1920" class="s_parallax_bg oe_img_bg" t-attf-style="background-image: url('#{request.website.image_url(forum, 'image_1920')}'); background-position: center;"/>
                 <div t-if="forum.image_1920" class="o_we_bg_filter bg-black-50"/>
                 <div class="container s_allow_columns">
