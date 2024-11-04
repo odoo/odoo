@@ -51,6 +51,34 @@ patch(PosStore.prototype, {
         if (data["login_number"] === this.session.login_number) {
             return;
         }
+<<<<<<< 18.0
+||||||| d157556b7b62416672792c7e2b1c7e6cad8f5496
+        const tableByIds = this.models["restaurant.table"].getAllBy("id");
+        const tables = data["table_ids"].map((id) => this.models["restaurant.table"].get(id));
+        const draftTableOrders = [
+            ...new Set(
+                tables
+                    .map((t) => t["<-pos.order.table_id"])
+                    .flat()
+                    .filter((o) => !o.finalized)
+            ),
+        ];
+        await this.loadServerOrders([
+            "|",
+=======
+        const tableByIds = this.models["restaurant.table"].getAllBy("id");
+        const tables = data["table_ids"].map((id) => this.models["restaurant.table"].get(id));
+        const draftTableOrders = [
+            ...new Set(
+                tables
+                    .map((t) => t["<-pos.order.table_id"])
+                    .flat()
+                    .filter((o) => !o.finalized && typeof o.id === "number")
+            ),
+        ];
+        await this.loadServerOrders([
+            "|",
+>>>>>>> 541c34e3844d7a1287434426b3560a9a74873e70
 
         const orderIds = this.models["pos.order"]
             .filter((order) => !order.finalized && typeof order.id === "number")
