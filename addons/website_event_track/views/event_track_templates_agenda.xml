@@ -175,10 +175,11 @@
 </template>
 
 <template id="agenda_main_track" name="Track Agenda: Track">
-    <div class="d-flex flex-column h-100" t-att-data-publish="track.website_published and 'on' or 'off'">
+    <div t-att-data-publish="track.website_published and 'on' or 'off'" class="h-100">
+        <div class="o_we_agenda_card d-flex flex-column h-100">
         <div class="o_we_agenda_card_content position-relative d-flex flex-column justify-content-center my-1">
             <div class="o_we_agenda_card_title mb-1">
-                <t t-if="track.website_published or is_event_user">
+                <t t-if="(not is_html_empty(track.description) or track.partner_biography) and (track.website_published or is_event_user)">
                     <a t-att-href="'/event/%s/track/%s' % (slug(event), slug(track))" class="text-reset fw-bold stretched-link">
                         <t t-out="track.name"/>
                     </a>
@@ -214,7 +215,7 @@
                 <small t-if="not track.website_published and is_event_user"
                     title="Unpublished"
                     class="ms-1 mt-1 mt-md-0 badge text-bg-danger o_wevent_online_badge_unpublished">Unpublished</small>
-                <span t-if="option_track_wishlist">
+                <span t-if="option_track_wishlist and (not track.date or track.is_track_upcoming or track.is_reminder_on)">
                     <t t-call="website_event_track.track_widget_reminder">
                         <t t-set="reminder_light" t-value="False"/>
                         <t t-set="reminder_small" t-value="True"/>
@@ -223,6 +224,7 @@
                 </span>
             </div>
         </div>
+    </div>
     </div>
 </template>
 
