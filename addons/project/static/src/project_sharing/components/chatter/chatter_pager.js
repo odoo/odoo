@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Component, useState, onWillUpdateProps } from "@odoo/owl";
 
 export class ChatterPager extends Component {

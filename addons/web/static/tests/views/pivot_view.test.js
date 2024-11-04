@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { expect, test } from "@odoo/hoot";
 import { queryAll, queryAllTexts, queryFirst, queryOne, queryText } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockDate } from "@odoo/hoot-mock";

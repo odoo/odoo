@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { ListController } from '@web/views/list/list_controller';
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";

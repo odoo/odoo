@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { Record } from "@web/model/relational_model/record";
 import { makeActiveField } from "@web/model/relational_model/utils";

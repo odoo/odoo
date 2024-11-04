@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 function patchSessionManager() {
     const { DateTime } = luxon;
     const SessionManager = odoo.loader.modules.get('@survey/js/survey_session_manage')[Symbol.for('default')]

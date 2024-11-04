@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { registry } from "@web/core/registry";
 import { progressBarField, ProgressBarField } from "@web/views/fields/progress_bar/progress_bar_field";
 

@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { CorePlugin, UIPlugin } from "@odoo/o-spreadsheet";
 
 /**

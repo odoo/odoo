@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { Component, useEffect, useState } from "@odoo/owl";
 
 export class ImportDataProgress extends Component {

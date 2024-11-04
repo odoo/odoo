@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { BarcodeScanner } from "@barcodes/components/barcode_scanner";
 import { BarcodeDialog } from '@web/core/barcode/barcode_dialog';
 

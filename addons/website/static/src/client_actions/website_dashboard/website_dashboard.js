@@ -1,4 +1,3 @@
-/** @odoo-module **/
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { Layout } from "@web/search/layout";

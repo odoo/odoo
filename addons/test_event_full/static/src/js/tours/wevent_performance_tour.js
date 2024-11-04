@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { queryOne } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 import * as wsTourUtils from '@website_sale/js/tours/tour_utils';

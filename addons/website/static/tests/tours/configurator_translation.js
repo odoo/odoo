@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { localization } from "@web/core/l10n/localization";
 import { translatedTerms } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";

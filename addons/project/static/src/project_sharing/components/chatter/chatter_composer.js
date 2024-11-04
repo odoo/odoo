@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { rpc } from "@web/core/network/rpc";
 import { TextField } from '@web/views/fields/text/text_field';
 import { PortalAttachDocument } from '../portal_attach_document/portal_attach_document';

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { useEffect } from "@odoo/owl";
 

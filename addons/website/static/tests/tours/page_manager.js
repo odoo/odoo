@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { switchWebsite, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
 import { registry } from "@web/core/registry";
 

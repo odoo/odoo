@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import publicWidget from '@web/legacy/js/public/public_widget';
 import { CategoryAddDialog } from "@website_slides/js/public/components/category_add_dialog/category_add_dialog";

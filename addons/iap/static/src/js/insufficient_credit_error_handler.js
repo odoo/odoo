@@ -1,4 +1,3 @@
-/** @odoo-module */
 import { Dialog } from "@web/core/dialog/dialog";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";

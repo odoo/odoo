@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { rpc } from "@web/core/network/rpc";
 
 import { ChatterAttachmentsViewer } from "./chatter_attachments_viewer";

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import { pick } from "@web/core/utils/objects";
 import { clamp } from "@web/core/utils/numbers";

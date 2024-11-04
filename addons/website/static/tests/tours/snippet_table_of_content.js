@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { isVisible } from '@odoo/hoot-dom';
 import {
     clickOnEditAndWaitEditMode,

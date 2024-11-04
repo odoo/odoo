@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import publicWidget from "@web/legacy/js/public/public_widget";
 
 publicWidget.registry.SurveyBreadcrumbWidget = publicWidget.Widget.extend({

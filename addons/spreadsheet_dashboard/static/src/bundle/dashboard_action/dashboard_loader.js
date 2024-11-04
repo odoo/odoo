@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Model } from "@odoo/o-spreadsheet";
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
 import { createDefaultCurrency } from "@spreadsheet/currency/helpers";

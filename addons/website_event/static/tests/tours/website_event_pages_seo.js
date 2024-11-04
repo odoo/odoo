@@ -1,5 +1,3 @@
-/** @odoo-modules */
-
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("website_event_pages_seo", {

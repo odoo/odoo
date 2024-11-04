@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import "@website/snippets/s_website_form/000";  // force deps
 import { uniqueId } from "@web/core/utils/functions";
 import publicWidget from '@web/legacy/js/public/public_widget';

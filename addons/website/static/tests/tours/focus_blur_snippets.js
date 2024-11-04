@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { insertSnippet, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
 
 const blockIDToData = {

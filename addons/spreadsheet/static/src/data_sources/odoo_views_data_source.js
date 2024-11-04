@@ -1,4 +1,3 @@
-/** @odoo-module */
 // @ts-check
 
 import { LOADING_ERROR, LoadableDataSource } from "./data_source";

@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { ProjectProjectKanbanHeader } from "./project_project_kanban_header";
 

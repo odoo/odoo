@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 /**
  * Add custom step to check allow_billable during project creation
  * to be able to set a partner on project/tasks.

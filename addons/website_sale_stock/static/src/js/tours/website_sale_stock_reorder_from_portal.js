@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { registry } from "@web/core/registry";
 import { clickOnElement } from '@website/js/tours/tour_utils';
 

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 // Redefine the getRangeAt function in order to avoid an error appearing
 // sometimes when an input element is focused on Firefox.
 // The error happens because the range returned by getRangeAt is "restricted".

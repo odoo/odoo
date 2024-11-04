@@ -1,4 +1,3 @@
-/** @odoo-module **/
 // TODO: avoid empty keys when not necessary to reduce request size
 export function serializeNode(node, nodesToStripFromChildren = new Set()) {
     if (!node.oid) {

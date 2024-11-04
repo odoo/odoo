@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 /* global YT, Vimeo */
 
     import publicWidget from '@web/legacy/js/public/public_widget';

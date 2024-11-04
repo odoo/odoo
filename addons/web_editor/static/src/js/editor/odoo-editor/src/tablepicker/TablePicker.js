@@ -1,4 +1,3 @@
-/** @odoo-module **/
 import { getRangePosition } from '../utils/utils.js';
 
 export class TablePicker extends EventTarget {

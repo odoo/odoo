@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import { pick } from "@web/core/utils/objects";
 import options from "@web_editor/js/editor/snippets.options";

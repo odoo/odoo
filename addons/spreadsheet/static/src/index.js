@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 /**
  * This file is meant to load the different subparts of the module
  * to guarantee their plugins are loaded in the right order

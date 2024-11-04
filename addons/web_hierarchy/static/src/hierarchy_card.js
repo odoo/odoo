@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Component } from "@odoo/owl";
 
 import { evaluateBooleanExpr } from "@web/core/py_js/py";

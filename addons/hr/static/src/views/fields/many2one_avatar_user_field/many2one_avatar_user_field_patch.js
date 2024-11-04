@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { patch } from "@web/core/utils/patch";
 import { usePopover } from "@web/core/popover/popover_hook";
 import {

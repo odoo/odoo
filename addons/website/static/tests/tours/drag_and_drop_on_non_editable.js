@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { insertSnippet, goBackToBlocks, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
 
 registerWebsitePreviewTour("test_drag_and_drop_on_non_editable", {

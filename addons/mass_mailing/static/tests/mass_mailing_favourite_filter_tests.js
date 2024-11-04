@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import * as testUtils from "@web/../tests/helpers/utils";
 import weTestUtils from "@web_editor/../tests/test_utils";
