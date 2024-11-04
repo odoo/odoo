@@ -26,9 +26,7 @@ class Test_New_ApiCategory(models.Model):
     depth = fields.Integer(compute="_compute_depth")
     root_categ = fields.Many2one('test_new_api.category', compute='_compute_root_categ')
     display_name = fields.Char(
-        compute='_compute_display_name',
         inverse='_inverse_display_name',
-        search='_search_display_name',
         recursive=True,
     )
     dummy = fields.Char(store=False)
@@ -141,7 +139,7 @@ class Test_New_ApiMessage(models.Model):
     body = fields.Text(index='trigram')
     author = fields.Many2one('res.users', default=lambda self: self.env.user)
     name = fields.Char(string='Title', compute='_compute_name', store=True)
-    display_name = fields.Char(string='Abstract', compute='_compute_display_name')
+    display_name = fields.Char(string='Abstract')
     size = fields.Integer(compute='_compute_size', search='_search_size')
     double_size = fields.Integer(compute='_compute_double_size')
     discussion_name = fields.Char(related='discussion.name', string="Discussion Name", readonly=False)
@@ -661,7 +659,7 @@ class Test_New_ApiRecursive(models.Model):
     name = fields.Char(required=True)
     parent = fields.Many2one('test_new_api.recursive', ondelete='cascade')
     full_name = fields.Char(compute='_compute_full_name', recursive=True)
-    display_name = fields.Char(compute='_compute_display_name', recursive=True, store=True)
+    display_name = fields.Char(recursive=True, store=True)
     context_dependent_name = fields.Char(compute='_compute_context_dependent_name', recursive=True)
 
     @api.depends('name', 'parent.full_name')
@@ -699,7 +697,7 @@ class Test_New_ApiRecursiveTree(models.Model):
     name = fields.Char(required=True)
     parent_id = fields.Many2one('test_new_api.recursive.tree', ondelete='cascade')
     children_ids = fields.One2many('test_new_api.recursive.tree', 'parent_id')
-    display_name = fields.Char(compute='_compute_display_name', recursive=True, store=True)
+    display_name = fields.Char(recursive=True, store=True)
 
     @api.depends('name', 'children_ids.display_name')
     def _compute_display_name(self):
@@ -1138,7 +1136,7 @@ class Test_New_ApiModel_Child_Nocheck(models.Model):
 class Test_New_ApiDisplay(models.Model):
     _description = 'Model that overrides display_name'
 
-    display_name = fields.Char(compute='_compute_display_name', store=True)
+    display_name = fields.Char(store=True)
 
     def _compute_display_name(self):
         for record in self:

@@ -27,7 +27,7 @@ class Test_Read_GroupAggregate(models.Model):
     value = fields.Integer("Value")
     numeric_value = fields.Float(digits=(4, 2))
     partner_id = fields.Many2one('res.partner')
-    display_name = fields.Char()
+    display_name = fields.Char(store=True)
 
 
 # we use a selection that is in reverse lexical order, in order to check the
