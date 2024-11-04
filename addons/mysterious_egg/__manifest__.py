@@ -45,6 +45,8 @@
 
             'mysterious_egg/static/src/builder/**/*.js',
             'mysterious_egg/static/src/builder/**/*.xml',
+
+            'mysterious_egg/static/src/builder/add_snippet_dialog/snippet_viewer.scss'
         ],
         'mysterious_egg.inside_builder_style': [
             ('include', 'web._assets_helpers'),
@@ -52,5 +54,9 @@
             'web/static/src/scss/bootstrap_overridden.scss',
             'mysterious_egg/static/src/builder/**/*.inside.scss',
         ],
+        'mysterious_egg.iframe_add_dialog': [
+            ('include', 'web.assets_frontend'),
+            'mysterious_egg/static/src/builder/add_snippet_dialog/snippet_viewer.scss'
+        ]
     },
 }
