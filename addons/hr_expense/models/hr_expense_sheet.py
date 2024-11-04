@@ -683,7 +683,7 @@ class HrExpenseSheet(models.Model):
             raise UserError(_("You can only generate an accounting entry for approved expense(s)."))
 
         if any(not sheet.journal_id for sheet in self):
-            raise UserError(_("Specify expense journal to generate accounting entries."))
+            raise UserError(_("Please specify an expense journal in order to generate accounting entries."))
 
         if False in self.mapped('payment_mode'):
             raise UserError(_(
