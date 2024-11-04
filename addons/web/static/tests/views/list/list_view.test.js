@@ -16096,3 +16096,34 @@ test("two pages, go page 2, record deleted meanwhile (grouped case)", async () =
     expect(".o_data_row").toHaveCount(3);
     expect(".o_group_header .o_pager").toHaveCount(0);
 });
+
+test("open record, with invalid record in list", async () => {
+    // in this scenario, the record is already invalid in db, so we should be allowed to
+    // leave it
+    Foo._records[0].foo = false;
+    Foo._views = {
+        form: `<form><field name="foo"/><field name="int_field"/></form>`,
+        list: `<tree><field name="foo" required="1"/><field name="int_field"/></tree>`,
+        search: `<search/>`,
+    };
+
+    mockService("notification", {
+        add() {
+            throw new Error("should not display a notification");
+        },
+    });
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        res_model: "foo",
+        type: "ir.actions.act_window",
+        views: [
+            [false, "list"],
+            [false, "form"],
+        ],
+    });
+
+    await contains(".o_data_cell").click();
+
+    expect(".o_form_view").toHaveCount(1);
+});
