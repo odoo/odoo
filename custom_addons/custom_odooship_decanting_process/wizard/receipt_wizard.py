@@ -149,7 +149,7 @@ class DeliveryReceiptWizard(models.TransientModel):
             if line.product_id.id in license_plate_product_map:
                 # If the product exists, update the quantity
                 license_plate_product_map[line.product_id.id]['quantity'] += line.quantity
-                # license_plate_product_map[line.product_id.id]['remaining_qty'] += line.remaining_quantity
+                license_plate_product_map[line.product_id.id]['remaining_qty'] += line.quantity
             else:
                 # If it's a new product, add it to the map
                 license_plate_product_map[line.product_id.id] = {
@@ -159,7 +159,6 @@ class DeliveryReceiptWizard(models.TransientModel):
                     'quantity': line.quantity,
                     'remaining_qty': line.quantity,
                 }
-
             # Update remaining quantity in stock move lines
             move_lines = self.picking_id.move_ids_without_package.filtered(
                 lambda m: m.product_id == line.product_id)

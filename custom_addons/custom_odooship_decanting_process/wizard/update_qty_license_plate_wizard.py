@@ -31,7 +31,7 @@ class UpdateQtyWizard(models.TransientModel):
 
         # Check if License Plate is in an active decanting process
         decanting_process = self.env['automation.decanting.orders.process'].search([
-            ('license_plate_ids', '=', self.license_plate_id.ids),
+            ('license_plate_ids', 'in', self.license_plate_id.ids),
             ('state', 'in', ['in_progress', 'done'])  # Check if decanting process is ongoing
         ], limit=1)
 
@@ -56,9 +56,8 @@ class UpdateQtyWizard(models.TransientModel):
 
         # Calculate the difference between new quantity and current line quantity
         qty_difference = self.quantity - line.quantity
-
         # If the user is increasing the quantity (difference > 0)
-        if stock_move.picked == False:
+        if stock_move.delivery_receipt_state in ['draft', 'partially_received']:
             if qty_difference > 0:
                 # Check if the stock move can fulfill the additional quantity
                 if qty_difference > stock_remaining_qty:
@@ -67,16 +66,13 @@ class UpdateQtyWizard(models.TransientModel):
                     )
                 # Subtract the additional quantity from the stock move's remaining quantity
                 stock_move.remaining_qty -= qty_difference
-
             # If the user is decreasing the quantity (difference < 0)
             else:
                 if qty_difference < 0:
                     # Add the reduced quantity back to the stock move's remaining quantity
                     stock_move.remaining_qty += abs(qty_difference)
-
         # Update the quantity on the license plate order line
         line.quantity = line.remaining_qty = self.quantity
-
         # Update delivery receipt status if necessary
         # stock_move._compute_delivery_receipt_state()
 
