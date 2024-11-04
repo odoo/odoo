@@ -7,7 +7,7 @@
             <t t-set-slot="control-panel-navigation-additional">
                 <div class="btn-group d-none d-md-inline-block float-end" style="margin-right: 20px;">
                     <t t-foreach="state.websites" t-as="website" t-key="website.id">
-                        <button class="btn btn-secondary js_website" t-att-class="{'active': website.selected}"
+                        <button class="btn btn-secondary text-truncate js_website" style="max-width: 200px;" t-att-class="{'active': website.selected}"
                                 t-on-click="() => this.state.website = website.id">
                             <t t-esc="website.name"/>
                         </button>
