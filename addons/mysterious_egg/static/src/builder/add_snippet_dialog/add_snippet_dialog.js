@@ -14,7 +14,6 @@ export class AddSnippetDialog extends Component {
 
         this.state = useState({
             groupSelected: this.props.selectedSnippet.groupName,
-            search: "",
             showIframe: false,
         });
         this.snippetViewerProps = {
@@ -25,6 +24,13 @@ export class AddSnippetDialog extends Component {
             },
         };
         this.selectGroup(this.props.selectedSnippet);
+
+        this.categoryById = {};
+        for (const snippetGroup of this.props.snippetGroups) {
+            if (snippetGroup.groupName) {
+                this.categoryById[snippetGroup.groupName] = snippetGroup;
+            }
+        }
 
         let root;
         onMounted(async () => {
@@ -63,6 +69,24 @@ export class AddSnippetDialog extends Component {
 
     selectGroup(snippetGroup) {
         this.state.groupSelected = snippetGroup.groupName;
+        this.snippetViewerProps.state.snippets = this.getSelectedSnippets();
+    }
+
+    onInputSearch(ev) {
+        const search = ev.target.value.toLowerCase();
+        if (search) {
+            const strMatches = (str) => !search || str.toLowerCase().includes(search);
+            this.snippetViewerProps.state.snippets = this.props.snippetStructures.filter(
+                (snippet) => {
+                    return (
+                        strMatches(this.categoryById[snippet.groupName].title) ||
+                        strMatches(snippet.title) ||
+                        strMatches(snippet.keyWords || "")
+                    );
+                }
+            );
+            return;
+        }
         this.snippetViewerProps.state.snippets = this.getSelectedSnippets();
     }
 }
