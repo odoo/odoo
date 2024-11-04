@@ -495,8 +495,8 @@ class MailComposer(models.TransientModel):
     def _process_state(self, mail_values_dict):
         recipients_info = self._process_recipient_values(mail_values_dict)
         blacklist_ids = self._get_blacklist_record_ids(mail_values_dict, recipients_info)
-        optout_emails = self._get_optout_emails(mail_values_dict)
-        done_emails = self._get_done_emails(mail_values_dict)
+        optout_emails = [tools.email_normalize(email) for email in self._get_optout_emails(mail_values_dict)]
+        done_emails = [tools.email_normalize(email) for email in self._get_done_emails(mail_values_dict)]
         # in case of an invoice e.g.
         mailing_document_based = self.env.context.get('mailing_document_based')
 
@@ -518,17 +518,17 @@ class MailComposer(models.TransientModel):
                 mail_values['state'] = 'cancel'
                 mail_values['failure_type'] = 'mail_email_invalid'
             elif optout_emails and all(
-                    mail_to in optout_emails for mail_to in recipients['mail_to']
+                    mail_to in optout_emails for mail_to in recipients['mail_to_normalized']
                 ):
                 mail_values['state'] = 'cancel'
                 mail_values['failure_type'] = 'mail_optout'
             elif done_emails and not mailing_document_based and all(
-                    mail_to in done_emails for mail_to in recipients['mail_to']
+                    mail_to in done_emails for mail_to in recipients['mail_to_normalized']
                 ):
                 mail_values['state'] = 'cancel'
                 mail_values['failure_type'] = 'mail_dup'
             elif done_emails is not None and not mailing_document_based:
-                done_emails.extend(recipients['mail_to'])
+                done_emails.extend(recipients['mail_to_normalized'])
 
         return mail_values_dict
 
