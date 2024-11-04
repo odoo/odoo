@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools, _
+from odoo import fields, models, tools, _
 
 
 class LunchCashmoveReport(models.Model):
@@ -9,7 +9,7 @@ class LunchCashmoveReport(models.Model):
     _auto = False
     _order = "date desc"
 
-    id = fields.Integer('ID')
+    id = fields.Id(string='ID')
     amount = fields.Float('Amount')
     date = fields.Date('Date')
     currency_id = fields.Many2one('res.currency', string='Currency')

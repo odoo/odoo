@@ -9,7 +9,6 @@ class HrEmployeeSkillReport(models.BaseModel):
     _description = 'Employee Skills Report'
     _order = 'employee_id, level_progress desc'
 
-    id = fields.Id()
     display_name = fields.Char(related='employee_id.name')
     company_id = fields.Many2one('res.company', readonly=True)
     department_id = fields.Many2one('hr.department', readonly=True)
