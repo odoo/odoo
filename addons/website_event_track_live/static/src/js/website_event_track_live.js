@@ -24,7 +24,7 @@ publicWidget.registry.websiteEventTrackLive = publicWidget.Widget.extend({
     //--------------------------------------------------------------------------
 
     _onPlayerReady: function () {
-        this.$('.o_wevent_event_track_live_loading').remove();
+        this.el.querySelector(".o_wevent_event_track_live_loading").remove();
     },
 
     _onPlayerStateChange: function (event) {
@@ -42,12 +42,12 @@ publicWidget.registry.websiteEventTrackLive = publicWidget.Widget.extend({
     },
 
     _onVideoEnded: function () {
-        this.$el.append($('<div/>', {
-            class: 'owevent_track_suggestion_loading position-absolute w-100'
-        }));
+        const trackSuggestionEL = document.createElement("div");
+        trackSuggestionEL.className = "owevent_track_suggestion_loading position-absolute w-100";
+        this.el.append(trackSuggestionEL);
         var self = this;
         rpc('/event_track/get_track_suggestion', {
-            track_id: this.$el.data('trackId'),
+            track_id: parseInt(this.el.dataset.trackId),
         }).then(function (suggestion) {
             self.nextSuggestion = suggestion;
             self._showSuggestion();
@@ -57,7 +57,7 @@ publicWidget.registry.websiteEventTrackLive = publicWidget.Widget.extend({
     _onReplay: function () {
         this.youtubePlayer.seekTo(0);
         this.youtubePlayer.playVideo();
-        this.$('.owevent_track_suggestion_loading').remove();
+        document.querySelector(".owevent_track_suggestion_loading").remove();
         if (this.outro) {
             delete this.outro;
         }
@@ -70,9 +70,10 @@ publicWidget.registry.websiteEventTrackLive = publicWidget.Widget.extend({
     _setupYoutubePlayer: function () {
         var self = this;
 
-        var youtubeId = self.$el.data('youtubeVideoId');
-        var $youtubeElement = $('<script/>', {src: 'https://www.youtube.com/iframe_api'});
-        $(document.head).append($youtubeElement);
+        const youtubeId = this.el.dataset.youtubeVideoId;
+        const youtubeEl = document.createElement("script");
+        youtubeEl.src = "https://www.youtube.com/iframe_api";
+        document.head.appendChild(youtubeEl);
 
         window.onYouTubeIframeAPIReady = function () {
             self.youtubePlayer = new YT.Player('o_wevent_youtube_iframe_container', {
@@ -105,7 +106,7 @@ publicWidget.registry.websiteEventTrackLive = publicWidget.Widget.extend({
             if (this.nextSuggestion) {
                 this.outro = new TrackSuggestionWidget(this, this.nextSuggestion);
             } else {
-                var data = this.$el.data();
+                const data = this.el.dataset;
                 this.outro = new ReplaySuggestionWidget(this, {
                     current_track: {
                         name: data.trackName,
@@ -113,7 +114,7 @@ publicWidget.registry.websiteEventTrackLive = publicWidget.Widget.extend({
                     }
                 });
             }
-            this.outro.appendTo(this.$el);
+            this.outro.appendTo(this.el);
             this.outro.on('replay', null, this._onReplay.bind(this));
         }
     }
