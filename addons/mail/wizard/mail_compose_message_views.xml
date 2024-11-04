@@ -54,6 +54,9 @@
                         </div>
                         <field name="notified_bcc" widget="mail_composer_bcc_list" invisible="not show_notified_bcc"/>
                         <field name="subject" placeholder="Welcome to MyCompany!" required="True"/>
+                        <field name="reply_to" placeholder='Recipient Followers'
+                            invisible="reply_to_mode == 'update'"
+                            required="reply_to_mode != 'update'"/>
                     </group>
                     <field name="can_edit_body" invisible="1"/>
                     <div invisible="composition_mode == 'mass_mail'">
@@ -75,11 +78,6 @@
                             <!-- mass mailing -->
                             <field name="reply_to_force_new" invisible="1"/>
                             <field name="reply_to_mode" invisible="composition_mode != 'mass_mail'" widget="radio"/>
-                            <group>
-                                <field name="reply_to" string="Reply-to Address" placeholder='e.g: "info@mycompany.odoo.com"'
-                                    invisible="reply_to_mode == 'update' or composition_mode != 'mass_mail'"
-                                    required="reply_to_mode != 'update' and composition_mode == 'mass_mail'"/>
-                            </group>
                         </page>
                     </notebook>
                     <footer>
