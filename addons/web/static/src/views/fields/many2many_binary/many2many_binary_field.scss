@@ -1,6 +1,6 @@
 // Attachment Icons (common for many2many_binary widget and chat thread and chat composer)
 // ------------------------------------------------------------------
-$o-attachment-image-size: 38px;
+$o-attachment-image-size: 45px;
 $o-attachment-margin: 5px;
 
 .o_attachment {
@@ -8,38 +8,18 @@ $o-attachment-margin: 5px;
     width: 100%;
     padding: $o-attachment-margin;
 
-    @include media-breakpoint-up(md) {
-        width: 50%;
-    }
-    @include media-breakpoint-up(lg) {
-        width: 25%;
-    }
-    // many2many_binary widget for send mail with attachment
-    &.o_attachment_many2many {
-        @include media-breakpoint-up(md) {
-            width: 50%;
-        }
-        @include media-breakpoint-up(lg) {
-            width: 62%;
-        }
-    }
-
     .o_attachment_wrap {
         overflow: hidden;
         position: relative;
         border-bottom: 1px solid rgba(black, 0.1);
         border-radius: 2px;
-        padding: 4px 6px 0 4px;
+        padding: 4px $o-attachment-image-size 0 4px;
         background-color: rgba($o-black, 0.05);
 
         .o_attachment_delete_cross {
             float: right;
             cursor: pointer;
         }
-    }
-
-    &.o_attachment_editable .o_attachment_wrap  {
-        padding-right: 40px;
     }
 
     .o_image {
