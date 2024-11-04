@@ -5,7 +5,7 @@ import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import { Component, useRef, onMounted } from "@odoo/owl";
 import { TipReceipt } from "@pos_restaurant/app/tip_receipt/tip_receipt";
-import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
+import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 
 export class TipScreen extends Component {
     static template = "pos_restaurant.TipScreen";

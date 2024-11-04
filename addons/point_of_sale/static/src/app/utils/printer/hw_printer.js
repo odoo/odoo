@@ -1,6 +1,6 @@
 import { rpc } from "@web/core/network/rpc";
 
-import { BasePrinter } from "@point_of_sale/app/printer/base_printer";
+import { BasePrinter } from "@point_of_sale/app/utils/printer/base_printer";
 
 /**
  * Printer that sends print requests thru /hw_proxy endpoints.

@@ -1,4 +1,4 @@
-import { BasePrinter } from "@point_of_sale/app/printer/base_printer";
+import { BasePrinter } from "@point_of_sale/app/utils/printer/base_printer";
 import { _t } from "@web/core/l10n/translation";
 import { getTemplate } from "@web/core/templates";
 import { createElement, append, createTextNode } from "@web/core/utils/xml";

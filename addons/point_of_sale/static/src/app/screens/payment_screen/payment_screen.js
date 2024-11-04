@@ -15,8 +15,8 @@ import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Component, useState, onMounted } from "@odoo/owl";
 import { Numpad, enhancedButtons } from "@point_of_sale/app/generic_components/numpad/numpad";
 import { floatIsZero, roundPrecision as round_pr } from "@web/core/utils/numbers";
-import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
-import { handleRPCError } from "@point_of_sale/app/errors/error_handlers";
+import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
+import { handleRPCError } from "@point_of_sale/app/utils/error_handlers";
 import { sprintf } from "@web/core/utils/strings";
 import { serializeDateTime } from "@web/core/l10n/dates";
 

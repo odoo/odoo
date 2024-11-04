@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { OrderSummary } from "@point_of_sale/app/screens/product_screen/order_summary/order_summary";
 import { patch } from "@web/core/utils/patch";
-import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
+import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { useService } from "@web/core/utils/hooks";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { ManageGiftCardPopup } from "@pos_loyalty/utils/manage_giftcard_popup/manage_giftcard_popup";
