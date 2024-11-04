@@ -360,8 +360,14 @@ class configmanager:
         # Advanced options
         group = optparse.OptionGroup(parser, "Advanced options")
         group.add_option('--dev', dest='dev_mode', type='comma', my_default=[], file_exportable=False,
-                         help="Enable developer mode. Param: List of options separated by comma. "
-                              "Options : all, reload, qweb, xml")
+                         # optparse uses a fixed 55 chars to print the help no matter the
+                         # terminal size, abuse that to align the features
+                         help="Enable developer features (comma-separated list, use   "
+                              '"all" for all features). Available features:           '
+                              "- qweb: log the compiled xml with qweb errors          "
+                              "- reload: restart server on change in the source code  "
+                              "- werkzeug: open a html debugger on http request error "
+                              "- xml: read views from the source code, and not the db ")
         group.add_option('--shell-interface', dest='shell_interface', my_default='', file_exportable=False,
                          help="Specify a preferred REPL to use in shell mode. Supported REPLs are: "
                               "[ipython|ptpython|bpython|python]")
