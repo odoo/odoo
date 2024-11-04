@@ -306,11 +306,6 @@ class WebsiteHrRecruitment(WebsiteForm):
             )
         }
 
-    def _should_log_authenticate_message(self, record):
-        if record._name == "hr.applicant" and not request.session.uid:
-            return False
-        return super()._should_log_authenticate_message(record)
-
     def extract_data(self, model_sudo, values):
         candidate = request.env['hr.candidate']
         if model_sudo.model == 'hr.applicant':
