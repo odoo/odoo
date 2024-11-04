@@ -72,6 +72,11 @@ class AccountMove(models.Model):
             domain = expression.AND(
                 [domain, [("move_id.state", "=", "posted")]]
             )
+        partner_ids = [int(partner_id) for partner_id in formula_params.get("partner_id", []) if partner_id]
+        if partner_ids:
+            domain = expression.AND(
+                [domain, [("partner_id", "in", partner_ids)]]
+            )
         return domain
 
     def _pre_process_date_period_boundaries(self, args_list):
@@ -210,10 +215,13 @@ class AccountMove(models.Model):
 
             lines_in_period = self.env['account.move.line'].with_context(allowed_company_ids=company_ids)._read_group(
                 domain=domain,
-                groupby=['company_id', 'parent_state', 'account_id'],
+                groupby=['company_id', 'parent_state', 'account_id', 'partner_id'],
                 aggregates=aggregates,
             )
-            all_lines.update({(period, company.id, state, account.id): dict(zip(fields, val)) for company, state, account, *val in lines_in_period})
+            all_lines.update({
+                (period, company.id, state, account.id, partner.id): dict(zip(fields, val))
+                for company, state, account, partner, *val in lines_in_period
+            })
         return all_lines
 
     # ------------------------ #
@@ -225,8 +233,11 @@ class AccountMove(models.Model):
         self._pre_process_date_period_boundaries([args])
         domain = self._build_spreadsheet_formula_domain(args)
         codes = [code for code in args["codes"] if code]
+        partner_ids = [partner_id for partner_id in args.get('partner_id', []) if partner_id]
         if codes:
             name = _("Journal items for account prefix %s", ", ".join(codes))
+        elif partner_ids:
+            name = _("Journal items for partner(s) %s", ", ".join(partner_ids))
         else:
             name = _("Journal items for payable and receivable accounts")
         return {
@@ -272,6 +283,23 @@ class AccountMove(models.Model):
         return self._spreadsheet_fetch_data(args_list, ['amount_residual'], default_accounts=True)
 
     @api.model
+    def spreadsheet_fetch_partner_balance(self, args_list):
+        """Fetch data for ODOO.PARTNER.BALANCE formulas
+        The input list looks like this:
+        [{
+            date_range: {
+                range_type: "year"
+                year: int
+            },
+            company_id: int
+            codes: str[]
+            include_unposted: bool
+            partner_ids: str[]
+        }]
+        """
+        return self._spreadsheet_fetch_data(args_list, ['balance'], default_accounts=True)
+
+    @api.model
     def _spreadsheet_fetch_data(self, args_list, fields, default_accounts=False):
         if not args_list:
             return []
@@ -280,6 +308,7 @@ class AccountMove(models.Model):
         timeline = self._get_timeline(args_list)
         all_accounts = self._get_all_accounts(args_list, default_accounts=default_accounts)
         all_lines = self._get_all_lines(args_list, fields, timeline, all_accounts)
+        all_partner_ids = {line[4] for line in all_lines}
 
         results = []
         for args in args_list:
@@ -296,6 +325,7 @@ class AccountMove(models.Model):
                 accounts = all_accounts[company_id].filtered(lambda account: account.with_company(company_id).code.startswith(subcodes))
             else:
                 accounts = all_accounts[company_id].filtered(lambda account: account.with_company(company_id).account_type in ['liability_payable', 'asset_receivable'])
+            partner_ids = set(args.get('partner_ids', '')) or all_partner_ids
 
             cell_data = {field: 0.0 for field in fields}
             for account in accounts:
@@ -307,10 +337,11 @@ class AccountMove(models.Model):
 
                 for period in past_periods + periods:
                     for state in states:
-                        cell_data = {
-                            field: cell_data.get(field, 0.0) + all_lines.get((period, company_id, state, account.id), {}).get(field, 0.0)
-                            for field in fields
-                        }
+                        for partner_id in partner_ids:
+                            cell_data = {
+                                field: cell_data.get(field, 0.0) + all_lines.get((period, company_id, state, account.id, partner_id), {}).get(field, 0.0)
+                                for field in fields
+                            }
 
             results.append(cell_data)
         return results

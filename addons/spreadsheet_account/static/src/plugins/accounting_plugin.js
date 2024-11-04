@@ -19,6 +19,7 @@ export class AccountingPlugin extends OdooUIPlugin {
         "getFiscalStartDate",
         "getFiscalEndDate",
         "getAccountResidual",
+        "getAccountPartnerData",
     ]);
     constructor(config) {
         super(config);
@@ -167,5 +168,37 @@ export class AccountingPlugin extends OdooUIPlugin {
             throw new EvaluationError(_t("The residual amount for given accounts could not be computed."));
         }
         return result.amount_residual;
+    }
+
+    /**
+     * Fetch the account information (credit/debit) for a given account code and partner
+     * @private
+     * @param {string[]} codes prefix of the accounts' codes
+     * @param {DateRange} dateRange start date of the period to look
+     * @param {number} offset year offset of the period to look
+     * @param {number | null} companyId specific companyId to target
+     * @param {boolean} includeUnposted wether or not select unposted entries
+     * @param {number[]} partnerIds ids of the partners
+     * @returns {number | undefined}
+     */
+    getAccountPartnerData(codes, dateRange, offset, companyId, includeUnposted, partnerIds) {
+        dateRange = deepCopy(dateRange);
+        dateRange.year += offset;
+        // Excel dates start at 1899-12-30, we should not support date ranges
+        // that do not cover dates prior to it.
+        // Unfortunately, this check needs to be done right before the server
+        // call as a date to low (year <= 1) can raise an error server side.
+        if (dateRange.year < 1900) {
+            throw new EvaluationError(_t("%s is not a valid year.", dateRange.year));
+        }
+        const result = this.serverData.batch.get(
+            "account.account",
+            "spreadsheet_fetch_partner_balance",
+            camelToSnakeObject({ dateRange, codes, companyId, includeUnposted, partnerIds })
+        );
+        if (result === false) {
+            throw new EvaluationError(_t("The balance for given partners could not be computed."));
+        }
+        return result.balance;
     }
 }
