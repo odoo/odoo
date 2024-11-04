@@ -44,7 +44,7 @@
                             <th t-if="not groupby == 'project_id'">Project</th>
                             <th t-if="not groupby == 'task_id'">Task</th>
                             <th>Description</th>
-                            <th class="text-end" name="t_label">Time Spent</th>
+                            <th class="text-end" t-att-colspan="2 if groupby != 'none' else 0" name="t_label">Time Spent</th>
                         </tr>
                     </thead>
                     <t t-foreach="grouped_timesheets" t-as="timesheets_with_hours">
@@ -97,7 +97,7 @@
                                     <td t-if="not groupby == 'project_id'"><span t-field="timesheet.project_id" t-att-title="timesheet.project_id.display_name"/></td>
                                     <td t-if="not groupby == 'task_id'"><span t-field="timesheet.task_id" t-att-title="timesheet.task_id.display_name"/></td>
                                     <td><span t-esc="timesheet.name" t-att-title="timesheet.name"/></td>
-                                    <td class="text-end">
+                                    <td class="text-end" t-att-colspan="2 if groupby != 'none' else 0">
                                         <span t-if="is_uom_day" t-esc="timesheet._get_timesheet_time_day()" t-options='{"widget": "timesheet_uom"}'/>
                                         <span t-else="" t-field="timesheet.unit_amount" t-options='{"widget": "float_time"}'/>
                                     </td>
