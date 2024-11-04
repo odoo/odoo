@@ -89,13 +89,11 @@
             'project/static/src/js/portal_rating.js',
         ],
         'web.assets_unit_tests': [
-            'project/static/src/project_sharing/components/portal_file_input/portal_file_input.js',
             'project/static/tests/mock_server/**/*',
             'project/static/tests/project_models.js',
             'project/static/tests/**/*.test.js',
         ],
         'web.qunit_suite_tests': [
-            'project/static/src/project_sharing/components/portal_file_input/portal_file_input.js',
             'project/static/tests/tours/**/*',
         ],
         'web.assets_tests': [
