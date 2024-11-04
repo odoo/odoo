@@ -1213,7 +1213,7 @@ class HrExpenseSheet(models.Model):
             raise UserError(_("You can only generate accounting entry for approved expense(s)."))
 
         if any(not sheet.journal_id for sheet in self if sheet.payment_mode == 'own_account'):
-            raise UserError(_("Specify expense journal to generate accounting entries."))
+            raise UserError(_("Please specify an expense journal in order to generate accounting entries."))
 
         if any(not sheet.bank_journal_id for sheet in self if sheet.payment_mode == 'company_account'):
             raise UserError(_("Please specify a bank journal in order to generate accounting entries."))
