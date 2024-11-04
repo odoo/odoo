@@ -13,7 +13,7 @@
 }
 
 // Form view rules to break the default table layout
-@mixin form-break-table($-is-editable: false) {
+@mixin form-break-table() {
     --fieldWidget-margin-bottom: 0;
 
     grid-template-columns: 1fr;
@@ -44,11 +44,12 @@
             }
         }
     }
+}
 
-    @if $-is-editable {
-        .o_address_type, .o_address_format {
-            --fieldWidget-margin-bottom: #{$o-form-spacing-unit * 2};
-        }
+
+@mixin editable-form-break-table() {
+    .o_address_type, .o_address_format {
+        --fieldWidget-margin-bottom: #{$o-form-spacing-unit * 2};
     }
 }
 
@@ -1080,7 +1081,7 @@
         }
 
         .o_form_editable .o_inner_group {
-            @include form-break-table($-is-editable: true);
+            @include editable-form-break-table();
         }
     }
 }
@@ -1154,7 +1155,7 @@
     }
 
     .o_form_editable .o_inner_group {
-        @include form-break-table($-is-editable: true);
+        @include editable-form-break-table();
     }
 }
 
