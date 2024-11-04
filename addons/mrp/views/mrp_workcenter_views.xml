@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="act_product_mrp_production_workcenter" model="ir.actions.act_window">
-            <field name="context">{'search_default_confirmed': 1}</field>
-            <field name="name">Manufacturing Orders</field>
-            <field name="res_model">mrp.production</field>
-            <field name="view_mode">list,kanban,form</field>
-            <field name="domain">[('bom_id', '!=', False), ('bom_id.operation_ids.workcenter_id', '=', active_id)]</field>
-        </record>
-
         <record id="action_work_orders" model="ir.actions.act_window">
             <field name="name">Work Orders</field>
             <field name="res_model">mrp.workorder</field>
