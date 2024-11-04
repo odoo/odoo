@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import {PageDependencies} from '@website/components/dialog/page_properties';
 import {standardFieldProps} from '@web/views/fields/standard_field_props';
 import { UrlField, urlField } from "@web/views/fields/url/url_field";

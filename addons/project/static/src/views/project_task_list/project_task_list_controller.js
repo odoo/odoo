@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { ListController } from "@web/views/list/list_controller";
 import { subTaskDeleteConfirmationMessage } from "@project/views/project_task_form/project_task_form_controller";
 

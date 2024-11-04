@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { onWillStart, useState, useSubEnv } from "@odoo/owl";
 

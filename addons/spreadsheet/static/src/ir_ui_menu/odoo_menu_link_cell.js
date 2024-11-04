@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 const VIEW_PREFIX = "odoo://view/";
 const IR_MENU_ID_PREFIX = "odoo://ir_menu_id/";
 const IR_MENU_XML_ID_PREFIX = "odoo://ir_menu_xml_id/";

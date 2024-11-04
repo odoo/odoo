@@ -1,4 +1,3 @@
-/** @odoo-module **/
 // @ts-check
 
 import { _t } from "@web/core/l10n/translation";

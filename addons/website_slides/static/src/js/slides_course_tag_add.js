@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { CourseTagAddDialog } from "@website_slides/js/public/components/course_tag_add_dialog/course_tag_add_dialog";
 import publicWidget from '@web/legacy/js/public/public_widget';
 

@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { patch } from '@web/core/utils/patch';
 import { registry } from '@web/core/registry';
 import { utils } from '@web/../tests/helpers/mock_env';

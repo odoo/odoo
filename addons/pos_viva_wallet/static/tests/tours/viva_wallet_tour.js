@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_screen_util";
 import * as PaymentScreenPos from "@point_of_sale/../tests/tours/utils/payment_screen_util";
 import * as PaymentScreenViva from "@pos_viva_wallet/../tests/tours/utils/payment_screen_viva_util";

@@ -1,4 +1,3 @@
-/** @odoo-module **/
 import { patch } from "@web/core/utils/patch";
 
 import { ProductCatalogKanbanRecord } from "@product/product_catalog/kanban_record";

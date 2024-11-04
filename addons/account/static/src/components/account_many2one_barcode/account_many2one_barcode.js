@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { registry } from "@web/core/registry";
 import { Many2OneBarcodeField, many2OneBarcodeField } from "@web/views/fields/many2one_barcode/many2one_barcode_field";
 

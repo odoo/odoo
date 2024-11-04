@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import {applyModifications, cropperDataFields, activateCropper, loadImage, loadImageInfo} from "@web_editor/js/editor/image_processing";
 import { _t } from "@web/core/l10n/translation";
 import {

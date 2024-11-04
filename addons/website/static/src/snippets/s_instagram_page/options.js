@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import {_t} from "@web/core/l10n/translation";
 import options from "@web_editor/js/editor/snippets.options";
 import SocialMediaOption from "@website/snippets/s_social_media/options";

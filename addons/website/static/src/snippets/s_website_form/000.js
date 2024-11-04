@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
     import {ReCaptcha} from "@google_recaptcha/js/recaptcha";
     import { session } from "@web/session";
     import { user } from "@web/core/user";

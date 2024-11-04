@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { useService } from "@web/core/utils/hooks";
 

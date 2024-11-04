@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { rpc } from "@web/core/network/rpc";
 import Quiz from "@website_event_track_quiz/js/event_quiz";
 

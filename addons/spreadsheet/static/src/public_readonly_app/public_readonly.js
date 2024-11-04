@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { Component, onWillStart, useChildSubEnv, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { download } from "@web/core/network/download";

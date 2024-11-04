@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { loadCSS } from "@web/core/assets";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";

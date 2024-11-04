@@ -1,4 +1,3 @@
-/** @odoo-module **/
 import { Component, useState, markup, onWillStart } from "@odoo/owl";
 import { FlagMarkAsOffensiveDialog } from "../components/flag_mark_as_offensive/flag_mark_as_offensive";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";

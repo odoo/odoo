@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { patch } from "@web/core/utils/patch";
 
 // It's an optionnal import, to patch only when the WebsitePreview is loaded.

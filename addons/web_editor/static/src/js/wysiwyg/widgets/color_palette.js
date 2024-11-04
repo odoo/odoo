@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { ColorPicker } from "@web/core/color_picker/color_picker";
 import customColors from "@web_editor/js/editor/custom_colors";
 import weUtils from "@web_editor/js/common/utils";

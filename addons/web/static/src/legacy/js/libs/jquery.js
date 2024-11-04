@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 /**
  * The jquery library extensions and fixes should be done here to avoid patching
  * in place.

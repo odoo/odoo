@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { CalendarModel } from '@web/views/calendar/calendar_model';
 import {
     deserializeDate,

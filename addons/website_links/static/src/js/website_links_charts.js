@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { loadBundle } from "@web/core/assets";
 import { _t } from "@web/core/l10n/translation";
 import publicWidget from "@web/legacy/js/public/public_widget";

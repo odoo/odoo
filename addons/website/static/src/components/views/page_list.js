@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import {PageControllerMixin} from "./page_views_mixin";
 import {PageSearchModel} from "./page_search_model";

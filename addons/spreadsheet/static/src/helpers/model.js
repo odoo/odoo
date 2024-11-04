@@ -1,4 +1,3 @@
-/** @odoo-module */
 // @ts-check
 
 import { parse, helpers, iterateAstNodes } from "@odoo/o-spreadsheet";

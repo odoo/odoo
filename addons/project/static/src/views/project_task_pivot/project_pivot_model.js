@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import { PivotModel } from "@web/views/pivot/pivot_model";
 

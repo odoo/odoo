@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { registry } from "@web/core/registry";
 import { zip } from "@web/core/utils/arrays";
 import { accessSurveysteps } from "./survey_tour_session_tools";

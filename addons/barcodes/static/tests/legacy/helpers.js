@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { triggerEvent } from "@web/../tests/helpers/utils";
 
 export function simulateBarCode(chars, target = document.body, selector = undefined) {
