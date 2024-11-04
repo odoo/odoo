@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record model="ir.ui.view" id="auth_passkey_groups_form">
+        <field name="name">auth.passkey.groups.form</field>
+        <field name="model">res.groups</field>
+        <field name="inherit_id" ref="base.view_groups_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Timeouts">
+                    <group>
+                    <label for="has_lock_timeout_inactivity" string="Inactivity"/>
+                        <div class="d-flex flex-row gap-2">
+                            <field name="has_lock_timeout_inactivity"/>
+                            <div invisible="not has_lock_timeout_inactivity">
+                                <field name="lock_timeout_inactivity" invisible="True"/><!-- for onchanges `_onchange_has_lock_timeout_inactivity`, `_onchange_lock_timeout_inactivity_delay_unit` -->
+                                <field name="lock_timeout_inactivity_2fa_selection" class="oe_inline"/>
+                                after
+                                <field name="lock_timeout_inactivity_delay_in_unit" class="oe_inline o_input_4ch"/>
+                                <field name="lock_timeout_inactivity_delay_unit" class="oe_inline"/>
+                                of inactivity
+                            </div>
+                        </div>
+                        <label for="has_lock_timeout" string="Session"/>
+                        <div class="d-flex flex-row gap-2">
+                            <field name="has_lock_timeout"/>
+                            <div invisible="not has_lock_timeout">
+                                <field name="lock_timeout" invisible="True"/><!-- for onchanges `_onchange_has_lock_timeout`, `_onchange_lock_timeout_delay_unit` -->
+                                <field name="lock_timeout_2fa_selection" class="oe_inline"/>
+                                every
+                                <field name="lock_timeout_delay_in_unit" class="oe_inline o_input_4ch"/>
+                                <field name="lock_timeout_delay_unit" class="oe_inline"/>
+                            </div>
+                        </div>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>
