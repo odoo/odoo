@@ -18,6 +18,7 @@ export class AccountingPlugin extends OdooUIPlugin {
         "getFiscalStartDate",
         "getFiscalEndDate",
         "getAccountResidual",
+        "getAccountPartnerData",
     ]);
     constructor(config) {
         super(config);
@@ -176,5 +177,41 @@ export class AccountingPlugin extends OdooUIPlugin {
             throw new EvaluationError(_t("The residual amount for given accounts could not be computed."));
         }
         return result.amount_residual;
+    }
+
+    /**
+     * Fetch the account information (credit/debit) for a given account code and partner
+     * @private
+     * @param {string[]} codes prefix of the accounts' codes
+     * @param {DateRange} dateFrom start date of the period to look
+     * @param {DateRange} dateTo end date of the period to look
+     * @param {number} offset year offset of the period to look
+     * @param {number | null} companyId specific companyId to target
+     * @param {boolean} includeUnposted wether or not select unposted entries
+     * @param {number[]} partnerIds ids of the partners
+     * @returns {number | undefined}
+     */
+    getAccountPartnerData(codes, dateFrom, dateTo, offset, companyId, includeUnposted, partnerIds) {
+        dateFrom = deepCopy(dateFrom);
+        dateTo = deepCopy(dateTo);
+        dateFrom.year += offset;
+        dateTo.year += offset;
+        // Excel dates start at 1899-12-31 and end at 9999-12-31 (inclusive), we
+        // should not support date ranges outside of it.
+        if ( dateFrom.year < 1900 || dateFrom.year > 9999 ) {
+            throw new EvaluationError(_t("%s is not a valid year.", dateFrom.year));
+        }
+        if ( dateTo.year < 1900 || dateTo.year > 9999 ) {
+            throw new EvaluationError(_t("%s is not a valid year.", dateTo.year));
+        }
+        const result = this.serverData.batch.get(
+            "account.account",
+            "spreadsheet_fetch_partner_balance",
+            camelToSnakeObject({ dateFrom, dateTo, codes, companyId, includeUnposted, partnerIds })
+        );
+        if (result === false) {
+            throw new EvaluationError(_t("The balance for given partners could not be computed."));
+        }
+        return result.balance;
     }
 }

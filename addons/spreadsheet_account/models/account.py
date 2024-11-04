@@ -71,6 +71,11 @@ class AccountAccount(models.Model):
             domain = expression.AND(
                 [domain, [("move_id.state", "=", "posted")]]
             )
+        partner_ids = [int(partner_id) for partner_id in formula_params.get("partner_id", []) if partner_id]
+        if partner_ids:
+            domain = expression.AND(
+                [domain, [("partner_id", "in", partner_ids)]]
+            )
         return domain
 
     def _pre_process_date_period_boundaries(self, args_list):
@@ -187,10 +192,13 @@ class AccountAccount(models.Model):
 
             lines_in_period = self.env['account.move.line'].with_context(allowed_company_ids=company_ids)._read_group(
                 domain=domain,
-                groupby=['company_id', 'parent_state', 'account_id'],
+                groupby=['company_id', 'parent_state', 'account_id', 'partner_id'],
                 aggregates=aggregates,
             )
-            all_lines.update({(period, company.id, state, account.id): dict(zip(fields, val)) for company, state, account, *val in lines_in_period})
+            all_lines.update({
+                (period, company.id, state, account.id, partner.id): dict(zip(fields, val))
+                for company, state, account, partner, *val in lines_in_period
+            })
         return all_lines
 
     # ------------------------ #
@@ -203,8 +211,11 @@ class AccountAccount(models.Model):
         self._pre_process_date_period_boundaries([args])
         domain = self._build_spreadsheet_formula_domain(args)
         codes = [code for code in args["codes"] if code]
+        partner_ids = [partner_id for partner_id in args.get('partner_id', []) if partner_id]
         if codes:
             name = _("Journal items for account prefix %s", ", ".join(codes))
+        elif partner_ids:
+            name = _("Journal items for partner(s) %s", ", ".join(partner_ids))
         else:
             name = _("Journal items for payable and receivable accounts")
         return {
@@ -261,6 +272,27 @@ class AccountAccount(models.Model):
 
     @api.readonly
     @api.model
+    def spreadsheet_fetch_partner_balance(self, args_list):
+        """Fetch data for ODOO.PARTNER.BALANCE formulas
+        The input list looks like this:
+        [{
+            date_from: {
+                range_type: "year"
+                year: int
+            },
+            date_to: {
+                range_type: "year"
+                year: int
+            },
+            company_id: int
+            codes: str[]
+            include_unposted: bool
+            partner_ids: str[]
+        }]
+        """
+        return self._spreadsheet_fetch_data(args_list, ['balance'], default_accounts=True)
+
+    @api.model
     def _spreadsheet_fetch_data(self, args_list, fields, default_accounts=False):
         if not args_list:
             return []
@@ -285,6 +317,7 @@ class AccountAccount(models.Model):
                 accounts = all_accounts[company_id].filtered(lambda account: account.with_company(company_id).code.startswith(subcodes))
             else:
                 accounts = all_accounts[company_id].filtered(lambda account: account.with_company(company_id).account_type in ['liability_payable', 'asset_receivable'])
+            partner_ids = args.get('partner_ids')
 
             matching_keys = set()
             for account in accounts:
@@ -296,11 +329,12 @@ class AccountAccount(models.Model):
 
                 matching_keys.update(set(filter(
                     lambda line_key: (
-                        # line_key should be (period, company_id, state, account_id)
+                        # line_key should be (period, company_id, state, account_id, partner_ids)
                         line_key[0] in past_periods + periods
                         and line_key[1] == company_id
                         and line_key[2] in states
                         and line_key[3] == account.id
+                        and (line_key[4] in partner_ids if partner_ids else True)
                     ),
                     all_lines.keys()
                 )))
