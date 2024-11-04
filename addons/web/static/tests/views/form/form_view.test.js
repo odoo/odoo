@@ -5414,6 +5414,26 @@ test(`switching to another record from an invalid one (2)`, async () => {
     expect(`.o_field_widget[name=foo]`).toHaveClass("o_required_modifier");
 });
 
+test("open a new record from an invalid one", async () => {
+    // in this scenario, the record is already invalid in db, so we should be allowed to
+    // leave it
+    Partner._records[0].foo = false;
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form><field name="foo" required="1"/></form>`,
+        resIds: [1],
+        resId: 1,
+    });
+
+    expect(`.o_breadcrumb`).toHaveText("first record");
+    expect(`.o_field_widget[name=foo]`).toHaveClass("o_required_modifier");
+
+    await contains(".o_control_panel_main_buttons .o_form_button_create").click();
+    expect(`.o_breadcrumb`).toHaveText("New");
+});
+
 test.tags("desktop")(`switching to another record from an invalid one (2) on desktop`, async () => {
     // in this scenario, the record is already invalid in db, so we should be allowed to
     // leave it
