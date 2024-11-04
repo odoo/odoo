@@ -1,6 +1,6 @@
 import { Component, useEffect, useState } from "@odoo/owl";
-import { usePos } from "@point_of_sale/app/store/pos_hook";
-import { useTrackedAsync } from "@point_of_sale/app/utils/hooks";
+import { usePos } from "@point_of_sale/app/hooks/pos_hook";
+import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
 import { useService } from "@web/core/utils/hooks";
 import { AccordionItem } from "@point_of_sale/app/generic_components/accordion_item/accordion_item";
 
