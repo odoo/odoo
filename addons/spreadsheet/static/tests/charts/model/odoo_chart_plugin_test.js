@@ -188,7 +188,7 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
         model.dispatch("UPDATE_CHART", {
             definition: {
                 ...newDefinition,
-                type: "odoo_bar",
+                background: "#00FF00",
             },
             id: chartId,
             sheetId,
@@ -611,6 +611,25 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
             model.getters.getChartRuntime(chartId).chartJsConfig.options.plugins.legend.labels
                 .color,
             "#FFFFFF"
+        );
+    });
+
+    QUnit.test("Chart data source is recreated when chart type is updated", async (assert) => {
+        const { model } = await createSpreadsheetWithChart({ type: "odoo_bar" });
+        const sheetId = model.getters.getActiveSheetId();
+        const chartId = model.getters.getChartIds(sheetId)[0];
+        const chartDataSource = model.getters.getChartDataSource(chartId);
+        model.dispatch("UPDATE_CHART", {
+            definition: {
+                ...model.getters.getChartDefinition(chartId),
+                type: "odoo_line",
+            },
+            id: chartId,
+            sheetId,
+        });
+        assert.ok(
+            chartDataSource !== model.getters.getChartDataSource(chartId),
+            "The data source should have been recreated"
         );
     });
 });
