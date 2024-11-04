@@ -1,7 +1,7 @@
 // Part of Odoo. See LICENSE file for full copyright and licensing details.
 import { ReceiptScreen } from "@point_of_sale/app/screens/receipt_screen/receipt_screen";
 import { patch } from "@web/core/utils/patch";
-import { useTrackedAsync } from "@point_of_sale/app/utils/hooks";
+import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
 import { useService } from "@web/core/utils/hooks";
 
 patch(ReceiptScreen.prototype, {

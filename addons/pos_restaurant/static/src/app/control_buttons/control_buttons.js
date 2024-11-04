@@ -4,7 +4,7 @@ import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { useAsyncLockedMethod } from "@point_of_sale/app/utils/hooks";
+import { useAsyncLockedMethod } from "@point_of_sale/app/hooks/hooks";
 import { patch } from "@web/core/utils/patch";
 import { BillScreen } from "@pos_restaurant/app/bill_screen/bill_screen";
 import { TextInputPopup } from "@point_of_sale/app/components/popups/text_input_popup/text_input_popup";
