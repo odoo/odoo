@@ -818,7 +818,7 @@ class BaseModel(metaclass=MetaModel):
         methods = []
         for attr, func in getmembers(cls, is_constraint):
             if callable(func._constrains):
-                func = wrap(func, func._constrains(self))
+                func = wrap(func, func._constrains(self.sudo()))
             for name in func._constrains:
                 field = cls._fields.get(name)
                 if not field:
