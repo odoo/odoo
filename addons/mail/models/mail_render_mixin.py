@@ -211,15 +211,15 @@ class MailRenderMixin(models.AbstractModel):
             for fname, field in template._fields.items():
                 engine = getattr(field, 'render_engine', 'inline_template')
                 if engine in ('qweb', 'qweb_view'):
-                    if self._has_unsafe_expression_template_qweb(template[fname], template.render_model):
+                    if self._has_unsafe_expression_template_qweb(template[fname], template.render_model, fname):
                         return True
                 else:
-                    if self._has_unsafe_expression_template_inline_template(template[fname], template.render_model):
+                    if self._has_unsafe_expression_template_inline_template(template[fname], template.render_model, fname):
                         return True
         return False
 
     @api.model
-    def _has_unsafe_expression_template_qweb(self, template_src, model):
+    def _has_unsafe_expression_template_qweb(self, template_src, model, fname=None):
         if template_src:
             try:
                 node = html.fragment_fromstring(template_src, create_parent='div')
@@ -231,7 +231,7 @@ class MailRenderMixin(models.AbstractModel):
         return False
 
     @api.model
-    def _has_unsafe_expression_template_inline_template(self, template_txt, model):
+    def _has_unsafe_expression_template_inline_template(self, template_txt, model, fname=None):
         if template_txt:
             template_instructions = parse_inline_template(str(template_txt))
             expressions = [inst[1] for inst in template_instructions]

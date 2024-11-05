@@ -6,7 +6,7 @@ from unittest.mock import patch
 
 from odoo.addons.mail.tests import common
 from odoo.exceptions import AccessError
-from odoo.tests import tagged, users
+from odoo.tests import Form, tagged, users
 
 
 class TestMailRenderCommon(common.MailCommon):
@@ -566,6 +566,53 @@ class TestMailRenderSecurity(TestMailRenderCommon):
             res_ids
         )[res_ids[0]]
         self.assertIn('26', result, 'Template Editor should be able to render inline_template code')
+
+    @users('user_rendering_restricted')
+    def test_render_restricted_allow_template_defaults(self):
+        """Check that default template values are implicitly allowed for the specific field they define."""
+        def patched_mail_template_default_values(model):
+            return {
+                'email_cc': '{{ object.user_ids[0].email }}',  # inline
+                'lang': '{{ object.user_ids[0].lang }}',  # inline
+                'body_html': '<p>Hi <t t-out="object.user_ids[0].name"/></p>',  # qweb
+            }
+        template_defaults = patched_mail_template_default_values(self.env['mail.template'])
+        partner_model_id = self.env['ir.model']._get_id('res.partner')
+
+        # check no default
+        template = Form(self.env['mail.template'].with_context({
+            'default_name': 'test_allow_template_defaults_nodefault_valid',
+            'default_model_id': partner_model_id,
+        }))
+        template = template.save()
+        self.assertFalse(template.lang)
+        self.assertFalse(template.email_cc)
+        self.assertFalse(template.body_html)
+
+        # sanity check, make sure the expressions are not allowed before the test (not in default allow list, etc...)
+        with self.assertRaises(AccessError, msg="Complex inline expression should fail if it is not the default."):
+            with self.cr.savepoint():
+                template.lang = template_defaults['lang']
+        with self.assertRaises(AccessError, msg="Complex qweb expression should fail if it is not the default."):
+            with self.cr.savepoint():
+                template.body_html = template_defaults['body_html']
+
+        with patch(
+            'odoo.addons.base.models.res_partner.ResPartner._mail_template_default_values',
+            new=patched_mail_template_default_values, create=True,
+        ):
+            template = Form(self.env['mail.template'].with_context({
+                'default_name': 'test_allow_template_with_default',
+                'default_model_id': partner_model_id,
+            }))
+            template = template.save()
+            self.assertEqual(template.lang, template_defaults['lang'])
+            self.assertEqual(template.email_cc, template_defaults['email_cc'])
+            self.assertEqual(template.body_html, template_defaults['body_html'])
+
+            with self.assertRaises(AccessError, msg="Complex expressions should only be allowed if they are the default for that field."):
+                with self.cr.savepoint():
+                    template.email_cc = template_defaults['lang']
 
     @users('user_rendering_restricted')
     def test_render_template_qweb_restricted(self):
