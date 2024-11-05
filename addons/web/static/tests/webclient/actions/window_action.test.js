@@ -36,7 +36,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { browser } from "@web/core/browser/browser";
-import { router } from "@web/core/browser/router";
+import { router, routerBus } from "@web/core/browser/router";
 import { redirect } from "@web/core/utils/urls";
 import { useSetupAction } from "@web/search/action_hook";
 import { listView } from "@web/views/list/list_view";
@@ -1823,6 +1823,29 @@ test("current act_window action is stored in session_storage if possible", async
         flags: { x },
     });
     expect(".o_kanban_view").toHaveCount(1);
+});
+
+test("stored action is restored correctly with domain", async () => {
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        id: 1,
+        type: "ir.actions.act_window",
+        res_model: "partner",
+        views: [[false, "list"]],
+        view_mode: "list",
+        target: "current",
+        domain: [["id", "=", 4]],
+    });
+    await animationFrame();
+    expect(".o_list_view").toHaveCount(1);
+    expect(".o_data_row").toHaveCount(1);
+
+    // Emulate a Reload
+    routerBus.trigger("ROUTE_CHANGE");
+    await animationFrame();
+
+    expect(".o_list_view").toHaveCount(1);
+    expect(".o_data_row").toHaveCount(1);
 });
 
 test.tags("desktop")("destroy action with lazy loaded controller", async () => {

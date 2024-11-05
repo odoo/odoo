@@ -141,10 +141,18 @@ export function makeActionManager(env, router = _router) {
     env.bus.addEventListener("CLEAR-CACHES", () => {
         actionCache = {};
     });
-    rpcBus.addEventListener("RPC:RESPONSE", (ev) => {
+    rpcBus.addEventListener("RPC:RESPONSE", async (ev) => {
         const { model, method } = ev.detail.data.params;
         if (model === "ir.actions.act_window" && UPDATE_METHODS.includes(method)) {
             actionCache = {};
+            const virtualStack = await _controllersFromState();
+            const nextStack = [...virtualStack, controllerStack[controllerStack.length - 1]];
+            nextStack[nextStack.length - 1].config.breadcrumbs.splice(
+                0,
+                nextStack[nextStack.length - 1].config.breadcrumbs.length,
+                ..._getBreadcrumbs(nextStack)
+            );
+            controllerStack = nextStack;
         }
     });
 
@@ -449,6 +457,11 @@ export function makeActionManager(env, router = _router) {
     function _getActionParams(state = router.current) {
         const options = {};
         let actionRequest = null;
+        const storedAction = browser.sessionStorage.getItem("current_action");
+        const lastAction = JSON.parse(storedAction || "{}");
+        if (lastAction.help) {
+            lastAction.help = markup(lastAction.help);
+        }
         if (state.action) {
             const context = {};
             if (state.active_id) {
@@ -475,12 +488,22 @@ export function makeActionManager(env, router = _router) {
                 }
             } else {
                 // The action to load isn't the current one => executes it
-                actionRequest = state.action;
                 context.params = state;
                 Object.assign(options, {
                     additionalContext: context,
                     viewType: state.resId ? "form" : state.view_type,
                 });
+                if (
+                    [lastAction.id, lastAction.path, lastAction.xml_id]
+                        .filter(Boolean)
+                        .includes(state.action) &&
+                    lastAction.context?.active_id === context.active_id &&
+                    shallowEqual(lastAction.context?.active_ids, context.active_ids)
+                ) {
+                    actionRequest = lastAction;
+                } else {
+                    actionRequest = state.action;
+                }
             }
             if ((state.resId && state.resId !== "new") || state.globalState) {
                 options.props = {};
@@ -502,11 +525,6 @@ export function makeActionManager(env, router = _router) {
             } else {
                 // This is a window action on a multi-record view => restores it from
                 // the session storage
-                const storedAction = browser.sessionStorage.getItem("current_action");
-                const lastAction = JSON.parse(storedAction || "{}");
-                if (lastAction.help) {
-                    lastAction.help = markup(lastAction.help);
-                }
                 if (lastAction.res_model === state.model) {
                     if (lastAction.context) {
                         // If this method is called because of a company switch, the
