@@ -5059,6 +5059,7 @@ export class OdooEditor extends EventTarget {
         } else {
             const text = ev.clipboardData.getData('text/plain');
             const selectionIsInsideALink = !!closestElement(sel.anchorNode, 'a');
+            const isSelectionInsidePre = !!closestElement(sel.anchorNode, 'pre');
             let splitAroundUrl = [text];
             // Avoid transforming dynamic placeholder pattern to url.
             if(!text.match(/\${.*}/gi)) {
@@ -5067,7 +5068,7 @@ export class OdooEditor extends EventTarget {
                 // 2, 5, 8, ...).
                 splitAroundUrl = splitAroundUrl.filter((_, index) => ((index + 1) % 3));
             }
-            if (splitAroundUrl.length === 3 && !splitAroundUrl[0] && !splitAroundUrl[2]) {
+            if (splitAroundUrl.length === 3 && !splitAroundUrl[0] && !splitAroundUrl[2] && !isSelectionInsidePre) {
                 // Pasted content is a single URL.
                 const url = /^https?:\/\//i.test(text) ? text : 'http://' + text;
                 const youtubeUrl = this.options.allowCommandVideo && YOUTUBE_URL_GET_VIDEO_ID.exec(url);
@@ -5166,7 +5167,7 @@ export class OdooEditor extends EventTarget {
                         : 'http://' + splitAroundUrl[i];
                     // Even indexes will always be plain text, and odd indexes will always be URL.
                     // A url cannot be transformed inside an existing link.
-                    if (i % 2 && !selectionIsInsideALink) {
+                    if (i % 2 && !selectionIsInsideALink && !isSelectionInsidePre) {
                         this._applyCommand('insert', this._createLink(splitAroundUrl[i], url));
                     } else if (splitAroundUrl[i] !== '') {
                         const textFragments = splitAroundUrl[i].split(/\r?\n/);
