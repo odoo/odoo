@@ -204,7 +204,7 @@ test("reposition popover should properly change classNames", async () => {
     class TestPopover extends Popover {
         setup() {
             // Don't call super.setup() in order to replace the use of usePosition hook...
-            usePosition("ref", () => this.props.target, {
+            this.position = usePosition("ref", () => this.props.target, {
                 container,
                 onPositioned: this.onPositioned.bind(this),
                 position: this.props.position,
@@ -225,6 +225,7 @@ test("reposition popover should properly change classNames", async () => {
         props: {
             target: queryOne(".popover-target"),
             component: Content,
+            animation: false,
         },
     });
 
@@ -234,7 +235,7 @@ test("reposition popover should properly change classNames", async () => {
 
     // Should have classes for a "bottom-middle" placement
     expect(".o_popover").toHaveClass(
-        "o_popover popover mw-100 o-popover--with-arrow bs-popover-bottom o-popover-bottom o-popover--bm"
+        "o_popover popover mw-100 o-popover--with-arrow bs-popover-bottom o-popover--bm"
     );
     expect(".popover-arrow").toHaveClass("popover-arrow start-0 end-0 mx-auto");
 
@@ -246,9 +247,9 @@ test("reposition popover should properly change classNames", async () => {
     await animationFrame();
 
     expect(".o_popover").toHaveClass(
-        "o_popover popover mw-100 o-popover--with-arrow bs-popover-end o-popover-right o-popover--re"
+        "o_popover popover mw-100 o-popover--with-arrow bs-popover-end o-popover--re"
     );
-    expect(".popover-arrow").toHaveClass("popover-arrow top-auto");
+    expect(".popover-arrow").toHaveClass("popover-arrow");
 });
 
 test("within iframe", async () => {
@@ -337,6 +338,7 @@ test("within iframe -- wrong element class", async () => {
 test("popover fixed position", async () => {
     class TestPopover extends Popover {
         onPositioned() {
+            super.onPositioned(...arguments);
             expect.step("onPositioned");
         }
     }
@@ -368,4 +370,30 @@ test("popover fixed position", async () => {
     await animationFrame();
 
     expect.verifySteps([]);
+});
+
+test("popover with arrow and onPositioned", async () => {
+    class TestPopover extends Popover {
+        onPositioned() {
+            expect.step("onPositioned (from override)");
+            super.onPositioned(...arguments);
+        }
+    }
+
+    await mountWithCleanup(TestPopover, {
+        props: {
+            target: getFixture(),
+            component: Content,
+            arrow: true,
+            onPositioned() {
+                expect.step("onPositioned (from props)");
+            },
+        },
+    });
+
+    expect.verifySteps(["onPositioned (from override)", "onPositioned (from props)"]);
+    expect(".o_popover").toHaveClass(
+        "o_popover popover mw-100 o-popover--with-arrow bs-popover-bottom o-popover--bm"
+    );
+    expect(".o_popover > .popover-arrow").toHaveClass("start-0 end-0 mx-auto");
 });
