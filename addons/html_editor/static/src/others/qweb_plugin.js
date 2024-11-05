@@ -2,12 +2,22 @@ import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { leftPos, rightPos } from "@html_editor/utils/position";
 import { QWebPicker } from "./qweb_picker";
+import { isElement } from "@html_editor/utils/dom_info";
 
-const isUnsplittableQWebElement = (element) =>
-    element.tagName === "T" ||
-    ["t-field", "t-if", "t-elif", "t-else", "t-foreach", "t-value", "t-esc", "t-out", "t-raw"].some(
-        (attr) => element.getAttribute(attr)
-    );
+const isUnsplittableQWebElement = (node) =>
+    isElement(node) &&
+    (node.tagName === "T" ||
+        [
+            "t-field",
+            "t-if",
+            "t-elif",
+            "t-else",
+            "t-foreach",
+            "t-value",
+            "t-esc",
+            "t-out",
+            "t-raw",
+        ].some((attr) => node.getAttribute(attr)));
 
 export class QWebPlugin extends Plugin {
     static id = "qweb";
@@ -16,8 +26,9 @@ export class QWebPlugin extends Plugin {
         selectionchange_handlers: this.onSelectionChange.bind(this),
         is_mutation_record_savable: this.isMutationRecordSavable.bind(this),
         clean_handlers: this.clearDataAttributes.bind(this),
-        isUnremovable: (element) => element.getAttribute("t-set") || element.getAttribute("t-call"),
-        isUnsplittable: isUnsplittableQWebElement,
+        unremovable_node_predicates: (node) =>
+            node.getAttribute?.("t-set") || node.getAttribute?.("t-call"),
+        unsplittable_node_predicates: isUnsplittableQWebElement,
         clean_for_save_handlers: ({ root }) => {
             this.clearDataAttributes(root);
             for (const element of root.querySelectorAll("[t-esc], [t-raw], [t-out], [t-field]")) {

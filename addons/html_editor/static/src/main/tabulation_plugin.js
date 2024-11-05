@@ -42,7 +42,7 @@ export class TabulationPlugin extends Plugin {
             { hotkey: "tab", commandId: "tab" },
             { hotkey: "shift+tab", commandId: "shiftTab" },
         ],
-        isUnsplittable: isEditorTab, // avoid merge
+        unsplittable_node_predicates: isEditorTab, // avoid merge
         clean_for_save_handlers: ({ root }) => {
             for (const tab of root.querySelectorAll("span.oe-tabs")) {
                 tab.removeAttribute("contenteditable");
