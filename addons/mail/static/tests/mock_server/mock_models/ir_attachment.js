@@ -77,7 +77,7 @@ export class IrAttachment extends webModels.IrAttachment {
                         : false;
             }
             if (fields.includes("voice")) {
-                data.filename = attachment.is_voice;
+                data.voice = attachment.is_voice;
             }
             store.add(this.browse(attachment.id), data);
         }
