@@ -43,6 +43,7 @@ class WebsiteBuilder extends Component {
             iframe: this.websiteContent.el,
             closeEditor: this.closeEditor.bind(this),
             snippetsName: "website.snippets",
+            websiteId: this.backendWebsiteId,
         };
     }
 

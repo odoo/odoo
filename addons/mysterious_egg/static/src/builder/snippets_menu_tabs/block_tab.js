@@ -108,7 +108,10 @@ export class BlockTab extends Component {
             {
                 selectedSnippet: snippet,
                 snippetGroups: this.snippetGroups.filter((snippet) => !snippet.moduleId),
-                snippetStructures: this.snippetsByCategory.snippet_structure,
+                snippetStructures: [
+                    ...this.snippetsByCategory.snippet_structure,
+                    ...this.snippetsByCategory.snippet_custom,
+                ],
                 selectSnippet: (snippet) => {
                     this.props.editor.shared.addElementToCenter(snippet.content.cloneNode(true));
                 },
@@ -167,7 +170,7 @@ export class BlockTab extends Component {
                 "ir.ui.view",
                 "render_public_asset",
                 [this.props.snippetsName, {}],
-                { context: { rendering_bundle: true } }
+                { context: { rendering_bundle: true, website_id: this.props.websiteId } }
             );
         }
         const html = await cacheSnippetTemplate[this.props.snippetsName];
@@ -186,6 +189,7 @@ export class BlockTab extends Component {
                     title: snippetEl.getAttribute("name"),
                     name: snippetEl.children[0].dataset.snippet,
                     thumbnailSrc: escape(snippetEl.dataset.oeThumbnail),
+                    isCustom: false,
                 };
                 const moduleId = snippetEl.dataset.moduleId;
                 if (moduleId) {
@@ -204,6 +208,10 @@ export class BlockTab extends Component {
                     case "snippet_structure":
                         snippet.groupName = snippetEl.dataset.oGroup;
                         snippet.keyWords = snippetEl.dataset.oeKeywords;
+                        break;
+                    case "snippet_custom":
+                        snippet.groupName = "custom";
+                        snippet.isCustom = true;
                         break;
                 }
                 snippets.push(snippet);
