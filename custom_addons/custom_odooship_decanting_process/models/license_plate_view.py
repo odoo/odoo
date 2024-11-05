@@ -9,6 +9,8 @@ from odoo.exceptions import ValidationError
 class LicensePlateOrders(models.Model):
     _name = 'license.plate.orders'
     _description = 'License Plate Model'
+    _inherit = 'mail.thread'
+    _order = 'id desc'
 
     name = fields.Char(string='License Plate Name')
     license_plate_order_line_ids = fields.One2many('license.plate.orders.line', 'license_plate_orders_id',

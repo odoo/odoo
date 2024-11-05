@@ -13,30 +13,32 @@ _logger = logging.getLogger(__name__)
 class AutomationDecantingOrdersProcess(models.Model):
     _name = 'automation.decanting.orders.process'
     _description = 'Automation Decanting Orders Process'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _order = 'id desc'
 
     name = fields.Char(string='Reference', required=True, default=lambda self: _('New'))
     barcode_option = fields.Selection([('pallet', 'Pallet'),
                                        ('Box', 'Box'),
                                        ('crate', 'Crate'),])
-    pallet_barcode = fields.Char(string='License Plate Barcode')
+    pallet_barcode = fields.Char(string='License Plate Barcode',  track_visibility="always")
     hu_barcode = fields.Char(string='Handling Unit Barcode')
-    crate_barcode = fields.Char(string='Crate Barcode', tracking=True)
+    crate_barcode = fields.Char(string='Crate Barcode',  track_visibility="always")
     container_id = fields.Many2one('crate.container.configuration', string='Container')
     container_partition = fields.Integer(related='container_id.crate_container_partition', string='Container Partition')
     container_code = fields.Char(related='container_id.crate_code', string='Container Code')
     automation_decanting_process_line_ids = fields.One2many('automation.decanting.orders.process.line',
-                            'automation_decanting_process_id', string='Items')
+                            'automation_decanting_process_id', string='Items', tracking=True)
     crate_status = fields.Selection([('open', 'Open'),
                                      ('closed', 'Closed'),
                                      ('partially_filled', 'Partially Filled'),
                                      ('fully_filled', 'Fully Filled')],
-                                    string='Crate Status', default='open')
+                                    string='Crate Status', default='open', track_visibility="always")
     state = fields.Selection([
-        ('draft', 'draft'),
+        ('draft', 'Draft'),
         ('in_progress', 'In Progress'),
         ('done', 'Done'),
-    ], string='State', default='draft')
-    license_plate_ids = fields.Many2many('license.plate.orders', string='License Plate Barcodes', tracking=True)
+    ], string='State', default='draft', track_visibility="always")
+    license_plate_ids = fields.Many2many('license.plate.orders', string='License Plate Barcodes',  track_visibility="always")
     picking_id = fields.Many2one(
         comodel_name='stock.picking',
         string='Receipt Order'
@@ -84,6 +86,7 @@ class AutomationDecantingOrdersProcess(models.Model):
                 'default_container_id': self.container_id.id,
                 'default_crate_barcode': self.crate_barcode,
                 'default_picking_id': self.picking_id.id,
+                'default_count_lines': self.count_lines,
             }
         }
 
@@ -298,7 +301,8 @@ class AutomationDecantingOrdersProcessLine(models.Model):
     remaining_quantity = fields.Float(string='Remaining Quantity')
     picking_id = fields.Many2one(
         string='Receipt Order',
-        related = 'automation_decanting_process_id.picking_id'
+        related = 'automation_decanting_process_id.picking_id',
+        store=True
     )
     location_dest_id = fields.Many2one(related='picking_id.location_dest_id', string='Destination location')
 
@@ -351,4 +355,22 @@ class AutomationDecantingOrdersProcessLine(models.Model):
         partition_letter = 'A' if line_index < half_partition else 'B'  # First half 'A', second half 'B'
         partition_number = (line_index % half_partition) + 1  # Cycle through numbers up to half_partition
         return f"{partition_number}{partition_letter}"
+
+    # def action_open_update_quantity_wizard(self):
+    #     """
+    #     Open the update quantity wizard.
+    #     """
+    #     return {
+    #         'name': _('Update Quantity'),
+    #         'type': 'ir.actions.act_window',
+    #         'res_model': 'automation.decanting.update.quantity.wizard',
+    #         'view_mode': 'form',
+    #         'target': 'new',
+    #         'context': {
+    #             'default_decanting_line_id': self.id,
+    #             'default_quantity': self.quantity,
+    #             'default_product_id':self.product_id.id,
+    #             'default_license_plate_order_id': self.automation_decanting_process_id.license_plate_ids.ids,
+    #         }
+    #     }
 
