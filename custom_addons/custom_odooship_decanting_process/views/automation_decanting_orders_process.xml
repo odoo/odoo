@@ -22,12 +22,14 @@
                             <field name="pallet_barcode" invisible="1"/>
                             <field name="hu_barcode" invisible="1"/>
                             <field name="license_plate_ids" widget="many2many_tags"
-                                   placeholder="Scan License Plate Barcode here"/>
+                                   placeholder="Scan License Plate Barcode here"
+                                   options="{'no_create':True, 'no_quick_create': True, 'no_create_edit':True}"/>
                         </group>
                         <group>
                             <field name="crate_barcode"
                                    placeholder="Scan Crate Barcode here"/>
-                            <field name="container_id"/>
+                            <field name="container_id"
+                                   options="{'no_create':True, 'no_open': True, 'no_quick_create': True, 'no_create_edit':True}"/>
                             <field name="container_partition"/>
                             <field name="container_code"/>
                         </group>
@@ -35,13 +37,14 @@
                     <hr/>
                     <group string="Customer Information">
                         <group>
-                            <field name="picking_id"/>
-                            <field name="location_dest_id"/>
-                            <field name="partner_id"/>
+                            <field name="picking_id"
+                                   options="{'no_create':True, 'no_open': True, 'no_quick_create': True, 'no_create_edit':True}"/>
+                            <field name="location_dest_id" options="{'no_open':True}"/>
+                            <field name="partner_id" options="{'no_open':True}"/>
                         </group>
                         <group>
-                            <field name="tenant_code_id"/>
-                            <field name="site_code_id"/>
+                            <field name="tenant_code_id" options="{'no_open':True}"/>
+                            <field name="site_code_id" options="{'no_open':True}"/>
                         </group>
                     </group>
                     <notebook>
@@ -58,11 +61,16 @@
                                     <field name="picking_id" column_invisible="True"/>
                                     <field name="location_dest_id" column_invisible="True"/>
                                     <field name="available_product_ids" column_invisible="1"/>
+<!--                                    <button name="action_open_update_quantity_wizard" string="Update Quantity" type="object" class="btn-primary"/>-->
                                 </tree>
                             </field>
                         </page>
                     </notebook>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
             </form>
         </field>
     </record>
@@ -74,7 +82,7 @@
         <field name="arch" type="xml">
             <tree string="Automation Decanting Orders Process">
                 <field name="name"/>
-                <field name="license_plate_ids"/>
+                <field name="license_plate_ids" widget="many2many_tags"/>
                 <field name="partner_id"/>
                 <field name="crate_barcode"/>
                 <field name="container_id"/>
@@ -92,6 +100,8 @@
                 <field name="name" string="Automation Decanting Number"/>
                 <field name="picking_id" string="Receipt Number"/>
                 <field name="crate_barcode" string="Crate Barcode"/>
+                <field name="license_plate_ids" string="License Plate Barcode"/>
+                <field name="picking_id" string="Receipt Number"/>
                 <!-- Filters -->
                 <filter name="filter_draft" string="Draft" domain="[('state', '=', 'draft')]"/>
                 <filter name="filter_in_progress" string="In Progress" domain="[('state', '=', 'in_progress')]"/>
