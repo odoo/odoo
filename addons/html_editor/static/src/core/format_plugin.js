@@ -131,7 +131,7 @@ export class FormatPlugin extends Plugin {
                 isDisabled: (sel, nodes) => !this.hasAnyFormat(nodes),
             },
         ],
-        arrows_should_skip: (ev, char, lastSkipped) => char === "\u200b",
+        intangible_char_for_keyboard_navigation_predicates: (_, char) => char === "\u200b",
         beforeinput_handlers: withSequence(20, this.onBeforeInput.bind(this)),
         clean_for_save_handlers: this.cleanForSave.bind(this),
         normalize_handlers: this.normalize.bind(this),

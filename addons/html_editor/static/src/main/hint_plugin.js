@@ -26,8 +26,8 @@ export class HintPlugin extends Plugin {
     static id = "hint";
     static dependencies = ["history", "selection"];
     resources = {
-        mutation_filtered_classes: ["o-we-hint"],
-        is_mutation_record_savable: isMutationRecordSavable,
+        system_classes: ["o-we-hint"],
+        savable_mutation_record_predicates: isMutationRecordSavable,
         selectionchange_handlers: this.updateHints.bind(this),
         external_history_step_handlers: () => {
             this.clearHints();
