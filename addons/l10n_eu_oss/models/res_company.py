@@ -27,6 +27,7 @@ class Company(models.Model):
             ('name', 'ilike', 'oss_tax_group'),
             ('module', '=', 'account'),
             ('model', '=', 'account.tax.group')])
+        oss_tax_group_ids = oss_tax_groups.mapped('res_id')
         for company in self:
             # instantiate OSS taxes on the highest parent company of the same country that has a tax id
             relevant_parent_companies = company.parent_ids.filtered(
@@ -38,7 +39,7 @@ class Company(models.Model):
                 *self.env['account.tax']._check_company_domain(company),
                 ('type_tax_use', '=', 'sale'),
                 ('amount_type', '=', 'percent'),
-                ('tax_group_id', 'not in', oss_tax_groups.mapped('res_id'))
+                ('tax_group_id', 'not in', oss_tax_group_ids)
             ])
 
             multi_tax_reports_countries_fpos = self.env['account.fiscal.position'].search([
@@ -69,22 +70,24 @@ class Company(models.Model):
                         if not foreign_taxes.get(tax_amount, False):
                             oss_tax_group_local_xml_id = f"{company.id}_oss_tax_group_{str(tax_amount).replace('.', '_')}_{company.account_fiscal_country_id.code}"
                             if not self.env.ref(f"account.{oss_tax_group_local_xml_id}", raise_if_not_found=False):
-                                tg = self.env['account.tax.group'].search([
-                                    *self.env['account.tax.group']._check_company_domain(company),
-                                    ('tax_payable_account_id', '!=', False)], limit=1)
-                                self.env['ir.model.data'].create({
+                                tax_group_vals = {
+                                    'name': f'OSS {tax_amount}%',
+                                    'country_id': company.account_fiscal_country_id.id,
+                                    'company_id': company.id,
+                                }
+                                tax_group_payable_account, tax_group_receivable_account = company._get_oss_tax_group_accounts(oss_tax_group_ids)
+                                if tax_group_payable_account:
+                                    tax_group_vals['tax_payable_account_id'] = tax_group_payable_account.id
+                                if tax_group_receivable_account:
+                                    tax_group_vals['tax_receivable_account_id'] = tax_group_receivable_account.id
+                                oss_tax_group = self.env['ir.model.data'].create({
                                     'name': oss_tax_group_local_xml_id,
                                     'module': 'account',
                                     'model': 'account.tax.group',
-                                    'res_id': self.env['account.tax.group'].create({
-                                        'name': f'OSS {tax_amount}%',
-                                        'country_id': company.account_fiscal_country_id.id,
-                                        'company_id': company.id,
-                                        'tax_payable_account_id': tg.tax_payable_account_id.id,
-                                        'tax_receivable_account_id': tg.tax_receivable_account_id.id,
-                                    }).id,
+                                    'res_id': self.env['account.tax.group'].create(tax_group_vals).id,
                                     'noupdate': True,
                                 })
+                                oss_tax_group_ids.append(oss_tax_group.res_id)
                             foreign_tax_name = f'{tax_amount}% {destination_country.code} {destination_country.vat_label}'
                             existing_foreign_tax = self.env['account.tax'].search([
                                 ('company_id', 'child_of', company.root_id.id),
@@ -121,6 +124,39 @@ class Company(models.Model):
                 vals['account_id'] = oss_account.id
             repartition_line_ids.setdefault(doc_type, []).append(Command.create(vals))
         return repartition_line_ids['invoice'], repartition_line_ids['refund']
+
+    def _get_oss_tax_group_accounts(self, oss_tax_group_ids):
+        self.ensure_one()
+
+        def _get_account(account_type):
+            # account_type is "payable" or "receivable"
+            xmlid = f"oss_tax_group_{account_type}_account_company_{self.id}"
+            oss_account = self.env.ref(f'l10n_eu_oss.{xmlid}', raise_if_not_found=False)
+            if not oss_account:
+                existing_account = self.env['account.tax.group'].search([
+                    *self.env['account.tax.group']._check_company_domain(self),
+                    (f'tax_{account_type}_account_id', '!=', False),
+                    ('id', 'not in', oss_tax_group_ids),
+                ], limit=1)[f'tax_{account_type}_account_id']
+                if not existing_account:
+                    return False
+                new_code = self.env['account.account']._search_new_account_code(self, len(existing_account.code), existing_account.code[:-2])
+                oss_account = self.env['account.account'].create({
+                    'name': f'{existing_account.name} OSS',
+                    'code': new_code,
+                    'account_type': existing_account.account_type,
+                    'company_id': self.id,
+                    'tag_ids': [Command.link(tag.id) for tag in existing_account.tag_ids],
+                })
+                self.env['ir.model.data'].create({
+                    'name': xmlid,
+                    'module': 'l10n_eu_oss',
+                    'model': 'account.account',
+                    'res_id': oss_account.id,
+                    'noupdate': True,
+                })
+            return oss_account
+        return (_get_account(account_type) for account_type in ["payable", "receivable"])
 
     def _get_oss_account(self):
         self.ensure_one()
