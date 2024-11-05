@@ -12,7 +12,7 @@
                     <field name="partner_id"/>
                     <field name="tenant_code_id"/>
                     <field name="site_code_id"/>
-                    <field name="license_plate_order_line_ids" widget="one2many_list"/>
+                    <field name="license_plate_order_line_ids" widget="many2many_tags"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -66,6 +66,10 @@
                             </field>
                         </group>
                     </sheet>
+                    <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
                 </form>
             </field>
         </record>
