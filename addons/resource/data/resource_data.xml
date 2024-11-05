@@ -7,6 +7,31 @@
             <field name="full_time_required_hours">40</field>
         </record>
 
+        <record id="resource_calendar_fully_flexible" model="resource.calendar">
+            <field name="name">Fully Flexible</field>
+            <field name="company_id" eval="False"/>
+            <field name="hours_per_day">24</field>
+            <field name="flexible_hours" eval="True"/>
+            <field name="attendance_ids"
+                eval="[(7, 0, 0),
+                    (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 0.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Monday Atrernoon', 'dayofweek': '0', 'hour_from': 12.0, 'hour_to': 24.0, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 0.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Tuesday Atrernoon', 'dayofweek': '1', 'hour_from': 12.0, 'hour_to': 24.0, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 0.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Wednesday Atrernoon', 'dayofweek': '2', 'hour_from': 12.0, 'hour_to': 24.0, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 0.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Thursday Atrernoon', 'dayofweek': '3', 'hour_from': 12.0, 'hour_to': 24.0, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 0.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Friday Atrernoon', 'dayofweek': '4', 'hour_from': 12.0, 'hour_to': 24.0, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Saturday Morning', 'dayofweek': '5', 'hour_from': 0.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Saturday Atrernoon', 'dayofweek': '5', 'hour_from': 12.0, 'hour_to': 24.0, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Sunday Morning', 'dayofweek': '6', 'hour_from': 0.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Sunday Atrernoon', 'dayofweek': '6', 'hour_from': 12.0, 'hour_to': 24.0, 'day_period': 'afternoon'}),
+                ]"
+            />
+        </record>
+
         <record id="base.main_company" model="res.company">
             <field name="resource_calendar_id" ref="resource_calendar_std"/>
         </record>

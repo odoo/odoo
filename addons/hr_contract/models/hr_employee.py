@@ -165,10 +165,39 @@ class Employee(models.Model):
                 ('date_end', '>=', start),
             ('employee_id', 'in', self.ids),
         ], groupby=['employee_id'], aggregates=['id:recordset'])
+
+        env_resource_calendar = self.env['resource.calendar']
+        fully_flexible_calendar = self.env.ref('hr_attendance.resource_calendar_fully_flexible', raise_if_not_found=False) or \
+            (env_resource_calendar.search([('name', '=', 'Fully Flexible')])[0] if env_resource_calendar.search([('name', '=', 'Fully Flexible')]) else None) or \
+            env_resource_calendar.create({
+                'name': 'Fully Flexible',
+                'hours_per_day': 24.0,
+                'company_id': None,
+                'flexible_hours': True,
+                'full_time_required_hours': None,
+                'attendance_ids': [
+                    (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 0.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Monday Atrernoon', 'dayofweek': '0', 'hour_from': 12.0, 'hour_to': 24.0, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 0.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Tuesday Atrernoon', 'dayofweek': '1', 'hour_from': 12.0, 'hour_to': 24.0, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 0.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Wednesday Atrernoon', 'dayofweek': '2', 'hour_from': 12.0, 'hour_to': 24.0, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 0.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Thursday Atrernoon', 'dayofweek': '3', 'hour_from': 12.0, 'hour_to': 24.0, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 0.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Friday Atrernoon', 'dayofweek': '4', 'hour_from': 12.0, 'hour_to': 24.0, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Saturday Morning', 'dayofweek': '5', 'hour_from': 0.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Saturday Atrernoon', 'dayofweek': '5', 'hour_from': 12.0, 'hour_to': 24.0, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Sunday Morning', 'dayofweek': '6', 'hour_from': 0.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Sunday Atrernoon', 'dayofweek': '6', 'hour_from': 12.0, 'hour_to': 24.0, 'day_period': 'afternoon'}),
+                ],
+            })
+
         for employee, contracts in contracts_by_employee:
             for contract in contracts:
                 # if employee is under fully flexible contract, use timezone of the employee
-                calendar_tz = timezone(contract.resource_calendar_id.tz) if contract.resource_calendar_id else timezone(employee.resource_id.tz)
+                calendar = contract.resource_calendar_id or fully_flexible_calendar
+                calendar_tz = timezone(calendar.tz)
                 utc = timezone('UTC')
                 date_start = datetime.combine(
                     contract.date_start,
@@ -182,7 +211,7 @@ class Employee(models.Model):
                 else:
                     date_end = stop
                 calendar_periods_by_employee[employee].append(
-                    (max(date_start, start), min(date_end, stop), contract.resource_calendar_id)
+                    (max(date_start, start), min(date_end, stop), calendar)
                 )
         return calendar_periods_by_employee
 
