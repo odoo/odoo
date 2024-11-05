@@ -2,6 +2,7 @@
 
 from . import ir_http
 from . import onboarding_step
+from . import payment_data
 from . import payment_method
 from . import payment_provider
 from . import payment_token

@@ -620,17 +620,28 @@ class PaymentTransaction(models.Model):
             **custom_create_values,
         })
 
-    def _handle_notification_data(self, provider_code, notification_data):
-        """ Match the transaction with the notification data, update its state and return it.
+    def _handle_notification_data(self, provider_code, notification_data, postpone=True):
+        """ Match the transaction with the notification data and update it with the payment data.
 
         :param str provider_code: The code of the provider handling the transaction.
         :param dict notification_data: The notification data sent by the provider.
-        :return: The transaction.
+        :param str postpone: Whether the notification data should be saved as a `payment.data`
+                             record and processed later by a cron job. This is the recommended in
+                             most cases to ensure that no two requests write on a transaction at the
+                             same time.
+        :return: None
         :rtype: recordset of `payment.transaction`
         """
         tx = self._get_tx_from_notification_data(provider_code, notification_data)
-        tx._process_notification_data(notification_data)
-        return tx
+        if postpone:
+            tx._set_pending()
+            self.env['payment.data'].create({
+                'provider_code': provider_code,
+                'payload': notification_data,
+            })
+            self.env.ref('payment.cron_process_payment_data')._trigger()
+        else:
+            tx._process_notification_data(notification_data)
 
     def _get_tx_from_notification_data(self, provider_code, notification_data):
         """ Find the transaction based on the notification data.
@@ -800,6 +811,7 @@ class PaymentTransaction(models.Model):
                     'allowed_states': allowed_states,
                 },
             )
+        # TODO: Don't allow writing on a transaction outside of the payment data processing cron.
         txs_to_process.write({
             'state': target_state,
             'state_message': state_message,
