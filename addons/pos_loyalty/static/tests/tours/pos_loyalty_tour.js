@@ -491,6 +491,7 @@ registry.category("web_tour.tours").add("PosLoyaltyArchivedRewardProductsActive"
         ].flat(),
 });
 
+<<<<<<< saas-17.4:addons/pos_loyalty/static/tests/tours/pos_loyalty_tour.js
 registry.category("web_tour.tours").add("CustomerLoyaltyPointsDisplayed", {
     test: true,
     url: "/pos/web",
@@ -509,6 +510,24 @@ registry.category("web_tour.tours").add("CustomerLoyaltyPointsDisplayed", {
             PosLoyalty.finalizeOrder("Cash", "100.00"),
 
             PosLoyalty.checkPartnerPoints("John Doe", "100.00"),
+||||||| b5873e7f064191fa033b85cbbf854f3aac2b7388:addons/pos_loyalty/static/tests/tours/PosLoyaltyTour.js
+=======
+registry.category("web_tour.tours").add("PosLoyalty2DiscountsSpecificGlobal", {
+    test: true,
+    url: "/pos/web",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AAAA"),
+
+            ProductScreen.addOrderline("Test Product A", "5"),
+            ProductScreen.clickDisplayedProduct("Test Product B"),
+            PosLoyalty.hasRewardLine("10% on your order", "-3.00"),
+            PosLoyalty.hasRewardLine("10% on Test Product B", "-0.45"),
+            PosLoyalty.finalizeOrder("Cash", "100"),
+>>>>>>> f5c2a500574bf2a1ed9441ddbe6898235496ab1c:addons/pos_loyalty/static/tests/tours/PosLoyaltyTour.js
         ].flat(),
 });
 

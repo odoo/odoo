@@ -946,7 +946,8 @@ patch(PosOrder.prototype, {
                             lineRewardApplicableProductsIds.has(product) &&
                             applicableProductIds.has(product)
                     ) &&
-                        lineReward.reward_type === "discount")
+                        lineReward.reward_type === "discount" &&
+                        lineReward.discount_mode != "percent")
                 ) {
                     linesToDiscount.push(line);
                 }
@@ -973,6 +974,7 @@ patch(PosOrder.prototype, {
             if (!discountedLines.length) {
                 continue;
             }
+<<<<<<< saas-17.4:addons/pos_loyalty/static/src/overrides/models/pos_order.js
             const commonLines = linesToDiscount.filter((line) => discountedLines.includes(line));
             const nonCommonLines = discountedLines.filter(
                 (line) => !linesToDiscount.includes(line)
@@ -985,7 +987,34 @@ patch(PosOrder.prototype, {
                 const key = line.tax_ids.map((t) => t.id);
                 if (!discountedAmounts[key] || line.reward_id) {
                     return;
+||||||| b5873e7f064191fa033b85cbbf854f3aac2b7388:addons/pos_loyalty/static/src/overrides/models/loyalty.js
+            const commonLines = linesToDiscount.filter((line) => discountedLines.includes(line));
+            const nonCommonLines = discountedLines.filter(
+                (line) => !linesToDiscount.includes(line)
+            );
+            const discountedAmounts = lines.reduce((map, line) => {
+                map[line.getTaxIds()];
+                return map;
+            }, {});
+            const process = (line) => {
+                const key = line.getTaxIds();
+                if (!discountedAmounts[key] || line.reward_id) {
+                    return;
+=======
+            if (lineReward.discount_mode === "percent") {
+                const discount = lineReward.discount / 100;
+                for (const line of discountedLines) {
+                    if (line.reward_id) {
+                        continue;
+                    }
+                    if (lineReward.discount_applicability === "cheapest") {
+                        remainingAmountPerLine[line.cid] *= 1 - discount / line.get_quantity();
+                    } else {
+                        remainingAmountPerLine[line.cid] *= 1 - discount;
+                    }
+>>>>>>> f5c2a500574bf2a1ed9441ddbe6898235496ab1c:addons/pos_loyalty/static/src/overrides/models/loyalty.js
                 }
+<<<<<<< saas-17.4:addons/pos_loyalty/static/src/overrides/models/pos_order.js
                 const remaining = remainingAmountPerLine[line.uuid];
                 const consumed = Math.min(remaining, discountedAmounts[key]);
                 discountedAmounts[key] -= consumed;
@@ -993,6 +1022,17 @@ patch(PosOrder.prototype, {
             };
             nonCommonLines.forEach(process);
             commonLines.forEach(process);
+||||||| b5873e7f064191fa033b85cbbf854f3aac2b7388:addons/pos_loyalty/static/src/overrides/models/loyalty.js
+                const remaining = remainingAmountPerLine[line.cid];
+                const consumed = Math.min(remaining, discountedAmounts[key]);
+                discountedAmounts[key] -= consumed;
+                remainingAmountPerLine[line.cid] -= consumed;
+            };
+            nonCommonLines.forEach(process);
+            commonLines.forEach(process);
+=======
+            }
+>>>>>>> f5c2a500574bf2a1ed9441ddbe6898235496ab1c:addons/pos_loyalty/static/src/overrides/models/loyalty.js
         }
 
         let discountable = 0;
