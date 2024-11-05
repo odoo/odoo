@@ -608,10 +608,10 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ChromeTour', login="pos_user")
-        n_invoiced = self.env['pos.order'].search_count([('state', '=', 'invoiced')])
+        n_invoiced = self.env['pos.order'].search_count([('account_move', '!=', False)])
         n_paid = self.env['pos.order'].search_count([('state', '=', 'paid')])
         self.assertEqual(n_invoiced, 1, 'There should be 1 invoiced order.')
-        self.assertEqual(n_paid, 2, 'There should be 2 paid order.')
+        self.assertEqual(n_paid, 2, 'There should be 3 paid order.')
         last_order = self.env['pos.order'].search([], limit=1, order="id desc")
         self.assertEqual(last_order.lines[0].price_subtotal, 30.0)
         self.assertEqual(last_order.lines[0].price_subtotal_incl, 30.0)

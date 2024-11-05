@@ -32,8 +32,8 @@ class SaleReport(models.Model):
             SUM(l.qty) AS product_uom_qty,
             SUM(l.qty_delivered) AS qty_delivered,
             SUM(l.qty - l.qty_delivered) AS qty_to_deliver,
-            CASE WHEN pos.state = 'invoiced' THEN SUM(l.qty) ELSE 0 END AS qty_invoiced,
-            CASE WHEN pos.state != 'invoiced' THEN SUM(l.qty) ELSE 0 END AS qty_to_invoice,
+            CASE WHEN pos.account_move IS NOT NULL THEN SUM(l.qty) ELSE 0 END AS qty_invoiced,
+            CASE WHEN pos.account_move IS NULL THEN SUM(l.qty) ELSE 0 END AS qty_to_invoice,
             AVG(l.price_unit)
                 / MIN({self._case_value_or_one('pos.currency_rate')})
                 * {self._case_value_or_one('account_currency_table.rate')}
@@ -46,11 +46,11 @@ class SaleReport(models.Model):
                 / MIN({self._case_value_or_one('pos.currency_rate')})
                 * {self._case_value_or_one('account_currency_table.rate')}
             AS price_subtotal,
-            (CASE WHEN pos.state != 'invoiced' THEN SUM(l.price_subtotal) ELSE 0 END)
+            (CASE WHEN pos.account_move IS NULL THEN SUM(l.price_subtotal) ELSE 0 END)
                 / MIN({self._case_value_or_one('pos.currency_rate')})
                 * {self._case_value_or_one('account_currency_table.rate')}
             AS amount_to_invoice,
-            (CASE WHEN pos.state = 'invoiced' THEN SUM(l.price_subtotal) ELSE 0 END)
+            (CASE WHEN pos.account_move IS NOT NULL THEN SUM(l.price_subtotal) ELSE 0 END)
                 / MIN({self._case_value_or_one('pos.currency_rate')})
                 * {self._case_value_or_one('account_currency_table.rate')}
             AS amount_invoiced,

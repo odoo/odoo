@@ -95,7 +95,7 @@ export class SelfOrder extends Reactive {
                     const order = this.models["pos.order"].find(
                         (o) => o.access_token === data["pos.order"][0].access_token
                     );
-                    if (["paid", "invoiced", "done"].includes(order?.state)) {
+                    if (["paid", "done"].includes(order?.state)) {
                         this.notification.add(_t("Your order has been paid"), {
                             type: "success",
                         });
@@ -159,7 +159,7 @@ export class SelfOrder extends Reactive {
             this.models.loadData(data);
             const oUpdated = data["pos.order"].find((o) => o.uuid === this.selectedOrderUuid);
 
-            if (["paid", "invoiced", "done"].includes(oUpdated?.state)) {
+            if (["paid", "done"].includes(oUpdated?.state)) {
                 message = _t("Your order has been paid");
             } else if (oUpdated?.state === "cancel") {
                 message = _t("Your order has been cancelled");
@@ -171,7 +171,7 @@ export class SelfOrder extends Reactive {
                 });
             }
 
-            if (["paid", "invoiced", "done"].includes(oUpdated?.state)) {
+            if (["paid", "done"].includes(oUpdated?.state)) {
                 this.selectedOrderUuid = null;
                 this.router.navigate("default");
             }

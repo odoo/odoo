@@ -35,7 +35,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
         return date_start, date_stop
 
     def _get_domain(self, date_start=False, date_stop=False, config_ids=False, session_ids=False):
-        domain = [('state', 'in', ['paid', 'invoiced', 'done'])]
+        domain = [('state', 'in', ['paid', 'done'])]
 
         if (session_ids):
             domain = AND([domain, [('session_id', 'in', session_ids)]])

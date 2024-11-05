@@ -81,7 +81,7 @@ class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, TestPointOfSaleCommon):
         pos_order.to_invoice = True
         self.pay_pos_order(pos_order)
 
-        self.assertEqual(pos_order.state, 'invoiced')
+        self.assertTrue(pos_order.account_move)
         # The edi is handled by the invoice
         self.assertFalse(pos_order.l10n_es_tbai_state)
 
@@ -131,5 +131,5 @@ class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, TestPointOfSaleCommon):
         pos_refund.to_invoice = True
         self.pay_pos_order(pos_refund)
 
-        self.assertEqual(pos_refund.state, 'invoiced')
+        self.assertTrue(pos_refund.account_move)
         self.assertFalse(pos_refund.l10n_es_tbai_state)
