@@ -1,7 +1,7 @@
 <templates id="template" xml:space="preserve">
 
 <t t-name="html_editor.ChatGPTAlternativesDialog">
-    <Dialog size="'lg'" title.translate="AI Copywriter">
+    <Dialog size="'lg'" title.translate="AI Copywriter" t-on-mousedown="preventDialogMousedown">
         <div class="md-8">
             <div class="mb-3">
                 <t t-foreach="Object.entries(props.alternativesModes)"
