@@ -395,7 +395,7 @@ export class FormatPlugin extends Plugin {
             this.cleanZWS(element, { preserveSelection });
             return;
         }
-        if (this.getResource("isUnremovable").some((predicate) => predicate(element))) {
+        if (this.getResource("unremovable_node_predicates").some((p) => p(element))) {
             return;
         }
         if (element.classList.length) {
@@ -504,7 +504,7 @@ export class FormatPlugin extends Plugin {
 
     shouldBeMergedWithPreviousSibling(node) {
         const isMergeable = (node) =>
-            !this.getResource("isUnsplittable").some((predicate) => predicate(node));
+            !this.getResource("unsplittable_node_predicates").some((predicate) => predicate(node));
         return (
             !isSelfClosingElement(node) &&
             areSimilarElements(node, node.previousSibling) &&

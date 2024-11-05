@@ -16,7 +16,7 @@ export class ProtectedNodePlugin extends Plugin {
     resources = {
         is_mutation_record_savable: this.isMutationRecordSavable.bind(this),
         filter_descendants_to_remove: this.filterDescendantsToRemove.bind(this),
-        isUnsplittable: isProtecting, // avoid merge
+        unsplittable_node_predicates: isProtecting, // avoid merge
         clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
         normalize_handlers: this.normalize.bind(this),
         before_filter_mutation_record_handlers: this.beforeFilteringMutationRecords.bind(this),
