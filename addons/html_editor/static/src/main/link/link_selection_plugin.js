@@ -59,12 +59,11 @@ export class LinkSelectionPlugin extends Plugin {
     // TODO ABD: refactor to handle Knowledge comments inside this plugin without sharing padLinkWithZwnbsp.
     static shared = ["padLinkWithZwnbsp"];
     resources = {
-        mutation_filtered_classes: ["o_link_in_selection"],
-        link_ignore_classes: ["o_link_in_selection"],
+        system_classes: ["o_link_in_selection"],
         selectionchange_handlers: this.resetLinkInSelection.bind(this),
         clean_handlers: (root) => this.removeFEFFs(root, { preserveSelection: true }),
         clean_for_save_handlers: this.cleanForSave.bind(this),
-        arrows_should_skip: (ev, char, lastSkipped) =>
+        intangible_char_for_keyboard_navigation_predicates: (ev, char, lastSkipped) =>
             // Skip first FEFF, but not the second one (unless shift is pressed).
             char === "\uFEFF" && (ev.shiftKey || lastSkipped !== "\uFEFF"),
         normalize_handlers: (el) => this.normalize(el || this.editable),
@@ -174,14 +173,16 @@ export class LinkSelectionPlugin extends Plugin {
             this.editable.contains(link) &&
             !isProtected(link) &&
             !isProtecting(link) &&
-            !this.getResource("excludeLinkZwnbsp").some((callback) => callback(link))
+            !this.getResource("ineligible_link_for_zwnbsp_predicates").some((p) => p(link))
         );
     }
 
     isLinkEligibleForVisualIndication(link) {
         return (
             this.isLinkEligibleForZwnbsp(link) &&
-            !this.getResource("excludeLinkVisualIndication").some((callback) => callback(link))
+            !this.getResource("ineligible_link_for_selection_indication_predicates").some(
+                (predicate) => predicate(link)
+            )
         );
     }
 

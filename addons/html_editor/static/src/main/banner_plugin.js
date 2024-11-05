@@ -53,7 +53,8 @@ export class BannerPlugin extends Plugin {
                 },
             },
         ],
-        showPowerButtons: (selection) => !closestElement(selection.anchorNode, ".o_editor_banner"),
+        power_buttons_visibility_predicates: ({ anchorNode }) =>
+            !closestElement(anchorNode, ".o_editor_banner"),
         powerbox_categories: withSequence(20, { id: "banner", name: _t("Banner") }),
         powerbox_items: [
             {

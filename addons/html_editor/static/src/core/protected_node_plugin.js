@@ -14,8 +14,8 @@ export class ProtectedNodePlugin extends Plugin {
     static id = "protectedNode";
     static shared = ["setProtectingNode"];
     resources = {
-        is_mutation_record_savable: this.isMutationRecordSavable.bind(this),
-        filter_descendants_to_remove: this.filterDescendantsToRemove.bind(this),
+        savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
+        removable_descendants_providers: this.filterDescendantsToRemove.bind(this),
         unsplittable_node_predicates: isProtecting, // avoid merge
         clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
         normalize_handlers: this.normalize.bind(this),

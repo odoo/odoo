@@ -512,7 +512,7 @@ export class DeletePlugin extends Plugin {
         const remove = (node) => {
             let customHandling = false;
             let customIsUnremovable;
-            for (const cb of this.getResource("filter_descendants_to_remove")) {
+            for (const cb of this.getResource("removable_descendants_providers")) {
                 const descendantsToRemove = cb(node);
                 if (descendantsToRemove) {
                     for (const descendant of descendantsToRemove) {

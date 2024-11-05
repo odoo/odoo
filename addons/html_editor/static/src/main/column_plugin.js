@@ -83,7 +83,8 @@ export class ColumnPlugin extends Plugin {
                 text: _t("Empty column"),
             },
         ],
-        showPowerButtons: (selection) => !closestElement(selection.anchorNode, ".o_text_columns"),
+        power_buttons_visibility_predicates: ({ anchorNode }) =>
+            !closestElement(anchorNode, ".o_text_columns"),
     };
 
     columnize({ numberOfColumns, addParagraphAfter = true } = {}) {
