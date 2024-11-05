@@ -111,33 +111,10 @@ export class Popover extends Component {
 
         useForwardRefToParent("ref");
         this.popoverRef = useRef("ref");
-
-        let shouldAnimate = this.props.animation;
         this.position = usePosition("ref", () => this.props.target, {
             onPositioned: (el, solution) => {
-                (this.props.onPositioned || this.onPositioned.bind(this))(el, solution);
-
-                // opening animation
-                if (shouldAnimate) {
-                    shouldAnimate = false; // animate only once
-                    const transform = {
-                        top: ["translateY(-5%)", "translateY(0)"],
-                        right: ["translateX(5%)", "translateX(0)"],
-                        bottom: ["translateY(5%)", "translateY(0)"],
-                        left: ["translateX(-5%)", "translateX(0)"],
-                    }[solution.direction];
-                    this.position.lock();
-                    const animation = el.animate(
-                        { opacity: [0, 1], transform },
-                        this.constructor.animationTime
-                    );
-                    animation.finished.then(this.position.unlock);
-                }
-
-                if (this.props.fixedPosition) {
-                    // Prevent further positioning updates if fixed position is wanted
-                    this.position.lock();
-                }
+                this.onPositioned(el, solution);
+                this.props.onPositioned?.(el, solution);
             },
             position: this.props.position,
         });
@@ -187,25 +164,23 @@ export class Popover extends Component {
     }
 
     onPositioned(el, { direction, variant }) {
-        const position = `${direction[0]}${variant[0]}`;
-
-        // reset all popover classes
-        el.classList = [];
-        const directionMap = {
-            top: "top",
-            bottom: "bottom",
-            left: "start",
-            right: "end",
-        };
-        addClassesToElement(
-            el,
-            this.defaultClassObj,
-            `bs-popover-${directionMap[direction]}`,
-            `o-popover-${direction}`,
-            `o-popover--${position}`
-        );
-
         if (this.props.arrow) {
+            const position = `${direction[0]}${variant[0]}`;
+            const directionMap = {
+                top: "top",
+                bottom: "bottom",
+                left: "start",
+                right: "end",
+            };
+
+            // reset all popover classes
+            el.classList = [];
+            addClassesToElement(
+                el,
+                this.defaultClassObj,
+                `bs-popover-${directionMap[direction]}`,
+                `o-popover--${position}`
+            );
             const arrowEl = el.querySelector(":scope > .popover-arrow");
             // reset all arrow classes
             arrowEl.className = "popover-arrow";
@@ -222,23 +197,31 @@ export class Popover extends Component {
                 case "rf": // right-fit
                     arrowEl.classList.add("top-0", "bottom-0", "my-auto");
                     break;
-                case "ts": // top-start
-                case "bs": // bottom-start
-                    arrowEl.classList.add("end-auto");
-                    break;
-                case "te": // top-end
-                case "be": // bottom-end
-                    arrowEl.classList.add("start-auto");
-                    break;
-                case "ls": // left-start
-                case "rs": // right-start
-                    arrowEl.classList.add("bottom-auto");
-                    break;
-                case "le": // left-end
-                case "re": // right-end
-                    arrowEl.classList.add("top-auto");
-                    break;
             }
+        }
+
+        // opening animation
+        if (this.props.animation && !this.animationDone) {
+            const transform = {
+                top: ["translateY(-5%)", "translateY(0)"],
+                right: ["translateX(5%)", "translateX(0)"],
+                bottom: ["translateY(5%)", "translateY(0)"],
+                left: ["translateX(-5%)", "translateX(0)"],
+            }[direction];
+            this.position.lock();
+            const animation = el.animate(
+                { opacity: [0, 1], transform },
+                this.constructor.animationTime
+            );
+            animation.finished.then(() => {
+                this.animationDone = true;
+                this.position.unlock();
+            });
+        }
+
+        if (this.props.fixedPosition) {
+            // Prevent further positioning updates if fixed position is wanted
+            this.position.lock();
         }
     }
 }

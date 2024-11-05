@@ -140,13 +140,15 @@ test("close popover if target is removed", async () => {
         static props = ["*"];
     }
 
-    getService("popover").add(target, Comp);
+    const popoverTarget = document.createElement("div");
+    target.appendChild(popoverTarget);
+    getService("popover").add(popoverTarget, Comp);
     await animationFrame();
 
     expect(".o_popover").toHaveCount(1);
     expect(".o_popover #comp").toHaveCount(1);
 
-    target.remove();
+    popoverTarget.remove();
     await animationFrame();
 
     expect(".o_popover").toHaveCount(0);
