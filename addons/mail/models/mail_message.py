@@ -1344,8 +1344,13 @@ class MailMessage(models.Model):
             # have access to the record related to the notification. In this case, we skip it.
             # YTI FIXME: check allowed_company_ids if necessary
             if record := record_by_message.get(message):
-                if record.has_access('read'):
-                    messages += message
+                try:
+                    if record.has_access('read'):
+                        _dummy = record.display_name  # access anything to make sure record exists
+                        messages += message
+                except (MissingError):
+                    # record has been removed from db without cascading notif -> avoid crash at least
+                    continue
         messages_per_partner = defaultdict(lambda: self.env['mail.message'])
         for message in messages:
             if not self.env.user._is_public():
