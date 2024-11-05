@@ -67,6 +67,7 @@ class MailMessageSchedule(models.Model):
                 existing = records.exists()
             else:
                 records = [self.env['mail.thread']] * len(schedules)
+                existing = records
 
             for record, schedule in zip(records, schedules):
                 if record not in existing:

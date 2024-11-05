@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from werkzeug.exceptions import NotFound
 
 from odoo import http
@@ -73,7 +74,22 @@ class WebclientController(http.Controller):
             # sudo as to not check ACL, which is far too costly
             # sudo: mail.notification - return only failures of current user as author
             notifications = request.env["mail.notification"].sudo().search(domain, limit=100)
-            notifications.mail_message_id._message_notifications_to_store(store)
+            found = defaultdict(list)
+            for message in notifications.mail_message_id:
+                found[message.model].append(message.res_id)
+            existing = {
+                model: set(request.env[model].browse(ids).exists().ids)
+                for model, ids in found.items()
+            }
+            valid = notifications.filtered(
+                lambda n: n.mail_message_id.res_id in existing[n.mail_message_id.model]
+            )
+            lost = notifications - valid
+            # might break readonly status of mail/data, but in really rare cases
+            # and solves it by removing useless notifications
+            if lost:
+                lost.sudo().unlink()  # no unlink right except admin, ok to remove as lost anyway
+            valid.mail_message_id._message_notifications_to_store(store)
 
     def _process_request_for_internal_user(self, store, **kwargs):
         if kwargs.get("systray_get_activities"):
