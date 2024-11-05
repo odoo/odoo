@@ -301,6 +301,7 @@ class ProductProduct(models.Model):
                     'debit': abs(value),
                     'credit': 0,
                     'product_id': product.id,
+                    'quantity': 0,
                 }), (0, 0, {
                     'name': _(
                         '%(user)s changed cost from %(previous)s to %(new_price)s - %(product)s',
@@ -313,6 +314,7 @@ class ProductProduct(models.Model):
                     'debit': 0,
                     'credit': abs(value),
                     'product_id': product.id,
+                    'quantity': 0,
                 })],
             }
             am_vals_list.append(move_vals)
