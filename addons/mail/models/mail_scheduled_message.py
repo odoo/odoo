@@ -2,12 +2,11 @@
 
 import json
 import operator
-import threading
 from collections import defaultdict
 from itertools import groupby
 from markupsafe import Markup
 
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, modules
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import clean_context
@@ -230,7 +229,7 @@ class MailScheduledMessage(models.Model):
             This is useful when scheduled messages are sent from the _post_messages_cron.
         """
         notification_parameters_whitelist = self._notification_parameters_whitelist()
-        auto_commit = not getattr(threading.current_thread(), 'testing', False)
+        auto_commit = not modules.module.current_test
         for scheduled_message in self:
             message_creator = scheduled_message.create_uid
             try:

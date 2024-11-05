@@ -13,7 +13,6 @@ import lxml
 import logging
 import pytz
 import time
-import threading
 
 from collections import defaultdict, namedtuple
 from collections.abc import Iterable
@@ -3431,14 +3430,13 @@ class MailThread(models.AbstractModel):
         #   2. do not send emails immediately if the registry is not loaded,
         #      to prevent sending email during a simple update of the database
         #      using the command-line.
-        test_mode = getattr(threading.current_thread(), 'testing', False)
         if force_send := self.env.context.get('mail_notify_force_send', force_send):
             force_send_limit = int(self.env['ir.config_parameter'].sudo().get_param('mail.mail.force.send.limit', 100))
             force_send = len(emails) < force_send_limit
-        if force_send and (not self.pool._init or test_mode):
+        if force_send and not self.env['ir.mail_server']._disable_send():
             # unless asked specifically, send emails after the transaction to
             # avoid side effects due to emails being sent while the transaction fails
-            if not test_mode and send_after_commit:
+            if send_after_commit:
                 emails.send_after_commit()
             else:
                 emails.send()
