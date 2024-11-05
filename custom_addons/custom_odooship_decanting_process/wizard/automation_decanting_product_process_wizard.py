@@ -71,8 +71,8 @@ class AutomationDecantingProductProcess(models.TransientModel):
 
     def action_confirm(self):
         """
-        Confirm the decanting process by validating quantities for each product line and updating the
-        license plate lines accordingly.
+        Confirm the decanting process by validating quantities for each product line
+        and updating the license plate lines accordingly.
         """
         # Validation: Ensure at least one product line item is added
         if not self.line_ids:
@@ -103,7 +103,6 @@ class AutomationDecantingProductProcess(models.TransientModel):
 
             # Track total quantity to decant for this product line
             total_qty_to_decant = line.quantity
-            insufficient_qty = False  # To detect if any line fails the quantity check
 
             # Loop through license plate orders to find the corresponding product and update remaining quantity
             for license_plate in self.license_plate_ids:
@@ -111,6 +110,7 @@ class AutomationDecantingProductProcess(models.TransientModel):
                     lambda lp: lp.product_id == line.product_id
                 )
 
+                # Adjust remaining quantity across all license plate lines for the product
                 for lp_line in product_lines:
                     if total_qty_to_decant <= 0:
                         break  # Exit if no more quantity is needed
@@ -123,15 +123,15 @@ class AutomationDecantingProductProcess(models.TransientModel):
                         total_qty_to_decant -= lp_line.remaining_qty
                         lp_line.remaining_qty = 0
 
-                    # Mark `is_remaining_qty` if fully decanted
+                    # Update `is_remaining_qty` if fully decanted
                     lp_line.is_remaining_qty = lp_line.remaining_qty == 0
-                    # if line.remaining_quantity < line.quantity:
-                    #     raise ValidationError("Insufficient Quantity")
 
-                # If remaining quantity is still greater than 0, raise an error for this product line
-                if total_qty_to_decant > 0:
-                    insufficient_qty = True
-                    break
+            # If total_qty_to_decant is still greater than 0, raise an error for this product line
+            if total_qty_to_decant > 0:
+                raise ValidationError(
+                    _("Insufficient quantity for product '%s'. Only %s units available across selected license plates.")
+                    % (line.product_id.display_name, line.available_quantity)
+                )
 
         # Update crate status and count lines after confirming all lines
         self._compute_crate_status()
@@ -178,6 +178,14 @@ class AutomationDecantingProductProcessLine(models.TransientModel):
                 if self.wizard_id.count_lines > partition_limit:
                     raise ValidationError(
                         _("You cannot add more than %s items to the container.") % partition_limit)
+                if self.product_id and self.product_id.id not in available_product_ids:
+                    return {
+                        'warning': {
+                            'title': _("Invalid Product Selection"),
+                            'message': _("The selected product is not available in the ASN."),
+                        }
+                    }
+
 
     @api.depends('wizard_id.license_plate_ids')
     def _compute_available_products(self):
@@ -308,33 +316,4 @@ class AutomationDecantingProductProcessLine(models.TransientModel):
         partition_letter = 'A' if line_index < half_partition else 'B'  # First half 'A', second half 'B'
         partition_number = (line_index % half_partition) + 1  # Cycle through numbers up to half_partition
         return f"{partition_number}{partition_letter}"
-
-    # @api.model
-    # def create(self, vals):
-    #     """
-    #     Override the create method to assign partition codes, check quantity,
-    #     and validate partition limits before creation.
-    #     """
-    #     process_id = vals.get('automation_decanting_process_id')
-    #     if process_id:
-    #         process = self.env['automation.decanting.orders.process'].browse(process_id)
-    #         current_line_count = len(process.automation_decanting_process_line_ids)
-    #
-    #         # Check partition limit before adding a new line
-    #         partition_limit = process.container_partition
-    #         if current_line_count >= partition_limit:
-    #             raise ValidationError(
-    #                 _("You cannot add more than %s items to the container.") % partition_limit)
-    #
-    #         # Calculate partition_code based on current line count and container_partition
-    #         partition_code = self._generate_partition_code(current_line_count, partition_limit)
-    #         vals['partition_code'] = partition_code
-    #
-    #     # Call the original create method
-    #     new_record = super(AutomationDecantingProductProcessLine, self).create(vals)
-    #     # Check the quantity after creation
-    #     # new_record.onchange_quantity()
-    #     return new_record
-
-
 

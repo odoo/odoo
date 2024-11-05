@@ -8,9 +8,10 @@ from odoo import models, fields, api
 class TenantCodeConfiguration(models.Model):
     _name = 'tenant.code.configuration'
     _description = 'Tenant Code Configuration.'
+    _inherit = 'mail.thread'
 
-    name = fields.Char(string='Tenant Code')
-    partner_id = fields.Many2one('res.partner', string='Partner')
+    name = fields.Char(string='Tenant Code', tracking=True)
+    partner_id = fields.Many2one('res.partner', string='Partner', tracking=True)
 
     @api.model
     def create(self, vals):
