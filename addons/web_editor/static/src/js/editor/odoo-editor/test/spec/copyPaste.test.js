@@ -2518,6 +2518,15 @@ describe('Paste', () => {
                     contentAfter: '<p><a href="#">a123[]b</a></p>',
                 });
             });
+            it('should paste and not transform an URL in a pre tag', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<pre>[]<br></pre>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'http://www.xyz.com');
+                    },
+                    contentAfter: '<pre>http://www.xyz.com[]</pre>',
+                });
+            });
         });
         describe('range not collapsed', async () => {
             it('should paste and transform an URL in a p', async () => {
