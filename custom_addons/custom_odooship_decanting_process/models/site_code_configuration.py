@@ -8,6 +8,7 @@ from odoo import models, fields, api
 class SiteCodeConfiguration(models.Model):
     _name = 'site.code.configuration'
     _description = 'Site Code Configuration.'
+    _inherit = 'mail.thread'
 
-    name = fields.Char(string='Site Code')
+    name = fields.Char(string='Site Code', tracking=True)
 
