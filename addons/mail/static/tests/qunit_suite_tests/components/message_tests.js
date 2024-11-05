@@ -592,11 +592,12 @@ QUnit.test('allow attachment delete on authored message', async function (assert
         "should have an attachment",
     );
     assert.containsOnce(
-        document.body,
-        '.o_AttachmentImage_actionUnlink',
-        "should have delete attachment button"
+        document.querySelector('.o_AttachmentImage_actions'),
+        '.o_AttachmentImage_actionDropdown',
+        'should have action dropdown button'
     );
 
+    await click('.o_AttachmentImage_actionDropdown');
     await click('.o_AttachmentImage_actionUnlink');
     assert.containsOnce(
         document.body,
@@ -657,7 +658,7 @@ QUnit.test('prevent attachment delete on non-authored message in channels', asyn
 });
 
 QUnit.test('allow attachment image download on message', async function (assert) {
-    assert.expect(1);
+    assert.expect(2);
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
@@ -671,7 +672,7 @@ QUnit.test('allow attachment image download on message', async function (assert)
         model: 'mail.channel',
         res_id: mailChannelId1,
     });
-    const { openDiscuss } = await start({
+    const { click, openDiscuss } = await start({
         discuss: {
             context: {
                 active_id: mailChannelId1,
@@ -680,9 +681,16 @@ QUnit.test('allow attachment image download on message', async function (assert)
     });
     await openDiscuss();
     assert.containsOnce(
+        document.querySelector('.o_AttachmentImage_actions'),
+        '.o_AttachmentImage_actionDropdown',
+        'should have action dropdown button'
+    );
+
+    await click('.o_AttachmentImage_actionDropdown');
+    assert.containsOnce(
         document.body,
         '.o_AttachmentImage_actionDownload',
-        "should have download attachment button"
+        'should have download attachment button'
     );
 });
 

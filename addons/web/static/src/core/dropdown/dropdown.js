@@ -179,6 +179,7 @@ export class Dropdown extends Component {
             newState: { ...this.state },
         };
         Dropdown.bus.trigger("state-changed", stateChangedPayload);
+        this.props.onStateChanged({ ...this.state });
     }
 
     /**
@@ -305,6 +306,9 @@ export class Dropdown extends Component {
     }
 }
 Dropdown.bus = new EventBus();
+Dropdown.defaultProps = {
+    onStateChanged: () => {},
+};
 Dropdown.props = {
     class: {
         type: String,
@@ -332,6 +336,10 @@ Dropdown.props = {
         optional: true,
     },
     beforeOpen: {
+        type: Function,
+        optional: true,
+    },
+    onStateChanged: {
         type: Function,
         optional: true,
     },

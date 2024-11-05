@@ -25,7 +25,7 @@ export class DropdownItem extends Component {
             ev.preventDefault();
         }
         if (onSelected) {
-            onSelected();
+            onSelected(ev);
         }
         const dropdown = this.env[DROPDOWN];
         if (!dropdown) {
