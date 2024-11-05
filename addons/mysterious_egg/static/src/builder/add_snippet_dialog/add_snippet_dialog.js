@@ -15,6 +15,7 @@ export class AddSnippetDialog extends Component {
         this.state = useState({
             groupSelected: this.props.selectedSnippet.groupName,
             showIframe: false,
+            isSearching: false,
         });
         this.snippetViewerProps = {
             state: reactive({ snippets: this.getSelectedSnippets() }),
@@ -24,13 +25,6 @@ export class AddSnippetDialog extends Component {
             },
         };
         this.selectGroup(this.props.selectedSnippet);
-
-        this.categoryById = {};
-        for (const snippetGroup of this.props.snippetGroups) {
-            if (snippetGroup.groupName) {
-                this.categoryById[snippetGroup.groupName] = snippetGroup;
-            }
-        }
 
         let root;
         onMounted(async () => {
@@ -74,19 +68,16 @@ export class AddSnippetDialog extends Component {
 
     onInputSearch(ev) {
         const search = ev.target.value.toLowerCase();
-        if (search) {
-            const strMatches = (str) => !search || str.toLowerCase().includes(search);
-            this.snippetViewerProps.state.snippets = this.props.snippetStructures.filter(
-                (snippet) => {
-                    return (
-                        strMatches(this.categoryById[snippet.groupName].title) ||
-                        strMatches(snippet.title) ||
-                        strMatches(snippet.keyWords || "")
-                    );
-                }
-            );
+        if (!search) {
+            this.state.isSearching = false;
+            this.snippetViewerProps.state.snippets = this.getSelectedSnippets();
             return;
         }
-        this.snippetViewerProps.state.snippets = this.getSelectedSnippets();
+
+        const strMatches = (str) => str.toLowerCase().includes(search);
+        this.snippetViewerProps.state.snippets = this.props.snippetStructures.filter((snippet) => {
+            return strMatches(snippet.title) || strMatches(snippet.keyWords || "");
+        });
+        this.state.isSearching = true;
     }
 }
