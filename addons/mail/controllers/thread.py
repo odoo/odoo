@@ -11,7 +11,7 @@ from odoo.addons.mail.tools.discuss import Store
 
 
 class ThreadController(http.Controller):
-    @http.route("/mail/thread/data", methods=["POST"], type="json", auth="user")
+    @http.route("/mail/thread/data", methods=["POST"], type="json", auth="user", readonly=True)
     def mail_thread_data(self, thread_model, thread_id, request_list):
         thread = request.env[thread_model].with_context(active_test=False).search([("id", "=", thread_id)])
         store = Store()
