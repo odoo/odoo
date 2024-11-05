@@ -2,7 +2,8 @@ $o-kanban-attachement-image-size: 80px;
 
 .o_kanban_renderer {
     .o_kanban_record.o_kanban_attachment {
-        padding: map-get($spacers, 0);
+        --KanbanRecord-padding-h: #{map-get($spacers, 0)};
+        --KanbanRecord-padding-v: #{map-get($spacers, 0)};
 
         .o_kanban_image {
             width: $o-kanban-attachement-image-size;
