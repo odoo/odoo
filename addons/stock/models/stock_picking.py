@@ -220,7 +220,7 @@ class PickingType(models.Model):
     def _search_is_favorite(self, operator, value):
         if operator not in ['=', '!='] or not isinstance(value, bool):
             raise NotImplementedError(_('Operation not supported'))
-        return [('favorite_user_ids', 'in' if (operator == '=') == value else 'in', self.env.uid)]
+        return [('favorite_user_ids', 'in' if (operator == '=') == value else 'not in', self.env.uid)]
 
     def _compute_is_favorite(self):
         for picking_type in self:
