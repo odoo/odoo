@@ -250,15 +250,15 @@ describe("step", () => {
     });
 });
 
-describe("prevent mutationFilteredClasses to be set from history", () => {
-    class TestMutationFilteredClassesPlugin extends Plugin {
+describe("prevent system classes to be set from history", () => {
+    class TestSystemClassesPlugin extends Plugin {
         static id = "testRenderClasses";
         resources = {
-            mutation_filtered_classes: ["x"],
+            system_classes: ["x"],
         };
     }
-    const Plugins = [...MAIN_PLUGINS, TestMutationFilteredClassesPlugin];
-    test("should prevent mutationFilteredClasses to be added", async () => {
+    const Plugins = [...MAIN_PLUGINS, TestSystemClassesPlugin];
+    test("should prevent system classes to be added", async () => {
         await testEditor({
             contentBefore: `<p>a</p>`,
             stepFunction: async (editor) => {
@@ -272,7 +272,7 @@ describe("prevent mutationFilteredClasses to be set from history", () => {
         });
     });
 
-    test("should prevent mutationFilteredClasses to be added when adding 2 classes", async () => {
+    test("should prevent system classes to be added when adding 2 classes", async () => {
         await testEditor({
             contentBefore: `<p>a[]</p>`,
             stepFunction: async (editor) => {
@@ -287,7 +287,7 @@ describe("prevent mutationFilteredClasses to be set from history", () => {
         });
     });
 
-    test("should prevent mutationFilteredClasses to be added in historyApply", async () => {
+    test("should prevent system classes to be added in historyApply", async () => {
         const { el, plugins } = await setupEditor(`<p>a</p>`, { config: { Plugins } });
         /** @type import("../src/core/history_plugin").HistoryPlugin") */
         const historyPlugin = plugins.get("history");
@@ -557,7 +557,7 @@ describe("destroy", () => {
             static dependencies = ["history", "dom"];
             static id = "test";
             resources = {
-                is_mutation_record_savable: this.isMutationRecordSavable.bind(this),
+                savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
             };
             isMutationRecordSavable(record) {
                 if (

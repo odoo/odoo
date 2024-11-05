@@ -557,7 +557,7 @@ export class SelectionPlugin extends Plugin {
         range.setEnd(selection.endContainer, selection.endOffset);
         const isNodeFullySelected = (node) =>
             // Custom rules
-            this.getResource("considerNodeFullySelected").some((cb) => cb(node, selection)) ||
+            this.getResource("fully_selected_node_predicates").some((cb) => cb(node, selection)) ||
             // Default rule
             (range.isPointInRange(node, 0) && range.isPointInRange(node, nodeSize(node)));
         return this.getTraversedNodes().filter(isNodeFullySelected);
@@ -587,7 +587,7 @@ export class SelectionPlugin extends Plugin {
                 return nodes.filter((node) => !edgeNodes.has(node));
             },
             // Custom modifiers
-            ...this.getResource("modifyTraversedNodes"),
+            ...this.getResource("traversed_nodes_processors"),
         ];
 
         for (const modifier of modifiers) {
@@ -750,7 +750,9 @@ export class SelectionPlugin extends Plugin {
         const domDirection = (screenDirection === "left") ^ isRtl ? "previous" : "next";
 
         // Whether the character next to the cursor should be skipped.
-        const shouldSkipCallbacks = this.getResource("arrows_should_skip");
+        const shouldSkipCallbacks = this.getResource(
+            "intangible_char_for_keyboard_navigation_predicates"
+        );
         let adjacentCharacter = getAdjacentCharacter(selection, domDirection, this.editable);
         let shouldSkip = shouldSkipCallbacks.some((cb) => cb(ev, adjacentCharacter));
 
