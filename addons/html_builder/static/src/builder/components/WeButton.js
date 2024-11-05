@@ -1,32 +1,47 @@
 import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useBus } from "@web/core/utils/hooks";
-import { useDomState } from "../builder_helpers";
+import { basicContainerWeWidgetProps, useDomState, useWeComponent } from "../builder_helpers";
 
 const actionsRegistry = registry.category("website-builder-actions");
 
 export class WeButton extends Component {
     static template = "html_builder.WeButton";
     static props = {
-        actions: Object,
+        ...basicContainerWeWidgetProps,
+
         title: { type: String, optional: true },
         label: { type: String, optional: true },
         iconImg: { type: String, optional: true },
         iconImgAlt: { type: String, optional: true },
-        applyTo: { type: Function, optional: true },
+
+        actionValue: {
+            type: [Boolean, String, Number, { type: Array, element: [Boolean, String, Number] }],
+            optional: true,
+        },
+
+        // Shorthand actions values.
+        classActionValue: { type: [String, Array], optional: true },
+        attributeActionValue: { type: [String, Array], optional: true },
+        dataAttributeActionValue: { type: [String, Array], optional: true },
+        styleActionValue: { type: [String, Array], optional: true },
+
+        slots: { type: Object, optional: true },
     };
 
     setup() {
+        useWeComponent();
         this.state = useDomState(() => ({
             isActive: this.isActive(),
         }));
 
         if (this.env.buttonGroupBus) {
             useBus(this.env.buttonGroupBus, "BEFORE_CALL_ACTIONS", () => {
-                for (const [actionId, actionParams] of Object.entries(this.props.actions)) {
+                for (const [actionId, actionParam, actionValue] of this.getActions()) {
                     actionsRegistry.get(actionId).clean({
-                        editingElement: this.getEditedElement(),
-                        params: actionParams,
+                        editingElement: this.env.editingElement,
+                        param: actionParam,
+                        value: actionValue,
                     });
                 }
             });
@@ -37,12 +52,40 @@ export class WeButton extends Component {
     }
     callActions() {
         this.env.buttonGroupBus?.trigger("BEFORE_CALL_ACTIONS");
-        for (const [actionId, actionParams] of Object.entries(this.props.actions)) {
+        for (const [actionId, actionParam, actionValue] of this.getActions()) {
             actionsRegistry.get(actionId).apply({
-                editingElement: this.getEditedElement(),
-                params: actionParams,
+                editingElement: this.env.editingElement,
+                param: actionParam,
+                value: actionValue,
             });
         }
+    }
+    getActions() {
+        const actions = [];
+        if (this.props.classAction) {
+            actions.push(["classAction", this.props.classAction, this.props.classActionValue]);
+        }
+        if (this.props.attributeAction) {
+            actions.push([
+                "attributeAction",
+                this.props.attributeAction,
+                this.props.attributeActionValue,
+            ]);
+        }
+        if (this.props.dataAttributeAction) {
+            actions.push([
+                "dataAttributeAction",
+                this.props.dataAttributeAction,
+                this.props.dataAttributeActionValue,
+            ]);
+        }
+        if (this.props.styleAction) {
+            actions.push(["styleAction", this.props.styleAction, this.props.styleActionValue]);
+        }
+        if (this.props.action) {
+            actions.push([this.props.action, this.props.actionParam, this.props.actionValue]);
+        }
+        return actions;
     }
     onClick() {
         this.call.commit();
@@ -54,16 +97,12 @@ export class WeButton extends Component {
         this.call.revert();
     }
     isActive() {
-        return Object.entries(this.props.actions).every(([actionId, actionParams]) => {
+        return this.getActions().every(([actionId, actionParam, actionValue]) => {
             return actionsRegistry.get(actionId).isActive({
-                editingElement: this.getEditedElement(),
-                params: actionParams,
+                editingElement: this.env.editingElement,
+                param: actionParam,
+                value: actionValue,
             });
         });
-    }
-    getEditedElement() {
-        return this.props.applyTo
-            ? this.env.editingElement.querySelector(this.props.applyTo)
-            : this.env.editingElement;
     }
 }

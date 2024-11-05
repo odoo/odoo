@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.NumberInput">
+    <div class="d-flex flex-row flex-nowrap align-items-center" style="width: 60px">
+        <input type="text" autocomplete="chrome-off" class="text-end" t-on-change="this.onChange" t-on-input="this.onInput" t-att-value="this.state.value" />
+        <span t-out="props.unit" />
+    </div>
+</t>
+
+</templates>
