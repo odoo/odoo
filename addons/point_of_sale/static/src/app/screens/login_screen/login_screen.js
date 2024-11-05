@@ -17,23 +17,16 @@ export class LoginScreen extends Component {
     }
 
     openRegister() {
-        this.selectUser();
-    }
-
-    selectUser() {
-        this.selectOneCashier(this.pos.user);
+        this.pos.setSessionCashierInfo({ userId: this.pos.user.id });
+        this.cashierLogIn();
     }
     cashierLogIn() {
+        this.pos.cashier.logged = true;
         const selectedScreen =
             this.pos.previousScreen && this.pos.previousScreen !== "LoginScreen"
                 ? this.pos.previousScreen
                 : this.pos.firstScreen;
         this.pos.showScreen(selectedScreen);
-        this.pos.hasLoggedIn = true;
-    }
-    selectOneCashier(cashier) {
-        this.pos.set_cashier(cashier);
-        this.cashierLogIn();
     }
     get backBtnName() {
         return _t("Backend");

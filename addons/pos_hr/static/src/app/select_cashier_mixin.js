@@ -21,7 +21,7 @@ export function useCashierSelector({ exclusive, onScan } = { onScan: () => {}, e
                 );
                 if (
                     employee &&
-                    employee !== pos.get_cashier() &&
+                    employee !== pos.cashier.employee &&
                     (!employee._pin || (await checkPin(employee)))
                 ) {
                     onScan && onScan(employee);
@@ -85,7 +85,7 @@ export function useCashierSelector({ exclusive, onScan } = { onScan: () => {}, e
 
         let employee = false;
         const allEmployees = pos.models["hr.employee"].filter(
-            (employee) => employee.id !== pos.get_cashier()?.id
+            (employee) => employee.id !== pos.cashier.employee?.id
         );
         const pinMatchEmployees = allEmployees.filter(
             (employee) => !pin || Sha1.hash(pin) === employee._pin
@@ -129,7 +129,7 @@ export function useCashierSelector({ exclusive, onScan } = { onScan: () => {}, e
         }
 
         if (login && employee) {
-            pos.hasLoggedIn = true;
+            pos.cashier.logged = true;
             pos.set_cashier(employee);
         }
 

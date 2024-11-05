@@ -10,11 +10,11 @@ patch(CashierName.prototype, {
     //@Override
     get avatar() {
         if (this.pos.config.module_pos_hr) {
-            const cashier = this.pos.get_cashier();
-            if (!(cashier && cashier.id)) {
+            const employee = this.pos.cashier.employee;
+            if (!(employee && employee.id)) {
                 return "";
             }
-            return `/web/image/hr.employee.public/${cashier.id}/avatar_128`;
+            return `/web/image/hr.employee.public/${employee.id}/avatar_128`;
         }
         return super.avatar;
     },
@@ -24,5 +24,8 @@ patch(CashierName.prototype, {
             return { oe_status: true };
         }
         return super.cssClass;
+    },
+    get username() {
+        return this.pos.cashier?.employee?.name || "";
     },
 });
