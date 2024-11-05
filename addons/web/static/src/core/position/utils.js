@@ -210,7 +210,6 @@ function computePosition(popper, target, { container, flip, margin, position }) 
         };
     }
 
-
     // Find best solution
     const matches = [];
     for (const d of directions) {

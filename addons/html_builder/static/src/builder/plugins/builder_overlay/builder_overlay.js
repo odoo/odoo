@@ -1,164 +1,98 @@
-import { Component, useRef, useState } from "@odoo/owl";
-import { usePosition } from "@web/core/position/position_hook";
-import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
-import { pick } from "@web/core/utils/objects";
+import { renderToElement } from "@web/core/utils/render";
+import { isMobileView } from "@html_builder/builder/utils/utils";
 
-const useDraggableWithoutFollow = makeDraggableHook({
-    name: "useDraggable",
-    onComputeParams: ({ ctx }) => {
-        ctx.followCursor = false;
-    },
-    onWillStartDrag: ({ ctx }) => pick(ctx.current, "element"),
-    onDragStart: ({ ctx }) => pick(ctx.current, "element"),
-    onDrag: ({ ctx }) => pick(ctx.current, "element"),
-    onDragEnd: ({ ctx }) => pick(ctx.current, "element"),
-    onDrop: ({ ctx }) => pick(ctx.current, "element"),
-});
+const sizingY = {
+    selector: "section, .row > div, .parallax, .s_hr, .carousel-item, .s_rating",
+    exclude:
+        "section:has(> .carousel), .s_image_gallery .carousel-item, .s_col_no_resize.row > div, .s_col_no_resize",
+};
+const sizingX = {
+    selector: ".row > div",
+    exclude: ".s_col_no_resize.row > div, .s_col_no_resize",
+};
+const sizingGrid = {
+    selector: ".row > div",
+    exclude: ".s_col_no_resize.row > div, .s_col_no_resize",
+};
 
-export class BuilderOverlay extends Component {
-    static template = "html_builder.BuilderOverlay";
-    static props = ["*"]; // TODO add props
-    setup() {
-        this.overlay = useRef("overlay");
-        this.target = this.props.target;
-        this.size = useState({
-            height: this.target.clientHeight,
-            width: this.target.clientWidth,
+export class BuilderOverlay {
+    constructor(overlayTarget, { overlayContainer }) {
+        this.overlayContainer = overlayContainer;
+        this.overlayElement = renderToElement("html_builder.BuilderOverlay");
+        this.overlayTarget = overlayTarget;
+        this.hasSizingHandles = this.hasSizingHandles();
+        this.handlesWrapperEl = this.overlayElement.querySelector(".o_handles");
+        this.handleEls = this.overlayElement.querySelectorAll(".o_handle");
+    }
+
+    hasSizingHandles() {
+        return (
+            this.overlayTarget.matches(`${sizingY.selector}:not(${sizingY.exclude})`) ||
+            this.overlayTarget.matches(`${sizingX.selector}:not(${sizingX.exclude})`) ||
+            this.overlayTarget.matches(`${sizingGrid.selector}:not(${sizingGrid.exclude})`)
+        );
+    }
+
+    // displayOverlayOptions(el) {
+    //     // TODO when options will be more clear:
+    //     // - moving
+    //     // - timeline
+    //     // (maybe other where `displayOverlayOptions: true`)
+    // }
+
+    isActive() {
+        // TODO active still necessary ? (check when we have preview mode)
+        return this.overlayElement.classList.contains("oe_active");
+    }
+
+    refreshPosition() {
+        if (!this.isActive()) {
+            return;
+        }
+
+        // TODO transform
+        const overlayContainerRect = this.overlayContainer.getBoundingClientRect();
+        const targetRect = this.overlayTarget.getBoundingClientRect();
+        Object.assign(this.overlayElement.style, {
+            width: `${targetRect.width}px`,
+            height: `${targetRect.height}px`,
+            top: `${targetRect.y - overlayContainerRect.y + window.scrollY}px`,
+            left: `${targetRect.x - overlayContainerRect.x + window.scrollX}px`,
         });
-        this.spacingConfig = this.buildSpacingConfig();
-
-        usePosition("root", () => this.target, {
-            position: "center",
-            container: () => this.props.container,
-            onPositioned: this.updateOverlaySize.bind(this),
-        });
-
-        useDraggableWithoutFollow({
-            ref: { el: window.document.body },
-            elements: ".o_handle",
-            onDragStart: ({ x, y, element }) => {
-                const direction = this.getCurrentDirection(element);
-                const spacingConfigIndex = this.getSpacingIndexFromTarget(direction);
-                this.currentDraggable = {
-                    initialX: x,
-                    initialY: y,
-                    direction,
-                    spacingConfigIndex,
-                    initialSpacingConfigIndex: spacingConfigIndex,
-                };
-            },
-            onDrag: ({ y }) => {
-                // TODO: handle x
-                const spacingConfig = this.spacingConfig[this.currentDraggable.direction];
-                const spacingConfigIndex = this.currentDraggable.spacingConfigIndex;
-                const isLastSize = spacingConfigIndex + 1 === spacingConfig.classes.length;
-                const nextSizeIndex = isLastSize ? spacingConfigIndex : spacingConfigIndex + 1;
-                const prevSizeIndex = spacingConfigIndex ? spacingConfigIndex - 1 : 0;
-                const deltaY =
-                    y -
-                    this.currentDraggable.initialY +
-                    spacingConfig.values[this.currentDraggable.initialSpacingConfigIndex];
-                let indexToApply;
-
-                // If the mouse moved to the right/down by at least 2/3 of
-                // the space between the previous and the next steps, the
-                // handle is snapped to the next step and the class is
-                // replaced by the one matching this step.
-                if (
-                    deltaY >
-                    (2 * spacingConfig.values[nextSizeIndex] +
-                        spacingConfig.values[spacingConfigIndex]) /
-                        3
-                ) {
-                    indexToApply = nextSizeIndex;
-                }
-
-                // Same as above but to the left/up.
-                if (
-                    deltaY <
-                    (2 * spacingConfig.values[prevSizeIndex] +
-                        spacingConfig.values[spacingConfigIndex]) /
-                        3
-                ) {
-                    indexToApply = prevSizeIndex;
-                }
-
-                if (indexToApply) {
-                    this.props.target.classList.remove(spacingConfig.classes[spacingConfigIndex]);
-                    this.props.target.classList.add(spacingConfig.classes[indexToApply]);
-                    this.currentDraggable.spacingConfigIndex = indexToApply;
-                    this.updateOverlaySize();
-                }
-            },
-        });
+        this.handlesWrapperEl.style.height = `${targetRect.height}px`;
     }
 
-    updateOverlaySize() {
-        this.size.height = this.target.clientHeight;
-        this.size.width = this.target.clientWidth;
-        this.size.paddingBottom = window
-            .getComputedStyle(this.target)
-            .getPropertyValue("padding-bottom");
-        this.size.paddingTop = window.getComputedStyle(this.target).getPropertyValue("padding-top");
-    }
-
-    buildSpacingConfig() {
-        let topClass = "pt";
-        let topStyleName = "padding-top";
-        let bottomClass = "pb";
-        let bottomStyleName = "padding-bottom";
-
-        if (this.target.tagName === "HR") {
-            topClass = "mt";
-            topStyleName = "margin-top";
-            bottomClass = "mb";
-            bottomStyleName = "margin-bottom";
+    refreshHandles() {
+        if (!this.hasSizingHandles || !this.isActive()) {
+            return;
         }
 
-        const values = [0, 4];
-        for (let i = 1; i <= 256 / 8; i++) {
-            values.push(i * 8);
-        }
-
-        return {
-            top: { classes: values.map((v) => topClass + v), values, styleName: topStyleName },
-            bottom: {
-                classes: values.map((v) => bottomClass + v),
-                values,
-                styleName: bottomStyleName,
-            },
-        };
-    }
-
-    getSpacingIndexFromTarget(direction) {
-        // Find the index of the current padding class applied to the target
-        const spacingConfig = this.spacingConfig[direction];
-        const styleName = spacingConfig.styleName;
-        for (let i = 0; i < spacingConfig.classes.length; i++) {
-            const paddingClass = spacingConfig.classes[i];
-            const paddingValue = spacingConfig.values[i];
-            if (
-                this.target.classList.contains(paddingClass) ||
-                window.getComputedStyle(this.target).getPropertyValue(styleName) ===
-                    paddingValue + "px"
-            ) {
-                return i;
-            }
+        if (this.overlayTarget.parentNode?.classList.contains("row")) {
+            const isMobile = isMobileView(this.overlayTarget);
+            const isGridOn = this.overlayTarget.classList.contains("o_grid_item");
+            const isGrid = !isMobile && isGridOn;
+            // Hiding/showing the correct resize handles if we are in grid mode
+            // or not.
+            this.handleEls.forEach((handleEl) => {
+                const isGridHandle = handleEl.classList.contains("o_grid_handle");
+                handleEl.classList.toggle("d-none", isGrid ^ isGridHandle);
+                // Disabling the vertical resize if we are in mobile view.
+                const isVerticalSizing = handleEl.matches(".n, .s");
+                handleEl.classList.toggle("readonly", isMobile && isVerticalSizing && isGridOn);
+            });
         }
     }
 
-    getCurrentDirection(handleElement) {
-        const handleClasses = handleElement.classList;
-        if (handleClasses.contains("top")) {
-            return "top";
-        } else if (handleClasses.contains("bottom")) {
-            return "bottom";
-        } else if (handleClasses.contains("end")) {
-            return "end";
-        } else if (handleClasses.contains("start")) {
-            return "start";
-        } else {
-            return "";
+    toggleOverlay(show) {
+        this.overlayElement.classList.add("oe_active", show);
+        this.refreshPosition();
+        this.refreshHandles();
+    }
+
+    toggleOverlayVisibility(show) {
+        if (!this.isActive()) {
+            return;
         }
+        this.overlayElement.classList.toggle("o_overlay_hidden", !show);
     }
 }

@@ -110,6 +110,10 @@ export class SnippetsMenu extends Component {
                         type: editableEl.dataset["oeType"],
                     };
                 },
+                localOverlayContainers: {
+                    key: this.env.localOverlayContainerKey,
+                    ref: this.props.overlayRef,
+                },
             },
             this.env.services
         );

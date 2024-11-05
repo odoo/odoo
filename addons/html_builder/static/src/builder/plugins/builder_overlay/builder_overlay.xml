@@ -2,19 +2,46 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.BuilderOverlay">
-    <div t-ref="root" class="border border-info pe-none border-2" t-attf-style="width: {{size.width}}px; height:{{size.height}}px;">
-        <div class="o_handles" t-attf-style="height: {{size.height}}px">
-            <div class="o_handle o_column_handle o_side o_side_y top o_handle_start" t-attf-style="height: {{size.paddingTop}};">
+    <div class="oe_overlay o_handlers_idle">
+        <div class="o_handles">
+            <!-- Visible overlay borders + allow to resize when not readonly -->
+            <div class="o_handle o_column_handle o_side o_side_y n readonly">
                 <span class="o_handle_indicator"></span>
             </div>
-            <div class="o_handle o_column_handle o_side o_side_y bottom o_handle_start" t-attf-style="height: {{size.paddingBottom}};">
+            <div class="o_handle o_column_handle o_side o_side_y s readonly">
                 <span class="o_handle_indicator"></span>
             </div>
-            <div class="o_handle o_column_handle o_side o_side_x end o_handle_start" >
+            <div class="o_handle o_column_handle o_side o_side_x e readonly" >
                 <span class="o_handle_indicator"></span>
             </div>
-            <div class="o_handle o_column_handle o_side o_side_x start o_handle_start">
+            <div class="o_handle o_column_handle o_side o_side_x w readonly">
                 <span class="o_handle_indicator"></span>
+            </div>
+
+             <!-- Grid resize handles -->
+             <div class="o_handle o_grid_handle o_side o_side_y n d-none">
+                <span class="o_handle_indicator"/>
+            </div>
+             <div class="o_handle o_grid_handle o_side o_side_x e d-none">
+                <span class="o_handle_indicator"/>
+            </div>
+             <div class="o_handle o_grid_handle o_side o_side_x w d-none">
+                <span class="o_handle_indicator"/>
+            </div>
+             <div class="o_handle o_grid_handle o_side o_side_y s d-none">
+                <span class="o_handle_indicator"/>
+            </div>
+             <div class="o_handle o_grid_handle o_corner_handle ne d-none">
+                <span class="o_handle_indicator"/>
+            </div>
+             <div class="o_handle o_grid_handle o_corner_handle nw d-none">
+                <span class="o_handle_indicator"/>
+            </div>
+             <div class="o_handle o_grid_handle o_corner_handle se d-none">
+                <span class="o_handle_indicator"/>
+            </div>
+             <div class="o_handle o_grid_handle o_corner_handle sw d-none">
+                <span class="o_handle_indicator"/>
             </div>
         </div>
     </div>
