@@ -506,6 +506,25 @@ registry.category("web_tour.tours").add("PosLoyaltyArchivedRewardProductsActive"
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("PosLoyalty2DiscountsSpecificGlobal", {
+    test: true,
+    url: "/pos/web",
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickHomeCategory(),
+
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AAAA"),
+
+            ProductScreen.addOrderline("Test Product A", "5"),
+            ProductScreen.clickDisplayedProduct("Test Product B"),
+            PosLoyalty.hasRewardLine("10% on your order", "-3.00"),
+            PosLoyalty.hasRewardLine("10% on Test Product B", "-0.45"),
+            PosLoyalty.finalizeOrder("Cash", "100"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("PosRewardProductScan", {
     test: true,
     steps: () =>
