@@ -15,6 +15,11 @@
             <keywords>updates, digest, bulletin, announcements, notifications, communication, promotional, email, alert, dialog, prompt, subscription, subscribe, mailing-list, news, box, image, picture</keywords>
         </t>
     </xpath>
+    <xpath expr="//t[@id='mass_mailing_newsletter_centered_hook']" position="replace">
+        <t t-snippet="website_mass_mailing.s_newsletter_centered" string="Newsletter Centered" t-forbid-sanitize="form" group="contact_and_forms">
+            <keywords>updates, digest, bulletin, announcements, notifications, communication, promotional, email, alert, dialog, prompt, subscription, subscribe, mailing-list, news</keywords>
+        </t>
+    </xpath>
     <xpath expr="//t[@id='mass_mailing_newsletter_popup_hook']" position="replace">
         <t t-snippet="website_mass_mailing.s_newsletter_subscribe_popup" string="Newsletter Popup" t-forbid-sanitize="form" group="contact_and_forms"/>
     </xpath>
@@ -100,6 +105,30 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
                 </div>
             </div>
         </div>
+    </section>
+</template>
+
+<template id="s_newsletter_centered" name="Newsletter Centered">
+    <section class="s_newsletter_centered s_newsletter_list o_colored_level pt72 pb72" data-list-id="0" data-oe-shape-data="{'shape':'web_editor/Origins/05','colors':{'c3':'o-color-1'},'flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0'}" data-name="Newsletter Centered">
+        <div class="o_we_shape o_web_editor_Origins_05" style="background-image: url('/web_editor/shape/web_editor/Origins/05.svg?c3=o-color-1');"/>
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 col-lg-6 offset-lg-3 pt16 pb16" data-name="Card">
+                        <div class="s_card card o_cc o_cc1 my-0" data-vxml="001" data-snippet="s_card" data-name="Card">
+                            <div class="card-body p-md-5">
+                                <p class="h1-fs" style="text-align: center;">&#9993;&#65039;</p>
+                                <h3 class="card-title" style="text-align: center;">Subscribe to our newsletter</h3>
+                                <p class="card-text text-muted" style="text-align: center;">Get all the latest news, blog posts and product updates from our company, delivered directly to your inbox.</p>
+                                <p><br/></p>
+                                <t t-snippet-call="website_mass_mailing.s_newsletter_subscribe_form">
+                                    <t t-set="_inputClasses" t-value="'o_subscribe_input'"/>
+                                    <t t-set="_wrapClasses" t-value="'input-group justify-content-center'"/>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
     </section>
 </template>
 
@@ -260,7 +289,7 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
         </t>
         <t t-call="website_mass_mailing.newsletter_subscribe_options_common">
             <t t-set="_selector">.s_newsletter_list</t>
-            <t t-set="_exclude">.s_newsletter_block .s_newsletter_list, .o_newsletter_popup .s_newsletter_list, .s_newsletter_box .s_newsletter_list</t>
+            <t t-set="_exclude">.s_newsletter_block .s_newsletter_list, .o_newsletter_popup .s_newsletter_list, .s_newsletter_box .s_newsletter_list, .s_newsletter_centered .s_newsletter_list</t>
         </t>
         <div data-selector=".js_subscribe" data-drop-near="p, h1, h2, h3, blockquote, .card"/>
     </xpath>

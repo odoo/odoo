@@ -366,6 +366,7 @@
                 <t id="mass_mailing_newsletter_block_hook"/>
                 <t id="mass_mailing_newsletter_popup_hook"/>
                 <t id="mass_mailing_newsletter_box_hook"/>
+                <t id="mass_mailing_newsletter_centered_hook"/>
 
                 <!-- Social group -->
                 <t t-snippet="website.s_instagram_page" string="Instagram Page" group="social"
@@ -446,6 +447,8 @@
     <xpath expr="//snippets[@id='snippet_structure']" position="inside">
         <t t-install="mass_mailing" string="Newsletter Block" group="contact_and_forms"
             t-image-preview="/website/static/src/img/snippets_previews/s_newsletter_block_preview.png"/>
+        <t t-install="mass_mailing" string="Newsletter Centered" group="contact_and_forms"
+            t-image-preview="/website/static/src/img/snippets_previews/s_newsletter_centered_preview.jpg"/>
         <t t-install="mass_mailing" string="Newsletter Popup" group="contact_and_forms"
             t-image-preview="/website/static/src/img/snippets_previews/s_newsletter_subscribe_popup_preview.png"/>
         <t t-install="mass_mailing" string="Newsletter Box" group="contact_and_forms"
@@ -745,7 +748,7 @@
              which the s_card options should be bound (instead of the s_card).
              Note: defined here to be set above all the other options that might
              need it. -->
-        <t t-set="card_parent_handlers" t-value="'.s_three_columns .row > div, .s_comparisons .row > div, .s_cards_grid .row > div, .s_cards_soft .row > div, .s_product_list .row > div'"/>
+        <t t-set="card_parent_handlers" t-value="'.s_three_columns .row > div, .s_comparisons .row > div, .s_cards_grid .row > div, .s_cards_soft .row > div, .s_product_list .row > div, .s_newsletter_centered .row > div'"/>
 
         <!-- Binding the option on the snippet if it is not a s_card with a
              handler parent -->
