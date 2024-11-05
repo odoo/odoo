@@ -6,10 +6,9 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 
 const REGEX_BOOTSTRAP_COLUMN = /(?:^| )col(-[a-zA-Z]+)?(-\d+)?(?:$| )/;
 
-function isUnremovableColumn(element, root) {
+function isUnremovableColumn(node, root) {
     const isColumnInnerStructure =
-        element.tagName === "DIV" &&
-        [...element.classList].some((cls) => /^row$|^col$|^col-/.test(cls));
+        node.nodeName === "DIV" && [...node.classList].some((cls) => /^row$|^col$|^col-/.test(cls));
 
     if (!isColumnInnerStructure) {
         return false;
@@ -17,7 +16,7 @@ function isUnremovableColumn(element, root) {
     if (!root) {
         return true;
     }
-    const closestColumnContainer = closestElement(element, "div.o_text_columns");
+    const closestColumnContainer = closestElement(node, "div.o_text_columns");
     return !root.contains(closestColumnContainer);
 }
 
@@ -41,7 +40,7 @@ export class ColumnPlugin extends Plugin {
                 run: this.columnize.bind(this),
             },
         ],
-        isUnremovable: isUnremovableColumn,
+        unremovable_node_predicates: isUnremovableColumn,
         powerbox_items: [
             {
                 title: _t("2 columns"),
