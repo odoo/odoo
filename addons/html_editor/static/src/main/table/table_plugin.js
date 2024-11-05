@@ -18,14 +18,14 @@ import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 export const BORDER_SENSITIVITY = 5;
 
 const tableInnerComponents = new Set(["THEAD", "TBODY", "TFOOT", "TR", "TH", "TD"]);
-function isUnremovableTableComponent(element, root) {
-    if (!tableInnerComponents.has(element.tagName)) {
+function isUnremovableTableComponent(node, root) {
+    if (!tableInnerComponents.has(node.nodeName)) {
         return false;
     }
     if (!root) {
         return true;
     }
-    const closestTable = closestElement(element, "table");
+    const closestTable = closestElement(node, "table");
     return !root.contains(closestTable);
 }
 
@@ -69,9 +69,9 @@ export class TablePlugin extends Plugin {
         tab_overrides: withSequence(20, this.handleTab.bind(this)),
         shift_tab_overrides: withSequence(20, this.handleShiftTab.bind(this)),
         delete_range_overrides: this.handleDeleteRange.bind(this),
-        isUnremovable: isUnremovableTableComponent,
-        isUnsplittable: (element) =>
-            element.tagName === "TABLE" || tableInnerComponents.has(element.tagName),
+        unremovable_node_predicates: isUnremovableTableComponent,
+        unsplittable_node_predicates: (node) =>
+            node.nodeName === "TABLE" || tableInnerComponents.has(node.nodeName),
         selectionchange_handlers: this.updateSelectionTable.bind(this),
         color_apply_overrides: this.applyTableColor.bind(this),
         clean_handlers: this.deselectTable.bind(this),

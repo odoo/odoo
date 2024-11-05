@@ -31,17 +31,20 @@ export class SplitPlugin extends Plugin {
         "isUnsplittable",
     ];
     resources = {
-        isUnsplittable: [
+        unsplittable_node_predicates: [
             // An unremovable element is also unmergeable (as merging two
             // elements results in removing one of them).
             // An unmergeable element is unsplittable and vice-versa (as
             // split and merge are reverse operations from one another).
             // Therefore, unremovable nodes are also unsplittable.
-            (element) => this.getResource("isUnremovable").some((predicate) => predicate(element)),
+            (node) =>
+                this.getResource("unremovable_node_predicates").some((predicate) =>
+                    predicate(node)
+                ),
             // "Unbreakable" is a legacy term that means unsplittable and
             // unmergeable.
-            (element) => element.classList.contains("oe_unbreakable"),
-            (element) => ["DIV", "SECTION"].includes(element.tagName),
+            (node) => node.classList?.contains("oe_unbreakable"),
+            (node) => ["DIV", "SECTION"].includes(node.nodeName),
         ],
         beforeinput_handlers: this.onBeforeInput.bind(this),
     };
@@ -135,10 +138,7 @@ export class SplitPlugin extends Plugin {
      * @returns {boolean}
      */
     isUnsplittable(node) {
-        return (
-            node.nodeType === Node.ELEMENT_NODE &&
-            this.getResource("isUnsplittable").some((predicate) => predicate(node))
-        );
+        return this.getResource("unsplittable_node_predicates").some((p) => p(node));
     }
 
     /**

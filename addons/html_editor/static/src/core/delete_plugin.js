@@ -90,12 +90,12 @@ export class DeletePlugin extends Plugin {
         delete_forward_line_overrides: this.deleteForwardUnmergeable.bind(this),
 
         // @todo @phoenix: move these predicates to different plugins
-        isUnremovable: [
-            (element) => element.classList.contains("oe_unremovable"),
+        unremovable_node_predicates: [
+            (node) => node.classList?.contains("oe_unremovable"),
             // Website stuff?
-            (element) => element.classList.contains("o_editable"),
+            (node) => node.classList?.contains("o_editable"),
             // Monetary field
-            (element) => element.matches("[data-oe-type='monetary'] > span"),
+            (node) => node.matches?.("[data-oe-type='monetary'] > span"),
         ],
     };
 
@@ -502,16 +502,7 @@ export class DeletePlugin extends Plugin {
     // conditionally unremovable (e.g. a table cell is only removable if its
     // ancestor table is also being removed).
     isUnremovable(node, root = undefined) {
-        // For now, there's no use case of unremovable text nodes.
-        // Should this change, the predicates must be adapted to take a Node
-        // instead of an Element as argument.
-        if (node.nodeType === Node.TEXT_NODE) {
-            return false;
-        }
-        if (node.nodeType !== Node.ELEMENT_NODE) {
-            return true;
-        }
-        return this.getResource("isUnremovable").some((predicate) => predicate(node, root));
+        return this.getResource("unremovable_node_predicates").some((p) => p(node, root));
     }
 
     // Returns true if the entire subtree rooted at node was removed.
@@ -627,10 +618,7 @@ export class DeletePlugin extends Plugin {
      * merge are reverse operations from one another).
      */
     isUnmergeable(node) {
-        return (
-            node.nodeType === Node.ELEMENT_NODE &&
-            this.getResource("isUnsplittable").some((predicate) => predicate(node))
-        );
+        return this.getResource("unsplittable_node_predicates").some((p) => p(node));
     }
 
     joinBlocks(left, right, commonAncestor) {
