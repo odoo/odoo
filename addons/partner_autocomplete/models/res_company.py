@@ -1,14 +1,13 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
 import logging
-import threading
 
 from lxml.builder import E
 
 from odoo.addons.iap.tools import iap_tools
-from odoo import api, fields, models, _
+from odoo import api, fields, models, modules, _
+from odoo.tools import config
 from odoo.tools.mail import email_domain_extract, url_domain_extract
 
 _logger = logging.getLogger(__name__)
@@ -29,7 +28,10 @@ class ResCompany(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
-        if not getattr(threading.current_thread(), 'testing', False):
+        if modules.module.current_test:
+            # while running the test, mark enrichment as done
+            res.sudo().iap_enrich_auto_done = True
+        else:
             res.iap_enrich_auto()
         return res
 
@@ -49,7 +51,7 @@ class ResCompany(models.Model):
     def iap_enrich_auto(self):
         """ Enrich company. This method should be called by automatic processes
         and a protection is added to avoid doing enrich in a loop. """
-        if self.env.user._is_system():
+        if self.env.user._is_system() and self.env.registry.ready:
             for company in self.filtered(lambda company: not company.iap_enrich_auto_done):
                 company._enrich()
             self.iap_enrich_auto_done = True

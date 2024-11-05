@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import threading
 
 from odoo import _, api, fields, models, modules
 
@@ -193,8 +191,7 @@ class ResCompany(models.Model):
             company.sudo()._create_per_company_picking_types()
             company.sudo()._create_per_company_rules()
             company.sudo()._set_per_company_inter_company_locations(inter_company_location)
-        test_mode = getattr(threading.current_thread(), 'testing', False) or modules.module.current_test
-        if test_mode:
+        if modules.module.current_test:
             self.env['stock.warehouse'].sudo().create([{'company_id': company.id} for company in companies])
         return companies
 

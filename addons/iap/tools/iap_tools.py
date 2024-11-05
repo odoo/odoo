@@ -5,10 +5,9 @@ import contextlib
 import logging
 import json
 import requests
-import threading
 import uuid
 
-from odoo import exceptions, _
+from odoo import exceptions, modules, _
 from odoo.tools import email_normalize
 
 _logger = logging.getLogger(__name__)
@@ -109,7 +108,7 @@ def iap_jsonrpc(url, method='call', params=None, timeout=15):
     Calls the provided JSON-RPC endpoint, unwraps the result and
     returns JSON-RPC errors as exceptions.
     """
-    if hasattr(threading.current_thread(), 'testing') and threading.current_thread().testing:
+    if modules.module.current_test:
         raise exceptions.AccessError("Unavailable during tests.")  # pylint: disable=missing-gettext
 
     payload = {

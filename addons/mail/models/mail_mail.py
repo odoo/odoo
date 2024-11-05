@@ -9,7 +9,6 @@ import psycopg2
 import pytz
 import re
 import smtplib
-import threading
 from collections import defaultdict
 
 from dateutil.parser import parse
@@ -231,7 +230,7 @@ class MailMail(models.Model):
         res = None
         try:
             # auto-commit except in testing mode
-            auto_commit = not getattr(threading.current_thread(), 'testing', False)
+            auto_commit = not modules.module.current_test
             res = self.browse(send_ids).send(auto_commit=auto_commit, post_send_callback=post_send_callback)
         except Exception:
             _logger.exception("Failed processing mail queue")
@@ -560,7 +559,7 @@ class MailMail(models.Model):
         """
         # send immediately on same cursor when testing as we don't want
         # to actually commit during tests
-        if getattr(threading.current_thread(), 'testing', False):
+        if modules.module.current_test:
             self.send()
             return
 
@@ -639,6 +638,9 @@ class MailMail(models.Model):
     def _send(self, auto_commit=False, raise_exception=False, smtp_session=None, alias_domain_id=False,
               mail_server=False, post_send_callback=None):
         IrMailServer = self.env['ir.mail_server']
+        if IrMailServer._disable_send():
+            # during testing skip sending e-mails unless monkeypatched
+            return True
         # Only retrieve recipient followers of the mails if needed
         mails_with_unfollow_link = self.filtered(lambda m: m.body_html and '/mail/unfollow' in m.body_html)
         doc_to_followers = self.env['mail.followers']._get_mail_doc_to_followers(mails_with_unfollow_link.ids)

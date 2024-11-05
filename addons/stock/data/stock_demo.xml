@@ -160,6 +160,10 @@
             <field name="user_ids" eval="[(4, ref('base.user_admin')), (4, ref('base.user_demo'))]"/>
         </record>
 
+        <record id="warehouse_company_1" model="stock.warehouse">
+            <field name="company_id" ref="res_company_1"/>
+        </record>
+
         <record id="base.group_multi_company" model="res.groups">
             <field name="user_ids" eval="[(4, ref('base.user_admin')), (4, ref('base.user_demo'))]"/>
         </record>

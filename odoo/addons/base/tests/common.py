@@ -440,7 +440,7 @@ class MockSmtplibCase:
 
         with patch('smtplib.SMTP_SSL', side_effect=lambda *args, **kwargs: self.testing_smtp_session), \
              patch('smtplib.SMTP', side_effect=lambda *args, **kwargs: self.testing_smtp_session), \
-             patch.object(modules.module, 'current_test', False), \
+             patch.object(type(IrMailServer), '_disable_send', lambda _: False), \
              patch.object(type(IrMailServer), 'connect', mock_function(connect_origin)) as connect_mocked, \
              patch.object(type(IrMailServer), '_find_mail_server', mock_function(find_mail_server_origin)) as find_mail_server_mocked:
             self.connect_mocked = connect_mocked.mock
@@ -460,8 +460,9 @@ class MockSmtplibCase:
         )
 
     def _send_email(self, msg, smtp_session):
-        with patch.object(modules.module, 'current_test', False):
-            self.env['ir.mail_server'].send_email(msg, smtp_session=smtp_session)
+        IrMailServer = self.env['ir.mail_server']
+        with patch.object(type(IrMailServer), '_disable_send', lambda _: False):
+            IrMailServer.send_email(msg, smtp_session=smtp_session)
         return smtp_session.messages.pop()
 
     def assertSMTPEmailsSent(self, smtp_from=None, smtp_to_list=None,
