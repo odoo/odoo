@@ -234,6 +234,15 @@ class SaleOrder(models.Model):
                         res[coupon] |= reward
                     else:
                         res[coupon] = reward
+
+        for coupon, rewards in list(res.items()):
+            if coupon.program_id.applies_on == 'current':
+                global_discounts = rewards.filtered(lambda r: (
+                    r.reward_type == 'discount' and r.discount_applicability == 'order'
+                ))
+                if global_discounts:
+                    res[coupon] -= global_discounts - max(global_discounts, key=lambda d: d.discount)
+
         return res
 
     def _cart_find_product_line(self, product_id, line_id=None, **kwargs):
