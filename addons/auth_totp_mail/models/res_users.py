@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
+
 from odoo import _, models
+
+_logger = logging.getLogger(__name__)
 
 
 class Users(models.Model):
@@ -30,6 +34,8 @@ class Users(models.Model):
             }
             invite_template.send_mail(user.id, force_send=True, email_values=email_values,
                                       notif_layout='mail.mail_notification_light')
+        _logger.info("An invitation to activate 2FA for users %s has been sent by %s",
+                      users_to_invite, self.env.user)
 
         # Display a confirmation toaster
         return {

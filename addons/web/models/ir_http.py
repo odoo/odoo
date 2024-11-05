@@ -4,6 +4,7 @@
 import base64
 import hashlib
 import json
+import logging
 
 import odoo
 from odoo import api, http, models
@@ -11,6 +12,8 @@ from odoo.http import request
 from odoo.tools import file_open, image_process, ustr
 
 from odoo.addons.web.controllers.main import HomeStaticTemplateHelpers
+
+_logger = logging.getLogger(__name__)
 
 
 class Http(models.AbstractModel):

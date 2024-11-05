@@ -10,6 +10,7 @@ import werkzeug
 
 import odoo
 from odoo.tools.misc import hmac, DotDict
+from odoo.tools._vendor.useragents import UserAgent
 
 
 def get_video_embed_code(video_url):
@@ -95,6 +96,7 @@ def MockRequest(
             host='localhost',
             path='/hello',
             app=odoo.http.root,
+            user_agent=UserAgent('Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:125.0) Gecko/20100101 Firefox/125.0'),
             environ={'REMOTE_ADDR': '127.0.0.1'},
             cookies=cookies or {},
             referrer='',
