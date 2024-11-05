@@ -37,9 +37,12 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
      * @override
      */
     start: function () {
-        // Enable magnify on zommable img
-        this.$('.zoomable img[data-zoom]').zoomOdoo();
+        // Enable magnify on zoomable img
+        var zoomable_elements = this.$('.zoomable img[data-zoom]')
+        if (zoomable_elements.zoomOdoo === undefined)
+            return this;
 
+        zoomable_elements.zoomOdoo();
         return this._super.apply(this, arguments);
     },
 
