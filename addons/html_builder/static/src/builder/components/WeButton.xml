@@ -10,6 +10,7 @@
         t-on-mouseleave="() => this.onMouseleave?.(props.id)">
         <img t-if="props.iconImg" t-att-src="props.iconImg" t-att-alt="props.iconImgAlt"/>
         <t t-if="props.label"  t-out="props.label"/>
+        <t t-slot="content"/>
     </button>
 </t>
 

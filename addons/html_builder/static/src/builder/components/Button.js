@@ -9,7 +9,7 @@ export class Button extends Component {
         iconImg: { type: String, optional: true },
         iconImgAlt: { type: String, optional: true },
         onClick: Function,
-        isActive: Function,
+        isActive: { Function, optional: true },
     };
 
     setup() {
