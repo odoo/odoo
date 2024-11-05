@@ -1,5 +1,5 @@
 import { Component, useRef } from "@odoo/owl";
-import { useSelfOrder } from "@pos_self_order/app/self_order_service";
+import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService, useForwardRefToParent } from "@web/core/utils/hooks";
 import { ProductInfoPopup } from "@pos_self_order/app/components/product_info_popup/product_info_popup";
 

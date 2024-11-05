@@ -1,5 +1,5 @@
 import { Component, onMounted, useRef, useState } from "@odoo/owl";
-import { useSelfOrder } from "@pos_self_order/app/self_order_service";
+import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { attributeFlatter, attributeFormatter } from "@pos_self_order/app/utils";
 import { floatIsZero } from "@web/core/utils/numbers";
 
