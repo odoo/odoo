@@ -39,7 +39,6 @@ import { DiscussChannel } from "./mock_server/mock_models/discuss_channel";
 import { DiscussChannelMember } from "./mock_server/mock_models/discuss_channel_member";
 import { DiscussChannelRtcSession } from "./mock_server/mock_models/discuss_channel_rtc_session";
 import { DiscussGifFavorite } from "./mock_server/mock_models/discuss_gif_favorite";
-import { DiscussVoiceMetadata } from "./mock_server/mock_models/discuss_voice_metadata";
 import { IrAttachment } from "./mock_server/mock_models/ir_attachment";
 import { IrWebSocket } from "./mock_server/mock_models/ir_websocket";
 import { M2xAvatarUser } from "./mock_server/mock_models/m2x_avatar_user";
@@ -112,7 +111,6 @@ export const mailModels = {
     DiscussChannelMember,
     DiscussChannelRtcSession,
     DiscussGifFavorite,
-    DiscussVoiceMetadata,
     IrAttachment,
     IrWebSocket,
     M2xAvatarUser,

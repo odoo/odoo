@@ -32,6 +32,8 @@ export class Attachment extends FileModelMixin(Record) {
         return attachment;
     }
 
+    /** @type {boolean} */
+    is_voice;
     thread = Record.one("Thread", { inverse: "attachments" });
     res_name;
     message = Record.one("mail.message", { inverse: "attachment_ids" });

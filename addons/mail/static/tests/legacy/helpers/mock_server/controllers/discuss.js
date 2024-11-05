@@ -18,14 +18,12 @@ patch(MockServer.prototype, {
             const id = is_pending ? 0 : parseInt(args.body.get("thread_id"));
             const attachmentId = this.mockCreate("ir.attachment", {
                 // datas,
+                is_voice: args.body.get("voice"),
                 mimetype: ufile.type,
                 name: ufile.name,
                 res_id: id,
                 res_model: model,
             });
-            if (args.body.get("voice")) {
-                this.mockCreate("discuss.voice.metadata", { attachment_id: attachmentId });
-            }
             return {
                 data: { "ir.attachment": this._mockIrAttachment_attachmentFormat([attachmentId]) },
             };

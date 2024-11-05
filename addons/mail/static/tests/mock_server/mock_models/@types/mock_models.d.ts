@@ -3,7 +3,6 @@ declare module "mock_models" {
     import { DiscussChannel as DiscussChannel2 } from "@mail/../tests/mock_server/mock_models/discuss_channel";
     import { DiscussChannelMember as DiscussChannelMember2 } from "@mail/../tests/mock_server/mock_models/discuss_channel_member";
     import { DiscussChannelRtcSession as DiscussChannelRtcSession2 } from "@mail/../tests/mock_server/mock_models/discuss_channel_rtc_session";
-    import { DiscussVoiceMetadata as DiscussVoiceMetadata2 } from "@mail/../tests/mock_server/mock_models/discuss_voice_metadata";
     import { IrAttachment as IrAttachment2 } from "@mail/../tests/mock_server/mock_models/ir_attachment";
     import { MailActivity as MailActivity2 } from "@mail/../tests/mock_server/mock_models/mail_activity";
     import { MailActivityType as MailActivityType2 } from "@mail/../tests/mock_server/mock_models/mail_activity_type";
@@ -29,7 +28,6 @@ declare module "mock_models" {
     export interface DiscussChannel extends DiscussChannel2 {}
     export interface DiscussChannelMember extends DiscussChannelMember2 {}
     export interface DiscussChannelRtcSession extends DiscussChannelRtcSession2 {}
-    export interface DiscussVoiceMetadata extends DiscussVoiceMetadata2 {}
     export interface IrAttachment extends IrAttachment2 {}
     export interface MailActivity extends MailActivity2 {}
     export interface MailActivityType extends MailActivityType2 {}
@@ -56,7 +54,6 @@ declare module "mock_models" {
         "discuss.channel": DiscussChannel,
         "discuss.channel.member": DiscussChannelMember,
         "discuss.channel.rtc.session": DiscussChannelRtcSession,
-        "discuss.voice.metadata": DiscussVoiceMetadata,
         "ir.attachment": IrAttachment,
         "mail.activity": MailActivity,
         "mail.activity.type": MailActivityType,
