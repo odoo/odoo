@@ -44,12 +44,8 @@ export class MediaWebsitePlugin extends Plugin {
         const params = { node: mediaEl };
         const sel = this.dependencies.selection.getEditableSelection();
 
-        if (!sel.rangeCount) {
-            return;
-        }
-        const range = sel.getRangeAt(0);
         const editableEl =
-            closestElement(params.node || range.startContainer, ".o_editable") || this.editable;
+            closestElement(params.node || sel.startContainer, ".o_editable") || this.editable;
         this.dependencies.media.openMediaDialog(params, editableEl);
     }
 }

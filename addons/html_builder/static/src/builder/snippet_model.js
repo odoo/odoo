@@ -3,14 +3,15 @@ import { _t } from "@web/core/l10n/translation";
 import { uniqueId } from "@web/core/utils/functions";
 import { Reactive } from "@web/core/utils/reactive";
 import { escape } from "@web/core/utils/strings";
+import { useService } from "@web/core/utils/hooks";
 
 export class SnippetModel extends Reactive {
-    constructor(services, { websiteId, snippetsName }) {
+    constructor(services, { snippetsName }) {
         super();
-        this.websiteId = websiteId;
         this.orm = services.orm;
         this.dialog = services.dialog;
         this.snippetsName = snippetsName;
+        this.websiteService = useService("website");
 
         this.snippetsByCategory = {
             snippet_groups: [],
@@ -52,7 +53,12 @@ export class SnippetModel extends Reactive {
             "ir.ui.view",
             "render_public_asset",
             [this.snippetsName, {}],
-            { context: { rendering_bundle: true, website_id: this.websiteId } }
+            {
+                context: {
+                    rendering_bundle: true,
+                    website_id: this.websiteService.currentWebsite.id,
+                },
+            }
         );
         const snippetsDocument = new DOMParser().parseFromString(html, "text/html");
         this.computeSnippetTemplates(snippetsDocument);

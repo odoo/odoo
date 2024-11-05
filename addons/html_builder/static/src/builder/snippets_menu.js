@@ -1,16 +1,27 @@
 import { Editor } from "@html_editor/editor";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
-import { Component, EventBus, onWillDestroy, onWillStart, useState, useSubEnv } from "@odoo/owl";
+import {
+    Component,
+    EventBus,
+    onWillDestroy,
+    onWillStart,
+    useExternalListener,
+    useState,
+    useSubEnv,
+} from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { registry } from "@web/core/registry";
 import { BuilderOverlayPlugin } from "./plugins/builder_overlay/builder_overlay_plugin";
 import { DropZonePlugin } from "./plugins/drop_zone_plugin";
 import { ElementToolboxPlugin } from "./plugins/element_toolbox_plugin";
+import { HandleDirtyElementPlugin } from "./plugins/handle_dirty_element_plugin";
 import { MediaWebsitePlugin } from "./plugins/media_website_plugin";
 import { SetupEditorPlugin } from "./plugins/setup_editor_plugin";
 import { SnippetModel } from "./snippet_model";
 import { BlockTab, blockTab } from "./snippets_menu_tabs/block_tab";
 import { CustomizeTab, customizeTab } from "./snippets_menu_tabs/customize_tab";
+import { useService } from "@web/core/utils/hooks";
+import { browser } from "@web/core/browser/browser";
 
 const BUILDER_PLUGIN = [
     ElementToolboxPlugin,
@@ -18,6 +29,7 @@ const BUILDER_PLUGIN = [
     DropZonePlugin,
     MediaWebsitePlugin,
     SetupEditorPlugin,
+    HandleDirtyElementPlugin,
 ];
 
 function onIframeLoaded(iframe, callback) {
@@ -36,7 +48,6 @@ export class SnippetsMenu extends Component {
         iframe: { type: Object },
         closeEditor: { type: Function },
         snippetsName: { type: String },
-        websiteId: { type: Number },
     };
 
     setup() {
@@ -51,6 +62,10 @@ export class SnippetsMenu extends Component {
         useHotkey("control+z", () => this.undo());
         useHotkey("control+y", () => this.redo());
         useHotkey("control+shift+z", () => this.redo());
+        this.websiteService = useService("website");
+        this.orm = useService("orm");
+
+        useExternalListener(window, "beforeunload", this.onBeforeUnload);
 
         const editorBus = new EventBus();
         this.editor = new Editor(
@@ -82,7 +97,6 @@ export class SnippetsMenu extends Component {
 
         this.snippetModel = useState(
             new SnippetModel(this.env.services, {
-                websiteId: this.props.websiteId,
                 snippetsName: this.props.snippetsName,
             })
         );
@@ -112,8 +126,17 @@ export class SnippetsMenu extends Component {
         this.props.closeEditor();
     }
 
-    save() {
-        console.log("todo");
+    async save() {
+        this.isSaving = true;
+        const saveProms = [...this.editor.editable.querySelectorAll(".o_dirty")].map(
+            async (dirtyEl) => {
+                await this.editor.shared.media.savePendingImages(dirtyEl);
+                const cleanedEl = this.editor.shared.dirty.handleDirtyElement(dirtyEl);
+                await this.saveView(cleanedEl);
+            }
+        );
+        await Promise.all(saveProms);
+        browser.location.reload();
     }
 
     setTab(tab) {
@@ -126,6 +149,36 @@ export class SnippetsMenu extends Component {
 
     redo() {
         this.editor.shared.history.redo();
+    }
+
+    /**
+     * Saves one (dirty) element of the page.
+     *
+     * @param {HTMLElement} el - the element to save
+     */
+    async saveView(el) {
+        const viewID = Number(el.dataset["oeId"]);
+        const result = this.orm.call(
+            "ir.ui.view",
+            "save",
+            [viewID, el.outerHTML, (!el.dataset["oeExpression"] && el.dataset["oeXpath"]) || null],
+            {
+                context: {
+                    website_id: this.websiteService.currentWebsite.id,
+                    lang: this.websiteService.currentWebsite.metadata.lang,
+                    // TODO: Restore the delay translation feature once it's
+                    // fixed, see commit msg for more info.
+                    delay_translations: false,
+                },
+            }
+        );
+        return result;
+    }
+
+    onBeforeUnload(event) {
+        if (!this.isSaving && this.editor.shared.dirty.isEditableDirty()) {
+            event.returnValue = "Unsaved changes";
+        }
     }
 }
 
