@@ -8,7 +8,7 @@
                 <header>
                     <button name="%(action_pos_payment)d" string="Payment" class="oe_highlight" type="action" invisible="state != 'draft'" />
                     <button name="action_pos_order_invoice" string="Invoice" type="object"
-                            invisible="state not in ['paid', 'done']"/>
+                            invisible="state not in ['paid', 'done'] or account_move"/>
                     <button name="refund" string="Return Products" type="object"
                         invisible="state == 'draft' or not has_refundable_lines"/>
                     <field name="state" widget="statusbar" invisible="state == 'cancel'" statusbar_visible="draft,paid,done"/>
@@ -31,7 +31,7 @@
                         type="object"
                         class="oe_stat_button"
                         icon="fa-pencil-square-o"
-                        invisible="state != 'invoiced'">
+                        invisible="not account_move">
                     </button>
                     <button name="action_view_refund_orders"
                         type="object"
@@ -52,10 +52,10 @@
                     <field name="name"/>
                     <field name="date_order"/>
                     <field name="session_id"  readonly="state != 'draft'"/>
-                    <field string="User" name="user_id" readonly="state in ['done', 'invoiced']"/>
+                    <field string="User" name="user_id" readonly="account_move or state == 'done'"/>
                     <field name="order_edit_tracking" invisible="1"/>
                     <field name="is_edited" readonly="1" invisible="not order_edit_tracking"/>
-                    <field name="partner_id" context="{'res_partner_search_mode': 'customer'}" readonly="state == 'invoiced'"/>
+                    <field name="partner_id" context="{'res_partner_search_mode': 'customer'}" readonly="account_move"/>
                     <field name="fiscal_position_id" options="{'no_create': True}" readonly="state != 'draft'"/>
                 </group>
                 <notebook colspan="4">
@@ -150,7 +150,7 @@
                         <div class="clearfix"/>
                     </page>
                     <page string="Payments" name="payments">
-                        <field name="payment_ids" colspan="4" nolabel="1" readonly="state in ['invoiced', 'done'] or nb_print > 0">
+                        <field name="payment_ids" colspan="4" nolabel="1" readonly="account_move or state == 'done' or nb_print > 0">
                             <list string="Payments" create="1" editable="bottom">
                                 <field name="currency_id" column_invisible="True" />
                                 <field name="payment_date"/>
@@ -173,7 +173,7 @@
                             <group
                                 string="Accounting"
                                 groups="account.group_account_manager"
-                                invisible="not session_move_id or state == 'invoiced'">
+                                invisible="not session_move_id or account_move">
                                 <field name="session_move_id" readonly="1" />
                             </group>
                             <group string="Other Information" name="other_information">
@@ -232,7 +232,7 @@
                         <footer class="flex-wrap">
                             <field name="date_order" class="text-muted text-nowrap"/>
                             <field name="state" widget="label_selection" options="{'classes': {'draft': 'default',
-                            'invoiced': 'success', 'cancel': 'danger'}}" class="ms-auto text-truncate"/>
+                            'done': 'success', 'cancel': 'danger'}}" class="ms-auto text-truncate"/>
                         </footer>
                     </t>
                 </templates>
@@ -272,7 +272,7 @@
         <field name="name">Orders</field>
         <field name="res_model">pos.order</field>
         <field name="view_mode">graph,list,form,kanban,pivot</field>
-        <field name="domain">[('state', 'not in', ['draft', 'cancel', 'invoiced'])]</field>
+        <field name="domain">[('state', 'not in', ['draft', 'cancel']), ('account_move', '!=', False)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No data yet!
@@ -295,7 +295,7 @@
                 <field name="pos_reference"/>
                 <field name="tracking_number" optional="hide"/>
                 <field name="partner_id"/>
-                <field name="user_id" widget="many2one_avatar_user" readonly="state in ['done', 'invoiced']"/>
+                <field name="user_id" widget="many2one_avatar_user" readonly="account_move or state == 'done'"/>
                 <field name="amount_total" sum="Amount total" widget="monetary" decoration-bf="1"/>
                 <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state not in ('draft','cancel')"/>
                 <field name="invoice_status" widget="badge" decoration-success="invoice_status == 'invoiced'" decoration-info="invoice_status == 'to_invoice'"/>
@@ -417,7 +417,7 @@
                 <field name="session_id"/>
                 <field name="config_id"/>
                 <field name="lines" string="Product" filter_domain="[('lines.product_id', 'ilike', self)]"/>
-                <filter string="Invoiced" name="invoiced" domain="[('state', '=', 'invoiced')]"/>
+                <filter string="Invoiced" name="invoiced" domain="[('account_move', '!=', False)]"/>
                 <filter string="Posted" name="posted" domain="[('state', '=', 'done')]"/>
                 <filter string="Cancelled" name="cancelled" domain="[('state', '=', 'cancel')]"/>
                 <separator/>
