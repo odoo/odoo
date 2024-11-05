@@ -225,7 +225,8 @@
                                                 <field name="avatar_128" class="o_kanban_image_fill w-100" widget="image" options="{'img_class': 'object-fit-cover'}" alt="Contact image"/>
                                             </aside>
                                             <main class="ps-2 ps-md-0">
-                                                <field name="name" class="fw-bold"/>
+                                                <field name="name" invisible="not name" class="fw-bold"/>
+                                                <field name="type" invisible="name" class="fw-bold"/>
                                                 <field name="function"/>
                                                 <field name="email" widget="email"/>
                                                 <div t-if="record.type.raw_value != 'contact'">
@@ -407,7 +408,8 @@
                                 <t t-if="!record.is_company.raw_value">
                                     <div class="o_kanban_image_fill position-relative w-100">
                                         <field name="avatar_128" alt="Contact image" class="h-100" widget="image" options="{'img_class': 'object-fit-cover'}"/>
-                                        <field t-if="record.parent_id.raw_value" name="parent_id" class="position-absolute bottom-0 end-0 w-25 bg-light" widget="image" options="{'preview_image': 'image_128', 'img_class': 'object-fit-contain'}"/>
+                                        <field t-if="record.parent_id.raw_value and record.parent_id.image_128" name="parent_id" class="position-absolute bottom-0 end-0 w-25 bg-light" widget="image" options="{'preview_image': 'image_128', 'img_class': 'object-fit-contain'}"/>
+                                        <field t-elif="record.parent_id.raw_value and !record.parent_id.image_128" name="parent_id" class="position-absolute bottom-0 end-0 w-25 bg-light" widget="image" options="{'preview_image': 'avatar_128', 'img_class': 'object-fit-contain'}"/>
                                     </div>
                                 </t>
                                 <t t-else="">
