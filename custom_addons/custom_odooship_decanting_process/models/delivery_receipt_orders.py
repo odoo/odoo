@@ -7,6 +7,8 @@ from odoo.exceptions import UserError,ValidationError
 class DeliveryReceiptOrders(models.Model):
     _name = 'delivery.receipt.orders'
     _description = 'Delivery Receipt Orders'
+    _inherit = 'mail.thread'
+    _order = 'id desc'
 
     name = fields.Char(string='Reference', required=True,default=lambda self: _('New'))
     receipt_number = fields.Char(string="Scan Barcode of receipt", tracking=True)
@@ -24,12 +26,13 @@ class DeliveryReceiptOrders(models.Model):
         ('draft', 'Draft'),
         ('in_progress', 'In Progress'),
         ('done', 'Done'),
-    ], string='Status', readonly=True)
+    ], string='Status', readonly=True, tracking=True)
 
     delivery_receipt_orders_line_ids = fields.One2many(
         comodel_name='delivery.receipt.orders.line',
         inverse_name='delivery_receipt_order_line_id',
-        string='Product Lines'
+        string='Product Lines',
+        tracking=True,
     )
     tenant_code_id = fields.Many2one(
         'tenant.code.configuration',
