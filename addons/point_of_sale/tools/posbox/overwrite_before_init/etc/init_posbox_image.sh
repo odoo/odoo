@@ -154,8 +154,8 @@ PKGS_TO_INSTALL="
     xdotool \
     xinput \
     xserver-xorg-input-evdev \
-    xserver-xorg-video-dummy \
-    xserver-xorg-video-fbdev"
+    xserver-xorg-video-fbdev \
+    xvfb"
 
 echo "Acquire::Retries "16";" > /etc/apt/apt.conf.d/99acquire-retries
 # KEEP OWN CONFIG FILES DURING PACKAGE CONFIGURATION

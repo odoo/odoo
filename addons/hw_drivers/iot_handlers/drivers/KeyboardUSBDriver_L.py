@@ -7,7 +7,6 @@ import json
 import logging
 from lxml import etree
 import os
-from pathlib import Path
 from queue import Queue, Empty
 import re
 import subprocess
@@ -35,7 +34,7 @@ class KeyboardUSBDriver(Driver):
     def __init__(self, identifier, device):
         if not hasattr(KeyboardUSBDriver, 'display'):
             os.environ['XAUTHORITY'] = "/run/lightdm/pi/xauthority"
-            KeyboardUSBDriver.display = xlib.XOpenDisplay(bytes(":0.0", "utf-8"))
+            KeyboardUSBDriver.display = xlib.XOpenDisplay(bytes(":1", "utf-8"))
 
         super(KeyboardUSBDriver, self).__init__(identifier, device)
         self.device_connection = 'direct'
@@ -159,48 +158,37 @@ class KeyboardUSBDriver(Driver):
             KeyboardUSBDriver.keyboard_layout_groups.remove(self.keyboard_layout)
 
         if new_layout:
-            self.keyboard_layout = new_layout.get('layout') or 'us'
+            self.keyboard_layout = new_layout.get('layout', 'us')
             if new_layout.get('variant'):
                 self.keyboard_layout += "(%s)" % new_layout['variant']
         else:
             self.keyboard_layout = 'us'
 
         KeyboardUSBDriver.keyboard_layout_groups.append(self.keyboard_layout)
-        subprocess.call(["setxkbmap", "-display", ":0.0", ",".join(KeyboardUSBDriver.keyboard_layout_groups)])
+        subprocess.run(["setxkbmap", "-display", ":1", ",".join(KeyboardUSBDriver.keyboard_layout_groups)], check=False)
 
         # Close then re-open display to refresh the mapping
         xlib.XCloseDisplay(KeyboardUSBDriver.display)
-        KeyboardUSBDriver.display = xlib.XOpenDisplay(bytes(":0.0", "utf-8"))
+        KeyboardUSBDriver.display = xlib.XOpenDisplay(bytes(":1", "utf-8"))
 
     def save_layout(self, layout):
         """Save the layout to a file on the box to read it when restarting it.
         We need that in order to keep the selected layout after a reboot.
 
         Args:
-            new_layout (dict): A dict containing two keys:
+            layout (dict): A dict containing two keys:
                 - layout (str): The layout code
                 - variant (str): An optional key to represent the variant of the
                                  selected layout
         """
-        file_path = Path.home() / 'odoo-keyboard-layouts.conf'
-        if file_path.exists():
-            data = json.loads(file_path.read_text())
-        else:
-            data = {}
-        data[self.device_identifier] = layout
-        helpers.write_file('odoo-keyboard-layouts.conf', json.dumps(data))
+        helpers.update_conf({self.device_identifier: layout.get('layout')}, section='layouts')
 
     def load_layout(self):
-        """Read the layout from the saved filed and set it as current layout.
-        If no file or no layout is found we use 'us' by default.
+        """Read the layout from the config file and set it as current layout.
+        If no layout is found we use 'us' by default.
         """
-        file_path = Path.home() / 'odoo-keyboard-layouts.conf'
-        if file_path.exists():
-            data = json.loads(file_path.read_text())
-            layout = data.get(self.device_identifier, {'layout': 'us'})
-        else:
-            layout = {'layout': 'us'}
-        self._change_keyboard_layout(layout)
+        layout = helpers.get_conf(self.device_identifier, section='layouts') or 'us'
+        self._change_keyboard_layout({'layout': layout})
 
     def _action_default(self, data):
         self.data['value'] = ''
@@ -210,15 +198,11 @@ class KeyboardUSBDriver(Driver):
         """Read the device type from the saved filed and set it as current type.
         If no file or no device type is found we try to detect it automatically.
         """
-        device_name = self.device_name.lower()
-        scanner_name = ['barcode', 'scanner', 'reader']
-        is_scanner = any(x in device_name for x in scanner_name) or self.dev.interface_protocol == '0'
-
-        file_path = Path.home() / 'odoo-keyboard-is-scanner.conf'
-        if file_path.exists():
-            data = json.loads(file_path.read_text())
-            is_scanner = data.get(self.device_identifier, {}).get('is_scanner', is_scanner)
-        return is_scanner
+        return (
+            helpers.get_conf(self.device_identifier, section='scanners')
+            or any(name in self.device_name.lower() for name in ['barcode', 'scanner', 'reader'])
+            or self.dev.interface_protocol == '0'
+        )
 
     def _keyboard_input(self, scancode):
         """Deal with a keyboard input. Send the character corresponding to the
@@ -255,23 +239,21 @@ class KeyboardUSBDriver(Driver):
         """Save the type of device.
         We need that in order to keep the selected type of device after a reboot.
         """
-        is_scanner = {'is_scanner': data.get('is_scanner')}
-        file_path = Path.home() / 'odoo-keyboard-is-scanner.conf'
-        if file_path.exists():
-            data = json.loads(file_path.read_text())
-        else:
-            data = {}
-        data[self.device_identifier] = is_scanner
-        helpers.write_file('odoo-keyboard-is-scanner.conf', json.dumps(data))
-        self._set_device_type('scanner') if is_scanner.get('is_scanner') else self._set_device_type()
+        is_scanner = data.get('is_scanner')
+        helpers.update_conf({self.device_identifier: is_scanner}, section='scanners')
+        self._set_device_type('scanner') if is_scanner else self._set_device_type()
 
     def _update_layout(self, data):
-        layout = {
-            'layout': data.get('layout'),
-            'variant': data.get('variant'),
-        }
-        self._change_keyboard_layout(layout)
-        self.save_layout(layout)
+        """Action to update the layout of the current device to what
+        is specified in data.
+        This action also calls _save_is_scanner to reduce the number of
+        requests to the box.
+
+        :param dict data: Dict containing new layout, variant and eventually is_scanner
+        """
+        self._save_is_scanner(data)
+        self._change_keyboard_layout(data)
+        self.save_layout(data)
 
     def _set_device_type(self, device_type='keyboard'):
         """Modify the device type between 'keyboard' and 'scanner'

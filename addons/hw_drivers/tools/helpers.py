@@ -579,7 +579,7 @@ def get_conf(key=None, section='iot.box'):
     :param section: The section to get the key from (Default: iot.box).
     :return: The value of the key provided or None if it doesn't exist, or full conf object if no key is provided.
     """
-    conf = configparser.RawConfigParser()
+    conf = configparser.RawConfigParser(delimiters='=')
     conf.read(path_file("odoo.conf"))
 
     return conf.get(section, key, fallback=None) if key else conf  # Return the key's value or the configparser object
