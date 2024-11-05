@@ -107,7 +107,7 @@ class PosPreset(models.Model):
             ('preset_id', '=', self.id),
             ('session_id.state', '=', 'opened'),
             ('preset_time', '!=', False),
-            ('state', 'in', ['draft', 'paid', 'invoiced']),
+            ('state', 'in', ['draft', 'paid']),
             ('create_date', '>=', fields.Datetime.now() - timedelta(days=1))
         ])
         for order in orders:

@@ -58,7 +58,7 @@ class PosPayment(models.Model):
     @api.constrains('amount')
     def _check_amount(self):
         for payment in self:
-            if payment.pos_order_id.state in ['invoiced', 'done']:
+            if payment.pos_order_id.state == 'done' or payment.pos_order_id.account_move:
                 raise ValidationError(_('You cannot edit a payment for a posted order.'))
             elif payment.pos_order_id.nb_print > 0:
                 raise ValidationError(_('You cannot edit a payment for a printed order.'))

@@ -279,7 +279,7 @@ class PosOrder(models.Model):
         help='The rate of the currency to the currency of rate applicable at the date of the order')
 
     state = fields.Selection(
-        [('draft', 'New'), ('cancel', 'Cancelled'), ('paid', 'Paid'), ('done', 'Posted'), ('invoiced', 'Invoiced')],
+        [('draft', 'New'), ('cancel', 'Cancelled'), ('paid', 'Paid'), ('done', 'Posted')],
         'Status', readonly=True, copy=False, default='draft', index=True)
 
     account_move = fields.Many2one('account.move', string='Invoice', readonly=True, copy=False, index="btree_not_null")
@@ -506,7 +506,7 @@ class PosOrder(models.Model):
             if vals.get('payment_ids'):
                 order._compute_prices()
                 totally_paid_or_more = float_compare(order.amount_paid, order.amount_total, precision_rounding=order.currency_id.rounding)
-                if totally_paid_or_more < 0 and order.state in ['paid', 'done', 'invoiced']:
+                if totally_paid_or_more < 0 and order.state in ['paid', 'done']:
                     raise UserError(_('The paid amount is different from the total amount of the order.'))
                 elif totally_paid_or_more > 0 and order.state == 'paid':
                     list_line.append(_("Warning, the paid amount is higher than the total amount. (Difference: %s)", formatLang(self.env, order.amount_paid - order.amount_total, currency_obj=order.currency_id)))
@@ -957,7 +957,7 @@ class PosOrder(models.Model):
             move_vals = order._prepare_invoice_vals()
             new_move = order._create_invoice(move_vals)
 
-            order.write({'account_move': new_move.id, 'state': 'invoiced'})
+            order.write({'account_move': new_move.id, 'state': 'done'})
             new_move.sudo().with_company(order.company_id).with_context(skip_invoice_sync=True)._post()
 
             moves += new_move

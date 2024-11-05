@@ -657,7 +657,6 @@ export class PosOrder extends Base {
         return [];
     }
 
-    // sjai
     _reduceTotalDiscountCallback(sum, orderLine) {
         let discountUnitPrice =
             orderLine.getUnitDisplayPriceBeforeDiscount() * (orderLine.getDiscount() / 100);
