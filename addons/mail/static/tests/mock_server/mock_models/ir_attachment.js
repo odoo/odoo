@@ -36,9 +36,6 @@ export class IrAttachment extends webModels.IrAttachment {
         const kwargs = getKwArgs(arguments, "ids", "store", "fields");
         fields = kwargs.fields;
 
-        /** @type {import("mock_models").DiscussVoiceMetadata} */
-        const DiscussVoiceMetadata = this.env["discuss.voice.metadata"];
-
         if (!fields) {
             fields = [
                 "checksum",
@@ -51,13 +48,14 @@ export class IrAttachment extends webModels.IrAttachment {
                 "thread",
                 "type",
                 "url",
+                "voice",
             ];
         }
 
         for (const attachment of this.browse(ids)) {
             const [data] = this._read_format(
                 attachment.id,
-                fields.filter((field) => !["filename", "size", "thread"].includes(field)),
+                fields.filter((field) => !["filename", "size", "thread", "voice"].includes(field)),
                 makeKwArgs({ load: false })
             );
             if (fields.includes("filename")) {
@@ -78,9 +76,8 @@ export class IrAttachment extends webModels.IrAttachment {
                           )
                         : false;
             }
-            const voice = DiscussVoiceMetadata.browse(attachment.id)[0];
-            if (voice) {
-                data.voice = true;
+            if (fields.includes("voice")) {
+                data.voice = attachment.is_voice;
             }
             store.add(this.browse(attachment.id), data);
         }

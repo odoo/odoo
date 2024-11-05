@@ -107,8 +107,6 @@ export function registerRoute(route, handler) {
 registerRoute("/mail/attachment/upload", mail_attachment_upload);
 /** @type {RouteCallback}} */
 async function mail_attachment_upload(request) {
-    /** @type {import("mock_models").DiscussVoiceMetadata} */
-    const DiscussVoiceMetadata = this.env["discuss.voice.metadata"];
     /** @type {import("mock_models").IrAttachment} */
     const IrAttachment = this.env["ir.attachment"];
 
@@ -119,14 +117,12 @@ async function mail_attachment_upload(request) {
     const id = is_pending ? 0 : parseInt(body.get("thread_id"));
     const attachmentId = IrAttachment.create({
         // datas,
+        is_voice: body.get("voice"),
         mimetype: ufile.type,
         name: ufile.name,
         res_id: id,
         res_model: model,
     });
-    if (body.get("voice")) {
-        DiscussVoiceMetadata.create({ attachment_id: attachmentId });
-    }
     return {
         data: new mailDataHelpers.Store(IrAttachment.browse(attachmentId)).get_result(),
     };
