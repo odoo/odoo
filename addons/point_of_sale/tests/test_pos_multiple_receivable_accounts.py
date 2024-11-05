@@ -90,7 +90,7 @@ class TestPoSMultipleReceivableAccounts(TestPoSCommon):
             self.assertAlmostEqual(orders_total, self.pos_session.total_payments_amount, msg='Total order amount should be equal to the total payment amount.')
 
             # check if there is one invoiced order
-            self.assertEqual(len(self.pos_session.order_ids.filtered(lambda order: order.state == 'invoiced')), 1, 'There should only be one invoiced order.')
+            self.assertEqual(len(self.pos_session.order_ids.filtered(lambda order: order.account_move)), 1, 'There should only be one invoiced order.')
 
         self._run_test({
             'payment_methods': self.cash_pm1 | self.bank_pm1,
@@ -192,7 +192,7 @@ class TestPoSMultipleReceivableAccounts(TestPoSCommon):
             self.assertAlmostEqual(orders_total, self.pos_session.total_payments_amount, msg='Total order amount should be equal to the total payment amount.')
 
             # check if there is one invoiced order
-            self.assertEqual(len(self.pos_session.order_ids.filtered(lambda order: order.state == 'invoiced')), 3, 'All orders should be invoiced.')
+            self.assertEqual(len(self.pos_session.order_ids.filtered(lambda order: order.account_move)), 3, 'All orders should be invoiced.')
 
         self._run_test({
             'payment_methods': self.cash_pm1 | self.bank_pm1,

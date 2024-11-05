@@ -225,12 +225,12 @@ class TestPoSBasicConfig(TestPoSCommon):
             invoiced_order = self.pos_session.order_ids.filtered(lambda order: order.account_move)
             self.assertEqual(1, len(invoiced_order), 'Only one order is invoiced in this test.')
 
-            # check state of orders before validating the session.
-            self.assertEqual('invoiced', invoiced_order.state, msg="state should be 'invoiced' for invoiced orders.")
+            # check account_move of orders before validating the session.
+            self.assertTrue(invoiced_order.account_move, msg="Invoiced orders must have account_move.")
             uninvoiced_orders = self.pos_session.order_ids - invoiced_order
             self.assertTrue(
-                all([order.state == 'paid' for order in uninvoiced_orders]),
-                msg="state should be 'paid' for uninvoiced orders before validating the session."
+                all(not order.account_move for order in uninvoiced_orders),
+                msg="Uninvoiced orders do not have account_move."
             )
 
         def _after_closing_cb():

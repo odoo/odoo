@@ -19,7 +19,7 @@ class DigestDigest(models.Model):
             'pos.order',
             'kpi_pos_total_value',
             date_field='date_order',
-            additional_domain=[('state', 'not in', ['draft', 'cancel', 'invoiced'])],
+            additional_domain=[('state', 'not in', ['draft', 'cancel']), ('account_move', '=', False)],
             sum_field='amount_total',
         )
 
