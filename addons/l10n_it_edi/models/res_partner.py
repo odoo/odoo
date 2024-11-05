@@ -146,7 +146,7 @@ class ResPartner(models.Model):
             if self.country_code
             else self.vat.startswith("IT")
         ):
-            self.l10n_it_codice_fiscale = self._l10n_it_normalize_codice_fiscale(self.vat)
+            self.l10n_it_codice_fiscale = self._l10n_it_edi_normalized_codice_fiscale(self.vat)
         else:
             self.l10n_it_codice_fiscale = False
 

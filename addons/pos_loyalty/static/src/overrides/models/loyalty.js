@@ -1185,9 +1185,10 @@ patch(Order.prototype, {
             if (!line.get_quantity() || !line.price) {
                 continue;
             }
+            const product_id = line.comboParent?.product.id || line.get_product().id;
             remainingAmountPerLine[line.cid] = line.get_price_with_tax();
             if (
-                applicableProducts.has(line.get_product().id) ||
+                applicableProducts.has(product_id) ||
                 (line.reward_product_id && applicableProducts.has(line.reward_product_id))
             ) {
                 linesToDiscount.push(line);

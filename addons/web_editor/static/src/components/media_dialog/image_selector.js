@@ -71,6 +71,7 @@ export class ImageSelector extends FileSelector {
         this.MIN_ROW_HEIGHT = 128;
 
         this.fileMimetypes = IMAGE_MIMETYPES.join(',');
+        this.isImageField = !!this.props.media?.closest("[data-oe-type=image]") || !!this.env.addFieldImage;
     }
 
     get canLoadMore() {
@@ -162,6 +163,23 @@ export class ImageSelector extends FileSelector {
                     resolve();
                 };
                 imageEl.onload = () => {
+                    const urlPathname = new URL(url, window.location.href).pathname;
+                    const imageExtension = IMAGE_EXTENSIONS.find(format => urlPathname.endsWith(format));
+                    if (this.isImageField && imageExtension === ".webp") {
+                        // Do not allow the user to replace an image field by a
+                        // webp CORS protected image as we are not currently
+                        // able to manage the report creation if such images are
+                        // in there (as the equivalent jpeg can not be
+                        // generated). It also causes a problem for resize
+                        // operations as 'libwep' can not be used.
+                        this.notificationService.add(_t(
+                            "You can not replace a field by this image. If you want to use this image, first save it on your computer and then upload it here."
+                        ), {
+                            title: _t("Error"),
+                            sticky: true,
+                        });
+                        return resolve();
+                    }
                     super.uploadUrl(url).then(resolve);
                 };
                 imageEl.src = url;
@@ -184,6 +202,17 @@ export class ImageSelector extends FileSelector {
 
     async fetchAttachments(limit, offset) {
         const attachments = await super.fetchAttachments(limit, offset);
+        if (this.isImageField) {
+            // The image is a field; mark the attachments if they are linked to
+            // a webp CORS protected image. Indeed, in this case, they should
+            // not be selectable on the media dialog (due to a problem of image
+            // resize and report creation).
+            for (const attachment of attachments) {
+                if (attachment.mimetype === "image/webp" && await weUtils.isSrcCorsProtected(attachment.image_src)) {
+                    attachment.unselectable = true;
+                }
+            }
+        }
         // Color-substitution for dynamic SVG attachment
         const primaryColors = {};
         for (let color = 1; color <= 5; color++) {
@@ -274,6 +303,15 @@ export class ImageSelector extends FileSelector {
     }
 
     async onClickAttachment(attachment) {
+        if (attachment.unselectable) {
+            this.notificationService.add(_t(
+                "You can not replace a field by this image. If you want to use this image, first save it on your computer and then upload it here."
+            ), {
+                title: _t("Error"),
+                sticky: true,
+            });
+            return;
+        }
         this.selectAttachment(attachment);
         if (!this.props.multiSelect) {
             await this.props.save();
