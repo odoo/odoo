@@ -1,5 +1,5 @@
 import { Component, useState } from "@odoo/owl";
-import { useSelfOrder } from "@pos_self_order/app/self_order_service";
+import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
 import { groupBy } from "@web/core/utils/arrays";
 
