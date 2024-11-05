@@ -1522,6 +1522,7 @@ export function makeActionManager(env, router = _router) {
                 ];
                 const context = {
                     ...action.context,
+                    ...(embeddedAction.context ? makeContext([embeddedAction.context]) : {}),
                     active_id: params.resId,
                     active_model: params.resModel,
                     current_embedded_action_id: embeddedActionId,
