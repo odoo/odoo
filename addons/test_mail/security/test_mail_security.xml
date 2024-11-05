@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
 
+    <!-- Having rules triggers call to check_access_rules and allow to spot crashes
+    notably when records are unlinked. Without rule, method is not called and
+    some crashes are not trigerred in tests. -->
+    <record id="ir_rule_mail_test_simple_dummy" model="ir.rule">
+        <field name="name">Dummy rule, just to enable rule evaluation, shows some specific errors</field>
+        <field name="model_id" ref="test_mail.model_mail_test_simple"/>
+        <field name="domain_force">[('email_from', '!=', 'donotsetmewiththisvalue')]</field>
+    </record>
+
     <record id="ir_rule_mail_test_access_public" model="ir.rule">
         <field name="name">Public: public only</field>
         <field name="model_id" ref="test_mail.model_mail_test_access"/>
