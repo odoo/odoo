@@ -2,7 +2,7 @@ import { PosOrder } from "@point_of_sale/app/models/pos_order";
 import { patch } from "@web/core/utils/patch";
 import { roundDecimals, roundPrecision } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
-import { loyaltyIdsGenerator } from "./pos_store";
+import { loyaltyIdsGenerator } from "@pos_loyalty/app/services/pos_store";
 import {
     compute_price_force_price_include,
     getTaxesAfterFiscalPosition,

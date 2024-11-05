@@ -1,6 +1,6 @@
 import { Component, whenReady } from "@odoo/owl";
 import { MainComponentsContainer } from "@web/core/main_components_container";
-import { useSelfOrder } from "@pos_self_order/app/self_order_service";
+import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { Router } from "@pos_self_order/app/router";
 import { LandingPage } from "@pos_self_order/app/pages/landing_page/landing_page";
 import { ProductListPage } from "@pos_self_order/app/pages/product_list_page/product_list_page";
