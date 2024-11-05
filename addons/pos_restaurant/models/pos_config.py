@@ -87,7 +87,7 @@ class PosConfig(models.Model):
             self._load_bar_data()
 
         journal, payment_methods_ids = self._create_journal_and_payment_methods(cash_journal_vals={'name': 'Cash Bar', 'show_on_dashboard': False})
-        bar_categories = self.get_categories([
+        bar_categories = self.get_record_by_ref([
             'pos_restaurant.pos_category_cocktails',
             'pos_restaurant.pos_category_soft_drinks',
         ])
@@ -114,7 +114,7 @@ class PosConfig(models.Model):
             self._load_restaurant_data()
 
         journal, payment_methods_ids = self._create_journal_and_payment_methods(cash_journal_vals={'name': 'Cash Restaurant', 'show_on_dashboard': False})
-        restaurant_categories = self.get_categories([
+        restaurant_categories = self.get_record_by_ref([
             'pos_restaurant.food',
             'pos_restaurant.drinks',
         ])

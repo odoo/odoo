@@ -16,9 +16,15 @@
                 <div t-if="props.data.company.email" t-esc="props.data.company.email" />
                 <div t-if="props.data.company.website" t-esc="props.data.company.website" />
                 <div t-if="props.data.header" style="white-space:pre-line" t-esc="props.data.header" />
-                <div t-if="props.data.cashier" class="cashier">
+                <div t-if="props.data.cashier and !props.data.addressOnTicket" class="cashier">
                     <div>--------------------------------</div>
                     <div t-esc="props.data.cashier" />
+                </div>
+                <div t-elif="props.data.addressOnTicket">
+                    <div>--------------------------------</div>
+                    Delivery to: <t t-esc="props.data.addressOnTicket.name" /><br/>
+                    <t t-esc="props.data.addressOnTicket.contact_address" /><br/>
+                    <t t-esc="props.data.addressOnTicket.phone" />
                 </div>
             </div>
         </div>
