@@ -1,14 +1,12 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
 import logging
-import threading
 
 from lxml.builder import E
 
 from odoo.addons.iap.tools import iap_tools
-from odoo import api, fields, models, _
+from odoo import api, fields, models, modules, _
 from odoo.tools.mail import email_domain_extract, url_domain_extract
 
 _logger = logging.getLogger(__name__)
@@ -29,7 +27,7 @@ class ResCompany(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
-        if not getattr(threading.current_thread(), 'testing', False):
+        if not modules.module.current_test:
             res.iap_enrich_auto()
         return res
 

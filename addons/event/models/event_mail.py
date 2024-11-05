@@ -1,13 +1,11 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import threading
 
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models, modules, tools
 from odoo.addons.base.models.ir_qweb import QWebException
 from odoo.tools import exception_to_unicode
 from odoo.tools.translate import _
@@ -164,7 +162,7 @@ class EventMail(models.Model):
         'after_event' or 'before_event' (and their negative counterparts).
         This is a global communication done once i.e. we do not track each
         registration individually. """
-        auto_commit = not getattr(threading.current_thread(), 'testing', False)
+        auto_commit = not modules.module.current_test
         batch_size = int(
             self.env['ir.config_parameter'].sudo().get_param('mail.batch_size')
         ) or 50  # be sure to not have 0, as otherwise no iteration is done
@@ -228,7 +226,7 @@ class EventMail(models.Model):
         self.ensure_one()
         context_registrations = self.env.context.get('event_mail_registration_ids')
 
-        auto_commit = not getattr(threading.current_thread(), 'testing', False)
+        auto_commit = not modules.module.current_test
         batch_size = int(
             self.env['ir.config_parameter'].sudo().get_param('mail.batch_size')
         ) or 50  # be sure to not have 0, as otherwise no iteration is done
@@ -484,6 +482,6 @@ class EventMail(models.Model):
                 self.env.invalidate_all()
                 scheduler._warn_error(e)
             else:
-                if autocommit and not getattr(threading.current_thread(), 'testing', False):
+                if autocommit and not modules.module.current_test:
                     self.env.cr.commit()
         return True
