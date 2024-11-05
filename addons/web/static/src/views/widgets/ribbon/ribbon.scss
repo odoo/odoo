@@ -39,12 +39,9 @@
     }
 
     &-top-right {
-        --Ribbon-gap-top-default: calc(var(--formView-sheet-padding-y, 0) * -1 - #{$border-width});
-        --Ribbon-gap-right-default: -#{$border-width};
-
         pointer-events: none;
-        margin-top: var(--Ribbon-gap-top, var(--Ribbon-gap-top-default));
-        right: var(--Ribbon-gap-right, var(--Ribbon-gap-right-default));
+        top: 0;
+        right: 0;
 
         & span {
             --Ribbon-top-position-default: calc((var(--Ribbon-height-default) * -1));
