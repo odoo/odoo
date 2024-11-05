@@ -42,6 +42,7 @@
         'views/res_partner_view.xml',
         'views/report_userlabel.xml',
         'views/report_saledetails.xml',
+        'views/pos_preset_view.xml',
         'views/point_of_sale_dashboard.xml',
         'views/report_invoice.xml',
         'views/pos_printer_view.xml',

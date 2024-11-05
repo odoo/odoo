@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
+        <record model="pos.preset" id="pos_takein_preset">
+            <field name="name">Eat In</field>
+            <field name="color">4</field>
+        </record>
+        <record model="pos.preset" id="pos_takeout_preset">
+            <field name="name">Takeout</field>
+            <field name="color">3</field>
+            <field name="address_on_ticket">True</field>
+        </record>
+        <record model="pos.preset" id="pos_delivery_preset">
+            <field name="name">Delivery</field>
+            <field name="color">2</field>
+        </record>
         <function model="pos.config" name="load_onboarding_furniture_scenario" />
         <function model="pos.config" name="load_onboarding_clothes_scenario" />
         <function model="pos.config" name="load_onboarding_bakery_scenario" />
