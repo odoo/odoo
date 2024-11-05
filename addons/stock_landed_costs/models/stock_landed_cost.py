@@ -148,6 +148,12 @@ class StockLandedCost(models.Model):
                     })
                     linked_layer.remaining_value += cost_to_add
                     valuation_layer_ids.append(valuation_layer.id)
+                # If there is product free but none in obtained above, some operation
+                # (i.e., costing method change) has left this LC in an illogical state.
+                elif line.product_id.free_qty:
+                    raise UserError(_('An inventory valuation operation occurred, making it '
+                                      'impossible to validate this landed cost while linked to the '
+                                      'following transfer: %s', line.move_id.picking_id.name))
                 # Update the AVCO/FIFO
                 product = line.move_id.product_id
                 if product.cost_method in ['average', 'fifo']:

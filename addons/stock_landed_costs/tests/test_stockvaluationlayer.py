@@ -3,6 +3,8 @@
 
 """ Implementation of "INVENTORY VALUATION TESTS (With valuation layers)" spreadsheet. """
 
+from odoo import Command
+from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
 from odoo.addons.stock_landed_costs.tests.common import TestStockLandedCostsCommon
 
@@ -268,6 +270,49 @@ class TestStockValuationLCFIFO(TestStockValuationLCCommon):
         self._make_lc(move1, 250)
         self.assertEqual(move1.stock_valuation_layer_ids[0].remaining_value, 10250)
 
+    def test_change_cost_method_create_lc_post_bill_svl_not_created(self):
+        """
+        """
+        self.env.company.anglo_saxon_accounting = True
+        product = self.product1
+        product.standard_price = 2
+        product.product_tmpl_id.categ_id.write({
+            'property_valuation': 'manual_periodic',
+            'property_cost_method': 'standard',
+        })
+
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_qty': 10,
+            })],
+        })
+        purchase_order.button_confirm()
+        purchase_order.picking_ids[0].move_ids[0].quantity = 10
+        purchase_order.picking_ids[0].button_validate()
+
+        with Form(product.product_tmpl_id.categ_id) as prod_categ_form:
+            prod_categ_form.property_valuation = 'real_time'
+            prod_categ_form.property_cost_method = 'fifo'
+            prod_categ_form.property_stock_valuation_account_id = self.company_data['default_account_stock_valuation']
+            prod_categ_form.property_stock_account_input_categ_id = self.company_data['default_account_stock_in']
+            prod_categ_form.property_stock_account_output_categ_id = self.company_data['default_account_stock_out']
+
+        purchase_order.action_create_invoice()
+        bill = purchase_order.invoice_ids[0]
+        bill.invoice_date = '2000-05-05'
+        with Form(bill) as bill_form:
+            with bill_form.invoice_line_ids.new() as inv_line:
+                inv_line.product_id = self.landed_cost
+                inv_line.price_unit = 100
+                inv_line.is_landed_costs_line = True
+        action = bill.button_create_landed_costs()
+        lc_form = Form(self.env[action['res_model']].browse(action['res_id']))
+        lc_form.picking_ids.add(purchase_order.picking_ids[0])
+        lc = lc_form.save()
+        with self.assertRaises(UserError):
+            lc.button_validate()
 
 @tagged('-at_install', 'post_install')
 class TestStockValuationLCAVCO(TestStockValuationLCCommon):
