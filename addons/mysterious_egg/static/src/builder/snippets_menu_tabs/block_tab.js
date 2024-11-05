@@ -81,11 +81,19 @@ export class BlockTab extends Component {
     }
 
     get snippetGroups() {
-        return this.snippetsByCategory.snippet_groups;
+        const snippetGroups = this.snippetsByCategory.snippet_groups;
+        if (this.hasCustomGroup) {
+            return snippetGroups;
+        }
+        return snippetGroups.filter((snippet) => snippet.groupName !== "custom");
     }
 
     get innerContentSnippets() {
         return this.snippetsByCategory.snippet_content;
+    }
+
+    get hasCustomGroup() {
+        return !!this.snippetsByCategory.snippet_custom.length;
     }
 
     getSnippet(category, id) {
@@ -99,7 +107,7 @@ export class BlockTab extends Component {
             AddSnippetDialog,
             {
                 selectedSnippet: snippet,
-                snippetGroups: this.snippetGroups,
+                snippetGroups: this.snippetGroups.filter((snippet) => !snippet.moduleId),
                 snippetStructures: this.snippetsByCategory.snippet_structure,
                 selectSnippet: (snippet) => {
                     this.props.editor.shared.addElementToCenter(snippet.content.cloneNode(true));
@@ -174,6 +182,7 @@ export class BlockTab extends Component {
             const snippets = [];
             for (const snippetEl of snippetCategory.children) {
                 const snippet = {
+                    id: uniqueId(),
                     title: snippetEl.getAttribute("name"),
                     name: snippetEl.children[0].dataset.snippet,
                     thumbnailSrc: escape(snippetEl.dataset.oeThumbnail),
@@ -181,12 +190,10 @@ export class BlockTab extends Component {
                 const moduleId = snippetEl.dataset.moduleId;
                 if (moduleId) {
                     Object.assign(snippet, {
-                        id: uniqueId(moduleId),
                         moduleId,
                     });
                 } else {
                     Object.assign(snippet, {
-                        id: parseInt(snippetEl.dataset.oeSnippetId),
                         content: snippetEl.children[0],
                     });
                 }
