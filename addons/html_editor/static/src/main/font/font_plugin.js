@@ -322,9 +322,7 @@ export class FontPlugin extends Plugin {
             return;
         }
         // Check if unremovable.
-        if (
-            this.getResource("isUnremovable").some((predicate) => predicate(closestHandledElement))
-        ) {
+        if (this.getResource("unremovable_node_predicates").some((p) => p(closestHandledElement))) {
             return;
         }
         const p = this.document.createElement("p");
