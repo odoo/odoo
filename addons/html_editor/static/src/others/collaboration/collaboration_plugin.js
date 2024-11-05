@@ -27,7 +27,7 @@ export class CollaborationPlugin extends Plugin {
     static dependencies = ["history", "selection", "sanitize"];
     resources = {
         set_attribute_overrides: this.setAttribute.bind(this),
-        process_history_step: this.processHistoryStep.bind(this),
+        history_step_processors: this.processHistoryStep.bind(this),
         unreversible_step_predicates: this.isUnreversibleStep.bind(this),
         history_cleaned_handlers: this.onHistoryClean.bind(this),
         history_reset_handlers: this.onHistoryReset.bind(this),

@@ -94,8 +94,8 @@ export class PowerButtonsPlugin extends Plugin {
             !this.services.ui.isSmall &&
             !closestElement(editableSelection.anchorNode, "td") &&
             !block.style.textAlign &&
-            this.getResource("showPowerButtons").every((showPowerButtons) =>
-                showPowerButtons(editableSelection)
+            this.getResource("power_buttons_visibility_predicates").every((predicate) =>
+                predicate(editableSelection)
             )
         ) {
             this.powerButtonsContainer.classList.remove("d-none");

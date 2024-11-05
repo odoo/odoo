@@ -46,7 +46,7 @@ function getConfig(components) {
     return {
         Plugins: [...MAIN_PLUGINS, EmbeddedComponentPlugin],
         resources: {
-            embeddedComponents: components,
+            embedded_components: components,
         },
     };
 }
