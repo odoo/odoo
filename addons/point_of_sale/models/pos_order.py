@@ -52,7 +52,8 @@ class PosOrder(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return [('state', '=', 'draft'), ('session_id', '=', data['pos.session'][0]['id'])]
+        preset_ids = data['pos.config'][0]['available_preset_ids'] + [data['pos.config'][0]['default_preset_id']]
+        return ['|', ('preset_id', 'in', preset_ids), ('state', '=', 'draft'), ('session_id', '=', data['pos.session'][0]['id'])]
 
     @api.model
     def _process_order(self, order, existing_order):
@@ -289,7 +290,7 @@ class PosOrder(models.Model):
     failed_pickings = fields.Boolean(compute='_compute_picking_count')
     picking_type_id = fields.Many2one('stock.picking.type', related='session_id.config_id.picking_type_id', string="Operation Type", readonly=False)
     procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
-
+    preset_id = fields.Many2one('pos.preset', string='Preset')
     floating_order_name = fields.Char(string='Order Name')
     general_customer_note = fields.Text(string='General Customer Note')
     internal_note = fields.Text(string='Internal Note')
@@ -313,6 +314,7 @@ class PosOrder(models.Model):
     session_move_id = fields.Many2one('account.move', string='Session Journal Entry', related='session_id.move_id', readonly=True, copy=False)
     to_invoice = fields.Boolean('To invoice', copy=False)
     shipping_date = fields.Date('Shipping Date')
+    preset_time = fields.Datetime(string='Hour', help="Hour of the day for the order")
     is_invoiced = fields.Boolean('Is Invoiced', compute='_compute_is_invoiced')
     is_tipped = fields.Boolean('Is this already tipped?', readonly=True)
     tip_amount = fields.Float(string='Tip Amount', digits=0, readonly=True)
