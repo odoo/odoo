@@ -61,6 +61,7 @@ from .tools.func import frame_codeinfo
 from .tools.misc import CountingStream, clean_context, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT, get_lang
 from .tools.translate import _
 from .tools import date_utils
+from .tools import float_round
 from .tools import populate
 from .tools import unique
 from .tools.lru import LRU
@@ -6043,6 +6044,14 @@ Fields:
                 ))
 
         if onchange in ("1", "true"):
+            # before calling on change ensure float are properly rounded
+            # as expected in configuration
+            field = self._fields[field_name]
+            if field.type == 'float' and field._digits:
+                self[field_name] = float_round(
+                    self[field_name],
+                    precision_digits=field.get_digits(self.env)[1]
+                )
             for method in self._onchange_methods.get(field_name, ()):
                 method_res = method(self)
                 process(method_res)
