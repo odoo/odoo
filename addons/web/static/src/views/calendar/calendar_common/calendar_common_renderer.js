@@ -1,4 +1,4 @@
-import { getLocalWeekNumber, is24HourFormat } from "@web/core/l10n/dates";
+import { getLocalYearAndWeek, is24HourFormat } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { renderToString } from "@web/core/utils/render";
 import { getColor } from "../colors";
@@ -114,7 +114,7 @@ export class CalendarCommonRenderer extends Component {
                 week: this.props.model.scale === "month" || this.env.isSmall ? "numeric" : "long",
             },
             weekends: this.props.isWeekendVisible,
-            weekNumberCalculation: (date) => getLocalWeekNumber(date),
+            weekNumberCalculation: (date) => getLocalYearAndWeek(date).week,
             weekNumbers: true,
             dayHeaderContent: this.getHeaderHtml,
             eventDisplay: "block", // Restore old render in daygrid view for single-day timed events
