@@ -13,8 +13,10 @@ import {
     webModels,
     toggleSearchBarMenu,
     toggleMenuItem,
+    MockServer,
 } from "@web/../tests/web_test_helpers";
 
+import { deepEqual } from "@web/core/utils/objects";
 import { browser } from "@web/core/browser/browser";
 import { WebClient } from "@web/webclient/webclient";
 import { router } from "@web/core/browser/router";
@@ -126,6 +128,7 @@ defineActions([
             [false, "list"],
             [1, "kanban"],
             [false, "form"],
+            [false, "pivot"],
         ],
     },
     {
@@ -143,6 +146,15 @@ defineActions([
 ]);
 
 defineEmbeddedActions([
+    {
+        id: 1,
+        xml_id: "embedded_action_1",
+        name: "Embedded Action 1",
+        parent_res_model: "partner",
+        type: "ir.embedded.actions",
+        parent_action_id: 2,
+        action_id: 3,
+    },
     {
         id: 2,
         xml_id: "embedded_action_2",
@@ -360,4 +372,41 @@ test("the embedded actions should not be displayed when switching view", async (
     expect(".o_embedded_actions").toHaveCount(0, {
         message: "The embedded actions menu should not be displayed",
     });
+});
+
+test("Persistance of embedded actions while switching view of same action_window", async () => {
+    onRpc("ir.embedded.actions", "create", (params) => {
+        expect(params.args[0][0].name).toBe("Custom Partners");
+        MockServer.current.embeddedActions.push(params.args[0][0]);
+        return [MockServer.current.embeddedActions.length];
+    });
+    onRpc("ir.filters", "create_or_replace", (params) => {
+        return true;
+    });
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(2);
+    browser.localStorage.clear();
+
+    await contains(".fa-sliders").click();
+    await getService("action").switchView("pivot");
+    await contains(".o_embedded_actions .fa-sliders").click();
+    await contains(".o_accordion_toggle.o_save_current_view").click();
+    await contains(".o_accordion_values .o_save_favorite").click();
+
+    await getService("action").switchView("kanban");
+    expect(
+        deepEqual(
+            MockServer.current.embeddedActions[MockServer.current.embeddedActions.length - 1],
+            {
+                action_id: 2,
+                parent_res_model: "partner",
+                user_id: 7,
+                is_deletable: true,
+                default_view_mode: "pivot",
+                context: {},
+                name: "Custom Partners",
+            }
+        )
+    ).toBe(true);
 });
