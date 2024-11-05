@@ -71,6 +71,7 @@ import { contains } from "./mail_test_helpers_contains";
 export { SIZES } from "@web/core/ui/ui_service";
 import { patch } from "@web/core/utils/patch";
 import { logger } from "@web/../lib/hoot/core/logger";
+import { loader } from "@mail/utils/common/loader";
 
 export * from "./mail_test_helpers_contains";
 
@@ -349,6 +350,8 @@ export async function start(options) {
         env = getMockEnv() || (await makeMockEnv({}));
     }
     env.testEnv = true;
+    await loader.lamejs.load();
+    await loader.marked.load();
     await mountWithCleanup(WebClient, { env, target });
     return Object.assign(env, { ...options?.env, target });
 }

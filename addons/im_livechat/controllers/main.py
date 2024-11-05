@@ -59,6 +59,13 @@ class LivechatController(http.Controller):
         stream = request.env['ir.binary']._get_stream_from(asset.js())
         return stream.get_response()
 
+    @http.route('/im_livechat/marked_bundle', type='http', auth='public', cors='*')
+    def get_marked_bundle(self):
+        bundle = 'mail.assets_marked'
+        asset = request.env["ir.qweb"]._get_asset_bundle(bundle)
+        stream = request.env['ir.binary']._get_stream_from(asset.js())
+        return stream.get_response()
+
     @http.route('/im_livechat/support/<int:channel_id>', type='http', auth='public')
     def support_page(self, channel_id, **kwargs):
         channel = request.env['im_livechat.channel'].sudo().browse(channel_id)

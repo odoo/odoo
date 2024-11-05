@@ -3,7 +3,6 @@
 import { getPyEnv } from "@bus/../tests/helpers/mock_python_environment";
 import { timings } from "@bus/misc";
 
-import { loadLamejs } from "@mail/discuss/voice_message/common/voice_message_service";
 import { patchBrowserNotification } from "@mail/../tests/helpers/patch_notifications";
 import { getAdvanceTime } from "@mail/../tests/helpers/time_control";
 import { getWebClientReady } from "@mail/../tests/helpers/webclient_setup";
@@ -22,10 +21,12 @@ import { patchUserWithCleanup } from "@web/../tests/helpers/mock_services";
 import { getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { doAction, getActionManagerServerData } from "@web/../tests/webclient/helpers";
 import { DISCUSS_ACTION_ID } from "./test_constants";
+import { loader } from "@mail/utils/common/loader";
 
-// load emoji data and lamejs once, when the test suite starts.
+// load emoji data, lamejs, marked once, when the test suite starts.
 QUnit.begin(loadEmoji);
-QUnit.begin(loadLamejs);
+QUnit.begin(() => loader.lamejs.load());
+QUnit.begin(() => loader.marked.load());
 registryNamesToCloneWithCleanup.push("mock_server_callbacks", "discuss.model");
 
 //------------------------------------------------------------------------------

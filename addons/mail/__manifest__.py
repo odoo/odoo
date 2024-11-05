@@ -204,6 +204,10 @@ For more specific needs, you may also assign custom-defined actions
         'mail.assets_lamejs': [
             'mail/static/lib/lame/lame.js',
         ],
+        'mail.assets_marked': [
+            'mail/static/lib/marked/**/*',
+            'web/static/lib/dompurify/DOMpurify.js',
+        ],
         'mail.assets_public': [
             'web/static/lib/jquery/jquery.js',
             'web/static/lib/odoo_ui_icons/style.css',

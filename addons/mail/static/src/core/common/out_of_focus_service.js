@@ -49,7 +49,7 @@ export class OutOfFocusService {
                 notificationTitle = author.name;
             }
         }
-        const notificationContent = htmlToTextContentInline(message.body).substring(
+        const notificationContent = htmlToTextContentInline(message.bodyHtml).substring(
             0,
             PREVIEW_MSG_MAX_SIZE
         );
