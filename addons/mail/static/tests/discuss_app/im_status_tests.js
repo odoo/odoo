@@ -2,10 +2,12 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
+import { Persona } from "@mail/core/common/persona_model";
 import { Command } from "@mail/../tests/helpers/command";
 import { start } from "@mail/../tests/helpers/test_utils";
 
 import { click, contains } from "@web/../tests/utils";
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
 QUnit.module("im status");
 
@@ -61,7 +63,8 @@ QUnit.test("change icon on change partner im_status", async () => {
         channel_member_ids: [Command.create({ partner_id: pyEnv.currentPartnerId })],
         channel_type: "chat",
     });
-    const { openDiscuss } = await start({ hasTimeControl: true });
+    patchWithCleanup(Persona, { IM_STATUS_DEBOUNCE_DELAY: 0 });
+    const { openDiscuss } = await start();
     openDiscuss(channelId);
     await contains(".o-mail-ImStatus i[title='Online']");
 
