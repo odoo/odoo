@@ -368,7 +368,7 @@ class TestMailMail(MailCommon):
                              'Scheduled date: %s should be stored as %s, received %s' % (scheduled_datetime, expected_datetime, mail.scheduled_date))
             self.assertEqual(mail.state, 'outgoing')
 
-        with freeze_time(now):
+        with freeze_time(now), self.mock_mail_gateway():
             self.env['mail.mail'].process_email_queue()
             for mail, expected_state in zip(mails, expected_states):
                 self.assertEqual(mail.state, expected_state)
@@ -1133,7 +1133,7 @@ class TestMailMailServer(MailCommon):
 
 
 @tagged('mail_mail')
-class TestMailMailRace(common.TransactionCase):
+class TestMailMailRace(MailCommon):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_bounce_during_send(self):
@@ -1189,9 +1189,9 @@ class TestMailMailRace(common.TransactionCase):
                     cr.execute("UPDATE mail_notification SET notification_status='bounce' WHERE id = %s", [notif.id])
             return message['Message-Id']
 
-        self.patch(self.registry['ir.mail_server'], 'send_email', send_email)
-
-        mail.send()
+        with self.mock_mail_gateway():
+            self.patch(self.registry['ir.mail_server'], 'send_email', send_email)
+            mail.send()
 
         self.assertTrue(bounce_deferred, "The bounce should have been deferred")
         self.assertEqual(notif.notification_status, 'sent')

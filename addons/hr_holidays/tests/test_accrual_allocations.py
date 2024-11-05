@@ -1424,6 +1424,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'request_hour_to': '12',
             })
             self.assertEqual(leave.number_of_hours, 2)
+            self.assertEqual(allocation.leaves_taken, 2)
             self.assert_allocation_and_balance(allocation, 120, 118,
                 "The 2 hours should be deduced from the balance")
 
@@ -1447,6 +1448,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'request_date_to': datetime.date(2025, 6, 11),
             })
             self.assertEqual(leave.number_of_hours, 64)
+            self.assertEqual(allocation.leaves_taken, 66)
             self.assert_allocation_and_balance(allocation, 182, 116,
                 "The leave hours should be deduced from the balance.")
 

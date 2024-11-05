@@ -3,7 +3,6 @@ import importlib.util
 import inspect
 import logging
 import sys
-import threading
 from pathlib import Path
 from unittest import case
 
@@ -112,11 +111,9 @@ def run_suite(suite):
     # avoid dependency hell
     from ..modules import module
     module.current_test = True
-    threading.current_thread().testing = True
 
     results = OdooTestResult()
     suite(results)
 
-    threading.current_thread().testing = False
     module.current_test = False
     return results
