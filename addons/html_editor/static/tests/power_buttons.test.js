@@ -54,6 +54,17 @@ describe.tags("desktop")("visibility", () => {
         await setupEditor("<p>[]<br><br></p>");
         expect(".o_we_power_buttons").not.toBeVisible();
     });
+
+    test("should show power buttons on undo", async () => {
+        const { editor } = await setupEditor("<p>[]<br></p>");
+        expect(".o_we_power_buttons").toBeVisible();
+        insertText(editor, "a");
+        await animationFrame();
+        expect(".o_we_power_buttons").not.toBeVisible();
+        await press(["ctrl", "z"]);
+        expect(".odoo-editor-editable p").toHaveText("");
+        expect(".o_we_power_buttons").toBeVisible();
+    });
 });
 
 describe.tags("desktop")("buttons", () => {
