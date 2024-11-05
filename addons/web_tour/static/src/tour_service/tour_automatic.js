@@ -33,7 +33,7 @@ export class TourAutomatic {
         return tourConfig.debug !== false;
     }
 
-    start(pointer, callback) {
+    start(pointer) {
         const macroSteps = this.steps
             .filter((step) => step.index >= this.currentIndex)
             .flatMap((step) => {
@@ -96,21 +96,37 @@ export class TourAutomatic {
                 ];
             });
 
+        const end = () => {
+            transitionConfig.disabled = false;
+            tourState.clear();
+            pointer.stop();
+        };
+
         const macro = {
             name: this.name,
             checkDelay: this.checkDelay,
             steps: macroSteps,
             onError: (error) => {
                 this.throwError(error);
-                transitionConfig.disabled = false;
-                callback();
+                console.error("tour not succeeded");
+                end();
             },
             onComplete: () => {
-                transitionConfig.disabled = false;
-                callback();
+                browser.console.log("tour succeeded");
+                // Used to see easily in the python console and to know which tour has been succeeded in suite tours case.
+                const succeeded = `║ TOUR ${this.name} SUCCEEDED ║`;
+                const msg = [succeeded];
+                msg.unshift("╔" + "═".repeat(succeeded.length - 2) + "╗");
+                msg.push("╚" + "═".repeat(succeeded.length - 2) + "╝");
+                browser.console.log(`\n\n${msg.join("\n")}\n`);
+                end();
             },
         };
-
+        if (this.debugMode) {
+            // Starts the tour with a debugger to allow you to choose devtools configuration.
+            // eslint-disable-next-line no-debugger
+            debugger;
+        }
         transitionConfig.disabled = true;
         //Activate macro in exclusive mode (only one macro per MacroEngine)
         this.macroEngine.activate(macro, true);
