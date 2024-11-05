@@ -1123,3 +1123,34 @@ QUnit.test("can open messaging menu even if messaging is not initialized", async
     def.resolve();
     await contains(".o-mail-NotificationItem", { text: "OdooBot has a request" });
 });
+
+QUnit.test("failure is removed from messaging menu when message is deleted", async () => {
+    const pyEnv = await startServer();
+    const recipientId = pyEnv["res.partner"].create({ name: "James" });
+    const messageId = pyEnv["mail.message"].create({
+        body: "Hello world!",
+        model: "res.partner",
+        partner_ids: [recipientId],
+        res_id: pyEnv.currentPartner_id,
+        res_model_name: "Contact",
+    });
+    pyEnv["mail.notification"].create({
+        failure_type: "mail_email_invalid",
+        mail_message_id: messageId,
+        notification_status: "exception",
+        notification_type: "email",
+        res_partner_id: pyEnv.currentPartnerId,
+    });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await contains(".o-mail-NotificationItem", {
+        contains: [
+            [".o-mail-NotificationItem-name", { text: "Contact" }],
+            [".o-mail-NotificationItem-text", { text: "An error occurred when sending an email" }],
+        ],
+    });
+    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.message/delete", {
+        message_ids: [messageId],
+    });
+    await contains(".o-mail-NotificationItem", { count: 0 });
+});
