@@ -72,9 +72,9 @@ export function onExternalClick(refName, cb) {
 }
 
 /**
- * @param {string | string[]} refNames name of refs that determine whether this is in state "hovering".
+ * @param {string | string[] | Function} refNames name of refs that determine whether this is in state "hovering".
  *   ref name that end with "*" means it takes parented HTML node into account too. Useful for floating
- *   menu where dropdown menu container is not accessible.
+ *   menu where dropdown menu container is not accessible. Function type is for useChildRef support.
  * @param {Object} param1
  * @param {() => void} [param1.onHover] callback when hovering the ref names.
  * @param {() => void} [param1.onAway] callback when stop hovering the ref names.
@@ -89,6 +89,11 @@ export function useHover(refNames, { onHover, onAway, onHovering } = {}) {
     let hoveringTimeout;
     let awayTimeout;
     for (const refName of refNames) {
+        if (typeof refName === "function") {
+            // Special case: useChildRef support
+            targets.push({ ref: refName });
+            continue;
+        }
         targets.push({
             ref: refName.endsWith("*")
                 ? useRef(refName.substring(0, refName.length - 1))
