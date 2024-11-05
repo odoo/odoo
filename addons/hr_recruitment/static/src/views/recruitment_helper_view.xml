@@ -9,7 +9,7 @@
                 <p>
                     Let's create a job position.
                 </p>
-                <t t-if="!state.hasDemoData">
+                <t t-if="!state.hasDemoData and isRecruitmentUser">
                     <div class="d-flex gap-3 align-items-center or-separator">
                         <hr class="flex-grow-1" /> or <hr class="flex-grow-1" />
                     </div>
