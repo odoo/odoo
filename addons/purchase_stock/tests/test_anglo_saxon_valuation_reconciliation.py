@@ -548,3 +548,33 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         purchase_order.invoice_ids.action_post()
         post_bill_remaining_value = purchase_order.picking_ids.move_ids.stock_valuation_layer_ids.remaining_value
         self.assertEqual(post_bill_remaining_value, pre_bill_remaining_value)
+
+    def test_manual_cost_adjustment_journal_items_quantity(self):
+        """ The quantity field of `account.move.line` should be permitted to be zero, e.g., in the
+        case of modifying an automatically valuated product's cost.
+        """
+        self.stock_account_product_categ.property_cost_method = 'average'
+        self.product_a.write({
+            'categ_id': self.stock_account_product_categ.id,
+            'detailed_type': 'product',
+        })
+
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product_a.id,
+                'product_uom_qty': 5,
+                'price_unit': 4,
+            })],
+        })
+        purchase_order.button_confirm()
+        purchase_order.picking_ids.move_line_ids.quantity = 5
+        purchase_order.picking_ids.button_validate()
+        with Form(self.product_a) as product_form:
+            product_form.standard_price = 3
+
+        cost_change_journal_items = self.env['account.move.line'].search([
+            ('product_id', '=', self.product_a.id),
+            '|', ('debit', '=', 5), ('credit', '=', 5),
+        ])
+        self.assertEqual(cost_change_journal_items.mapped('quantity'), [0, 0])
