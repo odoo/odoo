@@ -4,7 +4,7 @@ import { getColor } from "../colors";
 import { useCalendarPopover, useFullCalendar } from "../hooks";
 import { CalendarYearPopover } from "./calendar_year_popover";
 import { makeWeekColumn } from "@web/views/calendar/calendar_common/calendar_common_week_column";
-import { getLocalWeekNumber } from "@web/core/l10n/dates";
+import { getLocalYearAndWeek } from "@web/core/l10n/dates";
 
 import { Component, useEffect, useRef } from "@odoo/owl";
 
@@ -71,7 +71,7 @@ export class CalendarYearRenderer extends Component {
             timeZone: luxon.Settings.defaultZone.name,
             titleFormat: { month: "long", year: "numeric" },
             unselectAuto: false,
-            weekNumberCalculation: (date) => getLocalWeekNumber(date),
+            weekNumberCalculation: (date) => getLocalYearAndWeek(date).week,
             weekNumbers: false,
             weekNumberFormat: { week: "numeric" },
             windowResize: this.onWindowResizeDebounced,
