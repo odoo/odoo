@@ -404,7 +404,7 @@ class Job(models.Model):
     def _action_load_recruitment_scenario(self):
 
         convert_file(
-            self.env,
+            self.sudo().env,
             "hr_recruitment",
             "data/scenarios/hr_recruitment_scenario.xml",
             None,
