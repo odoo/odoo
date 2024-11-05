@@ -28,11 +28,16 @@ class WebsiteBuilder extends Component {
             builderRef: useRef("container"),
         });
         this.state = useState({ isEditing: false });
+        this.websiteService = useService("website");
 
         onWillStart(async () => {
-            const slugCurrentWebsite = await this.orm.call("website", "get_current_website");
-            this.backendWebsiteId = unslugHtmlDataObject(slugCurrentWebsite).id;
+            const [backendWebsiteRepr] = await Promise.all([
+                this.orm.call("website", "get_current_website"),
+                this.websiteService.fetchWebsites(),
+            ]);
+            this.backendWebsiteId = unslugHtmlDataObject(backendWebsiteRepr).id;
             this.initialUrl = `/website/force/${encodeURIComponent(this.backendWebsiteId)}`;
+            this.websiteService.currentWebsiteId = this.backendWebsiteId;
         });
         this.addSystrayItems();
         onWillDestroy(() => {
@@ -45,7 +50,6 @@ class WebsiteBuilder extends Component {
             iframe: this.websiteContent.el,
             closeEditor: this.closeEditor.bind(this),
             snippetsName: "website.snippets",
-            websiteId: this.backendWebsiteId,
         };
     }
 
@@ -86,6 +90,7 @@ class WebsiteBuilder extends Component {
         loadBundle("html_builder.inside_builder_style", {
             targetDoc: this.websiteContent.el.contentDocument,
         });
+        this.websiteService.pageDocument = this.websiteContent.el.contentDocument;
     }
 }
 

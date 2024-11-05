@@ -5,6 +5,7 @@ export class SetupEditorPlugin extends Plugin {
 
     resources = {
         clean_for_save_handlers: ({ root }) => {
+            root.classList.remove("o_editable");
             root.querySelectorAll(".o_editable").forEach((el) => {
                 el.classList.remove("o_editable");
             });
