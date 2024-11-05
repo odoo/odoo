@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
@@ -18,7 +17,7 @@ class ProjectProductEmployeeMap(models.Model):
                 ('order_partner_id', '=?', unquote('partner_id')),
             ],
         ])
-        return str(domain)
+        return domain
 
     project_id = fields.Many2one('project.project', "Project", required=True)
     employee_id = fields.Many2one('hr.employee', "Employee", required=True, domain="[('id', 'not in', existing_employee_ids)]")
@@ -26,7 +25,7 @@ class ProjectProductEmployeeMap(models.Model):
     sale_line_id = fields.Many2one(
         'sale.order.line', "Sales Order Item",
         compute="_compute_sale_line_id", store=True, readonly=False,
-        domain=_domain_sale_line_id,
+        domain=lambda self: str(self._domain_sale_line_id())
     )
     sale_order_id = fields.Many2one(related="project_id.sale_order_id", export_string_translation=False)
     company_id = fields.Many2one('res.company', string='Company', related='project_id.company_id', export_string_translation=False)
