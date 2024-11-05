@@ -100,11 +100,11 @@ class StockWarehouseOrderpoint(models.Model):
 
     @api.depends('warehouse_id')
     def _compute_allowed_location_ids(self):
-        loc_domain = [('usage', 'in', ('internal', 'view'))]
         # We want to keep only the locations
         #  - strictly belonging to our warehouse
         #  - not belonging to any warehouses
         for orderpoint in self:
+            loc_domain = [('usage', 'in', ('internal', 'view'))]
             other_warehouses = self.env['stock.warehouse'].search([('id', '!=', orderpoint.warehouse_id.id)])
             for view_location_id in other_warehouses.mapped('view_location_id'):
                 loc_domain = expression.AND([loc_domain, ['!', ('id', 'child_of', view_location_id.id)]])
