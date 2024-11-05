@@ -1,9 +1,11 @@
 import { Component, onWillDestroy, onWillStart, useRef, useState, useSubEnv } from "@odoo/owl";
 import { LazyComponent, loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
+import { useService, useChildRef } from "@web/core/utils/hooks";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { WebsiteSystrayItem } from "./website_systray_item";
+import { uniqueId } from "@web/core/utils/functions";
+import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 
 function unslugHtmlDataObject(repr) {
     const match = repr && repr.match(/(.+)\((\d+),(.*)\)/);
@@ -18,7 +20,7 @@ function unslugHtmlDataObject(repr) {
 
 class WebsiteBuilder extends Component {
     static template = "html_builder.WebsiteBuilder";
-    static components = { LazyComponent };
+    static components = { LazyComponent, LocalOverlayContainer };
     static props = { ...standardActionServiceProps };
 
     setup() {
@@ -32,6 +34,11 @@ class WebsiteBuilder extends Component {
         // TODO: to remove: this is only needed to not use the website systray
         // when using the "website preview" app.
         this.websiteService.useMysterious = true;
+
+        this.overlayRef = useChildRef();
+        useSubEnv({
+            localOverlayContainerKey: uniqueId("website"),
+        });
 
         onWillStart(async () => {
             const [backendWebsiteRepr] = await Promise.all([
@@ -56,6 +63,7 @@ class WebsiteBuilder extends Component {
             closeEditor: this.closeEditor.bind(this),
             snippetsName: "website.snippets",
             toggleMobile: this.toggleMobile.bind(this),
+            overlayRef: this.overlayRef,
         };
     }
 
