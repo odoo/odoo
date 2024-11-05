@@ -5420,6 +5420,8 @@ class AccountMove(models.Model):
     def _get_invoice_next_payment_values(self, custom_amount=None):
         self.ensure_one()
         term_lines = self.line_ids.filtered(lambda line: line.display_type == 'payment_term')
+        if not term_lines:
+            return {}
         installments = term_lines._get_installments_data()
         not_reconciled_installments = [x for x in installments if not x['reconciled']]
         overdue_installments = [x for x in not_reconciled_installments if x['type'] == 'overdue']

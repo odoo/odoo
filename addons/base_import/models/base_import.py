@@ -1108,7 +1108,7 @@ class Import(models.TransientModel):
                 'advanced_mode': advanced_mode,
                 'debug': self.env.user.has_group('base.group_no_one'),
                 'batch': batch,
-                'file_length': file_length
+                'file_length': len(rows),
             }
         except Exception as error:
             # Due to lazy generators, UnicodeDecodeError (for

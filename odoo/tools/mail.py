@@ -101,6 +101,7 @@ class _Cleaner(clean.Cleaner):
 
     strip_classes = False
     sanitize_style = False
+    conditional_comments = True
 
     def __call__(self, doc):
         super(_Cleaner, self).__call__(doc)
@@ -132,6 +133,24 @@ class _Cleaner(clean.Cleaner):
                 el.attrib['style'] = '; '.join('%s:%s' % (key, val) for (key, val) in valid_styles.items())
             else:
                 del el.attrib['style']
+
+    def kill_conditional_comments(self, doc):
+        """Override the default behavior of lxml.
+
+        https://github.com/lxml/lxml/blob/e82c9153c4a7d505480b94c60b9a84d79d948efb/src/lxml/html/clean.py#L501-L510
+
+        In some use cases, e.g. templates used for mass mailing,
+        we send emails containing conditional comments targeting Microsoft Outlook,
+        to give special styling instructions.
+        https://github.com/odoo/odoo/pull/119325/files#r1301064789
+
+        Within these conditional comments, unsanitized HTML can lie.
+        However, in modern browser, these comments are considered as simple comments,
+        their content is not executed.
+        https://caniuse.com/sr_ie-features
+        """
+        if self.conditional_comments:
+            super().kill_conditional_comments(doc)
 
 
 def tag_quote(el):
@@ -203,7 +222,7 @@ def tag_quote(el):
         el.set('data-o-mail-quote', '1')
 
 
-def html_normalize(src, filter_callback=None):
+def html_normalize(src, filter_callback=None, output_method="html"):
     """ Normalize `src` for storage as an html field value.
 
     The string is parsed as an html tag soup, made valid, then decorated for
@@ -216,6 +235,8 @@ def html_normalize(src, filter_callback=None):
     :param filter_callback: optional callable taking a single `etree._Element`
         document parameter, to be called during normalization in order to
         filter the output document
+    :param output_method: defines the output method to pass to `html.tostring`.
+        It defaults to 'html', but can also be 'xml' for xhtml output.
     """
     if not src:
         return src
@@ -245,7 +266,7 @@ def html_normalize(src, filter_callback=None):
     if filter_callback:
         doc = filter_callback(doc)
 
-    src = html.tostring(doc, encoding='unicode')
+    src = html.tostring(doc, encoding='unicode', method=output_method)
 
     # this is ugly, but lxml/etree tostring want to put everything in a
     # 'div' that breaks the editor -> remove that
@@ -258,7 +279,7 @@ def html_normalize(src, filter_callback=None):
     return src
 
 
-def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=False, sanitize_style=False, sanitize_form=True, strip_style=False, strip_classes=False):
+def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=False, sanitize_style=False, sanitize_form=True, sanitize_conditional_comments=True, strip_style=False, strip_classes=False, output_method="html"):
     if not src:
         return src
 
@@ -272,6 +293,7 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
             'forms': sanitize_form,            # True = remove form tags
             'remove_unknown_tags': False,
             'comments': False,
+            'conditional_comments': sanitize_conditional_comments,   # True = remove conditional comments
             'processing_instructions': False
         }
         if sanitize_tags:
@@ -297,7 +319,7 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
         return doc
 
     try:
-        sanitized = html_normalize(src, filter_callback=sanitize_handler)
+        sanitized = html_normalize(src, filter_callback=sanitize_handler, output_method=output_method)
     except etree.ParserError:
         if not silent:
             raise

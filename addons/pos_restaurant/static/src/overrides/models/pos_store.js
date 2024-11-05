@@ -80,9 +80,23 @@ patch(PosStore.prototype, {
             return acc;
         }, {});
 
+        const nbNoteChange = Object.keys(orderChanges.noteUpdated).length;
+        if (nbNoteChange) {
+            categories["noteUpdate"] = { count: nbNoteChange, name: _t("Note") };
+        }
+        // Only send modeUpdate if there's already an older mode in progress.
+        const currentOrder = this.get_order();
+        if (
+            orderChanges.modeUpdate &&
+            Object.keys(currentOrder.last_order_preparation_change.lines).length
+        ) {
+            const displayName = currentOrder.takeaway ? _t("Take out") : _t("Dine in");
+            categories["modeUpdate"] = { count: 1, name: displayName };
+        }
+
         return [
             ...Object.values(categories),
-            ...("generalNote" in orderChanges ? [{ count: 1, name: _t("General Note") }] : []),
+            ...("generalNote" in orderChanges ? [{ count: 1, name: _t("Message") }] : []),
         ];
     },
     createNewOrder() {

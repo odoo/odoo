@@ -2,11 +2,14 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registry.category("web_tour.tours").add('order_lunch_tour', {
     url: "/odoo",
-    steps: () => [{
-    trigger: 'a[data-menu-xmlid="lunch.menu_lunch"]',
+    steps: () => [
+    stepUtils.showAppsMenuItem(),
+{
+    trigger: '.o_app[data-menu-xmlid="lunch.menu_lunch"]',
     content: _t("Start by accessing the lunch app."),
     tooltipPosition: 'bottom',
     run: "click",

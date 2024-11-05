@@ -15,7 +15,7 @@
                         }" role="menu" >
                 <div t-foreach="images" t-as="attachment" t-key="attachment.id"
                      t-att-aria-label="attachment.filename"
-                     class="o-mail-AttachmentImage d-flex position-relative flex-shrink-0 mw-100 mb-1 me-1 rounded"
+                     class="o-mail-AttachmentImage d-flex position-relative flex-shrink-0 mw-100 mb-1 me-1 rounded o-viewable"
                      t-att-title="attachment.name"
                      t-att-class="{ 'o-isUploading': attachment.uploading }"
                      tabindex="0"
@@ -24,7 +24,7 @@
                      role="menuitem"
                 >
                     <img
-                        class="img img-fluid my-0 mx-auto o-viewable rounded"
+                        class="img img-fluid my-0 mx-auto rounded"
                         t-att-class="{ 'opacity-25': attachment.uploading }"
                         t-att-src="getImageUrl(attachment)"
                         t-att-alt="attachment.name"
@@ -78,8 +78,11 @@
                         >
                             <i class="fa fa-trash" role="img" aria-label="Remove"/>
                         </button>
+                        <a t-if="attachment.type === 'url'" class="btn d-flex align-items-center justify-content-center w-100 h-100 rounded-0" t-attf-class="{{ bg-300 }}" t-att-href="attachment.url" target='_blank' title="Open Link">
+                            <i class="fa fa-external-link" role="img" aria-label="Open Link"/>
+                        </a>
                         <!-- t-attf-class overridden in extensions -->
-                        <button t-if="canDownload(attachment)" class="btn d-flex align-items-center justify-content-center w-100 h-100 rounded-0"
+                        <button t-elif="canDownload(attachment)" class="btn d-flex align-items-center justify-content-center w-100 h-100 rounded-0"
                                 t-attf-class="{{ bg-300 }}"
                                 t-on-click.stop="() => this.onClickDownload(attachment)" title="Download"
                         >

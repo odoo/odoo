@@ -256,7 +256,7 @@ class L10nMyEDITestSubmission(AccountTestInvoicingCommon):
         self._assert_node_values(
             root,
             'cac:BillingReference/cac:InvoiceDocumentReference/cbc:ID',
-            'Document Internal ID',
+            basic_invoice.name,
         )
         self._assert_node_values(
             root,
@@ -268,6 +268,10 @@ class L10nMyEDITestSubmission(AccountTestInvoicingCommon):
         node = root.xpath(node_path, namespaces=NS_MAP)
 
         assert node, 'The requested node has not been found.'
+
+        # Ensure that we don't have duplicated nodes. As of writing, all tested nodes are expected to exist only once in the result.
+        node = root.xpath(node_path, namespaces=NS_MAP)
+        self.assertEqual(len(node), 1, f"The node {node[0].tag} has been found {len(node)} time in the file")
 
         self.assertEqual(
             node[0].text,
