@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="crm_inherited_form_view_twilio">
+            <field name="name">crm.lead.form.inherit</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+            <field name="arch" type="xml">
+                <header>
+                    <button name="send_message_twilio_method" string="Send SMS by Twilio" type="object" class="btn btn-primary"/>
+                </header>
+            </field>
+        </record>
+    </data>
+</odoo>

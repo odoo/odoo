@@ -94,8 +94,8 @@ class SendGridEmail(models.Model):
                     payload = "{\"personalizations\":[{\"to\":[{\"email\":\"" + to_email + "\"}],\"dynamic_template_data\":{\"firstname\":\"" + to_name + "\",\"english\":\"true\",\"company\":\"" + to_company + "\"},\"subject\":\"Official Mail\"}],\"from\":{\"email\":\"" + from_email + "\",\"name\":\"" + from_name + "\"},\"template_id\":\"" + temp_id + "\"}"
 
                 headers = {
-                    'authorization': "Bearer " + api_key + "",
-                    'content-type': "application/json"
+                    'Authorization': "Bearer " + api_key + "",
+                    'Content-type': "application/json"
                 }
 
                 conn.request("POST", "/v3/mail/send", payload, headers)
@@ -165,8 +165,8 @@ class SendGridEmail(models.Model):
                     payload = "{\"personalizations\":[{\"to\":[{\"email\":\"" + to_email + "\"}],\"dynamic_template_data\":{\"firstname\":\"" + to_name + "\",\"english\":\"true\",\"company\":\"" + to_company + "\"},\"subject\":\"Official Mail\"}],\"from\":{\"email\":\"" + from_email + "\",\"name\":\"" + from_name + "\"},\"template_id\":\"" + temp_id + "\"}"
 
                 headers = {
-                    'authorization': "Bearer " + api_key + "",
-                    'content-type': "application/json"
+                    'Authorization': "Bearer " + api_key + "",
+                    'Content-type': "application/json"
                 }
 
                 conn.request("POST", "/v3/mail/send", payload, headers)
@@ -235,8 +235,8 @@ class SendGridEmail(models.Model):
                     payload = "{\"personalizations\":[{\"to\":[{\"email\":\"" + to_email + "\"}],\"dynamic_template_data\":{\"firstname\":\"" + to_name + "\",\"english\":\"true\",\"company\":\"" + to_company + "\"},\"subject\":\"Official Mail\"}],\"from\":{\"email\":\"" + from_email + "\",\"name\":\"" + from_name + "\"},\"template_id\":\"" + temp_id + "\"}"
 
                 headers = {
-                    'authorization': "Bearer " + api_key + "",
-                    'content-type': "application/json"
+                    'Authorization': "Bearer " + api_key + "",
+                    'Content-type': "application/json"
                 }
 
                 conn.request("POST", "/v3/mail/send", payload, headers)

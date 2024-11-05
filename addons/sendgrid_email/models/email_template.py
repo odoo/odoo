@@ -70,17 +70,18 @@ class EmailTemplateDetails(models.Model):
         payload = "{\"name\":\"" + temp_name + "\",\"generation\":\"dynamic\"}"
 
         headers = {
-            'authorization': "Bearer " + api_key + "",
-            'content-type': "application/json"
+            'Authorization': "Bearer " + api_key + "",
+            'Content-type': "application/json"
         }
         print(payload, headers, "nwerk")
         conn.request("POST", "/v3/templates", payload, headers)
 
         res = conn.getresponse()
+        print ("X---------------res: -------------",res)
         data = res.read()
         print("json", json)
         temp_data = json.loads(data.decode("utf-8"))
-        print("temp_data", temp_data)
+        print("XX------temp_data", temp_data)
         self.temp_id = temp_data['id']
         print("temp_id", self.temp_id)
 
@@ -127,8 +128,8 @@ class EmailTemplateDetails(models.Model):
             # }
             print(payload, "fdkngfd")
             headers = {
-                'authorization': "Bearer " + api_key + "",
-                'content-type': "application/json"
+                'Authorization': "Bearer " + api_key + "",
+                'Content-type': "application/json"
             }
             print("head", headers)
             conn.request("POST", "/v3/templates/" + temp_id + "/versions", payload, headers)

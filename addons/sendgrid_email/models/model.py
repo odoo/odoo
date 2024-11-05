@@ -73,7 +73,7 @@ class SendGridSendEmails(models.Model):
             api_key = api_info.value
         if not api_key and api_key == "":
             raise UserError(_("Your Company Needs an API Key"))
-        headers = {'authorization': "Bearer " + api_key + ""}
+        headers = {'Authorization': "Bearer " + api_key + ""}
 
         conn.request("GET", "/v3/suppression/bounces/" + self.to_email + "", payload, headers)
 
@@ -121,8 +121,8 @@ class SendGridSendEmails(models.Model):
                 if line.to_email and line.recipient_name:
                     payload = "{\"personalizations\":[{\"to\":[{\"email\":\"" + line.to_email + "\"}],\"dynamic_template_data\":{\"firstname\":\"" + line.recipient_name + "\",\"english\":\"true\",\"company\":\"" + to_company + "\"},\"subject\":\"Official Mail\"}],\"from\":{\"email\":\"" + from_email + "\",},\"template_id\":\"" + temp_id + "\"}"
                 headers = {
-                    'authorization': "Bearer " + api_key + "",
-                    'content-type': "application/json"
+                    'Authorization': "Bearer " + api_key + "",
+                    'Content-type': "application/json"
                 }
 
                 conn.request("POST", "/v3/mail/send", payload, headers)
