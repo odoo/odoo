@@ -8,7 +8,7 @@ from binascii import Error as binascii_error
 from collections import defaultdict
 
 from odoo import _, api, Command, fields, models, modules, tools
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, MissingError
 from odoo.osv import expression
 from odoo.tools import clean_context, groupby as tools_groupby, SQL
 
@@ -908,6 +908,11 @@ class Message(models.Model):
         for message in self:
             if message.model and message.res_id:
                 thread_ids_by_model_name[message.model].add(message.res_id)
+
+        # filter missing records
+        for model_name, record_ids in thread_ids_by_model_name.items():
+            thread_ids_by_model_name[model_name] = self.env[model_name].browse(record_ids).exists().ids
+
         for vals in vals_list:
             message_sudo = self.browse(vals['id']).sudo().with_prefetch(self.ids)
             author = False
@@ -920,7 +925,7 @@ class Message(models.Model):
             elif message_sudo.author_id:
                 author = message_sudo.author_id.mail_partner_format({'id': True, 'name': True, 'is_company': True, 'user': {"id": True}}).get(message_sudo.author_id)
             record_sudo = False
-            if message_sudo.model and message_sudo.res_id:
+            if message_sudo.model and message_sudo.res_id and message_sudo.res_id in thread_ids_by_model_name[message_sudo.model]:
                 record_sudo = self.env[message_sudo.model].browse(message_sudo.res_id).sudo()
                 record_name = record_sudo.with_prefetch(thread_ids_by_model_name[message_sudo.model]).display_name
                 default_subject = record_name
@@ -1184,7 +1189,9 @@ class Message(models.Model):
                 try:
                     record.check_access_rights('read')
                     record.check_access_rule('read')
-                except AccessError:
+                except (MissingError, AccessError):
+                    # record has been removed from db without cascading notif -> avoid crash at least
+                    # access error -> just skip
                     continue
                 else:
                     messages += message
