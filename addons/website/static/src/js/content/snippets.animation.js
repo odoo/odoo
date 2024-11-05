@@ -9,7 +9,6 @@ import { escape } from "@web/core/utils/strings";
 import { debounce, throttleForAnimation } from "@web/core/utils/timing";
 import Class from "@web/legacy/js/core/class";
 import publicWidget from "@web/legacy/js/public/public_widget";
-import wUtils from "@website/js/utils";
 import { renderToElement } from "@web/core/utils/render";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
@@ -1554,96 +1553,6 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
     _onScrollWebsiteAnimate() {
         // Note: Do not rely on ev.currentTarget which might be lost by Chrome.
         this._scrollWebsiteAnimate(this.$scrollingElement[0]);
-    },
-});
-
-/**
- * The websites, by default, use image lazy loading via the loading="lazy"
- * attribute on <img> elements. However, this does not work great on all
- * browsers. This widget fixes the behaviors with as less code as possible.
- */
-registry.ImagesLazyLoading = publicWidget.Widget.extend({
-    selector: '#wrapwrap',
-
-    /**
-     * @override
-     */
-    start() {
-        // For each image on the page, force a 1px min-height so that Chrome
-        // understands the image exists on different zoom sizes of the browser.
-        // Indeed, without this, on a 90% zoom, some images were never loaded.
-        // Once the image has been loaded, the 1px min-height is removed.
-        // Note: another possible solution without JS would be this CSS rule:
-        // ```
-        // [loading="lazy"] {
-        //     min-height: 1px;
-        // }
-        // ```
-        // This would solve the problem the same way with a CSS rule with a
-        // very small priority (any class setting a min-height would still have
-        // priority). However, the min-height would always be forced even once
-        // the image is loaded, which could mess with some layouts relying on
-        // the image intrinsic min-height.
-        const imgEls = this.el.querySelectorAll('img[loading="lazy"]');
-        for (const imgEl of imgEls) {
-            this._updateImgMinHeight(imgEl);
-            wUtils.onceAllImagesLoaded($(imgEl)).then(() => {
-                if (this.isDestroyed()) {
-                    return;
-                }
-                this._restoreImage(imgEl);
-            });
-        }
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    destroy() {
-        this._super(...arguments);
-        const imgEls = this.el.querySelectorAll('img[data-lazy-loading-initial-min-height]');
-        for (const imgEl of imgEls) {
-            this._restoreImage(imgEl);
-        }
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {HTMLImageElement} imgEl
-     */
-    _restoreImage(imgEl) {
-        this._updateImgMinHeight(imgEl, true);
-    },
-    /**
-     * Updates the image element style with the corresponding min-height.
-     * If the editor is enabled, it deactivates the observer during the CSS
-     * update.
-     *
-     * @param {HTMLElement} imgEl - The image element to update the minimum
-     *        height of.
-     * @param {boolean} [reset=false] - Whether to remove the minimum height
-     *        and restore the initial value.
-     */
-    _updateImgMinHeight(imgEl, reset = false) {
-        if (this.options.wysiwyg) {
-            this.options.wysiwyg.odooEditor.observerUnactive('_updateImgMinHeight');
-        }
-        if (reset) {
-            imgEl.style.minHeight = imgEl.dataset.lazyLoadingInitialMinHeight;
-            delete imgEl.dataset.lazyLoadingInitialMinHeight;
-        } else {
-            // Write initial min-height on the dataset, so that it can also
-            // be properly restored on widget destroy.
-            imgEl.dataset.lazyLoadingInitialMinHeight = imgEl.style.minHeight;
-            imgEl.style.minHeight = '1px';
-        }
-        if (this.options.wysiwyg) {
-            this.options.wysiwyg.odooEditor.observerActive('_updateImgMinHeight');
-        }
     },
 });
 
