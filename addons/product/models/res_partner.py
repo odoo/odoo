@@ -14,15 +14,20 @@ class ResPartner(models.Model):
         compute='_compute_product_pricelist',
         inverse="_inverse_product_pricelist",
         company_dependent=False,
+        recursive=True,
         domain=lambda self: [('company_id', 'in', (self.env.company.id, False))],
         help="This pricelist will be used, instead of the default one, for sales to the current partner")
 
-    @api.depends('country_id')
+    @api.depends('country_id', 'parent_id.property_product_pricelist')
     @api.depends_context('company')
     def _compute_product_pricelist(self):
-        res = self.env['product.pricelist']._get_partner_pricelist_multi(self.ids)
-        for partner in self:
+        partners_without_parent = self.filtered(lambda p: not p.parent_id)
+        res = self.env['product.pricelist']._get_partner_pricelist_multi(partners_without_parent.ids)
+        for partner in partners_without_parent:
             partner.property_product_pricelist = res.get(partner._origin.id)
+
+        for partner in (self - partners_without_parent):
+            partner.property_product_pricelist = partner.parent_id.property_product_pricelist
 
     def _inverse_product_pricelist(self):
         for partner in self:
