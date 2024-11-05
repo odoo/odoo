@@ -76,8 +76,8 @@ export class TablePlugin extends Plugin {
         color_apply_overrides: this.applyTableColor.bind(this),
         clean_handlers: this.deselectTable.bind(this),
         clean_for_save_handlers: ({ root }) => this.deselectTable(root),
-        modifyTraversedNodes: this.adjustTraversedNodes.bind(this),
-        considerNodeFullySelected: (node) => !!closestElement(node, ".o_selected_td"),
+        traversed_nodes_processors: this.adjustTraversedNodes.bind(this),
+        fully_selected_node_predicates: (node) => !!closestElement(node, ".o_selected_td"),
         before_line_break_handlers: this.resetTableSelection.bind(this),
         before_split_block_handlers: this.resetTableSelection.bind(this),
     };

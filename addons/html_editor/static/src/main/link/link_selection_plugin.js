@@ -64,7 +64,7 @@ export class LinkSelectionPlugin extends Plugin {
         selectionchange_handlers: this.resetLinkInSelection.bind(this),
         clean_handlers: (root) => this.removeFEFFs(root, { preserveSelection: true }),
         clean_for_save_handlers: this.cleanForSave.bind(this),
-        arrows_should_skip: (ev, char, lastSkipped) =>
+        intangible_char_for_keyboard_navigation_predicates: (ev, char, lastSkipped) =>
             // Skip first FEFF, but not the second one (unless shift is pressed).
             char === "\uFEFF" && (ev.shiftKey || lastSkipped !== "\uFEFF"),
         normalize_handlers: (el) => this.normalize(el || this.editable),
@@ -174,14 +174,14 @@ export class LinkSelectionPlugin extends Plugin {
             this.editable.contains(link) &&
             !isProtected(link) &&
             !isProtecting(link) &&
-            !this.getResource("excludeLinkZwnbsp").some((callback) => callback(link))
+            !this.getResource("ineligible_link_for_zwnbsp_predicates").some((callback) => callback(link))
         );
     }
 
     isLinkEligibleForVisualIndication(link) {
         return (
             this.isLinkEligibleForZwnbsp(link) &&
-            !this.getResource("excludeLinkVisualIndication").some((callback) => callback(link))
+            !this.getResource("ineligible_link_for_selection_indication_predicates").some((callback) => callback(link))
         );
     }
 

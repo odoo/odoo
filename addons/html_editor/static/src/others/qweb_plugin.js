@@ -24,7 +24,7 @@ export class QWebPlugin extends Plugin {
     static dependencies = ["overlay", "selection"];
     resources = {
         selectionchange_handlers: this.onSelectionChange.bind(this),
-        is_mutation_record_savable: this.isMutationRecordSavable.bind(this),
+        savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
         clean_handlers: this.clearDataAttributes.bind(this),
         unremovable_node_predicates: (node) =>
             node.getAttribute?.("t-set") || node.getAttribute?.("t-call"),

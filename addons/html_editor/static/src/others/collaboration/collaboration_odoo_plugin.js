@@ -375,7 +375,7 @@ export class CollaborationOdooPlugin extends Plugin {
             startTime: this.startCollaborationTime,
             peerName: user.name,
         };
-        for (const cb of this.getResource("getCollaborationPeerMetadata")) {
+        for (const cb of this.getResource("collaboration_peer_metadata_providers")) {
             Object.assign(metadatas, cb());
         }
         return metadatas;

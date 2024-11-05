@@ -11,7 +11,7 @@ export class EmbeddedComponentPlugin extends Plugin {
     static dependencies = ["history", "protectedNode"];
     resources = {
         serializable_descendants_processors: this.processDescendantsToSerialize.bind(this),
-        is_mutation_record_savable: this.isMutationRecordSavable.bind(this),
+        savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
         attribute_change_handlers: this.onChangeAttribute.bind(this),
         attribute_change_processors: this.onChangeAttribute.bind(this),
         clean_for_save_handlers: ({ root }) => this.cleanForSave(root),

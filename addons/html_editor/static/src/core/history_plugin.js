@@ -221,7 +221,7 @@ export class HistoryPlugin extends Plugin {
      * @param { HistoryStep } step
      */
     processHistoryStep(step) {
-        for (const fn of this.getResource("process_history_step")) {
+        for (const fn of this.getResource("history_step_processors")) {
             step = fn(step);
         }
         return step;
@@ -302,7 +302,7 @@ export class HistoryPlugin extends Plugin {
      */
     filterMutationRecords(records) {
         this.dispatchTo("before_filter_mutation_record_handlers", records);
-        for (const callback of this.getResource("is_mutation_record_savable")) {
+        for (const callback of this.getResource("savable_mutation_record_predicates")) {
             records = records.filter(callback);
         }
 

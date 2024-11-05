@@ -15,7 +15,7 @@ export class CollaborationSelectionPlugin extends Plugin {
     static dependencies = ["history", "collaborationOdoo", "localOverlay"];
     resources = {
         collaboration_notification_handlers: this.handleCollaborationNotification.bind(this),
-        getCollaborationPeerMetadata: () => ({ selectionColor: this.selectionColor }),
+        collaboration_peer_metadata_providers: () => ({ selectionColor: this.selectionColor }),
         layout_geometry_change_handlers: this.refreshSelection.bind(this),
         collaborative_selection_update_handlers: this.updateSelection.bind(this),
     };
