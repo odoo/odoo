@@ -1,12 +1,158 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import contextlib
+
 from markupsafe import Markup
 
+from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import UserError
 from odoo.tests.common import tagged, users, HttpCase
 from odoo.tools import is_html_empty, mute_logger, formataddr
+
+
+@tagged('mail_message', 'mail_controller', 'post_install', '-at_install')
+class TestMessageHelpersRobustness(MailCommon, HttpCase):
+    """ Test message helpers robustness, currently mainly linked to records
+    being removed from DB due to cascading deletion, which let side records
+    alive in DB. """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.user_employee_2 = mail_new_test_user(
+            cls.env,
+            email='eglantine@example.com',
+            groups='base.group_user',
+            login='employee2',
+            notification_type='email',
+            name='Eglantine Employee',
+        )
+        cls.partner_employee_2 = cls.user_employee_2.partner_id
+
+        cls.test_records_simple, _partners = cls._create_records_for_batch(
+            'mail.test.simple', 3,
+        )
+
+    def setUp(self):
+        super().setUp()
+        # cleanup db
+        self.env['mail.notification'].search([('author_id', '=', self.partner_employee.id)]).unlink()
+
+        # handy shortcut variables
+        self.deleted_record = self.test_records_simple[2]
+
+        # generate crashed notifications
+        with mute_logger('odoo.addons.mail.models.mail_mail'), self.mock_mail_gateway():
+            def _send_email(*args, **kwargs):
+                raise MailDeliveryException("Some exception")
+            self.send_email_mocked.side_effect = _send_email
+
+            for record in self.test_records_simple.with_user(self.user_employee):
+                record.message_post(
+                    body="Setup",
+                    message_type='comment',
+                    partner_ids=self.partner_employee_2.ids,
+                    subtype_id=self.env.ref('mail.mt_comment').id,
+                )
+
+        # In the mean time, some FK deletes the record where the message is
+        # # scheduled, skipping its unlink() override
+        self.env.cr.execute(
+            f"DELETE FROM {self.test_records_simple._table} WHERE id = %s", (self.deleted_record.id,)
+        )
+        self.env.invalidate_all()
+
+    def test_assert_initial_values(self):
+        notifs_by_employee = self.env['mail.notification'].search([('author_id', '=', self.partner_employee.id)])
+        self.assertEqual(
+            set(notifs_by_employee.mapped('mail_message_id.res_id')),
+            set(self.test_records_simple.ids)
+        )
+        self.assertEqual(len(notifs_by_employee), 3)
+        self.assertTrue(all(notif.notification_status == 'exception' for notif in notifs_by_employee))
+        self.assertTrue(all(notif.res_partner_id == self.partner_employee_2 for notif in notifs_by_employee))
+
+    def test_load_message_failures(self):
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        with contextlib.suppress(Exception), mute_logger('odoo.http', 'odoo.sql_db'):  # suppress logged error due to readonly route doing an update
+            result = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["failures"]})
+        self.assertEqual(sorted(r['thread']['id'] for r in result['mail.message']), sorted(self.test_records_simple[:2].ids))
+        self.assertEqual(
+            sorted(self.env['mail.notification'].search([('author_id', '=', self.partner_employee.id)]).mapped('mail_message_id.res_id')),
+            sorted((self.test_records_simple - self.deleted_record).ids),
+            'Should have cleaned notifications linked to unexisting records'
+        )
+
+    def test_load_message_failures_use_display_name(self):
+        test_record = self.env['mail.test.simple.unnamed'].create({'description': 'Some description'})
+        test_record.message_subscribe(partner_ids=self.partner_employee_2.ids)
+
+        self.authenticate(self.user_employee.login, self.user_employee.password)
+        msg = test_record.message_post(body='Some body', author_id=self.partner_employee.id)
+        # simulate failure
+        self.env['mail.notification'].create({
+            'author_id': msg.author_id.id,
+            'mail_message_id': msg.id,
+            'res_partner_id': self.partner_employee_2.id,
+            'notification_type': 'email',
+            'notification_status': 'exception',
+            'failure_type': 'mail_email_invalid',
+        })
+        with contextlib.suppress(Exception), mute_logger('odoo.http', 'odoo.sql_db'):  # suppress logged error due to readonly route doing an update
+            res = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["failures"]})
+            self.assertEqual(
+                sorted(t["name"] for t in res["mail.thread"]),
+                sorted(['Some description'] + (self.test_records_simple - self.deleted_record).mapped('display_name'))
+            )
+
+    def test_message_fetch(self):
+        # set notifications to unread, so that we can simulate inbox usage
+        p2_notifications = self.env['mail.notification'].search([('res_partner_id', '=', self.partner_employee_2.id)])
+        p2_notifications.is_read = False
+
+        self.authenticate(self.user_employee_2.login, self.user_employee_2.login)
+        result = self.make_jsonrpc_request("/mail/inbox/messages", {})['data']
+        self.assertEqual(
+            {r['thread']['id'] if r['thread'] else False for r in result['mail.message']},
+            set((self.test_records_simple - self.deleted_record).ids + [False]),
+            'Currently reading message on missing record, crash avoided, void thread for missing record'
+        )
+        p2_notifications.with_user(self.user_employee_2).mail_message_id.set_message_done()
+
+        result = self.make_jsonrpc_request("/mail/history/messages", {})['data']
+        self.assertEqual(
+            {r['thread']['id'] if r['thread'] else False for r in result['mail.message']},
+            set((self.test_records_simple - self.deleted_record).ids + [False]),
+            'Currently reading message on missing record, crash avoided'
+        )
+
+    def test_message_link_by_employee(self):
+        record = self.test_records_simple[0]
+        thread_message = record.message_post(body='Thread Message', message_type='comment')
+        deleted_message = record.message_post(body='', message_type='comment')
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        with self.subTest(thread_message=thread_message):
+            expected_url = self.base_url() + f'/odoo/{thread_message.model}/{thread_message.res_id}?highlight_message_id={thread_message.id}'
+            res = self.url_open(f'/mail/message/{thread_message.id}')
+            self.assertEqual(res.url, expected_url)
+        with self.subTest(deleted_message=deleted_message):
+            res = self.url_open(f'/mail/message/{deleted_message.id}')
+
+    def test_notify_cancel_by_type(self):
+        """ Test canceling notifications, notably when having missing records. """
+        self.env.invalidate_all()
+        notifs_by_employee = self.env['mail.notification'].search([('author_id', '=', self.partner_employee.id)])
+
+        # do not crash even if removed record
+        self.test_records_simple.with_user(self.user_employee).notify_cancel_by_type('email')
+        self.env.invalidate_all()
+
+        notifs_by_employee = notifs_by_employee.exists()
+        self.assertEqual(len(notifs_by_employee), 3, 'Currently keep notifications for missing records')
+        self.assertTrue(all(notif.notification_status == 'canceled' for notif in notifs_by_employee))
 
 
 @tagged("mail_message", "post_install", "-at_install")
@@ -335,41 +481,3 @@ class TestMessageValues(MailCommon):
         """ Test various values on mail.message, notably default values """
         msg = self.env['mail.message'].create({'model': self.alias_record._name, 'res_id': self.alias_record.id})
         self.assertEqual(msg.message_type, 'comment', 'Message should be comments by default')
-
-
-@tagged("mail_message")
-class TestMessageLinks(MailCommon, HttpCase):
-
-    def test_message_link_by_employee(self):
-        record = self.env['mail.test.simple'].create({'name': 'Test1'})
-        thread_message = record.message_post(body='Thread Message', message_type='comment')
-        deleted_message = record.message_post(body='', message_type='comment')
-        self.authenticate(self.user_employee.login, self.user_employee.login)
-        with self.subTest(thread_message=thread_message):
-            expected_url = self.base_url() + f'/odoo/{thread_message.model}/{thread_message.res_id}?highlight_message_id={thread_message.id}'
-            res = self.url_open(f'/mail/message/{thread_message.id}')
-            self.assertEqual(res.url, expected_url)
-            self.assertEqual(res.url, expected_url)
-        with self.subTest(deleted_message=deleted_message):
-            res = self.url_open(f'/mail/message/{deleted_message.id}')
-
-@tagged("mail_message", "mail_store", "post_install", "-at_install")
-class TestMessageStore(MailCommon, HttpCase):
-
-    def test_store_data_use_display_name(self):
-        test_record = self.env['mail.test.simple.unnamed'].create({'description': 'Some description'})
-        user_invalid = mail_new_test_user(self.env, login='invalid', groups='base.group_portal', name='Invalid User', email='invalid email', notification_type='email')
-        test_record.message_subscribe(partner_ids=user_invalid.partner_id.ids)
-        self.authenticate(self.user_employee.login, self.user_employee.password)
-        msg = test_record.message_post(body='Some body', author_id=self.partner_employee.id)
-        # simulate failure
-        self.env['mail.notification'].create({
-            'author_id': msg.author_id.id,
-            'mail_message_id': msg.id,
-            'res_partner_id': user_invalid.partner_id.id,
-            'notification_type': 'email',
-            'notification_status': 'exception',
-            'failure_type': 'mail_email_invalid',
-        })
-        res = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["failures"]})
-        self.assertEqual([t["display_name"] for t in res["mail.thread"]], ['Some description'])
