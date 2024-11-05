@@ -3,8 +3,6 @@
 
 from odoo import models, modules, _
 
-import threading
-
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
@@ -23,7 +21,7 @@ class StockPicking(models.Model):
             is_delivery = picking.company_id.stock_move_sms_validation \
                     and picking.picking_type_id.code == 'outgoing' \
                     and picking.partner_id.phone
-            if is_delivery and not getattr(threading.current_thread(), 'testing', False) \
+            if is_delivery \
                     and not modules.module.current_test \
                     and not picking.company_id.has_received_warning_stock_sms \
                     and picking.company_id.stock_move_sms_validation:

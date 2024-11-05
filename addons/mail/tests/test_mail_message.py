@@ -8,9 +8,10 @@ from odoo.tests import new_test_user, tagged
 class TestMailMessage(common.MailCommon):
     def test_unlink_failure_message_notify_author(self):
         recipient = new_test_user(self.env, login="Bob", email="invalid_email_addr")
-        message = self.env.user.partner_id.message_post(
-            body="Hello world!", partner_ids=recipient.partner_id.ids
-        )
+        with self.mock_mail_gateway():
+            message = self.env.user.partner_id.message_post(
+                body="Hello world!", partner_ids=recipient.partner_id.ids
+            )
         self.assertEqual(message.notification_ids.failure_type, "mail_email_invalid")
         self.assertEqual(message.notification_ids.res_partner_id, recipient.partner_id)
         self.assertEqual(message.notification_ids.author_id, self.env.user.partner_id)

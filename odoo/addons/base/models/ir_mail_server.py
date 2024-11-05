@@ -378,6 +378,12 @@ class IrMail_Server(models.Model):
         self.ensure_one()
         return self.test_smtp_connection(autodetect_max_email_size=True)
 
+    @classmethod
+    def _disable_send(cls):
+        """Whether to disable sending e-mails"""
+        # no e-mails during testing or when registry is not ready
+        return modules.module.current_test or not cls.pool._init
+
     def connect(self, host=None, port=None, user=None, password=None, encryption=None,
                 smtp_from=None, ssl_certificate=None, ssl_private_key=None, smtp_debug=False, mail_server_id=None,
                 allow_archived=False):
@@ -403,8 +409,8 @@ class IrMail_Server(models.Model):
            longer raised.
         """
         # Do not actually connect while running in test mode
-        if modules.module.current_test:
-            return
+        if self._disable_send():
+            return None
         mail_server = smtp_encryption = None
         if mail_server_id:
             mail_server = self.sudo().browse(mail_server_id)
@@ -821,7 +827,7 @@ class IrMail_Server(models.Model):
         smtp_from, smtp_to_list, message = self._prepare_email_message(message, smtp)
 
         # Do not actually send emails in testing mode!
-        if modules.module.current_test:
+        if self._disable_send():
             _test_logger.debug("skip sending email in test mode")
             return message['Message-Id']
 

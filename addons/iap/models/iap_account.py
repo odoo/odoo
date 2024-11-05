@@ -2,13 +2,13 @@
 
 import logging
 import secrets
-import threading
 import uuid
 import werkzeug.urls
 
 from odoo import api, fields, models, _
 from odoo.addons.iap.tools import iap_tools
 from odoo.exceptions import AccessError, UserError
+from odoo.modules import module
 from odoo.tools import get_lang
 
 _logger = logging.getLogger(__name__)
@@ -81,13 +81,9 @@ class IapAccount(models.Model):
                     _logger.warning("Update of the warning email configuration has failed: %s", str(e))
         return res
 
-    @staticmethod
-    def is_running_test_suite():
-        return hasattr(threading.current_thread(), 'testing') and threading.current_thread().testing
-
     def _get_account_information_from_iap(self):
         # During testing, we don't want to call the iap server
-        if self.is_running_test_suite():
+        if module.current_test:
             return
         route = '/iap/1/get-accounts-information'
         endpoint = iap_tools.iap_get_endpoint(self.env)
@@ -163,7 +159,7 @@ class IapAccount(models.Model):
             service = self.env['iap.service'].search([('technical_name', '=', service_name)], limit=1)
             if not service:
                 raise UserError(self.env._("No service exists with the provided technical name"))
-            if self.is_running_test_suite():
+            if module.current_test:
                 # During testing, we don't want to commit the creation of a new IAP account to the database
                 return self.sudo().create({'service_id': service.id})
 

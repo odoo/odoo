@@ -611,7 +611,7 @@ class IrActionsReport(models.Model):
                     if len(bodies) > 1:
                         v = subprocess.run([_get_wkhtmltopdf_bin(), '--version'], stdout=subprocess.PIPE, check=True, encoding="utf-8")
                         if '(with patched qt)' not in v.stdout:
-                            if modules.module.current_test or tools.config['test_enable']:
+                            if modules.module.current_test:
                                 raise unittest.SkipTest("Unable to convert multiple documents via wkhtmltopdf using unpatched QT")
                             raise UserError(_("Tried to convert multiple documents in wkhtmltopdf using unpatched QT"))
 

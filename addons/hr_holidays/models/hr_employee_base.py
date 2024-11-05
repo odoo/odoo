@@ -5,6 +5,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import SQL
 from odoo.tools.float_utils import float_round
 
 from odoo.addons.resource.models.utils import HOURS_PER_DAY
@@ -53,10 +54,12 @@ class HrEmployeeBase(models.AbstractModel):
         """ Helper to compute the remaining leaves for the current employees
             :returns dict where the key is the employee id, and the value is the remain leaves
         """
-        self._cr.execute("""
+        for model_name in ('hr.leave', 'hr.leave.allocation'):
+            self.env[model_name].flush_model()
+        return self.env.execute_query_dict(SQL("""
             SELECT
-                sum(h.number_of_days) AS days,
-                h.employee_id
+                h.employee_id,
+                sum(h.number_of_days) AS days
             FROM
                 (
                     SELECT holiday_status_id, number_of_days,
@@ -72,8 +75,9 @@ class HrEmployeeBase(models.AbstractModel):
                 s.active = true AND h.state='validate' AND
                 s.requires_allocation='yes' AND
                 h.employee_id in %s
-            GROUP BY h.employee_id""", (tuple(self.ids),))
-        return {row['employee_id']: row['days'] for row in self._cr.dictfetchall()}
+            GROUP BY h.employee_id
+            """, (tuple(self.ids),)
+        ))
 
     def _compute_remaining_leaves(self):
         remaining = {}

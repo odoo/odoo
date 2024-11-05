@@ -490,6 +490,7 @@ class StockWarehouse(models.Model):
         (_find_existing_rule_or_create method is responsible for this part).
         """
         # Create routes and active/create their related rules.
+        self.ensure_one()
         routes = []
         rules_dict = self.get_rules_dict()
         for route_field, route_data in self._get_routes_values().items():

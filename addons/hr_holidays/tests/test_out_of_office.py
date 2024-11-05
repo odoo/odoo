@@ -48,6 +48,7 @@ class TestOutOfOffice(TestHrHolidaysCommon):
         })
         second_leave.action_approve()
         # validate a leave from 2024-06-10 (Monday) to 2024-06-11 (Tuesday)
+        self.env.invalidate_all()  # missing dependencies on compute functions, reset transaction
         self.assertEqual(self.employee_hruser.user_id.im_status, 'leave_offline', 'user should be out (leave_offline)')
         self.assertEqual(self.employee_hruser.user_id.partner_id.im_status, 'leave_offline', 'user should be out (leave_offline)')
 
