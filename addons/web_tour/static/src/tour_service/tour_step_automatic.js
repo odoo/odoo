@@ -47,7 +47,6 @@ export class TourStepAutomatic extends TourStep {
      * @returns {Boolean}
      */
     async doAction() {
-        clearTimeout(this._timeout);
         let result = false;
         if (!this.skipped) {
             // TODO: Delegate the following routine to the `ACTION_HELPERS` in the macro module.
