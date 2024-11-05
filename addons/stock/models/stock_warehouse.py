@@ -1032,27 +1032,27 @@ class Warehouse(models.Model):
         return {
             'in_type_id': {
                 'name': name + ' ' + _('Sequence in'),
-                'prefix': code + '/IN/', 'padding': 5,
+                'prefix': code + '/' + (self.in_type_id.sequence_code or 'IN') + '/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
             'out_type_id': {
                 'name': name + ' ' + _('Sequence out'),
-                'prefix': code + '/OUT/', 'padding': 5,
+                'prefix': code + '/' + (self.out_type_id.sequence_code or 'OUT') + '/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
             'pack_type_id': {
                 'name': name + ' ' + _('Sequence packing'),
-                'prefix': code + '/PACK/', 'padding': 5,
+                'prefix': code + '/' + (self.pack_type_id.sequence_code or 'PACK') + '/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
             'pick_type_id': {
                 'name': name + ' ' + _('Sequence picking'),
-                'prefix': code + '/PICK/', 'padding': 5,
+                'prefix': code + '/' + (self.pick_type_id.sequence_code or 'PICK') + '/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
             'int_type_id': {
                 'name': name + ' ' + _('Sequence internal'),
-                'prefix': code + '/INT/', 'padding': 5,
+                'prefix': code + '/' + (self.int_type_id.sequence_code or 'INT') + '/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
         }
