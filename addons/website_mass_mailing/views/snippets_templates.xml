@@ -10,6 +10,11 @@
             <keywords>form, updates, digest, bulletin, announcements, notifications, communication, email, modal, alert, dialog, prompt, pop-up, subscription</keywords>
         </t>
     </xpath>
+    <xpath expr="//t[@id='mass_mailing_newsletter_box_hook']" position="replace">
+        <t t-snippet="website_mass_mailing.s_newsletter_box" string="Newsletter Box" t-forbid-sanitize="form" group="contact_and_forms">
+            <keywords>updates, digest, bulletin, announcements, notifications, communication, promotional, email, alert, dialog, prompt, subscription, subscribe, mailing-list, news, box, image, picture</keywords>
+        </t>
+    </xpath>
     <xpath expr="//t[@id='mass_mailing_newsletter_popup_hook']" position="replace">
         <t t-snippet="website_mass_mailing.s_newsletter_subscribe_popup" string="Newsletter Popup" t-forbid-sanitize="form" group="contact_and_forms"/>
     </xpath>
@@ -69,6 +74,33 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
             <t t-snippet-call="website_mass_mailing.s_newsletter_subscribe_form"/>
         </div>
     </div>
+</template>
+
+<template id="s_newsletter_box" name="Newsletter Box">
+    <section class="s_newsletter_box s_newsletter_list o_colored_level pt64 pb64 o_cc o_cc2" data-name="Newsletter Box" data-list-id="0" data-oe-shape-data="{'shape':'web_editor/Blobs/04','colors':{'c5':'o-color-2'},'flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0'}">
+        <div class="o_we_shape o_web_editor_Blobs_04" style="background-image: url('/web_editor/shape/web_editor/Blobs/04.svg?c5=o-color-2');"/>
+        <div class="container">
+            <div class="row s_nb_column_fixed s_col_no_bgcolor">
+                <div class="s_media_list_item col-lg-7 offset-lg-4 pt16 pb16" data-name="Box">
+                    <div class="s_col_no_resize s_col_no_bgcolor o_cc o_cc1 row g-0 align-items-center flex-row-reverse rounded overflow-hidden shadow-sm">
+                        <div class="s_media_list_img_wrapper col-lg-4 align-self-stretch">
+                            <img src="/web/image/website.library_image_07" class="s_media_list_img h-100 w-100 object-fit-cover" alt=""/>
+                        </div>
+                        <div class="s_media_list_body col-lg-8 p-3 p-md-5">
+                            <h4>Don't miss our upcoming updates</h4>
+                            <p class="text-muted">Get all the latest news, blog posts and product updates from our company, delivered directly to your inbox.</p>
+                            <t t-snippet-call="website_mass_mailing.s_newsletter_subscribe_form">
+                                <t t-set="_input_classes" t-valuef="s_newsletter_subscribe_form_input_small"/>
+                                <t t-set="thank_you_message">
+                                    <p class="h6-fs text-success">Thanks for registering!</p>
+                                </t>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </template>
 
 <template id="s_newsletter_block_form_template" groups="base.group_user">
@@ -228,7 +260,7 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
         </t>
         <t t-call="website_mass_mailing.newsletter_subscribe_options_common">
             <t t-set="_selector">.s_newsletter_list</t>
-            <t t-set="_exclude">.s_newsletter_block .s_newsletter_list, .o_newsletter_popup .s_newsletter_list</t>
+            <t t-set="_exclude">.s_newsletter_block .s_newsletter_list, .o_newsletter_popup .s_newsletter_list, .s_newsletter_box .s_newsletter_list</t>
         </t>
         <div data-selector=".js_subscribe" data-drop-near="p, h1, h2, h3, blockquote, .card"/>
     </xpath>

@@ -91,7 +91,13 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
     },
 
     _getListId: function () {
-        return this.$el.closest('[data-snippet=s_newsletter_block').data('list-id') || this.$el.data('list-id');
+        // TODO this should be improved: we currently have snippets (e.g. the
+        // s_newsletter_block one) who relies on the fact the list-id is saved
+        // on the snippet's main section, and ignores the one saved on the inner
+        // form snippet. Some other (e.g. the s_newsletter_popup one) relies on
+        // the ID of the inner form snippet. We should make it more consistent:
+        // probably always relying on the inner form list-id? (upgrade...)
+        return this.el.closest('section[data-list-id]')?.dataset.listId || this.el.dataset.listId;
     },
 
     //--------------------------------------------------------------------------
