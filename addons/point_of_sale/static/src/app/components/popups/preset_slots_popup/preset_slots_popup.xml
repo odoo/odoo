@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.PresetSlotsPopup">
+        <Dialog size="'xl'">
+            <t t-set-slot="header">
+            </t>
+            <div>
+                <div class="d-flex align-items-center gap-2">
+                    <button t-foreach="timedPresets"
+                        t-as="preset"
+                        t-key="preset.id"
+                        class="btn btn-lg flex-grow-1"
+                        t-attf-class="{{ preset.id === this.state.selectedPresetId ? 'btn-primary' : 'btn-secondary' }}"
+                        t-on-click="() => this.state.selectedPresetId = preset.id"
+                        t-esc="preset.name" />
+                </div>
+                <div t-foreach="timedPresets"
+                    t-as="preset"
+                    t-key="preset.id"
+                    t-attf-class="{{ preset.id === this.state.selectedPresetId ? '' : 'd-none' }}"
+                    class="mt-3 d-flex flex-wrap gap-2">
+                    <button t-foreach="preset.availabilities"
+                        t-as="slot"
+                        t-key="slot_index"
+                        class="btn btn-secondary"
+                        t-on-click="() => this.confirm(slot, preset)"
+                        t-esc="slot.humain_readable" />
+                </div>
+            </div>
+            <t t-set-slot="footer">
+            </t>
+        </Dialog>
+    </t>
+</templates>

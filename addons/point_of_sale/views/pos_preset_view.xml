@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_preset_form" model="ir.ui.view">
+        <field name="name">pos.preset.form</field>
+        <field name="model">pos.preset</field>
+        <field name="arch" type="xml">
+            <form string="Preset">
+                <sheet>
+                    <div class="oe_title mb-2">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Cash" class="oe_inline"/></h1>
+                    </div>
+                    <group name="Presets">
+                        <group>
+                            <field name="pricelist_id"/>
+                            <field name="fiscal_position_id"/>
+                        </group>
+                        <group>
+                            <field name="address_on_ticket"/>
+                            <field name="color" widget="color_picker"/>
+                        </group>
+                    </group>
+                    <group name="Timing">
+                        <field name="use_timing" />
+                        <div class="row col-lg-12" invisible="not use_timing">
+                            <span class="text-900 fw-bold">From
+                                <field name="hour_opening" class="oe_inline text-center" widget="float_time" /> to <field name="hour_closing" class="oe_inline text-center" widget="float_time" />
+                            </span>
+                            <span class="text-900 fw-bold">Capacity
+                                <field name="capacity_per_x_minutes" class="oe_inline text-center" /> orders per <field name="x_minutes" class="oe_inline text-center" /> minutes
+                            </span>
+                            <span class="text-900 fw-bold">Preparation Time
+                                <field name="preparation_time_minute" class="oe_inline text-center" /> minutes
+                            </span>
+                        </div>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_pos_preset_tree" model="ir.ui.view">
+        <field name="name">pos.preset.list</field>
+        <field name="model">pos.preset</field>
+        <field name="arch" type="xml">
+            <list string="Presets">
+                <field name="name"/>
+                <field name="use_timing"/>
+                <field name="address_on_ticket"/>
+                <field name="color" widget="color_picker"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_pos_preset_form" model="ir.actions.act_window">
+        <field name="name">Presets</field>
+        <field name="res_model">pos.preset</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new preset
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_pos_preset" parent="menu_point_config_product" action="action_pos_preset_form" sequence="3" groups="group_pos_manager,group_pos_user"/>
+</odoo>
