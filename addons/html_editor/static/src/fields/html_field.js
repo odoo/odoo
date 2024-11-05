@@ -236,7 +236,7 @@ export class HtmlField extends Component {
 
         if (this.props.embeddedComponents) {
             // TODO @engagement: fill this array with default/base components
-            config.resources.embeddedComponents = [...MAIN_EMBEDDINGS];
+            config.resources.embedded_components = [...MAIN_EMBEDDINGS];
         }
 
         const { sanitize_tags, sanitize } = this.props.record.fields[this.props.name];

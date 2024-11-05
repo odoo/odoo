@@ -207,7 +207,7 @@ export class LinkPlugin extends Plugin {
                     this.dependencies.selection.getSelectionData().documentSelectionIsInEditable,
             }
         );
-        this.ignoredClasses = new Set(this.getResource("link_ignore_classes"));
+        this.ignoredClasses = new Set(this.getResource("system_classes"));
 
         this.getExternalMetaData = memoize(fetchExternalMetaData);
         this.getInternalMetaData = memoize(fetchInternalMetaData);

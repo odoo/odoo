@@ -25,7 +25,7 @@ export class TableOfContentPlugin extends Plugin {
                 commandId: "insertTableOfContent",
             },
         ],
-        mutation_filtered_classes: ["o_embedded_toc_header_highlight"],
+        system_classes: ["o_embedded_toc_header_highlight"],
         restore_savepoint_handlers: () => this.delayedUpdateTableOfContents(this.editable),
         history_reset_handlers: () => this.delayedUpdateTableOfContents(this.editable),
         history_reset_from_steps_handlers: () => this.delayedUpdateTableOfContents(this.editable),
