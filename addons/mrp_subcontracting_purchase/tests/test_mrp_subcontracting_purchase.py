@@ -712,7 +712,6 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         """
         search_qty_less_than_or_equal_moved = 10
         moved_quantity_to_subcontractor = 20
-        search_qty_less_than_or_equal_total = 90
         total_component_quantity = 100
         search_qty_more_than_total = 110
 
@@ -761,8 +760,8 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         self.assertEqual(quantity_after_move, quantity_before_move + moved_quantity_to_subcontractor)
 
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom.id, searchQty=search_qty_less_than_or_equal_moved, searchVariant=False)
-        self.assertEqual(report_values['lines']['components'][0]['quantity_available'], total_component_quantity)
-        self.assertEqual(report_values['lines']['components'][0]['quantity_on_hand'], total_component_quantity)
+        self.assertEqual(report_values['lines']['components'][0]['quantity_available'], moved_quantity_to_subcontractor)
+        self.assertEqual(report_values['lines']['components'][0]['quantity_on_hand'], moved_quantity_to_subcontractor)
         self.assertEqual(report_values['lines']['quantity_available'], 0)
         self.assertEqual(report_values['lines']['quantity_on_hand'], 0)
         self.assertEqual(report_values['lines']['producible_qty'], moved_quantity_to_subcontractor)
@@ -770,7 +769,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
 
         self.assertEqual(report_values['lines']['components'][0]['stock_avail_state'], 'available')
 
-        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom.id, searchQty=search_qty_less_than_or_equal_total, searchVariant=False)
+        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom.id, searchQty=search_qty_less_than_or_equal_moved, searchVariant=False)
         self.assertEqual(report_values['lines']['components'][0]['stock_avail_state'], 'available')
 
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom.id, searchQty=search_qty_more_than_total, searchVariant=False)
