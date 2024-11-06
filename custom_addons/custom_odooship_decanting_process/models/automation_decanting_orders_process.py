@@ -55,6 +55,7 @@ class AutomationDecantingOrdersProcess(models.Model):
                                    store=True)
     location_dest_id = fields.Many2one(related='picking_id.location_dest_id', string='Destination location')
     count_lines = fields.Integer(string='Count Lines')
+    source_document = fields.Char(related='picking_id.origin', store=True)
 
     def action_open_decanting_wizard(self):
         """
@@ -212,7 +213,8 @@ class AutomationDecantingOrdersProcess(models.Model):
                 "container_code": self.crate_barcode,  # Crate Barcode
                 "container_type": self.container_code,  # Container Code
                 "bin_code": line.bin_code,  # Bin Code
-                "batch_property07": 'yyy',  # Assuming Color is stored here
+                # "batch_property07": 'yyy',  # Assuming Color is stored here
+                "batch_property07": self.source_document,  # Assuming Color is stored here
                 "batch_property08": 'zzz',
             })
             stock_quant_obj._update_available_quantity(
