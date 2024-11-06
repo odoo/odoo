@@ -1,12 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import odoo
-import sys
 import optparse
 import logging
-
 from collections import defaultdict
 
 from . import Command
+
 from odoo.modules.registry import Registry
 from odoo.tools import SQL
 
@@ -15,6 +14,7 @@ _logger = logging.getLogger(__name__)
 
 class Obfuscate(Command):
     """Obfuscate data in a given odoo database"""
+
     def __init__(self):
         super().__init__()
         self.cr = None
@@ -125,11 +125,11 @@ class Obfuscate(Command):
         conf_y = input(f"This will alter data in the database {self.dbname} and can lead to a data loss. Would you like to proceed [y/N]? ")
         if conf_y.upper() != 'Y':
             self.rollback()
-            sys.exit(0)
+            self.exit(0)
         conf_db = input(f"Please type your database name ({self.dbname}) in UPPERCASE to confirm you understand this operation is not considered secure : ")
         if self.dbname.upper() != conf_db:
             self.rollback()
-            sys.exit(0)
+            self.exit(0)
         return True
 
     def run(self, cmdargs):
@@ -146,16 +146,16 @@ class Obfuscate(Command):
 
         parser.add_option_group(group)
         if not cmdargs:
-            sys.exit(parser.print_help())
+            self.exit(parser.print_help())
 
         try:
             opt = odoo.tools.config.parse_config(cmdargs, setup_logging=True)
             if not opt.pwd:
                 _logger.error("--pwd is required")
-                sys.exit("ERROR: --pwd is required")
+                self.exit("ERROR: --pwd is required")
             if opt.allfields and not opt.unobfuscate:
                 _logger.error("--allfields can only be used in unobfuscate mode")
-                sys.exit("ERROR: --allfields can only be used in unobfuscate mode")
+                self.exit("ERROR: --allfields can only be used in unobfuscate mode")
             self.dbname = odoo.tools.config['db_name']
             self.registry = Registry(self.dbname)
             with self.registry.cursor() as cr:
@@ -249,4 +249,4 @@ class Obfuscate(Command):
                     self.rollback()
 
         except Exception as e:  # noqa: BLE001
-            sys.exit("ERROR: %s" % e)
+            self.exit("ERROR: %s" % e)

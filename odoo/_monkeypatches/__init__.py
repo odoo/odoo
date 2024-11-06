@@ -15,6 +15,10 @@ def patch_all():
     patch_evented()
     set_timezone_utc()
 
+    from .csv import patch_csv
+    patch_csv()
+    from .re import patch_re
+    patch_re()
     from .codecs import patch_codecs
     patch_codecs()
     from .mimetypes import patch_mimetypes

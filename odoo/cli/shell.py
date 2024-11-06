@@ -1,10 +1,7 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import code
 import logging
 import os
 import signal
-import sys
-from pathlib import Path
 
 import odoo
 from odoo.modules.registry import Registry
@@ -56,19 +53,19 @@ class Shell(Command):
     supported_shells = ['ipython', 'ptpython', 'bpython', 'python']
 
     def init(self, args):
-        config.parser.prog = f'{Path(sys.argv[0]).name} {self.name}'
+        config.parser.prog = self.title
         config.parse_config(args, setup_logging=True)
         cli_server.report_configuration()
         server.start(preload=[], stop=True)
         signal.signal(signal.SIGINT, raise_keyboard_interrupt)
 
     def console(self, local_vars):
-        if not os.isatty(sys.stdin.fileno()):
+        if not os.isatty(self.stdin.fileno()):
             local_vars['__name__'] = '__main__'
-            exec(sys.stdin.read(), local_vars)
+            exec(self.stdin.read(), local_vars)
         else:
             if 'env' not in local_vars:
-                print('No environment set, use `%s shell -d dbname` to get one.' % sys.argv[0])
+                print('No environment set, use `%s shell -d dbname` to get one.' % self.appname)
             for i in sorted(local_vars):
                 print('%s: %s' % (i, local_vars[i]))
 

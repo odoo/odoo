@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-import argparse
-import sys
 
 import os.path
 from importlib.machinery import SourceFileLoader
@@ -66,7 +64,7 @@ class FileManager:
         return self._files.get(str(path))
 
     def print_progress(self, current, total):
-        if sys.stdout.isatty():
+        if Command.sys.stdout.isatty():
             print(f'\033[F{round(current / total * 100)}%')  # noqa: T201
 
 
@@ -108,7 +106,19 @@ def migrate(
 
 
 class UpgradeCode(Command):
+    """ Activates code scripts between version upgrades. """
+
     name = 'upgrade_code'
+
+    def documentation(self):
+        return """
+            Activates code scripts between version upgrades.
+
+            The script folder will be emptied during each release,
+            only the scripts of the current major version are kept.
+
+            The scripts are placed in the `code_upgrade` folder.
+        """
 
     def run(self, cmdargs):
         odoo = Path(__file__).parent.parent.parent
@@ -119,7 +129,7 @@ class UpgradeCode(Command):
             str(next(odoo.glob('addons'))),
         ]
 
-        parser = argparse.ArgumentParser()
+        parser = self.new_parser()
         parser.add_argument('--addons-path', default=','.join(addons_path),
             help="[str] comma separated string representing the odoo addons path")
         parser.add_argument('-g', '--glob', default='**/*',
