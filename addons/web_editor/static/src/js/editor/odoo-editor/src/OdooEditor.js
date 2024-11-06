@@ -2382,8 +2382,14 @@ export class OdooEditor extends EventTarget {
             // zws if still needed.
             const el = closestElement(insertedZws);
             const next = insertedZws.nextSibling;
+            const isLineBreak = el && el.previousElementSibling && el.previousElementSibling.tagName === 'BR';
             insertedZws.remove();
             el && fillEmpty(el);
+            if (isLineBreak) {
+                // If there was already a line-break BR just before
+                // el that was removed in fillEmpty, add it back.
+                el.before(this.document.createElement('BR'));
+            }
             setSelection(next, 0);
         }
         if (joinWith) {
