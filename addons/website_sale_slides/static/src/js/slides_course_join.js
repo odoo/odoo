@@ -1,5 +1,4 @@
 import CourseJoin from "@website_slides/js/slides_course_join";
-import wUtils from "@website/js/utils";
 
 const CourseJoinWidget = CourseJoin.courseJoinWidget;
 
@@ -27,10 +26,17 @@ CourseJoinWidget.include({
         if (this.channel.channelEnroll === 'payment' && !this.publicUser) {
             const self = this;
             this.beforeJoin().then(function () {
-                wUtils.sendRequest('/shop/cart/update', {
-                    product_id: self.productId,
-                    express: 1,
-                });
+                const isBuyNow = true;
+                self.call('websiteSale', 'addToCart',
+                    {
+                        // TODO VCR Ensure productTemplateId is always provided to `addToCart`.
+                        // Currently, this works because the product configurator check is bypassed
+                        // when the isBuyNow parameter is set.
+                        productTemplateId: false,
+                        productId: self.productId,
+                    },
+                    isBuyNow,
+                );
             });
         } else {
             this._super.apply(this, arguments);

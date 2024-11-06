@@ -69,7 +69,8 @@ publicWidget.registry.websiteSaleTracking = publicWidget.Widget.extend({
     /**
      * @private
      */
-    _onAddToCart(event, ...productsTrackingInfo) {
+    _onAddToCart(event) {
+        const productsTrackingInfo = event.detail;
         const trackingInfo = {
             'currency': productsTrackingInfo[0]['currency'],
             'value': productsTrackingInfo.reduce((acc, val) => acc + val['price'] * val['quantity'], 0),

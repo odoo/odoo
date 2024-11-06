@@ -273,7 +273,6 @@ publicWidget.registry.ProductComparison = publicWidget.Widget.extend(cartHandler
     start: function () {
         var def = this._super.apply(this, arguments);
         this.productComparison = new ProductComparison(this);
-        this.getRedirectOption();
         return Promise.all([def, this.productComparison.appendTo(this.$el)]);
     },
 
@@ -303,34 +302,23 @@ publicWidget.registry.ProductComparison = publicWidget.Widget.extend(cartHandler
      */
     _onFormSubmit(ev) {
         ev.preventDefault();
-        const $form = $(ev.currentTarget);
+
+        const form = (ev.currentTarget);
         const cellIndex = $(ev.currentTarget).closest('td')[0].cellIndex;
         this.getCartHandlerOptions(ev);
         // Override product image container for animation.
         this.$itemImgContainer = this.$('#o_comparelist_table tr').first().find('td').eq(cellIndex);
-        const $inputProduct = $form.find('input[type="hidden"][name="product_id"]').first();
-        const productId = parseInt($inputProduct.val());
-        if (productId) {
-            const productTrackingInfo = $inputProduct.data('product-tracking-info');
-            if (productTrackingInfo) {
-                productTrackingInfo.quantity = 1;
-                $inputProduct.trigger('add_to_cart_event', [productTrackingInfo]);
-            }
-            return this.addToCart(this._getAddToCartParams(productId, $form));
-        }
+
+        const productTemplateId = parseInt(
+            form.querySelector('input[type="hidden"][name="product_template_id"]').value
+        );
+        const productId = parseInt(
+            form.querySelector('input[type="hidden"][name="product_id"]').value
+        );
+        this.call('websiteSale', 'addToCart', {
+            productTemplateId: productTemplateId,
+            productId: productId,
+        });
     },
-    /**
-     * Get the addToCart Params
-     *
-     * @param {number} productId
-     * @param {JQuery} $form
-     * @override
-     */
-    _getAddToCartParams(productId, $form) {
-        return {
-            product_id: productId,
-            add_qty: 1,
-        };
-    }
 });
 export default ProductComparison;
