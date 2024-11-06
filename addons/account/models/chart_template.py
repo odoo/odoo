@@ -140,7 +140,7 @@ class AccountChartTemplate(models.AbstractModel):
             chart template.
         :type install_demo: bool
         """
-        if not self.env.registry.ready and not install_demo:
+        if not self.env.registry.loaded and not install_demo:
             _logger.warning('Incorrect usage of try_loading without a fully loaded registry. This could lead to issues.')
         if not company:
             return
