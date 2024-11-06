@@ -18,7 +18,7 @@
                     t-on-click="(ev) => this.onFacetLabelClick(ev.target, facet)"
                     t-att-role="facet.domain ? 'button' : 'img'"
                     t-att-class="{
-                        'text-bg-action': facet.type == 'groupBy' || facet.type == 'comparison',
+                        'text-bg-action': facet.type == 'groupBy',
                         'btn': facet.type == 'groupBy' and env.searchModel.canOrderByCount,
                         'btn btn-primary': facet.type == 'field' || facet.type == 'filter',
                         'btn btn-favourite': facet.type == 'favorite'

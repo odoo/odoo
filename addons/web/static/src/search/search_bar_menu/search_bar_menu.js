@@ -131,26 +131,6 @@ export class SearchBarMenu extends Component {
         this.env.searchModel.createNewGroupBy(fieldName);
     }
 
-    // Comparison Panel
-    get showComparisonMenu() {
-        return (
-            this.env.searchModel.searchMenuTypes.has("comparison") &&
-            this.env.searchModel.getSearchItems((i) => i.type === "comparison").length > 0
-        );
-    }
-    get comparisonItems() {
-        return this.env.searchModel.getSearchItems(
-            (searchItem) => searchItem.type === "comparison"
-        );
-    }
-
-    /**
-     * @param {number} itemId
-     */
-    onComparisonSelected(itemId) {
-        this.env.searchModel.toggleSearchItem(itemId);
-    }
-
     // Favorite Panel
 
     get favorites() {

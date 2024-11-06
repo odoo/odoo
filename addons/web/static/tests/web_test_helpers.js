@@ -117,7 +117,6 @@ export {
     selectGroup,
     switchView,
     toggleActionMenu,
-    toggleComparisonMenu,
     toggleFavoriteMenu,
     toggleFilterMenu,
     toggleGroupByMenu,

@@ -99,7 +99,6 @@ export function getDefaultConfig() {
  *  @property {Object[]} [irFilters]
  *  @property {boolean} [loadIrFilters=false]
  *
- *  @property {Object} [comparison]
  *  @property {Object} [context={}]
  *  @property {DomainRepr} [domain]
  *  @property {string[]} [groupBy]
@@ -148,7 +147,6 @@ const STANDARD_PROPS = [
     "irFilters",
     "loadIrFilters",
 
-    "comparison",
     "context",
     "domain",
     "groupBy",
@@ -451,8 +449,8 @@ export class View extends Component {
             return this.loadView(nextProps);
         }
         // we assume that nextProps can only vary in the search keys:
-        // comparison, context, domain, groupBy, orderBy
-        const { comparison, context, domain, groupBy, orderBy } = nextProps;
-        Object.assign(this.withSearchProps, { comparison, context, domain, groupBy, orderBy });
+        // context, domain, groupBy, orderBy
+        const { context, domain, groupBy, orderBy } = nextProps;
+        Object.assign(this.withSearchProps, { context, domain, groupBy, orderBy });
     }
 }

@@ -174,23 +174,16 @@ test("default favorite is not activated if activateFavorite is set to false", as
     expect(getFacetTexts()).toEqual([]);
 });
 
-test(`toggle favorite correctly clears filter, groupbys, comparison and field "options"`, async () => {
+test(`toggle favorite correctly clears filter, groupbys and field "options"`, async () => {
     mockDate("2019-07-31T13:43:00");
 
     const searchBar = await mountWithSearch(SearchBar, {
         resModel: "foo",
-        searchMenuTypes: ["filter", "groupBy", "comparison", "favorite"],
+        searchMenuTypes: ["filter", "groupBy", "favorite"],
         searchViewId: false,
         irFilters: [
             {
-                context: `
-                        {
-                            "group_by": ["foo"],
-                            "comparison": {
-                                "favorite comparison content": "bla bla..."
-                            },
-                         }
-                    `,
+                context: `{"group_by": ["foo"]}`,
                 domain: "['!', ['foo', '=', 'qsdf']]",
                 id: 7,
                 is_default: false,
@@ -220,33 +213,14 @@ test(`toggle favorite correctly clears filter, groupbys, comparison and field "o
         ["date_field", "<=", "2019-12-31"],
     ]);
     expect(searchBar.env.searchModel.groupBy).toEqual(["date_field:month"]);
-    expect(searchBar.env.searchModel.getFullComparison()).toBe(null);
     expect(getFacetTexts()).toEqual([
         "Foo\na",
         "Date Field Filter: 2019",
         "Date Field Groupby: Month",
     ]);
 
-    // activate a comparison
-    await toggleSearchBarMenu();
-    await toggleMenuItem("Date Field Filter: Previous Period");
-    expect(searchBar.env.searchModel.domain).toEqual([["foo", "ilike", "a"]]);
-    expect(searchBar.env.searchModel.groupBy).toEqual(["date_field:month"]);
-    expect(searchBar.env.searchModel.getFullComparison()).toEqual({
-        comparisonId: "previous_period",
-        comparisonRange: [
-            "&",
-            ["date_field", ">=", "2018-01-01"],
-            ["date_field", "<=", "2018-12-31"],
-        ],
-        comparisonRangeDescription: "2018",
-        fieldDescription: "Date Field Filter",
-        fieldName: "date_field",
-        range: ["&", ["date_field", ">=", "2019-01-01"], ["date_field", "<=", "2019-12-31"]],
-        rangeDescription: "2019",
-    });
-
     // activate the unique existing favorite
+    await toggleSearchBarMenu();
     const favorite = queryFirst`.o_favorite_menu .dropdown-item`;
     expect(favorite).toHaveText("My favorite");
     expect(favorite).toHaveAttribute("role", "menuitemcheckbox");
@@ -256,9 +230,6 @@ test(`toggle favorite correctly clears filter, groupbys, comparison and field "o
     expect(favorite).toHaveProperty("ariaChecked", "true");
     expect(searchBar.env.searchModel.domain).toEqual(["!", ["foo", "=", "qsdf"]]);
     expect(searchBar.env.searchModel.groupBy).toEqual(["foo"]);
-    expect(searchBar.env.searchModel.getFullComparison()).toEqual({
-        "favorite comparison content": "bla bla...",
-    });
     expect(getFacetTexts()).toEqual(["My favorite"]);
 });
 
