@@ -61,7 +61,7 @@
                             <span t-elif="o.move_type == 'out_refund' and o.state == 'cancel'">Cancelled Credit Note</span>
                             <span t-elif="o.move_type == 'in_refund'">Vendor Credit Note</span>
                             <span t-elif="o.move_type == 'in_invoice'">Vendor Bill</span>
-                            <span t-if="o.name != '/'" t-field="o.name">INV/2023/0001</span>
+                            <span t-if="o.name != '/'" t-field="o.name" data-oe-demo="INV/2023/0001"/>
                         </t>
                         <div class="oe_structure"></div>
                         <div id="informations" class="row mb-4">
@@ -70,19 +70,19 @@
                                 <t t-elif="o.move_type == 'out_refund'"><strong>Credit Note Date</strong></t>
                                 <t t-elif="o.move_type == 'out_receipt'"><strong>Receipt Date</strong></t>
                                 <t t-else=""><strong>Date</strong></t>
-                                <div t-field="o.invoice_date">2023-09-12</div>
+                                <div t-field="o.invoice_date" data-oe-demo="2023-09-12"/>
                             </div>
                             <div class="col" t-if="o.invoice_date_due and o.move_type == 'out_invoice' and o.state == 'posted'" name="due_date">
                                 <strong>Due Date</strong>
-                                <div t-field="o.invoice_date_due">2023-10-31</div>
+                                <span t-field="o.invoice_date_due" data-oe-demo="2023-10-31"/>
                             </div>
                             <div class="col" t-if="o.delivery_date" name="delivery_date">
                                 <strong>Delivery Date</strong>
-                                <div t-field="o.delivery_date">2023-09-25</div>
+                                <div t-field="o.delivery_date" data-oe-demo="2023-09-25"/>
                             </div>
                             <div class="col" t-if="o.invoice_origin" name="origin">
                                 <strong>Source</strong>
-                                <div t-field="o.invoice_origin">SO123</div>
+                                <div t-field="o.invoice_origin" data-oe-demo="SO123"/>
                             </div>
                             <div class="col" t-if="o.partner_id.ref" name="customer_code">
                                 <strong>Customer Code</strong>
@@ -90,7 +90,7 @@
                             </div>
                             <div class="col" t-if="o.ref" name="reference">
                                 <strong>Reference</strong>
-                                <div t-field="o.ref">INV/2023/00001</div>
+                                <div t-field="o.ref" data-oe-demo="INV/2023/00001"/>
                             </div>
                             <div class="col" t-if="o.invoice_incoterm_id" name="incoterm_id">
                                 <strong>Incoterm</strong>
@@ -131,36 +131,36 @@
                                     <tr t-att-class="'fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
                                         <t t-if="line.display_type == 'product'" name="account_invoice_line_accountable">
                                             <td name="account_invoice_line_name">
-                                                <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}">Bacon Burger</span>
+                                                <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}" data-oe-demo="Bacon Burger"/>
                                             </td>
                                             <td name="td_quantity" class="text-end text-nowrap">
-                                                <span t-field="line.quantity">3.00</span>
-                                                <span t-field="line.product_uom_id"  groups="uom.group_uom">units</span>
+                                                <span t-field="line.quantity" data-oe-demo="3.00"/>
+                                                <span t-field="line.product_uom_id"  groups="uom.group_uom" data-oe-demo="units"/>
                                             </td>
                                             <td name="td_price_unit" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
-                                                <span class="text-nowrap" t-field="line.price_unit">9.00</span>
+                                                <span class="text-nowrap" t-field="line.price_unit" data-oe-demo="9.00"/>
                                             </td>
                                             <td name="td_discount" t-if="display_discount" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
-                                                <span class="text-nowrap" t-field="line.discount">0</span>
+                                                <span class="text-nowrap" t-field="line.discount" data-oe-demo="0"/>
                                             </td>
                                             <t t-set="taxes" t-value="', '.join([(tax.invoice_label or tax.name) for tax in line.tax_ids])"/>
                                             <td name="td_taxes" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }} {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
-                                                <span t-out="taxes" id="line_tax_ids">Tax 15%</span>
+                                                <span t-out="taxes" id="line_tax_ids" data-oe-demo="Tax 15%"/>
                                             </td>
                                             <td name="td_subtotal" class="text-end o_price_total">
-                                                <span class="text-nowrap" t-field="line.price_subtotal">27.00</span>
+                                                <span class="text-nowrap" t-field="line.price_subtotal" data-oe-demo="27.00"/>
                                             </td>
                                         </t>
                                         <t t-elif="line.display_type == 'line_section'">
                                             <td colspan="99">
-                                                <span t-field="line.name" t-options="{'widget': 'text'}">A section title</span>
+                                                <span t-field="line.name" t-options="{'widget': 'text'}" data-oe-demo="A section title"/>
                                             </td>
                                             <t t-set="current_section" t-value="line"/>
                                             <t t-set="current_subtotal" t-value="0"/>
                                         </t>
                                         <t t-elif="line.display_type == 'line_note'">
                                             <td colspan="99">
-                                                <span t-field="line.name" t-options="{'widget': 'text'}">A note, whose content usually applies to the section or product above.</span>
+                                                <span t-field="line.name" t-options="{'widget': 'text'}" data-oe-demo="A note, whose content usually applies to the section or product above."/>
                                             </td>
                                         </t>
                                     </tr>
@@ -172,7 +172,8 @@
                                                 <span
                                                     t-out="current_subtotal"
                                                     t-options='{"widget": "monetary", "display_currency": o.currency_id}'
-                                                >31.05</span>
+                                                    data-oe-demo="31.05"
+                                                />
                                             </td>
                                         </tr>
                                     </t>
@@ -198,10 +199,10 @@
                                                     <t t-foreach="payments_vals" t-as="payment_vals">
                                                         <tr t-if="payment_vals['is_exchange'] == 0">
                                                             <td>
-                                                                <i class="oe_form_field text-end oe_payment_label">Paid on <t t-out="payment_vals['date']" t-options='{"widget": "date"}'>2021-09-19</t></i>
+                                                                <i class="oe_form_field text-end oe_payment_label">Paid on <t t-out="payment_vals['date']" t-options='{"widget": "date"}' data-oe-demo="2021-09-19"/></i>
                                                             </td>
                                                             <td class="text-end">
-                                                                <span t-out="payment_vals['amount']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'>20.00</span>
+                                                                <span t-out="payment_vals['amount']" t-options='{"widget": "monetary", "display_currency": o.currency_id}' data-oe-demo="20.00"/>
                                                             </td>
                                                         </tr>
                                                     </t>
@@ -209,7 +210,7 @@
                                                         <tr class="fw-bold">
                                                             <td>Amount Due</td>
                                                             <td class="text-end">
-                                                                <span t-field="o.amount_residual">11.05</span>
+                                                                <span t-field="o.amount_residual" data-oe-demo="11.05"/>
                                                             </td>
                                                         </tr>
                                                     </t>
@@ -221,7 +222,7 @@
                                 <div class="mb-2">
                                     <p class="text-end lh-sm" t-if="o.company_id.display_invoice_amount_total_words">
                                         Total amount in words: <br/>
-                                        <small class="text-muted lh-sm"><span t-field="o.amount_total_words">Thirty one dollar and Five cents</span></small>
+                                        <small class="text-muted lh-sm"><span t-field="o.amount_total_words" data-oe-demo="Thirty one dollar and Five cents"/></small>
                                     </p>
                                 </div>
 
@@ -250,23 +251,23 @@
                                     <span id="payment_terms_note_id"
                                           t-if="o.invoice_payment_term_id.note"
                                           t-field="o.invoice_payment_term_id.note"
-                                          name="payment_term">Payment within 30 calendar day</span><br/>
+                                          name="payment_term" data-oe-demo="Payment within 30 calendar day"/><br/>
                                     <t t-if="o.invoice_payment_term_id.display_on_invoice and payment_term_details">
                                         <div t-if='o.show_payment_term_details' id="total_payment_term_details_table" class="row">
                                             <div t-attf-class="#{'col-10' if report_type != 'html' else 'col-sm-10 col-md-9'}">
                                                 <t t-if="o._is_eligible_for_early_payment_discount(o.currency_id,o.invoice_date)">
                                                     <td>
                                                         <span t-options='{"widget": "monetary", "display_currency": o.currency_id}'
-                                                              t-out="o.invoice_payment_term_id._get_amount_due_after_discount(o.amount_total, o.amount_tax)">30.00</span> due if paid before
-                                                        <span t-out="o.invoice_payment_term_id._get_last_discount_date_formatted(o.invoice_date)">2024-01-01</span>
+                                                              t-out="o.invoice_payment_term_id._get_amount_due_after_discount(o.amount_total, o.amount_tax)" data-oe-demo="30.00"/> due if paid before
+                                                        <span t-out="o.invoice_payment_term_id._get_last_discount_date_formatted(o.invoice_date)" data-oe-demo="2024-01-01"/>
                                                     </td>
                                                 </t>
                                                 <t t-if="len(payment_term_details) > 1" t-foreach="payment_term_details" t-as="term">
                                                     <div>
-                                                        <span t-out="term_index + 1">1</span> - Installment of
-                                                        <t t-options='{"widget": "monetary", "display_currency": o.currency_id}' t-out="term.get('amount')" class="text-end">31.05</t>
+                                                        <span t-out="term_index + 1" data-oe-demo="1"/> - Installment of
+                                                        <t t-options='{"widget": "monetary", "display_currency": o.currency_id}' t-out="term.get('amount')" class="text-end" data-oe-demo="31.05"/>
                                                         <span> due on </span>
-                                                        <t t-out="term.get('date')" class="text-start">2024-01-01</t>
+                                                        <t t-out="term.get('date')" class="text-start" data-oe-demo="2024-01-01"/>
                                                     </div>
                                                 </t>
                                             </div>
@@ -275,7 +276,7 @@
                                 </div>
                                 <div class="mb-3" t-if="o.move_type in ('out_invoice', 'in_refund') and o.payment_reference">
                                     <p name="payment_communication">
-                                        Payment Communication: <span class="fw-bold" t-field="o.payment_reference">INV/2023/00001</span>
+                                        Payment Communication: <span class="fw-bold" t-field="o.payment_reference" data-oe-demo="INV/2023/00001"/>
                                         <t t-if="o.partner_bank_id">
                                             <br/> on this account: <span t-field="o.partner_bank_id" class="fw-bold"/>
                                         </t>
@@ -322,13 +323,14 @@
             <t t-foreach="tax_totals['subtotals']" t-as="subtotal">
                 <tr class="o_subtotal">
                     <td>
-                        <span t-out="subtotal['name']">Untaxed Amount</span>
+                        <span t-out="subtotal['name']" data-oe-demo="Untaxed Amount"/>
                     </td>
                     <td class="text-end">
                         <span t-att-class="oe_subtotal_footer_separator"
                               t-out="subtotal['base_amount_currency']"
                               t-options='{"widget": "monetary", "display_currency": currency}'
-                        >27.00</span>
+                              data-oe-demo="27.00"
+                        />
                     </td>
                 </tr>
 
@@ -336,29 +338,32 @@
                     <tr class="o_taxes">
                         <t t-if="same_tax_base or tax_group['display_base_amount_currency'] is None">
                             <td>
-                                <span class="text-nowrap" t-out="tax_group['group_name']">Tax 15%</span>
+                                <span class="text-nowrap" t-out="tax_group['group_name']" data-oe-demo="Tax 15%"/>
                             </td>
                             <td class="text-end o_price_total">
                                 <span class="text-nowrap"
                                       t-out="tax_group['tax_amount_currency']"
                                       t-options='{"widget": "monetary", "display_currency": currency}'
-                                >1.05</span>
+                                      data-oe-demo="1.05"
+                                />
                             </td>
                         </t>
                         <t t-else="">
                             <td>
-                                <span t-out="tax_group['group_name']">Tax 15%</span>
+                                <span t-out="tax_group['group_name']" data-oe-demo="Tax 15%"/>
                                 <span> on </span>
                                 <span class="text-nowrap"
                                       t-out="tax_group['display_base_amount_currency']"
                                       t-options='{"widget": "monetary", "display_currency": currency}'
-                                >27.00</span>
+                                      data-oe-demo="27.00"
+                                />
                             </td>
                             <td class="text-end o_price_total">
                                 <span class="text-nowrap"
                                       t-out="tax_group['tax_amount_currency']"
                                       t-options='{"widget": "monetary", "display_currency": currency}'
-                                >4.05</span>
+                                      data-oe-demo="4.05"
+                                />
                             </td>
                         </t>
                     </tr>
@@ -370,7 +375,8 @@
                 <td class="text-end">
                     <span t-out="tax_totals['cash_rounding_base_amount_currency']"
                           t-options='{"widget": "monetary", "display_currency": currency}'
-                    >0</span>
+                          data-oe-demo="0"
+                    />
                 </td>
             </tr>
             
@@ -380,7 +386,8 @@
                 <td class="text-end">
                     <strong t-out="tax_totals['total_amount_currency']"
                             t-options='{"widget": "monetary", "display_currency": currency}'
-                    >31.05</strong>
+                            data-oe-demo="31.05"
+                    />
                 </td>
             </tr>
         </template>
@@ -399,12 +406,13 @@
                     <t t-foreach="tax_totals['subtotals']" t-as="subtotal">
                         <tr class="o_subtotal">
                             <td>
-                                <span t-out="subtotal['name']">Untaxed amount</span>
+                                <span t-out="subtotal['name']" data-oe-demo="Untaxed amount"/>
                             </td>
                             <td class="text-end">
                                 <span t-out="subtotal['base_amount']"
                                       t-options='{"widget": "monetary", "display_currency": currency}'
-                                >27.00</span>
+                                      data-oe-demo="27.00"
+                                />
                             </td>
                         </tr>
                         <t t-foreach="subtotal['tax_groups']" t-as="tax_group">
@@ -417,23 +425,26 @@
                                         <span class="text-nowrap"
                                               t-out="tax_group['tax_amount']"
                                               t-options='{"widget": "monetary", "display_currency": currency}'
-                                        >31.05</span>
+                                              data-oe-demo="31.05"
+                                        />
                                     </td>
                                 </t>
                                 <t t-else="">
                                     <td>
-                                        <span t-out="tax_group['group_name']">Tax 15%</span>
+                                        <span t-out="tax_group['group_name']" data-oe-demo="Tax 15%"/>
                                         <span> on </span>
                                         <span class="text-nowrap"
                                               t-out="tax_group['display_base_amount']"
                                               t-options='{"widget": "monetary", "display_currency": currency}'
-                                        >27.00</span>
+                                              data-oe-demo="27.00"
+                                        />
                                     </td>
                                     <td class="text-end o_price_total">
                                         <span class="text-nowrap"
                                               t-out="tax_group['tax_amount']"
                                               t-options='{"widget": "monetary", "display_currency": currency}'
-                                        >4.05</span>
+                                              data-oe-demo="4.05"
+                                        />
                                     </td>
                                 </t>
                             </tr>
@@ -445,7 +456,8 @@
                         <td class="text-end">
                             <strong t-out="tax_totals['total_amount']"
                                     t-options='{"widget": "monetary", "display_currency": currency}'
-                            >31.05</strong>
+                                    data-oe-demo="31.05"
+                            />
                         </td>
                     </tr>
                 </table>

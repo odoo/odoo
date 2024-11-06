@@ -39,12 +39,12 @@
                                     <div class="col-7">
                                         <h5>
                                             <strong>
-                                                <span t-out="o.journal_id.display_name">Journal Name</span>
+                                                <span t-out="o.journal_id.display_name" data-oe-demo="Journal Name"/>
                                                 <span t-if="o.journal_id.bank_account_id">
-                                                    - <span t-out="o.journal_id.bank_account_id.display_name">Bank Account Name</span>
+                                                    - <span t-out="o.journal_id.bank_account_id.display_name" data-oe-demo="Bank Account Name"/>
                                                 </span>
                                                 <span t-if="o.journal_id.code">
-                                                    - <span t-out="o.journal_id.code">12345</span>
+                                                    - <span t-out="o.journal_id.code" data-oe-demo="12345"/>
                                                 </span>
                                             </strong>
                                         </h5>
@@ -53,9 +53,9 @@
                                         <h5>
                                             <strong>
                                                 <span t-if="o.name">
-                                                    <span t-field="o.name">Statement Name</span>
+                                                    <span t-field="o.name" data-oe-demo="Statement Name"/>
                                                 - </span>
-                                                <span t-field="o.date">2023-08-15</span>
+                                                <span t-field="o.date" data-oe-demo="2023-08-15"/>
                                             </strong>
                                         </h5>
                                     </div>
@@ -74,12 +74,12 @@
                                                     </td>
                                                     <td class="p-0">
                                                         <strong>
-                                                            <span t-out="o.line_ids and o.line_ids.sorted(lambda line: line.date)[0].date" t-options='{"widget": "date"}'>2023-08-11</span>
+                                                            <span t-out="o.line_ids and o.line_ids.sorted(lambda line: line.date)[0].date" t-options='{"widget": "date"}' data-oe-demo="2023-08-11"/>
                                                         </strong>
                                                     </td>
                                                     <td class="text-end p-0">
                                                         <strong>
-                                                            <span t-field="o.balance_start">1000.0</span>
+                                                            <span t-field="o.balance_start" data-oe-demo="1000.0"/>
                                                         </strong>
                                                     </td>
                                                 </tr>
@@ -89,12 +89,12 @@
                                                     </td>
                                                     <td class="p-0">
                                                         <strong>
-                                                            <span t-out="o.line_ids and o.line_ids.sorted(lambda line: line.date)[-1].date" t-options='{"widget": "date"}'>2023-08-31</span>
+                                                            <span t-out="o.line_ids and o.line_ids.sorted(lambda line: line.date)[-1].date" t-options='{"widget": "date"}' data-oe-demo="2023-08-31"/>
                                                         </strong>
                                                     </td>
                                                     <td class="text-end p-0">
                                                         <strong>
-                                                            <span t-field="o.balance_end_real">1500.0</span>
+                                                            <span t-field="o.balance_end_real" data-oe-demo="1500.0"/>
                                                         </strong>
                                                     </td>
                                                 </tr>
@@ -109,17 +109,17 @@
                                 <tbody>
                                     <tr t-foreach="o.line_ids" t-as="line">
                                         <td class="w-25 py-1">
-                                            <span class="d-block fw-bold" t-field="line.date">2023-08-11</span>
+                                            <span class="d-block fw-bold" t-field="line.date" data-oe-demo="2023-08-11"/>
                                         </td>
                                         <td class="py-1">
                                             <span class="d-block fw-bold" t-if="line.partner_id">
-                                                <span t-out="line.partner_id.name">Marc Demo</span> <span t-if="line.partner_bank_id and line.partner_bank_id.partner_id != line.partner_id">(<span t-out="line.partner_bank_id.partner_id.name">Bank of odoo</span>)</span>
+                                                <span t-out="line.partner_id.name" data-oe-demo="Marc Demo"/> <span t-if="line.partner_bank_id and line.partner_bank_id.partner_id != line.partner_id">(<span t-out="line.partner_bank_id.partner_id.name" data-oe-demo="Bank of odoo"/>)</span>
                                             </span>
-                                            <span class="d-block" t-if="line.partner_bank_id or line.account_number" t-out="line.account_number or line.partner_bank_id.acc_number">534677881234</span>
-                                            <span class="d-block" t-if="line.payment_ref" t-field="line.payment_ref">Payment Reference</span>
+                                            <span class="d-block" t-if="line.partner_bank_id or line.account_number" t-out="line.account_number or line.partner_bank_id.acc_number" data-oe-demo="534677881234"/>
+                                            <span class="d-block" t-if="line.payment_ref" t-field="line.payment_ref" data-oe-demo="Payment Reference"/>
                                         </td>
                                         <td class="text-end py-1">
-                                            <span t-att-class="'d-block fw-bold' + (' text-danger' if line.amount &lt; 0 else '')" t-field="line.amount">100.0</span>
+                                            <span t-att-class="'d-block fw-bold' + (' text-danger' if line.amount &lt; 0 else '')" t-field="line.amount" data-oe-demo="100.0"/>
                                         </td>
                                     </tr>
                                 </tbody>
