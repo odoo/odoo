@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import {
-    ICON_SELECTOR,
+    MEDIA_SELECTOR,
     isIconElement,
     isProtected,
     isProtecting,
@@ -12,8 +12,6 @@ import { MediaDialog } from "./media_dialog/media_dialog";
 import { rightPos } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
 
-const MEDIA_SELECTOR = `${ICON_SELECTOR} , .o_image, .media_iframe_video`;
-
 /**
  * @typedef { Object } MediaShared
  * @property { MediaPlugin['savePendingImages'] } savePendingImages
@@ -22,7 +20,7 @@ const MEDIA_SELECTOR = `${ICON_SELECTOR} , .o_image, .media_iframe_video`;
 export class MediaPlugin extends Plugin {
     static id = "media";
     static dependencies = ["selection", "history", "dom", "dialog"];
-    static shared = ["savePendingImages"];
+    static shared = ["savePendingImages", "openMediaDialog"];
     resources = {
         user_commands: [
             {
@@ -67,8 +65,8 @@ export class MediaPlugin extends Plugin {
         unsplittable_node_predicates: isIconElement, // avoid merge
     };
 
-    get recordInfo() {
-        return this.config.getRecordInfo ? this.config.getRecordInfo() : {};
+    getRecordInfo(editableEl = null) {
+        return this.config.getRecordInfo ? this.config.getRecordInfo(editableEl) : {};
     }
 
     replaceImage() {
@@ -143,8 +141,8 @@ export class MediaPlugin extends Plugin {
         this.dependencies.history.addStep();
     }
 
-    openMediaDialog(params = {}) {
-        const { resModel, resId, field, type } = this.recordInfo;
+    openMediaDialog(params = {}, editableEl = null) {
+        const { resModel, resId, field, type } = this.getRecordInfo(editableEl);
         const mediaDialogClosedPromise = this.dependencies.dialog.addDialog(MediaDialog, {
             resModel,
             resId,
@@ -168,7 +166,7 @@ export class MediaPlugin extends Plugin {
 
     async savePendingImages() {
         const editableEl = this.editable;
-        const { resModel, resId } = this.recordInfo;
+        const { resModel, resId } = this.getRecordInfo();
         // When saving a webp, o_b64_image_to_save is turned into
         // o_modified_image_to_save by saveB64Image to request the saving
         // of the pre-converted webp resizes and all the equivalent jpgs.
