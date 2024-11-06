@@ -61,7 +61,7 @@
         <field name="name">project.update.view.kanban</field>
         <field name="model">project.update</field>
         <field name="arch" type="xml">
-            <kanban highlight_color="color" sample="1" js_class="project_update_kanban">
+            <kanban highlight_color="color" js_class="project_update_kanban">
                 <field name="color"/>
                 <templates>
                     <t t-name="card" class="flex-row align-items-center">
@@ -100,7 +100,7 @@
         <field name="name">project.update.view.list</field>
         <field name="model">project.update</field>
         <field name="arch" type="xml">
-            <list sample="1" js_class="project_update_list">
+            <list js_class="project_update_list">
                 <field name="name"/>
                 <field name="user_id" widget="many2one_avatar_user" class="fw-bolder" optional="show"/>
                 <field name="date" optional="show"/>
