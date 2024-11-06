@@ -66,12 +66,9 @@ export class WebsiteSaleService {
         this.rpc = rpc;  // To be overridable in tests.
 
         // Only expose `addToCart` in the service registry.
-        let self = this;
         return {
-            addToCart: function() {
-                return self.addToCart(...arguments);
-            }
-        }
+            addToCart: (...args) => this.addToCart(...args)
+        };
     }
 
     //--------------------------------------------------------------------------
