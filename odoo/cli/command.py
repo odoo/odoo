@@ -13,36 +13,11 @@ commands = {}
 
 class Command:
     name = None
+    prog_name = Path(sys.argv[0]).name
 
     def __init_subclass__(cls):
         cls.name = cls.name or cls.__name__.lower()
         commands[cls.name] = cls
-
-
-ODOO_HELP = """\
-Odoo CLI, use '{odoo_bin} --help' for regular server options.
-
-Available commands:
-    {command_list}
-
-Use '{odoo_bin} <command> --help' for individual command help."""
-
-
-class Help(Command):
-    """ Display the list of available commands """
-    def run(self, args):
-        load_internal_commands()
-        load_addons_commands()
-        padding = max(len(cmd) for cmd in commands) + 2
-        command_list = "\n    ".join([
-            "    {}{}".format(name.ljust(padding), (command.__doc__ or "").strip())
-            for name in sorted(commands)
-            if (command := find_command(name))
-        ])
-        print(ODOO_HELP.format(  # pylint: disable=bad-builtin  # noqa: T201
-            odoo_bin=Path(sys.argv[0]).name,
-            command_list=command_list
-        ))
 
 
 def load_internal_commands():
@@ -94,13 +69,17 @@ def main():
         odoo.tools.config._parse_config([args[0]])
         args = args[1:]
 
-    # Default legacy command
-    command_name = 'server'
-
-    # Subcommand discovery
     if len(args) and not args[0].startswith('-'):
+        # Command specified, search for it
         command_name = args[0]
         args = args[1:]
+    elif '-h' in args or '--help' in args:
+        # No command specified, but help is requested
+        command_name = 'help'
+        args = [x for x in args if x not in ('-h', '--help')]
+    else:
+        # No command specified, default command used
+        command_name = 'server'
 
     if command := find_command(command_name):
         o = command()

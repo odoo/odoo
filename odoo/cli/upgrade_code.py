@@ -108,6 +108,8 @@ def migrate(
 
 
 class UpgradeCode(Command):
+    """ Rewrite the entire source code using the scripts found at /odoo/upgrade_code """
+
     name = 'upgrade_code'
 
     def run(self, cmdargs):
