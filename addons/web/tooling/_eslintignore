@@ -17,10 +17,13 @@ addons/*
 !web_studio
 !web_studio/**/*
 
-# BlackList libs except HOOT
+# BlackList libs
 addons/web/static/lib/**/*
+
+# Whitelist Hoot (but not its libs)
 !addons/web/static/lib/hoot
 !addons/web/static/lib/hoot/**/*
+addons/web/static/lib/hoot/lib/**/*
 
 # Ignore everything in web legacy but the top level (adapters)
 addons/web/static/src/legacy/**/*
