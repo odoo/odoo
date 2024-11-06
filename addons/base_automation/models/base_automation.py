@@ -80,7 +80,7 @@ class BaseAutomation(models.Model):
     name = fields.Char(string="Automation Rule Name", required=True, translate=True)
     description = fields.Html(string="Description")
     model_id = fields.Many2one(
-        "ir.model", string="Model", domain=[("field_id", "!=", False)], required=True, ondelete="cascade",
+        "ir.model", string="Model", domain=[("abstract", "=", False)], required=True, ondelete="cascade",
         help="Model on which the automation rule runs."
     )
     model_name = fields.Char(related="model_id.model", string="Model Name", readonly=True, inverse="_inverse_model_name")
