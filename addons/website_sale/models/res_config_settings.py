@@ -16,9 +16,7 @@ class ResConfigSettings(models.TransientModel):
     )
     group_show_uom_price = fields.Boolean(
         string="Base Unit Price",
-        default=False,
-        implied_group="website_sale.group_show_uom_price",
-        group='base.group_user',
+        implied_group="product.group_show_uom_price",
     )
     group_product_price_comparison = fields.Boolean(
         string="Comparison Price",
