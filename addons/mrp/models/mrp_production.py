@@ -612,7 +612,7 @@ class MrpProduction(models.Model):
             if production.state in ('draft', 'done', 'cancel'):
                 production.reservation_state = False
                 continue
-            relevant_move_state = production.move_raw_ids._get_relevant_state_among_moves()
+            relevant_move_state = production.move_raw_ids.filtered(lambda m: not m.picked)._get_relevant_state_among_moves()
             # Compute reservation state according to its component's moves.
             if relevant_move_state == 'partially_available':
                 if production.workorder_ids.operation_id and production.bom_id.ready_to_produce == 'asap':
