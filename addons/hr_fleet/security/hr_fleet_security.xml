@@ -12,6 +12,49 @@
             <field name="domain_force">['|', ('driver_employee_id', '!=', False), ('future_driver_employee_id', '!=', False)]</field>
         </record>
 
+        <!-- base group_user <- able to read their vehicle data-->
+        <record id="hr_fleet_rule_vehicle_visibility_base_user" model="ir.rule">
+            <field name="name">User are able to see only their cars</field>
+            <field name="model_id" ref="model_fleet_vehicle"/>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="domain_force">[
+                '|', 
+                    ('driver_employee_id', 'in', user.employee_ids.ids),
+                    ('future_driver_employee_id', 'in', user.employee_ids.ids),
+            ]</field>
+        </record>
+        <record id="hr_fleet_rule_log_services_visibility_base_user" model="ir.rule">
+            <field name="name">User are able to see only their log services</field>
+            <field name="model_id" ref="model_fleet_vehicle_log_services"/>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="domain_force">[('vehicle_id.driver_employee_id','in',user.employee_ids.ids)]</field>
+        </record>
+        <record id="hr_fleet_rule_log_contract_visibility_base_user" model="ir.rule">
+            <field name="name">User are able to see only their log contract</field>
+            <field name="model_id" ref="model_fleet_vehicle_log_contract"/>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="domain_force">[('vehicle_id.driver_employee_id','in',user.employee_ids.ids)]</field>
+        </record>
+        <record id="hr_fleet_rule_assignation_log_base_user" model="ir.rule">
+            <field name="name">User are able to see only their log fuel</field>
+            <field name="model_id" ref="model_fleet_vehicle_assignation_log"/>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="domain_force">[('driver_id','in',user.employee_ids.mapped('address_home_id').ids)]</field>
+        </record>
+        <record id="hr_fleet_rule_odometer_visibility_base_user" model="ir.rule">
+            <field name="name">User are able to see only their odometer</field>
+            <field name="model_id" ref="model_fleet_vehicle_odometer"/>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="domain_force">[('vehicle_id.driver_employee_id','in',user.employee_ids.ids)]</field>
+        </record>
+
+        <record id="hr_fleet_rule_assignation_log_visibility_user" model="ir.rule">
+            <field name="name">User are able to see any assignation log </field>
+            <field name="model_id" ref="model_fleet_vehicle_assignation_log"/>
+            <field name="groups" eval="[(4, ref('fleet.fleet_group_user'))]"/>
+            <field name="domain_force">[]</field>
+        </record>
+
         <record id="fleet.fleet_rule_contract_visibility_user" model="ir.rule">
             <field name="domain_force">['|', ('vehicle_id.driver_id','=',user.partner_id.id),
                 ('vehicle_id.driver_employee_id.user_id','=',user.id)]</field>
