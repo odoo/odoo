@@ -11,6 +11,7 @@ from odoo.addons.sale.tests.test_sale_product_attribute_value_config import (
     TestSaleProductAttributeValueCommon,
 )
 from odoo.addons.website.tools import MockRequest
+from odoo.addons.website_sale_loyalty.controllers.cart import Cart
 from odoo.addons.website_sale_loyalty.controllers.main import WebsiteSale
 
 
@@ -451,7 +452,7 @@ class TestWebsiteSaleCoupon(HttpCase):
 
             # Apply the coupon again
             WebsiteSaleController.pricelist(promo=self.coupon.code)
-            WebsiteSaleController.cart()
+            Cart().cart()
             error_msg = request.session.get('error_promo_code')
 
             # Check that the coupon stay applied

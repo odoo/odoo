@@ -1,12 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 
 from odoo.addons.payment.tests.common import PaymentCommon
 from odoo.addons.sale.tests.common import SaleCommon
 from odoo.addons.website.tools import MockRequest
-from odoo.addons.website_sale.controllers.delivery import Delivery
-from odoo.exceptions import ValidationError
+from odoo.addons.website_sale.controllers.cart import Cart
+from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 
 @tagged('post_install', '-at_install')
@@ -14,7 +15,8 @@ class TestWebsiteSaleStockDeliveryController(PaymentCommon, SaleCommon):
     def setUp(self):
         super().setUp()
         self.website = self.env.ref('website.default_website')
-        self.Controller = Delivery()
+        self.WebsiteSaleCartController = Cart()
+        self.WebsiteSaleController = WebsiteSale()
 
     def test_validate_payment_with_no_available_delivery_method(self):
         """
@@ -32,6 +34,10 @@ class TestWebsiteSaleStockDeliveryController(PaymentCommon, SaleCommon):
 
         with MockRequest(self.env, website=self.website):
             self.website.sale_get_order(force_create=True)
-            self.Controller.cart_update_json(product_id=storable_product.id, add_qty=1)
+            self.WebsiteSaleCartController.add_to_cart(
+                product_template_id=storable_product.product_tmpl_id,
+                product_id=storable_product.id,
+                quantity=1,
+            )
             with self.assertRaises(ValidationError):
-                self.Controller.shop_payment_validate()
+                self.WebsiteSaleController.shop_payment_validate()

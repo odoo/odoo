@@ -14,7 +14,12 @@
                     t-att-data-product-product-id="order_line.product_id.id"
                     data-action="o_wishlist"
                 >
-                    <span t-att-data-product-id="order_line.product_id.id">Save for Later</span>
+                    <span
+                        t-att-data-line-id="order_line.id"
+                        t-att-data-product-id="order_line.product_id.id"
+                    >
+                        Save for Later
+                    </span>
                 </a>
             </span>
             <button
@@ -24,7 +29,11 @@
                 t-att-data-product-product-id="order_line.product_id.id"
                 data-action="o_wishlist"
             >
-                <i class="fa fa-heart-o" t-att-data-product-id="order_line.product_id.id"/>
+                <i
+                    class="fa fa-heart-o"
+                    t-att-data-line-id="order_line.id"
+                    t-att-data-product-id="order_line.product_id.id"
+                />
             </button>
         </div>
     </template>

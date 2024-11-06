@@ -181,9 +181,11 @@
     </template>
 
     <template id="products_item" name="Products item">
-        <form action="/shop/cart/update" method="post" class="oe_product_cart h-100 d-flex"
+        <form
+            class="oe_product_cart h-100 d-flex"
             t-att-data-publish="product.website_published and 'on' or 'off'"
-            itemscope="itemscope" itemtype="http://schema.org/Product">
+            itemscope="itemscope" itemtype="http://schema.org/Product"
+        >
             <t t-set="product_href" t-value="keep(product.website_url, page=(pager['page']['num'] if pager['page']['num']&gt;1 else None)) + selected_attributes_hash" />
             <t t-set="image_type" t-value="product._get_suitable_image_size(ppr, td_product['x'], td_product['y'])"/>
 
@@ -258,6 +260,7 @@
             <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
             <input name="product_id" t-att-value="product_variant_id" type="hidden"/>
             <input name="product_template_id" t-att-value="product.id" type="hidden"/>
+            <input name="product_type" t-att-value="product.type" type="hidden"/>
             <t t-if="product_variant_id and template_price_vals['price_reduce'] or not website.prevent_zero_price_sale">
                 <a
                     t-if="product._website_show_quick_add()"
@@ -1327,7 +1330,7 @@
                             </t>
                             <div t-field="product.description_ecommerce" class="oe_structure"
                                 placeholder="A detailed, formatted description to promote your product on this page. Use '/' to discover more features."/>
-                            <form t-if="product._is_add_to_cart_possible()" action="/shop/cart/update" method="POST">
+                            <form t-if="product._is_add_to_cart_possible()">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
                                 <div class="js_product js_main_product mb-3">
                                     <div>
@@ -1337,17 +1340,40 @@
                                             <t t-call='website_sale.base_unit_price'/>
                                         </small>
                                     </div>
-                                    <t t-placeholder="select">
-                                        <input type="hidden" class="product_id" name="product_id" t-att-value="product_variant.id" />
-                                        <input type="hidden" class="product_template_id" name="product_template_id" t-att-value="product.id" />
-                                        <input t-if="product.public_categ_ids.ids" type="hidden" class="product_category_id" name="product_category_id" t-att-value="product.public_categ_ids.ids[0]" />
+                                    <t name="variant_info">
+                                        <input
+                                            type="hidden"
+                                            class="o_not_editable product_id"
+                                            name="product_id"
+                                            t-att-value="product_variant.id"
+                                        />
+                                        <input
+                                            type="hidden"
+                                            class="o_not_editable product_template_id"
+                                            name="product_template_id"
+                                            t-att-value="product.id"
+                                        />
+                                        <input
+                                            t-if="product.public_categ_ids.ids"
+                                            type="hidden"
+                                            class="product_category_id"
+                                            name="product_category_id"
+                                            t-att-value="product.public_categ_ids.ids[0]"
+                                        />
+                                        <input
+                                            type="hidden"
+                                            name="product_type"
+                                            t-att-value="product.type"
+                                        />
                                         <t t-call="website_sale.variants">
                                             <t t-set="ul_class" t-valuef="flex-column" />
                                             <t t-set="parent_combination" t-value="None" />
                                             <t t-set="combination" t-value="combination_info['combination']"/>
                                         </t>
                                     </t>
-                                    <p t-if="True" class="css_not_available_msg alert alert-warning">This combination does not exist.</p>
+                                    <p class="css_not_available_msg alert alert-warning">
+                                        This combination does not exist.
+                                    </p>
                                     <div id="o_wsale_cta_wrapper" class="d-flex flex-wrap align-items-center">
                                         <div id="add_to_cart_wrap" t-attf-class="{{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-flex'}} align-items-center mb-2 me-auto">
                                             <a data-animation-selector=".o_wsale_product_images" role="button" id="add_to_cart" t-attf-class="btn btn-primary js_check_product a-submit flex-grow-1" href="#">
@@ -1723,7 +1749,7 @@
     </template>
 
     <template id="product_variants" inherit_id="website_sale.product" active="False" name="List View of Variants">
-        <xpath expr="//t[@t-placeholder='select']" position="replace">
+        <xpath expr="//t[@name='variant_info']" position="replace">
             <!--
                 Using this setting with dynamic variants is not supported.
                 Indeed the variants that have yet to exist will not show on the
@@ -2079,12 +2105,12 @@
                         <p>This is your current cart.</p>
                         <p>
                             <strong>
-                                <a t-attf-href="/shop/cart/?access_token=#{access_token}&amp;revive=squash">Click here</a>
+                                <a t-attf-href="/shop/cart/?id=#{id}&amp;access_token=#{access_token}&amp;revive=squash">Click here</a>
                             </strong> if you want to restore your previous cart. Your current cart will be replaced with your previous cart.
                         </p>
                         <p>
                             <strong>
-                                <a t-attf-href="/shop/cart/?access_token=#{access_token}&amp;revive=merge">Click here</a>
+                                <a t-attf-href="/shop/cart/?id=#{id}&amp;access_token=#{access_token}&amp;revive=merge">Click here</a>
                             </strong> if you want to merge your previous cart into current cart.
                         </p>
                     </t>
@@ -2121,9 +2147,13 @@
                         <div class="d-none d-md-block text-muted" t-field="product.description_sale"/>
                     </div>
                     <div class="d-flex flex-column align-items-end">
-                        <input class="js_quantity" name="product_id" t-att-data-product-id="product.id" type="hidden"/>
-                        <a role="button"
-                           class="js_add_suggested_products btn btn-md btn-outline-primary text-nowrap">
+                        <a
+                            role="button"
+                            class="js_add_suggested_products btn btn-md btn-outline-primary text-nowrap"
+                            t-att-data-product-id="product.id"
+                            t-att-data-product-template-id="product.product_tmpl_id.id"
+                            t-att-data-product-type="product.type"
+                        >
                             <span class="d-md-none fa fa-shopping-cart"/>
                             <span class="d-none d-md-inline">Add to cart</span>
                         </a>
@@ -3314,12 +3344,6 @@
                     </t>
                 </p>
             </t>
-        </xpath>
-    </template>
-
-    <template id="add_to_cart_redirect" inherit_id="website.layout" name="Cart Redirection" priority="1">
-        <xpath expr="//html" position="before">
-            <t t-set="html_data" t-value="dict(html_data, **{'data-add2cart-redirect': '1' if website.add_to_cart_action == 'stay' else '0' if website.add_to_cart_action == 'go_to_cart' else '2'})"/>
         </xpath>
     </template>
 

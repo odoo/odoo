@@ -1,10 +1,8 @@
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import publicWidget from '@web/legacy/js/public/public_widget';
-import { WebsiteSale } from '@website_sale/js/website_sale';
-import { cartHandlerMixin } from '@website_sale/js/website_sale_utils';
 
-publicWidget.registry.AddToCartSnippet = WebsiteSale.extend(cartHandlerMixin, {
+publicWidget.registry.AddToCartSnippet = publicWidget.Widget.extend({
     selector: '.s_add_to_cart_btn',
     events: {
         'click': '_onClickAddToCartButton',
@@ -18,22 +16,12 @@ publicWidget.registry.AddToCartSnippet = WebsiteSale.extend(cartHandlerMixin, {
     _onClickAddToCartButton: async function (ev) {
         const dataset = ev.currentTarget.dataset;
 
-        const action = dataset.action;
-        const productId = parseInt(dataset.productVariantId);
         const productTemplateId = parseInt(dataset.productTemplateId);
-        const isCombo = dataset.isCombo;
+        const productId = parseInt(dataset.productVariantId);
+        const isCombo = dataset.isCombo === 'true';
+        const action = dataset.action;
 
-        if (!productId || isCombo) {
-            this.rootProduct = {
-                product_id: productId,
-                product_template_id: productTemplateId,
-                quantity: 1,
-                product_custom_attribute_values: [],
-                variant_values: [],
-                no_variant_attribute_values: [],
-            };
-            this._onProductReady();
-        } else {
+        if (productId) {
             const isAddToCartAllowed = await rpc(`/shop/product/is_add_to_cart_allowed`, {
                 product_id: productId,
             });
@@ -44,10 +32,18 @@ publicWidget.registry.AddToCartSnippet = WebsiteSale.extend(cartHandlerMixin, {
                 );
                 return;
             }
-            this.isBuyNow = action === 'buy_now';
-            this.stayOnPageOption = !this.isBuyNow;
-            this.addToCart({product_id: productId, add_qty: 1});
         }
+
+        this.call('websiteSale', 'addToCart',
+            {
+                productTemplateId: productTemplateId,
+                productId: productId,
+                isCombo: isCombo,
+            },
+            {
+                isBuyNow: action === 'buy_now',
+            }
+        );
     },
 });
 

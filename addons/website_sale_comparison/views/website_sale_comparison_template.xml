@@ -225,13 +225,18 @@
                                                     <t t-call='website_sale.base_unit_price'/>
                                                 </small>
                                             </span>
-
-                                            <form action="/shop/cart/update" method="post" class="text-center o_add_cart_form_compare">
+                                            <form class="text-center o_add_cart_form_compare">
                                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                                                <input name="product_id"
-                                                       type="hidden"
-                                                       t-att-value="product.id"
-                                                       t-att-data-product-tracking-info="'product_tracking_info' in combination_info and json.dumps(combination_info['product_tracking_info'])"/>
+                                                <input
+                                                    name="product_template_id"
+                                                    type="hidden"
+                                                    t-att-value="product.product_tmpl_id.id"
+                                                />
+                                                <input
+                                                    name="product_id"
+                                                    type="hidden"
+                                                    t-att-value="product.id"
+                                                />
                                                 <a t-if="combination_info['prevent_zero_price_sale']"
                                                    t-att-href="website.contact_us_button_url"
                                                    class="btn btn-primary btn_cta">

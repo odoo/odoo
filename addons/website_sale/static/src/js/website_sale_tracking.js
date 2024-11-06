@@ -3,7 +3,7 @@ import publicWidget from "@web/legacy/js/public/public_widget";
 publicWidget.registry.websiteSaleTracking = publicWidget.Widget.extend({
     selector: '.oe_website_sale',
     events: {
-        'click form[action="/shop/cart/update"] a.a-submit': '_onAddProductIntoCart',
+        'click form a.a-submit': '_onAddProductIntoCart',
         'click a[href^="/shop/checkout"]': '_onCheckoutStart',
         'click a[href^="/web/login?redirect"][href*="/shop/checkout"]': '_onCustomerSignin',
         'click form[action="/shop/confirm_order"] a.a-submit': '_onOrder',
@@ -69,7 +69,8 @@ publicWidget.registry.websiteSaleTracking = publicWidget.Widget.extend({
     /**
      * @private
      */
-    _onAddToCart(event, ...productsTrackingInfo) {
+    _onAddToCart(event) {
+        const productsTrackingInfo = event.detail;
         const trackingInfo = {
             'currency': productsTrackingInfo[0]['currency'],
             'value': productsTrackingInfo.reduce((acc, val) => acc + val['price'] * val['quantity'], 0),

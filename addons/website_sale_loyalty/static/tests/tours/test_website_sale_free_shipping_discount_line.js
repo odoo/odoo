@@ -51,7 +51,7 @@ webTours.add('check_shipping_discount', {
         },
         {
             content: "click on 'Add to Cart' button",
-            trigger: '#product_detail form[action^="/shop/cart/update"] #add_to_cart',
+            trigger: '#product_detail form #add_to_cart',
             run: "click",
         },
         goToCart({ quantity: 3 }),

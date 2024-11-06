@@ -1,44 +1,4 @@
-import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
-import wUtils from "@website/js/utils";
-
-export const cartHandlerMixin = {
-    getRedirectOption() {
-        const html = document.documentElement;
-        this.stayOnPageOption = html.dataset.add2cartRedirect === '1';
-    },
-    getCartHandlerOptions(ev) {
-        this.isBuyNow = ev.currentTarget.classList.contains('o_we_buy_now');
-        const targetSelector = ev.currentTarget.dataset.animationSelector || 'img';
-        this.$itemImgContainer = this.$(ev.currentTarget).closest(`:has(${targetSelector})`);
-    },
-    /**
-     * Used to add product depending on stayOnPageOption value.
-     */
-    addToCart(params) {
-        if (this.isBuyNow) {
-            params.express = true;
-        } else if (this.stayOnPageOption) {
-            return this._addToCartInPage(params);
-        }
-        return wUtils.sendRequest('/shop/cart/update', params);
-    },
-    /**
-     * @private
-     */
-    async _addToCartInPage(params) {
-        const data = await rpc("/shop/cart/update_json", {
-            ...params,
-            display: false,
-            force_create: true,
-        });
-        if (data.cart_quantity && (data.cart_quantity !== parseInt($(".my_cart_quantity").text()))) {
-            updateCartNavBar(data);
-        };
-        showCartNotification(this.call.bind(this), data.notification_info);
-        return data;
-    },
-};
+import { browser } from '@web/core/browser/browser';
 
 function animateClone($cart, $elem, offsetTop, offsetLeft) {
     if (!$cart.length) {
@@ -91,19 +51,23 @@ function animateClone($cart, $elem, offsetTop, offsetLeft) {
  * @param {Object} data
  */
 function updateCartNavBar(data) {
-    sessionStorage.setItem('website_sale_cart_quantity', data.cart_quantity);
-    $(".my_cart_quantity")
-        .parents('li.o_wsale_my_cart').removeClass('d-none').end()
-        .toggleClass('d-none', data.cart_quantity === 0)
-        .addClass('o_mycart_zoom_animation').delay(300)
-        .queue(function () {
-            $(this)
-                .toggleClass('fa fa-warning', !data.cart_quantity)
-                .attr('title', data.warning)
-                .text(data.cart_quantity || '')
-                .removeClass('o_mycart_zoom_animation')
-                .dequeue();
-        });
+    browser.sessionStorage.setItem('website_sale_cart_quantity', data.cart_quantity);
+    // Mobile and Desktop elements have to be updated.
+    const cartQuantityElements = document.querySelectorAll('.my_cart_quantity');
+    for(const cartQuantityElement of cartQuantityElements) {
+        if (data.cart_quantity === 0) {
+            cartQuantityElement.classList.add('d-none');
+        } else {
+            const cartIconElement = document.querySelector('li.o_wsale_my_cart');
+            cartIconElement.classList.remove('d-none');
+            cartQuantityElement.classList.remove('d-none');
+            cartQuantityElement.classList.add('o_mycart_zoom_animation');
+            setTimeout(() => {
+                cartQuantityElement.textContent = data.cart_quantity;
+                cartQuantityElement.classList.remove('o_mycart_zoom_animation');
+            }, 300);
+        }
+    }
 
     $(".js_cart_lines").first().before(data['website_sale.cart_lines']).end().remove();
     $("#cart_total").replaceWith(data['website_sale.total']);
@@ -111,23 +75,6 @@ function updateCartNavBar(data) {
         document.querySelector("a[name='website_sale_main_button']")?.classList.remove('disabled');
     } else {
         document.querySelector("a[name='website_sale_main_button']")?.classList.add('disabled');
-    }
-}
-
-function showCartNotification(callService, props, options = {}) {
-    // Show the notification about the cart
-    if (props.lines) {
-        callService("cartNotificationService", "add", _t("Item(s) added to your cart"), {
-            lines: props.lines,
-            currency_id: props.currency_id,
-            ...options,
-        });
-    }
-    if (props.warning) {
-        callService("cartNotificationService", "add", _t("Warning"), {
-            warning: props.warning,
-            ...options,
-        });
     }
 }
 
@@ -156,7 +103,5 @@ function showWarning(message) {
 export default {
     animateClone: animateClone,
     updateCartNavBar: updateCartNavBar,
-    cartHandlerMixin: cartHandlerMixin,
-    showCartNotification: showCartNotification,
     showWarning: showWarning,
 };

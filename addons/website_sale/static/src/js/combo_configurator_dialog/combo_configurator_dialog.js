@@ -8,9 +8,13 @@ patch(ComboConfiguratorDialog, {
     props: {
         ...ComboConfiguratorDialog.props,
         isFrontend: { type: Boolean, optional: true },
-        // The following fields are needed for tracking.
-        category_name: { type: String, optional: true },
-        currency_name: { type: String, optional: true },
+        options: {
+            type: Object,
+            optional: true,
+            shape: {
+                isBuyNow: { type: Boolean, optional: true },
+            },
+        },
     },
 });
 
