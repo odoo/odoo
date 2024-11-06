@@ -1,4 +1,3 @@
-import { _legacyIsVisible } from "@web/core/utils/ui";
 import { tourState } from "./tour_state";
 import * as hoot from "@odoo/hoot-dom";
 import { callWithUnloadCheck } from "./tour_utils";
@@ -79,15 +78,13 @@ export class TourStepAutomatic extends TourStep {
             this.skipped = true;
             return true;
         }
-        let nodes;
         try {
-            nodes = hoot.queryAll(this.trigger);
+            //if pseudo-selector :visible is not present in trigger, visible is true
+            const visible = !this.trigger.includes(":visible");
+            this.element = hoot.queryFirst(this.trigger, { visible });
         } catch (error) {
             this.error = `HOOT: ${error.message}`;
         }
-        this.element = this.trigger.includes(":visible")
-            ? nodes.at(0)
-            : nodes.find(_legacyIsVisible);
         return !this.isUIBlocked && this.elementIsEnabled && this.elementIsInModal
             ? this.element
             : false;
