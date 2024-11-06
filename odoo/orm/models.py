@@ -3621,9 +3621,6 @@ class BaseModel(metaclass=MetaModel):
             # Unknown (or virtual) fields are considered accessible because they will not be read and nothing will be written to them.
             invalid_fields = [name for name in field_names if name in self._fields and not self._fields[name].is_accessible(self.env)]
             if invalid_fields:
-                _logger.info('Access Denied by ACLs for operation: %s, uid: %s, model: %s, fields: %s',
-                             operation, self._uid, self._name, ', '.join(invalid_fields))
-
                 description = self.env['ir.model']._get(self._name).name
 
                 error_msg = _(

@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools
 from odoo.exceptions import AccessError, ValidationError
 from odoo.osv import expression
 from odoo.tools import config, SQL
@@ -59,7 +59,7 @@ class IrRule(models.Model):
     def _check_model_name(self):
         # Don't allow rules on rules records (this model).
         if any(rule.model_id.model == self._name for rule in self):
-            raise ValidationError(_('Rules can not be applied on the Record Rules model.'))
+            raise ValidationError(self.env._('Rules can not be applied on the Record Rules model.'))
 
     @api.constrains('active', 'domain_force', 'model_id')
     def _check_domain(self):
@@ -70,7 +70,7 @@ class IrRule(models.Model):
                     domain = safe_eval(rule.domain_force, eval_context)
                     expression.expression(domain, self.env[rule.model_id.model].sudo())
                 except Exception as e:
-                    raise ValidationError(_('Invalid domain: %s', e))
+                    raise ValidationError(self.env._('Invalid domain: %s', e))
 
     def _compute_domain_keys(self):
         """ Return the list of context keys to use for caching ``_compute_domain``. """
@@ -202,8 +202,8 @@ class IrRule(models.Model):
         return res
 
     def _make_access_error(self, operation, records):
-        _logger.info('Access Denied by record rules for operation: %s on record ids: %r, uid: %s, model: %s', operation, records.ids[:6], self._uid, records._name)
         self = self.with_context(self.env.user.context_get())
+        _ = self.env._
 
         model = records._name
         description = self.env['ir.model']._get(model).name or model
@@ -214,8 +214,10 @@ class IrRule(models.Model):
             'unlink': _("unlink"),
         }
         user_description = f"{self.env.user.name} (id={self.env.user.id})"
-        operation_error = _("Uh-oh! Looks like you have stumbled upon some top-secret records.\n\n" \
-            "Sorry, %(user)s doesn't have '%(operation)s' access to:", user=user_description, operation=operations[operation])
+        operation_error = _(
+            "Uh-oh! Looks like you have stumbled upon some top-secret records.\n\n"
+            "Sorry, %(user)s doesn't have '%(operation)s' access to:",
+            user=user_description, operation=operations[operation])
         failing_model = _("- %(description)s (%(model)s)", description=description, model=model)
 
         resolution_info = _("If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies.")
