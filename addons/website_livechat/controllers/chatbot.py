@@ -57,9 +57,10 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
         chatbot_script._post_welcome_steps(discuss_channel)
         store = Store()
         request.env["res.users"]._init_store_data(store)
+        store.add(chatbot_script)
         return request.render("im_livechat.chatbot_test_script_page", {
             'server_url': chatbot_script.get_base_url(),
             'channel_data': {'id': discuss_channel.id, 'model': 'discuss.channel'},
-            'chatbot_data': chatbot_script._format_for_frontend(),
+            'chatbot_script': chatbot_script,
             'storeData': store.get_result(),
         })

@@ -32,7 +32,7 @@ declare module "models" {
         "ChatbotStep": ChatbotStep,
         "Chatbot": Chatbot,
         "ChatbotScriptStepAnswer": ChatbotScriptStepAnswer,
-        "ChatbotScript": ChatbotScript,
+        "chatbot.script": ChatbotScript,
         "LivechatRule": LivechatRule,
     }
 }

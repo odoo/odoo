@@ -76,6 +76,7 @@ class LivechatController(http.Controller):
     def livechat_init(self, channel_id):
         operator_available = len(request.env['im_livechat.channel'].sudo().browse(channel_id).available_operator_ids)
         rule = {}
+        store = Store()
         # find the country from the request
         country_id = False
         if request.geoip.country_code:
@@ -94,8 +95,8 @@ class LivechatController(http.Controller):
             if matching_rule.chatbot_script_id.active and (not matching_rule.chatbot_only_if_no_operator or
                (not operator_available and matching_rule.chatbot_only_if_no_operator)) and matching_rule.chatbot_script_id.script_step_ids:
                 chatbot_script = matching_rule.chatbot_script_id
-                rule.update({'chatbotScript': chatbot_script._format_for_frontend()})
-        store = Store()
+                rule.update({"chatbotScript": chatbot_script.id})
+                store.add(chatbot_script)
         request.env["res.users"]._init_store_data(store)
         return {
             'available_for_me': bool((rule and rule.get('chatbotScript'))
@@ -128,7 +129,7 @@ class LivechatController(http.Controller):
         if previous_operator_id:
             previous_operator_id = int(previous_operator_id)
 
-        chatbot_script = False
+        chatbot_script = request.env["chatbot.script"]
         if chatbot_script_id:
             chatbot_script = request.env['chatbot.script'].sudo().with_context(
                 lang=request.env["chatbot.script"]._get_chatbot_language()
@@ -157,7 +158,7 @@ class LivechatController(http.Controller):
                 "channel_type": "livechat",
                 "chatbot": (
                     {
-                        "script": chatbot_script._format_for_frontend(),
+                        "script": chatbot_script.id,
                         "steps": chatbot_script._get_welcome_steps().mapped(
                             lambda s: {"scriptStep": {"id": s.id}}
                         ),
@@ -166,6 +167,7 @@ class LivechatController(http.Controller):
                     else None
                 ),
             }
+            store.add(chatbot_script)
             store.add("discuss.channel", channel_info)
         else:
             channel = request.env['discuss.channel'].with_context(

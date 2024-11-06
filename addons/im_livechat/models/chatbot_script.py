@@ -4,6 +4,7 @@
 from odoo import api, models, fields
 from odoo.http import request
 from odoo.tools import email_normalize, get_lang, html2plaintext, is_html_empty, plaintext2html
+from odoo.addons.mail.tools.discuss import Store
 
 
 class ChatbotScript(models.Model):
@@ -183,19 +184,18 @@ class ChatbotScript(models.Model):
     # Tooling / Misc
     # --------------------------
 
-    def _format_for_frontend(self):
-        """ Small utility method that formats the script into a dict usable by the frontend code. """
-        self.ensure_one()
-
-        return {
-            'id': self.id,
-            'name': self.title,
-            'partner': {'id': self.operator_partner_id.id, 'type': 'partner', 'name': self.operator_partner_id.name},
-            'welcomeSteps': [
-                step._format_for_frontend()
-                for step in self._get_welcome_steps()
-            ]
-        }
+    def _to_store(self, store: Store, /, *, fields=None, **kwargs):
+        if fields is None:
+            fields = ["title", "operator_partner_id", "welcome_steps"]
+        for script in self:
+            data = script._read_format(
+                [f for f in fields if f not in {"operator_partner_id", "welcome_steps"}], load=False
+            )[0]
+            if "operator_partner_id" in fields:
+                data["operator_partner_id"] = Store.one(script.operator_partner_id, fields=["name"])
+            if "welcome_steps" in fields:
+                data["welcome_steps"] = Store.many(script._get_welcome_steps())
+            store.add(script, data)
 
     def _validate_email(self, email_address, discuss_channel):
         email_address = html2plaintext(email_address)
