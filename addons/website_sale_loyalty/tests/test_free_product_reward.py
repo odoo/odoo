@@ -5,6 +5,7 @@ from odoo.tests import tagged
 from odoo.tests.common import HttpCase
 
 from odoo.addons.website.tools import MockRequest
+from odoo.addons.website_sale_loyalty.controllers.cart import Cart
 from odoo.addons.website_sale_loyalty.controllers.main import WebsiteSale
 
 
@@ -15,6 +16,7 @@ class TestFreeProductReward(HttpCase):
         super().setUp()
 
         self.WebsiteSaleController = WebsiteSale()
+        self.WebsiteSaleCartController = Cart()
         self.website = self.env['website'].browse(1)
 
         self.sofa = self.env['product.product'].create({
@@ -72,9 +74,17 @@ class TestFreeProductReward(HttpCase):
         # want to add the product again
         order = self.empty_order
         with MockRequest(self.env, website=self.website, sale_order_id=order.id, website_sale_current_pl=1):
-            self.WebsiteSaleController.cart_update_json(self.sofa.id, set_qty=1)
+            self.WebsiteSaleCartController.add_to_cart(
+                product_template_id=self.sofa.product_tmpl_id,
+                product_id=self.sofa.id,
+                quantity=1,
+            )
             self.WebsiteSaleController.claim_reward(self.program.reward_ids[0].id)
-            self.WebsiteSaleController.cart_update_json(self.carpet.id, set_qty=1)
+            self.WebsiteSaleCartController.add_to_cart(
+                product_template_id=self.carpet.product_tmpl_id,
+                product_id=self.carpet.id,
+                quantity=1,
+            )
             sofa_line = order.order_line.filtered(lambda line: line.product_id.id == self.sofa.id)
             carpet_reward_line = order.order_line.filtered(lambda line: line.product_id.id == self.carpet.id and line.is_reward_line)
             carpet_line = order.order_line.filtered(lambda line: line.product_id.id == self.carpet.id and not line.is_reward_line)

@@ -887,30 +887,3 @@ class ProductTemplate(models.Model):
                     price, currency, product_taxes, taxes, product_or_template, website=website
                 ), pricelist_rule_id
         return price, pricelist_rule_id
-
-    @api.model
-    def _get_additional_configurator_data(
-        self, product_or_template, date, currency, pricelist, **kwargs
-    ):
-        """ Override of `sale` to append tracking data.
-
-        :param product.product|product.template product_or_template: The product for which to get
-            additional data.
-        :param datetime date: The date to use to compute prices.
-        :param res.currency currency: The currency to use to compute prices.
-        :param product.pricelist pricelist: The pricelist to use to compute prices.
-        :param dict kwargs: Locally unused data passed to `super`.
-        :rtype: dict
-        :return: A dict containing additional data about the specified product.
-        """
-        data = super()._get_additional_configurator_data(
-            product_or_template, date, currency, pricelist, **kwargs
-        )
-
-        if ir_http.get_request_website():
-            data.update({
-                # The following fields are needed for tracking.
-                'category_name': product_or_template.categ_id.name,
-                'currency_name': currency.name,
-            })
-        return data

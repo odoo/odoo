@@ -107,16 +107,18 @@ var VariantMixin = {
                 var attributeValueName = $customInput.data('value_name');
 
                 if ($variantContainer.find('.variant_custom_value').length === 0
-                        || $variantContainer
-                              .find('.variant_custom_value')
-                              .data('custom_product_template_attribute_value_id') !== parseInt(attributeValueId)) {
+                    || $variantContainer
+                        .find('.variant_custom_value')
+                        .data('custom_product_template_attribute_value_id') !== parseInt(
+                            attributeValueId
+                        )
+                ) {
                     $variantContainer.find('.variant_custom_value').remove();
 
                     const previousCustomValue = $customInput.attr("previous_custom_value");
                     var $input = $('<input>', {
                         type: 'text',
                         'data-custom_product_template_attribute_value_id': attributeValueId,
-                        'data-attribute_value_name': attributeValueName,
                         class: 'variant_custom_value form-control mt-2'
                     });
 
@@ -134,40 +136,6 @@ var VariantMixin = {
     },
 
     /**
-     * Hack to add and remove from cart with json
-     *
-     * @param {MouseEvent} ev
-     */
-    onClickAddCartJSON: function (ev) {
-        ev.preventDefault();
-        var $link = $(ev.currentTarget);
-        var $input = $link.closest('.input-group').find("input");
-        var min = parseFloat($input.data("min") || 0);
-        var max = parseFloat($input.data("max") || Infinity);
-        var previousQty = parseFloat($input.val() || 0, 10);
-        var quantity = ($link.has(".fa-minus").length ? -1 : 1) + previousQty;
-        var newQty = quantity > min ? (quantity < max ? quantity : max) : min;
-
-        if (newQty !== previousQty) {
-            $input.val(newQty).trigger('change');
-        }
-        return false;
-    },
-
-    /**
-     * When the quantity is changed, we need to query the new price of the product.
-     * Based on the pricelist, the price might change when quantity exceeds a certain amount.
-     *
-     * @param {MouseEvent} ev
-     */
-    onChangeAddQuantity: function (ev) {
-        const $parent = $(ev.currentTarget).closest('form');
-        if ($parent.length > 0) {
-            this.triggerVariantChange($parent);
-        }
-    },
-
-    /**
      * Triggers the price computation and other variant specific changes
      *
      * @param {$.Element} $container
@@ -177,73 +145,6 @@ var VariantMixin = {
         $container.find('input.js_variant_change:checked, select.js_variant_change').each(function () {
             VariantMixin.handleCustomValues($(this));
         });
-    },
-
-    /**
-     * Will look for user custom attribute values
-     * in the provided container
-     *
-     * @param {$.Element} $container
-     * @returns {Array} array of custom values with the following format
-     *   {integer} custom_product_template_attribute_value_id
-     *   {string} attribute_value_name
-     *   {string} custom_value
-     */
-    getCustomVariantValues: function ($container) {
-        var variantCustomValues = [];
-        $container.find('.variant_custom_value').each(function (){
-            var $variantCustomValueInput = $(this);
-            if ($variantCustomValueInput.length !== 0){
-                variantCustomValues.push({
-                    'custom_product_template_attribute_value_id': $variantCustomValueInput.data('custom_product_template_attribute_value_id'),
-                    'attribute_value_name': $variantCustomValueInput.data('attribute_value_name'),
-                    'custom_value': $variantCustomValueInput.val(),
-                });
-            }
-        });
-
-        return variantCustomValues;
-    },
-
-    /**
-     * Will look for attribute values that do not create product variant
-     * (see product_attribute.create_variant "dynamic")
-     *
-     * @param {$.Element} $container
-     * @returns {Array} array of attribute values with the following format
-     *   {integer} custom_product_template_attribute_value_id
-     *   {string} attribute_value_name
-     *   {integer} value
-     *   {string} attribute_name
-     *   {boolean} is_custom
-     */
-    getNoVariantAttributeValues: function ($container) {
-        var noVariantAttributeValues = [];
-        var variantsValuesSelectors = [
-            'input.no_variant.js_variant_change:checked',
-            'select.no_variant.js_variant_change'
-        ];
-
-        $container.find(variantsValuesSelectors.join(',')).each(function (){
-            var $variantValueInput = $(this);
-            var singleNoCustom = $variantValueInput.data('is_single') && !$variantValueInput.data('is_custom');
-
-            if ($variantValueInput.is('select')){
-                $variantValueInput = $variantValueInput.find('option[value=' + $variantValueInput.val() + ']');
-            }
-
-            if ($variantValueInput.length !== 0 && !singleNoCustom){
-                noVariantAttributeValues.push({
-                    'custom_product_template_attribute_value_id': $variantValueInput.data('value_id'),
-                    'attribute_value_name': $variantValueInput.data('value_name'),
-                    'value': $variantValueInput.val(),
-                    'attribute_name': $variantValueInput.data('attribute_name'),
-                    'is_custom': $variantValueInput.data('is_custom')
-                });
-            }
-        });
-
-        return noVariantAttributeValues;
     },
 
     /**

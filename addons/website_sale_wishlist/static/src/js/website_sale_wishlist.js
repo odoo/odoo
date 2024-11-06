@@ -164,50 +164,29 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
     /**
      * @private
      */
-    _addOrMoveWish: function (e) {
-        var tr = $(e.currentTarget).parents('tr');
-        var product = tr.data('product-id');
-        $('.o_wsale_my_cart').removeClass('d-none');
+    _addOrMoveWish: function (ev) {
+        const td = ev.currentTarget.parentElement;
 
-        if ($('#b2b_wish').is(':checked')) {
-            return this._addToCart(product, tr.find('add_qty').val() || 1);
-        } else {
-            var adding_deffered = this._addToCart(product, tr.find('add_qty').val() || 1);
-            this._removeWish(e, adding_deffered);
-            return adding_deffered;
-        }
-    },
-    /**
-     * @private
-     */
-    _addToCart: function (productID, qty) {
-        const $tr = this.$(`tr[data-product-id="${productID}"]`);
-        const productTrackingInfo = $tr.data('product-tracking-info');
-        if (productTrackingInfo) {
-            productTrackingInfo.quantity = parseFloat(qty);
-            $tr.trigger('add_to_cart_event', [productTrackingInfo]);
-        }
-        const callService = this.call.bind(this)
-        return rpc("/shop/cart/update_json", {
-            ...this._getCartUpdateJsonParams(productID, qty),
-            display: false,
-        }).then(function (data) {
-            wSaleUtils.updateCartNavBar(data);
-            wSaleUtils.showCartNotification(callService, data.notification_info);
+        const productId = parseInt(
+            td.querySelector('input[type="hidden"][name="product_id"]').value
+        );
+        const productTemplateId = parseInt(
+            td.querySelector('input[type="hidden"][name="product_template_id"]').value
+        );
+        const isCombo = td.querySelector(
+            'input[type="hidden"][name="product_type"]'
+        )?.value === 'combo';
+
+        const addToCart = this.call('websiteSale', 'addToCart', {
+            productTemplateId: productTemplateId,
+            productId: parseInt(productId, 10),
+            isCombo: isCombo,
         });
-    },
-    /**
-     * Get the cart update params.
-     *
-     * @param {string} productId
-     * @param {string} qty
-     */
-    _getCartUpdateJsonParams(productId, qty) {
-        return {
-            product_id: parseInt(productId, 10),
-            add_qty: parseInt(qty, 10),
-            display: false,
-        };
+
+        if (!document.getElementById('b2b_wish').checked) {
+            this._removeWish(ev, addToCart);
+        }
+        return addToCart;
     },
     /**
      * @private
@@ -285,10 +264,6 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
             ev.preventDefault();
             return;
         }
-        var self = this;
-        this.$('.wishlist-section .o_wish_add').addClass('disabled');
-        this._addOrMoveWish(ev).then(function () {
-            self.$('.wishlist-section .o_wish_add').removeClass('disabled');
-        });
+        this._addOrMoveWish(ev);
     },
 });

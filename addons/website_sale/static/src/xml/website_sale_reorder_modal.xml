@@ -2,7 +2,12 @@
 <templates>
     <t t-name="website_sale.ReorderModal">
         <Dialog title.translate="Re-Order">
-            <table id="o_wsale_reorder_table" class="table table-sm">
+            <!--
+                TODO: `.oe_website_sale` is used as a selector in `website_sale_tracking.js`. This
+                is a temporary solution to load the tracking utilities and will be removed once
+                tracking utilities will be fully integrated into a service.
+            -->
+            <table id="o_wsale_reorder_table" class="table table-sm oe_website_sale">
                 <thead class="bg-100">
                     <tr id="o_wsale_reorder_header">
                         <!-- Product Image -->

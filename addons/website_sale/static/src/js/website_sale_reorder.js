@@ -51,6 +51,7 @@ export class ReorderDialog extends Component {
     setup() {
         this.orm = useService("orm");
         this.dialogService = useService("dialog");
+        this.websiteSale = useService("websiteSale");
         this.formatCurrency = formatCurrency;
 
         onWillStart(this.onWillStartHandler.bind(this));
@@ -148,17 +149,24 @@ export class ReorderDialog extends Component {
     }
 
     async addProductsToCart() {
+        let promises = [];
         for (const product of this.content.products) {
             if (!product.add_to_cart_allowed) {
                 continue;
             }
-            await rpc("/shop/cart/update_json", {
-                product_id: product.product_id,
-                add_qty: product.qty,
-                no_variant_attribute_value_ids: product.no_variant_attribute_value_ids,
-                product_custom_attribute_values: JSON.stringify(product.product_custom_attribute_values),
-                display: false,
-            });
+
+            promises.push(this.websiteSale.addToCart({
+                productTemplateId: product.product_template_id,
+                productId: product.product_id,
+                quantity: product.qty,
+                productCustomAttributeValues: product.product_custom_attribute_values,
+                noVariantAttributeValues: product.no_variant_attribute_value_ids,
+            }, {
+                isBuyNow: true,
+                redirectToCart: false,
+                isConfigured: true,
+            }));
         }
+        return Promise.all(promises);
     }
 }
