@@ -2695,12 +2695,19 @@ var SnippetsMenu = Widget.extend({
         return exec(() => {
             return new Promise(resolve => {
                 if ($snippet && $snippet.length) {
-                    return this._createSnippetEditor($snippet).then(resolve);
+                    this._createSnippetEditor($snippet).then(resolve);
+                } else {
+                    resolve(null);
                 }
-                resolve(null);
             }).then(async editorToEnable => {
-                if (!previewMode && this._enabledEditorHierarchy[0] === editorToEnable
-                        || ifInactiveOptions && this._enabledEditorHierarchy.includes(editorToEnable)) {
+                if (editorToEnable && editorToEnable.$target && !editorToEnable.$target.closest('body').length) {
+                    await new Promise(requestAnimationFrame);
+                    if (!editorToEnable.$target.closest('body').length) {
+                        return null;
+                    }
+                }
+
+                if (this._enabledEditorHierarchy[0] === editorToEnable || ifInactiveOptions && this._enabledEditorHierarchy.includes(editorToEnable)) {
                     return editorToEnable;
                 }
 
