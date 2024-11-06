@@ -1103,18 +1103,18 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(len(move_byproduct_1), 1)
         self.assertEqual(move_byproduct_1.product_uom_qty, 2.0)
         self.assertEqual(move_byproduct_1.quantity, 1)
-        self.assertTrue(move_byproduct_1.picked)
+        self.assertFalse(move_byproduct_1.picked)
 
         move_byproduct_2 = mo.move_finished_ids.filtered(lambda l: l.product_id == self.byproduct2)
         self.assertEqual(len(move_byproduct_2), 1)
         self.assertEqual(move_byproduct_2.product_uom_qty, 4.0)
         self.assertEqual(move_byproduct_2.quantity, 2)
-        self.assertTrue(move_byproduct_2.picked)
+        self.assertFalse(move_byproduct_2.picked)
 
         move_byproduct_3 = mo.move_finished_ids.filtered(lambda l: l.product_id == self.byproduct3)
         self.assertEqual(move_byproduct_3.product_uom_qty, 4.0)
         self.assertEqual(move_byproduct_3.quantity, 2.0)
-        self.assertTrue(move_byproduct_3.picked)
+        self.assertFalse(move_byproduct_3.picked)
         self.assertEqual(move_byproduct_3.product_uom, dozen)
 
         details_operation_form = Form(move_byproduct_1, view=self.env.ref('stock.view_stock_move_operations'))
@@ -1138,18 +1138,18 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(len(move_byproduct_1), 1)
         self.assertEqual(move_byproduct_1.product_uom_qty, 1.0)
         self.assertEqual(move_byproduct_1.quantity, 1)
-        self.assertTrue(move_byproduct_1.picked)
+        self.assertFalse(move_byproduct_1.picked)
 
         move_byproduct_2 = mo2.move_finished_ids.filtered(lambda l: l.product_id == self.byproduct2)
         self.assertEqual(len(move_byproduct_2), 1)
         self.assertEqual(move_byproduct_2.product_uom_qty, 2.0)
         self.assertEqual(move_byproduct_2.quantity, 2)
-        self.assertTrue(move_byproduct_2.picked)
+        self.assertFalse(move_byproduct_2.picked)
 
         move_byproduct_3 = mo2.move_finished_ids.filtered(lambda l: l.product_id == self.byproduct3)
         self.assertEqual(move_byproduct_3.product_uom_qty, 2.0)
         self.assertEqual(move_byproduct_3.quantity, 2.0)
-        self.assertTrue(move_byproduct_3.picked)
+        self.assertFalse(move_byproduct_3.picked)
         self.assertEqual(move_byproduct_3.product_uom, dozen)
 
         details_operation_form = Form(move_byproduct_1, view=self.env.ref('stock.view_stock_move_operations'))
@@ -1222,6 +1222,57 @@ class TestMrpOrder(TestMrpCommon):
                 break
         mo = mo_form.save()
         mo.button_mark_done()
+
+    def test_byproduct_checkboxes(self):
+        """ Tests if the produced checkbox is picked when quantity_producing changes """
+        self.env.user.group_ids += self.env.ref('mrp.group_mrp_byproducts')
+        self.byproduct1 = self.env['product.product'].create({
+            'name': 'Byproduct 1',
+            'is_storable': True,
+            'tracking': 'none',
+        })
+        self.byproduct2 = self.env['product.product'].create({
+            'name': 'Byproduct 2',
+            'is_storable': True,
+            'tracking': 'none',
+        })
+
+        with Form(self.bom_1) as bom:
+            bom.product_qty = 1.0
+            with bom.byproduct_ids.new() as bp:
+                bp.product_id = self.byproduct1
+                bp.product_qty = 1.0
+            with bom.byproduct_ids.new() as bp:
+                bp.product_id = self.byproduct2
+                bp.product_qty = 1.0
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product_4
+        mo_form.bom_id = self.bom_1
+        mo_form.product_qty = 2
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        mo_form = Form(mo)
+        mo_form.qty_producing = 1
+        mo = mo_form.save()
+        move_byproduct_1 = mo.move_finished_ids.filtered(lambda l: l.product_id == self.byproduct1)
+        self.assertEqual(move_byproduct_1.quantity, 1)
+        self.assertFalse(move_byproduct_1.picked)
+
+        move_byproduct_2 = mo.move_finished_ids.filtered(lambda l: l.product_id == self.byproduct2)
+        self.assertEqual(move_byproduct_2.quantity, 1)
+        self.assertFalse(move_byproduct_2.picked)
+
+        move_byproduct_1.picked = True
+        mo_form = Form(mo)
+        mo_form.qty_producing = 2
+        mo = mo_form.save()
+        self.assertEqual(move_byproduct_1.quantity, 1)
+        self.assertTrue(move_byproduct_1.picked)
+
+        self.assertEqual(move_byproduct_2.quantity, 2)
+        self.assertFalse(move_byproduct_2.picked)
 
     def test_product_produce_duplicate_1(self):
         """ produce a finished product tracked by serial number 2 times with the
