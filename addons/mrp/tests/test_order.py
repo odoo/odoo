@@ -185,7 +185,6 @@ class TestMrpOrder(TestMrpCommon):
         mo.action_confirm()
         self.assertEqual(mo.workorder_ids.mapped('sequence'), [0, 1, 2, 100])
 
-
     @freeze_time('2022-06-28 08:00')
     def test_end_date(self):
         """ End date must be the day the MO is done (regardless of lead times)"""
@@ -1088,18 +1087,18 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(len(move_byproduct_1), 1)
         self.assertEqual(move_byproduct_1.product_uom_qty, 2.0)
         self.assertEqual(move_byproduct_1.quantity, 1)
-        self.assertTrue(move_byproduct_1.picked)
+        self.assertFalse(move_byproduct_1.picked)
 
         move_byproduct_2 = mo.move_finished_ids.filtered(lambda l: l.product_id == self.byproduct2)
         self.assertEqual(len(move_byproduct_2), 1)
         self.assertEqual(move_byproduct_2.product_uom_qty, 4.0)
         self.assertEqual(move_byproduct_2.quantity, 2)
-        self.assertTrue(move_byproduct_2.picked)
+        self.assertFalse(move_byproduct_2.picked)
 
         move_byproduct_3 = mo.move_finished_ids.filtered(lambda l: l.product_id == self.byproduct3)
         self.assertEqual(move_byproduct_3.product_uom_qty, 4.0)
         self.assertEqual(move_byproduct_3.quantity, 2.0)
-        self.assertTrue(move_byproduct_3.picked)
+        self.assertFalse(move_byproduct_3.picked)
         self.assertEqual(move_byproduct_3.product_uom, self.uom_dozen)
 
         details_operation_form = Form(move_byproduct_1, view=self.env.ref('stock.view_stock_move_operations'))
@@ -1123,18 +1122,18 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(len(move_byproduct_1), 1)
         self.assertEqual(move_byproduct_1.product_uom_qty, 1.0)
         self.assertEqual(move_byproduct_1.quantity, 1)
-        self.assertTrue(move_byproduct_1.picked)
+        self.assertFalse(move_byproduct_1.picked)
 
         move_byproduct_2 = mo2.move_finished_ids.filtered(lambda l: l.product_id == self.byproduct2)
         self.assertEqual(len(move_byproduct_2), 1)
         self.assertEqual(move_byproduct_2.product_uom_qty, 2.0)
         self.assertEqual(move_byproduct_2.quantity, 2)
-        self.assertTrue(move_byproduct_2.picked)
+        self.assertFalse(move_byproduct_2.picked)
 
         move_byproduct_3 = mo2.move_finished_ids.filtered(lambda l: l.product_id == self.byproduct3)
         self.assertEqual(move_byproduct_3.product_uom_qty, 2.0)
         self.assertEqual(move_byproduct_3.quantity, 2.0)
-        self.assertTrue(move_byproduct_3.picked)
+        self.assertFalse(move_byproduct_3.picked)
         self.assertEqual(move_byproduct_3.product_uom, self.uom_dozen)
 
         details_operation_form = Form(move_byproduct_1, view=self.env.ref('stock.view_stock_move_operations'))
@@ -1206,6 +1205,63 @@ class TestMrpOrder(TestMrpCommon):
                 break
         mo = mo_form.save()
         mo.button_mark_done()
+
+    def test_byproduct_update_produced(self):
+        """ Ensures that when the MO quantity to produce is updated, the
+        by-products quantity are updated aswell when they are not produced yet,
+        and the by-products quantity is NOT updated when already produced.
+        """
+        self.env.user.group_ids += self.env.ref('mrp.group_mrp_byproducts')
+        byproduct1, byproduct2 = self.env['product.product'].create([{
+            'name': f'byproduct{i}',
+            'is_storable': True,
+            'tracking': 'none',
+        } for i in [1, 2]])
+
+        self.bom_1.product_qty = 1
+        self.bom_1.byproduct_ids = [
+            Command.create({
+                'product_id': byproduct1.id,
+                'product_qty': 1.0,
+            }),
+            Command.create({
+                'product_id': byproduct2.id,
+                'product_qty': 1.0,
+            }),
+        ]
+
+        # Create a MO for 2 product_4
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product_4
+        mo_form.bom_id = self.bom_1
+        mo_form.product_qty = 2
+        mo = mo_form.save()
+        mo.action_confirm()
+        self.assertRecordValues(mo.move_byproduct_ids, [
+            {'product_id': byproduct1.id, 'quantity': 2, 'picked': False},
+            {'product_id': byproduct2.id, 'quantity': 2, 'picked': False},
+        ])
+
+        # Update quantity to produce to 1 => Both by-product qty should be updated to 1 too.
+        mo_form = Form(mo)
+        mo_form.qty_producing = 1
+        mo = mo_form.save()
+        self.assertRecordValues(mo.move_byproduct_ids, [
+            {'product_id': byproduct1.id, 'quantity': 1, 'picked': False},
+            {'product_id': byproduct2.id, 'quantity': 1, 'picked': False},
+        ])
+
+        # Mark first by-product as produced and update MO qty to 2 => only
+        # second by-product qty should be updated to 2.
+        move_byproduct_1 = mo.move_finished_ids.filtered(lambda l: l.product_id == byproduct1)
+        move_byproduct_1.picked = True
+        mo_form = Form(mo)
+        mo_form.qty_producing = 2
+        mo = mo_form.save()
+        self.assertRecordValues(mo.move_byproduct_ids, [
+            {'product_id': byproduct1.id, 'quantity': 1, 'picked': True},
+            {'product_id': byproduct2.id, 'quantity': 2, 'picked': False},
+        ])
 
     def test_product_produce_duplicate_1(self):
         """ produce a finished product tracked by serial number 2 times with the
@@ -1972,7 +2028,6 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo.reservation_state, 'assigned')
         self.assertEqual(mo.components_availability, 'Available')
         check_availability_state('available')
-
 
     def test_immediate_validate_6(self):
         """In a production for a tracked product, clicking on mark as done without filling any quantities should

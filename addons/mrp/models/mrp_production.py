@@ -1262,6 +1262,9 @@ class MrpProduction(models.Model):
             origin = '%s,%s' % (origin, self.name)
         return origin
 
+    def _mark_byproducts_as_produced(self):
+        self.move_byproduct_ids.picked = True
+
     def _set_qty_producing(self, pick_manual_consumption_moves=True):
         if self.product_id.tracking == 'serial':
             qty_producing_uom = self.product_uom_id._compute_quantity(self.qty_producing, self.product_id.uom_id, rounding_method='HALF-UP')
@@ -1272,7 +1275,12 @@ class MrpProduction(models.Model):
         # waiting for a preproduction move before assignement
         is_waiting = self.warehouse_id.manufacture_steps != 'mrp_one_step' and self.picking_ids.filtered(lambda p: p.picking_type_id == self.warehouse_id.pbm_type_id and p.state not in ('done', 'cancel'))
 
-        for move in (self.move_raw_ids.filtered(lambda m: not is_waiting or m.product_id.tracking == 'none') | self.move_finished_ids.filtered(lambda m: m.product_id != self.product_id)):
+        for move in (self.move_raw_ids.filtered(lambda m: not is_waiting or m.product_id.tracking == 'none') | self.move_byproduct_ids):
+            is_byproduct = move in self.move_byproduct_ids
+            # Never update already produced by-product moves.
+            if move.picked and is_byproduct:
+                continue
+
             # picked + manual means the user set the quantity manually
             if move.manual_consumption and move.picked:
                 continue
@@ -1283,7 +1291,7 @@ class MrpProduction(models.Model):
 
             new_qty = move.product_uom.round((self.qty_producing - self.qty_produced) * move.unit_factor)
             move._set_quantity_done(new_qty)
-            if (not move.manual_consumption or pick_manual_consumption_moves) and move.quantity:
+            if (not move.manual_consumption or pick_manual_consumption_moves) and move.quantity and not is_byproduct:
                 move.picked = True
 
     def _should_postpone_date_finished(self, date_finished):
@@ -2167,7 +2175,7 @@ class MrpProduction(models.Model):
 
     def pre_button_mark_done(self):
         self._button_mark_done_sanity_checks()
-        productions_auto = set()
+        production_auto_ids = set()
         for production in self:
             if not production.product_uom_id.is_zero(production.qty_producing):
                 production.move_raw_ids.filtered(
@@ -2175,12 +2183,15 @@ class MrpProduction(models.Model):
                 ).picked = True
                 continue
             if production._auto_production_checks():
-                productions_auto.add(production.id)
+                production_auto_ids.add(production.id)
             else:
                 return production.action_mass_produce()
 
-        for production in self.env['mrp.production'].browse(productions_auto):
+        productions_auto = self.env['mrp.production'].browse(production_auto_ids)
+        for production in productions_auto:
             production._set_quantities()
+        # Produce by-products also for not auto productions.
+        (self - productions_auto)._mark_byproducts_as_produced()
 
         consumption_issues = self._get_consumption_issues()
         if consumption_issues:
@@ -2757,6 +2768,7 @@ class MrpProduction(models.Model):
         else:
             self.qty_producing = self.product_qty - self.qty_produced
         self._set_qty_producing()
+        self._mark_byproducts_as_produced()
 
         for move in self.move_raw_ids:
             if move.state in ('done', 'cancel') or not move.product_uom_qty:
