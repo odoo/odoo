@@ -40,6 +40,7 @@ jobs:
           git branch
           git pull
           sudo service odoo start
+          exit
           EOF
 
       - name: Cleanup SSH Key
