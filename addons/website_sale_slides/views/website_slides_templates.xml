@@ -101,8 +101,27 @@
 
 <!-- TOOLS -->
 <template name="Buy Course Link" id="course_buy_course_link">
-    <a class="post_link" t-att-href="'/shop/cart/update?product_id=%s' % slide.channel_id.product_id.id">
-        Join this Course</a><t t-if="for_resources"> to access resources</t>
+    <form class="oe_website_sale">
+        <input
+            type="hidden"
+            name="product_template_id"
+            t-att-value="slide.channel_id.product_id.product_tmpl_id.id"
+        />
+        <input
+            type="hidden"
+            class="product_id"
+            name="product_id"
+            t-att-value="slide.channel_id.product_id.id"
+        />
+        <a
+            id="add_to_cart"
+            role="button"
+            class="btn btn-primary d-block"
+        >
+            Join this Course
+        </a>
+        <t t-if="for_resources"> to access resources</t>
+    </form>
 </template>
 
 <template name="Buy Course Button" id="course_buy_course_button">
@@ -151,19 +170,28 @@
             </a>
         </t>
         <div t-else="" class="oe_website_sale">
-            <div class="add_to_cart_button">
-                <form action="/shop/cart/update" method="POST">
-                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-                    <input type="hidden" name="product_template_id" t-att-value="channel.product_id.product_tmpl_id.id"/>
-                    <input type="hidden" class="product_id" name="product_id" t-att-value="channel.product_id.id"/>
-                    <a id="add_to_cart" role="button" href="#"
-                       class="btn btn-primary d-block js_check_product o_js_add_to_cart a-submit"
-                       data-animation-selector=".o_wslides_course_pict">
-                        <i class="fa fa-shopping-cart"></i> Add to Cart
-                    </a>
-                    <div id="product_option_block"/>
-                </form>
-            </div>
+            <form>
+                <input
+                    type="hidden"
+                    name="product_template_id"
+                    t-att-value="channel.product_id.product_tmpl_id.id"
+                />
+                <input
+                    type="hidden"
+                    class="product_id"
+                    name="product_id"
+                    t-att-value="channel.product_id.id"
+                />
+                <a
+                    id="add_to_cart"
+                    role="button"
+                    class="btn btn-primary d-block"
+                >
+                    <i class="fa fa-shopping-cart"></i> Add to Cart
+                </a>
+                <!-- Hook for wishlist -->
+                <div id="product_option_block"/>
+            </form>
         </div>
     </t>
     <t t-elif="not channel.is_member">
@@ -174,15 +202,16 @@
 </template>
 
 <template name="Display 'Buy Now'" id="course_option_buy_course_now" inherit_id="website_sale_slides.course_buy_course_button" active="False">
-    <xpath expr="//div[hasclass('add_to_cart_button')]" position="before">
-        <div class="mb-1">
-            <a role="button" class="post_link btn btn-primary d-block" t-attf-href="/shop/cart/update?product_id={{channel.product_id.id}}&amp;try_skip_step=true">
-                <i class="fa fa-bolt"></i> Buy Now
-            </a>
-        </div>
+    <xpath expr="//form//a[@id='add_to_cart']" position="before">
+        <a
+            role="button"
+            class="btn btn-primary d-block o_we_buy_now mb-1"
+        >
+            <i class="fa fa-bolt"></i> Buy Now
+        </a>
     </xpath>
-    <xpath expr="//div[hasclass('add_to_cart_button')]//a[@id='add_to_cart']" position="attributes">
-        <attribute name="class">btn btn-outline-primary d-block js_check_product o_js_add_to_cart a-submit</attribute>
+    <xpath expr="//form//a[@id='add_to_cart']" position="attributes">
+        <attribute name="class" remove="btn-primary" add="btn-outline-primary" separator=" "/>
     </xpath>
 </template>
 
