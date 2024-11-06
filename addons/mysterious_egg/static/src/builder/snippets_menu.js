@@ -6,10 +6,18 @@ import { registry } from "@web/core/registry";
 import { BuilderOverlayPlugin } from "./plugins/builder_overlay/builder_overlay_plugin";
 import { DropZonePlugin } from "./plugins/drop_zone_plugin";
 import { ElementToolboxPlugin } from "./plugins/element_toolbox_plugin";
+import { MediaWebsitePlugin } from "./plugins/media_website_plugin";
+import { SetupEditorPlugin } from "./plugins/setup_editor_plugin";
 import { BlockTab, blockTab } from "./snippets_menu_tabs/block_tab";
 import { CustomizeTab, customizeTab } from "./snippets_menu_tabs/customize_tab";
 
-const BUILDER_PLUGIN = [ElementToolboxPlugin, BuilderOverlayPlugin, DropZonePlugin];
+const BUILDER_PLUGIN = [
+    ElementToolboxPlugin,
+    BuilderOverlayPlugin,
+    DropZonePlugin,
+    MediaWebsitePlugin,
+    SetupEditorPlugin,
+];
 
 function onIframeLoaded(iframe, callback) {
     const doc = iframe.contentDocument;
@@ -54,6 +62,14 @@ export class SnippetsMenu extends Component {
                         this.setTab("customize");
                     },
                 },
+                getRecordInfo: (editableEl) => {
+                    return {
+                        resModel: editableEl.dataset["oeModel"],
+                        resId: editableEl.dataset["oeId"],
+                        field: editableEl.dataset["oeField"],
+                        type: editableEl.dataset["oeType"],
+                    };
+                },
             },
             this.env.services
         );
@@ -74,6 +90,8 @@ export class SnippetsMenu extends Component {
     }
 
     discard() {
+        // TODO: adapt
+        this.editor.getContent();
         this.props.closeEditor();
     }
 
