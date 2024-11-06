@@ -25,7 +25,12 @@ export class ActivityMenu extends Component {
             isDisplayed: false
         });
         this.date_formatter = registry.category("formatters").get("float_time")
+<<<<<<< saas-17.2
         this.dropdown = useDropdownState();
+||||||| 98aa20fe640556490be4aa4cfef8743e048d5a7c
+        this.onClickSignInOut = useDebounced(this.signInOut, 200, true);
+=======
+>>>>>>> 226ff342d52ad2fede0fdea0cef4ff3faabb1b05
         // load data but do not wait for it to render to prevent from delaying
         // the whole webclient
         this.searchReadEmployee();
@@ -54,8 +59,18 @@ export class ActivityMenu extends Component {
     }
 
     async signInOut() {
+<<<<<<< saas-17.2
         this.dropdown.close();
         if (!isIosApp()) { // iOS app lacks permissions to call `getCurrentPosition`
+||||||| 98aa20fe640556490be4aa4cfef8743e048d5a7c
+        // iOS app lacks permissions to call `getCurrentPosition`
+        if (!isIosApp()) {
+=======
+        // to close the dropdown
+        document.body.click()
+        // iOS app lacks permissions to call `getCurrentPosition`
+        if (!isIosApp()) {
+>>>>>>> 226ff342d52ad2fede0fdea0cef4ff3faabb1b05
             navigator.geolocation.getCurrentPosition(
                 async ({coords: {latitude, longitude}}) => {
                     await rpc("/hr_attendance/systray_check_in_out", {
