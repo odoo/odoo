@@ -550,7 +550,12 @@ class TestAccountPayment(AccountTestInvoicingCommon):
         invoice2 = invoice1.copy()
         invoice2.action_post()
         self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice2.ids).create({})._create_payments()
-        self.assertTrue(invoice2._is_eligible_for_early_payment_discount(invoice2.currency_id, invoice2.invoice_date))
+
+        # In the community edition, a journal entry is created for a payment regardless of whether an outstanding account is set.
+        # This removes the eligibility for early payment discount.
+        is_accounting_installed = invoice1._get_invoice_in_payment_state() == 'in_payment'
+
+        self.assertEqual(invoice2._is_eligible_for_early_payment_discount(invoice2.currency_id, invoice2.invoice_date), is_accounting_installed)
 
     def test_payments_invoice_payment_state_without_outstanding_accounts(self):
         """ Ensures that, without outstanding accounts set on the bank journal payment method,
