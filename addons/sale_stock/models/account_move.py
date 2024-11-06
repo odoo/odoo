@@ -155,7 +155,12 @@ class AccountMoveLine(models.Model):
                 qty_to_invoice = -qty_to_invoice
             account_moves = so_line.invoice_lines.move_id.filtered(lambda m: m.state == 'posted' and bool(m.reversed_entry_id) == is_line_reversing)
 
-            posted_cogs = account_moves.line_ids.filtered(lambda l: l.display_type == 'cogs' and l.product_id == self.product_id and l.balance > 0)
+            posted_cogs = self.env['account.move.line'].search([
+                ('move_id', 'in', account_moves.ids),
+                ('display_type', '=', 'cogs'),
+                ('product_id', '=', self.product_id.id),
+                ('balance', '>', 0),
+            ])
             qty_invoiced = 0
             product_uom = self.product_id.uom_id
             for line in posted_cogs:
@@ -164,8 +169,13 @@ class AccountMoveLine(models.Model):
                 else:
                     qty_invoiced += line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id)
             value_invoiced = sum(posted_cogs.mapped('balance'))
-
-            reversal_cogs = posted_cogs.move_id.reversal_move_ids.line_ids.filtered(lambda l: l.display_type == 'cogs' and l.product_id == self.product_id and l.balance > 0)
+            reversal_moves = self.env['account.move']._search([('reversed_entry_id', 'in', posted_cogs.move_id.ids)])
+            reversal_cogs = self.env['account.move.line'].search([
+                ('move_id', 'in', reversal_moves),
+                ('display_type', '=', 'cogs'),
+                ('product_id', '=', self.product_id.id),
+                ('balance', '>', 0)
+            ])
             for line in reversal_cogs:
                 if float_compare(line.quantity, 0, precision_rounding=product_uom.rounding) and line.move_id.move_type == 'out_refund' and any(line.move_id.invoice_line_ids.sale_line_ids.mapped('is_downpayment')):
                     qty_invoiced -= line.product_uom_id._compute_quantity(abs(line.quantity), line.product_id.uom_id)
