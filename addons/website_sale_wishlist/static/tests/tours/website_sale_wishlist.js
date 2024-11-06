@@ -1,5 +1,6 @@
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
+import { clickOnElement } from '@website/js/tours/tour_utils';
 
 registry.category("web_tour.tours").add('shop_wishlist', {
     checkDelay: 250,
@@ -107,6 +108,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             trigger: '.o_wish_add:eq(1)',
             run: "click",
         },
+        clickOnElement('Continue Shopping', 'button:contains("Continue Shopping")'),
         {
             content: "check that cart contains 1 item",
             trigger: ".my_cart_quantity:contains(1)",
@@ -125,6 +127,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             trigger: '.o_wish_add:eq(1)',
             run: "click",
         },
+        clickOnElement('Continue Shopping', 'button:contains("Continue Shopping")'),
         {
             content: "check that user is redirect - wishlist is empty",
             trigger: "#wrap #cart_products",
