@@ -6,7 +6,7 @@
             <div class="o_form_status_indicator_buttons d-flex" t-att-class="{ invisible: !(props.model.root.isNew or displayButtons) }">
                 <button
                     type="button"
-                    class="o_form_button_save btn btn-light px-1 py-0 lh-sm"
+                    class="o_form_button_save btn btn-light border-0 px-1 py-0 lh-sm"
                     data-hotkey="s"
                     t-on-click.stop="save"
                     data-tooltip="Save manually"
@@ -16,7 +16,7 @@
                 </button>
                 <button
                     type="button"
-                    class="o_form_button_cancel btn btn-light px-1 py-0 lh-sm"
+                    class="o_form_button_cancel btn btn-light border-0 px-1 py-0 lh-sm"
                     data-hotkey="j"
                     t-on-click.stop="discard"
                     data-tooltip="Discard all changes"
