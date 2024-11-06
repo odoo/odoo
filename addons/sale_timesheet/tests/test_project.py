@@ -185,3 +185,7 @@ class TestProject(TestCommonSaleTimesheet):
             default_service_policy='delivered_timesheet',
         ))
         self.assertEqual('delivered_timesheet', form.service_policy)
+
+    def test_duplicate_project_allocated_hours(self):
+        self.project_global.allocated_hours = 10
+        self.assertEqual(self.project_global.copy().allocated_hours, 10)

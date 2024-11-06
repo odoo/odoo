@@ -506,6 +506,42 @@ function _forwardToThumbnail(imgEl) {
     }
 }
 
+/**
+ * @param {HTMLImageElement} img
+ * @returns {Promise<Boolean>}
+ */
+async function _isImageCorsProtected(img) {
+    const src = img.getAttribute("src");
+    if (!src) {
+        return false;
+    }
+    let isCorsProtected = false;
+    if (!src.startsWith("/") || /\/web\/image\/\d+-redirect\//.test(src)) {
+        // The `fetch()` used later in the code might fail if the image is
+        // CORS protected. We check upfront if it's the case.
+        // Two possible cases:
+        // 1. the `src` is an absolute URL from another domain.
+        //    For instance, abc.odoo.com vs abc.com which are actually the
+        //    same database behind.
+        // 2. A "attachment-url" which is just a redirect to the real image
+        //    which could be hosted on another website.
+        isCorsProtected = await fetch(src, { method: "HEAD" })
+            .then(() => false)
+            .catch(() => true);
+    }
+    return isCorsProtected;
+}
+
+/**
+ * @param {string} src
+ * @returns {Promise<Boolean>}
+ */
+async function _isSrcCorsProtected(src) {
+    const dummyImg = document.createElement("img");
+    dummyImg.src = src;
+    return _isImageCorsProtected(dummyImg);
+}
+
 export default {
     COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES: COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES,
     CSS_SHORTHANDS: CSS_SHORTHANDS,
@@ -535,4 +571,6 @@ export default {
     isMobileView: _isMobileView,
     getLinkLabel: _getLinkLabel,
     forwardToThumbnail: _forwardToThumbnail,
+    isImageCorsProtected: _isImageCorsProtected,
+    isSrcCorsProtected: _isSrcCorsProtected,
 };

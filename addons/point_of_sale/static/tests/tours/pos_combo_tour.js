@@ -95,6 +95,9 @@ registry.category("web_tour.tours").add("ProductComboPriceCheckTour", {
             ]),
             ProductScreen.totalAmountIs("7.00"),
             ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
         ].flat(),
 });
 

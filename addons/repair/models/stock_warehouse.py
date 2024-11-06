@@ -17,7 +17,7 @@ class StockWarehouse(models.Model):
         values.update({
             'repair_type_id': {
                 'name': _('%(name)s Sequence repair', name=self.name),
-                'prefix': self.code + '/RO/',
+                'prefix': self.code + '/' + (self.repair_type_id.sequence_code or 'RO') + '/',
                 'padding': 5,
                 'company_id': self.company_id.id
                 },

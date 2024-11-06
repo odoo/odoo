@@ -208,6 +208,7 @@ class PosOrder(models.Model):
                 'is_change': True,
             }
             order.add_payment(return_payment_vals)
+            order._compute_prices()
 
     def _prepare_tax_base_line_values(self):
         """ Convert pos order lines into dictionaries that would be used to compute taxes later.
@@ -437,10 +438,10 @@ class PosOrder(models.Model):
                 raise UserError(_("You can't: create a pos order from the backend interface, or unset the pricelist, or create a pos.order in a python test with Form tool, or edit the form view in studio if no PoS order exist"))
             currency = order.currency_id
             order.amount_paid = sum(payment.amount for payment in order.payment_ids)
-            order.amount_return = sum(payment.amount < 0 and payment.amount or 0 for payment in order.payment_ids)
+            order.amount_return = -sum(payment.amount < 0 and payment.amount or 0 for payment in order.payment_ids)
             order.amount_tax = currency.round(sum(self._amount_line_tax(line, order.fiscal_position_id) for line in order.lines))
             order.amount_total = order.amount_tax + currency.round(sum(line.price_subtotal for line in order.lines))
-            order.amount_difference = order.amount_paid - order.amount_total
+            order.amount_difference = currency.round(order.amount_paid - order.amount_total) or 0
 
     def _compute_batch_amount_all(self):
         """
@@ -1572,8 +1573,12 @@ class PosOrderLine(models.Model):
     @api.depends('price_subtotal', 'total_cost')
     def _compute_margin(self):
         for line in self:
-            line.margin = line.price_subtotal - line.total_cost
-            line.margin_percent = not float_is_zero(line.price_subtotal, precision_rounding=line.currency_id.rounding) and line.margin / line.price_subtotal or 0
+            if line.product_id.type == 'combo':
+                line.margin = 0
+                line.margin_percent = 0
+            else:
+                line.margin = line.price_subtotal - line.total_cost
+                line.margin_percent = not float_is_zero(line.price_subtotal, precision_rounding=line.currency_id.rounding) and line.margin / line.price_subtotal or 0
 
     def _prepare_tax_base_line_values(self):
         """ Convert pos order lines into dictionaries that would be used to compute taxes later.

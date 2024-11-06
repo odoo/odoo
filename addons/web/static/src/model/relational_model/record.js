@@ -729,14 +729,6 @@ export class Record extends DataPoint {
     _processProperties(properties, fieldName, parent, currentValues = {}) {
         const data = {};
 
-        const relatedPropertyField = {
-            fieldName,
-        };
-        if (parent) {
-            relatedPropertyField.id = parent[0];
-            relatedPropertyField.displayName = parent[1];
-        }
-
         const hasCurrentValues = Object.keys(currentValues).length > 0;
         for (const property of properties) {
             const propertyFieldName = `${fieldName}.${property.name}`;
@@ -746,13 +738,23 @@ export class Record extends DataPoint {
                 this.fields[propertyFieldName] = {
                     ...property,
                     name: propertyFieldName,
-                    relatedPropertyField,
+                    relatedPropertyField: {
+                        name: fieldName,
+                    },
                     propertyName: property.name,
                     relation: property.comodel,
                 };
             }
             if (hasCurrentValues || !this.activeFields[propertyFieldName]) {
                 this.activeFields[propertyFieldName] = createPropertyActiveField(property);
+            }
+
+            if (!this.activeFields[propertyFieldName].relatedPropertyField) {
+                this.activeFields[propertyFieldName].relatedPropertyField = {
+                    name: fieldName,
+                    id: parent?.id,
+                    displayName: parent?.display_name,
+                };
             }
 
             // Extract property data

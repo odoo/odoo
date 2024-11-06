@@ -51,7 +51,7 @@ class ProjectProject(models.Model):
     warning_employee_rate = fields.Boolean(compute='_compute_warning_employee_rate', compute_sudo=True, export_string_translation=False)
     partner_id = fields.Many2one(
         compute='_compute_partner_id', store=True, readonly=False)
-    allocated_hours = fields.Float(copy=False)
+    allocated_hours = fields.Float()
     billing_type = fields.Selection(
         compute="_compute_billing_type",
         selection=[
@@ -417,7 +417,7 @@ class ProjectProject(models.Model):
             return profitability_items
         aa_line_read_group = self.env['account.analytic.line'].sudo()._read_group(
             self.sudo()._get_profitability_aal_domain(),
-            ['timesheet_invoice_type', 'timesheet_invoice_id', 'currency_id'],
+            ['timesheet_invoice_type', 'timesheet_invoice_id', 'currency_id', 'category'],
             ['amount:sum', 'id:array_agg'],
         )
         can_see_timesheets = with_action and len(self) == 1 and self.env.user.has_group('hr_timesheet.group_hr_timesheet_approver')
@@ -426,7 +426,9 @@ class ProjectProject(models.Model):
         total_revenues = {'invoiced': 0.0, 'to_invoice': 0.0}
         total_costs = {'billed': 0.0, 'to_bill': 0.0}
         convert_company = self.company_id or self.env.company
-        for timesheet_invoice_type, dummy, currency, amount, ids in aa_line_read_group:
+        for timesheet_invoice_type, dummy, currency, category, amount, ids in aa_line_read_group:
+            if category == 'vendor_bill':
+                continue  # This is done to prevent expense duplication with product re-invoice policies
             amount = currency._convert(amount, self.currency_id, convert_company)
             invoice_type = timesheet_invoice_type
             cost = costs_dict.setdefault(invoice_type, {'billed': 0.0, 'to_bill': 0.0})

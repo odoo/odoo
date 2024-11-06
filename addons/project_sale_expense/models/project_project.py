@@ -87,3 +87,16 @@ class Project(models.Model):
             if expense_ids:
                 expense_data['costs']['action'] = get_action(expense_ids)
         return expense_data
+
+    def _get_already_included_profitability_invoice_line_ids(self):
+        move_line_ids = super()._get_already_included_profitability_invoice_line_ids()
+        expenses_read_group = self.env['hr.expense']._read_group(
+            [('sheet_id.state', 'in', ['post', 'done']), ('analytic_distribution', 'in', self.account_id.ids)],
+            groupby=['sale_order_id'],
+            aggregates=['__count'],
+        )
+        if not expenses_read_group:
+            return move_line_ids
+        for sale_order, count in expenses_read_group:
+            move_line_ids.extend(sale_order.invoice_ids.mapped('invoice_line_ids').ids)
+        return move_line_ids
