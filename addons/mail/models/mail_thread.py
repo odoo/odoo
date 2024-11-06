@@ -1402,9 +1402,13 @@ class MailThread(models.AbstractModel):
             mixed = False
             html = u''
             for part in message.walk():
-                if part.get_content_type() == 'binary/octet-stream':
-                    _logger.warning("Message containing an unexpected Content-Type 'binary/octet-stream', assuming 'application/octet-stream'")
-                    part.replace_header('Content-Type', 'application/octet-stream')
+                original_content_type = part.get_content_type()
+                if original_content_type in ['binary/octet-stream', 'bin/plain']:
+                    new_content_type = 'application/octet-stream'
+                    if part.get_filename(failobj='').endswith('.pdf'):
+                        new_content_type = 'application/pdf'
+                    part.replace_header('Content-Type', new_content_type)
+                    _logger.warning("Message containing an unexpected Content-Type '%s', assuming '%s'", original_content_type, new_content_type)
                 if part.get_content_type() == 'multipart/alternative':
                     alternative = True
                 if part.get_content_type() == 'multipart/mixed':
