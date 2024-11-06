@@ -207,7 +207,6 @@
             'website/static/src/js/content/menu.js',
             'website/static/src/js/content/snippets.animation.js',
             'website/static/src/js/show_password.js',
-            'website/static/src/js/post_link.js',
             'website/static/src/js/website_controller_page_listing_layout.js',
             'website/static/src/js/user_custom_javascript.js',
             'website/static/src/js/http_cookie.js',
