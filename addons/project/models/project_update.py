@@ -7,7 +7,7 @@ from werkzeug.urls import url_encode
 
 from odoo import api, fields, models
 from odoo.osv import expression
-from odoo.tools import format_amount, formatLang
+from odoo.tools import float_utils, format_amount, formatLang
 
 STATUS_COLOR = {
     'on_track': 20,  # green / success
@@ -113,14 +113,56 @@ class ProjectUpdate(models.Model):
     @api.model
     def _get_template_values(self, project):
         milestones = self._get_milestone_values(project)
+        profitability_values, show_profitability = self._get_profitability_values(project)
         return {
             'user': self.env.user,
             'project': project,
+            'profitability': profitability_values,
+            'show_profitability': show_profitability,
             'show_activities': milestones['show_section'],
             'milestones': milestones,
             'format_lang': lambda value, digits: formatLang(self.env, value, digits=digits),
             'format_monetary': lambda value: format_amount(self.env, value, project.currency_id),
         }
+
+    @api.model
+    def _get_profitability_values(self, project):
+        project_manager = self.env.user.has_group('project.group_project_manager')
+        if not project_manager:
+            return {}, False
+        profitability_items = project._get_profitability_items(False)
+        if project._get_profitability_sequence_per_invoice_type() and profitability_items and 'revenues' in profitability_items and 'costs' in profitability_items:  # sort the data values
+            profitability_items['revenues']['data'] = sorted(profitability_items['revenues']['data'], key=lambda k: k['sequence'])
+            profitability_items['costs']['data'] = sorted(profitability_items['costs']['data'], key=lambda k: k['sequence'])
+        costs = sum(profitability_items['costs']['total'].values())
+        revenues = sum(profitability_items['revenues']['total'].values())
+        margin = revenues + costs
+        to_bill_to_invoice = profitability_items['costs']['total']['to_bill'] + profitability_items['revenues']['total']['to_invoice']
+        billed_invoiced = profitability_items['costs']['total']['billed'] + profitability_items['revenues']['total']['invoiced']
+        expected_percentage, to_bill_to_invoice_percentage, billed_invoiced_percentage = 0, 0, 0
+        if revenues:
+            expected_percentage = formatLang(self.env, (margin / revenues) * 100, digits=0)
+        if profitability_items['revenues']['total']['to_invoice']:
+            to_bill_to_invoice_percentage = formatLang(self.env, (to_bill_to_invoice / profitability_items['revenues']['total']['to_invoice']) * 100, digits=0)
+        if profitability_items['revenues']['total']['invoiced']:
+            billed_invoiced_percentage = formatLang(self.env, (billed_invoiced / profitability_items['revenues']['total']['invoiced']) * 100, digits=0)
+        return {
+            'account_id': project.account_id,
+            'costs': profitability_items['costs'],
+            'revenues': profitability_items['revenues'],
+            'expected_percentage': expected_percentage,
+            'to_bill_to_invoice_percentage': to_bill_to_invoice_percentage,
+            'billed_invoiced_percentage': billed_invoiced_percentage,
+            'total': {
+                'costs': costs,
+                'revenues': revenues,
+                'margin': margin,
+                'margin_percentage': formatLang(self.env,
+                                                not float_utils.float_is_zero(costs, precision_digits=2) and (margin / -costs) * 100 or 0.0,
+                                                digits=0),
+            },
+            'labels': project._get_profitability_labels(),
+        }, project_manager
 
     @api.model
     def _get_milestone_values(self, project):
