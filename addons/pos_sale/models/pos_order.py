@@ -70,7 +70,7 @@ class PosOrder(models.Model):
                     'product_id': line.product_id.id,
                     'price_unit': line.price_unit,
                     'product_uom_qty': 0,
-                    'tax_id': [(6, 0, line.tax_ids.ids)],
+                    'tax_ids': [(6, 0, line.tax_ids.ids)],
                     'is_downpayment': True,
                     'discount': line.discount,
                     'sequence': sale_lines and sale_lines[-1].sequence + 2 or 10,

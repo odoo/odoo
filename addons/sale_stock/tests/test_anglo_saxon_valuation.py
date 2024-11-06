@@ -36,7 +36,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_id': self.product.id,
                     'product_uom_qty': 2.0,
                     'price_unit': 12,
-                    'tax_id': False,  # no love taxes amls
+                    'tax_ids': False,  # no love taxes amls
                 })],
         })
         sale_order.flush_recordset()
@@ -922,7 +922,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_id': self.product.id,
                     'product_uom_qty': 10.0,
                     'price_unit': 12,
-                    'tax_id': False,  # no love taxes amls
+                    'tax_ids': False,  # no love taxes amls
                 })],
         })
         sale_order.action_confirm()
@@ -1011,7 +1011,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_id': self.product.id,
                     'product_uom_qty': 1,
                     'price_unit': 20,
-                    'tax_id': False,
+                    'tax_ids': False,
                 })],
         })
         sale_order.action_confirm()
@@ -1029,7 +1029,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_id': self.product.id,
                     'product_uom_qty': 6,
                     'price_unit': 20,
-                    'tax_id': False,
+                    'tax_ids': False,
                 })],
         })
         sale_order.action_confirm()
@@ -1073,7 +1073,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_id': self.product.id,
                     'product_uom_qty': 10.0,
                     'price_unit': 12,
-                    'tax_id': False,  # no love taxes amls
+                    'tax_ids': False,  # no love taxes amls
                 })],
         })
         sale_order.action_confirm()
@@ -1152,7 +1152,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_id': self.product.id,
                     'product_uom_qty': 1.0,
                     'price_unit': 12,
-                    'tax_id': False,  # no love taxes amls
+                    'tax_ids': False,  # no love taxes amls
                 })],
         })
         so_2.action_confirm()
@@ -1248,7 +1248,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_uom_qty': 1,
                     'product_uom_id': unit_12.id,
                     'price_unit': 18,
-                    'tax_id': False,  # no love taxes amls
+                    'tax_ids': False,  # no love taxes amls
                 })],
         })
         so_1.action_confirm()
@@ -1308,7 +1308,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_uom_qty': 1,
                     'product_uom_id': unit_12.id,
                     'price_unit': 18,
-                    'tax_id': False,  # no love taxes amls
+                    'tax_ids': False,  # no love taxes amls
                 })],
         })
         so_2.action_confirm()
@@ -1374,7 +1374,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_id': self.product.id,
                     'product_uom_qty': 3.0,
                     'price_unit': 100,
-                    'tax_id': False,
+                    'tax_ids': False,
                 })],
         })
         so.action_confirm()
@@ -1466,7 +1466,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_id': self.product.id,
                     'product_uom_qty': 3.0,
                     'price_unit': 100,
-                    'tax_id': False,
+                    'tax_ids': False,
                 })],
         })
         so.action_confirm()
@@ -1552,7 +1552,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_id': self.product.id,
                     'product_uom_qty': 3.0,
                     'price_unit': 100,
-                    'tax_id': False,
+                    'tax_ids': False,
                 })],
         })
         so.action_confirm()
@@ -1640,7 +1640,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_id': self.product.id,
                     'product_uom_qty': 1.0,
                     'price_unit': 100,
-                    'tax_id': False,
+                    'tax_ids': False,
                 })],
         })
         so.action_confirm()
@@ -1717,7 +1717,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_id': self.product.id,
                     'product_uom_qty': 10.0,
                     'price_unit': 100,
-                    'tax_id': False,
+                    'tax_ids': False,
                 })],
         })
         so.action_confirm()

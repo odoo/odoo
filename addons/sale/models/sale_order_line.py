@@ -155,10 +155,10 @@ class SaleOrderLine(models.Model):
     combo_item_id = fields.Many2one(comodel_name='product.combo.item')
 
     # Pricing fields
-    tax_id = fields.Many2many(
+    tax_ids = fields.Many2many(
         comodel_name='account.tax',
         string="Taxes",
-        compute='_compute_tax_id',
+        compute='_compute_tax_ids',
         store=True, readonly=False, precompute=True,
         context={'active_test': False},
         check_company=True)
@@ -490,12 +490,12 @@ class SaleOrderLine(models.Model):
                 line.product_uom_id = line.product_id.uom_id
 
     @api.depends('product_id', 'company_id')
-    def _compute_tax_id(self):
+    def _compute_tax_ids(self):
         lines_by_company = defaultdict(lambda: self.env['sale.order.line'])
         cached_taxes = {}
         for line in self:
             if line.product_type == 'combo':
-                line.tax_id = False
+                line.tax_ids = False
                 continue
             lines_by_company[line.company_id] += line
         for company, lines in lines_by_company.items():
@@ -505,7 +505,7 @@ class SaleOrderLine(models.Model):
                     taxes = line.product_id.taxes_id._filter_taxes_by_company(company)
                 if not line.product_id or not taxes:
                     # Nothing to map
-                    line.tax_id = False
+                    line.tax_ids = False
                     continue
                 fiscal_position = line.order_id.fiscal_position_id
                 cache_key = (fiscal_position.id, company.id, tuple(taxes.ids))
@@ -516,7 +516,7 @@ class SaleOrderLine(models.Model):
                     result = fiscal_position.map_tax(taxes)
                     cached_taxes[cache_key] = result
                 # If company_id is set, always filter taxes by the company
-                line.tax_id = result
+                line.tax_ids = result
 
     def _get_custom_compute_tax_cache_key(self):
         """Hook method to be able to set/get cached taxes while computing them"""
@@ -747,7 +747,7 @@ class SaleOrderLine(models.Model):
         return self.env['account.tax']._prepare_base_line_for_taxes_computation(
             self,
             **{
-                'tax_ids': self.tax_id,
+                'tax_ids': self.tax_ids,
                 'quantity': self.product_uom_qty,
                 'partner_id': self.order_id.partner_id,
                 'currency_id': self.order_id.currency_id or self.order_id.company_id.currency_id,
@@ -756,7 +756,7 @@ class SaleOrderLine(models.Model):
             },
         )
 
-    @api.depends('product_uom_qty', 'discount', 'price_unit', 'tax_id')
+    @api.depends('product_uom_qty', 'discount', 'price_unit', 'tax_ids')
     def _compute_amount(self):
         for line in self:
             base_line = line._prepare_base_line_for_taxes_computation()
@@ -1038,11 +1038,11 @@ class SaleOrderLine(models.Model):
                 uom_qty_to_consider = line.qty_delivered if line.product_id.invoice_policy == 'delivery' else line.product_uom_qty
                 price_reduce = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
                 price_subtotal = price_reduce * uom_qty_to_consider
-                if len(line.tax_id.filtered(lambda tax: tax.price_include)) > 0:
+                if len(line.tax_ids.filtered(lambda tax: tax.price_include)) > 0:
                     # As included taxes are not excluded from the computed subtotal, `compute_all()` method
                     # has to be called to retrieve the subtotal without them.
                     # `price_reduce_taxexcl` cannot be used as it is computed from `price_subtotal` field. (see upper Note)
-                    price_subtotal = line.tax_id.compute_all(
+                    price_subtotal = line.tax_ids.compute_all(
                         price_reduce,
                         currency=line.currency_id,
                         quantity=uom_qty_to_consider,
@@ -1239,7 +1239,7 @@ class SaleOrderLine(models.Model):
         """
         return [
             'product_id', 'name', 'price_unit', 'product_uom_id', 'product_uom_qty',
-            'tax_id', 'analytic_distribution'
+            'tax_ids', 'analytic_distribution'
         ]
 
     def _update_line_quantity(self, values):
@@ -1334,7 +1334,7 @@ class SaleOrderLine(models.Model):
             'quantity': self.qty_to_invoice,
             'discount': self.discount,
             'price_unit': self.price_unit,
-            'tax_ids': [Command.set(self.tax_id.ids)],
+            'tax_ids': [Command.set(self.tax_ids.ids)],
             'sale_line_ids': [Command.link(self.id)],
             'is_downpayment': self.is_downpayment,
         }

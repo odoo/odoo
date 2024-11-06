@@ -26,22 +26,22 @@ class TestSaleToInvoice(TestSaleCommon):
                 Command.create({
                     'product_id': cls.company_data['product_order_no'].id,
                     'product_uom_qty': 5,
-                    'tax_id': False,
+                    'tax_ids': False,
                 }),
                 Command.create({
                     'product_id': cls.company_data['product_service_delivery'].id,
                     'product_uom_qty': 4,
-                    'tax_id': False,
+                    'tax_ids': False,
                 }),
                 Command.create({
                     'product_id': cls.company_data['product_service_order'].id,
                     'product_uom_qty': 3,
-                    'tax_id': False,
+                    'tax_ids': False,
                 }),
                 Command.create({
                     'product_id': cls.company_data['product_delivery_no'].id,
                     'product_uom_qty': 2,
-                    'tax_id': False,
+                    'tax_ids': False,
                 }),
             ]
         })
@@ -161,7 +161,7 @@ class TestSaleToInvoice(TestSaleCommon):
             'order_line': [Command.create({
                 'product_id': self.company_data['product_order_no'].id,
                 'product_uom_qty': 5,
-                'tax_id': False,
+                'tax_ids': False,
             }),]
         })
         # Confirm the SO
@@ -201,7 +201,7 @@ class TestSaleToInvoice(TestSaleCommon):
             'order_line': [Command.create({
                 'product_id': self.company_data['product_order_no'].id,
                 'product_uom_qty': 5,
-                'tax_id': False,
+                'tax_ids': False,
             }),]
         })
         # Confirm the SO
@@ -243,7 +243,7 @@ class TestSaleToInvoice(TestSaleCommon):
                 'product_id': self.company_data['product_order_no'].id,
                 'product_uom_qty': 5,
                 'price_unit': 0,
-                'tax_id': False,
+                'tax_ids': False,
             }), ]
         })
         sale_order.action_confirm()
@@ -504,7 +504,7 @@ class TestSaleToInvoice(TestSaleCommon):
             'product_id': self.company_data['product_order_no'].id,
             'product_uom_qty': 5,
             'order_id': sale_order.id,
-            'tax_id': False,
+            'tax_ids': False,
         })
 
         # Confirm the SO
@@ -544,7 +544,7 @@ class TestSaleToInvoice(TestSaleCommon):
             'product_id': self.company_data['product_order_no'].id,
             'product_uom_qty': 5,
             'order_id': sale_order.id,
-            'tax_id': False,
+            'tax_ids': False,
         })
 
         # Confirm the SO
@@ -750,7 +750,7 @@ class TestSaleToInvoice(TestSaleCommon):
             'product_uom_id': False,
             'price_unit': 0,
             'order_id': self.sale_order.id,
-            'tax_id': False,
+            'tax_ids': False,
         })]
 
         # confirm quotation
@@ -852,7 +852,7 @@ class TestSaleToInvoice(TestSaleCommon):
         })
         self.assertEqual(so_1.order_line.product_uom_qty, 1)
 
-        self.assertEqual(so_1.order_line.tax_id, self.company_data['default_tax_sale'],
+        self.assertEqual(so_1.order_line.tax_ids, self.company_data['default_tax_sale'],
             'Only taxes from the right company are put by default')
         so_1.action_confirm()
         # i'm not interested in groups/acls, but in the multi-company flow only
@@ -1028,7 +1028,7 @@ class TestSaleToInvoice(TestSaleCommon):
             'product_id': self.company_data['product_order_no'].id,
             'product_uom_qty': 5,
             'order_id': so.id,
-            'tax_id': False,
+            'tax_ids': False,
         })
 
         so.action_confirm()

@@ -61,7 +61,7 @@ class TestLoyaltyhistory(TestSaleCouponCommon):
             'order_line': [
                 Command.create({
                     'product_id': self.product_A.id,
-                    'tax_id': False,
+                    'tax_ids': False,
                 }),
             ]
         })
@@ -79,7 +79,7 @@ class TestLoyaltyhistory(TestSaleCouponCommon):
             'order_line': [
                 Command.create({
                     'product_id': self.product_A.id,
-                    'tax_id': False,
+                    'tax_ids': False,
                 }),
             ]
         })

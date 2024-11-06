@@ -72,7 +72,7 @@ class AccountMove(models.Model):
                 for l in so_dpl.invoice_lines
                 if l.move_id.state == 'posted' and l.move_id not in real_invoices  # don't recompute with the final invoice
             )
-            so_dpl.tax_id = so_dpl.invoice_lines.tax_ids
+            so_dpl.tax_ids = so_dpl.invoice_lines.tax_ids
 
         return res
 

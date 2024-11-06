@@ -1282,7 +1282,7 @@ class SaleOrder(models.Model):
 
     def _recompute_taxes(self):
         lines_to_recompute = self.order_line.filtered(lambda line: not line.display_type)
-        lines_to_recompute._compute_tax_id()
+        lines_to_recompute._compute_tax_ids()
         self.show_update_fpos = False
 
     def action_update_prices(self):

@@ -55,7 +55,7 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
             'product_id': product.id,
             'product_uom_qty': 1,
             'price_unit': product.list_price,
-            'tax_id': False,
+            'tax_ids': False,
             'order_id': so.id,
         }, {
             'name': 'Super Section',

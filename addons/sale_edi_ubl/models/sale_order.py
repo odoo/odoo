@@ -55,5 +55,5 @@ class SaleOrder(models.Model):
             'name': name,
             'product_uom_qty': quantity,
             'price_unit': price_unit,
-            'tax_id': [Command.set(tax_ids)],
+            'tax_ids': [Command.set(tax_ids)],
         } for name, quantity, price_unit, tax_ids in lines_vals]

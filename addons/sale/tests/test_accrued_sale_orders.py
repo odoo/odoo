@@ -45,7 +45,7 @@ class TestAccruedSaleOrders(AccountTestInvoicingCommon):
                     'product_id': cls.product_a.id,
                     'product_uom_qty': 10.0,
                     'price_unit': cls.product_a.list_price,
-                    'tax_id': False,
+                    'tax_ids': False,
                     'analytic_distribution': {
                         cls.analytic_account_a.id : 80.0,
                         cls.analytic_account_b.id : 20.0,
@@ -56,7 +56,7 @@ class TestAccruedSaleOrders(AccountTestInvoicingCommon):
                     'product_id': cls.product_b.id,
                     'product_uom_qty': 10.0,
                     'price_unit': cls.product_b.list_price,
-                    'tax_id': False,
+                    'tax_ids': False,
                     'analytic_distribution': {
                         cls.analytic_account_b.id : 100.0,
                     },
