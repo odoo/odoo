@@ -3731,7 +3731,7 @@ options.registry.ConditionalVisibility = options.registry.DeviceVisibility.exten
             // e.g of selector:
             // html:not([data-attr-1="valueAttr1"]):not([data-attr-1="valueAttr2"]) [data-visibility-id="ruleId"]
             const selector = attribute.records.reduce((acc, record) => {
-                return acc += `:not([${attribute.name}="${record.value}"])`;
+                return acc += `:not([${attribute.name}*="${record.value}"])`;
             }, 'html') + ` body:not(.editor_enable) [data-visibility-id="${visibilityId}"]`;
             selectors += selector + ', ';
         }
@@ -3739,7 +3739,7 @@ options.registry.ConditionalVisibility = options.registry.DeviceVisibility.exten
             // html[data-attr-1="valueAttr1"] [data-visibility-id="ruleId"],
             // html[data-attr-1="valueAttr2"] [data-visibility-id="ruleId"]
             const selector = attribute.records.reduce((acc, record, i, a) => {
-                acc += `html[${attribute.name}="${record.value}"] body:not(.editor_enable) [data-visibility-id="${visibilityId}"]`;
+                acc += `html[${attribute.name}*="${record.value}"] body:not(.editor_enable) [data-visibility-id="${visibilityId}"]`;
                 return acc + (i !== a.length - 1 ? ',' : '');
             }, '');
             selectors += selector + ', ';
