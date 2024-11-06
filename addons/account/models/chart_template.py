@@ -145,7 +145,7 @@ class AccountChartTemplate(models.AbstractModel):
         """
         if not company:
             return
-        if not self.env.registry.ready and not install_demo and not hasattr(self.env.registry, '_auto_install_template'):
+        if not self.env.registry.loaded and not install_demo and not hasattr(self.env.registry, '_auto_install_template'):
             _logger.warning(
                 'Incorrect usage of try_loading without a fully loaded registry. This could lead to issues. (%s-%s)',
                 company.name,
