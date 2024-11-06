@@ -195,6 +195,7 @@ class TestProcurement(TestMrpCommon):
         produce_form = Form(mo)
         produce_form.qty_producing = 3.0
         mo = produce_form.save()
+        mo.move_raw_ids.picked = True
         self.assertEqual(mo.move_raw_ids.quantity, 3.0)
         picking_qc_to_stock.move_line_ids.quantity = 5.0
         self.assertEqual(mo.move_raw_ids.quantity, 3.0)

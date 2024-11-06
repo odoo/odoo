@@ -783,7 +783,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo.state, 'done', "Production order should be in done state.")
 
     def test_product_produce_6(self):
-        """ Plan 5 finished products, reserve and produce 3. Post the current production.
+        """ Plan 5 finished products, reserve and produce 3.
         Simulate an unlock and edit and, on the opened moves, set the consumed quantity
         to 3. Now, try to update the quantity to mo2 to 3. It should fail since there
         are consumed quantities. Unlock and edit, remove the consumed quantities and
@@ -801,8 +801,7 @@ class TestMrpOrder(TestMrpCommon):
         mo_form.qty_producing = 3
         mo = mo_form.save()
 
-        mo._post_inventory()
-        self.assertEqual(len(mo.move_raw_ids), 4)
+        self.assertEqual(len(mo.move_raw_ids), 2)
 
         mo.move_raw_ids.filtered(lambda m: m.state != 'done')[0].quantity = 3
 
@@ -814,7 +813,7 @@ class TestMrpOrder(TestMrpCommon):
         mo.move_raw_ids.filtered(lambda m: m.state != 'done')[0].quantity = 0
         update_quantity_wizard.change_prod_qty()
 
-        self.assertEqual(len(mo.move_raw_ids), 4)
+        self.assertEqual(len(mo.move_raw_ids), 2)
 
         mo.move_raw_ids.picked = True
         mo.button_mark_done()
@@ -1103,18 +1102,18 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(len(move_byproduct_1), 1)
         self.assertEqual(move_byproduct_1.product_uom_qty, 2.0)
         self.assertEqual(move_byproduct_1.quantity, 1)
-        self.assertTrue(move_byproduct_1.picked)
+        self.assertFalse(move_byproduct_1.picked)
 
         move_byproduct_2 = mo.move_finished_ids.filtered(lambda l: l.product_id == self.byproduct2)
         self.assertEqual(len(move_byproduct_2), 1)
         self.assertEqual(move_byproduct_2.product_uom_qty, 4.0)
         self.assertEqual(move_byproduct_2.quantity, 2)
-        self.assertTrue(move_byproduct_2.picked)
+        self.assertFalse(move_byproduct_2.picked)
 
         move_byproduct_3 = mo.move_finished_ids.filtered(lambda l: l.product_id == self.byproduct3)
         self.assertEqual(move_byproduct_3.product_uom_qty, 4.0)
         self.assertEqual(move_byproduct_3.quantity, 2.0)
-        self.assertTrue(move_byproduct_3.picked)
+        self.assertFalse(move_byproduct_3.picked)
         self.assertEqual(move_byproduct_3.product_uom, dozen)
 
         details_operation_form = Form(move_byproduct_1, view=self.env.ref('stock.view_stock_move_operations'))
@@ -1138,18 +1137,18 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(len(move_byproduct_1), 1)
         self.assertEqual(move_byproduct_1.product_uom_qty, 1.0)
         self.assertEqual(move_byproduct_1.quantity, 1)
-        self.assertTrue(move_byproduct_1.picked)
+        self.assertFalse(move_byproduct_1.picked)
 
         move_byproduct_2 = mo2.move_finished_ids.filtered(lambda l: l.product_id == self.byproduct2)
         self.assertEqual(len(move_byproduct_2), 1)
         self.assertEqual(move_byproduct_2.product_uom_qty, 2.0)
         self.assertEqual(move_byproduct_2.quantity, 2)
-        self.assertTrue(move_byproduct_2.picked)
+        self.assertFalse(move_byproduct_2.picked)
 
         move_byproduct_3 = mo2.move_finished_ids.filtered(lambda l: l.product_id == self.byproduct3)
         self.assertEqual(move_byproduct_3.product_uom_qty, 2.0)
         self.assertEqual(move_byproduct_3.quantity, 2.0)
-        self.assertTrue(move_byproduct_3.picked)
+        self.assertFalse(move_byproduct_3.picked)
         self.assertEqual(move_byproduct_3.product_uom, dozen)
 
         details_operation_form = Form(move_byproduct_1, view=self.env.ref('stock.view_stock_move_operations'))
