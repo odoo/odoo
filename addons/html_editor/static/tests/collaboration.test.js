@@ -724,7 +724,7 @@ describe("Collaboration with embedded components", () => {
             contentBefore: "<p>[c1}{c1][c2}{c2]<br></p>",
             Plugins: [EmbeddedComponentPlugin],
             resources: {
-                embeddedComponents: [embedding("counter", Counter)],
+                embedded_components: [embedding("counter", Counter)],
             },
         });
         const e1 = peerInfos.c1.editor;
@@ -785,7 +785,7 @@ describe("Collaboration with embedded components", () => {
             contentBefore: `<p>a[c1}{c1][c2}{c2]</p>`,
             Plugins: [EmbeddedComponentPlugin],
             resources: {
-                embeddedComponents: [embedding("counter", Counter)],
+                embedded_components: [embedding("counter", Counter)],
             },
         });
         const e1 = peerInfos.c1.editor;
@@ -842,7 +842,7 @@ describe("Collaboration with embedded components", () => {
             contentBefore: `<p>a[c1}{c1][c2}{c2]</p>`,
             Plugins: [EmbeddedComponentPlugin],
             resources: {
-                embeddedComponents: [embedding("counter", Counter)],
+                embedded_components: [embedding("counter", Counter)],
             },
         });
         const e1 = peerInfos.c1.editor;
@@ -889,7 +889,7 @@ describe("Collaboration with embedded components", () => {
             contentBefore: `<p>[c1}{c1][c2}{c2]a</p>`,
             Plugins: [EmbeddedComponentPlugin],
             resources: {
-                embeddedComponents: [
+                embedded_components: [
                     embedding("wrapper", EmbeddedWrapper, (host) => ({ host }), {
                         getEditableDescendants,
                     }),
@@ -981,7 +981,7 @@ describe("Collaboration with embedded components", () => {
             contentBefore: `<p>[c1}{c1][c2}{c2]a</p>`,
             Plugins: [EmbeddedComponentPlugin],
             resources: {
-                embeddedComponents: [
+                embedded_components: [
                     embedding("wrapper", EmbeddedWrapper, (host) => ({ host }), {
                         getEditableDescendants,
                     }),
@@ -1059,7 +1059,7 @@ describe("Collaboration with embedded components", () => {
             contentBefore: `<p>[c1}{c1][c2}{c2]a</p>`,
             Plugins: [EmbeddedComponentPlugin],
             resources: {
-                embeddedComponents: [
+                embedded_components: [
                     embedding("wrapper", SimpleEmbeddedWrapper, (host) => ({ host }), {
                         getEditableDescendants,
                     }),
@@ -1118,7 +1118,7 @@ describe("Collaboration with embedded components", () => {
             contentBefore: `<p>[c1}{c1][c2}{c2]a</p>`,
             Plugins: [EmbeddedComponentPlugin],
             resources: {
-                embeddedComponents: [
+                embedded_components: [
                     embedding("wrapper", SimpleEmbeddedWrapper, (host) => ({ host }), {
                         getEditableDescendants,
                     }),
@@ -1196,7 +1196,7 @@ describe("Collaboration with embedded components", () => {
                 contentBefore: `<div>a[c1}{c1][c2}{c2]<span data-embedded="counter" data-embedded-props='{"value":1}'></span></div>`,
                 Plugins: [EmbeddedComponentPlugin],
                 resources: {
-                    embeddedComponents: [savedCounter],
+                    embedded_components: [savedCounter],
                 },
             });
             const e1 = peerInfos.c1.editor;
@@ -1252,7 +1252,7 @@ describe("Collaboration with embedded components", () => {
                 contentBefore: `<div>a[c1}{c1][c2}{c2]<span data-embedded="counter" data-embedded-props='{"value":1}'></span></div>`,
                 Plugins: [EmbeddedComponentPlugin],
                 resources: {
-                    embeddedComponents: [savedCounter],
+                    embedded_components: [savedCounter],
                 },
             });
             const e1 = peerInfos.c1.editor;
@@ -1330,7 +1330,7 @@ describe("Collaboration with embedded components", () => {
                 contentBefore: `<p>a[c1}{c1][c2}{c2]</p><div data-embedded="obj" data-embedded-props='{"obj":{"1":1}}'></div>`,
                 Plugins: [EmbeddedComponentPlugin],
                 resources: {
-                    embeddedComponents: [collaborativeObject],
+                    embedded_components: [collaborativeObject],
                 },
             });
             const e1 = peerInfos.c1.editor;
@@ -1407,7 +1407,7 @@ describe("Collaboration with embedded components", () => {
                 contentBefore: `<div>a[c1}{c1][c2}{c2]</div>`,
                 Plugins: [EmbeddedComponentPlugin],
                 resources: {
-                    embeddedComponents: [savedCounter],
+                    embedded_components: [savedCounter],
                 },
             });
             const e1 = peerInfos.c1.editor;
@@ -1448,7 +1448,7 @@ describe("Collaboration with embedded components", () => {
                 contentBefore: `<p>a[c1}{c1][c2}{c2]</p><div data-embedded="obj" data-embedded-props='{"obj":{"1":1}}'></div>`,
                 Plugins: [EmbeddedComponentPlugin],
                 resources: {
-                    embeddedComponents: [collaborativeObject],
+                    embedded_components: [collaborativeObject],
                 },
             });
             const e1 = peerInfos.c1.editor;
@@ -1488,7 +1488,7 @@ describe("Collaboration with embedded components", () => {
                 contentBefore: `<p>a[c1}{c1][c2}{c2]</p><div data-embedded="obj" data-embedded-props='{"obj":{"1":1}}'></div>`,
                 Plugins: [EmbeddedComponentPlugin],
                 resources: {
-                    embeddedComponents: [collaborativeObject],
+                    embedded_components: [collaborativeObject],
                 },
             });
             const e1 = peerInfos.c1.editor;
@@ -1522,7 +1522,7 @@ describe("Collaboration with embedded components", () => {
                 contentBefore: `<div>a[c1}{c1][c2}{c2]<span data-embedded="counter" data-embedded-props='{"value":1}'></span></div>`,
                 Plugins: [EmbeddedComponentPlugin],
                 resources: {
-                    embeddedComponents: [savedCounter],
+                    embedded_components: [savedCounter],
                 },
             });
             const e1 = peerInfos.c1.editor;
@@ -1565,7 +1565,7 @@ describe("Collaboration with embedded components", () => {
                 contentBefore: `<div>a[c1}{c1][c2}{c2]<span data-embedded="counter" data-embedded-props='{"name":"unnamed","value":1}'></span></div>`,
                 Plugins: [EmbeddedComponentPlugin],
                 resources: {
-                    embeddedComponents: [namedCounter],
+                    embedded_components: [namedCounter],
                 },
             });
             const e1 = peerInfos.c1.editor;
@@ -1601,7 +1601,7 @@ describe("Collaboration with embedded components", () => {
                 contentBefore: `<div>a[c1}{c1][c2}{c2]<span data-embedded="counter" data-embedded-props='{"value":1}'></span></div>`,
                 Plugins: [EmbeddedComponentPlugin],
                 resources: {
-                    embeddedComponents: [savedCounter],
+                    embedded_components: [savedCounter],
                 },
             });
             const e1 = peerInfos.c1.editor;
@@ -1635,7 +1635,7 @@ describe("Collaboration with embedded components", () => {
                 contentBefore: `<p>a[c1}{c1][c2}{c2]</p><div data-embedded="obj" data-embedded-props='{"obj":{"1":1}}'></div>`,
                 Plugins: [EmbeddedComponentPlugin],
                 resources: {
-                    embeddedComponents: [collaborativeObject],
+                    embedded_components: [collaborativeObject],
                 },
             });
             const e1 = peerInfos.c1.editor;
@@ -1668,7 +1668,7 @@ describe("Collaboration with embedded components", () => {
                 contentBefore: `<div>a[c1}{c1][c2}{c2]<span data-embedded="counter" data-embedded-props='{"baseValue":1}'></span></div>`,
                 Plugins: [EmbeddedComponentPlugin],
                 resources: {
-                    embeddedComponents: [offsetCounter],
+                    embedded_components: [offsetCounter],
                 },
             });
             const e1 = peerInfos.c1.editor;
@@ -1709,7 +1709,7 @@ describe("Collaboration with embedded components", () => {
                 contentBefore: `<p>a[c1}{c1][c2}{c2]</p><div data-embedded="obj"></div>`,
                 Plugins: [EmbeddedComponentPlugin],
                 resources: {
-                    embeddedComponents: [collaborativeObject],
+                    embedded_components: [collaborativeObject],
                 },
             });
             const e1 = peerInfos.c1.editor;

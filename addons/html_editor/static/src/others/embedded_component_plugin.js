@@ -91,7 +91,7 @@ export class EmbeddedComponentPlugin extends Plugin {
     }
 
     getEmbedding(host) {
-        return this.embeddedComponents(this.getResource("embeddedComponents"))[
+        return this.embeddedComponents(this.getResource("embedded_components"))[
             host.dataset.embedded
         ];
     }
