@@ -640,14 +640,13 @@ class BaseAutomation(models.Model):
             self = self.with_context(__action_done=automation_done)
             records = records.with_context(__action_done=automation_done)
 
-        # modify records
-        if 'date_automation_last' in records._fields:
-            records.date_automation_last = fields.Datetime.now()
-
         # we process the automation on the records for which any watched field
         # has been modified, and only mark the automation as done for those
         records = records.filtered(self._check_trigger_fields)
         automation_done[self] = records_done + records
+
+        if records and 'date_automation_last' in records._fields:
+            records.date_automation_last = fields.Datetime.now()
 
         # prepare the contexts for server actions
         contexts = [
