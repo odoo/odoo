@@ -56,7 +56,7 @@ import { getRunner } from "./main_runner";
 //-----------------------------------------------------------------------------
 
 const {
-    Array: { isArray: $isArray },
+    Array: { from: $from, isArray: $isArray },
     Boolean,
     clearTimeout,
     console: { debug: $debug },
@@ -66,7 +66,7 @@ const {
     JSON: { parse: $parse, stringify: $stringify },
     localStorage,
     Map,
-    Math: { floor: $floor, max: $max },
+    Math: { floor: $floor, max: $max, min: $min },
     Number: { isInteger: $isInteger, isNaN: $isNaN, parseFloat: $parseFloat },
     navigator: { clipboard: $clipboard },
     Object: {
@@ -862,6 +862,44 @@ export function isOfType(value, type) {
         default:
             return typeof value === type;
     }
+}
+
+/**
+ * Returns the edit distance between 2 strings
+ *
+ * @param {string} a
+ * @param {string} b
+ * @param {{ normalize?: boolean }} [options]
+ * @returns {number}
+ * @example
+ *  levenshtein("abc", "àbc"); // => 0
+ * @example
+ *  levenshtein("abc", "def"); // => 3
+ * @example
+ *  levenshtein("abc", "adc"); // => 1
+ */
+export function levenshtein(a, b, options) {
+    if (!a.length) {
+        return b.length;
+    }
+    if (!b.length) {
+        return a.length;
+    }
+    if (options?.normalize) {
+        a = normalize(a);
+        b = normalize(b);
+    }
+    const dp = $from({ length: b.length + 1 }, (_, i) => i);
+    for (let i = 1; i <= a.length; i++) {
+        let prev = dp[0];
+        dp[0] = i;
+        for (let j = 1; j <= b.length; j++) {
+            const temp = dp[j];
+            dp[j] = a[i - 1] === b[j - 1] ? prev : 1 + $min(dp[j - 1], dp[j], prev);
+            prev = temp;
+        }
+    }
+    return dp[b.length];
 }
 
 /**
