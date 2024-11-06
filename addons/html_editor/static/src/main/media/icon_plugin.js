@@ -52,7 +52,7 @@ export class IconPlugin extends Plugin {
                     ),
             },
         ],
-        toolbarGroups: [
+        toolbar_groups: [
             withSequence(1, {
                 id: "icon_color",
                 namespace: "icon",
@@ -63,7 +63,7 @@ export class IconPlugin extends Plugin {
             }),
             withSequence(3, { id: "icon_spin", namespace: "icon" }),
         ],
-        toolbarItems: [
+        toolbar_items: [
             {
                 id: "icon_forecolor",
                 groupId: "icon_color",

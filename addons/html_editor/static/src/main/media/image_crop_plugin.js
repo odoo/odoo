@@ -17,11 +17,11 @@ export class ImageCropPlugin extends Plugin {
                 icon: "fa-crop",
             },
         ],
-        toolbarGroups: withSequence(27, {
+        toolbar_groups: withSequence(27, {
             id: "image_crop",
             namespace: "image",
         }),
-        toolbarItems: [
+        toolbar_items: [
             {
                 id: "image_crop",
                 commandId: "cropImage",

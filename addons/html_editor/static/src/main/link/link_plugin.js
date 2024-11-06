@@ -130,7 +130,7 @@ export class LinkPlugin extends Plugin {
             },
         ],
         beforeinput_handlers: withSequence(5, this.onBeforeInput.bind(this)),
-        toolbarGroups: [
+        toolbar_groups: [
             withSequence(40, {
                 id: "link",
             }),
@@ -139,7 +139,7 @@ export class LinkPlugin extends Plugin {
                 namespace: "image",
             }),
         ],
-        toolbarItems: [
+        toolbar_items: [
             {
                 id: "link",
                 groupId: "link",

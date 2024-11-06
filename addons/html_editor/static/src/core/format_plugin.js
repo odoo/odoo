@@ -92,8 +92,8 @@ export class FormatPlugin extends Plugin {
             { hotkey: "control+u", commandId: "formatUnderline" },
             { hotkey: "control+5", commandId: "formatStrikethrough" },
         ],
-        toolbarGroups: withSequence(20, { id: "decoration" }),
-        toolbarItems: [
+        toolbar_groups: withSequence(20, { id: "decoration" }),
+        toolbar_items: [
             {
                 id: "bold",
                 groupId: "decoration",

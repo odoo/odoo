@@ -67,10 +67,10 @@ export class ListPlugin extends Plugin {
         tab_overrides: this.handleTab.bind(this),
         shift_tab_overrides: this.handleShiftTab.bind(this),
         split_element_block_overrides: this.handleSplitBlock.bind(this),
-        toolbarGroups: withSequence(30, {
+        toolbar_groups: withSequence(30, {
             id: "list",
         }),
-        toolbarItems: [
+        toolbar_items: [
             {
                 id: "bulleted_list",
                 groupId: "list",

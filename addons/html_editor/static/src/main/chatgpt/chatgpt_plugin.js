@@ -20,10 +20,10 @@ export class ChatGPTPlugin extends Plugin {
                 run: this.openDialog.bind(this),
             },
         ],
-        toolbarGroups: withSequence(50, {
+        toolbar_groups: withSequence(50, {
             id: "ai",
         }),
-        toolbarItems: [
+        toolbar_items: [
             {
                 id: "translate",
                 groupId: "ai",

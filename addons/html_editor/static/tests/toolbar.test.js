@@ -368,8 +368,8 @@ test("toolbar correctly show namespace button group and stop showing when namesp
                     },
                 },
             ],
-            toolbarGroups: withSequence(24, { id: "test_group", namespace: "aNamespace" }),
-            toolbarItems: [
+            toolbar_groups: withSequence(24, { id: "test_group", namespace: "aNamespace" }),
+            toolbar_items: [
                 {
                     id: "test_btn",
                     groupId: "test_group",
@@ -394,8 +394,8 @@ test("toolbar correctly process inheritance buttons chain", async () => {
     class TestPlugin extends Plugin {
         static id = "TestPlugin";
         resources = {
-            toolbarGroups: withSequence(24, { id: "test_group" }),
-            toolbarItems: [
+            toolbar_groups: withSequence(24, { id: "test_group" }),
+            toolbar_items: [
                 {
                     id: "test_btn",
                     groupId: "test_group",
@@ -430,8 +430,8 @@ test("toolbar does not evaluate isActive when namespace does not match", async (
     class TestPlugin extends Plugin {
         static id = "TestPlugin";
         resources = {
-            toolbarGroups: withSequence(24, { id: "test_group", namespace: "image" }),
-            toolbarItems: [
+            toolbar_groups: withSequence(24, { id: "test_group", namespace: "image" }),
+            toolbar_items: [
                 {
                     id: "test_btn",
                     groupId: "test_group",
@@ -465,8 +465,8 @@ test("plugins can create buttons with text in toolbar", async () => {
     class TestPlugin extends Plugin {
         static id = "TestPlugin";
         resources = {
-            toolbarGroups: withSequence(24, { id: "test_group" }),
-            toolbarItems: [
+            toolbar_groups: withSequence(24, { id: "test_group" }),
+            toolbar_items: [
                 {
                     id: "test_btn",
                     groupId: "test_group",

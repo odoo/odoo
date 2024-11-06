@@ -37,10 +37,10 @@ export class ColorPlugin extends Plugin {
                 run: this.applyColor.bind(this),
             },
         ],
-        toolbarGroups: withSequence(25, {
+        toolbar_groups: withSequence(25, {
             id: "color",
         }),
-        toolbarItems: [
+        toolbar_items: [
             {
                 id: "forecolor",
                 groupId: "color",

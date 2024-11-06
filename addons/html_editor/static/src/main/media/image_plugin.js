@@ -75,7 +75,7 @@ export class ImagePlugin extends Plugin {
                     ),
             },
         ],
-        toolbarGroups: [
+        toolbar_groups: [
             withSequence(23, {
                 id: "image_preview",
                 namespace: "image",
@@ -90,7 +90,7 @@ export class ImagePlugin extends Plugin {
             withSequence(26, { id: "image_transform", namespace: "image" }),
             withSequence(30, { id: "image_delete", namespace: "image" }),
         ],
-        toolbarItems: [
+        toolbar_items: [
             {
                 id: "image_preview",
                 groupId: "image_preview",

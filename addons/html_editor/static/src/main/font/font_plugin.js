@@ -150,7 +150,7 @@ export class FontPlugin extends Plugin {
         input_handlers: this.onInput.bind(this),
         delete_backward_overrides: withSequence(20, this.handleDeleteBackward.bind(this)),
         delete_backward_word_overrides: this.handleDeleteBackward.bind(this),
-        toolbarGroups: [
+        toolbar_groups: [
             withSequence(10, {
                 id: "font",
             }),
@@ -158,7 +158,7 @@ export class FontPlugin extends Plugin {
                 id: "font-size",
             }),
         ],
-        toolbarItems: [
+        toolbar_items: [
             {
                 id: "font",
                 groupId: "font",

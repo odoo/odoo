@@ -74,11 +74,11 @@ export class MediaPlugin extends Plugin {
         ],
         powerbox_categories: withSequence(40, { id: "media", name: _t("Media") }),
         powerbox_items: getPowerboxItems(this),
-        toolbarGroups: withSequence(29, {
+        toolbar_groups: withSequence(29, {
             id: "replace_image",
             namespace: "image",
         }),
-        toolbarItems: [
+        toolbar_items: [
             {
                 id: "replace_image",
                 groupId: "replace_image",

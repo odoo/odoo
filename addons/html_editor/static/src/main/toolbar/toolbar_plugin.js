@@ -27,7 +27,7 @@ export class ToolbarPlugin extends Plugin {
 
     setup() {
         const groupIds = new Set();
-        for (const group of this.getResource("toolbarGroups")) {
+        for (const group of this.getResource("toolbar_groups")) {
             if (groupIds.has(group.id)) {
                 throw new Error(`Duplicate toolbar group id: ${group.id}`);
             }
@@ -115,7 +115,7 @@ export class ToolbarPlugin extends Plugin {
 
     getButtons() {
         const commands = this.dependencies.userCommand.getCommands();
-        const toolbarItems = this.getResource("toolbarItems");
+        const toolbarItems = this.getResource("toolbar_items");
         const buttons = toolbarItems.map((item) => {
             const command = commands[item.commandId] || {};
             const label = item.label || command.label;
@@ -161,7 +161,7 @@ export class ToolbarPlugin extends Plugin {
 
     getButtonGroups() {
         const buttons = this.getButtons();
-        const groups = this.getResource("toolbarGroups");
+        const groups = this.getResource("toolbar_groups");
 
         return groups.map((group) => ({
             ...group,
