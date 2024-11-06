@@ -59,10 +59,11 @@ class DiscussChannel(models.Model):
                     'operatorFound': current_step_sudo.step_type == 'forward_operator' and len(channel.channel_member_ids) > 2,
                 }
                 channel_info["chatbot"] = {
-                    'script': chatbot_script._format_for_frontend(),
+                    'script': chatbot_script.id,
                     'steps': [current_step],
                     'currentStep': current_step,
                 }
+                store.add(chatbot_script)
             channel_info['anonymous_name'] = channel.anonymous_name
             channel_info['anonymous_country'] = {
                 'code': channel.country_id.code,

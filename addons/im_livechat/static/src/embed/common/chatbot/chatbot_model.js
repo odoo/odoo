@@ -11,7 +11,7 @@ export class Chatbot extends Record {
     static MULTILINE_STEP_DEBOUNCE_DELAY = 10000;
 
     isTyping = false;
-    script = Record.one("ChatbotScript");
+    script = Record.one("chatbot.script");
     currentStep = Record.one("ChatbotStep");
     steps = Record.many("ChatbotStep");
     thread = Record.one("Thread", {
@@ -26,7 +26,7 @@ export class Chatbot extends Record {
                 return {
                     id: -0.1 - this.thread.id,
                     thread: this.thread,
-                    author: this.script.partner,
+                    author: this.script.operator_partner_id,
                 };
             }
         },
@@ -70,7 +70,7 @@ export class Chatbot extends Record {
             this.currentStep.message = this.store["mail.message"].insert(
                 {
                     id: this.store.getNextTemporaryId(),
-                    author: this.script.partner,
+                    author: this.script.operator_partner_id,
                     body: this.currentStep.scriptStep.message,
                     thread: this.thread,
                 },
