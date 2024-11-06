@@ -1005,6 +1005,8 @@ export class Runner {
                     storageSet(STORAGE.failed, [...this.state.failedIds]);
                 }
             } else {
+                this._failed++;
+
                 const failReasons = [];
                 const failedAssertions = lastResults.assertions.filter(
                     (assertion) => !assertion.pass
@@ -1027,21 +1029,23 @@ export class Runner {
                     [`Test ${stringify(test.fullName)} failed:`, ...failReasons].join("\n")
                 );
 
-                this.state.failedIds.add(test.id);
-                storageSet(STORAGE.failed, [...this.state.failedIds]);
+                if (!this.aborted) {
+                    if (this._failed === 1) {
+                        // On first failed test: reset the "failed IDs" list
+                        this.state.failedIds.clear();
+                    }
+                    this.state.failedIds.add(test.id);
+                    storageSet(STORAGE.failed, [...this.state.failedIds]);
+                }
             }
 
             await this._callbacks.call("after-post-test", test, handleError);
 
-            if (this.config.bail) {
-                if (!test.config.skip && !lastResults.pass) {
-                    this._failed++;
-                }
-                if (this._failed >= this.config.bail) {
-                    return this.stop();
-                }
-            }
             this._pushTest(test);
+
+            if (this.config.bail && this._failed >= this.config.bail) {
+                return this.stop();
+            }
             if (test.willRunAgain()) {
                 test.run = test.run.bind(test);
             } else {
