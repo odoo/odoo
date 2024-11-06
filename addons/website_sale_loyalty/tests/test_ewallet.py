@@ -6,7 +6,7 @@ from odoo.tests import HttpCase, tagged
 
 from odoo.addons.website.tools import MockRequest
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
-from odoo.addons.website_sale_loyalty.controllers.main import WebsiteSale
+from odoo.addons.website_sale_loyalty.controllers.cart import Cart
 
 
 @tagged('post_install', '-at_install')
@@ -16,7 +16,7 @@ class TestEwallet(HttpCase, WebsiteSaleCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.WebsiteSaleController = WebsiteSale()
+        cls.WebsiteSaleCartController = Cart()
         cls.website = cls.env['website'].browse(1)
 
         cls.product.write({'taxes_id': [Command.clear()]})
@@ -60,7 +60,11 @@ class TestEwallet(HttpCase, WebsiteSaleCommon):
 
         order = self.empty_cart
         with MockRequest(self.env, website=self.website, sale_order_id=order.id):
-            self.WebsiteSaleController.cart_update_json(self.product.id, set_qty=1)
+            self.WebsiteSaleCartController.add_to_cart(
+                product_template_id=self.product.product_tmpl_id,
+                product_id=self.product.id,
+                quantity=1,
+            )
             self.assertEqual(order.amount_total, 20)
-            self.WebsiteSaleController.claim_reward(self.ewallet_program.reward_ids[0].id)
+            self.WebsiteSaleCartController.claim_reward(self.ewallet_program.reward_ids[0].id)
             self.assertEqual(order.amount_total, 10)
