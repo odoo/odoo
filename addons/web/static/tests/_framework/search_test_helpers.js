@@ -241,15 +241,6 @@ export async function saveFavorite() {
 }
 
 //-----------------------------------------------------------------------------
-// Comparison menu
-//-----------------------------------------------------------------------------
-
-export async function toggleComparisonMenu() {
-    await ensureSearchBarMenu();
-    await contains(`.o_comparison_menu button.dropdown-toggle`).click();
-}
-
-//-----------------------------------------------------------------------------
 // Search bar
 //-----------------------------------------------------------------------------
 

@@ -53,25 +53,6 @@ export const INTERVAL_OPTIONS = {
     day: { description: _t("Day"), id: "day", groupNumber: 1 },
 };
 
-// ComparisonMenu parameters
-export const COMPARISON_OPTIONS = {
-    previous_period: {
-        description: _t("Previous Period"),
-        id: "previous_period",
-    },
-    previous_year: {
-        description: _t("Previous Year"),
-        id: "previous_year",
-        plusParam: { years: -1 },
-    },
-};
-
-export const PER_YEAR = {
-    year: 1,
-    quarter: 4,
-    month: 12,
-};
-
 //-------------------------------------------------------------------------
 // Functions
 //-------------------------------------------------------------------------
@@ -85,24 +66,9 @@ export const PER_YEAR = {
  * where leftBound_i and rightBound_i are date or datetime computed accordingly
  * to the given options and reference moment.
  */
-export function constructDateDomain(
-    referenceMoment,
-    searchItem,
-    selectedOptionIds,
-    comparisonOptionId
-) {
+export function constructDateDomain(referenceMoment, searchItem, selectedOptionIds) {
     let plusParam;
-    let selectedOptions;
-    if (comparisonOptionId) {
-        [plusParam, selectedOptions] = getComparisonParams(
-            referenceMoment,
-            searchItem,
-            selectedOptionIds,
-            comparisonOptionId
-        );
-    } else {
-        selectedOptions = getSelectedOptions(referenceMoment, searchItem, selectedOptionIds);
-    }
+    const selectedOptions = getSelectedOptions(referenceMoment, searchItem, selectedOptionIds);
     if ("withDomain" in selectedOptions) {
         return {
             description: selectedOptions.withDomain[0].description,
@@ -191,80 +157,6 @@ export function constructDateRange(params) {
     }
     const description = descriptions.join(" ");
     return { domain, description };
-}
-
-/**
- * Returns a version of the options in COMPARISON_OPTIONS with translated descriptions.
- * @see getOptionsWithDescriptions
- */
-export function getComparisonOptions() {
-    return getOptionsWithDescriptions(COMPARISON_OPTIONS);
-}
-
-/**
- * Returns the params plusParam and selectedOptions necessary for the computation
- * of a comparison domain.
- */
-export function getComparisonParams(
-    referenceMoment,
-    searchItem,
-    selectedOptionIds,
-    comparisonOptionId
-) {
-    const comparisonOption = COMPARISON_OPTIONS[comparisonOptionId];
-    const selectedOptions = getSelectedOptions(referenceMoment, searchItem, selectedOptionIds);
-    if (comparisonOption.plusParam) {
-        return [comparisonOption.plusParam, selectedOptions];
-    }
-    const plusParam = {};
-    let globalGranularity = "year";
-    if (selectedOptions.month) {
-        globalGranularity = "month";
-    } else if (selectedOptions.quarter) {
-        globalGranularity = "quarter";
-    }
-    const granularityFactor = PER_YEAR[globalGranularity];
-    const years = selectedOptions.year.map((o) => o.setParam.year);
-    const yearMin = Math.min(...years);
-    const yearMax = Math.max(...years);
-    let optionMin = 0;
-    let optionMax = 0;
-    if (selectedOptions.quarter) {
-        const quarters = selectedOptions.quarter.map((o) => o.setParam.quarter);
-        if (globalGranularity === "month") {
-            delete selectedOptions.quarter;
-            for (const quarter of quarters) {
-                for (const month of QUARTERS[quarter].coveredMonths) {
-                    const monthOption = selectedOptions.month.find(
-                        (o) => o.setParam.month === month
-                    );
-                    if (!monthOption) {
-                        selectedOptions.month.push({
-                            setParam: { month },
-                            granularity: "month",
-                        });
-                    }
-                }
-            }
-        } else {
-            optionMin = Math.min(...quarters);
-            optionMax = Math.max(...quarters);
-        }
-    }
-    if (selectedOptions.month) {
-        const months = selectedOptions.month.map((o) => o.setParam.month);
-        optionMin = Math.min(...months);
-        optionMax = Math.max(...months);
-    }
-    const num = -1 + granularityFactor * (yearMin - yearMax) + optionMin - optionMax;
-    const key =
-        globalGranularity === "year"
-            ? "years"
-            : globalGranularity === "month"
-            ? "months"
-            : "quarters";
-    plusParam[key] = num;
-    return [plusParam, selectedOptions];
 }
 
 /**

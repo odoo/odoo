@@ -109,24 +109,6 @@
                         </t>
                     </div>
                 </t>
-                <!-- Comparison -->
-                <t t-if="showComparisonMenu">
-                    <div class="o_dropdown_container o_comparison_menu w-100 w-lg-auto h-100 px-3 border-end">
-                        <div class="px-3 fs-5 mb-2">
-                            <i class="me-2 text-danger" t-att-class="facet_icons.comparison"/>
-                            <h5 class="o_dropdown_title d-inline">Comparison</h5>
-                        </div>
-                        <t t-foreach="comparisonItems" t-as="item" t-key="item.id">
-                            <CheckboxItem class="{ 'o_menu_item text-truncate': true, selected: item.isActive }"
-                                                checked="item.isActive"
-                                                closingMode="'none'"
-                                                t-esc="item.description"
-                                                attrs="{ title: item.description.length > 15 ? item.description : ''}"
-                                                onSelected="() => this.onComparisonSelected(item.id)"
-                            />
-                        </t>
-                    </div>
-                </t>
                 <!-- Favorite -->
                 <t t-if="this.env.searchModel.searchMenuTypes.has('favorite')">
                     <div class="o_dropdown_container o_favorite_menu w-100 w-lg-auto h-100 px-3">

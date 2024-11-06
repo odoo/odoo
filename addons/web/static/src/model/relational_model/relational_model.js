@@ -162,7 +162,6 @@ export class RelationalModel extends Model {
 
     /**
      * @param {Object} [params={}]
-     * @param {Comparison | null} [params.comparison]
      * @param {Context} [params.context]
      * @param {DomainListRepr} [params.domain]
      * @param {string[]} [params.groupBy]
@@ -248,7 +247,6 @@ export class RelationalModel extends Model {
             }
         } else {
             config.domain = "domain" in params ? params.domain : config.domain;
-            config.comparison = "comparison" in params ? params.comparison : config.comparison;
 
             // groupBy
             config.groupBy = "groupBy" in params ? params.groupBy : config.groupBy;
