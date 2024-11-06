@@ -370,10 +370,10 @@ class ChatbotScriptStep(models.Model):
 
     def _to_store(self, store: Store, /, *, fields=None):
         if fields is None:
-            fields = ["answer_ids", "message", "type"]
+            fields = ["answer_ids", "message", "type", "is_last"]
         for step in self:
             data = step._read_format(
-                [f for f in fields if f not in {"answer_ids", "message", "type"}], load=False
+                [f for f in fields if f not in {"answer_ids", "message", "type", "is_last"}], load=False
             )[0]
             if "answer_ids" in fields:
                 data["answers"] = Store.many(step.answer_ids)
@@ -381,6 +381,8 @@ class ChatbotScriptStep(models.Model):
                 data["message"] = plaintext2html(step.message) if step.message else False
             if "type" in fields:
                 data["type"] = step.step_type
+            if "is_last" in fields:
+                data["isLast"] = step._is_last_step()
             store.add("chatbot.script.step", data)
 
     # --------------------------

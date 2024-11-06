@@ -7,6 +7,6 @@ export class LivechatRule extends Record {
     autoPopupTimer;
     /** @type {string} */
     regexURL;
-    chatbotScript = Record.one("ChatbotScript");
+    chatbotScript = Record.one("chatbot.script");
 }
 LivechatRule.register();
