@@ -137,6 +137,8 @@ publicWidget.registry.portalPicture = publicWidget.Widget.extend({
     },
 });
 
+export default publicWidget.registry.portalDetails;
+
 export const PortalHomeCounters = publicWidget.Widget.extend({
     selector: '.o_portal_my_home',
 
