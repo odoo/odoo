@@ -6,27 +6,27 @@ For the moment we hack the contenteditable system so that the social media
 title stay editable after a save (see SOCIAL_MEDIA_TITLE_CONTENTEDITABLE).
 -->
 <template id="s_social_media" name="Social Media">
-    <div class="s_social_media text-start o_not_editable" contenteditable="false">
+    <div class="s_social_media text-start o_not_editable" contenteditable="false" data-vxml="001">
         <h4 class="s_social_media_title d-none" contenteditable="true">Social Media</h4>
-        <a href="/website/social/facebook" class="s_social_media_facebook" target="_blank" aria-label="Facebook">
+        <a href="https://www.facebook.com/Odoo" class="s_social_media_facebook" target="_blank" aria-label="Facebook">
             <i class="fa fa-facebook rounded shadow-sm o_editable_media"/>
         </a>
-        <a href="/website/social/twitter" class="s_social_media_twitter" target="_blank" aria-label="X">
+        <a href="https://twitter.com/Odoo" class="s_social_media_twitter" target="_blank" aria-label="X">
             <i class="fa fa-twitter rounded shadow-sm o_editable_media"/>
         </a>
-        <a href="/website/social/linkedin" class="s_social_media_linkedin" target="_blank" aria-label="LinkedIn">
+        <a href="https://www.linkedin.com/company/odoo" class="s_social_media_linkedin" target="_blank" aria-label="LinkedIn">
             <i class="fa fa-linkedin rounded shadow-sm o_editable_media"/>
         </a>
-        <a href="/website/social/youtube" class="s_social_media_youtube" target="_blank" aria-label="YouTube">
-            <i class="fa fa-youtube rounded shadow-sm o_editable_media"/>
+        <a href="https://www.youtube.com/user/OpenERPonline" class="s_social_media_youtube" target="_blank" aria-label="YouTube">
+            <i class="fa fa-youtube-play rounded shadow-sm o_editable_media"/>
         </a>
-        <a href="/website/social/instagram" class="s_social_media_instagram" target="_blank" aria-label="Instagram">
+        <a href="https://www.instagram.com/explore/tags/odoo/" class="s_social_media_instagram" target="_blank" aria-label="Instagram">
             <i class="fa fa-instagram rounded shadow-sm o_editable_media"/>
         </a>
-        <a href="/website/social/github" class="s_social_media_github" target="_blank" aria-label="GitHub">
+        <a href="https://github.com/odoo" class="s_social_media_github" target="_blank" aria-label="GitHub">
             <i class="fa fa-github rounded shadow-sm o_editable_media"/>
         </a>
-        <a href="/website/social/tiktok" class="s_social_media_tiktok" target="_blank" aria-label="TikTok">
+        <a href="https://www.tiktok.com/@odoo" class="s_social_media_tiktok" target="_blank" aria-label="TikTok">
             <i class="fa fa-tiktok rounded shadow-sm o_editable_media"/>
         </a>
     </div>
@@ -40,7 +40,7 @@ title stay editable after a save (see SOCIAL_MEDIA_TITLE_CONTENTEDITABLE).
                 data-render-list-items="" data-has-default="multiple" data-name="social_media_list"
                 data-default-value="https://www.example.com" data-id-mode="name"
                 data-new-elements-not-toggleable="true" data-no-preview="true"
-                data-render-on-input-blur="true"/>
+                data-render-on-input-blur="true" data-allow-empty="true"/>
         </div>
     </xpath>
 </template>

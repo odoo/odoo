@@ -350,13 +350,6 @@ class Website(Home):
             action_url += '&step=' + str(step)
         return request.redirect(action_url)
 
-    @http.route(['/website/social/<string:social>'], type='http', auth="public", website=True, sitemap=False)
-    def social(self, social, **kwargs):
-        url = getattr(request.website, 'social_%s' % social, False)
-        if not url:
-            raise werkzeug.exceptions.NotFound()
-        return request.redirect(url, local=False)
-
     @http.route('/website/get_suggested_links', type='jsonrpc', auth="user", website=True, readonly=True)
     def get_suggested_link(self, needle, limit=10):
         current_website = request.website

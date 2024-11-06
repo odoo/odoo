@@ -2546,6 +2546,7 @@ const ListUserValueWidget = UserValueWidget.extend({
      * @param {Event} ev
      */
     _onRemoveItemClick(ev) {
+        // For social media list, we allow to remove all elements.
         const minElements = this.el.dataset.allowEmpty ? 0 : 1;
         if (ev.target.closest('table').querySelectorAll('tr').length > minElements) {
             ev.target.closest('tr').remove();

@@ -132,39 +132,11 @@ class Website(models.Model):
         'List of blocked 3rd-party domains',
         compute='_compute_blocked_third_party_domains')
 
-    def _default_social_facebook(self):
-        return self.env.ref('base.main_company').social_facebook
-
-    def _default_social_github(self):
-        return self.env.ref('base.main_company').social_github
-
-    def _default_social_linkedin(self):
-        return self.env.ref('base.main_company').social_linkedin
-
-    def _default_social_youtube(self):
-        return self.env.ref('base.main_company').social_youtube
-
-    def _default_social_instagram(self):
-        return self.env.ref('base.main_company').social_instagram
-
-    def _default_social_twitter(self):
-        return self.env.ref('base.main_company').social_twitter
-
-    def _default_social_tiktok(self):
-        return self.env.ref('base.main_company').social_tiktok
-
     def _default_logo(self):
         with tools.file_open('website/static/src/img/website_logo.svg', 'rb') as f:
             return base64.b64encode(f.read())
 
     logo = fields.Binary('Website Logo', default=_default_logo, help="Display this logo on the website.")
-    social_twitter = fields.Char('X Account', default=_default_social_twitter)
-    social_facebook = fields.Char('Facebook Account', default=_default_social_facebook)
-    social_github = fields.Char('GitHub Account', default=_default_social_github)
-    social_linkedin = fields.Char('LinkedIn Account', default=_default_social_linkedin)
-    social_youtube = fields.Char('Youtube Account', default=_default_social_youtube)
-    social_instagram = fields.Char('Instagram Account', default=_default_social_instagram)
-    social_tiktok = fields.Char('TikTok Account', default=_default_social_tiktok)
     social_default_image = fields.Binary(string="Default Social Share Image", help="If set, replaces the website logo as the default social share image.")
     has_social_default_image = fields.Boolean(compute='_compute_has_social_default_image', store=True)
 

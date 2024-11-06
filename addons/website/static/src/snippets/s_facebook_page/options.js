@@ -18,7 +18,7 @@ options.registry.facebookPage = options.Class.extend({
         var defs = [this._super.apply(this, arguments)];
 
         var defaults = {
-            href: '',
+            href: "https://www.facebook.com/Odoo",
             id: '',
             height: 215,
             width: 350,
@@ -27,17 +27,6 @@ options.registry.facebookPage = options.Class.extend({
             hide_cover: "true",
         };
         this.fbData = Object.assign({}, defaults, pick(this.$target[0].dataset, ...Object.keys(defaults)));
-        if (!this.fbData.href) {
-            // Fetches the default url for facebook page from website config
-            var self = this;
-            defs.push(this.orm.searchRead("website", [], ["social_facebook"], {
-                limit: 1,
-            }).then(function (res) {
-                if (res) {
-                    self.fbData.href = res[0].social_facebook || '';
-                }
-            }));
-        }
 
         return Promise.all(defs).then(() => this._markFbElement()).then(() => this._refreshPublicWidgets());
     },
