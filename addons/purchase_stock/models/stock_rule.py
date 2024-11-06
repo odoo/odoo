@@ -76,6 +76,17 @@ class StockRule(models.Model):
                 errors.append((procurement, msg))
 
             partner = supplier.partner_id
+            if partner.purchase_warn == 'block':
+                if self.env.context.get('from_orderpoint'):
+                    errors.append((procurement, partner.purchase_warn_msg))
+                elif procurement.values['group_id'].sale_id:
+                    blocking_msg = 'Vendor Blocking Message: %s' % partner.purchase_warn_msg
+                    procurement.values['group_id'].sale_id.message_post(body=blocking_msg)
+            elif partner.purchase_warn == 'warning':
+                if procurement.values['group_id'].sale_id:
+                    warning_msg = 'Vendor Warning Message: %s' % partner.purchase_warn_msg
+                    procurement.values['group_id'].sale_id.message_post(body=warning_msg)
+
             # we put `supplier_info` in values for extensibility purposes
             procurement.values['supplier'] = supplier
             procurement.values['propagate_cancel'] = rule.propagate_cancel

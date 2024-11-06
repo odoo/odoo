@@ -119,6 +119,8 @@ class ProductProduct(models.Model):
 class ProductSupplierinfo(models.Model):
     _inherit = "product.supplierinfo"
 
+    purchase_warn = fields.Selection(related='partner_id.purchase_warn')
+
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         self.currency_id = self.partner_id.property_purchase_currency_id.id or self.env.company.currency_id.id
