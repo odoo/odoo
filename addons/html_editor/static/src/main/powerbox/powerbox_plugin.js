@@ -64,7 +64,7 @@ export class PowerboxPlugin extends Plugin {
             text: _t('Type "/" for commands'),
             target,
         },
-        powerboxCategories: [
+        powerbox_categories: [
             withSequence(10, { id: "structure", name: _t("Structure") }),
             withSequence(60, { id: "widget", name: _t("Widget") }),
         ],
@@ -95,9 +95,9 @@ export class PowerboxPlugin extends Plugin {
         return this.defaultPowerboxItems.filter((cmd) => !cmd.isAvailable?.(selection.anchorNode));
     }
     makeDefaultPowerboxItems() {
-        const powerboxItems = this.getResource("powerboxItems");
+        const powerboxItems = this.getResource("powerbox_items");
         const userCommands = this.dependencies.userCommand.getCommands();
-        const categories = this.getResource("powerboxCategories");
+        const categories = this.getResource("powerbox_categories");
         const categoryDict = Object.fromEntries(
             categories.map((category) => [category.id, category])
         );

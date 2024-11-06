@@ -191,8 +191,8 @@ export class FontPlugin extends Plugin {
                 },
             },
         ],
-        powerboxCategories: withSequence(30, { id: "format", name: _t("Format") }),
-        powerboxItems: [
+        powerbox_categories: withSequence(30, { id: "format", name: _t("Format") }),
+        powerbox_items: [
             {
                 categoryId: "format",
                 commandId: "setTagHeading1",

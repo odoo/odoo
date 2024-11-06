@@ -28,7 +28,7 @@ export class PowerButtonsPlugin extends Plugin {
         this.powerButtonsOverlay = this.dependencies.localOverlay.makeLocalOverlay(
             "oe-power-buttons-overlay"
         );
-        this.categories = this.getResource("powerboxCategories");
+        this.categories = this.getResource("powerbox_categories");
         this.createPowerButtons();
     }
 

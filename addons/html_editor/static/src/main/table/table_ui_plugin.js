@@ -28,7 +28,7 @@ export class TableUIPlugin extends Plugin {
                 run: this.openPicker.bind(this),
             },
         ],
-        powerboxItems: [
+        powerbox_items: [
             {
                 categoryId: "structure",
                 commandId: "openPickerOrInsertTable",

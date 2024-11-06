@@ -115,8 +115,8 @@ describe("search", () => {
         class TestPlugin extends Plugin {
             static id = "test";
             resources = {
-                powerboxCategories: { id: "test", name: "Test" },
-                powerboxItems: [
+                powerbox_categories: { id: "test", name: "Test" },
+                powerbox_items: [
                     {
                         label: "Test1",
                         description: "Test1",
@@ -255,8 +255,8 @@ describe("search", () => {
             class TestPlugin extends Plugin {
                 static id = "test";
                 resources = {
-                    powerboxCategories: { id: "test", name: "Test" },
-                    powerboxItems: [
+                    powerbox_categories: { id: "test", name: "Test" },
+                    powerbox_items: [
                         {
                             label: "Test1",
                             description: "Test1",
@@ -302,8 +302,8 @@ describe("search", () => {
             class TestPlugin extends Plugin {
                 static id = "test";
                 resources = {
-                    powerboxCategories: { id: "test", name: "Test" },
-                    powerboxItems: [
+                    powerbox_categories: { id: "test", name: "Test" },
+                    powerbox_items: [
                         {
                             label: "Change direction", // "icon" fuzzy matches this
                             description: "test",
@@ -504,8 +504,8 @@ class NoOpPlugin extends Plugin {
                 run: () => {},
             },
         ],
-        powerboxCategories: { id: "no_op", name: "No-op" },
-        powerboxItems: [
+        powerbox_categories: { id: "no_op", name: "No-op" },
+        powerbox_items: [
             {
                 label: "No-op",
                 description: "No-op",
@@ -728,12 +728,12 @@ test.todo("add plugins with the same powerboxCategory should crash", async () =>
     });
     class Plugin1 extends Plugin {
         resources = {
-            powerboxCategories: withSequence(10, { id: "test", name: "Test" }),
+            powerbox_categories: withSequence(10, { id: "test", name: "Test" }),
         };
     }
     class Plugin2 extends Plugin {
         resources = {
-            powerboxCategories: withSequence(10, { id: "test", name: "Test" }),
+            powerbox_categories: withSequence(10, { id: "test", name: "Test" }),
         };
     }
     await expect(

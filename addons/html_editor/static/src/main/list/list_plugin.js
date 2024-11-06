@@ -90,7 +90,7 @@ export class ListPlugin extends Plugin {
                 isActive: isListActive("CL"),
             },
         ],
-        powerboxItems: [
+        powerbox_items: [
             {
                 categoryId: "structure",
                 commandId: "toggleListUL",

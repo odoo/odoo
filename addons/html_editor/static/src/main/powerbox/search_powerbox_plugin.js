@@ -18,13 +18,13 @@ export class SearchPowerboxPlugin extends Plugin {
     };
     setup() {
         const categoryIds = new Set();
-        for (const category of this.getResource("powerboxCategories")) {
+        for (const category of this.getResource("powerbox_categories")) {
             if (categoryIds.has(category.id)) {
                 throw new Error(`Duplicate category id: ${category.id}`);
             }
             categoryIds.add(category.id);
         }
-        this.categories = this.getResource("powerboxCategories");
+        this.categories = this.getResource("powerbox_categories");
         this.shouldUpdate = false;
     }
     onBeforeInput(ev) {

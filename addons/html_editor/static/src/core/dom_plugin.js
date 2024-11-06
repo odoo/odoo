@@ -47,7 +47,7 @@ export class DomPlugin extends Plugin {
                 run: this.insertSeparator.bind(this),
             },
         ],
-        powerboxItems: {
+        powerbox_items: {
             categoryId: "structure",
             commandId: "insertSeparator",
         },

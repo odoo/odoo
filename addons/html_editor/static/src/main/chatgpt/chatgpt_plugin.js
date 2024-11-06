@@ -48,8 +48,8 @@ export class ChatGPTPlugin extends Plugin {
             },
         ],
 
-        powerboxCategories: withSequence(70, { id: "ai", name: _t("AI Tools") }),
-        powerboxItems: {
+        powerbox_categories: withSequence(70, { id: "ai", name: _t("AI Tools") }),
+        powerbox_items: {
             keywords: [_t("AI")],
             categoryId: "ai",
             commandId: "openChatGPTDialog",

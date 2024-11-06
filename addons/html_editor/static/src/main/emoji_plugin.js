@@ -21,7 +21,7 @@ export class EmojiPlugin extends Plugin {
                 run: this.showEmojiPicker.bind(this),
             },
         ],
-        powerboxItems: [
+        powerbox_items: [
             {
                 categoryId: "widget",
                 commandId: "addEmoji",

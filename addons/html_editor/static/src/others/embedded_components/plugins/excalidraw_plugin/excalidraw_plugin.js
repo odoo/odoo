@@ -15,7 +15,7 @@ export class ExcalidrawPlugin extends Plugin {
                 icon: "fa-pencil-square-o",
             },
         ],
-        powerboxItems: [
+        powerbox_items: [
             {
                 categoryId: "navigation",
                 commandId: "insertDrawingBoard",

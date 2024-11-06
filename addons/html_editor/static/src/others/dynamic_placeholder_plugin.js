@@ -24,11 +24,11 @@ export class DynamicPlaceholderPlugin extends Plugin {
                 },
             },
         ],
-        powerboxCategories: withSequence(60, {
+        powerbox_categories: withSequence(60, {
             id: "marketing_tools",
             name: _t("Marketing Tools"),
         }),
-        powerboxItems: {
+        powerbox_items: {
             categoryId: "marketing_tools",
             commandId: "openDynamicPlaceholder",
         },

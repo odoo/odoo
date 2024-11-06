@@ -17,7 +17,7 @@ export class TextDirectionPlugin extends Plugin {
                 run: this.switchDirection.bind(this),
             },
         ],
-        powerboxItems: [
+        powerbox_items: [
             {
                 categoryId: "format",
                 commandId: "switchDirection",

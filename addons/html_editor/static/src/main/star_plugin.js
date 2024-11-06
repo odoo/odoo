@@ -19,7 +19,7 @@ export class StarPlugin extends Plugin {
                 run: this.addStars.bind(this),
             },
         ],
-        powerboxItems: [
+        powerbox_items: [
             {
                 label: _t("3 Stars"),
                 description: _t("Insert a rating over 3 stars"),

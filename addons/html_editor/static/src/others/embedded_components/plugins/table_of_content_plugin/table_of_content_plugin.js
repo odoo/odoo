@@ -19,7 +19,7 @@ export class TableOfContentPlugin extends Plugin {
                 run: this.insertTableOfContent.bind(this),
             },
         ],
-        powerboxItems: [
+        powerbox_items: [
             {
                 categoryId: "navigation",
                 commandId: "insertTableOfContent",

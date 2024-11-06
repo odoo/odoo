@@ -41,7 +41,7 @@ export class ColumnPlugin extends Plugin {
             },
         ],
         unremovable_node_predicates: isUnremovableColumn,
-        powerboxItems: [
+        powerbox_items: [
             {
                 label: _t("2 columns"),
                 description: _t("Convert into 2 columns"),

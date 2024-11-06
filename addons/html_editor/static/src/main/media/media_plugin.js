@@ -72,8 +72,8 @@ export class MediaPlugin extends Plugin {
                 },
             },
         ],
-        powerboxCategories: withSequence(40, { id: "media", name: _t("Media") }),
-        powerboxItems: getPowerboxItems(this),
+        powerbox_categories: withSequence(40, { id: "media", name: _t("Media") }),
+        powerbox_items: getPowerboxItems(this),
         toolbarGroups: withSequence(29, {
             id: "replace_image",
             namespace: "image",

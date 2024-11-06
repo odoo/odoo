@@ -17,8 +17,8 @@ export class SignaturePlugin extends Plugin {
                 run: this.insertSignature.bind(this),
             },
         ],
-        powerboxCategories: withSequence(100, { id: "basic_block", name: _t("Basic Bloc") }),
-        powerboxItems: [
+        powerbox_categories: withSequence(100, { id: "basic_block", name: _t("Basic Bloc") }),
+        powerbox_items: [
             {
                 categoryId: "basic_block",
                 commandId: "insertSignature",

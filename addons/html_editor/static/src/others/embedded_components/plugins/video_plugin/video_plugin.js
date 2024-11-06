@@ -20,7 +20,7 @@ export class VideoPlugin extends Plugin {
                 },
             },
         ],
-        powerboxItems: [
+        powerbox_items: [
             {
                 categoryId: "navigation",
                 commandId: "openVideoSelectorDialog",

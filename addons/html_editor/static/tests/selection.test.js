@@ -185,7 +185,7 @@ test("restore a selection when you are not in the editable shouldn't move the fo
                     run: this.showOverlay.bind(this),
                 },
             ],
-            powerboxItems: [
+            powerbox_items: [
                 {
                     categoryId: "widget",
                     commandId: "testShowOverlay",

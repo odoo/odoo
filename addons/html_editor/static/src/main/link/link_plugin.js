@@ -164,8 +164,8 @@ export class LinkPlugin extends Plugin {
             },
         ],
 
-        powerboxCategories: withSequence(50, { id: "navigation", name: _t("Navigation") }),
-        powerboxItems: [
+        powerbox_categories: withSequence(50, { id: "navigation", name: _t("Navigation") }),
+        powerbox_items: [
             {
                 categoryId: "navigation",
                 commandId: "toggleLinkTools",
