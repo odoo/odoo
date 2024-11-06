@@ -858,11 +858,7 @@ class Message(models.Model):
                 'name': message_sudo.author_guest_id.name,
             } if message_sudo.author_guest_id else [('clear',)]
             if message_sudo.model and message_sudo.res_id:
-                record_name = self.env[message_sudo.model] \
-                    .browse(message_sudo.res_id) \
-                    .sudo() \
-                    .with_prefetch(thread_ids_by_model_name[message_sudo.model]) \
-                    .display_name
+                record_name = self.env[message_sudo.model].browse(message_sudo.res_id).sudo().with_prefetch(thread_ids_by_model_name[message_sudo.model]).display_name
             else:
                 record_name = False
             reactions_per_content = defaultdict(self.env['mail.message.reaction'].sudo().browse)
