@@ -39,7 +39,7 @@ export class IconPlugin extends Plugin {
                 run: this.toggleSpinIcon.bind(this),
             },
         ],
-        toolbarNamespace: [
+        toolbar_namespaces: [
             {
                 id: "icon",
                 isApplied: (traversedNodes) =>

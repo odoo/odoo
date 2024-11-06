@@ -237,7 +237,7 @@ export class ToolbarPlugin extends Plugin {
 
     updateNamespace() {
         const traversedNodes = this.getFilterTraverseNodes();
-        for (const namespace of this.getResource("toolbarNamespace") || []) {
+        for (const namespace of this.getResource("toolbar_namespaces")) {
             if (namespace.isApplied(traversedNodes)) {
                 this.state.namespace = namespace.id;
                 return;

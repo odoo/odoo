@@ -360,7 +360,7 @@ test("toolbar correctly show namespace button group and stop showing when namesp
     class TestPlugin extends Plugin {
         static id = "TestPlugin";
         resources = {
-            toolbarNamespace: [
+            toolbar_namespaces: [
                 {
                     id: "aNamespace",
                     isApplied: (nodeList) => {

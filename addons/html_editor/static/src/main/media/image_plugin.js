@@ -65,7 +65,7 @@ export class ImagePlugin extends Plugin {
         ],
         paste_url_overrides: this.handlePasteUrl.bind(this),
         selectionchange_handlers: this.onSelectionChange.bind(this),
-        toolbarNamespace: [
+        toolbar_namespaces: [
             {
                 id: "image",
                 isApplied: (traversedNodes) =>
