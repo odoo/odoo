@@ -27,14 +27,14 @@ jobs:
     steps:
       - name: Setup SSH Key for EC2
         env:
-          PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
         run: |
-          echo "$PRIVATE_KEY" > ${{ secrets.PRIVATE_KEY }}.pem
-          chmod 400 ${{ secrets.PRIVATE_KEY }}.pem
+          echo "$PRIVATE_KEY" > PRIVATE_KEY.pem
+          chmod 400 PRIVATE_KEY.pem
 
       - name: Pull changes
         run: |
-          ssh -tt -o StrictHostKeyChecking=no -i ./${{ secrets.PRIVATE_KEY }}.pem ${{ vars.EC2_USER_NAME }}@${{ vars.EC2_INSTANCE_ADDRESS }} <<EOF
+          ssh -tt -o StrictHostKeyChecking=no -i ./PRIVATE_KEY.pem ${{ vars.EC2_USER_NAME }}@${{ vars.EC2_INSTANCE_ADDRESS }} <<EOF
           cd /home/ubuntu
           service odoo stop
           git branch
@@ -43,4 +43,4 @@ jobs:
           EOF
 
       - name: Cleanup SSH Key
-        run: rm -f ./${{ secrets.PRIVATE_KEY }}.pem
+        run: rm -f ./PRIVATE_KEY.pem
