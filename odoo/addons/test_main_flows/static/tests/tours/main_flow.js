@@ -418,6 +418,11 @@ stepUtils.autoExpandMoreButtons(),
     run: "click",
 },
 {
+    isActive: ["mobile"],
+    trigger: ".o_field_widget[name=partner_id] .o_external_button:not(:visible)",
+},
+{
+    isActive: ["desktop"],
     trigger: ".o_field_widget[name=partner_id] .o_external_button",
 },
 {

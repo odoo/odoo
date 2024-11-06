@@ -19,7 +19,8 @@ registry.category("web_tour.tours").add("mail_message_load_order_tour", {
             run: "click",
         },
         {
-            trigger: ".o-mail-MessageCard-jump",
+            content: "Click on invisible jump (should hover card to be visible)",
+            trigger: ".o-mail-MessageCard-jump:not(:visible)",
             run: "click",
         },
         {

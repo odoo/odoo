@@ -940,6 +940,8 @@ registerWebsitePreviewTour("website_form_editable_content", {
         run: "drag_and_drop :iframe section.s_website_form",
     },
     {
+        // TODO we should ensure that as soon as the snippet 
+        // is visible, it is editable to avoid this step
         trigger: ":iframe section.s_website_form .col-lg-4[contenteditable=true]",
     },
     {
@@ -957,8 +959,10 @@ registerWebsitePreviewTour("website_form_editable_content", {
         content: "Check that the new text value was correctly set",
         trigger: ":iframe section.s_website_form h5:contains(/^ABC$/)",
     },
-    {   content: "Remove the dropped column",
-        trigger: ":iframe .oe_overlay.oe_active .oe_snippet_remove",
+    {
+        content: "Remove the dropped column",
+        // TODO: remove :not(:visible) and use hover && click.
+        trigger: ":iframe .oe_overlay.oe_active .oe_snippet_remove:not(:visible)",
         run: "click",
     },
     ...clickOnSave(),

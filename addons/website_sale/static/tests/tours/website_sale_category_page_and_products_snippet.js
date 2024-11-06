@@ -17,13 +17,13 @@ registerWebsitePreviewTour('category_page_and_products_snippet_edition', {
     },
     {
         content: "Click on the s_dynamic_snippet_products snippet.",
-        trigger: ':iframe .o_snippet_preview_wrap[data-snippet-id="s_dynamic_snippet_products"]',
+        trigger: ":iframe .o_snippet_preview_wrap[data-snippet-id=s_dynamic_snippet_products]:not(:visible)",
         run: "click",
     },
-
     {
         content: "Click on the product snippet to show its options",
-        trigger: ':iframe #category_header .s_dynamic_snippet_products',
+        trigger: ":iframe section[data-snippet=s_dynamic_snippet_products]",
+        timeout: 30000, //load product snippet take long time due to load unknow img.
         run: "click",
     },
     {
