@@ -10,7 +10,7 @@ from collections import OrderedDict
 
 from odoo import http, fields
 from odoo.addons.http_routing.models.ir_http import slug, unslug
-from odoo.addons.website.controllers.main import QueryURL
+from odoo.addons.website.controllers.main import QueryURL, Website
 from odoo.addons.portal.controllers.portal import _build_url_w_params
 from odoo.http import request
 from odoo.osv import expression
@@ -60,6 +60,8 @@ class WebsiteBlog(http.Controller):
         """ Prepare all values to display the blogs index page or one specific blog"""
         BlogPost = request.env['blog.post']
         BlogTag = request.env['blog.tag']
+        date_begin = isinstance(date_begin, fields.datetime) and date_begin
+        date_end = isinstance(date_end, fields.datetime) and date_end
 
         # prepare domain
         domain = request.website.website_domain()
@@ -347,3 +349,20 @@ class WebsiteBlog(http.Controller):
         """
         new_blog_post = request.env['blog.post'].with_context(mail_create_nosubscribe=True).browse(int(blog_post_id)).copy()
         return request.redirect("/blog/%s/%s?enable_editor=1" % (slug(new_blog_post.blog_id), slug(new_blog_post)))
+
+
+class WebsiteBlogAutocomplete(Website):
+
+    @http.route('/website/snippet/autocomplete', type='json', auth='public', website=True)
+    def autocomplete(self, search_type=None, term=None, order=None, limit=5, max_nb_chars=999, options=None):
+        """
+        Over riding the autocomplete method to check the type of date_start and date_end in blogs while
+        searching something in the blogs,as the user sometimes manually giving the value at the URL.
+        Which eventually leading to a traceback.
+        """
+        options = options or {}
+        date_begin, date_end = options.get('date_begin'), options.get('date_end')
+        if date_begin and date_end and not all(isinstance(date, fields.datetime) for date in (date_begin, date_end)):
+            options['date_begin'] = options['date_end'] = False
+
+        return super().autocomplete(search_type, term, order, limit, max_nb_chars, options)
