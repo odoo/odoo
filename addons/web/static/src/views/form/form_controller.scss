@@ -1177,3 +1177,8 @@
     clear: both;
     justify-content: space-between;
 }
+
+// This ensures correct alignment with the cog button when there is no breadcrumb displayed.
+.o_breadcrumb:not(:has(.breadcrumb)) + .o_form_status_indicator {
+    align-self: center !important;
+}
