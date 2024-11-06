@@ -1022,7 +1022,7 @@ class Warehouse(models.Model):
                 'default_location_src_id': False,
                 'sequence': max_sequence + 6,
                 'show_reserved': True,
-                'sequence_code': 'IN',
+                'sequence_code': 'RET',
                 'company_id': self.company_id.id,
             },
         }, max_sequence + 6
