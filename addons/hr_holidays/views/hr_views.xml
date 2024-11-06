@@ -129,7 +129,26 @@
                         type="object"
                         class="oe_stat_button"
                         context="{'search_default_employee_ids': id}"
-                        invisible="not is_absent">
+                        invisible="not is_absent or company_id not in allowed_company_ids">
+                        <div invisible="hr_icon_display != 'presence_holiday_present'"
+                              role="img" class="fa fa-fw fa-plane o_button_icon text-success" aria-label="Back On" title="Back On"/>
+                        <div invisible="hr_icon_display != 'presence_holiday_absent'" role="img"
+                             class="fa fa-fw fa-plane o_button_icon text-warning" aria-label="Back On" title="Back On"/>
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">
+                            Back On
+                        </span>
+                        <span class="o_stat_value">
+                            <field name="leave_date_to"/>
+                        </span>
+                    </div>
+                </button>
+                <button name="action_time_off_dashboard"
+                        type="object"
+                        class="oe_stat_button disabled"
+                        context="{'search_default_employee_ids': id}"
+                        disabled="1"
+                        invisible="not is_absent or company_id in allowed_company_ids">
                         <div invisible="hr_icon_display != 'presence_holiday_present'"
                               role="img" class="fa fa-fw fa-plane o_button_icon text-success" aria-label="Back On" title="Back On"/>
                         <div invisible="hr_icon_display != 'presence_holiday_absent'" role="img"
@@ -147,8 +166,31 @@
                         type="object"
                         class="oe_stat_button"
                         icon="fa-calendar"
-                        invisible="not show_leaves"
+                        invisible="not show_leaves or company_id not in allowed_company_ids"
                         context="{'search_default_employee_ids': id}"
+                        groups="base.group_user"
+                        help="Remaining leaves">
+                    <div class="o_field_widget o_stat_info" invisible="allocation_display == '0'">
+                        <span class="o_stat_value">
+                            <field name="allocation_remaining_display"/>/<field name="allocation_display"/> Days
+                        </span>
+                        <span class="o_stat_text">
+                            Time Off
+                        </span>
+                    </div>
+                    <div class="o_field_widget o_stat_info" invisible="allocation_display != '0'">
+                        <span class="o_stat_text">
+                           Time Off
+                        </span>
+                    </div>
+                </button>
+                <button name="action_time_off_dashboard"
+                        type="object"
+                        class="oe_stat_button disabled"
+                        icon="fa-calendar"
+                        invisible="not show_leaves or company_id in allowed_company_ids"
+                        context="{'search_default_employee_ids': id}"
+                        disabled="1"
                         groups="base.group_user"
                         help="Remaining leaves">
                     <div class="o_field_widget o_stat_info" invisible="allocation_display == '0'">
