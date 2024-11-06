@@ -82,7 +82,4 @@ registry.category("web_tour.tours").add('burndown_chart_tour', {
     content: 'Open the search panel menu',
     trigger: '.o_control_panel .o_searchview_dropdown_toggler',
     run: "click",
-}, {
-    content: 'The comparison menu is not rendered',
-    trigger: ':not(:has(.o_comparison_menu))',
 }]});

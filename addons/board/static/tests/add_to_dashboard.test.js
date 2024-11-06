@@ -2,7 +2,7 @@ import { addToBoardItem } from "@board/add_to_board/add_to_board";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { hover, press, queryOne } from "@odoo/hoot-dom";
-import { animationFrame, mockDate } from "@odoo/hoot-mock";
+import { animationFrame } from "@odoo/hoot-mock";
 import * as dsHelpers from "@web/../tests/core/domain_selector/domain_selector_helpers";
 import {
     contains,
@@ -19,7 +19,6 @@ import {
     serverState,
     switchView,
     toggleMenuItem,
-    toggleMenuItemOption,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
@@ -270,65 +269,6 @@ test("add to dashboard with no action id", async () => {
     });
     await toggleSearchBarMenu();
     expect(".o_add_to_board").toHaveCount(1);
-});
-
-test("correctly save the time ranges of a reporting view in comparison mode", async () => {
-    expect.assertions(1);
-
-    mockDate("2020-07-01 11:00:00");
-
-    Partner._fields.date = fields.Date();
-
-    Partner._views = {
-        pivot: '<pivot><field name="foo"/></pivot>',
-        search: '<search><filter name="Date" date="date"/></search>',
-    };
-
-    onRpc("/board/add_to_dashboard", async (request) => {
-        const { params: args } = await request.json();
-        expect(args.context_to_save.comparison).toEqual({
-            domains: [
-                {
-                    arrayRepr: ["&", ["date", ">=", "2020-07-01"], ["date", "<=", "2020-07-31"]],
-                    description: "July 2020",
-                },
-                {
-                    arrayRepr: ["&", ["date", ">=", "2020-06-01"], ["date", "<=", "2020-06-30"]],
-                    description: "June 2020",
-                },
-            ],
-            fieldName: "date",
-        });
-        return Promise.resolve(true);
-    });
-
-    // makes mouseEnter work
-
-    await mountWithCleanup(WebClient);
-
-    await getService("action").doAction({
-        id: 1,
-        res_model: "partner",
-        type: "ir.actions.act_window",
-        views: [[false, "pivot"]],
-    });
-
-    // filter on July 2020
-    await toggleSearchBarMenu();
-    await toggleMenuItem("Date");
-    await toggleMenuItemOption("Date", "July");
-
-    // compare July 2020 to June 2020
-    await toggleMenuItem("Date: Previous Period");
-
-    // add the view to the dashboard
-
-    await hover(".o_add_to_board button.dropdown-toggle");
-    await animationFrame();
-    await contains(queryOne("input", { root: getAddToDashboardMenu() })).edit("Pipeline", {
-        confirm: false,
-    });
-    await contains(queryOne("button", { root: getAddToDashboardMenu() })).click();
 });
 
 test("Add a view to dashboard (keynav)", async () => {

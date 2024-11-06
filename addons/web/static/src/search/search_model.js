@@ -2,48 +2,33 @@ import { makeContext } from "@web/core/context";
 import { Domain } from "@web/core/domain";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { user } from "@web/core/user";
-import { sortBy, groupBy } from "@web/core/utils/arrays";
+import { groupBy, sortBy } from "@web/core/utils/arrays";
 import { deepCopy } from "@web/core/utils/objects";
 import { SearchArchParser } from "./search_arch_parser";
 import {
     constructDateDomain,
     DEFAULT_INTERVAL,
-    getComparisonOptions,
     getIntervalOptions,
     getPeriodOptions,
     rankInterval,
     yearSelected,
 } from "./utils/dates";
-import { FACET_ICONS, FACET_COLORS } from "./utils/misc";
+import { FACET_COLORS, FACET_ICONS } from "./utils/misc";
 
 import { EventBus, toRaw } from "@odoo/owl";
-import { domainFromTree, treeFromDomain } from "@web/core/tree_editor/condition_tree";
-import { _t } from "@web/core/l10n/translation";
-import { useGetTreeDescription, useMakeGetFieldDef } from "@web/core/tree_editor/utils";
-import { DomainSelectorDialog } from "@web/core/domain_selector_dialog/domain_selector_dialog";
 import { getDefaultDomain } from "@web/core/domain_selector/utils";
+import { DomainSelectorDialog } from "@web/core/domain_selector_dialog/domain_selector_dialog";
+import { _t } from "@web/core/l10n/translation";
+import { domainFromTree, treeFromDomain } from "@web/core/tree_editor/condition_tree";
+import { useGetTreeDescription, useMakeGetFieldDef } from "@web/core/tree_editor/utils";
 
 const { DateTime } = luxon;
 
-/** @typedef {import("@web/core/domain").DomainRepr} DomainRepr */
 /** @typedef {import("@web/core/domain").DomainListRepr} DomainListRepr */
 /** @typedef {import("../views/utils").OrderTerm} OrderTerm */
 
 /**
- * @typedef {Object} ComparisonDomain
- * @property {DomainListRepr} arrayRepr
- * @property {string} description
- */
-
-/**
- * @typedef {Object} Comparison
- * @property {ComparisonDomain[]} domains
- * @property {string} [fieldName]
- */
-
-/**
  * @typedef {Object} SearchParams
- * @property {Comparison | null} comparison
  * @property {Context} context
  * @property {DomainListRepr} domain
  * @property {string[]} groupBy
@@ -182,7 +167,6 @@ export class SearchModel extends EventBus {
 
         // used to manage search items related to date/datetime fields
         this.referenceMoment = DateTime.local();
-        this.comparisonOptions = getComparisonOptions();
         this.intervalOptions = getIntervalOptions();
     }
 
@@ -197,7 +181,6 @@ export class SearchModel extends EventBus {
      * @param {Object[]} [config.irFilters=[]]
      *
      * @param {boolean} [config.activateFavorite=true]
-     * @param {Object | null} [config.comparison]
      * @param {Object} [config.context={}]
      * @param {Array} [config.domain=[]]
      * @param {Array} [config.dynamicFilters=[]]
@@ -218,9 +201,8 @@ export class SearchModel extends EventBus {
         // used to avoid useless recomputations
         this._reset();
 
-        const { comparison, context, domain, groupBy, hideCustomGroupBy, orderBy } = config;
+        const { context, domain, groupBy, hideCustomGroupBy, orderBy } = config;
 
-        this.globalComparison = comparison;
         this.globalContext = toRaw(Object.assign({}, context));
         this.globalDomain = domain || [];
         this.globalGroupBy = groupBy || [];
@@ -311,13 +293,6 @@ export class SearchModel extends EventBus {
         this.nextGroupNumber =
             1 + Math.max(...Object.values(this.searchItems).map((i) => i.groupNumber || 0), 0);
 
-        const dateFilters = Object.values(this.searchItems).filter(
-            (searchElement) => searchElement.type === "dateFilter"
-        );
-        if (dateFilters.length) {
-            this._createGroupOfComparisons(dateFilters);
-        }
-
         const { dynamicFilters } = config;
         if (dynamicFilters) {
             this._createGroupOfDynamicFilters(dynamicFilters);
@@ -359,7 +334,6 @@ export class SearchModel extends EventBus {
 
     /**
      * @param {Object} [config={}]
-     * @param {Object | null} [config.comparison]
      * @param {Object} [config.context={}]
      * @param {Array} [config.domain=[]]
      * @param {string[]} [config.groupBy=[]]
@@ -368,11 +342,10 @@ export class SearchModel extends EventBus {
     async reload(config = {}) {
         this._reset();
 
-        const { comparison, context, domain, groupBy, orderBy } = config;
+        const { context, domain, groupBy, orderBy } = config;
 
         this.globalContext = Object.assign({}, context);
         this.globalDomain = domain || [];
-        this.globalComparison = comparison;
         this.globalGroupBy = groupBy || [];
         this.globalOrderBy = orderBy || [];
 
@@ -423,51 +396,10 @@ export class SearchModel extends EventBus {
         return Object.assign({}, this.globalContext, user.context);
     }
 
-    /**
-     * @returns {Comparison}
-     */
-    get comparison() {
-        if (!this.searchMenuTypes.has("comparison")) {
-            return null;
-        }
-        if (this._comparison === undefined) {
-            if (this.globalComparison) {
-                this._comparison = this.globalComparison;
-            } else {
-                const comparison = this.getFullComparison();
-                if (comparison) {
-                    const {
-                        fieldName,
-                        range,
-                        rangeDescription,
-                        comparisonRange,
-                        comparisonRangeDescription,
-                    } = comparison;
-                    const domains = [
-                        {
-                            arrayRepr: Domain.and([this.domain, range]).toList(),
-                            description: rangeDescription,
-                        },
-                        {
-                            arrayRepr: Domain.and([this.domain, comparisonRange]).toList(),
-                            description: comparisonRangeDescription,
-                        },
-                    ];
-                    this._comparison = { domains, fieldName };
-                } else {
-                    this._comparison = null;
-                }
-            }
-        }
-        return deepCopy(this._comparison);
-    }
-
     get facets() {
-        const isValidType = (type) =>
-            !["groupBy", "comparison"].includes(type) || this.searchMenuTypes.has(type);
         const facets = [];
         for (const facet of this._getFacets()) {
-            if (!isValidType(facet.type)) {
+            if (facet.type === "groupBy" && !this.searchMenuTypes.has(facet.type)) {
                 continue;
             }
             facets.push(facet);
@@ -656,7 +588,6 @@ export class SearchModel extends EventBus {
             const searchItem = this.searchItems[queryElem.searchItemId];
             return searchItem.groupId !== groupId;
         });
-        this._checkComparisonStatus();
         this._checkOrderByCountStatus();
         this._notify();
     }
@@ -693,52 +624,6 @@ export class SearchModel extends EventBus {
         const state = {};
         execute(mapToArray, this, state);
         return state;
-    }
-
-    getFullComparison() {
-        let searchItem = null;
-        for (const queryElem of this.query.slice().reverse()) {
-            const item = this.searchItems[queryElem.searchItemId];
-            if (item.type === "comparison") {
-                searchItem = item;
-                break;
-            } else if (item.type === "favorite" && item.comparison) {
-                searchItem = item;
-                break;
-            }
-        }
-        if (!searchItem) {
-            return null;
-        } else if (searchItem.type === "favorite") {
-            return searchItem.comparison;
-        }
-        const { dateFilterId, comparisonOptionId } = searchItem;
-        const dateFilter = this.searchItems[dateFilterId];
-        const { fieldName, description: dateFilterDescription } = dateFilter;
-        const selectedGeneratorIds = this._getSelectedGeneratorIds(dateFilterId);
-        // compute range and range description
-        const { domain: range, description: rangeDescription } = constructDateDomain(
-            this.referenceMoment,
-            dateFilter,
-            selectedGeneratorIds
-        );
-        // compute comparisonRange and comparisonRange description
-        const { domain: comparisonRange, description: comparisonRangeDescription } =
-            constructDateDomain(
-                this.referenceMoment,
-                dateFilter,
-                selectedGeneratorIds,
-                comparisonOptionId
-            );
-        return {
-            comparisonId: comparisonOptionId,
-            fieldName,
-            fieldDescription: dateFilterDescription,
-            range: range.toList(),
-            rangeDescription,
-            comparisonRange: comparisonRange.toList(),
-            comparisonRangeDescription,
-        };
     }
 
     getIrFilterValues(params) {
@@ -923,12 +808,6 @@ export class SearchModel extends EventBus {
         } else {
             if (searchItem.type === "favorite") {
                 this.query = [];
-            } else if (searchItem.type === "comparison") {
-                // make sure only one comparison can be active
-                this.query = this.query.filter((queryElem) => {
-                    const { type } = this.searchItems[queryElem.searchItemId];
-                    return type !== "comparison";
-                });
             }
             this.query.push({ searchItemId });
         }
@@ -966,10 +845,8 @@ export class SearchModel extends EventBus {
                 }
             } else {
                 if (generatorId.startsWith("custom")) {
-                    const comparisonId = this._getActiveComparison()?.id;
                     this.query = this.query.filter(
-                        (queryElem) =>
-                            ![searchItemId, comparisonId].includes(queryElem.searchItemId)
+                        (queryElem) => searchItemId !== queryElem.searchItemId
                     );
                     this.query.push({ searchItemId, generatorId });
                     continue;
@@ -991,7 +868,6 @@ export class SearchModel extends EventBus {
                 }
             }
         }
-        this._checkComparisonStatus();
         this._notify();
     }
 
@@ -1244,25 +1120,6 @@ export class SearchModel extends EventBus {
         }
     }
 
-    /**
-     * If a comparison is active, check if it should become inactive.
-     * The comparison should become inactive if the corresponding date filter has become
-     * inactive.
-     */
-    _checkComparisonStatus() {
-        const activeComparison = this._getActiveComparison();
-        if (!activeComparison) {
-            return;
-        }
-        const { dateFilterId, id } = activeComparison;
-        const dateFilterIsActive = this.query.some(
-            (queryElem) => queryElem.searchItemId === dateFilterId
-        );
-        if (!dateFilterIsActive) {
-            this.query = this.query.filter((queryElem) => queryElem.searchItemId !== id);
-        }
-    }
-
     _checkOrderByCountStatus() {
         if (
             this.orderByCount &&
@@ -1378,28 +1235,6 @@ export class SearchModel extends EventBus {
     }
 
     /**
-     * Starting from the array of date filters, create the filters of type
-     * 'comparison'.
-     * @param {Object[]} dateFilters
-     */
-    _createGroupOfComparisons(dateFilters) {
-        const preSearchItem = [];
-        for (const dateFilter of dateFilters) {
-            for (const comparisonOption of this.comparisonOptions) {
-                const { id: dateFilterId, description } = dateFilter;
-                const preFilter = {
-                    type: "comparison",
-                    comparisonOptionId: comparisonOption.id,
-                    description: `${description}: ${comparisonOption.description}`,
-                    dateFilterId,
-                };
-                preSearchItem.push(preFilter);
-            }
-        }
-        this._createGroupOfSearchItems(preSearchItem);
-    }
-
-    /**
      * Add filters of type 'filter' determined by the key array dynamicFilters.
      */
     _createGroupOfDynamicFilters(dynamicFilters) {
@@ -1470,18 +1305,6 @@ export class SearchModel extends EventBus {
             });
         }
         switch (searchItem.type) {
-            case "comparison": {
-                const { dateFilterId } = searchItem;
-                const dateFilterIsActive = this.query.some(
-                    (queryElem) =>
-                        queryElem.searchItemId === dateFilterId &&
-                        !queryElem.generatorId.startsWith("custom")
-                );
-                if (!dateFilterIsActive) {
-                    return null;
-                }
-                break;
-            }
             case "dateFilter":
                 enrichSearchItem.options = _enrichOptions(
                     getPeriodOptions(this.referenceMoment, searchItem.optionsParams),
@@ -1616,16 +1439,6 @@ export class SearchModel extends EventBus {
         await this._fetchCategories(categoriesToLoad);
         await this._fetchFilters(filtersToLoad);
         this.searchPanelInfo.loaded = true;
-    }
-
-    _getActiveComparison() {
-        for (const queryElem of this.query) {
-            const searchItem = this.searchItems[queryElem.searchItemId];
-            if (searchItem.type === "comparison") {
-                return searchItem;
-            }
-        }
-        return null;
     }
 
     /**
@@ -1769,9 +1582,7 @@ export class SearchModel extends EventBus {
             let title;
             let type;
             for (const activeItem of group.activeItems) {
-                const domain = this._getSearchItemDomain(activeItem, {
-                    withDateFilterDomain: true,
-                });
+                const domain = this._getSearchItemDomain(activeItem);
                 if (domain) {
                     groupActiveItemDomains.push(domain);
                 }
@@ -2093,7 +1904,6 @@ export class SearchModel extends EventBus {
         }
         const domain = this._getDomain({ raw: true, withGlobal: false }).toString();
         const groupBys = this._getGroupBy();
-        const comparison = this.getFullComparison();
         const orderBy = localOrderBy || this._getOrderBy();
         const userId = isShared ? false : user.userId;
 
@@ -2118,11 +1928,6 @@ export class SearchModel extends EventBus {
             user_id: userId,
             context: { group_by: groupBys, ...context },
         };
-
-        if (comparison) {
-            preFavorite.comparison = comparison;
-            irFilter.context.comparison = comparison;
-        }
 
         return { preFavorite, irFilter };
     }
@@ -2202,10 +2007,8 @@ export class SearchModel extends EventBus {
 
     /**
      * Return the domain of the provided filter.
-     * @param {Object} [options={}]
-     * @param {boolean} [options.withDateFilterDomain]
      */
-    _getSearchItemDomain(activeItem, options = {}) {
+    _getSearchItemDomain(activeItem) {
         const { searchItemId } = activeItem;
         const searchItem = this.searchItems[searchItemId];
         switch (searchItem.type) {
@@ -2214,14 +2017,7 @@ export class SearchModel extends EventBus {
                 return this._getFieldDomain(searchItem, activeItem.autocompletValues);
             }
             case "dateFilter": {
-                const { dateFilterId } = this._getActiveComparison() || {};
-                if (
-                    options.withDateFilterDomain ||
-                    !(this.searchMenuTypes.has("comparison") && dateFilterId === searchItemId)
-                ) {
-                    return this._getDateFilterDomain(searchItem, activeItem.generatorIds);
-                }
-                return new Domain([]);
+                return this._getDateFilterDomain(searchItem, activeItem.generatorIds);
             }
             case "filter":
             case "favorite": {
@@ -2296,19 +2092,6 @@ export class SearchModel extends EventBus {
             groupBys = context.group_by;
             delete context.group_by;
         }
-        let comparison;
-        if (context.comparison) {
-            comparison = context.comparison;
-            if (typeof comparison.range === "string") {
-                // legacy case
-                comparison.range = new Domain(comparison.range).toList();
-            }
-            if (typeof comparison.comparisonRange === "string") {
-                // legacy case
-                comparison.comparisonRange = new Domain(comparison.comparisonRange).toList();
-            }
-            delete context.comparison;
-        }
         let sort;
         try {
             sort = JSON.parse(irFilter.sort);
@@ -2351,9 +2134,6 @@ export class SearchModel extends EventBus {
         };
         if (irFilter.is_default) {
             favorite.isDefault = irFilter.is_default;
-        }
-        if (comparison) {
-            favorite.comparison = comparison;
         }
         return favorite;
     }
@@ -2411,7 +2191,6 @@ export class SearchModel extends EventBus {
     }
 
     _reset() {
-        delete this._comparison;
         this._context = null;
         this._domain = null;
         this._groupBy = null;

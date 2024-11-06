@@ -524,50 +524,6 @@ describe.tags("desktop")("board_desktop", () => {
         });
     });
 
-    test("Dashboard should read comparison from context", async () => {
-        expect.assertions(2);
-        Partner._views["pivot,4"] = '<pivot><field name="int_field" type="measure"/></pivot>';
-        onRpc("/web/action/load", () => {
-            return Promise.resolve({
-                res_model: "partner",
-                views: [[4, "pivot"]],
-            });
-        });
-        await mountView({
-            type: "form",
-            resModel: "board",
-            arch: `
-                <form string="My Dashboard" js_class="board">
-                    <board style="2-1">
-                        <column>
-                            <action
-                                name="356"
-                                string="Sales Analysis pivot"
-                                view_mode="pivot"
-                                context="{
-                                    'comparison': {
-                                        'fieldName': 'date',
-                                        'domains': [
-                                            {
-                                                'arrayRepr': [],
-                                                'description': 'February 2023',
-                                            },
-                                            {
-                                                'arrayRepr': [],
-                                                'description': 'January 2023',
-                                            },
-                                        ]
-                                    },
-                                }"
-                            />
-                        </column>
-                    </board>
-                </form>`,
-        });
-        expect(".o_pivot_origin_row:eq(0)").toHaveText("January 2023");
-        expect(".o_pivot_origin_row:eq(1)").toHaveText("February 2023");
-    });
-
     test("Dashboard should use correct groupby when defined as a string of one field", async () => {
         expect.assertions(1);
         onRpc("/web/action/load", () => {

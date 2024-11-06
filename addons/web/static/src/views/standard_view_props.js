@@ -18,7 +18,6 @@ export const standardViewProps = {
     arch: { type: Element },
     bannerRoute: { type: String, optional: true },
     className: { type: String, optional: true },
-    comparison: { type: [Object, { value: null }], optional: true },
     context: { type: Object },
     createRecord: { type: Function, optional: true },
     display: { type: Object, optional: true },

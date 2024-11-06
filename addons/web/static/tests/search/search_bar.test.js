@@ -7,10 +7,9 @@ import {
     press,
     queryAll,
     queryAllTexts,
-    queryAllValues,
     queryFirst,
 } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, mockDate, mockTimeZone } from "@odoo/hoot-mock";
+import { Deferred, animationFrame, mockTimeZone } from "@odoo/hoot-mock";
 import { Component, onWillUpdateProps, xml } from "@odoo/owl";
 import {
     SELECTORS,
@@ -33,7 +32,6 @@ import {
     selectGroup,
     serverState,
     toggleMenuItem,
-    toggleMenuItemOption,
     toggleSearchBarMenu,
     validateSearch,
 } from "@web/../tests/web_test_helpers";
@@ -1298,107 +1296,6 @@ test("edit a favorite", async () => {
     await contains(".modal footer button").click();
     expect(`.modal`).toHaveCount(0);
     expect(getFacetTexts()).toEqual(["Bool\n>\nCompany", "Foo contains abc"]);
-});
-
-test("edit a date filter with comparison active", async () => {
-    mockDate("2023-04-28T13:40:00");
-    onRpc("/web/domain/validate", () => true);
-
-    await mountWithSearch(SearchBar, {
-        resModel: "partner",
-        searchMenuTypes: ["filter", "comparison"],
-        searchViewId: false,
-        searchViewArch: `
-            <search>
-                <filter name="birthday" string="Birthday" date="birthday"/>
-            </search>
-        `,
-        context: {
-            search_default_birthday: true,
-        },
-    });
-    expect(getFacetTexts()).toEqual(["Birthday: April 2023"]);
-    expect(`.o_searchview_facet.o_facet_with_domain .o_searchview_facet_label`).toHaveCount(1);
-
-    await toggleSearchBarMenu();
-    await toggleMenuItem("Birthday: Previous Period");
-    expect(getFacetTexts()).toEqual(["Birthday: April 2023", "Birthday: Previous Period"]);
-    expect(`.o_searchview_facet.o_facet_with_domain .o_searchview_facet_label`).toHaveCount(1);
-
-    await contains(".o_facet_with_domain .o_searchview_facet_label").click();
-    expect(`.modal`).toHaveCount(1);
-    expect(SELECTORS.condition).toHaveCount(1);
-    expect(getCurrentPath()).toBe("Birthday");
-    expect(getCurrentOperator()).toBe("is between");
-    expect(queryAllValues`.o_datetime_input`).toEqual(["04/01/2023", "04/30/2023"]);
-
-    await contains(".modal footer button").click();
-    expect(`.modal`).toHaveCount(0);
-    expect(getFacetTexts()).toEqual([`Birthday is between 04/01/2023 and 04/30/2023`]);
-});
-
-test("toggle a custom option in a date filter", async () => {
-    mockDate("2023-04-28T13:40:00");
-    onRpc("/web/domain/validate", () => true);
-
-    await mountWithSearch(SearchBar, {
-        resModel: "partner",
-        searchMenuTypes: ["filter", "comparison"],
-        searchViewId: false,
-        searchViewArch: `
-            <search>
-                <filter name="birthday" string="Birthday" date="birthday">
-                    <filter name="birthday_today" string="Today" domain="[('birthday', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                </filter>
-            </search>
-        `,
-        context: {
-            search_default_birthday: true,
-        },
-    });
-    expect(getFacetTexts()).toEqual(["Birthday: April 2023"]);
-
-    await toggleSearchBarMenu();
-    expect(`.o_dropdown_container.o_comparison_menu`).toHaveCount(1);
-
-    await toggleMenuItem("Birthday");
-    await toggleMenuItemOption("Birthday", "Today");
-    expect(getFacetTexts()).toEqual(["Birthday: Today"]);
-
-    await toggleSearchBarMenu();
-    expect(`.o_dropdown_container.o_comparison_menu`).toHaveCount(0);
-});
-
-test("toggle a custom option in a date filter with comparison active", async () => {
-    mockDate("2023-04-28T13:40:00");
-    onRpc("/web/domain/validate", () => true);
-
-    await mountWithSearch(SearchBar, {
-        resModel: "partner",
-        searchMenuTypes: ["filter", "comparison"],
-        searchViewId: false,
-        searchViewArch: `
-            <search>
-                <filter name="birthday" string="Birthday" date="birthday">
-                    <filter name="birthday_today" string="Today" domain="[('birthday', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                </filter>
-            </search>
-        `,
-        context: {
-            search_default_birthday: true,
-        },
-    });
-
-    await toggleSearchBarMenu();
-    await toggleMenuItem("Birthday: Previous Period");
-    expect(getFacetTexts()).toEqual(["Birthday: April 2023", "Birthday: Previous Period"]);
-
-    await toggleMenuItem("Birthday");
-    await toggleMenuItemOption("Birthday", "Today");
-    expect(getFacetTexts()).toEqual(["Birthday: Today"]);
-
-    await toggleSearchBarMenu();
-    expect(`.o_dropdown_container.o_comparison_menu`).toHaveCount(0);
 });
 
 test("edit a field", async () => {

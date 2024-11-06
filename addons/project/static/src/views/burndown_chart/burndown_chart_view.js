@@ -10,7 +10,6 @@ const burndownChartGraphView = {
   buttonTemplate: "project.BurndownChartView.Buttons",
   hideCustomGroupBy: true,
   Model: BurndownChartModel,
-  searchMenuTypes: graphView.searchMenuTypes.filter(menuType => menuType !== "comparison"),
   SearchModel: BurndownChartSearchModel,
 };
 

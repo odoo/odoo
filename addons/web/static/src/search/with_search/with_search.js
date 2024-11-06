@@ -3,7 +3,7 @@ import { CallbackRecorder, useSetupAction } from "@web/search/action_hook";
 import { SearchModel } from "@web/search/search_model";
 import { useBus, useService } from "@web/core/utils/hooks";
 
-export const SEARCH_KEYS = ["comparison", "context", "domain", "groupBy", "orderBy"];
+export const SEARCH_KEYS = ["context", "domain", "groupBy", "orderBy"];
 
 export class WithSearch extends Component {
     static template = "web.WithSearch";
@@ -19,7 +19,6 @@ export class WithSearch extends Component {
         display: { type: Object, optional: true },
 
         // search query elements
-        comparison: { type: [Object, { value: null }], optional: true },
         context: { type: Object, optional: true },
         domain: { type: Array, element: [String, Array], optional: true },
         groupBy: { type: Array, element: String, optional: true },
