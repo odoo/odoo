@@ -205,24 +205,28 @@ class AccountTax(models.Model):
             domains = []
             for tax in taxes:
                 if tax.type_tax_use != 'none':
+                    domain = []
+                    for lang in self.env['res.lang'].get_installed():
+                        if domain:
+                            domain = ['|'] + domain
+                        domain += [('name@' + lang[0], '=', tax.with_context(lang=lang[0]).name)]
                     domains.append([
                         ('company_id', 'child_of', tax.company_id.root_id.id),
-                        ('name', '=', tax.name),
+                        *domain,
                         ('type_tax_use', '=', tax.type_tax_use),
                         ('tax_scope', '=', tax.tax_scope),
                         ('country_id', '=', tax.country_id.id),
                         ('id', '!=', tax.id),
                     ])
-            for lang in self.env['res.lang'].get_installed():
-                if duplicates := self.with_context(lang=lang[0]).search(expression.OR(domains)):
-                    raise ValidationError(
-                        _("Tax names must be unique!")
-                        + "\n" + "\n".join(_(
-                            "- %(name)s in %(company)s",
-                            name=duplicate.name,
-                            company=duplicate.company_id.name,
-                        ) for duplicate in duplicates)
-                    )
+            if duplicates := self.search(expression.OR(domains)):
+                raise ValidationError(
+                    _("Tax names must be unique!")
+                    + "\n" + "\n".join(_(
+                        "- %(name)s in %(company)s",
+                        name=duplicate.name,
+                        company=duplicate.company_id.name,
+                    ) for duplicate in duplicates)
+                )
 
     @api.constrains('tax_group_id')
     def validate_tax_group_id(self):
