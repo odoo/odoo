@@ -846,7 +846,7 @@ Please change the quantity done or the rounding precision of your unit of measur
             warehouse = self.location_dest_id.warehouse_id
 
         if warehouse:
-            action['context']['warehouse_id'] = warehouse.id
+            action['context']['warehouse_id'] = [warehouse.id]
         return action
 
     def _do_unreserve(self):

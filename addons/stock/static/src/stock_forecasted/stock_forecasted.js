@@ -88,7 +88,7 @@ export class StockForecasted extends Component {
 
     async updateWarehouse(id) {
         const hasPreviousValue = this.context.warehouse_id !== undefined;
-        this.context.warehouse_id = id;
+        this.context.warehouse_id = [id];
         if (hasPreviousValue) {
             await this.reloadReport();
         }
@@ -107,12 +107,9 @@ export class StockForecasted extends Component {
     }
 
     get graphDomain() {
-        const warehouseIds = Array.isArray(this.context.warehouse_id)
-            ? this.context.warehouse_id
-            : [this.context.warehouse_id];
         const domain = [
             ["state", "=", "forecast"],
-            ["warehouse_id", "in", warehouseIds],
+            ["warehouse_id", "in", this.context.warehouse_id],
         ];
         if (this.resModel === "product.template") {
             domain.push(["product_tmpl_id", "=", this.productId]);
