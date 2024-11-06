@@ -198,6 +198,70 @@ class TestDiscussChannelAccess(MailCommon):
             ("user", "group_failing", "outside", "other", "write", False),
             ("user", "group_failing", "outside", "other", "unlink", False),
         ]
+        cls._group_type_channel_access_cases = [
+            ("public", "group", "member", "read", True),
+            ("public", "group", "member", "write", False),
+            ("public", "group", "member", "unlink", False),
+            ("public", "group", "outside", "create", False),
+            ("public", "group", "outside", "read", False),
+            ("public", "group", "outside", "write", False),
+            ("public", "group", "outside", "unlink", False),
+            ("portal", "group", "member", "read", True),
+            ("portal", "group", "member", "write", False),
+            ("portal", "group", "member", "unlink", False),
+            ("portal", "group", "outside", "create", False),
+            ("portal", "group", "outside", "read", False),
+            ("portal", "group", "outside", "write", False),
+            ("portal", "group", "outside", "unlink", False),
+            ("user", "group", "member", "read", True),
+            ("user", "group", "member", "write", True),
+            ("user", "group", "member", "unlink", False),
+            ("user", "group", "outside", "create", True),
+            ("user", "group", "outside", "read", False),
+            ("user", "group", "outside", "write", False),
+            ("user", "group", "outside", "unlink", False),
+        ]
+        cls._group_type_channel_member_access_cases = [
+            ("public", "group", "member", "self", "create", False),
+            ("public", "group", "member", "self", "read", True),
+            ("public", "group", "member", "self", "write", True),
+            ("public", "group", "member", "self", "unlink", True),
+            ("public", "group", "member", "other", "create", False),
+            ("public", "group", "member", "other", "read", True),
+            ("public", "group", "member", "other", "write", False),
+            ("public", "group", "member", "other", "unlink", False),
+            ("public", "group", "outside", "self", "create", False),
+            ("public", "group", "outside", "other", "create", False),
+            ("public", "group", "outside", "other", "read", False),
+            ("public", "group", "outside", "other", "write", False),
+            ("public", "group", "outside", "other", "unlink", False),
+            ("portal", "group", "member", "self", "create", False),
+            ("portal", "group", "member", "self", "read", True),
+            ("portal", "group", "member", "self", "write", True),
+            ("portal", "group", "member", "self", "unlink", True),
+            ("portal", "group", "member", "other", "create", False),
+            ("portal", "group", "member", "other", "read", True),
+            ("portal", "group", "member", "other", "write", False),
+            ("portal", "group", "member", "other", "unlink", False),
+            ("portal", "group", "outside", "self", "create", False),
+            ("portal", "group", "outside", "other", "create", False),
+            ("portal", "group", "outside", "other", "read", False),
+            ("portal", "group", "outside", "other", "write", False),
+            ("portal", "group", "outside", "other", "unlink", False),
+            ("user", "group", "member", "self", "create", False),
+            ("user", "group", "member", "self", "read", True),
+            ("user", "group", "member", "self", "write", True),
+            ("user", "group", "member", "self", "unlink", True),
+            ("user", "group", "member", "other", "create", True),
+            ("user", "group", "member", "other", "read", True),
+            ("user", "group", "member", "other", "write", False),
+            ("user", "group", "member", "other", "unlink", False),
+            ("user", "group", "outside", "self", "create", False),
+            ("user", "group", "outside", "other", "create", False),
+            ("user", "group", "outside", "other", "read", False),
+            ("user", "group", "outside", "other", "write", False),
+            ("user", "group", "outside", "other", "unlink", False),
+        ]
         cls.secret_group = cls.env["res.groups"].create({"name": "Secret User Group"})
         cls.env["ir.model.data"].create(
             {
@@ -288,24 +352,11 @@ class TestDiscussChannelAccess(MailCommon):
     def test_01_discuss_channel_access(self):
         cases = [
             *self._channel_type_channel_access_cases,
-            ("public", "group", "member", "read", True),
-            ("public", "group", "member", "write", False),
-            ("public", "group", "member", "unlink", False),
-            ("public", "group", "outside", "create", False),
-            ("public", "group", "outside", "read", False),
-            ("public", "group", "outside", "write", False),
-            ("public", "group", "outside", "unlink", False),
+            *self._group_type_channel_access_cases,
             ("public", "chat", "outside", "create", False),
             ("public", "chat", "outside", "read", False),
             ("public", "chat", "outside", "write", False),
             ("public", "chat", "outside", "unlink", False),
-            ("portal", "group", "member", "read", True),
-            ("portal", "group", "member", "write", False),
-            ("portal", "group", "member", "unlink", False),
-            ("portal", "group", "outside", "create", False),
-            ("portal", "group", "outside", "read", False),
-            ("portal", "group", "outside", "write", False),
-            ("portal", "group", "outside", "unlink", False),
             ("portal", "chat", "member", "read", True),
             ("portal", "chat", "member", "write", False),
             ("portal", "chat", "member", "unlink", False),
@@ -313,13 +364,6 @@ class TestDiscussChannelAccess(MailCommon):
             ("portal", "chat", "outside", "read", False),
             ("portal", "chat", "outside", "write", False),
             ("portal", "chat", "outside", "unlink", False),
-            ("user", "group", "member", "read", True),
-            ("user", "group", "member", "write", True),
-            ("user", "group", "member", "unlink", False),
-            ("user", "group", "outside", "create", True),
-            ("user", "group", "outside", "read", False),
-            ("user", "group", "outside", "write", False),
-            ("user", "group", "outside", "unlink", False),
             ("user", "chat", "member", "read", True),
             ("user", "chat", "member", "write", True),
             ("user", "chat", "member", "unlink", False),
@@ -331,9 +375,11 @@ class TestDiscussChannelAccess(MailCommon):
         self._test_discuss_channel_access(cases, for_sub_channel=False)
 
     def test_02_discuss_sub_channel_access(self):
-        self._test_discuss_channel_access(
-            self._channel_type_channel_access_cases, for_sub_channel=True
-        )
+        cases = [
+            *self._channel_type_channel_access_cases,
+            *self._group_type_channel_access_cases,
+        ]
+        self._test_discuss_channel_access(cases, for_sub_channel=True)
 
     def _test_discuss_channel_member_access(self, cases, for_sub_channel):
         """
@@ -389,37 +435,12 @@ class TestDiscussChannelAccess(MailCommon):
     def test_10_discuss_channel_member_access(self):
         cases = [
             *self._channel_type_channel_member_access_cases,
-            ("public", "group", "member", "self", "create", False),
-            ("public", "group", "member", "self", "read", True),
-            ("public", "group", "member", "self", "write", True),
-            ("public", "group", "member", "self", "unlink", True),
-            ("public", "group", "member", "other", "create", False),
-            ("public", "group", "member", "other", "read", True),
-            ("public", "group", "member", "other", "write", False),
-            ("public", "group", "member", "other", "unlink", False),
-            ("public", "group", "outside", "self", "create", False),
-            ("public", "group", "outside", "other", "create", False),
-            ("public", "group", "outside", "other", "read", False),
-            ("public", "group", "outside", "other", "write", False),
-            ("public", "group", "outside", "other", "unlink", False),
+            *self._group_type_channel_member_access_cases,
             ("public", "chat", "outside", "self", "create", False),
             ("public", "chat", "outside", "other", "create", False),
             ("public", "chat", "outside", "other", "read", False),
             ("public", "chat", "outside", "other", "write", False),
             ("public", "chat", "outside", "other", "unlink", False),
-            ("portal", "group", "member", "self", "create", False),
-            ("portal", "group", "member", "self", "read", True),
-            ("portal", "group", "member", "self", "write", True),
-            ("portal", "group", "member", "self", "unlink", True),
-            ("portal", "group", "member", "other", "create", False),
-            ("portal", "group", "member", "other", "read", True),
-            ("portal", "group", "member", "other", "write", False),
-            ("portal", "group", "member", "other", "unlink", False),
-            ("portal", "group", "outside", "self", "create", False),
-            ("portal", "group", "outside", "other", "create", False),
-            ("portal", "group", "outside", "other", "read", False),
-            ("portal", "group", "outside", "other", "write", False),
-            ("portal", "group", "outside", "other", "unlink", False),
             ("portal", "chat", "member", "self", "create", False),
             ("portal", "chat", "member", "self", "read", True),
             ("portal", "chat", "member", "self", "write", True),
@@ -433,19 +454,6 @@ class TestDiscussChannelAccess(MailCommon):
             ("portal", "chat", "outside", "other", "read", False),
             ("portal", "chat", "outside", "other", "write", False),
             ("portal", "chat", "outside", "other", "unlink", False),
-            ("user", "group", "member", "self", "create", False),
-            ("user", "group", "member", "self", "read", True),
-            ("user", "group", "member", "self", "write", True),
-            ("user", "group", "member", "self", "unlink", True),
-            ("user", "group", "member", "other", "create", True),
-            ("user", "group", "member", "other", "read", True),
-            ("user", "group", "member", "other", "write", False),
-            ("user", "group", "member", "other", "unlink", False),
-            ("user", "group", "outside", "self", "create", False),
-            ("user", "group", "outside", "other", "create", False),
-            ("user", "group", "outside", "other", "read", False),
-            ("user", "group", "outside", "other", "write", False),
-            ("user", "group", "outside", "other", "unlink", False),
             ("user", "chat", "member", "self", "create", False),
             ("user", "chat", "member", "self", "read", True),
             ("user", "chat", "member", "self", "write", True),
@@ -463,9 +471,11 @@ class TestDiscussChannelAccess(MailCommon):
         self._test_discuss_channel_member_access(cases, for_sub_channel=False)
 
     def test_11_discuss_sub_channel_member_access(self):
-        self._test_discuss_channel_member_access(
-            self._channel_type_channel_member_access_cases, for_sub_channel=True
-        )
+        cases = [
+            *self._channel_type_channel_member_access_cases,
+            *self._group_type_channel_member_access_cases,
+        ]
+        self._test_discuss_channel_member_access(cases, for_sub_channel=True)
 
     def _get_channel_id(self, user_key, channel_key, membership, sub_channel):
         partner = self.env["res.partner"] if user_key == "public" else self.users[user_key].partner_id

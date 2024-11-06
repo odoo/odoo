@@ -118,11 +118,12 @@ class DiscussChannel(models.Model):
             and (
                 c.parent_channel_id.parent_channel_id
                 or c.parent_channel_id.channel_type not in ["channel", "group"]
+                or c.parent_channel_id.channel_type != c.channel_type
             )
         ):
             raise ValidationError(
                 _(
-                    "Cannot create %(channels)s: parent should not be a sub-channel and should be of type 'channel' or 'group'.",
+                    "Cannot create %(channels)s: parent should not be a sub-channel and should be of type 'channel' or 'group'. The sub-channel should have the same type as the parent.",
                     channels=format_list(self.env, failing_channels.mapped("name")),
                 ),
             )
@@ -1147,7 +1148,7 @@ class DiscussChannel(models.Model):
         sub_channel = self.create(
             {
                 "channel_member_ids": [Command.create({"partner_id": self.env.user.partner_id.id})],
-                "channel_type": "channel",
+                "channel_type": self.channel_type,
                 "from_message_id": message.id,
                 "name": name or (message.body.striptags()[:30] if message else _("New Thread")),
                 "parent_channel_id": self.id,
