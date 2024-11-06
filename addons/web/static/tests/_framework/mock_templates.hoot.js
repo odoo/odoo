@@ -56,17 +56,17 @@ const { loader } = odoo;
  */
 export function makeTemplateFactory(name, factory) {
     return () => {
-        if (!loader.modules.has(name)) {
-            const factory = factory.fn;
-            factory.fn = (...args) => {
-                const exports = factory(...args);
-
-                exports.registerTemplateProcessor(replaceAttributes);
-
-                return exports;
-            };
-            loader.startModule(name);
+        if (loader.modules.has(name)) {
+            return loader.modules.get(name);
         }
-        return loader.modules.get(name);
+
+        const factoryFn = factory.fn;
+        factory.fn = (...args) => {
+            const exports = factoryFn(...args);
+            exports.registerTemplateProcessor(replaceAttributes);
+            return exports;
+        };
+
+        return loader.startModule(name);
     };
 }
