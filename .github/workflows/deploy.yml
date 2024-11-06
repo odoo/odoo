@@ -36,10 +36,10 @@ jobs:
         run: |
           ssh -tt -o StrictHostKeyChecking=no -i ./PRIVATE_KEY.pem ${{ vars.EC2_USER_NAME }}@${{ vars.EC2_INSTANCE_ADDRESS }} <<EOF
           cd /home/ubuntu
-          service odoo stop
+          sudo service odoo stop
           git branch
           git pull
-          service odoo start
+          sudo service odoo start
           EOF
 
       - name: Cleanup SSH Key
