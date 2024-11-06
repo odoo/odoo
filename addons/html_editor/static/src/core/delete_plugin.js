@@ -39,6 +39,8 @@ import {
 } from "../utils/position";
 import { CTYPES } from "../utils/content_types";
 import { withSequence } from "@html_editor/utils/resource";
+import { selectionsAreEqual } from "@html_editor/utils/selection";
+import { isAndroid, isBrowserChrome } from "@web/core/browser/feature_detection";
 
 /**
  * @typedef {Object} RangeLike
@@ -51,14 +53,17 @@ import { withSequence } from "@html_editor/utils/resource";
 /** @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection */
 
 export class DeletePlugin extends Plugin {
-    static dependencies = ["selection"];
+    static dependencies = ["selection", "history"];
     static name = "delete";
     static shared = ["deleteRange", "isUnmergeable"];
     resources = {
         onBeforeInput: [
             withSequence(5, this.onBeforeInputInsertText.bind(this)),
             this.onBeforeInputDelete.bind(this),
+            this.onBeforeInputAndroid.bind(this),
         ],
+        onInput: this.onInput.bind(this),
+        onSelectionChange: withSequence(5, this.onSelectionChange.bind(this)),
         shortcuts: [
             { hotkey: "backspace", command: "DELETE_BACKWARD" },
             { hotkey: "delete", command: "DELETE_FORWARD" },
@@ -87,6 +92,20 @@ export class DeletePlugin extends Plugin {
     setup() {
         this.findPreviousPosition = this.makeFindPositionFn("backward");
         this.findNextPosition = this.makeFindPositionFn("forward");
+        this.config.disableFloatingToolbar = true;
+
+        const loggerArea = this.document.createElement("div");
+        this.editable.before(loggerArea);
+        this.log = (message) => {
+            const p = this.document.createElement("P");
+            p.textContent = message;
+            loggerArea.append(p);
+            if (loggerArea.childElementCount > 5) {
+                loggerArea.firstChild.remove();
+            }
+        };
+
+        this.setupAndroid();
     }
 
     handleCommand(command, payload) {
@@ -153,20 +172,24 @@ export class DeletePlugin extends Plugin {
      * @param {"backward"|"forward"} direction
      * @param {"character"|"word"|"line"} granularity
      */
-    delete(direction, granularity) {
+    delete(direction, granularity, { addStep = true } = {}) {
         const selection = this.shared.getEditableSelection();
 
         if (!selection.isCollapsed) {
             this.deleteSelection(selection);
+            console.log("delete selection called");
         } else if (direction === "backward") {
             this.deleteBackward(selection, granularity);
+            console.log("delete backward called");
         } else if (direction === "forward") {
             this.deleteForward(selection, granularity);
         } else {
             throw new Error("Invalid direction");
         }
 
-        this.dispatch("ADD_STEP");
+        if (addStep) {
+            this.dispatch("ADD_STEP");
+        }
     }
 
     // --------------------------------------------------------------------------
@@ -1174,8 +1197,14 @@ export class DeletePlugin extends Plugin {
         };
         const argsForDelete = handledInputTypes[ev.inputType];
         if (argsForDelete) {
-            ev.preventDefault();
+            // this.log(`onBeforeInputDelete: ${serializeCurrentSelection()}`);
             this.delete(...argsForDelete);
+            if (isAndroid()) {
+                this.preventDefaultDeleteAndroidChrome(ev);
+                // this.handleBeforeInputAndroid(ev, argsForDelete);
+            } else {
+                ev.preventDefault();
+            }
         }
     }
 
@@ -1187,6 +1216,256 @@ export class DeletePlugin extends Plugin {
             }
             // Default behavior: insert text and trigger input event
         }
+    }
+
+    // ======== ANDROID =============
+
+    setupAndroid() {
+        this.listeners = {
+            beforeinput: new Set(),
+            input: new Set(),
+            selectionchange: new Set(),
+        };
+    }
+
+    // async waitForEvent(evType, predicate) {
+    //     return new Promise((resolve) => {
+    //         const listener = (ev) => {
+    //             if (!predicate || predicate(ev)) {
+    //                 resolve();
+    //                 this.listeners[evType].delete(listener);
+    //             }
+    //         };
+    //         this.listeners[evType].add(listener);
+    //     });
+    // }
+
+    runOnce(evType, predicate, callback) {
+        const listener = (ev) => {
+            if (!predicate || predicate(ev)) {
+                callback(ev);
+                this.listeners[evType].delete(listener);
+            }
+        };
+        this.listeners[evType].add(listener);
+        const cancel = () => this.listeners[evType].delete(listener);
+        return cancel;
+    }
+
+    waitForEvent(evType, predicate) {
+        return new Promise((resolve) => this.runOnce(evType, predicate, resolve));
+    }
+
+    runLast(evType, callback) {
+        this.listeners[evType].clear();
+        return this.runOnce(evType, null, callback);
+    }
+
+    // runOnce(evType, callback) {
+    //     const runOnce = (ev) => {
+    //         callback(ev);
+    //         this.listeners[evType].delete(runOnce);
+    //     }
+    //     this.listeners[evType].add(runOnce);
+    // }
+    
+    // cancel(evType, callback) {
+    //     this.listeners[evType].delete(callback);
+    // }
+
+    // runSameTick(evType, callback) {
+    //     this.listeners[evType].add(callback);
+    //     setTimeout(() => this.listeners[evType].delete(callback));
+    // }
+
+
+    // addSameTickListener(evType, callback) {
+    //     this.listeners[evType].push(callback);
+    //     setTimeout(() => {
+    //         this.listeners[evType] = [];
+    //     });
+    // }
+
+    // Beforeinput event of type deleteContentBackward cannot be default
+    // prevented in Android Chrome. So we need to revert eventual mutations and
+    // selection change.
+    async preventDefaultDeleteAndroidChrome(ev) {
+        // Helpers
+        const runOnce = (evType, predicate, callback) => {
+            const listener = (ev) => {
+                if (!predicate || predicate(ev)) {
+                    callback(ev);
+                    this.listeners[evType].delete(listener);
+                }
+            };
+            this.listeners[evType].add(listener);
+            // return () => this.listeners[evType].delete(listener); // cancel
+        };
+        // const runLast = (evType, callback) => {
+        //     this.listeners[evType].clear();
+        //     return runOnce(evType, null, callback);
+        // };
+        const waitForEvent = (evType, predicate) =>
+            new Promise((resolve) => this.runOnce(evType, predicate, resolve));
+        const watchForMutations = () => {
+            const records = [];
+            const observerCallback = (mutations) => records.push(...mutations);
+            const observer = new MutationObserver(observerCallback);
+            const observerOptions = { childList: true, subtree: true, characterData: true };
+            observer.observe(this.editable, observerOptions);
+            return () => {
+                observerCallback(observer.takeRecords());
+                observer.disconnect();
+                return records.length > 0;
+            };
+        };
+
+        // Revert mutations
+        const inputType = ev.inputType;
+        const restoreDOM = this.shared.makeSavePoint();
+        await waitForEvent("input", (ev) => ev.inputType === inputType);
+        restoreDOM();
+
+        // Revert selection change that might happen after input...
+        const { restore: restoreSelection } = this.shared.preserveSelection();
+
+        // ... unless mutations happended in the meantime (e.g. dictionary input).
+        const mutations = watchForMutations();
+        runOnce("selectionchange", null, () => {
+            if (!mutations()) {
+                restoreSelection({ log: true });
+            }
+        });
+
+        // let cancelOnSelectionChange;
+        // const observerCallback = (mutations, observer) => {
+        //     if (mutations.length) {
+        //         observer.disconnect();
+        //         cancelOnSelectionChange();
+        //     }
+        // };
+        // const observer = new MutationObserver(observerCallback);
+        // observer.observe(this.editable, { childList: true, subtree: true, characterData: true });
+        // runOnce("selectionchange", null, () => {
+        //     observerCallback(observer.takeRecords(), observer);
+        // });
+        // cancelOnSelectionChange = runOnce("selectionchange", null, restoreSelection);
+
+
+        // Don't interfere with the selection if delete is followed by text
+        // input in the same tick (dictionary replacement).
+        // const cancelOnBeforeInput = runOnce(
+        //     "beforeinput",
+        //     (ev) => ev.inputType === "insertText",
+        //     cancelOnSelectionChange
+        // );
+        // setTimeout(cancelOnBeforeInput);
+    }
+        // const onSelectionChange = () => {
+        //     restoreSelection({ log: true });
+        //     // run only once.
+        //     this.listeners.selectionchange.delete(onSelectionChange)
+        // };
+        // this.listeners.selectionchange.add(onSelectionChange);
+
+        // cancel it in case a beforeinput insertText happens in the same tick
+        // const onBeforeInput = (ev) => {
+        //     if (ev.inputType === "insertText") {
+        //         this.listeners.selectionchange.delete(onSelectionChange);
+        //     }
+        // };
+        // this.listeners.beforeinput.add(onBeforeInput);
+        // setTimeout(() => this.listeners.beforeinput.delete(onBeforeInput));
+        
+
+     
+
+
+        // const onInput = (ev) => {
+        //     // if (ev.inputType === inputType) {
+        //         console.log("preventing default on chrome");
+        //         // Mind the mutations
+        //         restoreDOM();
+        //         // Mind the selection change that might happen afterwards (Chrome
+        //         // bug)...
+        //         const { restore: restoreSelection } = this.shared.preserveSelection();
+        //         const onSelectionChange = () => {
+        //             restoreSelection({ log: true });
+        //             // run only once.
+        //             this.listeners.selectionchange.delete(onSelectionChange)
+        //         }
+        //         this.listeners.selectionchange.add(onSelectionChange);
+
+        //         const onBeforeInput = (ev) => {
+        //             if (ev.inputType === "insertText") {
+        //                 this.listeners.selectionchange.delete(onSelectionChange);
+        //             }
+        //         };
+        //         this.listeners.beforeinput.add(onBeforeInput);
+        //         setTimeout(() => this.listeners.delete(onBeforeInput));
+        //         // this.runOnceOnSelectionChange = ;
+        //         // ... but do not interfere with the selection if delete is followed
+        //         // by text input in the same tick (dictionary replacement).
+
+        //         this.addSameTickListener("beforeinput", (ev) => {
+        //             if (ev.inputType === "insertText") {
+        //                 delete this.runOnceOnSelectionChange;
+        //             }
+        //         });
+        //     // }
+        //     // run only once.
+        //     this.listeners.input.delete(onInput);
+        // this.listeners.input.add(onInput);
+        // this.addSameTickListener("input", (ev) => {
+            // }
+            // this.clearScheduledTasks("selectionchange");
+            // const restoreSelectionTask = this.scheduleTask("selectionchange", restoreSelection);
+            // this.scheduleTaskSameTick("beforeinput", (ev) => {
+            // });
+        // });
+        // Chrome might change the selection *after* the input event to a
+        // bad place, so we want to revert it.
+        // But we don't want to interfere if it's followed by text input in
+        // the same tick (dictionary replacement).
+
+        // this.runOnceOnInput = () => {
+        //     revertDomChanges();
+        //     // Chrome might change the selection *after* the input event to a
+        //     // bad place, so we want to revert it.
+        //     const { restore: revertSelectionChange } = this.shared.preserveSelection();
+        //     this.runOnceOnSelectionChange = revertSelectionChange;
+        //     // But we don't want to interfere if it's followed by text input in
+        //     // the same tick (dictionary replacement).
+        //     const cancelOnSelectionChange = (ev) => {
+        //         if (ev.inputType === "insertText") {
+        //             delete this.runOnceOnSelectionChange;
+        //         }
+        //     };
+        //     this.editable.addEventListener("beforeinput", cancelOnSelectionChange);
+        //     setTimeout(() => {
+        //         this.editable.removeEventListener("beforeinput", cancelOnSelectionChange);
+        //     });
+        // };
+    // }
+
+    onBeforeInputAndroid(ev) {
+        this.listeners.beforeinput.forEach((listener) => listener(ev));
+        // this.runScheduledTasks("beforeinput", ev);
+    }
+
+    onInput(ev) {
+        this.listeners.input.forEach((listener) => listener(ev));
+        // this.runScheduledTasks("input", ev);
+    }
+
+    onSelectionChange({ editableSelection }) {
+        // this.log(`onSelectionChange: ${serializeCurrentSelection()}`);
+
+        // if (this.runOnceOnSelectionChange) {
+        //     this.runOnceOnSelectionChange();
+        //     delete this.runOnceOnSelectionChange;
+        // }
+        this.listeners.selectionchange.forEach((listener) => listener(editableSelection));
     }
 
     // ======== AD-HOC STUFF ========
@@ -1282,3 +1561,9 @@ export class DeletePlugin extends Plugin {
         return { startContainer, startOffset, endContainer, endOffset, commonAncestorContainer };
     }
 }
+
+const serializeCurrentSelection = () => {
+    const { anchorNode, anchorOffset, focusNode, focusOffset, isCollapsed } =
+        document.getSelection();
+    return `{ anchorNode: ${anchorNode?.nodeName}, anchorOffset: ${anchorOffset}, focusNode: ${focusNode?.nodeName}, focusOffset: ${focusOffset}, isCollapsed: ${isCollapsed} }`;
+};

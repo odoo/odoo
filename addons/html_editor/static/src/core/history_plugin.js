@@ -114,6 +114,16 @@ export class HistoryPlugin extends Plugin {
         this.observer = new MutationObserver(this.handleNewRecords.bind(this));
         this._cleanups.push(() => this.observer.disconnect());
         this.clean();
+        window.HistoryPlugin = this;
+
+        const undoButton = document.createElement("button");
+        undoButton.textContent = "Undo";
+        undoButton.onclick = () => this.undo();
+        const redoButton = document.createElement("button");
+        redoButton.textContent = "Redo";
+        redoButton.onclick = () => this.redo();
+        this.document.querySelector(".o_main_navbar").prepend(redoButton);
+        this.document.querySelector(".o_main_navbar").prepend(undoButton);
     }
     handleCommand(command, payload) {
         switch (command) {
@@ -955,6 +965,7 @@ export class HistoryPlugin extends Plugin {
         for (let i = this.steps.length - 1; i > stepIndex; i--) {
             const currentStep = this.steps[i];
             this.revertMutations(currentStep.mutations, { forNewStep: true });
+            console.log("mutations reversed");
             // Process (filter, handle and stage) mutations so that the
             // attribute comparison for the state change is done with the
             // intermediate attribute value and not with the final value in the

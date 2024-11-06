@@ -1,10 +1,12 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
-import { microTick, press } from "@odoo/hoot-dom";
-import { animationFrame, tick } from "@odoo/hoot-mock";
+import { manuallyDispatchProgrammaticEvent, microTick, press } from "@odoo/hoot-dom";
+import { animationFrame, tick, mockUserAgent } from "@odoo/hoot-mock";
 import { deleteBackward, insertText, tripleClick, undo } from "../_helpers/user_actions";
-import { getContent } from "../_helpers/selection";
+import { getContent, setSelection } from "../_helpers/selection";
+import { isBrowserChrome } from "@web/core/browser/feature_detection";
+import { patchWithCleanup } from "addons/web/static/tests/web_test_helpers";
 
 /**
  * content of the "deleteBackward" sub suite in editor.test.js
@@ -2077,6 +2079,31 @@ describe("Selection not collapsed", () => {
                         <div contenteditable="true"><p>[]<br></p></div>
                     </div>`),
             });
+        });
+    });
+    describe.tags("mobile")("Android test suite", () => {
+        const backspaceAndroid = async (editor) => {
+            const selection = editor.document.getSelection();
+            const dispatch = (type, eventInit) =>
+                manuallyDispatchProgrammaticEvent(editor.editable, type, eventInit);
+            await dispatch("keydown", { key: "Unidentified" });
+            selection.modify("extend", "backward", "character");
+            await dispatch("beforeinput", { inputType: "deleteContentBackward" });
+            await dispatch("input", { inputType: "deleteContentBackward" });
+            await dispatch("keyup", { key: "Unidentified" });
+        };
+        test("should merge paragraphs and put cursor between c and d", async () => {
+            mockUserAgent("android");
+            const { editor, el } = await setupEditor("<p>abc</p><p>[]def</p>");
+            await backspaceAndroid(editor);
+            if (isBrowserChrome()) {
+                // Simulate what happens in Android Chrome: the cursor is moved
+                // one character to the right.
+                const secondTextNode = el.querySelector("p").childNodes[1];
+                setSelection({ anchorNode: secondTextNode, anchorOffset: 1 });
+            }
+            await tick(); // Wait for the selection change to be handled
+            expect(getContent(el)).toBe("<p>abc[]def</p>");
         });
     });
 });

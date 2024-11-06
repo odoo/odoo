@@ -17,6 +17,7 @@ import {
     normalizeCursorPosition,
     normalizeDeepCursorPosition,
     normalizeFakeBR,
+    selectionsAreEqual,
 } from "../utils/selection";
 
 /**
@@ -121,6 +122,7 @@ export class SelectionPlugin extends Plugin {
         "modifySelection",
         "rectifySelection",
         "focusEditable",
+        "isSelectionInEditable",
         // "collapseIfZWS",
     ];
     resources = {
@@ -502,16 +504,17 @@ export class SelectionPlugin extends Plugin {
         const focus = { node: selection.focusNode, offset: selection.focusOffset };
 
         return {
-            restore: () => {
-                this.setSelection(
-                    {
-                        anchorNode: anchor.node,
-                        anchorOffset: anchor.offset,
-                        focusNode: focus.node,
-                        focusOffset: focus.offset,
-                    },
-                    { normalize: false }
-                );
+            restore: ({ log = false } = {}) => {
+                const selectionToRestore = {
+                    anchorNode: anchor.node,
+                    anchorOffset: anchor.offset,
+                    focusNode: focus.node,
+                    focusOffset: focus.offset,
+                };
+                if (log && !selectionsAreEqual(this.getEditableSelection(), selectionToRestore)) {
+                    console.log("selection fixed post-delete");
+                }
+                this.setSelection(selectionToRestore, { normalize: false });
             },
             update(callback) {
                 callback(anchor);
