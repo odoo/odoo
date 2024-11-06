@@ -113,7 +113,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
             content: "check free product is removed",
             trigger: '#wrap:not(:has(div>strong:contains("Free Product - Small Cabinet")))',
         },
-        /* 4. Check /shop/payment does not break the `merged discount lines split per tax` (eg: with _compute_tax_id) */
+        /* 4. Check /shop/payment does not break the `merged discount lines split per tax` (eg: with _compute_tax_ids) */
         {
             content: "go to checkout",
             trigger: 'a[href="/shop/checkout?try_skip_step=true"]',

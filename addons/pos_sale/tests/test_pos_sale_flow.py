@@ -557,7 +557,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
                     'product_id': self.product_a.id,
                     'product_uom_qty': 10.0,
                     'price_unit': 100,
-                    'tax_id': False,
+                    'tax_ids': False,
                 })],
         })
         so.action_confirm()
@@ -662,7 +662,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
                     'product_id': self.product_a.id,
                     'product_uom_qty': 1.0,
                     'price_unit': 100,
-                    'tax_id': False,
+                    'tax_ids': False,
                 })],
         })
         so.action_confirm()

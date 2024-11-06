@@ -42,7 +42,7 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
             'product_id': self.service_purchase_1.id,
             'product_uom_qty': 4,
             'order_id': sale_order.id,
-            'tax_id': False,
+            'tax_ids': False,
         })
 
         # confirming SO will create the PO even if you don't have the rights

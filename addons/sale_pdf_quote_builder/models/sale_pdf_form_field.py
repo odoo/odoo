@@ -150,7 +150,7 @@ class SalePdfFormField(models.Model):
                 "quantity": "product_uom_qty",
                 "tax_excl_price": "price_subtotal",
                 "tax_incl_price": "price_total",
-                "taxes": "tax_id",
+                "taxes": "tax_ids",
                 "uom": "product_uom_id.name",
                 "user_id__name": "salesman_id.name",
                 "validity_date": "order_id.validity_date",
