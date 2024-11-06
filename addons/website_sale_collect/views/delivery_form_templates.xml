@@ -27,7 +27,12 @@
                             class="js_wsc_delete_product d-none d-md-inline-block small"
                             aria-label="Remove from cart"
                         >
-                            <span t-att-data-product-id="order_line.product_id.id">Remove</span>
+                            <span
+                                t-att-data-line-id="order_line.id"
+                                t-att-data-product-id="order_line.product_id.id"
+                            >
+                                Remove
+                            </span>
                         </a>
                         <button
                             title="Remove from cart"
@@ -35,6 +40,7 @@
                         >
                             <i
                                 class="fa fa-trash-o"
+                                t-att-data-line-id="order_line.id"
                                 t-att-data-product-id="order_line.product_id.id"
                             />
                         </button>

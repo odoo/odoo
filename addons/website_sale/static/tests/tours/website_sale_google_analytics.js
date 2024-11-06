@@ -9,8 +9,9 @@ odoo.loader.bus.addEventListener("module-started", (e) => {
             _onViewItem(event, data) {
                 document.body.setAttribute("view-event-id", data.item_id);
             },
-            _onAddToCart(event, data) {
-                document.body.setAttribute("cart-event-id", data.item_id);
+            _onAddToCart(event) {
+                const productsTrackingInfo = event.detail;
+                document.body.setAttribute("cart-event-id", productsTrackingInfo[0].item_id);
             },
         });
     }

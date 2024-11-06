@@ -7,20 +7,17 @@ import { extraMenuUpdateCallbacks } from "@website/js/content/menu";
 import "@website/libs/zoomodoo/zoomodoo";
 import { ProductImageViewer } from "@website_sale/js/components/website_sale_image_viewer";
 import VariantMixin from "@website_sale/js/sale_variant_mixin";
-import { cartHandlerMixin } from "@website_sale/js/website_sale_utils";
 
 
-export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerMixin, {
+export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
     selector: '.oe_website_sale',
     events: Object.assign({}, VariantMixin.events || {}, {
         'change form .js_product:first input[name="add_qty"]': '_onChangeAddQuantity',
-        'click a.js_add_cart_json': '_onClickAddCartJSON',
+        'click a.js_add_cart_json': '_onChangeQuantity',
         'click .a-submit': '_onClickSubmit',
         'change form.js_attributes input, form.js_attributes select': '_onChangeAttribute',
-        'mouseup form.js_add_cart_json label': '_onMouseupAddCartLabel',
-        'touchend form.js_add_cart_json label': '_onMouseupAddCartLabel',
         'submit .o_wsale_products_searchbar_form': '_onSubmitSaleSearch',
-        'click #add_to_cart, .o_we_buy_now, #products_grid .o_wsale_product_btn .a-submit': 'async _onClickAdd',
+        'click #add_to_cart, .o_we_buy_now, #products_grid .o_wsale_product_btn .a-submit': '_onClickAdd',
         'click input.js_product_change': 'onChangeVariant',
         'change .js_main_product [data-attribute_exclusions]': 'onChangeVariant',
         'click .o_product_page_reviews_link': '_onClickReviewsLink',
@@ -75,26 +72,11 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
             filmstripContainer?.classList.add('o_wsale_filmstip_fancy_disabled');
         }
 
-        this.getRedirectOption();
         return def;
     },
     destroy() {
         this._super.apply(this, arguments);
         this._cleanupZoom();
-    },
-    /**
-     * The selector is different when using list view of variants.
-     *
-     * @override
-     */
-    getSelectedVariantValues: function ($container) {
-        var combination = $container.find('input.js_product_change:checked')
-            .data('combination');
-
-        if (combination) {
-            return combination;
-        }
-        return VariantMixin.getSelectedVariantValues.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -324,91 +306,65 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickAdd: function (ev) {
+    _onClickAdd: async function (ev) {
         ev.preventDefault();
         var def = () => {
-            this.getCartHandlerOptions(ev);
-            return this._handleAdd($(ev.currentTarget).closest('form'));
+            this._updateRootProduct((ev.currentTarget).closest('form'));
+            const isBuyNow = ev.currentTarget.classList.contains('o_we_buy_now');
+            const isConfigured = ev.currentTarget.parentElement.id === 'add_to_cart_wrap';
+            return this.call('websiteSale', 'addToCart', this.rootProduct, {
+                isBuyNow: isBuyNow,
+                isConfigured: isConfigured,
+            });
         };
         if ($('.js_add_cart_variants').children().length) {
             return this._getCombinationInfo(ev).then(() => {
-                return !$(ev.target).closest('.js_product').hasClass("css_not_available") ? def() : Promise.resolve();
+                return !(ev.target).closest('.js_product').classList.contains('.css_not_available') ? def() : Promise.resolve();
             });
         }
         return def();
     },
     /**
-     * Initializes the optional products modal
-     * and add handlers to the modal events (confirm, back, ...)
+     * Event handler to increase or decrease quantity from the product page.
      *
-     * @private
-     * @param {$.Element} $form the related webshop form
-     */
-    _handleAdd: function ($form) {
-        var self = this;
-        this.$form = $form;
-
-        var productSelector = [
-            'input[type="hidden"][name="product_id"]',
-            'input[type="radio"][name="product_id"]:checked'
-        ];
-
-        const productTemplateId =
-            parseInt($form.find('input[type="hidden"][name="product_template_id"]').first().val());
-        var productReady = this.selectOrCreateProduct(
-            $form,
-            parseInt($form.find(productSelector.join(', ')).first().val(), 10),
-            productTemplateId,
-        );
-
-        return productReady.then(function (productId) {
-            $form.find(productSelector.join(', ')).val(productId);
-            self._updateRootProduct($form, productId, productTemplateId);
-            return self._onProductReady($form.closest('.o_wsale_product_page').length > 0);
-        });
-    },
-
-    _onProductReady(isOnProductPage = false) {
-        return this._submitForm();
-    },
-
-    /**
-     * Add custom variant values and attribute values that do not generate variants
-     * in the params to submit form if 'stay on page' option is disabled, or call
-     * '_addToCartInPage' otherwise.
-     *
-     * @private
-     * @returns {Promise}
-     */
-    _submitForm: function () {
-        const params = this.rootProduct;
-
-        const $product = $('#product_detail');
-        const productTrackingInfo = $product.data('product-tracking-info');
-        if (productTrackingInfo) {
-            productTrackingInfo.quantity = params.quantity;
-            $product.trigger('add_to_cart_event', [productTrackingInfo]);
-        }
-
-        params.add_qty = params.quantity;
-        params.product_custom_attribute_values = JSON.stringify(params.product_custom_attribute_values);
-        params.no_variant_attribute_values = JSON.stringify(params.no_variant_attribute_values);
-        delete params.quantity;
-        return this.addToCart(params);
-    },
-    /**
      * @private
      * @param {MouseEvent} ev
+     *
+     * @returns {void}
      */
-    _onClickAddCartJSON: function (ev) {
-        this.onClickAddCartJSON(ev);
+    _onChangeQuantity: function (ev) {
+        ev.preventDefault();
+
+        const input = ev.currentTarget.closest('.input-group').querySelector('input');
+        const min = parseFloat(input.dataset.min || 0);
+        const max = parseFloat(input.dataset.max || Infinity);
+        const previousQty = parseFloat(input.value || 0, 10);
+        const quantity = (
+            ev.currentTarget.querySelector('i').classList.contains('fa-minus') ? -1 : 1
+        ) + previousQty;
+        const newQty = quantity > min ? (quantity < max ? quantity : max) : min;
+
+        if (newQty !== previousQty) {
+            input.value = newQty;
+            input.dispatchEvent(
+                new Event('change', {bubbles: true})
+            );  // Trigger `onChangeVariant` through .js_main_product
+        }
     },
     /**
+     * When the quantity is changed, we need to query the new price of the product.
+     * Based on the pricelist, the price might change when quantity exceeds a certain amount.
+     *
      * @private
-     * @param {Event} ev
+     * @param {MouseEvent} ev
+     *
+     * @returns {void}
      */
     _onChangeAddQuantity: function (ev) {
-        this.onChangeAddQuantity(ev);
+        const $parent = $(ev.currentTarget).closest('form');
+        if ($parent.length > 0) {
+            this.triggerVariantChange($parent);
+        }
     },
     /**
      * @private
@@ -449,21 +405,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
             }
             $(ev.currentTarget).closest("form").submit();
         }
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onMouseupAddCartLabel: function (ev) { // change price when they are variants
-        var $label = $(ev.currentTarget);
-        var $price = $label.parents("form:first").find(".oe_price .oe_currency_value");
-        if (!$price.data("price")) {
-            $price.data("price", parseFloat($price.text()));
-        }
-        var value = $price.data("price") + parseFloat($label.find(".badge span").text() || 0);
-
-        var dec = value % 1;
-        $price.html(value + (dec < 0.01 ? ".00" : (dec < 1 ? "0" : "") ));
     },
     /**
      * @private
@@ -539,23 +480,108 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
     // -------------------------------------
     // Utils
     // -------------------------------------
+
     /**
-     * Update the root product during an Add process.
+     * Update the root product during based on the form elements.
      *
      * @private
-     * @param {Object} $form
-     * @param {Number} productId
-     * @param {Number} productTemplateId
+     * @param {HTMLFormElement} form - The form in which the product is.
+     *
+     * @returns {void}
      */
-    _updateRootProduct($form, productId, productTemplateId) {
+    _updateRootProduct(form) {
+        const productId = parseInt(form.querySelector([
+            'input[type="hidden"][name="product_id"]',
+            // Variants list view
+            'input[type="radio"][name="product_id"]:checked',
+        ].join(','))?.value);
+        const quantity = parseFloat(form.querySelector('input[name="add_qty"]')?.value);
+        const isCombo = form.querySelector(
+            'input[type="hidden"][name="product_type"]'
+        )?.value === 'combo';
         this.rootProduct = {
-            product_id: productId,
-            product_template_id: productTemplateId,
-            quantity: parseFloat($form.find('input[name="add_qty"]').val() || 1),
-            product_custom_attribute_values: this.getCustomVariantValues($form.find('.js_product')),
-            variant_values: this.getSelectedVariantValues($form.find('.js_product')),
-            no_variant_attribute_values: this.getNoVariantAttributeValues($form.find('.js_product'))
+            ...(productId ? {productId: productId} : {}),
+            productTemplateId: parseInt(form.querySelector(
+                'input[type="hidden"][name="product_template_id"]',
+            ).value),
+            ...(quantity ? {quantity: quantity} : {}),
+            ptavs: this._getSelectedPTAV(form),
+            productCustomAttributeValues: this._getCustomPTAVValues(form),
+            noVariantAttributeValues: this._getSelectedNoVariantPTAV(form),
+            ...(isCombo ? {isCombo: isCombo} : {}),
         };
+    },
+
+    /**
+     * Return the selected stored PTAV(s) of in the provided form.
+     *
+     * @private
+     * @param {HTMLFormElement} form - The form in which the product is.
+     *
+     * @returns {Number[]} - The selected stored attribute(s), as a list of
+     *      `product.template.attribute.value` ids.
+     */
+    _getSelectedPTAV(form) {
+        // Variants list view
+        let combination = form.querySelector('input.js_product_change:checked')?.dataset.combination;
+        if (combination) {
+            return JSON.parse(combination);
+        }
+
+        const selectedPTAVElements = form.querySelectorAll([
+            '.js_product input.js_variant_change:not(.no_variant):checked',
+            '.js_product select.js_variant_change:not(.no_variant)'
+        ].join(','));
+        let selectedPTAV = [];
+        for(const el of selectedPTAVElements) {
+            selectedPTAV.push(parseInt(el.value));
+        }
+        return selectedPTAV;
+    },
+
+    /**
+     * Return the custom PTAV(s) values in the provided form.
+     *
+     * @private
+     * @param {HTMLFormElement} form - The form in which the product is.
+     *
+     * @returns {{id: number, value: string}[]} An array of objects where each object contains:
+     *      - `custom_product_template_attribute_value_id`: The ID of the custom attribute.
+     *      - `custom_value`: The value assigned to the custom attribute.
+     */
+    _getCustomPTAVValues(form) {
+        const customPTAVsValuesElements = form.querySelectorAll('.variant_custom_value');
+        let customPTAVsValues = [];
+        for(const el of customPTAVsValuesElements) {
+            customPTAVsValues.push({
+                'custom_product_template_attribute_value_id': parseInt(
+                    el.dataset.custom_product_template_attribute_value_id
+                ),
+                'custom_value': el.value,
+            });
+        }
+        return customPTAVsValues;
+    },
+
+    /**
+     * Return the selected non-stored PTAV(s) of the product in the provided form.
+     *
+     * @private
+     * @param {HTMLFormElement} form - The form in which the product is.
+     *
+     * @returns {Number[]} - The selected non-stored attribute(s), as a list of
+     *      `product.template.attribute.value` ids.
+     */
+    _getSelectedNoVariantPTAV(form) {
+        const selectedNoVariantPTAVElements = form.querySelectorAll([
+            'input.no_variant.js_variant_change:checked',
+            'select.no_variant.js_variant_change',
+        ].join(','));
+        let selectedNoVariantPTAV = [];
+        for(const el of selectedNoVariantPTAVElements) {
+            selectedNoVariantPTAV.push(parseInt(el.value));
+        }
+        return selectedNoVariantPTAV;
     },
 });
 

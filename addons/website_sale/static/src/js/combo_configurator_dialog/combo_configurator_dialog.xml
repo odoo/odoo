@@ -16,7 +16,7 @@
         <button name="sale_combo_configurator_confirm_button" position="after">
             <button
                 class="btn btn-secondary flex-grow-1 flex-md-grow-0"
-                t-if="this.props.isFrontend"
+                t-if="this.props.isFrontend and !this.props.options.isBuyNow"
                 t-on-click="() => this.confirm({goToCart: false})"
                 t-att-disabled="!areAllCombosSelected"
             >
