@@ -127,7 +127,12 @@ class PurchaseOrder(models.Model):
     amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_amount_all')
     amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all')
 
-    fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    fiscal_position_id = fields.Many2one(
+        comodel_name='account.fiscal.position',
+        string='Fiscal Position',
+        compute='_compute_fiscal_position_id',
+        store=True, precompute=True, readonly=False,
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     tax_country_id = fields.Many2one(
         comodel_name='res.country',
         compute='_compute_tax_country_id',
@@ -188,6 +193,23 @@ class PurchaseOrder(models.Model):
                 order.date_planned = min(dates_list)
             else:
                 order.date_planned = False
+
+    @api.depends('partner_id', 'company_id')
+    def _compute_fiscal_position_id(self):
+        """
+        Trigger the change of fiscal position when the address is modified.
+        """
+        cache = {}
+        for order in self:
+            if not order.partner_id:
+                order.fiscal_position_id = False
+                continue
+            key = (order.company_id.id, order.partner_id.id)
+            if key not in cache:
+                cache[key] = self.env['account.fiscal.position'].with_company(
+                    order.company_id
+                )._get_fiscal_position(order.partner_id)
+            order.fiscal_position_id = cache[key]
 
     @api.depends('name', 'partner_ref')
     def name_get(self):
@@ -305,10 +327,8 @@ class PurchaseOrder(models.Model):
         self = self.with_company(self.company_id)
         default_currency = self._context.get("default_currency_id")
         if not self.partner_id:
-            self.fiscal_position_id = False
             self.currency_id = default_currency or self.env.company.currency_id.id
         else:
-            self.fiscal_position_id = self.env['account.fiscal.position']._get_fiscal_position(self.partner_id)
             self.payment_term_id = self.partner_id.property_supplier_payment_term_id.id
             self.currency_id = default_currency or self.partner_id.property_purchase_currency_id.id or self.env.company.currency_id.id
         return {}
