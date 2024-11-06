@@ -40,17 +40,6 @@ class WebsiteSale(main.WebsiteSale):
             order._auto_apply_rewards()
         return super().shop_payment(**post)
 
-    @route()
-    def cart(self, **post):
-        order = request.website.sale_get_order()
-        if order and order.state != 'draft':
-            request.session['sale_order_id'] = None
-            order = request.website.sale_get_order()
-        if order:
-            order._update_programs_and_rewards()
-            order._auto_apply_rewards()
-        return super().cart(**post)
-
     @route(['/coupon/<string:code>'], type='http', auth='public', website=True, sitemap=False)
     def activate_coupon(self, code, r='/shop', **kw):
         url_parts = url_parse(r)
@@ -137,13 +126,3 @@ class WebsiteSale(main.WebsiteSale):
             else:
                 order._remove_delivery_line()
         return True
-
-    @route()
-    def cart_update_json(self, *args, set_qty=None, **kwargs):
-        # When a reward line is deleted we remove it from the auto claimable rewards
-        if set_qty == 0:
-            request.update_context(website_sale_loyalty_delete=True)
-            # We need to update the website since `get_sale_order` is called on the website
-            # and does not follow the request's context
-            request.website = request.website.with_context(website_sale_loyalty_delete=True)
-        return super().cart_update_json(*args, set_qty=set_qty, **kwargs)

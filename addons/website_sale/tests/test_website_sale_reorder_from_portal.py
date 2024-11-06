@@ -78,7 +78,10 @@ class TestWebsiteSaleReorderFromPortal(HttpCase):
         order_lines = reorder_cart.order_line
 
         self.assertEqual(previous_lines.product_id, order_lines.product_id)
-        self.assertEqual(previous_lines.mapped('name'), order_lines.mapped('name'))
+        self.assertEqual(
+            previous_lines.product_id.sorted('id').mapped('name'),
+            order_lines.product_id.sorted('id').mapped('name'),
+        )
         self.assertEqual(
             previous_lines.product_no_variant_attribute_value_ids,
             order_lines.product_no_variant_attribute_value_ids,

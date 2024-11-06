@@ -14,6 +14,7 @@ patch(ProductConfiguratorDialog, {
             shape: {
                 ...ProductConfiguratorDialog.props.options.shape,
                 isMainProductConfigurable: { type: Boolean, optional: true },
+                isBuyNow: { type: Boolean, optional: true },
             },
         },
     },

@@ -2,7 +2,6 @@
 
 import random
 from datetime import datetime
-
 from dateutil.relativedelta import relativedelta
 
 from odoo import SUPERUSER_ID, _, api, fields, models
@@ -577,7 +576,7 @@ class SaleOrder(models.Model):
             access_opt = customer_portal_group[2].setdefault('button_access', {})
             if self._context.get('website_sale_send_recovery_email'):
                 access_opt['title'] = _('Resume Order')
-                access_opt['url'] = '%s/shop/cart?access_token=%s' % (self.get_base_url(), self.access_token)
+                access_opt['url'] = f'{self.get_base_url()}/shop/cart?id={self.id}&access_token={self.access_token}'
         return groups
 
     def _is_reorder_allowed(self):
