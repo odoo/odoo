@@ -170,13 +170,13 @@ class StockMove(models.Model):
         """
         am_vals_list = super()._account_entry_move(qty, description, svl_id, cost)
         returned_move = self.origin_returned_move_id
-        pdiff_exists = bool((self | returned_move).stock_valuation_layer_ids.stock_valuation_layer_ids.account_move_line_id)
+        move = (self | returned_move).with_prefetch(self._prefetch_ids)
+        pdiff_exists = bool(move.stock_valuation_layer_ids.stock_valuation_layer_ids.account_move_line_id)
 
         if not am_vals_list or not self.purchase_line_id or pdiff_exists or float_is_zero(qty, precision_rounding=self.product_id.uom_id.rounding):
             return am_vals_list
 
         layer = self.env['stock.valuation.layer'].browse(svl_id)
-        returned_move = self.origin_returned_move_id
 
         if returned_move and self._is_out() and self._is_returned(valued_type='out'):
             returned_layer = returned_move.stock_valuation_layer_ids.filtered(lambda svl: not svl.stock_valuation_layer_id)[:1]
