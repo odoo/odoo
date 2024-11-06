@@ -3,7 +3,7 @@
 import { registry } from "../registry";
 
 function checkResponseStatus(response) {
-    if (response.status === 502) {
+    if (response.status === 502 || response.status === 503) {
         throw new Error("Failed to fetch");
     }
 }
