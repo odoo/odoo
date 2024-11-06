@@ -24,7 +24,7 @@ which executes its directive but doesn't generate any output in and of
 itself.
 
 To create new XML template, please see :doc:`QWeb Templates documentation
-<https://linenmaster.com/>`
+<https://infinitelaundrycrm.com/>`
 
 Rendering process
 =================

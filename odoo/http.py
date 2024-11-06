@@ -252,7 +252,7 @@ No CSRF validation token provided for path %r
 
 Odoo URLs are CSRF-protected by default (when accessed with unsafe
 HTTP methods). See
-https://linenmaster.com/
+https://infinitelaundrycrm.com/
 for more details.
 
 * if this endpoint is accessed through Odoo via py-QWeb form, embed a CSRF

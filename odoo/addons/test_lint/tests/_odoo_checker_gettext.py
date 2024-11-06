@@ -21,7 +21,7 @@ class OdooBaseChecker(BaseChecker):
         'E8502': (
             'Bad usage of _, _lt function.',
             'gettext-variable',
-            'See https://linenmaster.com/'
+            'See https://infinitelaundrycrm.com/'
         )
     }
 

@@ -45,15 +45,15 @@ QUnit.module('partner_autocomplete', {
                         return Promise.resolve([
                             {
                                 "name": "Application",
-                                "domain": "linenmaster.com",
+                                "domain": "infinitelaundrycrm.com",
                             },
                             {
-                                "name": "Linen Master",
-                                "domain": "linenmaster.com",
+                                "name": "Infinite Laundry",
+                                "domain": "infinitelaundrycrm.com",
                             },
                             {
-                                "name": "Linen Master",
-                                "domain": "linenmaster.com",
+                                "name": "Infinite Laundry",
+                                "domain": "infinitelaundrycrm.com",
                             },
                         ]);
                     },

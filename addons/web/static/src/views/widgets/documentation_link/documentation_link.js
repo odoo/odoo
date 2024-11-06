@@ -25,7 +25,7 @@ export class DocumentationLink extends Component {
                       "-"
                   )
                 : "master";
-            return "https://www.odoo.com/documentation/" + serverVersion + this.props.path;
+            return "https://www.infinitelaundrycrm.com" + serverVersion + this.props.path;
         }
     }
 }

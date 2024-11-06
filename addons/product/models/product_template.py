@@ -659,7 +659,7 @@ class ProductTemplate(models.Model):
                     %s
                 </p>
                 <p>
-                    <a class="oe_link" href="https://linenmaster.com/">
+                    <a class="oe_link" href="https://infinitelaundrycrm.com/">
                     %s
                     </a>
                 </p>
