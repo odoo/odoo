@@ -113,6 +113,13 @@ describe("Selection collapsed", () => {
                 contentAfter: "<pre><em>a<strong>b<br>[]c</strong>d</em></pre>",
             });
         });
+        test("should insert a line break within pre when it is a child of a list", async () => {
+            await testEditor({
+                contentBefore: "<ul><li><pre>ab[]cd</pre></li></ul>",
+                stepFunction: splitBlock,
+                contentAfter: "<ul><li><pre>ab<br>[]cd</pre></li></ul>",
+            });
+        });
 
         test("should insert a new paragraph after the pre", async () => {
             await testEditor({
