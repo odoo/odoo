@@ -650,7 +650,7 @@ class TestReorderingRule(TransactionCase):
         customer_loc, _ = warehouse._get_partner_locations()
         mto_rule = self.env['stock.rule'].search(
             [('warehouse_id', '=', warehouse.id),
-             ('procure_method', '=', 'mts_else_mto'),
+             ('procure_method', '=', 'make_to_order'),
              ('location_dest_id', '=', customer_loc.id)
             ]
         )
