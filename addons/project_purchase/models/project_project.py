@@ -52,7 +52,7 @@ class Project(models.Model):
             'name': self.env._('Purchase Orders'),
             'type': 'ir.actions.act_window',
             'res_model': 'purchase.order',
-            'views': [[False, 'list'], [False, 'form']],
+            'view_mode': 'list,kanban,form,calendar,pivot,graph,activity',
             'domain': [('id', 'in', purchase_orders.ids)],
             'context': {
                 'default_project_id': self.id,
