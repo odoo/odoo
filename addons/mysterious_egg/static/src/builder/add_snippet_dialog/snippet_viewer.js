@@ -1,10 +1,35 @@
 import { Component, markup } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
+import { InputConfirmationDialog } from "./input_confirmation_dialog";
 
 export class SnippetViewer extends Component {
     static template = "mysterious_egg.SnippetViewer";
 
+    setup() {
+        this.dialog = useService("dialog");
+    }
+
+    onClickRename(snippet) {
+        this.dialog.add(InputConfirmationDialog, {
+            title: _t("Rename the block"),
+            inputLabel: _t("Name"),
+            defaultValue: snippet.title,
+            confirmLabel: _t("Save"),
+            confirm: (inputValue) => {
+                this.props.snippetModel.renameCustomSnippet(snippet, inputValue);
+            },
+            cancelLabel: _t("Discard"),
+            cancel: () => {},
+        });
+    }
+
+    onClickDelete(snippet) {
+        this.props.snippetModel.deleteCustomSnippet(snippet);
+    }
+
     getSnippetColumns() {
-        const snippets = this.props.state.snippets;
+        const snippets = this.getSelectedSnippets();
 
         const columns = [[], []];
         for (const index in snippets) {
@@ -22,9 +47,20 @@ export class SnippetViewer extends Component {
     }
 
     getContent(elem) {
-        if (!elem) {
-            return markup("<div>plop</div>");
-        }
         return markup(elem.outerHTML);
+    }
+
+    getSelectedSnippets() {
+        const snippetStructures = this.props.snippetModel.snippetStructures;
+        if (this.props.state.search) {
+            const strMatches = (str) => str.toLowerCase().includes(this.props.state.search);
+            return snippetStructures.filter((snippet) => {
+                return strMatches(snippet.title) || strMatches(snippet.keyWords || "");
+            });
+        }
+
+        return snippetStructures.filter(
+            (snippet) => snippet.groupName === this.props.state.groupSelected
+        );
     }
 }

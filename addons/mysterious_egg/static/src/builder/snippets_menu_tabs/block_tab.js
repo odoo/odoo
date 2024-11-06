@@ -1,14 +1,12 @@
-import { Component, markup, onWillStart } from "@odoo/owl";
+import { Component, markup, onWillStart, useState } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { RPCError } from "@web/core/network/rpc";
 import { useDraggable } from "@web/core/utils/draggable";
-import { uniqueId } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
 import { escape } from "@web/core/utils/strings";
 import { AddSnippetDialog } from "../add_snippet_dialog/add_snippet_dialog";
-
-const cacheSnippetTemplate = {};
+import { SnippetModel } from "../snippet_model";
 
 // TODO move it in web (copy from web_studio)
 function copyElementOnDrag() {
@@ -45,8 +43,14 @@ export class BlockTab extends Component {
         this.orm = useService("orm");
         this.company = useService("company");
 
+        this.snippetModel = useState(
+            new SnippetModel(this.env.services, {
+                websiteId: this.props.websiteId,
+                snippetsName: this.props.snippetsName,
+            })
+        );
         onWillStart(async () => {
-            this.snippetsByCategory = await this.loadSnippets();
+            await this.snippetModel.load();
         });
         const copyOnDrag = copyElementOnDrag();
         useDraggable({
@@ -80,24 +84,14 @@ export class BlockTab extends Component {
         });
     }
 
-    get snippetGroups() {
-        const snippetGroups = this.snippetsByCategory.snippet_groups;
-        if (this.hasCustomGroup) {
-            return snippetGroups;
-        }
-        return snippetGroups.filter((snippet) => snippet.groupName !== "custom");
-    }
-
     get innerContentSnippets() {
-        return this.snippetsByCategory.snippet_content;
-    }
-
-    get hasCustomGroup() {
-        return !!this.snippetsByCategory.snippet_custom.length;
+        return this.snippetModel.snippetsByCategory.snippet_content;
     }
 
     getSnippet(category, id) {
-        return this.snippetsByCategory[category].filter((snippet) => snippet.id === id)[0];
+        return this.snippetModel.snippetsByCategory[category].filter(
+            (snippet) => snippet.id === id
+        )[0];
     }
 
     openSnippetDialog(snippet) {
@@ -107,11 +101,7 @@ export class BlockTab extends Component {
             AddSnippetDialog,
             {
                 selectedSnippet: snippet,
-                snippetGroups: this.snippetGroups.filter((snippet) => !snippet.moduleId),
-                snippetStructures: [
-                    ...this.snippetsByCategory.snippet_structure,
-                    ...this.snippetsByCategory.snippet_custom,
-                ],
+                snippetModel: this.snippetModel,
                 selectSnippet: (snippet) => {
                     this.props.editor.shared.addElementToCenter(snippet.content.cloneNode(true));
                 },
@@ -162,63 +152,5 @@ export class BlockTab extends Component {
             confirmLabel: _t("Save and Install"),
             cancel: () => {},
         });
-    }
-
-    async loadSnippets() {
-        if (!cacheSnippetTemplate[this.props.snippetsName]) {
-            cacheSnippetTemplate[this.props.snippetsName] = this.orm.silent.call(
-                "ir.ui.view",
-                "render_public_asset",
-                [this.props.snippetsName, {}],
-                { context: { rendering_bundle: true, website_id: this.props.websiteId } }
-            );
-        }
-        const html = await cacheSnippetTemplate[this.props.snippetsName];
-        const snippetsDocument = new DOMParser().parseFromString(html, "text/html");
-        return this.computeSnippetTemplates(snippetsDocument);
-    }
-
-    computeSnippetTemplates(snippetsDocument) {
-        const snippetsBody = snippetsDocument.body;
-        const snippetsByCategory = {};
-        for (const snippetCategory of snippetsBody.querySelectorAll("snippets")) {
-            const snippets = [];
-            for (const snippetEl of snippetCategory.children) {
-                const snippet = {
-                    id: uniqueId(),
-                    title: snippetEl.getAttribute("name"),
-                    name: snippetEl.children[0].dataset.snippet,
-                    thumbnailSrc: escape(snippetEl.dataset.oeThumbnail),
-                    isCustom: false,
-                };
-                const moduleId = snippetEl.dataset.moduleId;
-                if (moduleId) {
-                    Object.assign(snippet, {
-                        moduleId,
-                    });
-                } else {
-                    Object.assign(snippet, {
-                        content: snippetEl.children[0],
-                    });
-                }
-                switch (snippetCategory.id) {
-                    case "snippet_groups":
-                        snippet.groupName = snippetEl.dataset.oSnippetGroup;
-                        break;
-                    case "snippet_structure":
-                        snippet.groupName = snippetEl.dataset.oGroup;
-                        snippet.keyWords = snippetEl.dataset.oeKeywords;
-                        break;
-                    case "snippet_custom":
-                        snippet.groupName = "custom";
-                        snippet.isCustom = true;
-                        break;
-                }
-                snippets.push(snippet);
-            }
-            snippetsByCategory[snippetCategory.id] = snippets;
-        }
-
-        return snippetsByCategory;
     }
 }
