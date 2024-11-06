@@ -35,11 +35,11 @@ jobs:
       - name: Pull changes
         run: |
           ssh -tt -o StrictHostKeyChecking=no -i ./PRIVATE_KEY.pem ${{ vars.EC2_USER_NAME }}@${{ vars.EC2_INSTANCE_ADDRESS }} <<EOF
-          cd /home/ubuntu/infinite-laundry-crm &&\
-          sudo service odoo stop &&\
-          git branch &&\
-          git pull &&\
-          sudo service odoo start &&\
+          cd /home/ubuntu/infinite-laundry-crm
+          service odoo stop
+          git branch
+          git pull
+          service odoo start
           exit
           EOF
 
