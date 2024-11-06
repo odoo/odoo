@@ -809,6 +809,73 @@ class TestXMLTranslation(TransactionCase):
         self.assertEqual(view.with_env(env_fr).arch_db, archf % new_terms_fr)
         self.assertEqual(view.with_env(env_nl).arch_db, archf % terms_nl)
 
+    def test_sync_selection(self):
+        """ Check the `<select/>` translations after source terms changes."""
+        archf = '<form>%s</form>'
+        env_en = self.env(context={'lang': 'en_US'})
+        env_fr = self.env(context={'lang': 'fr_FR'})
+
+        # The selection terms should be long enough to consider an option
+        # removal/addition a "minor change".
+        terms_en = ("""<select>
+            <option/>
+            <option value="option-1">Option 1</option>
+            <option value="option-2">Opti 2</option>
+            <option value="option-3">Option 3</option>
+            <option value="option-4">Option 4</option>
+            <option value="option-5">Option 5</option>
+            <option value="option-6">Option 6</option>
+            <option value="option-7">Option 7</option>
+        </select>""",)
+        terms_fr = ("""<select>
+            <option/>
+            <option value="option-1">Choix 1</option>
+            <option value="option-2">Choix 2</option>
+            <option value="option-3">Choix 3</option>
+            <option value="option-4">Choix 4</option>
+            <option value="option-5">Choix 5</option>
+            <option value="option-6">Choix 6</option>
+            <option value="option-7">Choix 7</option>
+        </select>""",)
+        view = self.create_view(archf, terms_en, en_US=terms_en, fr_FR=terms_fr)
+
+        # Check that terms were translated correctly.
+        self.assertEqual(view.with_env(env_en).arch_db, archf % terms_en)
+        self.assertEqual(view.with_env(env_fr).arch_db, archf % terms_fr)
+
+        # Update the source term: fix a typo in "Option 2".
+        terms_en = ("""<select>
+            <option/>
+            <option value="option-1">Option 1</option>
+            <option value="option-2">Option 2</option>
+            <option value="option-3">Option 3</option>
+            <option value="option-4">Option 4</option>
+            <option value="option-5">Option 5</option>
+            <option value="option-6">Option 6</option>
+            <option value="option-7">Option 7</option>
+        </select>""",)
+        view.with_env(env_en).write({'arch_db': archf % terms_en})
+
+        # Check whether translations have been synchronized.
+        self.assertEqual(view.with_env(env_en).arch_db, archf % terms_en)
+        self.assertEqual(view.with_env(env_fr).arch_db, archf % terms_fr)
+
+        # Update the source term: remove an option from the `<select/>`.
+        terms_en = ("""<select>
+            <option/>
+            <option value="option-1">Option 1</option>
+            <option value="option-3">Option 3</option>
+            <option value="option-4">Option 4</option>
+            <option value="option-5">Option 5</option>
+            <option value="option-6">Option 6</option>
+            <option value="option-7">Option 7</option>
+        </select>""",)
+        view.with_env(env_en).write({'arch_db': archf % terms_en})
+
+        # Check that translations have not been synchronized (different options).
+        self.assertEqual(view.with_env(env_en).arch_db, archf % terms_en)
+        self.assertEqual(view.with_env(env_fr).arch_db, archf % terms_en)
+
     def test_sync_update(self):
         """ Check translations after major changes in source terms. """
         archf = '<form string="X"><div>%s</div><div>%s</div></form>'
