@@ -31,7 +31,7 @@ class ProjectProject(models.Model):
             'name': action_name,
             'type': 'ir.actions.act_window',
             'res_model': 'stock.picking',
-            'view_mode': 'list,kanban,form,calendar,activity',
+            'view_mode': f"list,kanban,form,calendar,{'map' if picking_type == 'outgoing' else 'activity'}",
             'domain': domain,
             'context': context,
             'help': self.env['ir.ui.view']._render_template(
