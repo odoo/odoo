@@ -30,7 +30,7 @@ export class Colibri {
             }
         };
         interaction.setup();
-        interaction.willStart().then(() => {
+        (interaction.willStart() || Promise.resolve()).then(() => {
             if (interaction.isDestroyed) {
                 return;
             }
@@ -104,7 +104,7 @@ export class Colibri {
         fnStr += "\n";
         for (let [sel, event, expr] of handlers) {
             const nodes = sel === "_root" || sel === "_body" ? `[${sel.slice(1)}]` : selectors[sel];
-            addLine(`framework.addDomListener(interaction, ${nodes}, \`${event}\`, interaction[\`${expr}\`])`)
+            addLine(`framework.addDomListener(interaction, ${nodes}, \`${event}\`, interaction[\`${expr}\`]);`)
         }
 
         // update function
@@ -132,7 +132,7 @@ export class Colibri {
 
         addLine("return update;");
         const fn = new Function("framework", "interaction", fnStr);
-        console.log(fn.toString());
+        // console.log(fn.toString());
         return fn;
     }
 

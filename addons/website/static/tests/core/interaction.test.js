@@ -2,7 +2,7 @@ import { expect, test, describe } from "@odoo/hoot";
 
 import { startInteraction } from "./helpers";
 import { Interaction } from "@website/core/interaction";
-import { animationFrame, click } from "@odoo/hoot-dom";
+import { animationFrame, click, dblclick } from "@odoo/hoot-dom";
 
 
 // add test => if not t- => crash
@@ -73,6 +73,30 @@ describe("event handling", () => {
             await click(span);
         }
         expect(clicked).toBe(2);
+    });
+
+    test("can add multiple listeners on a element", async () => {
+        let clicked = 0;
+        class Test extends Interaction {
+            static selector=".test";
+            static dynamicContent = {
+                "span:t-on-click": "doSomething",
+                "span:t-on-dblclick": "doSomething",
+            }
+            doSomething() {
+                clicked++;
+            }
+        }
+        
+        const { el } = await startInteraction(Test, `
+            <div class="test">
+                <span>coucou</span>
+            </div>`);
+        expect(clicked).toBe(0);
+        const span = el.querySelector("span");
+        await dblclick(span)
+        // dblclick = 2 clicks and 1 dblcli
+        expect(clicked).toBe(3); 
     });
 
     test("listener is cleaned up when interaction is stopped", async () => {
