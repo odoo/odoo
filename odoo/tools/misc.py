@@ -1668,8 +1668,16 @@ class ReadonlyDict(Mapping[K, T], typing.Generic[K, T]):
     def __init__(self, data):
         self.__data = dict(data)
 
+    def __contains__(self, key: K):
+        return key in self.__data
+
     def __getitem__(self, key: K) -> T:
-        return self.__data[key]
+        try:
+            return self.__data[key]
+        except KeyError:
+            if hasattr(type(self), "__missing__"):
+                return self.__missing__(key)
+            raise
 
     def __len__(self):
         return len(self.__data)
