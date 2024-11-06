@@ -1,9 +1,9 @@
-import { Component, onMounted, onWillDestroy, reactive, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, onWillRender, useRef, useState } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
-import { Dialog } from "@web/core/dialog/dialog";
-import { SnippetViewer } from "./snippet_viewer";
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
+import { Dialog } from "@web/core/dialog/dialog";
 import { localization } from "@web/core/l10n/localization";
+import { SnippetViewer } from "./snippet_viewer";
 
 export class AddSnippetDialog extends Component {
     static template = "mysterious_egg.AddSnippetDialog";
@@ -13,18 +13,18 @@ export class AddSnippetDialog extends Component {
         this.iframeRef = useRef("iframe");
 
         this.state = useState({
+            search: "",
             groupSelected: this.props.selectedSnippet.groupName,
             showIframe: false,
-            isSearching: false,
         });
         this.snippetViewerProps = {
-            state: reactive({ snippets: this.getSelectedSnippets() }),
+            state: this.state,
             selectSnippet: (...args) => {
                 this.props.selectSnippet(...args);
                 this.props.close();
             },
+            snippetModel: this.props.snippetModel,
         };
-        this.selectGroup(this.props.selectedSnippet);
 
         let root;
         onMounted(async () => {
@@ -50,34 +50,24 @@ export class AddSnippetDialog extends Component {
             this.state.showIframe = true;
         });
 
+        onWillRender(() => {
+            if (!this.props.snippetModel.hasCustomGroup && this.state.groupSelected === "custom") {
+                this.state.groupSelected = this.props.snippetModel.snippetGroups[0].groupName;
+            }
+        });
+
         onWillDestroy(() => {
             root.destroy();
         });
     }
 
-    getSelectedSnippets() {
-        return this.props.snippetStructures.filter(
-            (snippet) => snippet.groupName === this.state.groupSelected
+    get snippetGroups() {
+        return this.props.snippetModel.snippetGroups.filter(
+            (snippetGroup) => !snippetGroup.moduleId
         );
     }
 
     selectGroup(snippetGroup) {
         this.state.groupSelected = snippetGroup.groupName;
-        this.snippetViewerProps.state.snippets = this.getSelectedSnippets();
-    }
-
-    onInputSearch(ev) {
-        const search = ev.target.value.toLowerCase();
-        if (!search) {
-            this.state.isSearching = false;
-            this.snippetViewerProps.state.snippets = this.getSelectedSnippets();
-            return;
-        }
-
-        const strMatches = (str) => str.toLowerCase().includes(search);
-        this.snippetViewerProps.state.snippets = this.props.snippetStructures.filter((snippet) => {
-            return strMatches(snippet.title) || strMatches(snippet.keyWords || "");
-        });
-        this.state.isSearching = true;
     }
 }
