@@ -285,12 +285,6 @@ publicWidget.registry.searchBar = publicWidget.Widget.extend({
             this.limit = 0; // prevent autocomplete
         } else { // clear button clicked
             this._render(); // remove existing suggestions
-            ev.preventDefault();
-            if (!this.wasEmpty) {
-                this.limit = 0; // prevent autocomplete
-                const form = this.$('.o_search_order_by').parents('form');
-                form.submit();
-            }
         }
     },
 });
