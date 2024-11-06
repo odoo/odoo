@@ -188,6 +188,7 @@
     <record id="timesheet_report_task" model="ir.actions.report">
         <field name="name">Timesheets</field>
         <field name="model">project.task</field>
+        <field name="groups_id" eval="[(4,ref('hr_timesheet.group_hr_timesheet_user'))]"/>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">hr_timesheet.report_project_task_timesheet</field>
         <field name="report_file">report_timesheet_task</field>
@@ -204,6 +205,7 @@
     <record id="timesheet_report_project" model="ir.actions.report">
         <field name="name">Timesheets</field>
         <field name="model">project.project</field>
+        <field name="groups_id" eval="[(4,ref('hr_timesheet.group_hr_timesheet_user'))]"/>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">hr_timesheet.report_timesheet_project</field>
         <field name="report_file">report_timesheet_project</field>
