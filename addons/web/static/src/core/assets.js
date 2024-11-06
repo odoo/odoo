@@ -60,14 +60,15 @@ export class AssetsLoadingError extends Error {}
  * Loads the given url inside a script tag.
  *
  * @param {string} url the url of the script
+ * @param {"text/javascript" | "module"} type the type of JS file to import
  * @returns {Promise<true>} resolved when the script has been loaded
  */
-assets.loadJS = async function loadJS(url) {
+assets.loadJS = async function loadJS(url, type = "text/javascript") {
     if (cacheMap.has(url)) {
         return cacheMap.get(url);
     }
     const scriptEl = document.createElement("script");
-    scriptEl.type = url.includes("web/static/lib/pdfjs/") ? "module" : "text/javascript";
+    scriptEl.type = type;
     scriptEl.src = url;
     const promise = new Promise((resolve, reject) => {
         onLoadAndError(scriptEl, resolve, () => {
@@ -188,8 +189,8 @@ assets.loadBundle = async function loadBundle(bundleName) {
     }
 };
 
-export const loadJS = function (url) {
-    return assets.loadJS(url);
+export const loadJS = function (url, type) {
+    return assets.loadJS(url, type);
 };
 export const loadCSS = function (url) {
     return assets.loadCSS(url);
