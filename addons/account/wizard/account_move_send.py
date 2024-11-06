@@ -505,7 +505,7 @@ class AccountMoveSend(models.TransientModel):
         seen_attachment_ids = set()
         to_exclude = {x['name'] for x in mail_attachments_widget if x.get('skip')}
         for attachment_data in self._get_invoice_extra_attachments_data(move) + mail_attachments_widget:
-            if attachment_data['name'] in to_exclude:
+            if attachment_data['name'] in to_exclude and not attachment_data.get('manual'):
                 continue
 
             try:
