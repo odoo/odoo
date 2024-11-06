@@ -2,16 +2,15 @@
 
 import publicWidget from "@web/legacy/js/public/public_widget";
 
-publicWidget.registry.portalDetails = publicWidget.Widget.extend({
-    selector: '.o_portal_details',
-    events: {
-        'change select[name="invoice_sending_method"]': '_onSendingMethodChange',
-    },
+publicWidget.registry.portalDetails.include({
+    events: Object.assign({}, publicWidget.registry.portalDetails.prototype.events, {
+        "change select[name='invoice_sending_method']": "_onSendingMethodChange",
+    }),
 
     start() {
         this._showPeppolConfig();
         this.orm = this.bindService("orm");
-        return this._super.apply(this, arguments);
+        return this._super(...arguments);
     },
 
     _showPeppolConfig() {
@@ -19,9 +18,9 @@ publicWidget.registry.portalDetails = publicWidget.Widget.extend({
         const divToToggle = document.querySelectorAll(".portal_peppol_toggle");
         for (const peppolDiv of divToToggle) {
             if (method === "peppol") {
-                peppolDiv.classList.remove("d-none")
+                peppolDiv.classList.remove("d-none");
             } else {
-                peppolDiv.classList.add("d-none")
+                peppolDiv.classList.add("d-none");
             }
         }
     },
