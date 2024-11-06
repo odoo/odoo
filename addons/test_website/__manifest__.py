@@ -38,7 +38,7 @@ models which only purpose is to run tests.""",
             'http://test.external.link/javascript2.js',
             'http://test.external.link/style2.css',
         ],
-        'web.assets_frontend': [
+        'web.assets_frontend_lazy': [
             'test_website/static/src/js/test_error.js',
         ],
         'web.assets_tests': [

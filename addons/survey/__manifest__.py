@@ -114,9 +114,6 @@ sent mails with personal token for the invitation of the survey.
         'web.assets_unit_tests': [
             'survey/static/tests/fields/*.test.js',
         ],
-        'web.assets_frontend': [
-            'survey/static/src/js/tours/survey_tour.js',
-        ],
     },
     'license': 'LGPL-3',
 }

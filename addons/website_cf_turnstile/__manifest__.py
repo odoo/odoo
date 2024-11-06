@@ -13,7 +13,7 @@ This module implements Cloudflare Turnstile so that you can prevent bot spam on 
         'views/res_config_settings_view.xml',
     ],
     'assets': {
-        'web.assets_frontend': [
+        'web.assets_frontend_lazy': [
             'website_cf_turnstile/static/src/js/turnstile.js',
             'website_cf_turnstile/static/src/js/error_handler.js',
         ],
