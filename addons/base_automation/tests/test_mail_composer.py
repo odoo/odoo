@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.mail.tests.common import MailCase
 from odoo.tests.common import tagged, HttpCase
 
 
 @tagged('-at_install', 'post_install', 'mail_composer')
-class TestMailFullComposer(MailCommon, HttpCase):
+class TestMailFullComposer(MailCase, HttpCase):
 
     def test_mail_composer_test_tour(self):
         self.env['mail.template'].create({
