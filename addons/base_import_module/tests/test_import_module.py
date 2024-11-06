@@ -16,6 +16,7 @@ from unittest.mock import patch
 
 from odoo import release
 from odoo.addons import __path__ as __addons_path__
+from odoo.exceptions import UserError
 from odoo.tools import mute_logger
 
 
@@ -379,3 +380,24 @@ class TestImportModuleHttp(TestImportModule, odoo.tests.HttpCase):
         self.assertEqual(asset.path, asset_path)
         asset_data = files[1][1]
         self.assertEqual(self.url_open(asset_path).content, asset_data)
+
+    def test_import_module_manifest(self):
+        """
+        Import a file with manifest of having wrong datatype (other than list)
+        in manifest data
+        """
+        files = [
+            ('foo/__manifest__.py', b"{'data': {'data.xml'}}"),
+            ('foo/data.xml', b"""
+                <data>
+                    <record id="logo" model="ir.attachment">
+                        <field name="name">Company Logo</field>
+                        <field name="datas" type="base64" file="foo/static/src/img/content/logo.png"/>
+                        <field name="res_model">ir.ui.view</field>
+                        <field name="public" eval="True"/>
+                    </record>
+                </data>
+            """),
+        ]
+        with self.assertRaises(UserError):
+            self.import_zipfile(files)
