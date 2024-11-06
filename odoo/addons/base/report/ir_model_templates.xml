@@ -12,6 +12,8 @@
                         </td>
                         <td colspan="8">
                             <p>Type: <span t-field="o.state"/></p>
+                            <p t-if="o.abstract">Abstract: True</p>
+                            <p t-if="not o.abstract">Abstract: False</p>
                             <p t-if="o.transient">Transient: True</p>
                             <p t-if="not o.transient">Transient: False</p>
                             <p>Apps: <span t-field="o.modules"/></p>
