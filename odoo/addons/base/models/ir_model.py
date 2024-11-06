@@ -225,6 +225,7 @@ class IrModel(models.Model):
     state = fields.Selection([('manual', 'Custom Object'), ('base', 'Base Object')], string='Type', default='manual', readonly=True)
     access_ids = fields.One2many('ir.model.access', 'model_id', string='Access')
     rule_ids = fields.One2many('ir.rule', 'model_id', string='Record Rules')
+    abstract = fields.Boolean(string="Abstract Model")
     transient = fields.Boolean(string="Transient Model")
     modules = fields.Char(compute='_in_modules', string='In Apps', help='List of modules in which the object is defined or inherited')
     view_ids = fields.One2many('ir.ui.view', compute='_view_ids', string='Views')
@@ -362,12 +363,9 @@ class IrModel(models.Model):
         return res
 
     def write(self, vals):
-        if 'model' in vals and any(rec.model != vals['model'] for rec in self):
-            raise UserError(_('Field "Model" cannot be modified on models.'))
-        if 'state' in vals and any(rec.state != vals['state'] for rec in self):
-            raise UserError(_('Field "Type" cannot be modified on models.'))
-        if 'transient' in vals and any(rec.transient != vals['transient'] for rec in self):
-            raise UserError(_('Field "Transient Model" cannot be modified on models.'))
+        for unmodifiable_field in ('model', 'state', 'abstract', 'transient'):
+            if unmodifiable_field in vals and any(rec[unmodifiable_field] != vals[unmodifiable_field] for rec in self):
+                raise UserError(_('Field %s cannot be modified on models.', self._fields[unmodifiable_field]._description_string(self.env)))
         # Filter out operations 4 from field id, because the web client always
         # writes (4,id,False) even for non dirty items.
         if 'field_id' in vals:
@@ -410,6 +408,7 @@ class IrModel(models.Model):
             'order': model._order,
             'info': next(cls.__doc__ for cls in self.env.registry[model._name].mro() if cls.__doc__),
             'state': 'manual' if model._custom else 'base',
+            'abstract': model._abstract,
             'transient': model._transient,
         }
 
@@ -460,6 +459,7 @@ class IrModel(models.Model):
             _description = model_data['name']
             _module = False
             _custom = True
+            _abstract = bool(model_data['abstract'])
             _transient = bool(model_data['transient'])
             _order = model_data['order']
             __doc__ = model_data['info']

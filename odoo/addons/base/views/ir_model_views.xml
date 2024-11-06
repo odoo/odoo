@@ -38,6 +38,7 @@
                             <field name="name"/>
                             <field name="model" readonly="id"/>
                             <field name="order"/>
+                            <field name="abstract" readonly="id" groups="base.group_no_one"/>
                             <field name="transient" readonly="id" groups="base.group_no_one"/>
                         </group>
                         <group>
@@ -226,6 +227,7 @@
                 <search string="Model Description">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('model','ilike',self)]" string="Model"/>
                     <field name="model" filter_domain="[('model','ilike',self)]" string="Technical Name"/>
+                    <filter string="Abstract" name="abstract" domain="[('abstract', '=', True)]"/>
                     <filter string="Transient" name="transient" domain="[('transient', '=', True)]"/>
                     <separator/>
                     <filter string="Custom" name="custom" domain="[('state', '=', 'manual')]"/>
