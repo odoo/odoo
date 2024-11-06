@@ -16,7 +16,7 @@ export class PowerButtonsPlugin extends Plugin {
         const powerboxItemsDict = Object.fromEntries(
             this.dependencies.powerbox.getPowerboxItems().map((item) => [item.id, item])
         );
-        this.powerboxItems = this.getResource("powerButtons")
+        this.powerboxItems = this.getResource("power_buttons")
             .map((id) => powerboxItemsDict[id])
             .filter(Boolean);
         this.powerboxItems.push({

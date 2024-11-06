@@ -34,7 +34,7 @@ export class TableUIPlugin extends Plugin {
                 commandId: "openPickerOrInsertTable",
             },
         ],
-        powerButtons: ["openPickerOrInsertTable"],
+        power_buttons: ["openPickerOrInsertTable"],
     };
 
     setup() {

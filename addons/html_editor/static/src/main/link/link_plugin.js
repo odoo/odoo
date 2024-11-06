@@ -180,7 +180,7 @@ export class LinkPlugin extends Plugin {
         selectionchange_handlers: this.handleSelectionChange.bind(this),
         split_element_block_overrides: this.handleSplitBlock.bind(this),
         insert_line_break_element_overrides: this.handleInsertLineBreak.bind(this),
-        powerButtons: ["toggleLinkTools"],
+        power_buttons: ["toggleLinkTools"],
         clean_for_save_handlers: ({ root }) => this.removeEmptyLinks(root),
         normalize_handlers: this.normalizeLink.bind(this),
     };

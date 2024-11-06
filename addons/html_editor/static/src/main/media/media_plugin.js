@@ -88,7 +88,7 @@ export class MediaPlugin extends Plugin {
         ],
         clean_handlers: this.clean.bind(this),
         unsplittable_node_predicates: isIconElement, // avoid merge
-        powerButtons: ["insertImage"],
+        power_buttons: ["insertImage"],
         clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
         normalize_handlers: this.normalizeMedia.bind(this),
     };

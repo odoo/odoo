@@ -107,7 +107,7 @@ export class ListPlugin extends Plugin {
         hints: [{ selector: "LI", text: _t("List") }],
         input_handlers: this.onInput.bind(this),
         normalize_handlers: this.normalize.bind(this),
-        powerButtons: ["toggleListUL", "toggleListOL", "toggleListCL"],
+        power_buttons: ["toggleListUL", "toggleListOL", "toggleListCL"],
     };
 
     setup() {

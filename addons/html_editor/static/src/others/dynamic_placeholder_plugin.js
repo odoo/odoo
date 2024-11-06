@@ -32,7 +32,7 @@ export class DynamicPlaceholderPlugin extends Plugin {
             categoryId: "marketing_tools",
             commandId: "openDynamicPlaceholder",
         },
-        powerButtons: ["openDynamicPlaceholder"],
+        power_buttons: ["openDynamicPlaceholder"],
     };
     setup() {
         this.defaultResModel = this.config.dynamicPlaceholderResModel;
