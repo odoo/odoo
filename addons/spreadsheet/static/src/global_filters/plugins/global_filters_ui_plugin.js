@@ -1,6 +1,7 @@
 /** @ts-check */
 
 /**
+ * @typedef {import("@odoo/o-spreadsheet").UID} UID
  * @typedef {import("@spreadsheet").GlobalFilter} GlobalFilter
  * @typedef {import("@spreadsheet").FieldMatching} FieldMatching
  * @typedef {import("@spreadsheet").DateGlobalFilter} DateGlobalFilter
@@ -18,14 +19,11 @@ import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 
 import { isEmpty } from "@spreadsheet/helpers/helpers";
 import { FILTER_DATE_OPTION } from "@spreadsheet/assets_backend/constants";
-import {
-    checkFilterValueIsValid,
-    getRelativeDateDomain,
-} from "@spreadsheet/global_filters/helpers";
-import { RELATIVE_DATE_RANGE_TYPES } from "@spreadsheet/helpers/constants";
+import { checkFilterValueIsValid } from "@spreadsheet/global_filters/helpers";
 import { OdooUIPlugin } from "@spreadsheet/plugins";
 import { getItemId } from "../../helpers/model";
 import { serializeDateTime, serializeDate } from "@web/core/l10n/dates";
+import { getRelativeDateInterval, getRelativeDateDomain } from "../relative_date_helpers";
 
 const { DateTime } = luxon;
 
@@ -68,8 +66,13 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
          * the list of display names.
          */
         this.recordsDisplayName = {};
-        /** @type {Object.<string, string|Array<string>|Object>} */
-        this.values = {};
+        /**
+         * Values set by the user for each filter. Different from the default
+         * value.
+         *
+         * @type {Object.<UID, string|Array<string>|Object>}
+         */
+        this.userSetValues = {};
     }
 
     /**
@@ -111,12 +114,12 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
                 const id = filter.id;
                 if (
                     filter.type === "date" &&
-                    this.values[id] &&
-                    this.values[id].rangeType !== filter.rangeType
+                    this.userSetValues[id] &&
+                    this.userSetValues[id].rangeType !== filter.rangeType
                 ) {
-                    delete this.values[id];
-                } else if (!checkFilterValueIsValid(filter, this.values[id]?.value)) {
-                    delete this.values[id];
+                    delete this.userSetValues[id];
+                } else if (!checkFilterValueIsValid(filter, this.userSetValues[id]?.value)) {
+                    delete this.userSetValues[id];
                 }
                 this.recordsDisplayName[id] =
                     filter.type === "relation" ? filter.defaultValueDisplayNames : undefined;
@@ -144,7 +147,7 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
                 break;
             case "REMOVE_GLOBAL_FILTER":
                 delete this.recordsDisplayName[cmd.id];
-                delete this.values[cmd.id];
+                delete this.userSetValues[cmd.id];
                 break;
             case "CLEAR_GLOBAL_FILTER_VALUE":
                 this.recordsDisplayName[cmd.id] = [];
@@ -189,8 +192,9 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
     getGlobalFilterValue(filterId) {
         const filter = this.getters.getGlobalFilter(filterId);
 
-        const value = filterId in this.values ? this.values[filterId].value : undefined;
-        const preventAutomaticValue = this.values[filterId]?.value?.preventAutomaticValue;
+        const value =
+            filterId in this.userSetValues ? this.userSetValues[filterId].value : undefined;
+        const preventAutomaticValue = this.userSetValues[filterId]?.value?.preventAutomaticValue;
         if (filter.type === "date" && filter.rangeType === "from_to") {
             return value || { from: undefined, to: undefined };
         }
@@ -271,12 +275,21 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
                     };
                     return [[from], [to]];
                 }
-                if (value && typeof value === "string") {
-                    const type = RELATIVE_DATE_RANGE_TYPES.find((type) => type.type === value);
-                    if (!type) {
+                if (filter.rangeType === "relative") {
+                    if (!value) {
                         return [[{ value: "" }]];
                     }
-                    return [[{ value: type.description.toString() }]];
+                    const interval = getRelativeDateInterval(DateTime.local(), value, 0);
+                    const locale = this.getters.getLocale();
+                    const from = {
+                        value: toNumber(interval.start.toLocaleString(), locale),
+                        format: locale.dateFormat,
+                    };
+                    const to = {
+                        value: toNumber(interval.end.toLocaleString(), locale),
+                        format: locale.dateFormat,
+                    };
+                    return [[from], [to]];
                 }
                 if (!value || value.yearOffset === undefined) {
                     return [[{ value: "" }]];
@@ -381,7 +394,7 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
      */
     _setGlobalFilterValue(id, value) {
         const filter = this.getters.getGlobalFilter(id);
-        this.values[id] = {
+        this.userSetValues[id] = {
             value: value,
             rangeType: filter.type === "date" ? filter.rangeType : undefined,
         };
@@ -432,7 +445,7 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
                 value = { preventAutomaticValue: true };
                 break;
         }
-        this.values[id] = {
+        this.userSetValues[id] = {
             value,
             rangeType: filter.type === "date" ? filter.rangeType : undefined,
         };
@@ -460,7 +473,7 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
         }
         const field = fieldMatching.chain;
         const type = /** @type {"date" | "datetime"} */ (fieldMatching.type);
-        const offset = fieldMatching.offset || 0;
+        const periodOffset = fieldMatching.offset || 0;
         const now = DateTime.local();
 
         if (filter.rangeType === "from_to") {
@@ -480,7 +493,7 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
         }
 
         if (filter.rangeType === "relative") {
-            return getRelativeDateDomain(now, offset, value, field, type);
+            return getRelativeDateDomain(now, periodOffset, value, field, type);
         }
         const noPeriod = !value.period || value.period === "empty";
         const noYear = value.yearOffset === undefined;
@@ -492,7 +505,7 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
         const plusParam = { years: yearOffset };
         if (noPeriod) {
             granularity = "year";
-            plusParam.years += offset;
+            plusParam.years += periodOffset;
         } else {
             // value.period is can be "first_quarter", "second_quarter", etc. or
             // full month name (e.g. "january", "february", "march", etc.)
@@ -500,11 +513,11 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
             switch (granularity) {
                 case "month":
                     setParam.month = MONTHS[value.period].value;
-                    plusParam.month = offset;
+                    plusParam.month = periodOffset;
                     break;
                 case "quarter":
                     setParam.quarter = QUARTER_OPTIONS[value.period].setParam.quarter;
-                    plusParam.quarter = offset;
+                    plusParam.quarter = periodOffset;
                     break;
             }
         }

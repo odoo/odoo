@@ -1,7 +1,6 @@
 /** @ts-check */
 
 import { MultiRecordSelector } from "@web/core/record_selectors/multi_record_selector";
-import { RELATIVE_DATE_RANGE_TYPES } from "@spreadsheet/helpers/constants";
 import { DateFilterValue } from "../filter_date_value/filter_date_value";
 import { DateFromToValue } from "../filter_date_from_to_value/filter_date_from_to_value";
 
@@ -11,10 +10,17 @@ import { useService } from "@web/core/utils/hooks";
 import { Domain } from "@web/core/domain";
 import { user } from "@web/core/user";
 import { TextFilterValue } from "../filter_text_value/filter_text_value";
+import { RelativeDateValue } from "../relative_date_value/relative_date_value";
 
 export class FilterValue extends Component {
     static template = "spreadsheet_edition.FilterValue";
-    static components = { DateFilterValue, DateFromToValue, MultiRecordSelector, TextFilterValue };
+    static components = {
+        DateFilterValue,
+        DateFromToValue,
+        MultiRecordSelector,
+        TextFilterValue,
+        RelativeDateValue,
+    };
     static props = {
         filter: Object,
         model: Object,
@@ -22,7 +28,6 @@ export class FilterValue extends Component {
 
     setup() {
         this.getters = this.props.model.getters;
-        this.relativeDateRangesTypes = RELATIVE_DATE_RANGE_TYPES;
         this.nameService = useService("name");
     }
 
