@@ -90,7 +90,7 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_id': self.kit_a.id,
                     'product_uom_qty': 1.0,
                     'price_unit': 1,
-                    'tax_id': False,
+                    'tax_ids': False,
                 })],
         })
         so.action_confirm()
@@ -251,7 +251,7 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_id': kit.id,
                     'product_uom_qty': 3.0,
                     'price_unit': 100,
-                    'tax_id': False,
+                    'tax_ids': False,
                 })],
         })
         so.action_confirm()
@@ -354,7 +354,7 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_id': kit.id,
                     'product_uom_qty': 3.0,
                     'price_unit': 100,
-                    'tax_id': False,
+                    'tax_ids': False,
                 })],
         })
         so.action_confirm()
@@ -446,7 +446,7 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_id': kit.id,
                     'product_uom_qty': 1.0,
                     'price_unit': 5,
-                    'tax_id': False,
+                    'tax_ids': False,
                 })],
         })
         so.action_confirm()
@@ -498,7 +498,7 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_id': kit.id,
                     'product_uom_qty': 2.0,
                     'price_unit': 5,
-                    'tax_id': False,
+                    'tax_ids': False,
                 })],
         })
         so.action_confirm()
@@ -596,7 +596,7 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_id': main_kit.id,
                     'product_uom_qty': 1.0,
                     'price_unit': 1,
-                    'tax_id': False,
+                    'tax_ids': False,
                 })],
         })
         so.action_confirm()

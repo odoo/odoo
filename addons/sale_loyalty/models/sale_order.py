@@ -220,7 +220,7 @@ class SaleOrder(models.Model):
             'points_cost': cost,
             'reward_identifier_code': _generate_random_reward_code(),
             'sequence': max(self.order_line.filtered(lambda x: not x.is_reward_line).mapped('sequence'), default=10) + 1,
-            'tax_id': [(Command.CLEAR, 0, 0)] + [(Command.LINK, tax.id, False) for tax in taxes]
+            'tax_ids': [Command.clear()] + [Command.link(tax.id) for tax in taxes],
         }]
 
     def _discountable_amount(self, rewards_to_ignore):
@@ -244,7 +244,7 @@ class SaleOrder(models.Model):
             if not line.product_uom_qty or not line.price_unit:
                 # Ignore lines whose amount will be 0 (bc of empty qty or 0 price)
                 continue
-            tax_data = line.tax_id.compute_all(
+            tax_data = line.tax_ids.compute_all(
                 line.price_unit,
                 quantity=line.product_uom_qty,
                 product=line.product_id,
@@ -252,7 +252,7 @@ class SaleOrder(models.Model):
             )
             # To compute the discountable amount we get the subtotal and add
             # non-fixed tax totals. This way fixed taxes will not be discounted
-            taxes = line.tax_id.filtered(lambda t: t.amount_type != 'fixed')
+            taxes = line.tax_ids.filtered(lambda t: t.amount_type != 'fixed')
             discountable += tax_data['total_excluded'] + sum(
                 tax['amount'] for tax in tax_data['taxes'] if tax['id'] in taxes.ids
             )
@@ -356,7 +356,7 @@ class SaleOrder(models.Model):
         discountable_per_tax = defaultdict(int)
         for line in cheapest_line:
             discountable += line.price_total
-            taxes = line.tax_id.filtered(lambda t: t.amount_type != 'fixed')
+            taxes = line.tax_ids.filtered(lambda t: t.amount_type != 'fixed')
             discountable_per_tax[taxes] += line.price_unit * (1 - (line.discount or 0) / 100)
 
         return discountable, discountable_per_tax
@@ -425,21 +425,21 @@ class SaleOrder(models.Model):
             else:
                 non_common_lines = discounted_lines - lines_to_discount
                 # Fixed prices are per tax
-                discounted_amounts = {line.tax_id.filtered(lambda t: t.amount_type != 'fixed'): abs(line.price_total) for line in lines}
+                discounted_amounts = {line.tax_ids.filtered(lambda t: t.amount_type != 'fixed'): abs(line.price_total) for line in lines}
                 for line in itertools.chain(non_common_lines, common_lines):
                     # For gift card and eWallet programs we have no tax but we can consume the amount completely
                     if lines.reward_id.program_id.is_payment_program:
-                        discounted_amount = discounted_amounts[lines.tax_id.filtered(lambda t: t.amount_type != 'fixed')]
+                        discounted_amount = discounted_amounts[lines.tax_ids.filtered(lambda t: t.amount_type != 'fixed')]
                     else:
-                        discounted_amount = discounted_amounts[line.tax_id.filtered(lambda t: t.amount_type != 'fixed')]
+                        discounted_amount = discounted_amounts[line.tax_ids.filtered(lambda t: t.amount_type != 'fixed')]
                     if discounted_amount == 0:
                         continue
                     remaining = remaining_amount_per_line[line]
                     consumed = min(remaining, discounted_amount)
                     if lines.reward_id.program_id.is_payment_program:
-                        discounted_amounts[lines.tax_id.filtered(lambda t: t.amount_type != 'fixed')] -= consumed
+                        discounted_amounts[lines.tax_ids.filtered(lambda t: t.amount_type != 'fixed')] -= consumed
                     else:
-                        discounted_amounts[line.tax_id.filtered(lambda t: t.amount_type != 'fixed')] -= consumed
+                        discounted_amounts[line.tax_ids.filtered(lambda t: t.amount_type != 'fixed')] -= consumed
                     remaining_amount_per_line[line] -= consumed
 
         discountable = 0
@@ -450,7 +450,7 @@ class SaleOrder(models.Model):
             # line_discountable is the same as in a 'order' discount
             #  but first multiplied by a factor for the taxes to apply
             #  and then multiplied by another factor coming from the discountable
-            taxes = line.tax_id.filtered(lambda t: t.amount_type != 'fixed')
+            taxes = line.tax_ids.filtered(lambda t: t.amount_type != 'fixed')
             discountable_per_tax[taxes] += line_discountable *\
                 (remaining_amount_per_line[line] / line.price_total)
         return discountable, discountable_per_tax
@@ -470,7 +470,7 @@ class SaleOrder(models.Model):
         base_reward_line_values = {
             'product_id': reward_product.id,
             'product_uom_qty': 1.0,
-            'tax_id': [Command.clear()],
+            'tax_ids': [Command.clear()],
             'name': reward.description,
             'reward_id': reward.id,
             'coupon_id': coupon.id,
@@ -551,7 +551,7 @@ class SaleOrder(models.Model):
                     )
                     reward_line_values.update({
                         'price_unit': new_price,
-                        'tax_id': [Command.set(mapped_taxes.ids)],
+                        'tax_ids': [Command.set(mapped_taxes.ids)],
                     })
             return [reward_line_values]
 
@@ -569,7 +569,7 @@ class SaleOrder(models.Model):
                 # Check for any order line where its taxes exactly match reward_taxes
                 matching_lines = [
                     line for line in self.order_line
-                    if not line.is_delivery and set(line.tax_id) == set(mapped_taxes)
+                    if not line.is_delivery and set(line.tax_ids) == set(mapped_taxes)
                 ]
 
                 if not matching_lines:
@@ -582,7 +582,7 @@ class SaleOrder(models.Model):
                     reward_line_values['price_unit']
                 )
 
-                reward_line_values['tax_id'] = [Command.set(mapped_taxes.ids)]
+                reward_line_values['tax_ids'] = [Command.set(mapped_taxes.ids)]
 
             # Discount amount should not exceed the untaxed amount on the order
             if abs(reward_line_values['price_unit']) > self.amount_untaxed:
@@ -611,7 +611,7 @@ class SaleOrder(models.Model):
                 ) if mapped_taxes else reward.description,
                 'price_unit': -(price * discount_factor),
                 'points_cost': 0,
-                'tax_id': [Command.clear()] + [Command.link(tax.id) for tax in mapped_taxes]
+                'tax_ids': [Command.clear()] + [Command.link(tax.id) for tax in mapped_taxes]
             }
         # We only assign the point cost to one line to avoid counting the cost multiple times
         if reward_dict:

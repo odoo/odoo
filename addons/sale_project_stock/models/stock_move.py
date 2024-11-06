@@ -49,7 +49,7 @@ class StockMove(models.Model):
             'name': self.name,
             'sequence': last_sequence,
             'price_unit': price,
-            'tax_id': [x.id for x in taxes],
+            'tax_ids': [x.id for x in taxes],
             'discount': 0.0,
             'product_id': self.product_id.id,
             'product_uom_qty': self.product_uom_qty,

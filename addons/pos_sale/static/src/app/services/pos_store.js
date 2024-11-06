@@ -98,9 +98,9 @@ patch(PosStore.prototype, {
                 price_unit: line.price_unit,
                 price_type: "automatic",
                 tax_ids:
-                    orderFiscalPos || !line.tax_id
+                    orderFiscalPos || !line.tax_ids
                         ? undefined
-                        : line.tax_id.map((t) => ["link", t]),
+                        : line.tax_ids.map((t) => ["link", t]),
                 sale_order_origin_id: sale_order,
                 sale_order_line_id: line,
                 customer_note: line.customer_note,
@@ -212,7 +212,7 @@ patch(PosStore.prototype, {
     async _createDownpaymentLines(sale_order, total_down_payment) {
         //This function will create all the downpaymentlines. We will create on downpayment line per unique tax combination
         const grouped = Object.groupBy(sale_order.order_line, (ol) => {
-            return ol.tax_id.map((tax_id) => tax_id.id).sort((a, b) => a - b);
+            return ol.tax_ids.map((tax_ids) => tax_ids.id).sort((a, b) => a - b);
         });
         Object.keys(grouped).forEach(async (key) => {
             const group = grouped[key];
@@ -223,7 +223,7 @@ patch(PosStore.prototype, {
             const down_payment_line_price = total_down_payment * ratio;
             // We apply the taxes and keep the same price
             const new_price = compute_price_force_price_include(
-                group[0].tax_id,
+                group[0].tax_ids,
                 down_payment_line_price,
                 this.config.down_payment_product_id,
                 this.config._product_default_values,
@@ -236,7 +236,7 @@ patch(PosStore.prototype, {
                 product_tmpl_id: this.config.down_payment_product_id.product_tmpl_id,
                 price_unit: new_price,
                 sale_order_origin_id: sale_order,
-                tax_ids: [["link", ...group[0].tax_id]],
+                tax_ids: [["link", ...group[0].tax_ids]],
                 down_payment_details: sale_order.order_line
                     .filter(
                         (line) =>

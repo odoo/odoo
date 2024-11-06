@@ -30,7 +30,7 @@ class TestPoSSaleL10NBe(TestPointOfSaleHttpCommon):
                 'product_id': self.product_a.id,
                 'product_uom_qty': 10,
                 'price_unit': 10,
-                'tax_id': False,
+                'tax_ids': False,
             })],
         })
 

@@ -2313,7 +2313,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
                     'product_id': kit.id,
                     'product_uom_qty': 1.0,
                     'price_unit': 100,
-                    'tax_id': False,
+                    'tax_ids': False,
                 })],
         })
         so.action_confirm()
@@ -2378,7 +2378,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
                     'product_id': kit.id,
                     'product_uom_qty': 1.0,
                     'price_unit': 5,
-                    'tax_id': False,
+                    'tax_ids': False,
                 })],
         })
         so.action_confirm()
@@ -2400,7 +2400,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
                     'product_id': self.kit_1.id,
                     'product_uom_qty': 1.0,
                     'price_unit': 5,
-                    'tax_id': False,
+                    'tax_ids': False,
                 })],
         })
         self.bom_kit_1.action_archive()
