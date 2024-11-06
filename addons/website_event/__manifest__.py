@@ -55,6 +55,12 @@
         'web.assets_tests': [
             'website_event/static/tests/**/*',
         ],
+        'web.assets_unit_tests': [
+            'website_event/static/tests/interactions/**/*',
+        ],
+        'web.assets_unit_tests_setup': [
+            'website_event/static/src/snippets/s_events/000.js',
+        ],
         'web.assets_frontend': [
             'website_event/static/src/js/tours/**/*',
             'website_event/static/src/scss/event_templates_common.scss',

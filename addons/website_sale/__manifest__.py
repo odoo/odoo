@@ -105,7 +105,7 @@
             'website_sale/static/src/js/website_sale_recently_viewed.js',
             'website_sale/static/src/js/website_sale_tracking.js',
             'website/static/lib/multirange/multirange_custom.js',
-            'website/static/lib/multirange/multirange_instance.js',
+            'website/static/src/interactions/multirange_input.js',
             'website_sale/static/src/xml/website_sale_image_viewer.xml',
             'website_sale/static/src/js/components/website_sale_image_viewer.js',
             'website_sale/static/src/xml/website_sale_reorder_modal.xml',
@@ -168,6 +168,12 @@
         'web.assets_tests': [
             'website_sale/static/tests/**/*',
             'website_sale/static/src/js/tours/product_configurator_tour_utils.js',
+        ],
+        'web.assets_unit_tests': [
+            'website_sale/static/tests/interactions/**/*',
+        ],
+        'web.assets_unit_tests_setup': [
+            'website_sale/static/src/snippets/s_dynamic_snippet_products/000.js',
         ],
     },
     'license': 'LGPL-3',

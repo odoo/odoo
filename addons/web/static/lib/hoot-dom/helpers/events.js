@@ -399,6 +399,10 @@ const getEventConstructor = (eventType) => {
         case "unload":
             return [Event, mapEvent];
 
+        // URL events
+        case "hashchange":
+            return [HashChangeEvent, mapNonBubblingEvent];
+
         // Default: base Event constructor
         default:
             return [Event, mapEvent, BUBBLES];

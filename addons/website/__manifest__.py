@@ -1,3 +1,4 @@
+
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -191,6 +192,13 @@
     'uninstall_hook': 'uninstall_hook',
     'assets': {
         'web.assets_frontend': [
+            'website/static/src/interactions/**/*',
+            ('remove', 'website/static/src/interactions/**/*.edit.js'),
+            # Multi-range is an opt-in feature.
+            ('remove', 'website/static/src/interactions/multirange_input.js'),
+            # Activated on-demand by website.ripple_effect_js.
+            ('remove', 'website/static/src/interactions/ripple_effect.js'),
+            'website/static/src/core/**/*',
             ('replace', 'web/static/src/legacy/js/public/public_root_instance.js', 'website/static/src/js/content/website_root_instance.js'),
             'website/static/src/libs/zoomodoo/zoomodoo.scss',
             'website/static/src/scss/website.scss',
@@ -206,10 +214,6 @@
             'website/static/src/js/content/compatibility.js',
             'website/static/src/js/content/menu.js',
             'website/static/src/js/content/snippets.animation.js',
-            'website/static/src/js/show_password.js',
-            'website/static/src/js/post_link.js',
-            'website/static/src/js/plausible.js',
-            'website/static/src/js/website_controller_page_listing_layout.js',
             'website/static/src/js/user_custom_javascript.js',
             'website/static/src/js/http_cookie.js',
             'website/static/src/xml/website.xml',
@@ -282,6 +286,32 @@
         ],
         'web.qunit_suite_tests': [
             'website/static/tests/redirect_field_tests.js',
+        ],
+        'web.assets_unit_tests': [
+            'website/static/tests/core/**/*',
+            'website/static/tests/interactions/**/*',
+        ],
+        'web.assets_unit_tests_setup': [
+            'website/static/lib/multirange/*.js',
+            'website/static/src/core/**/*',
+            'website/static/src/interactions/**/*',
+            # TODO Re-activate when testing edit mode
+            ('remove', 'website/static/src/interactions/**/*.edit.js'),
+            'website/static/src/snippets/s_countdown/000.js',
+            'website/static/src/snippets/s_chart/000.js',
+            'website/static/src/snippets/s_dynamic_snippet/000.js',
+            'website/static/src/snippets/s_dynamic_snippet/000.xml',
+            'website/static/src/snippets/s_dynamic_snippet_carousel/000.js',
+            'website/static/src/snippets/s_dynamic_snippet_carousel/000.xml',
+            'website/static/src/snippets/s_embed_code/000.js',
+            'website/static/src/snippets/s_image_gallery/000.js',
+            'website/static/src/snippets/s_table_of_content/000.js',
+            'website/static/src/snippets/s_table_of_content/000.scss',
+            'website/static/src/snippets/s_website_form/000.js',
+            'website/static/src/snippets/*/*.xml',
+            'website/static/src/xml/website_form.xml',
+            'website/static/src/xml/website.cookies_warning.xml',
+            'google_recaptcha/static/src/js/recaptcha.js',
         ],
         'web.tests_assets': [
             'website/static/tests/website_service_mock.js',
