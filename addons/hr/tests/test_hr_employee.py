@@ -422,3 +422,23 @@ class TestHrEmployee(TestHrCommon):
         employee_norbert = self.env['hr.employee'].create({'name': 'Norbert Employee', 'user_id': user_norbert.id})
         self.assertEqual(employee_norbert.image_1920, user_norbert.image_1920)
         self.assertEqual(employee_norbert.avatar_1920, user_norbert.avatar_1920)
+
+    def test_badge_validation(self):
+        # check employee's barcode should be a sequence of digits and alphabets
+        employee = self.env['hr.employee'].create({
+            'name': 'Badge Employee'
+        })
+
+        employee_form = Form(employee)
+        employee_form.barcode = 'Test@badge1'
+        with self.assertRaises(ValidationError):
+            employee_form.save()
+
+        employee_form.barcode = 'Testàë@badge'
+        with self.assertRaises(ValidationError):
+            employee_form.save()
+
+        employee_form.barcode = 'Testbadge2'
+        employee_form.save()
+
+        self.assertEqual(employee_form.barcode, 'Testbadge2')
