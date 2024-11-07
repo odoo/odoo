@@ -5,7 +5,7 @@ import { useService } from "@web/core/utils/hooks";
 import { BurgerUserMenu } from "./burger_user_menu/burger_user_menu";
 import { MobileSwitchCompanyMenu } from "./mobile_switch_company_menu/mobile_switch_company_menu";
 
-import { Component, onMounted, useState } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
 
 /**
  * This file includes the widget Menu in mobile to render the BurgerMenu which
@@ -30,15 +30,24 @@ export class BurgerMenu extends Component {
             isBurgerOpened: false,
         });
         this.swipeStartX = null;
-        onMounted(() => {
-            this.env.bus.addEventListener("HOME-MENU:TOGGLED", () => {
+
+        const homeMenuToggledListener = () => {
+            this._closeBurger();
+        };
+
+        const actionManagerUpdateListener = ({ detail: req }) => {
+            if (req.id) {
                 this._closeBurger();
-            });
-            this.env.bus.addEventListener("ACTION_MANAGER:UPDATE", ({ detail: req }) => {
-                if (req.id) {
-                    this._closeBurger();
-                }
-            });
+            }
+        };
+
+        onMounted(() => {
+            this.env.bus.addEventListener("HOME-MENU:TOGGLED", homeMenuToggledListener);
+            this.env.bus.addEventListener("ACTION_MANAGER:UPDATE", actionManagerUpdateListener);
+        });
+        onWillUnmount(() => {
+            this.env.bus.removeEventListener("HOME-MENU:TOGGLED", homeMenuToggledListener);
+            this.env.bus.removeEventListener("ACTION_MANAGER:UPDATE", actionManagerUpdateListener);
         });
     }
     _closeBurger() {
