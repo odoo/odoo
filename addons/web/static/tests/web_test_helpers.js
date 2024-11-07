@@ -29,6 +29,7 @@ import { defineModels } from "./_framework/mock_server/mock_server";
  * @typedef {import("./_framework/mock_server/mock_server").RouteCallback<T>} RouteCallback
  */
 
+export { asyncStep, waitForSteps } from "./_framework/async_step";
 export {
     findComponent,
     getDropdownMenu,
@@ -67,9 +68,7 @@ export {
     validateKanbanRecord,
 } from "./_framework/kanban_test_helpers";
 export { Command } from "./_framework/mock_server/mock_model";
-export { swipeLeft, swipeRight } from "./_framework/touch_helpers";
 export {
-    MockServer,
     authenticate,
     defineActions,
     defineEmbeddedActions,
@@ -78,15 +77,16 @@ export {
     defineParams,
     logout,
     makeMockServer,
+    MockServer,
     onRpc,
     stepAllNetworkCalls,
     withUser,
 } from "./_framework/mock_server/mock_server";
 export {
-    MockServerError,
     getKwArgs,
     makeKwArgs,
     makeServerError,
+    MockServerError,
     unmakeKwArgs,
 } from "./_framework/mock_server/mock_server_utils";
 export { serverState } from "./_framework/mock_server_state.hoot";
@@ -126,6 +126,7 @@ export {
     toggleSearchBarMenu,
     validateSearch,
 } from "./_framework/search_test_helpers";
+export { swipeLeft, swipeRight } from "./_framework/touch_helpers";
 export { installLanguages, patchTranslations } from "./_framework/translation_test_helpers";
 export {
     clickButton,
@@ -137,13 +138,13 @@ export {
     clickViewButton,
     expectMarkup,
     fieldInput,
+    hideTab,
     mountView,
     mountViewInDialog,
     parseViewProps,
     selectFieldDropdownItem,
-    hideTab,
 } from "./_framework/view_test_helpers";
-export { useTestClientAction, mountWebClient } from "./_framework/webclient_test_helpers";
+export { mountWebClient, useTestClientAction } from "./_framework/webclient_test_helpers";
 
 export function defineWebModels() {
     return defineModels(webModels);
