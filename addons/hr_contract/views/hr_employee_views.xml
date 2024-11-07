@@ -25,6 +25,17 @@
         </field>
     </record>
 
+    <record id="hr_contract_employee_list_inherit" model="ir.ui.view">
+        <field name="name">hr.contract.employee.list.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.hr_employee_list_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='resource_calendar_id']" position="before">
+                <field name="first_contract_date" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
     <record id="hr_employee_view_graph_inherit_hr_contract" model="ir.ui.view">
         <field name="name">hr.employee.view.graph</field>
         <field name="inherit_id" ref="hr.hr_employee_view_graph"/>
