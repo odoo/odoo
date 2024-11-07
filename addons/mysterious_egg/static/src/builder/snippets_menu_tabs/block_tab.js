@@ -57,6 +57,7 @@ export class BlockTab extends Component {
             ref: this.env.builderRef,
             elements: ".o-website-snippetsmenu .o_draggable",
             enable: () => this.props.editor?.isReady,
+            iframeWindow: this.props.editor?.editable.ownerDocument.defaultView,
             onWillStartDrag: ({ element }) => {
                 copyOnDrag.clone(element);
             },
