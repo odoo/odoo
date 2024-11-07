@@ -39,7 +39,8 @@ export class ClosePosPopup extends Component {
     }
     autoFillCashCount() {
         const count = this.props.default_cash_details.amount;
-        this.state.payments[this.props.default_cash_details.id].counted = count.toString();
+        this.state.payments[this.props.default_cash_details.id].counted =
+            this.env.utils.formatCurrency(count, false);
         this.setManualCashInput(count);
     }
     get cashMoveData() {
