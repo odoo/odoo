@@ -146,7 +146,7 @@ class MailBot(models.AbstractModel):
                 return random.choice([
                     html_escape(
                         _("I'm not smart enough to answer your question.%(new_line)sTo follow my guide,"
-                          " ask: %(command_start)sstart the tour%(command_end)s.") % self._get_style_dict()),
+                          " ask: %(command_start)sstart the tour%(command_end)s.")) % self._get_style_dict(),
                     _("Hmmm..."),
                     _("I'm afraid I don't understand. Sorry!"),
                     html_escape(
