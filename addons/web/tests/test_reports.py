@@ -1,6 +1,12 @@
+import os
+from unittest.mock import Mock, patch
+
 import odoo.tests
 
 from odoo.addons.website.tools import MockRequest
+from odoo.exceptions import UserError
+from odoo.http import root
+from odoo.tools import mute_logger
 
 
 class TestReports(odoo.tests.HttpCase):
@@ -83,3 +89,52 @@ class TestReports(odoo.tests.HttpCase):
         )
         self.assertEqual(result.get('record_id'), None, 'wkhtmltopdf must not have been allowed to fetch the image')
         self.assertEqual(result.get('data'), None, 'wkhtmltopdf must not have been allowed to fetch the image')
+
+    @mute_logger('odoo.addons.base.models.ir_actions_report')
+    def test_report_error_cleanup(self):
+        admin = self.env.ref('base.user_admin')
+        self.env['ir.ui.view'].create({
+            'type': 'qweb',
+            'name': 'base.test_report',
+            'key': 'base.test_report',
+            'arch': '''
+                <main>
+                    <div">
+                        <p>TEST</p>
+                    </div>
+                </main>
+            '''
+        })
+        report = self.env['ir.actions.report'].create({
+            'name': 'test report',
+            'report_name': 'base.test_report',
+            'model': 'res.partner',
+        })
+        report = report.with_user(admin)
+
+        with (MockRequest(report.env) as mock_request,
+            patch('subprocess.Popen') as mock_popen,
+            patch.object(root.session_store, 'delete') as mock_delete,
+            patch.object(os, 'unlink') as mock_unlink):
+
+            mock_request.session = self.authenticate(admin.login, admin.login)
+
+            mock_process = Mock()
+            mock_process.returncode = -1
+            mock_process.communicate.return_value = ("output", "")
+            mock_popen.return_value = mock_process
+
+            with self.assertRaises(UserError):
+                report.with_context(force_report_rendering=True)._render_qweb_pdf(report.id)
+
+            # Check if the temporary session has been deleted
+            self.assertEqual(mock_delete.call_count, 1)
+            self.assertNotEqual(mock_delete.call_args.args[0].sid, mock_request.session.sid)
+
+            # Check if temporary files have been deleted
+            deleted_files = ''.join([call.args[0] for call in mock_unlink.call_args_list])
+            self.assertIn('report.cookie_jar.tmp', deleted_files)
+            self.assertIn('report.header.tmp', deleted_files)
+            self.assertIn('report.footer.tmp', deleted_files)
+            self.assertIn('report.body.tmp', deleted_files)
+            self.assertIn('report.tmp', deleted_files)

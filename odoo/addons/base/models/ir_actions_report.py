@@ -528,110 +528,106 @@ class IrActionsReport(models.Model):
             set_viewport_size=set_viewport_size)
 
         files_command_args = []
-        temporary_files = []
-        temp_session = None
 
-        # Passing the cookie to wkhtmltopdf in order to resolve internal links.
-        if request and request.db:
-            # Create a temporary session which will not create device logs
-            temp_session = root.session_store.new()
-            temp_session.update({
-                **request.session,
-                '_trace_disable': True,
-            })
-            if temp_session.uid:
-                temp_session.session_token = security.compute_session_token(temp_session, self.env)
-            root.session_store.save(temp_session)
-
-            base_url = self._get_report_url()
-            domain = urlparse(base_url).hostname
-            cookie = f'session_id={temp_session.sid}; HttpOnly; domain={domain}; path=/;'
-            cookie_jar_file_fd, cookie_jar_file_path = tempfile.mkstemp(suffix='.txt', prefix='report.cookie_jar.tmp.')
-            temporary_files.append(cookie_jar_file_path)
-            with closing(os.fdopen(cookie_jar_file_fd, 'wb')) as cookie_jar_file:
-                cookie_jar_file.write(cookie.encode())
-            command_args.extend(['--cookie-jar', cookie_jar_file_path])
-
-        if header:
-            head_file_fd, head_file_path = tempfile.mkstemp(suffix='.html', prefix='report.header.tmp.')
-            with closing(os.fdopen(head_file_fd, 'wb')) as head_file:
-                head_file.write(header.encode())
-            temporary_files.append(head_file_path)
-            files_command_args.extend(['--header-html', head_file_path])
-        if footer:
-            foot_file_fd, foot_file_path = tempfile.mkstemp(suffix='.html', prefix='report.footer.tmp.')
-            with closing(os.fdopen(foot_file_fd, 'wb')) as foot_file:
-                foot_file.write(footer.encode())
-            temporary_files.append(foot_file_path)
-            files_command_args.extend(['--footer-html', foot_file_path])
-
-        paths = []
-        for i, body in enumerate(bodies):
-            prefix = '%s%d.' % ('report.body.tmp.', i)
-            body_file_fd, body_file_path = tempfile.mkstemp(suffix='.html', prefix=prefix)
-            with closing(os.fdopen(body_file_fd, 'wb')) as body_file:
-                # HACK: wkhtmltopdf doesn't like big table at all and the
-                #       processing time become exponential with the number
-                #       of rows (like 1H for 250k rows).
-                #
-                #       So we split the table into multiple tables containing
-                #       500 rows each. This reduce the processing time to 1min
-                #       for 250k rows. The number 500 was taken from opw-1689673
-                if len(body) < 4 * 1024 * 1024: # 4Mib
-                    body_file.write(body.encode())
-                else:
-                    tree = lxml.html.fromstring(body)
-                    _split_table(tree, 500)
-                    body_file.write(lxml.html.tostring(tree))
-            paths.append(body_file_path)
-            temporary_files.append(body_file_path)
-
-        pdf_report_fd, pdf_report_path = tempfile.mkstemp(suffix='.pdf', prefix='report.tmp.')
-        os.close(pdf_report_fd)
-        temporary_files.append(pdf_report_path)
-
-        wkhtmltopdf = [_get_wkhtmltopdf_bin()] + command_args + files_command_args + paths + [pdf_report_path]
-        process = subprocess.Popen(wkhtmltopdf, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding="utf-8")
-        _out, err = process.communicate()
-
-        match process.returncode:
-            case 0:
-                pass
-            case 1:
-                if len(bodies) > 1:
-                    v = subprocess.run([_get_wkhtmltopdf_bin(), '--version'], stdout=subprocess.PIPE, check=True, encoding="utf-8")
-                    if '(with patched qt)' not in v.stdout:
-                        if getattr(threading.current_thread(), 'testing', False):
-                            raise unittest.SkipTest("Unable to convert multiple documents via wkhtmltopdf using unpatched QT")
-                        raise UserError(_("Tried to convert multiple documents in wkhtmltopdf using unpatched QT"))
-
-                _logger.warning("wkhtmltopdf: %s", err)
-            case c:
-                message = _(
-                    'Wkhtmltopdf failed (error code: %(error_code)s). Memory limit too low or maximum file number of subprocess reached. Message : %(message)s',
-                    error_code=c,
-                    message=err[-1000:],
-                ) if c == -11 else _(
-                    'Wkhtmltopdf failed (error code: %(error_code)s). Message: %(message)s',
-                    error_code=c,
-                    message=err[-1000:],
-                )
-                _logger.warning(message)
-                raise UserError(message)
-
-        with open(pdf_report_path, 'rb') as pdf_document:
-            pdf_content = pdf_document.read()
-
-        # Manual cleanup of the temporary session
-        if temp_session:
-            root.session_store.delete(temp_session)
-
-        # Manual cleanup of the temporary files
-        for temporary_file in temporary_files:
+        def delete_file(file_path):
             try:
-                os.unlink(temporary_file)
-            except (OSError, IOError):
-                _logger.error('Error when trying to remove file %s' % temporary_file)
+                os.unlink(file_path)
+            except OSError:
+                _logger.error('Error when trying to remove file %s', file_path)
+
+        with ExitStack() as stack:
+
+            # Passing the cookie to wkhtmltopdf in order to resolve internal links.
+            if request and request.db:
+                # Create a temporary session which will not create device logs
+                temp_session = root.session_store.new()
+                temp_session.update({
+                    **request.session,
+                    '_trace_disable': True,
+                })
+                if temp_session.uid:
+                    temp_session.session_token = security.compute_session_token(temp_session, self.env)
+                root.session_store.save(temp_session)
+                stack.callback(root.session_store.delete, temp_session)
+
+                base_url = self._get_report_url()
+                domain = urlparse(base_url).hostname
+                cookie = f'session_id={temp_session.sid}; HttpOnly; domain={domain}; path=/;'
+                cookie_jar_file_fd, cookie_jar_file_path = tempfile.mkstemp(suffix='.txt', prefix='report.cookie_jar.tmp.')
+                stack.callback(delete_file, cookie_jar_file_path)
+                with closing(os.fdopen(cookie_jar_file_fd, 'wb')) as cookie_jar_file:
+                    cookie_jar_file.write(cookie.encode())
+                command_args.extend(['--cookie-jar', cookie_jar_file_path])
+
+            if header:
+                head_file_fd, head_file_path = tempfile.mkstemp(suffix='.html', prefix='report.header.tmp.')
+                with closing(os.fdopen(head_file_fd, 'wb')) as head_file:
+                    head_file.write(header.encode())
+                stack.callback(delete_file, head_file_path)
+                files_command_args.extend(['--header-html', head_file_path])
+            if footer:
+                foot_file_fd, foot_file_path = tempfile.mkstemp(suffix='.html', prefix='report.footer.tmp.')
+                with closing(os.fdopen(foot_file_fd, 'wb')) as foot_file:
+                    foot_file.write(footer.encode())
+                stack.callback(delete_file, foot_file_path)
+                files_command_args.extend(['--footer-html', foot_file_path])
+
+            paths = []
+            for i, body in enumerate(bodies):
+                prefix = '%s%d.' % ('report.body.tmp.', i)
+                body_file_fd, body_file_path = tempfile.mkstemp(suffix='.html', prefix=prefix)
+                with closing(os.fdopen(body_file_fd, 'wb')) as body_file:
+                    # HACK: wkhtmltopdf doesn't like big table at all and the
+                    #       processing time become exponential with the number
+                    #       of rows (like 1H for 250k rows).
+                    #
+                    #       So we split the table into multiple tables containing
+                    #       500 rows each. This reduce the processing time to 1min
+                    #       for 250k rows. The number 500 was taken from opw-1689673
+                    if len(body) < 4 * 1024 * 1024:  # 4Mib
+                        body_file.write(body.encode())
+                    else:
+                        tree = lxml.html.fromstring(body)
+                        _split_table(tree, 500)
+                        body_file.write(lxml.html.tostring(tree))
+                paths.append(body_file_path)
+                stack.callback(delete_file, body_file_path)
+
+            pdf_report_fd, pdf_report_path = tempfile.mkstemp(suffix='.pdf', prefix='report.tmp.')
+            os.close(pdf_report_fd)
+            stack.callback(delete_file, pdf_report_path)
+
+            wkhtmltopdf = [_get_wkhtmltopdf_bin()] + command_args + files_command_args + paths + [pdf_report_path]
+            process = subprocess.Popen(wkhtmltopdf, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding="utf-8")
+            _out, err = process.communicate()
+
+            match process.returncode:
+                case 0:
+                    pass
+                case 1:
+                    if len(bodies) > 1:
+                        v = subprocess.run([_get_wkhtmltopdf_bin(), '--version'], stdout=subprocess.PIPE, check=True, encoding="utf-8")
+                        if '(with patched qt)' not in v.stdout:
+                            if getattr(threading.current_thread(), 'testing', False):
+                                raise unittest.SkipTest("Unable to convert multiple documents via wkhtmltopdf using unpatched QT")
+                            raise UserError(_("Tried to convert multiple documents in wkhtmltopdf using unpatched QT"))
+
+                    _logger.warning("wkhtmltopdf: %s", err)
+                case c:
+                    message = _(
+                        'Wkhtmltopdf failed (error code: %(error_code)s). Memory limit too low or maximum file number of subprocess reached. Message : %(message)s',
+                        error_code=c,
+                        message=err[-1000:],
+                    ) if c == -11 else _(
+                        'Wkhtmltopdf failed (error code: %(error_code)s). Message: %(message)s',
+                        error_code=c,
+                        message=err[-1000:],
+                    )
+                    _logger.warning(message)
+                    raise UserError(message)
+
+            with open(pdf_report_path, 'rb') as pdf_document:
+                pdf_content = pdf_document.read()
 
         return pdf_content
 
