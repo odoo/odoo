@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-sudo service led-status stop
-
 cd /home/pi/odoo
 localbranch=$(git symbolic-ref -q --short HEAD)
 localremote=$(git config branch.$localbranch.remote)
@@ -53,5 +51,3 @@ fi
 } || {
     true
 }
-
-sudo service led-status start

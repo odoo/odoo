@@ -150,7 +150,6 @@ update-rc.d -f nginx remove
 update-rc.d -f dnsmasq remove
 
 systemctl enable ramdisks.service
-systemctl enable led-status.service
 systemctl disable dphys-swapfile.service
 systemctl enable ssh
 systemctl set-default graphical.target
