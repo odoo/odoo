@@ -4,7 +4,7 @@ from base64 import b64encode
 from functools import partial
 
 from odoo.fields import Command
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 from odoo.tools.misc import file_open
 
 from odoo.addons.sale.tests.common import SaleCommon
@@ -56,6 +56,15 @@ class TestPDFQuoteBuilder(SaleCommon):
             'res_id': cls.product.id,
         })
         cls.internal_user = cls._create_new_internal_user(login='internal.user@test.odoo.com')
+
+    def _create_so_form(self, **values):
+        """Default values limited to preexisting ones. No Command"""
+        SaleOrder = self.env['sale.order'].with_context(default_partner_id=self.partner.id)
+        so_form = Form(SaleOrder)
+        for field_name, value in values.items():
+            so_form[field_name] = value
+        so_form.save()
+        return so_form
 
     def test_compute_customizable_pdf_form_fields_when_no_file(self):
         self.env['quotation.document'].search([]).action_archive()
@@ -162,3 +171,38 @@ class TestPDFQuoteBuilder(SaleCommon):
             login='admin',
         )
         # Assert documents are selected
+
+    def test_quotation_document_is_added_iff_default(self):
+        self.assertFalse(self._create_so().quotation_document_ids)
+
+        self.header.add_by_default = True
+
+        self.assertEqual(self._create_so().quotation_document_ids, self.header)
+
+    def test_default_quotation_document_is_added_iff_available(self):
+        # header is default but only for quote_tmpl
+        so_tmpl = self.env['sale.order.template'].create({'name': 'Awesome Template'})
+        self.header.write({
+            'add_by_default': True,
+            'quotation_template_ids': [Command.link(so_tmpl.id)],
+        })
+
+        sof_without_tmpl = self._create_so_form()
+        sof_with_tmpl = self._create_so_form(sale_order_template_id=so_tmpl)
+
+        self.assertFalse(sof_without_tmpl.record.quotation_document_ids)
+        self.assertEqual(sof_with_tmpl.record.quotation_document_ids, self.header)
+
+    def test_quotation_document_is_removed_if_unavailable(self):
+        so_tmpl = self.env['sale.order.template'].create({'name': "Awesome Template"})
+        self.header.write({
+            'add_by_default': True,
+            'quotation_template_ids': [Command.link(so_tmpl.id)],
+        })
+        sof = self._create_so_form(sale_order_template_id=so_tmpl)
+        self.assertEqual(sof.record.quotation_document_ids, self.header)
+
+        sof.sale_order_template_id = self.env['sale.order.template']
+        sof.save()
+
+        self.assertFalse(sof.record.quotation_document_ids)
