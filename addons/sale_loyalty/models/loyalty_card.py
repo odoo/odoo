@@ -12,7 +12,7 @@ class LoyaltyCard(models.Model):
         readonly=True,
         help="The sales order from which coupon is generated")
     order_id_partner_id = fields.Many2one(
-        'res.partner', 'Sale Order Customer',
+        'res.partner', "Sale Order Customer",
         related='order_id.partner_id')
 
     def _get_default_template(self):
