@@ -52,24 +52,25 @@ class TestReportsCommon(TransactionCase):
         lines = docs['lines']
         return report_values, docs, lines
 
-
+target_1 = lambda barcode: f'^XA^CI28\n\n\n^FT35,40^A0N,25^FD[C4181234""154654654654]Mellohi"^FS\n\n^FO35,77^BY2\n^BCN,100,Y,N,N\n^FD{barcode}^FS\n\n\n^XZj'
 class TestReports(TestReportsCommon):
+
 
     def test_product_label_reports(self):
         """ Test that all the special characters are correctly rendered for the product name, the default code and the barcode.
             In this test we test that the double quote is rendered correctly.
         """
         report = self.env.ref('stock.label_product_product')
-        target = b'\n\n^XA^CI28\n^FT100,80^A0N,40,30^FD[C4181234""154654654654]Mellohi"^FS\n^FT100,115^A0N,30,24^FDC4181234""15465^FS\n^FT100,150^A0N,30,24^FD4654654^FS\n^FO100,160^BY3\n^BCN,100,Y,N,N\n^FDscan""me^FS\n^XZ\n\n\n^XA^CI28\n^FT100,80^A0N,40,30^FD[C4181234""154654654654]Mellohi"^FS\n^FT100,115^A0N,30,24^FDC4181234""15465^FS\n^FT100,150^A0N,30,24^FD4654654^FS\n^FO100,160^BY3\n^BCN,100,Y,N,N\n^FDscan""me^FS\n^XZ\n'
-        rendering, qweb_type = report._render_qweb_text('stock.label_product_product', self.product1.product_tmpl_id.id, {'quantity_by_product': {self.product1.product_tmpl_id.id: 2}, 'active_model': 'product.template'})
+        target=str.encode(f'\n\n{target_1('scan""me')}\n\n\n{target_1('scan""me')}\n')
+        rendering, qweb_type = report._render_qweb_text('stock.label_product_product', self.product1.product_tmpl_id.id, {'quantity_by_product': {self.product1.product_tmpl_id.id: 2}, 'active_model': 'product.template', 'zpl_template': 'normal-2.25x1.25'})
         self.assertEqual(target, rendering.replace(b' ', b''), 'Product name, default code or barcode is not correctly rendered, make sure the quotes are escaped correctly')
         self.assertEqual(qweb_type, 'text', 'the report type is not good')
 
     def test_product_label_custom_barcode_reports(self):
         """ Test that the custom barcodes are correctly rendered with special characters."""
         report = self.env.ref('stock.label_product_product')
-        target = b'\n\n^XA^CI28\n^FT100,80^A0N,40,30^FD[C4181234""154654654654]Mellohi"^FS\n^FT100,115^A0N,30,24^FDC4181234""15465^FS\n^FT100,150^A0N,30,24^FD4654654^FS\n^FO100,160^BY3\n^BCN,100,Y,N,N\n^FD123"barcode^FS\n^XZ\n\n\n^XA^CI28\n^FT100,80^A0N,40,30^FD[C4181234""154654654654]Mellohi"^FS\n^FT100,115^A0N,30,24^FDC4181234""15465^FS\n^FT100,150^A0N,30,24^FD4654654^FS\n^FO100,160^BY3\n^BCN,100,Y,N,N\n^FD123"barcode^FS\n^XZ\n\n\n^XA^CI28\n^FT100,80^A0N,40,30^FD[C4181234""154654654654]Mellohi"^FS\n^FT100,115^A0N,30,24^FDC4181234""15465^FS\n^FT100,150^A0N,30,24^FD4654654^FS\n^FO100,160^BY3\n^BCN,100,Y,N,N\n^FDbarcode"456^FS\n^XZ\n\n\n^XA^CI28\n^FT100,80^A0N,40,30^FD[C4181234""154654654654]Mellohi"^FS\n^FT100,115^A0N,30,24^FDC4181234""15465^FS\n^FT100,150^A0N,30,24^FD4654654^FS\n^FO100,160^BY3\n^BCN,100,Y,N,N\n^FDbarcode"456^FS\n^XZ\n'
-        rendering, qweb_type = report._render_qweb_text('stock.label_product_product', self.product1.product_tmpl_id.id, {'custom_barcodes': {self.product1.product_tmpl_id.id: [('123"barcode', 2), ('barcode"456', 2)]}, 'quantity_by_product': {}, 'active_model': 'product.template'})
+        target = str.encode('\n\n' + '\n\n\n'.join([target_1('123"barcode'), target_1('123"barcode'), target_1('barcode"456'), target_1('barcode"456')]) + '\n')
+        rendering, qweb_type = report._render_qweb_text('stock.label_product_product', self.product1.product_tmpl_id.id, {'custom_barcodes': {self.product1.product_tmpl_id.id: [('123"barcode', 2), ('barcode"456', 2)]}, 'quantity_by_product': {}, 'active_model': 'product.template', 'zpl_template': 'normal-2.25x1.25'})
         self.assertEqual(target, rendering.replace(b' ', b''), 'Custom barcodes are most likely not corretly rendered, make sure the quotes are escaped correctly')
         self.assertEqual(qweb_type, 'text', 'the report type is not good')
 
@@ -100,8 +101,8 @@ class TestReports(TestReportsCommon):
         """
         report = self.env.ref('stock.label_product_product')
         self.product1.barcode = False
-        target = b'\n\n^XA^CI28\n^FT100,80^A0N,40,30^FD[C4181234""154654654654]Mellohi"^FS\n^FT100,115^A0N,30,24^FDC4181234""15465^FS\n^FT100,150^A0N,30,24^FD4654654^FS\n^XZ\n'
-        rendering, qweb_type = report._render_qweb_text('stock.label_product_product', self.product1.product_tmpl_id.id, {'quantity_by_product': {self.product1.product_tmpl_id.id: 1}, 'active_model': 'product.template'})
+        target=b'\n\n^XA^CI28\n\n\n^FT20,40^A0N,25^FD[C4181234""154654654654]Mellohi"^FS\n\n\n\n^XZj\n'
+        rendering, qweb_type = report._render_qweb_text('stock.label_product_product', self.product1.product_tmpl_id.id, {'quantity_by_product': {self.product1.product_tmpl_id.id: 1}, 'active_model': 'product.template', 'zpl_template': 'normal-2.25x1.25'})
         self.assertEqual(target, rendering.replace(b' ', b''), 'Product name, default code or barcode is not correctly rendered, make sure the quotes are escaped correctly')
         self.assertEqual(qweb_type, 'text', 'the report type is not good')
 
