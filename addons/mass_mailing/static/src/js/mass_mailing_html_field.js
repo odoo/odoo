@@ -15,7 +15,7 @@ import { closestScrollableY } from "@web/core/utils/scrolling";
 import { getRangePosition } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { utils as uiUtils } from "@web/core/ui/ui_service";
-import { useSubEnv, status, markup, onWillUnmount } from "@odoo/owl";
+import { useSubEnv, status, markup, onWillUnmount, onMounted } from "@odoo/owl";
 
 export class MassMailingHtmlField extends HtmlField {
     static props = {
@@ -35,6 +35,7 @@ export class MassMailingHtmlField extends HtmlField {
         this.action = useService('action');
         this.orm = useService('orm');
         this.dialog = useService('dialog');
+        this.sidebarHeight = "";
 
         const onIframeUpdated = this.onIframeUpdated;
         this.onIframeUpdated = () => {
@@ -48,6 +49,12 @@ export class MassMailingHtmlField extends HtmlField {
         this._resizeObserver = new ResizeObserver(throttledOnResizeObserved);
         onWillUnmount(() => {
             this._resizeObserver.disconnect();
+        });
+
+        onMounted(() => {
+            document
+                .querySelector(".o_content")
+                .addEventListener("scroll", () => this._syncSidebarHeightWithIframe());
         });
 
         useRecordObserver((record) => {
@@ -268,11 +275,35 @@ export class MassMailingHtmlField extends HtmlField {
             const maxHeight = this.iframe.parentNode.getBoundingClientRect().height;
             const offsetHeight = window.innerHeight - document.querySelector(".o_content").getBoundingClientRect().y;
             sidebar.style.height = `${Math.min(maxHeight, offsetHeight)}px`;
+            this.sidebarHeight = sidebar.style.height;
             sidebar.style.top = top;
         } else {
             sidebar.style.height = "";
             sidebar.style.top = "0";
         }
+    }
+
+    /**
+     * Adjusts the height of the mailing editor sidebar to prevent it
+     * from sliding under the control panel as the user scrolls.
+     *
+     * This is required because `position: sticky` loses its effect
+     * once the template reaches to the end and the page starts to scroll.
+     *
+     * @private
+     */
+    _syncSidebarHeightWithIframe() {
+        const sidebar = document.querySelector("#oe_snippets");
+        if (!sidebar || this._isFullScreen()) {
+            return;
+        }
+        const contentRect = document.querySelector(".o_content").getBoundingClientRect();
+        const heightOfVisibleRectOfIframe =
+            this.iframe?.getBoundingClientRect().bottom - contentRect.top;
+        sidebar.style.height =
+            heightOfVisibleRectOfIframe <= contentRect.height
+                ? `${heightOfVisibleRectOfIframe}px`
+                : this.sidebarHeight;
     }
 
     async _resetIframe() {
