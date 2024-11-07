@@ -1,24 +1,33 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
+import logging
+import json
 import re
-import markupsafe
 
 from markupsafe import Markup
 
-from odoo import api, fields, models, _, Command
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import ValidationError, RedirectWarning, UserError
-from odoo.tools import SQL
 from odoo.tools.float_utils import json_float_round
 from odoo.tools.image import image_data_uri
+from odoo.tools import float_compare, SQL
 from odoo.tools.date_utils import get_month
 from odoo.addons.l10n_in.models.iap_account import IAP_SERVICE_NAME
+
+EDI_CANCEL_REASON = {
+    # Same for both e-way bill and IRN
+    '1': "Duplicate",
+    '2': "Data Entry Mistake",
+    '3': "Order Cancelled",
+    '4': "Others",
+}
+_logger = logging.getLogger(__name__)
 
 
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    l10n_in_gst_treatment = fields.Selection([
+    l10n_in_gst_treatment = fields.Selection(
+        selection=[
             ('regular', 'Registered Business - Regular'),
             ('composition', 'Registered Business - Composition'),
             ('unregistered', 'Unregistered Business'),
@@ -27,15 +36,34 @@ class AccountMove(models.Model):
             ('special_economic_zone', 'Special Economic Zone'),
             ('deemed_export', 'Deemed Export'),
             ('uin_holders', 'UIN Holders'),
-        ], string="GST Treatment", compute="_compute_l10n_in_gst_treatment", store=True, readonly=False, copy=True, precompute=True)
-    l10n_in_state_id = fields.Many2one('res.country.state', string="Place of supply",
-        compute="_compute_l10n_in_state_id", store=True, copy=True, readonly=False, precompute=True)
+        ],
+        string="GST Treatment",
+        compute="_compute_l10n_in_gst_treatment",
+        store=True,
+        readonly=False,
+        copy=True,
+        precompute=True
+    )
+    l10n_in_state_id = fields.Many2one(
+        comodel_name='res.country.state',
+        string="Place of supply",
+        compute="_compute_l10n_in_state_id",
+        store=True,
+        copy=True,
+        readonly=False,
+        precompute=True
+    )
     l10n_in_gstin = fields.Char(string="GSTIN")
     # For Export invoice this data is need in GSTR report
     l10n_in_shipping_bill_number = fields.Char('Shipping bill number')
     l10n_in_shipping_bill_date = fields.Date('Shipping bill date')
     l10n_in_shipping_port_code_id = fields.Many2one('l10n_in.port.code', 'Port code')
-    l10n_in_reseller_partner_id = fields.Many2one('res.partner', 'Reseller', domain=[('vat', '!=', False)], help="Only Registered Reseller")
+    l10n_in_reseller_partner_id = fields.Many2one(
+        comodel_name='res.partner',
+        string="Reseller",
+        domain=[('vat', '!=', False)],
+        help="Only Registered Reseller"
+    )
     l10n_in_journal_type = fields.Selection(string="Journal Type", related='journal_id.type')
     l10n_in_warning = fields.Json(compute="_compute_l10n_in_warning")
     l10n_in_is_gst_registered_enabled = fields.Boolean(related='company_id.l10n_in_is_gst_registered')
@@ -179,7 +207,13 @@ class AccountMove(models.Model):
 
     @api.onchange('name')
     def _onchange_name_warning(self):
-        if self.country_code == 'IN' and self.company_id.l10n_in_is_gst_registered and self.journal_id.type == 'sale' and self.name and (len(self.name) > 16 or not re.match(r'^[a-zA-Z0-9-\/]+$', self.name)):
+        if (
+            self.country_code == 'IN'
+            and self.company_id.l10n_in_is_gst_registered
+            and self.journal_id.type == 'sale'
+            and self.name
+            and (len(self.name) > 16 or not re.match(r'^[a-zA-Z0-9-\/]+$', self.name))
+        ):
             return {'warning': {
                 'title' : _("Invalid sequence as per GST rule 46(b)"),
                 'message': _(
@@ -189,38 +223,36 @@ class AccountMove(models.Model):
             }}
         return super()._onchange_name_warning()
 
-    @api.depends('invoice_line_ids.l10n_in_hsn_code', 'company_id.l10n_in_hsn_code_digit', 'invoice_line_ids.tax_ids',
-                 'commercial_partner_id.l10n_in_pan', 'invoice_line_ids.price_total')
+    @api.depends(
+        'invoice_line_ids.l10n_in_hsn_code',
+        'company_id.l10n_in_hsn_code_digit',
+        'invoice_line_ids.tax_ids',
+        'commercial_partner_id.l10n_in_pan',
+        'invoice_line_ids.price_total'
+    )
     def _compute_l10n_in_warning(self):
-
-        def build_warning(record, action_name, message, views, domain=False):
-            return {
-                'message': message,
-                'action_text': self.env._("View %s", action_name),
-                'action': record._get_records_action(name=self.env._("Check %s", action_name), target='current', views=views, domain=domain or [])
-            }
-
         indian_invoice = self.filtered(lambda m: m.country_code == 'IN' and m.move_type != 'entry')
+        line_filter_func = lambda line: line.display_type == 'product' and line.tax_ids and line._origin
+        _xmlid_to_res_id = self.env['ir.model.data']._xmlid_to_res_id
         for move in indian_invoice:
             warnings = {}
-            filtered_lines = move.invoice_line_ids.filtered(
-                lambda line: line.display_type == 'product' and line.tax_ids and line._origin
-            )
-
-            if move.company_id.l10n_in_tcs_feature or move.company_id.l10n_in_tds_feature:
+            company = move.company_id
+            action_name = _("Journal Item(s)")
+            action_text = _("View Journal Item(s)")
+            if company.l10n_in_tcs_feature or company.l10n_in_tds_feature:
                 invalid_tax_lines = move._get_l10n_in_invalid_tax_lines()
-                applicable_sections = move._get_l10n_in_tds_tcs_applicable_sections()
+                if company.l10n_in_tcs_feature and invalid_tax_lines:
+                    warnings['lower_tcs_tax'] = {
+                        'message': _("As the Partner's PAN missing/invalid apply TCS at the higher rate."),
+                        'actions': invalid_tax_lines.with_context(tax_validation=True)._get_records_action(
+                            name=action_name,
+                            views=[(_xmlid_to_res_id("l10n_in.view_move_line_tree_hsn_l10n_in"), "list")],
+                            domain=[('id', 'in', invalid_tax_lines.ids)],
+                        ),
+                        'action_text': action_text,
+                    }
 
-                if move.company_id.l10n_in_tcs_feature and invalid_tax_lines:
-                    warnings['lower_tcs_tax'] = build_warning(
-                        message=_("As the Partner's PAN missing/invalid apply TCS at the higher rate."),
-                        action_name=_("Journal Items(s)"),
-                        record=invalid_tax_lines,
-                        views=[(self.env.ref("l10n_in.view_move_line_tree_hsn_l10n_in").id, "list")],
-                        domain=[('id', 'in', invalid_tax_lines.ids)]
-                    )
-
-                if applicable_sections:
+                if applicable_sections := move._get_l10n_in_tds_tcs_applicable_sections():
                     tds_tcs_applicable_lines = (
                         move.move_type == 'out_invoice'
                         and move._get_tcs_applicable_lines(move.invoice_line_ids)
@@ -228,24 +260,32 @@ class AccountMove(models.Model):
                     )
                     warnings['tds_tcs_threshold_alert'] = {
                         'message': applicable_sections._get_warning_message(),
-                        'action_text': _("View Journal Items(s)"),
-                        'action': {
-                            'type': 'ir.actions.act_window',
-                            'name': _('Journal Items(s)'),
-                            'res_model': 'account.move.line',
-                            'domain': [('id', 'in', tds_tcs_applicable_lines.ids)],
-                            'views': [(self.env.ref('l10n_in.view_move_line_list_l10n_in_withholding').id, 'list')],
-                            'context': {
-                                'default_tax_type_use': move.invoice_filter_type_domain,
-                                'move_type': move.move_type == 'in_invoice'
-                            },
-                        }
+                        'action': tds_tcs_applicable_lines.with_context(
+                            default_tax_type_use=True,
+                            move_type=move.move_type == 'in_invoice'
+                        )._get_records_action(
+                            name=action_name,
+                            domain=[('id', 'in', tds_tcs_applicable_lines.ids)],
+                            views=[(_xmlid_to_res_id("l10n_in.view_move_line_list_l10n_in_withholding"), "list")]
+                        ),
+                        'action_text': action_text,
                     }
 
-            if move.company_id.l10n_in_is_gst_registered and move.company_id.l10n_in_hsn_code_digit and filtered_lines:
+            if (
+                company.l10n_in_is_gst_registered
+                and company.l10n_in_hsn_code_digit
+                and (filtered_lines := move.invoice_line_ids.filtered(line_filter_func))
+            ):
                 lines = self.env['account.move.line']
                 for line in filtered_lines:
-                    if (line.l10n_in_hsn_code and (not re.match(r'^\d{4}$|^\d{6}$|^\d{8}$', line.l10n_in_hsn_code) or len(line.l10n_in_hsn_code) < int(move.company_id.l10n_in_hsn_code_digit))) or not line.l10n_in_hsn_code:
+                    hsn_code = line.l10n_in_hsn_code
+                    if (
+                        not hsn_code
+                        or (
+                            not re.match(r'^\d{4}$|^\d{6}$|^\d{8}$', hsn_code)
+                            or len(hsn_code) < int(company.l10n_in_hsn_code_digit)
+                        )
+                    ):
                         lines |= line._origin
 
                 if lines:
@@ -254,23 +294,28 @@ class AccountMove(models.Model):
                         '6': _("6 digits or 8 digits"),
                         '8': _("8 digits")
                     }
-                    msg = _("Ensure that the HSN/SAC Code consists either %s in invoice lines",
-                        digit_suffixes.get(move.company_id.l10n_in_hsn_code_digit, _("Invalid HSN/SAC Code digit"))
+                    msg = _(
+                        "Ensure that the HSN/SAC Code consists either %s in invoice lines",
+                        digit_suffixes.get(company.l10n_in_hsn_code_digit, _("Invalid HSN/SAC Code digit"))
                     )
-                    warnings['invalid_hsn_code_length'] = build_warning(
-                        message=msg,
-                        action_name=_("Journal Items(s)"),
-                        record=lines,
-                        views=[(self.env.ref("l10n_in.view_move_line_tree_hsn_l10n_in").id, "list")],
-                        domain=[('id', 'in', lines.ids)]
-                    )
+                    warnings['invalid_hsn_code_length'] = {
+                        'message': msg,
+                        'action': lines._get_records_action(
+                            name=action_name,
+                            views=[(_xmlid_to_res_id("l10n_in.view_move_line_tree_hsn_l10n_in"), "list")],
+                            domain=[('id', 'in', lines.ids)]
+                        ),
+                        'action_text': action_text,
+                    }
 
             move.l10n_in_warning = warnings
         (self - indian_invoice).l10n_in_warning = {}
 
     @api.depends('partner_id', 'state', 'payment_state', 'l10n_in_gst_treatment')
     def _compute_l10n_in_show_gstin_status(self):
-        indian_moves = self.filtered(lambda m: m.country_code == 'IN' and m.company_id.l10n_in_gstin_status_feature)
+        indian_moves = self.filtered(
+            lambda m: m.country_code == 'IN' and m.company_id.l10n_in_gstin_status_feature
+        )
         (self - indian_moves).l10n_in_show_gstin_status = False
         for move in indian_moves:
             move.l10n_in_show_gstin_status = (
@@ -278,13 +323,24 @@ class AccountMove(models.Model):
                 and move.state == 'posted'
                 and move.move_type != 'entry'
                 and move.payment_state not in ['paid', 'reversed']
-                and move.l10n_in_gst_treatment in ['regular', 'composition', 'special_economic_zone', 'deemed_export', 'uin_holders']
+                and move.l10n_in_gst_treatment in [
+                    'regular',
+                    'composition',
+                    'special_economic_zone',
+                    'deemed_export',
+                    'uin_holders'
+                ]
             )
 
     @api.depends('partner_id')
     def _compute_l10n_in_partner_gstin_status_and_date(self):
         for move in self:
-            if move.country_code == 'IN' and move.company_id.l10n_in_gstin_status_feature and move.payment_state not in ['paid', 'reversed'] and move.state != 'cancel':
+            if (
+                move.country_code == 'IN'
+                and move.company_id.l10n_in_gstin_status_feature
+                and move.payment_state not in ['paid', 'reversed']
+                and move.state != 'cancel'
+            ):
                 move.l10n_in_partner_gstin_status = move.partner_id.l10n_in_gstin_verified_status
                 move.l10n_in_gstin_verified_date = move.partner_id.l10n_in_gstin_verified_date
             else:
@@ -303,8 +359,11 @@ class AccountMove(models.Model):
     def _compute_l10n_in_total_withholding_amount(self):
         for move in self:
             if self.env.company.l10n_in_tds_feature:
-                move.l10n_in_total_withholding_amount = sum(move.l10n_in_withhold_move_ids.filtered(
-                    lambda m: m.state == 'posted').l10n_in_withholding_line_ids.mapped('l10n_in_withhold_tax_amount'))
+                move.l10n_in_total_withholding_amount = sum(
+                    move.l10n_in_withhold_move_ids.filtered(
+                        lambda m: m.state == 'posted'
+                    ).l10n_in_withholding_line_ids.mapped('l10n_in_withhold_tax_amount')
+                )
             else:
                 move.l10n_in_total_withholding_amount = 0.0
 
@@ -423,9 +482,9 @@ class AccountMove(models.Model):
 
         def _is_section_applicable(section_alert, threshold_sums, invoice_currency_rate, lines):
             lines_total = sum(
-                    (line.price_total * invoice_currency_rate) if section_alert.consider_amount == 'total_amount' else line.balance
-                    for line in lines
-                )
+                (line.price_total * invoice_currency_rate) if section_alert.consider_amount == 'total_amount' else line.balance
+                for line in lines
+            )
             if section_alert.is_aggregate_limit:
                 aggregate_period_key = section_alert.consider_amount == 'total_amount' and 'price_total' or 'balance'
                 aggregate_total = threshold_sums.get(section_alert.aggregate_period, {}).get(aggregate_period_key)
@@ -441,7 +500,9 @@ class AccountMove(models.Model):
         if self.country_code == 'IN' and self.move_type in ['in_invoice', 'out_invoice']:
             warning = set()
             commercial_partner_id = self.commercial_partner_id
-            existing_section = (self.l10n_in_withhold_move_ids.line_ids + self.line_ids).tax_ids.l10n_in_section_id
+            existing_section = (
+                self.l10n_in_withhold_move_ids.line_ids + self.line_ids
+            ).tax_ids.l10n_in_section_id
             for section_alert, lines in _group_by_section_alert(self.invoice_line_ids).items():
                 if (
                     (section_alert not in existing_section
@@ -497,7 +558,15 @@ class AccountMove(models.Model):
                 }
                 raise RedirectWarning(msg, action, _('Go to Company configuration'))
             move.l10n_in_gstin = move.partner_id.vat
-            if not move.l10n_in_gstin and move.l10n_in_gst_treatment in ['regular', 'composition', 'special_economic_zone', 'deemed_export']:
+            if (
+                not move.l10n_in_gstin
+                and move.l10n_in_gst_treatment in [
+                    'regular',
+                    'composition',
+                    'special_economic_zone',
+                    'deemed_export'
+                ]
+            ):
                 raise ValidationError(_(
                     "Partner %(partner_name)s (%(partner_id)s) GSTIN is required under GST Treatment %(name)s",
                     partner_name=move.partner_id.name,
@@ -556,25 +625,26 @@ class AccountMove(models.Model):
         def l10n_in_grouping_key_generator(base_line, tax_data):
             invl = base_line['record']
             tax = tax_data['tax']
-            tags = tax.invoice_repartition_line_ids.tag_ids
+            tag_ids = tax.invoice_repartition_line_ids.tag_ids.ids
             line_code = "other"
+            xmlid_to_res_id = self.env['ir.model.data']._xmlid_to_res_id
             if not invl.currency_id.is_zero(tax_data['tax_amount_currency']):
-                if self.env.ref("l10n_in.tax_tag_cess") in tags:
+                if xmlid_to_res_id("l10n_in.tax_tag_cess") in tag_ids:
                     if tax.amount_type != "percent":
                         line_code = "cess_non_advol"
                     else:
                         line_code = "cess"
-                elif self.env.ref("l10n_in.tax_tag_state_cess") in tags:
+                elif xmlid_to_res_id("l10n_in.tax_tag_state_cess") in tag_ids:
                     if tax.amount_type != "percent":
                         line_code = "state_cess_non_advol"
                     else:
                         line_code = "state_cess"
                 else:
                     for gst in ["cgst", "sgst", "igst"]:
-                        if self.env.ref(f"l10n_in.tax_tag_{gst}") in tags:
+                        if xmlid_to_res_id(f"l10n_in.tax_tag_{gst}") in tag_ids:
                             line_code = gst
                         # need to separate rc tax value so it's not pass to other values
-                        if self.env.ref(f"l10n_in.tax_tag_{gst}_rc") in tags:
+                        elif xmlid_to_res_id(f"l10n_in.tax_tag_{gst}_rc") in tag_ids:
                             line_code = gst + '_rc'
             return {
                 "tax": tax,
@@ -623,16 +693,18 @@ class AccountMove(models.Model):
         for tax_detail in tax_details.values():
             if tax_detail["tax"].l10n_in_reverse_charge:
                 l10n_in_tax_details.setdefault("is_reverse_charge", True)
-            l10n_in_tax_details.setdefault("%s_rate" % (tax_detail["line_code"]), tax_detail["tax"].amount)
-            l10n_in_tax_details.setdefault("%s_amount" % (tax_detail["line_code"]), 0.00)
-            l10n_in_tax_details.setdefault("%s_amount_currency" % (tax_detail["line_code"]), 0.00)
-            l10n_in_tax_details["%s_amount" % (tax_detail["line_code"])] += tax_detail["tax_amount"]
-            l10n_in_tax_details["%s_amount_currency" % (tax_detail["line_code"])] += tax_detail["tax_amount_currency"]
+            line_code = tax_detail["line_code"]
+            l10n_in_tax_details.setdefault("%s_rate" % (line_code), tax_detail["tax"].amount)
+            l10n_in_tax_details.setdefault("%s_amount" % (line_code), 0.00)
+            l10n_in_tax_details.setdefault("%s_amount_currency" % (line_code), 0.00)
+            l10n_in_tax_details["%s_amount" % (line_code)] += tax_detail["tax_amount"]
+            l10n_in_tax_details["%s_amount_currency" % (line_code)] += tax_detail["tax_amount_currency"]
         return l10n_in_tax_details
 
-    def _l10n_in_get_iap_buy_credits_message(self):
-        url = self.env["iap.account"].get_credits_url(service_name=IAP_SERVICE_NAME)
-        return markupsafe.Markup("""<p><b>%s</b></p><p>%s <a href="%s">%s</a></p>""") % (
+    @api.model
+    def _l10n_in_edi_get_iap_buy_credits_message(self):
+        url = self.env['iap.account'].get_credits_url(service_name=IAP_SERVICE_NAME)
+        return Markup("""<p><b>%s</b></p><p>%s <a href="%s">%s</a></p>""") % (
             _("You have insufficient credits to send this document!"),
             _("Please buy more credits and retry: "),
             url,

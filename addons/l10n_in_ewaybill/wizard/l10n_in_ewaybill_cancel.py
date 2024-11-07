@@ -2,6 +2,8 @@
 
 from odoo import fields, models
 
+from odoo.addons.l10n_in.models.account_invoice import EDI_CANCEL_REASON
+
 
 class L10nInEwaybillCancel(models.TransientModel):
     _name = 'l10n.in.ewaybill.cancel'
@@ -10,12 +12,7 @@ class L10nInEwaybillCancel(models.TransientModel):
 
     l10n_in_ewaybill_id = fields.Many2one('l10n.in.ewaybill', string='Ewaybill', required=True)
     cancel_reason = fields.Selection(
-        selection=[
-            ("1", "Duplicate"),
-            ("2", "Data Entry Mistake"),
-            ("3", "Order Cancelled"),
-            ("4", "Others"),
-        ],
+        selection=list(EDI_CANCEL_REASON.items()),
         string="Cancel Reason",
         required=True
     )
