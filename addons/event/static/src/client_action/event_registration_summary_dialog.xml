@@ -35,15 +35,10 @@
                 </div>
             </div>
             <div class="row fs-1">
-                <div class="col-lg-12 d-flex align-items-baseline gap-3">
+                <div id="registration_header" class="col-lg-12 d-flex align-items-baseline gap-3">
                     <t t-set="guest_label">Guest #</t>
                     <t t-if="registration.name" t-out="registration.name"/>
                     <t t-else="" t-out="guest_label + registration.id"/>
-                    <t t-if="registration.sale_status_value">
-                        <span class="badge rounded-pill" t-att-class="registration.has_to_pay ? 'text-bg-danger' : 'text-bg-success'">
-                            <t t-out="registration.sale_status_value"/>
-                        </span>
-                    </t>
                 </div>
             </div>
             <div id="registration_information" class="row mt-4">
