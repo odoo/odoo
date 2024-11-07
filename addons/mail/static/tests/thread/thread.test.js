@@ -294,9 +294,9 @@ test("mark channel as fetched when a new message is loaded", async () => {
         ],
         channel_type: "chat",
     });
-    onRpcBefore("/mail/action", (args) => {
+    onRpcBefore("/mail/data", (args) => {
         if (args.init_messaging) {
-            step(`/mail/action - ${JSON.stringify(args)}`);
+            step(`/mail/data - ${JSON.stringify(args)}`);
         }
     });
     onRpcBefore("/discuss/channel/mark_as_read", (args) => {
@@ -310,7 +310,7 @@ test("mark channel as fetched when a new message is loaded", async () => {
     await start();
     await contains(".o_menu_systray i[aria-label='Messages']");
     await assertSteps([
-        `/mail/action - ${JSON.stringify({
+        `/mail/data - ${JSON.stringify({
             init_messaging: {},
             failures: true,
             systray_get_activities: true,

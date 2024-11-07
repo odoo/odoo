@@ -627,12 +627,17 @@ class DiscussChannel(models.Model):
                 groups[index] = (group_name, lambda partner: False, group_data)
         return groups
 
+    def _get_notify_valid_parameters(self):
+        return super()._get_notify_valid_parameters() | {"silent"}
+
     def _notify_thread(self, message, msg_vals=False, **kwargs):
         # link message to channel
         rdata = super()._notify_thread(message, msg_vals=msg_vals, **kwargs)
         payload = {"data": Store(message).get_result(), "id": self.id}
         if temporary_id := self.env.context.get("temporary_id"):
             payload["temporary_id"] = temporary_id
+        if kwargs.get("silent"):
+            payload["silent"] = True
         self._bus_send_store(self, {"is_pinned": True}, subchannel="members")
         self._bus_send("discuss.channel/new_message", payload)
         return rdata
