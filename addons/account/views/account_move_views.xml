@@ -777,7 +777,9 @@
                                 invisible="checked or state == 'draft'" data-hotkey="k" />
                         <field name="state" widget="statusbar" statusbar_visible="draft,posted"
                                groups="!account.group_account_secured"/>
-                        <field name="state" widget="account_move_statusbar_secured" statusbar_visible="draft,posted"
+                        <field name="state" invisible="not secured and not restrict_mode_hash_table" widget="account_move_statusbar_secured" statusbar_visible="draft,posted"
+                               groups="account.group_account_secured"/>
+                        <field name="state" invisible="restrict_mode_hash_table or secured" widget="statusbar" statusbar_visible="draft,posted"
                                groups="account.group_account_secured"/>
                     </header>
                     <div class="alert alert-warning w-100 d-flex align-items-center gap-1" invisible="state != 'draft' or not duplicated_ref_ids"  role="alert">
