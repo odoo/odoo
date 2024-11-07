@@ -2239,7 +2239,8 @@ class SaleOrder(models.Model):
 
     def _check_product_compatibility(self, product_id):
         """
-        Check compatibility of products in cart and the currently added product.
+        Check compatibility of products in cart and the currently added product when website_sale
+        is installed.
         :param product_id:
         :return: ``True`` if current product can be added valid, ``False`` when not.
         """
