@@ -8,6 +8,13 @@ from odoo import _, api, fields, models
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
+    def _default_quotation_document_ids(self):
+        return self.env['quotation.document'].search([
+            *self.env['quotation.document']._check_company_domain(self.env.company),
+            ('quotation_template_ids', '=', False),
+            ('add_by_default', '=', True),
+        ])
+
     available_quotation_document_ids = fields.Many2many(
         string="Available Quotation Documents",
         comodel_name='quotation.document',
@@ -19,6 +26,7 @@ class SaleOrder(models.Model):
     quotation_document_ids = fields.Many2many(
         string="Headers/Footers",
         comodel_name='quotation.document',
+        default=_default_quotation_document_ids,
         readonly=False,
         check_company=True,
     )
@@ -51,6 +59,21 @@ class SaleOrder(models.Model):
                 order.available_quotation_document_ids
                 or order.order_line.available_product_document_ids
             )
+
+    # === ONCHANGE METHODS === #
+
+    @api.onchange('sale_order_template_id')
+    def _onchange_sale_order_template_id(self):
+        super()._onchange_sale_order_template_id()
+
+        # Remove documents which are no longer available.
+        self.quotation_document_ids &= self.available_quotation_document_ids
+
+        if not self.sale_order_template_id.quotation_document_ids:
+            return
+        self.quotation_document_ids |= self.sale_order_template_id.quotation_document_ids.filtered(
+            lambda doc: doc.company_id.id in [False, self.company_id.id] and doc.add_by_default
+        )
 
     # === ACTION METHODS === #
 
