@@ -53,7 +53,7 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
 },
 // Open the matrix through the pencil button next to the product in line edit mode.
 {
-    trigger: ".o_form_status_indicator_buttons.invisible", // wait for save to be finished
+    trigger: ".o_form_status_indicator_buttons:not(:visible)", // wait for save to be finished
 },
 {
     trigger: '.o_field_pol_product_many2one',
@@ -82,7 +82,7 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
 },
 // Ensures the matrix is opened with the values, when adding the same product.
 {
-    trigger: '.o_form_status_indicator_buttons.invisible',
+    trigger: ".o_form_status_indicator_buttons:not(:visible)",
 },
 {
     trigger: 'a:contains("Add a product")',

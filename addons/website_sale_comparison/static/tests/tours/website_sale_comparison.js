@@ -70,7 +70,7 @@
     },
     {
         content: "select 2nd variant(Black Color)",
-        trigger: '.variant_attribute[data-attribute_name="Color"] input[data-value_name="Black"]',
+        trigger: ".variant_attribute[data-attribute_name=Color] input[data-value_name=Black]:not(:visible)",
         run: function (actions) {
           document.querySelector('img[class*="product_detail_img"]').setAttribute('data-image-to-change', 1);
           actions.click();

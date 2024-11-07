@@ -17,7 +17,7 @@ registry.category("web_tour.tours").add('website_event_booth_tour', {
     run: "click",
 }, {
     content: 'Select the first two booths',
-    trigger: '.o_wbooth_booths input[name="event_booth_ids"]',
+    trigger: ".o_wbooth_booths input[name=event_booth_ids]:not(:visible)",
     run() {
         document.querySelectorAll('.o_wbooth_booths input[name="event_booth_ids"]')[0].click();
         document.querySelectorAll('.o_wbooth_booths input[name="event_booth_ids"]')[1].click();
