@@ -57,15 +57,10 @@ class Environment(Mapping):
         """ Reset the transaction, see :meth:`Transaction.reset`. """
         self.transaction.reset()
 
-    def __new__(cls, cr, uid, context, su=False, uid_origin=None):
+    def __new__(cls, cr, uid, context, su=False):
         assert isinstance(cr, BaseCursor)
         if uid == SUPERUSER_ID:
             su = True
-
-        # isinstance(uid, int) is to handle `RequestUID`
-        uid_origin = uid_origin or (uid if isinstance(uid, int) else None)
-        if uid_origin == SUPERUSER_ID:
-            uid_origin = None
 
         # determine transaction object
         transaction = cr.transaction
@@ -74,12 +69,12 @@ class Environment(Mapping):
 
         # if env already exists, return it
         for env in transaction.envs:
-            if (env.cr, env.uid, env.su, env.uid_origin, env.context) == (cr, uid, su, uid_origin, context):
+            if env.cr is cr and env.uid == uid and env.su == su and env.context == context:
                 return env
 
         # otherwise create environment, and add it in the set
         self = object.__new__(cls)
-        self.cr, self.uid, self.su, self.uid_origin = cr, uid, su, uid_origin
+        self.cr, self.uid, self.su = cr, uid, su
         self.context = frozendict(context)
         self.transaction = transaction
         self.registry = transaction.registry
@@ -140,7 +135,7 @@ class Environment(Mapping):
         if context is None:
             context = clean_context(self.context) if su and not self.su else self.context
         su = (user is None and self.su) if su is None else su
-        return Environment(cr, uid, context, su, self.uid_origin)
+        return Environment(cr, uid, context, su)
 
     def ref(self, xml_id, raise_if_not_found=True):
         """ Return the record corresponding to the given ``xml_id``.

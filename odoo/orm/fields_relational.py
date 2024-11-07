@@ -539,7 +539,7 @@ class _RelationalMulti(_Relational[M], typing.Generic[M]):
         # if the model doesn't accept sudo commands
         if not comodel._allow_sudo_commands:
             # Then, disable sudo and reset the transaction origin user
-            return comodel.sudo(False).with_user(comodel.env.uid_origin)
+            return comodel.sudo(False).with_user(comodel.env.transaction.default_env.uid)
         return comodel
 
 
