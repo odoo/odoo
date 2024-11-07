@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import itertools
@@ -113,7 +112,18 @@ class ResourceCalendar(models.Model):
     hours_per_week = fields.Float(compute="_compute_hours_per_week", string="Hours per Week", store=True)
     full_time_required_hours = fields.Float(string="Company Full Time", help="Number of hours to work on the company schedule to be considered as fulltime.")
     is_fulltime = fields.Boolean(compute='_compute_work_time_rate', string="Is Full Time")
-    work_time_rate = fields.Float(string='Work Time Rate', compute='_compute_work_time_rate', help='Work time rate versus full time working schedule, should be between 0 and 100 %.')
+    work_time_rate = fields.Float(string='Work Time Rate', compute='_compute_work_time_rate', search='_search_work_time_rate',
+        help='Work time rate versus full time working schedule, should be between 0 and 100 %.')
+    work_resources_count = fields.Integer("Work Resources count", compute='_compute_work_resources_count')
+
+    def _compute_work_resources_count(self):
+        count_data = self.env['resource.resource']._read_group(
+            domain=[('calendar_id', 'in', self.ids)],
+            groupby=['calendar_id'],
+            aggregates=['__count'])
+        mapped_counts = {resource_calendar.id: count for resource_calendar, count in count_data}
+        for calendar in self:
+            calendar.work_resources_count = mapped_counts.get(calendar.id, 0)
 
     @api.depends('attendance_ids', 'attendance_ids.hour_from', 'attendance_ids.hour_to', 'two_weeks_calendar', 'flexible_hours')
     def _compute_hours_per_day(self):
@@ -139,6 +149,21 @@ class ResourceCalendar(models.Model):
                 calendar.work_time_rate = 100
 
             calendar.is_fulltime = float_compare(calendar.full_time_required_hours, calendar.hours_per_week, 3) == 0
+
+    @api.model
+    def _search_work_time_rate(self, operator, value):
+        if operator not in ['=', '!=', '<', '>'] or not isinstance(value, int):
+            raise NotImplementedError(_('Operation not supported.'))
+        calendar_ids = self.env['resource.calendar'].search([])
+        if operator == '=':
+            calender = calendar_ids.filtered(lambda m: m.work_time_rate == value)
+        elif operator == '!=':
+            calender = calendar_ids.filtered(lambda m: m.work_time_rate != value)
+        elif operator == '<':
+            calender = calendar_ids.filtered(lambda m: m.work_time_rate < value)
+        elif operator == '>':
+            calender = calendar_ids.filtered(lambda m: m.work_time_rate > value)
+        return [('id', 'in', calender.ids)]
 
     @api.depends('company_id')
     def _compute_attendance_ids(self):
