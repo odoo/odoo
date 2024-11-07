@@ -7,7 +7,7 @@ export class Interaction {
     static selector = "";
 
     constructor(el, env, colibri) {
-        this.__colibri__ = { colibri, update: null, handlers: [] };
+        this.__colibri__ = { colibri, update: null, handlers: [], startProm: null };
         this.isDestroyed = false;
         this.el = el;
         this.env = env;

@@ -15,7 +15,7 @@ export class Colibri {
         this.env = env;
     }
 
-    attach(el, I) {
+     attach(el, I) {
         const interaction = new I(el, this.env, this);
         // patch destroy to cleanup colibri stuff
         const destroy = interaction.destroy;
@@ -30,7 +30,7 @@ export class Colibri {
             }
         };
         interaction.setup();
-        (interaction.willStart() || Promise.resolve()).then(() => {
+        const prom = (interaction.willStart() || Promise.resolve()).then(() => {
             if (interaction.isDestroyed) {
                 return;
             }
@@ -40,6 +40,7 @@ export class Colibri {
             }
             interaction.start();
         });
+        interaction.__colibri__.startProm = prom;
         return interaction;
     }
 
@@ -71,12 +72,13 @@ export class Colibri {
             }
             if (directive.startsWith("t-att-")) {
                 attrs.push([sel, directive.slice(6), value]);
-            }
-            if (directive.startsWith("t-on-")) {
+            } else if (directive.startsWith("t-on-")) {
                 handlers.push([sel, directive.slice(5), value]);
-            }
-            if (directive === "t-out") {
+            } else if (directive === "t-out") {
                 tOuts.push([sel, value]);
+            } else {
+                const suffix = directive.startsWith("t-") ? "" : " (should start with t-)"
+                throw new Error(`Invalid directive: '${directive}'${suffix}`);
             }
         }
         // generate function code
