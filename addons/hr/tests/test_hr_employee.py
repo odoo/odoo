@@ -434,6 +434,7 @@ class TestHrEmployee(TestHrCommon):
         with self.assertRaises(ValidationError):
             employee_form.save()
 
+<<<<<<< master
         employee_form.barcode = 'Testbadge2'
         employee_form.save()
 
@@ -458,3 +459,14 @@ class TestHrEmployee(TestHrCommon):
 
         all_employees = employee_A | employee_B | employee_C
         self.assertEqual(all_employees.filtered(lambda e: e.active), employee_B, "Employees should have been archived")
+||||||| 768bf0ff097956f34dbf73c32a14eff158ee5779
+=======
+        employee_form.barcode = 'Testàë@badge'
+        with self.assertRaises(ValidationError):
+            employee_form.save()
+
+        employee_form.barcode = 'Testbadge2'
+        employee_form.save()
+
+        self.assertEqual(employee_form.barcode, 'Testbadge2')
+>>>>>>> c89413d053248055976d43088f45f07d11179f95
