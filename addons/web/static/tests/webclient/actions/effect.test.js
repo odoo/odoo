@@ -111,7 +111,7 @@ test.tags("desktop")("rainbowman integrated to webClient", async () => {
 
 test.tags("desktop")("on close with effect from server", async () => {
     patchWithCleanup(user, { showEffect: true });
-    onRpc("/web/dataset/call_button", () => {
+    onRpc("/web/dataset/call_button/*", () => {
         return {
             type: "ir.actions.act_window_close",
             effect: {
@@ -139,7 +139,7 @@ test.tags("desktop")("on close with effect in xml on desktop", async () => {
             </header>
             <field name="display_name"/>
         </form>`;
-    onRpc("/web/dataset/call_button", () => false);
+    onRpc("/web/dataset/call_button/*", () => false);
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(6);
@@ -160,7 +160,7 @@ test.tags("mobile")("on close with effect in xml on mobile", async () => {
             </header>
             <field name="display_name"/>
         </form>`;
-    onRpc("/web/dataset/call_button", () => false);
+    onRpc("/web/dataset/call_button/*", () => false);
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(6);

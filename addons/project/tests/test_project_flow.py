@@ -608,3 +608,9 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
         with self.mock_mail_gateway():
             self.task_1.project_id = self.project_goats.id
         self.assertSentEmail(self.env.user.email_formatted, [self.user_projectuser.email_formatted])
+
+    def test_do_not_copy_project_stage(self):
+        stage = self.env['project.project.stage'].create({'name': 'Custom stage'})  # Default sequence is 50
+        self.project_pigs.stage_id = stage.id
+        project_copy = self.project_pigs.with_context(default_stage_id=stage.id).copy()
+        self.assertNotEqual(project_copy.stage_id, self.project_pigs.stage_id, 'Copied project should have lowest sequence stage')

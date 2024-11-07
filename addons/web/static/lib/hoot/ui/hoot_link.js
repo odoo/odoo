@@ -35,7 +35,7 @@ export class HootLink extends Component {
             t-att-target="props.target"
             t-att-title="props.title"
             t-att-style="props.style"
-            t-on-click="onClick"
+            t-on-click.stop="onClick"
             t-on-focus="updateHref"
             t-on-pointerenter="updateHref"
         >

@@ -84,14 +84,18 @@ export class HootPresets extends Component {
                 this.state.open = false;
             }
         });
-        useWindowListener("click", (ev) => {
-            const path = ev.composedPath();
-            if (!path.includes(this.rootRef.el)) {
-                this.state.open = false;
-            } else if (path.includes(this.togglerRef.el)) {
-                this.state.open = !this.state.open;
-            }
-        });
+        useWindowListener(
+            "click",
+            (ev) => {
+                const path = ev.composedPath();
+                if (!path.includes(this.rootRef.el)) {
+                    this.state.open = false;
+                } else if (path.includes(this.togglerRef.el)) {
+                    this.state.open = !this.state.open;
+                }
+            },
+            { capture: true }
+        );
     }
 
     getPresetIcon() {

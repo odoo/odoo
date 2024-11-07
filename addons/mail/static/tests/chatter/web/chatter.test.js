@@ -27,6 +27,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { DELAY_FOR_SPINNER } from "@mail/chatter/web_portal/chatter";
+import { queryFirst } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -346,7 +347,7 @@ test("show attachment box", async () => {
     await contains(".o-mail-AttachmentBox");
 });
 
-test("composer show/hide on log note/send message [REQUIRE FOCUS]", async () => {
+test("composer show/hide on log note/send message", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     await start();
@@ -420,22 +421,22 @@ test("scroll position is kept when navigating from one record to another", async
     await start();
     await openFormView("res.partner", partnerId_1);
     await contains(".o-mail-Message", { count: 20 });
-    const clientHeight1 = $(".o-mail-Chatter")[0].clientHeight; // client height might change (cause: breadcrumb)
-    const scrollValue1 = $(".o-mail-Chatter")[0].scrollHeight / 2;
+    const clientHeight1 = queryFirst(".o-mail-Chatter:first").clientHeight; // client height might change (cause: breadcrumb)
+    const scrollValue1 = queryFirst(".o-mail-Chatter:first").scrollHeight / 2;
     await contains(".o-mail-Chatter", { scroll: 0 });
     await scroll(".o-mail-Chatter", scrollValue1);
     await openFormView("res.partner", partnerId_2);
     await contains(".o-mail-Message", { count: 30 });
-    const clientHeight2 = $(".o-mail-Chatter")[0].clientHeight;
-    const scrollValue2 = $(".o-mail-Chatter")[0].scrollHeight / 3;
+    const clientHeight2 = queryFirst(".o-mail-Chatter:first").clientHeight;
+    const scrollValue2 = queryFirst(".o-mail-Chatter:first").scrollHeight / 3;
     await scroll(".o-mail-Chatter", scrollValue2);
     await openFormView("res.partner", partnerId_1);
     await contains(".o-mail-Message", { count: 20 });
-    const clientHeight3 = $(".o-mail-Chatter")[0].clientHeight;
+    const clientHeight3 = queryFirst(".o-mail-Chatter:first").clientHeight;
     await contains(".o-mail-Chatter", { scroll: scrollValue1 - (clientHeight3 - clientHeight1) });
     await openFormView("res.partner", partnerId_2);
     await contains(".o-mail-Message", { count: 30 });
-    const clientHeight4 = $(".o-mail-Chatter")[0].clientHeight;
+    const clientHeight4 = queryFirst(".o-mail-Chatter:first").clientHeight;
     await contains(".o-mail-Chatter", { scroll: scrollValue2 - (clientHeight4 - clientHeight2) });
 });
 

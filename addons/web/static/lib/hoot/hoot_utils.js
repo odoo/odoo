@@ -56,7 +56,7 @@ import { getRunner } from "./main_runner";
 //-----------------------------------------------------------------------------
 
 const {
-    Array: { isArray: $isArray },
+    Array: { from: $from, isArray: $isArray },
     Boolean,
     clearTimeout,
     console: { debug: $debug },
@@ -66,7 +66,7 @@ const {
     JSON: { parse: $parse, stringify: $stringify },
     localStorage,
     Map,
-    Math: { floor: $floor, max: $max },
+    Math: { floor: $floor, max: $max, min: $min },
     Number: { isInteger: $isInteger, isNaN: $isNaN, parseFloat: $parseFloat },
     navigator: { clipboard: $clipboard },
     Object: {
@@ -800,7 +800,7 @@ export function getTypeOf(value) {
             if (value instanceof RegExp) {
                 return "regex";
             }
-            if (isIterable(value)) {
+            if (Array.isArray(value)) {
                 const types = [...value].map(getTypeOf);
                 const arrayType = new Set(types).size === 1 ? types[0] : "any";
                 if (arrayType.endsWith("[]")) {
@@ -865,6 +865,44 @@ export function isOfType(value, type) {
 }
 
 /**
+ * Returns the edit distance between 2 strings
+ *
+ * @param {string} a
+ * @param {string} b
+ * @param {{ normalize?: boolean }} [options]
+ * @returns {number}
+ * @example
+ *  levenshtein("abc", "àbc"); // => 0
+ * @example
+ *  levenshtein("abc", "def"); // => 3
+ * @example
+ *  levenshtein("abc", "adc"); // => 1
+ */
+export function levenshtein(a, b, options) {
+    if (!a.length) {
+        return b.length;
+    }
+    if (!b.length) {
+        return a.length;
+    }
+    if (options?.normalize) {
+        a = normalize(a);
+        b = normalize(b);
+    }
+    const dp = $from({ length: b.length + 1 }, (_, i) => i);
+    for (let i = 1; i <= a.length; i++) {
+        let prev = dp[0];
+        dp[0] = i;
+        for (let j = 1; j <= b.length; j++) {
+            const temp = dp[j];
+            dp[j] = a[i - 1] === b[j - 1] ? prev : 1 + $min(dp[j - 1], dp[j], prev);
+            prev = temp;
+        }
+    }
+    return dp[b.length];
+}
+
+/**
  * Returns a list of items that match the given pattern, ordered by their 'score'
  * (descending). A higher score means that the match is closer (e.g. consecutive
  * letters).
@@ -916,10 +954,15 @@ export function makePublicListeners(target, types) {
                 return listener;
             },
             set(value) {
+                if (listener) {
+                    target.removeEventListener(type, listener);
+                }
                 listener = value;
+                if (listener) {
+                    target.addEventListener(type, listener);
+                }
             },
         });
-        target.addEventListener(type, (...args) => listener?.(...args));
     }
 }
 
@@ -1423,6 +1466,12 @@ export const INCLUDE_LEVEL = {
     url: 1,
     tag: 2,
     preset: 3,
+};
+
+export const MIME_TYPE = {
+    blob: "application/octet-stream",
+    json: "application/json",
+    text: "text/plain",
 };
 
 export const STORAGE = {

@@ -43,7 +43,8 @@ registry.category("web_tour.tours").add('google_analytics_view_item', {
     },
     {
         content: 'select another variant',
-        trigger: 'ul.js_add_cart_variants ul.list-inline li:has(label.active) + li:has(label) input',
+        trigger:
+            "ul.js_add_cart_variants ul.list-inline li:has(label.active) + li:has(label) input:not(:visible)",
         run: "click",
     },
     {

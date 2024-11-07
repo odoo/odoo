@@ -12,9 +12,8 @@ import { makeTemplateFactory } from "./mock_templates.hoot";
 import { mockUserFactory } from "./mock_user.hoot";
 
 /**
- * @typedef {typeof loader} ModuleLoader
- *
  * @typedef {{
+ *  addonsKey: string;
  *  filter?: (path: string) => boolean;
  *  moduleNames: string[];
  * }} ModuleSet
@@ -51,6 +50,7 @@ const defineModuleSet = async (entryPoints, additionalAddons) => {
     const moduleSet = {};
     if (additionalAddons.has("*")) {
         // Use all addons
+        moduleSet.addonsKey = "*";
         moduleSet.moduleNames = sortedModuleNames.filter((name) => !name.endsWith(TEST_SUFFIX));
     } else {
         // Use subset of addons
@@ -76,6 +76,7 @@ const defineModuleSet = async (entryPoints, additionalAddons) => {
             );
         }
 
+        moduleSet.addonsKey = joinedAddons;
         moduleSet.filter = filter;
         moduleSet.moduleNames = moduleNamesCache.get(joinedAddons);
     }
@@ -97,8 +98,19 @@ const describeDrySuite = async (entryPoints) => {
         describe(getSuitePath(entryPoint), () => {
             currentModule = entryPoint;
             // Load entry point module
-            moduleSetLoader.startModule(entryPoint + TEST_SUFFIX);
+            const fullModuleName = entryPoint + TEST_SUFFIX;
+            const module = moduleSetLoader.startModule(fullModuleName);
             currentModule = null;
+
+            // Check exports (shouldn't have any)
+            const exports = Object.keys(module || {});
+            if (exports.length) {
+                throw new Error(
+                    `Test files cannot have exports, found the following exported member(s) in module ${fullModuleName}:${exports
+                        .map((name) => `\n - ${name}`)
+                        .join("")}`
+                );
+            }
         });
     }
 
@@ -258,11 +270,18 @@ const resolveAddonDependencies = (dependencies) => {
 };
 
 const runTests = async () => {
+    // Find dependency issues
+    const errors = loader.findErrors(loader.factories.keys());
+    delete errors.unloaded; // Only a few modules have been loaded yet => irrelevant
+    if (Object.keys(errors).length) {
+        throw new Error(
+            `Error(s) while loading modules for tests:\n${JSON.stringify(errors, null, 4)}`
+        );
+    }
+
     // Sort modules to accelerate loading time
     /** @type {Record<string, Deferred>} */
     const defs = {};
-    /** @type {Map<string, string[]>} */
-    const nonLoaded = new Map();
     /** @type {string[]} */
     const testModuleNames = [];
     for (const [name, { deps }] of loader.factories) {
@@ -273,36 +292,14 @@ const runTests = async () => {
         }
 
         // Register module dependencies
-        nonLoaded.set(name, deps);
         const [modDef, ...depDefs] = [name, ...deps].map((dep) => (defs[dep] ||= new Deferred()));
         Promise.all(depDefs).then(() => {
             sortedModuleNames.push(name);
             modDef.resolve();
-            nonLoaded.delete(name);
         });
     }
 
-    let timeout;
-    await Promise.race([
-        Promise.all(Object.values(defs)),
-        new Promise((resolve, reject) => {
-            timeout = setTimeout(
-                () =>
-                    reject(
-                        [
-                            `Missing dependencies:`,
-                            ...new Set(
-                                [...nonLoaded].flatMap(([name, deps]) =>
-                                    deps.filter((d) => !sortedModuleNames.includes(d))
-                                )
-                            ),
-                        ].join("\n")
-                    ),
-                1000
-            );
-        }),
-    ]);
-    clearTimeout(timeout);
+    await Promise.all(Object.values(defs));
 
     // Dry run
     const [{ suites }] = await Promise.all([
@@ -311,36 +308,41 @@ const runTests = async () => {
     ]);
 
     // Run all test files
-    const suitePaths = suites.map((s) => s.fullName);
+    const filteredSuitePaths = new Set(suites.map((s) => s.fullName));
+    let currentAddonsKey = "";
     for (const moduleName of testModuleNames) {
-        if (suitePaths.includes(getSuitePath(moduleName))) {
-            const moduleSet = await defineModuleSet([moduleName], new Set());
-            const moduleSetLoader = new ModuleSetLoader(moduleSet);
+        const suitePath = getSuitePath(moduleName);
+        if (!filteredSuitePaths.has(suitePath)) {
+            continue;
+        }
 
-            const suite = describe(getSuitePath(moduleName), () => {
-                const fullName = moduleName + TEST_SUFFIX;
-                moduleSetLoader.setup();
-                moduleSetLoader.startModule(fullName);
-                const module = moduleSetLoader.modules.get(fullName);
-                const exports = Object.keys(module);
-                if (exports.length) {
-                    throw new Error(
-                        `Test files cannot have exports, found the following exported member(s) in module ${fullName}:${exports
-                            .map((name) => `\n - ${name}`)
-                            .join("")}`
-                    );
-                }
-            });
+        const moduleSet = await defineModuleSet([moduleName], new Set());
+        const moduleSetLoader = new ModuleSetLoader(moduleSet);
 
-            // Run recently added tests
-            const running = await start(suite);
-
-            moduleSetLoader.cleanup();
-            __gcAndLogMemory(suite.fullName, suite.reporting.tests);
-
-            if (!running) {
-                break;
+        if (currentAddonsKey !== moduleSet.addonsKey) {
+            if (moduleSetLoader.modules.has(TEMPLATE_MODULE_NAME)) {
+                // If templates module is available: set URL filter to filter out
+                // static templates and cleanup current processed templates.
+                const templateModule = moduleSetLoader.modules.get(TEMPLATE_MODULE_NAME);
+                templateModule.setUrlFilters(moduleSet.filter ? [moduleSet.filter] : []);
+                templateModule.clearProcessedTemplates();
             }
+            currentAddonsKey = moduleSet.addonsKey;
+        }
+
+        const suite = describe(suitePath, () => {
+            moduleSetLoader.setup();
+            moduleSetLoader.startModule(moduleName + TEST_SUFFIX);
+        });
+
+        // Run recently added tests
+        const running = await start(suite);
+
+        moduleSetLoader.cleanup();
+        __gcAndLogMemory(suite.fullName, suite.reporting.tests);
+
+        if (!running) {
+            break;
         }
     }
 
@@ -393,7 +395,7 @@ const __gcAndLogMemory = (label, testCount) => {
     console.log(...logs);
 };
 
-/** @extends {ModuleLoader} */
+/** @extends {OdooModuleLoader} */
 class ModuleSetLoader extends loader.constructor {
     cleanups = [];
 
@@ -409,10 +411,6 @@ class ModuleSetLoader extends loader.constructor {
 
         odoo.define = this.define.bind(this);
         odoo.loader = this;
-    }
-
-    get templateModule() {
-        return this.modules.get("@web/core/templates");
     }
 
     /**
@@ -434,11 +432,6 @@ class ModuleSetLoader extends loader.constructor {
     }
 
     cleanup() {
-        if (this.templateModule) {
-            this.templateModule.setUrlFilters([]);
-            this.templateModule.clearProcessedTemplates();
-        }
-
         odoo.define = define;
         odoo.loader = loader;
 
@@ -465,8 +458,6 @@ class ModuleSetLoader extends loader.constructor {
     }
 
     setup() {
-        const { filter, moduleNames } = this.moduleSet;
-
         this.cleanups.push(
             watchKeys(window.odoo, WHITE_LISTED_KEYS),
             watchKeys(window, WHITE_LISTED_KEYS),
@@ -474,7 +465,7 @@ class ModuleSetLoader extends loader.constructor {
         );
 
         // Load module set modules (without entry point)
-        for (const name of moduleNames) {
+        for (const name of this.moduleSet.moduleNames) {
             const mockFactory = findMockFactory(name);
             if (mockFactory) {
                 // Use mock
@@ -488,12 +479,6 @@ class ModuleSetLoader extends loader.constructor {
                 this.startModule(name);
             }
         }
-
-        // If templates module is available: set URL filter to filter out static
-        // templates.
-        if (filter) {
-            this.templateModule?.setUrlFilters([filter]);
-        }
     }
 
     /**
@@ -502,10 +487,10 @@ class ModuleSetLoader extends loader.constructor {
      */
     startModule(name) {
         if (this.canAddModule(name)) {
-            super.startModule(...arguments);
-        } else {
-            this.jobs.delete(name);
+            return super.startModule(...arguments);
         }
+        this.jobs.delete(name);
+        return null;
     }
 }
 
@@ -527,6 +512,7 @@ const MODULE_MOCKS_BY_REGEX = new Map([
 ]);
 const R_DEFAULT_MODULE = /^@odoo\/(owl|hoot)/;
 const R_PATH_ADDON = /^[@/]?(\w+)/;
+const TEMPLATE_MODULE_NAME = "@web/core/templates";
 const WHITE_LISTED_KEYS = [
     "ace", // Ace editor
     "Chart", // Chart.js

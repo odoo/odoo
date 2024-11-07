@@ -196,7 +196,7 @@ describe("new", () => {
             },
         ]);
 
-        onRpc("/web/dataset/call_button", async (request) => {
+        onRpc("/web/dataset/call_button/*", async (request) => {
             const { params } = await request.json();
             if (params.method === "some_method") {
                 return {
@@ -253,7 +253,7 @@ describe("new", () => {
             },
         ]);
 
-        onRpc("/web/dataset/call_button", async (request) => {
+        onRpc("/web/dataset/call_button/*", async (request) => {
             const { params } = await request.json();
             if (params.method === "some_method") {
                 return {
@@ -352,7 +352,7 @@ describe("new", () => {
 
         await contains(".modal button[name=method]").click();
         expect(".modal").toHaveCount(2);
-        expect($(".modal:last .modal-body").text()).toBe("Are you sure?");
+        expect(".modal:last .modal-body").toHaveText("Are you sure?");
 
         await contains(".modal:last .modal-footer .btn-primary").click();
         // needs two renderings to close the ConfirmationDialog:
@@ -636,65 +636,63 @@ describe("fullscreen", () => {
         expect(".o_main_navbar").not.toBeVisible();
     });
 
-    test.tags("desktop")(
-        'fullscreen on action change: back to another "current" action',
-        async () => {
-            defineActions([
-                {
-                    id: 6,
-                    name: "Partner",
-                    res_id: 2,
-                    res_model: "partner",
-                    target: "current",
-                    type: "ir.actions.act_window",
-                    views: [[false, "form"]],
-                },
-                {
-                    id: 24,
-                    name: "Partner",
-                    res_id: 2,
-                    res_model: "partner",
-                    type: "ir.actions.act_window",
-                    views: [[666, "form"]],
-                },
-            ]);
-            defineMenus([
-                {
-                    id: "root",
-                    children: [{ id: 1, children: [], name: "MAIN APP", appID: 1, actionID: 6 }],
-                    name: "root",
-                    appID: "root",
-                },
-            ]);
-            Partner._views["form,false"] = `
+    test.tags("desktop");
+    test('fullscreen on action change: back to another "current" action', async () => {
+        defineActions([
+            {
+                id: 6,
+                name: "Partner",
+                res_id: 2,
+                res_model: "partner",
+                target: "current",
+                type: "ir.actions.act_window",
+                views: [[false, "form"]],
+            },
+            {
+                id: 24,
+                name: "Partner",
+                res_id: 2,
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [[666, "form"]],
+            },
+        ]);
+        defineMenus([
+            {
+                id: "root",
+                children: [{ id: 1, children: [], name: "MAIN APP", appID: 1, actionID: 6 }],
+                name: "root",
+                appID: "root",
+            },
+        ]);
+        Partner._views["form,false"] = `
             <form>
                 <button name="24" type="action" string="Execute action 24" class="oe_stat_button"/>
             </form>`;
-            Partner._views["form,666"] = `
+        Partner._views["form,666"] = `
             <form>
                 <button type="action" name="15" icon="fa-star" context="{'default_partner': id}" class="oe_stat_button"/>
             </form>`;
 
-            await mountWithCleanup(WebClient);
-            await animationFrame(); // wait for the load state (default app)
-            await animationFrame(); // wait for the action to be mounted
-            expect("nav .o_menu_brand").toHaveCount(1);
-            expect("nav .o_menu_brand").toHaveText("MAIN APP");
+        await mountWithCleanup(WebClient);
+        await animationFrame(); // wait for the load state (default app)
+        await animationFrame(); // wait for the action to be mounted
+        expect("nav .o_menu_brand").toHaveCount(1);
+        expect("nav .o_menu_brand").toHaveText("MAIN APP");
 
-            await contains("button[name='24']").click();
-            await animationFrame(); // wait for the webclient template to be re-rendered
-            expect("nav .o_menu_brand").toHaveCount(1);
+        await contains("button[name='24']").click();
+        await animationFrame(); // wait for the webclient template to be re-rendered
+        expect("nav .o_menu_brand").toHaveCount(1);
 
-            await contains("button[name='15']").click();
-            await animationFrame(); // wait for the webclient template to be re-rendered
-            expect("nav.o_main_navbar").toHaveCount(0);
+        await contains("button[name='15']").click();
+        await animationFrame(); // wait for the webclient template to be re-rendered
+        expect("nav.o_main_navbar").toHaveCount(0);
 
-            await contains(queryAll(".breadcrumb li a")[1]).click();
-            await animationFrame(); // wait for the webclient template to be re-rendered
-            expect("nav .o_menu_brand").toHaveCount(1);
-            expect("nav .o_menu_brand").toHaveText("MAIN APP");
-        }
-    );
+        await contains(queryAll(".breadcrumb li a")[1]).click();
+        await animationFrame(); // wait for the webclient template to be re-rendered
+        expect("nav .o_menu_brand").toHaveCount(1);
+        expect("nav .o_menu_brand").toHaveText("MAIN APP");
+    });
 });
 
 describe("main", () => {

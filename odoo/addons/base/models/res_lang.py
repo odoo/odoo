@@ -280,6 +280,7 @@ class Lang(models.Model):
         return self._get_data(code=code).code
 
     @api.model
+    @api.readonly
     def get_installed(self) -> list[tuple[str, str]]:
         """ Return installed languages' (code, name) pairs sorted by name. """
         return [(code, data.name) for code, data in self._get_active_by('code').items()]

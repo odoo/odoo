@@ -434,7 +434,25 @@ test("Close active thread action in chatwindow on ESCAPE", async () => {
     await contains(".o-mail-ChatWindow");
 });
 
-test("open 2 different chat windows: enough screen width [REQUIRE FOCUS]", async () => {
+test("ESC cancels thread rename", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, fold_state: "open" }),
+        ],
+    });
+    await start();
+    await click(".o-mail-ChatWindow-command", { text: "General" });
+    await click(".o-dropdown-item", { text: "Rename Thread" });
+    await contains(".o-mail-AutoresizeInput.o-focused[title='General']");
+    await insertText(".o-mail-AutoresizeInput", "New", { replace: true });
+    triggerHotkey("Escape");
+    await contains(".o-mail-AutoresizeInput.o-focused", { count: 0 });
+    await contains(".o-mail-ChatWindow-command", { text: "General" });
+});
+
+test.tags("focus required")("open 2 different chat windows: enough screen width", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([{ name: "Channel_1" }, { name: "Channel_2" }]);
     patchUiSize({ width: 1920 });
@@ -461,7 +479,8 @@ test("open 2 different chat windows: enough screen width [REQUIRE FOCUS]", async
     });
 });
 
-test("focus next visible chat window when closing current chat window with ESCAPE [REQUIRE FOCUS]", async () => {
+test.tags("focus required");
+test("focus next visible chat window when closing current chat window with ESCAPE", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([
         {
@@ -503,7 +522,7 @@ test("focus next visible chat window when closing current chat window with ESCAP
     });
 });
 
-test("chat window: switch on TAB [REQUIRE FOCUS]", async () => {
+test.tags("focus required")("chat window: switch on TAB", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([{ name: "channel1" }, { name: "channel2" }]);
     patchUiSize({ width: 1920 });
@@ -540,7 +559,7 @@ test("chat window: switch on TAB [REQUIRE FOCUS]", async () => {
     });
 });
 
-test("chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]", async () => {
+test.tags("focus required")("chat window: TAB cycle with 3 open chat windows", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([
         {
@@ -915,7 +934,8 @@ test("Open chat window of new inviter", async () => {
     });
 });
 
-test("keyboard navigation ArrowUp/ArrowDown on message action dropdown in chat window [REQUIRE FOCUS]", async () => {
+test.tags("focus required");
+test("keyboard navigation ArrowUp/ArrowDown on message action dropdown in chat window", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({

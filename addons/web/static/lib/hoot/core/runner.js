@@ -35,7 +35,7 @@ import { makeExpect } from "./expect";
 import { makeFixtureManager } from "./fixture";
 import { logLevels, logger } from "./logger";
 import { Suite, suiteError } from "./suite";
-import { Tag } from "./tag";
+import { Tag, getTagSimilarities } from "./tag";
 import { Test, testError } from "./test";
 import { EXCLUDE_PREFIX, createUrlFromId, setParams, urlParams } from "./url";
 
@@ -277,6 +277,11 @@ const warnUserEvent = (ev) => {
     removeEventListener(ev.type, warnUserEvent);
 };
 
+const WARNINGS = {
+    viewport: "Viewport size does not match the expected size for the current preset",
+    tagNames:
+        "The following tag names are very similar to each other and may be confusing for other developers:",
+};
 const RESIZE_OBSERVER_MESSAGE = "ResizeObserver loop completed with undelivered notifications";
 const handledErrors = new WeakSet();
 /** @type {string | null} */
@@ -714,13 +719,14 @@ export class Runner {
         const innerWidth = getViewPortWidth();
         const innerHeight = getViewPortHeight();
         const [width, height] = preset.size;
-        if (width !== innerWidth || height !== innerHeight) {
+        if (width === innerWidth && height === innerHeight) {
+            lastPresetWarn = null;
+            delete this.state.globalWarnings[WARNINGS.viewport];
+        } else {
             if (lastPresetWarn !== presetId) {
-                this._handleGlobalWarning(
-                    "viewport size does not match the expected size for the current preset"
-                );
+                this._handleGlobalWarning(WARNINGS.viewport);
                 logger.warn(
-                    `viewport size does not match the expected size for the "${preset.label}" preset`,
+                    WARNINGS.viewport,
                     `\n> expected:`,
                     width,
                     "x",
@@ -1005,6 +1011,8 @@ export class Runner {
                     storageSet(STORAGE.failed, [...this.state.failedIds]);
                 }
             } else {
+                this._failed++;
+
                 const failReasons = [];
                 const failedAssertions = lastResults.assertions.filter(
                     (assertion) => !assertion.pass
@@ -1027,21 +1035,23 @@ export class Runner {
                     [`Test ${stringify(test.fullName)} failed:`, ...failReasons].join("\n")
                 );
 
-                this.state.failedIds.add(test.id);
-                storageSet(STORAGE.failed, [...this.state.failedIds]);
+                if (!this.aborted) {
+                    if (this._failed === 1) {
+                        // On first failed test: reset the "failed IDs" list
+                        this.state.failedIds.clear();
+                    }
+                    this.state.failedIds.add(test.id);
+                    storageSet(STORAGE.failed, [...this.state.failedIds]);
+                }
             }
 
             await this._callbacks.call("after-post-test", test, handleError);
 
-            if (this.config.bail) {
-                if (!test.config.skip && !lastResults.pass) {
-                    this._failed++;
-                }
-                if (this._failed >= this.config.bail) {
-                    return this.stop();
-                }
-            }
             this._pushTest(test);
+
+            if (this.config.bail && this._failed >= this.config.bail) {
+                return this.stop();
+            }
             if (test.willRunAgain()) {
                 test.run = test.run.bind(test);
             } else {
@@ -1538,6 +1548,15 @@ export class Runner {
         if (existingFailed.length !== failedIds.length) {
             this.state.failedIds = new Set(existingFailed);
             storageSet(STORAGE.failed, existingFailed);
+        }
+
+        // Check tags similarities
+        const similarities = getTagSimilarities();
+        if (similarities.length) {
+            this._handleGlobalWarning(
+                WARNINGS.tagNames + similarities.map((s) => `\n- ${s.map(stringify).join(" / ")}`)
+            );
+            logger.warn(WARNINGS.tagNames, similarities);
         }
 
         this._populateState = true;

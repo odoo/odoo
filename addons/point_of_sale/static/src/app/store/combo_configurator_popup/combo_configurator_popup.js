@@ -85,7 +85,7 @@ export class ComboConfiguratorPopup extends Component {
                 this.state.configuration[combo_item.id] = payload;
             } else {
                 // Do not select the product if configuration popup is cancelled.
-                this.state.combo[combo_item.id] = 0;
+                this.state.combo[combo_item.combo_id.id] = 0;
             }
         }
     }

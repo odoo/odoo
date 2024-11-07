@@ -216,46 +216,44 @@ describe("useAutofocus", () => {
         expect("input").toHaveProperty("selectionEnd", 13);
     });
 
-    test.tags("desktop")(
-        "autofocus outside of active element doesn't work (CommandPalette)",
-        async () => {
-            const state = reactive({
-                showPalette: true,
-                text: "",
-            });
+    test.tags("desktop");
+    test("autofocus outside of active element doesn't work (CommandPalette)", async () => {
+        const state = reactive({
+            showPalette: true,
+            text: "",
+        });
 
-            class MyComponent extends Component {
-                static props = ["*"];
-                static template = xml`
+        class MyComponent extends Component {
+            static props = ["*"];
+            static template = xml`
                     <div>
                         <input type="text" t-ref="autofocus" t-att-value="state.text" />
                     </div>
                 `;
-                setup() {
-                    useAutofocus();
+            setup() {
+                useAutofocus();
 
-                    this.state = useState(state);
-                }
+                this.state = useState(state);
             }
-
-            await mountWithCleanup(MyComponent);
-
-            expect("input").toBeFocused();
-
-            getService("dialog").add(CommandPalette, {
-                config: { providers: [] },
-            });
-            await animationFrame();
-
-            expect(".o_command_palette").toHaveCount(1);
-            expect("input").not.toBeFocused();
-
-            state.text = "a";
-            await animationFrame();
-
-            expect("input").not.toBeFocused();
         }
-    );
+
+        await mountWithCleanup(MyComponent);
+
+        expect("input").toBeFocused();
+
+        getService("dialog").add(CommandPalette, {
+            config: { providers: [] },
+        });
+        await animationFrame();
+
+        expect(".o_command_palette").toHaveCount(1);
+        expect("input").not.toBeFocused();
+
+        state.text = "a";
+        await animationFrame();
+
+        expect("input").not.toBeFocused();
+    });
 });
 
 describe("useBus", () => {

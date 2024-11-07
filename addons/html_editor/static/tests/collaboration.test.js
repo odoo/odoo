@@ -211,7 +211,7 @@ describe("collaborative makeSavePoint", () => {
         const e1 = peerInfos.c1.editor;
         const e2 = peerInfos.c2.editor;
         const savepoint = e2.shared.makeSavePoint();
-        await   manuallyDispatchProgrammaticEvent(e1.editable, "beforeinput", {
+        await manuallyDispatchProgrammaticEvent(e1.editable, "beforeinput", {
             inputType: "insertParagraph",
         });
         mergePeersSteps(peerInfos);
@@ -1280,10 +1280,10 @@ describe("Collaboration with embedded components", () => {
             });
             const e1 = peerInfos.c1.editor;
             const e2 = peerInfos.c2.editor;
-            const counter1 = [...peerInfos.c1.plugins.get("embedded_components").components][0].app
-                .root.component;
-            const counter2 = [...peerInfos.c2.plugins.get("embedded_components").components][0].app
-                .root.component;
+            const counter1 = [...peerInfos.c1.plugins.get("embedded_components").components][0].root
+                .node.component;
+            const counter2 = [...peerInfos.c2.plugins.get("embedded_components").components][0].root
+                .node.component;
             expect(getContent(e1.editable, { sortAttrs: true })).toBe(
                 `<div>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":1}' data-oe-protected="true"><span class="counter">Counter:1</span></span></div>`
             );
@@ -1336,10 +1336,10 @@ describe("Collaboration with embedded components", () => {
             });
             const e1 = peerInfos.c1.editor;
             const e2 = peerInfos.c2.editor;
-            const counter1 = [...peerInfos.c1.plugins.get("embedded_components").components][0].app
-                .root.component;
-            const counter2 = [...peerInfos.c2.plugins.get("embedded_components").components][0].app
-                .root.component;
+            const counter1 = [...peerInfos.c1.plugins.get("embedded_components").components][0].root
+                .node.component;
+            const counter2 = [...peerInfos.c2.plugins.get("embedded_components").components][0].root
+                .node.component;
             counter2.embeddedState.value = 2;
             await animationFrame();
             mergePeersSteps(peerInfos);
@@ -1414,10 +1414,10 @@ describe("Collaboration with embedded components", () => {
             });
             const e1 = peerInfos.c1.editor;
             const e2 = peerInfos.c2.editor;
-            const obj1 = [...peerInfos.c1.plugins.get("embedded_components").components][0].app.root
-                .component;
-            const obj2 = [...peerInfos.c2.plugins.get("embedded_components").components][0].app.root
-                .component;
+            const obj1 = [...peerInfos.c1.plugins.get("embedded_components").components][0].root
+                .node.component;
+            const obj2 = [...peerInfos.c2.plugins.get("embedded_components").components][0].root
+                .node.component;
             expect(getContent(e1.editable, { sortAttrs: true })).toBe(
                 `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"1":1}}' data-oe-protected="true"><div class="obj">1_1</div></div>`
             );
@@ -1499,8 +1499,8 @@ describe("Collaboration with embedded components", () => {
             );
             e2.dispatch("ADD_STEP");
             await animationFrame();
-            const counter2 = [...peerInfos.c2.plugins.get("embedded_components").components][0].app
-                .root.component;
+            const counter2 = [...peerInfos.c2.plugins.get("embedded_components").components][0].root
+                .node.component;
             counter2.embeddedState.value = 3;
             await animationFrame();
             expect(getContent(e2.editable, { sortAttrs: true })).toBe(
@@ -1532,10 +1532,10 @@ describe("Collaboration with embedded components", () => {
             });
             const e1 = peerInfos.c1.editor;
             const e2 = peerInfos.c2.editor;
-            const obj1 = [...peerInfos.c1.plugins.get("embedded_components").components][0].app.root
-                .component;
-            const obj2 = [...peerInfos.c2.plugins.get("embedded_components").components][0].app.root
-                .component;
+            const obj1 = [...peerInfos.c1.plugins.get("embedded_components").components][0].root
+                .node.component;
+            const obj2 = [...peerInfos.c2.plugins.get("embedded_components").components][0].root
+                .node.component;
             obj1.embeddedState.obj["2"] = 2;
             obj1.embeddedState.obj["3"] = 4;
             obj2.embeddedState.obj["3"] = 3;
@@ -1572,10 +1572,10 @@ describe("Collaboration with embedded components", () => {
             });
             const e1 = peerInfos.c1.editor;
             const e2 = peerInfos.c2.editor;
-            const obj1 = [...peerInfos.c1.plugins.get("embedded_components").components][0].app.root
-                .component;
-            const obj2 = [...peerInfos.c2.plugins.get("embedded_components").components][0].app.root
-                .component;
+            const obj1 = [...peerInfos.c1.plugins.get("embedded_components").components][0].root
+                .node.component;
+            const obj2 = [...peerInfos.c2.plugins.get("embedded_components").components][0].root
+                .node.component;
             obj1.embeddedState.obj["2"] = 2;
             obj2.embeddedState.obj["3"] = 3;
             await animationFrame();
@@ -1606,10 +1606,10 @@ describe("Collaboration with embedded components", () => {
             });
             const e1 = peerInfos.c1.editor;
             const e2 = peerInfos.c2.editor;
-            const counter1 = [...peerInfos.c1.plugins.get("embedded_components").components][0].app
-                .root.component;
-            const counter2 = [...peerInfos.c2.plugins.get("embedded_components").components][0].app
-                .root.component;
+            const counter1 = [...peerInfos.c1.plugins.get("embedded_components").components][0].root
+                .node.component;
+            const counter2 = [...peerInfos.c2.plugins.get("embedded_components").components][0].root
+                .node.component;
             counter2.embeddedState.value = 2;
             await animationFrame();
             counter1.embeddedState.value = 3;
@@ -1649,10 +1649,10 @@ describe("Collaboration with embedded components", () => {
             });
             const e1 = peerInfos.c1.editor;
             const e2 = peerInfos.c2.editor;
-            const counter1 = [...peerInfos.c1.plugins.get("embedded_components").components][0].app
-                .root.component;
-            const counter2 = [...peerInfos.c2.plugins.get("embedded_components").components][0].app
-                .root.component;
+            const counter1 = [...peerInfos.c1.plugins.get("embedded_components").components][0].root
+                .node.component;
+            const counter2 = [...peerInfos.c2.plugins.get("embedded_components").components][0].root
+                .node.component;
             counter1.embeddedState.name = "newName";
             await animationFrame();
             expect(getContent(e1.editable, { sortAttrs: true })).toBe(
@@ -1685,10 +1685,10 @@ describe("Collaboration with embedded components", () => {
             });
             const e1 = peerInfos.c1.editor;
             const e2 = peerInfos.c2.editor;
-            const counter1 = [...peerInfos.c1.plugins.get("embedded_components").components][0].app
-                .root.component;
-            const counter2 = [...peerInfos.c2.plugins.get("embedded_components").components][0].app
-                .root.component;
+            const counter1 = [...peerInfos.c1.plugins.get("embedded_components").components][0].root
+                .node.component;
+            const counter2 = [...peerInfos.c2.plugins.get("embedded_components").components][0].root
+                .node.component;
             counter2.embeddedState.value = 2;
             counter1.embeddedState.value = 3;
             await animationFrame();
@@ -1719,8 +1719,8 @@ describe("Collaboration with embedded components", () => {
             });
             const e1 = peerInfos.c1.editor;
             const e2 = peerInfos.c2.editor;
-            const obj1 = [...peerInfos.c1.plugins.get("embedded_components").components][0].app.root
-                .component;
+            const obj1 = [...peerInfos.c1.plugins.get("embedded_components").components][0].root
+                .node.component;
             const savepoint = e1.shared.makeSavePoint();
             obj1.embeddedState.obj["2"] = 2;
             await animationFrame();
@@ -1752,10 +1752,10 @@ describe("Collaboration with embedded components", () => {
             });
             const e1 = peerInfos.c1.editor;
             const e2 = peerInfos.c2.editor;
-            const counter1 = [...peerInfos.c1.plugins.get("embedded_components").components][0].app
-                .root.component;
-            const counter2 = [...peerInfos.c2.plugins.get("embedded_components").components][0].app
-                .root.component;
+            const counter1 = [...peerInfos.c1.plugins.get("embedded_components").components][0].root
+                .node.component;
+            const counter2 = [...peerInfos.c2.plugins.get("embedded_components").components][0].root
+                .node.component;
             counter1.embeddedState.baseValue = 3;
             counter2.embeddedState.baseValue = 3;
             await animationFrame();
@@ -1793,10 +1793,10 @@ describe("Collaboration with embedded components", () => {
             });
             const e1 = peerInfos.c1.editor;
             const e2 = peerInfos.c2.editor;
-            const obj1 = [...peerInfos.c1.plugins.get("embedded_components").components][0].app.root
-                .component;
-            const obj2 = [...peerInfos.c2.plugins.get("embedded_components").components][0].app.root
-                .component;
+            const obj1 = [...peerInfos.c1.plugins.get("embedded_components").components][0].root
+                .node.component;
+            const obj2 = [...peerInfos.c2.plugins.get("embedded_components").components][0].root
+                .node.component;
             obj1.embeddedState.obj = {};
             obj1.embeddedState.obj["1"] = 1;
             await animationFrame();

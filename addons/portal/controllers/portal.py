@@ -161,7 +161,7 @@ class CustomerPortal(Controller):
         """
         return {}
 
-    @route(['/my/counters'], type='json', auth="user", website=True)
+    @route(['/my/counters'], type='json', auth="user", website=True, readonly=True)
     def counters(self, counters, **kw):
         cache = (request.session.portal_counters or {}).copy()
         res = self._prepare_home_portal_values(counters)

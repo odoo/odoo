@@ -988,8 +988,9 @@ patch(PosOrder.prototype, {
                 continue;
             }
             remainingAmountPerLine[line.uuid] = line.get_price_with_tax();
+            const product_id = line.combo_parent_id?.product_id.id || line.get_product().id;
             if (
-                applicableProductIds.has(line.get_product().id) ||
+                applicableProductIds.has(product_id) ||
                 (line._reward_product_id && applicableProductIds.has(line._reward_product_id.id))
             ) {
                 linesToDiscount.push(line);

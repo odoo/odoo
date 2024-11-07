@@ -793,46 +793,44 @@ test.tags("desktop")("Navigation is possible from the input when it is focused",
     expect.verifySteps(["a"]);
 });
 
-test.tags("desktop")(
-    "When only one choice is displayed, 'enter' key should select the value",
-    async () => {
-        class MyParent extends Component {
-            static props = ["*"];
-            static components = { SelectMenu };
-            static template = xml`
+test.tags("desktop");
+test("When only one choice is displayed, 'enter' key should select the value", async () => {
+    class MyParent extends Component {
+        static props = ["*"];
+        static components = { SelectMenu };
+        static template = xml`
             <SelectMenu
                 value="this.state.value"
                 choices="this.choices"
                 onSelect.bind="this.onSelect"
             />
         `;
-            setup() {
-                this.state = useState({ value: "b" });
-                this.choices = [
-                    { label: "A", value: "a" },
-                    { label: "B", value: "b" },
-                    { label: "C", value: "c" },
-                ];
-            }
-
-            onSelect(newValue) {
-                expect.step(newValue);
-                this.state.value = newValue;
-            }
+        setup() {
+            this.state = useState({ value: "b" });
+            this.choices = [
+                { label: "A", value: "a" },
+                { label: "B", value: "b" },
+                { label: "C", value: "c" },
+            ];
         }
 
-        await mountSingleApp(MyParent);
-        await open();
-        await edit("a");
-        await animationFrame();
-
-        await press("enter");
-
-        await animationFrame();
-
-        expect.verifySteps(["a"]);
+        onSelect(newValue) {
+            expect.step(newValue);
+            this.state.value = newValue;
+        }
     }
-);
+
+    await mountSingleApp(MyParent);
+    await open();
+    await edit("a");
+    await animationFrame();
+
+    await press("enter");
+
+    await animationFrame();
+
+    expect.verifySteps(["a"]);
+});
 
 test("Props onInput is executed when the search changes", async () => {
     class MyParent extends Component {
