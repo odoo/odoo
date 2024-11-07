@@ -13,6 +13,7 @@ class CrateBarcodeConfiguration(models.Model):
     crate_status = fields.Selection([('available', 'Available'),
                                      ('not_available', 'Not Available'),],
                                     string='Crate Status', default='available')
+    site_code_id = fields.Many2one('site.code.configuration', string='Site Code', store=True)
 
     def action_set_available(self):
         """Change the crate status to available."""
