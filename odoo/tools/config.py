@@ -200,8 +200,10 @@ class configmanager:
                          help="install one or more modules (comma-separated list, use \"all\" for all modules), requires -d")
         group.add_option("-u", "--update", dest="update", type='comma',  metavar="MODULE,...", my_default=[], file_loadable=False,
                          help="update one or more modules (comma-separated list, use \"all\" for all modules). Requires -d.")
-        group.add_option("--without-demo", dest="without_demo", my_default=False, type='without_demo', metavar='BOOL', nargs='?', const=True,
-                         help="use with -i/--init, skip installing fake demonstration data (e.g. Mitchel Admin/Azure Interior)")
+        group.add_option("--with-demo", dest="with_demo", action="store_true", my_default=False,
+                         help="Enable loading demo data for modules to be installed. Requires -d or -i. Default is %default")
+        group.add_option("--without-demo", dest="with_demo", my_default=False, type='without_demo', metavar='BOOL', nargs='?', const=False,
+                         help="Enable loading demo data for modules to be installed. Requires -d or -i. Default is %default")
         group.add_option("-P", "--import-partial", dest="import_partial", type='path', my_default='',
                          help="Use this for big data importation, if it crashes you will be able to continue at the current state. Provide a filename to store intermediate importation states.")
         group.add_option("--pidfile", dest="pidfile", type='path', my_default='',
@@ -632,7 +634,7 @@ class configmanager:
         ]))
 
         self._runtime_options['init'] = dict.fromkeys(self['init'], True) or {}
-        self._runtime_options['demo'] = dict(self['init']) if not self['without_demo'] else {}
+        self._runtime_options['demo'] = dict(self['init']) if self['with_demo'] else {}
         self._runtime_options['update'] = dict.fromkeys(self['update'], True) or {}
         self._runtime_options['translate_modules'] = sorted(self['translate_modules'])
 
@@ -764,11 +766,19 @@ class configmanager:
 
     @classmethod
     def _check_without_demo(cls, option, opt, value):
+        if value == 'False':
+            return False
+        else:
+            cls._warn(
+                "The without-demo option should be used as a flag.",
+                DeprecationWarning
+            )
+        # We store the variable within the config option 'with_demo' so the result is reversed.
         try:
-            return cls._check_bool(option, opt, value)
+            return not cls._check_bool(option, opt, value)
         except optparse.OptionValueError:
             cls._log(logging.WARNING, "option %s: since 19.0, invalid boolean value: %r, assume %s", opt, value, value != 'None')
-            return value != 'None'
+            return value == 'None'
 
     def parse(self, option_name, value):
         if not isinstance(value, str):

@@ -444,7 +444,7 @@ def load_modules(registry: Registry, force_demo: bool = False, status: None = No
             modules_db.initialize(cr)
             update_module = True # process auto-installed modules
             tools.config["init"]["all"] = 1
-            if not tools.config['without_demo']:
+            if tools.config['demo']:
                 tools.config["demo"]['all'] = 1
 
         if 'base' in tools.config['update'] or 'all' in tools.config['update']:
