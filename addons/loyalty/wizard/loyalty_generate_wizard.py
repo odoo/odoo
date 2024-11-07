@@ -7,21 +7,21 @@ from odoo.osv import expression
 
 class LoyaltyGenerateWizard(models.TransientModel):
     _name = 'loyalty.generate.wizard'
-    _description = 'Generate Coupons'
+    _description = "Generate Coupons"
 
     program_id = fields.Many2one('loyalty.program', required=True, default=lambda self: self.env.context.get('active_id', False) or self.env.context.get('default_program_id', False))
     program_type = fields.Selection(related='program_id.program_type')
 
     mode = fields.Selection([
-        ('anonymous', 'Anonymous Customers'),
-        ('selected', 'Selected Customers')],
+        ('anonymous', "Anonymous Customers"),
+        ('selected', "Selected Customers")],
         string='For', required=True, default='anonymous'
     )
 
     customer_ids = fields.Many2many('res.partner', string='Customers')
     customer_tag_ids = fields.Many2many('res.partner.category', string='Customer Tags')
 
-    coupon_qty = fields.Integer('Quantity',
+    coupon_qty = fields.Integer("Quantity",
         compute='_compute_coupon_qty', readonly=False, store=True)
     points_granted = fields.Float('Grant', required=True, default=1)
     points_name = fields.Char(related='program_id.portal_point_name', readonly=True)
