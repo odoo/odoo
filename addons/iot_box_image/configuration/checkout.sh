@@ -21,6 +21,17 @@ if [ -d /home/pi/odoo/addons/iot_box_image/overwrite_after_init ]; then
     rm -r /home/pi/odoo/addons/iot_box_image/overwrite_after_init
 fi
 
+# Update requirements
+pip3 install -r /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/requirements.txt --user --break-system-package
+
+# Update packages: install new ones, upgrade existing ones in the background
+sudo chroot /root_bypass_ramdisks/ /bin/bash <<'EOF'
+mount -t proc proc /proc
+apt-get udpate
+xargs apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install < /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/packages.txt
+nohup bash -c "apt-get upgrade -y && apt-get -y autoremove" > /dev/null 2>&1 &  # Run in background to avoid blocking the script
+EOF
+
 # TODO: Remove this code when v16 is deprecated
 odoo_conf="addons/iot_box_image/configuration/odoo.conf"
 if ! grep -q "server_wide_modules" $odoo_conf; then
