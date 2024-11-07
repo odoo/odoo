@@ -1143,7 +1143,9 @@ class Users(models.Model):
 
     @check_identity
     def action_revoke_all_devices(self):
-        return self._action_revoke_all_devices()
+        # self.env.user is sudo by default
+        # Need sudo to bypass access error for removing the devices of portal user
+        return (self.env.user if self.id == self.env.uid else self)._action_revoke_all_devices()
 
     def _action_revoke_all_devices(self):
         devices = self.env["res.device"].search([("user_id", "=", self.id)])
