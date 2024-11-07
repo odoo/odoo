@@ -7,13 +7,15 @@ class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
     is_reward_line = fields.Boolean(
-        string="Is a program reward line", compute='_compute_is_reward_line')
+        string="Is a program reward line", compute='_compute_is_reward_line'
+    )
     reward_id = fields.Many2one(
-        comodel_name='loyalty.reward', ondelete='restrict', readonly=True)
-    coupon_id = fields.Many2one(
-        comodel_name='loyalty.card', ondelete='restrict', readonly=True)
+        comodel_name='loyalty.reward', ondelete='restrict', readonly=True
+    )
+    coupon_id = fields.Many2one(comodel_name='loyalty.card', ondelete='restrict', readonly=True)
     reward_identifier_code = fields.Char(
-        help="Technical field used to link multiple reward lines from the same reward together.")
+        help="Technical field used to link multiple reward lines from the same reward together."
+    )
     points_cost = fields.Float(help="How much point this reward costs on the loyalty card.")
 
     def _compute_name(self):

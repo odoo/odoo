@@ -25,17 +25,21 @@ class LoyaltyCard(models.Model):
         for card in self:
             card.display_name = f"{card.program_id.name}: {card.code}"
 
-    program_id = fields.Many2one('loyalty.program', ondelete='restrict', default=lambda self: self.env.context.get('active_id', None))
+    program_id = fields.Many2one(
+        comodel_name='loyalty.program',
+        ondelete='restrict',
+        default=lambda self: self.env.context.get('active_id', None),
+    )
     program_type = fields.Selection(related='program_id.program_type')
     company_id = fields.Many2one(related='program_id.company_id', store=True)
     currency_id = fields.Many2one(related='program_id.currency_id')
     # Reserved for this partner if non-empty
-    partner_id = fields.Many2one('res.partner', index=True)
+    partner_id = fields.Many2one(comodel_name='res.partner', index=True)
     points = fields.Float(tracking=True)
     point_name = fields.Char(related='program_id.portal_point_name', readonly=True)
     points_display = fields.Char(compute='_compute_points_display')
 
-    code = fields.Char(default=lambda self: self._generate_code(), required=True)
+    code = fields.Char(required=True, default=lambda self: self._generate_code())
     expiration_date = fields.Date()
 
     use_count = fields.Integer(compute='_compute_use_count')
