@@ -76,6 +76,9 @@ class AnalyticPlanFieldsMixin(models.AbstractModel):
     def _get_plan_domain(self, plan):
         return [('plan_id', 'child_of', plan.id)]
 
+    def _get_account_node_context(self, plan):
+        return {'default_plan_id': plan.id}
+
     @api.constrains(lambda self: self._get_plan_fnames())
     def _check_account_id(self):
         fnames = self._get_plan_fnames()
@@ -113,6 +116,7 @@ class AnalyticPlanFieldsMixin(models.AbstractModel):
 
             # If there is a main node, append the ones for other plans
             if account_node is not None or account_filter_node is not None:
+                account_node.set('context', repr(self._get_account_node_context(project_plan)))
                 for plan in other_plans[::-1]:
                     fname = plan._column_name()
                     if account_node is not None:
@@ -120,7 +124,8 @@ class AnalyticPlanFieldsMixin(models.AbstractModel):
                             'optional': 'show',
                             **account_node.attrib,
                             'name': fname,
-                            'domain': repr(self._get_plan_domain(plan))
+                            'domain': repr(self._get_plan_domain(plan)),
+                            'context': repr(self._get_account_node_context(plan)),
                         }))
                     if account_filter_node is not None:
                         account_filter_node.addnext(E.filter(name=fname, context=f"{{'group_by': '{fname}'}}"))
