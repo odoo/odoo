@@ -533,7 +533,7 @@ class TestUi(odoo.tests.HttpCase):
         self.start_tour('/@/', 'website_text_font_size', login='admin', timeout=300)
 
     def test_update_column_count(self):
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'website_update_column_count', login="admin", step_delay=100)
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'website_update_column_count', login="admin")
 
     def test_website_text_highlights(self):
         self.start_tour("/", 'text_highlights', login='admin')
