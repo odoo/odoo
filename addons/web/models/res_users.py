@@ -21,3 +21,6 @@ class ResUsers(models.Model):
             if user_tuple := super().name_search(name, expression.AND([args or [], [('id', '=', uid)]]), operator, limit=1):
                 user_list = [user_tuple[0], *user_list[:-1]]
         return user_list
+
+    def _on_webclient_bootstrap(self):
+        self.ensure_one()

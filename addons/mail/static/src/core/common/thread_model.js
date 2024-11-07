@@ -165,11 +165,6 @@ export class Thread extends Record {
         }
         return this.message_needaction_counter;
     }
-    isCorrespondentOdooBot = Record.attr(undefined, {
-        compute() {
-            return this.correspondent?.persona.eq(this.store.odoobot);
-        },
-    });
     isDisplayed = Record.attr(false, {
         compute() {
             return this.computeIsDisplayed();

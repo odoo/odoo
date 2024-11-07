@@ -14,13 +14,8 @@ patch(Store.prototype, {
         this.discuss = { activeTab: "main" };
         this.env.bus.addEventListener(
             "discuss.channel/new_message",
-            ({ detail: { channel, message } }) => {
-                if (this.env.services.ui.isSmall || message.isSelfAuthored) {
-                    return;
-                }
-                if (channel.isCorrespondentOdooBot && this.odoobotOnboarding) {
-                    // this cancels odoobot onboarding auto-opening of chat window
-                    this.odoobotOnboarding = false;
+            ({ detail: { channel, message, silent } }) => {
+                if (this.env.services.ui.isSmall || message.isSelfAuthored || silent) {
                     return;
                 }
                 channel.notifyMessageToUser(message);
