@@ -1,7 +1,7 @@
 import { Component, useState, whenReady } from "@odoo/owl";
-import { OdooLogo } from "@point_of_sale/app/generic_components/odoo_logo/odoo_logo";
-import { OrderWidget } from "@point_of_sale/app/generic_components/order_widget/order_widget";
-import { Orderline } from "@point_of_sale/app/generic_components/orderline/orderline";
+import { OdooLogo } from "@point_of_sale/app/components/odoo_logo/odoo_logo";
+import { OrderWidget } from "@point_of_sale/app/components/order_widget/order_widget";
+import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { session } from "@web/session";
 import { useService } from "@web/core/utils/hooks";

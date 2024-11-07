@@ -7,7 +7,7 @@ import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { CashMoveReceipt } from "@point_of_sale/app/components/popups/cash_move_popup/cash_move_receipt/cash_move_receipt";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useAsyncLockedMethod } from "@point_of_sale/app/hooks/hooks";
-import { Input } from "@point_of_sale/app/generic_components/inputs/input/input";
+import { Input } from "@point_of_sale/app/components/inputs/input/input";
 
 export class CashMovePopup extends Component {
     static template = "point_of_sale.CashMovePopup";
