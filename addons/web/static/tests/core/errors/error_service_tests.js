@@ -32,6 +32,7 @@ const serviceRegistry = registry.category("services");
 
 let errorCb;
 let unhandledRejectionCb;
+let preventDefault;
 
 QUnit.module("Error Service", {
     async beforeEach() {
@@ -43,16 +44,17 @@ QUnit.module("Error Service", {
         serviceRegistry.add("localization", makeFakeLocalizationService());
         serviceRegistry.add("ui", uiService);
         const windowAddEventListener = browser.addEventListener;
+        preventDefault = Event.prototype.preventDefault;
         browser.addEventListener = (type, cb) => {
             if (type === "unhandledrejection") {
                 unhandledRejectionCb = (ev) => {
-                    ev.preventDefault();
+                    preventDefault.call(ev);
                     cb(ev);
                 };
             }
             if (type === "error") {
                 errorCb = (ev) => {
-                    ev.preventDefault();
+                    preventDefault.call(ev);
                     cb(ev);
                 };
             }
@@ -524,4 +526,52 @@ QUnit.test("logs the traceback of the full error chain for uncaughterror", async
     errorEvent.filename = "dummy_file.js"; // needed to not be treated as a CORS error
     await errorCb(errorEvent);
     assert.ok(errorEvent.defaultPrevented);
+});
+
+QUnit.test("error in handlers while handling an error", async (assert) => {
+    // Scenario: an error occurs at the early stage of the "boot" sequence, error handlers
+    // that are supposed to spawn dialogs are not ready then and will crash.
+    // We assert that *exactly one* error message is logged, that contains the original error's traceback
+    // and an indication that a handler has crashed just for not loosing information.
+    // The crash of the error handler should merely be seen as a consequence of the early stage at which the error occurs.
+    errorHandlerRegistry.add(
+        "__test_handler__",
+        (env, err, originalError) => {
+            throw new Error("Boom in handler");
+        },
+        { sequence: 0 }
+    );
+    // We want to assert that the error_service code does the preventDefault.
+    preventDefault = () => {};
+    patchWithCleanup(console, {
+        error(errorMessage) {
+            assert.ok(
+                errorMessage.startsWith(
+                    `@web/core/error_service: handler "__test_handler__" failed with "Error: Boom in handler" while trying to handle:\nError: Genuine Business Boom`
+                )
+            );
+            assert.step("error logged");
+        },
+    });
+
+    await makeTestEnv();
+    let errorEvent = new Event("error", {
+        promise: null,
+        cancelable: true,
+    });
+    errorEvent.error = new Error("Genuine Business Boom");
+    errorEvent.error.annotatedTraceback = "annotated";
+    errorEvent.filename = "dummy_file.js"; // needed to not be treated as a CORS error
+    await errorCb(errorEvent);
+    assert.ok(errorEvent.defaultPrevented);
+    assert.verifySteps(["error logged"]);
+
+    errorEvent = new PromiseRejectionEvent("unhandledrejection", {
+        promise: null,
+        cancelable: true,
+        reason: new Error("Genuine Business Boom"),
+    });
+    await unhandledRejectionCb(errorEvent);
+    assert.ok(errorEvent.defaultPrevented);
+    assert.verifySteps(["error logged"]);
 });
