@@ -19,6 +19,13 @@
                         <group name="sequence">
                             <field name="color" widget="color_picker" />
                         </group>
+                        <div name="available_between" class="row col-lg-12" invisible="1">
+                            <span class="text-900 fw-bold">Available between
+                                <span class="col-lg-4 o_light_label">
+                                    <a class="o-tooltip"><sup title="Only works for online and self order">?</sup></a>
+                                </span>
+                                <field name="hour_after" class="oe_inline text-center" widget="float_time"/> and <field name="hour_until" class="oe_inline text-center" widget="float_time"/></span>
+                        </div>
                     </group>
                 </sheet>
             </form>
