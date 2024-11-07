@@ -45,6 +45,7 @@ def execute_cr(cr, uid, obj, method, *args, **kw):
     # clean cache etc if we retry the same transaction
     cr.reset()
     env = odoo.api.Environment(cr, uid, {})
+    env.transaction.default_env = env  # ensure this is the default env for the call
     recs = env.get(obj)
     if recs is None:
         raise UserError(env._("Object %s doesn't exist", obj))

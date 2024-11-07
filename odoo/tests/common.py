@@ -372,6 +372,8 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
     def uid(self, user):
         """ Set the uid by changing the test's environment. """
         self.env = self.env(user=user)
+        # set the updated environment as the default one
+        self.env.transaction.default_env = self.env
 
     def ref(self, xid):
         """ Returns database ID for the provided :term:`external identifier`,

@@ -89,6 +89,9 @@ class Environment(Mapping):
         self._protected = transaction.protected
 
         transaction.envs.add(self)
+        # the default transaction's environment is the first one with a valid uid
+        if transaction.default_env is None and uid and isinstance(uid, int):
+            transaction.default_env = self
         return self
 
     #
@@ -486,13 +489,15 @@ class Environment(Mapping):
 
 class Transaction:
     """ A object holding ORM data structures for a transaction. """
-    __slots__ = ('_Transaction__file_open_tmp_paths', 'cache', 'envs', 'protected', 'registry', 'tocompute')
+    __slots__ = ('_Transaction__file_open_tmp_paths', 'cache', 'default_env', 'envs', 'protected', 'registry', 'tocompute')
 
-    def __init__(self, registry):
+    def __init__(self, registry: Registry):
         self.registry = registry
         # weak set of environments
-        self.envs = WeakSet()
+        self.envs: WeakSet[Environment] = WeakSet()
         self.envs.data = OrderedSet()  # make the weakset OrderedWeakSet
+        # default environment (for flushing)
+        self.default_env: Environment | None = None
         # cache for all records
         self.cache = Cache()
         # fields to protect {field: ids}
@@ -504,14 +509,8 @@ class Transaction:
 
     def flush(self):
         """ Flush pending computations and updates in the transaction. """
-        env_to_flush = None
-        for env in self.envs:
-            if isinstance(env.uid, int) or env.uid is None:
-                env_to_flush = env
-                if env.uid is not None:
-                    break
-        if env_to_flush is not None:
-            env_to_flush.flush_all()
+        if self.default_env is not None:
+            self.default_env.flush_all()
 
     def clear(self):
         """ Clear the caches and pending computations and updates in the translations. """
