@@ -123,16 +123,6 @@ class Browser:
             'type', text,
         ], check=False)
 
-    def open_new_tab(self, url):
-        """
-        Open a new tab with the given URL
-        :param url: URL to open in the new tab
-        """
-        self.url = url
-        self.xdotool_keystroke('ctrl+t')
-        self.xdotool_type(self.url)
-        self.xdotool_keystroke('Return')
-
     def refresh(self):
         """Refresh the current tab"""
         self.xdotool_keystroke('ctrl+r')

@@ -3,6 +3,7 @@
 
 import configparser
 import contextlib
+import crypt
 import datetime
 from enum import Enum
 from functools import cache
@@ -30,11 +31,6 @@ from odoo.tools.misc import file_path
 
 lock = Lock()
 _logger = logging.getLogger(__name__)
-
-try:
-    import crypt
-except ImportError:
-    _logger.warning('Could not import library crypt')
 
 
 class Orientation(Enum):

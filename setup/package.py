@@ -402,7 +402,7 @@ class DockerWine(Docker):
     arch = 'win'
 
     def build_image(self):
-        shutil.copy(os.path.join(self.args.build_dir, 'setup/win32/requirements-local-proxy.txt'), self.docker_dir)
+        shutil.copy(os.path.join(self.args.build_dir, 'addons/iot_box_image/configuration/requirements.txt'), self.docker_dir)
         super().build_image()
 
     def build(self):
