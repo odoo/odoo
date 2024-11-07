@@ -2,7 +2,7 @@
 {
     'name': 'Brazilian - Accounting',
     'version': '1.0',
-    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/brazil.html',
+    'website': 'https://www.odoo.com/documentation/18.0/applications/finance/fiscal_localizations/brazil.html',
     'icon': '/account/static/description/l10n.png',
     'countries': ['br'],
     'category': 'Accounting/Localizations/Account Charts',

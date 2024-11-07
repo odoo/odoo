@@ -16,7 +16,7 @@ Also:
     - sets up New Zealand taxes.
     """,
     'author': 'Odoo S.A., Richard deMeester - Willow IT',
-    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
+    'website': 'https://www.odoo.com/documentation/18.0/applications/finance/fiscal_localizations.html',
     'depends': [
         'account',
     ],
