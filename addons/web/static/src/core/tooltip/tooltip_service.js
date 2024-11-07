@@ -56,9 +56,12 @@ export const tooltipService = {
          * Closes the currently opened tooltip if any, or prevent it from opening.
          */
         function cleanup() {
+            target = null;
             browser.clearTimeout(openTooltipTimeout);
+            openTooltipTimeout = null;
             if (closeTooltip) {
                 closeTooltip();
+                closeTooltip = null;
             }
         }
 
@@ -96,12 +99,12 @@ export const tooltipService = {
          *  open
          */
         function openTooltip(el, { tooltip = "", template, info, position, delay = OPEN_DELAY }) {
-            target = el;
             cleanup();
             if (!tooltip && !template) {
                 return;
             }
 
+            target = el;
             openTooltipTimeout = browser.setTimeout(() => {
                 // verify that the element is still in the DOM
                 if (target.isConnected) {
