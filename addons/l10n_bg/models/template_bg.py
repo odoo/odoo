@@ -28,6 +28,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': 'l10n_bg_624',
                 'account_sale_tax_id': 'l10n_bg_sale_vat_20',
                 'account_purchase_tax_id': 'l10n_bg_purchase_vat_20_ptc',
+                'account_default_pos_receivable_account_id': 'l10n_bg_4111',
                 'expense_account_id': 'l10n_bg_601',
                 'income_account_id': 'l10n_bg_701',
             },
