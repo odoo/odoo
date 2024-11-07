@@ -441,14 +441,12 @@ export class HistoryPlugin extends Plugin {
                         value: record.target.getAttribute(record.attributeName),
                         oldValue: record.oldValue,
                     });
-                    for (const cb of this.getResource("on_change_attribute")) {
-                        cb({
-                            target: record.target,
-                            attributeName: record.attributeName,
-                            oldValue: record.oldValue,
-                            value: record.target.getAttribute(record.attributeName),
-                        });
-                    }
+                    this.dispatchTo("attribute_change_handlers", {
+                        target: record.target,
+                        attributeName: record.attributeName,
+                        oldValue: record.oldValue,
+                        value: record.target.getAttribute(record.attributeName),
+                    });
                     break;
                 }
                 case "childList": {
@@ -663,13 +661,13 @@ export class HistoryPlugin extends Plugin {
      * @param { number } index
      */
     isReversibleStep(index) {
-        for (const cb of this.getResource("is_reversible_step")) {
-            const result = cb(index);
-            if (typeof result !== "undefined") {
-                return result;
-            }
+        const step = this.steps[index];
+        if (!step) {
+            return false;
         }
-        return Boolean(this.steps[index]);
+        return !this.getResource("unreversible_step_predicates").some((predicate) =>
+            predicate(step)
+        );
     }
     /**
      * Get the step index in the history to redo.
@@ -747,17 +745,16 @@ export class HistoryPlugin extends Plugin {
                     const node = this.idToNodeMap.get(mutation.id);
                     if (node) {
                         let value = this.getAttributeValue(mutation.attributeName, mutation.value);
-                        for (const cb of this.getResource("on_change_attribute")) {
-                            value =
-                                cb(
-                                    {
-                                        target: node,
-                                        attributeName: mutation.attributeName,
-                                        oldValue: mutation.oldValue,
-                                        value,
-                                    },
-                                    { forNewStep }
-                                ) || value;
+                        for (const cb of this.getResource("attribute_change_processors")) {
+                            value = cb(
+                                {
+                                    target: node,
+                                    attributeName: mutation.attributeName,
+                                    oldValue: mutation.oldValue,
+                                    value,
+                                },
+                                { forNewStep }
+                            );
                         }
                         this.setAttribute(node, mutation.attributeName, value);
                     }
@@ -816,18 +813,17 @@ export class HistoryPlugin extends Plugin {
                             mutation.attributeName,
                             mutation.oldValue
                         );
-                        for (const cb of this.getResource("on_change_attribute")) {
-                            value =
-                                cb(
-                                    {
-                                        target: node,
-                                        attributeName: mutation.attributeName,
-                                        oldValue: mutation.value,
-                                        value,
-                                        reverse: true,
-                                    },
-                                    { forNewStep }
-                                ) || value;
+                        for (const cb of this.getResource("attribute_change_processors")) {
+                            value = cb(
+                                {
+                                    target: node,
+                                    attributeName: mutation.attributeName,
+                                    oldValue: mutation.value,
+                                    value,
+                                    reverse: true,
+                                },
+                                { forNewStep }
+                            );
                         }
                         this.setAttribute(node, mutation.attributeName, value);
                     }
@@ -1078,15 +1074,9 @@ export class HistoryPlugin extends Plugin {
         if (node.nodeType === Node.TEXT_NODE) {
             result.textValue = node.nodeValue;
         } else if (node.nodeType === Node.ELEMENT_NODE) {
-            let childrenToSerialize;
-            for (const cb of this.getResource("filter_descendants_to_serialize")) {
-                childrenToSerialize = cb(node);
-                if (childrenToSerialize) {
-                    break;
-                }
-            }
-            if (!childrenToSerialize) {
-                childrenToSerialize = childNodes(node);
+            let childrenToSerialize = childNodes(node);
+            for (const cb of this.getResource("serializable_descendants_processors")) {
+                childrenToSerialize = cb(node, childrenToSerialize);
             }
             result.tagName = node.tagName;
             result.children = [];
