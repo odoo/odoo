@@ -44,11 +44,6 @@ export class EventRegistrationSummaryDialog extends Component {
             this.printSettings.iotPrinterId = this.registration.iot_printers[0].id;
         }
 
-        this.willAutoPrint = 
-            this.registration.status === 'confirmed_registration' &&
-            this.printSettings.autoPrint && this.useIotPrinter &&
-            this.hasSelectedPrinter() && !this.registration.has_to_pay;
-
         this.dialogState = useState({ isHidden: this.willAutoPrint });
 
         onMounted(() => {
@@ -75,6 +70,15 @@ export class EventRegistrationSummaryDialog extends Component {
 
     get needManualConfirmation() {
         return this.registrationStatus.value === "need_manual_confirmation";
+    }
+
+    get willAutoPrint() {
+        return (
+            this.registration.status === "confirmed_registration" &&
+            this.printSettings.autoPrint &&
+            this.useIotPrinter &&
+            this.hasSelectedPrinter()
+        );
     }
 
     async onRegistrationConfirm() {
