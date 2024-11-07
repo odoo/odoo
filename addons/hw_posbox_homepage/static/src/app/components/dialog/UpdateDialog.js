@@ -72,7 +72,7 @@ export class UpdateDialog extends Component {
                             <a href="https://nightly.odoo.com/master/iotbox/iotbox-latest.zip">Download the latest image</a>
                         </li>
                         <li>
-                            <a href="https://www.odoo.com/documentation/17.0/applications/productivity/iot.html">IoTBox manual</a>
+                            <a href="https://www.odoo.com/documentation/18.0/applications/productivity/iot.html">IoTBox manual</a>
                         </li>
                     </ul>
                 </div>
