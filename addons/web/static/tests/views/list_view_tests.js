@@ -12760,6 +12760,82 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("multi edition: many2many field is required in list", async function (assert) {
+        serverData.models.foo.records = [
+            {
+                id: 1,
+                foo: "yop",
+                m2m: [1],
+            },
+        ];
+
+        const list = await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree multi_edit="1">
+                    <field name="foo" />
+                    <field name="m2m" widget="many2many_tags" required="1"/>
+                </tree>`,
+        });
+
+        patchWithCleanup(list.model.notification, {
+            add: (message, options = {}) => {
+                assert.strictEqual(message.toString(), "<ul><li>M2M field</li></ul>");
+                assert.deepEqual(options, { title: "Invalid fields: ", type: "danger" });
+            },
+        });
+
+        // list view with one record
+        const rows = target.querySelectorAll(".o_data_row");
+        assert.containsOnce(target, ".o_data_row");
+        await click(rows[0], ".o_list_record_selector input");
+
+        // list view record has a required many2many field
+        assert.containsOnce(
+            target,
+            ".o_data_cell:nth-of-type(3).o_many2many_tags_cell .o_required_modifier"
+        );
+        assert.containsOnce(
+            target,
+            ".o_data_cell:nth-of-type(3).o_many2many_tags_cell .o_field_widget .o_field_tags .o_tag"
+        );
+
+        // remove the many2many_tag so that dialog/warning appears
+        await click(rows[0].querySelectorAll(".o_data_cell")[1]);
+        await click(rows[0].querySelector(".o_data_cell .o_field_tags .o_tag .oi-close"));
+        assert.containsOnce(
+            target,
+            ".o_data_cell:nth-of-type(3).o_many2many_tags_cell.o_invalid_cell"
+        );
+        assert.containsOnce(target, ".modal-dialog");
+        assert.strictEqual(
+            target.querySelector(".modal-body").textContent,
+            "No valid record to save"
+        );
+
+        await click(target.querySelector(".modal-footer .btn-primary"));
+
+        // row remains unchanged and selected
+        assert.containsOnce(target, ".o_data_row.o_data_row_selected");
+        assert.containsOnce(
+            target,
+            ".o_data_cell:nth-of-type(3).o_many2many_tags_cell .o_field_widget .o_field_tags .o_tag"
+        );
+
+        // remove the tag again and close the error/warning modal-dialog so that record remains unchanged
+        await click(rows[0].querySelectorAll(".o_data_cell")[1]);
+        await click(rows[0].querySelector(".o_data_cell .o_field_tags .o_tag .oi-close"));
+
+        assert.containsOnce(target, ".modal-dialog");
+        await click(target.querySelector(".modal-header .btn-close"));
+        assert.containsOnce(
+            target,
+            ".o_data_cell:nth-of-type(3).o_many2many_tags_cell .o_field_widget .o_field_tags .o_tag"
+        );
+    });
+
     QUnit.test(
         "editable list view: multi edition of many2one: set same value",
         async function (assert) {

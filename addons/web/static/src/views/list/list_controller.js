@@ -581,6 +581,9 @@ export class ListController extends Component {
             this.nextActionAfterMouseup = () => this.model.root.multiSave(editedRecord);
             return false;
         }
+        if (!editedRecord._checkValidity({ displayNotification: true })) {
+            return false;
+        }
         if (validSelectedRecords.length > 1) {
             const { isDomainSelected, selection } = this.model.root;
             return new Promise((resolve) => {
