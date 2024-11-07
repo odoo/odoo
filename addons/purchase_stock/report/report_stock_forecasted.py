@@ -14,7 +14,7 @@ class ReplenishmentReport(models.AbstractModel):
         warehouse_id = self.env.context.get('warehouse', False)
         if warehouse_id:
             domain += [('order_id.picking_type_id.warehouse_id', '=', warehouse_id)]
-        po_lines = self.env['purchase.order.line'].search(domain)
+        po_lines = self.env['purchase.order.line'].sudo().search(domain)
         in_sum = sum(po_lines.mapped('product_uom_qty'))
         res['draft_purchase_qty'] = in_sum
         res['draft_purchase_orders'] = po_lines.mapped("order_id").sorted(key=lambda po: po.name)

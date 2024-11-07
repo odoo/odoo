@@ -21,7 +21,7 @@ class ReplenishmentReport(models.AbstractModel):
 
         # Pending incoming quantity.
         mo_domain = domain + [('location_dest_id', 'in', wh_location_ids)]
-        grouped_mo = self.env['mrp.production'].read_group(mo_domain, ['product_qty:sum'], 'product_id')
+        grouped_mo = self.env['mrp.production'].sudo().read_group(mo_domain, ['product_qty:sum'], 'product_id')
         res['draft_production_qty']['in'] = sum(mo['product_qty'] for mo in grouped_mo)
 
         # Pending outgoing quantity.
