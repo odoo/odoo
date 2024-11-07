@@ -479,6 +479,26 @@ $o-color-extras-nesting-selector: '&, .o_colored_level &';
     @return $-palette;
 }
 
+// ------------------------------------------------------------------
+// Shapes
+// ------------------------------------------------------------------
+
+$o_shape_connection_size_tiny: 2rem !default;
+$o_shape_connection_size_regular: 4rem !default;
+$o_shape_connection_size_big: 15rem !default;
+
+.o_we_shape {
+    --ShapeConnections--size-tiny: #{$o_shape_connection_size_tiny};
+    --ShapeConnections--size-regular: #{$o_shape_connection_size_regular};
+    --ShapeConnections--size-big: #{$o_shape_connection_size_big};
+}
+
+.o_we_shape_btn_content .o_we_shape {
+    --ShapeConnections--size-tiny: 25%;
+    --ShapeConnections--size-regular: 50%;
+    --ShapeConnections--size-big: 75%;
+}
+
 // format: (module_name: (shape_filename: ('position': X, 'size': Y, 'colors': (1, [3], ...)), ...))
 $o-bg-shapes: ('web_editor': (
     'Airy/01': ('position': bottom, 'size': 100% auto, 'colors': (1)),
@@ -538,6 +558,26 @@ $o-bg-shapes: ('web_editor': (
     'Bold/11_001': ('position': bottom, 'size': 100% auto, 'colors': (1, 2)),
     'Bold/12': ('position': center, 'size': 100% auto, 'colors': (1, 2, 5)),
     'Bold/12_001': ('position': center, 'size': 100% auto, 'colors': (1, 2, 5)),
+    'Connections/01': ('position': bottom, 'size': 100% var(--ShapeConnections--size-regular), 'colors': (5)),
+    'Connections/02': ('position': bottom, 'size': 100% var(--ShapeConnections--size-regular), 'colors': (5)),
+    'Connections/03': ('position': bottom, 'size': 100% var(--ShapeConnections--size-regular), 'colors': (5)),
+    'Connections/04': ('position': bottom, 'size': 100% var(--ShapeConnections--size-regular), 'colors': (5)),
+    'Connections/05': ('position': bottom, 'size': 100% var(--ShapeConnections--size-regular), 'colors': (5)),
+    'Connections/06': ('position': bottom, 'size': 100% var(--ShapeConnections--size-regular), 'colors': (5)),
+    'Connections/07': ('position': bottom, 'size': 100% var(--ShapeConnections--size-regular), 'colors': (5)),
+    'Connections/08': ('position': bottom, 'size': 100% var(--ShapeConnections--size-regular), 'colors': (5)),
+    'Connections/09': ('position': bottom, 'size': 100% var(--ShapeConnections--size-regular), 'colors': (5)),
+    'Connections/10': ('position': bottom, 'size': 100% var(--ShapeConnections--size-regular), 'colors': (5)),
+    'Connections/11': ('position': bottom, 'size': 100% var(--ShapeConnections--size-regular), 'colors': (5)),
+    'Connections/12': ('position': bottom, 'size': 100% var(--ShapeConnections--size-regular), 'colors': (5)),
+    'Connections/13': ('position': bottom, 'size': 100%, 'colors': (5)),
+    'Connections/14': ('position': bottom, 'size': 100% var(--ShapeConnections--size-regular), 'colors': (5)),
+    'Connections/15': ('position': bottom, 'size': 100% var(--ShapeConnections--size-regular), 'colors': (5)),
+    'Connections/16': ('position': bottom, 'size': 100% var(--ShapeConnections--size-regular), 'colors': (5)),
+    'Connections/17': ('position': bottom, 'size': var(--ShapeConnections--size-tiny), 'colors': (5), 'repeat-x': true),
+    'Connections/18': ('position': bottom, 'size': var(--ShapeConnections--size-tiny), 'colors': (5), 'repeat-x': true),
+    'Connections/19': ('position': bottom, 'size': 100% var(--ShapeConnections--size-regular), 'colors': (5)),
+    'Connections/20': ('position': bottom, 'size': 100% var(--ShapeConnections--size-big), 'colors': (5)),
     'Floats/01': ('position': center right, 'size': auto 100%, 'colors': (1, 2, 3, 4, 5)),
     'Floats/02': ('position': center, 'size': 100%, 'colors': (1, 2, 3, 5)),
     'Floats/03': ('position': center, 'size': 100%, 'colors': (1, 2, 3, 5)),
