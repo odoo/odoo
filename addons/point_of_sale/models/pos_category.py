@@ -28,6 +28,8 @@ class PosCategory(models.Model):
     sequence = fields.Integer(help="Gives the sequence order when displaying a list of product categories.")
     image_128 = fields.Image("Image", max_width=128, max_height=128)
     color = fields.Integer('Color', required=False, default=get_default_color)
+    hour_until = fields.Float(string='Availability Until', default=24.0, help="The product will be available until this hour for online order and self order.")
+    hour_after = fields.Float(string='Availability After', default=0.0, help="The product will be available after this hour for online order and self order.")
 
     # During loading of data, the image is not loaded so we expose a lighter
     # field to determine whether a pos.category has an image or not.
@@ -45,7 +47,7 @@ class PosCategory(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config_id):
-        return ['id', 'name', 'parent_id', 'child_ids', 'write_date', 'has_image', 'color', 'sequence']
+        return ['id', 'name', 'parent_id', 'child_ids', 'write_date', 'has_image', 'color', 'sequence', 'hour_until', 'hour_after']
 
     def _get_hierarchy(self) -> List[str]:
         """ Returns a list representing the hierarchy of the categories. """
@@ -90,3 +92,13 @@ class PosCategory(models.Model):
             available_categories |= child
             available_categories |= child._get_descendants()
         return available_categories
+
+    @api.constrains('hour_until', 'hour_after')
+    def _check_hour(self):
+        for category in self:
+            if category.hour_until and not (0.0 <= category.hour_until <= 24.0):
+                raise ValidationError(_('The Availability Until must be set between 00:00 and 24:00'))
+            if category.hour_after and not (0.0 <= category.hour_after <= 24.0):
+                raise ValidationError(_('The Availability After must be set between 00:00 and 24:00'))
+            if category.hour_until and category.hour_after and category.hour_until < category.hour_after:
+                raise ValidationError(_('The Availability Until must be greater than Availability After.'))
