@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
+import json
 import logging
 import platform
-import json
+import PyKCS11
 
 from passlib.context import CryptContext
 
@@ -11,12 +12,6 @@ from odoo import http
 from odoo.tools.config import config
 
 _logger = logging.getLogger(__name__)
-
-try:
-    import PyKCS11
-except ImportError:
-    PyKCS11 = None
-    _logger.error('Could not import library PyKCS11')
 
 crypt_context = CryptContext(schemes=['pbkdf2_sha512'])
 
@@ -32,14 +27,13 @@ class EtaUsbController(http.Controller):
 
     @http.route('/hw_l10n_eg_eta/certificate', type='http', auth='none', cors='*', csrf=False, save_session=False, methods=['POST'])
     def eta_certificate(self, pin, access_token):
-        """
-        Gets the certificate from the token and returns it to the main odoo instance so that we can prepare the
+        """Gets the certificate from the token and returns it to the main odoo instance so that we can prepare the
         cades-bes object on the main odoo instance rather than this middleware
-        @param pin: pin of the token
-        @param access_token: token shared with the main odoo instance
+
+        :param pin: pin of the token
+        :param access_token: token shared with the main odoo instance
+        :return: json object with the certificate
         """
-        if not PyKCS11:
-            return self._get_error_template('no_pykcs11')
         if not self._is_access_token_valid(access_token):
             return self._get_error_template('unauthorized')
         session, error = self._get_session(pin)
@@ -61,14 +55,13 @@ class EtaUsbController(http.Controller):
 
     @http.route('/hw_l10n_eg_eta/sign', type='http', auth='none', cors='*', csrf=False, save_session=False, methods=['POST'])
     def eta_sign(self, pin, access_token, invoices):
+        """Check if the access_token is valid and sign the invoices accessing the usb key with the pin.
+
+        :param pin: pin of the token
+        :param access_token: token shared with the main odoo instance
+        :param invoices: dictionary of invoices. Keys are invoices ids, value are the base64 encoded binaries to sign
+        :return: json object with the signed invoices
         """
-        Check if the access_token is valid and sign the invoices accessing the usb key with the pin.
-        @param pin: pin of the token
-        @param access_token: token shared with the main odoo instance
-        @param invoices: dictionary of invoices. Keys are invoices ids, value are the base64 encoded binaries to sign
-        """
-        if not PyKCS11:
-            return self._get_error_template('no_pykcs11')
         if not self._is_access_token_valid(access_token):
             return self._get_error_template('unauthorized')
         session, error = self._get_session(pin)
