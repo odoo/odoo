@@ -5,8 +5,12 @@
         <field name="model">res.partner.bank</field>
         <field name="inherit_id" ref="base.view_partner_bank_form"/>
         <field name="arch" type="xml">
-            <field name="bank_id" position="after">
-                <field name="aba_routing" invisible="acc_type == 'iban'"/>
+            <xpath expr="//field[@name='clearing_number']" position="attributes">
+                <attribute name="nolabel">1</attribute>
+            </xpath>
+            <field name="clearing_number" position="before">
+                <label for="clearing_number" invisible="show_aba_routing"/>
+                <label for="clearing_number" string="ABA/Routing" invisible="not show_aba_routing"/>
             </field>
         </field>
     </record>
