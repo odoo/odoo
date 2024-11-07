@@ -113,6 +113,8 @@ class AccountMove(models.Model):
             if not move.is_sale_document(include_receipts=True) or not move.company_id.anglo_saxon_accounting:
                 continue
 
+            anglo_saxon_price_ctx = move._get_anglo_saxon_price_ctx()
+
             for line in move.invoice_line_ids:
 
                 # Filter out lines being not eligible for COGS.
@@ -128,7 +130,7 @@ class AccountMove(models.Model):
 
                 # Compute accounting fields.
                 sign = -1 if move.move_type == 'out_refund' else 1
-                price_unit = line._stock_account_get_anglo_saxon_price_unit()
+                price_unit = line.with_context(anglo_saxon_price_ctx)._stock_account_get_anglo_saxon_price_unit()
                 amount_currency = sign * line.quantity * price_unit
 
                 if move.currency_id.is_zero(amount_currency) or float_is_zero(price_unit, precision_digits=price_unit_prec):
@@ -167,6 +169,12 @@ class AccountMove(models.Model):
                     'cogs_origin_id': line.id,
                 })
         return lines_vals_list
+
+    def _get_anglo_saxon_price_ctx(self):
+        """ To be overriden in modules overriding _stock_account_get_anglo_saxon_price_unit
+        to optimize computations that only depend on account.move and not account.move.line
+        """
+        return self.env.context
 
     def _stock_account_get_last_step_stock_moves(self):
         """ To be overridden for customer invoices and vendor bills in order to
@@ -233,6 +241,7 @@ class AccountMove(models.Model):
                     else:
                         reconcile_plan += [product_account_moves]
         self.env['account.move.line']._reconcile_plan(reconcile_plan)
+        no_exchange_reconcile_plan = [amls.filtered(lambda aml: not aml.reconciled) for amls in no_exchange_reconcile_plan]
         self.env['account.move.line'].with_context(no_exchange_difference=True)._reconcile_plan(no_exchange_reconcile_plan)
 
     def _get_invoiced_lot_values(self):
