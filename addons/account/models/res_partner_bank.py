@@ -38,6 +38,7 @@ class ResPartnerBank(models.Model):
     active = fields.Boolean(tracking=True)
     acc_number = fields.Char(tracking=True)
     acc_holder_name = fields.Char(tracking=True)
+    clearing_number = fields.Char(tracking=True)
     partner_id = fields.Many2one(tracking=True)
     user_has_group_validate_bank_account = fields.Boolean(compute='_compute_user_has_group_validate_bank_account')
     allow_out_payment = fields.Boolean(
