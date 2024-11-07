@@ -13,8 +13,8 @@ export class TableOfContentPlugin extends Plugin {
         user_commands: [
             {
                 id: "insertTableOfContent",
-                title: _t("Table Of Content"),
-                description: _t("Highlight the structure (headings) of this field"),
+                title: _t("Table of Contents"),
+                description: _t("Highlight the structure (headings)"),
                 icon: "fa-bookmark",
                 run: this.insertTableOfContent.bind(this),
             },
