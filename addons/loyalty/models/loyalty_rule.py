@@ -9,7 +9,7 @@ from odoo.osv import expression
 
 class LoyaltyRule(models.Model):
     _name = 'loyalty.rule'
-    _description = 'Loyalty Rule'
+    _description = "Loyalty Rule"
 
     @api.model
     def default_get(self, fields_list):
@@ -31,14 +31,14 @@ class LoyaltyRule(models.Model):
         #  and makes sure to display the currency related to the program instead of the company's.
         symbol = self.env.context.get('currency_symbol', self.env.company.currency_id.symbol)
         return [
-            ('order', _('per order')),
-            ('money', _('per %s spent', symbol)),
-            ('unit', _('per unit paid')),
+            ('order', _("per order")),
+            ('money', _("per %s spent", symbol)),
+            ('unit', _("per unit paid")),
         ]
 
     active = fields.Boolean(default=True)
     program_id = fields.Many2one('loyalty.program', required=True, ondelete='cascade')
-    program_type = fields.Selection(related="program_id.program_type")
+    program_type = fields.Selection(related='program_id.program_type')
     # Stored for security rules
     company_id = fields.Many2one(related='program_id.company_id', store=True)
     currency_id = fields.Many2one(related='program_id.currency_id')
@@ -47,19 +47,19 @@ class LoyaltyRule(models.Model):
     user_has_debug = fields.Boolean(compute='_compute_user_has_debug')
     product_domain = fields.Char(default="[]")
 
-    product_ids = fields.Many2many('product.product', string='Products')
-    product_category_id = fields.Many2one('product.category', string='Categories')
-    product_tag_id = fields.Many2one('product.tag', string='Product Tag')
+    product_ids = fields.Many2many('product.product', string="Products")
+    product_category_id = fields.Many2one('product.category', string="Categories")
+    product_tag_id = fields.Many2one('product.tag', string="Product Tag")
 
     reward_point_amount = fields.Float(default=1, string="Reward")
     # Only used for program_id.applies_on == 'future'
-    reward_point_split = fields.Boolean(string='Split per unit', default=False,
+    reward_point_split = fields.Boolean(string="Split per unit", default=False,
         help="Whether to separate reward coupons per matched unit, only applies to 'future' programs and trigger mode per money spent or unit paid..")
     reward_point_name = fields.Char(related='program_id.portal_point_name', readonly=True)
     reward_point_mode = fields.Selection(selection=_get_reward_point_mode_selection, required=True, default='order')
 
-    minimum_qty = fields.Integer('Minimum Quantity', default=1)
-    minimum_amount = fields.Monetary('Minimum Purchase', 'currency_id')
+    minimum_qty = fields.Integer("Minimum Quantity", default=1)
+    minimum_amount = fields.Monetary("Minimum Purchase", 'currency_id')
     minimum_amount_tax_mode = fields.Selection(
         selection=[
             ('incl', "tax included"),
@@ -70,14 +70,14 @@ class LoyaltyRule(models.Model):
     )
 
     mode = fields.Selection([
-        ('auto', 'Automatic'),
-        ('with_code', 'With a promotion code'),
+        ('auto', "Automatic"),
+        ('with_code', "With a promotion code"),
     ], string="Application", compute='_compute_mode', store=True, readonly=False)
-    code = fields.Char(string='Discount code', compute='_compute_code', store=True, readonly=False)
+    code = fields.Char(string="Discount code", compute='_compute_code', store=True, readonly=False)
 
     _reward_point_amount_positive = models.Constraint(
         'CHECK (reward_point_amount > 0)',
-        'Rule points reward must be strictly positive.',
+        "Rule points reward must be strictly positive.",
     )
 
     @api.constrains('reward_point_split')
@@ -85,7 +85,7 @@ class LoyaltyRule(models.Model):
         # Prevent setting trigger multi in case of nominative programs, it does not make sense to allow this
         for rule in self:
             if rule.reward_point_split and (rule.program_id.applies_on == 'both' or rule.program_id.program_type == 'ewallet'):
-                raise ValidationError(_('Split per unit is not allowed for Loyalty and eWallet programs.'))
+                raise ValidationError(_("Split per unit is not allowed for Loyalty and eWallet programs."))
 
     @api.constrains('code')
     def _constrains_code(self):
@@ -94,10 +94,10 @@ class LoyaltyRule(models.Model):
         if len(mapped_codes) != len(set(mapped_codes)) or\
             self.env['loyalty.rule'].search_count(
                 [('mode', '=', 'with_code'), ('code', 'in', mapped_codes), ('id', 'not in', self.ids)]):
-            raise ValidationError(_('The promo code must be unique.'))
+            raise ValidationError(_("The promo code must be unique."))
         # Prevent coupons and programs from sharing a code
         if self.env['loyalty.card'].search_count([('code', 'in', mapped_codes)]):
-            raise ValidationError(_('A coupon with the same code was found.'))
+            raise ValidationError(_("A coupon with the same code was found."))
 
     @api.depends('mode')
     def _compute_code(self):
@@ -115,7 +115,7 @@ class LoyaltyRule(models.Model):
                 rule.mode = 'auto'
 
     @api.depends_context('uid')
-    @api.depends("mode")
+    @api.depends('mode')
     def _compute_user_has_debug(self):
         self.user_has_debug = self.env.user.has_group('base.group_no_one')
 
