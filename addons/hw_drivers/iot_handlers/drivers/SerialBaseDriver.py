@@ -111,6 +111,9 @@ class SerialDriver(Driver):
             _logger.exception(msg)
             self._status = {'status': self.STATUS_ERROR, 'message_title': msg, 'message_body': traceback.format_exc()}
             self._push_status()
+        finally:
+            self._status = {'status': self.STATUS_CONNECTED, 'message_title': '', 'message_body': ''}
+            self._push_status()
 
     def action(self, data):
         """Establish a connection with the device if needed and have it perform a specific action.
