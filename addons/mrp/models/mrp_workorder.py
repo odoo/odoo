@@ -227,8 +227,9 @@ class MrpWorkorder(models.Model):
                 workorder.production_id.qty_producing = workorder.qty_producing
                 workorder.production_id._set_qty_producing()
 
-    @api.depends('state', 'production_state', 'qty_produced', 'qty_producing', 'qty_remaining', 'blocked_by_workorder_ids')
+    @api.depends('qty_produced', 'qty_producing', 'qty_remaining')
     def _compute_qty_ready(self):
+        # Dict on blocked_by_workorder_ids -> read state once
         for workorder in self:
             if workorder.production_state not in ('confirmed', 'progress') or workorder.state in ('cancel', 'done'):
                 workorder.qty_ready = 0
