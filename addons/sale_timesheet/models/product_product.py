@@ -9,10 +9,6 @@ from odoo.exceptions import ValidationError
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
-    @tools.ormcache()
-    def _get_default_uom_id(self):
-        return self.env.ref('uom.product_uom_unit')
-
     def _is_delivered_timesheet(self):
         """ Check if the product is a delivered timesheet """
         self.ensure_one()
@@ -27,7 +23,7 @@ class ProductProduct(models.Model):
             elif record._origin.uom_id:
                 record.uom_id = record._origin.uom_id
             else:
-                record.uom_id = self._get_default_uom_id()
+                record.uom_id = self.product_tmpl_id.default_get(['uom_id']).get('uom_id')
             record.uom_po_id = record.uom_id
 
     @api.onchange('service_policy')
