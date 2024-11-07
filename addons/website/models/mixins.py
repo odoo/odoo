@@ -151,6 +151,18 @@ class WebsiteCover_PropertiesMixin(models.AbstractModel):
         return True
 
 
+class WebsitePageOptionsMixin(models.AbstractModel):
+
+    _name = 'website.pageoptions.mixin'
+    _description = "Header Website Mixin"
+
+    header_overlay = fields.Boolean()
+    header_color = fields.Char()
+    header_text_color = fields.Char()
+    header_visible = fields.Boolean(default=True)
+    footer_visible = fields.Boolean(default=True)
+
+
 class WebsiteMultiMixin(models.AbstractModel):
 
     _description = 'Multi Website Mixin'
