@@ -89,7 +89,12 @@ class ProductTemplate(models.Model):
                         })
                     variant_options_values_ids.append(attribute_value.id)
 
-                    product_template_attribute_line = self.env['product.template.attribute.line'].search([('product_tmpl_id', '=', self.id), ('attribute_id', '=', attribute_odoo.id)], limit=1)
+                    product_template_attribute_line = self.env['product.template.attribute.line'].search([
+                            ('product_tmpl_id', '=', self.id),
+                            ('attribute_id', '=', attribute_odoo.id)
+                        ],
+                        limit=1
+                    )
 
                     if not product_template_attribute_line:
                         self.env['product.template.attribute.line'].create({
@@ -103,7 +108,9 @@ class ProductTemplate(models.Model):
                 current_product = self.env['product.product'].search(
                     [('product_tmpl_id', '=', self.id)]
                 )
-                current_product = current_product.filtered(lambda s: set(s.product_template_attribute_value_ids.product_attribute_value_id.ids) == set(variant_options_values_ids))
+                current_product = current_product.filtered(
+                    lambda s: set(s.product_template_attribute_value_ids.product_attribute_value_id.ids) == set(variant_options_values_ids)
+                )
 
                 gelato_ref = variant['productUid']
                 current_product[0].gelato_product_ref = gelato_ref

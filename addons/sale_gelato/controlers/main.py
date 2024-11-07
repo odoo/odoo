@@ -17,20 +17,27 @@ class GelatoController(http.Controller):
 
     @http.route(_webhook_url, type='http', methods=['POST'], auth='public', csrf=False)
     def gelato_webhook(self):
-        """ Process the notification data sent by Gelato to the webhook.
+        """
+        Process the notification data sent by Gelato to the webhook.
         """
         event = request.get_json_data()
-        _logger.info('Notification received from Gelato with data:\n%s', pprint.pformat(event))
+        _logger.info("Notification received from Gelato with data:\n%s", pprint.pformat(event))
         gelato_webhook_signature = request.httprequest.headers.get('signature', '')
-        sale_order_id = int(event.get('orderReferenceId'))
+        try:
+            sale_order_id = int(event.get('orderReferenceId'))
+        except ValueError:
+            return _logger.warning(
+                "Gelato did not provide proper orderReferenceId, it's not possible to "
+                "find related Sale Order "
+            )
         self.verify_gelato_notification(gelato_webhook_signature, sale_order_id)
 
         sale_order_sudo = request.env['sale.order'].sudo().browse(sale_order_id).exists()
         if event['event'] == 'order_status_updated':
             if event.get('fulfillmentStatus') == 'canceled':
                 template = request.env.ref('sale.mail_template_sale_cancellation')
-
                 sale_order_sudo.with_user(SUPERUSER_ID)._action_cancel()
+
                 # The currency is manually cached while in a sudoed environment to prevent an
                 # AccessError. The state of the Sales Order is a dependency of
                 # `untaxed_amount_to_invoice`, which is a monetary field. They require the
@@ -79,7 +86,7 @@ class GelatoController(http.Controller):
 
     @staticmethod
     def verify_gelato_notification(webhook_secret, sale_order_id):
-        """ Check that the received signature matches the expected one.
+        """ Check if the received signature matches the expected one.
 
         :return: None
         :raise: :class:`werkzeug.exceptions.Forbidden` if the
@@ -92,7 +99,7 @@ class GelatoController(http.Controller):
 
     @staticmethod
     def get_tracking_codes(items):
-        """ Check that the received signature matches the expected one.
+        """ Extract tracking url and tracking code from webhook notification.
 
         :return: List of dicts containing tracking url and tracking code.
         """
@@ -109,6 +116,9 @@ class GelatoController(http.Controller):
 
     @staticmethod
     def tracking_code_message(message, tracking_codes):
+        """
+        Create tracking code message containing clickable tracking url and tracking code.
+        """
         message += "Track your package(s) here:"
         for elem in tracking_codes:
             message += Markup('</br> <a href=%s>%s</a> </br> ') % (

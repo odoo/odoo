@@ -55,7 +55,7 @@ class SaleOrder(models.Model):
                 author_id=self.env.ref('base.partner_root').id,
             )
 
-        _logger.info('Notification received from Gelato with data:\n%s',
+        _logger.info("Notification received from Gelato with data:\n%s",
                      pprint.pformat(response.json()))
 
     def get_gelato_shipping_address(self):
@@ -174,8 +174,10 @@ class SaleOrder(models.Model):
         return super().action_open_delivery_wizard()
 
     def _check_product_compatibility(self, product_id):
-        #  check if products in Sale Order and currently added products are either both gelato or
-        #  non-gelato product
+        """
+        Check if products in Sale Order and currently added products are either both gelato or
+        non-gelato product.
+        """
         product = self.env['product.product'].search([('id', '=', product_id)])
         order_products = self.order_line.filtered(lambda line: line.product_id.gelato_product_ref)
 

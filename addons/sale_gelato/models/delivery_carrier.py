@@ -96,7 +96,9 @@ class ProviderGelato(models.Model):
            :param order: current order
            :return bool: return False if delivery type and order are not compatible
         """
-        is_gelato_order = bool(order.order_line.filtered(lambda l: l.product_id.gelato_product_ref))
+        is_gelato_order = bool(
+            order.order_line.filtered(lambda l: l.product_id.gelato_product_ref)
+        )
         is_gelato_delivery = self.delivery_type == 'gelato'
         if is_gelato_order != is_gelato_delivery:
             return False
