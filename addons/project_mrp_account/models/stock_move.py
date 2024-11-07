@@ -12,6 +12,12 @@ class StockMove(models.Model):
         distribution = self.raw_material_production_id.project_id._get_analytic_distribution()
         return distribution or super()._get_analytic_distribution()
 
+    def _prepare_analytic_line_values(self, account_field_values, amount, unit_amount):
+        res = super()._prepare_analytic_line_values(account_field_values, amount, unit_amount)
+        if self.raw_material_production_id:
+            res['category'] = 'manufacturing_order'
+        return res
+
     def _prepare_analytic_lines(self):
         res = super()._prepare_analytic_lines()
         if res and self.raw_material_production_id:
