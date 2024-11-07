@@ -1,7 +1,8 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+import pytz
 from stdnum.in_ import pan, gstin
+
+from odoo import _, api, fields, models 
+from odoo.exceptions import ValidationError
 
 
 class ResCompany(models.Model):
@@ -139,6 +140,12 @@ class ResCompany(models.Model):
     def onchange_vat(self):
         self.partner_id.onchange_vat()
 
+    @api.constrains('l10n_in_pan')
+    def _check_l10n_in_pan(self):
+        for record in self:
+            if record.l10n_in_pan and not pan.is_valid(record.l10n_in_pan):
+                raise ValidationError(_('The entered PAN seems invalid. Please enter a valid PAN.'))
+
     @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
@@ -167,12 +174,6 @@ class ResCompany(models.Model):
         for company in self:
             if company.country_code == "IN" and company.vat:
                 company.l10n_in_is_gst_registered = company.partner_id.check_vat_in(company.vat)
-
-    @api.constrains('l10n_in_pan')
-    def _check_l10n_in_pan(self):
-        for record in self:
-            if record.l10n_in_pan and not pan.is_valid(record.l10n_in_pan):
-                raise ValidationError(_('The entered PAN seems invalid. Please enter a valid PAN.'))
 
     def action_update_state_as_per_gstin(self):
         self.ensure_one()

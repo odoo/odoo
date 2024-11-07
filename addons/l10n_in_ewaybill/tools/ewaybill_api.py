@@ -123,7 +123,7 @@ class EWayBillApi:
         except EWayBillError as e:
             if "no-credit" in e.error_codes:
                 e.error_json['odoo_warning'].append({
-                    'message': self._ewaybill_get_iap_buy_credits_message()
+                    'message': self.env['account.move']._l10n_in_edi_get_iap_buy_credits_message()
                 })
                 raise
 
@@ -187,15 +187,6 @@ class EWayBillApi:
             }]
         })
         return response
-
-    def _ewaybill_get_iap_buy_credits_message(self):
-        url = self.env["iap.account"].get_credits_url(service_name="l10n_in_edi")
-        return Markup("""<p><b>%s</b></p><p>%s <a href="%s">%s</a></p>""") % (
-            _("You have insufficient credits to send this document!"),
-            _("Please buy more credits and retry: "),
-            url,
-            _("Buy Credits")
-        )
 
     @staticmethod
     def _raise_ewaybill_no_config_error():
