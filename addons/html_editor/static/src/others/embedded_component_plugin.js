@@ -9,9 +9,10 @@ export class EmbeddedComponentPlugin extends Plugin {
     static id = "embeddedComponents";
     static dependencies = ["history", "protectedNode"];
     resources = {
-        filter_descendants_to_serialize: this.filterDescendantsToSerialize.bind(this),
+        serializable_descendants_processors: this.processDescendantsToSerialize.bind(this),
         is_mutation_record_savable: this.isMutationRecordSavable.bind(this),
-        on_change_attribute: this.onChangeAttribute.bind(this),
+        attribute_change_handlers: this.onChangeAttribute.bind(this),
+        attribute_change_processors: this.onChangeAttribute.bind(this),
         clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
         normalize_handlers: this.normalize.bind(this),
         restore_savepoint_handlers: () => this.handleComponents(this.editable),
@@ -55,10 +56,10 @@ export class EmbeddedComponentPlugin extends Plugin {
         return true;
     }
 
-    filterDescendantsToSerialize(elem) {
+    processDescendantsToSerialize(elem, serializableDescendants) {
         const embedding = this.getEmbedding(elem);
         if (!embedding) {
-            return;
+            return serializableDescendants;
         }
         return Object.values(embedding.getEditableDescendants?.(elem) || {});
     }
@@ -104,24 +105,27 @@ export class EmbeddedComponentPlugin extends Plugin {
      * @param { Object } options
      * @param { boolean } options.forNewStep whether the mutation is being used
      *        to create a new step
-     * @returns {string|undefined} new attribute value to set on the node if
-     *          attributeChange.value has to be altered, undefined if
-     *          attributeChange.value is already correct.
+     * @returns {string} new attribute value to set on the node, which might be
+     *        unchanged
      */
     onChangeAttribute(attributeChange, { forNewStep = false } = {}) {
-        if (attributeChange.attributeName !== "data-embedded-state") {
-            return;
+        const attributeValue = attributeChange.value;
+        let newAttributeValue;
+        if (attributeChange.attributeName === "data-embedded-state") {
+            const attrState = attributeChange.reverse
+                ? attributeChange.oldValue
+                : attributeChange.value;
+            const stateChangeManager = this.getStateChangeManager(attributeChange.target);
+            if (stateChangeManager) {
+                // onStateChanged returns undefined if no change is needed for
+                // the attribute value
+                newAttributeValue = stateChangeManager.onStateChanged(attrState, {
+                    reverse: attributeChange.reverse,
+                    forNewStep,
+                });
+            }
         }
-        const attrState = attributeChange.reverse
-            ? attributeChange.oldValue
-            : attributeChange.value;
-        const stateChangeManager = this.getStateChangeManager(attributeChange.target);
-        if (stateChangeManager) {
-            return stateChangeManager.onStateChanged(attrState, {
-                reverse: attributeChange.reverse,
-                forNewStep,
-            });
-        }
+        return newAttributeValue || attributeValue;
     }
 
     getStateChangeManager(host) {
