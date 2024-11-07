@@ -17,11 +17,11 @@
                     <div class="row">
                         <div class="col-6" t-if="o.partner_type">
                             <t t-if="o.partner_type == 'customer'">
-                                Customer:
+                                Customer: 
                             </t>
                             <t t-else="o.partner_type == 'supplier'">
-                                Vendor:
-                            </t><span t-field="o.partner_id">Marc Demo</span>
+                                Vendor: 
+                            </t><span t-field="o.partner_id" data-oe-demo="Marc Demo"/>
                         </div>
                         <div name="payment_method"
                              t-if="values['display_payment_method'] and o.payment_method_id"
