@@ -34,9 +34,6 @@ patch(Thread.prototype, {
      * @param {import("models").Message} message
      */
     notifyMessageToUser(message) {
-        if (this.isCorrespondentOdooBot) {
-            return;
-        }
         const channel_notifications =
             this.custom_notifications || this.store.settings.channel_notifications;
         if (

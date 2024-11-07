@@ -27,15 +27,15 @@ test("Notify message received out of focus", async () => {
             Command.create({ guest_id: guestId }),
         ],
     });
-    onRpcBefore("/mail/action", async (args) => {
+    onRpcBefore("/mail/data", async (args) => {
         if (args.init_messaging) {
-            step(`/mail/action - ${JSON.stringify(args)}`);
+            step(`/mail/data - ${JSON.stringify(args)}`);
         }
     });
     mockService("presence", { isOdooFocused: () => false });
     await start();
     await assertSteps([
-        `/mail/action - ${JSON.stringify({
+        `/mail/data - ${JSON.stringify({
             init_messaging: {},
             failures: true,
             systray_get_activities: true,
