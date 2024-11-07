@@ -2,16 +2,16 @@ import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import { isDisplayStandalone, isMobileOS } from "@web/core/browser/feature_detection";
 
-import { CashierName } from "@point_of_sale/app/navbar/cashier_name/cashier_name";
-import { ProxyStatus } from "@point_of_sale/app/navbar/proxy_status/proxy_status";
+import { CashierName } from "@point_of_sale/app/components/navbar/cashier_name/cashier_name";
+import { ProxyStatus } from "@point_of_sale/app/components/navbar/proxy_status/proxy_status";
 import { SyncPopup } from "@point_of_sale/app/components/popups/sync_popup/sync_popup";
 import {
     SaleDetailsButton,
     handleSaleDetails,
-} from "@point_of_sale/app/navbar/sale_details_button/sale_details_button";
+} from "@point_of_sale/app/components/navbar/sale_details_button/sale_details_button";
 import { Component, onMounted, useState } from "@odoo/owl";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
-import { Input } from "@point_of_sale/app/generic_components/inputs/input/input";
+import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";

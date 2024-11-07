@@ -1,8 +1,8 @@
 import { registry } from "@web/core/registry";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Component, useState } from "@odoo/owl";
-import { Orderline } from "@point_of_sale/app/generic_components/orderline/orderline";
-import { OrderWidget } from "@point_of_sale/app/generic_components/order_widget/order_widget";
+import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
+import { OrderWidget } from "@point_of_sale/app/components/order_widget/order_widget";
 
 export class SplitBillScreen extends Component {
     static template = "pos_restaurant.SplitBillScreen";

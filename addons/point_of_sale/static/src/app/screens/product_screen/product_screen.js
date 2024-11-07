@@ -4,21 +4,21 @@ import { useBarcodeReader } from "@point_of_sale/app/hooks/barcode_reader_hook";
 import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Component, onMounted, useState, reactive, onWillRender } from "@odoo/owl";
-import { CategorySelector } from "@point_of_sale/app/generic_components/category_selector/category_selector";
-import { Input } from "@point_of_sale/app/generic_components/inputs/input/input";
+import { CategorySelector } from "@point_of_sale/app/components/category_selector/category_selector";
+import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import {
     BACKSPACE,
     Numpad,
     getButtons,
     DEFAULT_LAST_ROW,
-} from "@point_of_sale/app/generic_components/numpad/numpad";
+} from "@point_of_sale/app/components/numpad/numpad";
 import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
-import { Orderline } from "@point_of_sale/app/generic_components/orderline/orderline";
-import { OrderWidget } from "@point_of_sale/app/generic_components/order_widget/order_widget";
+import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
+import { OrderWidget } from "@point_of_sale/app/components/order_widget/order_widget";
 import { OrderSummary } from "@point_of_sale/app/screens/product_screen/order_summary/order_summary";
 import { ProductInfoPopup } from "@point_of_sale/app/components/popups/product_info_popup/product_info_popup";
 import { fuzzyLookup } from "@web/core/utils/search";
-import { ProductCard } from "@point_of_sale/app/generic_components/product_card/product_card";
+import { ProductCard } from "@point_of_sale/app/components/product_card/product_card";
 import {
     ControlButtons,
     ControlButtonsPopup,

@@ -1,5 +1,5 @@
 import { Dialog } from "@web/core/dialog/dialog";
-import { SaleDetailsButton } from "@point_of_sale/app/navbar/sale_details_button/sale_details_button";
+import { SaleDetailsButton } from "@point_of_sale/app/components/navbar/sale_details_button/sale_details_button";
 import { ConfirmationDialog, AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { MoneyDetailsPopup } from "@point_of_sale/app/components/popups/money_details_popup/money_details_popup";
 import { useService } from "@web/core/utils/hooks";
@@ -8,7 +8,7 @@ import { ConnectionLostError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { parseFloat } from "@web/views/fields/parsers";
-import { Input } from "@point_of_sale/app/generic_components/inputs/input/input";
+import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import { useAsyncLockedMethod } from "@point_of_sale/app/hooks/hooks";
 import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { deduceUrl } from "@point_of_sale/utils";

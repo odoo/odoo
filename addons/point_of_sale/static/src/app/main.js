@@ -1,4 +1,4 @@
-import { Loader } from "@point_of_sale/app/loader/loader";
+import { Loader } from "@point_of_sale/app/components/loader/loader";
 import { getTemplate } from "@web/core/templates";
 import { mount, reactive, whenReady } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";

@@ -1,7 +1,7 @@
 import { ClosePosPopup } from "@point_of_sale/app/components/popups/closing_popup/closing_popup";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
-import { AccordionItem } from "@point_of_sale/app/generic_components/accordion_item/accordion_item";
+import { AccordionItem } from "@point_of_sale/app/components/accordion_item/accordion_item";
 
 patch(ClosePosPopup, {
     components: { ...ClosePosPopup.components, AccordionItem },

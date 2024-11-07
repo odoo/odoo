@@ -21,12 +21,7 @@ import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { loadImage } from "@point_of_sale/utils";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 import { hasTouch } from "@web/core/browser/feature_detection";
-import {
-    getButtons,
-    DECIMAL,
-    ZERO,
-    BACKSPACE,
-} from "@point_of_sale/app/generic_components/numpad/numpad";
+import { getButtons, DECIMAL, ZERO, BACKSPACE } from "@point_of_sale/app/components/numpad/numpad";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { pick } from "@web/core/utils/objects";
 import { getOrderChanges } from "@point_of_sale/app/models/utils/order_change";
