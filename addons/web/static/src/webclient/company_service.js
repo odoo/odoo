@@ -72,6 +72,9 @@ export const companyService = {
                             ...allowedCompanyIds.filter((id) => id !== companyId),
                         ];
                     }
+                } else if (mode === "switch") {
+                    nextCompanyIds = companyIds;
+
                 }
                 nextCompanyIds = nextCompanyIds.length ? nextCompanyIds : [companyIds[0]];
 
