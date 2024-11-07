@@ -629,6 +629,8 @@ class MrpProduction(models.Model):
                 production.reservation_state = relevant_move_state
             else:
                 production.reservation_state = False
+            if production.workorder_ids:
+                production.workorder_ids.filtered(lambda wo: not wo.blocked_by_workorder_ids).write({'state': 'ready' if production.reservation_state == 'assigned' else 'waiting'})
 
     @api.depends('move_raw_ids', 'state', 'move_raw_ids.product_uom_qty')
     def _compute_unreserve_visible(self):
