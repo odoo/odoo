@@ -46,7 +46,14 @@ test("can create a new channel", async () => {
         }
     });
     await start();
+<<<<<<< master
     await waitForSteps([
+||||||| 760a6df27f099a596ed35efde41f7fc2b6479fb6
+    await assertSteps([
+        `/mail/action - ${JSON.stringify({
+=======
+    await assertSteps([
+>>>>>>> 0eea914ec97919688ced2176325e44df8e2c5d63
         `/mail/data - ${JSON.stringify({
             init_messaging: {},
             failures: true,
@@ -115,7 +122,14 @@ test("can make a DM chat", async () => {
         }
     });
     await start();
+<<<<<<< master
     await waitForSteps([
+||||||| 760a6df27f099a596ed35efde41f7fc2b6479fb6
+    await assertSteps([
+        `/mail/action - ${JSON.stringify({
+=======
+    await assertSteps([
+>>>>>>> 0eea914ec97919688ced2176325e44df8e2c5d63
         `/mail/data - ${JSON.stringify({
             init_messaging: {},
             failures: true,

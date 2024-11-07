@@ -160,7 +160,14 @@ export class DiscussCoreCommon {
             channel.markAsRead({ sync: false });
         }
         this.env.bus.trigger("discuss.channel/new_message", { channel, message, silent });
+<<<<<<< master
         const authorMember = channel.channel_member_ids.find(({ persona }) =>
+||||||| 760a6df27f099a596ed35efde41f7fc2b6479fb6
+        this.env.bus.trigger("discuss.channel/new_message", { channel, message });
+        const authorMember = channel.channelMembers.find(({ persona }) =>
+=======
+        const authorMember = channel.channelMembers.find(({ persona }) =>
+>>>>>>> 0eea914ec97919688ced2176325e44df8e2c5d63
             persona?.eq(message.author)
         );
         if (authorMember) {

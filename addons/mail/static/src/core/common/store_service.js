@@ -160,6 +160,7 @@ export class Store extends BaseStore {
          * @param {import("models").Thread} thread1
          * @param {import("models").Thread} thread2
          */
+<<<<<<< master
         sort(thread1, thread2) {
             const compareFunctions = threadCompareRegistry.getAll();
             for (const fn of compareFunctions) {
@@ -169,6 +170,92 @@ export class Store extends BaseStore {
                 }
             }
             return thread2.localId > thread1.localId ? 1 : -1;
+||||||| 760a6df27f099a596ed35efde41f7fc2b6479fb6
+        sort(a, b) {
+            /**
+             * Ordering:
+             * - threads with needaction
+             * - unread channels
+             * - read channels
+             * - odoobot chat
+             *
+             * In each group, thread with most recent message comes first
+             */
+            const aOdooBot = a.isCorrespondentOdooBot;
+            const bOdooBot = b.isCorrespondentOdooBot;
+            if (aOdooBot && !bOdooBot) {
+                return 1;
+            }
+            if (bOdooBot && !aOdooBot) {
+                return -1;
+            }
+            const aNeedaction = a.needactionMessages.length;
+            const bNeedaction = b.needactionMessages.length;
+            if (aNeedaction > 0 && bNeedaction === 0) {
+                return -1;
+            }
+            if (bNeedaction > 0 && aNeedaction === 0) {
+                return 1;
+            }
+            const aUnread = a.selfMember?.message_unread_counter;
+            const bUnread = b.selfMember?.message_unread_counter;
+            if (aUnread > 0 && bUnread === 0) {
+                return -1;
+            }
+            if (bUnread > 0 && aUnread === 0) {
+                return 1;
+            }
+            const aMessageDatetime = a.newestPersistentNotEmptyOfAllMessage?.datetime;
+            const bMessageDateTime = b.newestPersistentNotEmptyOfAllMessage?.datetime;
+            if (!aMessageDatetime && bMessageDateTime) {
+                return 1;
+            }
+            if (!bMessageDateTime && aMessageDatetime) {
+                return -1;
+            }
+            if (aMessageDatetime && bMessageDateTime && aMessageDatetime !== bMessageDateTime) {
+                return bMessageDateTime - aMessageDatetime;
+            }
+            return b.localId > a.localId ? 1 : -1;
+=======
+        sort(a, b) {
+            /**
+             * Ordering:
+             * - threads with needaction
+             * - unread channels
+             * - read channels
+             *
+             * In each group, thread with most recent message comes first
+             */
+            const aNeedaction = a.needactionMessages.length;
+            const bNeedaction = b.needactionMessages.length;
+            if (aNeedaction > 0 && bNeedaction === 0) {
+                return -1;
+            }
+            if (bNeedaction > 0 && aNeedaction === 0) {
+                return 1;
+            }
+            const aUnread = a.selfMember?.message_unread_counter;
+            const bUnread = b.selfMember?.message_unread_counter;
+            if (aUnread > 0 && bUnread === 0) {
+                return -1;
+            }
+            if (bUnread > 0 && aUnread === 0) {
+                return 1;
+            }
+            const aMessageDatetime = a.newestPersistentNotEmptyOfAllMessage?.datetime;
+            const bMessageDateTime = b.newestPersistentNotEmptyOfAllMessage?.datetime;
+            if (!aMessageDatetime && bMessageDateTime) {
+                return 1;
+            }
+            if (!bMessageDateTime && aMessageDatetime) {
+                return -1;
+            }
+            if (aMessageDatetime && bMessageDateTime && aMessageDatetime !== bMessageDateTime) {
+                return bMessageDateTime - aMessageDatetime;
+            }
+            return b.localId > a.localId ? 1 : -1;
+>>>>>>> 0eea914ec97919688ced2176325e44df8e2c5d63
         },
     });
 

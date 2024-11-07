@@ -55,14 +55,27 @@ test("new message from operator displays unread counter", async () => {
     );
     onRpcBefore("/mail/data", (args) => {
         if (args.init_messaging) {
+<<<<<<< master
             asyncStep(`/mail/data - ${JSON.stringify(args)}`);
+||||||| 760a6df27f099a596ed35efde41f7fc2b6479fb6
+            step(`/mail/action - ${JSON.stringify(args)}`);
+=======
+            step(`/mail/data - ${JSON.stringify(args)}`);
+>>>>>>> 0eea914ec97919688ced2176325e44df8e2c5d63
         }
     });
     const userId = serverState.userId;
     await start({
         authenticateAs: { ...pyEnv["mail.guest"].read(guestId)[0], _name: "mail.guest" },
     });
+<<<<<<< master
     await waitForSteps([
+||||||| 760a6df27f099a596ed35efde41f7fc2b6479fb6
+    await assertSteps([
+        `/mail/action - ${JSON.stringify({
+=======
+    await assertSteps([
+>>>>>>> 0eea914ec97919688ced2176325e44df8e2c5d63
         `/mail/data - ${JSON.stringify({
             init_messaging: {
                 channel_types: ["livechat"],
@@ -88,7 +101,13 @@ test.tags("focus required")("focus on unread livechat marks it as read", async (
     await loadDefaultEmbedConfig();
     onRpcBefore("/mail/data", (args) => {
         if (args.init_messaging) {
+<<<<<<< master
             asyncStep(`/mail/data - ${JSON.stringify(args)}`);
+||||||| 760a6df27f099a596ed35efde41f7fc2b6479fb6
+            step(`/mail/action - ${JSON.stringify(args)}`);
+=======
+            step(`/mail/data - ${JSON.stringify(args)}`);
+>>>>>>> 0eea914ec97919688ced2176325e44df8e2c5d63
         }
     });
     const userId = serverState.userId;
@@ -101,7 +120,14 @@ test.tags("focus required")("focus on unread livechat marks it as read", async (
     // presence of the message is not enough (temporary message).
     await waitUntilSubscribe();
     await contains(".o-mail-Message-content", { text: "Hello World!" });
+<<<<<<< master
     await waitForSteps([
+||||||| 760a6df27f099a596ed35efde41f7fc2b6479fb6
+    await assertSteps([
+        `/mail/action - ${JSON.stringify({
+=======
+    await assertSteps([
+>>>>>>> 0eea914ec97919688ced2176325e44df8e2c5d63
         `/mail/data - ${JSON.stringify({
             init_messaging: {
                 channel_types: ["livechat"],
