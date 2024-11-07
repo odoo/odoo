@@ -4,6 +4,7 @@ import { patch } from "@web/core/utils/patch";
 import { onWillStart, status, useEffect } from '@odoo/owl';
 import wUtils from "@website/js/utils";
 import { debounce } from "@web/core/utils/timing";
+import { Wysiwyg } from "@web_editor/js/wysiwyg/wysiwyg";
 
 const LINK_DEBOUNCE = 1000;
 
@@ -117,5 +118,14 @@ patch(LinkTools.prototype, {
             this.__onURLInput();
         }
         super._onPickSelectOption(...arguments);
+    },
+});
+
+patch(Wysiwyg.prototype, {
+    /**
+     * @override
+     */
+    _getDelayBlurSelectors() {
+        return super._getDelayBlurSelectors().concat([".ui-autocomplete"]);
     },
 });
