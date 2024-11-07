@@ -142,7 +142,7 @@ def retrying(func, env):
                 if env.cr._closed:
                     raise
                 env.cr.rollback()
-                env.reset()
+                env.transaction.reset()
                 env.registry.reset_changes()
                 if request:
                     request.session = request._get_session_and_dbname()[0]
@@ -168,7 +168,7 @@ def retrying(func, env):
             raise RuntimeError("unreachable")
 
     except Exception:
-        env.reset()
+        env.transaction.reset()
         env.registry.reset_changes()
         raise
 
