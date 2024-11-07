@@ -4,7 +4,7 @@
     <t t-name="project.ProjectRightSidePanelSection">
         <div class="o_rightpanel_section py-0" t-att-name="props.name" t-if="props.show">
             <div class="o_rightpanel_header d-flex align-items-center justify-content-between py-2 border-bottom" t-att-class="props.headerClassName" t-if="props.header">
-                <div class="o_rightpanel_title me-auto" t-if="props.slots.title">
+                <div class="o_rightpanel_title me-auto" t-if="props.slots.title" t-attf-class="{{ env.isSmall ? 'd-flex flex-row-reverse align-items-center' : '' }}">
                     <h3 class="m-0 lh-lg ps-1"><t t-slot="title"/></h3>
                 </div>
                 <t t-slot="header"/>
