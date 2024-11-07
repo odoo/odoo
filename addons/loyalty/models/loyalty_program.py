@@ -9,7 +9,7 @@ from odoo.exceptions import UserError, ValidationError
 
 class LoyaltyProgram(models.Model):
     _name = 'loyalty.program'
-    _description = 'Loyalty Program'
+    _description = "Loyalty Program"
     _order = 'sequence'
     _rec_name = 'name'
 
@@ -24,11 +24,11 @@ class LoyaltyProgram(models.Model):
                 defaults.update({k: v for k, v in default_values.items() if k in fields_list})
         return defaults
 
-    name = fields.Char('Program Name', required=True, translate=True)
+    name = fields.Char("Program Name", required=True, translate=True)
     active = fields.Boolean(default=True)
     sequence = fields.Integer(copy=False)
-    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
-    currency_id = fields.Many2one('res.currency', 'Currency', compute='_compute_currency_id',
+    company_id = fields.Many2one('res.company', "Company", default=lambda self: self.env.company)
+    currency_id = fields.Many2one('res.currency', "Currency", compute='_compute_currency_id',
         readonly=False, required=True, store=True, precompute=True)
     currency_symbol = fields.Char(related='currency_id.symbol')
     pricelist_ids = fields.Many2many(
@@ -38,11 +38,11 @@ class LoyaltyProgram(models.Model):
         domain="[('currency_id', '=', currency_id)]",
     )
 
-    total_order_count = fields.Integer("Total Order Count", compute="_compute_total_order_count")
+    total_order_count = fields.Integer("Total Order Count", compute='_compute_total_order_count')
 
-    rule_ids = fields.One2many('loyalty.rule', 'program_id', 'Conditional rules', copy=True,
+    rule_ids = fields.One2many('loyalty.rule', 'program_id', "Conditional rules", copy=True,
          compute='_compute_from_program_type', readonly=False, store=True)
-    reward_ids = fields.One2many('loyalty.reward', 'program_id', 'Rewards', copy=True,
+    reward_ids = fields.One2many('loyalty.reward', 'program_id', "Rewards", copy=True,
          compute='_compute_from_program_type', readonly=False, store=True)
     communication_plan_ids = fields.One2many('loyalty.mail', 'program_id', copy=True,
          compute='_compute_from_program_type', readonly=False, store=True)
@@ -56,14 +56,14 @@ class LoyaltyProgram(models.Model):
     coupon_count_display = fields.Char(compute='_compute_coupon_count_display', string="Items")
 
     program_type = fields.Selection([
-        ('coupons', 'Coupons'),
-        ('gift_card', 'Gift Card'),
-        ('loyalty', 'Loyalty Cards'),
-        ('promotion', 'Promotions'),
-        ('ewallet', 'eWallet'),
-        ('promo_code', 'Discount Code'),
-        ('buy_x_get_y', 'Buy X Get Y'),
-        ('next_order_coupons', 'Next Order Coupons')],
+        ('coupons', "Coupons"),
+        ('gift_card', "Gift Card"),
+        ('loyalty', "Loyalty Cards"),
+        ('promotion', "Promotions"),
+        ('ewallet', "eWallet"),
+        ('promo_code', "Discount Code"),
+        ('buy_x_get_y', "Buy X Get Y"),
+        ('next_order_coupons', "Next Order Coupons")],
         default='promotion', required=True,
     )
     date_from = fields.Date(
@@ -74,21 +74,21 @@ class LoyaltyProgram(models.Model):
         string="End date",
         help="The end date is included in the validity period of this program",
     )
-    limit_usage = fields.Boolean(string='Limit Usage')
+    limit_usage = fields.Boolean(string="Limit Usage")
     max_usage = fields.Integer()
     # Dictates when the points can be used:
     # current: if the order gives enough points on that order, the reward may directly be claimed, points lost otherwise
     # future: if the order gives enough points on that order, a coupon is generated for a next order
     # both: points are accumulated on the coupon to claim rewards, the reward may directly be claimed
     applies_on = fields.Selection([
-        ('current', 'Current order'),
-        ('future', 'Future orders'),
-        ('both', 'Current & Future orders')], default='current', required=True,
+        ('current', "Current order"),
+        ('future', "Future orders"),
+        ('both', "Current & Future orders")], default='current', required=True,
          compute='_compute_from_program_type', readonly=False, store=True,
     )
     trigger = fields.Selection([
-        ('auto', 'Automatic'),
-        ('with_code', 'Use a code')],
+        ('auto', "Automatic"),
+        ('with_code', "Use a code")],
         compute='_compute_from_program_type', readonly=False, store=True,
         help="""
         Automatic: Customers will be eligible for a reward automatically in their cart.
@@ -106,7 +106,7 @@ class LoyaltyProgram(models.Model):
 
     payment_program_discount_product_id = fields.Many2one(
         'product.product',
-        string='Discount Product',
+        string="Discount Product",
         compute='_compute_payment_program_discount_product_id',
         readonly=True,
         help="Product used in the sales order to apply the discount."
@@ -121,7 +121,7 @@ class LoyaltyProgram(models.Model):
 
     _check_max_usage = models.Constraint(
         'CHECK (limit_usage = False OR max_usage > 0)',
-        'Max usage must be strictly positive if a limit is used.',
+        "Max usage must be strictly positive if a limit is used.",
     )
 
     @api.constrains('currency_id', 'pricelist_ids')
@@ -147,7 +147,7 @@ class LoyaltyProgram(models.Model):
         if self.env.context.get('loyalty_skip_reward_check'):
             return
         if any(not program.reward_ids for program in self):
-            raise ValidationError(_('A program must have at least one reward.'))
+            raise ValidationError(_("A program must have at least one reward."))
 
     def _compute_total_order_count(self):
         self.total_order_count = 0
@@ -158,14 +158,14 @@ class LoyaltyProgram(models.Model):
         for program in self:
             program.coupon_count_display = "%i %s" % (program.coupon_count or 0, program_items_name[program.program_type] or '')
 
-    @api.depends("communication_plan_ids.mail_template_id")
+    @api.depends('communication_plan_ids.mail_template_id')
     def _compute_mail_template_id(self):
         for program in self:
             program.mail_template_id = program.communication_plan_ids.mail_template_id[:1]
 
     def _inverse_mail_template_id(self):
         for program in self:
-            if program.program_type not in ("gift_card", "ewallet"):
+            if program.program_type not in ('gift_card', 'ewallet'):
                 continue
             if not program.mail_template_id:
                 program.communication_plan_ids = [(5, 0, 0)]
@@ -215,14 +215,14 @@ class LoyaltyProgram(models.Model):
     @api.model
     def _program_items_name(self):
         return {
-            'coupons': _('Coupons'),
-            'promotion': _('Promos'),
-            'gift_card': _('Gift Cards'),
-            'loyalty': _('Loyalty Cards'),
-            'ewallet': _('eWallets'),
-            'promo_code': _('Discounts'),
-            'buy_x_get_y': _('Promos'),
-            'next_order_coupons': _('Coupons'),
+            'coupons': _("Coupons"),
+            'promotion': _("Promos"),
+            'gift_card': _("Gift Cards"),
+            'loyalty': _("Loyalty Cards"),
+            'ewallet': _("eWallets"),
+            'promo_code': _("Discounts"),
+            'buy_x_get_y': _("Promos"),
+            'next_order_coupons': _("Coupons"),
         }
 
     @api.model
@@ -235,7 +235,7 @@ class LoyaltyProgram(models.Model):
                 'applies_on': 'current',
                 'trigger': 'with_code',
                 'portal_visible': False,
-                'portal_point_name': _('Coupon point(s)'),
+                'portal_point_name': _("Coupon point(s)"),
                 'rule_ids': [(5, 0, 0)],
                 'reward_ids': [(5, 0, 0), (0, 0, {
                     'required_points': 1,
@@ -250,7 +250,7 @@ class LoyaltyProgram(models.Model):
                 'applies_on': 'current',
                 'trigger': 'auto',
                 'portal_visible': False,
-                'portal_point_name': _('Promo point(s)'),
+                'portal_point_name': _("Promo point(s)"),
                 'rule_ids': [(5, 0, 0), (0, 0, {
                     'reward_point_amount': 1,
                     'reward_point_mode': 'order',
@@ -281,7 +281,7 @@ class LoyaltyProgram(models.Model):
                     'discount': 1,
                     'discount_applicability': 'order',
                     'required_points': 1,
-                    'description': _('Gift Card'),
+                    'description': _("Gift Card"),
                 })],
                 'communication_plan_ids': [(5, 0, 0), (0, 0, {
                     'trigger': 'create',
@@ -292,7 +292,7 @@ class LoyaltyProgram(models.Model):
                 'applies_on': 'both',
                 'trigger': 'auto',
                 'portal_visible': True,
-                'portal_point_name': _('Loyalty point(s)'),
+                'portal_point_name': _("Loyalty point(s)"),
                 'rule_ids': [(5, 0, 0), (0, 0, {
                     'reward_point_mode': 'money',
                 })],
@@ -319,7 +319,7 @@ class LoyaltyProgram(models.Model):
                     'discount': 1,
                     'discount_applicability': 'order',
                     'required_points': 1,
-                    'description': _('eWallet'),
+                    'description': _("eWallet"),
                 })],
                 'communication_plan_ids': [(5, 0, 0)],
             },
@@ -327,7 +327,7 @@ class LoyaltyProgram(models.Model):
                 'applies_on': 'current',
                 'trigger': 'with_code',
                 'portal_visible': False,
-                'portal_point_name': _('Discount point(s)'),
+                'portal_point_name': _("Discount point(s)"),
                 'rule_ids': [(5, 0, 0), (0, 0, {
                     'mode': 'with_code',
                     'code': 'PROMO_CODE_' + str(uuid4())[:4], # We should try not to trigger any unicity constraint
@@ -345,7 +345,7 @@ class LoyaltyProgram(models.Model):
                 'applies_on': 'current',
                 'trigger': 'auto',
                 'portal_visible': False,
-                'portal_point_name': _('Credit(s)'),
+                'portal_point_name': _("Credit(s)"),
                 'rule_ids': [(5, 0, 0), (0, 0, {
                     'reward_point_mode': 'unit',
                     'product_ids': first_sale_product,
@@ -362,7 +362,7 @@ class LoyaltyProgram(models.Model):
                 'applies_on': 'future',
                 'trigger': 'auto',
                 'portal_visible': True,
-                'portal_point_name': _('Coupon point(s)'),
+                'portal_point_name': _("Coupon point(s)"),
                 'rule_ids': [(5, 0, 0), (0, 0, {
                     'minimum_amount': 100,
                     'minimum_qty': 0,
@@ -393,7 +393,7 @@ class LoyaltyProgram(models.Model):
             if program_type in program_type_defaults:
                 programs.write(program_type_defaults[program_type])
 
-    @api.depends("currency_id", "program_type")
+    @api.depends('currency_id', 'program_type')
     def _compute_portal_point_name(self):
         for program in self:
             if program.program_type not in ('ewallet', 'gift_card'):
@@ -409,7 +409,7 @@ class LoyaltyProgram(models.Model):
             domain = rule._get_valid_product_domain()
             if domain:
                 rule_products[rule] = products.filtered_domain(domain)
-            elif not domain and rule.program_type != "gift_card":
+            elif not domain and rule.program_type != 'gift_card':
                 rule_products[rule] = products
             else:
                 continue
@@ -417,7 +417,7 @@ class LoyaltyProgram(models.Model):
 
     def action_open_loyalty_cards(self):
         self.ensure_one()
-        action = self.env['ir.actions.act_window']._for_xml_id("loyalty.loyalty_card_action")
+        action = self.env['ir.actions.act_window']._for_xml_id('loyalty.loyalty_card_action')
         action['name'] = self._program_items_name()[self.program_type]
         action['display_name'] = action['name']
         action['context'] = {
@@ -432,7 +432,7 @@ class LoyaltyProgram(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active(self):
         if any(program.active for program in self):
-            raise UserError(_('You can not delete a program in an active state'))
+            raise UserError(_("You can not delete a program in an active state"))
 
     def write(self, vals):
         # There is an issue when we change the program type, since we clear the rewards and create new ones.
@@ -554,47 +554,47 @@ class LoyaltyProgram(models.Model):
         product = self.env['product.product'].search([('sale_ok', '=', True)], limit=1)
         return {
             'gift_card': {
-                'name': _('Gift Card'),
+                'name': _("Gift Card"),
                 'program_type': 'gift_card',
                 **program_type_defaults['gift_card']
             },
             'ewallet': {
-                'name': _('eWallet'),
+                'name': _("eWallet"),
                 'program_type': 'ewallet',
                 **program_type_defaults['ewallet'],
             },
             'loyalty': {
-                'name': _('Loyalty Cards'),
+                'name': _("Loyalty Cards"),
                 'program_type': 'loyalty',
                 **program_type_defaults['loyalty'],
             },
             'coupons': {
-                'name': _('Coupons'),
+                'name': _("Coupons"),
                 'program_type': 'coupons',
                 **program_type_defaults['coupons'],
             },
             'promotion': {
-                'name': _('Promotional Program'),
+                'name': _("Promotional Program"),
                 'program_type': 'promotion',
                 **program_type_defaults['promotion'],
             },
             'promo_code': {
-                'name': _('Discount code'),
+                'name': _("Discount code"),
                 'program_type': 'promo_code',
                 **program_type_defaults['promo_code'],
             },
             'buy_x_get_y': {
-                'name': _('2+1 Free'),
+                'name': _("2+1 Free"),
                 'program_type': 'buy_x_get_y',
                 **program_type_defaults['buy_x_get_y'],
             },
             'next_order_coupons': {
-                'name': _('Next Order Coupons'),
+                'name': _("Next Order Coupons"),
                 'program_type': 'next_order_coupons',
                 **program_type_defaults['next_order_coupons'],
             },
             'fidelity': {
-                'name': _('Fidelity Cards'),
+                'name': _("Fidelity Cards"),
                 'program_type': 'loyalty',
                 'applies_on': 'both',
                 'trigger': 'auto',
