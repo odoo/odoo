@@ -59,7 +59,9 @@ class TestWebsiteProject(HttpCase):
         self.assertTrue(task.exists())
         self.assertEqual(task.partner_id, self.test_partner, "Partner id should not be False")
         self.assertFalse(task.email_cc, "email_cc field should be empty")
-        self.assertIn('This Task was submitted by Mitchell Admin (admin@yourcompany.example.com) on behalf of test@partner.com', html2plaintext(task.description), "Warning message should be displayed in description of task")
+        admin_user = self.env.ref('base.user_admin')
+        asserttext = '%s (%s)' % (admin_user.name, admin_user.email)
+        self.assertIn('This Task was submitted by %s on behalf of test@partner.com' % asserttext, html2plaintext(task.description), "Warning message should be displayed in description of task")
 
-        mail_message = task.message_ids.filtered(lambda m: m.body == '<div class="alert alert-info">This Task was submitted by Mitchell Admin (admin@yourcompany.example.com) on behalf of test@partner.com</div>')
+        mail_message = task.message_ids.filtered(lambda m: m.body == '<div class="alert alert-info">This Task was submitted by %s on behalf of test@partner.com</div>' % asserttext)
         self.assertEqual(len(mail_message), 1, "Alert message should be displayed in the chatter of the task created.")
