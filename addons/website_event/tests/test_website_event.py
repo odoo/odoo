@@ -55,7 +55,7 @@ class TestEventRegisterUTM(HttpCase, TestEventOnlineCommon):
 class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
     def test_website_event_tour_admin(self):
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'website_event_tour', login='admin', step_delay=100)
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'website_event_tour', login='admin')
 
     def test_website_event_pages_seo(self):
         website = self.env['website'].get_current_website()

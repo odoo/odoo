@@ -255,5 +255,5 @@ class TestStockPickingTour(HttpCase):
                 move_form.lot_ids = lots
 
         url = self._get_picking_url(picking.id)
-        self.start_tour(url, 'test_onchange_twice_lot_ids', login='admin', step_delay=100)
+        self.start_tour(url, 'test_onchange_twice_lot_ids', login='admin')
         self.assertRecordValues(picking.move_ids, [{"quantity": 1, "lot_ids": lots[2].ids}])

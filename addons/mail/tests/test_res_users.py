@@ -103,6 +103,5 @@ class TestUserModifyOwnProfile(HttpCaseWithUserDemo):
                 "/odoo",
                 "mail/static/tests/tours/user_modify_own_profile_tour.js",
                 login="demo",
-                step_delay=100,
             )
         self.assertEqual(self.user_demo.email, "updatedemail@example.com")

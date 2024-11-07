@@ -103,17 +103,17 @@ class TestLivechatChatbotUI(TestLivechatCommon, ChatbotCase):
     def test_complete_chatbot_flow_ui(self):
         tests.new_test_user(self.env, login="portal_user", groups="base.group_portal")
         operator = self.chatbot_script.operator_partner_id
-        self.start_tour('/', 'website_livechat_chatbot_flow_tour', step_delay=100)
+        self.start_tour('/', 'website_livechat_chatbot_flow_tour')
         self._check_complete_chatbot_flow_result()
         self.env['discuss.channel'].search([
             ('livechat_channel_id', '=', self.livechat_channel.id),
             ('livechat_operator_id', '=', operator.id),
         ]).unlink()
-        self.start_tour('/', 'website_livechat_chatbot_flow_tour', step_delay=100, login="portal_user")
+        self.start_tour('/', 'website_livechat_chatbot_flow_tour', login="portal_user")
         self._check_complete_chatbot_flow_result()
 
     def test_chatbot_available_after_reload(self):
-        self.start_tour("/", "website_livechat_chatbot_after_reload_tour", step_delay=100)
+        self.start_tour("/", "website_livechat_chatbot_after_reload_tour")
 
     def test_chatbot_test_page_tour(self):
         bob_operator = tests.new_test_user(self.env, login="bob_user", groups="im_livechat.im_livechat_group_user,base.group_user")
