@@ -5,9 +5,38 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
+            <!-- E-Invoice -->
             <xpath expr="//group[@name='sale_info_group']" position="inside">
-                <field name="l10n_in_edi_cancel_reason" invisible="country_code != 'IN' or state != 'posted' or not l10n_in_edi_show_cancel"/>
-                <field name="l10n_in_edi_cancel_remarks" invisible="country_code != 'IN' or state != 'posted' or not l10n_in_edi_show_cancel"/>
+                <field name="l10n_in_edi_cancel_reason"
+                       string="EDI Cancel Reason"
+                       invisible="not l10n_in_edi_cancel_reason"
+                       readonly="1"/>
+                <field name="l10n_in_edi_cancel_remarks"
+                       string="EDI Cancel Remarks"
+                       invisible="not l10n_in_edi_cancel_remarks"
+                       readonly="1"/>
+            </xpath>
+            <xpath expr="//header" position="after">
+                <div class="alert alert-danger" role="alert"
+                     invisible="not l10n_in_edi_error">
+                    <div class="o_row">
+                        <field name="l10n_in_edi_error"/>
+                        <button name="action_l10n_in_edi_force_cancel"
+                                type="object"
+                                class="oe_link oe_inline"
+                                confirm="Are you sure you want to cancel this invoice without waiting for the EDI document to be canceled?"
+                                invisible="l10n_in_edi_status != 'sent'"
+                                string="Force Cancel"/>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//button[@name='button_draft']" position="after">
+                <button name="action_export_l10n_in_edi_content_json"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="not l10n_in_edi_error"
+                        groups="base.group_no_one"
+                        string="Download EDI JSON"/>
             </xpath>
         </field>
     </record>

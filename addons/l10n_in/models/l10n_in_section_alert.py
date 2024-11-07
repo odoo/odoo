@@ -1,4 +1,4 @@
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
 
 
 class L10n_InSectionAlert(models.Model):
@@ -41,7 +41,7 @@ class L10n_InSectionAlert(models.Model):
     def _get_warning_message(self):
         warning = ", ".join(self.mapped('name'))
         section_type = next(iter(set(self.mapped('tax_source_type')))).upper()
-        action = 'collect' if section_type == 'TCS' else 'deduct'
+        action = _('collect') if section_type == 'TCS' else _('deduct')
         return _("It's advisable to %(action)s %(section_type)s u/s %(warning)s on this transaction.",
             action=action,
             section_type=section_type,

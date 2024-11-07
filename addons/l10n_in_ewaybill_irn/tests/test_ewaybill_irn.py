@@ -9,18 +9,24 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.invoice = cls.init_invoice("out_invoice", post=True, products=cls.product_a)
+        cls.env.company.write({
+            "l10n_in_edi_feature": True
+        })
+        cls.invoice = cls.init_invoice(
+            "out_invoice",
+            post=True,
+            products=cls.product_a,
+            partner=cls.partner_a
+        )
         attachment = cls.env['ir.attachment'].create({
             'name': 'einvoice.json',
             'res_model': 'account.move',
             'res_id': cls.invoice.id,
             'raw': b'{"Irn": "1234567890"}',
         })
-        cls.invoice.edi_document_ids = cls.env['account.edi.document'].create({
-            'edi_format_id': cls.env.ref('l10n_in_edi.edi_in_einvoice_json_1_03').id,
-            'state': 'sent',
-            'attachment_id': attachment.id,
-            'move_id': cls.invoice.id,
+        cls.invoice.write({
+            "l10n_in_edi_status": "sent",
+            "l10n_in_edi_attachment_id": attachment.id,
         })
 
     def test_ewaybill_irn(self):
