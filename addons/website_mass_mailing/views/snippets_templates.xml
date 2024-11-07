@@ -20,6 +20,11 @@
             <keywords>updates, digest, bulletin, announcements, notifications, communication, promotional, email, alert, dialog, prompt, subscription, subscribe, mailing-list, news</keywords>
         </t>
     </xpath>
+    <xpath expr="//t[@id='mass_mailing_newsletter_grid_hook']" position="replace">
+        <t t-snippet="website_mass_mailing.s_newsletter_grid" string="Newsletter Grid" t-forbid-sanitize="form" group="contact_and_forms">
+            <keywords>updates, digest, bulletin, announcements, notifications, communication, promotional, email, alert, dialog, prompt, subscription, subscribe, mailing-list, news, grid, image, picture</keywords>
+        </t>
+    </xpath>
     <xpath expr="//t[@id='mass_mailing_newsletter_popup_hook']" position="replace">
         <t t-snippet="website_mass_mailing.s_newsletter_subscribe_popup" string="Newsletter Popup" t-forbid-sanitize="form" group="contact_and_forms"/>
     </xpath>
@@ -129,6 +134,31 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
                     </div>
                 </div>
             </div>
+    </section>
+</template>
+
+<template id="s_newsletter_grid" name="Newsletter Grid">
+    <section class="s_newsletter_grid s_newsletter_list o_colored_level pt64 pb64" data-name="Newsletter Grid" data-list-id="0">
+        <div class="container">
+            <div class="row o_grid_mode" data-row-count="9">
+                <div class="o_grid_item o_grid_item_image g-col-lg-5 g-height-6 col-lg-5" style="z-index: 1; grid-area: 1 / 1 / 7 / 6;">
+                    <h2 class="h1-fs">Subscribe to our newsletter</h2>
+                    <p class="lead">Be the first to find out all the latest new, products and trends.</p>
+                    <t t-snippet-call="website_mass_mailing.s_newsletter_subscribe_form">
+                        <t t-set="thank_you_message">
+                            <p class="h5-fs mt-4 text-success"><i class="fa fa-check-circle-o" role="img"/> Thanks for registering!</p>
+                        </t>
+                        <t t-set="_wrapClasses" t-value="'input-group input-group-lg'"/>
+                    </t>
+                </div>
+                <div class="o_grid_item o_grid_item_image g-height-5 g-col-lg-2 col-lg-2 d-lg-block d-none o_snippet_mobile_invisible" style="z-index: 3; grid-area: 5 / 8 / 10 / 10;" data-invisible="1">
+                    <img class="img img-fluid rounded" src="/web/image/website.s_newsletter_grid_default_image_1" alt=""/>
+                </div>
+                <div class="o_grid_item o_grid_item_image g-col-lg-3 g-height-9 col-lg-3 d-lg-block d-none o_snippet_mobile_invisible" style="z-index: 4; grid-area: 1 / 10 / 10 / 13;" data-invisible="1">
+                    <img class="img img-fluid rounded" src="/web/image/website.s_newsletter_grid_default_image_2" alt=""/>
+                </div>
+            </div>
+        </div>
     </section>
 </template>
 
@@ -289,7 +319,7 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
         </t>
         <t t-call="website_mass_mailing.newsletter_subscribe_options_common">
             <t t-set="_selector">.s_newsletter_list</t>
-            <t t-set="_exclude">.s_newsletter_block .s_newsletter_list, .o_newsletter_popup .s_newsletter_list, .s_newsletter_box .s_newsletter_list, .s_newsletter_centered .s_newsletter_list</t>
+            <t t-set="_exclude">.s_newsletter_block .s_newsletter_list, .o_newsletter_popup .s_newsletter_list, .s_newsletter_box .s_newsletter_list, .s_newsletter_centered .s_newsletter_list, .s_newsletter_grid .s_newsletter_list</t>
         </t>
         <div data-selector=".js_subscribe" data-drop-near="p, h1, h2, h3, blockquote, .card"/>
     </xpath>
