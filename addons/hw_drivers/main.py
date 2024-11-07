@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import platform
+from dbus.mainloop.glib import DBusGMainLoop
 import logging
+import platform
 import requests
+import schedule
 from threading import Thread
 import time
 
@@ -10,18 +12,6 @@ from odoo.addons.hw_drivers.tools import helpers, wifi
 from odoo.addons.hw_drivers.websocket_client import WebsocketClient
 
 _logger = logging.getLogger(__name__)
-
-try:
-    import schedule
-except ImportError:
-    schedule = None
-    _logger.warning('Could not import library schedule')
-
-try:
-    from dbus.mainloop.glib import DBusGMainLoop
-except ImportError:
-    DBusGMainLoop = None
-    _logger.error('Could not import library dbus')
 
 drivers = []
 interfaces = {}
@@ -115,8 +105,8 @@ class Manager(Thread):
                 _logger.exception("Interface %s could not be started", str(interface))
 
         # Set scheduled actions
-        schedule and schedule.every().day.at("00:00").do(helpers.get_certificate_status)
-        schedule and schedule.every().day.at("00:00").do(helpers.reset_log_level)
+        schedule.every().day.at("00:00").do(helpers.get_certificate_status)
+        schedule.every().day.at("00:00").do(helpers.reset_log_level)
 
         # Set up the websocket connection
         if self.server_url and iot_client.iot_channel:
@@ -130,14 +120,13 @@ class Manager(Thread):
                     self.previous_iot_devices = iot_devices.copy()
                     self.send_alldevices(iot_client)
                 time.sleep(3)
-                schedule and schedule.run_pending()
+                schedule.run_pending()
             except Exception:
                 # No matter what goes wrong, the Manager loop needs to keep running
                 _logger.exception("Manager loop unexpected error")
 
 # Must be started from main thread
-if DBusGMainLoop:
-    DBusGMainLoop(set_as_default=True)
+DBusGMainLoop(set_as_default=True)
 
 manager = Manager()
 manager.daemon = True
