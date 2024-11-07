@@ -424,9 +424,8 @@ class L10nInEwaybill(models.Model):
         if warnings := response.get('odoo_warning'):
             for warning in warnings:
                 if warning.get('message_post'):
-                    odoobot = self.env.ref('base.partner_root')
                     self.message_post(
-                        author_id=odoobot.id,
+                        author_id=self.env.ref('base.partner_root').id,
                         body=warning.get('message')
                     )
                 else:

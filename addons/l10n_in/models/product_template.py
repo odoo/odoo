@@ -1,8 +1,5 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import re
-from odoo import api, models, fields, _
+from odoo import _, api, models, fields
 
 
 class ProductTemplate(models.Model):
@@ -17,7 +14,10 @@ class ProductTemplate(models.Model):
     def _compute_l10n_in_is_gst_registered_enabled(self):
         for record in self:
             allowed_companies = record.company_id or self.env.companies
-            record.l10n_in_is_gst_registered_enabled = any(company.l10n_in_is_gst_registered for company in allowed_companies)
+            record.l10n_in_is_gst_registered_enabled = any(
+                company.l10n_in_is_gst_registered
+                for company in allowed_companies
+            )
 
     @api.depends('sale_ok', 'l10n_in_hsn_code')
     def _compute_l10n_in_hsn_warning(self):
