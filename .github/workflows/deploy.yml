@@ -37,10 +37,10 @@ jobs:
           ssh -tt -o StrictHostKeyChecking=no -i ./PRIVATE_KEY.pem ${{ vars.EC2_USER_NAME }}@${{ vars.EC2_INSTANCE_ADDRESS }} <<EOF
           whoami
           cd /home/ubuntu/infinite-laundry-crm
-          service odoo stop
+          systemctl stop odoo.service
           git branch
           git pull
-          service odoo start
+          systemctl start odoo.service
           exit
           EOF
 
