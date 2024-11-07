@@ -3,13 +3,13 @@ import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { SearchPanel } from "@web/search/search_panel/search_panel";
 
 /**
- * @param {Object} params
- * @returns {Object}
+ * @param {Object} ViewClass
+ * @returns {{ ControlPanel: Component, SearchPanel: Component }}
  */
-export function extractLayoutComponents(params) {
+export function extractLayoutComponents(ViewClass) {
     const layoutComponents = {
-        ControlPanel: params.ControlPanel || ControlPanel,
-        SearchPanel: params.SearchPanel || SearchPanel,
+        ControlPanel: ViewClass.ControlPanel || ControlPanel,
+        SearchPanel: ViewClass.SearchPanel || SearchPanel,
     };
     return layoutComponents;
 }
