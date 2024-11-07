@@ -9,7 +9,7 @@ export class EmbeddedTableOfContentComponent extends Component {
     };
 
     setup() {
-        this.state = useState({ toc: this.props.manager.structure });
+        this.state = useState({ toc: this.props.manager.structure, folded: false });
         onWillStart(async () => {
             await this.props.manager.batchedUpdateStructure();
         });
