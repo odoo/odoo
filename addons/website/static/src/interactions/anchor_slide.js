@@ -43,8 +43,7 @@ export class AnchorSlide extends Interaction {
             return;
         }
         // Escape special characters to make the selector work.
-        // TODO Not rely on jQuery to escape anchor name for selector.
-        hash = "#" + $.escapeSelector(hash.substring(1));
+        hash = "#" + CSS.escape(hash.substring(1));
         const anchorEl = this.el.ownerDocument.querySelector(hash);
         const scrollValue = anchorEl?.dataset.anchor;
         if (!anchorEl || !scrollValue) {
