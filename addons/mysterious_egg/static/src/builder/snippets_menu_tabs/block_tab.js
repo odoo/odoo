@@ -70,7 +70,7 @@ export class BlockTab extends Component {
             onDrop: ({ element }) => {
                 const { x, y, height, width } = element.getClientRects()[0];
                 const { category, id } = element.dataset;
-                const snippet = this.getSnippet(category, parseInt(id));
+                const snippet = this.getSnippet(category, id);
                 this.props.editor.shared.dropElement(snippet.content.cloneNode(true), {
                     x,
                     y,
