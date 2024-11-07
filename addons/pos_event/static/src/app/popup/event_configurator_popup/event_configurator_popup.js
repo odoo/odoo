@@ -2,8 +2,8 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { Component, useState } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { ProductCard } from "@point_of_sale/app/generic_components/product_card/product_card";
-import { NumericInput } from "@point_of_sale/app/generic_components/inputs/numeric_input/numeric_input";
+import { ProductCard } from "@point_of_sale/app/components/product_card/product_card";
+import { NumericInput } from "@point_of_sale/app/components/inputs/numeric_input/numeric_input";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
