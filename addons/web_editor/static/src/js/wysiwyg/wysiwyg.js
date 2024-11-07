@@ -2919,6 +2919,11 @@ export class Wysiwyg extends Component {
             }
         }
     }
+
+    _getDelayBlurSelectors() {
+        return [".oe-toolbar", ".oe-powerbox-wrapper", ".o_we_crop_widget"];
+    }
+
     _onDocumentMousedown(e) {
         if (!e.target.classList.contains('o_editable_date_field_linked')) {
             this.$editable.find('.o_editable_date_field_linked').removeClass('o_editable_date_field_linked');
@@ -2926,7 +2931,7 @@ export class Wysiwyg extends Component {
         const closestDialog = e.target.closest('.o_dialog, .o_web_editor_dialog');
         if (
             e.target.closest("#oe_snippets") ||
-            e.target.closest('.oe-toolbar,.oe-powerbox-wrapper,.o_we_crop_widget') ||
+            e.target.closest(this._getDelayBlurSelectors().join(",")) ||
             (closestDialog && closestDialog.querySelector('.o_select_media_dialog, .o_link_dialog'))
         ) {
             this._shouldDelayBlur = true;
