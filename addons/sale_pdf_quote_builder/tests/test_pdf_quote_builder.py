@@ -3,6 +3,7 @@
 from base64 import b64encode
 from functools import partial
 
+from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.tests import tagged
 from odoo.tools.misc import file_open
@@ -170,3 +171,54 @@ class TestPDFQuoteBuilder(HttpCaseWithUserDemo, SaleCommon):
             login='admin',
         )
         # Assert documents are selected
+
+    def test_default_headers_footers(self):
+        self.assertFalse(
+            self.sale_order.copy().quotation_document_ids, 
+            'If no headers/footers are marked as default, then nothing should be added when '
+            'creating a new sales order.'
+        )
+        self.header.write({
+            'add_by_default': True,
+        })
+        self.assertEqual(
+            self.sale_order.copy().quotation_document_ids,
+            self.header,
+            'If headers/footers are marked as default, then they should be added by default when '
+            'creating a new sales order.'
+        )
+        quote_tmpl = self.env['sale.order.template'].create({
+            'name': 'Awesome Template',
+        })
+        self.header.write({
+            'quotation_template_ids': [Command.set(quote_tmpl.ids)],
+        })
+        self.assertFalse(
+            self.sale_order.copy().quotation_document_ids,
+            'No default headers/footers should be added if they are not available for the sale '
+            'order.',
+        )
+        self.assertEqual(
+            self.sale_order.copy({'sale_order_template_id': quote_tmpl.id}).quotation_document_ids,
+            self.header,
+            'If the default headers/footers are available for the sale order, then add them to the '
+            'quote.',
+        )
+
+    def test_no_unavailable_document_selected(self):
+        quote_tmpl = self.env['sale.order.template'].create({
+            'name': 'Awesome Template',
+        })
+        self.header.write({
+            'quotation_template_ids': [Command.set(quote_tmpl.ids)],
+        })
+        so = self.sale_order.copy({
+            'sale_order_template_id': quote_tmpl.id,
+            'quotation_document_ids': [Command.link(self.header.id)],
+        })
+        with self.assertRaises(
+            ValidationError,
+            msg='If a document suddenly becomes unavailable, should raise an error preventing the '
+            'user from saving his edits.',
+        ):
+            so.write({ 'sale_order_template_id': False })
