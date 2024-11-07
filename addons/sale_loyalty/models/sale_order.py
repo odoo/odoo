@@ -20,11 +20,14 @@ class SaleOrder(models.Model):
 
     # Contains how much points should be given to a coupon upon validating the order
     applied_coupon_ids = fields.Many2many(
-        comodel_name='loyalty.card', string="Manually Applied Coupons", copy=False)
+        string="Manually Applied Coupons", comodel_name='loyalty.card', copy=False
+    )
     code_enabled_rule_ids = fields.Many2many(
-        comodel_name='loyalty.rule', string="Manually Triggered Rules", copy=False)
+        string="Manually Triggered Rules", comodel_name='loyalty.rule', copy=False
+    )
     coupon_point_ids = fields.One2many(
-        comodel_name='sale.order.coupon.points', inverse_name='order_id', copy=False)
+        comodel_name='sale.order.coupon.points', inverse_name='order_id', copy=False
+    )
     reward_amount = fields.Float(compute='_compute_reward_total')
 
     # Display Fields
