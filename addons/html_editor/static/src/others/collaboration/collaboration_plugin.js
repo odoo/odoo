@@ -8,6 +8,8 @@ const HISTORY_SNAPSHOT_BUFFER_TIME = 1000 * 10;
 /**
  * @typedef { Object } CollaborationPluginConfig
  * @property { string } peerId
+ *
+ * @typedef { import("../../core/history_plugin").HistoryStep } HistoryStep
  */
 
 /**
@@ -26,7 +28,7 @@ export class CollaborationPlugin extends Plugin {
     resources = {
         set_attribute_overrides: this.setAttribute.bind(this),
         process_history_step: this.processHistoryStep.bind(this),
-        is_reversible_step: this.isReversibleStep.bind(this),
+        unreversible_step_predicates: this.isUnreversibleStep.bind(this),
         history_cleaned_handlers: this.onHistoryClean.bind(this),
         history_reset_handlers: this.onHistoryReset.bind(this),
         step_added_handlers: ({ step }) => this.onStepAdded(step),
@@ -67,12 +69,10 @@ export class CollaborationPlugin extends Plugin {
         this.snapshots = [{ step: firstStep }];
     }
     /**
-     * @param {number} index
+     * @param {HistoryStep} step
      */
-    isReversibleStep(index) {
-        const steps = this.dependencies.history.getHistorySteps();
-        const step = steps[index];
-        return step && step.peerId === this.peerId;
+    isUnreversibleStep(step) {
+        return step.peerId !== this.peerId;
     }
     /**
      * @param {Node} node
@@ -148,8 +148,8 @@ export class CollaborationPlugin extends Plugin {
     }
 
     /**
-     * @param {import("../../core/history_plugin").HistoryStep[]} steps
-     * @param {import("../../core/history_plugin").HistoryStep} newStep
+     * @param {HistoryStep[]} steps
+     * @param {HistoryStep} newStep
      */
     getInsertStepIndex(steps, newStep) {
         let index = steps.length - 1;
@@ -284,14 +284,14 @@ export class CollaborationPlugin extends Plugin {
     }
 
     /**
-     * @param {import("../../core/history_plugin").HistoryStep} step
+     * @param {HistoryStep} step
      */
     onStepAdded(step) {
         step.peerId = this.peerId;
         this.dispatchTo("collaboration_step_added_handlers", step);
     }
     /**
-     * @param {import("../../core/history_plugin").HistoryStep} step
+     * @param {HistoryStep} step
      */
     processHistoryStep(step) {
         step.peerId = this.peerId;
