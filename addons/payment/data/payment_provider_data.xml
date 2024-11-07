@@ -435,4 +435,20 @@
                ])]"/>
     </record>
 
+    <record id="payment_provider_kueski" model="payment.provider">
+        <field name="name">Kueski Pay</field>
+        <field name="image_128"
+            type="base64"
+            file="base/static/img/icons/payment_kueski.png" />
+        <field name="module_id" ref="base.module_payment_kueski" />
+        <field name="available_country_ids" 
+            eval="[Command.set([
+                 ref('base.mx')
+            ])]" />
+        <field name="payment_method_ids"
+            eval="[Command.set([
+                 ref('payment.payment_method_kueski')
+            ])]" />
+    </record>
+
 </odoo>
