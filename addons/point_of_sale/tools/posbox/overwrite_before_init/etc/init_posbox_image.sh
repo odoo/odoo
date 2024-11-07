@@ -237,15 +237,17 @@ systemctl disable hostapd.service
 systemctl disable cups-browsed.service
 systemctl enable odoo.service
 
-# disable overscan in /boot/config.txt, we can't use
-# overwrite_after_init because it's on a different device
-# (/dev/mmcblk0p1) and we don't mount that afterwards.
-# This option disables any black strips around the screen
-# cf: https://www.raspberrypi.org/documentation/configuration/raspi-config.md
-echo "disable_overscan=1" >> /boot/config.txt
-
-# Use the fkms driver instead of the legacy one (RPI3 requires this)
-sed -i '/dtoverlay/c\dtoverlay=vc4-fkms-v3d' /boot/config.txt
+# Use the following video drivers:
+#  Pi 3 - default (legacy)
+#  Pi 4/5 - KMS
+sed -i '/dtoverlay/c\' /boot/config.txt
+echo "
+[pi4]
+dtoverlay=vc4-kms-v3d
+[pi5]
+dtoverlay=vc4-kms-v3d
+[all]
+" | tee -a /boot/config.txt
 
 # exclude /drivers folder from git info to be able to load specific drivers
 echo "addons/hw_drivers/iot_devices/" > /home/pi/odoo/.git/info/exclude
