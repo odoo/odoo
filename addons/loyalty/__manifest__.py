@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Coupons & Loyalty',
+    'name': "Coupons & Loyalty",
     'summary': "Use discounts, gift card, eWallets and loyalty programs in different sales channels",
     'category': 'Sales',
     'version': '1.0',
