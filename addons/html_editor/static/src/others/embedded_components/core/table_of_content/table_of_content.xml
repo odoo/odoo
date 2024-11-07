@@ -1,16 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
 <t t-name="html_editor.EmbeddedTableOfContent">
-    <div class="o_embedded_toc_content">
-        <t t-foreach="this.state.toc.headings" t-as="heading" t-key="heading_index">
-            <a href="#" contenteditable="false"
-                t-out="heading.name"
-                t-on-click.prevent="() => this.onTocLinkClick(heading)"
-                t-attf-class="o_no_link_popover py-1 pe-1 d-block o_embedded_toc_link #{'o_embedded_toc_link_depth_' + heading.depth}"/>
-        </t>
+    <div class="px-1" t-att-class="{ 'pb-1' : !state.folded and state.toc.headings.length }">
+        <div class="d-flex align-items-center cursor-pointer user-select-none" t-on-click="() => { this.state.folded = !this.state.folded; }">
+            <div class="o_embedded_toc_label p-1 fw-bold">
+                Table of Contents
+                <i t-attf-class="align-self-center fa fa-fw fa-caret-#{ state.folded ? 'right' : 'down' }"/>
+            </div>
+        </div>
+        <div t-if="!state.folded" class="o_embedded_toc_content">
+            <t t-foreach="this.state.toc.headings" t-as="heading" t-key="heading_index">
+                <a href="#" contenteditable="false"
+                    t-out="heading.name"
+                    t-on-click.prevent="() => this.onTocLinkClick(heading)"
+                    t-attf-class="o_no_link_popover py-1 pe-1 d-block text-reset o_embedded_toc_link #{'o_embedded_toc_link_depth_' + heading.depth}"/>
+            </t>
+        </div>
     </div>
-    <i class="o_embedded_toc_hint" t-if="displayTocHint()">
-        Add headings in this field to fill the Table of Content
-    </i>
+    <div class="p-1" t-if="displayTocHint()">
+        <i class="o_embedded_toc_hint px-1">
+            Add headings to fill the Table of Contents
+        </i>
+    </div>
 </t>
 </templates>
