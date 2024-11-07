@@ -42,8 +42,7 @@ def test_01_cow_views_inherit_on_module_update(env):
     # 3. Upgrade the module
     portal_module = env['ir.module.module'].search([('name', '=', 'portal')])
     portal_module.button_immediate_upgrade()
-    env.reset()     # clear the set of environments
-    env = env()     # get an environment that refers to the new registry
+    env.transaction.reset()     # clear the set of environments
 
     # 4. Ensure cow view also got its inherit_id updated
     expected_parent_view = env.ref('portal.frontend_layout')  # XML data
@@ -79,8 +78,7 @@ def test_02_cow_views_inherit_on_module_update(env):
     # 3. Upgrade the module
     portal_module = env['ir.module.module'].search([('name', '=', 'portal')])
     portal_module.button_immediate_upgrade()
-    env.reset()     # clear the set of environments
-    env = env()     # get an environment that refers to the new registry
+    env.transaction.reset()     # clear the set of environments
 
     # 4. Ensure cow view also got its inherit_id updated
     assert view_D.inherit_id == view_B, "Generic view security check."

@@ -44,8 +44,7 @@ def test_all_l10n(env):
             _logger.warning("Demo data of module %s has failed: %s",
                 failure.module_id.name, failure.error)
 
-    env.reset()     # clear the set of environments
-    env = env()     # get an environment that refers to the new registry
+    env.transaction.reset()     # clear the set of environments
 
     # Install Charts of Accounts
     _logger.info('Loading chart of account')

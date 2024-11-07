@@ -179,8 +179,7 @@ class AccountChartTemplate(models.AbstractModel):
         module = self.env['ir.module.module'].search([('name', '=', module_name), ('state', '=', 'uninstalled')])
         if module:
             module.button_immediate_install()
-            self.env.reset()  # clear the envs with an old registry
-            self = self.env()['account.chart.template']  # create a new env with the new registry
+            self.env.transaction.reset()  # clear the transaction with an old registry
 
         # To be able to use code translation we load everything in 'en_US'
         # The demo data is still loaded "normally" since code translations cannot be used for them reliably.

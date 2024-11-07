@@ -550,8 +550,7 @@ class IrCron(models.Model):
         try:
             if self.pool != self.pool.check_signaling():
                 # the registry has changed, reload self in the new registry
-                self.env.reset()
-                self = self.env()[self._name]
+                self.env.transaction.reset()
 
             _logger.debug(
                 "cron.object.execute(%r, %d, '*', %r, %d)",

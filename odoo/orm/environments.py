@@ -11,6 +11,7 @@ __all__ = [
 
 import logging
 import typing
+import warnings
 from collections import defaultdict
 from collections.abc import Mapping
 from contextlib import contextmanager
@@ -49,12 +50,11 @@ class Environment(Mapping):
     uid: int
     context: frozendict
     su: bool
-    registry: Registry
-    cache: Cache
     transaction: Transaction
 
     def reset(self):
         """ Reset the transaction, see :meth:`Transaction.reset`. """
+        warnings.warn("Since 19.0, use directly `transaction.reset()`", DeprecationWarning)
         self.transaction.reset()
 
     def __new__(cls, cr, uid, context, su=False):
@@ -77,11 +77,6 @@ class Environment(Mapping):
         self.cr, self.uid, self.su = cr, uid, su
         self.context = frozendict(context)
         self.transaction = transaction
-        self.registry = transaction.registry
-        self.cache = transaction.cache
-
-        self._cache_key = {}                    # memo {field: cache_key}
-        self._protected = transaction.protected
 
         transaction.envs.add(self)
         # the default transaction's environment is the first one with a valid uid
@@ -170,6 +165,27 @@ class Environment(Mapping):
         """ Return whether the current user has group "Settings", or is in
             superuser mode. """
         return self.su or self.user._is_system()
+
+    @lazy_property
+    def registry(self):
+        """Return the registry associated with the transaction."""
+        return self.transaction.registry
+
+    @lazy_property
+    def _protected(self):
+        """Return the protected map of the transaction."""
+        return self.transaction.protected
+
+    @lazy_property
+    def cache(self):
+        """Return the cache object of the transaction."""
+        return self.transaction.cache
+
+    @lazy_property
+    def _cache_key(self):
+        """Return an empty key for the cache"""
+        # memo {field: cache_key}
+        return {}
 
     @lazy_property
     def user(self):
@@ -313,7 +329,6 @@ class Environment(Mapping):
             This may be useful when recovering from a failed ORM operation.
         """
         lazy_property.reset_all(self)
-        self._cache_key.clear()
         self.transaction.clear()
 
     def invalidate_all(self, flush=True):
@@ -508,7 +523,7 @@ class Transaction:
             self.default_env.flush_all()
 
     def clear(self):
-        """ Clear the caches and pending computations and updates in the translations. """
+        """ Clear the caches and pending computations and updates in the transactions. """
         self.cache.clear()
         self.tocompute.clear()
 
@@ -519,9 +534,7 @@ class Transaction:
         """
         self.registry = Registry(self.registry.db_name)
         for env in self.envs:
-            env.registry = self.registry
             lazy_property.reset_all(env)
-            env._cache_key.clear()
         self.clear()
 
 

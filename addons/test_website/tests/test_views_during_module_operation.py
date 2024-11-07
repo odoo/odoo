@@ -70,8 +70,7 @@ def test_01_cow_views_unlink_on_module_update(env):
     # Upgrade the module
     test_website_module = env['ir.module.module'].search([('name', '=', 'test_website')])
     test_website_module.button_immediate_upgrade()
-    env.reset()     # clear the set of environments
-    env = env()     # get an environment that refers to the new registry
+    env.transaction.reset()     # clear the set of environments
 
     # Ensure generic views got removed
     view = env.ref('test_website.update_module_view_to_be_t_called', raise_if_not_found=False)
@@ -180,8 +179,7 @@ def test_02_copy_ids_views_unlink_on_module_update(env):
 
     # Upgrade the module
     theme_default.button_immediate_upgrade()
-    env.reset()  # clear the set of environments
-    env = env()  # get an environment that refers to the new registry
+    env.transaction.reset()  # clear the set of environments
 
     # Ensure the theme.ir.ui.view got removed (since there is an IMD but not
     # present in XML files)
@@ -204,8 +202,7 @@ def test_02_copy_ids_views_unlink_on_module_update(env):
     # Upgrade the module
     with MockRequest(env, website=website_1):
         theme_default.button_immediate_upgrade()
-    env.reset()  # clear the set of environments
-    env = env()  # get an environment that refers to the new registry
+    env.transaction.reset()  # clear the set of environments
 
     # Ensure the theme.ir.ui.view got removed (since there is an IMD but not
     # present in XML files)

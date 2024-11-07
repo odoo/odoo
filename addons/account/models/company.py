@@ -859,9 +859,9 @@ class ResCompany(models.Model):
             # No automatic install during the loading of a chart_template
             return False
         if res := super().install_l10n_modules():
-            self.env.flush_all()
-            self.env.reset()     # clear the set of environments
-            env = self.env()     # get an environment that refers to the new registry
+            env = self.env
+            env.flush_all()
+            env.transaction.reset()
             for company in self.filtered(lambda c: c.country_id and not c.chart_template):
                 template_code = company.parent_id.chart_template or self.env['account.chart.template']._guess_chart_template(company.country_id)
                 if template_code != 'generic_coa':
