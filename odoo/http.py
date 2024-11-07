@@ -1506,6 +1506,7 @@ class Request:
         """
         cr = None  # None is a sentinel, it keeps the same cursor
         self.env = self.env(cr, user, context, su)
+        self.env.transaction.default_env = self.env
         threading.current_thread().uid = self.env.uid
 
     def update_context(self, **overrides):
