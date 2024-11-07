@@ -562,3 +562,59 @@ class TestLeadAssign(TestLeadAssignCommon):
             len(members_data[sales_team_4_m1]['assigned']),
             0,
             "If team member has lead count greater than max assign,then do not assign any more")
+
+    def test_merge_assign_keep_master_team_multi_company(self):
+        """ Check duplicate opportunities are kept when assigning to a team from a different company."""
+        company_1 = self.env['res.company'].create({
+            'name': 'New Test Company 1',
+        })
+
+        self._activate_multi_company()
+        master_opportunity = self.env['crm.lead'].create({
+            'name': 'Master opportunity1 with company1',
+            'type': 'opportunity',
+            'email_from': 'test1@mail.com',
+            'probability': 50,
+            'partner_id': False,
+            'team_id': False,
+            'company_id': company_1.id,
+            'user_id': False,
+        })
+        dups_master_opportunity = self.env['crm.lead'].create({
+            'name': 'Duplicate of master opportunity1 with company 1',
+            'type': 'lead',
+            'email_from': 'test1@mail.com',
+            'probability': 10,
+            'team_id': False,
+            'user_id': False,
+            'company_id': company_1.id,
+        })
+
+        master_opportunity2 = self.env['crm.lead'].create({
+            'name': 'Master opportunity2 with company 2',
+            'type': 'opportunity',
+            'email_from': 'test2@mail.com',
+            'probability': 50,
+            'partner_id': False,
+            'team_id': False,
+            'company_id': self.company_2.id,
+            'user_id': False,
+        })
+        dups_master_opportunity2 = self.env['crm.lead'].create({
+            'name': 'Duplicate of master opportunity2 with company 2',
+            'type': 'lead',
+            'email_from': 'test2@mail.com',
+            'probability': 10,
+            'team_id': False,
+            'user_id': False,
+            'company_id': self.company_2.id,
+        })
+
+        self.team_company2._action_assign_leads(work_days=2)
+        self.assertTrue(master_opportunity.exists())
+        self.assertTrue(dups_master_opportunity.exists())
+
+        self.assertTrue(master_opportunity2.exists())
+        self.assertTrue(master_opportunity2.team_id)
+        self.assertTrue(master_opportunity2.user_id)
+        self.assertFalse(dups_master_opportunity2.exists())
