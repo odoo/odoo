@@ -26,4 +26,10 @@ if [ -f $start_wifi ]; then
   $start_wifi &
 fi
 
+update_odoo=/home/pi/odoo/addons/iot_box_image/configuration/checkout.sh
+if [ -f $update_odoo ]; then
+  printf "Updating Odoo service...\n"
+  $update_odoo &
+fi
+
 exit 0
