@@ -17,8 +17,8 @@
                     <Pager t-if="props.value.count > props.value.limit" t-props="pagerProps"/>
                 </div>
             </div>
-            <ListRenderer t-if="viewMode === 'list'" t-props="rendererProps" />
-            <KanbanRenderer t-elif="viewMode" t-props="rendererProps" />
+            <ListRenderer t-if="viewMode === 'list'" t-props="this.rendererProps" />
+            <KanbanRenderer t-elif="viewMode" t-props="this.rendererProps" />
         </div>
     </t>
 

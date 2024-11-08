@@ -19,6 +19,7 @@ import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
+import { X2ManyField } from "@web/views/fields/x2many/x2many_field";
 import { companyService } from "@web/webclient/company_service";
 
 let target;
@@ -2137,5 +2138,51 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(target.querySelector(".ids").innerText, "2,4");
         await click(target.querySelector(".my_btn"));
         assert.strictEqual(target.querySelector(".ids").innerText, "2,3");
+    });
+
+    QUnit.test("`this` inside rendererProps should reference the component", async function (assert) {
+        class CustomX2manyField extends X2ManyField {
+            setup() {
+                super.setup();
+                this.selectCreate = (params) => {
+                    assert.step("selectCreate");
+                    assert.strictEqual(this.num, 2);
+                };
+                this.num = 1;
+            }
+
+            async onAdd({ context, editable } = {}) {
+                this.num = 2;
+                assert.step("onAdd");
+                super.onAdd(...arguments);
+            }
+        }
+
+        registry.category("fields").add("custom_x2many", CustomX2manyField);
+
+        serverData.views = {
+            "partner_type,false,list": `<tree><field name="display_name"/></tree>`,
+            "partner_type,false,search": `<search></search>`,
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="timmy" widget="custom_x2many">
+                        <tree editable="top">
+                            <field name="display_name"/>
+                        </tree>
+                        <form>
+                            <field name="display_name" />
+                        </form>
+                    </field>
+                </form>`,
+            resId: 1,
+        });
+        await click(target.querySelector(".o_field_x2many_list_row_add a"));
+        assert.verifySteps(["onAdd", "selectCreate"]);
     });
 });
