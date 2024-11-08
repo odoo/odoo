@@ -20,6 +20,8 @@ import {
     serverState,
     stepAllNetworkCalls,
 } from "@web/../tests/web_test_helpers";
+import { registry } from "@web/core/registry";
+import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 
 describe.current.tags("desktop");
@@ -1848,4 +1850,48 @@ test("many2many basic keys in field evalcontext -- in a x2many in form", async (
     await contains(".o_m2o_dropdown_option_create_edit").click();
     expect(".modal .o_field_many2one").toHaveCount(1);
     expect(".modal .o_field_many2one input").toHaveValue("default partner");
+});
+
+test("`this` inside rendererProps should reference the component", async () => {
+    class CustomX2manyField extends X2ManyField {
+        setup() {
+            super.setup();
+            this.selectCreate = (params) => {
+                expect.step("selectCreate");
+                expect(this.num).toEqual(2);
+            };
+            this.num = 1;
+        }
+
+        async onAdd({ context, editable } = {}) {
+            this.num = 2;
+            expect.step("onAdd");
+            super.onAdd(...arguments);
+        }
+    }
+
+    const customX2ManyField = {
+        ...x2ManyField,
+        component: CustomX2manyField,
+    };
+    registry.category("fields").add("custom", customX2ManyField);
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+                <form>
+                    <field name="timmy" widget="custom">
+                        <list editable="top">
+                            <field name="display_name"/>
+                        </list>
+                        <form>
+                            <field name="display_name" />
+                        </form>
+                    </field>
+                </form>`,
+        resId: 1,
+    });
+    await contains(".o_field_x2many_list_row_add a").click();
+    expect.verifySteps(["onAdd", "selectCreate"]);
 });
