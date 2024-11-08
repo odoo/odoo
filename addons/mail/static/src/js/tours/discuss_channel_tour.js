@@ -4,8 +4,15 @@ import { registry } from "@web/core/registry";
 import { markup } from "@odoo/owl";
 
 registry.category("web_tour.tours").add("discuss_channel_tour", {
-    url: "/odoo/action-mail.action_discuss",
+    url: "/odoo",
     steps: () => [
+        {
+            isActive: ["enterprise"],
+            trigger: "a[data-menu-xmlid='mail.menu_root_discuss']",
+            content: _t("Open Discuss App"),
+            tooltipPosition: "bottom",
+            run: "click",
+        },
         {
             trigger: ".o-mail-DiscussSidebarCategory-channel .o-mail-DiscussSidebarCategory-add",
             content: markup(
