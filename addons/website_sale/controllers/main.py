@@ -455,7 +455,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         values.update(self._get_additional_extra_shop_values(values, **post))
         return request.render("website_sale.products", values)
 
-    @route(['/shop/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=sitemap_products)
+    @route(['/shop/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=sitemap_products, readonly=True)
     def product(self, product, category='', search='', **kwargs):
         if not request.website.has_ecommerce_access():
             return request.redirect('/web/login')
@@ -468,6 +468,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         auth='public',
         website=True,
         sitemap=False,
+        readonly=True,
     )
     def product_document(self, product_template, document_id):
         product_template.check_access('read')
@@ -2161,7 +2162,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             tracking_cart_dict['shipping'] = delivery_line.price_unit
         return tracking_cart_dict
 
-    @route(['/shop/country_info/<model("res.country"):country>'], type='jsonrpc', auth="public", methods=['POST'], website=True)
+    @route(['/shop/country_info/<model("res.country"):country>'], type='jsonrpc', auth="public", methods=['POST'], website=True, readonly=True)
     def shop_country_info(self, country, address_type, **kw):
         address_fields = country.get_address_fields()
         if address_type == 'billing':
