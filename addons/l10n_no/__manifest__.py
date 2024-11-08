@@ -19,6 +19,7 @@ Updated for Odoo 9 by Bringsvor Consulting AS <www.bringsvor.com>
     'auto_install': ['account'],
     'data': [
         'data/account_tax_report_data.xml',
+        'views/account_tax.xml',
         'views/res_partner_views.xml',
         'views/res_company_views.xml',
     ],
