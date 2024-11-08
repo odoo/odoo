@@ -40,3 +40,4 @@ from . import account_fiscal_position
 from . import account_fiscal_position_tax
 from . import res_currency
 from . import ir_ui_view
+from . import product_tag
