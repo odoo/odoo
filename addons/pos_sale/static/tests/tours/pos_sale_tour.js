@@ -325,3 +325,13 @@ registry.category("web_tour.tours").add("PosSettleOrder4", {
             ReceiptScreen.isShown(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosRepairSettleOrder", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1),
+            ProductScreen.selectedOrderlineHas("Test Product", 1),
+        ].flat(),
+});
