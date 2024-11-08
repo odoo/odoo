@@ -13,6 +13,12 @@ class AccountMove(models.Model):
     reversed_pos_order_id = fields.Many2one('pos.order', string="Reversed POS Order",
         help="The pos order that was reverted after closing the session to create an invoice for it.")
     pos_session_ids = fields.One2many("pos.session", "move_id", "POS Sessions")
+    pos_order_count = fields.Integer(compute="_compute_origin_pos_count", string='POS Order Count')
+
+    @api.depends('pos_order_ids')
+    def _compute_origin_pos_count(self):
+        for move in self:
+            move.pos_order_count = len(move.sudo().pos_order_ids)
 
     def _stock_account_get_last_step_stock_moves(self):
         stock_moves = super(AccountMove, self)._stock_account_get_last_step_stock_moves()
@@ -71,7 +77,22 @@ class AccountMove(models.Model):
     def _compute_tax_totals(self):
         return super(AccountMove, self.with_context(linked_to_pos=bool(self.sudo().pos_order_ids)))._compute_tax_totals()
 
+    def action_view_source_pos_orders(self):
+        self.ensure_one()
+        action = self.env['ir.actions.act_window']._for_xml_id('point_of_sale.action_pos_pos_form')
 
+        if len(self.pos_order_ids) == 1:
+            action['views'] = [(self.env.ref('point_of_sale.view_pos_pos_form', False).id, 'form')]
+            action['res_id'] = self.pos_order_ids.id
+        else:
+            action['domain'] = [('id', 'in', self.pos_order_ids.ids)]
+        return action
+
+    def action_invoice_download_pdf(self):
+        # If still not printed no attachments linked so first generate attachment than download
+        if self.pos_order_ids and not self.invoice_pdf_report_id:
+            self.with_context(skip_invoice_sync=True)._generate_and_send()
+        return super().action_invoice_download_pdf()
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
