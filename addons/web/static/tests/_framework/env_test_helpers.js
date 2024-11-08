@@ -155,6 +155,11 @@ export function mockService(name, serviceFactory) {
         },
         { force: true }
     );
+
+    // Patch already initialized service (only works with objects)
+    if (currentEnv?.services && typeof serviceFactory !== "function") {
+        patch(currentEnv.services[name], serviceFactory);
+    }
 }
 
 /**
