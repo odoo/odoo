@@ -5,7 +5,24 @@ import { Interaction } from "@website/core/interaction";
 import { animationFrame, click, dblclick } from "@odoo/hoot-dom";
 
 
-// add test => if not t- => crash
+test("crashes if a dynamic content element does not start with t-", async () => {
+    class Test extends Interaction {
+        static selector=".test";
+        static dynamicContent = {
+            "span:click": "doSomething"
+        }
+        doSomething() {}
+    }
+    
+    let error = null;
+    try {
+        await startInteraction(Test, `<div class="test"></div>`);
+    } catch (e) {
+        error = e;
+    }
+    expect(error).not.toBe(null);
+    expect(error.message).toBe("Invalid directive: 'click' (should start with t-)")
+});
 
 describe("event handling", () => {
 

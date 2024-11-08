@@ -35,15 +35,6 @@ class WebsiteCore {
         this.roots = [];
         this.colibri = new Colibri(this.env);
         this.app = null;
-        this.startInteractions();
-        activeElementRegistry.addEventListener("UPDATE", async (ev) => {
-            if (this.isActive) {
-                const { operation, key: name, value: I } = ev.detail;
-                if (operation !== "delete") {
-                    this._startInteraction(name, I);
-                }
-            }
-        });
     }
 
     async _mountComponent(el, C) {
@@ -70,32 +61,35 @@ class WebsiteCore {
         compElem.setAttribute("contenteditable", "false");
         compElem.dataset.oeProtected = "true";
         el.appendChild(compElem);
-        root.mount(compElem);
+        return root.mount(compElem);
     }
 
     startInteractions() {
+        const proms = [];
         if (!this.active) {
             for (const [name, I] of activeElementRegistry.getEntries()) {
                 if (this.el.matches(I.selector)) {
                     console.log("starting", name);
-                    this._startInteraction(this.el, I);
+                    proms.push(this._startInteraction(this.el, I));
                 } else {
                     for (let el of this.el.querySelectorAll(I.selector)) {
                         console.log("starting", name);
-                        this._startInteraction(el, I);
+                        proms.push(this._startInteraction(el, I));
                     }
                 }
             }
             this.active = true;
         }
+        return Promise.all(proms)
     }
 
     _startInteraction(el, I) {
         if (I.prototype instanceof Interaction) {
             const interaction = this.colibri.attach(el, I);
             this.interactions.push(interaction);
+            return interaction.__colibri__.startProm;
         } else {
-            this._mountComponent(el, I);
+            return this._mountComponent(el, I);
         }
     }
 
@@ -114,6 +108,16 @@ class WebsiteCore {
 
 registry.category("services").add("website_core", {
     async start(env) {
-        return new WebsiteCore(env);
+        const websiteCore = new WebsiteCore(env);
+        activeElementRegistry.addEventListener("UPDATE", async (ev) => {
+            if (this.isActive) {
+                const { operation, key: name, value: I } = ev.detail;
+                if (operation !== "delete") {
+                    this._startInteraction(name, I);
+                }
+            }
+        });
+        await websiteCore.startInteractions();
+        return websiteCore;
     },
 });

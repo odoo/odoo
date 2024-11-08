@@ -190,7 +190,7 @@
     'uninstall_hook': 'uninstall_hook',
     'assets': {
         'web.assets_frontend': [
-            'website/static/src/interactions/*',
+            'website/static/src/interactions/**/*',
             'website/static/src/core/*',
             ('replace', 'web/static/src/legacy/js/public/public_root_instance.js', 'website/static/src/js/content/website_root_instance.js'),
             'website/static/src/libs/zoomodoo/zoomodoo.scss',
@@ -291,6 +291,7 @@
             'website/static/src/interactions/**/*',
             'website/static/src/snippets/s_table_of_content/000.js',
             'website/static/src/snippets/s_table_of_content/000.scss',
+
         ],
         'web.tests_assets': [
             'website/static/tests/website_service_mock.js',
