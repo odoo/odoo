@@ -93,5 +93,7 @@ test("Display livechat custom name in typing status", async () => {
             is_typing: true,
         })
     );
-    await contains(".o-discuss-Typing", { text: "livechat custom username is typing..." });
+    await contains(".o-discuss-composerFooterHint", {
+        text: "livechat custom username is typing...",
+    });
 });
