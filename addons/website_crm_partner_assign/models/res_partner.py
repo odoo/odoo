@@ -72,14 +72,14 @@ class ResPartner(models.Model):
         self.ensure_one()  # especially here as we are doing an id, in, IDS domain
         action = super().action_view_opportunity()
         action_domain_origin = action.get('domain')
-        action_context_origin = action.get('context') or {}
+        action_context_origin = action.get('context') or {'active_test': False}
         action_domain_assign = [('partner_assigned_id', '=', self.id)]
         if not action_domain_origin:
             action['domain'] = action_domain_assign
             return action
         # perform searches independently as having OR with those leaves seems to
         # be counter productive
-        Lead = self.env['crm.lead'].with_context(**action_context_origin, active_test=False)
+        Lead = self.env['crm.lead'].with_context(**action_context_origin)
         ids_origin = Lead.search(action_domain_origin).ids
         ids_new = Lead.search(action_domain_assign).ids
         action['domain'] = [('id', 'in', sorted(list(set(ids_origin) | set(ids_new))))]
