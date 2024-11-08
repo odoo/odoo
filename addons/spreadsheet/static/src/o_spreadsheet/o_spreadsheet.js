@@ -18635,7 +18635,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     return { type: "FUNCALL", value: current.value, args };
                 }
             case "INVALID_REFERENCE":
-                throw new InvalidReferenceError();
+                return {
+                    type: "REFERENCE",
+                    value: CellErrorType.InvalidReference,
+                };
             case "REFERENCE":
                 if (((_b = tokens[0]) === null || _b === void 0 ? void 0 : _b.value) === ":" && ((_c = tokens[1]) === null || _c === void 0 ? void 0 : _c.type) === "REFERENCE") {
                     tokens.shift();
@@ -41857,13 +41860,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             .filter((tk) => tk.type === "FUNCTION")
             .every((tk) => functions[tk.value.toUpperCase()].isExported);
         const type = getCellType(cell.value);
+        const exportedValue = adaptFormulaValueToExcel(cell.value);
         if (isExported) {
             const XlsxFormula = adaptFormulaToExcel(formula);
             node = escapeXml /*xml*/ `
       <f>
         ${XlsxFormula}
       </f>
-      ${escapeXml /*xml*/ `<v>${cell.value}</v>`}
+      ${escapeXml /*xml*/ `<v>${exportedValue}</v>`}
     `;
             attrs.push(["t", type]);
             return { attrs, node };
@@ -41873,10 +41877,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             // nothing* ,we don't export it.
             // * non-falsy value are relevant and so are 0 and FALSE, which only leaves
             // the empty string.
-            if (cell.value === "")
+            if (exportedValue === "")
                 return undefined;
             attrs.push(["t", type]);
-            node = escapeXml /*xml*/ `<v>${cell.value}</v>`;
+            node = escapeXml /*xml*/ `<v>${exportedValue}</v>`;
             return { attrs, node };
         }
     }
@@ -41911,7 +41915,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             ast = addMissingRequiredArgs(ast);
             return ast;
         });
+        ast = convertAstNodes(ast, "REFERENCE", (ast) => {
+            return ast.value === CellErrorType.InvalidReference ? { ...ast, value: "#REF!" } : ast;
+        });
         return ast ? astToFormula(ast) : formulaText;
+    }
+    function adaptFormulaValueToExcel(formulaValue) {
+        return formulaValue === CellErrorType.InvalidReference ? "#REF!" : formulaValue;
     }
     /**
      * Some Excel function need required args that might not be mandatory in o-spreadsheet.
@@ -43448,9 +43458,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.53';
-    __info__.date = '2024-10-14T07:57:53.922Z';
-    __info__.hash = 'a9ad6d8';
+    __info__.version = '16.0.54';
+    __info__.date = '2024-11-08T12:23:04.819Z';
+    __info__.hash = 'fdfa7dc';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
