@@ -284,6 +284,9 @@ export class PosStore extends WithLazyGetterTrap {
         );
         this.models["product.pricelist.item"].addEventListener("create", () => {
             const order = this.getOrder();
+            if (!order) {
+                return;
+            }
             const currentPricelistId = order.pricelist_id?.id;
             order.setPricelist(this.models["product.pricelist"].get(currentPricelistId));
         });
@@ -593,7 +596,7 @@ export class PosStore extends WithLazyGetterTrap {
             price_extra: 0,
             price_unit: 0,
             order_id: this.getOrder(),
-            qty: 1,
+            qty: this.getOrder().preset_id?.is_return ? -1 : 1,
             tax_ids: productTemplate.taxes_id.map((tax) => ["link", tax]),
             product_id: productTemplate.product_variant_ids[0],
             ...vals,
@@ -870,9 +873,7 @@ export class PosStore extends WithLazyGetterTrap {
         }, 3000);
 
         this.addPendingOrder([order.id]);
-
-        // FIXME: If merged with another line, this returned object is useless.
-        return line;
+        return order.getSelectedOrderline();
     }
 
     createPrinter(config) {
@@ -970,12 +971,13 @@ export class PosStore extends WithLazyGetterTrap {
             ...data,
         });
 
+        this.getNextOrderRefs(order);
+        order.setPricelist(this.config.pricelist_id);
+
         if (this.config.use_presets) {
             this.selectPreset(this.config.default_preset_id, order);
         }
 
-        this.getNextOrderRefs(order);
-        order.setPricelist(this.config.pricelist_id);
         order.recomputeOrderData();
 
         return order;
@@ -1230,6 +1232,7 @@ export class PosStore extends WithLazyGetterTrap {
         }
     }
     async getServerOrders() {
+        await this.syncAllOrders();
         return await this.loadServerOrders([
             ["config_id", "in", [...this.config.raw.trusted_config_ids, this.config.id]],
             ["state", "=", "draft"],
@@ -1645,7 +1648,7 @@ export class PosStore extends WithLazyGetterTrap {
     async selectPricelist(pricelist) {
         await this.getOrder().setPricelist(pricelist);
     }
-    async selectPreset(preset = false, order = this.get_order()) {
+    async selectPreset(preset = false, order = this.getOrder()) {
         if (!preset) {
             const selectionList = this.models["pos.preset"].map((preset) => ({
                 id: preset.id,
@@ -1661,11 +1664,9 @@ export class PosStore extends WithLazyGetterTrap {
         }
 
         if (preset) {
-            if (preset.address_on_ticket && !order.partner_id) {
+            if (preset.identification === "address" && !order.partner_id) {
                 const partner = await this.selectPartner();
-
                 if (!partner) {
-                    this.notification.add("Please select a customer first", { type: "warning" });
                     return;
                 }
             }
@@ -1674,7 +1675,7 @@ export class PosStore extends WithLazyGetterTrap {
 
             if (preset.use_timing && !order.preset_time) {
                 await this.syncPresetSlotAvaibility(preset);
-                order.preset_time = preset.nextSlot.sql_datetime;
+                order.preset_time = preset.nextSlot?.sql_datetime || false;
             } else if (!preset.use_timing) {
                 order.preset_time = false;
             }
@@ -1686,29 +1687,10 @@ export class PosStore extends WithLazyGetterTrap {
                 preset.id,
             ]);
 
-            preset.generateSlots();
-            const slotByDateTime = presetAvailabilities.reduce((acc, slot) => {
-                slot.order_ids = new Set(slot.order_ids || []);
-                acc[slot.sql_datetime] = slot;
-                return acc;
-            }, {});
-
-            for (const slot of Object.values(preset.uiState.availabilities)) {
-                const serverSlot = slotByDateTime[slot.sql_datetime];
-
-                slot.order_ids.forEach((orderId) => {
-                    if (
-                        !serverSlot.order_ids.has(orderId) &&
-                        !this.models["pos.order"].get(orderId)
-                    ) {
-                        slot.order_ids.delete(orderId);
-                    }
-                });
-
-                slot.order_ids.add(...(serverSlot.order_ids || []));
-            }
+            preset.computeAvailabilities(presetAvailabilities);
         } catch {
-            console.info("Offline mode, cannot update the slot avaibility");
+            // Compute locally if the server is not reachable
+            preset.computeAvailabilities();
         }
     }
     async selectPartner() {
@@ -1880,12 +1862,16 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     getReceiptHeaderData(order) {
+        const pName = this.config.use_presets && order.preset_id?.identification === "name";
+        const pAddrs = this.config.use_presets && order.preset_id?.identification === "address";
         return {
             company: this.company,
             cashier: _t("Served by %s", order?.getCashierName() || this.getCashier()?.name),
             header: this.config.receipt_header,
-            addressOnTicket:
-                this.config.use_presets && order.preset_id?.address_on_ticket && order.partner_id,
+            orderNameOnTicket: pName,
+            orderName: order.floatingOrderName,
+            addressOnTicket: pAddrs,
+            partnerAddress: pAddrs && order.partner_id.contact_address.split("\n"),
         };
     }
 

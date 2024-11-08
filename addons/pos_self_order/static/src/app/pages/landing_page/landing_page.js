@@ -104,8 +104,9 @@ export class LandingPage extends Component {
             return;
         }
         if (
-            this.selfOrder.config.self_ordering_takeaway &&
-            !this.selfOrder.orderTakeAwayState[this.selfOrder.currentOrder.uuid] &&
+            this.selfOrder.config.use_presets &&
+            this.selfOrder.models["pos.preset"].length > 1 &&
+            !this.selfOrder.currentOrder.preset_id &&
             this.selfOrder.ordering
         ) {
             this.router.navigate("location");

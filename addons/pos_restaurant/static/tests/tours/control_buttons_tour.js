@@ -40,7 +40,7 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             ProductScreen.clickControlButton("Split"),
             SplitBillScreen.clickBack(),
             ProductScreen.clickLine("Water", "5.0"),
-            ProductScreen.addInternalNote("test note", "Kitchen Note"),
+            ProductScreen.addInternalNote("test note", "Note"),
             Order.hasLine({
                 productName: "Water",
                 quantity: "5",

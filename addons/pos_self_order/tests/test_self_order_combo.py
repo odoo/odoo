@@ -18,10 +18,10 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
         )
         self.pos_config.write({
             'self_ordering_default_user_id': self.pos_admin.id,
-            'self_ordering_takeaway': False,
             'self_ordering_mode': 'mobile',
             'self_ordering_pay_after': 'each',
             'self_ordering_service_mode': 'counter',
+            'available_preset_ids': [(5, 0)],
         })
         self.pos_admin.groups_id += self.env.ref('account.group_account_invoice')
         self.pos_config.with_user(self.pos_user).open_ui()

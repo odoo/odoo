@@ -7,7 +7,7 @@
                 <OrderTabs orders="getOrderTabs()"/>
                 <button class="btn btn-light d-flex align-items-center gap-2 h-100 fs-3" t-on-click="openPresetTiming" t-if="shouldDisplayPresetTime">
                     <i class="fa fa-clock-o" aria-hidden="true"></i>
-                    <div class="lh-1" t-esc="this.pos.get_order()?.presetTime || '--:--'" />
+                    <div class="lh-1" t-esc="this.pos.getOrder()?.presetTime || '--:--'" />
                 </button>
             </div>
             <div t-if="!ui.isSmall"  class="pos-centerheader d-flex justify-content-center overflow-hidden">

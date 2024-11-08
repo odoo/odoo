@@ -6,6 +6,23 @@
         <field name="arch" type="xml">
             <form string="Preset">
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_linked_orders"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-shopping-cart"
+                            invisible="count_linked_orders == 0">
+                            <field string="Order(s)" name="count_linked_orders" widget="statinfo"/>
+                        </button>
+                        <button name="action_open_linked_config"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-share-alt"
+                            invisible="count_linked_config == 0">
+                            <field string="PoS Config" name="count_linked_config" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <field name="image_128" widget="image" class="oe_avatar"/>
                     <div class="oe_title mb-2">
                         <label for="name"/>
                         <h1><field name="name" placeholder="e.g. Cash" class="oe_inline"/></h1>
@@ -14,26 +31,26 @@
                         <group>
                             <field name="pricelist_id"/>
                             <field name="fiscal_position_id"/>
+                            <field name="use_timing" />
+                            <field name="resource_calendar_id" invisible="not use_timing" />
+                            <label for="slot_params" string="Capacity" invisible="not use_timing" />
+                            <div invisible="not use_timing">
+                                <field id="slot_params" name="slots_per_interval" class="oe_inline border-bottom text-center" />
+                                <label for="interval_time" string="orders per" style="font-weight:bold;" />
+                                <field name="interval_time" class="oe_inline border-bottom text-center" />
+                            </div>
                         </group>
                         <group>
-                            <field name="address_on_ticket"/>
+                            <field name="identification"/>
+                            <field name="is_return" />
                             <field name="color" widget="color_picker"/>
                         </group>
                     </group>
-                    <group name="Timing">
-                        <field name="use_timing" />
-                        <div class="row col-lg-12" invisible="not use_timing">
-                            <span class="text-900 fw-bold">From
-                                <field name="hour_opening" class="oe_inline text-center" widget="float_time" /> to <field name="hour_closing" class="oe_inline text-center" widget="float_time" />
-                            </span>
-                            <span class="text-900 fw-bold">Capacity
-                                <field name="capacity_per_x_minutes" class="oe_inline text-center" /> orders per <field name="x_minutes" class="oe_inline text-center" /> minutes
-                            </span>
-                            <span class="text-900 fw-bold">Preparation Time
-                                <field name="preparation_time_minute" class="oe_inline text-center" /> minutes
-                            </span>
-                        </div>
-                    </group>
+                    <notebook>
+                        <page string="Resource" name="resource" invisible="not use_timing or not resource_calendar_id">
+                            <field name="attendance_ids" widget="section_one2many" />
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
@@ -46,7 +63,7 @@
             <list string="Presets">
                 <field name="name"/>
                 <field name="use_timing"/>
-                <field name="address_on_ticket"/>
+                <field name="identification"/>
                 <field name="color" widget="color_picker"/>
             </list>
         </field>

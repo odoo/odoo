@@ -141,6 +141,13 @@ export class SelfOrder extends Reactive {
         });
     }
 
+    get selfService() {
+        const presets = this.models["pos.preset"].getAll();
+        return this.config.use_presets && presets.length > 0
+            ? this.currentOrder?.preset_id?.service_at
+            : this.config.self_ordering_service_mode;
+    }
+
     subscribeToOrderChannel(order) {
         if (!order.access_token || this.orderSubscribtion.has(order.access_token)) {
             return;
@@ -202,6 +209,19 @@ export class SelfOrder extends Reactive {
         this.currentOrder.removeOrderline(line);
     }
 
+    async syncPresetSlotAvaibility(preset) {
+        try {
+            const presetAvailabilities = await rpc(`/pos-self-order/get-slots`, {
+                access_token: this.access_token,
+                preset_id: this.currentOrder?.preset_id?.id,
+            });
+
+            preset.computeAvailabilities(presetAvailabilities);
+        } catch {
+            console.info("Offline mode, cannot update the slot avaibility");
+        }
+    }
+
     async addToCart(
         productTemplate,
         qty,
@@ -211,13 +231,14 @@ export class SelfOrder extends Reactive {
         comboValues = {}
     ) {
         const product = productTemplate.product_variant_ids[0];
+        const productPrice = this.getProductPriceInfo(productTemplate, product);
         const values = {
             order_id: this.currentOrder,
             product_id: product,
             tax_ids: productTemplate.taxes_id.map((tax) => ["link", tax]),
             qty: qty,
             note: customer_note || "",
-            price_unit: product.lst_price,
+            price_unit: productPrice.total_excluded,
             price_extra: 0,
         };
 
@@ -347,7 +368,7 @@ export class SelfOrder extends Reactive {
     async confirmOrder() {
         const payAfter = this.config.self_ordering_pay_after; // each, meal
         const device = this.config.self_ordering_mode; // kiosk, mobile
-        const service = this.config.self_ordering_service_mode; // table, counter
+        const service = this.selfService; // table, counter, delivery
         const paymentMethods = this.filterPaymentMethods(
             this.models["pos.payment.method"].getAll()
         ); // Stripe, Adyen, Online
@@ -360,7 +381,7 @@ export class SelfOrder extends Reactive {
         // Stand number page will recall this function after the stand number is set
         if (
             service === "table" &&
-            !order.takeaway &&
+            !order.isTakeaway &&
             device === "kiosk" &&
             !order.table_stand_number
         ) {
@@ -413,15 +434,24 @@ export class SelfOrder extends Reactive {
             return existingOrder;
         }
 
-        const fiscalPosition = this.models["account.fiscal.position"].find(
-            (fp) => fp.id === this.config.default_fiscal_position_id?.id
-        );
+        const autoSelectedPresets =
+            this.models["pos.preset"].length === 1 && this.config.use_presets;
+
+        const fiscalPosition = autoSelectedPresets
+            ? this.config.default_preset_id?.fiscal_position_id
+            : this.config.default_fiscal_position_id;
+
+        const pricelist = autoSelectedPresets
+            ? this.config.default_preset_id?.pricelist_id
+            : this.config.default_pricelist_id;
 
         const newOrder = this.models["pos.order"].create({
             company_id: this.company,
             session_id: this.session,
             config_id: this.config,
             fiscal_position_id: fiscalPosition,
+            pricelist_id: pricelist,
+            preset_id: autoSelectedPresets ? this.config.default_preset_id : false,
         });
         this.selectedOrderUuid = newOrder.uuid;
 
@@ -819,8 +849,10 @@ export class SelfOrder extends Reactive {
         return result;
     }
 
-    getProductDisplayPrice(productTemplate, product) {
-        const pricelist = this.config.pricelist_id;
+    getProductPriceInfo(productTemplate, product) {
+        const pricelist = this.config.use_presets
+            ? this.currentOrder.preset_id?.pricelist_id
+            : this.config.default_pricelist_id;
         const price = productTemplate.getPrice(pricelist, 1, 0, false, product);
 
         let taxes = productTemplate.taxes_id;
@@ -846,6 +878,10 @@ export class SelfOrder extends Reactive {
             this.currency
         );
 
+        return taxesData;
+    }
+    getProductDisplayPrice(productTemplate, product) {
+        const taxesData = this.getProductPriceInfo(productTemplate, product);
         if (this.config.iface_tax_included === "total") {
             return taxesData.total_included;
         } else {
