@@ -90,7 +90,7 @@ export class SnippetsMenu extends Component {
         //     // actionService.setActionMode("fullscreen");
         // });
         onIframeLoaded(this.props.iframe, () => {
-            this.editor.attachTo(this.props.iframe.contentDocument.body);
+            this.editor.attachTo(this.props.iframe.contentDocument.body.querySelector("#wrapwrap"));
         });
         onWillDestroy(() => {
             this.editor.destroy();
