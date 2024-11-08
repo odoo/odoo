@@ -549,7 +549,8 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
             let changed = false;
             for (const {coupon_id, reward} of claimableRewards) {
                 if (reward.program_id.rewards.length === 1 && !reward.program_id.is_nominative &&
-                    (reward.reward_type !== 'product' || (reward.reward_type == 'product' && !reward.multi_product))) {
+                    (reward.reward_type !== 'product' || (reward.reward_type == 'product' && !reward.multi_product)) &&
+                    !(reward.program_id.program_type === 'coupons' && this.orderlines.find(((rewardline) => rewardline.reward_id === reward.id)))) {
                     this._applyReward(reward, coupon_id);
                     changed = true;
                 }
