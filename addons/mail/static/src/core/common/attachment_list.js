@@ -102,6 +102,10 @@ export class AttachmentList extends Component {
         });
     }
 
+    onClickAttachment(attachment) {
+        this.fileViewer.open(attachment, this.props.attachments);
+    }
+
     /**
      * @param {import("models").Attachment} attachment
      */
