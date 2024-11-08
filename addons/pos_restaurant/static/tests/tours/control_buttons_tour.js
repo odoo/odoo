@@ -1,4 +1,3 @@
-import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_input_popup_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as NumberPopup from "@point_of_sale/../tests/generic_helpers/number_popup_util";
 import * as FloorScreen from "@pos_restaurant/../tests/tours/utils/floor_screen_util";
@@ -41,9 +40,7 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             ProductScreen.clickControlButton("Split"),
             SplitBillScreen.clickBack(),
             ProductScreen.clickLine("Water", "5.0"),
-            ProductScreen.clickInternalNoteButton(),
-            TextInputPopup.inputText("test note"),
-            Dialog.confirm(),
+            ProductScreen.addInternalNote("test note", "Kitchen Note"),
             Order.hasLine({
                 productName: "Water",
                 quantity: "5",
