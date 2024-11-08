@@ -11,7 +11,7 @@ import {
 
 import { useService } from "@web/core/utils/hooks";
 import { deepEqual } from "@web/core/utils/objects";
-import { hidePDFJSButtons } from "@web/libs/pdfjs";
+import { hidePDFJSButtons } from "@web/core/utils/pdfjs";
 
 class AbstractAttachmentView extends Component {
     static template = "mail.AttachmentView";

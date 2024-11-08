@@ -160,7 +160,6 @@
             'web/static/lib/bootstrap/js/dist/toast.js',
             'web/static/lib/dompurify/DOMpurify.js',
             'web/static/src/libs/bootstrap.js',
-            'web/static/src/libs/pdfjs.js',
             'web/static/src/legacy/js/libs/jquery.js',
 
             'base/static/src/css/modules.css',
