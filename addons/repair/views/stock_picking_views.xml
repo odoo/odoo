@@ -5,18 +5,19 @@
         <field name="model">stock.picking.type</field>
         <field name="inherit_id" ref="stock.view_picking_type_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='default_location_src_id']" position="attributes">
-                <attribute name="invisible">code=='repair_operation'</attribute>
-            </xpath>
-            <xpath expr="//field[@name='default_location_dest_id']" position="attributes">
-                <attribute name="string">Default Component Destination Location</attribute>
-            </xpath>
-            <xpath expr="//field[@name='default_location_dest_id']" position="before">
+            <xpath expr="//label[@name='default_location_src_id_label']" position="before">
                 <field name="default_product_location_src_id" options="{'no_create': True}" invisible="code != 'repair_operation'" required="code == 'repair_operation'"/>
-                <field name="default_location_src_id" string="Default Component Source Location" invisible="code != 'repair_operation'" options="{'no_create': True}" required="code in ('internal', 'outgoing')"/>
-            </xpath>
-            <xpath expr="//field[@name='default_location_dest_id']" position="after">
                 <field name="default_product_location_dest_id" options="{'no_create': True}" invisible="code != 'repair_operation'" required="code == 'repair_operation'"/>
+            </xpath>
+            <xpath expr="//label[@name='default_location_src_id_label']" position="replace">
+                <label for="default_location_src_id" name="default_location_src_id_label" invisible="code == 'repair_operation'"/>
+                <label for="default_location_src_id" string="Component Source Location" invisible="code != 'repair_operation'"/>
+            </xpath>
+            <xpath expr="//label[@name='default_location_dest_id_label']" position="replace">
+                <label for="default_location_dest_id" name="default_location_dest_id_label" invisible="code == 'repair_operation'"/>
+                <label for="default_location_dest_id" string="Component Destination Location" invisible="code != 'repair_operation'"/>
+            </xpath>
+            <xpath expr="//div[@name='default_location_dest_id_div']" position="after">
                 <field name="default_remove_location_dest_id" options="{'no_create': True}" invisible="code != 'repair_operation'" required="code == 'repair_operation'"/>
                 <field name="default_recycle_location_dest_id" options="{'no_create': True}" invisible="code != 'repair_operation'" required="code == 'repair_operation'"/>
             </xpath>
