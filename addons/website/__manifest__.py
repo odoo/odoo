@@ -11,6 +11,7 @@
         'digest',
         'web',
         'web_editor',
+        'html_editor',
         'http_routing',
         'portal',
         'social_media',
@@ -281,6 +282,9 @@
         ],
         'web.qunit_suite_tests': [
             'website/static/tests/redirect_field_tests.js',
+        ],
+        'web.assets_unit_tests': [
+            'website/static/tests/website_html_editor.test.js',
         ],
         'web.tests_assets': [
             'website/static/tests/website_service_mock.js',
