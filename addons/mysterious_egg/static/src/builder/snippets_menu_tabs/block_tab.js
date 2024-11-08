@@ -89,6 +89,7 @@ export class BlockTab extends Component {
                 selectSnippet: (snippet) => {
                     this.props.editor.shared.addElementToCenter(snippet.content.cloneNode(true));
                 },
+                installModule: this.onClickInstall.bind(this),
             },
             {
                 onClose: () => this.props.editor.shared.clearDropZone(),

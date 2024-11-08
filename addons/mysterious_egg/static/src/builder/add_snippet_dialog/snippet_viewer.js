@@ -43,11 +43,19 @@ export class SnippetViewer extends Component {
     }
 
     onClick(snippet) {
-        this.props.selectSnippet(snippet);
+        if (snippet.moduleId) {
+            this.props.installModule(snippet);
+        } else {
+            this.props.selectSnippet(snippet);
+        }
     }
 
     getContent(elem) {
         return markup(elem.outerHTML);
+    }
+
+    getButtonInstallName(snippet) {
+        return _t("Install %s", snippet.title);
     }
 
     getSelectedSnippets() {

@@ -24,6 +24,7 @@ export class AddSnippetDialog extends Component {
                 this.props.close();
             },
             snippetModel: this.props.snippetModel,
+            installModule: this.props.installModule,
         };
 
         let root;
