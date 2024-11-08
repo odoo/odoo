@@ -1,4 +1,10 @@
-import { mountWithCleanup, defineModels, models, patchWithCleanup, getService } from "@web/../tests/web_test_helpers";
+import {
+    mountWithCleanup,
+    defineModels,
+    models,
+    patchWithCleanup,
+    getService,
+} from "@web/../tests/web_test_helpers";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { advanceTime, animationFrame, click, queryOne } from "@odoo/hoot-dom";
 import { getWebsiteSnippets } from "./snippets_getter.hoot";
@@ -42,7 +48,7 @@ export async function setupWebsiteBuilder(websiteContent) {
     });
 
     const iframe = queryOne("iframe[data-src='/website/force/1']");
-    iframe.contentDocument.body.innerHTML = websiteContent;
+    iframe.contentDocument.body.innerHTML = `<div id="wrapwrap">${websiteContent}</div>`;
     return { getEditor: () => editor };
 }
 

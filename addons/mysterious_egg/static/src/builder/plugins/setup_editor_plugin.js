@@ -5,8 +5,7 @@ export class SetupEditorPlugin extends Plugin {
 
     setup() {
         // Add the `o_editable` class on the editable elements
-        const wrapwrapEl = this.editable.querySelector("#wrapwrap");
-        const editableEls = Array.from(wrapwrapEl.querySelectorAll("[data-oe-model]"))
+        const editableEls = Array.from(this.editable.querySelectorAll("[data-oe-model]"))
             .filter((el) => !el.classList.contains("o_not_editable"))
             .filter((el) => {
                 const parent = el.closest(".o_editable, .o_not_editable");
@@ -23,7 +22,7 @@ export class SetupEditorPlugin extends Plugin {
             .filter((el) => !el.classList.contains("oe_snippet_editor"))
             .filter((el) => !el.matches("hr, br, input, textarea"))
             .filter((el) => !el.hasAttribute("data-oe-sanitize-prevent-edition"));
-        editableEls.concat(Array.from(wrapwrapEl.querySelectorAll(".o_editable")));
+        editableEls.concat(Array.from(this.editable.querySelectorAll(".o_editable")));
         editableEls.forEach((el) => el.classList.add("o_editable"));
     }
     handleCommand(command, payload) {
