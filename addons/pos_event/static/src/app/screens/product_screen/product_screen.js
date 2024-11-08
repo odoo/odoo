@@ -1,9 +1,9 @@
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { patch } from "@web/core/utils/patch";
-import { EventConfiguratorPopup } from "@pos_event/app/popup/event_configurator_popup/event_configurator_popup";
+import { EventConfiguratorPopup } from "@pos_event/app/components/popup/event_configurator_popup/event_configurator_popup";
 import { _t } from "@web/core/l10n/translation";
-import { EventRegistrationPopup } from "../../popup/event_registration_popup/event_registration_popup";
+import { EventRegistrationPopup } from "../../components/popup/event_registration_popup/event_registration_popup";
 
 patch(ProductScreen.prototype, {
     get products() {

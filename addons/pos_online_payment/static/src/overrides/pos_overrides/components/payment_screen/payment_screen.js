@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 import { patch } from "@web/core/utils/patch";
-import { OnlinePaymentPopup } from "@pos_online_payment/app/online_payment_popup/online_payment_popup";
+import { OnlinePaymentPopup } from "@pos_online_payment/app/components/popups/online_payment_popup/online_payment_popup";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { qrCodeSrc } from "@point_of_sale/utils";
 import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
