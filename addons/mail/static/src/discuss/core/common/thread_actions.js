@@ -33,6 +33,7 @@ threadActionsRegistry
             action.popover?.open(component.root.el.querySelector(`[name="${action.id}"]`), {
                 hasSizeConstraints: true,
                 thread: component.thread,
+                showMuteOptions: true,
             });
         },
         close(component, action) {
