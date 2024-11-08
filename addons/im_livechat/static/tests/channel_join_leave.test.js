@@ -46,10 +46,11 @@ test("from the discuss app", async () => {
     await click("[title='Join HR']", {
         parent: [".o-mail-DiscussSidebarCategory-livechat", { text: "HR" }],
     });
-    await click("[title='Leave Channel']", {
+    await click("[title='Chat Settings']", {
         parent: [".o-mail-DiscussSidebarChannel", { text: "Visitor" }],
     });
-    await click("button:contains(Leave Conversation)");
+    await contains(".o-mail-DiscussSidebarChannelCommands");
+    await click("[title='Unpin Conversation']");
     await click("[title='Leave HR']", {
         parent: [".o-mail-DiscussSidebarCategory-livechat", { text: "HR" }],
     });
