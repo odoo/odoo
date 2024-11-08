@@ -3813,7 +3813,7 @@ class MailThread(models.AbstractModel):
                 }
             }
         }
-        payload['options']['body'] = html2plaintext(body)
+        payload['options']['body'] = html2plaintext(body, include_references=False)
         payload['options']['body'] += self._generate_tracking_message(message)
 
         return payload
