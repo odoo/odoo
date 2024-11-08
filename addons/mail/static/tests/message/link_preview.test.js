@@ -1,5 +1,4 @@
 import {
-    assertSteps,
     click,
     contains,
     defineMailModels,
@@ -8,9 +7,9 @@ import {
     openDiscuss,
     start,
     startServer,
-    step,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
+import { asyncStep, waitForSteps } from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
 
@@ -382,7 +381,7 @@ test("Delete all link previews at once", async () => {
 test("link preview request is only made when message contains URL", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "Sales" });
-    onRpcBefore("/mail/link_preview", () => step("/mail/link_preview"));
+    onRpcBefore("/mail/link_preview", () => asyncStep("/mail/link_preview"));
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Hello, this message does not contain any link");
@@ -390,15 +389,15 @@ test("link preview request is only made when message contains URL", async () => 
     await contains(".o-mail-Message", {
         text: "Hello, this message does not contain any link",
     });
-    await assertSteps([]);
+    await waitForSteps([]);
     await insertText(".o-mail-Composer-input", "#");
     await click(".o-mail-NavigableList-item", { text: "Sales" });
     await click("button[aria-label='Send']:enabled");
     await contains(".o-mail-Message", { text: "Sales" });
-    await assertSteps([]);
+    await waitForSteps([]);
     await insertText(".o-mail-Composer-input", "https://www.odoo.com");
     await click("button[aria-label='Send']:enabled");
-    await assertSteps(["/mail/link_preview"]);
+    await waitForSteps(["/mail/link_preview"]);
 });
 
 test("youtube and gdrive videos URL are embed", async () => {

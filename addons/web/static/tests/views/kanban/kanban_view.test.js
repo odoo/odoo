@@ -4621,14 +4621,12 @@ test("drag and drop outside of a column", async () => {
 });
 
 test.tags("desktop")("drag and drop a record, grouped by selection", async () => {
-    expect.assertions(6);
-
     onRpc("/web/dataset/resequence", () => {
         expect.step("resequence");
         return true;
     });
     onRpc("partner", "web_save", ({ args }) => {
-        expect(args[1]).toEqual({ state: "abc" });
+        expect.step(args[1]);
     });
 
     await mountView({
@@ -4646,6 +4644,7 @@ test.tags("desktop")("drag and drop a record, grouped by selection", async () =>
     });
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(1);
     expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(1);
+    expect.verifySteps([]);
 
     // first record of second column moved to the bottom of first column
     await contains(".o_kanban_group:nth-child(2) .o_kanban_record").dragAndDrop(
@@ -4654,7 +4653,7 @@ test.tags("desktop")("drag and drop a record, grouped by selection", async () =>
 
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(2);
     expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(0);
-    expect.verifySteps(["resequence"]);
+    expect.verifySteps([{ state: "abc" }, "resequence"]);
 });
 
 test.tags("desktop")("prevent drag and drop of record if grouped by readonly", async () => {
@@ -7832,8 +7831,9 @@ test.tags("desktop")("resequence all when creating new record + partial resequen
     let resequenceOffset;
     onRpc("/web/dataset/resequence", async (request) => {
         const { params } = await request.json();
-        expect.step(JSON.stringify({ ids: params.ids, offset: params.offset }));
-        resequenceOffset = params.offset || 0;
+        const { ids, offset } = params;
+        expect.step({ ids, ...(offset ? { offset } : {}) });
+        resequenceOffset = offset || 0;
         return true;
     });
     onRpc("read", ({ args }) => {
@@ -7862,19 +7862,19 @@ test.tags("desktop")("resequence all when creating new record + partial resequen
     await quickCreateKanbanColumn();
     await editKanbanColumnName("foo");
     await validateKanbanColumn();
-    expect.verifySteps([JSON.stringify({ ids: [3, 5, 6] })]);
+    expect.verifySteps([{ ids: [3, 5, 6] }]);
 
     await editKanbanColumnName("bar");
     await validateKanbanColumn();
-    expect.verifySteps([JSON.stringify({ ids: [3, 5, 6, 7] })]);
+    expect.verifySteps([{ ids: [3, 5, 6, 7] }]);
 
     await editKanbanColumnName("baz");
     await validateKanbanColumn();
-    expect.verifySteps([JSON.stringify({ ids: [3, 5, 6, 7, 8] })]);
+    expect.verifySteps([{ ids: [3, 5, 6, 7, 8] }]);
 
     await editKanbanColumnName("boo");
     await validateKanbanColumn();
-    expect.verifySteps([JSON.stringify({ ids: [3, 5, 6, 7, 8, 9] })]);
+    expect.verifySteps([{ ids: [3, 5, 6, 7, 8, 9] }]);
 
     // When rearranging, only resequence the affected records. In this example,
     // dragging column 2 to column 4 should only resequence [5, 6, 7] to [6, 7, 5]
@@ -7882,7 +7882,7 @@ test.tags("desktop")("resequence all when creating new record + partial resequen
     await contains(".o_kanban_group:nth-child(2) .o_column_title").dragAndDrop(
         ".o_kanban_group:nth-child(4)"
     );
-    expect.verifySteps([JSON.stringify({ ids: [6, 7, 5], offset: 1 })]);
+    expect.verifySteps([{ ids: [6, 7, 5], offset: 1 }]);
 });
 
 test("prevent resequence columns if groups_draggable=false", async () => {

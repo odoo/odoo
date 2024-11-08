@@ -1,14 +1,13 @@
-import {
-    assertSteps,
-    contains,
-    onRpcBefore,
-    start,
-    startServer,
-    step,
-} from "@mail/../tests/mail_test_helpers";
+import { contains, onRpcBefore, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
 import { describe, test } from "@odoo/hoot";
-import { Command, mockService, serverState } from "@web/../tests/web_test_helpers";
+import {
+    asyncStep,
+    Command,
+    mockService,
+    serverState,
+    waitForSteps,
+} from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
 import { defineLivechatModels } from "./livechat_test_helpers";
@@ -29,17 +28,22 @@ test("Notify message received out of focus", async () => {
     });
     onRpcBefore("/mail/data", async (args) => {
         if (args.init_messaging) {
-            step(`/mail/data - ${JSON.stringify(args)}`);
+            asyncStep(`/mail/data - ${JSON.stringify(args)}`);
         }
     });
     mockService("presence", { isOdooFocused: () => false });
     await start();
-    await assertSteps([
+    await waitForSteps([
         `/mail/data - ${JSON.stringify({
             init_messaging: {},
             failures: true,
             systray_get_activities: true,
-            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
+            context: {
+                lang: "en",
+                tz: "taht",
+                uid: serverState.userId,
+                allowed_company_ids: [1],
+            },
         })}`,
     ]);
     // send after init_messaging because bus subscription is done after init_messaging

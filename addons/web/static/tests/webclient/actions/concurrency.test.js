@@ -693,7 +693,7 @@ test.tags("desktop")("local state, global state, and race conditions", async () 
         static props = ["*"];
         setup() {
             this.id = id++;
-            expect.step(JSON.stringify(this.props.state || "no state"));
+            expect.step(this.props.state || "no state");
             useSetupAction({
                 getLocalState: () => {
                     return { fromId: this.id };
@@ -739,8 +739,8 @@ test.tags("desktop")("local state, global state, and race conditions", async () 
     // of the first instantiated toy view.
 
     expect.verifySteps([
-        `"no state"`, // setup first view instantiated
-        `{"fromId":1}`, // setup second view instantiated
-        `{"fromId":1}`, // setup third view instantiated
+        "no state", // setup first view instantiated
+        { fromId: 1 }, // setup second view instantiated
+        { fromId: 1 }, // setup third view instantiated
     ]);
 });

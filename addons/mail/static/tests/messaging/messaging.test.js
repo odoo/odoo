@@ -1,5 +1,4 @@
 import {
-    assertSteps,
     click,
     contains,
     defineMailModels,
@@ -9,10 +8,15 @@ import {
     openFormView,
     start,
     startServer,
-    step,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
-import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
+import {
+    asyncStep,
+    Command,
+    serverState,
+    waitForSteps,
+    withUser,
+} from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
 
@@ -32,11 +36,11 @@ test("Receiving a new message out of discuss app should open a chat bubble", asy
     });
     onRpcBefore("/mail/data", (args) => {
         if (args.init_messaging) {
-            step(`/mail/data - ${JSON.stringify(args)}`);
+            asyncStep(`/mail/data - ${JSON.stringify(args)}`);
         }
     });
     await start();
-    await assertSteps([
+    await waitForSteps([
         `/mail/data - ${JSON.stringify({
             init_messaging: {},
             failures: true,
@@ -69,11 +73,11 @@ test("Receiving a new message in discuss app should open a chat bubble after lea
     });
     onRpcBefore("/mail/data", (args) => {
         if (args.init_messaging) {
-            step(`/mail/data - ${JSON.stringify(args)}`);
+            asyncStep(`/mail/data - ${JSON.stringify(args)}`);
         }
     });
     await start();
-    await assertSteps([
+    await waitForSteps([
         `/mail/data - ${JSON.stringify({
             init_messaging: {},
             failures: true,

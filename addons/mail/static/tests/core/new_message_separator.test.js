@@ -1,6 +1,5 @@
 import { presenceService } from "@bus/services/presence_service";
 import {
-    assertSteps,
     click,
     contains,
     defineMailModels,
@@ -11,13 +10,19 @@ import {
     scroll,
     start,
     startServer,
-    step,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { queryFirst } from "@odoo/hoot-dom";
 import { mockDate, tick } from "@odoo/hoot-mock";
-import { Command, mockService, serverState, withUser } from "@web/../tests/web_test_helpers";
+import {
+    asyncStep,
+    Command,
+    mockService,
+    serverState,
+    waitForSteps,
+    withUser,
+} from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
 
@@ -243,11 +248,11 @@ test("show new message separator when message is received while chat window is c
     });
     onRpcBefore("/mail/data", (args) => {
         if (args.init_messaging) {
-            step(`/mail/data - ${JSON.stringify(args)}`);
+            asyncStep(`/mail/data - ${JSON.stringify(args)}`);
         }
     });
     await start();
-    await assertSteps([
+    await waitForSteps([
         `/mail/data - ${JSON.stringify({
             init_messaging: {},
             failures: true,

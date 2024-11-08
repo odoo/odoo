@@ -27,13 +27,13 @@ test("set user settings do not override old valid keys", async () => {
     await makeMockEnv();
     patchWithCleanup(user, _makeUser({ user_settings: { a: 1, b: 2 } }));
     onRpc("set_res_users_settings", (args) => {
-        expect.step(JSON.stringify(args.kwargs.new_settings));
+        expect.step(args.kwargs.new_settings);
         return { a: 3, c: 4 };
     });
 
     expect(user.settings).toEqual({ a: 1, b: 2 });
 
     await user.setUserSettings("a", 3);
-    expect.verifySteps(['{"a":3}']);
+    expect.verifySteps([{ a: 3 }]);
     expect(user.settings).toEqual({ a: 3, b: 2, c: 4 });
 });

@@ -1,5 +1,4 @@
 import {
-    assertSteps,
     click,
     contains,
     defineMailModels,
@@ -9,12 +8,17 @@ import {
     scroll,
     start,
     startServer,
-    step,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { Deferred } from "@odoo/hoot-mock";
-import { mockService, serverState, withUser } from "@web/../tests/web_test_helpers";
+import {
+    asyncStep,
+    mockService,
+    serverState,
+    waitForSteps,
+    withUser,
+} from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
 
@@ -102,7 +106,7 @@ test('"reply to" composer should log note if message replied to is a note', asyn
         res_partner_id: serverState.partnerId,
     });
     onRpcBefore("/mail/message/post", (args) => {
-        step("/mail/message/post");
+        asyncStep("/mail/message/post");
         expect(args.post_data.message_type).toBe("comment");
         expect(args.post_data.subtype_xmlid).toBe("mail.mt_note");
     });
@@ -114,7 +118,7 @@ test('"reply to" composer should log note if message replied to is a note', asyn
     await insertText(".o-mail-Composer-input", "Test");
     await click(".o-mail-Composer-send:enabled", { text: "Log" });
     await contains(".o-mail-Composer", { count: 0 });
-    await assertSteps(["/mail/message/post"]);
+    await waitForSteps(["/mail/message/post"]);
 });
 
 test('"reply to" composer should send message if message replied to is not a note', async () => {
@@ -134,7 +138,7 @@ test('"reply to" composer should send message if message replied to is not a not
         res_partner_id: serverState.partnerId,
     });
     onRpcBefore("/mail/message/post", (args) => {
-        step("/mail/message/post");
+        asyncStep("/mail/message/post");
         expect(args.post_data.message_type).toBe("comment");
         expect(args.post_data.subtype_xmlid).toBe("mail.mt_comment");
     });
@@ -146,7 +150,7 @@ test('"reply to" composer should send message if message replied to is not a not
     await insertText(".o-mail-Composer-input", "Test");
     await click(".o-mail-Composer-send[aria-label='Send']:enabled");
     await contains(".o-mail-Composer-send", { count: 0 });
-    await assertSteps(["/mail/message/post"]);
+    await waitForSteps(["/mail/message/post"]);
 });
 
 test("show subject of message in Inbox", async () => {
@@ -470,7 +474,7 @@ test("click on (non-channel/non-partner) origin thread link should redirect to f
             // Callback of doing an action (action manager).
             // Expected to be called on click on origin thread link,
             // which redirects to form view of record related to origin thread
-            step("do-action");
+            asyncStep("do-action");
             expect(action.type).toBe("ir.actions.act_window");
             expect(action.views).toEqual([[false, "form"]]);
             expect(action.res_model).toBe("res.fake");
@@ -483,7 +487,7 @@ test("click on (non-channel/non-partner) origin thread link should redirect to f
     await contains(".o-mail-Message");
     await click(".o-mail-Message-header a", { text: "Some record" });
     await def;
-    await assertSteps(["do-action"]);
+    await waitForSteps(["do-action"]);
 });
 
 test("inbox messages are never squashed", async () => {
