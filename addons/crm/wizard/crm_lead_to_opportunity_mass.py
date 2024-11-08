@@ -104,6 +104,6 @@ class CrmLead2opportunityPartnerMass(models.TransientModel):
 
     def _convert_handle_partner(self, lead, action, partner_id):
         if self.action == 'each_exist_or_create':
-            partner_id = lead._find_matching_partner(email_only=True).id
+            partner_id = lead._find_matching_partner().id
             action = 'create'
         return super()._convert_handle_partner(lead, action, partner_id)
