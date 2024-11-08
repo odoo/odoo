@@ -50,11 +50,7 @@ class TestWebsiteSaleStockConfigurators(HttpCase, WebsiteSaleStockCommon):
         self.start_tour('/', 'website_sale_stock_product_configurator')
 
     def test_website_sale_stock_combo_configurator(self):
-        product = self._create_product(
-            name="Test product",
-            is_storable=True,
-            allow_out_of_stock_order=False,
-        )
+        product = self._create_product(name="Test product")
         self.env['stock.quant'].create({
             'product_id': product.id,
             'location_id': self.warehouse.lot_stock_id.id,
@@ -64,7 +60,9 @@ class TestWebsiteSaleStockConfigurators(HttpCase, WebsiteSaleStockCommon):
             'name': "Test combo",
             'combo_item_ids': [
                 Command.create({'product_id': product.id}),
-                Command.create({'product_id': self._create_product().id}),
+                Command.create({'product_id': self._create_product(
+                    allow_out_of_stock_order=True, is_storable=False
+                ).id}),
             ],
         })
         self._create_product(
