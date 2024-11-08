@@ -51,6 +51,10 @@ class ProductTemplate(models.Model):
         url = f'https://ecommerce.gelatoapis.com/v1/templates/{self.gelato_template_ref}'
 
         response = make_gelato_request(self.env.company, url=url, method='GET')
+        if response.status_code in [401,403]:
+            raise ValidationError(_(
+                'You don\'t have access to this template. Please check your credentials.'
+            ))
         if response.status_code == 404:
             raise ValidationError("Gelato Template Reference is incorrect")
         data = json.loads(response.text)

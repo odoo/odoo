@@ -50,8 +50,12 @@ class SaleOrder(models.Model):
         else:
             error_message = response.json().get('message')
             self.message_post(
-                body=_("Order %(order_reference)s has not been passed to Gelato. Following information were given: "
-                       "%(error_message)s", order_reference=self.display_name, error_message=error_message),
+                body=_(
+                    "Order %(order_reference)s has not been passed to Gelato. Following information" 
+                    "were given: %(error_message)s",
+                    order_reference=self.display_name,
+                    error_message=error_message
+                ),
                 author_id=self.env.ref('base.partner_root').id,
             )
 
@@ -180,8 +184,10 @@ class SaleOrder(models.Model):
         """
         product = self.env['product.product'].search([('id', '=', product_id)])
         order_products = self.order_line.filtered(lambda line: line.product_id.gelato_product_ref)
-
         if self.order_line and not bool(order_products) == bool(product.gelato_product_ref):
-            raise UserError(_("Can't add %s to current cart.", product.name))
+            raise UserError(_(
+                "Can't add %s to current cart as it cannot be shipped with current products.",
+                product.name
+            ))
 
         return super()._check_product_compatibility(product_id)
