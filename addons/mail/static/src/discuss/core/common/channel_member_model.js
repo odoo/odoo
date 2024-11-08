@@ -34,7 +34,7 @@ export class ChannelMember extends Record {
     /** @type {luxon.DateTime} */
     last_seen_dt = Record.attr(undefined, { type: "datetime" });
     persona = Record.one("Persona", { inverse: "channelMembers" });
-    thread = Record.one("Thread", { inverse: "channelMembers" });
+    thread = Record.one("Thread", { inverse: "channel_member_ids" });
     threadAsSelf = Record.one("Thread", {
         compute() {
             if (this.store.self?.eq(this.persona)) {

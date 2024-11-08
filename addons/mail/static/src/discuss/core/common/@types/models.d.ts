@@ -14,14 +14,19 @@ declare module "models" {
     }
 
     export interface Thread {
-        channelMembers: ChannelMember[],
+        readonly areAllMembersLoaded: boolean,
+        channel_member_ids: ChannelMember[],
         channel_type: "chat" | "channel" | "group" | "livechat" | "whatsapp",
         computeCorrespondent(): ChannelMember | undefined,
         correspondent: ChannelMember,
+        readonly correspondents: ChannelMember[],
+        default_display_mode: "video_full_screen" | false | undefined,
+        fetchChannelMembers(): Promise<void>,
         hasOtherMembersTyping: boolean,
         readonly hasMemberList: boolean,
         readonly hasSelfAsMember: boolean,
         invitedMembers: ChannelMember[],
+        member_count: number | undefined,
         readonly membersThatCanSeen: ChannelMember[],
         onlineMembers: ChannelMember[],
         offlineMembers: ChannelMember[],
@@ -30,6 +35,7 @@ declare module "models" {
         typingMembers: ChannelMember[],
         readonly hasMemberList: boolean,
         readonly notifyOnleave: boolean,
+        readonly unknownMembersCount: number,
         private _computeOfflineMembers(): ChannelMember[],
     }
 

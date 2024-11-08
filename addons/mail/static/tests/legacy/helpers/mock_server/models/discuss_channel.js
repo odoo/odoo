@@ -266,8 +266,8 @@ patch(MockServer.prototype, {
             "discuss.channel": [
                 {
                     id: channel.id,
-                    channelMembers: [["DELETE", { id: channelMember.id }]],
-                    memberCount: this.pyEnv["discuss.channel.member"].searchCount([
+                    channel_member_ids: [["DELETE", { id: channelMember.id }]],
+                    member_count: this.pyEnv["discuss.channel.member"].searchCount([
                         ["channel_id", "=", channel.id],
                     ]),
                 },
@@ -330,7 +330,7 @@ patch(MockServer.prototype, {
                 "discuss.channel": [
                     {
                         id: channel.id,
-                        channelMembers: [
+                        channel_member_ids: [
                             [
                                 "ADD",
                                 this._mockDiscussChannelMember_DiscussChannelMemberFormat(
@@ -338,7 +338,7 @@ patch(MockServer.prototype, {
                                 ),
                             ],
                         ],
-                        memberCount: this.pyEnv["discuss.channel.member"].searchCount([
+                        member_count: this.pyEnv["discuss.channel.member"].searchCount([
                             ["channel_id", "=", channel.id],
                         ]),
                     },
@@ -549,7 +549,7 @@ patch(MockServer.prototype, {
         const [channel] = this.getRecords("discuss.channel", [["id", "in", ids]]);
         const res = assignDefined({}, channel, [
             "allow_public_upload",
-            "avatarCacheKey", // mock server simplification
+            "avatar_cache_key", // mock server simplification
             "channel_type",
             "create_uid",
             "description",
@@ -562,9 +562,9 @@ patch(MockServer.prototype, {
         ]);
         Object.assign(res, {
             authorizedGroupFullName: group_public_id ? group_public_id.name : false,
-            defaultDisplayMode: channel.default_display_mode,
+            default_display_mode: channel.default_display_mode,
             group_based_subscription: channel.group_ids.length > 0,
-            memberCount: this.pyEnv["discuss.channel.member"].searchCount([
+            member_count: this.pyEnv["discuss.channel.member"].searchCount([
                 ["channel_id", "=", channel.id],
             ]),
         });
@@ -617,7 +617,7 @@ patch(MockServer.prototype, {
                     message_unread_counter: memberOfCurrentUser.message_unread_counter,
                     message_unread_counter_bus_id: bus_last_id,
                 });
-                res["channelMembers"] = [
+                res["channel_member_ids"] = [
                     [
                         "ADD",
                         this._mockDiscussChannelMember_DiscussChannelMemberFormat([
@@ -627,7 +627,7 @@ patch(MockServer.prototype, {
                 ];
             }
             if (channel.channel_type !== "channel") {
-                res["channelMembers"] = [
+                res["channel_member_ids"] = [
                     [
                         "ADD",
                         this._mockDiscussChannelMember_DiscussChannelMemberFormat(
@@ -879,11 +879,11 @@ patch(MockServer.prototype, {
      */
     _mockDiscussChannelWriteImage128(id) {
         this.pyEnv["discuss.channel"].write([id], {
-            avatarCacheKey: DateTime.utc().toFormat("yyyyMMddHHmmss"),
+            avatar_cache_key: DateTime.utc().toFormat("yyyyMMddHHmmss"),
         });
         const channel = this.pyEnv["discuss.channel"].search_read([["id", "=", id]])[0];
         this.pyEnv["bus.bus"]._sendone(channel, "mail.record/insert", {
-            "discuss.channel": [{ avatarCacheKey: channel.avatarCacheKey, id }],
+            "discuss.channel": [{ avatar_cache_key: channel.avatar_cache_key, id }],
         });
     },
     /**
@@ -901,11 +901,11 @@ patch(MockServer.prototype, {
             ],
             { limit: 100 }
         );
-        const memberCount = this.pyEnv["discuss.channel.member"].searchCount([
+        const member_count = this.pyEnv["discuss.channel.member"].searchCount([
             ["channel_id", "in", channel_ids],
         ]);
         return {
-            channelMembers: [
+            channel_member_ids: [
                 [
                     "ADD",
                     this._mockDiscussChannelMember_DiscussChannelMemberFormat(
@@ -913,7 +913,7 @@ patch(MockServer.prototype, {
                     ),
                 ],
             ],
-            memberCount,
+            member_count,
         };
     },
     /**

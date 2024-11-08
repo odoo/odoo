@@ -100,7 +100,7 @@ export class Message extends Record {
             if (!this.thread) {
                 return false;
             }
-            const otherFetched = this.thread.channelMembers.filter(
+            const otherFetched = this.thread.channel_member_ids.filter(
                 (m) => m.persona.notEq(this.author) && m.fetched_message_id?.id >= this.id
             );
             return otherFetched.length > 0;

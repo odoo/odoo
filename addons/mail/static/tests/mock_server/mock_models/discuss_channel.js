@@ -31,7 +31,7 @@ export class DiscussChannel extends models.ServerModel {
         relation: "res.partner",
         default: () => serverState.partnerId,
     });
-    avatarCacheKey = fields.Char({ string: "Avatar Cache Key" });
+    avatar_cache_key = fields.Char({ string: "Avatar Cache Key" });
     channel_member_ids = fields.One2many({
         relation: "discuss.channel.member",
         relation_field: "channel_id",
@@ -88,12 +88,12 @@ export class DiscussChannel extends models.ServerModel {
         // send custom store after message_post to avoid is_pinned reset to True
         BusBus._sendone(partner, "discuss.channel/leave", custom_store.get_result());
         const store = new mailDataHelpers.Store(this.browse(channel.id), {
-            channelMembers: mailDataHelpers.Store.many(
+            channel_member_ids: mailDataHelpers.Store.many(
                 DiscussChannelMember.browse(channelMember.id),
                 "DELETE",
                 makeKwArgs({ only_id: true })
             ),
-            memberCount: DiscussChannelMember.search_count([["channel_id", "=", channel.id]]),
+            member_count: DiscussChannelMember.search_count([["channel_id", "=", channel.id]]),
         });
         BusBus._sendone(channel, "mail.record/insert", store.get_result());
         // limitation of mock server, partner already unsubscribed from channel
@@ -164,7 +164,7 @@ export class DiscussChannel extends models.ServerModel {
                 channel,
                 "mail.record/insert",
                 new mailDataHelpers.Store(this.browse(channel.id), {
-                    memberCount: DiscussChannelMember.search_count([
+                    member_count: DiscussChannelMember.search_count([
                         ["channel_id", "=", channel.id],
                     ]),
                 })
@@ -236,9 +236,10 @@ export class DiscussChannel extends models.ServerModel {
             ids,
             [
                 "allow_public_upload",
-                "avatarCacheKey", // mock server simplification
+                "avatar_cache_key", // mock server simplification
                 "channel_type",
                 "create_uid",
+                "default_display_mode",
                 "description",
                 "last_interest_dt",
                 "name",
@@ -251,7 +252,6 @@ export class DiscussChannel extends models.ServerModel {
         const memberOfCurrentUser = this._find_or_create_member_for_self(channel.id);
         Object.assign(data, {
             authorizedGroupFullName: group_public_id ? group_public_id.name : false,
-            defaultDisplayMode: channel.default_display_mode,
             group_based_subscription: channel.group_ids.length > 0,
             is_editable: (() => {
                 if (channel.channel_type === "channel") {
@@ -263,7 +263,7 @@ export class DiscussChannel extends models.ServerModel {
                 }
                 return Boolean(memberOfCurrentUser);
             })(),
-            memberCount: DiscussChannelMember.search_count([["channel_id", "=", channel.id]]),
+            member_count: DiscussChannelMember.search_count([["channel_id", "=", channel.id]]),
         });
         return data;
     }
@@ -799,8 +799,8 @@ export class DiscussChannel extends models.ServerModel {
             ],
             makeKwArgs({ limit: 100 })
         );
-        const memberCount = DiscussChannelMember.search_count([["channel_id", "in", ids]]);
-        return new mailDataHelpers.Store(this.browse(ids[0]), { memberCount })
+        const member_count = DiscussChannelMember.search_count([["channel_id", "in", ids]]);
+        return new mailDataHelpers.Store(this.browse(ids[0]), { member_count })
             .add(members)
             .get_result();
     }
@@ -893,36 +893,39 @@ export class DiscussChannel extends models.ServerModel {
         /** @type {import("mock_models").BusBus} */
         const BusBus = this.env["bus.bus"];
 
-        const [firstId] = ensureArray(idOrIds);
-        if ("image_128" in values) {
-            super.write(firstId, {
-                avatarCacheKey: DateTime.utc().toFormat("yyyyMMddHHmmss"),
-            });
-            const channel = this.search_read([["id", "=", firstId]])[0];
-            return BusBus._sendone(
-                channel,
-                "mail.record/insert",
-                new mailDataHelpers.Store(this.browse(firstId), {
-                    avatarCacheKey: channel.avatarCacheKey,
-                }).get_result()
-            );
-        }
-        const notifications = [];
-        const [channel] = this.browse(firstId);
-        if (channel) {
-            const diff = {};
-            for (const key in values) {
-                if (channel[key] !== values[key] && key !== "image_128") {
-                    diff[key] = values[key];
-                }
+        const channels = this.browse(ensureArray(idOrIds));
+        const basicInfoByChannelId = Object.fromEntries(
+            channels.map((channel) => [channel.id, this._channel_basic_info(channel.id)])
+        );
+        for (const channel of channels) {
+            if ("image_128" in values) {
+                super.write(channel.id, {
+                    avatar_cache_key: DateTime.utc().toFormat("yyyyMMddHHmmss"),
+                });
             }
-            notifications.push([
-                channel,
-                "mail.record/insert",
-                new mailDataHelpers.Store(this.browse(channel.id), diff).get_result(),
-            ]);
         }
         const result = super.write(...arguments);
+        const notifications = [];
+        for (const channel of channels) {
+            const basicInfo = this._channel_basic_info(channel.id);
+            const previousBasicInfo = basicInfoByChannelId[channel.id];
+            const changes = [];
+            for (const key of Object.keys(basicInfo)) {
+                if (basicInfo[key] !== previousBasicInfo[key]) {
+                    changes.push([key, basicInfo[key]]);
+                }
+            }
+            if (changes.length) {
+                notifications.push([
+                    channel,
+                    "mail.record/insert",
+                    new mailDataHelpers.Store(
+                        this.browse(channel.id),
+                        Object.fromEntries(changes)
+                    ).get_result(),
+                ]);
+            }
+        }
         if (notifications.length) {
             BusBus._sendmany(notifications);
         }

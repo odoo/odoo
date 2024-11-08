@@ -144,7 +144,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                     {
                         "type": "mail.record/insert",
                         "payload": {
-                            "discuss.channel": [{"id": channel.id, "memberCount": 2}],
+                            "discuss.channel": [{"id": channel.id, "member_count": 2}],
                             "discuss.channel.member": [
                                 {
                                     "create_date": fields.Datetime.to_string(member.create_date),
@@ -188,7 +188,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                     {
                         "type": "mail.record/insert",
                         "payload": {
-                            "discuss.channel": [{"id": channel.id, "memberCount": 2}],
+                            "discuss.channel": [{"id": channel.id, "member_count": 2}],
                             "discuss.channel.member": [
                                 {
                                     "create_date": fields.Datetime.to_string(member.create_date),
@@ -612,7 +612,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                 {
                     "type": "mail.record/insert",
                     "payload": {
-                        "discuss.channel": [{"avatarCacheKey": avatar_cache_key, "id": channel.id}],
+                        "discuss.channel": [{"avatar_cache_key": avatar_cache_key, "id": channel.id}],
                     },
                 }
             ],
