@@ -11,8 +11,8 @@ import {
 import { browser } from "@web/core/browser/browser";
 import { Deferred } from "@web/core/utils/concurrency";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
-import { useService } from "@web/core/utils/hooks";
-import { monitorAudio } from "@mail/utils/common/media_monitoring";
+import { onExternalClick, useService } from "@web/core/utils/hooks";
+import { monitorAudio } from "./media_monitoring";
 
 export function useLazyExternalListener(target, eventName, handler, eventParams) {
     const boundHandler = handler.bind(useComponent());
@@ -41,33 +41,6 @@ export function useLazyExternalListener(target, eventName, handler, eventParams)
             return;
         }
         t.removeEventListener(eventName, boundHandler, eventParams);
-    });
-}
-
-export function onExternalClick(refName, cb) {
-    let downTarget, upTarget;
-    const ref = useRef(refName);
-    function onClick(ev) {
-        if (ref.el && !ref.el.contains(ev.composedPath()[0])) {
-            cb(ev, { downTarget, upTarget });
-            upTarget = downTarget = null;
-        }
-    }
-    function onMousedown(ev) {
-        downTarget = ev.target;
-    }
-    function onMouseup(ev) {
-        upTarget = ev.target;
-    }
-    onMounted(() => {
-        document.body.addEventListener("mousedown", onMousedown, true);
-        document.body.addEventListener("mouseup", onMouseup, true);
-        document.body.addEventListener("click", onClick, true);
-    });
-    onWillUnmount(() => {
-        document.body.removeEventListener("mousedown", onMousedown, true);
-        document.body.removeEventListener("mouseup", onMouseup, true);
-        document.body.removeEventListener("click", onClick, true);
     });
 }
 

@@ -23,6 +23,11 @@ const composerPatch = {
         }
         return setting;
     },
+    get isGifPickerActive() {
+        return this.picker
+            ? this.picker.state.picker === this.picker.PICKERS.GIF && this.ui.isSmall
+            : false;
+    },
     get hasGifPicker() {
         return (
             (this.store.hasGifPickerFeature || this.store.self.isAdmin) &&

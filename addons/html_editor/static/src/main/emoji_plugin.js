@@ -48,6 +48,7 @@ export class EmojiPlugin extends Plugin {
                     this.shared.domInsert(str);
                     this.dispatch("ADD_STEP");
                 },
+                state: { isOpen: true },
             },
             target,
         });

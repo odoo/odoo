@@ -32,6 +32,9 @@ export const EmojisFieldCommon = (T) =>
                             this._emojiAdded();
                         }
                     },
+                    state: {
+                        isOpen: true,
+                    },
                 },
                 {
                     position: "bottom",

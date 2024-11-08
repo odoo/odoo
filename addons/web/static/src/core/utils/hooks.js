@@ -1,6 +1,6 @@
 import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
 
-import { status, useComponent, useEffect, useRef, onWillUnmount } from "@odoo/owl";
+import { status, useComponent, useEffect, useRef, onWillUnmount, onMounted } from "@odoo/owl";
 
 /**
  * This file contains various custom hooks.
@@ -271,4 +271,39 @@ export function useRefListener(ref, ...listener) {
         },
         () => [ref.el]
     );
+}
+
+/**
+ * Attaches event listeners to detect external clicks relative to a specified element.
+ * When a click occurs outside the target element, the provided callback is invoked
+ * with the event and the last mousedown and mouseup targets.
+ *
+ * @param {string} refName
+ * @param {function} cb
+ */
+export function onExternalClick(refName, cb) {
+    let downTarget, upTarget;
+    const ref = useRef(refName);
+    function onClick(ev) {
+        if (ref.el && !ref.el.contains(ev.composedPath()[0])) {
+            cb(ev, { downTarget, upTarget });
+            upTarget = downTarget = null;
+        }
+    }
+    function onMousedown(ev) {
+        downTarget = ev.target;
+    }
+    function onMouseup(ev) {
+        upTarget = ev.target;
+    }
+    onMounted(() => {
+        document.body.addEventListener("mousedown", onMousedown, true);
+        document.body.addEventListener("mouseup", onMouseup, true);
+        document.body.addEventListener("click", onClick, true);
+    });
+    onWillUnmount(() => {
+        document.body.removeEventListener("mousedown", onMousedown, true);
+        document.body.removeEventListener("mouseup", onMouseup, true);
+        document.body.removeEventListener("click", onClick, true);
+    });
 }
