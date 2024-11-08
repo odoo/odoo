@@ -495,21 +495,13 @@ class MailComposer(models.TransientModel):
     def _process_state(self, mail_values_dict):
         recipients_info = self._process_recipient_values(mail_values_dict)
         blacklist_ids = self._get_blacklist_record_ids(mail_values_dict, recipients_info)
-        optout_emails = self._get_optout_emails(mail_values_dict)
-        done_emails = self._get_done_emails(mail_values_dict)
+        optout_emails = [tools.email_normalize(email) for email in self._get_optout_emails(mail_values_dict)]
+        done_emails = [tools.email_normalize(email) for email in self._get_done_emails(mail_values_dict)]
         # in case of an invoice e.g.
         mailing_document_based = self.env.context.get('mailing_document_based')
 
         for record_id, mail_values in mail_values_dict.items():
             recipients = recipients_info[record_id]
-            # when having more than 1 recipient: we cannot really decide when a single
-            # email is linked to several to -> skip that part. Mass mailing should
-            # anyway always have a single recipient per record as this is default behavior.
-            if len(recipients['mail_to']) > 1:
-                continue
-
-            mail_to = recipients['mail_to'][0] if recipients['mail_to'] else ''
-            mail_to_normalized = recipients['mail_to_normalized'][0] if recipients['mail_to_normalized'] else ''
 
             # prevent sending to blocked addresses that were included by mistake
             # blacklisted or optout or duplicate -> cancel
@@ -518,21 +510,25 @@ class MailComposer(models.TransientModel):
                 mail_values['failure_type'] = 'mail_bl'
                 # Do not post the mail into the recipient's chatter
                 mail_values['is_notification'] = False
-            elif optout_emails and mail_to in optout_emails:
-                mail_values['state'] = 'cancel'
-                mail_values['failure_type'] = 'mail_optout'
-            elif done_emails and mail_to in done_emails and not mailing_document_based:
-                mail_values['state'] = 'cancel'
-                mail_values['failure_type'] = 'mail_dup'
-            # void of falsy values -> error
-            elif not mail_to:
+            # void or falsy values -> error
+            elif not any(recipients['mail_to']):
                 mail_values['state'] = 'cancel'
                 mail_values['failure_type'] = 'mail_email_missing'
-            elif not mail_to_normalized:
+            elif not any(recipients['mail_to_normalized']):
                 mail_values['state'] = 'cancel'
                 mail_values['failure_type'] = 'mail_email_invalid'
+            elif optout_emails and all(
+                    mail_to in optout_emails for mail_to in recipients['mail_to_normalized']
+                ):
+                mail_values['state'] = 'cancel'
+                mail_values['failure_type'] = 'mail_optout'
+            elif done_emails and not mailing_document_based and all(
+                    mail_to in done_emails for mail_to in recipients['mail_to_normalized']
+                ):
+                mail_values['state'] = 'cancel'
+                mail_values['failure_type'] = 'mail_dup'
             elif done_emails is not None and not mailing_document_based:
-                done_emails.append(mail_to)
+                done_emails.extend(recipients['mail_to_normalized'])
 
         return mail_values_dict
 
