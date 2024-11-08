@@ -1,13 +1,14 @@
 from lxml import etree
 
 from odoo import Command
+from odoo.exceptions import UserError
 from odoo.tests import tagged
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
 from odoo.addons.l10n_fr_facturx_chorus_pro.models.account_edi_xml_ubl_bis3 import CHORUS_PRO_PEPPOL_ID
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestChorusProXml(AccountTestInvoicingCommon):
+class TestChorusProXml(TestAccountMoveSendCommon):
 
     @classmethod
     def setUpClass(cls, chart_template_ref='fr'):
@@ -24,6 +25,7 @@ class TestChorusProXml(AccountTestInvoicingCommon):
             'peppol_eas': chorus_eas,
             'peppol_endpoint': chorus_endpoint,
             'country_id': cls.env.ref('base.fr').id,
+            'ubl_cii_format': 'ubl_bis3',
         })
 
     def test_export_invoice_chorus_pro(self):
@@ -57,3 +59,21 @@ class TestChorusProXml(AccountTestInvoicingCommon):
 
         self.assertEqual(xml_etree.findtext("{*}BuyerReference"), "buyer_ref_123")
         self.assertEqual(xml_etree.findtext("{*}OrderReference/{*}ID"), "order_ref_123")
+
+    def test_export_invoice_chorus_pro_no_bic(self):
+        invoice = self.env['account.move'].create({
+            'company_id': self.company.id,
+            'partner_id': self.chorus_pro_partner.id,
+            'move_type': 'out_invoice',
+            'buyer_reference': 'buyer_ref_123',
+            'purchase_order_reference': 'order_ref_123',
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 100.0,
+            })],
+        })
+        invoice.action_post()
+        invoice.partner_bank_id = None
+        with self.assertRaisesRegex(UserError, "The BIC of the payee's bank is mandatory when invoicing to Chorus Pro."):
+            wizard = self.create_send_and_print(invoice, checkbox_ubl_cii_xml=True, checkbox_download=True, checkbox_send_mail=False)
+            wizard.action_send_and_print()
