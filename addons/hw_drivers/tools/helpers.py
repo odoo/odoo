@@ -180,10 +180,11 @@ def check_certificate():
 
 @toggleable
 @require_db
-def check_git_branch(server_url=None):
+def check_git_branch(force_checkout=False, server_url=None):
     """Check if the local branch is the same as the connected Odoo DB and
     checkout to match it if needed.
 
+    :param force_checkout: Force the checkout to the db branch even if it's the same as the local one.
     :param server_url: The URL of the connected Odoo database (provided by decorator).
     """
     try:
@@ -213,7 +214,7 @@ def check_git_branch(server_url=None):
             db_branch,
         )
 
-        if db_branch != local_branch:
+        if db_branch != local_branch or force_checkout:
             try:
                 with writable():
                     subprocess.run(git + ['branch', '-m', db_branch], check=True)
