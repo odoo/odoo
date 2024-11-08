@@ -9,7 +9,6 @@ defineWebsiteModels();
 
 test("open SnippetsMenu and discard", async () => {
     await setupWebsiteBuilder(`<h1> Homepage </h1>`);
-    await animationFrame();
     expect(".o_menu_systray .o-website-btn-custo-primary").toHaveCount(1);
     await openSnippetsMenu();
     expect(".o_menu_systray .o-website-btn-custo-primary").toHaveCount(0);
@@ -20,7 +19,6 @@ test("open SnippetsMenu and discard", async () => {
 
 test("undo and redo buttons", async () => {
     const { getEditor } = await setupWebsiteBuilder("<p> Text </p>");
-    await animationFrame();
     expect(".o_menu_systray .o-website-btn-custo-primary").toHaveCount(1);
     await openSnippetsMenu();
     const editor = getEditor();
