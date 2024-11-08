@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <templates>
-    <t t-name="hr_homeworking_calendar.CalendarCommonRendererHeader" t-inherit="web.CalendarCommonRendererHeader" t-inherit-mode="primary">
-        <xpath expr="//span[hasclass('o_cw_day_number')]" position="after">
+    <t t-name="calendar.AttendeeCalendarCommonRenderer.HeaderTemplate" t-inherit="calendar.AttendeeCalendarCommonRenderer.HeaderTemplate" t-inherit-mode="extension">
+        <xpath expr="//span[hasclass('worklocation_span')]" position="replace">
             <t t-if="scale != 'month'" t-call="hr_homeworking_calendar.CalendarCommonRenderer.buttonWorklocation"/>
         </xpath>
     </t>
