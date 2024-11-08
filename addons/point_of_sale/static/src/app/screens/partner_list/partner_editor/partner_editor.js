@@ -43,7 +43,7 @@ export class PartnerEditor extends Component {
                     "mobile",
                     "barcode",
                     "vat",
-                ].map((field) => [field, partner[field] || ""])
+                ].map((field) => [field, partner[field] || false])
             ),
             state_id: partner.state_id && partner.state_id.id,
             country_id: partner.country_id && partner.country_id.id,
