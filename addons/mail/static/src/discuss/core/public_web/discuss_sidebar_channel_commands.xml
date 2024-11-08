@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.DiscussSidebarChannelCommands">
+        <t t-set="actions" t-value="sidebarChannelActions.actions"/>
+        <div class="text-truncate mb-1" style="width:150px;">
+            <i t-if="props.thread.channel_type == 'channel'" class="fa fa-fw me-1" t-att-class="{'fa-hashtag': !props.thread?.parent_channel_id, 'fa-comments-o': props.thread.parent_channel_id}"/>
+            <span class="fw-bolder user-select-none text-truncate" t-out="props.thread.displayName"/>
+        </div>
+        <t t-foreach="actions" t-as="action" t-key="action.name">
+            <div class="mb-1">
+                <button class="btn opacity-50 opacity-100-hover w-100 p-1 d-flex align-items-center gap-1 smaller btn-secondary" t-on-click="() => action.executeAction" t-att-title="store.discuss.isSidebarCompact ? '' : action.name">
+                    <i role="img" class="fa-fw" t-att-class="action.icon"/>
+                    <span t-out="action.name"/>
+                </button>
+            </div>
+        </t>
+    </t>
+</templates>
