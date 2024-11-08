@@ -1,10 +1,12 @@
 import { Record } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
 import { patch } from "@web/core/utils/patch";
-import { imageUrl } from "@web/core/utils/urls";
+
+import { formatList } from "@web/core/l10n/utils";
 import { rpc } from "@web/core/network/rpc";
-import { Mutex } from "@web/core/utils/concurrency";
 import { registry } from "@web/core/registry";
+import { Mutex } from "@web/core/utils/concurrency";
+import { imageUrl } from "@web/core/utils/urls";
 
 const commandRegistry = registry.category("discuss.channel_commands");
 
@@ -12,7 +14,7 @@ const commandRegistry = registry.category("discuss.channel_commands");
 const threadPatch = {
     setup() {
         super.setup();
-        this.channelMembers = Record.many("discuss.channel.member", {
+        this.channel_member_ids = Record.many("discuss.channel.member", {
             inverse: "thread",
             onDelete: (r) => r.delete(),
             sort: (m1, m2) => m1.id - m2.id,
@@ -23,6 +25,7 @@ const threadPatch = {
                 return this.computeCorrespondent();
             },
         });
+        this.default_display_mode = undefined;
         this.fetchChannelMutex = new Mutex();
         this.fetchChannelInfoDeferred = undefined;
         this.fetchChannelInfoState = "not_fetched";
@@ -33,10 +36,11 @@ const threadPatch = {
             },
         });
         this.invitedMembers = Record.many("discuss.channel.member");
+        this.member_count = undefined;
         this.onlineMembers = Record.many("discuss.channel.member", {
             /** @this {import("models").Thread} */
             compute() {
-                return this.channelMembers.filter((member) =>
+                return this.channel_member_ids.filter((member) =>
                     this.store.onlineMemberStatuses.includes(member.persona.im_status)
                 );
             },
@@ -62,14 +66,17 @@ const threadPatch = {
         this.typingMembers = Record.many("discuss.channel.member", { inverse: "threadAsTyping" });
     },
     _computeOfflineMembers() {
-        return this.channelMembers.filter(
+        return this.channel_member_ids.filter(
             (member) => !this.store.onlineMemberStatuses.includes(member.persona?.im_status)
         );
+    },
+    get areAllMembersLoaded() {
+        return this.member_count === this.channel_member_ids.length;
     },
     get avatarUrl() {
         if (this.channel_type === "channel" || this.channel_type === "group") {
             return imageUrl("discuss.channel", this.id, "avatar_128", {
-                unique: this.avatarCacheKey,
+                unique: this.avatar_cache_key,
             });
         }
         if (this.channel_type === "chat" && this.correspondent) {
@@ -86,11 +93,25 @@ const threadPatch = {
             // 2 members chat.
             return correspondents[0];
         }
-        if (correspondents.length === 0 && this.channelMembers.length === 1) {
+        if (correspondents.length === 0 && this.channel_member_ids.length === 1) {
             // Self-chat.
-            return this.channelMembers[0];
+            return this.channel_member_ids[0];
         }
         return undefined;
+    },
+    get correspondents() {
+        return this.channel_member_ids.filter(({ persona }) => persona.notEq(this.store.self));
+    },
+    get displayName() {
+        if (this.channel_type === "chat" && this.correspondent) {
+            return this.custom_channel_name || this.correspondent.persona.name;
+        }
+        if (this.channel_type === "group" && !this.name) {
+            return formatList(
+                this.channel_member_ids.map((channelMember) => channelMember.persona.name)
+            );
+        }
+        return super.displayName;
     },
     async fetchChannelInfo() {
         return this.fetchChannelMutex.exec(async () => {
@@ -105,6 +126,26 @@ const threadPatch = {
             }
             return data ? this : undefined;
         });
+    },
+    async fetchChannelMembers() {
+        if (this.fetchMembersState === "pending") {
+            return;
+        }
+        const previousState = this.fetchMembersState;
+        this.fetchMembersState = "pending";
+        const known_member_ids = this.channel_member_ids.map((channelMember) => channelMember.id);
+        let data;
+        try {
+            data = await rpc("/discuss/channel/members", {
+                channel_id: this.id,
+                known_member_ids: known_member_ids,
+            });
+        } catch (e) {
+            this.fetchMembersState = previousState;
+            throw e;
+        }
+        this.fetchMembersState = "fetched";
+        this.store.insert(data);
     },
     async fetchMoreAttachments(limit = 30) {
         if (this.isLoadingAttachments || this.areAttachmentsLoaded) {
@@ -133,11 +174,11 @@ const threadPatch = {
     },
     /**
      * To be overridden.
-     * The purpose is to exclude technical channelMembers like bots and avoid
+     * The purpose is to exclude technical channel_member_ids like bots and avoid
      * "wrong" seen message indicator
      */
     get membersThatCanSeen() {
-        return this.channelMembers;
+        return this.channel_member_ids;
     },
     get notifyOnLeave() {
         // Skip notification if display name is unknown (might depend on
@@ -158,6 +199,9 @@ const threadPatch = {
             }
         }
         return super.post(...arguments);
+    },
+    get unknownMembersCount() {
+        return (this.member_count ?? 0) - this.channel_member_ids.length;
     },
 };
 patch(Thread.prototype, threadPatch);

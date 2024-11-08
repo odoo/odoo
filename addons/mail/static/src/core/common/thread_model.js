@@ -4,7 +4,6 @@ import { assignDefined, compareDatetime, nearestGreaterThanOrEqual } from "@mail
 import { rpc } from "@web/core/network/rpc";
 
 import { _t } from "@web/core/l10n/translation";
-import { formatList } from "@web/core/l10n/utils";
 import { user } from "@web/core/user";
 import { Deferred } from "@web/core/utils/concurrency";
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -196,7 +195,6 @@ export class Thread extends Record {
         },
     });
     mainAttachment = Record.one("ir.attachment");
-    memberCount = 0;
     message_needaction_counter = 0;
     message_needaction_counter_bus_id = 0;
     /**
@@ -235,8 +233,6 @@ export class Thread extends Record {
      */
     scrollTop = "bottom";
     transientMessages = Record.many("mail.message");
-    /** @type {string} */
-    defaultDisplayMode;
     scrollUnread = true;
     suggestedRecipients = Record.attr([], {
         onUpdate() {
@@ -309,10 +305,6 @@ export class Thread extends Record {
         });
     }
 
-    get areAllMembersLoaded() {
-        return this.memberCount === this.channelMembers.length;
-    }
-
     get busChannel() {
         return `${this.model}_${this.id}`;
     }
@@ -362,19 +354,7 @@ export class Thread extends Record {
     }
 
     get displayName() {
-        if (this.channel_type === "chat" && this.correspondent) {
-            return this.custom_channel_name || this.correspondent.persona.name;
-        }
-        if (this.channel_type === "group" && !this.name) {
-            return formatList(
-                this.channelMembers.map((channelMember) => channelMember.persona.name)
-            );
-        }
         return this.name;
-    }
-
-    get correspondents() {
-        return this.channelMembers.filter(({ persona }) => persona.notEq(this.store.self));
     }
 
     computeIsDisplayed() {
@@ -515,7 +495,7 @@ export class Thread extends Record {
             if (!this.hasSeenFeature) {
                 return;
             }
-            const otherMembers = this.channelMembers.filter((member) =>
+            const otherMembers = this.channel_member_ids.filter((member) =>
                 member.persona.notEq(this.store.self)
             );
             if (otherMembers.length === 0) {
@@ -553,10 +533,6 @@ export class Thread extends Record {
         },
     });
 
-    get unknownMembersCount() {
-        return this.memberCount - this.channelMembers.length;
-    }
-
     executeCommand(command, body = "") {
         return this.store.env.services.orm.call(
             "discuss.channel",
@@ -564,27 +540,6 @@ export class Thread extends Record {
             [[this.id]],
             { body }
         );
-    }
-
-    async fetchChannelMembers() {
-        if (this.fetchMembersState === "pending") {
-            return;
-        }
-        const previousState = this.fetchMembersState;
-        this.fetchMembersState = "pending";
-        const known_member_ids = this.channelMembers.map((channelMember) => channelMember.id);
-        let data;
-        try {
-            data = await rpc("/discuss/channel/members", {
-                channel_id: this.id,
-                known_member_ids: known_member_ids,
-            });
-        } catch (e) {
-            this.fetchMembersState = previousState;
-            throw e;
-        }
-        this.fetchMembersState = "fetched";
-        this.store.insert(data);
     }
 
     /** @param {{after: Number, before: Number}} */

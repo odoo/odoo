@@ -893,7 +893,7 @@ class TestChannelRTC(MailCommon):
                 (self.cr.dbname, "discuss.channel", channel.id, "members"),
                 # discuss.channel/new_message
                 (self.cr.dbname, "discuss.channel", channel.id),
-                # mail.record/insert - discuss.channel (memberCount), discuss.channel.member
+                # mail.record/insert - discuss.channel (member_count), discuss.channel.member
                 (self.cr.dbname, "discuss.channel", channel.id),
                 # mail.record/insert - discuss.channel (rtcInvitingSession), discuss.channel.member
                 (self.cr.dbname, "res.partner", test_user.partner_id.id),

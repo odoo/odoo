@@ -404,8 +404,8 @@ class DiscussChannel(models.Model):
         self._bus_send_store(
             self,
             {
-                "channelMembers": Store.many(member, "DELETE", only_id=True),
-                "memberCount": self.member_count,
+                "channel_member_ids": Store.many(member, "DELETE", only_id=True),
+                "member_count": self.member_count,
             },
         )
 
@@ -459,14 +459,14 @@ class DiscussChannel(models.Model):
                     )
             if new_members:
                 channel._bus_send_store(
-                    Store(channel, {"memberCount": channel.member_count}).add(new_members)
+                    Store(channel, {"member_count": channel.member_count}).add(new_members)
                 )
             if existing_members and (current_partner or current_guest):
                 # If the current user invited these members but they are already present, notify the current user about their existence as well.
                 # In particular this fixes issues where the current user is not aware of its own member in the following case:
                 # create channel from form view, and then join from discuss without refreshing the page.
                 (current_partner or current_guest)._bus_send_store(
-                    Store(channel, {"memberCount": channel.member_count}).add(existing_members)
+                    Store(channel, {"member_count": channel.member_count}).add(existing_members)
                 )
         if invite_to_rtc_call:
             for channel in self:
@@ -885,20 +885,20 @@ class DiscussChannel(models.Model):
         data = self._read_format(
             [
                 "allow_public_upload",
+                "avatar_cache_key",
                 "channel_type",
                 "create_uid",
+                "default_display_mode",
                 "description",
                 "last_interest_dt",
+                "member_count",
                 "name",
                 "uuid",
             ],
             load=False,
         )[0]
         data["authorizedGroupFullName"] = self.group_public_id.full_name
-        data["avatarCacheKey"] = self.avatar_cache_key
-        data["defaultDisplayMode"] = self.default_display_mode
         data["group_based_subscription"] = bool(self.group_ids)
-        data["memberCount"] = self.member_count
         return data
 
     def _to_store(self, store: Store):
@@ -1263,7 +1263,7 @@ class DiscussChannel(models.Model):
         count = self.env['discuss.channel.member'].search_count(
             domain=[('channel_id', '=', self.id)],
         )
-        return Store(unknown_members).add(self, {"memberCount": count}).get_result()
+        return Store(unknown_members).add(self, {"member_count": count}).get_result()
 
     # ------------------------------------------------------------
     # COMMANDS
