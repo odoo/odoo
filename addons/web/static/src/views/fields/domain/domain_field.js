@@ -281,7 +281,7 @@ export const domainField = {
             type: "string",
         },
     ],
-    supportedTypes: ["char"],
+    supportedTypes: ["char", "text"],
     isEmpty: () => false,
     extractProps({ options }, dynamicInfo) {
         return {
