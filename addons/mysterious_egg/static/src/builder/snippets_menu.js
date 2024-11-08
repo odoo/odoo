@@ -1,6 +1,6 @@
 import { Editor } from "@html_editor/editor";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
-import { Component, EventBus, onWillDestroy, reactive, useState, useSubEnv } from "@odoo/owl";
+import { Component, EventBus, onWillDestroy, useState, useSubEnv } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { registry } from "@web/core/registry";
 import { BuilderOverlayPlugin } from "./plugins/builder_overlay/builder_overlay_plugin";
@@ -8,6 +8,7 @@ import { DropZonePlugin } from "./plugins/drop_zone_plugin";
 import { ElementToolboxPlugin } from "./plugins/element_toolbox_plugin";
 import { MediaWebsitePlugin } from "./plugins/media_website_plugin";
 import { SetupEditorPlugin } from "./plugins/setup_editor_plugin";
+import { SnippetModel } from "./snippet_model";
 import { BlockTab, blockTab } from "./snippets_menu_tabs/block_tab";
 import { CustomizeTab, customizeTab } from "./snippets_menu_tabs/customize_tab";
 
@@ -73,6 +74,14 @@ export class SnippetsMenu extends Component {
             },
             this.env.services
         );
+
+        this.snippetModel = useState(
+            new SnippetModel(this.env.services, {
+                websiteId: this.props.websiteId,
+                snippetsName: this.props.snippetsName,
+            })
+        );
+
         useSubEnv({
             editor: this.editor,
             editorBus,
