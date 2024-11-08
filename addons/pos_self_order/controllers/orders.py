@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import re
 from datetime import timedelta
 from odoo import http, fields
 from odoo.http import request
@@ -9,9 +8,13 @@ from werkzeug.exceptions import NotFound, BadRequest, Unauthorized
 class PosSelfOrderController(http.Controller):
     @http.route("/pos-self-order/process-order/<device_type>/", auth="public", type="jsonrpc", website=True)
     def process_order(self, order, access_token, table_identifier, device_type):
-        is_takeaway = order.get('takeaway')
-        pos_config, table = self._verify_authorization(access_token, table_identifier, is_takeaway)
+        pos_config, _ = self._verify_authorization(access_token, table_identifier, order)
         pos_session = pos_config.current_session_id
+        preset_id = order['preset_id'] if pos_config.use_presets else False
+        preset_id = pos_config.env['pos.preset'].browse(preset_id) if preset_id else False
+
+        if not preset_id and pos_config.use_presets:
+            raise BadRequest("Invalid preset")
 
         # Create the order
         tracking_prefix, ref_prefix = self._get_prefixes(device_type)
@@ -20,11 +23,6 @@ class PosSelfOrderController(http.Controller):
         tracking_number = order.get('tracking_number')
         if not (sequence_number and pos_reference and tracking_number):
             pos_reference, sequence_number, tracking_number = pos_session.get_next_order_refs(ref_prefix=ref_prefix, tracking_prefix=tracking_prefix)
-        fiscal_position = (
-            pos_config.takeaway_fp_id
-            if is_takeaway
-            else pos_config.default_fiscal_position_id
-        )
 
         if 'picking_type_id' in order:
             del order['picking_type_id']
@@ -34,13 +32,14 @@ class PosSelfOrderController(http.Controller):
         order['sequence_number'] = sequence_number
         order['user_id'] = request.session.uid
         order['date_order'] = str(fields.Datetime.now())
-        order['fiscal_position_id'] = fiscal_position.id if fiscal_position else False
+        order['fiscal_position_id'] = preset_id.fiscal_position_id.id if preset_id else pos_config.default_fiscal_position_id.id
+        order['pricelist_id'] = preset_id.pricelist_id.id if preset_id else pos_config.pricelist_id.id
 
         results = pos_config.env['pos.order'].sudo().with_context(from_self=True).with_company(pos_config.company_id.id).sync_from_ui([order])
         line_ids = pos_config.env['pos.order.line'].browse([line['id'] for line in results['pos.order.line']])
         order_ids = pos_config.env['pos.order'].browse([order['id'] for order in results['pos.order']])
 
-        self._verify_line_price(line_ids, pos_config)
+        self._verify_line_price(line_ids, pos_config, preset_id)
 
         amount_total, amount_untaxed = self._get_order_prices(order_ids.lines)
         order_ids.write({
@@ -74,8 +73,8 @@ class PosSelfOrderController(http.Controller):
             'product.attribute.custom.value':  order.lines.custom_attribute_value_ids.read(order.lines.custom_attribute_value_ids._load_pos_data_fields(config_id.id), load=False),
         }
 
-    def _verify_line_price(self, lines, pos_config, takeaway=False):
-        pricelist = pos_config.pricelist_id
+    def _verify_line_price(self, lines, pos_config, preset_id):
+        pricelist = preset_id.pricelist_id or pos_config.pricelist_id if preset_id else pos_config.pricelist_id
         sale_price_digits = pos_config.env['decimal.precision'].precision_get('Product Price')
 
         for line in lines:
@@ -86,10 +85,7 @@ class PosSelfOrderController(http.Controller):
             price_extra = sum(attr.price_extra for attr in selected_attributes)
             lst_price += price_extra
 
-            fiscal_pos = pos_config.default_fiscal_position_id
-            if takeaway and pos_config.takeaway_fp_id:
-                fiscal_pos = pos_config.takeaway_fp_id
-
+            fiscal_pos = preset_id.fiscal_position_id or pos_config.default_fiscal_position_id if preset_id else pos_config.default_fiscal_position_id
             if len(line.combo_line_ids) > 0:
                 original_total = sum(line.combo_line_ids.mapped("combo_item_id").combo_id.mapped("base_price"))
                 remaining_total = lst_price
@@ -160,6 +156,11 @@ class PosSelfOrderController(http.Controller):
         if has_paper != pos_config.has_paper:
             pos_config.write({'has_paper': has_paper})
 
+    @http.route('/pos-self-order/get-slots', auth='public', type='jsonrpc', website=True)
+    def get_slots(self, access_token, preset_id):
+        pos_config = self._verify_pos_config(access_token)
+        preset = pos_config.env['pos.preset'].browse(preset_id)
+        return preset.get_available_slots()
 
     def _get_order_prices(self, lines):
         amount_untaxed = sum(lines.mapped('price_subtotal'))
@@ -178,15 +179,16 @@ class PosSelfOrderController(http.Controller):
         user = pos_config_sudo.self_ordering_default_user_id
         return pos_config_sudo.sudo(False).with_company(company).with_user(user).with_context(allowed_company_ids=company.ids)
 
-    def _verify_authorization(self, access_token, table_identifier, takeaway):
+    def _verify_authorization(self, access_token, table_identifier, order):
         """
         Similar to _verify_pos_config but also looks for the restaurant.table of the given identifier.
         The restaurant.table record is also returned with reduced privileges.
         """
         pos_config = self._verify_pos_config(access_token)
         table_sudo = request.env["restaurant.table"].sudo().search([('identifier', '=', table_identifier)], limit=1)
-
-        if not table_sudo and not pos_config.self_ordering_mode == 'kiosk' and pos_config.self_ordering_service_mode == 'table' and not takeaway:
+        preset = request.env['pos.preset'].sudo().browse(order.get('preset_id'))
+        is_takeaway = order and pos_config.use_presets and preset and preset.service_at != 'table'
+        if not table_sudo and not pos_config.self_ordering_mode == 'kiosk' and pos_config.self_ordering_service_mode == 'table' and not is_takeaway:
             raise Unauthorized("Table not found")
 
         company = pos_config.company_id

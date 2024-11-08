@@ -9,8 +9,6 @@ from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCom
 class TestSelfOrderMobile(SelfOrderCommonTest):
     def test_self_order_mobile(self):
         self.pos_config.write({
-            'takeaway': True,
-            'self_ordering_takeaway': True,
             'self_ordering_mode': 'mobile',
             'self_ordering_pay_after': 'each',
             'self_ordering_service_mode': 'table',
@@ -38,9 +36,12 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         self.pos_config.current_session_id.set_opening_control(0, "")
         self_route = self.pos_config._get_self_order_route()
 
-        # Mobile, each, table
+        # Test selection of different presets
         self.start_tour(self_route, "self_mobile_each_table_takeaway_in")
         self.start_tour(self_route, "self_mobile_each_table_takeaway_out")
+        orders = self.env['pos.order'].search([], order="id desc", limit=2)
+        self.assertEqual(orders[0].preset_id, self.out_preset)
+        self.assertEqual(orders[1].preset_id, self.in_preset)
 
         self.pos_config.write({
             'self_ordering_service_mode': 'counter',

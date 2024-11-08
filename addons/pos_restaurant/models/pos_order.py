@@ -8,7 +8,6 @@ class PosOrder(models.Model):
 
     table_id = fields.Many2one('restaurant.table', string='Table', help='The table where this order was served', index='btree_not_null', readonly=True)
     customer_count = fields.Integer(string='Guests', help='The amount of customers that have been served by this order.', readonly=True)
-    takeaway = fields.Boolean(string="Take Away", default=False)
 
     @api.model
     def remove_from_ui(self, server_ids):
