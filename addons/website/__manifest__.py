@@ -234,6 +234,7 @@
             'website/static/src/js/editor/editor.js',
             '/website/static/src/components/wysiwyg_adapter/toolbar_patch.js',
             'website/static/src/xml/web_editor.xml',
+            'website/static/src/js/editor/widget_link.js',
         ],
         'website.assets_wysiwyg': [
             ('include', 'web._assets_helpers'),
