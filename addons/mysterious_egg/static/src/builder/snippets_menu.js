@@ -32,7 +32,12 @@ function onIframeLoaded(iframe, callback) {
 export class SnippetsMenu extends Component {
     static template = "mysterious_egg.SnippetsMenu";
     static components = { BlockTab, CustomizeTab };
-    static props = ["iframe", "closeEditor", "snippetsName", "websiteId"];
+    static props = {
+        iframe: { type: Object },
+        closeEditor: { type: Function },
+        snippetsName: { type: String },
+        websiteId: { type: Number },
+    };
 
     setup() {
         // const actionService = useService("action");
