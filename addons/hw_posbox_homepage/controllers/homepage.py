@@ -257,7 +257,7 @@ class IotBoxOwlHomePage(http.Controller):
     def update_wifi(self, essid, password, persistent=False):
         persistent = "1" if persistent else ""
         subprocess.check_call([file_path(
-            'point_of_sale/tools/posbox/configuration/connect_to_wifi.sh'), essid, password, persistent])
+            'iot_box_image/configuration/connect_to_wifi.sh'), essid, password, persistent])
         server = helpers.get_odoo_server_url()
 
         res_payload = {
@@ -309,7 +309,7 @@ class IotBoxOwlHomePage(http.Controller):
 
         if iotname and platform.system() == 'Linux' and iotname != helpers.get_hostname():
             subprocess.run([file_path(
-                'point_of_sale/tools/posbox/configuration/rename_iot.sh'), iotname], check=False)
+                'iot_box_image/configuration/rename_iot.sh'), iotname], check=False)
 
         # 1 sec delay for IO operations (save_conf_server)
         helpers.odoo_restart(1)

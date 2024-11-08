@@ -51,7 +51,7 @@ if [ -z "${WIRED_IP}" ] ; then
 
 	if [ "${ESSID}" ] && [ "${PASSWORD}" ] && [ -z "${FORCE_HOST_AP}" ] ; then
 		logger -t posbox_wireless_ap "Loading persistently saved setting"
-		/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/connect_to_wifi.sh &
+		/home/pi/odoo/addons/iot_box_image/configuration/connect_to_wifi.sh &
 	else
 		logger -t posbox_wireless_ap "Starting AP"
 

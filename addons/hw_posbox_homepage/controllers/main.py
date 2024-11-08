@@ -19,12 +19,12 @@ class IoTboxHomepage(Home):
         self.updating = threading.Lock()
 
     def clean_partition(self):
-        subprocess.check_call(['sudo', 'bash', '-c', '. /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/upgrade.sh; cleanup'])
+        subprocess.check_call(['sudo', 'bash', '-c', '. /home/pi/odoo/addons/iot_box_image/configuration/upgrade.sh; cleanup'])
 
     @http.route('/hw_proxy/perform_upgrade', type='http', auth='none')
     def perform_upgrade(self):
         self.updating.acquire()
-        os.system('/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/posbox_update.sh')
+        os.system('/home/pi/odoo/addons/iot_box_image/configuration/checkout.sh')
         self.updating.release()
         return 'SUCCESS'
 
@@ -35,7 +35,7 @@ class IoTboxHomepage(Home):
     @http.route('/hw_proxy/perform_flashing_create_partition', type='http', auth='none')
     def perform_flashing_create_partition(self):
         try:
-            response = subprocess.check_output(['sudo', 'bash', '-c', '. /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/upgrade.sh; create_partition']).decode().split('\n')[-2]
+            response = subprocess.check_output(['sudo', 'bash', '-c', '. /home/pi/odoo/addons/iot_box_image/configuration/upgrade.sh; create_partition']).decode().split('\n')[-2]
             if response in ['Error_Card_Size', 'Error_Upgrade_Already_Started']:
                 raise Exception(response)
             return Response('success', status=200)
@@ -48,7 +48,7 @@ class IoTboxHomepage(Home):
     @http.route('/hw_proxy/perform_flashing_download_raspios', type='http', auth='none')
     def perform_flashing_download_raspios(self):
         try:
-            response = subprocess.check_output(['sudo', 'bash', '-c', '. /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/upgrade.sh; download_raspios']).decode().split('\n')[-2]
+            response = subprocess.check_output(['sudo', 'bash', '-c', '. /home/pi/odoo/addons/iot_box_image/configuration/upgrade.sh; download_raspios']).decode().split('\n')[-2]
             if response == 'Error_Raspios_Download':
                 raise Exception(response)
             return Response('success', status=200)
@@ -62,7 +62,7 @@ class IoTboxHomepage(Home):
     @http.route('/hw_proxy/perform_flashing_copy_raspios', type='http', auth='none')
     def perform_flashing_copy_raspios(self):
         try:
-            response = subprocess.check_output(['sudo', 'bash', '-c', '. /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/upgrade.sh; copy_raspios']).decode().split('\n')[-2]
+            response = subprocess.check_output(['sudo', 'bash', '-c', '. /home/pi/odoo/addons/iot_box_image/configuration/upgrade.sh; copy_raspios']).decode().split('\n')[-2]
             if response == 'Error_Iotbox_Download':
                 raise Exception(response)
             return Response('success', status=200)
