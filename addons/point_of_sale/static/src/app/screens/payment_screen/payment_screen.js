@@ -464,6 +464,14 @@ export class PaymentScreen extends Component {
             return false;
         }
 
+        if (this.currentOrder.preset_id?.identification === "address" && !partner?.name) {
+            this.dialog.add(AlertDialog, {
+                title: _t("Customer required"),
+                body: _t("Please add a customer to the order."),
+            });
+            return false;
+        }
+
         if (
             this.currentOrder.getTotalWithTax() != 0 &&
             this.currentOrder.payment_ids.length === 0

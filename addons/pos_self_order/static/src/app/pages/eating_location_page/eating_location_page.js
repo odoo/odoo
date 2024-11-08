@@ -15,13 +15,13 @@ export class EatingLocationPage extends Component {
         this.router.navigate("default");
     }
 
-    selectLocation(loc) {
-        this.selfOrder.currentOrder.takeaway = loc === "out";
-        this.selfOrder.orderTakeAwayState[this.selfOrder.currentOrder.uuid] = true;
-
-        if (loc === "out") {
-            this.selfOrder.currentOrder.fiscal_position_id = this.selfOrder.config.takeaway_fp_id;
-        }
+    selectPreset(preset) {
+        this.selfOrder.currentOrder.setPreset(preset);
+        this.selfOrder.currentTable = null;
         this.router.navigate("product_list");
+    }
+
+    get presets() {
+        return this.selfOrder.models["pos.preset"].getAll();
     }
 }

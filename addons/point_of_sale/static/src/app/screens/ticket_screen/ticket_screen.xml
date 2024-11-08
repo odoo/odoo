@@ -5,10 +5,11 @@
         <t t-set="_filteredOrderList" t-value="getFilteredOrderList()" />
         <div class="ticket-screen screen h-100 bg-100">
             <div class="screen-full-width d-flex w-100 h-100">
+                <t t-set="usePreset" t-value="pos.config.use_presets and pos.models['pos.preset'].length > 1" />
                 <div t-if="!ui.isSmall || pos.ticket_screen_mobile_pane === 'left'" class="rightpane pane-border d-flex flex-column flex-grow-1 w-100 h-100 h-lg-100 bg-200 overflow-y-auto">
                     <div class="controls d-grid d-sm-flex align-items-center justify-content-between gap-2 gap-sm-3 p-2 bg-300">
                         <div class="buttons d-flex gap-2">
-                            <button class="discard btn btn-lg btn-light text-nowrap" t-on-click="() => this.closeTicketScreen()">
+                            <button class="discard btn btn-light text-nowrap" t-on-click="() => this.closeTicketScreen()">
                                 <i class="oi oi-chevron-left"/>
                                 <span t-if="!ui.isSmall" class="ms-2">Back</span>
                             </button>
@@ -18,13 +19,20 @@
                             placeholder.translate="Search Orders..."
                             onSearch.bind="onSearch"
                             onFilterSelected.bind="onFilterSelected" />
+                        <div class="buttons d-flex gap-1" t-if="usePreset">
+                            <button t-foreach="pos.models['pos.preset'].getAll()" t-as="preset" t-key="preset.id"
+                                class="btn text-nowrap" t-on-click="() => this.onPresetSelected(preset)"
+                                t-attf-class="{{this.state.selectedPreset === preset ? 'btn-primary' : 'btn-light'}}">
+                                <t t-esc="preset.name"/>
+                            </button>
+                        </div>
                         <div class="item d-flex align-items-center justify-content-end">
                             <span class="page me-2"><t t-esc="getPageNumber()" /></span>
                             <div class="page-controls d-flex align-items-center gap-1">
-                                <button class="previous btn btn-light btn-lg" t-on-click="() => this.onPrevPage()">
+                                <button class="previous btn btn-light" t-on-click="() => this.onPrevPage()">
                                     <i class="fa fa-fw fa-caret-left" role="img" aria-label="Previous Order List" title="Previous Order List"></i>
                                 </button>
-                                <button class="next btn btn-light btn-lg" t-on-click="() => this.onNextPage()">
+                                <button class="next btn btn-light" t-on-click="() => this.onNextPage()">
                                     <i class="fa fa-fw fa-caret-right" role="img" aria-label="Next Order List" title="Next Order List"></i>
                                 </button>
                             </div>
@@ -40,6 +48,7 @@
                                 <div class="col wide p-2" t-if="showCardholderName()">Cardholder Name</div>
                                 <div class="col p-2">Cashier</div>
                                 <div class="col end p-2">Total</div>
+                                <div class="col narrow p-2" t-if="usePreset">Preset</div>
                                 <div class="col narrow p-2">Status</div>
                                 <div class="col very-narrow p-2" name="delete"></div>
                             </div>
@@ -68,7 +77,10 @@
                                     <div class="col end p-2">
                                         <div><t t-esc="getTotal(order)"></t></div>
                                     </div>
-                                    <div class="col narrow p-2">
+                                    <div class="col narrow p-2" t-if="usePreset">
+                                        <div><t t-esc="order.preset_id?.name"></t></div>
+                                    </div>
+                                    <div class="col narrow p-2 orderStatus">
                                         <div><t t-esc="getStatus(order)"></t></div>
                                     </div>
                                     <div t-if="!shouldHideDeleteButton(order)" class="col very-narrow delete-button p-2" name="delete" t-on-click.stop="() => this.pos.onDeleteOrder(order)">

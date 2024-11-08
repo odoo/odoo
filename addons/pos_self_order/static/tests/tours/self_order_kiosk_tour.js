@@ -10,7 +10,6 @@ registry.category("web_tour.tours").add("self_kiosk_each_table_takeaway_in", {
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
-        LandingPage.selectLocation("Eat In"),
         ProductPage.checkReferenceNotInProductName("Coca-Cola", "12345"),
         ProductPage.clickProduct("Coca-Cola"),
         Utils.clickBtn("Order"),
@@ -21,7 +20,6 @@ registry.category("web_tour.tours").add("self_kiosk_each_table_takeaway_in", {
         Utils.clickBtn("Close"),
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
-        LandingPage.selectLocation("Eat In"),
         Utils.checkIsDisabledBtn("Order"),
     ],
 });
@@ -30,7 +28,6 @@ registry.category("web_tour.tours").add("self_kiosk_each_table_takeaway_out", {
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
-        LandingPage.selectLocation("Take Out"),
         ProductPage.clickProduct("Coca-Cola"),
         Utils.clickBtn("Order"),
         CartPage.checkProduct("Coca-Cola", "2.53", "1"),
@@ -38,7 +35,6 @@ registry.category("web_tour.tours").add("self_kiosk_each_table_takeaway_out", {
         Utils.clickBtn("Close"),
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
-        LandingPage.selectLocation("Take Out"),
         Utils.checkIsDisabledBtn("Order"),
     ],
 });
@@ -47,15 +43,17 @@ registry.category("web_tour.tours").add("self_kiosk_each_counter_takeaway_in", {
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
-        LandingPage.selectLocation("Eat In"),
+        LandingPage.selectLocation("Test-In"),
         ProductPage.clickProduct("Coca-Cola"),
         Utils.clickBtn("Order"),
         CartPage.checkProduct("Coca-Cola", "2.53", "1"),
         Utils.clickBtn("Pay"),
+        Numpad.click("3"),
+        Utils.clickBtn("Pay"),
         Utils.clickBtn("Close"),
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
-        LandingPage.selectLocation("Eat In"),
+        LandingPage.selectLocation("Test-In"),
         Utils.checkIsDisabledBtn("Order"),
     ],
 });
@@ -64,7 +62,7 @@ registry.category("web_tour.tours").add("self_kiosk_each_counter_takeaway_out", 
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
-        LandingPage.selectLocation("Take Out"),
+        LandingPage.selectLocation("Test-Takeout"),
         ProductPage.clickProduct("Coca-Cola"),
         Utils.clickBtn("Order"),
         CartPage.checkProduct("Coca-Cola", "2.53", "1"),
@@ -72,7 +70,7 @@ registry.category("web_tour.tours").add("self_kiosk_each_counter_takeaway_out", 
         Utils.clickBtn("Close"),
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
-        LandingPage.selectLocation("Take Out"),
+        LandingPage.selectLocation("Test-Takeout"),
         Utils.checkIsDisabledBtn("Order"),
     ],
 });
@@ -81,7 +79,6 @@ registry.category("web_tour.tours").add("self_order_kiosk_cancel", {
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
-        LandingPage.selectLocation("Take Out"),
         ProductPage.clickProduct("Coca-Cola"),
         ProductPage.clickProduct("Fanta"),
         Utils.clickBtn("Order"),
@@ -90,7 +87,6 @@ registry.category("web_tour.tours").add("self_order_kiosk_cancel", {
         CartPage.clickBack(),
         ...ProductPage.clickCancel(),
         Utils.clickBtn("Order Now"),
-        LandingPage.selectLocation("Eat In"),
         Utils.checkIsDisabledBtn("Order"),
     ],
 });
