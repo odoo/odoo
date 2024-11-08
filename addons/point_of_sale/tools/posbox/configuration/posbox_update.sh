@@ -3,17 +3,24 @@
 sudo service led-status stop
 
 cd /home/pi/odoo
-localbranch=$(git symbolic-ref -q --short HEAD)
-localremote=$(git config branch.$localbranch.remote)
 
-if [[ "$(git remote get-url "$localremote")" != *odoo/odoo* ]]; then
-    git remote set-url "${localremote}" "https://github.com/odoo/odoo.git"
+db_branch="$1"
+if [ -n $db_branch ]; then
+    git branch -m $db_branch
+    git remote set-branches origin $db_branch
+fi
+
+local_branch=$(git symbolic-ref -q --short HEAD)
+local_remote=$(git config branch.$local_branch.remote)
+
+if [[ "$(git remote get-url "$local_remote")" != *odoo/odoo* ]]; then
+    git remote set-url "${local_remote}" "https://github.com/odoo/odoo.git"
 fi
 
 echo "addons/point_of_sale/tools/posbox/overwrite_after_init/home/pi/odoo" >> .git/info/sparse-checkout
 
-git fetch "${localremote}" "${localbranch}" --depth=1
-git reset "${localremote}"/"${localbranch}" --hard
+git fetch "${local_remote}" "${local_branch}" --depth=1
+git reset "${local_remote}"/"${local_branch}" --hard
 
 sudo git clean -dfx
 if [ -d /home/pi/odoo/addons/point_of_sale/tools/posbox/overwrite_after_init ]; then

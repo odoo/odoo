@@ -135,10 +135,16 @@ def check_certificate():
         return {"status": CertificateStatus.OK, "message": message}
 
 
-def check_git_branch():
+def check_git_branch(force_checkout=False):
     """Check if the local branch is the same as the connected Odoo DB and
     checkout to match it if needed.
+
+    :param force_checkout: Force the checkout to the DB branch
     """
+    server = get_odoo_server_url()
+    if not server:
+        return  # Do not update if not connected to a db (cron job can't check prior to this)
+
     try:
         response = requests.post(get_odoo_server_url() + "/web/webclient/version_info", json={}, timeout=5)
         response.raise_for_status()
@@ -154,26 +160,25 @@ def check_git_branch():
         git = ['git', '--work-tree=/home/pi/odoo/', '--git-dir=/home/pi/odoo/.git']
 
         db_branch = data['result']['server_serie'].replace('~', '-')
-        if not subprocess.check_output(git + ['ls-remote', 'origin', db_branch]):
+        ls_remote = subprocess.run(git + ['ls-remote', 'origin', db_branch], stdout=subprocess.PIPE, check=False)
+        if ls_remote.returncode != 0 or not ls_remote.stdout:
             db_branch = 'master'
 
-        local_branch = (
-            subprocess.check_output(git + ['symbolic-ref', '-q', '--short', 'HEAD']).decode('utf-8').rstrip()
+        local_branch = subprocess.run(
+            git + ['symbolic-ref', '-q', '--short', 'HEAD'], stdout=subprocess.PIPE, check=False
         )
-        _logger.info(
-            "Current IoT Box local git branch: %s / Associated Odoo database's git branch: %s",
-            local_branch,
-            db_branch,
-        )
+        local_branch = local_branch.stdout.decode().strip() if local_branch.returncode == 0 else ''
+        _logger.info("Current IoT Box local git branch: %s / Odoo database git branch: %s", local_branch, db_branch)
 
-        if db_branch != local_branch:
+        if db_branch != local_branch or force_checkout:
             with writable():
-                subprocess.run(git + ['branch', '-m', db_branch], check=True)
-                subprocess.run(git + ['remote', 'set-branches', 'origin', db_branch], check=True)
                 _logger.info("Updating odoo folder to the branch %s", db_branch)
-                subprocess.run(
-                    ['/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/posbox_update.sh'], check=True
+                checkout = subprocess.run(
+                    ['/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/posbox_update.sh', db_branch],
+                    check=False,
                 )
+                if checkout.returncode != 0:
+                    _logger.error("Failed to update the branch to %s", db_branch)
             odoo_restart()
     except Exception:
         _logger.exception('An error occurred while trying to update the code with git')
