@@ -12,5 +12,10 @@ const attachmentPatch = {
         }
         super.delete(...arguments);
     },
+    onClickAttachment(attachment) {
+        if (!attachment.voice) {
+            super.onClickAttachment(attachment);
+        }
+    },
 };
 patch(Attachment.prototype, attachmentPatch);
