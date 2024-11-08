@@ -25,11 +25,12 @@ import { defineTestMailModels } from "@test_mail/../tests/test_mail_test_helpers
 import { Domain } from "@web/core/domain";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { DynamicList } from "@web/model/relational_model/dynamic_list"
-import { deepEqual } from "@web/core/utils/objects";
+import { deepEqual, omit } from "@web/core/utils/objects";
 import { getOrigin } from "@web/core/utils/urls";
 import { serializeDate, formatDate } from "@web/core/l10n/dates";
-import { onRpc, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
-import { keyDown } from "@odoo/hoot-dom";
+import { onRpc, patchWithCleanup, serverState, contains as webContains } from "@web/../tests/web_test_helpers";
+import { keyDown, waitFor } from "@odoo/hoot-dom";
+import { MailActivitySchedule } from "@mail/../tests/mock_server/mock_models/mail_activity_schedule";
 
 const { DateTime } = luxon;
 
@@ -1119,4 +1120,47 @@ test("test node visibility depends on invisible attribute on the node and in the
         context: { invisible: true },
     });
     await contains(".invisible_node", { count: 0 });
+});
+
+test("update activity view after creating multiple activities", async () => {
+    registerArchs(archs);
+    MailTestActivity._views = {
+        ...MailTestActivity._views,
+        "list,false": '<list string="MailTestActivity"><field name="name"/><field name="activity_ids" widget="list_activity"/></list>',
+    };
+
+    MailActivitySchedule._views = {
+        ...MailActivitySchedule._views,
+        [`form,${DEFAULT_MAIL_VIEW_ID}`]: "<form><field name='summary'/></form>",
+    }
+
+    const Activity = pyEnv["mail.activity"];
+    const activityToCreate = omit(Activity[0], "id");
+    Activity.unlink(Activity.search([]));
+
+    onRpc(({method, model}) => {
+        if (method === "web_save" && model === "mail.activity.schedule") {
+            Activity.create(activityToCreate);
+        }
+    });
+
+    await start();
+    await openView({
+        res_model: "mail.test.activity",
+        views: [[false, "activity"]],
+    });
+    expect(".o_activity_summary_cell").toHaveCount(0);
+    await click("table tfoot tr .o_record_selector");
+    await click(
+        ".o_list_renderer table tbody tr:nth-child(2) td:nth-child(2) .o-mail-ActivityButton"
+    );
+    await webContains(".o-mail-ActivityListPopover > button.btn-secondary").click();
+    const modalSchedule = await waitFor(".modal:has(.o_form_view)");
+    await insertText(`.o_form_view .o_field_widget[name='summary'] input`, "test1", {
+        target: modalSchedule,
+    });
+    await click(".modal-footer button.o_form_button_save", {target: modalSchedule});
+    await click(".modal-footer button.o_form_button_cancel");
+    await waitFor(".o_activity_summary_cell:not(.o_activity_empty_cell)");
+    expect(".o_activity_summary_cell:not(.o_activity_empty_cell)").toHaveCount(1);
 });
