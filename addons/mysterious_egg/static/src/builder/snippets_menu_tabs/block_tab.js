@@ -1,4 +1,4 @@
-import { Component, markup, onWillStart, useState } from "@odoo/owl";
+import { Component, markup, onWillStart } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { RPCError } from "@web/core/network/rpc";
@@ -6,7 +6,6 @@ import { useDraggable } from "@web/core/utils/draggable";
 import { useService } from "@web/core/utils/hooks";
 import { escape } from "@web/core/utils/strings";
 import { AddSnippetDialog } from "../add_snippet_dialog/add_snippet_dialog";
-import { SnippetModel } from "../snippet_model";
 
 // TODO move it in web (copy from web_studio)
 function copyElementOnDrag() {
@@ -43,14 +42,8 @@ export class BlockTab extends Component {
         this.orm = useService("orm");
         this.company = useService("company");
 
-        this.snippetModel = useState(
-            new SnippetModel(this.env.services, {
-                websiteId: this.props.websiteId,
-                snippetsName: this.props.snippetsName,
-            })
-        );
         onWillStart(async () => {
-            await this.snippetModel.load();
+            await this.props.snippetModel.load();
         });
         const copyOnDrag = copyElementOnDrag();
         useDraggable({
@@ -71,7 +64,7 @@ export class BlockTab extends Component {
             onDrop: ({ element }) => {
                 const { x, y, height, width } = element.getClientRects()[0];
                 const { category, id } = element.dataset;
-                const snippet = this.getSnippet(category, id);
+                const snippet = this.props.snippetModel.getSnippet(category, id);
                 this.props.editor.shared.dropElement(snippet.content.cloneNode(true), {
                     x,
                     y,
@@ -85,16 +78,6 @@ export class BlockTab extends Component {
         });
     }
 
-    get innerContentSnippets() {
-        return this.snippetModel.snippetsByCategory.snippet_content;
-    }
-
-    getSnippet(category, id) {
-        return this.snippetModel.snippetsByCategory[category].filter(
-            (snippet) => snippet.id === id
-        )[0];
-    }
-
     openSnippetDialog(snippet) {
         this.props.editor.shared.displayDropZone("section");
 
@@ -102,7 +85,7 @@ export class BlockTab extends Component {
             AddSnippetDialog,
             {
                 selectedSnippet: snippet,
-                snippetModel: this.snippetModel,
+                snippetModel: this.props.snippetModel,
                 selectSnippet: (snippet) => {
                     this.props.editor.shared.addElementToCenter(snippet.content.cloneNode(true));
                 },
