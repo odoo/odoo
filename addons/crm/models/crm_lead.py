@@ -1832,28 +1832,19 @@ class CrmLead(models.Model):
     # CUSTOMER TOOLS
     # --------------------------------------------------
 
-    def _find_matching_partner(self, email_only=False):
+    def _find_matching_partner(self):
         """ Try to find a matching partner with available information on the
-        lead, using notably customer's name, email, ...
+        lead, using currently customer's email
 
-        :param email_only: Only find a matching based on the email. To use
-            for automatic process where ilike based on name can be too dangerous
         :return: partner browse record
         """
         self.ensure_one()
         partner = self.partner_id
-
-        if not partner and self.email_from:
-            partner = self.env['res.partner'].search([('email', '=', self.email_from)], limit=1)
-
-        if not partner and not email_only:
-            # search through the existing partners based on the lead's partner or contact name
-            # to be aligned with _create_customer, search on lead's name as last possibility
-            for customer_potential_name in [self[field_name] for field_name in ['partner_name', 'contact_name', 'name'] if self[field_name]]:
-                partner = self.env['res.partner'].search([('name', 'ilike', customer_potential_name)], limit=1)
-                if partner:
-                    break
-
+        if not partner and (self.email_normalized or self.email_from):
+            partner = self._partner_find_from_emails_single(
+                [self.email_normalized or self.email_from],
+                no_create=True,
+            )
         return partner
 
     def _create_customer(self):
