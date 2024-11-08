@@ -71,7 +71,6 @@ registry.category("web_tour.tours").add("test_drag_and_drop_event_in_calendar", 
         },
         {
             trigger: '.fc-dayGridMonth-view',
-            isCheck: true,
         },
         {
             content: "Move event to 15th of the month",
