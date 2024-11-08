@@ -159,3 +159,8 @@ class SaleOrderLine(models.Model):
                     downpayment_sol.name = _("%(line_description)s (Cancelled)", line_description=downpayment_sol.name)
             else:
                 super()._compute_name()
+
+    def pos_has_valued_move_ids(self):
+        return {
+            "has_valued_move_ids": bool(self.has_valued_move_ids())
+        }
