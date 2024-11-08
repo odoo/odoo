@@ -23,6 +23,7 @@ test("undo and redo buttons", async () => {
     await openSnippetsMenu();
     const editor = getEditor();
     setContent(editor.editable, "<p> Text[] </p>");
+    editor.dispatch("ADD_STEP");
     await insertText(editor, "a");
     expect(editor.editable).toHaveInnerHTML("<p> Texta </p>");
     await animationFrame();
