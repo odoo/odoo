@@ -1,17 +1,15 @@
-import { describe, test } from "@odoo/hoot";
 import {
-    assertSteps,
     click,
     contains,
     openView,
     registerArchs,
     start,
-    startServer,
-    step,
+    startServer
 } from "@mail/../tests/mail_test_helpers";
-import { inputFiles } from "@web/../tests/utils";
 import { defineMrpModels } from "@mrp/../tests/mrp_test_helpers";
-import { getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { describe, test } from "@odoo/hoot";
+import { inputFiles } from "@web/../tests/utils";
+import { asyncStep, getService, patchWithCleanup, waitForSteps } from "@web/../tests/web_test_helpers";
 import { fileUploadService } from "@web/core/file_upload/file_upload_service";
 
 describe.current.tags("desktop");
@@ -62,11 +60,11 @@ test("mrp: upload multiple files", async () => {
     await start();
     await openView({ res_model: "product.document", views: [[false, "kanban"]] });
 
-    getService("file_upload").bus.addEventListener("FILE_UPLOAD_ADDED", () => step("xhrSend"));
+    getService("file_upload").bus.addEventListener("FILE_UPLOAD_ADDED", () => asyncStep("xhrSend"));
     await inputFiles(".o_control_panel_main_buttons .o_input_file", [text1]);
-    assertSteps(["xhrSend"]);
+    await waitForSteps(["xhrSend"]);
     await inputFiles(".o_control_panel_main_buttons .o_input_file", [text2, text3]);
-    assertSteps(["xhrSend"]);
+    await waitForSteps(["xhrSend"]);
 });
 
 test("mrp: click on image opens attachment viewer", async () => {

@@ -1,15 +1,13 @@
 import {
-    assertSteps,
     click,
     contains,
     openFormView,
     start,
     startServer,
-    step,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { Deferred } from "@odoo/hoot-mock";
-import { getService, onRpc } from "@web/../tests/web_test_helpers";
+import { asyncStep, getService, onRpc, waitForSteps } from "@web/../tests/web_test_helpers";
 import { defineSnailmailModels } from "../snailmail_test_helpers";
 
 describe.current.tags("desktop");
@@ -112,7 +110,7 @@ test("No Price Available", async () => {
     const def = new Deferred();
     onRpc("mail.message", "cancel_letter", (args) => {
         if (args.args[0][0] === messageId) {
-            step(args.method);
+            asyncStep(args.method);
             def.resolve();
         }
         return true;
@@ -126,7 +124,7 @@ test("No Price Available", async () => {
     await click("button", { text: "Cancel letter" });
     await contains(".o-snailmail-SnailmailError", { count: 0 });
     await def;
-    assertSteps(["cancel_letter"]);
+    await waitForSteps(["cancel_letter"]);
 });
 
 test("Credit Error", async () => {
@@ -151,7 +149,7 @@ test("Credit Error", async () => {
     const def = new Deferred();
     onRpc("mail.message", "send_letter", (args) => {
         if (args.args[0][0] === messageId) {
-            step(args.method);
+            asyncStep(args.method);
             def.resolve();
         }
         return true;
@@ -166,7 +164,7 @@ test("Credit Error", async () => {
     await click("button", { text: "Re-send letter" });
     await contains(".o-snailmail-SnailmailError", { count: 0 });
     await def;
-    assertSteps(["send_letter"]);
+    await waitForSteps(["send_letter"]);
 });
 
 test("Trial Error", async () => {
@@ -191,7 +189,7 @@ test("Trial Error", async () => {
     const def = new Deferred();
     onRpc("mail.message", "send_letter", (args) => {
         if (args.args[0][0] === messageId) {
-            step(args.method);
+            asyncStep(args.method);
             def.resolve();
         }
         return true;
@@ -206,7 +204,7 @@ test("Trial Error", async () => {
     await click("button", { text: "Re-send letter" });
     await contains(".o-snailmail-SnailmailError", { count: 0 });
     await def;
-    assertSteps(["send_letter"]);
+    await waitForSteps(["send_letter"]);
 });
 
 test("Format Error", async () => {
@@ -231,7 +229,7 @@ test("Format Error", async () => {
     await start();
     await openFormView("res.partner", partnerId);
     getService("action").doAction = (action, options) => {
-        step("do_action");
+        asyncStep("do_action");
         expect(action).toBe("snailmail.snailmail_letter_format_error_action");
         expect(options.additionalContext.message_id).toBe(messageId);
         def.resolve();
@@ -239,7 +237,7 @@ test("Format Error", async () => {
     const def = new Deferred();
     await click(".o-mail-Message-notification i.fa-paper-plane");
     await def;
-    assertSteps(["do_action"]);
+    await waitForSteps(["do_action"]);
 });
 
 test("Missing Required Fields", async () => {
@@ -263,7 +261,7 @@ test("Missing Required Fields", async () => {
     await start();
     await openFormView("res.partner", partnerId);
     getService("action").doAction = (action, options) => {
-        step("do_action");
+        asyncStep("do_action");
         expect(action).toBe("snailmail.snailmail_letter_missing_required_fields_action");
         expect(options?.additionalContext.default_letter_id).toBe(snailMailLetterId1);
         def.resolve();
@@ -271,5 +269,5 @@ test("Missing Required Fields", async () => {
     const def = new Deferred();
     await click(".o-mail-Message-notification i.fa-paper-plane");
     await def;
-    assertSteps(["do_action"]);
+    await waitForSteps(["do_action"]);
 });

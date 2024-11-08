@@ -4468,7 +4468,7 @@ test(`select events and discard create`, async () => {
 
 test.tags("desktop")(`create event in year view`, async () => {
     onRpc("create", ({ args }) => {
-        expect.step(JSON.stringify(args[0][0]));
+        expect.step(args[0][0]);
     });
 
     await mountView({
@@ -4484,7 +4484,7 @@ test.tags("desktop")(`create event in year view`, async () => {
     });
     await contains(`.o-calendar-quick-create--create-btn`).click();
     expect.verifySteps([
-        `{"name":"Whole July","is_all_day":true,"start":"2016-07-01","stop":"2016-07-31"}`,
+        { name: "Whole July", is_all_day: true, start: "2016-07-01", stop: "2016-07-31" },
     ]);
 
     // get all rows for event 8
@@ -4505,7 +4505,7 @@ test.tags("desktop")(`create event in year view`, async () => {
     });
     await contains(`.o-calendar-quick-create--create-btn`).click();
     expect.verifySteps([
-        `{"name":"Whole November","is_all_day":true,"start":"2016-11-01","stop":"2016-11-30"}`,
+        { name: "Whole November", is_all_day: true, start: "2016-11-01", stop: "2016-11-30" },
     ]);
 
     // get all rows for event 9

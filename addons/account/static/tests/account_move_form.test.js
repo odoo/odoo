@@ -1,16 +1,14 @@
-import { defineAccountModels } from "./account_test_helpers";
-import { test } from "@odoo/hoot";
 import {
-    assertSteps,
     click,
     insertText,
     openFormView,
     start,
     startServer,
-    triggerHotkey,
-    step,
+    triggerHotkey
 } from "@mail/../tests/mail_test_helpers";
-import { onRpc } from "@web/../tests/web_test_helpers";
+import { test } from "@odoo/hoot";
+import { asyncStep, onRpc, waitForSteps } from "@web/../tests/web_test_helpers";
+import { defineAccountModels } from "./account_test_helpers";
 
 defineAccountModels();
 
@@ -19,7 +17,7 @@ test("When I switch tabs, it saves", async () => {
     const accountMove = pyEnv["account.move"].create({ name: "move0" });
     await start();
     onRpc("account.move", "web_save", () => {
-        step("tab saved");
+        asyncStep("tab saved");
     });
     await openFormView("account.move", accountMove, {
         arch: `<form js_class='account_move_form'>
@@ -36,5 +34,5 @@ test("When I switch tabs, it saves", async () => {
     await insertText("[name='name'] input", "somebody save me!");
     triggerHotkey("Enter");
     await click('a[name="aml_tab"]');
-    await assertSteps(["tab saved"]);
+    await waitForSteps(["tab saved"]);
 });

@@ -1,22 +1,26 @@
-import { expirableStorage } from "@im_livechat/embed/common/expirable_storage";
-import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
 import {
     defineLivechatModels,
     loadDefaultEmbedConfig,
 } from "@im_livechat/../tests/livechat_test_helpers";
-import { describe, test } from "@odoo/hoot";
+import { expirableStorage } from "@im_livechat/embed/common/expirable_storage";
+import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
 import {
-    assertSteps,
     click,
     contains,
     insertText,
     onRpcBefore,
     start,
     startServer,
-    step,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
-import { Command, mountWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { describe, test } from "@odoo/hoot";
+import {
+    asyncStep,
+    Command,
+    mountWithCleanup,
+    serverState,
+    waitForSteps,
+} from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineLivechatModels();
@@ -79,16 +83,16 @@ test("Only necessary requests are made when creating a new chat", async () => {
     const operatorPartnerId = serverState.partnerId;
     onRpcBefore((route, args) => {
         if (!route.includes("assets")) {
-            step(`${route} - ${JSON.stringify(args)}`);
+            asyncStep(`${route} - ${JSON.stringify(args)}`);
         }
     });
     await start({ authenticateAs: false });
     await mountWithCleanup(LivechatButton);
     await contains(".o-livechat-LivechatButton");
-    await assertSteps([`/im_livechat/init - {"channel_id":${livechatChannelId}}`]);
+    await waitForSteps([`/im_livechat/init - {"channel_id":${livechatChannelId}}`]);
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-Message", { text: "Hello, how may I help you?" });
-    await assertSteps([
+    await waitForSteps([
         `/im_livechat/get_session - ${JSON.stringify({
             channel_id: livechatChannelId,
             anonymous_name: "Visitor",
@@ -97,11 +101,11 @@ test("Only necessary requests are made when creating a new chat", async () => {
         })}`,
     ]);
     await insertText(".o-mail-Composer-input", "Hello!");
-    await assertSteps([]);
+    await waitForSteps([]);
     await triggerHotkey("Enter");
     await contains(".o-mail-Message", { text: "Hello!" });
     const [threadId] = pyEnv["discuss.channel"].search([], { order: "id DESC" });
-    await assertSteps([
+    await waitForSteps([
         `/im_livechat/get_session - ${JSON.stringify({
             channel_id: livechatChannelId,
             anonymous_name: "Visitor",

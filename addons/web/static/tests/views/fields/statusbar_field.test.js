@@ -756,7 +756,7 @@ test.tags("desktop")("correctly load statusbar when dynamic domain changes", asy
 
     defineModels([Stage, Project, Task]);
 
-    onRpc("search_read", ({ kwargs }) => expect.step(JSON.stringify(kwargs.domain)));
+    onRpc("search_read", ({ kwargs }) => expect.step(kwargs.domain));
     await mountView({
         type: "form",
         resModel: "task",
@@ -771,14 +771,14 @@ test.tags("desktop")("correctly load statusbar when dynamic domain changes", asy
         `,
     });
     expect(queryAllTexts(".o_statusbar_status button:not(.d-none)")).toEqual(["Stage Project 1"]);
-    expect.verifySteps(['["|",["id","=",1],["project_ids","in",1]]']);
+    expect.verifySteps([["|", ["id", "=", 1], ["project_ids", "in", 1]]]);
     await click(`[name="project_id"] .dropdown input`);
     await animationFrame();
     await click(`[name="project_id"] .dropdown .dropdown-menu .ui-menu-item:contains("Project 2")`);
     await animationFrame();
 
     expect(queryAllTexts(".o_statusbar_status button:not(.d-none)")).toEqual(["Stage Project 2"]);
-    expect.verifySteps(['["|",["id","=",2],["project_ids","in",2]]']);
+    expect.verifySteps([["|", ["id", "=", 2], ["project_ids", "in", 2]]]);
     await clickSave();
     expect(queryAllTexts(".o_statusbar_status button:not(.d-none)")).toEqual(["Stage Project 2"]);
     expect.verifySteps([]);

@@ -1,17 +1,22 @@
 import {
-    assertSteps,
     click,
     contains,
     defineMailModels,
     start,
     startServer,
-    step,
     triggerEvents,
 } from "@mail/../tests/mail_test_helpers";
 import { rpcWithEnv } from "@mail/utils/common/misc";
 import { describe, expect, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
-import { Command, mockService, serverState, withUser } from "@web/../tests/web_test_helpers";
+import {
+    asyncStep,
+    Command,
+    mockService,
+    serverState,
+    waitForSteps,
+    withUser,
+} from "@web/../tests/web_test_helpers";
 
 /** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
 let rpc;
@@ -108,7 +113,7 @@ test("open non-channel failure", async () => {
     ]);
     mockService("action", {
         doAction(action) {
-            step("do_action");
+            asyncStep("do_action");
             expect(action.name).toBe("Mail Failures");
             expect(action.type).toBe("ir.actions.act_window");
             expect(action.view_mode).toBe("kanban,list,form");
@@ -129,7 +134,7 @@ test("open non-channel failure", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    await assertSteps(["do_action"]);
+    await waitForSteps(["do_action"]);
 });
 
 test("different discuss.channel are not grouped", async () => {

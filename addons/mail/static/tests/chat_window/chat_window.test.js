@@ -1,6 +1,4 @@
 import {
-    SIZES,
-    assertSteps,
     click,
     contains,
     defineMailModels,
@@ -14,15 +12,22 @@ import {
     openListView,
     patchUiSize,
     scroll,
+    SIZES,
     start,
     startServer,
-    step,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { queryFirst } from "@odoo/hoot-dom";
 import { mockDate, tick } from "@odoo/hoot-mock";
-import { Command, getService, serverState, withUser } from "@web/../tests/web_test_helpers";
+import {
+    asyncStep,
+    Command,
+    getService,
+    serverState,
+    waitForSteps,
+    withUser,
+} from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 
 import { rpc } from "@web/core/network/rpc";
@@ -232,41 +237,41 @@ test("Mobile: opening a chat window should not update channel state on the serve
 test("chat window: fold", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({});
-    onRpcBefore("/discuss/channel/fold", (args) => step(`channel_fold/${args.state}`));
+    onRpcBefore("/discuss/channel/fold", (args) => asyncStep(`channel_fold/${args.state}`));
     await start();
     // Open Thread
     await click("button i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow .o-mail-Thread");
-    await assertSteps(["channel_fold/open"]);
+    await waitForSteps(["channel_fold/open"]);
     // Fold chat window
     await click(".o-mail-ChatWindow-command[title='Fold']");
     await contains(".o-mail-ChatWindow .o-mail-Thread", { count: 0 });
-    await assertSteps(["channel_fold/folded"]);
+    await waitForSteps(["channel_fold/folded"]);
     // Unfold chat window
     await click(".o-mail-ChatBubble");
     await contains(".o-mail-ChatWindow .o-mail-Thread");
-    await assertSteps(["channel_fold/open"]);
+    await waitForSteps(["channel_fold/open"]);
 });
 
 test("chat window: open / close", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({});
-    onRpcBefore("/discuss/channel/fold", (args) => step(`channel_fold/${args.state}`));
+    onRpcBefore("/discuss/channel/fold", (args) => asyncStep(`channel_fold/${args.state}`));
     await start();
     await click("button i[aria-label='Messages']");
     await contains(".o-mail-ChatWindow", { count: 0 });
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow");
-    await assertSteps(["channel_fold/open"]);
+    await waitForSteps(["channel_fold/open"]);
     await click(".o-mail-ChatWindow-command[title*='Close Chat Window']");
     await contains(".o-mail-ChatWindow", { count: 0 });
-    await assertSteps(["channel_fold/closed"]);
+    await waitForSteps(["channel_fold/closed"]);
     // Reopen chat window
     await click("button i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow");
-    await assertSteps(["channel_fold/open"]);
+    await waitForSteps(["channel_fold/open"]);
 });
 
 test("Open chatwindow as a non member", async () => {
@@ -333,13 +338,13 @@ test("chat window: close on ESCAPE", async () => {
             Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
         ],
     });
-    onRpcBefore("/discuss/channel/fold", (args) => step(`channel_fold/${args.state}`));
+    onRpcBefore("/discuss/channel/fold", (args) => asyncStep(`channel_fold/${args.state}`));
     await start();
     await contains(".o-mail-ChatWindow");
     await focus(".o-mail-Composer-input");
     triggerHotkey("Escape");
     await contains(".o-mail-ChatWindow", { count: 0 });
-    await assertSteps(["channel_fold/closed"]);
+    await waitForSteps(["channel_fold/closed"]);
 });
 
 test("chat window: close on ESCAPE (multi)", async () => {
@@ -638,11 +643,11 @@ test("chat window should open when receiving a new DM", async () => {
     });
     onRpcBefore("/mail/data", async (args) => {
         if (args.init_messaging) {
-            step("init_messaging");
+            asyncStep("init_messaging");
         }
     });
     await start();
-    await assertSteps(["init_messaging"]);
+    await waitForSteps(["init_messaging"]);
     await contains(".o-mail-ChatHub");
     withUser(userId, () =>
         rpc("/mail/message/post", {

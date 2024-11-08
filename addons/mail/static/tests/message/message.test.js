@@ -1,6 +1,4 @@
 import {
-    SIZES,
-    assertSteps,
     click,
     contains,
     defineMailModels,
@@ -10,20 +8,22 @@ import {
     openDiscuss,
     openFormView,
     patchUiSize,
+    SIZES,
     start,
     startServer,
-    step,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { leave, press, queryFirst } from "@odoo/hoot-dom";
 import { Deferred, mockDate, tick } from "@odoo/hoot-mock";
 import {
+    asyncStep,
     Command,
     mockService,
     onRpc,
     patchWithCleanup,
     serverState,
+    waitForSteps,
     withUser,
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
@@ -316,13 +316,13 @@ test("Do not call server on save if no changes", async () => {
         res_id: channelId,
         message_type: "comment",
     });
-    onRpcBefore("/mail/message/update_content", () => step("update_content"));
+    onRpcBefore("/mail/message/update_content", () => asyncStep("update_content"));
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
     await click(".o-mail-Message a", { text: "save" });
-    await assertSteps([]);
+    await waitForSteps([]);
 });
 
 test("Update the link previews when a message is edited", async () => {
@@ -338,7 +338,7 @@ test("Update the link previews when a message is edited", async () => {
         res_id: channelId,
         message_type: "comment",
     });
-    onRpcBefore("/mail/link_preview", (args) => step("link_preview"));
+    onRpcBefore("/mail/link_preview", (args) => asyncStep("link_preview"));
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-Message [title='Expand']");
@@ -348,7 +348,7 @@ test("Update the link previews when a message is edited", async () => {
     });
     await click(".o-mail-Message a", { text: "save" });
     await contains(".o-mail-Message-body", { text: "http://odoo.com" });
-    await assertSteps(["link_preview"]);
+    await waitForSteps(["link_preview"]);
 });
 
 test("Scroll bar to the top when edit starts", async () => {
@@ -888,7 +888,7 @@ test("toggle_star message", async () => {
         res_id: channelId,
     });
     onRpc("mail.message", "toggle_message_starred", ({ args }) => {
-        step("rpc:toggle_message_starred");
+        asyncStep("rpc:toggle_message_starred");
         expect(args[0][0]).toBe(messageId);
     });
     await start();
@@ -899,12 +899,12 @@ test("toggle_star message", async () => {
     await contains("button", { text: "Starred", contains: [".badge", { count: 0 }] });
     await click(".o-mail-Message [title='Mark as Todo']");
     await contains("button", { text: "Starred", contains: [".badge", { text: "1" }] });
-    await assertSteps(["rpc:toggle_message_starred"]);
+    await waitForSteps(["rpc:toggle_message_starred"]);
     await contains(".o-mail-Message");
     await contains(".o-mail-Message [title='Mark as Todo']" + " i.fa-star");
     await click(".o-mail-Message [title='Mark as Todo']");
     await contains("button", { text: "Starred", contains: [".badge", { count: 0 }] });
-    await assertSteps(["rpc:toggle_message_starred"]);
+    await waitForSteps(["rpc:toggle_message_starred"]);
     await contains(".o-mail-Message");
     await contains(".o-mail-Message [title='Mark as Todo']" + " i.fa-star-o");
 });
@@ -1026,7 +1026,7 @@ test("Notification Error", async () => {
             if (action?.res_model === "res.partner") {
                 return super.doAction(...arguments);
             }
-            step("do_action");
+            asyncStep("do_action");
             expect(action).toBe("mail.mail_resend_message_action");
             expect(options.additionalContext.mail_message_to_resend).toBe(messageId);
             openResendActionDef.resolve();
@@ -1040,7 +1040,7 @@ test("Notification Error", async () => {
     expect(".o-mail-Message-notification i:first").toHaveClass("fa-envelope");
     await click(".o-mail-Message-notification").then(() => {});
     await openResendActionDef;
-    await assertSteps(["do_action"]);
+    await waitForSteps(["do_action"]);
 });
 
 test('Quick edit (edit from Composer with ArrowUp) ignores empty ("deleted") messages.', async () => {
@@ -1437,13 +1437,13 @@ test("data-oe-id & data-oe-model link redirection on click", async () => {
             expect(action.type).toBe("ir.actions.act_window");
             expect(action.res_model).toBe("some.model");
             expect(action.res_id).toBe(250);
-            step("do-action:openFormView_some.model_250");
+            asyncStep("do-action:openFormView_some.model_250");
         },
     });
     await start();
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Message-body a");
-    await assertSteps(["do-action:openFormView_some.model_250"]);
+    await waitForSteps(["do-action:openFormView_some.model_250"]);
 });
 
 test("Chat with partner should be opened after clicking on their mention", async () => {
@@ -1929,7 +1929,7 @@ test("Delete starred message decrements starred counter once", async () => {
 test("Copy Message Link", async () => {
     patchWithCleanup(browser.navigator.clipboard, {
         writeText(text) {
-            step(text);
+            asyncStep(text);
             super.writeText(text);
         },
     });
@@ -1954,7 +1954,7 @@ test("Copy Message Link", async () => {
     await contains("[title='Copy Link']", { count: 0 });
     await click(".o-mail-Message:eq(1) [title='Expand']");
     await click("[title='Copy Link']");
-    await assertSteps([url(`/mail/message/${messageId_2}`)]);
+    await waitForSteps([url(`/mail/message/${messageId_2}`)]);
     await press(["ctrl", "v"]);
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message", { text: url(`/mail/message/${messageId_2}`) });

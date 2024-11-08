@@ -1,5 +1,4 @@
 import {
-    assertSteps,
     click,
     contains,
     defineMailModels,
@@ -7,10 +6,15 @@ import {
     scroll,
     start,
     startServer,
-    step,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { mockService, onRpc, serverState } from "@web/../tests/web_test_helpers";
+import {
+    asyncStep,
+    mockService,
+    onRpc,
+    serverState,
+    waitForSteps,
+} from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -57,7 +61,7 @@ test('click on "add followers" button', async () => {
             if (action?.res_model !== "mail.wizard.invite") {
                 return super.doAction(...arguments);
             }
-            step("action:open_view");
+            asyncStep("action:open_view");
             expect(action.context.default_res_model).toBe("res.partner");
             expect(action.context.default_res_id).toBe(partnerId_1);
             expect(action.res_model).toBe("mail.wizard.invite");
@@ -81,7 +85,7 @@ test('click on "add followers" button', async () => {
     await contains(".o-mail-Followers-dropdown");
     await click("a", { text: "Add Followers" });
     await contains(".o-mail-Followers-dropdown", { count: 0 });
-    await assertSteps(["action:open_view"]);
+    await waitForSteps(["action:open_view"]);
     await contains(".o-mail-Followers-counter", { text: "2" });
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Follower", { count: 2 });
@@ -104,7 +108,7 @@ test("click on remove follower", async () => {
         res_model: "res.partner",
     });
     onRpc("res.partner", "message_unsubscribe", ({ args, method }) => {
-        step(method);
+        asyncStep(method);
         expect(args).toEqual([[partnerId_1], [partnerId_2]]);
     });
     await start();
@@ -113,7 +117,7 @@ test("click on remove follower", async () => {
     await contains(".o-mail-Follower");
     await contains("button[title='Remove this follower']");
     await click("button[title='Remove this follower']");
-    await assertSteps(["message_unsubscribe"]);
+    await waitForSteps(["message_unsubscribe"]);
     await contains(".o-mail-Follower", { count: 0 });
 });
 

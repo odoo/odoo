@@ -1,5 +1,4 @@
 import {
-    assertSteps,
     click,
     contains,
     defineMailModels,
@@ -7,11 +6,10 @@ import {
     openFormView,
     start,
     startServer,
-    step,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { Deferred } from "@odoo/hoot-mock";
-import { mockService, onRpc } from "@web/../tests/web_test_helpers";
+import { asyncStep, mockService, onRpc, waitForSteps } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -69,7 +67,7 @@ test("activity mark done popover mark done without feedback", async () => {
         res_model: "res.partner",
     });
     onRpc("/web/dataset/call_kw/mail.activity/action_feedback", async (request) => {
-        step("action_feedback");
+        asyncStep("action_feedback");
         const { params } = await request.json();
         expect(params.args).toHaveLength(1);
         expect(params.args[0]).toHaveLength(1);
@@ -83,7 +81,7 @@ test("activity mark done popover mark done without feedback", async () => {
     await openFormView("res.partner", partnerId);
     await click(".btn", { text: "Mark Done" });
     await click(".o-mail-ActivityMarkAsDone button[aria-label='Done']");
-    await assertSteps(["action_feedback"]);
+    await waitForSteps(["action_feedback"]);
 });
 
 test("activity mark done popover mark done with feedback", async () => {
@@ -96,7 +94,7 @@ test("activity mark done popover mark done with feedback", async () => {
         res_model: "res.partner",
     });
     onRpc("/web/dataset/call_kw/mail.activity/action_feedback", async (request) => {
-        step("action_feedback");
+        asyncStep("action_feedback");
         const { params } = await request.json();
         expect(params.args).toHaveLength(1);
         expect(params.args[0]).toHaveLength(1);
@@ -120,7 +118,7 @@ test("activity mark done popover mark done with feedback", async () => {
         "This task is done"
     );
     await click(".o-mail-ActivityMarkAsDone button[aria-label='Done']");
-    await assertSteps(["action_feedback"]);
+    await waitForSteps(["action_feedback"]);
 });
 
 test("activity mark done popover mark done and schedule next", async () => {
@@ -133,7 +131,7 @@ test("activity mark done popover mark done and schedule next", async () => {
         res_model: "res.partner",
     });
     onRpc("/web/dataset/call_kw/mail.activity/action_feedback_schedule_next", async (request) => {
-        step("action_feedback_schedule_next");
+        asyncStep("action_feedback_schedule_next");
         const { params } = await request.json();
         expect(params.args).toHaveLength(1);
         expect(params.args[0]).toHaveLength(1);
@@ -150,7 +148,7 @@ test("activity mark done popover mark done and schedule next", async () => {
     mockService("action", {
         doAction(action) {
             if (action?.res_model !== "res.partner") {
-                step("activity_action");
+                asyncStep("activity_action");
                 throw new Error(
                     "The do-action event should not be triggered when the route doesn't return an action"
                 );
@@ -166,7 +164,7 @@ test("activity mark done popover mark done and schedule next", async () => {
         "This task is done"
     );
     await click(".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']");
-    await assertSteps(["action_feedback_schedule_next"]);
+    await waitForSteps(["action_feedback_schedule_next"]);
 });
 
 test("[technical] activity mark done & schedule next with new action", async () => {
@@ -186,7 +184,7 @@ test("[technical] activity mark done & schedule next with new action", async () 
         doAction(action) {
             if (action?.res_model !== "res.partner") {
                 def.resolve();
-                step("activity_action");
+                asyncStep("activity_action");
                 expect(action).toEqual(
                     { type: "ir.actions.act_window" },
                     { message: "The content of the action should be correct" }
@@ -201,5 +199,5 @@ test("[technical] activity mark done & schedule next with new action", async () 
     await click(".btn", { text: "Mark Done" });
     await click(".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']");
     await def;
-    await assertSteps(["activity_action"]);
+    await waitForSteps(["activity_action"]);
 });

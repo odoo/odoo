@@ -1,14 +1,12 @@
 import {
-    assertSteps,
     click,
     contains,
     openFormView,
     start,
-    startServer,
-    step,
+    startServer
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { onRpc } from "@web/../tests/web_test_helpers";
+import { asyncStep, onRpc, waitForSteps } from "@web/../tests/web_test_helpers";
 import { defineWebsiteSlidesModels } from "@website_slides/../tests/website_slides_test_helpers";
 
 describe.current.tags("desktop");
@@ -29,7 +27,7 @@ test("grant course access", async () => {
         expect(args.args[0]).toHaveLength(1);
         expect(args.args[0][0]).toBe(channelId);
         expect(args.kwargs.partner_id).toBe(partnerId);
-        step("access_grant");
+        asyncStep("access_grant");
         // random value returned in order for the mock server to know that this route is implemented.
         return true;
     });
@@ -37,7 +35,7 @@ test("grant course access", async () => {
     await openFormView("slide.channel", channelId);
     await contains(".o-mail-Activity");
     await click("button", { text: "Grant Access" });
-    await assertSteps(["access_grant"]);
+    await waitForSteps(["access_grant"]);
 });
 
 test("refuse course access", async () => {
@@ -55,7 +53,7 @@ test("refuse course access", async () => {
         expect(args.args[0]).toHaveLength(1);
         expect(args.args[0][0]).toBe(channelId);
         expect(args.kwargs.partner_id).toBe(partnerId);
-        step("access_refuse");
+        asyncStep("access_refused");
         // random value returned in order for the mock server to know that this route is implemented.
         return true;
     });
@@ -63,5 +61,5 @@ test("refuse course access", async () => {
     await openFormView("slide.channel", channelId);
     await contains(".o-mail-Activity");
     await click("button", { text: "Refuse Access" });
-    await assertSteps(["access_refuse"]);
+    await waitForSteps(["access_refused"]);
 });

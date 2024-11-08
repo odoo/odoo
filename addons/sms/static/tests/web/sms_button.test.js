@@ -1,15 +1,12 @@
 import {
-    assertSteps,
     click,
     contains,
     editInput,
-    startServer,
-    step,
+    startServer
 } from "@mail/../tests/mail_test_helpers";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { queryFirst } from "@odoo/hoot-dom";
 import { defineSMSModels } from "@sms/../tests/sms_test_helpers";
-import { mockService, mountView, MockServer } from "@web/../tests/web_test_helpers";
+import { MockServer, asyncStep, mockService, mountView, waitForSteps } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineSMSModels();
@@ -64,7 +61,7 @@ test("Sms button with option enable_sms set as False", async () => {
 test("click on the sms button while creating a new record in a FormView", async () => {
     mockService("action", {
         doAction(action, options) {
-            step("do_action");
+            asyncStep("do_action");
             expect(action.type).toBe("ir.actions.act_window");
             expect(action.res_model).toBe("sms.composer");
             options.onClose();
@@ -86,9 +83,9 @@ test("click on the sms button while creating a new record in a FormView", async 
     await editInput(document.body, "[name='foo'] input", "John");
     await editInput(document.body, "[name='mobile'] input", "+32494444411");
     await click(".o_field_phone_sms");
-    expect(queryFirst("[name='foo'] input")).toHaveValue("John");
-    expect(queryFirst("[name='mobile'] input")).toHaveValue("+32494444411");
-    await assertSteps(["do_action"]);
+    expect("[name='foo'] input:first").toHaveValue("John");
+    expect("[name='mobile'] input:first").toHaveValue("+32494444411");
+    await waitForSteps(["do_action"]);
 });
 
 
@@ -97,7 +94,7 @@ test(
     async () => {
         mockService("action", {
             doAction(action, options){
-                step("do_action");
+                asyncStep("do_action");
                 expect(action.type).toBe("ir.actions.act_window");
                 expect(action.res_model).toBe("sms.composer");
                 options.onClose();
@@ -134,12 +131,12 @@ test(
         await editInput(document.body, ".modal .o_field_char[name='foo'] input", "Max");
         await editInput(document.body, ".modal .o_field_phone[name='mobile'] input", "+324955555");
         await click(":nth-child(1 of .modal) .o_field_phone_sms");
-        expect(queryFirst(".modal [name='foo'] input")).toHaveValue("Max");
-        expect(queryFirst(".modal [name='mobile'] input")).toHaveValue("+324955555");
+        expect(".modal [name='foo'] input:first").toHaveValue("Max");
+        expect(".modal [name='mobile'] input:first").toHaveValue("+324955555");
 
         await click(":nth-child(1 of .modal) .o_form_button_cancel");
-        expect(queryFirst("[name='foo'] input")).toHaveValue("John");
-        expect(queryFirst("[name='mobile'] input")).toHaveValue("+32494444411");
-        await assertSteps(["do_action"]);
+        expect("[name='foo'] input:first").toHaveValue("John");
+        expect("[name='mobile'] input:first").toHaveValue("+32494444411");
+        await waitForSteps(["do_action"]);
     }
 );

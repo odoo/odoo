@@ -1,4 +1,3 @@
-import { test } from "@odoo/hoot";
 import { defineCalendarModels } from "@calendar/../tests/calendar_test_helpers";
 import {
     click,
@@ -8,6 +7,7 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
+import { test } from "@odoo/hoot";
 
 defineCalendarModels();
 

@@ -1,21 +1,19 @@
 import { waitNotifications } from "@bus/../tests/bus_test_helpers";
-import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
 import {
     defineLivechatModels,
     loadDefaultEmbedConfig,
 } from "@im_livechat/../tests/livechat_test_helpers";
-import { describe, expect, test } from "@odoo/hoot";
+import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
 import {
-    assertSteps,
     click,
     contains,
     insertText,
     start,
     startServer,
-    step,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
-import { mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
+import { describe, expect, test } from "@odoo/hoot";
+import { asyncStep, mountWithCleanup, onRpc, waitForSteps } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineLivechatModels();
@@ -41,7 +39,7 @@ test("open/close persisted channel", async () => {
     onRpc("/im_livechat/get_session", async (req) => {
         const { params } = await req.json();
         if (params.persisted) {
-            step("persisted");
+            asyncStep("persisted");
         }
     });
     const env = await start({ authenticateAs: false });
@@ -49,7 +47,7 @@ test("open/close persisted channel", async () => {
     await click(".o-livechat-LivechatButton");
     await insertText(".o-mail-Composer-input", "How can I help?");
     await triggerHotkey("Enter");
-    await assertSteps(["persisted"]);
+    await waitForSteps(["persisted"]);
     await contains(".o-mail-Message-content", { text: "How can I help?" });
     await waitNotifications([env, "discuss.channel/new_message"]);
     await click("[title*='Close Chat Window']");

@@ -1,6 +1,4 @@
 import {
-    SIZES,
-    assertSteps,
     click,
     contains,
     defineMailModels,
@@ -8,13 +6,19 @@ import {
     onRpcBefore,
     openDiscuss,
     patchUiSize,
+    SIZES,
     start,
     startServer,
-    step,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
-import { Command, onRpc, serverState } from "@web/../tests/web_test_helpers";
+import {
+    asyncStep,
+    Command,
+    onRpc,
+    serverState,
+    waitForSteps,
+} from "@web/../tests/web_test_helpers";
 
 import { pick } from "@web/core/utils/objects";
 
@@ -29,12 +33,12 @@ test("can create a new channel", async () => {
             route.startsWith("/discuss/channel/messages") ||
             route.startsWith("/discuss/search")
         ) {
-            step(`${route} - ${JSON.stringify(args)}`);
+            asyncStep(`${route} - ${JSON.stringify(args)}`);
         }
     });
     onRpc((params) => {
         if (params.model === "discuss.channel" && params.method === "channel_create") {
-            step(
+            asyncStep(
                 `${params.route} - ${JSON.stringify(
                     pick(params, "args", "kwargs", "method", "model")
                 )}`
@@ -42,7 +46,7 @@ test("can create a new channel", async () => {
         }
     });
     await start();
-    await assertSteps([
+    await waitForSteps([
         `/mail/data - ${JSON.stringify({
             init_messaging: {},
             failures: true,
@@ -51,7 +55,7 @@ test("can create a new channel", async () => {
         })}`,
     ]);
     await openDiscuss();
-    await assertSteps([
+    await waitForSteps([
         `/mail/data - ${JSON.stringify({
             channels_as_member: true,
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
@@ -62,7 +66,7 @@ test("can create a new channel", async () => {
     await contains(".o-mail-DiscussSidebar-item", { text: "abc", count: 0 });
     await click("input[placeholder='Find or start a conversation']");
     await insertText("input[placeholder='Search a conversation']", "abc");
-    await assertSteps([`/discuss/search - {"term":""}`, `/discuss/search - {"term":"abc"}`]);
+    await waitForSteps([`/discuss/search - {"term":""}`, `/discuss/search - {"term":"abc"}`]);
     await click("a", { text: "Create Channel" });
     await contains(".o-mail-DiscussSidebar-item", { text: "abc" });
     await contains(".o-mail-Message", { count: 0 });
@@ -71,7 +75,7 @@ test("can create a new channel", async () => {
         ["channel_id", "=", channelId],
         ["partner_id", "=", serverState.partnerId],
     ]);
-    await assertSteps([
+    await waitForSteps([
         `/web/dataset/call_kw/discuss.channel/channel_create - ${JSON.stringify({
             args: ["abc", null],
             kwargs: {
@@ -95,7 +99,7 @@ test("can make a DM chat", async () => {
     pyEnv["res.users"].create({ partner_id: partnerId });
     onRpcBefore((route, args) => {
         if (route.startsWith("/mail") || route.startsWith("/discuss")) {
-            step(`${route} - ${JSON.stringify(args)}`);
+            asyncStep(`${route} - ${JSON.stringify(args)}`);
         }
     });
     onRpc((params) => {
@@ -103,7 +107,7 @@ test("can make a DM chat", async () => {
             params.model === "discuss.channel" &&
             ["search_read", "channel_create", "channel_get"].includes(params.method)
         ) {
-            step(
+            asyncStep(
                 `${params.route} - ${JSON.stringify(
                     pick(params, "args", "kwargs", "method", "model")
                 )}`
@@ -111,7 +115,7 @@ test("can make a DM chat", async () => {
         }
     });
     await start();
-    await assertSteps([
+    await waitForSteps([
         `/mail/data - ${JSON.stringify({
             init_messaging: {},
             failures: true,
@@ -120,7 +124,7 @@ test("can make a DM chat", async () => {
         })}`,
     ]);
     await openDiscuss();
-    await assertSteps([
+    await waitForSteps([
         `/mail/data - ${JSON.stringify({
             channels_as_member: true,
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
@@ -135,7 +139,7 @@ test("can make a DM chat", async () => {
     await contains(".o-mail-DiscussSidebar-item", { text: "Mario" });
     await contains(".o-mail-Message", { count: 0 });
     const channelId = pyEnv["discuss.channel"].search([["name", "=", "Mario, Mitchell Admin"]]);
-    await assertSteps([
+    await waitForSteps([
         `/discuss/search - {"term":""}`,
         `/discuss/search - {"term":"mario"}`,
         `/web/dataset/call_kw/discuss.channel/channel_get - ${JSON.stringify({

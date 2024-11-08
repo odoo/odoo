@@ -1,6 +1,4 @@
 import {
-    SIZES,
-    assertSteps,
     click,
     contains,
     defineMailModels,
@@ -8,9 +6,9 @@ import {
     onRpcBefore,
     openDiscuss,
     patchUiSize,
+    SIZES,
     start,
     startServer,
-    step,
     triggerEvents,
 } from "@mail/../tests/mail_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
@@ -19,10 +17,12 @@ import { describe, expect, test } from "@odoo/hoot";
 import { hover, queryFirst } from "@odoo/hoot-dom";
 import { mockUserAgent } from "@odoo/hoot-mock";
 import {
+    asyncStep,
     Command,
     mockService,
     patchWithCleanup,
     serverState,
+    waitForSteps,
 } from "@web/../tests/web_test_helpers";
 
 import { browser } from "@web/core/browser/browser";
@@ -128,7 +128,7 @@ test("should disconnect when closing page while in call", async () => {
                 if (data instanceof Blob && route === "/mail/rtc/channel/leave_call") {
                     const blobText = await data.text();
                     const blobData = JSON.parse(blobText);
-                    step(`sendBeacon_leave_call:${blobData.params.channel_id}`);
+                    asyncStep(`sendBeacon_leave_call:${blobData.params.channel_id}`);
                 }
             },
         },
@@ -138,7 +138,7 @@ test("should disconnect when closing page while in call", async () => {
     await contains(".o-discuss-Call");
     // simulate page close
     window.dispatchEvent(new Event("pagehide"), { bubble: true });
-    await assertSteps([`sendBeacon_leave_call:${channelId}`]);
+    await waitForSteps([`sendBeacon_leave_call:${channelId}`]);
 });
 
 test("should display invitations", async () => {
@@ -155,19 +155,19 @@ test("should display invitations", async () => {
     });
     onRpcBefore("/mail/data", (args) => {
         if (args.init_messaging) {
-            step(`/mail/data - ${JSON.stringify(args)}`);
+            asyncStep(`/mail/data - ${JSON.stringify(args)}`);
         }
     });
     mockService("mail.sound_effects", {
         play(name) {
-            step(`play - ${name}`);
+            asyncStep(`play - ${name}`);
         },
         stop(name) {
-            step(`stop - ${name}`);
+            asyncStep(`stop - ${name}`);
         },
     });
     await start();
-    await assertSteps([
+    await waitForSteps([
         `/mail/data - ${JSON.stringify({
             init_messaging: {},
             failures: true,
@@ -193,7 +193,7 @@ test("should display invitations", async () => {
             .get_result()
     );
     await contains(".o-discuss-CallInvitation");
-    await assertSteps(["play - incoming-call"]);
+    await waitForSteps(["play - incoming-call"]);
     // Simulate stop receiving call invitation
 
     pyEnv["bus.bus"]._sendone(
@@ -204,7 +204,7 @@ test("should display invitations", async () => {
         }).get_result()
     );
     await contains(".o-discuss-CallInvitation", { count: 0 });
-    await assertSteps(["stop - incoming-call"]);
+    await waitForSteps(["stop - incoming-call"]);
 });
 
 test("can share screen", async () => {
@@ -283,12 +283,12 @@ test("join/leave sounds are only played on main tab", async () => {
     const env2 = await start({ asTab: true });
     patchWithCleanup(env1.services["mail.sound_effects"], {
         play(name) {
-            step(`tab1 - play - ${name}`);
+            asyncStep(`tab1 - play - ${name}`);
         },
     });
     patchWithCleanup(env2.services["mail.sound_effects"], {
         play(name) {
-            step(`tab2 - play - ${name}`);
+            asyncStep(`tab2 - play - ${name}`);
         },
     });
     await openDiscuss(channelId, { target: env1 });
@@ -296,11 +296,11 @@ test("join/leave sounds are only played on main tab", async () => {
     await click("[title='Start a Call']", { target: env1 });
     await contains(".o-discuss-Call", { target: env1 });
     await contains(".o-discuss-Call", { target: env2 });
-    await assertSteps(["tab1 - play - channel-join"]);
+    await waitForSteps(["tab1 - play - channel-join"]);
     await click("[title='Disconnect']:not([disabled])", { target: env1 });
     await contains(".o-discuss-Call", { target: env1, count: 0 });
     await contains(".o-discuss-Call", { target: env2, count: 0 });
-    await assertSteps(["tab1 - play - channel-leave"]);
+    await waitForSteps(["tab1 - play - channel-leave"]);
 });
 
 test("'Start a meeting' in mobile", async () => {

@@ -1,6 +1,5 @@
 import {
     SIZES,
-    assertSteps,
     click,
     contains,
     defineMailModels,
@@ -13,17 +12,18 @@ import {
     scroll,
     start,
     startServer,
-    step,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { Deferred, advanceTime } from "@odoo/hoot-mock";
 import {
+    asyncStep,
     defineActions,
     getService,
     mockService,
     onRpc,
     serverState,
+    waitForSteps,
 } from "@web/../tests/web_test_helpers";
 
 import { DELAY_FOR_SPINNER } from "@mail/chatter/web_portal/chatter";
@@ -36,11 +36,11 @@ test("simple chatter on a record", async () => {
     const pyEnv = await startServer();
     onRpcBefore((route, args) => {
         if (route.startsWith("/mail") || route.startsWith("/discuss")) {
-            step(`${route} - ${JSON.stringify(args)}`);
+            asyncStep(`${route} - ${JSON.stringify(args)}`);
         }
     });
     await start();
-    await assertSteps([
+    await waitForSteps([
         `/mail/data - ${JSON.stringify({
             init_messaging: {},
             failures: true,
@@ -52,7 +52,7 @@ test("simple chatter on a record", async () => {
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Chatter-topbar");
     await contains(".o-mail-Thread");
-    await assertSteps([
+    await waitForSteps([
         `/mail/thread/data - {"request_list":["activities","attachments","followers","scheduledMessages","suggestedRecipients"],"thread_id":${partnerId},"thread_model":"res.partner"}`,
         `/mail/thread/messages - {"thread_id":${partnerId},"thread_model":"res.partner","limit":30}`,
     ]);
@@ -62,7 +62,7 @@ test("can post a message on a record thread", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     onRpcBefore("/mail/message/post", (args) => {
-        step("/mail/message/post");
+        asyncStep("/mail/message/post");
         const expected = {
             context: args.context,
             post_data: {
@@ -85,14 +85,14 @@ test("can post a message on a record thread", async () => {
     await contains(".o-mail-Message", { count: 0 });
     await click(".o-mail-Composer button[aria-label='Send']:enabled");
     await contains(".o-mail-Message");
-    await assertSteps(["/mail/message/post"]);
+    await waitForSteps(["/mail/message/post"]);
 });
 
 test("can post a note on a record thread", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     onRpcBefore("/mail/message/post", (args) => {
-        step("/mail/message/post");
+        asyncStep("/mail/message/post");
         const expected = {
             context: args.context,
             post_data: {
@@ -115,7 +115,7 @@ test("can post a note on a record thread", async () => {
     await contains(".o-mail-Message", { count: 0 });
     await click(".o-mail-Composer button:enabled", { text: "Log" });
     await contains(".o-mail-Message");
-    await assertSteps(["/mail/message/post"]);
+    await waitForSteps(["/mail/message/post"]);
 });
 
 test("No attachment loading spinner when creating records", async () => {
@@ -576,13 +576,13 @@ test("schedule activities on draft record should prompt with scheduling an activ
             if (action.res_model === "res.partner") {
                 return super.doAction(...arguments);
             } else if (action.res_model === "mail.activity.schedule") {
-                step("mail.activity.schedule");
+                asyncStep("mail.activity.schedule");
                 expect(action.context.active_model).toBe("res.partner");
                 expect(Number(action.context.active_id)).toBeGreaterThan(0);
                 options.onClose();
                 wizardOpened.resolve();
             } else {
-                step("Unexpected action" + action.res_model);
+                asyncStep("Unexpected action" + action.res_model);
             }
         },
     });
@@ -598,7 +598,7 @@ test("schedule activities on draft record should prompt with scheduling an activ
     });
     await click("button", { text: "Activities" });
     await wizardOpened;
-    await assertSteps(["mail.activity.schedule"]);
+    await waitForSteps(["mail.activity.schedule"]);
 });
 
 test("upload attachment on draft record", async () => {
