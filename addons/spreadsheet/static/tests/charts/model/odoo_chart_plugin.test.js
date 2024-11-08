@@ -866,3 +866,30 @@ test("Show values is taken into account in the runtime", async () => {
     const runtime = model.getters.getChartRuntime(chartId);
     expect(runtime.chartJsConfig.options.plugins.chartShowValuesPlugin.showValues).toBe(true);
 });
+
+test("Odoo line and bar charts display only horizontal grid lines", async () => {
+    const { model } = await createSpreadsheetWithChart({
+        type: "odoo_line",
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    const lineChartConfig = model.getters.getChartRuntime(chartId).chartJsConfig;
+
+    expect(lineChartConfig.options.scales.x.grid.display).toBe(false);
+    expect(lineChartConfig.options.scales.y.grid.display).toBe(true);
+
+    const lineChartDefinition = model.getters.getChartDefinition(chartId);
+    model.dispatch("UPDATE_CHART", {
+        definition: {
+            ...lineChartDefinition,
+            type: "odoo_bar",
+        },
+        id: chartId,
+        sheetId,
+    });
+
+    const barChartConfig = model.getters.getChartRuntime(chartId).chartJsConfig;
+
+    expect(barChartConfig.options.scales.x.grid.display).toBe(false);
+    expect(barChartConfig.options.scales.y.grid.display).toBe(true);
+});

@@ -3,14 +3,16 @@ import { _t } from "@web/core/l10n/translation";
 import { OdooChart } from "./odoo_chart";
 
 const { chartRegistry } = spreadsheet.registries;
+const { INTERACTIVE_LEGEND_CONFIG } = spreadsheet.constants;
 
 const {
     getDefaultChartJsRuntime,
     getChartAxisTitleRuntime,
+    getCustomLegendLabels,
     chartFontColor,
     ColorGenerator,
     getTrendDatasetForBarChart,
-    formatTickValue
+    formatTickValue,
 } = spreadsheet.helpers;
 
 const { TREND_LINE_XAXIS_ID } = spreadsheet.constants;
@@ -116,6 +118,11 @@ function getBarConfiguration(chart, labels, locale) {
         ...config.options.legend,
         display: chart.legendPosition !== "none",
         labels: { color },
+        ...INTERACTIVE_LEGEND_CONFIG,
+        ...getCustomLegendLabels(color, {
+            pointStyle: "rect",
+            lineWidth: 3,
+        }),
     };
     legend.position = chart.legendPosition;
     config.options.plugins = config.options.plugins || {};
@@ -134,12 +141,18 @@ function getBarConfiguration(chart, labels, locale) {
                 color,
             },
             title: getChartAxisTitleRuntime(chart.axesDesign?.x),
+            grid: {
+                display: false,
+            },
         },
         y: {
             position: chart.verticalAxisPosition,
             ticks: { color },
             beginAtZero: true, // the origin of the y axis is always zero
             title: getChartAxisTitleRuntime(chart.axesDesign?.y),
+            grid: {
+                display: true,
+            },
         },
     };
     if (chart.stacked) {
