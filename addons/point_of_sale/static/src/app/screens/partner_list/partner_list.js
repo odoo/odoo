@@ -1,13 +1,13 @@
-import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { Dialog } from "@web/core/dialog/dialog";
 import { PartnerLine } from "@point_of_sale/app/screens/partner_list/partner_line/partner_line";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Input } from "@point_of_sale/app/generic_components/inputs/input/input";
-import { Component, useState } from "@odoo/owl";
+import { Component, onMounted, useState } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { unaccent } from "@web/core/utils/strings";
+import { useTrackedAsync } from "@point_of_sale/app/utils/hooks";
 
 export class PartnerList extends Component {
     static components = { PartnerLine, Dialog, Input };
@@ -26,13 +26,25 @@ export class PartnerList extends Component {
         this.ui = useState(useService("ui"));
         this.notification = useService("notification");
         this.dialog = useService("dialog");
-
+        this.partnersDisplay = useState(new Map());
+        this.partnerListElement = null;
+        this.loadNewPartners = useTrackedAsync(() => this.searchPartner());
         this.state = useState({
             query: null,
             previousQuery: "",
             currentOffset: 0,
         });
+
         useHotkey("enter", () => this.onEnter());
+        this.getPartners();
+
+        onMounted(() => {
+            this.partnerListElement = document.querySelector(".partner-list");
+
+            if (this.partnerListElement) {
+                this.partnerListElement.addEventListener("scroll", this.onScroll.bind(this));
+            }
+        });
     }
     async editPartner(p = false) {
         const partner = await this.pos.editPartner(p);
@@ -40,18 +52,25 @@ export class PartnerList extends Component {
             this.clickPartner(partner);
         }
     }
+
+    onScroll() {
+        if (
+            this.partnerListElement.clientHeight + this.partnerListElement.scrollTop >=
+            this.partnerListElement.scrollHeight
+        ) {
+            this.onEnter();
+        }
+    }
+
     async onEnter() {
         if (!this.state.query) {
             return;
         }
-        const result = await this.searchPartner();
-        if (result.length > 0) {
-            this.notification.add(
-                _t('%s customer(s) found for "%s".', result.length, this.state.query),
-                3000
-            );
+
+        if (unaccent((this.state.query || "").trim(), false).length > 1) {
+            await this.loadNewPartners.call();
         } else {
-            this.notification.add(_t('No more customer found for "%s".', this.state.query));
+            await this.loadNewPartners.call();
         }
     }
 
@@ -78,7 +97,6 @@ export class PartnerList extends Component {
         const searchWord = unaccent((this.state.query || "").trim(), false);
         const partners = this.pos.models["res.partner"].getAll();
         const exactMatches = partners.filter((product) => product.exactMatch(searchWord));
-
         if (exactMatches.length > 0) {
             return exactMatches;
         }
@@ -92,8 +110,14 @@ export class PartnerList extends Component {
                           ? -1
                           : (a.name || "").localeCompare(b.name || "")
                   );
+        for (const partner of availablePartners) {
+            this.partnersDisplay.set(partner.id, partner);
+        }
+    }
 
-        return availablePartners;
+    handleInputChange() {
+        this.partnersDisplay = new Map();
+        this.getPartners();
     }
     get isBalanceDisplayed() {
         return false;
@@ -114,8 +138,11 @@ export class PartnerList extends Component {
             this.state.previousQuery = this.state.query;
             this.state.currentOffset = partner.length;
         }
+        this.getPartners();
+
         return partner;
     }
+
     async getNewPartners() {
         let domain = [];
         const limit = 30;
