@@ -122,7 +122,7 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
                 ...Order.doesNotHaveLine(),
             ]),
 
-            // Test OrderlineCustomerNoteButton
+            // Test Customer notes
             ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1.0"),
             inLeftSide([
                 { ...ProductScreen.clickLine("Desk Organizer")[0], isActive: ["mobile"] },
@@ -133,6 +133,24 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
                     customerNote: "Test customer note",
                     withClass: ".selected",
                 }),
+                ...ProductScreen.clickSelectedLine("Desk Organizer"),
+                ...ProductScreen.addCustomerNote("Test customer note on order"),
+                ...Order.hasCustomerNote("Test customer note on order"),
+            ]),
+
+            // Test Internal notes
+            inLeftSide([
+                ...ProductScreen.clickLine("Desk Organizer"),
+                ...ProductScreen.addInternalNote("Test internal note"),
+                ...Order.hasLine({
+                    productName: "Desk Organizer",
+                    quantity: "1.0",
+                    internalNote: "Test internal note",
+                    withClass: ".selected",
+                }),
+                ...ProductScreen.clickSelectedLine("Desk Organizer"),
+                ...ProductScreen.addInternalNote("Test internal note on order"),
+                ...Order.hasInternalNote("Test internal note on order"),
             ]),
             ProductScreen.isShown(),
             OfflineUtil.setOnlineMode(),
