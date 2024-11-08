@@ -33,6 +33,9 @@ export class DropZonePlugin extends Plugin {
                 target.before(createDropZone());
             }
         }
+
+        // TODO: hack: we need to add a step here to avoid floating content (remove history warning)
+        this.dispatch("ADD_STEP");
     }
 
     clearDropZone() {
