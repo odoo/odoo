@@ -45,6 +45,10 @@ export class SnippetModel extends Reactive {
         return this.snippetsByCategory.snippet_content;
     }
 
+    getSnippet(category, id) {
+        return this.snippetsByCategory[category].filter((snippet) => snippet.id === id)[0];
+    }
+
     async load() {
         if (!cacheSnippetTemplate[this.snippetsName]) {
             cacheSnippetTemplate[this.snippetsName] = this.orm.silent.call(
