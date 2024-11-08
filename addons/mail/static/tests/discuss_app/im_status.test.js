@@ -6,8 +6,9 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
+import { Persona } from "@mail/core/common/persona_model";
 import { describe, test } from "@odoo/hoot";
-import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { Command, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -58,6 +59,7 @@ test("initially away", async () => {
 });
 
 test("change icon on change partner im_status", async () => {
+    patchWithCleanup(Persona, { IM_STATUS_DEBOUNCE_DELAY: 0 });
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
