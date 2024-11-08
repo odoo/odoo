@@ -92,6 +92,9 @@ export class SnippetModel extends Reactive {
                         snippet.groupName = snippetEl.dataset.oSnippetGroup;
                         break;
                     case "snippet_structure":
+                        if (snippet.moduleId) {
+                            snippet.imagePreviewSrc = snippetEl.dataset.oImagePreview;
+                        }
                         snippet.groupName = snippetEl.dataset.oGroup;
                         snippet.keyWords = snippetEl.dataset.oeKeywords;
                         break;
