@@ -719,12 +719,26 @@ def unquote(str):
     """Returns unquoted PO term string, with special PO characters unescaped"""
     return re_escaped_char.sub(_sub_replacement, str[1:-1])
 
-def TranslationFileReader(source, fileformat='po'):
+
+def parse_xmlid(xmlid: str, default_module: str) -> tuple[str, str]:
+    split_id = xmlid.split('.', maxsplit=1)
+    if len(split_id) == 1:
+        return default_module, split_id[0]
+    return split_id[0], split_id[1]
+
+
+def translation_file_reader(source, fileformat='po', module=None):
     """ Iterate over translation file to return Odoo translation entries """
     if fileformat == 'csv':
+        if module is not None:
+            # if `module` is provided, we are reading a data file located in that module
+            return CSVDataFileReader(source, module)
         return CSVFileReader(source)
     if fileformat == 'po':
         return PoFileReader(source)
+    if fileformat == 'xml':
+        assert module
+        return XMLDataFileReader(source, module)
     _logger.info('Bad file format: %s', fileformat)
     raise Exception(_('Bad file format: %s', fileformat))
 
@@ -755,6 +769,72 @@ class CSVFileReader:
                 self.prev_code_src = entry["src"]
 
             yield entry
+
+
+class CSVDataFileReader:
+    def __init__(self, source, module: str):
+        """Read the translations in CSV data file.
+
+        :param source: the input stream
+        :param module: the CSV file is considered as a data file possibly
+                       containing terms translated with the `@` syntax
+        """
+        _reader = codecs.getreader('utf-8')
+        self.module = module
+        self.model = os.path.splitext((os.path.basename(source.name)))[0].split('-')[0]
+        self.source = csv.DictReader(_reader(source), quotechar='"', delimiter=',')
+        self.prev_code_src = ""
+
+    def __iter__(self):
+        translated_fnames = sorted(
+            [fname.split('@', maxsplit=1) for fname in self.source.fieldnames or [] if '@' in fname],
+            key=lambda x: x[1],  # Put fallback languages first
+        )
+        for entry in self.source:
+            for fname, lang in translated_fnames:
+                module, imd_name = parse_xmlid(entry['id'], self.module)
+                yield {
+                    'type': 'model',
+                    'imd_model': self.model,
+                    'imd_name': imd_name,
+                    'lang': lang,
+                    'value': entry[f"{fname}@{lang}"],
+                    'src': entry[fname],
+                    'module': module,
+                    'name': f"{self.model},{fname}",
+                }
+
+
+class XMLDataFileReader:
+    def __init__(self, source, module: str):
+        try:
+            tree = etree.parse(source)
+        except etree.LxmlSyntaxError:
+            _logger.warning("Error parsing XML file %s", source)
+            tree = etree.fromstring('<data/>')
+        self.source = tree
+        self.module = module
+
+    def __iter__(self):
+        for record in self.source.xpath("//field[contains(@name, '@')]/.."):
+            vals = {field.attrib['name']: field.text for field in record.xpath("field")}
+            translated_fnames = sorted(
+                [fname.split('@', maxsplit=1) for fname in vals if '@' in fname],
+                key=lambda x: x[1],  # Put fallback languages first
+            )
+            for fname, lang in translated_fnames:
+                module, imd_name = parse_xmlid(record.attrib['id'], self.module)
+                yield {
+                    'type': 'model',
+                    'imd_model': record.attrib['model'],
+                    'imd_name': imd_name,
+                    'lang': lang,
+                    'value': vals[f"{fname}@{lang}"],
+                    'src': vals[fname],
+                    'module': module,
+                    'name': f"{record.attrib['model']},{fname}",
+                }
+
 
 class PoFileReader:
     """ Iterate over po file to return Odoo translation entries """
@@ -1316,6 +1396,14 @@ class TranslationModuleReader(TranslationReader):
 
     def _export_translatable_records(self):
         """ Export translations of all translated records having an external id """
+        modules = self._installed_modules if 'all' in self._modules else list(self._modules)
+        xml_defined = set()
+        for module in modules:
+            for filepath in get_datafile_translation_path(module, self.env):
+                fileformat = os.path.splitext(filepath)[-1][1:].lower()
+                with file_open(filepath, mode='rb') as source:
+                    for entry in translation_file_reader(source, fileformat=fileformat, module=module):
+                        xml_defined.add((entry['imd_model'], module, entry['imd_name']))
 
         query = """SELECT min(name), model, res_id, module
                      FROM ir_model_data
@@ -1323,16 +1411,13 @@ class TranslationModuleReader(TranslationReader):
                  GROUP BY model, res_id, module
                  ORDER BY module, model, min(name)"""
 
-        if 'all' not in self._modules:
-            query_param = list(self._modules)
-        else:
-            query_param = self._installed_modules
-
-        self._cr.execute(query, (query_param,))
+        self._cr.execute(query, (modules,))
 
         records_per_model = defaultdict(dict)
-        for (xml_name, model, res_id, module) in self._cr.fetchall():
-            records_per_model[model][res_id] = ImdInfo(xml_name, model, res_id, module)
+        for (imd_name, model, res_id, module) in self._cr.fetchall():
+            if (model, module, imd_name) in xml_defined:
+                continue
+            records_per_model[model][res_id] = ImdInfo(imd_name, model, res_id, module)
 
         for model, imd_per_id in records_per_model.items():
             self._export_imdinfo(model, imd_per_id)
@@ -1451,28 +1536,32 @@ class TranslationImporter:
         self.model_translations = DeepDefaultDict()
         # {model_name: {field_name: {xmlid: {src: {lang: value}}}}}
         self.model_terms_translations = DeepDefaultDict()
+        self.imported_langs = set()
 
-    def load_file(self, filepath, lang, xmlids=None):
+    def load_file(self, filepath, lang, xmlids=None, module=None):
         """ Load translations from the given file path.
 
         :param filepath: file path to open
         :param lang: language code of the translations contained in the file;
                      the language must be present and activated in the database
         :param xmlids: if given, only translations for records with xmlid in xmlids will be loaded
+        :param module: if given, the file will be interpreted as a data file containing translations
         """
         with suppress(FileNotFoundError), file_open(filepath, mode='rb', env=self.env) as fileobj:
-            _logger.info('loading base translation file %s for language %s', filepath, lang)
+            if self.verbose:
+                _logger.info('loading base translation file %s for language %s', filepath, lang)
             fileformat = os.path.splitext(filepath)[-1][1:].lower()
-            self.load(fileobj, fileformat, lang, xmlids=xmlids)
+            self.load(fileobj, fileformat, lang, xmlids=xmlids, module=module)
 
-    def load(self, fileobj, fileformat, lang, xmlids=None):
+    def load(self, fileobj, fileformat, lang, xmlids=None, module=None):
         """Load translations from the given file object.
 
         :param fileobj: buffer open to a translation file
-        :param fileformat: format of the `fielobj` file, one of 'po' or 'csv'
+        :param fileformat: format of the `fielobj` file, one of 'po', 'csv', or 'xml'
         :param lang: language code of the translations contained in `fileobj`;
                      the language must be present and activated in the database
         :param xmlids: if given, only translations for records with xmlid in xmlids will be loaded
+        :param module: if given, the file will be interpreted as a data file containing translations
         """
         if self.verbose:
             _logger.info('loading translation file for language %s', lang)
@@ -1481,7 +1570,7 @@ class TranslationImporter:
             return None
         try:
             fileobj.seek(0)
-            reader = TranslationFileReader(fileobj, fileformat=fileformat)
+            reader = translation_file_reader(fileobj, fileformat=fileformat, module=module)
             self._load(reader, lang, xmlids)
         except IOError:
             iso_lang = get_iso_codes(lang)
@@ -1491,10 +1580,13 @@ class TranslationImporter:
     def _load(self, reader, lang, xmlids=None):
         if xmlids and not isinstance(xmlids, set):
             xmlids = set(xmlids)
+        valid_langs = get_base_langs(lang) + [lang]
         for row in reader:
             if not row.get('value') or not row.get('src'):  # ignore empty translations
                 continue
             if row.get('type') == 'code':  # ignore code translations
+                continue
+            if row.get('lang', lang) not in valid_langs:
                 continue
             model_name = row.get('imd_model')
             module_name = row['module']
@@ -1509,8 +1601,10 @@ class TranslationImporter:
                 continue
             if row.get('type') == 'model' and field.translate is True:
                 self.model_translations[model_name][field_name][xmlid][lang] = row['value']
+                self.imported_langs.add(lang)
             elif row.get('type') == 'model_terms' and callable(field.translate):
                 self.model_terms_translations[model_name][field_name][xmlid][row['src']][lang] = row['value']
+                self.imported_langs.add(lang)
 
     def save(self, overwrite=False, force_overwrite=False):
         """ Save translations to the database.
@@ -1686,13 +1780,19 @@ def load_language(cr, lang):
     installer.lang_install()
 
 
-def get_po_paths(module_name: str, lang: str, env: odoo.api.Environment | None = None):
-    lang_base = lang.split('_')[0]
-    # Load the base as a fallback in case a translation is missing:
-    po_names = [lang_base, lang]
+def get_base_langs(lang: str) -> str:
+    # properly get the base lang, including for exceptions like cr@latin and es_419
+    base_langs = [lang.split('_')[0]]
     # Exception for Spanish locales: they have two bases, es and es_419:
-    if lang_base == 'es' and lang not in ('es_ES', 'es_419'):
-        po_names.insert(1, 'es_419')
+    if 'es' in base_langs and lang not in ('es_ES', 'es_419'):
+        base_langs.insert(1, 'es_419')
+    return base_langs
+
+
+def get_po_paths(module_name: str, lang: str, env: odoo.api.Environment | None = None):
+    base_langs = get_base_langs(lang)
+    # Load the base as a fallback in case a translation is missing:
+    po_names = base_langs + [lang]
     po_paths = [
         join(module_name, dir_, filename + '.po')
         for filename in OrderedSet(po_names)
@@ -1701,6 +1801,14 @@ def get_po_paths(module_name: str, lang: str, env: odoo.api.Environment | None =
     for path in po_paths:
         with suppress(FileNotFoundError):
             yield file_path(path, env=env)
+
+
+def get_datafile_translation_path(module_name: str, env: odoo.api.Environment | None = None):
+    manifest = odoo.modules.get_manifest(module_name)
+    for data_type in ('data', 'demo'):
+        for path in manifest.get(data_type, ()):
+            if path.endswith(('.xml', '.csv')):
+                yield file_path(join(module_name, path), env=env)
 
 
 class CodeTranslations:
@@ -1720,7 +1828,7 @@ class CodeTranslations:
         # don't use it in the import logic
         translations = {}
         fileobj.seek(0)
-        reader = TranslationFileReader(fileobj, fileformat='po')
+        reader = translation_file_reader(fileobj, fileformat='po')
         for row in reader:
             if row.get('type') == 'code' and row.get('src') and filter_func(row):
                 translations[row['src']] = row['value']
