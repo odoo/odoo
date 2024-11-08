@@ -1,23 +1,21 @@
 import { waitNotifications } from "@bus/../tests/bus_test_helpers";
-import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
-import { RATING } from "@im_livechat/embed/common/livechat_service";
 import {
     defineLivechatModels,
     loadDefaultEmbedConfig,
 } from "@im_livechat/../tests/livechat_test_helpers";
-import { describe, expect, test } from "@odoo/hoot";
+import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
+import { RATING } from "@im_livechat/embed/common/livechat_service";
 import {
-    assertSteps,
     click,
     contains,
     insertText,
     onRpcBefore,
     start,
     startServer,
-    step,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { describe, expect, test } from "@odoo/hoot";
+import { asyncStep, mountWithCleanup, waitForSteps } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineLivechatModels();
@@ -36,11 +34,8 @@ test("Close without feedback", async () => {
     await startServer();
     await loadDefaultEmbedConfig();
     onRpcBefore((route) => {
-        if (route === "/im_livechat/visitor_leave_session") {
-            step(route);
-        }
-        if (route === "/im_livechat/feedback") {
-            step(route);
+        if (route === "/im_livechat/visitor_leave_session" || route === "/im_livechat/feedback") {
+            asyncStep(route);
         }
     });
     await start({ authenticateAs: false });
@@ -54,7 +49,7 @@ test("Close without feedback", async () => {
     await click(".o-livechat-CloseConfirmation-leave");
     await click("button", { text: "Close conversation" });
     await contains(".o-livechat-LivechatButton");
-    await assertSteps(["/im_livechat/visitor_leave_session"]);
+    await waitForSteps(["/im_livechat/visitor_leave_session"]);
 });
 
 test("Feedback with rating and comment", async () => {
@@ -62,10 +57,10 @@ test("Feedback with rating and comment", async () => {
     await loadDefaultEmbedConfig();
     onRpcBefore((route, args) => {
         if (route === "/im_livechat/visitor_leave_session") {
-            step(route);
+            asyncStep(route);
         }
         if (route === "/im_livechat/feedback") {
-            step(route);
+            asyncStep(route);
             expect(args.reason.includes("Good job!")).toBe(true);
             expect(args.rate).toBe(RATING.GOOD);
         }
@@ -79,12 +74,12 @@ test("Feedback with rating and comment", async () => {
     await contains(".o-mail-Message-content", { text: "Hello World!" });
     await click("[title*='Close Chat Window']");
     await click(".o-livechat-CloseConfirmation-leave");
-    await assertSteps(["/im_livechat/visitor_leave_session"]);
+    await waitForSteps(["/im_livechat/visitor_leave_session"]);
     await click(`img[data-alt="${RATING.GOOD}"]`);
     await insertText("textarea[placeholder='Explain your note']", "Good job!");
     await click("button:contains(Send):enabled");
     await contains("p", { text: "Thank you for your feedback" });
-    await assertSteps(["/im_livechat/feedback"]);
+    await waitForSteps(["/im_livechat/feedback"]);
 });
 
 test("Closing folded chat window should open it with feedback", async () => {

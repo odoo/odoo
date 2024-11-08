@@ -1,7 +1,4 @@
-import { defineSaleTimesheetModels } from "./sale_timesheet_test_helpers";
-import { beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
 import {
-    assertSteps,
     click,
     contains,
     editInput,
@@ -10,10 +7,11 @@ import {
     openListView,
     registerArchs,
     start,
-    step,
-    startServer,
+    startServer
 } from "@mail/../tests/mail_test_helpers";
-import { onRpc } from "@web/../tests/web_test_helpers";
+import { beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
+import { asyncStep, onRpc, waitForSteps } from "@web/../tests/web_test_helpers";
+import { defineSaleTimesheetModels } from "./sale_timesheet_test_helpers";
 
 describe.current.tags("desktop");
 defineSaleTimesheetModels();
@@ -47,22 +45,22 @@ test("Check whether so_line_field widget works as intended in form view", async 
     await start();
     onRpc("account.analytic.line", "web_save", (args) => {
         expect(args.args[1].is_so_line_edited).toBe(true);
-        step("web_save");
+        asyncStep("web_save");
     });
     await openFormView("account.analytic.line");
     await editInput(target, ".o_field_widget[name=so_line] input", "Sale Order Line 2");
     await contains(".ui-autocomplete");
     await click(target.querySelector(".ui-menu-item"));
     await click(".o_form_button_save");
-    await assertSteps(["web_save"]);
+    await waitForSteps(["web_save"]);
 });
 
 test("Check whether so_line_field widget works as intended in list view", async () => {
     const target = getFixture();
     await start();
-    onRpc("account.analytic.line", "web_save", (args) => {
-        expect(args.args[1].is_so_line_edited).toBe(true);
-        step("web_save");
+    onRpc("account.analytic.line", "web_save", ({ args }) => {
+        expect(args[1].is_so_line_edited).toBe(true);
+        asyncStep("web_save");
     });
     await openListView("account.analytic.line");
     await click(".o_data_cell");
@@ -70,15 +68,15 @@ test("Check whether so_line_field widget works as intended in list view", async 
     await contains(".ui-autocomplete");
     await click(target.querySelector(".ui-menu-item"));
     await click(target.querySelector(".o_searchview_input"));
-    await assertSteps(["web_save"]);
+    await waitForSteps(["web_save"]);
 });
 
 test("Check whether so_line_field widget works as intended in sub-tree view of timesheets linked to a task", async () => {
     const target = getFixture();
     await start();
-    onRpc("project.task", "web_save", (args) => {
-        expect(args.args[1].timesheet_ids[0][2].is_so_line_edited).toBe(true);
-        step("web_save");
+    onRpc("project.task", "web_save", ({ args }) => {
+        expect(args[1].timesheet_ids[0][2].is_so_line_edited).toBe(true);
+        asyncStep("web_save");
     });
     await openFormView("project.task");
     await click(".o_field_x2many_list_row_add a");
@@ -86,5 +84,5 @@ test("Check whether so_line_field widget works as intended in sub-tree view of t
     await contains(".ui-autocomplete");
     await click(target.querySelector(".ui-menu-item"));
     await click(".o_form_button_save");
-    await assertSteps(["web_save"]);
+    await waitForSteps(["web_save"]);
 });

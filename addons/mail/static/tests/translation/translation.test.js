@@ -1,6 +1,4 @@
-import { describe, test } from "@odoo/hoot";
 import {
-    assertSteps,
     click,
     contains,
     defineMailModels,
@@ -8,9 +6,9 @@ import {
     openFormView,
     start,
     startServer,
-    step,
 } from "@mail/../tests/mail_test_helpers";
-import { serverState } from "@web/../tests/web_test_helpers";
+import { describe, test } from "@odoo/hoot";
+import { asyncStep, serverState, waitForSteps } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -25,7 +23,7 @@ test("Toggle display of original/translated version of chatter message", async (
         res_id: partnerId,
     });
     onRpcBefore("/mail/message/translate", () => {
-        step("Request");
+        asyncStep("Request");
         return { body: "To bad weather, good face.", lang_name: "Spanish", error: null };
     });
     await start();
@@ -43,7 +41,7 @@ test("Toggle display of original/translated version of chatter message", async (
     await contains(".o-mail-Message", { text: "Al mal tiempo, buena cara." });
     await click("[title='Translate']");
     // The translation button should not trigger more than one external request for a single message.
-    await assertSteps(["Request"]);
+    await waitForSteps(["Request"]);
 });
 
 test("translation of email message", async () => {

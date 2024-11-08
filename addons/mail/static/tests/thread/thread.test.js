@@ -1,5 +1,4 @@
 import {
-    assertSteps,
     click,
     contains,
     defineMailModels,
@@ -13,7 +12,6 @@ import {
     scroll,
     start,
     startServer,
-    step,
     triggerEvents,
 } from "@mail/../tests/mail_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
@@ -21,7 +19,15 @@ import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 import { describe, expect, test } from "@odoo/hoot";
 import { queryFirst, queryValue } from "@odoo/hoot-dom";
 import { Deferred, mockDate, tick } from "@odoo/hoot-mock";
-import { Command, makeKwArgs, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
+import {
+    asyncStep,
+    Command,
+    makeKwArgs,
+    onRpc,
+    serverState,
+    waitForSteps,
+    withUser,
+} from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
 
@@ -296,20 +302,20 @@ test("mark channel as fetched when a new message is loaded", async () => {
     });
     onRpcBefore("/mail/data", (args) => {
         if (args.init_messaging) {
-            step(`/mail/data - ${JSON.stringify(args)}`);
+            asyncStep(`/mail/data - ${JSON.stringify(args)}`);
         }
     });
     onRpcBefore("/discuss/channel/mark_as_read", (args) => {
         expect(args.channel_id).toBe(channelId);
-        step("rpc:mark_as_read");
+        asyncStep("rpc:mark_as_read");
     });
     onRpc("discuss.channel", "channel_fetched", ({ args }) => {
         expect(args[0][0]).toBe(channelId);
-        step("rpc:channel_fetch");
+        asyncStep("rpc:channel_fetch");
     });
     await start();
     await contains(".o_menu_systray i[aria-label='Messages']");
-    await assertSteps([
+    await waitForSteps([
         `/mail/data - ${JSON.stringify({
             init_messaging: {},
             failures: true,
@@ -326,10 +332,10 @@ test("mark channel as fetched when a new message is loaded", async () => {
         })
     );
     await contains(".o-mail-Message");
-    await assertSteps(["rpc:channel_fetch"]);
+    await waitForSteps(["rpc:channel_fetch"]);
     await contains(".o-mail-Thread-newMessage hr + span", { text: "New" });
     await focus(".o-mail-Composer-input");
-    await assertSteps(["rpc:mark_as_read"]);
+    await waitForSteps(["rpc:mark_as_read"]);
 });
 
 test.tags("focus required");
@@ -344,10 +350,10 @@ test("mark channel as fetched when a new message is loaded and thread is focused
             Command.create({ partner_id: partnerId }),
         ],
     });
-    onRpc("/discuss/channel/messages", () => step("/discuss/channel/messages"));
+    onRpc("/discuss/channel/messages", () => asyncStep("/discuss/channel/messages"));
     onRpcBefore("/discuss/channel/mark_as_read", (args) => {
         expect(args.channel_id).toBe(channelId);
-        step("rpc:mark_as_read");
+        asyncStep("rpc:mark_as_read");
     });
     onRpc("discuss.channel", "channel_fetched", ({ args }) => {
         if (args[0] === channelId) {
@@ -358,7 +364,7 @@ test("mark channel as fetched when a new message is loaded and thread is focused
     });
     await start();
     await openDiscuss(channelId);
-    await assertSteps(["/discuss/channel/messages"]);
+    await waitForSteps(["/discuss/channel/messages"]);
     await click(".o-mail-Composer");
     // simulate receiving a message
     await withUser(userId, () =>
@@ -369,7 +375,7 @@ test("mark channel as fetched when a new message is loaded and thread is focused
         })
     );
     await contains(".o-mail-Message");
-    await assertSteps(["rpc:mark_as_read"]);
+    await waitForSteps(["rpc:mark_as_read"]);
 });
 
 test("should scroll to bottom on receiving new message if the list is initially scrolled to bottom (asc order)", async () => {
@@ -784,7 +790,7 @@ test("Thread messages are only loaded once", async () => {
     const pyEnv = await startServer();
     const channelIds = pyEnv["discuss.channel"].create([{ name: "General" }, { name: "Sales" }]);
     onRpcBefore("/discuss/channel/messages", (args) =>
-        step(`load messages - ${args["channel_id"]}`)
+        asyncStep(`load messages - ${args["channel_id"]}`)
     );
     await start();
     pyEnv["mail.message"].create([
@@ -806,7 +812,7 @@ test("Thread messages are only loaded once", async () => {
     await contains(".o-mail-Message-content", { text: "Message on channel2" });
     await click("button", { text: "General" });
     await contains(".o-mail-Message-content", { text: "Message on channel1" });
-    await assertSteps([`load messages - ${channelIds[0]}`, `load messages - ${channelIds[1]}`]);
+    await waitForSteps([`load messages - ${channelIds[0]}`, `load messages - ${channelIds[1]}`]);
 });
 
 test.tags("focus required");
@@ -815,7 +821,7 @@ test("Opening thread with needaction messages should mark all messages of thread
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     onRpc("mail.message", "mark_all_as_read", ({ args }) => {
-        step("mark-all-messages-as-read");
+        asyncStep("mark-all-messages-as-read");
         expect(args[0]).toEqual([
             ["model", "=", "discuss.channel"],
             ["res_id", "=", channelId],
@@ -854,13 +860,13 @@ test("Opening thread with needaction messages should mark all messages of thread
     await click("button", { text: "General" });
     await contains(".o-discuss-badge", { count: 0 });
     await contains("button", { text: "Inbox", contains: [".badge", { count: 0 }] });
-    await assertSteps(["mark-all-messages-as-read"]);
+    await waitForSteps(["mark-all-messages-as-read"]);
 });
 
 test("[technical] Opening thread without needaction messages should not mark all messages of thread as read", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    onRpc("mail.message", "mark_all_as_read", () => step("mark-all-messages-as-read"));
+    onRpc("mail.message", "mark_all_as_read", () => asyncStep("mark-all-messages-as-read"));
     await start();
     await openDiscuss(channelId);
     await click("button", { text: "Inbox" });
@@ -874,7 +880,7 @@ test("[technical] Opening thread without needaction messages should not mark all
     });
     await click("button", { text: "General" });
     await tick();
-    await assertSteps([]);
+    await waitForSteps([]);
 });
 
 test.tags("focus required")("can be marked as read while loading", async () => {

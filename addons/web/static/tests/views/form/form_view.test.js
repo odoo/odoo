@@ -7917,7 +7917,7 @@ test(`display toolbar`, async () => {
 test(`execute ActionMenus actions`, async () => {
     mockService("action", {
         doAction(id, { additionalContext, onClose }) {
-            expect.step(JSON.stringify({ action_id: id, context: additionalContext }));
+            expect.step({ action_id: id, context: additionalContext });
             onClose(); // simulate closing of target new action's dialog
         },
     });
@@ -7945,7 +7945,19 @@ test(`execute ActionMenus actions`, async () => {
     await toggleActionMenu();
     await toggleMenuItem("Action Partner");
     expect.verifySteps([
-        `{"action_id":29,"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"active_id":1,"active_ids":[1],"active_model":"partner","active_domain":[]}}`,
+        {
+            action_id: 29,
+            context: {
+                lang: "en",
+                tz: "taht",
+                uid: 7,
+                allowed_company_ids: [1],
+                active_id: 1,
+                active_ids: [1],
+                active_model: "partner",
+                active_domain: [],
+            },
+        },
         "web_read",
     ]);
 });
@@ -7953,7 +7965,7 @@ test(`execute ActionMenus actions`, async () => {
 test(`execute ActionMenus actions (create)`, async () => {
     mockService("action", {
         doAction(id, { additionalContext, onClose }) {
-            expect.step(JSON.stringify({ action_id: id, context: additionalContext }));
+            expect.step({ action_id: id, context: additionalContext });
             onClose(); // simulate closing of target new action's dialog
         },
     });
@@ -7984,7 +7996,19 @@ test(`execute ActionMenus actions (create)`, async () => {
     await toggleMenuItem("Action Partner");
     expect.verifySteps([
         "web_save",
-        `{"action_id":29,"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"active_id":6,"active_ids":[6],"active_model":"partner","active_domain":[]}}`,
+        {
+            action_id: 29,
+            context: {
+                lang: "en",
+                tz: "taht",
+                uid: 7,
+                allowed_company_ids: [1],
+                active_id: 6,
+                active_ids: [6],
+                active_model: "partner",
+                active_domain: [],
+            },
+        },
         "web_read",
     ]);
     expect(`.o_field_widget[name='foo'] input`).toHaveValue("test");

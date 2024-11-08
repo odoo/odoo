@@ -2,10 +2,9 @@ import { describe, expect, test } from "@odoo/hoot";
 import { leave } from "@odoo/hoot-dom";
 
 import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
-import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { asyncStep, Command, serverState, waitForSteps } from "@web/../tests/web_test_helpers";
 import { rpc } from "@web/core/network/rpc";
 import {
-    assertSteps,
     click,
     contains,
     defineMailModels,
@@ -14,7 +13,6 @@ import {
     onRpcBefore,
     start,
     startServer,
-    step,
 } from "../mail_test_helpers";
 
 describe.current.tags("desktop");
@@ -322,7 +320,7 @@ test("Can close all chat windows at once", async () => {
             closed.add(args.channel_id);
         }
         if (closed.size === 20) {
-            step("ALL_CLOSED");
+            asyncStep("ALL_CLOSED");
         }
     });
     const pyEnv = await startServer();
@@ -343,7 +341,7 @@ test("Can close all chat windows at once", async () => {
     await click("button.fa.fa-ellipsis-h[title='Chat Options']");
     await click("button.o-mail-ChatHub-option", { text: "Close all conversations" });
     await contains(".o-mail-ChatBubble", { count: 0 });
-    await assertSteps(["ALL_CLOSED"]);
+    await waitForSteps(["ALL_CLOSED"]);
     const members = pyEnv["discuss.channel.member"].search_read([
         ["channel_id", "in", channelIds],
         ["partner_id", "=", serverState.partnerId],

@@ -167,7 +167,7 @@ test("Server requests", async () => {
             if (args.method === "spreadsheet_fetch_debit_credit") {
                 const blobs = args.args[0];
                 for (const blob of blobs) {
-                    expect.step(JSON.stringify(blob));
+                    expect.step(blob);
                 }
                 return new Array(blobs.length).fill({ credit: 0, debit: 0 });
             }
@@ -186,78 +186,60 @@ test("Server requests", async () => {
     await waitForDataLoaded(model);
 
     expect.verifySteps([
-        JSON.stringify(
-            camelToSnakeObject({
-                dateRange: parseAccountingDate({ value: "2022" }, locale),
-                codes: ["100"],
-                companyId: null,
-                includeUnposted: false,
-            })
-        ),
-        JSON.stringify(
-            camelToSnakeObject({
-                dateRange: parseAccountingDate({ value: "01/2022" }, locale),
-                codes: ["100"],
-                companyId: null,
-                includeUnposted: false,
-            })
-        ),
-        JSON.stringify(
-            camelToSnakeObject({
-                dateRange: parseAccountingDate({ value: "Q2/2022" }, locale),
-                codes: ["100"],
-                companyId: null,
-                includeUnposted: false,
-            })
-        ),
-        JSON.stringify(
-            camelToSnakeObject({
-                dateRange: parseAccountingDate({ value: "2021" }, locale),
-                codes: ["10"],
-                companyId: null,
-                includeUnposted: false,
-            })
-        ),
-        JSON.stringify(
-            camelToSnakeObject({
-                dateRange: parseAccountingDate({ value: "2021" }, locale),
-                codes: ["5"],
-                companyId: 2,
-                includeUnposted: false,
-            })
-        ),
-        JSON.stringify(
-            camelToSnakeObject({
-                dateRange: parseAccountingDate({ value: "05/04/2022" }, locale),
-                codes: ["5"],
-                companyId: null,
-                includeUnposted: false,
-            })
-        ),
-        JSON.stringify(
-            camelToSnakeObject({
-                dateRange: parseAccountingDate({ value: "2022" }, locale),
-                codes: ["5"],
-                companyId: null,
-                includeUnposted: false,
-            })
-        ),
-        JSON.stringify(
-            camelToSnakeObject({
-                dateRange: parseAccountingDate({ value: "05/05/2022" }, locale),
-                codes: ["100"],
-                companyId: null,
-                includeUnposted: true,
-            })
-        ),
-        JSON.stringify(
-            camelToSnakeObject({
-                dateRange: parseAccountingDate({ value: "2019" }, locale),
-                codes: ["33"],
-                companyId: null,
-                includeUnposted: false,
-            })
-        ),
+        camelToSnakeObject({
+            dateRange: parseAccountingDate({ value: "2022" }, locale),
+            codes: ["100"],
+            companyId: null,
+            includeUnposted: false,
+        }),
+        camelToSnakeObject({
+            dateRange: parseAccountingDate({ value: "01/2022" }, locale),
+            codes: ["100"],
+            companyId: null,
+            includeUnposted: false,
+        }),
+        camelToSnakeObject({
+            dateRange: parseAccountingDate({ value: "Q2/2022" }, locale),
+            codes: ["100"],
+            companyId: null,
+            includeUnposted: false,
+        }),
+        camelToSnakeObject({
+            dateRange: parseAccountingDate({ value: "2021" }, locale),
+            codes: ["10"],
+            companyId: null,
+            includeUnposted: false,
+        }),
+        camelToSnakeObject({
+            dateRange: parseAccountingDate({ value: "2021" }, locale),
+            codes: ["5"],
+            companyId: 2,
+            includeUnposted: false,
+        }),
+        camelToSnakeObject({
+            dateRange: parseAccountingDate({ value: "05/04/2022" }, locale),
+            codes: ["5"],
+            companyId: null,
+            includeUnposted: false,
+        }),
+        camelToSnakeObject({
+            dateRange: parseAccountingDate({ value: "2022" }, locale),
+            codes: ["5"],
+            companyId: null,
+            includeUnposted: false,
+        }),
+        camelToSnakeObject({
+            dateRange: parseAccountingDate({ value: "05/05/2022" }, locale),
+            codes: ["100"],
+            companyId: null,
+            includeUnposted: true,
+        }),
+        camelToSnakeObject({
+            dateRange: parseAccountingDate({ value: "2019" }, locale),
+            codes: ["33"],
+            companyId: null,
+            includeUnposted: false,
+        }),
     ]);
 });
 
@@ -268,7 +250,7 @@ test("Server requests with multiple account codes", async () => {
                 expect.step("spreadsheet_fetch_debit_credit");
                 const blobs = args.args[0];
                 for (const blob of blobs) {
-                    expect.step(JSON.stringify(blob));
+                    expect.step(blob);
                 }
             }
         },
@@ -280,14 +262,12 @@ test("Server requests with multiple account codes", async () => {
 
     expect.verifySteps([
         "spreadsheet_fetch_debit_credit",
-        JSON.stringify(
-            camelToSnakeObject({
-                dateRange: parseAccountingDate({ value: "2022"}, locale),
-                codes: ["100", "200"],
-                companyId: null,
-                includeUnposted: false,
-            })
-        ),
+        camelToSnakeObject({
+            dateRange: parseAccountingDate({ value: "2022" }, locale),
+            codes: ["100", "200"],
+            companyId: null,
+            includeUnposted: false,
+        }),
     ]);
 });
 
@@ -299,7 +279,7 @@ test("account group formula as input to balance formula", async () => {
                 expect.step("spreadsheet_fetch_debit_credit");
                 const blobs = args.args[0];
                 for (const blob of blobs) {
-                    expect.step(JSON.stringify(blob));
+                    expect.step(blob);
                 }
             }
         },
@@ -313,14 +293,12 @@ test("account group formula as input to balance formula", async () => {
     expect(getCellValue(model, "A2")).toBe(0);
     expect.verifySteps([
         "spreadsheet_fetch_debit_credit",
-        JSON.stringify(
-            camelToSnakeObject({
-                dateRange: parseAccountingDate({ value: "2022"}, locale),
-                codes: ["100104", "200104"],
-                companyId: null,
-                includeUnposted: false,
-            })
-        ),
+        camelToSnakeObject({
+            dateRange: parseAccountingDate({ value: "2022" }, locale),
+            codes: ["100104", "200104"],
+            companyId: null,
+            includeUnposted: false,
+        }),
     ]);
 });
 
@@ -332,7 +310,7 @@ test("two concurrent requests on different accounts", async () => {
                 expect.step("spreadsheet_fetch_debit_credit");
                 const blobs = args.args[0];
                 for (const blob of blobs) {
-                    expect.step(JSON.stringify(blob));
+                    expect.step(blob);
                 }
             }
         },
@@ -353,23 +331,19 @@ test("two concurrent requests on different accounts", async () => {
     expect(getCellValue(model, "A3")).toBe(0);
     expect.verifySteps([
         "spreadsheet_fetch_debit_credit",
-        JSON.stringify(
-            camelToSnakeObject({
-                dateRange: parseAccountingDate({ value: "2022" }, locale),
-                codes: ["100"],
-                companyId: null,
-                includeUnposted: false,
-            })
-        ),
+        camelToSnakeObject({
+            dateRange: parseAccountingDate({ value: "2022" }, locale),
+            codes: ["100"],
+            companyId: null,
+            includeUnposted: false,
+        }),
         "spreadsheet_fetch_debit_credit",
-        JSON.stringify(
-            camelToSnakeObject({
-                dateRange: parseAccountingDate({ value: "2022" }, locale),
-                codes: ["100104", "200104"],
-                companyId: null,
-                includeUnposted: false,
-            })
-        ),
+        camelToSnakeObject({
+            dateRange: parseAccountingDate({ value: "2022" }, locale),
+            codes: ["100104", "200104"],
+            companyId: null,
+            includeUnposted: false,
+        }),
     ]);
 });
 

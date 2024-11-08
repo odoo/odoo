@@ -218,82 +218,85 @@ test.tags("mobile")("Many2ManyTagsField with and without color on mobile", async
     expect(".o_colorlist").toHaveCount(0);
 });
 
-test.tags("desktop")("Many2ManyTagsField with color: rendering and edition on desktop", async () => {
-    expect.assertions(26);
+test.tags("desktop")(
+    "Many2ManyTagsField with color: rendering and edition on desktop",
+    async () => {
+        expect.assertions(26);
 
-    Partner._records[0].timmy = [12, 14];
-    PartnerType._records.push({ id: 13, name: "red", color: 8 });
-    onRpc(({ args, method, model, kwargs, route }) => {
-        if (route === "/web/dataset/call_kw/partner/web_save") {
-            var commands = args[1].timmy;
-            expect(commands.length).toBe(2);
-            expect(commands.map((cmd) => cmd[0]).join("-")).toBe("4-3");
-            expect(commands.map((cmd) => cmd[1])).toEqual([13, 14], {
-                message: "Should add 13, remove 14",
-            });
-        }
-        if ((method === "web_read" || method === "web_save") && model === "partner.type") {
-            expect(kwargs.specification).toEqual(
-                { display_name: {}, color: {} },
-                { message: "should read color field" }
-            );
-        }
-    });
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        arch: `
+        Partner._records[0].timmy = [12, 14];
+        PartnerType._records.push({ id: 13, name: "red", color: 8 });
+        onRpc(({ args, method, model, kwargs, route }) => {
+            if (route === "/web/dataset/call_kw/partner/web_save") {
+                var commands = args[1].timmy;
+                expect(commands.length).toBe(2);
+                expect(commands.map((cmd) => cmd[0]).join("-")).toBe("4-3");
+                expect(commands.map((cmd) => cmd[1])).toEqual([13, 14], {
+                    message: "Should add 13, remove 14",
+                });
+            }
+            if ((method === "web_read" || method === "web_save") && model === "partner.type") {
+                expect(kwargs.specification).toEqual(
+                    { display_name: {}, color: {} },
+                    { message: "should read color field" }
+                );
+            }
+        });
+        await mountView({
+            type: "form",
+            resModel: "partner",
+            arch: `
             <form>
                 <field name="timmy" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True }"/>
             </form>`,
-        resId: 1,
-    });
-    expect(".o_field_many2many_tags .badge").toHaveCount(2);
-    expect(".badge .o_tag_badge_text:eq(0)").toHaveText("gold");
-    expect(".badge .o_tag_badge_text:eq(1)").toHaveText("silver");
-    expect(".badge:eq(0)").toHaveClass("o_tag_color_2");
-    expect(".o_field_many2many_tags .o_delete").toHaveCount(2);
+            resId: 1,
+        });
+        expect(".o_field_many2many_tags .badge").toHaveCount(2);
+        expect(".badge .o_tag_badge_text:eq(0)").toHaveText("gold");
+        expect(".badge .o_tag_badge_text:eq(1)").toHaveText("silver");
+        expect(".badge:eq(0)").toHaveClass("o_tag_color_2");
+        expect(".o_field_many2many_tags .o_delete").toHaveCount(2);
 
-    // add an other existing tag
-    await contains("div[name='timmy'] .o-autocomplete.dropdown input").click();
-    expect(`.dropdown-item-selected`).toHaveCount(2);
-    expect(queryAllTexts`.dropdown-item-selected`).toEqual(["gold", "silver"]);
-    expect(".o-autocomplete--dropdown-menu li").toHaveCount(5);
-    expect(".o-autocomplete--dropdown-menu li a:eq(2)").toHaveText("red");
+        // add an other existing tag
+        await contains("div[name='timmy'] .o-autocomplete.dropdown input").click();
+        expect(`.dropdown-item-selected`).toHaveCount(2);
+        expect(queryAllTexts`.dropdown-item-selected`).toEqual(["gold", "silver"]);
+        expect(".o-autocomplete--dropdown-menu li").toHaveCount(5);
+        expect(".o-autocomplete--dropdown-menu li a:eq(2)").toHaveText("red");
 
-    await contains(".o-autocomplete--dropdown-menu li a:eq(2)").click();
-    expect(".o_field_many2many_tags .badge").toHaveCount(3);
-    expect(".o_field_many2many_tags .badge .o_tag_badge_text:eq(2)").toHaveText("red");
-    expect(".badge:eq(2)").toHaveClass("o_tag_color_8");
+        await contains(".o-autocomplete--dropdown-menu li a:eq(2)").click();
+        expect(".o_field_many2many_tags .badge").toHaveCount(3);
+        expect(".o_field_many2many_tags .badge .o_tag_badge_text:eq(2)").toHaveText("red");
+        expect(".badge:eq(2)").toHaveClass("o_tag_color_8");
 
-    // remove tag silver
-    await contains(".o_field_many2many_tags .o_delete:eq(1)").click();
-    expect(".o_field_many2many_tags .badge").toHaveCount(2);
-    const textContent = queryAllTexts(".o_field_many2many_tags  .dropdown-toggle .badge");
-    expect(textContent).not.toInclude("silver");
-    // save the record (should do the write RPC with the correct commands)
-    await clickSave();
+        // remove tag silver
+        await contains(".o_field_many2many_tags .o_delete:eq(1)").click();
+        expect(".o_field_many2many_tags .badge").toHaveCount(2);
+        const textContent = queryAllTexts(".o_field_many2many_tags  .dropdown-toggle .badge");
+        expect(textContent).not.toInclude("silver");
+        // save the record (should do the write RPC with the correct commands)
+        await clickSave();
 
-    // checkbox 'Hide in Kanban'
-    const badgeElement = queryOne(".o_field_many2many_tags .badge:eq(1)"); // selects 'red' tag
-    await contains(badgeElement).click();
-    expect(".o_tag_popover .form-check input").toHaveCount(1);
+        // checkbox 'Hide in Kanban'
+        const badgeElement = queryOne(".o_field_many2many_tags .badge:eq(1)"); // selects 'red' tag
+        await contains(badgeElement).click();
+        expect(".o_tag_popover .form-check input").toHaveCount(1);
 
-    expect(".o_tag_popover .form-check input").not.toBeChecked();
+        expect(".o_tag_popover .form-check input").not.toBeChecked();
 
-    await contains(".o_tag_popover input[type='checkbox']").click();
-    expect(badgeElement).toHaveAttribute("data-color", "0");
+        await contains(".o_tag_popover input[type='checkbox']").click();
+        expect(badgeElement).toHaveAttribute("data-color", "0");
 
-    await contains(badgeElement).click();
-    expect(".o_tag_popover .form-check input").toBeChecked();
+        await contains(badgeElement).click();
+        expect(".o_tag_popover .form-check input").toBeChecked();
 
-    await contains(".o_tag_popover input[type='checkbox']").click();
+        await contains(".o_tag_popover input[type='checkbox']").click();
 
-    expect(badgeElement).toHaveAttribute("data-color", "8");
+        expect(badgeElement).toHaveAttribute("data-color", "8");
 
-    await contains(badgeElement).click();
-    expect(".o_tag_popover .form-check input").not.toBeChecked();
-});
+        await contains(badgeElement).click();
+        expect(".o_tag_popover .form-check input").not.toBeChecked();
+    }
+);
 
 test.tags("desktop")("Many2ManyTagsField in list view on desktop", async () => {
     Partner._records[0].timmy = [12, 14];
@@ -604,7 +607,7 @@ test("Many2ManyTagsField: update color", async () => {
     Partner._records[0].timmy = [12];
     PartnerType._records[0].color = 0;
     onRpc("web_save", ({ args }) => {
-        expect.step(JSON.stringify(args[1]));
+        expect.step(args[1]);
     });
 
     await mountView({
@@ -637,9 +640,9 @@ test("Many2ManyTagsField: update color", async () => {
     // await clickSave();
 
     expect.verifySteps([
-        `{"color":1}`,
-        `{"color":6}`,
-        //  `{"timmy":[[1,12,{"color":6}]]}`
+        { color: 1 },
+        { color: 6 },
+        // { timmy: [[1, 12, { color: 6 }]] },
     ]);
 
     /*
@@ -912,41 +915,44 @@ test.tags("desktop")("select a many2many value by pressing tab on desktop", asyn
     expect(".o_field_many2many_tags .badge:eq(1)").toHaveText("red");
 });
 
-test.tags("desktop")("input and remove text without selecting any tag or option on desktop", async () => {
-    PartnerType._records.push({ id: 13, name: "red", color: 8 });
+test.tags("desktop")(
+    "input and remove text without selecting any tag or option on desktop",
+    async () => {
+        PartnerType._records.push({ id: 13, name: "red", color: 8 });
 
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        arch: '<form><field name="timmy" widget="many2many_tags"/></form>',
-    });
+        await mountView({
+            type: "form",
+            resModel: "partner",
+            arch: '<form><field name="timmy" widget="many2many_tags"/></form>',
+        });
 
-    expect(".o_field_many2many_tags .badge").toHaveCount(0);
+        expect(".o_field_many2many_tags .badge").toHaveCount(0);
 
-    // enter some text
-    await contains(".o_field_many2many_tags input").edit("go", { confirm: false });
-    await runAllTimers();
+        // enter some text
+        await contains(".o_field_many2many_tags input").edit("go", { confirm: false });
+        await runAllTimers();
 
-    // ensure no selection
-    await hover(".o-autocomplete--dropdown-item:eq(0)");
-    await hover(".o_form_renderer");
-    await press("Tab");
+        // ensure no selection
+        await hover(".o-autocomplete--dropdown-item:eq(0)");
+        await hover(".o_form_renderer");
+        await press("Tab");
 
-    // ensure we're not adding any value
-    expect(".modal").toHaveCount(0);
-    expect(".o_field_many2many_tags .badge").toHaveCount(0);
+        // ensure we're not adding any value
+        expect(".modal").toHaveCount(0);
+        expect(".o_field_many2many_tags .badge").toHaveCount(0);
 
-    // remove the added text to test behaviour with falsy value
-    await contains(".o_field_many2many_tags input").clear({ confirm: false });
-    await runAllTimers();
+        // remove the added text to test behaviour with falsy value
+        await contains(".o_field_many2many_tags input").clear({ confirm: false });
+        await runAllTimers();
 
-    await hover(".o-autocomplete--dropdown-item:eq(0)");
-    await hover(".o_form_renderer");
-    await press("Tab");
+        await hover(".o-autocomplete--dropdown-item:eq(0)");
+        await hover(".o_form_renderer");
+        await press("Tab");
 
-    expect(".modal").toHaveCount(0);
-    expect(".o_field_many2many_tags .badge").toHaveCount(0);
-});
+        expect(".modal").toHaveCount(0);
+        expect(".o_field_many2many_tags .badge").toHaveCount(0);
+    }
+);
 
 test.tags("desktop")("Many2ManyTagsField in one2many with name on desktop", async () => {
     Turtle._records[0].partner_ids = [2];
@@ -1203,146 +1209,152 @@ test.tags("desktop")(
     }
 );
 
-test.tags("desktop")("Many2ManyTagsField: conditional create/delete actions on desktop", async () => {
-    Turtle._records[0].partner_ids = [2];
-    for (var i = 1; i <= 10; i++) {
-        Partner._records.push({
-            id: 100 + i,
-            name: "Partner" + i,
+test.tags("desktop")(
+    "Many2ManyTagsField: conditional create/delete actions on desktop",
+    async () => {
+        Turtle._records[0].partner_ids = [2];
+        for (var i = 1; i <= 10; i++) {
+            Partner._records.push({
+                id: 100 + i,
+                name: "Partner" + i,
+            });
+        }
+
+        Partner._views = {
+            list: '<list><field name="name"/></list>',
+            search: "<search/>",
+        };
+
+        let nameSearchProm = new Deferred();
+        onRpc("name_search", () => {
+            nameSearchProm.resolve();
         });
-    }
-
-    Partner._views = {
-        list: '<list><field name="name"/></list>',
-        search: "<search/>",
-    };
-
-    let nameSearchProm = new Deferred();
-    onRpc("name_search", () => {
-        nameSearchProm.resolve();
-    });
-    await mountView({
-        type: "form",
-        resModel: "turtle",
-        arch: `
+        await mountView({
+            type: "form",
+            resModel: "turtle",
+            arch: `
             <form>
                 <field name="name"/>
                 <field name="turtle_bar"/>
                 <field name="partner_ids" options="{'create': [('turtle_bar', '=', True)], 'delete': [('turtle_bar', '=', True)]}" widget="many2many_tags"/>
             </form>`,
-        resId: 1,
-    });
+            resId: 1,
+        });
 
-    // turtle_bar is true -> create and delete actions are available
-    expect(".o_field_many2many_tags.o_field_widget .badge .o_delete").toHaveCount(1);
+        // turtle_bar is true -> create and delete actions are available
+        expect(".o_field_many2many_tags.o_field_widget .badge .o_delete").toHaveCount(1);
 
-    await clickFieldDropdown("partner_ids");
-    await nameSearchProm;
-    await animationFrame();
-    expect(
-        ".o-autocomplete.dropdown li.o_m2o_start_typing a:contains(Start typing...)"
-    ).toHaveCount(1);
+        await clickFieldDropdown("partner_ids");
+        await nameSearchProm;
+        await animationFrame();
+        expect(
+            ".o-autocomplete.dropdown li.o_m2o_start_typing a:contains(Start typing...)"
+        ).toHaveCount(1);
 
-    await clickFieldDropdownItem("partner_ids", "Search More...");
+        await clickFieldDropdownItem("partner_ids", "Search More...");
 
-    expect(".modal .modal-footer button").toHaveCount(3);
+        expect(".modal .modal-footer button").toHaveCount(3);
 
-    await contains(".modal .modal-footer .o_form_button_cancel").click();
+        await contains(".modal .modal-footer .o_form_button_cancel").click();
 
-    // type something that doesn't exist
-    nameSearchProm = new Deferred();
-    await contains(".o_field_many2many_tags input").edit("Something that does not exist", {
-        confirm: false,
-    });
+        // type something that doesn't exist
+        nameSearchProm = new Deferred();
+        await contains(".o_field_many2many_tags input").edit("Something that does not exist", {
+            confirm: false,
+        });
 
-    await press("ArrowDown");
-    await nameSearchProm;
-    await animationFrame();
+        await press("ArrowDown");
+        await nameSearchProm;
+        await animationFrame();
 
-    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(2);
+        expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(2);
 
-    // set turtle_bar false -> create and delete actions are no longer available
-    await contains('.o_field_widget[name="turtle_bar"] input:eq(0)').click();
-    await animationFrame();
+        // set turtle_bar false -> create and delete actions are no longer available
+        await contains('.o_field_widget[name="turtle_bar"] input:eq(0)').click();
+        await animationFrame();
 
-    // remove icon should still be there as it doesn't delete records but rather remove links
-    expect(".o_field_many2many_tags.o_field_widget .badge .o_delete").toHaveCount(1);
+        // remove icon should still be there as it doesn't delete records but rather remove links
+        expect(".o_field_many2many_tags.o_field_widget .badge .o_delete").toHaveCount(1);
 
-    nameSearchProm = new Deferred();
-    await clickFieldDropdown("partner_ids");
-    await nameSearchProm;
-    await animationFrame();
+        nameSearchProm = new Deferred();
+        await clickFieldDropdown("partner_ids");
+        await nameSearchProm;
+        await animationFrame();
 
-    // only Search More option should be available
-    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(1);
-    expect(
-        ".o-autocomplete.dropdown li.o_m2o_dropdown_option a:contains(Search More...)"
-    ).toHaveCount(1);
+        // only Search More option should be available
+        expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(1);
+        expect(
+            ".o-autocomplete.dropdown li.o_m2o_dropdown_option a:contains(Search More...)"
+        ).toHaveCount(1);
 
-    await clickFieldDropdownItem("partner_ids", "Search More...");
+        await clickFieldDropdownItem("partner_ids", "Search More...");
 
-    expect(".modal .modal-footer button").toHaveCount(2);
+        expect(".modal .modal-footer button").toHaveCount(2);
 
-    await contains(".modal .modal-footer .o_form_button_cancel").click();
+        await contains(".modal .modal-footer .o_form_button_cancel").click();
 
-    // type something that does exist in multiple occurrences
-    // LPE: to check with AAB
-    nameSearchProm = new Deferred();
-    await contains(".o_field_many2many_tags input").edit("Pa", { confirm: false });
+        // type something that does exist in multiple occurrences
+        // LPE: to check with AAB
+        nameSearchProm = new Deferred();
+        await contains(".o_field_many2many_tags input").edit("Pa", { confirm: false });
 
-    await press("ArrowUp");
-    await animationFrame();
-    await nameSearchProm;
-    await animationFrame();
+        await press("ArrowUp");
+        await animationFrame();
+        await nameSearchProm;
+        await animationFrame();
 
-    // only Search More option should be available
-    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(1);
-    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option a:contains(Search More)").toHaveCount(
-        1
-    );
-});
+        // only Search More option should be available
+        expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(1);
+        expect(
+            ".o-autocomplete.dropdown li.o_m2o_dropdown_option a:contains(Search More)"
+        ).toHaveCount(1);
+    }
+);
 
-test.tags("desktop")("failing many2one quick create in a Many2ManyTagsField on desktop", async () => {
-    expect.assertions(5);
+test.tags("desktop")(
+    "failing many2one quick create in a Many2ManyTagsField on desktop",
+    async () => {
+        expect.assertions(5);
 
-    PartnerType._views = {
-        form: `
+        PartnerType._views = {
+            form: `
             <form>
                 <field name="name"/>
                 <field name="color"/>
             </form>`,
-    };
-    onRpc("name_create", () => {
-        throw makeServerError({ type: "ValidationError" });
-    });
-    onRpc("web_save", (args) => {
-        expect(args.args[1]).toEqual({
-            color: 8,
-            name: "new partner",
+        };
+        onRpc("name_create", () => {
+            throw makeServerError({ type: "ValidationError" });
         });
-    });
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        arch: '<form><field name="timmy" widget="many2many_tags"/></form>',
-    });
+        onRpc("web_save", (args) => {
+            expect(args.args[1]).toEqual({
+                color: 8,
+                name: "new partner",
+            });
+        });
+        await mountView({
+            type: "form",
+            resModel: "partner",
+            arch: '<form><field name="timmy" widget="many2many_tags"/></form>',
+        });
 
-    expect(".o_field_many2many_tags .badge").toHaveCount(0);
+        expect(".o_field_many2many_tags .badge").toHaveCount(0);
 
-    // try to quick create a record
-    await contains(".o_field_many2many_tags input").edit("new partner", { confirm: false });
-    await runAllTimers();
-    await clickFieldDropdownItem("timmy", `Create "new partner"`);
+        // try to quick create a record
+        await contains(".o_field_many2many_tags input").edit("new partner", { confirm: false });
+        await runAllTimers();
+        await clickFieldDropdownItem("timmy", `Create "new partner"`);
 
-    // as the quick create failed, a dialog should be open to 'slow create' the record
-    expect(".modal .o_form_view").toHaveCount(1);
-    expect(".modal .o_field_widget[name=name] input").toHaveValue("new partner");
+        // as the quick create failed, a dialog should be open to 'slow create' the record
+        expect(".modal .o_form_view").toHaveCount(1);
+        expect(".modal .o_field_widget[name=name] input").toHaveValue("new partner");
 
-    await contains(".modal .o_field_widget[name=color] input").edit(8);
-    await contains(".modal footer .o_form_buttons_edit button").click();
+        await contains(".modal .o_field_widget[name=color] input").edit(8);
+        await contains(".modal footer .o_form_buttons_edit button").click();
 
-    expect(".o_field_many2many_tags .badge").toHaveCount(1);
-});
+        expect(".o_field_many2many_tags .badge").toHaveCount(1);
+    }
+);
 
 test.tags("desktop")("navigation in tags (mode 'readonly') on desktop", async () => {
     // keep a single line with 2 badges
@@ -1518,35 +1530,38 @@ test("set a required many2many_tags and save directly", async () => {
     expect(".o_tag").toHaveText("gold");
 });
 
-test.tags("desktop")("Many2ManyTagsField with option 'no_quick_create' set to true on desktop", async () => {
-    PartnerType._views = {
-        form: `<form><field name="name"/><field name="color"/></form>`,
-    };
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        arch: `
+test.tags("desktop")(
+    "Many2ManyTagsField with option 'no_quick_create' set to true on desktop",
+    async () => {
+        PartnerType._views = {
+            form: `<form><field name="name"/><field name="color"/></form>`,
+        };
+        await mountView({
+            type: "form",
+            resModel: "partner",
+            arch: `
             <form>
                 <field name="timmy" widget="many2many_tags" options="{'no_quick_create': 1}"/>
             </form>`,
-    });
+        });
 
-    expect(".o_tag").toHaveCount(0);
-    await contains(".o_field_many2many_tags .o-autocomplete--input").edit("new tag", {
-        confirm: false,
-    });
-    await runAllTimers();
-    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(1);
-    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveClass(
-        "o_m2o_dropdown_option_create_edit"
-    );
-    await clickFieldDropdownItem("timmy", "Create and edit...");
-    expect(".modal").toHaveCount(1);
-    expect(".modal .o_field_widget[name=name] input").toHaveValue("new tag");
-    await contains(".modal .o_form_button_save").click();
-    expect(".o_tag").toHaveCount(1);
-    expect(".o_tag").toHaveText("new tag");
-});
+        expect(".o_tag").toHaveCount(0);
+        await contains(".o_field_many2many_tags .o-autocomplete--input").edit("new tag", {
+            confirm: false,
+        });
+        await runAllTimers();
+        expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(1);
+        expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveClass(
+            "o_m2o_dropdown_option_create_edit"
+        );
+        await clickFieldDropdownItem("timmy", "Create and edit...");
+        expect(".modal").toHaveCount(1);
+        expect(".modal .o_field_widget[name=name] input").toHaveValue("new tag");
+        await contains(".modal .o_form_button_save").click();
+        expect(".o_tag").toHaveCount(1);
+        expect(".o_tag").toHaveText("new tag");
+    }
+);
 
 test.tags("desktop")(
     "Many2ManyTagsField keep the linked records after discard of the quick create dialog on desktop",
@@ -1581,34 +1596,40 @@ test.tags("desktop")(
     }
 );
 
-test.tags("desktop")("Many2ManyTagsField with option 'no_create' set to true on desktop", async () => {
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        arch: `<form><field name="timmy" widget="many2many_tags" options="{'no_create': 1}"/></form>`,
-    });
+test.tags("desktop")(
+    "Many2ManyTagsField with option 'no_create' set to true on desktop",
+    async () => {
+        await mountView({
+            type: "form",
+            resModel: "partner",
+            arch: `<form><field name="timmy" widget="many2many_tags" options="{'no_create': 1}"/></form>`,
+        });
 
-    await contains(".o_field_many2many_tags .o-autocomplete--input").edit("new tag", {
-        confirm: false,
-    });
-    await runAllTimers();
-    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(0);
-    expect(".o-autocomplete.dropdown li.o_m2o_no_result").toHaveCount(1);
-});
+        await contains(".o_field_many2many_tags .o-autocomplete--input").edit("new tag", {
+            confirm: false,
+        });
+        await runAllTimers();
+        expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(0);
+        expect(".o-autocomplete.dropdown li.o_m2o_no_result").toHaveCount(1);
+    }
+);
 
-test.tags("desktop")("Many2ManyTagsField with attribute 'can_create' set to false on desktop", async () => {
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        arch: `<form><field name="timmy" widget="many2many_tags" can_create="0"/></form>`,
-    });
+test.tags("desktop")(
+    "Many2ManyTagsField with attribute 'can_create' set to false on desktop",
+    async () => {
+        await mountView({
+            type: "form",
+            resModel: "partner",
+            arch: `<form><field name="timmy" widget="many2many_tags" can_create="0"/></form>`,
+        });
 
-    await contains(".o_field_many2many_tags .o-autocomplete--input").edit("new tag", {
-        confirm: false,
-    });
-    await runAllTimers();
-    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(0);
-});
+        await contains(".o_field_many2many_tags .o-autocomplete--input").edit("new tag", {
+            confirm: false,
+        });
+        await runAllTimers();
+        expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(0);
+    }
+);
 
 test.tags("desktop")("Many2ManyTagsField with arch context in form view on desktop", async () => {
     onRpc("name_search", async (args) => {
@@ -1813,71 +1834,77 @@ test.tags("mobile")(
     }
 );
 
-test.tags("desktop")("Many2ManyTagsField selected records still pickable and not duplicable on desktop", async () => {
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        arch: `
+test.tags("desktop")(
+    "Many2ManyTagsField selected records still pickable and not duplicable on desktop",
+    async () => {
+        await mountView({
+            type: "form",
+            resModel: "partner",
+            arch: `
             <list>
                 <field name="turtles" widget="many2many_tags"/>
             </list>
         `,
-    });
-    // Check that records are correctly displayed in the dropdown
-    await contains("div[name='turtles']").click();
-    await contains("input[id=turtles_0]").click();
-    expect(`${"a.dropdown-item"}:eq(0)`).toHaveText("leonardo");
+        });
+        // Check that records are correctly displayed in the dropdown
+        await contains("div[name='turtles']").click();
+        await contains("input[id=turtles_0]").click();
+        expect(`${"a.dropdown-item"}:eq(0)`).toHaveText("leonardo");
 
-    // Check that selecting a record adds the corresponding tag
-    await contains(`${"a.dropdown-item"}:eq(0)`).click();
-    expect(".o_tag").toHaveCount(1);
-    expect(".o_tag:eq(0)").toHaveText("leonardo");
+        // Check that selecting a record adds the corresponding tag
+        await contains(`${"a.dropdown-item"}:eq(0)`).click();
+        expect(".o_tag").toHaveCount(1);
+        expect(".o_tag:eq(0)").toHaveText("leonardo");
 
-    // Check that a selected record is still shown in the dropdown
-    await contains("input[id=turtles_0]").click();
-    expect(`${"a.dropdown-item"}:eq(0)`).toHaveText("leonardo");
+        // Check that a selected record is still shown in the dropdown
+        await contains("input[id=turtles_0]").click();
+        expect(`${"a.dropdown-item"}:eq(0)`).toHaveText("leonardo");
 
-    // Check that selecting an already selected record doesn't duplicate it
-    await contains(`${"a.dropdown-item"}:eq(0)`).click();
-    expect(".o_tag").toHaveCount(1);
+        // Check that selecting an already selected record doesn't duplicate it
+        await contains(`${"a.dropdown-item"}:eq(0)`).click();
+        expect(".o_tag").toHaveCount(1);
 
-    // Check that deleting a record which was selected twice doens't leave one occurence
-    await contains("a.o_delete").click();
-    expect(".o_tag").toHaveCount(0);
-});
+        // Check that deleting a record which was selected twice doens't leave one occurence
+        await contains("a.o_delete").click();
+        expect(".o_tag").toHaveCount(0);
+    }
+);
 
-test.tags("mobile")("Many2ManyTagsField selected records still pickable and not duplicable on mobile", async () => {
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        arch: `
+test.tags("mobile")(
+    "Many2ManyTagsField selected records still pickable and not duplicable on mobile",
+    async () => {
+        await mountView({
+            type: "form",
+            resModel: "partner",
+            arch: `
             <list>
                 <field name="turtles" widget="many2many_tags"/>
             </list>
         `,
-    });
-    // Check that records are correctly displayed in the dropdown
-    await contains("div[name='turtles']").click();
-    await contains("input[id=turtles_0]").click();
-    expect(`${".o_kanban_record"}:eq(0)`).toHaveText("leonardo");
+        });
+        // Check that records are correctly displayed in the dropdown
+        await contains("div[name='turtles']").click();
+        await contains("input[id=turtles_0]").click();
+        expect(`${".o_kanban_record"}:eq(0)`).toHaveText("leonardo");
 
-    // Check that selecting a record adds the corresponding tag
-    await contains(`${".o_kanban_record"}:eq(0)`).click();
-    expect(".o_tag").toHaveCount(1);
-    expect(".o_tag:eq(0)").toHaveText("leonardo");
+        // Check that selecting a record adds the corresponding tag
+        await contains(`${".o_kanban_record"}:eq(0)`).click();
+        expect(".o_tag").toHaveCount(1);
+        expect(".o_tag:eq(0)").toHaveText("leonardo");
 
-    // Check that a selected record is still shown in the dropdown
-    await contains("input[id=turtles_0]").click();
-    expect(`${".o_kanban_record"}:eq(0)`).toHaveText("leonardo");
+        // Check that a selected record is still shown in the dropdown
+        await contains("input[id=turtles_0]").click();
+        expect(`${".o_kanban_record"}:eq(0)`).toHaveText("leonardo");
 
-    // Check that selecting an already selected record doesn't duplicate it
-    await contains(`${".o_kanban_record"}:eq(0)`).click();
-    expect(".o_tag").toHaveCount(1);
+        // Check that selecting an already selected record doesn't duplicate it
+        await contains(`${".o_kanban_record"}:eq(0)`).click();
+        expect(".o_tag").toHaveCount(1);
 
-    // Check that deleting a record which was selected twice doens't leave one occurence
-    await contains("a.o_delete").click();
-    expect(".o_tag").toHaveCount(0);
-});
+        // Check that deleting a record which was selected twice doens't leave one occurence
+        await contains("a.o_delete").click();
+        expect(".o_tag").toHaveCount(0);
+    }
+);
 
 test("Many2ManyTagsField with edit_tags option", async () => {
     expect.assertions(4);

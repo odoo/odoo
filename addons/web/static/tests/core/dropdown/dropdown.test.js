@@ -12,7 +12,7 @@ import {
 import { Deferred, animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { App, Component, onMounted, onPatched, useState, xml } from "@odoo/owl";
 
-import { getMockEnv, makeMockEnv } from "@web/../tests/_framework/env_test_helpers";
+import { getMockEnv, makeMockEnv, mockService } from "@web/../tests/_framework/env_test_helpers";
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import { defineParams, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
@@ -1421,8 +1421,8 @@ test.tags("desktop")("multi-level dropdown: unsubscribe all keynav when root clo
         keySet.clear();
     }
 
-    const env = await makeMockEnv();
-    patchWithCleanup(env.services.hotkey, {
+    await makeMockEnv();
+    mockService("hotkey", {
         add(key) {
             const remove = super.add(...arguments);
             registeredHotkeys.add(key);
@@ -1433,7 +1433,7 @@ test.tags("desktop")("multi-level dropdown: unsubscribe all keynav when root clo
         },
     });
 
-    await mountWithCleanup(Parent, { env });
+    await mountWithCleanup(Parent);
     expect(DROPDOWN_MENU).toHaveCount(0);
     expect(registeredHotkeys.size).toBe(0);
 

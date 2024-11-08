@@ -1,5 +1,4 @@
 import {
-    assertSteps,
     click,
     contains,
     defineMailModels,
@@ -7,12 +6,17 @@ import {
     openDiscuss,
     start,
     startServer,
-    step,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
-import { getService, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import {
+    asyncStep,
+    getService,
+    mockService,
+    serverState,
+    waitForSteps,
+} from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
 
@@ -109,9 +113,9 @@ test.skip("Channel subscription is renewed when channel is added from invite", a
         `${later.year}-${later.month}-${later.day} ${later.hour}:${later.minute}:${later.second}`
     );
     await start();
-    patchWithCleanup(getService("bus_service"), {
+    mockService("bus_service", {
         forceUpdateChannels() {
-            step("update-channels");
+            asyncStep("update-channels");
         },
     });
     await openDiscuss();
@@ -120,7 +124,7 @@ test.skip("Channel subscription is renewed when channel is added from invite", a
         partner_ids: [serverState.partnerId],
     });
     await contains(".o-mail-DiscussSidebarChannel", { count: 2 });
-    await assertSteps(["update-channels"]); // FIXME: sometimes 1 or 2 update-channels
+    await waitForSteps(["update-channels"]); // FIXME: sometimes 1 or 2 update-channels
 });
 
 test("Adding attachments", async () => {
