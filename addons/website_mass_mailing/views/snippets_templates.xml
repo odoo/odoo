@@ -25,15 +25,26 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
 <template id="s_newsletter_subscribe_form" name="Newsletter">
     <div class="s_newsletter_subscribe_form s_newsletter_list js_subscribe" data-vxml="001" data-list-id="0" data-name="Newsletter Form">
         <div class="js_subscribed_wrap d-none">
-            <p class="h4-fs text-center text-success"><i class="fa fa-check-circle-o" role="img"/> Thanks for registering!</p>
+            <t t-if="thank_you_message" t-out="thank_you_message"/>
+            <p t-else="" class="h4-fs text-center text-success"><i class="fa fa-check-circle-o" role="img"/> Thanks for registering!</p>
         </div>
         <div class="js_subscribe_wrap">
-            <div class="input-group">
-                <input type="email" name="email" class="js_subscribe_value form-control" placeholder="johnsmith@example.com"/>
-                <a role="button" href="#" class="btn btn-primary js_subscribe_btn o_submit">Subscribe</a>
+            <div t-attf-class="{{_wrap_classes or 'input-group'}}">
+                <input type="email" name="email" t-attf-class="s_newsletter_subscribe_form_input js_subscribe_value form-control #{_input_classes}" placeholder="Email Address"/>
+                <a role="button" href="#" t-attf-class="js_subscribe_btn o_submit {{_btn_classes or 'btn btn-primary'}}">Subscribe</a>
             </div>
         </div>
     </div>
+</template>
+
+<template id="s_newsletter_subscribe_form_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <div data-selector=".s_newsletter_subscribe_form">
+            <we-input string="Placeholder" class="o_we_large"
+                data-select-attribute="" data-attribute-name="placeholder"
+                data-apply-to=".s_newsletter_subscribe_form_input"/>
+        </div>
+    </xpath>
 </template>
 
 <!--
