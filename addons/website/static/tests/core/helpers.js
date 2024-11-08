@@ -2,6 +2,7 @@ import { getFixture } from "@odoo/hoot";
 import { clearRegistry, makeMockEnv, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { registry } from "@web/core/registry";
+import { isInViewPort } from "@odoo/hoot-dom";;
 
 defineMailModels();
 
@@ -64,5 +65,13 @@ export function isElementInViewport(el) {
         rect.left >= 0 &&
         rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
         rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+}
+
+export function isElementVerticallyInViewportOf(el, scrollEl) {
+    const rect = el.getBoundingClientRect();
+    return (
+        rect.top <= scrollEl.clientHeight &&
+        rect.bottom >= 0
     );
 }
