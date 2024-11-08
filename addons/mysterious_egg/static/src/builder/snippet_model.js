@@ -75,6 +75,7 @@ export class SnippetModel extends Reactive {
                     name: snippetEl.children[0].dataset.snippet,
                     thumbnailSrc: escape(snippetEl.dataset.oeThumbnail),
                     isCustom: false,
+                    imagePreviewSrc: snippetEl.dataset.oImagePreview,
                 };
                 const moduleId = snippetEl.dataset.moduleId;
                 if (moduleId) {
@@ -92,9 +93,6 @@ export class SnippetModel extends Reactive {
                         snippet.groupName = snippetEl.dataset.oSnippetGroup;
                         break;
                     case "snippet_structure":
-                        if (snippet.moduleId) {
-                            snippet.imagePreviewSrc = snippetEl.dataset.oImagePreview;
-                        }
                         snippet.groupName = snippetEl.dataset.oGroup;
                         snippet.keyWords = snippetEl.dataset.oeKeywords;
                         break;
