@@ -619,23 +619,6 @@ export class Store extends BaseStore {
             .map((thread) => thread.correspondent.persona.id);
     }
 
-    async joinChannel(id, name) {
-        await this.env.services.orm.call("discuss.channel", "add_members", [[id]], {
-            partner_ids: [this.self.id],
-        });
-        const thread = this.Thread.insert({
-            channel_type: "channel",
-            id,
-            model: "discuss.channel",
-            name,
-        });
-        if (!thread.avatarCacheKey) {
-            thread.avatarCacheKey = "hello";
-        }
-        thread.open();
-        return thread;
-    }
-
     async joinChat(id, forceOpen = false) {
         const data = await this.env.services.orm.call("discuss.channel", "channel_get", [], {
             partners_to: [id],
