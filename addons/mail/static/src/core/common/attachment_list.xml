@@ -20,7 +20,7 @@
                      t-att-class="{ 'o-isUploading': attachment.uploading }"
                      tabindex="0"
                      t-att-data-mimetype="attachment.mimetype"
-                     t-on-click="() => this.fileViewer.open(attachment, props.attachments)"
+                     t-on-click="() => this.onClickAttachment(attachment)"
                      role="menuitem"
                 >
                     <img
@@ -50,7 +50,7 @@
                                }"
                     t-attf-class="bg-300"
                     t-att-title="attachment.name ? attachment.name : undefined" role="menu" t-att-aria-label="attachment.name"
-                    t-on-click="() => this.fileViewer.open(attachment, props.attachments)"
+                    t-on-click="() => this.onClickAttachment(attachment)"
                 >
                     <!-- o_image from mimetype.scss -->
                     <t t-ref="nonImageMain">
