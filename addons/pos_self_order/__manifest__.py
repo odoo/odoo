@@ -16,11 +16,13 @@
         "views/custom_link_views.xml",
         "views/pos_restaurant_views.xml",
         "views/product_views.xml",
+        "views/pos_preset_view.xml",
         "data/init_access.xml",
         "views/res_config_settings_views.xml",
         "views/point_of_sale_dashboard.xml",
     ],
     "demo": [
+        "data/demo_data.xml",
         "data/kiosk_demo_data.xml",
     ],
     "assets": {

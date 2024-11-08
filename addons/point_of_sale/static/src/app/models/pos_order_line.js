@@ -200,6 +200,10 @@ export class PosOrderline extends Base {
     // product's unity of measure properties. Quantities greater than zero will not get
     // rounded to zero
     setQuantity(quantity, keep_price) {
+        if (this.order_id.preset_id?.is_return) {
+            quantity = -Math.abs(quantity);
+        }
+
         this.order_id.assetEditable();
         const quant =
             typeof quantity === "number" ? quantity : parseFloat("" + (quantity ? quantity : 0));

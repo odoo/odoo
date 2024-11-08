@@ -88,6 +88,12 @@
                         <textarea class="closing-notes form-control" style="height: 60px" rows="7" id="closingNotes" placeholder="Add a closing note..." t-model="state.notes"/>
                     </div>
                 </div>
+                <div class="mt-3" t-if="orderForNextDays > 0">
+                    <label class="form-label">Orders status</label>
+                    <div class="alert alert-info" role="alert">
+                        You still have <span t-esc="orderForNextDays" /> open orders for the next few days.
+                    </div>
+                </div>
             <t t-set-slot="footer">
                 <div class="w-100 d-flex flex-wrap justify-content-between gap-2" t-att-class="{'container-fluid row p-0': this.ui.isSmall}">
                     <!-- First line of buttons -->

@@ -534,7 +534,7 @@ class PosConfig(models.Model):
     def _get_forbidden_change_fields(self):
         forbidden_keys = ['module_pos_hr', 'module_pos_restaurant', 'available_pricelist_ids',
                           'limit_categories', 'iface_available_categ_ids', 'use_pricelist', 'module_pos_discount',
-                          'payment_method_ids', 'iface_tipproduc', 'use_presets', 'default_preset_id']
+                          'payment_method_ids', 'iface_tipproduct', 'use_presets', 'default_preset_id']
         return forbidden_keys
 
     def unlink(self):
@@ -938,11 +938,6 @@ class PosConfig(models.Model):
             'point_of_sale.pos_category_desks',
             'point_of_sale.pos_category_chairs'
         ])
-        presets = self.get_record_by_ref([
-            'point_of_sale.pos_takein_preset',
-            'point_of_sale.pos_takeout_preset',
-            'point_of_sale.pos_delivery_preset',
-        ])
         config = self.env['pos.config'].create([{
             'name': _('Furniture Shop'),
             'company_id': self.env.company.id,
@@ -950,9 +945,6 @@ class PosConfig(models.Model):
             'payment_method_ids': payment_methods_ids,
             'limit_categories': True,
             'iface_available_categ_ids': furniture_categories,
-            'use_presets': True,
-            'default_preset_id': presets[0],
-            'available_preset_ids': [(6, 0, presets[1:])],
         }])
         self.env['ir.model.data']._update_xmlids([{
             'xml_id': self._get_suffixed_ref_name(ref_name),
