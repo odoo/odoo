@@ -4786,9 +4786,439 @@ class MailThread(models.AbstractModel):
             res["models"][self._name]["has_activities"] = True
         return res
 
+<<<<<<< b991f766e28dc71f8627fdfbf2d59589d9707d3a
     @api.model
     def _get_allowed_message_update_params(self):
         return {"attachment_ids", "body", "partner_ids"}
+||||||| 552f1a8a03b86193a82c25c336d37bc14ea46e73
+    def _extract_partner_ids_for_notifications(self, message, msg_vals, recipients_data):
+        notif_pids = []
+        no_inbox_pids = []
+        for recipient in recipients_data:
+            if recipient['active']:
+                notif_pids.append(recipient['id'])
+                if recipient['notif'] != 'inbox':
+                    no_inbox_pids.append(recipient['id'])
+
+        if not notif_pids:
+            return []
+
+        msg_sudo = message.sudo()
+        msg_type = msg_vals.get('message_type') or msg_sudo.message_type
+        author_id = [msg_vals.get('author_id')] if 'author_id' in msg_vals else msg_sudo.author_id.ids
+        # never send to author and to people outside Odoo (email), except comments
+        pids = set()
+        if msg_type in {'comment', 'whatsapp_message'}:
+            pids = set(notif_pids) - set(author_id)
+        elif msg_type in ('notification', 'user_notification', 'email'):
+            pids = (set(notif_pids) - set(author_id) - set(no_inbox_pids))
+        return list(pids)
+
+    def _truncate_payload(self, payload):
+        r"""Check the payload limit of ~3990 bytes to avoid 413 error return code.
+
+        See `_truncate_payload_get_max_payload_length` for the exact limit.
+
+        When sending a push notification, the entire encrypted json payload should be no more than 4096 bytes in length.
+        To ensure this, when possible, the body contents of the notification are truncated in such a way that the end
+        result will not exceed that limit.
+
+        Example Truncation:
+            We know there is an encryption overhead of 10 bytes, and a total limit of 50 bytes.
+            The payload is `{"messageId": "5291", "body": "A very long text"}`
+            So we have an effective payload length of (50 - 10) = 40.
+            Our full payload is 49 bytes, of which 16 bytes are text we are willing to truncate.
+            We must remove 9 bytes, such that the payload becomes effectively
+            `{"messageId": "5291", "body": "A very "}`
+
+        There are some considerations with this approach. Notably we must consider the full encoded length in bytes.
+        While we encode the payload in utf-8, it is actually transformed into json with `ensure_ascii=True` first.
+        This means this payload, as a python dictionary: {"body": "BØDY"}; Becomes {"body": "B\\u00d8DY"}.
+        Where `00d8` is the unicode codepoint for "Ø", and "\\u" is a json escape sequence.
+
+        In that case we must ensure that the truncated body does not suddenly contain invalid unicode escape sequences.
+        Similarly to how one should not cut an encoded string in the middle of a utf-8 character.
+
+        Example Unicode Truncation:
+            Assume {"body": "BØDY"} needs to be truncated of 3 bytes
+            It should not become {"body": "B\\u00d"}
+            Instead it should become {"body": "B"}
+
+        :param dict payload: Current payload to truncate.
+        :return: The truncated payload;
+        """
+        payload_length = len(json.dumps(payload).encode())
+        # json.dumps defaults to translating unicode to hex codepoints (ensure_ascii=True)
+        # hence we need to check the length the body takes up in that format
+        # json string quotes are removed and the body is not encoded as it's already all ASCII
+        body = json.dumps(payload['options']['body'])[1:-1]
+        body_length = len(body)
+
+        max_length = self._truncate_payload_get_max_payload_length()
+        if payload_length > max_length:
+            body_max_length = max(0, max_length - payload_length + body_length)
+            # truncate to max length and try to loads again
+            # if there's any error, it will be a unicode error
+            # the error position gives us the start of the codepoint
+            # remove everything after that + the preceding escape marker (\u)
+            try:
+                # remove trailing '\' as the error for that is unhelpful
+                truncated_body = body[:body_max_length].rstrip('\\')
+                truncated_body = json.loads(f'"{truncated_body}"')
+            except json.decoder.JSONDecodeError as json_error:
+                truncated_body = json.loads(f'"{body[:json_error.pos - 2]}"')
+            payload['options']['body'] = truncated_body
+        return payload
+
+    @staticmethod
+    def _truncate_payload_get_max_payload_length():
+        """Define the maximum length we want for the payload.
+
+        This limit is derived from:
+            - the maximum encrypted payload size we may send to web push servers.
+            - the header required using AES128GCM encryption.
+            - the overhead of encrypting one block. Payload will not exceed 1 block
+            as the point here is to keep everything within the default (and max) block size.
+        For details about encryption overhead sizes, see variable definition in web_push.
+        Currently all of these values are payload-independant.
+        """
+        return MAX_PAYLOAD_SIZE - ENCRYPTION_HEADER_SIZE - ENCRYPTION_BLOCK_OVERHEAD
+
+    def _notify_thread_by_web_push(self, message, recipients_data, msg_vals=False, **kwargs):
+        """ Method to send cloud notifications for every mention of a partner
+        and every direct message. We have to take into account the risk of
+        duplicated notifications in case of a mention in a channel of `chat` type.
+
+        :param message: ``mail.message`` record to notify;
+        :param recipients_data: list of recipients information (based on res.partner
+          records), formatted like
+            [{'active': partner.active;
+              'id': id of the res.partner being recipient to notify;
+              'groups': res.group IDs if linked to a user;
+              'notif': 'inbox', 'email', 'sms' (SMS App);
+              'share': partner.partner_share;
+              'type': 'customer', 'portal', 'user;'
+             }, {...}].
+          See ``MailThread._notify_get_recipients``;
+        :param msg_vals: dictionary of values used to create the message. If given it
+          may be used to access values related to ``message`` without accessing it
+          directly. It lessens query count in some optimized use cases by avoiding
+          access message content in db;
+        """
+
+        msg_vals = dict(msg_vals or {})
+        partner_ids = self._extract_partner_ids_for_notifications(message, msg_vals, recipients_data)
+        if not partner_ids:
+            return
+
+        partner_devices_sudo = self.env['mail.partner.device'].sudo()
+        devices = partner_devices_sudo.search([
+            ('partner_id', 'in', partner_ids)
+        ])
+        if not devices:
+            return
+
+        ir_parameter_sudo = self.env['ir.config_parameter'].sudo()
+        vapid_private_key = ir_parameter_sudo.get_param('mail.web_push_vapid_private_key')
+        vapid_public_key = ir_parameter_sudo.get_param('mail.web_push_vapid_public_key')
+        if not vapid_private_key or not vapid_public_key:
+            _logger.warning("Missing web push vapid keys !")
+            return
+
+        payload = self._notify_by_web_push_prepare_payload(message, msg_vals=msg_vals)
+        payload = self._truncate_payload(payload)
+        if len(devices) < MAX_DIRECT_PUSH:
+            session = Session()
+            devices_to_unlink = set()
+            for device in devices:
+                try:
+                    push_to_end_point(
+                        base_url=self.get_base_url(),
+                        device={
+                            'id': device.id,
+                            'endpoint': device.endpoint,
+                            'keys': device.keys
+                        },
+                        payload=json.dumps(payload),
+                        vapid_private_key=vapid_private_key,
+                        vapid_public_key=vapid_public_key,
+                        session=session,
+                    )
+                except DeviceUnreachableError:
+                    devices_to_unlink.add(device.id)
+                except Exception as e:  # pylint: disable=broad-except
+                    # Avoid blocking the whole request just for a notification
+                    _logger.error('An error occurred while contacting the endpoint: %s', e)
+
+            # clean up obsolete devices
+            if devices_to_unlink:
+                devices_list = list(devices_to_unlink)
+                self.env['mail.partner.device'].sudo().browse(devices_list).unlink()
+
+        else:
+            self.env['mail.notification.web.push'].sudo().create([{
+                'user_device': device.id,
+                'payload': json.dumps(payload),
+            } for device in devices])
+            self.env.ref('mail.ir_cron_web_push_notification')._trigger()
+
+    def _notify_by_web_push_prepare_payload(self, message, msg_vals=False):
+        """ Returns dictionary containing message information for a browser device.
+        This info will be delivered to a browser device via its recorded endpoint.
+        REM: It is having a limit of 4000 bytes (4kb)
+        """
+        if msg_vals:
+            author_id = [msg_vals.get('author_id')]
+            author_name = self.env['res.partner'].browse(author_id).name
+            model = msg_vals.get('model')
+            title = msg_vals.get('record_name') or msg_vals.get('subject')
+            res_id = msg_vals.get('res_id')
+            body = msg_vals.get('body')
+            if not model and body:
+                model, res_id = self._extract_model_and_id(msg_vals)
+        else:
+            author_id = message.author_id.ids
+            author_name = self.env['res.partner'].browse(author_id).name
+            model = message.model
+            title = message.record_name or message.subject
+            res_id = message.res_id
+            body = message.body
+
+        icon = '/web/static/img/odoo-icon-192x192.png'
+
+        if author_name:
+            title = "%s: %s" % (author_name, title)
+            icon = "/web/image/res.partner/%d/avatar_128" % author_id[0]
+
+        payload = {
+            'title': title,
+            'options': {
+                'icon': icon,
+                'data': {
+                    'model': model if model else '',
+                    'res_id': res_id if res_id else '',
+                }
+            }
+        }
+        payload['options']['body'] = tools.html2plaintext(body)
+        payload['options']['body'] += self._generate_tracking_message(message)
+
+        return payload
+=======
+    def _extract_partner_ids_for_notifications(self, message, msg_vals, recipients_data):
+        notif_pids = []
+        no_inbox_pids = []
+        for recipient in recipients_data:
+            if recipient['active']:
+                notif_pids.append(recipient['id'])
+                if recipient['notif'] != 'inbox':
+                    no_inbox_pids.append(recipient['id'])
+
+        if not notif_pids:
+            return []
+
+        msg_sudo = message.sudo()
+        msg_type = msg_vals.get('message_type') or msg_sudo.message_type
+        author_id = [msg_vals.get('author_id')] if 'author_id' in msg_vals else msg_sudo.author_id.ids
+        # never send to author and to people outside Odoo (email), except comments
+        pids = set()
+        if msg_type in {'comment', 'whatsapp_message'}:
+            pids = set(notif_pids) - set(author_id)
+        elif msg_type in ('notification', 'user_notification', 'email'):
+            pids = (set(notif_pids) - set(author_id) - set(no_inbox_pids))
+        return list(pids)
+
+    def _truncate_payload(self, payload):
+        r"""Check the payload limit of ~3990 bytes to avoid 413 error return code.
+
+        See `_truncate_payload_get_max_payload_length` for the exact limit.
+
+        When sending a push notification, the entire encrypted json payload should be no more than 4096 bytes in length.
+        To ensure this, when possible, the body contents of the notification are truncated in such a way that the end
+        result will not exceed that limit.
+
+        Example Truncation:
+            We know there is an encryption overhead of 10 bytes, and a total limit of 50 bytes.
+            The payload is `{"messageId": "5291", "body": "A very long text"}`
+            So we have an effective payload length of (50 - 10) = 40.
+            Our full payload is 49 bytes, of which 16 bytes are text we are willing to truncate.
+            We must remove 9 bytes, such that the payload becomes effectively
+            `{"messageId": "5291", "body": "A very "}`
+
+        There are some considerations with this approach. Notably we must consider the full encoded length in bytes.
+        While we encode the payload in utf-8, it is actually transformed into json with `ensure_ascii=True` first.
+        This means this payload, as a python dictionary: {"body": "BØDY"}; Becomes {"body": "B\\u00d8DY"}.
+        Where `00d8` is the unicode codepoint for "Ø", and "\\u" is a json escape sequence.
+
+        In that case we must ensure that the truncated body does not suddenly contain invalid unicode escape sequences.
+        Similarly to how one should not cut an encoded string in the middle of a utf-8 character.
+
+        Example Unicode Truncation:
+            Assume {"body": "BØDY"} needs to be truncated of 3 bytes
+            It should not become {"body": "B\\u00d"}
+            Instead it should become {"body": "B"}
+
+        :param dict payload: Current payload to truncate.
+        :return: The truncated payload;
+        """
+        payload_length = len(json.dumps(payload).encode())
+        # json.dumps defaults to translating unicode to hex codepoints (ensure_ascii=True)
+        # hence we need to check the length the body takes up in that format
+        # json string quotes are removed and the body is not encoded as it's already all ASCII
+        body = json.dumps(payload['options']['body'])[1:-1]
+        body_length = len(body)
+
+        max_length = self._truncate_payload_get_max_payload_length()
+        if payload_length > max_length:
+            body_max_length = max(0, max_length - payload_length + body_length)
+            # truncate to max length and try to loads again
+            # if there's any error, it will be a unicode error
+            # the error position gives us the start of the codepoint
+            # remove everything after that + the preceding escape marker (\u)
+            try:
+                # remove trailing '\' as the error for that is unhelpful
+                truncated_body = body[:body_max_length].rstrip('\\')
+                truncated_body = json.loads(f'"{truncated_body}"')
+            except json.decoder.JSONDecodeError as json_error:
+                truncated_body = json.loads(f'"{body[:json_error.pos - 2]}"')
+            payload['options']['body'] = truncated_body
+        return payload
+
+    @staticmethod
+    def _truncate_payload_get_max_payload_length():
+        """Define the maximum length we want for the payload.
+
+        This limit is derived from:
+            - the maximum encrypted payload size we may send to web push servers.
+            - the header required using AES128GCM encryption.
+            - the overhead of encrypting one block. Payload will not exceed 1 block
+            as the point here is to keep everything within the default (and max) block size.
+        For details about encryption overhead sizes, see variable definition in web_push.
+        Currently all of these values are payload-independant.
+        """
+        return MAX_PAYLOAD_SIZE - ENCRYPTION_HEADER_SIZE - ENCRYPTION_BLOCK_OVERHEAD
+
+    def _notify_thread_by_web_push(self, message, recipients_data, msg_vals=False, **kwargs):
+        """ Method to send cloud notifications for every mention of a partner
+        and every direct message. We have to take into account the risk of
+        duplicated notifications in case of a mention in a channel of `chat` type.
+
+        :param message: ``mail.message`` record to notify;
+        :param recipients_data: list of recipients information (based on res.partner
+          records), formatted like
+            [{'active': partner.active;
+              'id': id of the res.partner being recipient to notify;
+              'groups': res.group IDs if linked to a user;
+              'notif': 'inbox', 'email', 'sms' (SMS App);
+              'share': partner.partner_share;
+              'type': 'customer', 'portal', 'user;'
+             }, {...}].
+          See ``MailThread._notify_get_recipients``;
+        :param msg_vals: dictionary of values used to create the message. If given it
+          may be used to access values related to ``message`` without accessing it
+          directly. It lessens query count in some optimized use cases by avoiding
+          access message content in db;
+        """
+
+        msg_vals = dict(msg_vals or {})
+        partner_ids = self._extract_partner_ids_for_notifications(message, msg_vals, recipients_data)
+        if not partner_ids:
+            return
+
+        partner_devices_sudo = self.env['mail.partner.device'].sudo()
+        devices = partner_devices_sudo.search([
+            ('partner_id', 'in', partner_ids)
+        ])
+        if not devices:
+            return
+
+        ir_parameter_sudo = self.env['ir.config_parameter'].sudo()
+        vapid_private_key = ir_parameter_sudo.get_param('mail.web_push_vapid_private_key')
+        vapid_public_key = ir_parameter_sudo.get_param('mail.web_push_vapid_public_key')
+        if not vapid_private_key or not vapid_public_key:
+            _logger.warning("Missing web push vapid keys !")
+            return
+
+        payload = self._notify_by_web_push_prepare_payload(message, msg_vals=msg_vals)
+        payload = self._truncate_payload(payload)
+        if len(devices) < MAX_DIRECT_PUSH:
+            session = Session()
+            devices_to_unlink = set()
+            for device in devices:
+                try:
+                    push_to_end_point(
+                        base_url=self.get_base_url(),
+                        device={
+                            'id': device.id,
+                            'endpoint': device.endpoint,
+                            'keys': device.keys
+                        },
+                        payload=json.dumps(payload),
+                        vapid_private_key=vapid_private_key,
+                        vapid_public_key=vapid_public_key,
+                        session=session,
+                    )
+                except DeviceUnreachableError:
+                    devices_to_unlink.add(device.id)
+                except Exception as e:  # pylint: disable=broad-except
+                    # Avoid blocking the whole request just for a notification
+                    _logger.error('An error occurred while contacting the endpoint: %s', e)
+
+            # clean up obsolete devices
+            if devices_to_unlink:
+                devices_list = list(devices_to_unlink)
+                self.env['mail.partner.device'].sudo().browse(devices_list).unlink()
+
+        else:
+            self.env['mail.notification.web.push'].sudo().create([{
+                'user_device': device.id,
+                'payload': json.dumps(payload),
+            } for device in devices])
+            self.env.ref('mail.ir_cron_web_push_notification')._trigger()
+
+    def _notify_by_web_push_prepare_payload(self, message, msg_vals=False):
+        """ Returns dictionary containing message information for a browser device.
+        This info will be delivered to a browser device via its recorded endpoint.
+        REM: It is having a limit of 4000 bytes (4kb)
+        """
+        if msg_vals:
+            author_id = [msg_vals.get('author_id')]
+            author_name = self.env['res.partner'].browse(author_id).name
+            model = msg_vals.get('model')
+            title = msg_vals.get('record_name') or msg_vals.get('subject')
+            res_id = msg_vals.get('res_id')
+            body = msg_vals.get('body')
+            if not model and body:
+                model, res_id = self._extract_model_and_id(msg_vals)
+        else:
+            author_id = message.author_id.ids
+            author_name = self.env['res.partner'].browse(author_id).name
+            model = message.model
+            title = message.record_name or message.subject
+            res_id = message.res_id
+            body = message.body
+
+        icon = '/web/static/img/odoo-icon-192x192.png'
+
+        if author_name:
+            title = "%s: %s" % (author_name, title)
+            icon = "/web/image/res.partner/%d/avatar_128" % author_id[0]
+
+        payload = {
+            'title': title,
+            'options': {
+                'icon': icon,
+                'data': {
+                    'model': model if model else '',
+                    'res_id': res_id if res_id else '',
+                }
+            }
+        }
+        payload['options']['body'] = html2plaintext(body, include_references=False)
+        payload['options']['body'] += self._generate_tracking_message(message)
+
+        return payload
+>>>>>>> 96e106293c684991757faa75074c00bd30c1add9
 
     @api.model
     def _get_thread_with_access(self, thread_id, mode="read", **kwargs):

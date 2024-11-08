@@ -469,6 +469,7 @@ def html2plaintext(html, body_id=None, encoding='utf-8', include_references=True
         tree = source[0]
 
     url_index = []
+<<<<<<< b991f766e28dc71f8627fdfbf2d59589d9707d3a
     linkrefs = itertools.count(1)
     if include_references:
         for link in tree.findall('.//a'):
@@ -476,7 +477,28 @@ def html2plaintext(html, body_id=None, encoding='utf-8', include_references=True
                 link.tag = 'span'
                 link.text = f'{link.text} [{next(linkrefs)}]'
                 url_index.append(url)
+||||||| 552f1a8a03b86193a82c25c336d37bc14ea46e73
+    i = 0
+    for link in tree.findall('.//a'):
+        url = link.get('href')
+        if url:
+            i += 1
+            link.tag = 'span'
+            link.text = '%s [%s]' % (link.text, i)
+            url_index.append(url)
+=======
+    i = 0
+    if include_references:
+        for link in tree.findall('.//a'):
+            url = link.get('href')
+            if url:
+                i += 1
+                link.tag = 'span'
+                link.text = '%s [%s]' % (link.text, i)
+                url_index.append(url)
+>>>>>>> 96e106293c684991757faa75074c00bd30c1add9
 
+<<<<<<< b991f766e28dc71f8627fdfbf2d59589d9707d3a
         for img in tree.findall('.//img'):
             if src := img.get('src'):
                 img.tag = 'span'
@@ -486,6 +508,31 @@ def html2plaintext(html, body_id=None, encoding='utf-8', include_references=True
                     img_name = re.search(r'[^/]+(?=\.[a-zA-Z]+(?:\?|$))', src)
                 img.text = '%s [%s]' % (img_name[0] if img_name else 'Image', next(linkrefs))
                 url_index.append(src)
+||||||| 552f1a8a03b86193a82c25c336d37bc14ea46e73
+    for img in tree.findall('.//img'):
+        src = img.get('src')
+        if src:
+            i += 1
+            img.tag = 'span'
+            if src.startswith('data:'):
+                img_name = None   # base64 image
+            else:
+                img_name = re.search(r'[^/]+(?=\.[a-zA-Z]+(?:\?|$))', src)
+            img.text = '%s [%s]' % (img_name.group(0) if img_name else 'Image', i)
+            url_index.append(src)
+=======
+        for img in tree.findall('.//img'):
+            src = img.get('src')
+            if src:
+                i += 1
+                img.tag = 'span'
+                if src.startswith('data:'):
+                    img_name = None   # base64 image
+                else:
+                    img_name = re.search(r'[^/]+(?=\.[a-zA-Z]+(?:\?|$))', src)
+                    img.text = '%s [%s]' % (img_name.group(0) if img_name else 'Image', i)
+                    url_index.append(src)
+>>>>>>> 96e106293c684991757faa75074c00bd30c1add9
 
     html = etree.tostring(tree, encoding="unicode")
     # \r char is converted into &#13;, must remove it
