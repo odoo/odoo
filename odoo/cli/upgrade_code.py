@@ -40,7 +40,7 @@ from typing import Iterator
 
 ROOT = Path(__file__).parent.parent
 UPGRADE = ROOT / 'upgrade_code'
-AVAILABLE_EXT = ('.py', '.js', '.css', '.scss', '.xml', '.csv')
+AVAILABLE_EXT = ('.py', '.js', '.css', '.scss', '.xml', '.csv', '.po', '.pot')
 
 
 try:
