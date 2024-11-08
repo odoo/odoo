@@ -88,7 +88,7 @@
                     <t t-set-slot="content">
                         <div class="overflow-hidden" t-ref="floating">
                             <span class="fw-bolder user-select-none" t-esc="thread.displayName"/>
-                            <t t-call="mail.DiscussSidebarChannel.commands"/>
+                            <t t-call="mail.DiscussSidebarChannel.commandsMenuBtn"/>
                         </div>
                     </t>
                 </Dropdown>
@@ -108,7 +108,10 @@
         <Dropdown t-if="store.discuss.isSidebarCompact" state="floating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu bg-view border p-2 mx-2 my-0 min-w-0 shadow-sm'" manual="true">
             <t t-call="mail.DiscussSidebarSubchannel.main"/>
             <t t-set-slot="content">
-                <div class="overflow-hidden user-select-none" t-ref="floating" t-esc="thread.displayName"/>
+                <div class="overflow-hidden" t-ref="floating">
+                    <div class="user-select-none" t-esc="thread.displayName"/>
+                    <t t-call="mail.DiscussSidebarChannel.commandsMenuBtn"/>
+                </div>
             </t>
         </Dropdown>
         <t t-else="" t-call="mail.DiscussSidebarSubchannel.main"/>
@@ -137,8 +140,8 @@
                     'text-muted': !(thread.selfMember?.message_unread_counter > 0 and !thread.isMuted),
                 }"/>
                 <span class="flex-grow-1"/>
-                <t t-if="!store.discuss.isSidebarCompact" t-call="mail.DiscussSidebarChannel.commands"/>
                 <span t-if="thread.importantCounter > 0" t-attf-class="o-mail-DiscussSidebar-badge badge rounded-pill o-discuss-badge fw-bold top-0 {{thread.isMuted ? 'o-muted' : ''}}" t-att-class="{ 'mx-1': !store.discuss.isSidebarCompact, 'position-absolute top-0 o-compact': store.discuss.isSidebarCompact }" t-esc="thread.importantCounter"/>
+                <t t-if="!store.discuss.isSidebarCompact" t-call="mail.DiscussSidebarChannel.commandsMenuBtn"/>
             </button>
             <t t-if="thread.selfMember?.message_unread_counter > 0 and !thread.isMuted and thread.importantCounter === 0" t-call="mail.DiscussSidebar.unreadIndicator"/>
         </li>
@@ -166,7 +169,7 @@
             </div>
             <t t-if="!store.discuss.isSidebarCompact">
                 <div class="flex-grow-1"/>
-                <t t-call="mail.DiscussSidebarChannel.commands"/>
+                <t t-call="mail.DiscussSidebarChannel.commandsMenuBtn"/>
                 <t t-foreach="indicators" t-as="indicator" t-key="indicator_index" t-component="indicator" t-props="{ thread }"/>
                 <i t-if="thread.isMuted" class="fa fa-fw fa-bell-slash me-1"/>
             </t>
@@ -180,15 +183,13 @@
         </button>
     </t>
 
-    <t t-name="mail.DiscussSidebarChannel.commands">
+    <t t-name="mail.DiscussSidebarChannel.commandsMenuBtn">
         <div class="o-mail-DiscussSidebarChannel-commands" t-att-class="{ 'd-none mx-1': !store.discuss.isSidebarCompact }">
             <div t-att-class="{ 'd-flex flex-column align-items-start ps-1 pt-1': store.discuss.isSidebarCompact, 'btn-group btn-group-sm gap-1': !store.discuss.isSidebarCompact }">
-                <t t-foreach="sortedCommands" t-as="command" t-key="command_index">
-                    <button class="btn opacity-50 opacity-100-hover" t-att-class="{ 'd-flex align-items-center px-1 py-0 gap-1 text-start smaller btn-secondary': store.discuss.isSidebarCompact, 'btn-light rounded-circle p-0': !store.discuss.isSidebarCompact }" t-on-click.stop="() => command.onSelect()" t-att-title="store.discuss.isSidebarCompact ? '' : command.label">
-                        <i role="img" class="fa-fw" t-att-class="command.icon"/>
-                        <span t-if="store.discuss.isSidebarCompact" t-esc="command.label"/>
-                    </button>
-                </t>
+                <button class="btn opacity-50 opacity-100-hover" t-att-class="{ 'd-flex align-items-center px-1 py-0 gap-1 text-start smaller btn-secondary': store.discuss.isSidebarCompact, 'btn-light rounded-circle p-0': !store.discuss.isSidebarCompact }" t-on-click.stop="() => commandsMenuBtn.onSelect()" t-att-title="store.discuss.isSidebarCompact ? '' : commandsMenuBtn.label">
+                    <i role="img" class="fa-fw" t-att-class="commandsMenuBtn.icon"/>
+                    <span t-if="store.discuss.isSidebarCompact" t-esc="commandsMenuBtn.label"/>
+                </button>
             </div>
         </div>
     </t>

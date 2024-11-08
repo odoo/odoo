@@ -2,38 +2,97 @@ import { patch } from "@web/core/utils/patch";
 import {
     DiscussSidebarCategory,
     DiscussSidebarChannel,
+    DiscussSidebarSubchannel,
 } from "../public_web/discuss_sidebar_categories";
+import { DiscussSidebarChannelCommands } from "../public_web/discuss_sidebar_channel_commands";
+import { usePopover } from "@web/core/popover/popover_hook";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { useState, useExternalListener } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
 
 /** @type {import("@mail/discuss/core/public_web/discuss_sidebar_categories").DiscussSidebarChannel} */
 const DiscussSidebarChannelPatch = {
     setup() {
         super.setup();
         this.actionService = useService("action");
+        this.popover = usePopover(DiscussSidebarChannelCommands, {
+            position: "right-start",
+            onClose: () => {
+                this.floating.close();
+            },
+            popoverClass: "o-mail-DiscussSidebarChannelCommands",
+        });
+        this.state = useState({
+            action: null,
+        });
+        useExternalListener(
+            browser,
+            "click",
+            () => {
+                if (!this.state.action) {
+                    this.popover.close();
+                }
+            },
+            { capture: true }
+        );
     },
-    get commands() {
-        const commands = super.commands;
-        if (this.thread.channel_type === "channel") {
-            commands.push({
-                onSelect: () => this.openSettings(),
-                label: _t("Channel settings"),
-                icon: "fa fa-cog",
-                sequence: 10,
-            });
-        }
-        return commands;
+    get commandsMenuBtn() {
+        return {
+            onSelect: () => {
+                this.popover.open(this.root.el, {
+                    thread: this.thread,
+                    activeAction: (action) => {
+                        this.state.action = action;
+                    },
+                });
+            },
+            label:
+                this.thread.channel_type != "channel"
+                    ? _t("Chat Settings")
+                    : _t("Channel Settings"),
+            icon: this.store.discuss.isSidebarCompact ? "fa fa-cog" : "fa fa-ellipsis-h",
+            sequence: 10,
+        };
     },
-    openSettings() {
-        if (this.thread.channel_type === "channel") {
-            this.actionService.doAction({
-                type: "ir.actions.act_window",
-                res_model: "discuss.channel",
-                res_id: this.thread.id,
-                views: [[false, "form"]],
-                target: "current",
-            });
-        }
+};
+
+/** @type {import("@mail/discuss/core/public_web/discuss_sidebar_categories").DiscussSidebarSubchannel} */
+const DiscussSidebarSubchannelPatch = {
+    setup() {
+        super.setup();
+        this.popover = usePopover(DiscussSidebarChannelCommands, {
+            position: "right-start",
+            onClose: () => this.floating.close(),
+            popoverClass: "o-mail-DiscussSidebarChannelCommands",
+        });
+        this.state = useState({
+            action: null,
+        });
+        useExternalListener(
+            browser,
+            "click",
+            () => {
+                if (!this.state.action) {
+                    this.popover.close();
+                }
+            },
+            { capture: true }
+        );
+    },
+    get commandsMenuBtn() {
+        return {
+            onSelect: () => {
+                this.popover.open(this.root.el, {
+                    thread: this.thread,
+                    activeAction: (action) => {
+                        this.state.action = action;
+                    },
+                });
+            },
+            label: _t("Thread Settings"),
+            icon: this.store.discuss.isSidebarCompact ? "fa fa-cog" : "fa fa-ellipsis-h",
+        };
     },
 };
 
@@ -76,3 +135,4 @@ const DiscussSidebarCategoryPatch = {
 
 patch(DiscussSidebarChannel.prototype, DiscussSidebarChannelPatch);
 patch(DiscussSidebarCategory.prototype, DiscussSidebarCategoryPatch);
+patch(DiscussSidebarSubchannel.prototype, DiscussSidebarSubchannelPatch);

@@ -4,11 +4,10 @@ import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { discussSidebarItemsRegistry } from "@mail/core/public_web/discuss_sidebar";
 import { useHover } from "@mail/utils/common/hooks";
 
-import { Component, useState, useSubEnv } from "@odoo/owl";
+import { Component, useRef, useState, useSubEnv } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { markEventHandled } from "@web/core/utils/misc";
@@ -30,29 +29,11 @@ export class DiscussSidebarSubchannel extends Component {
             onAway: () => (this.floating.isOpen = false),
         });
         this.floating = useDropdownState();
+        this.root = useRef("root");
     }
 
     get thread() {
         return this.props.thread;
-    }
-
-    get commands() {
-        const commands = [];
-        if (this.thread.canUnpin) {
-            commands.push({
-                onSelect: () => this.thread.unpin(),
-                label: _t("Unpin Thread"),
-                icon: "oi oi-close",
-                sequence: 20,
-            });
-        }
-        return commands;
-    }
-
-    get sortedCommands() {
-        const commands = [...this.commands];
-        commands.sort((c1, c2) => c1.sequence - c2.sequence);
-        return commands;
     }
 
     /** @param {MouseEvent} ev */
@@ -75,6 +56,7 @@ export class DiscussSidebarChannel extends Component {
             onAway: () => (this.floating.isOpen = false),
         });
         this.floating = useDropdownState();
+        this.root = useRef("root");
     }
 
     get attClass() {
@@ -106,33 +88,6 @@ export class DiscussSidebarChannel extends Component {
 
     get indicators() {
         return discussSidebarChannelIndicatorsRegistry.getAll();
-    }
-
-    get commands() {
-        const commands = [];
-        if (this.thread.canLeave) {
-            commands.push({
-                onSelect: () => this.thread.leaveChannel(),
-                label: _t("Leave Channel"),
-                icon: "oi oi-close",
-                sequence: 20,
-            });
-        }
-        if (this.thread.canUnpin) {
-            commands.push({
-                onSelect: () => this.thread.unpin(),
-                label: _t("Unpin Conversation"),
-                icon: "oi oi-close",
-                sequence: 20,
-            });
-        }
-        return commands;
-    }
-
-    get sortedCommands() {
-        const commands = [...this.commands];
-        commands.sort((c1, c2) => c1.sequence - c2.sequence);
-        return commands;
     }
 
     /** @returns {import("models").Thread} */

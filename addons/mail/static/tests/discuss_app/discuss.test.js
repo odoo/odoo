@@ -584,12 +584,13 @@ test("sidebar: basic channel rendering", async () => {
     await contains(".o-mail-DiscussSidebarChannel", { text: "General" });
     await contains(".o-mail-DiscussSidebarChannel img[data-alt='Thread Image']");
     await contains(".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands.d-none");
-    await contains(
-        ".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands [title='Channel settings']"
+    await click(
+        ".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands [title='Channel Settings']"
     );
-    await contains(
-        ".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands [title='Leave Channel']"
-    );
+    await contains(".o-mail-DiscussSidebarChannelCommands");
+    await click("[title='Leave Channel']", {
+        parent: [".o-mail-DiscussSidebarChannelCommands", { text: "General" }],
+    });
 });
 
 test("channel become active", async () => {
@@ -2045,9 +2046,11 @@ test("Correct breadcrumb when open discuss from chat window then see settings", 
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
     await click(".o-dropdown-item", { text: "Open in Discuss" });
-    await click("[title='Channel settings']", {
+    await click("[title='Channel Settings']", {
         parent: [".o-mail-DiscussSidebarChannel", { text: "General" }],
     });
+    await contains(".o-mail-DiscussSidebarChannelCommands");
+    await click("[title='Channel Info']");
     await contains(".o_breadcrumb", { text: "GeneralGeneral" });
 });
 

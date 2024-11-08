@@ -9,7 +9,7 @@ import { useSequential } from "@mail/utils/common/hooks";
 
 export class ChannelInvitation extends Component {
     static components = { ImStatus, ActionPanel };
-    static defaultProps = { hasSizeConstraints: false };
+    static defaultProps = { hasSizeConstraints: false, close: () => {}};
     static props = [
         "autofocus?",
         "hasSizeConstraints?",
