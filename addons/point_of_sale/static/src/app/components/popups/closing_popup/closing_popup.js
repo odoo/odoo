@@ -15,6 +15,8 @@ import { deduceUrl } from "@point_of_sale/utils";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { PaymentMethodBreakdown } from "@point_of_sale/app/components/payment_method_breakdown/payment_method_breakdown";
 
+const { DateTime } = luxon;
+
 export class ClosePosPopup extends Component {
     static components = { SaleDetailsButton, Input, Dialog, PaymentMethodBreakdown };
     static template = "point_of_sale.ClosePosPopup";
@@ -57,6 +59,13 @@ export class ClosePosPopup extends Component {
             { total: 0, moves: [] }
         );
         return { total, moves };
+    }
+    get orderForNextDays() {
+        const today = DateTime.now();
+        return this.pos.models["pos.order"].filter((o) => {
+            const presetTime = DateTime.fromSQL(o.preset_time);
+            return o.lines.length > 0 && presetTime > today && o.state === "draft";
+        }).length;
     }
     async cashMove() {
         await this.pos.cashMove();

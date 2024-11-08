@@ -73,6 +73,7 @@ export class TicketScreen extends Component {
             search: this.pos.getDefaultSearchDetails(),
             selectedOrder: this.pos.getOrder() || null,
             selectedOrderlineIds: {},
+            selectedPreset: null,
         });
         Object.assign(this.state, this.props.stateOverride || {});
 
@@ -83,6 +84,18 @@ export class TicketScreen extends Component {
             // Show updated list of synced orders when going back to the screen.
             this.onFilterSelected(this.state.filter);
         });
+    }
+    onPresetSelected(preset) {
+        if (this.state.selectedPreset === preset) {
+            this.state.selectedPreset = null;
+        } else {
+            this.state.selectedPreset = preset;
+            const firstFilteredOrder = this.getFilteredOrderList()[0];
+
+            if (firstFilteredOrder) {
+                this.onClickOrder(firstFilteredOrder);
+            }
+        }
     }
     async onFilterSelected(selectedFilter) {
         this.state.filter = selectedFilter;
@@ -228,7 +241,6 @@ export class TicketScreen extends Component {
                 ? this.props.destinationOrder
                 : this._getEmptyOrder(partner);
 
-        destinationOrder.takeaway = order.takeaway;
         // Add orderline for each toRefundDetail to the destinationOrder.
         const lines = [];
         for (const refundDetail of this._getRefundableDetails(partner, order)) {
@@ -328,6 +340,10 @@ export class TicketScreen extends Component {
         if (this.state.search.searchTerm) {
             const repr = this._getSearchFields()[this.state.search.fieldName].repr;
             orders = fuzzyLookup(this.state.search.searchTerm, orders, repr);
+        }
+
+        if (this.state.selectedPreset) {
+            orders = orders.filter((order) => order.preset_id?.id === this.state.selectedPreset.id);
         }
 
         const sortOrders = (orders, ascending = false) =>

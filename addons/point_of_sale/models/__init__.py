@@ -48,3 +48,4 @@ from . import res_currency
 from . import ir_ui_view
 from . import pos_preset
 from . import product_tag
+from . import resource_calendar_attendance

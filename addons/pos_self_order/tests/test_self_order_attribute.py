@@ -10,10 +10,10 @@ class TestSelfOrderAttribute(SelfOrderCommonTest):
     def test_self_order_attribute(self):
         self.pos_config.write({
             'self_ordering_default_user_id': self.pos_admin.id,
-            'self_ordering_takeaway': False,
             'self_ordering_mode': 'mobile',
             'self_ordering_pay_after': 'each',
             'self_ordering_service_mode': 'counter',
+            'available_preset_ids': [(5, 0)]
         })
 
         product = self.env['product.template'].search([('name', '=', 'Desk Organizer')])[0]
@@ -33,10 +33,10 @@ class TestSelfOrderAttribute(SelfOrderCommonTest):
     def test_self_order_multi_check_attribute(self):
         self.pos_config.write({
             'self_ordering_default_user_id': self.pos_admin.id,
-            'self_ordering_takeaway': False,
             'self_ordering_mode': 'mobile',
             'self_ordering_pay_after': 'each',
             'self_ordering_service_mode': 'counter',
+            'available_preset_ids': [(5, 0)]
         })
 
         pos_categ_misc = self.env['pos.category'].create({
@@ -77,10 +77,10 @@ class TestSelfOrderAttribute(SelfOrderCommonTest):
     def test_self_order_always_attribute(self):
         self.pos_config.write({
             'self_ordering_default_user_id': self.pos_admin.id,
-            'self_ordering_takeaway': False,
             'self_ordering_mode': 'mobile',
             'self_ordering_pay_after': 'each',
             'self_ordering_service_mode': 'counter',
+            'available_preset_ids': [(5, 0)]
         })
         pos_categ_chairs = self.env['pos.category'].create({
             'name': 'Chairs',

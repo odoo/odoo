@@ -32,6 +32,7 @@ class TestSelfOrderSequence(SelfOrderCommonTest):
         self.pos_config.write({
             'self_ordering_mode': 'mobile',
             'self_ordering_service_mode': 'table',
+            'available_preset_ids': [(5, 0)],
         })
 
         self.pos_config.open_ui()

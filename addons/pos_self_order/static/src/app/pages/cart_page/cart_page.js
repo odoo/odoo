@@ -4,10 +4,11 @@ import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { PopupTable } from "@pos_self_order/app/components/popup_table/popup_table";
 import { _t } from "@web/core/l10n/translation";
 import { OrderWidget } from "@pos_self_order/app/components/order_widget/order_widget";
+import { SlotsPopup } from "@pos_self_order/app/components/slots_popup/slots_popup";
 
 export class CartPage extends Component {
     static template = "pos_self_order.CartPage";
-    static components = { PopupTable, OrderWidget };
+    static components = { PopupTable, OrderWidget, SlotsPopup };
     static props = {};
 
     setup() {
@@ -15,6 +16,7 @@ export class CartPage extends Component {
         this.router = useService("router");
         this.state = useState({
             selectTable: false,
+            selectSlots: false,
             cancelConfirmation: false,
         });
     }
@@ -45,19 +47,31 @@ export class CartPage extends Component {
     }
 
     async pay() {
-        const orderingMode = this.selfOrder.config.self_ordering_service_mode;
-        const type = this.selfOrder.config.self_ordering_mode;
-        const takeAway = this.selfOrder.currentOrder.takeaway;
+        const presets = this.selfOrder.models["pos.preset"].getAll();
+        const config = this.selfOrder.config;
+        const type = config.self_ordering_mode;
+        const orderingMode =
+            config.use_presets && presets.length > 1
+                ? this.selfOrder.currentOrder.preset_id?.service_at
+                : config.self_ordering_service_mode;
 
         if (this.selfOrder.rpcLoading || !this.selfOrder.verifyCart()) {
             return;
         }
 
         if (
+            this.selfOrder.currentOrder.preset_id?.use_timing &&
+            !this.selfOrder.currentOrder.preset_time
+        ) {
+            this.state.selectSlots = true;
+            return;
+        }
+
+        if (
             type === "mobile" &&
             orderingMode === "table" &&
-            !takeAway &&
-            !this.selfOrder.currentTable
+            !this.selfOrder.currentTable &&
+            this.selfOrder.config.module_pos_restaurant
         ) {
             this.state.selectTable = true;
             return;
@@ -68,6 +82,16 @@ export class CartPage extends Component {
         this.selfOrder.rpcLoading = true;
         await this.selfOrder.confirmOrder();
         this.selfOrder.rpcLoading = false;
+    }
+
+    selectSlot(time) {
+        if (!time) {
+            this.state.selectSlots = false;
+            return;
+        }
+
+        this.selfOrder.currentOrder.preset_time = time;
+        this.pay();
     }
 
     selectTable(table) {

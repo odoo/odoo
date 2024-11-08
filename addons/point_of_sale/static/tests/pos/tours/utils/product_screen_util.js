@@ -543,7 +543,7 @@ export function addCustomerNote(note) {
         Dialog.confirm(),
     ].flat();
 }
-export function addInternalNote(note, buttonLabel = "Internal Note") {
+export function addInternalNote(note, buttonLabel = "Note") {
     return [
         clickInternalNoteButton(buttonLabel),
         TextInputPopup.inputText(note),

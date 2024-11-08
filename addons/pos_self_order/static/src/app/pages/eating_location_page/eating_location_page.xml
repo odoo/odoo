@@ -4,13 +4,13 @@
         <div class="o_kiosk_eating_location d-flex flex-column align-items-center flex-grow-1 bg-300 bg-gradient overflow-y-auto text-center">
             <h1 class="pt-3 m-0">Choose your eating location</h1>
             <div class="container d-flex flex-wrap align-items-center justify-content-center gap-3 my-auto">
-                <button t-on-click="() => this.selectLocation('in')" role="button" class="o_kiosk_eating_location_box btn btn-light">
-                    <img src="/pos_self_order/static/img/eatin.svg" />
-                    <h3>Eat In</h3>
-                </button>
-                <button t-on-click="() => this.selectLocation('out')" role="button" class="o_kiosk_eating_location_box o_kiosk_eating_location_away btn btn-light">
-                    <img src="/pos_self_order/static/img/takeAway.svg" />
-                    <h3>Take Out</h3>
+                <button t-foreach="presets"
+                    t-as="preset" t-key="preset.id"
+                    t-on-click="() => this.selectPreset(preset)"
+                    role="button"
+                    class="o_kiosk_eating_location_box btn btn-light">
+                    <img t-if="preset.image_128" t-att-src="'data:image/png;base64,' + preset.image_128" />
+                    <h3 t-esc="preset.name"/>
                 </button>
             </div>
         </div>

@@ -41,19 +41,6 @@ class PosOrder(models.Model):
     def _load_pos_self_data_domain(self, data):
         return [('id', '=', False)]
 
-    @api.model
-    def sync_from_ui(self, orders):
-        for order in orders:
-            if order.get('id'):
-                order_id = order['id']
-
-                if isinstance(order_id, int):
-                    old_order = self.env['pos.order'].browse(order_id)
-                    if old_order.takeaway:
-                        order['takeaway'] = old_order.takeaway
-
-        return super().sync_from_ui(orders)
-
     def _process_saved_order(self, draft):
         res = super()._process_saved_order(draft)
 

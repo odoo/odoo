@@ -32,6 +32,10 @@ export class OpeningControlPopup extends Component {
         this.hardwareProxy = useService("hardware_proxy");
         this.ui = useService("ui");
     }
+    get orderCount() {
+        return this.pos.models["pos.order"].filter((o) => o.lines.length > 0 && o.state === "draft")
+            .length;
+    }
     confirm() {
         this.pos.session.state = "opened";
         this.pos.data.call(
