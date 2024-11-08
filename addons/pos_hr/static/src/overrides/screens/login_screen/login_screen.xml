@@ -2,10 +2,10 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_hr.LoginScreen" t-inherit="point_of_sale.LoginScreen" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('screen-login')]" position="attributes">
-            <attribute name="t-if">!this.pos.config.module_pos_hr || !this.pos.login</attribute>
+            <attribute name="t-if">!this.pos.config.module_pos_hr || !this.state.login</attribute>
         </xpath>
         <xpath expr="//div[hasclass('screen-login')]" position="after">
-            <div t-if="this.pos.config.module_pos_hr and this.pos.login" class="screen-login flex-grow-1 d-flex align-items-center justify-content-center">
+            <div t-if="this.pos.config.module_pos_hr and this.state.login" class="screen-login flex-grow-1 d-flex align-items-center justify-content-center">
                 <div class="d-flex bg-white p-3 gap-2 rounded">
                     <input t-model="this.state.pin"
                         t-ref="autofocus"

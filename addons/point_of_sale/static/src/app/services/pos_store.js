@@ -148,18 +148,7 @@ export class PosStore extends Reactive {
     }
 
     get firstScreen() {
-        if (odoo.from_backend) {
-            // Remove from_backend params in the URL but keep the rest
-            const url = new URL(window.location.href);
-            url.searchParams.delete("from_backend");
-            window.history.replaceState({}, "", url);
-
-            if (!this.config.module_pos_hr) {
-                this.set_cashier(this.user);
-            }
-        }
-
-        return !this.cashier ? "LoginScreen" : "ProductScreen";
+        return this.cashier.logged ? "ProductScreen" : "LoginScreen";
     }
 
     showLoginScreen() {
@@ -169,40 +158,7 @@ export class PosStore extends Reactive {
     }
 
     reset_cashier() {
-        this.cashier = false;
-        this._resetConnectedCashier();
-    }
-
-    checkPreviousLoggedCashier() {
-        const savedCashier = this._getConnectedCashier();
-        if (savedCashier) {
-            this.set_cashier(savedCashier);
-        }
-    }
-
-    set_cashier(user) {
-        if (!user) {
-            return;
-        }
-
-        this.cashier = user;
-        this._storeConnectedCashier(user);
-    }
-
-    _getConnectedCashier() {
-        const cashier_id = Number(sessionStorage.getItem(`connected_cashier_${this.config.id}`));
-        if (cashier_id && this.models["res.users"].get(cashier_id)) {
-            return this.models["res.users"].get(cashier_id);
-        }
-        return false;
-    }
-
-    _storeConnectedCashier(user) {
-        sessionStorage.setItem(`connected_cashier_${this.config.id}`, user.id);
-    }
-
-    _resetConnectedCashier() {
-        sessionStorage.removeItem(`connected_cashier_${this.config.id}`);
+        this.cashier.logged = false;
     }
 
     useProxy() {
@@ -225,6 +181,20 @@ export class PosStore extends Reactive {
         return this.data.models["pos.session"].getFirst();
     }
 
+    get sessionCashierInfo() {
+        return {
+            user: this.data.models["res.users"].get(
+                sessionStorage.getItem(`connected_user_${this.config.id}`)
+            ),
+        };
+    }
+
+    setSessionCashierInfo(data) {
+        if ("userId" in data) {
+            sessionStorage.setItem(`connected_user_${this.config.id}`, data.userId);
+        }
+    }
+
     async processServerData() {
         // These fields should be unique for the pos_config
         // and should not change during the session, so we can
@@ -237,7 +207,20 @@ export class PosStore extends Reactive {
         this.models = this.data.models;
 
         // Check cashier
-        this.checkPreviousLoggedCashier();
+        const previousUser = this.sessionCashierInfo.user;
+        this.user.role = this.user._raw.role;
+        this.cashier = {
+            logged: (this.session.state === "opened" && previousUser) || odoo.from_backend,
+            user: this.user,
+        };
+
+        if (odoo.from_backend) {
+            // Remove from_backend params in the URL but keep the rest
+            const url = new URL(window.location.href);
+            url.searchParams.delete("from_backend");
+            window.history.replaceState({}, "", url);
+            this.setSessionCashierInfo({ userId: this.user.id });
+        }
 
         // Add Payment Interface to Payment Method
         for (const pm of this.models["pos.payment.method"].getAll()) {
@@ -909,18 +892,6 @@ export class PosStore extends Reactive {
 
         return this.data.localDeleteCascade(order, removeFromServer);
     }
-
-    /**
-     * Return the current cashier (in this case, the user)
-     * @returns {name: string, id: int, role: string}
-     */
-    get_cashier() {
-        this.user.role = this.user._raw.role;
-        return this.user;
-    }
-    get_cashier_user_id() {
-        return this.user.id;
-    }
     get orderPreparationCategories() {
         if (this.printers_category_ids_set) {
             return new Set([...this.printers_category_ids_set]);
@@ -928,7 +899,7 @@ export class PosStore extends Reactive {
         return new Set();
     }
     cashierHasPriceControlRights() {
-        return !this.config.restrict_price_control || this.get_cashier()._role == "manager";
+        return !this.config.restrict_price_control || this.cashier.user.role == "manager";
     }
     createNewOrder(data = {}) {
         const fiscalPosition = this.models["account.fiscal.position"].find((fp) => {
@@ -1586,7 +1557,6 @@ export class PosStore extends Reactive {
         });
     }
     async closePos() {
-        this._resetConnectedCashier();
         // If pos is not properly loaded, we just go back to /web without
         // doing anything in the order data.
         if (!this) {
@@ -1784,7 +1754,7 @@ export class PosStore extends Reactive {
     getReceiptHeaderData(order) {
         return {
             company: this.company,
-            cashier: _t("Served by %s", order?.getCashierName() || this.get_cashier()?.name),
+            cashier: _t("Served by %s", order?.getCashierName() || this.cashier.user.name),
             header: this.config.receipt_header,
         };
     }

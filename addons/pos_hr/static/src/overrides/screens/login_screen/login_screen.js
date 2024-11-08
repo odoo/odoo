@@ -11,17 +11,18 @@ patch(LoginScreen.prototype, {
 
         this.state = useState({
             pin: "",
+            login: false,
         });
 
         if (this.pos.config.module_pos_hr) {
             this.selectCashier = useCashierSelector({
-                onScan: (employee) => employee && this.selectOneCashier(employee),
+                onScan: (employee) => employee && this.selectEmployee(employee),
                 exclusive: true,
             });
 
             useAutofocus();
             useExternalListener(window, "keypress", async (ev) => {
-                if (this.pos.login && ev.key === "Enter" && this.state.pin) {
+                if (this.state.login && ev.key === "Enter" && this.state.pin) {
                     await this.selectCashier(this.state.pin, true);
                 }
             });
@@ -29,15 +30,18 @@ patch(LoginScreen.prototype, {
 
         onWillUnmount(() => {
             this.state.pin = "";
-            this.pos.login = false;
+            this.state.login = false;
         });
     },
+    selectEmployee(employee) {
+        this.pos.cashier.employee = employee;
+    },
     unlockRegister() {
-        this.pos.login = true;
+        this.state.login = true;
     },
     openRegister() {
         if (this.pos.config.module_pos_hr) {
-            this.pos.login = true;
+            this.state.login = true;
         } else {
             super.openRegister();
         }
@@ -48,9 +52,9 @@ patch(LoginScreen.prototype, {
             return;
         }
 
-        if (this.pos.login) {
+        if (this.state.login) {
             this.state.pin = "";
-            this.pos.login = false;
+            this.state.login = false;
         } else {
             const employee = await this.selectCashier();
             if (
@@ -63,6 +67,8 @@ patch(LoginScreen.prototype, {
         }
     },
     get backBtnName() {
-        return this.pos.login && this.pos.config.module_pos_hr ? _t("Discard") : super.backBtnName;
+        return this.state.login && this.pos.config.module_pos_hr
+            ? _t("Discard")
+            : super.backBtnName;
     },
 });

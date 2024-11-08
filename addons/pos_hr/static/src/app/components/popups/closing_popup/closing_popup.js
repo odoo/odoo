@@ -11,3 +11,10 @@ patch(ClosePosPopup, {
         });
     },
 });
+
+patch(ClosePosPopup.prototype, {
+    closeSession() {
+        this.pos.setSessionCashierInfo({ employeeId: false });
+        return super.closeSession(...arguments);
+    },
+});
