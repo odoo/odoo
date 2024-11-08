@@ -30,6 +30,21 @@ class TestImport(common.TransactionCase):
             record.with_context(lang='fr_FR').name,
             'Vaisselle'
         )
+        record = self.env.ref('test_translation_import.test_translation_import_model1_record2')
+        self.assertEqual(
+            record.with_context(lang='fr_FR').name,
+            'Meuble'
+        )
+        record = self.env.ref('test_translation_import.test_translation_import_model1_record3')
+        self.assertEqual(
+            record.with_context(lang='fr_FR').name,
+            'Test de traduction CSV depuis PO'
+        )
+        record = self.env.ref('test_translation_import.test_translation_import_model1_record4')
+        self.assertEqual(
+            record.with_context(lang='fr_FR').name,
+            'Test de traduction CSV depuis les données'
+        )
 
     def test_import_model_term_translation(self):
         self.env['res.lang']._activate_lang('fr_FR')
@@ -426,13 +441,17 @@ class TestTranslationFlow(common.TransactionCase):
             'lang_ids': [(6, 0, [self.env.ref('base.lang_fr').id])],
         }).lang_install()
 
-        model1_ids = self.env.ref('test_translation_import.test_translation_import_model1_record1').ids
+        model1_ids = [
+            self.env.ref('test_translation_import.test_translation_import_model1_record1').id,
+            self.env.ref('test_translation_import.test_translation_import_model1_record2').id,
+        ]
         po_reader = TranslationRecordReader(self.env.cr, 'test.translation.import.model1', model1_ids, lang='fr_FR')
         translations = {line[4]: line[5] for line in po_reader}
         self.assertDictEqual(
             translations,
             {
                 'Fork': 'Fourchette',
+                'Furniture': 'Meuble',
                 'Knife': 'Couteau',
                 'Spoon': 'Cuillère',
                 'Tableware': 'Vaisselle',
