@@ -3,10 +3,12 @@ import { _t } from "@web/core/l10n/translation";
 import { OdooChart } from "./odoo_chart";
 
 const { chartRegistry } = spreadsheet.registries;
+const { INTERACTIVE_LEGEND_CONFIG } = spreadsheet.constants;
 
 const {
     getDefaultChartJsRuntime,
     getChartAxisTitleRuntime,
+    getCustomLegendLabels,
     chartFontColor,
     ColorGenerator,
     getFillingMode,
@@ -139,10 +141,18 @@ function createOdooChartRuntime(chart, getters) {
 function getLineConfiguration(chart, labels, locale) {
     const fontColor = chartFontColor(chart.background);
     const config = getDefaultChartJsRuntime(chart, labels, fontColor, { locale });
+    const filled = chart.fillArea || chart.stacked;
+    const pointStyle = filled ? "rect" : "line";
+    const lineWidth = filled ? 2 : 3;
     config.type = chart.type.replace("odoo_", "");
     const legend = {
         ...config.options.legend,
         display: chart.legendPosition !== "none",
+        ...INTERACTIVE_LEGEND_CONFIG,
+        ...getCustomLegendLabels(fontColor, {
+            pointStyle,
+            lineWidth,
+        }),
     };
     legend.position = chart.legendPosition;
     config.options.plugins = config.options.plugins || {};
