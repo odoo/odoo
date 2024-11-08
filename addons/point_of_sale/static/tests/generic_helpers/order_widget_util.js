@@ -101,3 +101,19 @@ export function hasTax(amount) {
         trigger: `.order-summary .tax:contains("${amount}")`,
     };
 }
+export function hasInternalNote(note) {
+    return [
+        {
+            content: `Order internal note is '${note}'`,
+            trigger: `.order-container .internal-note-container li.internal-note.badge:contains("${note}")`,
+        },
+    ];
+}
+export function hasCustomerNote(note) {
+    return [
+        {
+            content: `Order customer note is '${note}'`,
+            trigger: `.order-container .customer-note .col div:contains("${note}")`,
+        },
+    ];
+}
