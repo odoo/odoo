@@ -385,6 +385,8 @@ form: module.record_id""" % (xml_id,)
         for field in rec.iterchildren('field'):
             #TODO: most of this code is duplicated above (in _eval_xml)...
             f_name = field.get("name")
+            if '@' in f_name:
+                continue  # used for translations
             f_model = field.get("model")
             if not f_model and f_name in model._fields:
                 f_model = model._fields[f_name].comodel_name
@@ -644,10 +646,19 @@ def convert_csv_import(env, module, fname, csvcontent, idref=None, mode='init',
         _logger.error("Import specification does not contain 'id' and we are in init mode, Cannot continue.")
         return
 
+    translate_indexes = {i for i, field in enumerate(fields) if '@' in field}
+    def remove_translations(row):
+        return [cell for i, cell in enumerate(row) if i not in translate_indexes]
+
+    fields = remove_translations(fields)
+    if not fields:
+        return
+
+    # clean the data from translations (treated during translation import), then
     # filter out empty lines (any([]) == False) and lines containing only empty cells
     datas = [
-        line for line in reader
-        if any(line)
+        data_line for line in reader
+        if any(data_line := remove_translations(line))
     ]
 
     context = {
