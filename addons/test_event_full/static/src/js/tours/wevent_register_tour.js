@@ -162,4 +162,30 @@ tour.register('wevent_register', {
     )
 );
 
+/**
+ * Agenda STEPS
+ */
+
+var discoverAgendaSteps = function (AgendaTitle) {
+    return [{
+        content: `Go on ${AgendaTitle} Event page`,
+        trigger: `span:contains(${AgendaTitle})`,
+    }];
+};
+
+var browseAgendaSteps = [{
+    content: 'Browse Agenda',
+    trigger: 'a:contains("Agenda")',
+}];
+
+tour.register('event_track', {
+    test: true,
+    },[].concat(
+            browseAgendaSteps,
+            discoverAgendaSteps('Live Testimonial'),
+            discoverAgendaSteps('What This Event Is All About'),
+            discoverAgendaSteps('Our Last Day Together !'),
+        )
+    );
+
 });
