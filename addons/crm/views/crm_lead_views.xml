@@ -18,7 +18,7 @@
                         <field name="stage_id" widget="statusbar_duration"
                             options="{'clickable': '1', 'fold_field': 'fold'}"
                             domain="['|', ('team_id', '=', team_id), ('team_id', '=', False)]"
-                            invisible="type == 'lead'" readonly="won_status == 'lost'"/>
+                            invisible="type == 'lead'" readonly="won_status == 'lost' or not active"/>
                     </header>
                     <sheet>
                         <field name="won_status" invisible="1"/>
@@ -175,7 +175,7 @@
                                         title="By saving this change, the customer phone number will also be updated."
                                         invisible="not partner_phone_update"/>
                                 </div>
-                                <field name="lost_reason_id" invisible="won_status != 'lost'"/>
+                                <field name="lost_reason_id" invisible="won_status != 'lost'" placeholder="Not specified"/>
                                 <field name="date_conversion" invisible="1"/>
                                 <field name="user_company_ids" invisible="1"/>
                             </group>
@@ -512,6 +512,7 @@
                         </t>
                         <t t-name="card">
                             <widget name="web_ribbon" id="lost_ribbon" title="Lost" bg_color="text-bg-danger" invisible="won_status != 'lost'"/>
+                            <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active or won_status in ['lost', 'won']"/>
                             <field class="fw-bold fs-5" name="name"/>
                             <div>
                                 <t t-if="record.expected_revenue.raw_value">

@@ -659,17 +659,14 @@ class TestCrmPlsSides(CrmPlsCommon):
         self.assertEqual(lead.won_status, 'lost')
 
         # Test won validity reaching won stage, currently does not update
+        # Archived leads become active again when they are marked as won.
         lead.write({'stage_id': stage_won.id})
-        self.assertFalse(lead.active)
+        self.assertTrue(lead.active)
         self.assertEqual(lead.probability, 100)
         self.assertEqual(lead.won_status, 'won')
 
-        # Back to lost
+        # Back to new stage
         lead.write({'probability': 0, 'stage_id': stage_new.id})
-        self.assertEqual(lead.won_status, 'lost')
-
-        # Once active again, lead is not lost anymore
-        lead.write({'active': True})
         self.assertEqual(lead.won_status, 'pending', "An active lead cannot be lost")
 
     @users('user_sales_manager')
