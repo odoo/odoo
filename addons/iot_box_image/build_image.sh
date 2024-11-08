@@ -64,7 +64,7 @@ if [ ! -d $CLONE_DIR ]; then
     git config core.sparsecheckout true
     echo "addons/web
 addons/hw_*
-addons/point_of_sale/tools/posbox/configuration
+addons/iot_box_image/configuration
 odoo/
 odoo-bin" | tee --append .git/info/sparse-checkout > /dev/null
     git read-tree -mu HEAD
@@ -146,7 +146,7 @@ cp -av "${OVERWRITE_FILES_BEFORE_INIT_DIR}"/* "${MOUNT_POINT}"
 # it needs to be performed in the classic filesystem, as 'systemctl' commands are not available in /root_bypass_ramdisks
 sudo systemctl reload NetworkManager
 
-chroot "${MOUNT_POINT}" /bin/bash -c "/etc/init_posbox_image.sh"
+chroot "${MOUNT_POINT}" /bin/bash -c "/etc/init_image.sh"
 
 # copy iotbox version
 mkdir -pv "${MOUNT_POINT}"/var/odoo/
