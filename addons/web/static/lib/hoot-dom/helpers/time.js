@@ -69,7 +69,7 @@ const idToTimeout = (id) => Number(id.slice(ID_PREFIX.timeout.length));
  */
 const intervalToId = (id) => ID_PREFIX.interval + String(id);
 
-const now = () => $performanceNow() + timeOffset;
+const now = () => (freezed ? 0 : $performanceNow()) + timeOffset;
 
 /**
  * @param {number} id
