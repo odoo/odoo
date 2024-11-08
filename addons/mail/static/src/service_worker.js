@@ -2,14 +2,30 @@
 /* eslint-disable no-restricted-globals */
 self.addEventListener("notificationclick", (event) => {
     event.notification.close();
+
+    async function handleNavigation(url) {
+        const windowClients = await clients.matchAll({
+            type: "window",
+            includeUncontrolled: true,
+        });
+        const odooClient = windowClients.find(
+            (client) => client.url && client.url.includes("/odoo")
+        );
+        if (odooClient) {
+            await odooClient.focus();
+            await odooClient.navigate(url);
+        } else {
+            clients.openWindow(url);
+        }
+    }
+
     if (event.notification.data) {
         const { action, model, res_id } = event.notification.data;
-        if (model === "discuss.channel") {
-            clients.openWindow(`/odoo/${res_id}/action-${action}`);
-        } else {
-            const modelPath = model.includes(".") ? model : `m-${model}`;
-            clients.openWindow(`/odoo/${modelPath}/${res_id}`);
-        }
+        const url =
+            model === "discuss.channel"
+                ? `/odoo/${res_id}/action-${action}`
+                : `/odoo/${model.includes(".") ? model : `m-${model}`}/${res_id}`;
+        event.waitUntil(handleNavigation(url));
     }
 });
 self.addEventListener("push", (event) => {
