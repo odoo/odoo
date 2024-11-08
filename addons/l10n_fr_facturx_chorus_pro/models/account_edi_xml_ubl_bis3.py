@@ -52,4 +52,6 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 constraints['chorus_customer'] = _("The siret is mandatory for the customer when invoicing to Chorus Pro.")
             if supplier.country_code == 'FR' and ('siret' not in supplier._fields or not supplier.siret):
                 constraints['chorus_supplier'] = _("The siret is mandatory for french suppliers when invoicing to Chorus Pro.")
+            if not invoice.partner_bank_id.bank_id.bic:
+                constraints['chorus_financial_institution_branch'] = _("The BIC of the payee's bank is mandatory when invoicing to Chorus Pro.")
         return constraints
