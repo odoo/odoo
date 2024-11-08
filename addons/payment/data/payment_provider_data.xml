@@ -213,6 +213,19 @@
         <field name="module_id" ref="base.module_payment_demo"/>
     </record>
 
+    <record id="payment_provider_dpo" model="payment.provider">
+        <field name="name">DPO Pay</field>
+        <field name="image_128" type="base64" file="payment_dpo/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_dpo"/>
+        <!-- https://dpogroup.com/Payment-methods/ -->
+        <field
+            name="payment_method_ids"
+            eval="[Command.set([
+                      ref('payment.payment_method_dpo'),
+                  ])]"
+        />
+    </record>
+
     <record id="payment_provider_flutterwave" model="payment.provider">
         <field name="name">Flutterwave</field>
         <field name="image_128"
