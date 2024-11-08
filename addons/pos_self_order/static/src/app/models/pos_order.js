@@ -30,6 +30,9 @@ patch(PosOrder.prototype, {
             return acc;
         }, {});
     },
+    get isTakeaway() {
+        return this.preset_id?.service_at !== "table" && this.config.use_presets;
+    },
     recomputeChanges() {
         const lines = this.lines;
         for (const line of lines) {

@@ -11,12 +11,11 @@ from odoo.exceptions import UserError
 class TestSelfOrderCommon(SelfOrderCommonTest):
     def test_self_order_common(self):
         self.pos_config.write({
-            'takeaway': True,
             'self_ordering_default_user_id': self.pos_admin.id,
-            'self_ordering_takeaway': True,
             'self_ordering_mode': 'kiosk',
             'self_ordering_pay_after': 'each',
             'self_ordering_service_mode': 'table',
+            'available_preset_ids': [(5, 0)],
         })
 
         self.pos_admin.groups_id += self.env.ref('account.group_account_invoice')

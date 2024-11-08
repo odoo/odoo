@@ -57,6 +57,10 @@ export class PosOrder extends Base {
                 inputTipAmount: "",
             },
         };
+
+        if (!this.session_id) {
+            this.session_id = this.session;
+        }
     }
 
     get user() {
@@ -97,7 +101,7 @@ export class PosOrder extends Base {
 
     get presetTime() {
         const dateTime = DateTime.fromSQL(this.preset_time);
-        return dateTime.toFormat("HH:mm");
+        return dateTime.isValid ? dateTime.toFormat("HH:mm") : false;
     }
 
     getEmailItems() {

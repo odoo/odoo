@@ -119,11 +119,11 @@ export function checkStatus(orderName, status) {
     return [
         {
             isActive: ["desktop"],
-            trigger: `.ticket-screen .order-row > .col:contains("${orderName}") ~ .col:nth-child(7):contains(${status})`,
+            trigger: `.ticket-screen .order-row > .col:contains("${orderName}") ~ .orderStatus:contains(${status})`,
         },
         {
             isActive: ["mobile"],
-            trigger: `.ticket-screen .order-row > .col:contains("${orderName}") ~ .col:nth-child(2):contains(${status})`,
+            trigger: `.ticket-screen .order-row > .col:contains("${orderName}") ~ .col .orderStatus:contains(${status})`,
         },
     ];
 }
