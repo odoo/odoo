@@ -402,3 +402,13 @@ registry.category("web_tour.tours").add("test_import_so_to_pos_no_existing_lot",
             },
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_pos_repair", {
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickQuotationButton(),
+            ProductScreen.selectNthOrder(1),
+            ProductScreen.selectedOrderlineHas("Test product 1", 1),
+        ].flat(),
+});

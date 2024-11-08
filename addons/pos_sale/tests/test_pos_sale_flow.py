@@ -1110,7 +1110,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
 
         invoice = self.env['account.move'].search([('invoice_origin', '=', order.name)], limit=1)
         self.assertTrue(invoice)
-        self.assertFalse(invoice.invoice_payment_term_id) 
+        self.assertFalse(invoice.invoice_payment_term_id)
 
         self.assertAlmostEqual(order.amount_total, invoice.amount_total, places=2, msg="Order and Invoice amounts do not match.")
 
@@ -1347,3 +1347,34 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         })
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_import_so_to_pos_no_existing_lot', login="accountman")
+
+    def test_pos_repair(self):
+        if self.env['ir.module.module']._get('repair').state != 'installed':
+            self.skipTest("Repair module is required for this test")
+
+        self.product_1 = self.env['product.product'].create({
+            'available_in_pos': True,
+            'name': 'Test product 1'
+        })
+        self.stock_warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        self.repair1 = self.env['repair.order'].create({
+            'product_id': self.product_1.id,
+            'product_uom': self.env.ref('uom.product_uom_unit').id,
+            'picking_type_id': self.stock_warehouse.repair_type_id.id,
+            'move_ids': [
+                (0, 0, {
+                    'product_id': self.product_1.id,
+                    'product_uom_qty': 1.0,
+                    'state': 'draft',
+                    'repair_line_type': 'add',
+                    'company_id': self.env.company.id,
+                })
+            ],
+            'partner_id': self.env['res.partner'].create({'name': 'Partner 1'}).id
+        })
+        self.repair1._action_repair_confirm()
+        self.repair1.action_repair_start()
+        self.repair1.action_repair_end()
+        self.repair1.action_create_sale_order()
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_pos_repair', login="accountman")

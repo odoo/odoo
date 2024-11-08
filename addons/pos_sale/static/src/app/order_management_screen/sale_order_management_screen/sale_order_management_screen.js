@@ -240,6 +240,12 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                             });
                         }
                     }
+
+                    line.has_valued_move_ids = await this.orm.call(
+                        "sale.order.line",
+                        "has_valued_move_ids",
+                        [line.id]
+                    );
                     new_line.setQuantityFromSOL(line);
                     new_line.set_unit_price(line.price_unit);
                     new_line.set_discount(line.discount);
