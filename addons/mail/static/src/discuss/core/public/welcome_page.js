@@ -14,7 +14,7 @@ export class WelcomePage extends Component {
         this.isClosed = false;
         this.store = useState(useService("mail.store"));
         this.state = useState({
-            userName: "Guest",
+            userName: this.store.self.name || _t("Guest"),
             audioStream: null,
             videoStream: null,
         });
