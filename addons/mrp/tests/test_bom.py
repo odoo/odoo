@@ -1516,6 +1516,8 @@ class TestBoM(TestMrpCommon):
         bom = self.make_bom(prod1, prod2)
         bom.product_qty = 100
 
+        bom = self.make_bom(p5, p6)
+        bom.bom_line_ids[0].product_qty = 0.1
         loc = self.env.ref("stock.stock_location_stock")
         self.env["stock.quant"]._update_available_quantity(p3, loc, 10)
         self.env["stock.quant"]._update_available_quantity(p4, loc, 10)
@@ -1523,12 +1525,19 @@ class TestBoM(TestMrpCommon):
         self.env["stock.quant"]._update_available_quantity(p6, loc, -4.8)
         self.env["stock.quant"]._update_available_quantity(prod2, loc, 5.57)
         self.env["stock.quant"]._update_available_quantity(prod2, loc, -5)
+<<<<<<< saas-17.4
 
+||||||| ae69eab0e3984d34116a8a9bcf39b6e5a44d93db
+=======
+        self.env["stock.quant"]._update_available_quantity(p6, loc, 5.5)
+        self.env["stock.quant"]._update_available_quantity(p6, loc, -5.2)
+>>>>>>> 2500952362a7c891a7c469f2af689db7f0b31042
         self.assertEqual(p1.qty_available, 5.0)
         self.assertEqual(p2.qty_available, 10.0)
         self.assertEqual(p3.qty_available, 10.0)
         self.assertEqual(p5.qty_available, 7.0)
         self.assertEqual(prod1.qty_available, 57.0)
+        self.assertEqual(p5.qty_available, 3.0)
 
     def test_bom_updates_mo(self):
         """ Creates a Manufacturing Order using a BoM, then modifies the BoM.
