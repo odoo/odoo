@@ -5,6 +5,18 @@
 
 .o-EmojiPicker {
     --o-emoji-picker-active: #{$gray-200};
+
+    &.o-mobile {
+        height: 55vh;
+        width: 100%;
+        --o-emoji-picker-active: #{$gray-200};
+
+        .o-Emoji {
+            width: 40px;
+            font-size: 1.5rem !important;
+        }
+    }
+
     .o-active {
         background-color: var(--o-emoji-picker-active) !important;
     }
@@ -48,3 +60,4 @@
         }
     }
 }
+

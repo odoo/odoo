@@ -4,12 +4,11 @@ import { _t } from "@web/core/l10n/translation";
 import { download } from "@web/core/network/download";
 import { registry } from "@web/core/registry";
 import { MessageReactionButton } from "./message_reaction_button";
-import { useService } from "@web/core/utils/hooks";
+import { onExternalClick, useService } from "@web/core/utils/hooks";
 import { discussComponentRegistry } from "./discuss_component_registry";
 import { Deferred } from "@web/core/utils/concurrency";
 import { EMOJI_PICKER_PROPS, EmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { Dialog } from "@web/core/dialog/dialog";
-import { onExternalClick } from "@mail/utils/common/hooks";
 import { convertBrToLineBreak } from "@mail/utils/common/format";
 
 const { DateTime } = luxon;
@@ -33,6 +32,9 @@ class EmojiPickerMobile extends Component {
             onSelect: (...args) => {
                 this.props.onSelect(...args);
                 this.props.close?.();
+            },
+            state: {
+                isOpen: true,
             },
         };
     }
@@ -70,7 +72,12 @@ messageActionsRegistry
                         def.resolve(true);
                     },
                 },
-                { context: component, onClose: () => def.resolve(false) }
+                {
+                    context: component,
+                    onClose: () => {
+                        def.resolve(false);
+                    },
+                }
             );
             return def;
         },
