@@ -293,7 +293,8 @@
         'web_editor.assets_wysiwyg': [
             'website/static/src/js/editor/editor.js',
             'website/static/src/xml/web_editor.xml',
-            'website/static/src/js/editor/add_snippet_dialog.js'
+            'website/static/src/js/editor/add_snippet_dialog.js',
+            'website/static/src/js/editor/widget_link.js',
         ],
         'website.assets_wysiwyg': [
             ('include', 'web._assets_helpers'),
