@@ -5,7 +5,7 @@
             <h2 class="attribute_name mb-5 mb-md-3"><small class="text-muted">Choose your</small> <strong t-esc="props.combo.name" /></h2>
             <div class="combo-list align-items-center justify-content-start">
                 <div class="combo-list-products o-so-products-row">
-                    <t t-foreach="props.combo.combo_item_ids" t-as="line" t-key="line.id">
+                    <t t-foreach="props.combo.combo_item_ids" t-as="line" t-key="line.id" t-if="line.product_id">
                         <t t-set="product" t-value="line.product_id"/>
                         <t t-set="isOutOfStock" t-value="!product.self_order_available"/>
                         <article

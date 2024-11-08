@@ -1431,7 +1431,16 @@ class MailCommon(common.TransactionCase, MailCase):
             notification_type='inbox',
             signature='--\nEnguerrand'
         )
+        cls.user_employee_c3 = mail_new_test_user(
+            cls.env, login='employee_c3',
+            company_id=cls.company_3.id,
+            company_ids=[(4, cls.company_3.id)],
+            email='freudenbergerg@example.com',
+            name='Freudenbergerg Employee C3',
+            notification_type='inbox'
+        )
         cls.partner_employee_c2 = cls.user_employee_c2.partner_id
+        cls.partner_employee_c3 = cls.user_employee_c3.partner_id
 
         # test erp manager employee
         cls.user_erp_manager = mail_new_test_user(

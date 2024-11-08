@@ -150,7 +150,7 @@ publicWidget.registry.searchBar = publicWidget.Widget.extend({
             const results = res['results'];
             let template = 'website.s_searchbar.autocomplete';
             const candidate = template + '.' + this.searchType;
-            if (candidate in renderToString.app.rawTemplates) {
+            if (renderToString.app.getRawTemplate(candidate)) {
                 template = candidate;
             }
             this.$menu = $(renderToElement(template, {
