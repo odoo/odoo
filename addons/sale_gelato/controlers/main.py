@@ -22,14 +22,14 @@ class GelatoController(http.Controller):
         """
         event = request.get_json_data()
         _logger.info("Notification received from Gelato with data:\n%s", pprint.pformat(event))
-        gelato_webhook_signature = request.httprequest.headers.get('signature', '')
         try:
             sale_order_id = int(event.get('orderReferenceId'))
         except ValueError:
             return _logger.warning(
                 "Gelato did not provide proper orderReferenceId, it's not possible to "
-                "find related Sale Order "
+                "find related Sale Order."
             )
+        gelato_webhook_signature = request.httprequest.headers.get('signature', '')
         self.verify_gelato_notification(gelato_webhook_signature, sale_order_id)
 
         sale_order_sudo = request.env['sale.order'].sudo().browse(sale_order_id).exists()
@@ -51,8 +51,15 @@ class GelatoController(http.Controller):
                 )
 
             elif event.get('fulfillmentStatus') == 'failed':
+
+                message = (Markup("{}<br/>{gelato_message}").format(_(
+                    "Order fulfillment has failed. Please refer to "
+                    "the message below provided by Gelato:"
+                    ),
+                    gelato_message=event['comment']
+                ))
                 sale_order_sudo.message_post(
-                    body=event['comment'],
+                    body=message,
                     author_id=request.env.ref('base.partner_root').id,
                 )
 

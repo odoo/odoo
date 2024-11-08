@@ -103,3 +103,10 @@ class ProviderGelato(models.Model):
         if is_gelato_order != is_gelato_delivery:
             return False
         return super()._is_available_for_order(order)
+
+    def gelato_send_shipping(self, pickings):
+        res = []
+        for p in pickings:
+            res = res + [{'exact_price': p.sale_id.order_line.filtered(lambda l: l.is_delivery).price_total,
+                          'tracking_number': False}]
+        return res
