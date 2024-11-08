@@ -36,6 +36,10 @@ function copyElementOnDrag() {
 
 export class BlockTab extends Component {
     static template = "mysterious_egg.BlockTab";
+    static props = {
+        editor: { type: Object },
+        snippetModel: { type: Object },
+    };
 
     setup() {
         this.dialog = useService("dialog");

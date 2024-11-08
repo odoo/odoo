@@ -5,6 +5,12 @@ import { InputConfirmationDialog } from "./input_confirmation_dialog";
 
 export class SnippetViewer extends Component {
     static template = "mysterious_egg.SnippetViewer";
+    static props = {
+        state: { type: Object },
+        selectSnippet: { type: Function },
+        snippetModel: { type: Object },
+        installModule: { type: Function },
+    };
 
     setup() {
         this.dialog = useService("dialog");

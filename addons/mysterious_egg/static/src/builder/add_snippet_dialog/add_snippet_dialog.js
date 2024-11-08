@@ -8,6 +8,13 @@ import { SnippetViewer } from "./snippet_viewer";
 export class AddSnippetDialog extends Component {
     static template = "mysterious_egg.AddSnippetDialog";
     static components = { Dialog };
+    static props = {
+        selectedSnippet: { type: Object },
+        selectSnippet: { type: Function },
+        snippetModel: { type: Object },
+        installModule: { type: Function },
+        close: { type: Function },
+    };
 
     setup() {
         this.iframeRef = useRef("iframe");

@@ -2,6 +2,7 @@ import { Component, onWillDestroy, onWillStart, useRef, useState, useSubEnv } fr
 import { LazyComponent, loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { WebsiteSystrayItem } from "./website_systray_item";
 
 function unslugHtmlDataObject(repr) {
@@ -18,6 +19,7 @@ function unslugHtmlDataObject(repr) {
 class WebsiteBuilder extends Component {
     static template = "mysterious_egg.WebsiteBuilder";
     static components = { LazyComponent };
+    static props = { ...standardActionServiceProps };
 
     setup() {
         this.orm = useService("orm");
