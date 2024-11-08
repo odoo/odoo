@@ -75,6 +75,7 @@
             'point_of_sale/static/src/backend/tours/point_of_sale.js',
             'point_of_sale/static/src/backend/pos_kanban_view/*',
             'point_of_sale/static/src/app/hooks/hooks.js',
+            'point_of_sale/static/src/backend/many2one_with_placeholder_field/*',
         ],
         'web.assets_tests': [
             'barcodes/static/tests/legacy/helpers.js',

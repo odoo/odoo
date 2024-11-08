@@ -9,6 +9,7 @@
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <field name="active" invisible="1"/>
                     <field name="type" invisible="1"/>
+                    <field name="default_pos_receivable_account_name" invisible="1" />
                     <div class="d-flex justify-content-between">
                         <div class="oe_title">
                             <label for="name"/>
@@ -21,7 +22,7 @@
                             <field name="split_transactions"/>
                             <field name="journal_id" required="not split_transactions" placeholder="Leave empty to use the receivable account of customer" />
                             <field name="outstanding_account_id" groups="account.group_account_readonly" invisible="type != 'bank'" required="type == 'bank'" placeholder="Selection of outstanding account is required" />
-                            <field name="receivable_account_id" groups="account.group_account_readonly" invisible="split_transactions" placeholder="Leave empty to use the default account from the company setting" />
+                            <field name="receivable_account_id" groups="account.group_account_readonly" invisible="split_transactions" widget="many2one_with_placeholder_field" options="{'placeholder_field': 'default_pos_receivable_account_name'}"/>
                             <field name="company_id" readonly="1" groups="base.group_multi_company" />
                         </group>
                         <group>
