@@ -1355,6 +1355,7 @@ class MailCommon(common.TransactionCase, MailCase):
             signature='--\nErnest'
         )
         cls.partner_employee = cls.user_employee.partner_id
+        cls.guest = cls.env['mail.guest'].create({'name': 'Guest Mario'})
 
     @classmethod
     def _create_portal_user(cls):
