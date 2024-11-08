@@ -826,7 +826,8 @@ class Users(models.Model):
         domain = super()._search_display_name(operator, value)
         if operator in ('=', 'ilike') and value:
             name_domain = [('login', '=', value)]
-            domain = expression.OR([name_domain, domain])
+            if users := self.search(name_domain):
+                domain = [('id', 'in', users.ids)]
         return domain
 
     def copy_data(self, default=None):
