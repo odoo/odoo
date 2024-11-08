@@ -4,6 +4,7 @@ import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { sprintf } from "@web/core/utils/strings";
 import { roundPrecision } from "@web/core/utils/numbers";
 import { uuidv4 } from "@point_of_sale/utils";
+import { register_payment_method } from "@point_of_sale/app/services/pos_store";
 
 export class PaymentVivaWallet extends PaymentInterface {
     /*
@@ -177,3 +178,5 @@ export class PaymentVivaWallet extends PaymentInterface {
         });
     }
 }
+
+register_payment_method("viva_wallet", PaymentVivaWallet);

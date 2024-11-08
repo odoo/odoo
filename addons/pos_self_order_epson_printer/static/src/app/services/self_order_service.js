@@ -1,4 +1,4 @@
-import { EpsonPrinter } from "@pos_epson_printer/app/epson_printer";
+import { EpsonPrinter } from "@pos_epson_printer/app/utils/payment/epson_printer";
 import { SelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { patch } from "@web/core/utils/patch";
 

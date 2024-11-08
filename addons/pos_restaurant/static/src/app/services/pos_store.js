@@ -1,7 +1,7 @@
 import { patch } from "@web/core/utils/patch";
 import { PosStore } from "@point_of_sale/app/services/pos_store";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
-import { FloorScreen } from "@pos_restaurant/app/floor_screen/floor_screen";
+import { FloorScreen } from "@pos_restaurant/app/screens/floor_screen/floor_screen";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 
