@@ -485,10 +485,12 @@ def create_link(url, label):
     return f'<a href="{url}" target="_blank" rel="noreferrer noopener">{label}</a>'
 
 
-def html2plaintext(html, body_id=None, encoding='utf-8'):
+def html2plaintext(html, body_id=None, encoding='utf-8', include_references=True):
     """ From an HTML text, convert the HTML to plain text.
     If @param body_id is provided then this is the tag where the
     body (not necessarily <body>) starts.
+    :param include_references: If False, numbered references and
+        URLs for links and images will not be included.
     """
     ## (c) Fry-IT, www.fry-it.com, 2007
     ## <peter@fry-it.com>
@@ -512,18 +514,19 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
 
     url_index = []
     linkrefs = itertools.count(1)
-    for link in tree.findall('.//a'):
-        if url := link.get('href'):
-            link.tag = 'span'
-            link.text = f'{link.text} [{next(linkrefs)}]'
-            url_index.append(url)
+    if include_references:
+        for link in tree.findall('.//a'):
+            if url := link.get('href'):
+                link.tag = 'span'
+                link.text = f'{link.text} [{next(linkrefs)}]'
+                url_index.append(url)
 
-    for img in tree.findall('.//img'):
-        if src := img.get('src'):
-            img.tag = 'span'
-            img_name = re.search(r'[^/]+(?=\.[a-zA-Z]+(?:\?|$))', src)
-            img.text = '%s [%s]' % (img_name[0] if img_name else 'Image', next(linkrefs))
-            url_index.append(src)
+        for img in tree.findall('.//img'):
+            if src := img.get('src'):
+                img.tag = 'span'
+                img_name = re.search(r'[^/]+(?=\.[a-zA-Z]+(?:\?|$))', src)
+                img.text = '%s [%s]' % (img_name[0] if img_name else 'Image', next(linkrefs))
+                url_index.append(src)
 
     html = etree.tostring(tree, encoding="unicode")
     # \r char is converted into &#13;, must remove it

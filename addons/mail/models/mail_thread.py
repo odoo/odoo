@@ -3790,7 +3790,7 @@ class MailThread(models.AbstractModel):
         return {
             'title': title,
             'options': {
-                'body': html2plaintext(body) + self._generate_tracking_message(message),
+                'body': html2plaintext(body, include_references=False) + self._generate_tracking_message(message),
                 'icon': icon,
                 'data': {
                     'model': model if model else '',
