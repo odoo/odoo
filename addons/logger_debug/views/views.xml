@@ -1,0 +1,60 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+<!--
+    <record model="ir.ui.view" id="logger_debug.list">
+      <field name="name">logger_debug list</field>
+      <field name="model">logger_debug.logger_debug</field>
+      <field name="arch" type="xml">
+        <list>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </list>
+      </field>
+    </record>
+-->
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="logger_debug.action_window">
+      <field name="name">logger_debug window</field>
+      <field name="res_model">logger_debug.logger_debug</field>
+      <field name="view_mode">list,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="logger_debug.action_server">
+      <field name="name">logger_debug server</field>
+      <field name="model_id" ref="model_logger_debug_logger_debug"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "list,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="logger_debug" id="logger_debug.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="logger_debug.menu_1" parent="logger_debug.menu_root"/>
+    <menuitem name="Menu 2" id="logger_debug.menu_2" parent="logger_debug.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="logger_debug.menu_1_list" parent="logger_debug.menu_1"
+              action="logger_debug.action_window"/>
+    <menuitem name="Server to list" id="logger_debug" parent="logger_debug.menu_2"
+              action="logger_debug.action_server"/>
+-->
+  </data>
+</odoo>
