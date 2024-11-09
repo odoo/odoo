@@ -28,6 +28,7 @@ import {
     getDateDomainDurationInDays,
 } from "@spreadsheet/../tests/helpers/date_domain";
 import {
+    getCell,
     getCellFormula,
     getCellValue,
     getEvaluatedCell,
@@ -1492,9 +1493,13 @@ test("Export from/to global filters for excel", async function () {
     expect(filterSheet.cells["B1"].content).toBe("Value");
     expect(filterSheet.cells["B2"].content).toBe("43831");
     expect(filterSheet.cells["C2"].content).toBe("44197");
-    expect(filterSheet.cells["B2"].format).toBe(1);
-    expect(filterSheet.cells["C2"].format).toBe(1);
+    expect(filterSheet.formats["B2"]).toBe(1);
+    expect(filterSheet.formats["C2"]).toBe(1);
     expect(exportData.formats[1]).toBe("m/d/yyyy");
+    const exportedModel = await createModelWithDataSource({ spreadsheetData: exportData });
+    const sheetId = exportData.sheets.at(-1).id;
+    expect(getCell(exportedModel, "B2", sheetId).format).toBe("m/d/yyyy");
+    expect(getCell(exportedModel, "C2", sheetId).format).toBe("m/d/yyyy");
 });
 
 test("Date filter automatic default value for years filter", async function () {

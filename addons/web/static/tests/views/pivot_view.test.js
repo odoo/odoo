@@ -602,45 +602,43 @@ test.tags("desktop")("columns are highlighted when hovering a measure", async ()
     expect(".o_cell_hover").toHaveCount(0);
 });
 
-test.tags("desktop")(
-    "columns are highlighted when hovering an origin (comparison mode)",
-    async () => {
-        expect.assertions(5);
+test.tags("desktop");
+test("columns are highlighted when hovering an origin (comparison mode)", async () => {
+    expect.assertions(5);
 
-        mockDate("2016-12-20T1:00:00");
-        Partner._records[0].date = "2016-11-15";
-        Partner._records[1].date = "2016-12-17";
-        Partner._records[2].date = "2016-11-22";
-        Partner._records[3].date = "2016-11-03";
+    mockDate("2016-12-20T1:00:00");
+    Partner._records[0].date = "2016-11-15";
+    Partner._records[1].date = "2016-12-17";
+    Partner._records[2].date = "2016-11-22";
+    Partner._records[3].date = "2016-11-03";
 
-        await mountView({
-            type: "pivot",
-            resModel: "partner",
-            arch: `
+    await mountView({
+        type: "pivot",
+        resModel: "partner",
+        arch: `
 			<pivot>
 				<field name="product_id" type="row"/>
 				<field name="date" type="col"/>
 			</pivot>`,
-            searchViewArch: `
+        searchViewArch: `
 			<search>
 				<filter name="date_filter" date="date" domain="[]" default_period='month'/>
 			</search>`,
-            context: { search_default_date_filter: true },
-        });
+        context: { search_default_date_filter: true },
+    });
 
-        await toggleSearchBarMenu();
-        await toggleMenuItem("Date: Previous period");
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Date: Previous period");
 
-        // hover the second origin in second group
-        await contains("th.o_pivot_origin_row:nth-of-type(5)").hover();
-        expect(".o_cell_hover").toHaveCount(3);
-        for (let i = 1; i <= 3; i++) {
-            expect(`tbody tr:nth-of-type(${i}) td:nth-of-type(5)`).toHaveClass("o_cell_hover");
-        }
-        await contains(".o_pivot_buttons button.dropdown-toggle").hover();
-        expect(".o_cell_hover").toHaveCount(0);
+    // hover the second origin in second group
+    await contains("th.o_pivot_origin_row:nth-of-type(5)").hover();
+    expect(".o_cell_hover").toHaveCount(3);
+    for (let i = 1; i <= 3; i++) {
+        expect(`tbody tr:nth-of-type(${i}) td:nth-of-type(5)`).toHaveClass("o_cell_hover");
     }
-);
+    await contains(".o_pivot_buttons button.dropdown-toggle").hover();
+    expect(".o_cell_hover").toHaveCount(0);
+});
 
 test('pivot view with disable_linking="True"', async () => {
     mockService("action", {
@@ -3636,12 +3634,10 @@ test.tags("desktop")("pivot is reloaded when leaving and coming back", async () 
     Partner._views["search,false"] = `<search/>`;
     Partner._views["list,false"] = `<list><field name="foo"/></list>`;
 
-    onRpc(({ method, model }) => {
-        if (model === "partner") {
-            expect.step(method);
-        }
+    onRpc("partner", "*", ({ method }) => {
+        expect.step(method);
     });
-    onRpc("/web/webclient/load_menus", () => {
+    onRpc("/web/webclient/load_menus/*", () => {
         expect.step("/web/webclient/load_menus");
     });
 
@@ -4514,37 +4510,35 @@ test("Close header dropdown when a simple groupby is selected", async function (
     ]);
 });
 
-test.tags("desktop")(
-    "Close header dropdown when a simple date groupby option is selected",
-    async function (assert) {
-        await mountView({
-            type: "pivot",
-            resModel: "partner",
-            arch: `<pivot/>`,
-        });
-        expect(".o-overlay-container .dropdown-menu").toHaveCount(0);
-        expect(queryAllTexts("thead th")).toEqual(["", "Total", "Count"]);
+test.tags("desktop");
+test("Close header dropdown when a simple date groupby option is selected", async function (assert) {
+    await mountView({
+        type: "pivot",
+        resModel: "partner",
+        arch: `<pivot/>`,
+    });
+    expect(".o-overlay-container .dropdown-menu").toHaveCount(0);
+    expect(queryAllTexts("thead th")).toEqual(["", "Total", "Count"]);
 
-        await contains("thead .o_pivot_header_cell_closed").click();
-        expect(".o-overlay-container .dropdown-menu").toHaveCount(1);
+    await contains("thead .o_pivot_header_cell_closed").click();
+    expect(".o-overlay-container .dropdown-menu").toHaveCount(1);
 
-        // open the Date sub dropdown
-        await contains(".o-dropdown--menu .dropdown-toggle.o_menu_item").hover();
-        const subDropdownMenu = getDropdownMenu(".o-dropdown--menu .dropdown-toggle.o_menu_item");
+    // open the Date sub dropdown
+    await contains(".o-dropdown--menu .dropdown-toggle.o_menu_item").hover();
+    const subDropdownMenu = getDropdownMenu(".o-dropdown--menu .dropdown-toggle.o_menu_item");
 
-        await contains(queryOne(".dropdown-item:eq(2)", { root: subDropdownMenu })).click();
-        expect(".o-overlay-container .dropdown-menu").toHaveCount(0);
-        expect(queryAllTexts("thead th")).toEqual([
-            "",
-            "Total",
-            "",
-            "April 2016",
-            "October 2016",
-            "December 2016",
-            "Count",
-            "Count",
-            "Count",
-            "Count",
-        ]);
-    }
-);
+    await contains(queryOne(".dropdown-item:eq(2)", { root: subDropdownMenu })).click();
+    expect(".o-overlay-container .dropdown-menu").toHaveCount(0);
+    expect(queryAllTexts("thead th")).toEqual([
+        "",
+        "Total",
+        "",
+        "April 2016",
+        "October 2016",
+        "December 2016",
+        "Count",
+        "Count",
+        "Count",
+        "Count",
+    ]);
+});

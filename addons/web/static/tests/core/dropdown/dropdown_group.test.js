@@ -9,16 +9,15 @@ import { DropdownGroup } from "@web/core/dropdown/dropdown_group";
 
 const DROPDOWN_MENU = ".o-dropdown--menu.dropdown-menu";
 
-test.tags("desktop")(
-    "DropdownGroup: when one Dropdown is open, others with same group name can be toggled on mouse-enter",
-    async () => {
-        expect.assertions(16);
-        const beforeOpenProm = new Deferred();
+test.tags("desktop");
+test("DropdownGroup: when one Dropdown is open, others with same group name can be toggled on mouse-enter", async () => {
+    expect.assertions(16);
+    const beforeOpenProm = new Deferred();
 
-        class Parent extends Component {
-            static components = { Dropdown, DropdownGroup };
-            static props = [];
-            static template = xml`
+    class Parent extends Component {
+        static components = { Dropdown, DropdownGroup };
+        static props = [];
+        static template = xml`
                     <div>
                         <div class="outside">OUTSIDE</div>
                         <DropdownGroup>
@@ -52,66 +51,64 @@ test.tags("desktop")(
                     </div>
                 `;
 
-            beforeOpen() {
-                expect.step("beforeOpen");
-                return beforeOpenProm;
-            }
+        beforeOpen() {
+            expect.step("beforeOpen");
+            return beforeOpenProm;
         }
-        await mountWithCleanup(Parent);
-
-        // Click on ONE
-        await click(queryOne(".one"));
-        await animationFrame();
-
-        expect.verifySteps([]);
-        expect(DROPDOWN_MENU).toHaveCount(1);
-        expect(".one").toHaveClass("show");
-
-        // Hover on TWO
-        await hover(".two");
-        await animationFrame();
-        expect.verifySteps(["beforeOpen"]);
-        expect(DROPDOWN_MENU).toHaveCount(1);
-        expect(".menu-two").toHaveCount(0);
-
-        beforeOpenProm.resolve();
-        await animationFrame();
-        expect(DROPDOWN_MENU).toHaveCount(1);
-        expect(".menu-two").toHaveCount(1);
-
-        // Hover on THREE
-        await hover(".three");
-        await animationFrame();
-        expect(DROPDOWN_MENU).toHaveCount(1);
-        expect(".menu-three").toHaveCount(1);
-
-        // Hover on FOUR (Should not open)
-        expect(".menu-four").toHaveCount(0);
-        await hover(".four");
-        await animationFrame();
-        expect(DROPDOWN_MENU).toHaveCount(1);
-        expect(".menu-three").toHaveCount(1);
-        expect(".menu-four").toHaveCount(0);
-
-        // Click on OUTSIDE
-        await click("div.outside");
-        await animationFrame();
-        expect(DROPDOWN_MENU).toHaveCount(0);
-
-        // Hover on ONE, TWO, THREE
-        await hover(".one");
-        await hover(".two");
-        await hover(".three");
-        await animationFrame();
-        expect(DROPDOWN_MENU).toHaveCount(0);
     }
-);
+    await mountWithCleanup(Parent);
 
-test.tags("desktop")(
-    "DropdownGroup: when non-sibling Dropdown is open, other must not be toggled on mouse-enter",
-    async () => {
-        class Parent extends Component {
-            static template = xml`
+    // Click on ONE
+    await click(queryOne(".one"));
+    await animationFrame();
+
+    expect.verifySteps([]);
+    expect(DROPDOWN_MENU).toHaveCount(1);
+    expect(".one").toHaveClass("show");
+
+    // Hover on TWO
+    await hover(".two");
+    await animationFrame();
+    expect.verifySteps(["beforeOpen"]);
+    expect(DROPDOWN_MENU).toHaveCount(1);
+    expect(".menu-two").toHaveCount(0);
+
+    beforeOpenProm.resolve();
+    await animationFrame();
+    expect(DROPDOWN_MENU).toHaveCount(1);
+    expect(".menu-two").toHaveCount(1);
+
+    // Hover on THREE
+    await hover(".three");
+    await animationFrame();
+    expect(DROPDOWN_MENU).toHaveCount(1);
+    expect(".menu-three").toHaveCount(1);
+
+    // Hover on FOUR (Should not open)
+    expect(".menu-four").toHaveCount(0);
+    await hover(".four");
+    await animationFrame();
+    expect(DROPDOWN_MENU).toHaveCount(1);
+    expect(".menu-three").toHaveCount(1);
+    expect(".menu-four").toHaveCount(0);
+
+    // Click on OUTSIDE
+    await click("div.outside");
+    await animationFrame();
+    expect(DROPDOWN_MENU).toHaveCount(0);
+
+    // Hover on ONE, TWO, THREE
+    await hover(".one");
+    await hover(".two");
+    await hover(".three");
+    await animationFrame();
+    expect(DROPDOWN_MENU).toHaveCount(0);
+});
+
+test.tags("desktop");
+test("DropdownGroup: when non-sibling Dropdown is open, other must not be toggled on mouse-enter", async () => {
+    class Parent extends Component {
+        static template = xml`
                     <div>
                         <DropdownGroup>
                             <Dropdown>
@@ -127,32 +124,30 @@ test.tags("desktop")(
                         </DropdownGroup>
                     </div>
                 `;
-            static components = { Dropdown, DropdownGroup };
-            static props = [];
-        }
-        await mountWithCleanup(Parent);
-        // Click on One
-        await click(".one");
-        await animationFrame();
-        expect(getDropdownMenu(".one")).toHaveCount(1);
-
-        // Hover on Two
-        await hover(".two");
-        await animationFrame();
-        expect(getDropdownMenu(".one")).toHaveCount(1);
-
-        expect(".one").toHaveClass("show");
-        expect(".two").not.toHaveClass("show");
+        static components = { Dropdown, DropdownGroup };
+        static props = [];
     }
-);
+    await mountWithCleanup(Parent);
+    // Click on One
+    await click(".one");
+    await animationFrame();
+    expect(getDropdownMenu(".one")).toHaveCount(1);
 
-test.tags("desktop")(
-    "DropdownGroup: when one is open, then non-sibling toggled, siblings must not be toggled on mouse-enter",
-    async () => {
-        class Parent extends Component {
-            static components = { Dropdown, DropdownGroup };
-            static props = [];
-            static template = xml`
+    // Hover on Two
+    await hover(".two");
+    await animationFrame();
+    expect(getDropdownMenu(".one")).toHaveCount(1);
+
+    expect(".one").toHaveClass("show");
+    expect(".two").not.toHaveClass("show");
+});
+
+test.tags("desktop");
+test("DropdownGroup: when one is open, then non-sibling toggled, siblings must not be toggled on mouse-enter", async () => {
+    class Parent extends Component {
+        static components = { Dropdown, DropdownGroup };
+        static props = [];
+        static template = xml`
                     <div>
                         <DropdownGroup>
                             <Dropdown>
@@ -172,25 +167,24 @@ test.tags("desktop")(
                         </DropdownGroup>
                     </div>
                 `;
-        }
-        await mountWithCleanup(Parent);
-        // Click on BAR1
-        await click(".two");
-        await animationFrame();
-        expect(DROPDOWN_MENU).toHaveCount(1);
-
-        // Click on FOO
-        await click(".one");
-        await animationFrame();
-        expect(DROPDOWN_MENU).toHaveCount(1);
-
-        // Hover on BAR1
-        await hover(".two");
-        await animationFrame();
-        expect(DROPDOWN_MENU).toHaveCount(1);
-        expect(".two-menu").toHaveCount(0);
     }
-);
+    await mountWithCleanup(Parent);
+    // Click on BAR1
+    await click(".two");
+    await animationFrame();
+    expect(DROPDOWN_MENU).toHaveCount(1);
+
+    // Click on FOO
+    await click(".one");
+    await animationFrame();
+    expect(DROPDOWN_MENU).toHaveCount(1);
+
+    // Hover on BAR1
+    await hover(".two");
+    await animationFrame();
+    expect(DROPDOWN_MENU).toHaveCount(1);
+    expect(".two-menu").toHaveCount(0);
+});
 
 test.tags("desktop")("DropdownGroup: toggler focused on mouseenter", async () => {
     class Parent extends Component {

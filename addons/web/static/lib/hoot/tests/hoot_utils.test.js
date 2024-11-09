@@ -7,6 +7,7 @@ import {
     formatHumanReadable,
     formatTechnical,
     generateHash,
+    levenshtein,
     lookup,
     match,
     title,
@@ -123,6 +124,13 @@ describe(parseUrl(import.meta.url), () => {
 
         expect(isRegExpFilter("/abc")).toBe(false);
         expect(isRegExpFilter("abc/")).toBe(false);
+    });
+
+    test("levenshtein", () => {
+        expect(levenshtein("abc", "àbc ", { normalize: true })).toBe(0);
+        expect(levenshtein("abc", "àbc ")).toBe(2);
+        expect(levenshtein("abc", "def")).toBe(3);
+        expect(levenshtein("abc", "adc")).toBe(1);
     });
 
     test("lookup", () => {

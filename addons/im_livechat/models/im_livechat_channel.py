@@ -66,7 +66,7 @@ class ImLivechatChannel(models.Model):
     @api.depends('user_ids.im_status')
     def _compute_available_operator_ids(self):
         for record in self:
-            record.available_operator_ids = record.user_ids.filtered(lambda user: user.im_status == 'online')
+            record.available_operator_ids = record.user_ids.filtered(lambda user: user._is_user_available())
 
     @api.depends('rule_ids.chatbot_script_id')
     def _compute_chatbot_script_count(self):

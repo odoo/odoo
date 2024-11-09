@@ -134,7 +134,7 @@ export class HootStatusPanel extends Component {
                     <t t-set="color" t-value="!uiState.statusFilter or uiState.statusFilter === 'passed' ? 'pass' : 'muted'" />
                     <button
                         t-attf-class="text-{{ color }} transition-colors flex items-center gap-1 p-1 font-bold"
-                        t-on-click="() => this.filterResults('passed')"
+                        t-on-click.stop="() => this.filterResults('passed')"
                         t-attf-title="Show {{ runnerReporting.passed }} passed tests"
                     >
                         <i class="fa fa-check-circle" />
@@ -145,7 +145,7 @@ export class HootStatusPanel extends Component {
                     <t t-set="color" t-value="!uiState.statusFilter or uiState.statusFilter === 'failed' ? 'fail' : 'muted'" />
                     <button
                         t-attf-class="text-{{ color }} transition-colors flex items-center gap-1 p-1 font-bold"
-                        t-on-click="() => this.filterResults('failed')"
+                        t-on-click.stop="() => this.filterResults('failed')"
                         t-attf-title="Show {{ runnerReporting.failed }} failed tests"
                     >
                         <i class="fa fa-times-circle" />
@@ -156,7 +156,7 @@ export class HootStatusPanel extends Component {
                     <t t-set="color" t-value="!uiState.statusFilter or uiState.statusFilter === 'skipped' ? 'skip' : 'muted'" />
                     <button
                         t-attf-class="text-{{ color }} transition-colors flex items-center gap-1 p-1 font-bold"
-                        t-on-click="() => this.filterResults('skipped')"
+                        t-on-click.stop="() => this.filterResults('skipped')"
                         t-attf-title="Show {{ runnerReporting.skipped }} skipped tests"
                     >
                         <i class="fa fa-pause-circle" />
@@ -167,7 +167,7 @@ export class HootStatusPanel extends Component {
                     <t t-set="color" t-value="!uiState.statusFilter or uiState.statusFilter === 'todo' ? 'todo' : 'muted'" />
                     <button
                         t-attf-class="text-{{ color }} transition-colors flex items-center gap-1 p-1 font-bold"
-                        t-on-click="() => this.filterResults('todo')"
+                        t-on-click.stop="() => this.filterResults('todo')"
                         t-attf-title="Show {{ runnerReporting.todo }} tests to do"
                     >
                         <i class="fa fa-exclamation-circle" />
@@ -178,7 +178,7 @@ export class HootStatusPanel extends Component {
                     class="p-1 transition-colors"
                     t-att-class="{ 'text-primary': uiState.sortResults }"
                     title="Sort by duration"
-                    t-on-click="sortResults"
+                    t-on-click.stop="sortResults"
                 >
                     <i t-attf-class="fa fa-sort-numeric-{{ uiState.sortResults or 'desc' }} transition" />
                 </button>
@@ -189,7 +189,7 @@ export class HootStatusPanel extends Component {
                             class="px-1 transition-color"
                             title="Previous page"
                             t-att-disabled="uiState.resultsPage === 0"
-                            t-on-click="previousPage"
+                            t-on-click.stop="previousPage"
                         >
                             <i class="fa fa-chevron-left" />
                         </button>
@@ -200,7 +200,7 @@ export class HootStatusPanel extends Component {
                             class="px-1 transition-color"
                             title="Next page"
                             t-att-disabled="uiState.resultsPage === lastPage"
-                            t-on-click="nextPage"
+                            t-on-click.stop="nextPage"
                         >
                             <i class="fa fa-chevron-right" />
                         </button>

@@ -2358,11 +2358,11 @@ class MailThread(models.AbstractModel):
                 attachement_values_list.append(attachement_values)
 
                 # keep cid, name list and token synced with attachement_values_list length to match ids latter
-                attachement_extra_list.append((cid, name, token))
+                attachement_extra_list.append((cid, name, token, info))
 
-            new_attachments = self.env['ir.attachment'].sudo().create(attachement_values_list)
+            new_attachments = self._create_attachments_for_post(attachement_values_list, attachement_extra_list)
             attach_cid_mapping, attach_name_mapping = {}, {}
-            for attachment, (cid, name, token) in zip(new_attachments, attachement_extra_list):
+            for attachment, (cid, name, token, _info) in zip(new_attachments, attachement_extra_list):
                 if cid:
                     attach_cid_mapping[cid] = (attachment.id, token)
                 if name:
@@ -2388,6 +2388,12 @@ class MailThread(models.AbstractModel):
                     return_values['body'] = Markup(lxml.html.tostring(root, pretty_print=False, encoding='unicode'))
         return_values['attachment_ids'] = m2m_attachment_ids
         return return_values
+
+    def _create_attachments_for_post(self, values_list, extra_list):
+        """ Ease tweaking attachment creation when processing them in posting
+        process. Mainly meant for stable version, to be cleaned when reaching
+        master. """
+        return self.env['ir.attachment'].sudo().create(values_list)
 
     def _process_attachments_for_template_post(self, mail_template):
         """ Model specific management of attachments used with template attachments
@@ -3207,7 +3213,7 @@ class MailThread(models.AbstractModel):
             )
             for user in users:
                 user._bus_send_store(
-                    message.with_user(user),
+                    message.with_user(user).with_context(allowed_company_ids=None),
                     msg_vals=msg_vals,
                     for_current_user=True,
                     add_followers=True,

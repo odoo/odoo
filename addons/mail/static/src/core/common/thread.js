@@ -151,23 +151,7 @@ export class Thread extends Component {
         this.setupScroll();
         useEffect(
             () => {
-                if (!this.viewportEl || !this.jumpPresentRef.el) {
-                    return;
-                }
-                const width = this.viewportEl.clientWidth;
-                const height = this.viewportEl.clientHeight;
-                const computedStyle = window.getComputedStyle(this.viewportEl);
-                const ps = parseInt(computedStyle.getPropertyValue("padding-left"));
-                const pe = parseInt(computedStyle.getPropertyValue("padding-right"));
-                const pt = parseInt(computedStyle.getPropertyValue("padding-top"));
-                const pb = parseInt(computedStyle.getPropertyValue("padding-bottom"));
-                this.jumpPresentRef.el.style.transform = `translate(${
-                    this.env.inChatter ? 22 : width - ps - pe - 22
-                }px, ${
-                    this.env.inChatter && !this.env.inChatter.aside
-                        ? 0
-                        : height - pt - pb - (this.env.inChatter?.aside ? 75 : 0)
-                }px)`;
+                this.computeJumpPresentPosition();
             },
             () => [this.jumpPresentRef.el, this.viewportEl]
         );
@@ -259,6 +243,26 @@ export class Thread extends Component {
                 toRaw(nextProps.thread).fetchNewMessages();
             }
         });
+    }
+
+    computeJumpPresentPosition() {
+        if (!this.viewportEl || !this.jumpPresentRef.el) {
+            return;
+        }
+        const width = this.viewportEl.clientWidth;
+        const height = this.viewportEl.clientHeight;
+        const computedStyle = window.getComputedStyle(this.viewportEl);
+        const ps = parseInt(computedStyle.getPropertyValue("padding-left"));
+        const pe = parseInt(computedStyle.getPropertyValue("padding-right"));
+        const pt = parseInt(computedStyle.getPropertyValue("padding-top"));
+        const pb = parseInt(computedStyle.getPropertyValue("padding-bottom"));
+        this.jumpPresentRef.el.style.transform = `translate(${
+            this.env.inChatter ? 22 : width - ps - pe - 22
+        }px, ${
+            this.env.inChatter && !this.env.inChatter.aside
+                ? 0
+                : height - pt - pb - (this.env.inChatter?.aside ? 75 : 0)
+        }px)`;
     }
 
     /**
@@ -458,7 +462,10 @@ export class Thread extends Component {
         useChildSubEnv({
             onImageLoaded: applyScroll,
         });
-        const observer = new ResizeObserver(applyScroll);
+        const observer = new ResizeObserver(() => {
+            this.computeJumpPresentPosition();
+            applyScroll();
+        });
         useEffect(
             (el, mountedAndLoaded) => {
                 if (el && mountedAndLoaded) {

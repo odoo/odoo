@@ -20,5 +20,5 @@ class ReportProjectTaskUser(models.Model):
 
     def _from(self):
         return super()._from() + """
-            LEFT JOIN sale_order_line sol ON t.id = sol.task_id
+            LEFT JOIN sale_order_line sol ON t.sale_line_id = sol.id
         """

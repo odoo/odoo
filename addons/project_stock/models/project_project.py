@@ -34,4 +34,9 @@ class ProjectProject(models.Model):
             'views': [[False, 'list'], [False, 'form'], [False, 'kanban']],
             'domain': domain,
             'context': context,
+            'help': self.env['ir.ui.view']._render_template(
+                'stock.help_message_template', {
+                    'picking_type_code': picking_type,
+                }
+            ),
         }

@@ -7,6 +7,8 @@ import { _t } from "@web/core/l10n/translation";
 import "@website/js/editor/snippets.options";
 import { rpc } from "@web/core/network/rpc";
 import { renderToElement } from "@web/core/utils/render";
+import { useChildSubEnv } from "@odoo/owl";
+import weUtils from '@web_editor/js/common/utils';
 
 options.registry.WebsiteSaleGridLayout = options.Class.extend({
     /**
@@ -437,6 +439,10 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
 
 // Small override of the MediaDialog to retrieve the attachment ids instead of img elements
 class AttachmentMediaDialog extends MediaDialog {
+    setup() {
+        super.setup();
+        useChildSubEnv({ addFieldImage: true });
+    }
     /**
      * @override
      */
@@ -606,6 +612,10 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
         // This method is widely adapted from onFileUploaded in ImageField.
         // Upon change, make sure to verify whether the same change needs
         // to be applied on both sides.
+        if (await weUtils.isImageCorsProtected(imageEl)) {
+            // The image is CORS protected; do not transform it into webp
+            return;
+        }
         // Generate alternate sizes and format for reports.
         const imgEl = document.createElement("img");
         imgEl.src = imageEl.src;

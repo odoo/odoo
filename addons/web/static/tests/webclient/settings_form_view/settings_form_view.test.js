@@ -899,7 +899,6 @@ test("search for default label when label has empty string", async () => {
 
 test("clicking on any button in setting should show discard warning if setting form is dirty", async () => {
     onRpc("has_group", () => true);
-    expect.assertions(11);
     defineActions([
         {
             id: 1,
@@ -937,11 +936,8 @@ test("clicking on any button in setting should show discard warning if setting f
     ResConfigSettings._views.search = /* xml */ `<search/>`;
     Task._views.search = /* xml */ `<search/>`;
 
-    onRpc("/web/dataset/call_button", async (request) => {
-        const {
-            params: { method },
-        } = await request.json();
-        expect(method).toBe("execute", { message: "execute method called" });
+    onRpc("/web/dataset/call_button/*/<string:method>", async (request, { method }) => {
+        expect.step(method);
     });
 
     await mountWithCleanup(WebClient);
@@ -987,6 +983,8 @@ test("clicking on any button in setting should show discard warning if setting f
     await click(".o_control_panel .o_form_button_cancel"); // Form Discard button
     await animationFrame();
     expect(".modal").toHaveCount(0, { message: "should not open a warning dialog" });
+
+    expect.verifySteps(["execute"]);
 });
 
 test("header field don't dirty settings", async () => {
@@ -1510,10 +1508,7 @@ test('call "call_button/execute" when clicking on a button in dirty settings', a
     Task._views.list = /* xml */ `<list/>`;
     Task._views.search = /* xml */ `<search/>`;
 
-    onRpc("/web/dataset/call_button", async (request) => {
-        const {
-            params: { method },
-        } = await request.json();
+    onRpc("/web/dataset/call_button/*/<string:method>", async (request, { method }) => {
         expect.step(method);
         return true;
     });

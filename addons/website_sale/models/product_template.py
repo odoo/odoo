@@ -280,7 +280,7 @@ class ProductTemplate(models.Model):
             base_price = None
             template_price_vals = {
                 'price_reduce': self._apply_taxes_to_price(
-                    pricelist_price, currency, product_taxes, taxes, self, website=website,
+                    pricelist_price, currency, product_taxes, taxes, template, website=website,
                 ),
             }
             if pricelist_rule_id:  # If a rule was applied, there might be a discount
@@ -296,7 +296,7 @@ class ProductTemplate(models.Model):
                 if float_compare(pricelist_base_price, pricelist_price, precision_rounding=currency.rounding) > 0:
                     base_price = pricelist_base_price
                     template_price_vals['base_price'] = self._apply_taxes_to_price(
-                        base_price, currency, product_taxes, taxes, self, website=website,
+                        base_price, currency, product_taxes, taxes, template, website=website,
                     )
 
             if not base_price and comparison_prices_enabled and template.compare_list_price:

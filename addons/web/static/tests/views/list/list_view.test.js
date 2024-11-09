@@ -981,7 +981,7 @@ test(`list view: buttons handler is called once on double click`, async () => {
 });
 
 test(`list view: click on an action button saves the record before executing the action`, async () => {
-    onRpc("/web/dataset/call_button", () => true);
+    onRpc("/web/dataset/call_button/*", () => true);
     stepAllNetworkCalls();
 
     await mountView({
@@ -6973,7 +6973,7 @@ test(`list view, editable, with a button`, async () => {
     onRpc("web_save", () => {
         expect.step("web_save");
     });
-    onRpc("/web/dataset/call_button", () => {
+    onRpc("/web/dataset/call_button/*", () => {
         expect.step("call_button");
         return true;
     });
@@ -15807,7 +15807,7 @@ test(`Invisible Properties`, async () => {
 });
 
 test(`header buttons in list view`, async () => {
-    onRpc("/web/dataset/call_button", async (request) => {
+    onRpc("/web/dataset/call_button/*", async (request) => {
         const { params } = await request.json();
         expect.step(params.method);
         return true;
@@ -15964,10 +15964,8 @@ test(`context keys not passed down the stack and not to fields`, async () => {
         Bar._records.push({ id: i, name: `Value ${i}` });
     }
 
-    onRpc(({ model, method, kwargs }) => {
-        if (["foo", "bar"].includes(model) && method) {
-            expect.step({ model, method, context: kwargs.context });
-        }
+    onRpc(["foo", "bar"], "*", ({ model, method, kwargs }) => {
+        expect.step({ model, method, context: kwargs.context });
     });
 
     await mountWithCleanup(WebClient);
@@ -16245,4 +16243,49 @@ test("Pass context when duplicating data in list view", async () => {
     await contains(`.o_cp_action_menus .dropdown-toggle`).click();
     await toggleMenuItem("Duplicate");
     expect.verifySteps(["copy"]);
+});
+
+test(`properties do not disappear after domain change`, async () => {
+    const definition0 = {
+        type: "char",
+        name: "property_char",
+        string: "Property char",
+    };
+    Bar._records[0].definitions = [definition0];
+    for (const record of Foo._records) {
+        if (record.m2o === 1) {
+            record.properties = [{ ...definition0, value: "AA" }];
+        }
+    }
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list editable="bottom">
+                <field name="m2o"/>
+                <field name="properties"/>
+            </list>
+        `,
+        searchViewArch: `
+            <search>
+                <filter name="properties_filter" string="My filter" domain="[['properties.property_char', '=', 'AA']]"/>
+                <group>
+                    <!-- important -->
+                    <filter name="properties_groupby" string="My groupby" context="{'group_by':'properties'}"/>
+                </group>
+            </search>
+        `,
+    });
+
+    await contains(`.o_optional_columns_dropdown_toggle`).click();
+    await contains(`.o-dropdown-item input[type="checkbox"]`).click();
+    expect(`.o_list_renderer th[data-name="properties.property_char"]`).toHaveCount(1);
+
+    await toggleSearchBarMenu();
+    await toggleMenuItem("My filter");
+    expect(`.o_list_renderer th[data-name="properties.property_char"]`).toHaveCount(1);
+
+    await toggleMenuItem("My filter");
+    expect(`.o_list_renderer th[data-name="properties.property_char"]`).toHaveCount(1);
 });

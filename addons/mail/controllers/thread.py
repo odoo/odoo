@@ -12,7 +12,7 @@ from odoo.addons.mail.tools.discuss import Store
 
 
 class ThreadController(http.Controller):
-    @http.route("/mail/thread/data", methods=["POST"], type="json", auth="public")
+    @http.route("/mail/thread/data", methods=["POST"], type="json", auth="public", readonly=True)
     def mail_thread_data(self, thread_model, thread_id, request_list, **kwargs):
         thread = request.env[thread_model]._get_thread_with_access(thread_id, **kwargs)
         if not thread:

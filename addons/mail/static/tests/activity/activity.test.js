@@ -351,7 +351,8 @@ test("activity click on mark as done", async () => {
     await contains(".o-mail-ActivityMarkAsDone", { count: 0 });
 });
 
-test("activity mark as done popover should focus feedback input on open [REQUIRE FOCUS]", async () => {
+test.tags("focus required");
+test("activity mark as done popover should focus feedback input on open", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const activityTypeId = pyEnv["mail.activity.type"].search([["name", "=", "Email"]])[0];

@@ -192,16 +192,7 @@ class ReturnPicking(models.TransientModel):
         for line in self.product_return_moves:
             if not line.move_id:
                 continue
-            proc_values = {
-                'group_id': self.picking_id.group_id,
-                'sale_line_id': line.move_id.sale_line_id.id,
-                'date_planned': line.move_id.date or fields.Datetime.now(),
-                'warehouse_id': self.picking_id.picking_type_id.warehouse_id,
-                'partner_id': self.picking_id.partner_id.id,
-                'location_final_id': line.move_id.location_final_id or self.picking_id.location_dest_id,
-                'company_id': self.picking_id.company_id,
-            }
-
+            proc_values = self._get_proc_values(line)
             proc_list.append(self.env["procurement.group"].Procurement(
                 line.product_id, line.quantity, line.uom_id,
                 line.move_id.location_dest_id or self.picking_id.location_dest_id,
@@ -211,3 +202,14 @@ class ReturnPicking(models.TransientModel):
         if proc_list:
             self.env['procurement.group'].run(proc_list)
         return action
+
+    def _get_proc_values(self, line):
+        self.ensure_one()
+        return {
+            'group_id': self.picking_id.group_id,
+            'date_planned': line.move_id.date or fields.Datetime.now(),
+            'warehouse_id': self.picking_id.picking_type_id.warehouse_id,
+            'partner_id': self.picking_id.partner_id.id,
+            'location_final_id': line.move_id.location_final_id or self.picking_id.location_dest_id,
+            'company_id': self.picking_id.company_id,
+        }

@@ -143,7 +143,7 @@ class AccountChartTemplate(models.AbstractModel):
         """
         if not company:
             return
-        if not self.env.registry.ready and not install_demo and not hasattr(self.env.registry, '_auto_install_template'):
+        if not self.env.registry.loaded and not install_demo and not hasattr(self.env.registry, '_auto_install_template'):
             _logger.warning(
                 'Incorrect usage of try_loading without a fully loaded registry. This could lead to issues. (%s-%s)',
                 company.name,
@@ -341,10 +341,12 @@ class AccountChartTemplate(models.AbstractModel):
                                       and t.type_tax_use == values.get('type_tax_use')\
                                       and t.tax_scope == values.get('tax_scope', False)
                             )
-                        uniq_key = unique_tax_name_key(oldtax)
-                        rename_idx = len(list(filter(lambda t: re.match(fr"^(?:\[old\d*\] |){uniq_key[0]}$", t[0]) and t[1:] == uniq_key[1:], unique_tax_name_keys)))
-                        if rename_idx:
-                            oldtax.name = f"[old{rename_idx - 1 if rename_idx > 1 else ''}] {oldtax.name}"
+                        uniq_key = unique_tax_name_key(oldtax[0] if len(oldtax) > 1 else oldtax)
+                        matching_names = len(list(filter(lambda t: re.match(fr"^(?:\[old\d*\] |){uniq_key[0]}$", t[0]) and t[1:] == uniq_key[1:], unique_tax_name_keys)))
+                        for index, tax_to_rename in enumerate(oldtax):
+                            rename_idx = index + matching_names
+                            if rename_idx:
+                                tax_to_rename.name = f"[old{rename_idx - 1 if rename_idx > 1 else ''}] {tax_to_rename.name}"
                     else:
                         repartition_lines = values.get('repartition_line_ids')
                         values.clear()
@@ -514,9 +516,17 @@ class AccountChartTemplate(models.AbstractModel):
                 ):
                     try:
                         values[fname] = self.ref(value).id if value not in ('', 'False', 'None') else False
-                    except ValueError as e:
-                        _logger.warning("Failed when trying to recover %s for field=%s", value, field)
-                        failed_fields.append(fname)
+                    except ValueError:
+                        if model != self.env['res.company']:
+                            _logger.warning("Failed when trying to recover %s for field=%s", value, field)
+                            failed_fields.append(fname)
+
+                        # We can't find the record referenced in the chart template in our database.
+                        # This might happen when we're creating a branch and the parent company has deleted the
+                        # referenced record and replaced it with something else.
+                        #
+                        # In this case, we try looking for the record already set on the company or its root.
+                        values[fname] = self.env.company[fname] or self.env.company.parent_ids[0][fname] or False
                 elif field.type in ('one2many', 'many2many') and isinstance(value[0], (list, tuple)):
                     for i, (command, _id, *last_part) in enumerate(value):
                         if last_part:

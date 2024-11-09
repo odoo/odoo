@@ -11,7 +11,7 @@ import { mockFetch, mockWebSocket } from "@odoo/hoot-mock";
 import { assets } from "@web/core/assets";
 import { RPCError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
-import { isIterable } from "@web/core/utils/arrays";
+import { ensureArray, isIterable } from "@web/core/utils/arrays";
 import { isObject } from "@web/core/utils/objects";
 import { patch } from "@web/core/utils/patch";
 import { serverState } from "../mock_server_state.hoot";
@@ -63,10 +63,14 @@ const { DateTime } = luxon;
  *  route: string;
  * }} OrmParams
  *
+ * @typedef {[RegExp, Record<string, string>]} RouteMatcher
+ *
  * @typedef {{
- *  alwaysReturns?: boolean;
+ *  final?: boolean;
  *  pure?: boolean;
  * }} RouteOptions
+ *
+ * @typedef {`/${string}`} RoutePath
  *
  * @typedef {{
  *  actions?: Partial<typeof MockServer["prototype"]["actions"]>;
@@ -80,6 +84,10 @@ const { DateTime } = luxon;
  *  timezone?: string;
  *  translations?: Record<string, string>;
  * }} ServerParams
+ *
+ * @typedef {string | Iterable<string> | RegExp} StringMatcher
+ *
+ * @typedef {(string | RegExp)[]} StringMatchers
  */
 
 /**
@@ -92,8 +100,8 @@ const { DateTime } = luxon;
  */
 
 /**
- * @template [T={}]
- * @typedef {(this: MockServer, request: Request, params: T) => any} RouteCallback
+ * @template [T=string]
+ * @typedef {(this: MockServer, request: Request, params: Record<T, string>) => any} RouteCallback
  */
 
 //-----------------------------------------------------------------------------
@@ -183,18 +191,14 @@ const isNil = (value) => value === null || value === undefined;
 
 /**
  * @param {string} target
- * @param {string | RegExp} matcher
+ * @param {StringMatchers} matchers
  */
-const match = (target, matcher) => {
-    if (matcher === "*") {
-        return true;
-    }
-    if (matcher instanceof RegExp) {
-        return matcher.test(target);
-    } else {
-        return target === matcher;
-    }
-};
+const match = (target, matchers) =>
+    matchers.some(
+        (matcher) =>
+            matcher === "*" ||
+            (matcher instanceof RegExp ? matcher.test(target) : target === matcher)
+    );
 
 /**
  * @param {string} modelName
@@ -260,6 +264,12 @@ class MockServerBaseEnvironment {
     }
 }
 
+const ALLOWED_CHARS = {
+    default: "[^/]",
+    int: "\\d",
+    path: ".",
+    string: "[\\w:.-]",
+};
 const DEFAULT_MENU = {
     id: 99999,
     appID: 1,
@@ -267,6 +277,8 @@ const DEFAULT_MENU = {
     name: "App0",
 };
 const R_DATASET_ROUTE = /\/web\/dataset\/call_(button|kw)\/[\w.-]+\/(?<step>\w+)/;
+const R_ROUTE_PARAM = /<((?<type>\w+):)?(?<name>[\w-]+)>/g;
+const R_WILDCARD = /\*+/g;
 const R_WEBCLIENT_ROUTE = /(?<step>\/web\/webclient\/\w+)/;
 
 const mockRpcRegistry = registry.category("mock_rpc");
@@ -347,24 +359,24 @@ export class MockServer {
 
     // Data
     /** @type {Record<string, ActionDefinition>} */
-    actions = {};
+    actions = Object.create(null);
     /** @type {Record<string, ActionDefinition>[]} */
     embeddedActions = [];
     /** @type {MenuDefinition[]} */
     menus = [];
     /** @type {Record<string, Model>} */
-    models = {};
+    models = Object.create(null);
     /** @type {Record<string, ModelConstructor>} */
-    modelSpecs = {};
+    modelSpecs = Object.create(null);
     /** @type {Set<string>} */
     modelNamesToFetch = new Set();
 
     // Routes
-    /** @type {[RegExp, string[], RouteCallback, RouteOptions][]} */
+    /** @type {[StringMatchers, StringMatchers, OrmCallback][]>} */
+    ormListeners = [];
+    /** @type {[RegExp[], RouteCallback, RouteOptions][]} */
     routes = [];
     started = false;
-    /** @type {[string, string, OrmCallback][]>} */
-    ormListeners = [];
 
     // WebSocket connections
     /** @type {import("@odoo/hoot-mock").ServerWebSocket[]} */
@@ -372,15 +384,29 @@ export class MockServer {
 
     constructor() {
         // Set default routes
-        this.onRpc("/web/action/load", this.mockActionLoad);
-        this.onRpc("/web/action/load_breadcrumbs", this.mockActionLoadBreadcrumbs);
-        this.onRpc("/web/bundle", this.mockBundle, { pure: true });
-        this.onRpc("/web/dataset/call_kw", this.mockCallKw, { alwaysReturns: true });
-        this.onRpc("/web/dataset/call_button", this.mockCallKw, { alwaysReturns: true });
-        this.onRpc("/web/dataset/resequence", this.mockResequence);
-        this.onRpc("/web/image/:model/:id/:field", this.mockImage, { pure: true });
-        this.onRpc("/web/webclient/load_menus", this.mockLoadMenus, { pure: true });
-        this.onRpc("/web/webclient/translations", this.mockLoadTranslations, { pure: true });
+        this.onRoute(["/web/action/load"], this.mockActionLoad);
+        this.onRoute(["/web/action/load_breadcrumbs"], this.mockActionLoadBreadcrumbs);
+        this.onRoute(["/web/bundle/<string:bundle_name>"], this.mockBundle, { pure: true });
+        this.onRoute(
+            ["/web/dataset/call_kw", "/web/dataset/call_kw/<path:path>"],
+            this.mockCallKw,
+            { final: true }
+        );
+        this.onRoute(
+            ["/web/dataset/call_button", "/web/dataset/call_button/<path:path>"],
+            this.mockCallKw,
+            { final: true }
+        );
+        this.onRoute(["/web/dataset/resequence"], this.mockResequence);
+        this.onRoute(["/web/image/<string:model>/<int:id>/<string:field>"], this.mockImage, {
+            pure: true,
+        });
+        this.onRoute(["/web/webclient/load_menus/<string:unique>"], this.mockLoadMenus, {
+            pure: true,
+        });
+        this.onRoute(["/web/webclient/translations/<string:unique>"], this.mockLoadTranslations, {
+            pure: true,
+        });
 
         mockFetch((input, init) => this.handle(input, init));
         mockWebSocket((ws) => this.websockets.push(ws));
@@ -471,8 +497,8 @@ export class MockServer {
      */
     findOrmListeners({ method, model }) {
         const callbacks = [this.callOrm];
-        for (const [listenerModel, listenerMethod, callback] of this.ormListeners) {
-            if (match(model, listenerModel) && match(method, listenerMethod)) {
+        for (const [modelMatchers, methodMatchers, callback] of this.ormListeners) {
+            if (match(model, modelMatchers) && match(method, methodMatchers)) {
                 callbacks.unshift(callback);
             }
         }
@@ -485,14 +511,12 @@ export class MockServer {
     findRouteListeners(route) {
         /** @type {[RouteCallback, Record<string, string>, RouteOptions][]} */
         const listeners = [];
-        for (const [regex, params, callback, options] of this.routes) {
-            const match = route.match(regex);
-            if (match) {
-                const routeParams = {};
-                for (let i = 0; i < params.length; i++) {
-                    routeParams[params[i]] = match[i + 1];
+        for (const [routeRegexes, callback, options] of this.routes) {
+            for (const regex of routeRegexes) {
+                const argsMatch = route.match(regex);
+                if (argsMatch) {
+                    listeners.unshift([callback, argsMatch.groups, options]);
                 }
-                listeners.unshift([callback, routeParams, options]);
             }
         }
         return listeners;
@@ -559,9 +583,7 @@ export class MockServer {
     getAction(id) {
         const action =
             this.actions[id] ||
-            Object.values(this.actions).find((action) => {
-                return action.xml_id === id || action.path === id;
-            });
+            Object.values(this.actions).find((act) => act.xml_id === id || act.path === id);
         if (!action) {
             throw makeServerError({
                 errorName: "odoo.addons.web.controllers.action.MissingActionError",
@@ -570,7 +592,7 @@ export class MockServer {
         }
         if (action.type === "ir.actions.act_window") {
             action["embedded_action_ids"] = this.embeddedActions.filter(
-                (el) => el && el.parent_action_id === id
+                (act) => act && act.parent_action_id === id
             );
         }
         return action;
@@ -646,13 +668,18 @@ export class MockServer {
 
         let result = null;
         for (const [callback, routeParams, routeOptions] of listeners) {
+            const pure = options.pure ?? routeOptions.pure;
+            const final = options.final ?? routeOptions.final;
             try {
                 result = await callback.call(this, request, routeParams);
             } catch (error) {
+                if (pure) {
+                    throw error;
+                }
                 result = ensureError(error);
             }
-            if (!isNil(result) || (options.alwaysReturns ?? routeOptions.alwaysReturns)) {
-                if (options.pure ?? routeOptions.pure) {
+            if (!isNil(result) || final) {
+                if (pure) {
                     return result;
                 }
                 if (result instanceof RPCError) {
@@ -680,7 +707,7 @@ export class MockServer {
     async loadModels() {
         const models = Object.values(this.modelSpecs);
         const serverModelInheritances = new Set();
-        this.modelSpecs = {};
+        this.modelSpecs = Object.create(null);
         if (this.modelNamesToFetch.size) {
             const modelEntries = await fetchModelDefinitions(this.modelNamesToFetch);
             this.modelNamesToFetch.clear();
@@ -834,42 +861,54 @@ export class MockServer {
      */
     /**
      * @overload
-     * @param {string} method
+     * @param {StringMatchers} method
      * @param {OrmCallback} callback
      */
     /**
      * @overload
-     * @param {string} model
-     * @param {string} method
+     * @param {StringMatchers} model
+     * @param {StringMatcher} method
      * @param {OrmCallback} callback
      */
     /**
-     * @param {string | OrmCallback} model
-     * @param {string | OrmCallback} [method]
+     * @param {StringMatchers | OrmCallback} model
+     * @param {StringMatcher | OrmCallback} [method]
      * @param {OrmCallback} [callback]
      */
     onOrmMethod(...args) {
-        const callback = args.pop();
-        const method = args.pop() || "*";
-        const model = args.pop() || "*";
+        /** @type {OrmCallback[]} */
+        const [callback] = ensureArray(args.pop());
+        /** @type {StringMatchers} */
+        const method = ensureArray(args.pop() || "*");
+        /** @type {StringMatchers} */
+        const model = ensureArray(args.pop() || "*");
+
+        if (typeof callback !== "function") {
+            throw new Error(`onRpc: expected callback to be a function, got: ${callback}`);
+        }
+
         this.ormListeners.push([model, method, callback]);
     }
 
     /**
-     * @param {`/${string}`} route
+     * @param {RoutePath[]} routes
      * @param {RouteCallback} callback
      * @param {RouteOptions} options
      */
-    onRoute(route, callback, options) {
-        const routeParams = [];
-        const routeRegex = new RegExp(
-            `^${route.replace("*", ".*").replace(/:([^/]+)/g, (_, param) => {
-                routeParams.push(param);
-                return `([^/]+)`;
-            })}`,
-            "i"
-        );
-        this.routes.push([routeRegex, routeParams, callback, options || {}]);
+    onRoute(routes, callback, options) {
+        const routeRegexes = routes.map((route) => {
+            const regexString = route
+                // Replace parameters by regex notation and store their names
+                .replaceAll(R_ROUTE_PARAM, (...args) => {
+                    const { name, type } = args.pop();
+                    return `(?<${name}>${ALLOWED_CHARS[type] || ALLOWED_CHARS.default}+)`;
+                })
+                // Replace glob wildcards by regex wildcard
+                .replaceAll(R_WILDCARD, ".*");
+            return new RegExp(`^${regexString}$`, "i");
+        });
+
+        this.routes.push([routeRegexes, callback, options || {}]);
     }
 
     /**
@@ -878,31 +917,41 @@ export class MockServer {
      */
     /**
      * @overload
-     * @param {`/${string}`} route
+     * @param {RoutePath | Iterable<RoutePath>} route
      * @param {RouteCallback} callback
      * @param {RouteOptions} [options]
      */
     /**
      * @overload
-     * @param {string | RegExp} method
+     * @param {StringMatcher} method
      * @param {OrmCallback} callback
      */
     /**
      * @overload
-     * @param {string} model
-     * @param {string | RegExp} method
+     * @param {StringMatcher} model
+     * @param {StringMatcher} method
      * @param {OrmCallback} callback
      */
     /**
-     * @param {string | OrmCallback | RegExp} route
-     * @param {RouteCallback | OrmCallback | string | RegExp} [callback]
+     * @param {StringMatcher | OrmCallback} route
+     * @param {RouteCallback | StringMatcher | OrmCallback} [callback]
      * @param {RouteOptions | OrmCallback} [options]
      */
     onRpc(...args) {
-        if (typeof args[0] === "string" && args[0].startsWith("/")) {
-            this.onRoute(...args);
-        } else {
-            this.onOrmMethod(...args);
+        const ormArgs = [];
+        const routeArgs = [];
+        for (const val of ensureArray(args.shift())) {
+            if (typeof val === "string" && val.startsWith("/")) {
+                routeArgs.push(val);
+            } else {
+                ormArgs.push(val);
+            }
+        }
+        if (ormArgs.length) {
+            this.onOrmMethod(ormArgs, ...args);
+        }
+        if (routeArgs.length) {
+            this.onRoute(routeArgs, ...args);
         }
         return this;
     }
@@ -926,8 +975,8 @@ export class MockServer {
      * @param {Record<string, string>} translations
      */
     registerTranslations(module, translations) {
-        this.modules[module] ||= {};
-        this.modules[module].messages ||= {};
+        this.modules[module] ||= Object.create(null);
+        this.modules[module].messages ||= Object.create(null);
         if (Array.isArray(translations)) {
             this.modules.web.messages.push(...translations);
         } else {
@@ -964,29 +1013,28 @@ export class MockServer {
         const { params } = await request.json();
         const { actions } = params;
         return actions.map(({ action: actionId, model, resId }) => {
+            /** @type {string} */
+            let displayName;
             if (actionId) {
                 const action = this.getAction(actionId);
                 if (resId) {
-                    return {
-                        display_name: this.env[action.res_model].read([resId], ["display_name"])[0]
-                            .display_name,
-                    };
+                    displayName = this.env[action.res_model].browse(resId)[0].display_name;
+                } else {
+                    displayName = action.name;
                 }
-                return { display_name: action.name };
             } else if (model) {
-                if (resId) {
-                    return {
-                        display_name: this.env[model].read([resId], ["display_name"])[0]
-                            .display_name,
-                    };
+                if (!resId) {
+                    throw new Error("Actions with a 'model' should also have a 'resId'");
                 }
-                throw new Error("Actions with a model should also have a resId");
+                displayName = this.env[model].browse(resId)[0].display_name;
+            } else {
+                throw new Error("Actions should have either an 'action' (ID or path) or a 'model'");
             }
-            throw new Error("Actions should have either an action (id or path) or a model");
+            return { display_name: displayName };
         });
     }
 
-    /** @type {RouteCallback} */
+    /** @type {RouteCallback<"bundle_name">} */
     async mockBundle(request) {
         // No mock here: we want to fetch the actual bundle
         return realFetch(request.url);
@@ -1016,12 +1064,12 @@ export class MockServer {
         return null;
     }
 
-    /** @type {RouteCallback} */
-    async mockImage(request, { model, field, id }) {
+    /** @type {RouteCallback<"model" | "field" | "id">} */
+    async mockImage(request, { id, model, field }) {
         return `<fake url to record ${id} on ${model}.${field}>`;
     }
 
-    /** @type {RouteCallback} */
+    /** @type {RouteCallback<"unique">} */
     async mockLoadMenus() {
         const root = { id: "root", children: [], name: "root", appID: "root" };
         const menuDict = { root };
@@ -1042,7 +1090,7 @@ export class MockServer {
         return menuDict;
     }
 
-    /** @type {RouteCallback} */
+    /** @type {RouteCallback<"unique">} */
     async mockLoadTranslations() {
         const langParameters = { ...this.lang_parameters };
         if (typeof langParameters.grouping !== "string") {
@@ -1205,19 +1253,19 @@ export async function makeMockServer() {
  */
 /**
  * @overload
- * @param {`/${string}`} route
+ * @param {RoutePath | Iterable<RoutePath>} route
  * @param {RouteCallback} callback
  * @param {RouteOptions} [options]
  */
 /**
  * @overload
- * @param {string | RegExp} method
+ * @param {StringMatcher} method
  * @param {OrmCallback} callback
  */
 /**
  * @overload
- * @param {string} model
- * @param {string | RegExp} method
+ * @param {StringMatcher} model
+ * @param {StringMatcher} method
  * @param {OrmCallback} callback
  */
 /**
@@ -1237,7 +1285,7 @@ export function onRpc(...args) {
  * @returns {void}
  */
 export function stepAllNetworkCalls() {
-    onRpc("/", (request) => {
+    onRpc("/*", (request) => {
         const route = new URL(request.url).pathname;
         let match = route.match(R_DATASET_ROUTE);
         if (match) {

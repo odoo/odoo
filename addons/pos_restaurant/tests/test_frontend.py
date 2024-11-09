@@ -311,3 +311,7 @@ class TestFrontend(TestFrontendCommon):
     def test_13_category_check(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('CategLabelCheck')
+
+    def test_14_change_synced_order(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('OrderChange')

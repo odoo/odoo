@@ -64,24 +64,18 @@ test.tags("desktop")("displays only apps if the search value is '/'", async () =
     expect(queryAllTexts(".o_command_name")).toEqual(["Contact", "Sales"]);
 });
 
-test.tags("desktop")(
-    "displays apps and menu items if the search value is not only '/'",
-    async () => {
-        await mountWithCleanup(WebClient);
+test.tags("desktop");
+test("displays apps and menu items if the search value is not only '/'", async () => {
+    await mountWithCleanup(WebClient);
 
-        await press(["control", "k"]);
-        await animationFrame();
-        await contains(".o_command_palette_search input").edit("/sal", { confirm: false });
-        await animationFrame();
-        expect(".o_command_palette").toHaveCount(1);
-        expect(".o_command").toHaveCount(3);
-        expect(queryAllTexts(".o_command_name")).toEqual([
-            "Sales",
-            "Sales / Info",
-            "Sales / Report",
-        ]);
-    }
-);
+    await press(["control", "k"]);
+    await animationFrame();
+    await contains(".o_command_palette_search input").edit("/sal", { confirm: false });
+    await animationFrame();
+    expect(".o_command_palette").toHaveCount(1);
+    expect(".o_command").toHaveCount(3);
+    expect(queryAllTexts(".o_command_name")).toEqual(["Sales", "Sales / Info", "Sales / Report"]);
+});
 
 test.tags("desktop")("opens an app", async () => {
     await mountWithCleanup(WebClient);

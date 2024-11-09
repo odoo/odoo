@@ -1013,13 +1013,12 @@ class IrModelFields(models.Model):
         for vals in vals_list:
             if 'model_id' in vals:
                 vals['model'] = IrModel.browse(vals['model_id']).model
-            assert vals.get('model'), f"missing model name for {vals}"
-            models.add(vals['model'])
 
         # for self._get_ids() in _update_selection()
         self.env.registry.clear_cache()
 
         res = super(IrModelFields, self).create(vals_list)
+        models = set(res.mapped('model'))
 
         for vals in vals_list:
             if vals.get('state', 'manual') == 'manual':

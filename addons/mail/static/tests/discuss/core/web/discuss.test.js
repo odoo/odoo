@@ -19,7 +19,7 @@ import { pick } from "@web/core/utils/objects";
 describe.current.tags("desktop");
 defineMailModels();
 
-test("can create a new channel [REQUIRE FOCUS]", async () => {
+test("can create a new channel", async () => {
     const pyEnv = await startServer();
     onRpcBefore((route, args) => {
         if (route.startsWith("/mail") || route.startsWith("/discuss/channel/messages")) {
@@ -259,7 +259,7 @@ test("sidebar: add channel", async () => {
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-channel .o-mail-DiscussSidebarCategory-add");
     expect(
-        $(".o-mail-DiscussSidebarCategory-channel .o-mail-DiscussSidebarCategory-add")[0]
+        ".o-mail-DiscussSidebarCategory-channel .o-mail-DiscussSidebarCategory-add:first"
     ).toHaveAttribute("title", "Add or join a channel");
     await click(".o-mail-DiscussSidebarCategory-channel .o-mail-DiscussSidebarCategory-add");
     await contains(".o-discuss-ChannelSelector");

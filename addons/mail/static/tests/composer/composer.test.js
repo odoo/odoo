@@ -29,6 +29,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { Composer } from "@mail/core/common/composer";
+import { queryFirst } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -118,7 +119,8 @@ test("emojis are auto-substituted from text", async () => {
     await contains(".o-mail-Message-body", { text: "😈" });
 });
 
-test("Exiting emoji picker brings the focus back to the Composer textarea [REQUIRE FOCUS]", async () => {
+test.tags("focus required");
+test("Exiting emoji picker brings the focus back to the Composer textarea", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     await start();
@@ -141,7 +143,7 @@ test("add an emoji after some text", async () => {
     await contains(".o-mail-Composer-input", { value: "Blabla🤑" });
 });
 
-test("add emoji replaces (keyboard) text selection [REQUIRE FOCUS]", async () => {
+test("add emoji replaces (keyboard) text selection", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "pétanque-tournament-14" });
     await start();
@@ -199,7 +201,7 @@ test("Selection is kept when changing channel and going back to original channel
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Foo");
     // simulate selection of all the content by keyboard
-    const textarea = $(".o-mail-Composer-input")[0];
+    const textarea = queryFirst(".o-mail-Composer-input");
     textarea.setSelectionRange(0, textarea.value.length);
     await tick();
     await click(":nth-child(2 of .o-mail-DiscussSidebarChannel-container)");
@@ -416,9 +418,9 @@ test("composer suggestion should match with input selection", async () => {
     await contains(".o-mail-Composer-input", { value: "#Mario Party " });
     await insertText(".o-mail-Composer-input", "@");
     await contains(".o-mail-Composer-suggestion", { text: "Luigi" });
-    $(".o-mail-Composer-input")[0].setSelectionRange(3, 3);
+    queryFirst(".o-mail-Composer-input").setSelectionRange(3, 3);
     await contains(".o-mail-Composer-suggestion", { text: "Mario Party" });
-    const textarea = $(".o-mail-Composer-input")[0];
+    const textarea = queryFirst(".o-mail-Composer-input");
     textarea.setSelectionRange(textarea.value.length, textarea.value.length);
     await contains(".o-mail-Composer-suggestion", { text: "Luigi" });
 });
@@ -534,7 +536,7 @@ test("composer text input placeholder should contain correspondent name when thr
     await contains("textarea.o-mail-Composer-input[placeholder='Message Marc Demo…']");
 });
 
-test("quick edit last self-message from UP arrow [REQUIRE FOCUS]", async () => {
+test.tags("focus required")("quick edit last self-message from UP arrow", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     pyEnv["mail.message"].create({
@@ -692,7 +694,7 @@ test("composer: paste attachments", async () => {
     await contains(".o-mail-AttachmentList .o-mail-AttachmentCard");
 });
 
-test("Replying on a channel should focus composer initially [REQUIRE FOCUS]", async () => {
+test.tags("focus required")("Replying on a channel should focus composer initially", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",

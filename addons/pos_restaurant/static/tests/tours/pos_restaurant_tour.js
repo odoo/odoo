@@ -295,3 +295,25 @@ registry.category("web_tour.tours").add("CategLabelCheck", {
             ProductScreen.OrderButtonNotContain("Drinks"),
         ].flat(),
 });
+registry.category("web_tour.tours").add("OrderChange", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola", true, "1.0"),
+            ProductScreen.clickOrderButton(),
+            {
+                ...Dialog.confirm(),
+                content:
+                    "acknowledge printing error ( because we don't have printer in the test. )",
+            },
+            ProductScreen.orderlinesHaveNoChange(),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickNumpad("+10"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            TicketScreen.receiptChangeIs("7.80"),
+        ].flat(),
+});

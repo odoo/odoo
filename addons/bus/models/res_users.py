@@ -20,3 +20,6 @@ class ResUsers(models.Model):
 
     def _bus_channel(self):
         return self.partner_id._bus_channel()
+
+    def _is_user_available(self):
+        return self.im_status == 'online'

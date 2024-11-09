@@ -295,13 +295,16 @@ export class ListRenderer extends Component {
         return Object.values(list.fields)
             .filter(
                 (field) =>
+                    list.activeFields[field.name] &&
                     field.relatedPropertyField &&
-                    field.relatedPropertyField.fieldName === column.name &&
+                    field.relatedPropertyField.name === column.name &&
                     field.type !== "separator"
             )
             .map((propertyField) => {
+                const activeField = list.activeFields[propertyField.name];
                 return {
                     ...getPropertyFieldInfo(propertyField),
+                    relatedPropertyField: activeField.relatedPropertyField,
                     id: `${column.id}_${propertyField.name}`,
                     column_invisible: combineModifiers(
                         propertyField.column_invisible,

@@ -1987,7 +1987,7 @@ export class PosStore extends Reactive {
     getReceiptHeaderData(order) {
         return {
             company: this.company,
-            cashier: _t("Served by %s", order.getCashierName() || this.get_cashier()?.name),
+            cashier: _t("Served by %s", order?.getCashierName() || this.get_cashier()?.name),
             header: this.config.receipt_header,
         };
     }
@@ -1998,8 +1998,8 @@ export class PosStore extends Reactive {
             qr = await this.data.call("pos.payment.method", "get_qr_code", [
                 [payment.payment_method_id.id],
                 payment.amount,
-                payment.pos_order_id.name,
-                payment.pos_order_id.name,
+                payment.pos_order_id.name + " " + payment.pos_order_id.tracking_number,
+                "",
                 this.currency.id,
                 payment.pos_order_id.partner_id?.id,
             ]);
