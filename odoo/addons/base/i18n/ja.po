@@ -4,10 +4,10 @@
 # 
 # Translators:
 # Andy Yiu, 2024
-# Ryoko Tsuda <ryoko@quartile.co>, 2024
 # Martin Trigaux, 2024
 # Wil Odoo, 2024
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2024
+# Ryoko Tsuda <ryoko@quartile.co>, 2024
 # Junko Augias, 2024
 # 
 msgid ""
@@ -29505,7 +29505,7 @@ msgstr "ポータル・ユーザだけが自分のアカウントを削除でき
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 msgid "Oops, no!"
-msgstr "おっと、いや'"
+msgstr "おっと、違った！"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__speedscope_url
@@ -35520,6 +35520,15 @@ msgstr "\"アプリスイッチャー\"アクションはホームアクショ�
 #, python-format
 msgid "The %s of a subsidiary must be the same as it's root company."
 msgstr "子会社の%sは元会社と同様である必要があります。 "
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"The action \"%s\" cannot be set as the home action because it requires a "
+"record to be selected beforehand."
+msgstr "アクション\"%s\" は、事前にレコードを選択する必要があるため、ホームアクションとして設定できません。"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__code
