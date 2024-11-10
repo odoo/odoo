@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Tiffany Chang, 2024
-# Tony Ng, 2024
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2024
 # Wil Odoo, 2024
+# Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2024-10-25 07:50+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,12 +27,12 @@ msgstr ""
 msgid ""
 "<i>Your order has been saved.</i> Please come to the store to pay for your "
 "products."
-msgstr ""
+msgstr "<b>你的訂單已儲存。</b><i></i>請前往實體商店，支付產品費用。"
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.payment_confirmation_status
 msgid "<span class=\"text-muted\"> (In-store pickup)</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">（店內取貨）</span>"
 
 #. module: website_sale_collect
 #. odoo-javascript
@@ -55,7 +55,7 @@ msgstr "配置設定"
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.res_config_settings_form
 msgid "Configure Pickup Locations"
-msgstr ""
+msgstr "配置取貨地點"
 
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_payment_provider__custom_mode
@@ -71,7 +71,7 @@ msgstr "送貨方式"
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_website__in_store_dm_id
 msgid "In-store Delivery Method"
-msgstr ""
+msgstr "實體店送貨方式"
 
 #. module: website_sale_collect
 #. odoo-javascript
@@ -87,6 +87,12 @@ msgid "Only"
 msgstr "僅"
 
 #. module: website_sale_collect
+#. odoo-python
+#: code:addons/website_sale_collect/models/sale_order.py:0
+msgid "Only %(new_qty)s available"
+msgstr "只剩 %(new_qty)s 件可用"
+
+#. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_stock_warehouse__opening_hours
 msgid "Opening Hours"
 msgstr "開始時間"
@@ -100,7 +106,7 @@ msgstr "缺貨"
 #. module: website_sale_collect
 #: model:payment.provider,name:website_sale_collect.payment_provider_on_site
 msgid "Pay on Site"
-msgstr ""
+msgstr "到店付款"
 
 #. module: website_sale_collect
 #: model:ir.model.fields.selection,name:website_sale_collect.selection__payment_provider__custom_mode__on_site
@@ -120,13 +126,13 @@ msgstr "支付提供商"
 #: model:ir.model.fields.selection,name:website_sale_collect.selection__delivery_carrier__delivery_type__in_store
 #: model:product.template,name:website_sale_collect.product_pick_up_in_store_product_template
 msgid "Pick up in store"
-msgstr ""
+msgstr "到店自取"
 
 #. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/controllers/main.py:0
 msgid "Please choose a store to collect your order."
-msgstr ""
+msgstr "請選擇一間商店，以領取訂單貨品。"
 
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_product_template
@@ -156,14 +162,14 @@ msgstr "寄送方式"
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
 msgid "Some of the products are not available at"
-msgstr ""
+msgstr "部份產品無法在以下項目提供："
 
 #. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/controllers/main.py:0
 #: code:addons/website_sale_collect/models/sale_order.py:0
 msgid "Some products are not available in the selected store."
-msgstr ""
+msgstr "部份產品在所選商店中不可用。"
 
 #. module: website_sale_collect
 #. odoo-python
@@ -181,13 +187,13 @@ msgstr "商店"
 #. odoo-python
 #: code:addons/website_sale_collect/models/delivery_carrier.py:0
 msgid "The delivery method and a warehouse must share the same company"
-msgstr ""
+msgstr "送貨方法及倉庫必須屬於同一家公司"
 
 #. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/models/delivery_carrier.py:0
 msgid "The delivery method must have at least one warehouse to be published."
-msgstr ""
+msgstr "送貨方式必須至少有一個倉庫可以發佈。"
 
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_stock_warehouse
@@ -205,7 +211,7 @@ msgstr "網站"
 msgid ""
 "You can only pay on site when selecting the pick up in store delivery "
 "method."
-msgstr ""
+msgstr "選擇店內取貨方式時，只可現場付款。"
 
 #. module: website_sale_collect
 #: model_terms:payment.provider,auth_msg:website_sale_collect.payment_provider_on_site
@@ -233,4 +239,4 @@ msgstr "可用"
 #. odoo-python
 #: code:addons/website_sale_collect/models/payment_provider.py:0
 msgid "no in-store delivery methods available"
-msgstr ""
+msgstr "沒有店內取貨方式可用"

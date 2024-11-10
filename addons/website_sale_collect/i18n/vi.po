@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Tiffany Chang, 2024
-# Thi Huong Nguyen, 2024
 # Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2024
 # Wil Odoo, 2024
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2024-10-25 07:50+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,11 +28,13 @@ msgid ""
 "<i>Your order has been saved.</i> Please come to the store to pay for your "
 "products."
 msgstr ""
+"<i>Đơn hàng của bạn đã được lưu.</i> Vui lòng đến cửa hàng để thanh toán sản"
+" phẩm."
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.payment_confirmation_status
 msgid "<span class=\"text-muted\"> (In-store pickup)</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\"> (Nhận hàng tại cửa hàng)</span>"
 
 #. module: website_sale_collect
 #. odoo-javascript
@@ -55,7 +57,7 @@ msgstr "Cài đặt cấu hình"
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.res_config_settings_form
 msgid "Configure Pickup Locations"
-msgstr ""
+msgstr "Cấu hình địa điểm nhận hàng"
 
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_payment_provider__custom_mode
@@ -71,7 +73,7 @@ msgstr "Phương thức giao hàng"
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_website__in_store_dm_id
 msgid "In-store Delivery Method"
-msgstr ""
+msgstr "Phương thức giao hàng tại cửa hàng"
 
 #. module: website_sale_collect
 #. odoo-javascript
@@ -87,6 +89,12 @@ msgid "Only"
 msgstr "Chỉ"
 
 #. module: website_sale_collect
+#. odoo-python
+#: code:addons/website_sale_collect/models/sale_order.py:0
+msgid "Only %(new_qty)s available"
+msgstr "Chỉ còn %(new_qty)s "
+
+#. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_stock_warehouse__opening_hours
 msgid "Opening Hours"
 msgstr "Giờ bắt đầu"
@@ -100,7 +108,7 @@ msgstr "Hết hàng"
 #. module: website_sale_collect
 #: model:payment.provider,name:website_sale_collect.payment_provider_on_site
 msgid "Pay on Site"
-msgstr ""
+msgstr "Thanh toán tại cửa hàng"
 
 #. module: website_sale_collect
 #: model:ir.model.fields.selection,name:website_sale_collect.selection__payment_provider__custom_mode__on_site
@@ -120,13 +128,13 @@ msgstr "Nhà cung cấp dịch vụ thanh toán"
 #: model:ir.model.fields.selection,name:website_sale_collect.selection__delivery_carrier__delivery_type__in_store
 #: model:product.template,name:website_sale_collect.product_pick_up_in_store_product_template
 msgid "Pick up in store"
-msgstr ""
+msgstr "Nhận hàng tại cửa hàng"
 
 #. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/controllers/main.py:0
 msgid "Please choose a store to collect your order."
-msgstr ""
+msgstr "Vui lòng chọn cửa hàng để nhận đơn hàng của bạn."
 
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_product_template
@@ -156,14 +164,14 @@ msgstr "Phương thức vận chuyển"
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
 msgid "Some of the products are not available at"
-msgstr ""
+msgstr "Một số sản phẩm không có sẵn tại"
 
 #. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/controllers/main.py:0
 #: code:addons/website_sale_collect/models/sale_order.py:0
 msgid "Some products are not available in the selected store."
-msgstr ""
+msgstr "Một số sản phẩm không có sẵn tại cửa hàng đã chọn."
 
 #. module: website_sale_collect
 #. odoo-python
@@ -181,13 +189,13 @@ msgstr "Cửa hàng"
 #. odoo-python
 #: code:addons/website_sale_collect/models/delivery_carrier.py:0
 msgid "The delivery method and a warehouse must share the same company"
-msgstr ""
+msgstr "Phương thức giao hàng và nhà kho phải cùng chung một công ty"
 
 #. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/models/delivery_carrier.py:0
 msgid "The delivery method must have at least one warehouse to be published."
-msgstr ""
+msgstr "Phương thức giao hàng phải có ít nhất một nhà kho được công khai."
 
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_stock_warehouse
@@ -206,6 +214,8 @@ msgid ""
 "You can only pay on site when selecting the pick up in store delivery "
 "method."
 msgstr ""
+"Bạn chỉ có thể thanh toán tại cửa hàng khi chọn phương thức giao hàng là "
+"nhận hàng tại cửa hàng."
 
 #. module: website_sale_collect
 #: model_terms:payment.provider,auth_msg:website_sale_collect.payment_provider_on_site
@@ -233,4 +243,4 @@ msgstr "còn lại"
 #. odoo-python
 #: code:addons/website_sale_collect/models/payment_provider.py:0
 msgid "no in-store delivery methods available"
-msgstr ""
+msgstr "không có phương thức giao hàng tại cửa hàng"

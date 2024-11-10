@@ -27,6 +27,8 @@ msgid ""
 "\n"
 "Affected valuation layers: %s"
 msgstr ""
+"\n"
+"영향을 받는 평가 레이어: %s"
 
 #. module: stock_account
 #. odoo-python
@@ -44,13 +46,13 @@ msgstr " [회계 처리 %s]"
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid " lot/serial number cost updated from %(previous)s to %(new_cost)s."
-msgstr ""
+msgstr "로트/일련번호 원가가 %(previous)s에서 %(new_cost)s으로 업데이트되었습니다."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_valuation_layer.py:0
 msgid "%(user)s changed cost from %(previous)s to %(new_price)s - %(record)s"
-msgstr ""
+msgstr "%(user)s 사용자가 %(previous)s에서 %(new_price)s-%(record)s로 원가를 변경했습니다."
 
 #. module: stock_account
 #. odoo-python
@@ -59,6 +61,8 @@ msgid ""
 "%(user)s changed stock valuation from  %(previous)s to %(new_value)s - %(product)s\n"
 "%(reason)s"
 msgstr ""
+"%(user)s가 재고 평가를 %(previous)s에서 %(new_value)s%(product)s으로 변경했습니다:\n"
+"%(reason)s"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -283,7 +287,7 @@ msgstr "환경 설정 오류. 이 작업을 처리하려면 제품 또는 범주
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Correction of %s (modification of past move)"
-msgstr ""
+msgstr "%s 수정 (과거 이동 수정)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__standard_price
@@ -432,7 +436,7 @@ msgstr "ID"
 #: model:ir.model.fields,help:stock_account.field_product_product__lot_valuated
 #: model:ir.model.fields,help:stock_account.field_product_template__lot_valuated
 msgid "If checked, the valuation will be specific by Lot/Serial number."
-msgstr ""
+msgstr "이 옵션을 선택하면 평가가 로트/일련번호에만 적용됩니다. "
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
@@ -511,13 +515,13 @@ msgstr "다음과 연결됨"
 msgid ""
 "Lot %(lot)s has a negative quantity in stock. Correct this"
 "                         quantity before enabling lot valuation"
-msgstr ""
+msgstr "로트 %(lot)s의 재고 수량이 음수입니다. 로트 평가를 활성화하기 전에 이 수량을 수정하세요. "
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_lot.py:0
 msgid "Lot value manually modified (from %(old)s to %(new)s)"
-msgstr ""
+msgstr "로트 값이 수동으로 수정되었습니다. (%(old)s에서 %(new)s로)"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_lot
@@ -534,13 +538,13 @@ msgstr "로트/일련번호"
 #. odoo-python
 #: code:addons/stock_account/models/stock_lot.py:0
 msgid "Lot/Serial number Revaluation"
-msgstr ""
+msgstr "로트/일련번호 재평가 중"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move_line.py:0
 msgid "Lot/Serial number is mandatory for product valuated by lot"
-msgstr ""
+msgstr "로트별로 평가된 제품의 경우 로트/일련 번호는 필수입니다."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -585,7 +589,7 @@ msgstr "수량별 신규 값"
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "No Reason Given"
-msgstr ""
+msgstr "이유 없음"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
@@ -643,12 +647,12 @@ msgstr "수동으로 수정된 품목 가격 (%(original_price)s에서 %(new_pri
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_production_wip_account_id
 msgid "Production WIP Account"
-msgstr ""
+msgstr "생산 WIP 계정"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_production_wip_overhead_account_id
 msgid "Production WIP Overhead Account"
-msgstr ""
+msgstr "프로덕션 WIP 간접비 계정"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__quantity
@@ -690,7 +694,7 @@ msgstr "참조"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__lot_id
 msgid "Related lot/serial number"
-msgstr ""
+msgstr "관련 로트/일련번호"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__product_id
@@ -727,7 +731,7 @@ msgstr "재평가"
 #. odoo-python
 #: code:addons/stock_account/models/stock_lot.py:0
 msgid "Select an existing lot/serial number to be reevaluated"
-msgstr ""
+msgstr "재평가할 기존 로트/일련번호를 선택합니다."
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__standard
@@ -896,7 +900,7 @@ msgstr "이동 명세가 일관된 상태가 아닙니다. 동일한 출발지 �
 #: code:addons/stock_account/models/product.py:0
 msgid ""
 "The stock accounts should be set in order to use the automatic valuation."
-msgstr ""
+msgstr "자동 평가 기능을 사용하려면 재고 계정을 설정해야 합니다."
 
 #. module: stock_account
 #. odoo-python
@@ -1002,7 +1006,7 @@ msgstr "SO/PO의 수량 갱신"
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid "Updating lot valuation for product %s."
-msgstr ""
+msgstr "제품 %s에 대한 로트 밸류에이션을 업데이트하는 중입니다. "
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_in_account_id
@@ -1062,7 +1066,7 @@ msgstr "평가일"
 #: model:ir.model.fields,field_description:stock_account.field_product_product__lot_valuated
 #: model:ir.model.fields,field_description:stock_account.field_product_template__lot_valuated
 msgid "Valuation by Lot/Serial number"
-msgstr ""
+msgstr "로트/일련번호별 평가"
 
 #. module: stock_account
 #. odoo-python
@@ -1076,7 +1080,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__adjusted_layer_ids
 msgid "Valuations layers being adjusted"
-msgstr ""
+msgstr "밸류에이션 레이어 조정 중"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__value
@@ -1146,13 +1150,13 @@ msgstr "품목 비축 재고 재평가용 마법사 모델"
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "You cannot adjust the valuation of a layer with zero quantity"
-msgstr ""
+msgstr "수량이 0인 레이어의 평가액은 조정할 수 없습니다. "
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "You cannot adjust valuation without a product"
-msgstr ""
+msgstr "상품이 없으면 평가를 조정할 수 없습니다."
 
 #. module: stock_account
 #. odoo-python
@@ -1160,7 +1164,7 @@ msgstr ""
 msgid ""
 "You cannot change the costing method of product valuated by lot/serial "
 "number."
-msgstr ""
+msgstr "로트/일련 번호로 평가된 제품의 원가 계산 방법은 변경할 수 없습니다."
 
 #. module: stock_account
 #. odoo-python
@@ -1168,7 +1172,7 @@ msgstr ""
 msgid ""
 "You cannot change the product category of a product valuated by lot/serial "
 "number."
-msgstr ""
+msgstr "로트/일련 번호로 평가된 제품의 카테고리는 변경할 수 없습니다. "
 
 #. module: stock_account
 #. odoo-python
@@ -1186,7 +1190,7 @@ msgstr "재고 내용이 없거나 음수인 품목은 재평가할 수 없습�
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "You cannot revalue multiple products at once"
-msgstr ""
+msgstr "한 번에 여러 제품을 재평가할 수 없습니다."
 
 #. module: stock_account
 #. odoo-python

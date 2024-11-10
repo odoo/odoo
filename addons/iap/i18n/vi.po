@@ -26,6 +26,8 @@ msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
 "                                    Buy Credit"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                                    Mua tín dụng"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
@@ -52,6 +54,8 @@ msgid ""
 "An error occurred while reaching %s. Please contact Odoo support if this "
 "error persists."
 msgstr ""
+"Đã xảy ra lỗi trong khi liên hệ %s. Vui lòng liên hệ với bộ phận hỗ trợ của "
+"Odoo nếu lỗi này vẫn tiếp diễn."
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__balance
@@ -112,12 +116,12 @@ msgstr "Tên hiển thị"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__warning_user_ids
 msgid "Email Alert Recipients"
-msgstr ""
+msgstr "Người nhận cảnh báo email"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__warning_threshold
 msgid "Email Alert Threshold"
-msgstr ""
+msgstr "Ngưỡng cảnh báo email"
 
 #. module: iap
 #: model:iap.service,description:iap.iap_service_reveal
@@ -126,6 +130,9 @@ msgid ""
 "leads, generate leads based on a set of criteria and enrich the company data"
 " of your opportunities."
 msgstr ""
+"Có được lead và cơ hội chất lượng: chuyển đổi khách truy cập trang web thành"
+" lead, tạo lead dựa trên một bộ tiêu chí và tăng cường dữ liệu công ty về "
+"các cơ hội của bạn."
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_root_menu
@@ -153,7 +160,7 @@ msgstr "IAP API Tăng cường lead"
 #. module: iap
 #: model:ir.model,name:iap.model_iap_service
 msgid "IAP Service"
-msgstr ""
+msgstr "Dịch vụ IAP"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__id
@@ -170,7 +177,7 @@ msgstr "Tín dụng không đủ để thực hiện dịch vụ này."
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__integer_balance
 msgid "Integer Balance"
-msgstr ""
+msgstr "Số dư nguyên"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__write_uid
@@ -188,7 +195,7 @@ msgstr "Cập nhật lần cuối vào"
 #. odoo-javascript
 #: code:addons/iap/static/src/action_buttons_widget/action_buttons_widget.xml:0
 msgid "Manage Service & Buy Credits"
-msgstr ""
+msgstr "Quản lý dịch vụ & mua tín dụng"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__name
@@ -208,17 +215,19 @@ msgid ""
 "One of the email alert recipients doesn't have an email address set. Users: "
 "%s"
 msgstr ""
+"Một trong những người nhận cảnh báo email hiện không có địa chỉ email nào. "
+"Người dùng: %s"
 
 #. module: iap
 #: model:ir.model.constraint,message:iap.constraint_iap_service_unique_technical_name
 msgid "Only one service can exist with a specific technical_name"
-msgstr ""
+msgstr "Chỉ có một dịch vụ có thể tồn tại với technical_name cụ thể"
 
 #. module: iap
 #. odoo-python
 #: code:addons/iap/models/iap_account.py:0
 msgid "Please set a positive email alert threshold."
-msgstr ""
+msgstr "Vui lòng đặt ngưỡng cảnh báo email lớn hơn 0."
 
 #. module: iap
 #: model:ir.model.fields.selection,name:iap.selection__iap_account__state__registered
@@ -233,7 +242,7 @@ msgstr "Dịch vụ"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_locked
 msgid "Service Locked"
-msgstr ""
+msgstr "Dịch vụ đã bị khoá"
 
 #. module: iap
 #. odoo-javascript

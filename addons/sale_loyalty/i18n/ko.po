@@ -23,8 +23,8 @@ msgstr ""
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
-msgid " - On product with the following taxes: %(taxes)s"
-msgstr "- 다음 세금이 포함된 품목: %(taxes)s"
+msgid " - On products with the following taxes: %(taxes)s"
+msgstr " - 다음 세금이 부과되는 제품: %(taxes)s"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
@@ -34,7 +34,7 @@ msgstr "<span class=\"fa fa-clipboard\"/> 복사"
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
 msgid "<strong>Loyalty Card</strong>"
-msgstr ""
+msgstr "<strong>멤버십 카드</strong>"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -124,15 +124,15 @@ msgid "Discard"
 msgstr "취소"
 
 #. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid "Discount %(desc)s%(tax_str)s"
+msgstr "할인 %(desc)s%(tax_str)s"
+
+#. module: sale_loyalty
 #: model:ir.ui.menu,name:sale_loyalty.menu_discount_loyalty_type_config
 msgid "Discount & Loyalty"
 msgstr "할인 및 적립"
-
-#. module: sale_loyalty
-#. odoo-python
-#: code:addons/sale_loyalty/models/sale_order.py:0
-msgid "Discount: %(desc)s%(tax_str)s"
-msgstr "할인: %(desc)s%(tax_str)s"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__display_name
@@ -215,7 +215,7 @@ msgstr "발행"
 #. odoo-javascript
 #: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
 msgid "Issued :"
-msgstr ""
+msgstr "발행 : "
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__write_uid
@@ -235,7 +235,7 @@ msgstr "최근 갱신 일자"
 #. odoo-javascript
 #: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
 msgid "Loyalty Card :"
-msgstr ""
+msgstr "적립 카드:"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_card
@@ -245,7 +245,7 @@ msgstr "적립 쿠폰"
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__loyalty_data
 msgid "Loyalty Data"
-msgstr ""
+msgstr "멤버십 데이터"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_program
@@ -284,7 +284,7 @@ msgstr "이 적립 프로그램용 카드가 없으므로 이 주문에 대해 �
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "No product is compatible with this promotion."
-msgstr ""
+msgstr "이 프로모션과 호환되는 제품이 없습니다."
 
 #. module: sale_loyalty
 #. odoo-python
@@ -531,7 +531,7 @@ msgstr "사용됨"
 #. odoo-javascript
 #: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
 msgid "Used :"
-msgstr ""
+msgstr "사용됨 :"
 
 #. module: sale_loyalty
 #. odoo-python

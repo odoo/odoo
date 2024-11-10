@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2024
-# Manon Rondou, 2024
 # Wil Odoo, 2024
+# Manon Rondou, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # 
 msgid ""
@@ -113,7 +113,7 @@ msgstr "%(name)s (kopie)(%(id)s)"
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "%(name)s Sequence cross dock"
-msgstr "%(name)s Sequence cross dock"
+msgstr "%(name)s Volgorde cross dock"
 
 #. module: stock
 #. odoo-python
@@ -125,7 +125,7 @@ msgstr "%(name)s Volgorde in"
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "%(name)s Sequence internal"
-msgstr "%(name)s Sequentie intern"
+msgstr "%(name)s Volgorde intern"
 
 #. module: stock
 #. odoo-python
@@ -142,14 +142,20 @@ msgstr "%(name)s Volgorde verpakking"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
+msgid "%(name)s Sequence picking"
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_warehouse.py:0
 msgid "%(name)s Sequence quality control"
-msgstr "%(name)s Kwaliteitscontrole van sequentie"
+msgstr "%(name)s Volgorde kwaliteitscontrole"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "%(name)s Sequence storage"
-msgstr "%(name)s Sequentieopslag"
+msgstr "%(name)s Volgorde opslag"
 
 #. module: stock
 #. odoo-python
@@ -691,7 +697,7 @@ msgstr "<span class=\"o_stat_text\">Volgende Transfer</span>"
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span class=\"o_stat_text\">On Hand</span>"
-msgstr "<span class=\"o_stat_text\">Beschikbaar</span>"
+msgstr "<span class=\"o_stat_text\">Beschikbare voorraad</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -1556,7 +1562,7 @@ msgstr "Barcode is geldig EAN"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_picking_batch
 msgid "Batch, Wave & Cluster Transfers"
-msgstr "Batch-, Wave- & Clusteroverdrachten"
+msgstr "Batch-, Wave- & Clusterpickings"
 
 #. module: stock
 #. odoo-python
@@ -2693,7 +2699,7 @@ msgid ""
 "quotations or confirmed manufacturing orders to resupply your stock."
 msgstr ""
 "Definieer een minimumvoorraadregel zodat Odoo automatisch offerteaanvragen "
-"of bevestigde productieorders creëert om je voorraad te herbevoorraden."
+"of bevestigde productieorders aanmakt om je voorraad te herbevoorraden."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -4920,7 +4926,7 @@ msgstr "Te late activiteiten"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Late Availability"
-msgstr "Laattijdige beschikbaarheid"
+msgstr "Te laat beschikbaar"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_late
@@ -5213,7 +5219,7 @@ msgstr "Partij- en serienummers worden afgedrukt op de leveringsbon"
 #: model:ir.actions.act_window,name:stock.action_production_lot_form
 #: model:ir.ui.menu,name:stock.menu_action_production_lot_form
 msgid "Lots / Serial Numbers"
-msgstr "Loten / Serienummers"
+msgstr "Partijen/Serienummers"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__lots_visible
@@ -5489,7 +5495,7 @@ msgstr "Verplaatsingen"
 #: model:ir.actions.act_window,name:stock.stock_move_action
 #: model:ir.ui.menu,name:stock.stock_move_menu
 msgid "Moves Analysis"
-msgstr "Verplaatsingsanalyse"
+msgstr "Verplaatsingen"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_move_line_action
@@ -5949,7 +5955,7 @@ msgstr "Kantoorstoel"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_product_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_simple
 msgid "On Hand"
-msgstr "Beschikbaar"
+msgstr "Beschikbare voorraad"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__product_qty
@@ -5975,7 +5981,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
 msgid "On hand:"
-msgstr "Beschikbaar:"
+msgstr "Beschikbare voorraad:"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__label_quantity__lots
@@ -6116,7 +6122,7 @@ msgstr "Opties"
 #: model_terms:ir.ui.view,arch_db:stock.replenishment_option_warning_view
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "Order"
-msgstr "Order"
+msgstr "Bestel"
 
 #. module: stock
 #. odoo-javascript
@@ -8339,12 +8345,6 @@ msgid "Sequence Prefix"
 msgstr "Reeks voorvoegsel"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_warehouse.py:0
-msgid "Sequence picking"
-msgstr "Reeks picking"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
 msgid "Serial Numbers"
 msgstr "Serienummers"
@@ -9535,24 +9535,18 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_dest_id
 msgid ""
-"This is the default destination location when you create a picking manually "
-"with this operation type. It is possible however to change it or that the "
-"routes put another location."
+"This is the default destination location when this operation is manually "
+"created. However, it is possible to change it afterwards or that the routes "
+"use another one by default."
 msgstr ""
-"Dit is de standaard bestemmingslocatie wanneer je handmatig een levering "
-"aanmaakt met dit bewerkingssoort. Het is mogelijk om dit te wijzigen of om "
-"de routes via een andere locatie te laten gaan."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_src_id
 msgid ""
-"This is the default source location when you create a picking manually with "
-"this operation type. It is possible however to change it or that the routes "
-"put another location."
+"This is the default source location when this operation is manually created."
+" However, it is possible to change it afterwards or that the routes use "
+"another one by default."
 msgstr ""
-"Dit is de standaard bronlocatie wanneer je handmatig een levering aanmaakt "
-"met dit bewerkingssoort. Het is mogelijk om dit te wijzigen of om de routes "
-"via een andere locatie te laten gaan."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__owner_id
@@ -11253,7 +11247,7 @@ msgid ""
 "package through this view. Try adding them to a batch picking and pack it "
 "there."
 msgstr ""
-"Via deze weergave kun je hoeveelheden van verschillende transfers niet "
+"Via deze weergave kun je hoeveelheden van verschillende verplaatsingen niet "
 "rechtstreeks in hetzelfde pakket verpakken. Probeer ze toe te voegen aan een"
 " batchpicking en verpak ze daar."
 

@@ -17,6 +17,7 @@
 # Tairi Tiimann, 2024
 # Siim Raasuke, 2024
 # JanaAvalah, 2024
+# Anna, 2024
 # 
 msgid ""
 msgstr ""
@@ -24,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: JanaAvalah, 2024\n"
+"Last-Translator: Anna, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,7 +48,7 @@ msgstr ""
 #. module: repair
 #: model:ir.actions.report,print_report_name:repair.action_report_repair_order
 msgid "('Repair Order - %s' % (object.name))"
-msgstr ""
+msgstr "('Repair Order - %s' % (object.name))"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -312,7 +313,13 @@ msgid "Company"
 msgstr "Ettevõte"
 
 #. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.repair_view_picking_type_form
+msgid "Component Destination Location"
+msgstr ""
+
+#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__location_id
+#: model_terms:ir.ui.view,arch_db:repair.repair_view_picking_type_form
 msgid "Component Source Location"
 msgstr "Komponentide võtmise asukoht"
 
@@ -403,36 +410,6 @@ msgstr "Klient"
 #: model:ir.model.fields,field_description:repair.field_repair_order__search_date_category
 msgid "Date Category"
 msgstr "Kuupäeva kategooria"
-
-#. module: repair
-#: model_terms:ir.ui.view,arch_db:repair.repair_view_picking_type_form
-msgid "Default Component Destination Location"
-msgstr ""
-
-#. module: repair
-#: model_terms:ir.ui.view,arch_db:repair.repair_view_picking_type_form
-msgid "Default Component Source Location"
-msgstr ""
-
-#. module: repair
-#: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_product_location_dest_id
-msgid "Default Product Destination Location"
-msgstr ""
-
-#. module: repair
-#: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_product_location_src_id
-msgid "Default Product Source Location"
-msgstr ""
-
-#. module: repair
-#: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_recycle_location_dest_id
-msgid "Default Recycle Destination Location"
-msgstr ""
-
-#. module: repair
-#: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_remove_location_dest_id
-msgid "Default Remove Destination Location"
-msgstr ""
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -908,6 +885,7 @@ msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_location_dest_id
+#: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_product_location_dest_id
 msgid "Product Destination Location"
 msgstr "Toote sihtkoht"
 
@@ -928,6 +906,7 @@ msgstr "Toote kogus"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_location_src_id
+#: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_product_location_src_id
 msgid "Product Source Location"
 msgstr ""
 
@@ -1005,6 +984,11 @@ msgid "Recycle"
 msgstr "Taaskasuta"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_recycle_location_dest_id
+msgid "Recycle Destination Location"
+msgstr ""
+
+#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__recycle_location_id
 msgid "Recycled Parts Destination Location"
 msgstr "Taaskasutatud varude sihtkoht"
@@ -1013,6 +997,11 @@ msgstr "Taaskasutatud varude sihtkoht"
 #: model:ir.model.fields.selection,name:repair.selection__stock_move__repair_line_type__remove
 msgid "Remove"
 msgstr "Eemalda"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_remove_location_dest_id
+msgid "Remove Destination Location"
+msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__parts_location_id
@@ -1352,11 +1341,9 @@ msgstr "See on remondimärkus."
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_product_location_dest_id
 msgid ""
-"This is the default destination location for product which come for the "
-"repair when you create a repair order with this operation type."
+"This is the default destination location for the product to be repaired in "
+"repair orders with this operation type."
 msgstr ""
-"See on vaike-sihtkoht toodetele, mis tulevad remonti, kui lood "
-"remonditellimuse selle toimingutüübiga."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_recycle_location_dest_id
@@ -1379,11 +1366,9 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_product_location_src_id
 msgid ""
-"This is the default source location for product which come for the repair "
-"when you create a repair order with this operation type."
+"This is the default source location for the product to be repaired in repair"
+" orders with this operation type."
 msgstr ""
-"See on vaike-lähtekoht toodetele, mis tulevad remonti, kui lood "
-"remonditellimuse selle toimingutüübiga."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__location_id

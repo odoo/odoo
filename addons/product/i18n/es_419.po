@@ -1024,7 +1024,7 @@ msgstr "Costo"
 #: model:ir.model.fields,field_description:product.field_product_product__cost_currency_id
 #: model:ir.model.fields,field_description:product.field_product_template__cost_currency_id
 msgid "Cost Currency"
-msgstr "Divisa del costo"
+msgstr "Moneda del costo"
 
 #. module: product
 #: model:ir.model,name:product.model_res_country_group
@@ -1138,7 +1138,7 @@ msgstr "Metros cúbicos"
 #: model:ir.model.fields,field_description:product.field_product_template__currency_id
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__currency_id
 msgid "Currency"
-msgstr "Divisa"
+msgstr "Moneda"
 
 #. module: product
 #: model:product.attribute.value,name:product.fabric_attribute_custom
@@ -2339,6 +2339,12 @@ msgid ""
 msgstr ""
 "En el producto %(product)s no puede transformar el atributo "
 "%(attribute_src)s en el atributo %(attribute_dest)s."
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/product_document_kanban/upload_button/upload_button.js:0
+msgid "Oops! '%(fileName)s' didn’t upload since its format isn’t allowed."
+msgstr "No fue posible subir \"%(fileName)s\" porque no es un formato compatible."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__original_id

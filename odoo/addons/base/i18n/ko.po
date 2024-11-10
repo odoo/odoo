@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Martin Trigaux, 2024
+# Wil Odoo, 2024
 # Sarah Park, 2024
 # Daye Jeong, 2024
-# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 14:42+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Daye Jeong, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1343,6 +1343,9 @@ msgid ""
 "Accounting Data for Türkiye Payroll Rules\n"
 "==========================================\n"
 msgstr ""
+"\n"
+"터키 급여 규칙용 회계 데이터\n"
+"==========================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ae_hr_payroll_account
@@ -1916,6 +1919,11 @@ msgid ""
 "- Balance Sheet\n"
 "- Profit and Loss\n"
 msgstr ""
+"\n"
+"터키 회계 보고서\n"
+"\n"
+"- 재무상태표\n"
+"- 손익계산서\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uk_reports
@@ -4746,6 +4754,9 @@ msgid ""
 "EFT Batch Payment\n"
 "=================\n"
 msgstr ""
+"\n"
+"EFT 일괄 결제\n"
+"=================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_escpos
@@ -5481,6 +5492,67 @@ msgid ""
 "* Unit of measures AFIP codes\n"
 "* Partners: Consumidor Final and AFIP\n"
 msgstr ""
+"\n"
+"기능\n"
+"----------\n"
+"\n"
+"이 모듈은 회사가 아르헨티나에서 AFIP (Administración Federal de Ingresos Públicos) 규정 및 지침에 따라 운영하는데 필요한 최소한의 구성을 통하여 아르헨티나 현지화를 하기 위한 회계 기능을 추가합니다.\n"
+"\n"
+"생산관리를 위해서는 다음 구성 단계를 따르십시오:\n"
+"\n"
+"1. 회사 항목으로 이동하여 VAT 번호 및 AFIP 책임 유형을 구성합니다.\n"
+"2. 회계 / 설정 항목으로 이동하여 사용하려는 계정과목표를 설정합니다.\n"
+"3. AFIP POS 정보를 고려하여 판매 분개장을 생성합니다.\n"
+"\n"
+"테스트용 데모 데이터:\n"
+"\n"
+"* 각각의 계정과목표가 설치된 각 AFIP 책임 주체 유형에 대해 하나씩 3개의 회사가 생성되었습니다. 테스트를 위해 귀하가 수정할 회사를 선택하십시오:\n"
+"\n"
+"  * (AR) Responsable Inscripto\n"
+"  * (AR) Exento\n"
+"  * (AR) Monotributo\n"
+"\n"
+"* 전체 회사에 대한 판매 분개장을 구성하여 테스트용 인쇄 및 청구서 내보내기 시행\n"
+"* “(AR) Responsable Inscripto” 회사 상에서 검증이 완료된 청구서 및 기타 문서 예시\n"
+"* 다양한 책임 주체 유형에 대한 협력업체 예시:\n"
+"\n"
+"  * ADHOC (IVA Responsable Inscripto)\n"
+"  * Servicios Globales Rosario (IVA Sujeto Exento)\n"
+"  * Gritti (Monotributo)\n"
+"  * Montana Sur. IVA Liberado in Zona Franca\n"
+"  * Barcelona food (Cliente del Exterior)\n"
+"  * Odoo (Proveedor del Exterior)\n"
+"\n"
+"강조 사항:\n"
+"\n"
+"* 계정과목표는 자동으로 설치되지 않으며 각 CoA 서식은 회사의 AFIP 책임 주체에 따라 다르므로 필요에 따라 CoA를 설치해야 합니다.\n"
+"* CoA를 설치할 때 판매 분개장이 생성되지 않으므로 분개장을 직접 구성해야 합니다.\n"
+"* 문서의 발행자와 수신자 및 관련 저널의 재정 책임 주체에 따라 청구서 생성 시 문서 유형이 적절하게 미리 선택됩니다..\n"
+"* CBU 계정 유형이 추가되었으며 CBU 유효성 검사도 추가되었습니다.\n"
+"\n"
+"\n"
+"기술\n"
+"---------\n"
+"\n"
+"이 모듈에서는 최종적으로 전자 청구서 모듈에 사용될 모델과 필드 전체를 추가합니다. 다음은 주요 기능에 대한 요약 내용입니다:\n"
+"\n"
+"마스터 데이터:\n"
+"\n"
+"* 계정과목표: 법인과 관련된 각 AFIP 책임 주체에 대해 하나씩 존재:\n"
+"\n"
+"  * Responsable Inscripto (RI)\n"
+"  * Exento (EX)\n"
+"  * Monotributo (Mono)\n"
+"\n"
+"* 아르헨티나 세금 및 계정 세금 그룹 (기존 금액 및 기타 유형의 VAT 세금)\n"
+"* AFIP 책임 주체 유형\n"
+"* 재정 상태 (세금 추정 목적)\n"
+"* 아르헨티나의 법적 문서 유형\n"
+"* 아르헨티나에서 유효한 신분증 유형\n"
+"* 법인, 자연인 및 기타에 대한 국가 AFIP 코드 및 국가 VAT 코드\n"
+"* 통화용 AFIP 코드\n"
+"* 측정 단위용 AFIP 코드\n"
+"* 협력업체: 최종 소비자 및 AFIP\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec
@@ -7055,6 +7127,8 @@ msgid ""
 "\n"
 "Modelo 303: Extra fields regarding Rectificación\n"
 msgstr ""
+"\n"
+"모델 303: 정정 관련 추가 필드\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_recruitment_integration_skills_monster
@@ -8580,6 +8654,20 @@ msgid ""
 "\n"
 "5.3: Update taxes starting Q4 2024 according to BOE-A-2024-12944 (Royal Decree 4/2024) https://www.boe.es/buscar/act.php?id=BOE-A-2024-12944\n"
 msgstr ""
+"\n"
+"스페인 계정과목표 (PGCE 2008).\n"
+"========================================\n"
+"\n"
+"    * Defines the following chart of account templates:\n"
+"        * Spanish general chart of accounts 2008\n"
+"        * Spanish general chart of accounts 2008 for small and medium companies\n"
+"        * Spanish general chart of accounts 2008 for associations\n"
+"    * Defines templates for sale and purchase VAT\n"
+"    * Defines tax templates\n"
+"    * Defines fiscal positions for spanish fiscal legislation\n"
+"    * Defines tax reports mod 111, 115 and 303\n"
+"\n"
+"5.3: Update taxes starting Q4 2024 according to BOE-A-2024-12944 (Royal Decree 4/2024) https://www.boe.es/buscar/act.php?id=BOE-A-2024-12944\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_renting
@@ -8646,6 +8734,8 @@ msgid ""
 "\n"
 "Support for Indian TDS (Tax Deducted at Source) for Payment.\n"
 msgstr ""
+"\n"
+"인도 TDS (원천 공제 세금) 결제 지원.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_withholding
@@ -8808,6 +8898,8 @@ msgid ""
 "\n"
 "The UBL PINT e-invoicing format for Australia & New Zealand is based on the Peppol International (PINT) model for Billing.\n"
 msgstr ""
+"\n"
+"호주 및 뉴질랜드의 UBL PINT 전자 청구서 형식은 청구용 국제 Peppol (PINT) 모델을 기반으로 합니다.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jp_ubl_pint
@@ -8833,6 +8925,8 @@ msgid ""
 "\n"
 "The UBL PINT e-invoicing format for Singapore is based on the Peppol International (PINT) model for Billing.\n"
 msgstr ""
+"\n"
+"싱가포르의 UBL PINT 전자 청구서 형식은 청구용 국제 Peppol (PINT) 모델을 기반으로 합니다.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_repair
@@ -9409,6 +9503,12 @@ msgid ""
 "- Chart of accounts\n"
 "- Taxes\n"
 msgstr ""
+"\n"
+"이라크의 회계 계정과목표를 관리하기 위한 Odoo 기본 모듈입니다.\n"
+"==============================================================================\n"
+"이라크 회계 기본 계정과목표 및 현지화.\n"
+"활성화:\n"
+"- 계정과목표\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jo
@@ -9569,6 +9669,17 @@ msgid ""
 "- Taxes\n"
 "- Tax Report\n"
 msgstr ""
+"\n"
+"터키의 회계 계정과목표를 관리하기 위한 Odoo 기본 모듈입니다.\n"
+"==========================================================================\n"
+"\n"
+"터키 회계 기본 계정과목표 및 현지화\n"
+"-------------------------------------------------\n"
+"활성화:\n"
+"\n"
+"- 계정과목표\n"
+"- 세금\n"
+"- 세무 보고서\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mu_account
@@ -11331,6 +11442,8 @@ msgid ""
 "\n"
 "This module integrates with UrbanPiper to receive and manage orders from Swiggy.\n"
 msgstr ""
+"\n"
+"이 모듈은 UrbanPiper와 통합되어 Swiggy에서 주문을 수신하고 관리합니다..\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_urban_piper_ubereats
@@ -11338,6 +11451,8 @@ msgid ""
 "\n"
 "This module integrates with UrbanPiper to receive and manage orders from Uber Eats.\n"
 msgstr ""
+"\n"
+"이 모듈은 UrbanPiper와 통합되어 Uber Eats에서 주문을 수신하고 관리합니다..\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_urban_piper_zomato
@@ -11717,6 +11832,9 @@ msgid ""
 "It installs sale capabilities, front-end flow, eCommerce, questions and\n"
 "automatic lead generation, full Online support, sms and whatsapp support, ...\n"
 msgstr ""
+"\n"
+"이 모듈은 Odoo의 주요 행사 흐름을 프론트엔드와 백엔드 양쪽에서 모두 테스트합니다. 영업 기능, 프론트엔드 흐름, 이커머스, 질문 및 자동 영업제안 생성, \n"
+"모든 온라인 지원 항목, SMS 및 Whatsapp 지원 항목 등을 설치합니다.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_main_flows
@@ -11864,6 +11982,12 @@ msgid ""
 "- Income tax calculations\n"
 "- Stamp tax deductions\n"
 msgstr ""
+"\n"
+"터키 급여 및 세금 규칙\n"
+"=============================\n"
+"- 고용 및 실업 관련 사회 보장 보험료 및 보험금 계산\n"
+"- 소득세 계산\n"
+"- 인지대 세금 공제\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ua
@@ -12465,6 +12589,8 @@ msgid ""
 "'%%(field)s'. Each property need at least 'name', 'type' and 'string' "
 "attribute."
 msgstr ""
+"'%(value)s' 항목은 '%%(field)s' 에 대해 유효한 속성 값이 아닙니다. 각 속성에는 최소한 '이름', '유형' 및 "
+"'문자열' 속성이 있어야 합니다."
 
 #. module: base
 #. odoo-python
@@ -12473,6 +12599,8 @@ msgid ""
 "'%(value)s' does not seem to be a valid Selection value for "
 "'%(label_property)s' (subfield of '%%(field)s' field)."
 msgstr ""
+"'%(value)s' 항목은 '%(label_property)s' ('%%(field)s' 하위 항목)에 대해 유효하지 않은 선택 "
+"값입니다."
 
 #. module: base
 #. odoo-python
@@ -12481,6 +12609,8 @@ msgid ""
 "'%(value)s' does not seem to be a valid Tag value for '%(label_property)s' "
 "(subfield of '%%(field)s' field)."
 msgstr ""
+"'%(value)s' 항목은 '%(label_property)s' ('%%(field)s' 하위 항목)에 대해 유효하지 않은 태그 "
+"값입니다."
 
 #. module: base
 #. odoo-python
@@ -12489,6 +12619,7 @@ msgid ""
 "'%(value)s' does not seem to be an float for field '%(label_property)s' "
 "property (subfield of '%%(field)s' field)."
 msgstr ""
+"'%(value)s' 항목은 '%(label_property)s' ('%%(field)s' 하위 항목)에 대한 부동 소수점이 아닙니다."
 
 #. module: base
 #. odoo-python
@@ -12497,6 +12628,7 @@ msgid ""
 "'%(value)s' does not seem to be an integer for field '%(label_property)s' "
 "property (subfield of '%%(field)s' field)."
 msgstr ""
+"'%(value)s' 항목은 '%(label_property)s' ('%%(field)s' 하위 항목)에 대한 정수가 아닙니다."
 
 #. module: base
 #. odoo-python
@@ -13201,6 +13333,12 @@ msgstr "<strong>전화</strong>"
 msgid ""
 "<strong>Please enter your password to confirm you own this account</strong>"
 msgstr "<strong>해당 계정의 소유자 확인을 위해 비밀번호를 입력하십시오.</strong>"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.res_users_identitycheck_view_form
+msgid ""
+"<strong>Please confirm your identity by entering your password</strong>"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -17296,7 +17434,7 @@ msgstr "호주"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_anz_ubl_pint
 msgid "Australia & New Zealand - UBL PINT"
-msgstr ""
+msgstr "호주 및 뉴질랜드 - UBL PINT"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_au
@@ -18470,7 +18608,7 @@ msgstr "재고와 회계를 서로 연결"
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_timesheet
 msgid "Bridge created to add computation of timesheet to subscription"
-msgstr ""
+msgstr "구독에 작업시간표 계산을 추가하도록 브리지 생성"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_account_asset
@@ -22382,7 +22520,7 @@ msgstr "EET"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nz_eft
 msgid "EFT Batch Payment"
-msgstr ""
+msgstr "EFT 일괄 결제"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_escpos
@@ -23546,7 +23684,7 @@ msgstr "소셜 행사"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_event_full_enterprise
 msgid "Event Test (all modules)"
-msgstr ""
+msgstr "행사 테스트 (전체 모듈)"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_exhibitor
@@ -23822,7 +23960,7 @@ msgstr "결제 내역을 CPA 005 AFT 파일로 내보내기"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_nz_eft
 msgid "Export payments as EFT files"
-msgstr ""
+msgstr "결제를 EFT 파일로 내보내기"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_us_payment_nacha
@@ -26778,7 +26916,7 @@ msgstr "인도 - 재고 보고서(GST)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_withholding_payment
 msgid "Indian - TDS For Payment"
-msgstr ""
+msgstr "인도 - 결제용 TDS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_reports_tds_tcs
@@ -27542,7 +27680,7 @@ msgstr "이라크"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_iq
 msgid "Iraq - Accounting"
-msgstr ""
+msgstr "이라크 - 회계"
 
 #. module: base
 #: model:res.country,name:base.ie
@@ -34030,12 +34168,12 @@ msgstr "POS Stripe"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_urban_piper_swiggy
 msgid "POS UrbanPiper - Swiggy"
-msgstr ""
+msgstr "POS UrbanPiper - Swiggy"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_urban_piper_ubereats
 msgid "POS UrbanPiper - Uber Eats"
-msgstr ""
+msgstr "POS UrbanPiper - Uber Eats"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_urban_piper_zomato
@@ -35699,7 +35837,7 @@ msgstr "프로젝트 판매 구독"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_timesheet
 msgid "Project Sales Subscription Timesheet"
-msgstr ""
+msgstr "프로젝트 판매 구독 작업기록"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_stock
@@ -38500,7 +38638,7 @@ msgstr "싱가포르 - 회계 보고서"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sg_ubl_pint
 msgid "Singapore - UBL PINT"
-msgstr ""
+msgstr "싱가포르 - UBL PINT"
 
 #. module: base
 #: model:res.country,name:base.sx
@@ -38774,7 +38912,7 @@ msgstr "스페인 - 회계 (PGCE 2008) 보고서"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_reports_2024
 msgid "Spain - Accounting Reports (2024 Update)"
-msgstr ""
+msgstr "스페인 - 회계 보고서 (2024 업데이트)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_sale_amazon
@@ -40098,6 +40236,14 @@ msgstr "API 키의 기간이 올바르지 않습니다."
 #: code:addons/base/models/res_users.py:0
 msgid "The API key must have an expiration date"
 msgstr "API 키에는 지정된 만료 날짜가 있어야 합니다. "
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+msgid ""
+"The action \"%s\" cannot be set as the home action because it requires a "
+"record to be selected beforehand."
+msgstr "\"%s\" 작업은 먼저 레코드를 선택해야 하므로 홈 작업으로 설정할 수 없습니다."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_bank__country_code
@@ -42008,22 +42154,22 @@ msgstr "튀르키예"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_tr
 msgid "Türkiye - Accounting"
-msgstr ""
+msgstr "터키 - 회계"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_tr_reports
 msgid "Türkiye - Accounting Reports"
-msgstr ""
+msgstr "터키 - 회계 보고서"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_tr_hr_payroll
 msgid "Türkiye - Payroll"
-msgstr ""
+msgstr "터키 - 급여"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_tr_hr_payroll_account
 msgid "Türkiye - Payroll with Accounting"
-msgstr ""
+msgstr "터키 - 회계 및 급여"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_U
@@ -42262,7 +42408,7 @@ msgstr "이 시스템에서 Wkhtmltopdf를 찾을 수 없습니다. PDF를 만�
 msgid ""
 "Unable to import'%%(field)s' Properties field as a whole, target individual "
 "property instead."
-msgstr ""
+msgstr "전체 '%%(field)s' 속성 필드를 가져올 수 없습니다. 대신 개별 속성을 대상으로 지정하세요."
 
 #. module: base
 #. odoo-python
@@ -42499,6 +42645,7 @@ msgid ""
 "Unknown value '%(value)s' for boolean '%(label_property)s' property "
 "(subfield of '%%(field)s' field)."
 msgstr ""
+"부울 '%(label_property)s' 속성 ('%%(field)s' 하위 항목)에 대해 알 수 없는 값 '%(value)s'"
 
 #. module: base
 #. odoo-python

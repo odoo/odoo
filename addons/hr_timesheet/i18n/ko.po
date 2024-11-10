@@ -567,7 +567,7 @@ msgstr "잘못된 값: %s"
 msgid ""
 "Keep track of your working hours by project every day and bill your "
 "customers for that time."
-msgstr ""
+msgstr "매일 프로젝트별로 작업 시간을 추적하고 해당 시간에 대해 고객에게 청구하세요."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -685,7 +685,7 @@ msgstr "데이터가 아직 없습니다."
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
 msgid "No timesheets found. Let's create one!"
-msgstr ""
+msgstr "작업 기록이 없습니다. 새로 작성해 주세요."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -862,8 +862,8 @@ msgstr "설정"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_report_subtask
-msgid "Sub-Task:"
-msgstr "하위 작업:"
+msgid "Sub-Task of '<t t-out=\"title\"/>': "
+msgstr ""
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -1283,12 +1283,16 @@ msgstr "총 소요 일수"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__total_hours_spent
-#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__total_hours_spent
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Total Time Spent"
 msgstr "총 소요 시간"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__total_hours_spent
+msgid "Hours By Task (Including Subtasks)"
+msgstr "작업별 시간 (하위 작업 포함)"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets

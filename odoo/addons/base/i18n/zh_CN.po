@@ -6,10 +6,10 @@
 # Jeffery CHEN <jeffery9@gmail.com>, 2024
 # Martin Trigaux, 2024
 # Chill Liao <chill421@qq.com>, 2024
-# Chloe Wang, 2024
+# Wil Odoo, 2024
 # Odoo哥 <vnsoft.he@gmail.com>, 2024
 # Raymond Yu <cl_yu@hotmail.com>, 2024
-# Wil Odoo, 2024
+# Chloe Wang, 2024
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 14:42+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Chloe Wang, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1908,6 +1908,11 @@ msgid ""
 "- Balance Sheet\n"
 "- Profit and Loss\n"
 msgstr ""
+"\n"
+"土耳其会计报告\n"
+"\n"
+"- 资产负债表\n"
+"- 损益表\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uk_reports
@@ -3298,7 +3303,7 @@ msgstr ""
 "比利时工资规则。\n"
 "======================\n"
 "\n"
-"    * 雇员详情\n"
+"    * 员工详情\n"
 "    * 员工合同\n"
 "    * 基于护照的合同\n"
 "    * 津贴/扣款\n"
@@ -4727,6 +4732,9 @@ msgid ""
 "EFT Batch Payment\n"
 "=================\n"
 msgstr ""
+"\n"
+"EFT Batch Payment\n"
+"=================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_escpos
@@ -5458,6 +5466,67 @@ msgid ""
 "* Unit of measures AFIP codes\n"
 "* Partners: Consumidor Final and AFIP\n"
 msgstr ""
+"\n"
+"Functional\n"
+"----------\n"
+"\n"
+"This module add accounting features for the Argentinean localization, which represent the minimal configuration needed for a company  to operate in Argentina and under the AFIP (Administración Federal de Ingresos Públicos) regulations and guidelines.\n"
+"\n"
+"Follow the next configuration steps for Production:\n"
+"\n"
+"1. Go to your company and configure your VAT number and AFIP Responsibility Type\n"
+"2. Go to Accounting / Settings and set the Chart of Account that you will like to use.\n"
+"3. Create your Sale journals taking into account AFIP POS info.\n"
+"\n"
+"Demo data for testing:\n"
+"\n"
+"* 3 companies were created, one for each AFIP responsibility type with the respective Chart of Account installed. Choose the company that fix you in order to make tests:\n"
+"\n"
+"  * (AR) Responsable Inscripto\n"
+"  * (AR) Exento\n"
+"  * (AR) Monotributo\n"
+"\n"
+"* Journal sales configured to Pre printed and Expo invoices in all companies\n"
+"* Invoices and other documents examples already validated in “(AR) Responsable Inscripto” company\n"
+"* Partners example for the different responsibility types:\n"
+"\n"
+"  * ADHOC (IVA Responsable Inscripto)\n"
+"  * Servicios Globales (IVA Sujeto Exento)\n"
+"  * Gritti (Monotributo)\n"
+"  * Montana Sur. IVA Liberado in Zona Franca\n"
+"  * Barcelona food (Cliente del Exterior)\n"
+"  * Odoo (Proveedor del Exterior)\n"
+"\n"
+"Highlights:\n"
+"\n"
+"* Chart of account will not be automatically installed, each CoA Template depends on the AFIP Responsibility of the company, you will need to install the CoA for your needs.\n"
+"* No sales journals will be generated when installing a CoA, you will need to configure your journals manually.\n"
+"* The Document type will be properly pre selected when creating an invoice depending on the fiscal responsibility of the issuer and receiver of the document and the related journal.\n"
+"* A CBU account type has been added and also CBU Validation\n"
+"\n"
+"\n"
+"Technical\n"
+"---------\n"
+"\n"
+"This module adds both models and fields that will be eventually used for the electronic invoice module. Here is a summary of the main features:\n"
+"\n"
+"Master Data:\n"
+"\n"
+"* Chart of Account: one for each AFIP responsibility that is related to a legal entity:\n"
+"\n"
+"  * Responsable Inscripto (RI)\n"
+"  * Exento (EX)\n"
+"  * Monotributo (Mono)\n"
+"\n"
+"* Argentinean Taxes and Account Tax Groups (VAT taxes with the existing aliquots and other types)\n"
+"* AFIP Responsibility Types\n"
+"* Fiscal Positions (in order to map taxes)\n"
+"* Legal Documents Types in Argentina\n"
+"* Identification Types valid in Argentina.\n"
+"* Country AFIP codes and Country VAT codes for legal entities, natural persons and others\n"
+"* Currency AFIP codes\n"
+"* Unit of measures AFIP codes\n"
+"* Partners: Consumidor Final and AFIP\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec
@@ -6355,7 +6424,7 @@ msgstr ""
 "肯尼亚工资规则。\n"
 "=====================\n"
 "\n"
-"    * 雇员详情\n"
+"    * 员工详情\n"
 "    * 员工合同\n"
 "    * 津贴/扣款\n"
 "    * 允许配置基本工资/毛工资/净工资\n"
@@ -6437,7 +6506,7 @@ msgstr ""
 "立陶宛工资规则。\n"
 "=========================\n"
 "\n"
-"    * 雇员详情\n"
+"    * 员工详情\n"
 "    * 员工合同\n"
 "    * 基于护照的合同\n"
 "    * 津贴/扣款\n"
@@ -7029,6 +7098,8 @@ msgid ""
 "\n"
 "Modelo 303: Extra fields regarding Rectificación\n"
 msgstr ""
+"\n"
+"Modelo 303: Extra fields regarding Rectificación\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_recruitment_integration_skills_monster
@@ -7530,7 +7601,7 @@ msgstr ""
 "摩洛哥工资规则。\n"
 "=========================\n"
 "\n"
-"    * 雇员详情\n"
+"    * 员工详情\n"
 "    * 员工合同\n"
 
 #. module: base
@@ -7741,7 +7812,7 @@ msgstr ""
 "人力资源组织结构图小工具\n"
 "=======================\n"
 "\n"
-"该模块通过组织结构图扩展雇员表单。\n"
+"该模块通过组织结构图扩展员工表单。\n"
 "(N+1、N+2、直接下属）\n"
 
 #. module: base
@@ -8031,7 +8102,7 @@ msgstr ""
 "波兰工资规则。\n"
 "=========================\n"
 "\n"
-"    * 雇员详情\n"
+"    * 员工详情\n"
 "    * 员工合同\n"
 "    * 基于护照的合同\n"
 "    * 津贴/扣款\n"
@@ -8488,7 +8559,7 @@ msgstr ""
 "斯洛伐克工资规则。\n"
 "=========================\n"
 "\n"
-"    * 雇员详情\n"
+"    * 员工详情\n"
 "    * 员工合同\n"
 "    * 基于护照的合同\n"
 "    * 津贴/扣款\n"
@@ -8547,6 +8618,20 @@ msgid ""
 "\n"
 "5.3: Update taxes starting Q4 2024 according to BOE-A-2024-12944 (Royal Decree 4/2024) https://www.boe.es/buscar/act.php?id=BOE-A-2024-12944\n"
 msgstr ""
+"\n"
+"Spanish charts of accounts (PGCE 2008).\n"
+"========================================\n"
+"\n"
+"    * Defines the following chart of account templates:\n"
+"        * Spanish general chart of accounts 2008\n"
+"        * Spanish general chart of accounts 2008 for small and medium companies\n"
+"        * Spanish general chart of accounts 2008 for associations\n"
+"    * Defines templates for sale and purchase VAT\n"
+"    * Defines tax templates\n"
+"    * Defines fiscal positions for spanish fiscal legislation\n"
+"    * Defines tax reports mod 111, 115 and 303\n"
+"\n"
+"5.3: Update taxes starting Q4 2024 according to BOE-A-2024-12944 (Royal Decree 4/2024) https://www.boe.es/buscar/act.php?id=BOE-A-2024-12944\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_renting
@@ -8613,6 +8698,8 @@ msgid ""
 "\n"
 "Support for Indian TDS (Tax Deducted at Source) for Payment.\n"
 msgstr ""
+"\n"
+"支持印度 TDS（源头扣税）。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_withholding
@@ -8776,6 +8863,8 @@ msgid ""
 "\n"
 "The UBL PINT e-invoicing format for Australia & New Zealand is based on the Peppol International (PINT) model for Billing.\n"
 msgstr ""
+"\n"
+"澳洲及新西兰的UBL PINT电子发票格式，是基于Peppol International (PINT) 的账单模型。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jp_ubl_pint
@@ -8801,6 +8890,8 @@ msgid ""
 "\n"
 "The UBL PINT e-invoicing format for Singapore is based on the Peppol International (PINT) model for Billing.\n"
 msgstr ""
+"\n"
+"新加坡的 UBL PINT 电子发票格式基于 Peppol 国际（PINT）账单模式。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_repair
@@ -9377,6 +9468,13 @@ msgid ""
 "- Chart of accounts\n"
 "- Taxes\n"
 msgstr ""
+"\n"
+"This is the base module to manage the accounting chart for Iraq in Odoo.\n"
+"==============================================================================\n"
+"Iraq accounting basic charts and localization.\n"
+"Activates:\n"
+"- Chart of accounts\n"
+"- Taxes\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jo
@@ -9536,6 +9634,17 @@ msgid ""
 "- Taxes\n"
 "- Tax Report\n"
 msgstr ""
+"\n"
+"This is the base module to manage the accounting chart for Türkiye in Odoo\n"
+"==========================================================================\n"
+"\n"
+"Türkiye accounting basic charts and localizations\n"
+"-------------------------------------------------\n"
+"Activates:\n"
+"\n"
+"- Chart of Accounts\n"
+"- Taxes\n"
+"- Tax Report\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mu_account
@@ -11304,6 +11413,8 @@ msgid ""
 "\n"
 "This module integrates with UrbanPiper to receive and manage orders from Swiggy.\n"
 msgstr ""
+"\n"
+"该模块与 UrbanPiper 整合，用于接收和管理来自 Swiggy 的订单。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_urban_piper_ubereats
@@ -11311,6 +11422,8 @@ msgid ""
 "\n"
 "This module integrates with UrbanPiper to receive and manage orders from Uber Eats.\n"
 msgstr ""
+"\n"
+"该模块与 UrbanPiper 整合，用于接收和管理来自 Uber Eats 的订单。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_urban_piper_zomato
@@ -11690,6 +11803,10 @@ msgid ""
 "It installs sale capabilities, front-end flow, eCommerce, questions and\n"
 "automatic lead generation, full Online support, sms and whatsapp support, ...\n"
 msgstr ""
+"\n"
+"该模块将测试 Odoo 前端和后台的主要活动流程。\n"
+"它安装了销售功能、前端流程、电子商务、问题和\n"
+"自动生成潜在客户、完整在线支持、短信和 Whatsapp 支持，...\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_main_flows
@@ -11837,6 +11954,12 @@ msgid ""
 "- Income tax calculations\n"
 "- Stamp tax deductions\n"
 msgstr ""
+"\n"
+"Türkiye Payroll and Tax Rules\n"
+"=============================\n"
+"- Social Security Premium/Insurance calculations for employment and unemployment\n"
+"- Income tax calculations\n"
+"- Stamp tax deductions\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ua
@@ -12441,6 +12564,7 @@ msgid ""
 "'%%(field)s'. Each property need at least 'name', 'type' and 'string' "
 "attribute."
 msgstr ""
+"'%(value)s' 不像是字段 '%%(field)s' 的有效属性值。每个字段至少需要 'name'、'type' 和 'string' 属性。"
 
 #. module: base
 #. odoo-python
@@ -12448,7 +12572,7 @@ msgstr ""
 msgid ""
 "'%(value)s' does not seem to be a valid Selection value for "
 "'%(label_property)s' (subfield of '%%(field)s' field)."
-msgstr ""
+msgstr "'%(value)s' 不像是 '%(label_property)s' ('%%(field)s' 下级字段)的有效选择值。"
 
 #. module: base
 #. odoo-python
@@ -12456,7 +12580,7 @@ msgstr ""
 msgid ""
 "'%(value)s' does not seem to be a valid Tag value for '%(label_property)s' "
 "(subfield of '%%(field)s' field)."
-msgstr ""
+msgstr "'%(value)s' 不像是 '%(label_property)s' ('%%(field)s' 下级字段)的一个有效标签。"
 
 #. module: base
 #. odoo-python
@@ -12464,7 +12588,7 @@ msgstr ""
 msgid ""
 "'%(value)s' does not seem to be an float for field '%(label_property)s' "
 "property (subfield of '%%(field)s' field)."
-msgstr ""
+msgstr "'%(value)s' 不像是字段 '%(label_property)s'  ('%%(field)s'下级字段)的浮点数属性。"
 
 #. module: base
 #. odoo-python
@@ -12472,7 +12596,7 @@ msgstr ""
 msgid ""
 "'%(value)s' does not seem to be an integer for field '%(label_property)s' "
 "property (subfield of '%%(field)s' field)."
-msgstr ""
+msgstr "'%(value)s' 不像是字段%(label_property)s('%%(field)s'下级字段)的整数属性。"
 
 #. module: base
 #. odoo-python
@@ -13168,6 +13292,12 @@ msgstr "<strong>电话</strong>"
 msgid ""
 "<strong>Please enter your password to confirm you own this account</strong>"
 msgstr "<strong>请输入密码以确认您拥有此帐户</strong>"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.res_users_identitycheck_view_form
+msgid ""
+"<strong>Please confirm your identity by entering your password</strong>"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -14501,7 +14631,7 @@ msgstr "显著增加了联系人的地图视图"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_hr
 msgid "Adds specific fields to Employees for Mexican companies."
-msgstr "为墨西哥公司的雇员添加特定字段。"
+msgstr "为墨西哥公司的员工添加特定字段。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_ldap
@@ -17214,7 +17344,7 @@ msgstr "澳大利亚"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_anz_ubl_pint
 msgid "Australia & New Zealand - UBL PINT"
-msgstr ""
+msgstr "澳大利亚和新西兰 - UBL PINT"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_au
@@ -18387,7 +18517,7 @@ msgstr "库存和会计之间的桥梁"
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_timesheet
 msgid "Bridge created to add computation of timesheet to subscription"
-msgstr ""
+msgstr "创建订阅中的工时表计算关联"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_account_asset
@@ -20205,7 +20335,7 @@ msgstr "不能建立没有电子邮件地址的联系人！"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__count
 msgid "Count (Incl. Archived)"
-msgstr "计数(包括归档)"
+msgstr "数量(包括归档)"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_country
@@ -22275,7 +22405,7 @@ msgstr "EET"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nz_eft
 msgid "EFT Batch Payment"
-msgstr ""
+msgstr "电子转账批量付款"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_escpos
@@ -22548,7 +22678,7 @@ msgstr "员工小时成本"
 #: model:ir.module.module,shortdesc:base.module_hr_hourly_cost
 #: model:ir.module.module,summary:base.module_hr_hourly_cost
 msgid "Employee Hourly Wage"
-msgstr "雇员小时工资"
+msgstr "员工小时工资"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_presence
@@ -23438,7 +23568,7 @@ msgstr "活动社交"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_event_full_enterprise
 msgid "Event Test (all modules)"
-msgstr ""
+msgstr "活动测试（所有模块）"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_exhibitor
@@ -23712,7 +23842,7 @@ msgstr "将付款导出为 CPA 005 AFT 文件"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_nz_eft
 msgid "Export payments as EFT files"
-msgstr ""
+msgstr "将付款导出为 EFT 文件"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_us_payment_nacha
@@ -23893,7 +24023,7 @@ msgstr "失败次数"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_demo_failure_wizard__failures_count
 msgid "Failures Count"
-msgstr "故障计数"
+msgstr "故障数量"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_data_module
@@ -26513,12 +26643,12 @@ msgstr "应用内采购"
 #: model_terms:ir.ui.view,arch_db:base.view_currency_search
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "Inactive"
-msgstr "未启用的"
+msgstr "无效的"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_search
 msgid "Inactive Users"
-msgstr "未启用的用户"
+msgstr "无效的用户"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__include
@@ -26653,7 +26783,7 @@ msgstr "印度- 库存报表(GST)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_withholding_payment
 msgid "Indian - TDS For Payment"
-msgstr ""
+msgstr "印度 - 付款 TDS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_reports_tds_tcs
@@ -27410,7 +27540,7 @@ msgstr "伊拉克"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_iq
 msgid "Iraq - Accounting"
-msgstr ""
+msgstr "伊拉克 - 会计"
 
 #. module: base
 #: model:res.country,name:base.ie
@@ -27846,7 +27976,7 @@ msgstr "克罗地亚库纳"
 #. module: base
 #: model:res.currency,currency_subunit_label:base.TRY
 msgid "Kurus"
-msgstr ""
+msgstr "库鲁"
 
 #. module: base
 #: model:res.country,name:base.kw
@@ -27872,7 +28002,7 @@ msgstr "Kwajalein"
 #. module: base
 #: model:res.currency,currency_unit_label:base.AOA
 msgid "Kwanza"
-msgstr ""
+msgstr "安哥拉宽扎"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.MMK
@@ -27917,7 +28047,7 @@ msgstr "LGPL 版本 3"
 #. module: base
 #: model:res.currency,currency_subunit_label:base.MVR
 msgid "Laari"
-msgstr ""
+msgstr "格鲁吉亚拉里"
 
 #. module: base
 #. odoo-python
@@ -28714,7 +28844,7 @@ msgstr "莱索托马洛蒂"
 #. module: base
 #: model:res.currency,currency_subunit_label:base.AMD
 msgid "Luma"
-msgstr ""
+msgstr "Luma"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_lunch
@@ -33888,17 +34018,17 @@ msgstr "POS 与Stripe支付"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_urban_piper_swiggy
 msgid "POS UrbanPiper - Swiggy"
-msgstr ""
+msgstr "POS UrbanPiper - Swiggy"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_urban_piper_ubereats
 msgid "POS UrbanPiper - Uber Eats"
-msgstr ""
+msgstr "POS UrbanPiper - Uber Eats"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_urban_piper_zomato
 msgid "POS UrbanPiper - Zomato"
-msgstr ""
+msgstr "POS UrbanPiper - Zomato"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_viva_wallet
@@ -34166,7 +34296,7 @@ msgstr "派沙"
 #. module: base
 #: model:res.currency,currency_subunit_label:base.INR
 msgid "Paise"
-msgstr ""
+msgstr "派士"
 
 #. module: base
 #: model:res.country,name:base.pk
@@ -34269,7 +34399,7 @@ msgstr "参数存储"
 #: model:ir.model.fields,field_description:base.field_ir_model_inherit__parent_id
 #: model:ir.model.fields,field_description:base.field_res_company__parent_ids
 msgid "Parent"
-msgstr "父级"
+msgstr "上级"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_embedded_actions__parent_action_id
@@ -34290,7 +34420,7 @@ msgstr "上级公司"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_inherit__parent_field_id
 msgid "Parent Field"
-msgstr "父字段"
+msgstr "上级字段"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__parent_id
@@ -34303,7 +34433,7 @@ msgstr "上级菜单"
 #: model:ir.model.fields,field_description:base.field_res_company__parent_path
 #: model:ir.model.fields,field_description:base.field_res_partner_category__parent_path
 msgid "Parent Path"
-msgstr "父路径"
+msgstr "上级路径"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__parent_name
@@ -35557,7 +35687,7 @@ msgstr "项目销售订阅"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_timesheet
 msgid "Project Sales Subscription Timesheet"
-msgstr ""
+msgstr "项目销售订阅时间表"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_stock
@@ -35776,12 +35906,12 @@ msgstr "波多黎各"
 #. module: base
 #: model:res.currency,currency_unit_label:base.BWP
 msgid "Pula"
-msgstr ""
+msgstr "博茨瓦纳普拉"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.AFN
 msgid "Puls"
-msgstr ""
+msgstr "Puls"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_purchase
@@ -35856,7 +35986,7 @@ msgstr "推送通知以专题监听者"
 #. module: base
 #: model:res.currency,currency_subunit_label:base.MMK
 msgid "Pya"
-msgstr ""
+msgstr "Pya"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__code
@@ -35908,7 +36038,7 @@ msgstr "卡塔尔 - 会计"
 #. module: base
 #: model:res.currency,currency_subunit_label:base.ALL
 msgid "Qindarke"
-msgstr ""
+msgstr "Qindarke"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_manufacturing_quality
@@ -37451,12 +37581,12 @@ msgstr "消毒账号"
 #. module: base
 #: model:res.currency,currency_subunit_label:base.RWF
 msgid "Santime"
-msgstr ""
+msgstr "Santime"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.LVL
 msgid "Santims"
-msgstr ""
+msgstr "Santims"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.THB
@@ -37934,7 +38064,7 @@ msgstr ""
 #. module: base
 #: model:res.currency,currency_subunit_label:base.WST
 msgid "Sene"
-msgstr ""
+msgstr "Sene"
 
 #. module: base
 #: model:res.country,name:base.sn
@@ -38348,7 +38478,7 @@ msgstr "Singapore - Accounting Reports"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sg_ubl_pint
 msgid "Singapore - UBL PINT"
-msgstr ""
+msgstr "新加坡 - UBL PINT"
 
 #. module: base
 #: model:res.country,name:base.sx
@@ -38621,7 +38751,7 @@ msgstr "Spain - Accounting (PGCE 2008) Reports"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_reports_2024
 msgid "Spain - Accounting Reports (2024 Update)"
-msgstr ""
+msgstr "西班牙 - 财务报告（2024年更新）"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_sale_amazon
@@ -39943,6 +40073,14 @@ msgstr "API 密钥持续时间不正确。"
 #: code:addons/base/models/res_users.py:0
 msgid "The API key must have an expiration date"
 msgstr "API 密钥必须有到期日期"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+msgid ""
+"The action \"%s\" cannot be set as the home action because it requires a "
+"record to be selected beforehand."
+msgstr "“%s” 不可设为主页动作，因为它需要事先选取一项记录。"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_bank__country_code
@@ -41327,7 +41465,7 @@ msgstr "工单、支持、幻灯片"
 #. module: base
 #: model:res.currency,currency_subunit_label:base.KZT
 msgid "Tiin"
-msgstr ""
+msgstr "Tiin"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__time_format
@@ -41434,7 +41572,7 @@ msgstr "东帝汶"
 #: model:ir.model.fields,field_description:base.field_res_partner_title__name
 #: model:ir.model.fields,field_description:base.field_res_users__title
 msgid "Title"
-msgstr "标题"
+msgstr "称谓"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.UZS
@@ -42070,7 +42208,7 @@ msgstr "无法在此系统上找到Wkhtmltopdf.无法创建PDF."
 msgid ""
 "Unable to import'%%(field)s' Properties field as a whole, target individual "
 "property instead."
-msgstr ""
+msgstr "无法导入'%%(field)s'属性字段整体，可以试试单个属性。"
 
 #. module: base
 #. odoo-python
@@ -42306,7 +42444,7 @@ msgstr "未知子字段 “%s”"
 msgid ""
 "Unknown value '%(value)s' for boolean '%(label_property)s' property "
 "(subfield of '%%(field)s' field)."
-msgstr ""
+msgstr " '%(value)s' 不是布尔字段属性 '%(label_property)s' ('%%(field)s'下级字段)的有效值。"
 
 #. module: base
 #. odoo-python
@@ -43750,7 +43888,7 @@ msgstr "日元"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__update_boolean_value__true
 msgid "Yes (True)"
-msgstr "是（正确）"
+msgstr "是（真）"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -44243,7 +44381,7 @@ msgstr "账户代码"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_asset__active
 msgid "active"
-msgstr "启用"
+msgstr "有效"
 
 #. module: base
 #. odoo-python
@@ -44529,7 +44667,7 @@ msgstr "外部ID"
 #. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 msgid "false"
-msgstr "错误"
+msgstr "假"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__float

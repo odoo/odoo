@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -304,7 +305,13 @@ msgid "Company"
 msgstr "บริษัท"
 
 #. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.repair_view_picking_type_form
+msgid "Component Destination Location"
+msgstr ""
+
+#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__location_id
+#: model_terms:ir.ui.view,arch_db:repair.repair_view_picking_type_form
 msgid "Component Source Location"
 msgstr ""
 
@@ -394,37 +401,7 @@ msgstr "ลูกค้า"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__search_date_category
 msgid "Date Category"
-msgstr ""
-
-#. module: repair
-#: model_terms:ir.ui.view,arch_db:repair.repair_view_picking_type_form
-msgid "Default Component Destination Location"
-msgstr ""
-
-#. module: repair
-#: model_terms:ir.ui.view,arch_db:repair.repair_view_picking_type_form
-msgid "Default Component Source Location"
-msgstr ""
-
-#. module: repair
-#: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_product_location_dest_id
-msgid "Default Product Destination Location"
-msgstr ""
-
-#. module: repair
-#: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_product_location_src_id
-msgid "Default Product Source Location"
-msgstr ""
-
-#. module: repair
-#: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_recycle_location_dest_id
-msgid "Default Recycle Destination Location"
-msgstr "ตำแหน่งปลายทางของการรีไซเคิลเริ่มต้น"
-
-#. module: repair
-#: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_remove_location_dest_id
-msgid "Default Remove Destination Location"
-msgstr "การนำออกจากตำแหน่งปลายทางเริ่มต้น"
+msgstr "หมวดหมู่วันที่"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -501,6 +478,8 @@ msgid ""
 "For some of the parts, there is a difference between the initial demand and "
 "the actual quantity that was used. Are you sure you want to confirm ?"
 msgstr ""
+"สำหรับชิ้นส่วนบางชิ้น ความต้องการเริ่มต้นกับปริมาณที่ใช้จริงอาจแตกต่างกัน "
+"คุณแน่ใจหรือไม่ว่าต้องการยืนยัน?"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -900,6 +879,7 @@ msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_location_dest_id
+#: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_product_location_dest_id
 msgid "Product Destination Location"
 msgstr ""
 
@@ -920,6 +900,7 @@ msgstr "จำนวนสินค้า"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_location_src_id
+#: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_product_location_src_id
 msgid "Product Source Location"
 msgstr ""
 
@@ -997,6 +978,11 @@ msgid "Recycle"
 msgstr "รีไซเคิล"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_recycle_location_dest_id
+msgid "Recycle Destination Location"
+msgstr ""
+
+#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__recycle_location_id
 msgid "Recycled Parts Destination Location"
 msgstr "ที่ตั้งปลายทางของชิ้นส่วนรีไซเคิล"
@@ -1005,6 +991,11 @@ msgstr "ที่ตั้งปลายทางของชิ้นส่ว
 #: model:ir.model.fields.selection,name:repair.selection__stock_move__repair_line_type__remove
 msgid "Remove"
 msgstr "นำออก"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_remove_location_dest_id
+msgid "Remove Destination Location"
+msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__parts_location_id
@@ -1342,8 +1333,8 @@ msgstr "นี่คือบันทึกการซ่อมแซม"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_product_location_dest_id
 msgid ""
-"This is the default destination location for product which come for the "
-"repair when you create a repair order with this operation type."
+"This is the default destination location for the product to be repaired in "
+"repair orders with this operation type."
 msgstr ""
 
 #. module: repair
@@ -1366,8 +1357,8 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_product_location_src_id
 msgid ""
-"This is the default source location for product which come for the repair "
-"when you create a repair order with this operation type."
+"This is the default source location for the product to be repaired in repair"
+" orders with this operation type."
 msgstr ""
 
 #. module: repair

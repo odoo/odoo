@@ -41,12 +41,12 @@
 # Martin Trigaux, 2024
 # Marko Happonen <marko.happonen@sprintit.fi>, 2024
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2024
-# Joakim Weckman, 2024
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
 # Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2024
 # Konsta Aavaranta, 2024
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
+# Joakim Weckman, 2024
 # 
 msgid ""
 msgstr ""
@@ -54,7 +54,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 08:16+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
+"Last-Translator: Joakim Weckman, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -792,7 +792,7 @@ msgid ""
 "                                    <span class=\"d-none d-md-inline\"> Reversed</span>"
 msgstr ""
 "<i class=\"fa fa-fw fa-check\" aria-label=\"Reversed\" title=\"Käännetty\" role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> Käännetty</span>"
+"                                    <span class=\"d-none d-md-inline\"> Hyvitetty</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -1178,6 +1178,7 @@ msgstr "<span>5.00</span>"
 #: model_terms:web_tour.tour,rainbow_man_message:account.account_tour
 msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
 msgstr ""
+"<span><b>Hyvää työtä!</b> Kävit läpi kaikki tämän kiertueen vaiheet.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -1685,6 +1686,18 @@ msgid ""
 "this account to allow it."
 msgstr ""
 "Tili %s ei salli täsmäytystä. Salli täsmäytys muuttamalla tilin asetuksia."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "Account %s is of payable type, but is used in a sale operation."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "Account %s is of receivable type, but is used in a purchase operation."
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
@@ -8084,8 +8097,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move_reversal__journal_id
 msgid "If empty, uses the journal of the journal entry to be reversed."
 msgstr ""
-"Jos tyhjä, käytä päiväkirjan määrittelemää päiväkirjaa kirjauksen "
-"peruuttamiseen."
+"Jos tyhjä, käyttää päiväkirjan määrittelemää päiväkirjaa vastakirjauksiin."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__include_base_amount
@@ -9401,7 +9413,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 msgid "Journal should be the same type as the reversed entry."
-msgstr "Päiväkirjan on oltava samantyyppinen kuin käänteinen kirjaus."
+msgstr "Päiväkirjan on oltava samantyyppinen kuin hyvityksellä."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__automatic_entry_default_journal_id
@@ -10659,6 +10671,12 @@ msgstr ""
 "ostoasiakirjaa."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_payment.py:0
+msgid "No outstanding account could be found to make the payment"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "No payment journal entries"
 msgstr ""
@@ -11331,9 +11349,21 @@ msgid "Outstanding Account"
 msgstr "Saatavatili"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+msgid "Outstanding Payments"
+msgstr "Maksamattomat maksut"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Outstanding Payments accounts"
 msgstr "Erääntyvät maksut -tilit"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+msgid "Outstanding Receipts"
+msgstr "Avoimet vastaanotot"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -13026,7 +13056,7 @@ msgstr "Vastakirjaus tositteelle %s"
 #: model:ir.actions.act_window,name:account.action_view_account_move_reversal
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reverse"
-msgstr "Käänteinen"
+msgstr "Hyvitä"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -13047,7 +13077,7 @@ msgstr "Käänteiset siirrot"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reverse and Create Invoice"
-msgstr "Käännä ja luo lasku"
+msgstr "Hyvitä ja luo lasku"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__reversed
@@ -13056,7 +13086,7 @@ msgstr "Käännä ja luo lasku"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reversed"
-msgstr "Palautettu"
+msgstr "Hyvitetty"
 
 #. module: account
 #. odoo-python
@@ -16164,7 +16194,7 @@ msgstr "Tämä merkintä on kopioitu osoitteesta %s"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This entry has been reversed from %s"
-msgstr "Tämä merkintä on peruutettu %s"
+msgstr "Tämä merkintä on hyvitetty %s"
 
 #. module: account
 #. odoo-python
@@ -17740,7 +17770,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 msgid "You can only reverse posted moves."
-msgstr "Voit peruuttaa vain kirjattuja tapahtumia."
+msgstr "Voit hyvittää vain kirjattuja tapahtumia."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__invoice_reference_type
@@ -17803,6 +17833,12 @@ msgid ""
 msgstr ""
 "Et voi luoda uutta tiliotteen riviä ilman välitiliä, joka on määritetty %s "
 "päiväkirjalla."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_payment_register.py:0
+msgid "You can't create payments for entries belonging to different branches."
+msgstr ""
 
 #. module: account
 #. odoo-python

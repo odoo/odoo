@@ -7,7 +7,7 @@
 # e2f <projects@e2f.com>, 2024
 # Wil Odoo, 2024
 # Chloe Wang, 2024
-# 何彬 <vnsoft.he@gmail.com>, 2024
+# Odoo哥 <vnsoft.he@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:56+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: 何彬 <vnsoft.he@gmail.com>, 2024\n"
+"Last-Translator: Odoo哥 <vnsoft.he@gmail.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -73,7 +73,7 @@ msgid ""
 "'%(missing_plan_names)s' analytic plan(s) required on the analytic "
 "distribution of the sale order item '%(so_line_name)s' linked to the "
 "timesheet."
-msgstr ""
+msgstr "需要对与工时表相关联的销售订单项目%(so_line_name)s进行分析分配项%(missing_plan_names)s的分析计划。"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
@@ -137,7 +137,7 @@ msgstr ""
 "<i class=\"fa fa-lightbulb-o\"/>\n"
 "                        <span>\n"
 "                            根据员工的专业知识、技能或经验，确定其工作时间的计费标准。\n"
-"                            若要以不同费率结算同一服务，请创建单独的销售订单项目。\n"
+"                            若要以不同费率结算同一服务，请创建单独的销售订单行。\n"
 "                        </span>"
 
 #. module: sale_timesheet
@@ -167,7 +167,7 @@ msgstr "<span class=\"o_stat_text\">开票</span>"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.account_invoice_view_form_inherit_sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 msgid "<span class=\"o_stat_text\">Recorded</span>"
-msgstr "<span class=\"o_stat_text\">记录</span>"
+msgstr "<span class=\"o_stat_text\">工时单</span>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
@@ -203,12 +203,12 @@ msgstr "<strong>应付金额：</strong>"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
 msgid "<strong>Invoiced:</strong>"
-msgstr "<strong>结算单:</strong>"
+msgstr "<strong>已开发票:</strong>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
 msgid "<strong>Invoices:</strong>"
-msgstr "<strong>结算单:</strong>"
+msgstr "<strong>发票:</strong>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
@@ -289,7 +289,7 @@ msgstr "待开票金额"
 msgid ""
 "An employee cannot be selected more than once in the mapping. Please remove "
 "duplicate(s) and try again."
-msgstr "在一个映射中不能多次选择同一个雇员，请移除重复项再试."
+msgstr "在一个对应操作中不能多次选择同一个员工，请移除重复项再试."
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_analytic_line
@@ -482,7 +482,7 @@ msgstr "创建日期"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__currency_id
 msgid "Currency"
-msgstr "币种"
+msgstr "币别"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__partner_id
@@ -589,7 +589,7 @@ msgstr "结束日期"
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Expand your knowledge of various business industries"
-msgstr "扩展您在不同的商业工业的知识"
+msgstr "扩展您在不同的商业行业的知识"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
@@ -1027,7 +1027,7 @@ msgstr "项目"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_sale_line_employee_map
 msgid "Project Sales line, employee mapping"
-msgstr "销售明细行/员工地图"
+msgstr "项目销售明细行与员工关联"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__project_template_id
@@ -1068,7 +1068,7 @@ msgstr "报价"
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Real responsibilities and challenges in a fast evolving company"
-msgstr "在快速发展的公司承担风险和机遇"
+msgstr "在快速发展的公司中面临的真正责任和挑战"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__remaining_hours_available
@@ -1132,12 +1132,12 @@ msgstr "销售订单"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.report_timesheet_sale_order
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Sales Order Item"
-msgstr "销售订单项目"
+msgstr "销售订单行"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "销售订单行"
+msgstr "销售订单明细"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_kanban_inherit_sale_timesheet_so_button
@@ -1150,7 +1150,7 @@ msgid ""
 "Sales order item to which the time spent will be added in order to be "
 "invoiced to your customer. Remove the sales order item for the timesheet "
 "entry to be non-billable."
-msgstr "销售订单项目，所花费的时间将被添加到其中，以便向客户开具结算。移除销售订单项目，使工时表条目不能开票。"
+msgstr "销售订单行，所花费的时间将被添加到其中，以便向客户开具结算。移除销售订单行，使工时表条目不能开票。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__sale_order_id
@@ -1197,7 +1197,7 @@ msgid ""
 "Service that will be used by default when invoicing the time spent on a "
 "task. It can be modified on each task individually by selecting a specific "
 "sales order item."
-msgstr "在为任务花费的时间开票时默认使用的服务。 它可以通过选择特定的销售订单项目单独修改每个任务。"
+msgstr "在为任务花费的时间开票时默认使用的服务。 它可以通过选择特定的销售订单行单独修改每个任务。"
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.product_template_action_default_services
@@ -1288,7 +1288,7 @@ msgid ""
 "senior consultants would deliver the same service (= consultancy), but at a "
 "different rate because of their level of seniority."
 msgstr ""
-"如果您想以不同的费率向不同的客户收取不同的服务费，那么任务费率是完美的。如果您以每小时或每一天工作的固定费率收取服务费，而不考虑执行该服务的雇员，那么固定费率是完美的。如果您的雇员以不同的费率提供同样的服务，那么雇员费率是比较好的。例如，初级和高级顾问将提供相同的服务（=咨询），但由于他们的资历水平不同，费率也不同。"
+"如果您想以不同的费率向不同的客户收取不同的服务费，那么任务费率是完美的。如果您以每小时或每一天工作的固定费率收取服务费，而不考虑执行该服务的员工，那么固定费率是完美的。如果您的员工以不同的费率提供同样的服务，那么员工费率是比较好的。例如，初级和高级顾问将提供相同的服务（=咨询），但由于他们的资历水平不同，费率也不同。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_sale_line_employee_map__cost
@@ -1474,7 +1474,7 @@ msgstr "在开具所花时间的开票时采取的时间单"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "Timesheets without a sales order item are reported as"
-msgstr "没有销售订单项目的时间表报表为"
+msgstr "没有销售订单行的时间表报表为"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
@@ -1550,7 +1550,7 @@ msgstr "定价类型中不存在价值"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit
 msgid "View Timesheet"
-msgstr "查看工时单"
+msgstr "查看工时表"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit
@@ -1589,7 +1589,7 @@ msgstr "只能从项目中应用此操作。"
 msgid ""
 "You cannot link a billable project to a sales order item that comes from an "
 "expense or a vendor bill."
-msgstr "您不能把一个应收账款项目与一个来自费用或供应商账单的销售订单项目联系起来。"
+msgstr "您不能把一个应收账款项目与一个来自费用或供应商账单的销售订单行联系起来。"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1597,7 +1597,7 @@ msgstr "您不能把一个应收账款项目与一个来自费用或供应商账
 msgid ""
 "You cannot link a billable project to a sales order item that is not a "
 "service."
-msgstr "您不能把一个应收账款项目与一个不是服务的销售订单项目联系起来。"
+msgstr "您不能把一个应收账款项目与一个不是服务的销售订单行联系起来。"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1636,4 +1636,4 @@ msgstr "售出的小时数。"
 #. odoo-python
 #: code:addons/sale_timesheet/models/sale_order_line.py:0
 msgid "remaining"
-msgstr "其餘"
+msgstr "剩余"

@@ -5,9 +5,9 @@
 # Translators:
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2024
 # Interactive AV-IT, 2024
-# Marta Wacławek, 2024
 # Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2024
 # Wil Odoo, 2024
+# Marta Wacławek, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 08:16+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Marta Wacławek, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -840,6 +840,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-check\" aria-label=\"processing_payment\" title=\"Processing Payment\" role=\"img\"/>\n"
 "                                    <span class=\"d-none d-md-inline\"> Processing Payment</span>"
 msgstr ""
+"<i class=\"fa fa-fw fa-check\" aria-label=\"processing_payment\" title=\"Przetwarzanie płatności\" role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\"> Przetwarzanie płatności</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -986,6 +988,9 @@ msgid ""
 "                                        Audit\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                        Audyt\n"
+"                                    </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -1759,6 +1764,19 @@ msgid ""
 msgstr ""
 "Konto %s nie pozwala na uzgadnianie. Najpierw zmień konfigurację tego konta,"
 " aby je umożliwić."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "Account %s is of payable type, but is used in a sale operation."
+msgstr ""
+"Konto %s jest typu zobowiązanie, ale jest używane w operacji sprzedażowej."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "Account %s is of receivable type, but is used in a purchase operation."
+msgstr "Konto %s jest typu należność, ale jest używane w operacji zakupu."
 
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
@@ -3174,7 +3192,7 @@ msgstr "Ścieżka audytu"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__audit_trail_message_ids
 #: model:ir.model.fields,field_description:account.field_account_move__audit_trail_message_ids
 msgid "Audit Trail Messages"
-msgstr ""
+msgstr "Wiadomości ścieżki audytu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__auditable
@@ -4037,7 +4055,7 @@ msgstr "Konto gotówkowe"
 #. module: account
 #: model:account.account,name:account.1_cash_journal_default_account_52
 msgid "Cash Bakery"
-msgstr ""
+msgstr "Piekarnia Gotówka"
 
 #. module: account
 #: model:account.account,name:account.1_cash_journal_default_account_54
@@ -4083,7 +4101,7 @@ msgstr "Rachunek przejściowy dla metody kasowej"
 #. module: account
 #: model:account.account,name:account.1_cash_journal_default_account_51
 msgid "Cash Clothes Shop"
-msgstr ""
+msgstr "Sklep odzieżowy Gotówka"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_expense_account_id
@@ -4141,7 +4159,7 @@ msgstr "Dyskonto gotówkowe Konto odpisów strat"
 #. module: account
 #: model:account.account,name:account.1_cash_journal_default_account_50
 msgid "Cash Furn. Shop"
-msgstr ""
+msgstr "Sklep meblowy Gotówka"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
@@ -6303,7 +6321,7 @@ msgstr "Wyświetl raport pdf z szablonem faktury "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__display_mapping_tab
 msgid "Display Mapping Tab"
-msgstr ""
+msgstr "Wyświetl zakładkę mapowania"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__display_name
@@ -7901,7 +7919,7 @@ msgstr "Ma ostrzeżenie o transferze pieniędzy"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__has_negative_factor
 msgid "Has Negative Factor"
-msgstr ""
+msgstr "Ma czynnik ujemy"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_posted_entries
@@ -8927,6 +8945,8 @@ msgid ""
 "Invoice and credit note distribution should have a total factor (+) equals "
 "to 100."
 msgstr ""
+"Rozkład faktur i not kredytowych powinien mieć całkowity czynnik (+) równy "
+"100."
 
 #. module: account
 #. odoo-python
@@ -8935,6 +8955,8 @@ msgid ""
 "Invoice and credit note distribution should have a total factor (-) equals "
 "to 100."
 msgstr ""
+"Rozkład faktur i not kredytowych powinien mieć całkowity czynnik (-) równy "
+"100."
 
 #. module: account
 #. odoo-python
@@ -10785,6 +10807,12 @@ msgstr ""
 " dokumentu zakupu."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_payment.py:0
+msgid "No outstanding account could be found to make the payment"
+msgstr "Nie znaleziono żadnego zaległego konta, do dokonania płatności."
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "No payment journal entries"
 msgstr "Nie ma żadnych wpisów dziennika o płatności"
@@ -11463,9 +11491,21 @@ msgid "Outstanding Account"
 msgstr "Nieuzgodnione konto"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+msgid "Outstanding Payments"
+msgstr "Nieuzgodnione płatności"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Outstanding Payments accounts"
 msgstr "Nieuzgodnione konta płatności"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+msgid "Outstanding Receipts"
+msgstr "Wpływy zaległe"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -15003,6 +15043,8 @@ msgid ""
 "The Availability is set to 'Country Matches' but the field Country is not "
 "set."
 msgstr ""
+"Dostępność jest ustawiona na 'Dopasowanie Kraju', ale pole Kraj nie jest "
+"ustawione."
 
 #. module: account
 #. odoo-python
@@ -18064,6 +18106,14 @@ msgid ""
 msgstr ""
 "Nie można utworzyć nowej linii zestawienia bez ustawionego konta suspensji "
 "na dzienniku %s."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_payment_register.py:0
+msgid "You can't create payments for entries belonging to different branches."
+msgstr ""
+"Nie możesz tworzyć płatności na podstawie wpisów należących do różnych "
+"oddziałów."
 
 #. module: account
 #. odoo-python

@@ -5,7 +5,8 @@
 # Translators:
 # Wil Odoo, 2024
 # Chloe Wang, 2024
-# 何彬 <vnsoft.he@gmail.com>, 2024
+# Raymond Yu <cl_yu@hotmail.com>, 2024
+# Odoo哥 <vnsoft.he@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: 何彬 <vnsoft.he@gmail.com>, 2024\n"
+"Last-Translator: Odoo哥 <vnsoft.he@gmail.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,13 +26,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/repair/models/stock_warehouse.py:0
 msgid "%(name)s Sequence repair"
-msgstr ""
+msgstr "维修序列%(name)s "
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 msgid "%(product)s: Insufficient Quantity To Repair"
-msgstr ""
+msgstr "%(product)s：数量不足，无法维修"
 
 #. module: repair
 #: model:ir.actions.report,print_report_name:repair.action_report_repair_order
@@ -227,7 +228,7 @@ msgstr "任何部分都迟到了"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_attachment_count
 msgid "Attachment Count"
-msgstr "附件计数"
+msgstr "附件数量"
 
 #. module: repair
 #. odoo-python
@@ -304,9 +305,15 @@ msgid "Company"
 msgstr "公司"
 
 #. module: repair
-#: model:ir.model.fields,field_description:repair.field_repair_order__location_id
-msgid "Component Source Location"
+#: model_terms:ir.ui.view,arch_db:repair.repair_view_picking_type_form
+msgid "Component Destination Location"
 msgstr ""
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__location_id
+#: model_terms:ir.ui.view,arch_db:repair.repair_view_picking_type_form
+msgid "Component Source Location"
+msgstr "组件来源位置"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__parts_availability
@@ -350,12 +357,12 @@ msgstr "创建报价"
 #: model:ir.model.fields,field_description:repair.field_product_product__create_repair
 #: model:ir.model.fields,field_description:repair.field_product_template__create_repair
 msgid "Create Repair"
-msgstr "创建维修"
+msgstr "创建维修单"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__is_repairable
 msgid "Create Repair Orders from Returns"
-msgstr "是否根据退货创建维修订单"
+msgstr "依退货创建维修订单"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_product_product__create_repair
@@ -395,36 +402,6 @@ msgid "Date Category"
 msgstr "日期类别"
 
 #. module: repair
-#: model_terms:ir.ui.view,arch_db:repair.repair_view_picking_type_form
-msgid "Default Component Destination Location"
-msgstr ""
-
-#. module: repair
-#: model_terms:ir.ui.view,arch_db:repair.repair_view_picking_type_form
-msgid "Default Component Source Location"
-msgstr ""
-
-#. module: repair
-#: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_product_location_dest_id
-msgid "Default Product Destination Location"
-msgstr ""
-
-#. module: repair
-#: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_product_location_src_id
-msgid "Default Product Source Location"
-msgstr "默认产品源位置"
-
-#. module: repair
-#: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_recycle_location_dest_id
-msgid "Default Recycle Destination Location"
-msgstr "默认回收目的位置"
-
-#. module: repair
-#: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_remove_location_dest_id
-msgid "Default Remove Destination Location"
-msgstr "默认移除目的位置"
-
-#. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Demand"
 msgstr "需求"
@@ -438,7 +415,7 @@ msgstr "描述"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Details"
-msgstr "细节"
+msgstr "详情"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__display_name
@@ -563,7 +540,7 @@ msgstr "如果勾选此项， 某些消息将出现发送错误。"
 msgid ""
 "If ticked, the sales price will be set to 0 for all products transferred "
 "from the repair order."
-msgstr "若勾选，则从维修单转移的所有产品的售价都将设为 0。"
+msgstr "若勾选，则从维修订单转移的所有产品的售价都将设为 0。"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__is_repairable
@@ -589,7 +566,7 @@ msgstr "维修次数"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.product_view_search_catalog
 msgid "In the Repair Order"
-msgstr ""
+msgstr "在维修订单中"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__internal_notes
@@ -614,7 +591,7 @@ msgstr "是关注者"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking__is_repairable
 msgid "Is Repairable"
-msgstr "是否可修复"
+msgstr "是否可维修"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -734,7 +711,7 @@ msgstr "下一活动类型"
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
 msgid "No repair order found. Let's create one!"
-msgstr "未找到维修单。让我们创建一个！"
+msgstr "未找到维修订单。让我们创建一个！"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__priority__0
@@ -762,7 +739,7 @@ msgstr "操作数量"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__count_repair_late
 msgid "Number of Late Repair Orders"
-msgstr ""
+msgstr "最新维修订单数量"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__count_repair_confirmed
@@ -772,7 +749,7 @@ msgstr "已确认的维修订单数量"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__count_repair_under_repair
 msgid "Number of Repair Orders Under Repair"
-msgstr "维修中的维修单数量"
+msgstr "维修中的维修订单数量"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__count_repair_ready
@@ -889,12 +866,13 @@ msgstr "产品 B"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_product_product__product_catalog_product_is_in_repair
 msgid "Product Catalog Product Is In Repair"
-msgstr ""
+msgstr "产品目录里维修中的产品"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_location_dest_id
+#: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_product_location_dest_id
 msgid "Product Destination Location"
-msgstr ""
+msgstr "产品目标位置"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -913,8 +891,9 @@ msgstr "产品数量"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_location_src_id
+#: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_product_location_src_id
 msgid "Product Source Location"
-msgstr ""
+msgstr "产品来源位置"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__tracking
@@ -990,6 +969,11 @@ msgid "Recycle"
 msgstr "回收"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_recycle_location_dest_id
+msgid "Recycle Destination Location"
+msgstr ""
+
+#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__recycle_location_id
 msgid "Recycled Parts Destination Location"
 msgstr "回收部件目的位置"
@@ -998,6 +982,11 @@ msgstr "回收部件目的位置"
 #: model:ir.model.fields.selection,name:repair.selection__stock_move__repair_line_type__remove
 msgid "Remove"
 msgstr "移除"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_remove_location_dest_id
+msgid "Remove Destination Location"
+msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__parts_location_id
@@ -1016,7 +1005,7 @@ msgstr "维修"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_warehouse__repair_mto_pull_id
 msgid "Repair MTO Rule"
-msgstr ""
+msgstr "维修MTO规则"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -1036,12 +1025,12 @@ msgstr "维修操作类型"
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Repair Order"
-msgstr "维修单"
+msgstr "维修订单"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_sale_order__repair_count
 msgid "Repair Order(s)"
-msgstr "维修单"
+msgstr "维修订单"
 
 #. module: repair
 #. odoo-python
@@ -1058,7 +1047,7 @@ msgstr "维修单"
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_graph
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_pivot
 msgid "Repair Orders"
-msgstr "维修单"
+msgstr "维修订单"
 
 #. module: repair
 #: model:ir.ui.menu,name:repair.repair_menu_tag
@@ -1068,17 +1057,17 @@ msgstr "维修订单标签"
 #. module: repair
 #: model:ir.actions.act_window,name:repair.action_repair_picking_type_kanban
 msgid "Repair Overview"
-msgstr ""
+msgstr "维修概览"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__repair_properties_definition
 msgid "Repair Properties"
-msgstr ""
+msgstr "维修属性"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__name
 msgid "Repair Reference"
-msgstr "维修参照"
+msgstr "维修参考单号"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__repair_request
@@ -1100,7 +1089,7 @@ msgstr "维修标签"
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 msgid "Repair must be under repair in order to end reparation."
-msgstr "维修单必须维修，以便结束赔偿。"
+msgstr "维修订单必须维修，以便结束赔偿。"
 
 #. module: repair
 #. odoo-python
@@ -1139,7 +1128,7 @@ msgstr "维修"
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_tree
 msgid "Repairs order"
-msgstr "维修单"
+msgstr "维修订单"
 
 #. module: repair
 #. odoo-python
@@ -1203,12 +1192,12 @@ msgstr "销售订单明细"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__repair_request
 msgid "Sale Order Line Description."
-msgstr "销售订单行说明。"
+msgstr "销售订单明细说明。"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__sale_order_line_id
 msgid "Sale Order Line from which the Repair Order comes from."
-msgstr "维修订单所属的销售订单行。"
+msgstr "维修订单所属的销售订单明细。"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__sale_order_id
@@ -1223,7 +1212,7 @@ msgstr "销售订单"
 #. module: repair
 #: model:ir.model,name:repair.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "销售订单行"
+msgstr "销售订单明细"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__schedule_date
@@ -1233,7 +1222,7 @@ msgstr "安排的日期"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Search Repair Orders"
-msgstr "搜索维修单"
+msgstr "搜索维修订单"
 
 #. module: repair
 #. odoo-python
@@ -1335,9 +1324,9 @@ msgstr "这是一份维修说明。"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_product_location_dest_id
 msgid ""
-"This is the default destination location for product which come for the "
-"repair when you create a repair order with this operation type."
-msgstr "这是当您使用此操作类型创建维修订单时要维修的产品的默认目标位置。"
+"This is the default destination location for the product to be repaired in "
+"repair orders with this operation type."
+msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_recycle_location_dest_id
@@ -1351,14 +1340,14 @@ msgstr "使用此作业类型创建维修订单时，这是默认的回收目标
 msgid ""
 "This is the default remove destination location when you create a repair "
 "order with this operation type."
-msgstr "使用此作业类型创建维修订单时，这是默认的移除目标位置。"
+msgstr "当你使用这种操作类型创建维修订单时，这里设置的是默认的移除目的地位置。"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_product_location_src_id
 msgid ""
-"This is the default source location for product which come for the repair "
-"when you create a repair order with this operation type."
-msgstr "这是当您使用此操作类型创建维修订单时要维修的产品的默认来源位置。"
+"This is the default source location for the product to be repaired in repair"
+" orders with this operation type."
+msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__location_id
@@ -1369,7 +1358,7 @@ msgstr "这是要维修的产品组件所在的位置。"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__product_location_src_id
 msgid "This is the location where the product to repair is located."
-msgstr "这是要修复的产品所在的位置。"
+msgstr "这是要维修的产品所在的位置。"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__parts_location_id
@@ -1517,7 +1506,7 @@ msgstr "不能输入负数数量。"
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 msgid "You cannot cancel a Repair Order that's already been completed"
-msgstr "您无法取消已完成的维修单"
+msgstr "您无法取消已完成的维修订单"
 
 #. module: repair
 #. odoo-python

@@ -841,6 +841,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-check\" aria-label=\"processing_payment\" title=\"Processing Payment\" role=\"img\"/>\n"
 "                                    <span class=\"d-none d-md-inline\"> Processing Payment</span>"
 msgstr ""
+"<i class=\"fa fa-fw fa-check\" aria-label=\"processing_payment\" title=\"Processing Payment\" role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\"> Memproses Pembayaran</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -989,6 +991,9 @@ msgid ""
 "                                        Audit\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                        Audit\n"
+"                                    </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -1763,6 +1768,18 @@ msgid ""
 msgstr ""
 "Akun %s tidak mengizinkan rekonsiliasi. Pertama ubah dulu konfigurasi dari "
 "akun ini untuk memungkinkan rekonsiliasi."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "Account %s is of payable type, but is used in a sale operation."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "Account %s is of receivable type, but is used in a purchase operation."
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
@@ -3184,7 +3201,7 @@ msgstr "Audit Trail"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__audit_trail_message_ids
 #: model:ir.model.fields,field_description:account.field_account_move__audit_trail_message_ids
 msgid "Audit Trail Messages"
-msgstr ""
+msgstr "Audit Trail Messages"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__auditable
@@ -4053,7 +4070,7 @@ msgstr "Cash Account"
 #. module: account
 #: model:account.account,name:account.1_cash_journal_default_account_52
 msgid "Cash Bakery"
-msgstr ""
+msgstr "Cash Bakery"
 
 #. module: account
 #: model:account.account,name:account.1_cash_journal_default_account_54
@@ -4099,7 +4116,7 @@ msgstr "Cash Basis Transition Account"
 #. module: account
 #: model:account.account,name:account.1_cash_journal_default_account_51
 msgid "Cash Clothes Shop"
-msgstr ""
+msgstr "Cash Clothes Shop"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_expense_account_id
@@ -4157,7 +4174,7 @@ msgstr "Cash Discount Write-Off Loss Account"
 #. module: account
 #: model:account.account,name:account.1_cash_journal_default_account_50
 msgid "Cash Furn. Shop"
-msgstr ""
+msgstr "Cash Furn. Shop"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
@@ -6323,7 +6340,7 @@ msgstr "Display Invoice Template Pdf Report"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__display_mapping_tab
 msgid "Display Mapping Tab"
-msgstr ""
+msgstr "Tampilkan Tab Pemetaan"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__display_name
@@ -7922,7 +7939,7 @@ msgstr "Memiliki Peringatan Transfer Uang"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__has_negative_factor
 msgid "Has Negative Factor"
-msgstr ""
+msgstr "Memiliki Faktor Negatif"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_posted_entries
@@ -8949,6 +8966,8 @@ msgid ""
 "Invoice and credit note distribution should have a total factor (+) equals "
 "to 100."
 msgstr ""
+"Distribusi faktur dan nota kredit harus memiliki total faktor (+) sama "
+"dengan 100."
 
 #. module: account
 #. odoo-python
@@ -8957,6 +8976,8 @@ msgid ""
 "Invoice and credit note distribution should have a total factor (-) equals "
 "to 100."
 msgstr ""
+"Distribusi faktur dan nota kredit harus memiliki total faktor (-) sama "
+"dengan 100."
 
 #. module: account
 #. odoo-python
@@ -10810,6 +10831,12 @@ msgstr ""
 "pembelian yang terpilih."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_payment.py:0
+msgid "No outstanding account could be found to make the payment"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "No payment journal entries"
 msgstr "Tidak ada entri jurnal pembayaran"
@@ -11484,9 +11511,21 @@ msgid "Outstanding Account"
 msgstr "Akun Outstanding"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+msgid "Outstanding Payments"
+msgstr "Pembayaran Belum Lunas"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Outstanding Payments accounts"
 msgstr "Akun Pembayaran Belum Lunas"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+msgid "Outstanding Receipts"
+msgstr "Tanda Terima Belum Lunas"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -15017,6 +15056,8 @@ msgid ""
 "The Availability is set to 'Country Matches' but the field Country is not "
 "set."
 msgstr ""
+"Ketersediaan ditetapkan menjadi 'Negara Cocok' tapi field Negara tidak "
+"ditetapkan."
 
 #. module: account
 #. odoo-python
@@ -18075,6 +18116,12 @@ msgid ""
 msgstr ""
 "Anda tidak dapat membuat statement lien baru tanpa suspense account yang "
 "ditetapkan pada jurnal %s."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_payment_register.py:0
+msgid "You can't create payments for entries belonging to different branches."
+msgstr ""
 
 #. module: account
 #. odoo-python

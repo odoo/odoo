@@ -5,10 +5,11 @@
 # Translators:
 # Martin Trigaux, 2024
 # Jeffery CHEN <jeffery9@gmail.com>, 2024
-# Chloe Wang, 2024
 # Chill Liao <chill421@qq.com>, 2024
-# Odoo哥 <vnsoft.he@gmail.com>, 2024
 # Wil Odoo, 2024
+# Chloe Wang, 2024
+# Odoo哥 <vnsoft.he@gmail.com>, 2024
+# Raymond Yu <cl_yu@hotmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 07:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -152,7 +153,7 @@ msgstr "（开业余额）"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "+ New Shop"
-msgstr "+新商店"
+msgstr "+添加新的店铺"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -384,12 +385,12 @@ msgstr "<span class=\"oe_inline\"><b>跳过预览屏幕</b></span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>Balance</span>"
-msgstr "<span>平衡</span>"
+msgstr "<span>结余</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>Closing</span>"
-msgstr "<span>闭幕</span>"
+msgstr "<span>结算</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -644,7 +645,7 @@ msgstr "为 point_of_sale 激活短信功能"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__active
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__active
 msgid "Active"
-msgstr "已启用"
+msgstr "有效"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_ids
@@ -999,7 +1000,7 @@ msgstr "运动鞋，设计舒适，性能卓越。"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_attachment_count
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_attachment_count
 msgid "Attachment Count"
-msgstr "附件计数"
+msgstr "附件数量"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1108,7 +1109,7 @@ msgstr "回退"
 #: code:addons/point_of_sale/static/src/app/navbar/navbar.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/login_screen/login_screen.js:0
 msgid "Backend"
-msgstr "后端"
+msgstr "后台管理端"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__customer_display_bg_img
@@ -1364,7 +1365,7 @@ msgstr "不能改变无现金支付的方法"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Card"
-msgstr "卡片"
+msgstr "会员卡"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__card_no
@@ -3410,7 +3411,7 @@ msgstr "集成"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__receivable_account_id
 msgid "Intermediary Account"
-msgstr "中介账户"
+msgstr "中间账户"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3755,11 +3756,10 @@ msgid ""
 "For bank journal, we write to the outstanding account specified in this payment method.\n"
 "Only cash and bank journals are allowed."
 msgstr ""
-"留空以使用客户的应收账款。\n"
-"定义在结束门店会话后在何处记录累计支付（或个人支付，如果客户正确）的凭证。\n"
-"对于现金凭证，我們通过报表行直接写入凭证的的默认账户。\n"
-"对于银行凭证，我们会写入此支付方式中指定的未完成账户。\n"
-"只允许现金和银行凭证。"
+"留空即使用客户的应收账户。 \n"
+"定义在营业点结束时累积付款（或如果启用“识别客户”则为单个付款）的记账日记账。 \n"
+"对于现金日记账，我们直接通过报表行写入日记账中的默认账户。 \n"
+"对于银行日记账，我们写入此付款方式中指定的未清账户。 仅允许现金和银行日记账。"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.letter_tray_product_template
@@ -3945,7 +3945,7 @@ msgstr "消息"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__name
 msgid "Method"
-msgstr "方法"
+msgstr "付款方式"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_search
@@ -4415,7 +4415,7 @@ msgstr "打开使用此支付方式的POS营业点。"
 #: code:addons/point_of_sale/static/src/app/store/opening_control_popup/opening_control_popup.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Open Register"
-msgstr "Open 收银机"
+msgstr "开启收银机"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6210,7 +6210,7 @@ msgstr "请求已发送"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Rescue Sessions"
-msgstr ""
+msgstr "救援会话"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6706,13 +6706,13 @@ msgstr "每一套产品，多种价格自动折扣等."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid "Set the new discount"
-msgstr ""
+msgstr "设置新折扣"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid "Set the new price"
-msgstr ""
+msgstr "设定新价格"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7915,6 +7915,9 @@ msgid ""
 "\n"
 "Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"
 msgstr ""
+"要删除产品，请确保所有销售点会话都已关闭。\n"
+"\n"
+"删除会话中的可用产品就好比试图从顾客手中抢走吃到一半的汉堡包，番茄酱和蛋黄酱会四处飞溅，混乱不堪！"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7922,7 +7925,7 @@ msgstr ""
 msgid ""
 "To ensure due balance follow-up, generate an invoice or download the "
 "accounting application. "
-msgstr ""
+msgstr "为确保追踪到期余额，请生成发票或下载会计应用程序。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice
@@ -8415,7 +8418,7 @@ msgstr "欢迎！"
 msgid ""
 "When active, orderlines will be sorted based on product category and "
 "sequence in the product screen's order cart."
-msgstr "若启用，将根据产品屏幕中订单购物车中的产品类别及顺序，对订单资料进行排序。"
+msgstr "若有效，将根据产品屏幕中订单购物车中的产品类别及顺序，对订单资料进行排序。"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_config__picking_policy__one
@@ -8537,7 +8540,7 @@ msgid ""
 "pricelist, or create a pos.order in a python test with Form tool, or edit "
 "the form view in studio if no PoS order exist"
 msgstr ""
-"您不能：从后端界面创建 pos 订单，或取消设置价格表，或使用表单工具在 python 测试中创建 "
+"您不能：从后台界面创建 pos 订单，或取消设置价格表，或使用表单工具在 python 测试中创建 "
 "pos.order，或者在工作室中编辑表单视图（如果不存在 PoS 订单）"
 
 #. module: point_of_sale

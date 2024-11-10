@@ -27,6 +27,8 @@ msgid ""
 "\n"
 "Affected valuation layers: %s"
 msgstr ""
+"\n"
+"受影響估值層：%s"
 
 #. module: stock_account
 #. odoo-python
@@ -44,13 +46,13 @@ msgstr " [記賬至 %s]"
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid " lot/serial number cost updated from %(previous)s to %(new_cost)s."
-msgstr ""
+msgstr " 批次/序號成本已從 %(previous)s 更新為 %(new_cost)s。"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_valuation_layer.py:0
 msgid "%(user)s changed cost from %(previous)s to %(new_price)s - %(record)s"
-msgstr ""
+msgstr "%(user)s 已將成本從 %(previous)s 更改為 %(new_price)s - %(record)s"
 
 #. module: stock_account
 #. odoo-python
@@ -59,6 +61,8 @@ msgid ""
 "%(user)s changed stock valuation from  %(previous)s to %(new_value)s - %(product)s\n"
 "%(reason)s"
 msgstr ""
+"%(user)s 已將庫存估值從 %(previous)s 更改為 %(new_value)s - %(product)s\n"
+"%(reason)s"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -156,7 +160,7 @@ msgstr "價值調整"
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.action_revalue_layers
 msgid "Adjust Valuation"
-msgstr ""
+msgstr "調整估值"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -281,7 +285,7 @@ msgstr "配置錯誤。 請在產品或其類別上配置價格差異項目來�
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Correction of %s (modification of past move)"
-msgstr ""
+msgstr "%s 的更正（修改過去分錄）"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__standard_price
@@ -429,7 +433,7 @@ msgstr "識別號"
 #: model:ir.model.fields,help:stock_account.field_product_product__lot_valuated
 #: model:ir.model.fields,help:stock_account.field_product_template__lot_valuated
 msgid "If checked, the valuation will be specific by Lot/Serial number."
-msgstr ""
+msgstr "若勾選，估值將按個別批次/序號獨立進行。"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
@@ -508,13 +512,13 @@ msgstr "已連結至"
 msgid ""
 "Lot %(lot)s has a negative quantity in stock. Correct this"
 "                         quantity before enabling lot valuation"
-msgstr ""
+msgstr "批次 %(lot)s 的庫存數量為負數。進行批次估值之前，請更正此數量。"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_lot.py:0
 msgid "Lot value manually modified (from %(old)s to %(new)s)"
-msgstr ""
+msgstr "批次價值已手動修改（從 %(old)s 改為 %(new)s）"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_lot
@@ -531,13 +535,13 @@ msgstr "批次/序列號碼"
 #. odoo-python
 #: code:addons/stock_account/models/stock_lot.py:0
 msgid "Lot/Serial number Revaluation"
-msgstr ""
+msgstr "批次/序號重新估值"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move_line.py:0
 msgid "Lot/Serial number is mandatory for product valuated by lot"
-msgstr ""
+msgstr "對於按批次估值的產品，必須提供批次/序號"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -582,7 +586,7 @@ msgstr "按數量計算的新值"
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "No Reason Given"
-msgstr ""
+msgstr "未有提供原因"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
@@ -640,12 +644,12 @@ msgstr "產品價值已被手動修改（由 %(original_price)s 至 %(new_price)
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_production_wip_account_id
 msgid "Production WIP Account"
-msgstr ""
+msgstr "生產半成品賬戶"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_production_wip_overhead_account_id
 msgid "Production WIP Overhead Account"
-msgstr ""
+msgstr "生產半成品費用賬戶"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__quantity
@@ -724,7 +728,7 @@ msgstr "重估"
 #. odoo-python
 #: code:addons/stock_account/models/stock_lot.py:0
 msgid "Select an existing lot/serial number to be reevaluated"
-msgstr ""
+msgstr "選擇要重新估值的現有批次/序號"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__standard
@@ -893,7 +897,7 @@ msgstr "移動名細處於不一致的狀態:它們不屬於同一個來源或�
 #: code:addons/stock_account/models/product.py:0
 msgid ""
 "The stock accounts should be set in order to use the automatic valuation."
-msgstr ""
+msgstr "應先設定庫存賬戶，才可使用自動估值。"
 
 #. module: stock_account
 #. odoo-python
@@ -917,7 +921,7 @@ msgstr "沒有估值層。當出現影響庫存估值的產品移動時，會建
 msgid ""
 "This operation might lead in a loss of data. Valuation will be identical for"
 " all lots/SN. Do you want to proceed ? "
-msgstr ""
+msgstr "此操作可能會導致數據損失。所有批次/序號的估值將會相同。繼續操作？"
 
 #. module: stock_account
 #. odoo-python
@@ -925,7 +929,7 @@ msgstr ""
 msgid ""
 "This product is valuated by lot/serial number. Changing the cost will update"
 " the cost of every lot/serial number in stock."
-msgstr ""
+msgstr "此產品按批次/序號估值。更改成本將更新庫存記錄中所有批次/序號的成本。"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
@@ -998,7 +1002,7 @@ msgstr "更新 SO/PO 上的數量"
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid "Updating lot valuation for product %s."
-msgstr ""
+msgstr "正在更新產品 %s 的批次估值。"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_in_account_id
@@ -1095,6 +1099,9 @@ msgid ""
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"批次價值（在 AVCO 中自動計算）。\n"
+"        在採購成本未知情況下，用於為產品估值（例如庫存調整）。\n"
+"        計算銷售訂單利潤率時也會使用。"
 
 #. module: stock_account
 #. odoo-python
@@ -1136,13 +1143,13 @@ msgstr "用於重新評估產品庫存的作業模型"
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "You cannot adjust the valuation of a layer with zero quantity"
-msgstr ""
+msgstr "你不可調整數量為零的層次的估值"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "You cannot adjust valuation without a product"
-msgstr ""
+msgstr "你不可在未有產品的情況下調整估值"
 
 #. module: stock_account
 #. odoo-python
@@ -1150,7 +1157,7 @@ msgstr ""
 msgid ""
 "You cannot change the costing method of product valuated by lot/serial "
 "number."
-msgstr ""
+msgstr "你不可更改按批次/序號估值產品的成本計算方法。"
 
 #. module: stock_account
 #. odoo-python
@@ -1158,7 +1165,7 @@ msgstr ""
 msgid ""
 "You cannot change the product category of a product valuated by lot/serial "
 "number."
-msgstr ""
+msgstr "你不可更改按批次/序號估值產品的產品類別。"
 
 #. module: stock_account
 #. odoo-python
@@ -1176,7 +1183,7 @@ msgstr "您不能重估具有空庫存或負庫存的產品。"
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "You cannot revalue multiple products at once"
-msgstr ""
+msgstr "一次過不可為多項產品重新估值"
 
 #. module: stock_account
 #. odoo-python

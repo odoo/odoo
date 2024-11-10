@@ -7,6 +7,7 @@
 # Wil Odoo, 2024
 # Tiffany Chang, 2024
 # Daye Jeong, 2024
+# Sarah Park, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-27 08:16+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Daye Jeong, 2024\n"
+"Last-Translator: Sarah Park, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -78,19 +79,19 @@ msgstr "%(item_name)s: 종료 날짜 (%(end_date)s)는 시작 날짜 (%(start_da
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% %(discount_type)s on %(base)s %(extra)s"
-msgstr ""
+msgstr "%(percentage)s %% %(base)s %(extra)s %(discount_type)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% discount on %(pricelist)s"
-msgstr ""
+msgstr "%(percentage)s %% %(pricelist)s 할인"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% discount on sales price"
-msgstr ""
+msgstr "%(percentage)s %% 판매가 할인"
 
 #. module: product
 #. odoo-python
@@ -124,13 +125,13 @@ msgstr "예: 품목 설명, 전자책, 법적 고지 등"
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "+ %(amount)s extra fee"
-msgstr ""
+msgstr "+ %(amount)s 추가 수수료"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "- %(amount)s rebate"
-msgstr ""
+msgstr "- %(amount)s 리베이트"
 
 #. module: product
 #. odoo-python
@@ -322,25 +323,25 @@ msgstr "바코드는 하나의 포장에만 할당할 수 있습니다!"
 #. odoo-python
 #: code:addons/product/models/product_combo.py:0
 msgid "A combo choice can't contain duplicate products."
-msgstr ""
+msgstr "콤보 선택에는 중복된 품목이 포함될 수 없습니다."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_combo_item.py:0
 msgid "A combo choice can't contain products of type \"combo\"."
-msgstr ""
+msgstr "콤보 선택에는 \"콤보\" 유형의 품목이 포함될 수 없습니다."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_combo.py:0
 msgid "A combo choice must contain at least 1 product."
-msgstr ""
+msgstr "콤보 선택에는 품목이 최소 1개 이상 포함되어야 합니다."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "A combo product must contain at least 1 combo choice."
-msgstr ""
+msgstr "콤보 품목에는 콤보 선택 품목이 최소 1개 이상 포함되어야 합니다."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__description_sale
@@ -376,7 +377,7 @@ msgstr "이미 바코드가 사용되고 있는 품목입니다"
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "A sellable combo product can only contain sellable products."
-msgstr ""
+msgstr "판매 가능한 콤보 품목에는 판매가 가능한 품목만 포함될 수 있습니다."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__access_token
@@ -470,7 +471,7 @@ msgstr "품목 추가"
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Add Products to pricelist report"
-msgstr ""
+msgstr "가격표 보고서에 품목 추가"
 
 #. module: product
 #. odoo-javascript
@@ -485,22 +486,24 @@ msgid ""
 "Add products using the \"Add Products\" button at the top right to\n"
 "                                include them in the report."
 msgstr ""
+"오른쪽 상단에 있는 \"품목 추가\" 버튼을 사용하여 품목을 추가하여\n"
+"                                보고서에 포함시킵니다."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 msgid "Add to all products"
-msgstr ""
+msgstr "모든 품목에 추가"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__update_product_attribute_value__mode__add
 msgid "Add to existing products"
-msgstr ""
+msgstr "기존 품목에 추가"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Add to products"
-msgstr ""
+msgstr "품목에 추가"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
@@ -891,7 +894,7 @@ msgstr "콤보 가격"
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "Combo products can't have attributes"
-msgstr ""
+msgstr "콤보 품목에는 속성을 지정할 수 없습니다."
 
 #. module: product
 #. odoo-python
@@ -899,7 +902,7 @@ msgstr ""
 msgid ""
 "Combos allow to choose one product amongst a selection of choices per "
 "category."
-msgstr ""
+msgstr "콤보를 사용하면 카테고리별 여러 가지 항목 중에서 하나의 품목을 선택할 수 있습니다."
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
@@ -1166,7 +1169,7 @@ msgstr "기본 추가 금액"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__default_extra_price_changed
 msgid "Default Extra Price Changed"
-msgstr ""
+msgstr "기본 추가 가격 변경"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__product_uom_id
@@ -1416,7 +1419,7 @@ msgstr "인체공학적"
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Error exporting file. Please try again."
-msgstr ""
+msgstr "파일을 내보내는 중에 오류가 발생했습니다. 다시 시도하세요."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__exclude_for
@@ -1613,7 +1616,7 @@ msgstr "제품"
 msgid ""
 "Goods are tangible materials and merchandise you provide.\n"
 "A service is a non-material product you provide."
-msgstr ""
+msgstr "상품이란 상대에게 제공하는 유형적인 자재와 물품을 말합니다. 서비스는 상대에게 제공하는 비물질적 상품입니다."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
@@ -1722,7 +1725,7 @@ msgstr "설정하지 않는 경우, 공급업체 가격은 해당 제품의 모�
 #: model:ir.model.fields,help:product.field_product_attribute__active
 msgid ""
 "If unchecked, it will allow you to hide the attribute without removing it."
-msgstr ""
+msgstr "선택을 해제하면 속성을 제거하지 않고도 숨길 수 있습니다."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__active
@@ -2183,7 +2186,7 @@ msgstr "품목을 찾을 수 없습니다."
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "No products found in the report"
-msgstr ""
+msgstr "보고서에서 품목을 찾을 수 없음"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
@@ -2264,7 +2267,7 @@ msgstr "검정색 사무용 의자"
 #. module: product
 #: model:product.template,name:product.office_combo_product_template
 msgid "Office Combo"
-msgstr ""
+msgstr "오피스 콤보"
 
 #. module: product
 #: model:product.template,name:product.product_order_01_product_template
@@ -2293,6 +2296,12 @@ msgid ""
 "%(attribute_src)s into the attribute %(attribute_dest)s."
 msgstr ""
 "%(product)s 품목에서 %(attribute_src)s 속성을 %(attribute_dest)s 속성으로 변경할 수 없습니다."
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/product_document_kanban/upload_button/upload_button.js:0
+msgid "Oops! '%(fileName)s' didn’t upload since its format isn’t allowed."
+msgstr "이런! '%(fileName)s'  형식은 허용되지 않으므로 업로드를 하지 못했습니다."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__original_id
@@ -2383,7 +2392,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Please select some products first."
-msgstr ""
+msgstr "먼저 품목을 선택하세요."
 
 #. module: product
 #. odoo-python
@@ -2502,7 +2511,7 @@ msgstr "가격표 보고서"
 #. odoo-python
 #: code:addons/product/models/product_pricelist.py:0
 msgid "Pricelist Report Preview"
-msgstr ""
+msgstr "가격표 보고서 미리보기"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
@@ -2637,7 +2646,7 @@ msgstr "제품 콤보"
 #. module: product
 #: model:ir.model,name:product.model_product_combo_item
 msgid "Product Combo Item"
-msgstr ""
+msgstr "콤보 항목 품목"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo__combo_item_count
@@ -2648,7 +2657,7 @@ msgstr "품목 수"
 #. module: product
 #: model:res.groups,name:product.group_product_manager
 msgid "Product Creation"
-msgstr ""
+msgstr "제품 생성"
 
 #. module: product
 #: model:ir.model,name:product.model_product_document
@@ -2943,7 +2952,7 @@ msgstr "수량"
 #. odoo-python
 #: code:addons/product/controllers/pricelist_report.py:0
 msgid "Quantity (%s UoM)"
-msgstr ""
+msgstr "수량 (%s 단위)"
 
 #. module: product
 #. odoo-javascript
@@ -3145,7 +3154,7 @@ msgstr "사이즈"
 #: model:ir.model.fields,field_description:product.field_res_partner__specific_property_product_pricelist
 #: model:ir.model.fields,field_description:product.field_res_users__specific_property_product_pricelist
 msgid "Specific Property Product Pricelist"
-msgstr ""
+msgstr "특정 속성 품목 가격표"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__categ_id
@@ -3572,23 +3581,23 @@ msgstr "단위"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Update extra prices"
-msgstr ""
+msgstr "추가 가격 업데이트"
 
 #. module: product
 #: model:ir.model,name:product.model_update_product_attribute_value
 msgid "Update product attribute value"
-msgstr ""
+msgstr "품목 속성 값 업데이트"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 msgid "Update product extra prices"
-msgstr ""
+msgstr "품목 추가 가격 업데이트"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__update_product_attribute_value__mode__update_extra_price
 msgid "Update the extra price on existing products"
-msgstr ""
+msgstr "기존 품목의 추가 가격 업데이트"
 
 #. module: product
 #. odoo-javascript
@@ -3700,7 +3709,7 @@ msgstr "세부선택항목 수"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_variant
 msgid "Variant Creation"
-msgstr ""
+msgstr "품목 세부사항 생성"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_1920
@@ -3905,13 +3914,13 @@ msgstr "날짜 쓰기"
 msgid ""
 "You are about to add the value \"%(attribute_value)s\" to %(product_count)s "
 "products."
-msgstr ""
+msgstr "%(product_count)s 품목에 \"%(attribute_value)s\" 값을 추가하려고 합니다."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/wizard/update_product_attribute_value.py:0
 msgid "You are about to update the extra price of %s products."
-msgstr ""
+msgstr "%s 품목의 추가 가격을 업데이트하려고 합니다."
 
 #. module: product
 #. odoo-python
@@ -3979,7 +3988,7 @@ msgstr "카탈로그에서 이 품목을 편집할 수 없습니다."
 #: code:addons/product/models/product_attribute.py:0
 msgid ""
 "You cannot archive this attribute as there are still products linked to it"
-msgstr ""
+msgstr "아직 연결된 품목이 있으므로 이 속성을 보관할 수 없습니다."
 
 #. module: product
 #. odoo-python
@@ -4184,7 +4193,7 @@ msgstr "예: 1234567890"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_combo_view_form
 msgid "e.g. Burger Choice"
-msgstr ""
+msgstr "예: 버거 선택"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_form_normalized
@@ -4246,7 +4255,7 @@ msgstr "품목"
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "product cost"
-msgstr ""
+msgstr "제품 비용"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view

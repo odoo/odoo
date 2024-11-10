@@ -228,7 +228,7 @@ msgstr "4 x 7, koos hinnaga"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "<b>Tip: want to round at 9.99?</b>"
-msgstr ""
+msgstr "<b>Nõuanne: kas soovid ümardada kuni 9.99?</b>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -891,7 +891,7 @@ msgstr "Kombo"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_combo_view_form
 msgid "Combo Choice"
-msgstr ""
+msgstr "Kombinatsiooni valikud"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_combo_action
@@ -909,7 +909,7 @@ msgstr "Kombinatsioon"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo__base_price
 msgid "Combo Price"
-msgstr ""
+msgstr "Kombinatsiooni hind"
 
 #. module: product
 #. odoo-python
@@ -2344,6 +2344,12 @@ msgstr ""
 "%(attribute_dest)s."
 
 #. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/product_document_kanban/upload_button/upload_button.js:0
+msgid "Oops! '%(fileName)s' didn’t upload since its format isn’t allowed."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__original_id
 msgid "Original (unoptimized, unresized) attachment"
 msgstr "Algne (optimiseerimata, muutmata suurusega) manus"
@@ -3235,6 +3241,8 @@ msgid ""
 "Specify the fixed amount to add or subtract (if negative) to the amount "
 "calculated with the discount."
 msgstr ""
+"Määra fikseeritud summa, mida allahindlusega arvutatud summale lisada või "
+"lahutada (kui see on negatiivne)."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
@@ -3407,6 +3415,10 @@ msgid ""
 "combo product. This heuristic ensures that whatever product the user chooses"
 " in a combo, it will always be the same price."
 msgstr ""
+"Antud kombinatsiooni toodete minimaalne hind. Seda väärtust kasutatakse "
+"selle kombinatsiooni hinna proportsionaalseks jaotamiseks kombineeritud "
+"toote teiste kombinatsioonide suhtes. See lahendus tagab, et olenemata "
+"millise toote kasutaja kombinatsioonis valib, on selle hind alati sama."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category__product_count
@@ -3647,7 +3659,7 @@ msgstr "Mõõtühikud"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Update extra prices"
-msgstr ""
+msgstr "Uuenda lisahindasid"
 
 #. module: product
 #: model:ir.model,name:product.model_update_product_attribute_value
@@ -3658,12 +3670,12 @@ msgstr "Uuenda toote atribuudi väärtust"
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 msgid "Update product extra prices"
-msgstr ""
+msgstr "Uuenda toote lisahindu"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__update_product_attribute_value__mode__update_extra_price
 msgid "Update the extra price on existing products"
-msgstr ""
+msgstr "Uuenda lisahinda olemasolevatel toodetel"
 
 #. module: product
 #. odoo-javascript
@@ -4095,6 +4107,8 @@ msgid ""
 "You cannot change the attribute of the value %(value)s because it is used on"
 " the following products: %(products)s"
 msgstr ""
+"Väärtuse %(value)satribuuti ei saa muuta, sest seda kasutatakse järgnevatel "
+"toodetel: %(products)s"
 
 #. module: product
 #. odoo-python
@@ -4102,7 +4116,7 @@ msgstr ""
 msgid ""
 "You cannot change the product of the value %(value)s set on product "
 "%(product)s."
-msgstr ""
+msgstr "Väärtuse %(value)s toodet ei saa muuta tootel %(product)s."
 
 #. module: product
 #. odoo-python
@@ -4110,7 +4124,7 @@ msgstr ""
 msgid ""
 "You cannot change the value of the value %(value)s set on product "
 "%(product)s."
-msgstr ""
+msgstr "Toote %(product)s väärtust%(value)s ei saa muuta."
 
 #. module: product
 #. odoo-python
@@ -4137,6 +4151,10 @@ msgid ""
 "They are used within pricelist(s):\n"
 "%(other_pricelists)s"
 msgstr ""
+"Ei saa kustutada järgmisi hinnakirju:\n"
+"(%(pricelists)s)\n"
+"Need on kasutuses hinnakirjades:\n"
+"%(other_pricelists)s"
 
 #. module: product
 #. odoo-python
@@ -4161,6 +4179,8 @@ msgid ""
 "You cannot delete the value %(value)s because it is used on the following products:\n"
 "%(products)s\n"
 msgstr ""
+"Väärtust%(value)s ei saa kustutada, sest see on kasutuses too(de)tel:\n"
+"%(products)s\n"
 
 #. module: product
 #. odoo-python
@@ -4177,6 +4197,8 @@ msgid ""
 "You cannot move the attribute %(attribute)s from the product %(product_src)s"
 " to the product %(product_dest)s."
 msgstr ""
+"Atribuuti%(attribute)s ei saa liigutada tootelt%(product_src)s "
+"tootele%(product_dest)s."
 
 #. module: product
 #. odoo-python

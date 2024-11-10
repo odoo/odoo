@@ -3,8 +3,8 @@
 # 	* mrp
 # 
 # Translators:
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # Wil Odoo, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 08:17+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -86,7 +86,7 @@ msgstr "%(name)s Volgorde kiezen vóór productie"
 #. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 msgid "%(name)s Sequence production"
-msgstr "%(name)s Sequentieproductie"
+msgstr "%(name)s Volgorde productie"
 
 #. module: mrp
 #. odoo-python
@@ -2004,6 +2004,11 @@ msgid ""
 "  Note that in the case of component Highlight Consumption, where consumption is registered manually exclusively, consumption warnings will still be issued when appropriate also.\n"
 "  * Blocked: only a manager can close a manufacturing order when the BoM consumption is not respected."
 msgstr ""
+"Bepaalt of je meer of minder onderdelen kunt verbruiken dan de hoeveelheid die op de stuklijst is gedefinieerd:\n"
+"  * Toegestaan: toegestaan voor alle productiegebruikers.\n"
+"  * Toegestaan met waarschuwing: toegestaan voor alle productiegebruikers met overzicht van verbruiksverschillen bij het sluiten van de productieorder.\n"
+"  Houd er rekening mee dat in het geval van Handmatig verbruik van onderdelen, waarbij het verbruik uitsluitend handmatig wordt geregistreerd, er nog steeds verbruikswaarschuwingen worden afgegeven indien van toepassing.\n"
+"  * Geblokkeerd: alleen een beheerder kan een productieorder sluiten wanneer de comsumptie van de stuklijst niet wordt nageleefd."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__delay_alert_date
@@ -2582,7 +2587,7 @@ msgstr "Verborgen"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__manual_consumption
 msgid "Highlight Consumption"
-msgstr ""
+msgstr "Markeer verbruik"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__costs_hour
@@ -2991,7 +2996,7 @@ msgstr "Te late activiteiten"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Late Availability"
-msgstr "Laattijdige beschikbaarheid"
+msgstr "Te laat beschikbaar"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -3564,7 +3569,7 @@ msgstr "Mijn activiteit deadline"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "My MOs"
-msgstr ""
+msgstr "Mijn POs"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__never_product_template_attribute_value_ids

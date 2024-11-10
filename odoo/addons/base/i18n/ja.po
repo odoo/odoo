@@ -4,8 +4,9 @@
 # 
 # Translators:
 # Martin Trigaux, 2024
-# Junko Augias, 2024
 # Wil Odoo, 2024
+# Ryoko Tsuda <ryoko@quartile.co>, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 14:42+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1914,6 +1915,11 @@ msgid ""
 "- Balance Sheet\n"
 "- Profit and Loss\n"
 msgstr ""
+"\n"
+"トルコ向け会計レポート\n"
+"\n"
+"- 貸借対照表\n"
+"- 損益\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uk_reports
@@ -4707,6 +4713,9 @@ msgid ""
 "EFT Batch Payment\n"
 "=================\n"
 msgstr ""
+"\n"
+"EFTバッチ支払\n"
+"=================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_escpos
@@ -5439,6 +5448,67 @@ msgid ""
 "* Unit of measures AFIP codes\n"
 "* Partners: Consumidor Final and AFIP\n"
 msgstr ""
+"\n"
+"機能\n"
+"----------\n"
+"\n"
+"このモジュールは、アルゼンチンでの会社運営とAFIP(Administración Federal de Ingresos Públicos)の規制およびガイドラインに準拠するために必要な最小限の設定を反映した、アルゼンチン向けローカリゼーション用の会計機能を提供します。\n"
+"\n"
+"本番用に以下の設定ステップに従って下さい:\n"
+"\n"
+"1. 会社に移動し、VAT番号とAFIP責任タイプを設定します。\n"
+"2. 会計/設定に移動し、使用する勘定科目表を設定します。\n"
+"3. AFIP POS情報を考慮して販売仕訳帳を作成します。\n"
+"\n"
+"テスト用デモデータ:\n"
+"\n"
+"* AFIPの責任分野ごとに3つの会社が設立され、それぞれの勘定科目表がインストールされました。テストを行うには、適切な会社を選択して下さい:\n"
+"\n"
+"  * (AR) Responsable Inscripto\n"
+"  * (AR) Exento\n"
+"  * (AR) Monotributo\n"
+"\n"
+"* 全ての会社で、仕訳帳販売は、顧客請求書と展示会請求書に設定されています。\n"
+"* “(AR) Responsable Inscripto” 会社で検証済みの顧客請求書およびその他のドキュメントの例\n"
+"* パートナーの例: 異なる責任の種類:\n"
+"\n"
+"  * ADHOC (IVA Responsable Inscripto)\n"
+"  * Servicios Globales (IVA Sujeto Exento)\n"
+"  * Gritti (Monotributo)\n"
+"  * Montana Sur. IVA Liberado in Zona Franca\n"
+"  * Barcelona food (Cliente del Exterior)\n"
+"  * Odoo (Proveedor del Exterior)\n"
+"\n"
+"ハイライト:\n"
+"\n"
+"* 勘定科目表は自動的にインストールされません。CoAテンプレートは、AFIPの会社の責任に依存します。必要に応じてCoAをインストールする必要があります。\n"
+"* CoAをインストールしても販売仕訳帳は生成されないため、手動で仕訳帳を設定する必要があります。\n"
+"* 請求書作成時には、ドキュメントの発行者と受領者の財務上の責任と関連仕訳帳に応じて、ドキュメントタイプが適切に事前に選択されます。\n"
+"* CBUアカウントタイプが追加され、CBU検証も追加されました。\n"
+"\n"
+"\n"
+"テクニカル\n"
+"---------\n"
+"\n"
+"このモジュールでは、最終的に電子請求モジュールで使用されるモデルとフィールドの両方を追加します。主な機能の概要は以下の通りです:\n"
+"\n"
+"マスタデータ:\n"
+"\n"
+"* 勘定科目表: 法人に関連するAFIPの各責任ごとに1つ:\n"
+"\n"
+"  * Responsable Inscripto (RI)\n"
+"  * Exento (EX)\n"
+"  * Monotributo (Mono)\n"
+"\n"
+"* アルゼンチンの税金および会計税グループ(現行の割当て分およびその他の種類の付加価値税)\n"
+"* AFIP責任タイプ\n"
+"* 会計ポジション (税マップ用)\n"
+"* アルゼンチンの法定ドキュメントタイプ\n"
+"* アルゼンチンで有効なIDタイプ。\n"
+"* 法人、自然人、その他のための国別 AFIP コードおよび国別 VAT コード\n"
+"* 通貨AFIPコード\n"
+"* 単位AFIPコード\n"
+"* 取引先: 最終消費者およびAFIP\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec
@@ -7012,6 +7082,8 @@ msgid ""
 "\n"
 "Modelo 303: Extra fields regarding Rectificación\n"
 msgstr ""
+"\n"
+"Modelo 303: Extra fields regarding Rectificación\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_recruitment_integration_skills_monster
@@ -8525,6 +8597,20 @@ msgid ""
 "\n"
 "5.3: Update taxes starting Q4 2024 according to BOE-A-2024-12944 (Royal Decree 4/2024) https://www.boe.es/buscar/act.php?id=BOE-A-2024-12944\n"
 msgstr ""
+"\n"
+"スペイン勘定科目 (PGCE 2008)\n"
+"========================================\n"
+"\n"
+"    * Defines the following chart of account templates:\n"
+"        * Spanish general chart of accounts 2008\n"
+"        * Spanish general chart of accounts 2008 for small and medium companies\n"
+"        * Spanish general chart of accounts 2008 for associations\n"
+"    * Defines templates for sale and purchase VAT\n"
+"    * Defines tax templates\n"
+"    * Defines fiscal positions for spanish fiscal legislation\n"
+"    * Defines tax reports mod 111, 115 and 303\n"
+"\n"
+"5.3: Update taxes starting Q4 2024 according to BOE-A-2024-12944 (Royal Decree 4/2024) https://www.boe.es/buscar/act.php?id=BOE-A-2024-12944\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_renting
@@ -8587,6 +8673,8 @@ msgid ""
 "\n"
 "Support for Indian TDS (Tax Deducted at Source) for Payment.\n"
 msgstr ""
+"\n"
+"インドのTDS(源泉徴収税)をサポートします。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_withholding
@@ -8750,6 +8838,8 @@ msgid ""
 "\n"
 "The UBL PINT e-invoicing format for Australia & New Zealand is based on the Peppol International (PINT) model for Billing.\n"
 msgstr ""
+"\n"
+"オーストラリアおよびニュージーランド向けのUBL PINT 電子請求フォーマットは、Peppol International (PINT) の請求モデルに基づいています。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jp_ubl_pint
@@ -8775,6 +8865,8 @@ msgid ""
 "\n"
 "The UBL PINT e-invoicing format for Singapore is based on the Peppol International (PINT) model for Billing.\n"
 msgstr ""
+"\n"
+"シンガポール向けのUBL PINT e-invoicingフォーマットは、仕入先請求書のためのPeppol International (PINT) モデルに基づいています。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_repair
@@ -9343,6 +9435,13 @@ msgid ""
 "- Chart of accounts\n"
 "- Taxes\n"
 msgstr ""
+"\n"
+"Odooでイラクの勘定科目を管理するための基本モジュールです。\n"
+"==============================================================================\n"
+"Iraq accounting basic charts and localization.\n"
+"Activates:\n"
+"- Chart of accounts\n"
+"- Taxes\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jo
@@ -9503,6 +9602,17 @@ msgid ""
 "- Taxes\n"
 "- Tax Report\n"
 msgstr ""
+"\n"
+"Odooでトルコの勘定科目を管理するための基本モジュールです\n"
+"==========================================================================\n"
+"\n"
+"Türkiye accounting basic charts and localizations\n"
+"-------------------------------------------------\n"
+"Activates:\n"
+"\n"
+"- Chart of Accounts\n"
+"- Taxes\n"
+"- Tax Report\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mu_account
@@ -11247,6 +11357,8 @@ msgid ""
 "\n"
 "This module integrates with UrbanPiper to receive and manage orders from Swiggy.\n"
 msgstr ""
+"\n"
+"このモジュールは、UrbanPiperと統合し、Swiggyからのオーダを受信し、管理します。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_urban_piper_ubereats
@@ -11254,6 +11366,8 @@ msgid ""
 "\n"
 "This module integrates with UrbanPiper to receive and manage orders from Uber Eats.\n"
 msgstr ""
+"\n"
+"このモジュールはUrbanPiperと統合し、Uber Eatsからのオーダを受信して管理します。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_urban_piper_zomato
@@ -11623,6 +11737,10 @@ msgid ""
 "It installs sale capabilities, front-end flow, eCommerce, questions and\n"
 "automatic lead generation, full Online support, sms and whatsapp support, ...\n"
 msgstr ""
+"\n"
+"このモジュールは、Odooのフロントエンドとバックエンドの両方の主要なイベントフローをテストします。\n"
+"販売機能、フロントエンドフロー、eコマース、質問\n"
+"自動リードジェネレーション、オンラインサポート、SMS、WhatsAppサポートなどをインストールします。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_main_flows
@@ -11764,6 +11882,12 @@ msgid ""
 "- Income tax calculations\n"
 "- Stamp tax deductions\n"
 msgstr ""
+"\n"
+"トルコ給与および税規則\n"
+"=============================\n"
+"- 雇用と失業に関する社会保障料/保険料の計算\n"
+"- 所得税計算\n"
+"- 印紙税控除\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ua
@@ -12357,6 +12481,8 @@ msgid ""
 "'%%(field)s'. Each property need at least 'name', 'type' and 'string' "
 "attribute."
 msgstr ""
+"'%(value)s' はフィールド '%%(field)s'用に有効なプロパティ値ではないようです。各プロパティは 'name', 'type' と "
+"'string' 属性が必要です。"
 
 #. module: base
 #. odoo-python
@@ -12365,6 +12491,8 @@ msgid ""
 "'%(value)s' does not seem to be a valid Selection value for "
 "'%(label_property)s' (subfield of '%%(field)s' field)."
 msgstr ""
+"'%(value)s' は '%(label_property)s' ('%%(field)s' "
+"フィールド用サブフィールド)用に有効な選択値ではないようです。"
 
 #. module: base
 #. odoo-python
@@ -12373,6 +12501,8 @@ msgid ""
 "'%(value)s' does not seem to be a valid Tag value for '%(label_property)s' "
 "(subfield of '%%(field)s' field)."
 msgstr ""
+"'%(value)s' は '%(label_property)s' ('%%(field)s' "
+"フィールドのサブフィールド)用に有効なタグではないようです。"
 
 #. module: base
 #. odoo-python
@@ -12381,6 +12511,8 @@ msgid ""
 "'%(value)s' does not seem to be an float for field '%(label_property)s' "
 "property (subfield of '%%(field)s' field)."
 msgstr ""
+"'%(value)s' は フィールド'%(label_property)s' プロパティ ('%%(field)s' "
+"フィールドのサブフィールド)用の浮動小数点値ではないようです。"
 
 #. module: base
 #. odoo-python
@@ -12389,6 +12521,8 @@ msgid ""
 "'%(value)s' does not seem to be an integer for field '%(label_property)s' "
 "property (subfield of '%%(field)s' field)."
 msgstr ""
+"'%(value)s' はフィールド%(label_property)s' プロパティ ( '%%(field)s' "
+"フィールドのサブフィールド)用の整数ではないようです。"
 
 #. module: base
 #. odoo-python
@@ -13094,6 +13228,12 @@ msgstr "<strong>電話</strong>"
 msgid ""
 "<strong>Please enter your password to confirm you own this account</strong>"
 msgstr "<strong>あなた自身のアカウントであることを確認するために、パスワードを入力してください</strong>"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.res_users_identitycheck_view_form
+msgid ""
+"<strong>Please confirm your identity by entering your password</strong>"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -17174,7 +17314,7 @@ msgstr "オーストラリア"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_anz_ubl_pint
 msgid "Australia & New Zealand - UBL PINT"
-msgstr ""
+msgstr "オーストラリア & ニュージーランド - UBL PINT"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_au
@@ -18347,7 +18487,7 @@ msgstr "株式と会計の架け橋"
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_timesheet
 msgid "Bridge created to add computation of timesheet to subscription"
-msgstr ""
+msgstr "サブスクリプションにタイムシートの計算機能を追加するためのブリッジを作成"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_account_asset
@@ -22253,7 +22393,7 @@ msgstr "EET"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nz_eft
 msgid "EFT Batch Payment"
-msgstr ""
+msgstr "EFT バッチ支払"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_escpos
@@ -23413,7 +23553,7 @@ msgstr "イベントソーシャル"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_event_full_enterprise
 msgid "Event Test (all modules)"
-msgstr ""
+msgstr "イベントテスト (全モジュール)"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_exhibitor
@@ -23689,7 +23829,7 @@ msgstr "AFTファイルとして支払をエクスポート"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_nz_eft
 msgid "Export payments as EFT files"
-msgstr ""
+msgstr "EFTファイルとして支払をエキスポート"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_us_payment_nacha
@@ -26635,7 +26775,7 @@ msgstr "インド-株式レポート（GST）"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_withholding_payment
 msgid "Indian - TDS For Payment"
-msgstr ""
+msgstr "インド - 支払用TDS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_reports_tds_tcs
@@ -27395,7 +27535,7 @@ msgstr "イラク"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_iq
 msgid "Iraq - Accounting"
-msgstr ""
+msgstr "イラク - 会計"
 
 #. module: base
 #: model:res.country,name:base.ie
@@ -33010,7 +33150,7 @@ msgstr "ポータル・ユーザだけが自分のアカウントを削除でき
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 msgid "Oops, no!"
-msgstr "おっと、いや'"
+msgstr "おっと、違った！"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__speedscope_url
@@ -33749,12 +33889,12 @@ msgstr "POS Stripe"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_urban_piper_swiggy
 msgid "POS UrbanPiper - Swiggy"
-msgstr ""
+msgstr "POS UrbanPiper - Swiggy"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_urban_piper_ubereats
 msgid "POS UrbanPiper - Uber Eats"
-msgstr ""
+msgstr "POS UrbanPiper - Uber Eats"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_urban_piper_zomato
@@ -35417,7 +35557,7 @@ msgstr "プロジェクト販売サブスクリプション"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_timesheet
 msgid "Project Sales Subscription Timesheet"
-msgstr ""
+msgstr "プロジェクト 販売 サブスクリプション タイムシート"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_stock
@@ -38208,7 +38348,7 @@ msgstr "シンガポール-会計報告"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sg_ubl_pint
 msgid "Singapore - UBL PINT"
-msgstr ""
+msgstr "シンガポール - UBL PINT"
 
 #. module: base
 #: model:res.country,name:base.sx
@@ -38482,7 +38622,7 @@ msgstr "スペイン-会計(PGCE 2008)レポート"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_reports_2024
 msgid "Spain - Accounting Reports (2024 Update)"
-msgstr ""
+msgstr "スペイン - 会計レポート (2024 更新)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_sale_amazon
@@ -39804,6 +39944,14 @@ msgstr "APIキーの有効期限が正しくありません。"
 #: code:addons/base/models/res_users.py:0
 msgid "The API key must have an expiration date"
 msgstr "APIキーには有効期限日が必要です"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+msgid ""
+"The action \"%s\" cannot be set as the home action because it requires a "
+"record to be selected beforehand."
+msgstr "アクション\"%s\" は、事前にレコードを選択する必要があるため、ホームアクションとして設定できません。"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_bank__country_code
@@ -41939,7 +42087,7 @@ msgstr "このシステムでWkhtmltopdfが見つかりません。 PDFを作成
 msgid ""
 "Unable to import'%%(field)s' Properties field as a whole, target individual "
 "property instead."
-msgstr ""
+msgstr "t'%%(field)s' プロパティフィールドを全体としてインポートできません。代わりに個別プロパティを対象にして下さい。"
 
 #. module: base
 #. odoo-python
@@ -42176,6 +42324,8 @@ msgid ""
 "Unknown value '%(value)s' for boolean '%(label_property)s' property "
 "(subfield of '%%(field)s' field)."
 msgstr ""
+"不明な値 '%(value)s' ブーリアン'%(label_property)s' プロパティ用 ('%%(field)s' "
+"フィールドのサブフィールド)。"
 
 #. module: base
 #. odoo-python

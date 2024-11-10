@@ -73,7 +73,7 @@ msgstr "%(name)s 的工時表"
 msgid ""
 "'%(missing_plan_names)s' analytic plan(s) required on the project "
 "'%(project_name)s' linked to the timesheet."
-msgstr ""
+msgstr "缺漏「%(missing_plan_names)s」。已連結至工時表的專案「%(project_name)s」，需要此分析計劃。"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -566,7 +566,7 @@ msgstr "該值無效： %s"
 msgid ""
 "Keep track of your working hours by project every day and bill your "
 "customers for that time."
-msgstr ""
+msgstr "追蹤不同專案項目每天的工時，向客戶收取工時費用。"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -684,7 +684,7 @@ msgstr "暫無資料！"
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
 msgid "No timesheets found. Let's create one!"
-msgstr ""
+msgstr "找不到工時表。讓我們建立一個吧！"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -861,8 +861,8 @@ msgstr "設定"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_report_subtask
-msgid "Sub-Task:"
-msgstr "子任務："
+msgid "Sub-Task of '<t t-out=\"title\"/>': "
+msgstr ""
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -903,7 +903,7 @@ msgstr "該公司的休假用內部專案應該在這家公司。"
 msgid ""
 "The project, the task and the analytic accounts of the timesheet must belong"
 " to the same company."
-msgstr ""
+msgstr "工時表的專案、任務及分析賬戶，必須全部屬於同一間公司。"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -1227,7 +1227,7 @@ msgstr "必須使用所選公司的在職員工創建工時表。"
 msgid ""
 "Timesheets must be created with at least an active analytic account defined "
 "in the plan '%(plan_name)s'."
-msgstr ""
+msgstr "建立工時表時，計劃「%(plan_name)s」內必須最少有一個生效的分析賬戶。"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1247,7 +1247,7 @@ msgid ""
 "To use the timesheets feature, you need an analytic account for your "
 "project. Please set one up in the plan '%(plan_name)s' or turn off the "
 "timesheets feature."
-msgstr ""
+msgstr "要使用工時表功能，專案需要有一個分析賬戶。請為計劃「%(plan_name)s」設定一個分析賬戶，或關閉工時表功能。"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1276,12 +1276,16 @@ msgstr "已花費總日數"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__total_hours_spent
-#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__total_hours_spent
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Total Time Spent"
 msgstr "已花費時間總計"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__total_hours_spent
+msgid "Hours By Task (Including Subtasks)"
+msgstr "總花費工時，按任務劃分（包括子任務）"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
