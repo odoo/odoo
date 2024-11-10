@@ -8,6 +8,7 @@ import { FormatPlugin } from "./core/format_plugin";
 import { HistoryPlugin } from "./core/history_plugin";
 import { InputPlugin } from "./core/input_plugin";
 import { LineBreakPlugin } from "./core/line_break_plugin";
+import { NoInlineRootPlugin } from "./core/no_inline_root_plugin";
 import { OverlayPlugin } from "./core/overlay_plugin";
 import { ProtectedNodePlugin } from "./core/protected_node_plugin";
 import { SanitizePlugin } from "./core/sanitize_plugin";
@@ -68,6 +69,7 @@ export const CORE_PLUGINS = [
     HistoryPlugin,
     InputPlugin,
     LineBreakPlugin,
+    NoInlineRootPlugin,
     OverlayPlugin,
     ProtectedNodePlugin,
     SanitizePlugin,
