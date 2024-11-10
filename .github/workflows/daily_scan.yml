@@ -1,0 +1,75 @@
+
+name: Daily Code Scan and Fix
+
+on:
+  schedule:
+    - cron: "0 2 * * *" # Runs every day at 2 AM UTC
+  workflow_dispatch:      # Allows manual triggering
+
+jobs:
+  scan_and_fix:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        if: ${{ contains(github.repository, "JavaScript") || contains(github.repository, "Node") }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+
+      - name: Set up Python
+        if: ${{ contains(github.repository, "Python") }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.x"
+
+      - name: Install Dependencies (Node.js)
+        if: ${{ contains(github.repository, "JavaScript") || contains(github.repository, "Node") }}
+        run: |
+          npm install
+          npm install eslint prettier --save-dev
+
+      - name: Install Dependencies (Python)
+        if: ${{ contains(github.repository, "Python") }}
+        run: |
+          python -m pip install --upgrade pip
+          pip install pylint autopep8
+
+      - name: Run ESLint and Prettier (JavaScript Projects)
+        if: ${{ contains(github.repository, "JavaScript") || contains(github.repository, "Node") }}
+        run: |
+          npx eslint . --fix || echo "No ESLint issues found."
+          npx prettier --write . || echo "No Prettier issues found."
+
+      - name: Run PyLint and AutoPep8 (Python Projects)
+        if: ${{ contains(github.repository, "Python") }}
+        run: |
+          pylint *.py --exit-zero > pylint_output.txt
+          autopep8 --in-place --recursive .
+        
+      - name: Commit and Push Fixes
+        run: |
+          git config --global user.name "GitHub Action Bot"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          if ! git diff --cached --quiet; then
+            git commit -m "Automated code fixes via GitHub Actions"
+            git push
+          else
+            echo "No changes to commit."
+          fi
+
+      - name: Open GitHub Issues for Unresolved Problems
+        if: ${{ contains(github.repository, "Python") }}
+        run: |
+          if grep -q "error" pylint_output.txt; then
+            while read -r error_line; do
+              gh issue create --title "Automated Issue: Code error detected" --body "$error_line" --assignee "allyelvis"
+            done < pylint_output.txt
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
