@@ -125,7 +125,7 @@ msgstr "<span class=\"o_stat_text\">คำสั่งขาย</span>"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 msgid "<span class=\"o_stat_text\">Tasks</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">งาน</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -139,6 +139,8 @@ msgid ""
 "A project must be defined on the quotation or on the form of products creating a task on order.\n"
 "The following products need a project in which to put their task: %(product_names)s"
 msgstr ""
+"โปรเจ็กต์จะต้องกำหนดไว้ในใบเสนอราคาหรือแบบฟอร์มของผลิตภัณฑ์ โดยต้องสร้างงานตามคำสั่งซื้อ\n"
+"ผลิตภัณฑ์ต่อไปนี้จำเป็นต้องมีโปรเจ็กต์ที่จะดำเนินงาน:%(product_names)s"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
@@ -147,6 +149,8 @@ msgid ""
 "analytic distribution of this project will also serve as a reference for "
 "newly created sales order items."
 msgstr ""
+"งานจะถูกสร้างขึ้นสำหรับโปรเจ็กต์เมื่อได้รับการยืนยันคำสั่งซื้อ "
+"การกระจายเชิงวิเคราะห์ของโปรเจ็กต์นี้ยังทำหน้าที่เป็นข้อมูลอ้างอิงสำหรับรายการคำสั่งซื้อที่เพิ่งสร้างขึ้นอีกด้วย"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__qty_delivered_method
@@ -482,6 +486,9 @@ msgid ""
 "generate analytic costs, will be re-invoiced in this sales order if they are"
 " set up for it."
 msgstr ""
+"ผลิตภัณฑ์ที่เพิ่มเข้าในการเลือกสินค้า "
+"ซึ่งประเภทการดำเนินการได้รับการกำหนดค่าให้สร้างต้นทุนการวิเคราะห์ "
+"จะมีการเรียกเก็บเงินใหม่ในใบสั่งขายนี้ หากมีการตั้งค่าไว้"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_project

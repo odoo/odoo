@@ -3,8 +3,8 @@
 # 	* sms
 # 
 # Translators:
-# Sarah Park, 2024
 # Wil Odoo, 2024
+# Sarah Park, 2024
 # Daye Jeong, 2024
 # 
 msgid ""
@@ -61,14 +61,14 @@ msgstr "+1 555-555-555"
 msgid ""
 "<i class=\"fa fa-warning\"/> An error occurred with your account. Please "
 "contact the support for more information..."
-msgstr ""
+msgstr "<i class=\"fa fa-warning\"/> 계정에 오류가 발생했습니다. 자세한 내용은 지원팀에 문의하세요..."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
 msgid ""
 "<i class=\"fa fa-warning\"/> You cannot send SMS while your account is not "
 "registered."
-msgstr ""
+msgstr "<i class=\"fa fa-warning\"/> 계정이 등록되지 않은 상태에서는 SMS를 보낼 수 없습니다."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
@@ -76,6 +76,8 @@ msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
 "                            Register"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                            등록하기"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
@@ -83,6 +85,8 @@ msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
 "                            Set Sender Name"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                            발신자 이름 설정"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -198,7 +202,7 @@ msgstr "SMS 발송 중 오류가 발생했습니다."
 msgid ""
 "An unknown error occurred. Please contact Odoo support if this error "
 "persists."
-msgstr ""
+msgstr "알 수 없는 오류가 발생했습니다. 문제가 지속되면 Odoo 지원팀에 문의하세요."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model_id
@@ -296,7 +300,7 @@ msgstr "예제 선택"
 #: code:addons/sms/wizard/sms_account_code.py:0
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
 msgid "Choose your sender name"
-msgstr ""
+msgstr "보낸 사람 이름 선택"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -462,7 +466,7 @@ msgstr "SMS 활성화"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 msgid "Enter a phone number to get an SMS with a verification code."
-msgstr ""
+msgstr "SMS로 인증 코드를 받을 휴대폰 번호를 입력하세요."
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__error
@@ -989,7 +993,7 @@ msgstr "등록"
 #: code:addons/sms/models/iap_account.py:0
 #: code:addons/sms/wizard/sms_account_phone.py:0
 msgid "Register Account"
-msgstr ""
+msgstr "계정 등록"
 
 #. module: sms
 #. odoo-python
@@ -1001,7 +1005,7 @@ msgstr "지금 등록하세요."
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_code_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 msgid "Register your SMS account"
-msgstr ""
+msgstr "SMS 계정 등록"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_rejected
@@ -1081,17 +1085,17 @@ msgstr "SMS (메모 포함하지 않음)"
 #. module: sms
 #: model:ir.model,name:sms.model_sms_account_phone
 msgid "SMS Account Registration Phone Number Wizard"
-msgstr ""
+msgstr "SMS 계정 등록 전화번호 마법사"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_account_sender
 msgid "SMS Account Sender Name Wizard"
-msgstr ""
+msgstr "SMS 계정 발신자 이름 마법사"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_account_code
 msgid "SMS Account Verification Code Wizard"
-msgstr ""
+msgstr "SMS 계정 인증 코드 마법사"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_account_analytic_account__message_has_sms_error
@@ -1287,7 +1291,7 @@ msgstr "SMS 일괄 전송하기"
 #. module: sms
 #: model:iap.service,description:sms.iap_service_sms
 msgid "Send SMS to your contacts directly from your database."
-msgstr ""
+msgstr "데이터베이스에 있는 연락처로 직접 SMS를 보낼 수 있습니다."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1307,13 +1311,13 @@ msgstr "번호로 보내기"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 msgid "Send verification code"
-msgstr ""
+msgstr "인증 코드 전송"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_iap_account__sender_name
 #: model:ir.model.fields,field_description:sms.field_sms_account_sender__sender_name
 msgid "Sender Name"
-msgstr ""
+msgstr "발신자 이름"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_resend_action
@@ -1345,7 +1349,7 @@ msgstr "서버 오류"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
 msgid "Set sender name"
-msgstr ""
+msgstr "발신자 이름 설정"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -1372,7 +1376,7 @@ msgstr "단일 모드"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
 msgid "Skip for now"
-msgstr ""
+msgstr "지금 건너뛰기"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_resend_id
@@ -1426,7 +1430,7 @@ msgstr "템플릿(서식)"
 msgid ""
 "The SMS Service is currently unavailable for new users and new accounts "
 "registrations are suspended."
-msgstr ""
+msgstr "현재 신규 사용자 및 계정에 대한 신규 SMS 서비스 등록이 일시 중단되었습니다."
 
 #. module: sms
 #. odoo-python
@@ -1462,7 +1466,7 @@ msgstr "이 서식을 사용할 수 있는 문서 유형"
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "The verification code is incorrect."
-msgstr ""
+msgstr "인증 코드가 잘못되었습니다."
 
 #. module: sms
 #. odoo-python
@@ -1481,12 +1485,12 @@ msgstr "이 번호는 이미 사용되었기 때문에 삭제되었습니다."
 #: code:addons/sms/tools/sms_api.py:0
 msgid ""
 "This account already has an existing sender name and it cannot be changed."
-msgstr ""
+msgstr "이 계정에는 이미 수정할 수 없는 발신자 이름이 있습니다."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_iap_account__sender_name
 msgid "This is the name that will be displayed as the sender of the SMS."
-msgstr ""
+msgstr "SMS 발신자로 표시되는 이름입니다."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.res_partner_view_form
@@ -1498,7 +1502,7 @@ msgstr "이 전화번호는 SMS 마케팅에서 블랙리스트에 올라있습�
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "This phone number/account has been banned from our service."
-msgstr ""
+msgstr "이 전화번호 또는 계정은 서비스 이용이 금지되었습니다."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__resend
@@ -1608,7 +1612,7 @@ msgstr "경고"
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "We were not able to find your account in our database."
-msgstr ""
+msgstr "데이터베이스에서 귀하의 계정을 찾을 수 없습니다."
 
 #. module: sms
 #. odoo-python
@@ -1668,7 +1672,7 @@ msgstr "IAP 계정에 크레딧이 충분하지 않습니다."
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "You tried too many times. Please retry later."
-msgstr ""
+msgstr "시도 횟수가 너무 많습니다. 나중에 다시 시도하세요."
 
 #. module: sms
 #. odoo-javascript
@@ -1681,7 +1685,7 @@ msgstr "SMS 문자 메시지에는 공백이 아닌 문자가 하나 이상 있�
 #. odoo-python
 #: code:addons/sms/wizard/sms_account_code.py:0
 msgid "Your SMS account has been successfully registered."
-msgstr ""
+msgstr "SMS 계정 등록이 완료되었습니다."
 
 #. module: sms
 #. odoo-python
@@ -1689,7 +1693,7 @@ msgstr ""
 msgid ""
 "Your sender name must be between 3 and 11 characters long and only contain "
 "alphanumeric characters."
-msgstr ""
+msgstr "발신자 이름은 3~11자 사이여야 하며 영숫자만 포함해야 합니다."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
@@ -1704,7 +1708,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "Your sms account has not been activated yet."
-msgstr ""
+msgstr "SMS 계정이 아직 활성화되지 않았습니다."
 
 #. module: sms
 #. odoo-javascript

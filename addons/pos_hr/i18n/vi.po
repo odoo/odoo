@@ -5,8 +5,8 @@
 # Translators:
 # Martin Trigaux, 2024
 # Nancy Momoland <thanh.np2502@gmail.com>, 2024
-# Thi Huong Nguyen, 2024
 # Wil Odoo, 2024
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 07:49+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,12 +25,12 @@ msgstr ""
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_report_pos_hr_multi_employee_sales_report
 msgid "A collection of single session reports. One for each employee"
-msgstr ""
+msgstr "Một bộ báo cáo cho từng phiên. Mỗi bộ cho một nhân viên"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.single_employee_sales_report
 msgid "Abigal Peterson"
-msgstr ""
+msgstr "Abigal Peterson"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -41,7 +41,7 @@ msgstr "Truy cập bị từ chối"
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_daily_sales_reports_wizard__add_report_per_employee
 msgid "Add a report per each employee"
-msgstr ""
+msgstr "Thêm báo cáo cho mỗi nhân viên"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
@@ -72,12 +72,14 @@ msgid ""
 "Can't generate a report per employee! as selected session has no orders "
 "associated with any employee."
 msgstr ""
+"Không thể tạo báo cáo cho từng nhân viên! Vì phiên đã chọn không có đơn hàng"
+" nào được liên kết với bất kỳ nhân viên nào."
 
 #. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/overrides/components/closing_popup/closing_popup.xml:0
 msgid "Cash in/out"
-msgstr ""
+msgstr "Tiền thu/chi"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_order__employee_id
@@ -91,12 +93,12 @@ msgstr "Thu ngân"
 #. odoo-python
 #: code:addons/pos_hr/models/pos_order.py:0
 msgid "Cashier %s"
-msgstr ""
+msgstr "Thu ngân %s"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_order__cashier
 msgid "Cashier name"
-msgstr ""
+msgstr "Tên thu ngân"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -108,7 +110,7 @@ msgstr "Đổi thu ngân"
 #. odoo-python
 #: code:addons/pos_hr/models/pos_session.py:0
 msgid "Closed Register"
-msgstr ""
+msgstr "Máy tính tiền đã đóng"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_res_config_settings
@@ -145,12 +147,12 @@ msgstr "Nhân viên"
 #. module: pos_hr
 #: model:ir.actions.report,name:pos_hr.multi_employee_sales_report_action
 msgid "Employee Sales Details"
-msgstr ""
+msgstr "Thông tin bán hàng"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.single_employee_sales_report
 msgid "Employee Sales Report"
-msgstr ""
+msgstr "Báo cáo bán hàng"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.single_employee_sales_report
@@ -179,7 +181,7 @@ msgstr "Nhân viên có quyền truy cập cấp quản lý"
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/overrides/screens/login_screen/login_screen.xml:0
 msgid "Enter your PIN"
-msgstr ""
+msgstr "Nhập PIN của bạn"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_config__basic_employee_ids
@@ -215,7 +217,7 @@ msgstr "Mở máy tính tiền"
 #. odoo-python
 #: code:addons/pos_hr/models/pos_session.py:0
 msgid "Opened register"
-msgstr ""
+msgstr "Máy tính tiền đã mở"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -245,7 +247,7 @@ msgstr "Thanh toán"
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/overrides/components/closing_popup/closing_popup.js:0
 msgid "Payments in %(paymentMethod)s"
-msgstr ""
+msgstr "Các khoản thanh toán bằng %(paymentMethod)s"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_pos_config
@@ -297,35 +299,35 @@ msgstr "Chọn (các) nhân viên"
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_report_pos_hr_single_employee_sales_report
 msgid "Session sales details for a single employee"
-msgstr ""
+msgstr "Chi tiết bán hàng theo phiên cho một nhân viên"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_session__employee_id
 msgid "The employee who currently uses the cash register"
-msgstr ""
+msgstr "Nhân viên hiện đang sử dụng máy tính tiền"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_account_bank_statement_line__employee_id
 msgid "The employee who made the cash move."
-msgstr ""
+msgstr "Nhân viên thực hiện chuyển tiền."
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_order__employee_id
 #: model:ir.model.fields,help:pos_hr.field_pos_payment__employee_id
 msgid "The employee who uses the cash register."
-msgstr ""
+msgstr "Nhân viên sử dụng máy tính tiền."
 
 #. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
 msgid "There is no cashier available."
-msgstr ""
+msgstr "Không có thu ngân nào."
 
 #. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/overrides/screens/login_screen/login_screen.xml:0
 msgid "Unlock Register"
-msgstr ""
+msgstr "Mở khoá máy tính tiền"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -337,7 +339,7 @@ msgstr "Sai PIN"
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/overrides/screens/product_screen/order_summary/order_summary.js:0
 msgid "You are not allowed to change the price of a product."
-msgstr ""
+msgstr "Bạn không được phép thay đổi giá của sản phẩm."
 
 #. module: pos_hr
 #. odoo-python

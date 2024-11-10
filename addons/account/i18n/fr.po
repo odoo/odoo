@@ -5,8 +5,9 @@
 # Translators:
 # Martin Trigaux, 2024
 # D4E <a@d4e.cool>, 2024
-# Manon Rondou, 2024
 # Jolien De Paepe, 2024
+# allanot nicolas <n.allanot@free.fr>, 2024
+# Manon Rondou, 2024
 # Wil Odoo, 2024
 # 
 msgid ""
@@ -840,6 +841,9 @@ msgid ""
 "<i class=\"fa fa-fw fa-check\" aria-label=\"processing_payment\" title=\"Processing Payment\" role=\"img\"/>\n"
 "                                    <span class=\"d-none d-md-inline\"> Processing Payment</span>"
 msgstr ""
+"<i class='fa fa-fw fa-check' aria-label='traitement_paiement' "
+"title='Traitement du paiement' role='img'/><span class='d-none d-md-inline'>"
+" Traitement du paiement</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -988,6 +992,9 @@ msgid ""
 "                                        Audit\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                        Audit\n"
+"                                    </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -1772,6 +1779,22 @@ msgid ""
 msgstr ""
 "Le compte %s ne permet pas le lettrage. Modifiez sa configuration pour "
 "pouvoir lettrer des écritures."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "Account %s is of payable type, but is used in a sale operation."
+msgstr ""
+"Le compte %s est de type créditeur, mais est utilisé dans une opération de "
+"vente."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "Account %s is of receivable type, but is used in a purchase operation."
+msgstr ""
+"Le compte %s est de type débiteur, mais est utilisé dans une opération "
+"d'achat."
 
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
@@ -3208,7 +3231,7 @@ msgstr "Piste d'audit"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__audit_trail_message_ids
 #: model:ir.model.fields,field_description:account.field_account_move__audit_trail_message_ids
 msgid "Audit Trail Messages"
-msgstr ""
+msgstr "Messages de suivi d'audit"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__auditable
@@ -4085,7 +4108,7 @@ msgstr "Compte d'espèces"
 #. module: account
 #: model:account.account,name:account.1_cash_journal_default_account_52
 msgid "Cash Bakery"
-msgstr ""
+msgstr "Espèces Boulangerie"
 
 #. module: account
 #: model:account.account,name:account.1_cash_journal_default_account_54
@@ -4131,7 +4154,7 @@ msgstr "Compte d'attente pour la TVA sur encaissements"
 #. module: account
 #: model:account.account,name:account.1_cash_journal_default_account_51
 msgid "Cash Clothes Shop"
-msgstr ""
+msgstr "Espèces Magasin de vêtements"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_expense_account_id
@@ -4189,7 +4212,7 @@ msgstr "Compte des pertes d'annulation d'escompte"
 #. module: account
 #: model:account.account,name:account.1_cash_journal_default_account_50
 msgid "Cash Furn. Shop"
-msgstr ""
+msgstr "Espèces Magasin de meubles"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
@@ -6375,7 +6398,7 @@ msgstr "Afficher le modèle de facture rapport PDF"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__display_mapping_tab
 msgid "Display Mapping Tab"
-msgstr ""
+msgstr "Afficher l'onglet de mappage"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__display_name
@@ -7983,7 +8006,7 @@ msgstr "Le virement d'argent a un avertissement"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__has_negative_factor
 msgid "Has Negative Factor"
-msgstr ""
+msgstr "A un facteur négatif"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_posted_entries
@@ -9019,6 +9042,8 @@ msgid ""
 "Invoice and credit note distribution should have a total factor (+) equals "
 "to 100."
 msgstr ""
+"La distribution des factures et des notes de crédit doit avoir un facteur "
+"total (+) égal à 100."
 
 #. module: account
 #. odoo-python
@@ -9027,6 +9052,8 @@ msgid ""
 "Invoice and credit note distribution should have a total factor (-) equals "
 "to 100."
 msgstr ""
+"La distribution des factures et des notes de crédit doit avoir un facteur "
+"total (-) égal à 100."
 
 #. module: account
 #. odoo-python
@@ -9224,7 +9251,7 @@ msgstr "Facturation"
 #. module: account
 #: model:res.groups,name:account.group_account_basic
 msgid "Invoicing & Banks"
-msgstr ""
+msgstr "Facturation & banques"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__invoicing_legacy
@@ -10883,6 +10910,12 @@ msgstr ""
 "d'achat sélectionnés."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_payment.py:0
+msgid "No outstanding account could be found to make the payment"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "No payment journal entries"
 msgstr "Pas d'écritures de paiement"
@@ -11564,9 +11597,21 @@ msgid "Outstanding Account"
 msgstr "Compte en suspens"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+msgid "Outstanding Payments"
+msgstr "Paiements sortants en suspens"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Outstanding Payments accounts"
 msgstr "Comptes de paiements sortants en suspens"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+msgid "Outstanding Receipts"
+msgstr "Paiements entrants en suspens"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -15132,6 +15177,8 @@ msgid ""
 "The Availability is set to 'Country Matches' but the field Country is not "
 "set."
 msgstr ""
+"La disponibilité est définie sur « Correspondances de pays », mais le champ "
+"Pays n'est pas défini."
 
 #. module: account
 #. odoo-python
@@ -18224,6 +18271,12 @@ msgid ""
 msgstr ""
 "Vous ne pouvez pas créer une nouvelle ligne d'extrait sans un compte "
 "d'attente défini sur le journal %s."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_payment_register.py:0
+msgid "You can't create payments for entries belonging to different branches."
+msgstr ""
 
 #. module: account
 #. odoo-python

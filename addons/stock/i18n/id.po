@@ -139,6 +139,12 @@ msgstr "%(name)s Sequence packing"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
+msgid "%(name)s Sequence picking"
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_warehouse.py:0
 msgid "%(name)s Sequence quality control"
 msgstr "%(name)s Sequence quality control"
 
@@ -8293,12 +8299,6 @@ msgid "Sequence Prefix"
 msgstr "Awalan Nomor Urut"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_warehouse.py:0
-msgid "Sequence picking"
-msgstr "Sequence picking"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
 msgid "Serial Numbers"
 msgstr "Nomor Seri"
@@ -9478,24 +9478,18 @@ msgstr "Kolom ini akan mengisi asal kemasan dan nama pergerakannya"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_dest_id
 msgid ""
-"This is the default destination location when you create a picking manually "
-"with this operation type. It is possible however to change it or that the "
-"routes put another location."
+"This is the default destination location when this operation is manually "
+"created. However, it is possible to change it afterwards or that the routes "
+"use another one by default."
 msgstr ""
-"Ini adalah lokasi tujuan standar saat membuat picking secara manual dengan "
-"tipe operasi ini. Namun tetap dapat diubah atau rutenya ditaruh di lokasi "
-"lain."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_src_id
 msgid ""
-"This is the default source location when you create a picking manually with "
-"this operation type. It is possible however to change it or that the routes "
-"put another location."
+"This is the default source location when this operation is manually created."
+" However, it is possible to change it afterwards or that the routes use "
+"another one by default."
 msgstr ""
-"Ini adalah lokasi sumber standar saat membuat picking secara manual dengan "
-"tipe operasi ini. Namun tetap dapat diubah atau rutenya ditaruh di lokasi "
-"lain."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__owner_id

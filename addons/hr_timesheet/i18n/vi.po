@@ -74,6 +74,8 @@ msgid ""
 "'%(missing_plan_names)s' analytic plan(s) required on the project "
 "'%(project_name)s' linked to the timesheet."
 msgstr ""
+"Yêu cầu có (các) kế hoạch phân tích '%(missing_plan_names)s' trên dự án "
+"'%(project_name)s' được liên kết với bảng chấm công."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -571,6 +573,8 @@ msgid ""
 "Keep track of your working hours by project every day and bill your "
 "customers for that time."
 msgstr ""
+"Theo dõi giờ làm việc của bạn theo từng dự án mỗi ngày và tính phí cho khách"
+" hàng theo thời gian đó."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -635,7 +639,7 @@ msgstr "Menu"
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__message_partner_ids
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__message_partner_ids
 msgid "Message Partner"
-msgstr ""
+msgstr "Đối tác tin nhắn"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__milestone_id
@@ -688,7 +692,7 @@ msgstr "Chưa có dữ liệu nào!"
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
 msgid "No timesheets found. Let's create one!"
-msgstr ""
+msgstr "Không tìm thấy bảng chấm công nào. Hãy tạo một bảng chấm công!"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -871,8 +875,8 @@ msgstr "Cài đặt"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_report_subtask
-msgid "Sub-Task:"
-msgstr "Nhiệm vụ phụ:"
+msgid "Sub-Task of '<t t-out=\"title\"/>': "
+msgstr ""
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -914,6 +918,8 @@ msgid ""
 "The project, the task and the analytic accounts of the timesheet must belong"
 " to the same company."
 msgstr ""
+"Dự án, nhiệm vụ và tài khoản phân tích của bảng chấm công phải thuộc về cùng"
+" một công ty."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -1254,6 +1260,8 @@ msgid ""
 "Timesheets must be created with at least an active analytic account defined "
 "in the plan '%(plan_name)s'."
 msgstr ""
+"Bảng chấm công phải được tạo với ít nhất một tài khoản phân tích đang hoạt "
+"động được nêu trong kế hoạch '%(plan_name)s'."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1274,6 +1282,9 @@ msgid ""
 "project. Please set one up in the plan '%(plan_name)s' or turn off the "
 "timesheets feature."
 msgstr ""
+"Để sử dụng tính năng bảng chấm công, bạn cần có một tài khoản phân tích cho "
+"dự án của mình. Vui lòng thiết lập một tài khoản trong kế hoạch "
+"'%(plan_name)s' hoặc tắt tính năng bảng chấm công."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1302,12 +1313,16 @@ msgstr "Tổng ngày đã dùng"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__total_hours_spent
-#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__total_hours_spent
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Total Time Spent"
 msgstr "Tổng thời gian đã dùng"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__total_hours_spent
+msgid "Hours By Task (Including Subtasks)"
+msgstr "Giờ theo nhiệm vụ (Bao gồm nhiệm vụ phụ)"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets

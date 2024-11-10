@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2024
-# Maitê Dietze, 2024
 # Wil Odoo, 2024
+# Maitê Dietze, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 14:42+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Maitê Dietze, 2024\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1887,6 +1887,11 @@ msgid ""
 "- Balance Sheet\n"
 "- Profit and Loss\n"
 msgstr ""
+"\n"
+"Relatórios contábeis da Turquia\n"
+"\n"
+"- Balanço patrimonial\n"
+"- Lucros e perdas\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uk_reports
@@ -4692,6 +4697,9 @@ msgid ""
 "EFT Batch Payment\n"
 "=================\n"
 msgstr ""
+"\n"
+"Pagamento em lote EFT\n"
+"=================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_escpos
@@ -5411,6 +5419,68 @@ msgid ""
 "* Unit of measures AFIP codes\n"
 "* Partners: Consumidor Final and AFIP\n"
 msgstr ""
+"\n"
+"Funcional\n"
+"----------\n"
+"\n"
+"Este módulo adiciona recursos de contabilidade para a localização argentina, que representam a configuração mínima necessária para que uma empresa opere na Argentina e sob os regulamentos e diretrizes da AFIP (Administración Federal de Ingresos Públicos).\n"
+"\n"
+"Siga as próximas etapas de configuração para Produção:\n"
+"\n"
+"1. Vá para sua empresa e configure seu número de IVA e o tipo de responsabilidade AFIP.\n"
+"\n"
+"2. Vá para Contabilidade / Configurações e defina o plano de contas que você deseja usar.\n"
+"3. Crie seus diários de venda levando em conta as informações do AFIP POS.\n"
+"\n"
+"Dados de demonstração para teste:\n"
+"\n"
+"* Foram criadas 3 empresas, uma para cada tipo de responsabilidade AFIP com o respectivo plano de contas instalado. Escolha a empresa que lhe for mais conveniente para fazer os testes:\n"
+"\n"
+"* (AR) Responsável Inscripto\n"
+"* (AR) Exento\n"
+"* (AR) Monotributo\n"
+"\n"
+"* Diário de vendas configurado para Pré-impressão e Expo de notas fiscais em todas as empresas\n"
+"* Exemplos de notas fiscais e outros documentos já validados na empresa \"(AR) Responsável Inscripto\"\n"
+"* Exemplo de parceiros para os diferentes tipos de responsabilidade:\n"
+"\n"
+" * ADHOC (IVA Responsable Inscripto)\n"
+"* Servicios Globales (IVA Sujeto Exento)\n"
+"* Gritti (Monotributo)\n"
+"* Montana Sur. IVA Liberado in Zona Franca\n"
+"* Barcelona food (Cliente del Exterior)\n"
+"* Odoo (Proveedor del Exterior)\n"
+"\n"
+"Destaques:\n"
+"\n"
+"* O plano de contas não será instalado automaticamente, cada Modelo de CoA depende da Responsabilidade AFIP da empresa, você precisará instalar o CoA para suas necessidades.\n"
+"* Nenhum diário de vendas será gerado ao instalar um CoA, você precisará configurar seus diários manualmente.\n"
+"* O tipo de documento será adequadamente pré-selecionado ao criar uma fatura, dependendo da responsabilidade fiscal do emissor e do receptor do documento e do diário relacionado.\n"
+"* Um tipo de conta CBU foi adicionado e também a Validação CBU\n"
+"\n"
+"\n"
+"Técnico\n"
+"---------\n"
+"\n"
+"Este módulo adiciona modelos e campos que serão eventualmente usados para o módulo de fatura eletrônica. Aqui está um resumo dos principais recursos:\n"
+"\n"
+"Dados mestre:\n"
+"\n"
+"* Plano de contas: um para cada responsabilidade AFIP relacionada a uma entidade legal:\n"
+"\n"
+"* Responsable Inscripto (RI)\n"
+"* Exento (EX)\n"
+"* Monotributo (Mono)\n"
+"\n"
+"* Impostos argentinos e grupos de impostos da conta (impostos de IVA com as alíquotas existentes e outros tipos)\n"
+"* Tipos de responsabilidade AFIP\n"
+"* Posições fiscais (para mapear impostos)\n"
+"* Tipos de documentos legais na Argentina\n"
+"* Tipos de identificação válidos na Argentina.\n"
+"* Códigos AFIP de país e códigos IVA de país para pessoas jurídicas, pessoas físicas e outros\n"
+"* Códigos AFIP de moeda\n"
+"* Códigos AFIP de unidade de medida\n"
+"* Parceiros: Consumidor Final e AFIP\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec
@@ -6968,6 +7038,8 @@ msgid ""
 "\n"
 "Modelo 303: Extra fields regarding Rectificación\n"
 msgstr ""
+"\n"
+"Modelo 303: Campos extras referentes à Rectificación\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_recruitment_integration_skills_monster
@@ -8474,6 +8546,20 @@ msgid ""
 "\n"
 "5.3: Update taxes starting Q4 2024 according to BOE-A-2024-12944 (Royal Decree 4/2024) https://www.boe.es/buscar/act.php?id=BOE-A-2024-12944\n"
 msgstr ""
+"\n"
+"Planos de contas em espanhol (PGCE 2008).\n"
+"========================================\n"
+"\n"
+"* Define os seguintes modelos de plano de contas:\n"
+"* Plano de contas geral da Espanha 2008\n"
+"* Plano de contas geral da Espanha 2008 para pequenas e médias empresas\n"
+"* Plano de contas geral da Espanha 2008 para associações\n"
+"* Define modelos para IVA de compra e venda\n"
+"* Define modelos de impostos\n"
+"* Define posições fiscais para a legislação fiscal espanhola\n"
+"* Define relatórios fiscais mod 111, 115 e 303\n"
+"\n"
+"5.3: Atualização dos impostos a partir do quarto trimestre de 2024, de acordo com o BOE-A-2024-12944 (Decreto Real 4/2024) https://www.boe.es/buscar/act.php?id=BOE-A-2024-12944\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_renting
@@ -8538,6 +8624,8 @@ msgid ""
 "\n"
 "Support for Indian TDS (Tax Deducted at Source) for Payment.\n"
 msgstr ""
+"\n"
+"Suporte para TDS (imposto deduzido na fonte) indiano para pagamento.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_withholding
@@ -8702,6 +8790,8 @@ msgid ""
 "\n"
 "The UBL PINT e-invoicing format for Australia & New Zealand is based on the Peppol International (PINT) model for Billing.\n"
 msgstr ""
+"\n"
+"O formato de faturamento eletrônico UBL PINT para a Austrália e Nova Zelândia é baseado no modelo Peppol International (PINT) para faturamento.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jp_ubl_pint
@@ -8727,6 +8817,8 @@ msgid ""
 "\n"
 "The UBL PINT e-invoicing format for Singapore is based on the Peppol International (PINT) model for Billing.\n"
 msgstr ""
+"\n"
+"O formato de faturamento eletrônico UBL PINT para Singapura é baseado no modelo Peppol International (PINT) para faturamento.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_repair
@@ -9301,6 +9393,13 @@ msgid ""
 "- Chart of accounts\n"
 "- Taxes\n"
 msgstr ""
+"\n"
+"Esse é o módulo básico para gerenciar o gráfico contábil do Iraque no Odoo.\n"
+"==============================================================================\n"
+"Localização e planos contábeis básicos do Iraque.\n"
+"Ativa:\n"
+"- Plano de contas\n"
+"- Impostos\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jo
@@ -9461,6 +9560,17 @@ msgid ""
 "- Taxes\n"
 "- Tax Report\n"
 msgstr ""
+"\n"
+"Este é o módulo básico para gerenciar o gráfico contábil da Turquia no Odoo\n"
+"==========================================================================\n"
+"\n"
+"Gráficos básicos de contabilidade e localizações de Turquia\n"
+"-------------------------------------------------\n"
+"Ativa:\n"
+"\n"
+"- Plano de contas\n"
+"- Impostos\n"
+"- Relatório de impostos\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mu_account
@@ -11205,6 +11315,8 @@ msgid ""
 "\n"
 "This module integrates with UrbanPiper to receive and manage orders from Swiggy.\n"
 msgstr ""
+"\n"
+"Esse módulo se integra ao UrbanPiper para receber e gerenciar pedidos do Swiggy.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_urban_piper_ubereats
@@ -11212,6 +11324,8 @@ msgid ""
 "\n"
 "This module integrates with UrbanPiper to receive and manage orders from Uber Eats.\n"
 msgstr ""
+"\n"
+"Esse módulo se integra ao UrbanPiper para receber e gerenciar pedidos do Uber Eats.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_urban_piper_zomato
@@ -11582,6 +11696,10 @@ msgid ""
 "It installs sale capabilities, front-end flow, eCommerce, questions and\n"
 "automatic lead generation, full Online support, sms and whatsapp support, ...\n"
 msgstr ""
+"\n"
+"Esse módulo testará os principais fluxos de eventos do Odoo, tanto no front-end quanto no back-end.\n"
+"Ele instala recursos de venda, fluxo de front-end, comércio eletrônico, perguntas e\n"
+"geração automática de leads, suporte on-line completo, suporte por sms e whatsapp…\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_main_flows
@@ -11722,6 +11840,12 @@ msgid ""
 "- Income tax calculations\n"
 "- Stamp tax deductions\n"
 msgstr ""
+"\n"
+"Folha de pagamento e regras tributárias da Turquia\n"
+"=============================\n"
+"- Cálculos de prêmio de seguridade social/seguro para emprego e desemprego\n"
+"- Cálculos de imposto de renda\n"
+"- Deduções de imposto de selo\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ua
@@ -12324,6 +12448,9 @@ msgid ""
 "'%%(field)s'. Each property need at least 'name', 'type' and 'string' "
 "attribute."
 msgstr ""
+"'%(value)s' não parece ser um valor de propriedade válido para o campo "
+"'%%(field)s'. Cada propriedade precisa ter pelo menos os atributos \"name\","
+" \"type\" e \"string\"."
 
 #. module: base
 #. odoo-python
@@ -12332,6 +12459,8 @@ msgid ""
 "'%(value)s' does not seem to be a valid Selection value for "
 "'%(label_property)s' (subfield of '%%(field)s' field)."
 msgstr ""
+"'%(value)s' não parece ser um valor de seleção válido para "
+"'%(label_property)s' (subcampo do campao '%%(field)s')."
 
 #. module: base
 #. odoo-python
@@ -12340,6 +12469,8 @@ msgid ""
 "'%(value)s' does not seem to be a valid Tag value for '%(label_property)s' "
 "(subfield of '%%(field)s' field)."
 msgstr ""
+"'%(value)s' não parece ser um valor de marcador válido para "
+"'%(label_property)s' (subcampo do campo '%%(field)s')."
 
 #. module: base
 #. odoo-python
@@ -12348,6 +12479,8 @@ msgid ""
 "'%(value)s' does not seem to be an float for field '%(label_property)s' "
 "property (subfield of '%%(field)s' field)."
 msgstr ""
+"'%(value)s' não parece ser um float para a propriedade do campo "
+"'%(label_property)s' (subcampo do campo '%%(field)s')."
 
 #. module: base
 #. odoo-python
@@ -12356,6 +12489,8 @@ msgid ""
 "'%(value)s' does not seem to be an integer for field '%(label_property)s' "
 "property (subfield of '%%(field)s' field)."
 msgstr ""
+"'%(value)s' não parece ser um número inteiro para a propriedade do campo "
+"'%(label_property)s' (subcampo do campo '%%(field)s')."
 
 #. module: base
 #. odoo-python
@@ -13090,6 +13225,12 @@ msgid ""
 msgstr ""
 "<strong>Insira sua senha para confirmar que você é o proprietário da "
 "conta</strong>"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.res_users_identitycheck_view_form
+msgid ""
+"<strong>Please confirm your identity by entering your password</strong>"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -17300,7 +17441,7 @@ msgstr "Austrália"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_anz_ubl_pint
 msgid "Australia & New Zealand - UBL PINT"
-msgstr ""
+msgstr "Austrália e Nova Zelândia - UBL PINT"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_au
@@ -18491,6 +18632,7 @@ msgstr "Ponte entre Estoque e Financeiro"
 #: model:ir.module.module,description:base.module_sale_subscription_timesheet
 msgid "Bridge created to add computation of timesheet to subscription"
 msgstr ""
+"Ponte criada para adicionar o cálculo da planilha de horas à Assinaturas"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_account_asset
@@ -22488,7 +22630,7 @@ msgstr "EET"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nz_eft
 msgid "EFT Batch Payment"
-msgstr ""
+msgstr "Pagamento em lote EFT"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_escpos
@@ -23672,7 +23814,7 @@ msgstr "Redes sociais para evento"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_event_full_enterprise
 msgid "Event Test (all modules)"
-msgstr ""
+msgstr "Teste de eventos (todos os módulos)"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_exhibitor
@@ -23956,7 +24098,7 @@ msgstr "Exportar pagamentos como arquivos CPA 005 AFT"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_nz_eft
 msgid "Export payments as EFT files"
-msgstr ""
+msgstr "Exportar pagamentos como arquivos EFT"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_us_payment_nacha
@@ -27009,7 +27151,7 @@ msgstr "Índia - Relatório de estoque (GST)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_withholding_payment
 msgid "Indian - TDS For Payment"
-msgstr ""
+msgstr "Indiano - TDS para pagamento"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_reports_tds_tcs
@@ -27796,7 +27938,7 @@ msgstr "Iraque"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_iq
 msgid "Iraq - Accounting"
-msgstr ""
+msgstr "Iraque - Contabilidade"
 
 #. module: base
 #: model:res.country,name:base.ie
@@ -34148,12 +34290,12 @@ msgstr "PDV - Stripe"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_urban_piper_swiggy
 msgid "POS UrbanPiper - Swiggy"
-msgstr ""
+msgstr "PDV – Urban Piper – Swiggy"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_urban_piper_ubereats
 msgid "POS UrbanPiper - Uber Eats"
-msgstr ""
+msgstr "PDV – Urban Piper – Uber Eats"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_urban_piper_zomato
@@ -35813,7 +35955,7 @@ msgstr "Projeto - Vendas - Assinaturas"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_timesheet
 msgid "Project Sales Subscription Timesheet"
-msgstr ""
+msgstr "Projeto - Vendas - Assinaturas - Planilha de horas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_stock
@@ -38633,7 +38775,7 @@ msgstr "Singapura - Relatórios de Contabilidade"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sg_ubl_pint
 msgid "Singapore - UBL PINT"
-msgstr ""
+msgstr "Singapura - UBL PINT"
 
 #. module: base
 #: model:res.country,name:base.sx
@@ -38909,7 +39051,7 @@ msgstr "Espanha - Relatórios de Contabilidade (PGCE 2008)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_reports_2024
 msgid "Spain - Accounting Reports (2024 Update)"
-msgstr ""
+msgstr "Espanha - Relatórios contábeis (atualização de 2024)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_sale_amazon
@@ -40254,6 +40396,16 @@ msgstr "A duração da chave de API não está correta."
 #: code:addons/base/models/res_users.py:0
 msgid "The API key must have an expiration date"
 msgstr "A chave da API deve ter uma data de expiração"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+msgid ""
+"The action \"%s\" cannot be set as the home action because it requires a "
+"record to be selected beforehand."
+msgstr ""
+"A ação \"%s\" não pode ser definida como a ação inicial porque exige que um "
+"registro seja selecionado previamente."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_bank__country_code
@@ -42536,6 +42688,8 @@ msgid ""
 "Unable to import'%%(field)s' Properties field as a whole, target individual "
 "property instead."
 msgstr ""
+"Não foi possível importar as propriedades do campo '%%(field)s' na íntegra; "
+"em vez disso, use a propriedade individual."
 
 #. module: base
 #. odoo-python
@@ -42787,6 +42941,8 @@ msgid ""
 "Unknown value '%(value)s' for boolean '%(label_property)s' property "
 "(subfield of '%%(field)s' field)."
 msgstr ""
+"Valor desconhecido '%(value)s' para propriedade do booleano "
+"'%(label_property)s' (subcampo do campo '%%(field)s')."
 
 #. module: base
 #. odoo-python

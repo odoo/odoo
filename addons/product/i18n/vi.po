@@ -80,19 +80,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% %(discount_type)s on %(base)s %(extra)s"
-msgstr ""
+msgstr "%(percentage)s %% %(discount_type)s trên %(base)s %(extra)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% discount on %(pricelist)s"
-msgstr ""
+msgstr "Chiết khấu %(percentage)s %% trên %(pricelist)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% discount on sales price"
-msgstr ""
+msgstr "Chiết khấu %(percentage)s %% trên giá bán"
 
 #. module: product
 #. odoo-python
@@ -126,13 +126,13 @@ msgstr "(VD: mô tả sản phẩm, ebook, yết thị,...)"
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "+ %(amount)s extra fee"
-msgstr ""
+msgstr "+ %(amount)s phí bổ sung"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "- %(amount)s rebate"
-msgstr ""
+msgstr "- %(amount)s giảm giá"
 
 #. module: product
 #. odoo-python
@@ -149,6 +149,10 @@ msgid ""
 "        - Never: Variants are never created for the attribute.\n"
 "        Note: this cannot be changed once the attribute is used on a product."
 msgstr ""
+"- Ngay lập tức: Tất cả biến thể có thể được tạo ngay sau khi thuộc tính và các giá trị của thuộc tính được thêm vào sản phẩm.\n"
+"        - Linh động: Mỗi biến thể chỉ được tạo khi các thuộc tính và giá trị tương ứng của nó được thêm vào đơn mua hàng.\n"
+"        - Không bao giờ: Biến thể không bao giờ được tạo cho thuộc tính.\n"
+"        Lưu ý: không thể thay đổi điều này sau khi thuộc tính được sử dụng cho ít nhất một sản phẩm."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_5
@@ -322,25 +326,25 @@ msgstr "Mỗi mã vạch chỉ có thể được gán cho một gói hàng."
 #. odoo-python
 #: code:addons/product/models/product_combo.py:0
 msgid "A combo choice can't contain duplicate products."
-msgstr ""
+msgstr "Lựa chọn combo không thể chứa các sản phẩm trùng lặp."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_combo_item.py:0
 msgid "A combo choice can't contain products of type \"combo\"."
-msgstr ""
+msgstr "Lựa chọn combo không thể chứa các sản phẩm thuộc loại \"combo\"."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_combo.py:0
 msgid "A combo choice must contain at least 1 product."
-msgstr ""
+msgstr "Lựa chọn combo phải chứa ít nhất 1 sản phẩm."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "A combo product must contain at least 1 combo choice."
-msgstr ""
+msgstr "Sản phẩm combo phải chứa ít nhất 1 lựa chọn combo."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__description_sale
@@ -380,6 +384,7 @@ msgstr "Một sản phẩm đã sử dụng mã vạch này"
 #: code:addons/product/models/product_template.py:0
 msgid "A sellable combo product can only contain sellable products."
 msgstr ""
+"Một sản phẩm combo có thể bán chỉ có thể chứa các sản phẩm có thể bán."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__access_token
@@ -473,7 +478,7 @@ msgstr "Thêm sản phẩm"
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Add Products to pricelist report"
-msgstr ""
+msgstr "Thêm sản phẩm vào báo cáp bảng giá"
 
 #. module: product
 #. odoo-javascript
@@ -488,22 +493,24 @@ msgid ""
 "Add products using the \"Add Products\" button at the top right to\n"
 "                                include them in the report."
 msgstr ""
+"Thêm sản phẩm bằng nút \"Thêm sản phẩm\" ở góc trên bên phải để\n"
+"đưa chúng vào báo cáo."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 msgid "Add to all products"
-msgstr ""
+msgstr "Thêm vào tất cả sản phẩm"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__update_product_attribute_value__mode__add
 msgid "Add to existing products"
-msgstr ""
+msgstr "Thêm vào các sản phẩm hiện có"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Add to products"
-msgstr ""
+msgstr "Thêm vào sản phẩm"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
@@ -888,7 +895,7 @@ msgstr "Lựa chọn combo"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo__combo_item_ids
 msgid "Combo Item"
-msgstr ""
+msgstr "Sản phẩm combo"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo__base_price
@@ -899,7 +906,7 @@ msgstr "Giá combo"
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "Combo products can't have attributes"
-msgstr ""
+msgstr "Sản phẩm combo không thể chứa thuộc tính"
 
 #. module: product
 #. odoo-python
@@ -908,6 +915,7 @@ msgid ""
 "Combos allow to choose one product amongst a selection of choices per "
 "category."
 msgstr ""
+"Combo cho phép chọn một sản phẩm trong số nhiều lựa chọn cho mỗi danh mục."
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
@@ -1174,7 +1182,7 @@ msgstr "Giá bổ sung mặc định"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__default_extra_price_changed
 msgid "Default Extra Price Changed"
-msgstr ""
+msgstr "Giá bổ sung mặc định đã thay đổi"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__product_uom_id
@@ -1427,7 +1435,7 @@ msgstr "Dễ sử dụng"
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Error exporting file. Please try again."
-msgstr ""
+msgstr "Có lỗi khi xuất tệp. Vui lòng thử lại."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__exclude_for
@@ -1627,6 +1635,8 @@ msgid ""
 "Goods are tangible materials and merchandise you provide.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"Hàng hóa là nguyên vật liệu hữu hình và hàng hóa bạn cung cấp.\n"
+"Dịch vụ là sản phẩm phi vật chất bạn cung cấp."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
@@ -1739,7 +1749,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_attribute__active
 msgid ""
 "If unchecked, it will allow you to hide the attribute without removing it."
-msgstr ""
+msgstr "Nếu bỏ chọn, bạn sẽ được phép ẩn thuộc tính mà không cần xóa."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__active
@@ -2123,7 +2133,7 @@ msgstr "Kệ màn hình"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__multi
 msgid "Multi-checkbox"
-msgstr ""
+msgstr "Nhiều hộp kiểm"
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_attribute_check_multi_checkbox_no_variant
@@ -2209,7 +2219,7 @@ msgstr "Không tìm thấy sản phẩm nào."
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "No products found in the report"
-msgstr ""
+msgstr "Không tìm thấy sản phẩm nào trong báo cáo"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
@@ -2290,7 +2300,7 @@ msgstr "Ghế văn phòng màu đen"
 #. module: product
 #: model:product.template,name:product.office_combo_product_template
 msgid "Office Combo"
-msgstr ""
+msgstr "Combo văn phòng"
 
 #. module: product
 #: model:product.template,name:product.product_order_01_product_template
@@ -2321,6 +2331,12 @@ msgid ""
 msgstr ""
 "Trên sản phẩm %(product)s bạn không thể chuyển đổi thuộc tính "
 "%(attribute_src)s thành thuộc tính %(attribute_dest)s."
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/product_document_kanban/upload_button/upload_button.js:0
+msgid "Oops! '%(fileName)s' didn’t upload since its format isn’t allowed."
+msgstr "Rất tiếc! Không thể tải lên '%(fileName)s' vì định dạng không hợp lệ."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__original_id
@@ -2411,7 +2427,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Please select some products first."
-msgstr ""
+msgstr "Hãy chọn trước một số sản phẩm."
 
 #. module: product
 #. odoo-python
@@ -2532,7 +2548,7 @@ msgstr "Báo cáo bảng giá"
 #. odoo-python
 #: code:addons/product/models/product_pricelist.py:0
 msgid "Pricelist Report Preview"
-msgstr ""
+msgstr "Xem trước báo cáo bảng giá"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
@@ -2662,12 +2678,12 @@ msgstr "Danh mục sản phẩm"
 #. module: product
 #: model:ir.model,name:product.model_product_combo
 msgid "Product Combo"
-msgstr ""
+msgstr "Combo sản phẩm"
 
 #. module: product
 #: model:ir.model,name:product.model_product_combo_item
 msgid "Product Combo Item"
-msgstr ""
+msgstr "Mặt hàng combo"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo__combo_item_count
@@ -2678,7 +2694,7 @@ msgstr "Đếm sản phẩm"
 #. module: product
 #: model:res.groups,name:product.group_product_manager
 msgid "Product Creation"
-msgstr ""
+msgstr "Tạo sản phẩm"
 
 #. module: product
 #: model:ir.model,name:product.model_product_document
@@ -2977,7 +2993,7 @@ msgstr "Số lượng"
 #. odoo-python
 #: code:addons/product/controllers/pricelist_report.py:0
 msgid "Quantity (%s UoM)"
-msgstr ""
+msgstr "Số lượng (%s ĐVT)"
 
 #. module: product
 #. odoo-javascript
@@ -3181,7 +3197,7 @@ msgstr "Kích thước"
 #: model:ir.model.fields,field_description:product.field_res_partner__specific_property_product_pricelist
 #: model:ir.model.fields,field_description:product.field_res_users__specific_property_product_pricelist
 msgid "Specific Property Product Pricelist"
-msgstr ""
+msgstr "Bảng giá sản phẩm theo thuộc tính cụ thể"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__categ_id
@@ -3391,6 +3407,10 @@ msgid ""
 "combo product. This heuristic ensures that whatever product the user chooses"
 " in a combo, it will always be the same price."
 msgstr ""
+"Giá tối thiểu giữa các sản phẩm trong combo này. Giá trị này sẽ được sử dụng"
+" để cân đối giá của combo này theo các combo khác trong một sản phẩm combo. "
+"Phương pháp này đảm bảo rằng khi người dùng chọn bất kỳ sản phẩm nào trong "
+"một combo, thì giá của nó sẽ luôn giống nhau."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category__product_count
@@ -3632,23 +3652,23 @@ msgstr "Đơn vị tính"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Update extra prices"
-msgstr ""
+msgstr "Cập nhật giá bổ sung"
 
 #. module: product
 #: model:ir.model,name:product.model_update_product_attribute_value
 msgid "Update product attribute value"
-msgstr ""
+msgstr "Cập nhật giá trị thuộc tính sản phẩm"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 msgid "Update product extra prices"
-msgstr ""
+msgstr "Cập nhật giá bổ sung của sản phẩm"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__update_product_attribute_value__mode__update_extra_price
 msgid "Update the extra price on existing products"
-msgstr ""
+msgstr "Cập nhật giá bổ sung cho các sản phẩm hiện có"
 
 #. module: product
 #. odoo-javascript
@@ -3764,7 +3784,7 @@ msgstr "Số biến thể"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_variant
 msgid "Variant Creation"
-msgstr ""
+msgstr "Tạo biến thể"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_1920
@@ -3972,12 +3992,14 @@ msgid ""
 "You are about to add the value \"%(attribute_value)s\" to %(product_count)s "
 "products."
 msgstr ""
+"Bạn đang chuẩn bị thêm giá trị \"%(attribute_value)s\" vào %(product_count)s"
+" sản phẩm."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/wizard/update_product_attribute_value.py:0
 msgid "You are about to update the extra price of %s products."
-msgstr ""
+msgstr "Bạn đang chuẩn bị cập nhật giá bổ sung của %s sản phẩm."
 
 #. module: product
 #. odoo-python
@@ -4053,6 +4075,8 @@ msgstr "Bạn không thể chỉnh sửa sản phẩm này trong danh mục."
 msgid ""
 "You cannot archive this attribute as there are still products linked to it"
 msgstr ""
+"Bạn không thể lưu trữ thuộc tính này vì vẫn còn các sản phẩm được liên kết "
+"với nó"
 
 #. module: product
 #. odoo-python
@@ -4270,7 +4294,7 @@ msgstr "VD: 1234567890"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_combo_view_form
 msgid "e.g. Burger Choice"
-msgstr ""
+msgstr "VD: Lựa chọn bánh mì kẹp thịt"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_form_normalized
@@ -4332,7 +4356,7 @@ msgstr "sản phẩm"
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "product cost"
-msgstr ""
+msgstr "chi phí sản phẩm"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view

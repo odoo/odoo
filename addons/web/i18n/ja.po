@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2024-10-25 07:49+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -28,6 +28,12 @@ msgstr ""
 #: code:addons/web/static/src/core/expression_editor/expression_editor.xml:0
 msgid "# Code editor"
 msgstr "コードエディタ数"
+
+#. module: web
+#. odoo-python
+#: code:addons/web/controllers/export.py:0
+msgid "%(property_string)s (%(parent_name)s)"
+msgstr "%(property_string)s (%(parent_name)s)"
 
 #. module: web
 #. odoo-javascript
@@ -1318,6 +1324,12 @@ msgid "Barcode Scanner"
 msgstr "バーコードスキャナ"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/barcode/barcode_video_scanner.js:0
+msgid "Barcode Video Scanner could not be mounted properly."
+msgstr "バーコードビデオスキャナを正常にマウントできませんでした。"
+
+#. module: web
 #: model:ir.model,name:web.model_base
 msgid "Base"
 msgstr "ベース"
@@ -2126,6 +2138,12 @@ msgid "Data"
 msgstr "データ"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/debug_items.js:0
+msgid "Data: %(model)s(%(id)s)"
+msgstr "データ: %(model)s(%(id)s)"
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
 msgid "Database"
 msgstr "データベース"
@@ -2440,6 +2458,15 @@ msgstr " datetime値の時刻を表示または非表示にします。"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/char/char_field.js:0
+msgid ""
+"Displays the value of the selected field as a textual hint. If the selected "
+"field is empty, the static placeholder attribute is displayed instead."
+msgstr ""
+"選択されたフィールドの値をテキストのヒントとして表示します。選択されたフィールドが空の場合、代わりに静的なプレースホルダ属性が表示されます。"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/file_upload/file_upload_progress_bar.js:0
 msgid "Do you really want to cancel the upload of %s?"
 msgstr "本当に%sのアップロードをキャンセルしますか？"
@@ -2548,7 +2575,7 @@ msgstr "複製"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/char/char_field.js:0
-msgid "Dynamic placeholder"
+msgid "Dynamic Placeholder"
 msgstr "動的プレースホルダ"
 
 #. module: web
@@ -2637,13 +2664,6 @@ msgstr "明細空きを有効にする"
 #: code:addons/web/static/src/webclient/debug/profiling/profiling_item.xml:0
 msgid "Enable profiling"
 msgstr "プロファイリング有効化"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/fields/char/char_field.js:0
-msgid ""
-"Enable this option to allow the input to display a dynamic placeholder."
-msgstr "入力に動的プレースホルダを表示するには、このオプションを有効にします。"
 
 #. module: web
 #. odoo-javascript
@@ -2892,7 +2912,7 @@ msgstr "フィールド"
 #. odoo-javascript
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 msgid "Fields to export"
-msgstr "エクスポートする項目"
+msgstr "エクスポートするフィールド"
 
 #. module: web
 #. odoo-javascript
@@ -3243,6 +3263,16 @@ msgstr "TRUEの場合、URLはそのまま使用され、プレフィクスは�
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.js:0
+msgid ""
+"If checked, clicking on the tag will open the form that allows to directly "
+"edit it. Note that if a color field is also set, the tag edition will "
+"prevail. So, the color picker will not be displayed on click on the tag."
+msgstr ""
+"チェックを入れると、タグをクリックすると、タグを直接編集できるフォームが開きます。色フィールドも設定されている場合、タグの編集が優先されることにご注意下さい。そのため、タグをクリックしても、カラーピッカーは表示されません。"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/boolean_favorite/boolean_favorite_field.js:0
 #: code:addons/web/static/src/views/fields/boolean_toggle/boolean_toggle_field.js:0
 #: code:addons/web/static/src/views/fields/priority/priority_field.js:0
@@ -3250,14 +3280,6 @@ msgstr "TRUEの場合、URLはそのまま使用され、プレフィクスは�
 msgid ""
 "If checked, the record will be saved immediately when the field is modified."
 msgstr "チェックした場合、フィールドが変更されるとレコードは直ちに保存されます。"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.js:0
-msgid ""
-"If checked, users will be able to edit tag related records by clicking on "
-"the tags."
-msgstr "チェックした場合、ユーザはタグをクリックすることで、タグに関連するレコードを編集できるようになります。"
 
 #. module: web
 #. odoo-javascript
@@ -3392,6 +3414,12 @@ msgid "Invalid data"
 msgstr "無効なデータ"
 
 #. module: web
+#. odoo-python
+#: code:addons/web/controllers/json.py:0
+msgid "Invalid default search filter name for %s"
+msgstr "デフォルト検索フィルタ名が無効です %s"
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
 msgid "Invalid domain"
@@ -3446,6 +3474,12 @@ msgstr "無効なモデル: %s"
 #: code:addons/web/static/src/core/tree_editor/tree_editor_autocomplete.js:0
 msgid "Invalid record ID: %s"
 msgstr "無効なレコードID: %s"
+
+#. module: web
+#. odoo-python
+#: code:addons/web/controllers/json.py:0
+msgid "Invalid view type '%(view_type)s' for action id=%(action)s"
+msgstr "無効なビュータイプ '%(view_type)s' アクション id=%(action)s用"
 
 #. module: web
 #. odoo-javascript
@@ -4098,6 +4132,12 @@ msgid "Missing Record"
 msgstr "ミッシングレコード"
 
 #. module: web
+#. odoo-python
+#: code:addons/web/controllers/json.py:0
+msgid "Missing record id"
+msgstr "レコードIDが不明です"
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/fields/upgrade_dialog.xml:0
 msgid "Mobile support"
@@ -4134,12 +4174,6 @@ msgstr "モデルフィールド"
 #: code:addons/web/static/src/views/fields/field_tooltip.xml:0
 msgid "Model field:"
 msgstr "モデルフィールド:"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/fields/char/char_field.js:0
-msgid "Model reference field"
-msgstr "モデル参照フィールド"
 
 #. module: web
 #. odoo-javascript
@@ -5036,12 +5070,6 @@ msgstr "ピボット設定"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/char/char_field.js:0
-msgid "Placeholder field"
-msgstr "プレースホルダフィールド"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/ui/block_ui.js:0
 msgid "Please be patient."
 msgstr "今しばらくお待ちください。"
@@ -5580,18 +5608,6 @@ msgstr "回転(r)"
 #: code:addons/web/static/src/webclient/clickbot/clickbot_loader.js:0
 msgid "Run Click Everywhere"
 msgstr "Click Everywhereを実行"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/debug/debug_providers.js:0
-msgid "Run QUnit Mobile Tests (legacy)"
-msgstr "QUnitモバイルテストを実行(レガシー）"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/debug/debug_providers.js:0
-msgid "Run QUnit Tests (legacy)"
-msgstr "QUnitテストを実行(レガシー）"
 
 #. module: web
 #. odoo-javascript
@@ -6894,6 +6910,12 @@ msgid "Unselect All"
 msgstr "すべて選択解除"
 
 #. module: web
+#. odoo-python
+#: code:addons/web/controllers/json.py:0
+msgid "Unsupported server action"
+msgstr "サポートされていないサーバアクション"
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/graph/graph_view.js:0
 #: code:addons/web/static/src/views/pivot/pivot_view.js:0
@@ -7385,7 +7407,7 @@ msgstr "これらのプロパティフィールドを更新するには、親ド
 
 #. module: web
 #. odoo-python
-#: code:addons/web/controllers/home.py:0
+#: code:addons/web/controllers/json.py:0
 msgid "You need export permissions to use the /json route"
 msgstr "/jsonルートを使用するには許可をエクスポートする必要があります"
 

@@ -3,8 +3,8 @@
 # 	* sms
 # 
 # Translators:
-# Junko Augias, 2024
 # Wil Odoo, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:56+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,21 +53,21 @@ msgstr "%s無効な宛先"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 msgid "+1 555-555-555"
-msgstr ""
+msgstr "+1 555-555-555"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
 msgid ""
 "<i class=\"fa fa-warning\"/> An error occurred with your account. Please "
 "contact the support for more information..."
-msgstr ""
+msgstr "<i class=\"fa fa-warning\"/>アカウントでエラーが発生しました。詳細については、サポートまでご連絡下さい。"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
 msgid ""
 "<i class=\"fa fa-warning\"/> You cannot send SMS while your account is not "
 "registered."
-msgstr ""
+msgstr "<i class=\"fa fa-warning\"/> アカウントが登録されるまではSMSを送信できません。"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
@@ -75,6 +75,8 @@ msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
 "                            Register"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                            登録"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
@@ -82,6 +84,8 @@ msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
 "                            Set Sender Name"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                            送信者名を設定"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -195,7 +199,7 @@ msgstr "SMSを送信中にエラーが発生しました"
 msgid ""
 "An unknown error occurred. Please contact Odoo support if this error "
 "persists."
-msgstr ""
+msgstr "不明なエラーが発生しました。このエラーが継続する場合は、Odooサポートまでご連絡下さい。"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model_id
@@ -293,7 +297,7 @@ msgstr "例を選択"
 #: code:addons/sms/wizard/sms_account_code.py:0
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
 msgid "Choose your sender name"
-msgstr ""
+msgstr "送信者名を選択"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -459,7 +463,7 @@ msgstr "SMSを有効にする"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 msgid "Enter a phone number to get an SMS with a verification code."
-msgstr ""
+msgstr "電話番号を入力すると、認証コードが記載されたSMSが送信されます。"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__error
@@ -655,6 +659,8 @@ msgid ""
 "i.e. a plus sign (+), then country code, city code, and local phone number. "
 "For example: +1 555-555-555"
 msgstr ""
+"無効な電話番号です。国際フォーマットに従っていることを確認して下さい。プラス記号(+)、国番号、市外局番、市内電話番号の順です。 例：+1 "
+"555-555-555"
 
 #. module: sms
 #. odoo-python
@@ -801,7 +807,7 @@ msgstr "メモのみ"
 msgid ""
 "Note that this is not required, if you don't set a sender name, your SMS "
 "will be sent from a short code."
-msgstr ""
+msgstr " 送信者名を設定しない場合は、短縮コードからSMSが送信されます。"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__notification_id
@@ -981,7 +987,7 @@ msgstr "登録"
 #: code:addons/sms/models/iap_account.py:0
 #: code:addons/sms/wizard/sms_account_phone.py:0
 msgid "Register Account"
-msgstr ""
+msgstr "アカウント登録"
 
 #. module: sms
 #. odoo-python
@@ -993,7 +999,7 @@ msgstr "今すぐ登録"
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_code_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 msgid "Register your SMS account"
-msgstr ""
+msgstr "SMSアカウントを登録"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_rejected
@@ -1073,17 +1079,17 @@ msgstr "SMS(メモなし)"
 #. module: sms
 #: model:ir.model,name:sms.model_sms_account_phone
 msgid "SMS Account Registration Phone Number Wizard"
-msgstr ""
+msgstr "SMSアカウント登録電話番号ウィザード"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_account_sender
 msgid "SMS Account Sender Name Wizard"
-msgstr ""
+msgstr "SMSアカウント送信者名ウィザード"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_account_code
 msgid "SMS Account Verification Code Wizard"
-msgstr ""
+msgstr "SMSアカウント認証コードウィザード"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_account_analytic_account__message_has_sms_error
@@ -1279,7 +1285,7 @@ msgstr "SMSバッチ送信"
 #. module: sms
 #: model:iap.service,description:sms.iap_service_sms
 msgid "Send SMS to your contacts directly from your database."
-msgstr ""
+msgstr "データベースから直接連絡先にSMSを送信します。"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1299,13 +1305,13 @@ msgstr "番号に送る"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 msgid "Send verification code"
-msgstr ""
+msgstr "認証コードを送信"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_iap_account__sender_name
 #: model:ir.model.fields,field_description:sms.field_sms_account_sender__sender_name
 msgid "Sender Name"
-msgstr ""
+msgstr "送信者名"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_resend_action
@@ -1337,7 +1343,7 @@ msgstr "サーバーエラー"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
 msgid "Set sender name"
-msgstr ""
+msgstr "送信者名を設定"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -1364,7 +1370,7 @@ msgstr "シングルモード"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
 msgid "Skip for now"
-msgstr ""
+msgstr "今はスキップ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_resend_id
@@ -1418,7 +1424,7 @@ msgstr "テンプレート"
 msgid ""
 "The SMS Service is currently unavailable for new users and new accounts "
 "registrations are suspended."
-msgstr ""
+msgstr "現在、SMSサービスは新規ユーザは利用できず、新規アカウントの登録も停止されています。"
 
 #. module: sms
 #. odoo-python
@@ -1454,7 +1460,7 @@ msgstr "このテンプレートを使用できるドキュメントのタイプ
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "The verification code is incorrect."
-msgstr ""
+msgstr "認証コードが正しくありません。"
 
 #. module: sms
 #. odoo-python
@@ -1473,12 +1479,12 @@ msgstr "番号が既に使用されているため、このSMSは削除されま
 #: code:addons/sms/tools/sms_api.py:0
 msgid ""
 "This account already has an existing sender name and it cannot be changed."
-msgstr ""
+msgstr "このアカウントにはすでに送信者名が設定されており、変更できません。"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_iap_account__sender_name
 msgid "This is the name that will be displayed as the sender of the SMS."
-msgstr ""
+msgstr "SMSの送信者として表示される名前です。"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.res_partner_view_form
@@ -1490,7 +1496,7 @@ msgstr "この電話番号はSMSマーケティングのブラックリストに
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "This phone number/account has been banned from our service."
-msgstr ""
+msgstr "この電話番号/アカウントは、当社のサービスの利用を禁止されています。"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__resend
@@ -1600,7 +1606,7 @@ msgstr "警告"
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "We were not able to find your account in our database."
-msgstr ""
+msgstr "お客様のアカウントは当社のデータベースで見つかりませんでした。"
 
 #. module: sms
 #. odoo-python
@@ -1608,7 +1614,7 @@ msgstr ""
 msgid ""
 "We were not able to reach you via your phone number. If you have requested "
 "multiple codes recently, please retry later."
-msgstr ""
+msgstr "電話番号に連絡することができませんでした。続けて複数のコードをリクエストした場合は、後ほど再度お試し下さい。"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__website_message_ids
@@ -1660,7 +1666,7 @@ msgstr "IAPアカウントにクレジットが不足しています。"
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "You tried too many times. Please retry later."
-msgstr ""
+msgstr "回数の上限を超えました。しばらくしてから再度お試し下さい。"
 
 #. module: sms
 #. odoo-javascript
@@ -1673,7 +1679,7 @@ msgstr "SMSテキストメッセージには、空白以外の文字を少なく
 #. odoo-python
 #: code:addons/sms/wizard/sms_account_code.py:0
 msgid "Your SMS account has been successfully registered."
-msgstr ""
+msgstr " SMSアカウントが正常に登録されました。"
 
 #. module: sms
 #. odoo-python
@@ -1681,7 +1687,7 @@ msgstr ""
 msgid ""
 "Your sender name must be between 3 and 11 characters long and only contain "
 "alphanumeric characters."
-msgstr ""
+msgstr "送信者名は3文字以上11文字以下で、英数字のみにして下さい。"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
@@ -1689,12 +1695,14 @@ msgid ""
 "Your sender name must be between 3 and 11 characters long and only contain alphanumeric characters.\n"
 "                        It must fit your company name, and you aren't allowed to modify it once you registered one, choose it carefully."
 msgstr ""
+"送信者名は3文字以上11文字以下で、英数字のみにして下さい。\n"
+"                        会社名に適合している必要があり、一度登録すると変更することはできません。慎重に選択して下さい。"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "Your sms account has not been activated yet."
-msgstr ""
+msgstr "SMSアカウントがまだ有効化されていません。"
 
 #. module: sms
 #. odoo-javascript
