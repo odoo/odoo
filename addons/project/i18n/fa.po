@@ -746,7 +746,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__allocated_hours
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__allocated_hours
 msgid "Allocated Time"
-msgstr ""
+msgstr "زمان تخصیص داده شده"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -779,6 +779,10 @@ msgid ""
 "This analytic account can be changed on each task individually if necessary.\n"
 "An analytic account is required in order to use timesheets."
 msgstr ""
+"حساب تحلیلی که این پروژه، وظایف و برگه‌های زمانی‌اش به آن متصل هستند. \n"
+"هزینه‌ها و درآمدهای پروژه‌تان را با تنظیم این حساب تحلیلی روی اسناد مربوطه‌تان (مانند سفارشات فروش، فاکتورها، سفارشات خرید، صورتحساب‌های فروشندگان، هزینه‌ها و غیره) پیگیری کنید.\n"
+"در صورت نیاز می‌توان این حساب تحلیلی را به‌طور جداگانه در هر وظیفه تغییر داد.\n"
+"برای استفاده از برگه‌های زمانی به یک حساب تحلیلی نیاز است."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__analytic_account_id
@@ -1199,7 +1203,7 @@ msgstr "همکاران"
 #. module: project
 #: model:ir.model,name:project.model_project_collaborator
 msgid "Collaborators in project shared"
-msgstr ""
+msgstr "همکاران در پروژه به اشتراک گذاشته شده"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_status
@@ -1963,7 +1967,7 @@ msgstr "تاریخ انقضا"
 #. module: project
 #: model:project.tags,name:project.project_tags_05
 msgid "External"
-msgstr ""
+msgstr "خارجی"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -2352,14 +2356,14 @@ msgstr "یادداشت‌های داخلی فقط برای کاربران داخ
 #: code:addons/project/models/project_project.py:0
 #, python-format
 msgid "Invalid operator: %s"
-msgstr ""
+msgstr "عملگر نامعتبر: %s"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 #, python-format
 msgid "Invalid value: %s"
-msgstr ""
+msgstr "مقدار نامعتبر: %s"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_access_view_tree
@@ -3583,7 +3587,7 @@ msgstr ""
 #: model:ir.model,name:project.model_project_update
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_form
 msgid "Project Update"
-msgstr ""
+msgstr "به‌روزرسانی پروژه"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_update_all_action
@@ -4199,7 +4203,7 @@ msgstr "تمام رکوردهایی که تاریخ اقدام بعدی آن ق�
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "Since"
-msgstr ""
+msgstr "از زمان"
 
 #. module: project
 #. odoo-javascript
@@ -5213,6 +5217,14 @@ msgid ""
 "\n"
 "        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"برای ایجاد وظایف جدید از این کلمات کلیدی در عنوان استفاده کنید:\n"
+"\n"
+"30h تخصیص 30 ساعت به وظیفه\n"
+"#tags تنظیم برچسب‌ها روی وظیفه\n"
+"@user تخصیص وظیفه به یک کاربر\n"
+"! تنظیم اولویت بالا برای وظیفه\n"
+"\n"
+"اطمینان حاصل کنید که از فرمت و ترتیب صحیح استفاده کنید، مثلاً: بهبود صفحه تنظیمات 5h #feature #v16 @Mitchell !"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__user_id

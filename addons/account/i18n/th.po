@@ -1557,14 +1557,14 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Account %s is of payable type, but is used in a sale operation."
-msgstr ""
+msgstr "บัญชี %s เป็นประเภทเจ้าหนี้ แต่ใช้ในการดำเนินการขาย"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Account %s is of receivable type, but is used in a purchase operation."
-msgstr ""
+msgstr "บัญชี %s เป็นประเภทลูกหนี้ แต่ใช้ในการดำเนินการซื้อ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_avatax
@@ -9706,7 +9706,7 @@ msgstr "ช่องจำนวนเงินจะเป็นค่าลบ
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "Nested group of taxes are not allowed."
-msgstr ""
+msgstr "ไม่อนุญาตให้มีกลุ่มภาษีแบบซ้อนกัน"
 
 #. module: account
 #: model:account.report.column,name:account.generic_tax_report_account_tax_column_net
@@ -11726,7 +11726,7 @@ msgstr "วันที่ได้รับการยอมรับ"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Recompute all taxes and accounts based on this fiscal position"
-msgstr ""
+msgstr "คำนวณภาษีและบัญชีทั้งหมดใหม่ตามสถานะทางบัญชีนี้"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconciled
@@ -13881,6 +13881,7 @@ msgid ""
 "The Availability is set to 'Country Matches' but the field Country is not "
 "set."
 msgstr ""
+"ความพร้อมใช้งานถูกตั้งค่าเป็น 'การจับคู่ประเทศ' แต่ไม่ได้ตั้งค่าฟิลด์ประเทศ"
 
 #. module: account
 #. odoo-python
@@ -15303,6 +15304,7 @@ msgid ""
 "This will update all taxes and accounts based on the currently selected "
 "fiscal position."
 msgstr ""
+"การดำเนินการนี้จะอัปเดตภาษีและบัญชีทั้งหมดตามสถานะทางการเงินที่เลือกในปัจจุบัน"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
@@ -15758,7 +15760,7 @@ msgstr "หน่วยวัด"
 #: code:addons/account/models/template_generic_coa.py:0
 #, python-format
 msgid "United States of America (Generic)"
-msgstr ""
+msgstr "สหรัฐอเมริกา (ทั่วไป)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -15882,7 +15884,7 @@ msgstr "หน่วยวัด"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Update Taxes and Accounts"
-msgstr ""
+msgstr "อัปเดตภาษีและบัญชี"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -16396,6 +16398,8 @@ msgid ""
 "When targeting an expression for carryover, the label of that expression "
 "must start with _applied_carryover_"
 msgstr ""
+"เมื่อกำหนดเป้าหมายตัวสั่งงานสำหรับการส่งต่อ "
+"ป้ายชื่อของตัวสั่งงานนั้นจะต้องเริ่มต้นด้วย _applied_carryover_"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
@@ -16786,6 +16790,7 @@ msgid ""
 "You can't reset to draft those journal entries. You need to request a "
 "cancellation instead."
 msgstr ""
+"คุณไม่สามารถรีเซ็ตเพื่อร่างรายการสมุดรายวันเหล่านี้ได้ คุณต้องขอการยกเลิกแทน"
 
 #. module: account
 #. odoo-python
@@ -16834,7 +16839,7 @@ msgstr ""
 msgid ""
 "You cannot create a fiscal position with a country outside of the selected "
 "country group."
-msgstr ""
+msgstr "คุณไม่สามารถสร้างสถานะทางการเงินกับประเทศนอกกลุ่มประเทศที่เลือกได้"
 
 #. module: account
 #. odoo-python
@@ -17207,6 +17212,8 @@ msgid ""
 "You cannot use the field carryover_target in an expression that does not "
 "have the label starting with _carryover_"
 msgstr ""
+"คุณไม่สามารถใช้ฟิลด์ carryover_target "
+"ในตัวสั่งงานที่ไม่มีป้ายชื่อที่ขึ้นต้นด้วย _carryover_ ได้"
 
 #. module: account
 #. odoo-python

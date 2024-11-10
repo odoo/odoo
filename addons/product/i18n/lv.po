@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Vladimirs Malejevs <vladimirs.malejevs@ms-idi.eu>, 2023
-# Aleksejs Ivanovs, 2023
 # JanisJanis <jbojars@gmail.com>, 2023
 # Anzelika Adejanova, 2023
 # InfernalLV <karlisdreizis@gmail.com>, 2023
@@ -12,8 +11,8 @@
 # ievaputnina <ievai.putninai@gmail.com>, 2023
 # Arnis Putniņš <arnis@allegro.lv>, 2023
 # Martin Trigaux, 2023
-# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
 # Will Sensors, 2024
+# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -21,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Will Sensors, 2024\n"
+"Last-Translator: Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -225,7 +224,7 @@ msgstr "<span class=\"o_stat_text\">Saistītie produkti</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
 msgid "<span class=\"text-bg-danger\">Archived</span>"
-msgstr ""
+msgstr "<span class=\"text-bg-danger\">Arhivēts</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
@@ -316,9 +315,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Noliktavas produkts ir produkts, kuram Jūs pārvaldat krājumus. Jābūt instalētam \"Inventory\" modulim.\n"
-"Palīgmateriāls ir produkts, kuram krājumi netiek pārvaldīti.\n"
-"Pakalpojums ir nemateriāls produkts, ko jūs sniedzat."
+"Uzglabājama prece ir prece, kurai Jūs pārvaldat atlikumu. Inventāra lietotnei jābūt uzstādītai.\n"
+"Patērējama prece ir prece, kurai atlikums nav pārvaldams.\n"
+"Pakalpojums ir nemateriāla prece, kuru Jūs nodrošinat."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__access_token
@@ -829,7 +828,7 @@ msgid ""
 "Consumables are physical products for which you don't manage the inventory "
 "level: they are always available."
 msgstr ""
-"Palīgmateriāli ir fiziski produkti, kuriem Jums nav jāpārvalda krājumi: tie "
+"Palīgmateriāli ir fiziska prece, kurai Jūs nepārvaldat krājumu līmeni: tie "
 "vienmēr ir pieejami."
 
 #. module: product
@@ -1184,7 +1183,7 @@ msgstr "Dokumenti"
 #: model:ir.model.fields,field_description:product.field_product_product__product_document_count
 #: model:ir.model.fields,field_description:product.field_product_template__product_document_count
 msgid "Documents Count"
-msgstr ""
+msgstr "Dokumentu skaits"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
@@ -1521,7 +1520,8 @@ msgstr "Ja atzīmēts, dažiem ziņojumiem ir piegādes kļūda."
 msgid ""
 "If not set, the vendor price will apply to all variants of this product."
 msgstr ""
-"Ja naviestatīts, visiem šī produkta variantiem tiks piemērota pārdevēja cena"
+"Ja nav iestatīts, pārdevēja cena tiks pielietota visiem šīs preces "
+"variantiem."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__active
@@ -2112,14 +2112,14 @@ msgstr ""
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "Please specify the category for which this rule should be applied"
-msgstr ""
+msgstr "Lūdzu, norādiet kategoriju, kurai tiks pielietots šis noteikums"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "Please specify the product for which this rule should be applied"
-msgstr ""
+msgstr "Lūdzu, norādiet preci, kurai tiks pielietots šis noteikums"
 
 #. module: product
 #. odoo-python
@@ -2127,7 +2127,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Please specify the product variant for which this rule should be applied"
-msgstr ""
+msgstr "Lūdzu, norādiet preces variantu, kuram tiks pielietots šis noteikums"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_weight_in_lbs__1
@@ -2212,7 +2212,7 @@ msgstr "Cenu lapa"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__applied_on
 msgid "Pricelist Item applicable on selected option"
-msgstr "Cenrāža vienums, kas piemērojams izvēlētajai opcijai"
+msgstr "Cenrāža vienums piemērojams izvēlētajai opcijai"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__name
@@ -2854,8 +2854,8 @@ msgid ""
 "Specify a product category if this rule only applies to products belonging "
 "to this category or its children categories. Keep empty otherwise."
 msgstr ""
-"Norādiet produktu kategoriju, ja šis noteikums attiecas tikai uz produktiem,"
-" kas pieder šai kategorijai vai tās apakškategorijām. Citādi turiet tukšu."
+"Norādiet preces kategoriju, ja šis noteikums pielietojas tikai uz precēm, "
+"kas pieder šai kategorijai vai tās apakškategorijām. Citādi turiet tukšu."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__product_id
@@ -2863,8 +2863,8 @@ msgid ""
 "Specify a product if this rule only applies to one product. Keep empty "
 "otherwise."
 msgstr ""
-"Norādiet produktu, ja šis noteikums attiecas tikai uz vienu produktu. Citādi"
-" turiet tukšu."
+"Norādiet preci, ja šis noteikums pielietojas tikai uz vienu preci. Citādi "
+"turiet tukšu."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__product_tmpl_id
@@ -2872,7 +2872,7 @@ msgid ""
 "Specify a template if this rule only applies to one product template. Keep "
 "empty otherwise."
 msgstr ""
-"Norādiet veidni, ja šis noteikums attiecas tikai uz vienu produktu veidni. "
+"Norādiet veidni, ja šis noteikums pielietojas tikai uz vienu preces veidni. "
 "Citādi turiet tukšu."
 
 #. module: product
@@ -2948,7 +2948,7 @@ msgstr "Piegādātāja cenrādis"
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "Iezīmes nosaukums jau pastāv!"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -3763,6 +3763,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                            whether it's a storable product, a consumable or a service."
 msgstr ""
+"Jums ir jādefinē prece visam ko Jūs pārdodat vai iegādājaties,\n"
+"                             neatkarīgi no tā, vai tā ir uzglabājama prece, patērējama prece vai pakalpojums."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action
@@ -3771,8 +3773,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
-"Visam pārdotajam vai iegādātajam produktam ir jādefinē produkts,\n"
-"                neatkarīgi no tā, vai tas ir uzglabājams produkts, patēriņa prece vai pakalpojums."
+"Jums ir jādefinē prece visam ko Jūs pārdodat vai iegādājaties,\n"
+"                neatkarīgi no tā, vai tā ir uzglabājama prece, patērējama prece vai pakalpojums."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_variant_action
@@ -3782,6 +3784,10 @@ msgid ""
 "                The product form contains information to simplify the sale process:\n"
 "                price, notes in the quotation, accounting data, procurement methods, etc."
 msgstr ""
+"Jums ir jādefinē prece visam ko Jūs pārdodat vai iegādājaties,\n"
+"                neatkarīgi no tā, vai tā ir uzglabājama prece, patērējama prece vai pakalpojums.\n"
+"                Preces forma satur informāciju, lai atvieglot tirdzniecības procesu:\n"
+"                cena, piezīmes piedāvājumos, grāmatvedības dati, iepirkumu metodes, u.c."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action_sell

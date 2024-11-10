@@ -9,8 +9,8 @@
 # Larissa Manderfeld, 2024
 # Jolien De Paepe, 2024
 # Wil Odoo, 2024
-# Manon Rondou, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,7 +42,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/stock_picking.py:0
 #, python-format
 msgid " - From \"%s\" to \"%s\""
-msgstr ""
+msgstr " - Van \"%s\" t/m \"%s\""
 
 #. module: point_of_sale
 #. odoo-python
@@ -907,7 +907,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/main.js:0
 #, python-format
 msgid "An error occurred while loading the Point of Sale: \n"
-msgstr ""
+msgstr "Er is een fout opgetreden tijdens het laden van  Kassa: \n"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__name
@@ -2103,7 +2103,7 @@ msgstr "Klantscherm"
 #: code:addons/point_of_sale/static/src/app/navbar/customer_facing_display_button/customer_facing_display_button.xml:0
 #, python-format
 msgid "Customer Screen : {{message}}"
-msgstr ""
+msgstr "Klantscherm: {{message}}"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2119,7 +2119,7 @@ msgstr "Klantscherm verbonden"
 #: code:addons/point_of_sale/static/src/app/navbar/customer_facing_display_button/customer_facing_display_button.xml:0
 #, python-format
 msgid "Customer Screen Not Found : {{message}}"
-msgstr ""
+msgstr "Kon het klantscherm niet vinden: {{message}}"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2134,7 +2134,7 @@ msgstr "Klantscherm niet ondersteund. Graag de IoT Box te upgraden"
 #: code:addons/point_of_sale/static/src/app/navbar/customer_facing_display_button/customer_facing_display_button.xml:0
 #, python-format
 msgid "Customer Screen Warning : {{message}}"
-msgstr ""
+msgstr "Waarschuwing klantscherm: {{message}}"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2656,7 +2656,7 @@ msgstr "Email verzonden."
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 #, python-format
 msgid "Email: {{currentOrder.getEmailItems().join(', ')}}"
-msgstr ""
+msgstr "E-mail: {{currentOrder.getEmailItems().join(', ')}}"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -7152,6 +7152,9 @@ msgid ""
 "The datas received from the point of sale has been saved in the attachments.\n"
 "Please contact your support service to assist you on restoring it"
 msgstr ""
+"De Kassa-bestelling met referentie %s is ontvangen door de Odoo-server, maar de verwerking van de besteling is mislukt.\n"
+"De gegevens die zijn ontvangen van het kassasysteem zijn opgeslagen in de bijlagen.\n"
+"Neem contact op met je supportafdeling om je te helpen bij het herstellen"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8501,6 +8504,8 @@ msgid ""
 "You do not have permission to open a POS session. Please try opening a "
 "session with a different user"
 msgstr ""
+"Je kunt geen POS-sessie openen. Probeer een sessie te openen met een andere "
+"gebruiker"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8868,4 +8873,4 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.xml:0
 #, python-format
 msgid "{{partnerDetailsFields[item]}}"
-msgstr ""
+msgstr "{{partnerDetailsFields[item]}}"

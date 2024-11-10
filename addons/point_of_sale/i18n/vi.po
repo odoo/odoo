@@ -29,6 +29,8 @@ msgid ""
 "\n"
 "This issue occurs because the quantity becomes zero after rounding during the conversion. To fix this, adjust the conversion factors or rounding method to ensure that even the smallest quantity in the original unit does not round down to zero in the target unit."
 msgstr ""
+"\n"
+"Sự cố này xảy ra vì số lượng trở thành 0 sau khi làm tròn trong quá trình chuyển đổi. Để khắc phục sự cố này, hãy điều chỉnh hệ số chuyển đổi hoặc phương pháp làm tròn để đảm bảo rằng ngay cả số lượng nhỏ nhất trong đơn vị gốc cũng không làm tròn xuống 0 trong đơn vị mục tiêu."
 
 #. module: point_of_sale
 #. odoo-python
@@ -1850,6 +1852,8 @@ msgid ""
 "Conversion Error: The following unit of measure conversions result in a zero"
 " quantity due to rounding:"
 msgstr ""
+"Lỗi chuyển đổi: Các phép chuyển đổi đơn vị tính sau đây cho kết quả là số "
+"lượng bằng 0 vì làm tròn:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__currency_rate
@@ -4232,8 +4236,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "Only administrators can edit receipt headers and footers"
-msgstr ""
-"Chỉ quản trị viên mới có thể chỉnh sửa đầu trang và chân trang của biên lai"
+msgstr "Chỉ quản trị viên mới có thể chỉnh sửa header và footer của biên lai"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
@@ -6566,7 +6569,7 @@ msgstr "Thiết lập nhiều giá bán cho một sản phẩm, chiết khấu t
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #, python-format
 msgid "Set the new discount"
-msgstr ""
+msgstr "Thiết lập chiết khấu mới"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7145,6 +7148,8 @@ msgid ""
 "The amount of your payment lines must be rounded to validate the transaction.\n"
 "The rounding precision is %s so you should set %s or %s as payment amount instead of %s."
 msgstr ""
+"Số tiền của các dòng thanh toán phải được làm tròn để xác thực giao dịch.\n"
+"Độ chính xác làm tròn là %s, nên bạn nên đặt %s hoặc %s làm số tiền thanh toán thay vì %s."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8449,6 +8454,8 @@ msgid ""
 "You do not have permission to open a POS session. Please try opening a "
 "session with a different user"
 msgstr ""
+"Bạn không có quyền mở phiên POS. Vui lòng thử mở phiên bằng tài khoản người "
+"dùng khác"
 
 #. module: point_of_sale
 #. odoo-python

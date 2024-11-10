@@ -5,6 +5,7 @@
 # Translators:
 # Hamed Mohammadi <hamed@dehongi.com>, 2023
 # Martin Trigaux, 2023
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,6 +27,9 @@ msgid ""
 "<span> No company data found based on the email address or email address is "
 "one of an email provider. No credit was consumed. </span>"
 msgstr ""
+"```html\n"
+"<span>هیچ داده شرکتی بر اساس آدرس ایمیل پیدا نشد یا آدرس ایمیل متعلق به یک ارائه‌دهنده ایمیل است. هیچ اعتباری مصرف نشد.</span>\n"
+"```"
 
 #. module: crm_iap_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_no_email
@@ -33,23 +37,26 @@ msgid ""
 "<span>Enrichment could not be done because the email address does not look "
 "valid.</span>"
 msgstr ""
+"```html\n"
+"<span>غنی‌سازی نمی‌تواند انجام شود زیرا به نظر می‌رسد آدرس ایمیل معتبر نیست.</span>\n"
+"```"
 
 #. module: crm_iap_enrich
 #: model:ir.model.fields,field_description:crm_iap_enrich.field_crm_lead__show_enrich_button
 msgid "Allow manual enrich"
-msgstr ""
+msgstr "اجازه تکمیل دستی"
 
 #. module: crm_iap_enrich
 #. odoo-python
 #: code:addons/crm_iap_enrich/models/crm_lead.py:0
 #, python-format
 msgid "An error occurred during lead enrichment"
-msgstr ""
+msgstr "در حین غنی‌سازی سرنخ خطایی رخ داد"
 
 #. module: crm_iap_enrich
 #: model:ir.actions.server,name:crm_iap_enrich.ir_cron_lead_enrichment_ir_actions_server
 msgid "CRM: enrich leads (IAP)"
-msgstr ""
+msgstr "CRM: غنی‌سازی سرنخ‌ها (IAP)"
 
 #. module: crm_iap_enrich
 #: model:ir.model,name:crm_iap_enrich.model_res_config_settings
@@ -60,35 +67,35 @@ msgstr "تنظیمات پیکربندی"
 #: model:ir.actions.server,name:crm_iap_enrich.action_enrich_mail
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.crm_lead_view_form
 msgid "Enrich"
-msgstr ""
+msgstr "غنی‌سازی"
 
 #. module: crm_iap_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.crm_lead_view_form
 msgid "Enrich lead with company data"
-msgstr ""
+msgstr "تقویت سرنخ با اطلاعات شرکت"
 
 #. module: crm_iap_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.crm_lead_view_form
 msgid "Enrich opportunity with company data"
-msgstr ""
+msgstr "غنی‌سازی فرصت با اطلاعات شرکت"
 
 #. module: crm_iap_enrich
 #: model:ir.model.fields,field_description:crm_iap_enrich.field_crm_lead__iap_enrich_done
 msgid "Enrichment done"
-msgstr ""
+msgstr "غنی‌سازی انجام شد"
 
 #. module: crm_iap_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_no_email
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_notfound
 msgid "Lead Enrichment (based on email address)"
-msgstr ""
+msgstr "غنی‌سازی سرنخ (بر اساس آدرس ایمیل)"
 
 #. module: crm_iap_enrich
 #. odoo-python
 #: code:addons/crm_iap_enrich/models/crm_lead.py:0
 #, python-format
 msgid "Lead enriched based on email address"
-msgstr ""
+msgstr "سرنخ بر اساس آدرس ایمیل غنی‌سازی شده است"
 
 #. module: crm_iap_enrich
 #: model:ir.model,name:crm_iap_enrich.model_crm_lead
@@ -100,14 +107,14 @@ msgstr "سرنخ / فرصت"
 #: code:addons/crm_iap_enrich/models/crm_lead.py:0
 #, python-format
 msgid "Not enough credits for Lead Enrichment"
-msgstr ""
+msgstr "اعتبار کافی برای غنی‌سازی مخاطب وجود ندارد"
 
 #. module: crm_iap_enrich
 #. odoo-python
 #: code:addons/crm_iap_enrich/models/crm_lead.py:0
 #, python-format
 msgid "The leads/opportunities have successfully been enriched"
-msgstr ""
+msgstr "فرصت‌ها/سرنخ‌ها با موفقیت غنی‌سازی شده‌اند"
 
 #. module: crm_iap_enrich
 #: model:ir.model.fields,help:crm_iap_enrich.field_crm_lead__iap_enrich_done
@@ -115,3 +122,5 @@ msgid ""
 "Whether IAP service for lead enrichment based on email has been performed on"
 " this lead."
 msgstr ""
+"آیا سرویس IAP برای غنی‌سازی سرنخ بر اساس ایمیل بر روی این سرنخ انجام شده "
+"است."
