@@ -7,16 +7,19 @@ export class ExcalidrawPlugin extends Plugin {
     static name = "excalidraw";
     static dependencies = ["embedded_components", "dom", "selection", "link"];
     resources = {
-        powerboxItems: [
+        user_commands: [
             {
-                category: "navigation",
-                name: _t("Drawing Board"),
-                priority: 70,
+                id: "insertDrawingBoard",
+                title: _t("Drawing Board"),
                 description: _t("Insert an Excalidraw Board"),
-                fontawesome: "fa-pencil-square-o",
-                action: () => {
-                    this.insertDrawingBoard();
-                },
+                icon: "fa-pencil-square-o",
+                run: this.insertDrawingBoard.bind(this),
+            },
+        ],
+        powerbox_items: [
+            {
+                categoryId: "navigation",
+                commandId: "insertDrawingBoard",
             },
         ],
     };

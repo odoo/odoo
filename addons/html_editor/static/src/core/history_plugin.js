@@ -81,6 +81,7 @@ export class HistoryPlugin extends Plugin {
     static name = "history";
     static dependencies = ["dom", "selection", "sanitize"];
     static shared = [
+        "addStep",
         "reset",
         "canUndo",
         "canRedo",
@@ -96,10 +97,14 @@ export class HistoryPlugin extends Plugin {
         "getNodeById",
     ];
     resources = {
+        user_commands: [
+            { id: "historyUndo", run: this.undo.bind(this) },
+            { id: "historyRedo", run: this.redo.bind(this) },
+        ],
         shortcuts: [
-            { hotkey: "control+z", command: "HISTORY_UNDO" },
-            { hotkey: "control+y", command: "HISTORY_REDO" },
-            { hotkey: "control+shift+z", command: "HISTORY_REDO" },
+            { hotkey: "control+z", commandId: "historyUndo" },
+            { hotkey: "control+y", commandId: "historyRedo" },
+            { hotkey: "control+shift+z", commandId: "historyRedo" },
         ],
     };
 

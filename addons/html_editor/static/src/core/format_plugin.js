@@ -23,85 +23,104 @@ const allWhitespaceRegex = /^[\s\u200b]*$/;
 function isFormatted(formatPlugin, format) {
     return (sel, nodes) => formatPlugin.isSelectionFormat(format, nodes);
 }
-function hasFormat(formatPlugin) {
-    return () => {
-        const traversedNodes = formatPlugin.shared.getTraversedNodes();
-        for (const format of Object.keys(formatsSpecs)) {
-            if (
-                formatsSpecs[format].removeStyle &&
-                formatPlugin.isSelectionFormat(format, traversedNodes)
-            ) {
-                return true;
-            }
-        }
-        const nodes = formatPlugin.shared.getTraversedNodes();
-        return hasAnyNodesColor(nodes, "color") || hasAnyNodesColor(nodes, "backgroundColor");
-    };
-}
 
 export class FormatPlugin extends Plugin {
     static name = "format";
     static dependencies = ["selection", "split", "delete"];
     // TODO ABD: refactor to handle Knowledge comments inside this plugin without sharing mergeAdjacentInlines.
-    static shared = ["isSelectionFormat", "insertAndSelectZws", "mergeAdjacentInlines"];
+    static shared = [
+        "isSelectionFormat",
+        "insertAndSelectZws",
+        "mergeAdjacentInlines",
+        "formatSelection",
+    ];
     resources = {
-        shortcuts: [
-            { hotkey: "control+b", command: "FORMAT_BOLD" },
-            { hotkey: "control+i", command: "FORMAT_ITALIC" },
-            { hotkey: "control+u", command: "FORMAT_UNDERLINE" },
-            { hotkey: "control+5", command: "FORMAT_STRIKETHROUGH" },
+        user_commands: [
+            {
+                id: "formatBold",
+                title: _t("Toggle bold"),
+                icon: "fa-bold",
+                run: this.formatSelection.bind(this, "bold"),
+            },
+            {
+                id: "formatItalic",
+                title: _t("Toggle italic"),
+                icon: "fa-italic",
+                run: this.formatSelection.bind(this, "italic"),
+            },
+            {
+                id: "formatUnderline",
+                title: _t("Toggle underline"),
+                icon: "fa-underline",
+                run: this.formatSelection.bind(this, "underline"),
+            },
+            {
+                id: "formatStrikethrough",
+                title: _t("Toggle strikethrough"),
+                icon: "fa-strikethrough",
+                run: this.formatSelection.bind(this, "strikeThrough"),
+            },
+            {
+                id: "formatFontSize",
+                run: ({ size }) => {
+                    return this.formatSelection("fontSize", {
+                        applyStyle: true,
+                        formatProps: { size },
+                    });
+                },
+            },
+            {
+                id: "formatFontSizeClassName",
+                run: ({ className }) => {
+                    return this.formatSelection("setFontSizeClassName", {
+                        formatProps: { className },
+                    });
+                },
+            },
+            {
+                id: "removeFormat",
+                title: _t("Remove Format"),
+                icon: "fa-eraser",
+                run: this.removeFormat.bind(this),
+            },
         ],
-        toolbarCategory: withSequence(20, { id: "decoration" }),
-        toolbarItems: [
+        shortcuts: [
+            { hotkey: "control+b", commandId: "formatBold" },
+            { hotkey: "control+i", commandId: "formatItalic" },
+            { hotkey: "control+u", commandId: "formatUnderline" },
+            { hotkey: "control+5", commandId: "formatStrikethrough" },
+        ],
+        toolbar_groups: withSequence(20, { id: "decoration" }),
+        toolbar_items: [
             {
                 id: "bold",
-                category: "decoration",
-                action(dispatch) {
-                    dispatch("FORMAT_BOLD");
-                },
-                icon: "fa-bold",
-                title: _t("Toggle bold"),
-                isFormatApplied: isFormatted(this, "bold"),
+                groupId: "decoration",
+                commandId: "formatBold",
+                isActive: isFormatted(this, "bold"),
             },
             {
                 id: "italic",
-                category: "decoration",
-                action(dispatch) {
-                    dispatch("FORMAT_ITALIC");
-                },
-                icon: "fa-italic",
-                title: _t("Toggle italic"),
-                isFormatApplied: isFormatted(this, "italic"),
+                groupId: "decoration",
+                commandId: "formatItalic",
+                isActive: isFormatted(this, "italic"),
             },
             {
                 id: "underline",
-                category: "decoration",
-                action(dispatch) {
-                    dispatch("FORMAT_UNDERLINE");
-                },
-                icon: "fa-underline",
-                title: _t("Toggle underline"),
-                isFormatApplied: isFormatted(this, "underline"),
+                groupId: "decoration",
+                commandId: "formatUnderline",
+                isActive: isFormatted(this, "underline"),
             },
             {
                 id: "strikethrough",
-                category: "decoration",
-                action(dispatch) {
-                    dispatch("FORMAT_STRIKETHROUGH");
-                },
-                icon: "fa-strikethrough",
-                title: _t("Toggle strikethrough"),
-                isFormatApplied: isFormatted(this, "strikeThrough"),
+                groupId: "decoration",
+                commandId: "formatStrikethrough",
+                isActive: isFormatted(this, "strikeThrough"),
             },
             {
                 id: "remove_format",
-                category: "decoration",
-                action(dispatch) {
-                    dispatch("FORMAT_REMOVE_FORMAT");
-                },
-                icon: "fa-eraser",
-                title: _t("Remove Format"),
-                hasFormat: hasFormat(this),
+                groupId: "decoration",
+                commandId: "removeFormat",
+                isDisabled: (sel, nodes) => !this.hasAnyFormat(nodes),
             },
         ],
         arrows_should_skip: (ev, char, lastSkipped) => char === "\u200b",
@@ -186,6 +205,25 @@ export class FormatPlugin extends Plugin {
         const selectedNodes = traversedNodes.filter(isTextNode);
         const isFormatted = formatsSpecs[format].isFormatted;
         return selectedNodes.length && selectedNodes.every((n) => isFormatted(n, this.editable));
+    }
+
+    // @todo: issues:
+    // - this method mixes every (isSelectionFormat) with some (hasAnyNodesColor)
+    // - the calls to hasAnyColor should probably be replaced by calls to predicates
+    //   registered as resources (e.g. by the ColorPlugin).
+    hasAnyFormat(traversedNodes) {
+        for (const format of Object.keys(formatsSpecs)) {
+            if (
+                formatsSpecs[format].removeStyle &&
+                this.isSelectionFormat(format, traversedNodes)
+            ) {
+                return true;
+            }
+        }
+        return (
+            hasAnyNodesColor(traversedNodes, "color") ||
+            hasAnyNodesColor(traversedNodes, "backgroundColor")
+        );
     }
 
     formatSelection(...args) {

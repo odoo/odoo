@@ -8,18 +8,26 @@ export class DynamicPlaceholderPlugin extends Plugin {
     static dependencies = ["overlay", "selection", "history", "dom", "qweb"];
     static shared = ["updateDphDefaultModel"];
     resources = {
-        powerboxCategory: withSequence(60, { id: "marketing_tools", name: _t("Marketing Tools") }),
-        powerboxItems: {
-            id: "dynamic_placeholder",
-            name: _t("Dynamic Placeholder"),
-            description: _t("Insert a field"),
-            category: "marketing_tools",
-            fontawesome: "fa-hashtag",
-            action(dispatch) {
-                dispatch("OPEN_DYNAMIC_PLACEHOLDER");
+        user_commands: [
+            {
+                id: "openDynamicPlaceholder",
+                title: _t("Dynamic Placeholder"),
+                description: _t("Insert a field"),
+                icon: "fa-hashtag",
+                run: (params = {}) => {
+                    return this.open(params.resModel || this.defaultResModel);
+                },
             },
+        ],
+        powerbox_categories: withSequence(60, {
+            id: "marketing_tools",
+            name: _t("Marketing Tools"),
+        }),
+        powerbox_items: {
+            categoryId: "marketing_tools",
+            commandId: "openDynamicPlaceholder",
         },
-        powerButtons: ["dynamic_placeholder"],
+        power_buttons: { commandId: "openDynamicPlaceholder" },
     };
     setup() {
         this.defaultResModel = this.config.dynamicPlaceholderResModel;
@@ -29,15 +37,6 @@ export class DynamicPlaceholderPlugin extends Plugin {
             hasAutofocus: true,
             className: "popover",
         });
-    }
-
-    handleCommand(command, payload) {
-        switch (command) {
-            case "OPEN_DYNAMIC_PLACEHOLDER": {
-                this.open(payload.resModel || this.defaultResModel);
-                break;
-            }
-        }
     }
 
     /**

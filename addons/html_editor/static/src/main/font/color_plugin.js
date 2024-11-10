@@ -25,36 +25,32 @@ import { withSequence } from "@html_editor/utils/resource";
 export class ColorPlugin extends Plugin {
     static name = "color";
     static dependencies = ["selection", "split", "history", "format"];
-    static shared = ["colorElement"];
+    static shared = ["colorElement", "getPropsForColorSelector"];
     resources = {
-        toolbarCategory: withSequence(25, {
+        user_commands: [
+            {
+                id: "applyColor",
+                run: this.applyColor.bind(this),
+            },
+        ],
+        toolbar_groups: withSequence(25, {
             id: "color",
         }),
-        toolbarItems: [
+        toolbar_items: [
             {
                 id: "forecolor",
-                category: "color",
+                groupId: "color",
                 title: _t("Font Color"),
                 Component: ColorSelector,
-                props: {
-                    type: "foreground",
-                    getUsedCustomColors: () => this.getUsedCustomColors("color"),
-                    getSelectedColors: () => this.selectedColors,
-                    focusEditable: () => this.shared.focusEditable(),
-                },
+                props: this.getPropsForColorSelector("foreground"),
             },
             {
                 id: "backcolor",
-                category: "color",
+                groupId: "color",
                 title: _t("Background Color"),
 
                 Component: ColorSelector,
-                props: {
-                    type: "background",
-                    getUsedCustomColors: () => this.getUsedCustomColors("background"),
-                    getSelectedColors: () => this.selectedColors,
-                    focusEditable: () => this.shared.focusEditable(),
-                },
+                props: this.getPropsForColorSelector("background"),
             },
         ],
 
@@ -67,6 +63,19 @@ export class ColorPlugin extends Plugin {
         this.previewableApplyColor = this.shared.makePreviewableOperation((color, mode) =>
             this.applyColor(color, mode)
         );
+    }
+
+    /**
+     * @param {'foreground'|'background'} type
+     */
+    getPropsForColorSelector(type) {
+        const mode = type === "foreground" ? "color" : "background";
+        return {
+            type,
+            getUsedCustomColors: () => this.getUsedCustomColors(mode),
+            getSelectedColors: () => this.selectedColors,
+            focusEditable: () => this.shared.focusEditable(),
+        };
     }
 
     updateSelectedColor() {

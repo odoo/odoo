@@ -26,24 +26,22 @@ export class TabulationPlugin extends Plugin {
     static dependencies = ["dom", "selection", "delete", "split"];
     static shared = ["indentBlocks", "outdentBlocks"];
     resources = {
+        user_commands: [
+            { id: "tab", run: this.handleTab.bind(this) },
+            { id: "shiftTab", run: this.handleShiftTab.bind(this) },
+        ],
         tab_overrides: [],
         shift_tab_overrides: [],
         delete_forward_overrides: this.handleDeleteForward.bind(this),
         shortcuts: [
-            { hotkey: "tab", command: "TAB" },
-            { hotkey: "shift+tab", command: "SHIFT_TAB" },
+            { hotkey: "tab", commandId: "tab" },
+            { hotkey: "shift+tab", commandId: "shiftTab" },
         ],
         isUnsplittable: isEditorTab, // avoid merge
     };
 
     handleCommand(command, payload) {
         switch (command) {
-            case "TAB":
-                this.handleTab();
-                break;
-            case "SHIFT_TAB":
-                this.handleShiftTab();
-                break;
             case "NORMALIZE": {
                 for (const tab of payload.node.querySelectorAll(".oe-tabs")) {
                     tab.setAttribute("contenteditable", "false");

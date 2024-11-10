@@ -10,15 +10,19 @@ export class TableOfContentPlugin extends Plugin {
     static name = "tableOfContent";
     static dependencies = ["dom", "selection", "embedded_components", "link"];
     resources = {
-        powerboxItems: [
+        user_commands: [
             {
-                category: "navigation",
-                name: _t("Table Of Content"),
+                id: "insertTableOfContent",
+                title: _t("Table Of Content"),
                 description: _t("Highlight the structure (headings) of this field"),
-                fontawesome: "fa-bookmark",
-                action: () => {
-                    this.insertTableOfContent();
-                },
+                icon: "fa-bookmark",
+                run: this.insertTableOfContent.bind(this),
+            },
+        ],
+        powerbox_items: [
+            {
+                categoryId: "navigation",
+                commandId: "insertTableOfContent",
             },
         ],
         mutation_filtered_classes: ["o_embedded_toc_header_highlight"],

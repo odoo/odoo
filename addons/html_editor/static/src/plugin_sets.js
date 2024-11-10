@@ -15,6 +15,7 @@ import { SanitizePlugin } from "./core/sanitize_plugin";
 import { SelectionPlugin } from "./core/selection_plugin";
 import { ShortCutPlugin } from "./core/shortcut_plugin";
 import { SplitPlugin } from "./core/split_plugin";
+import { UserCommandPlugin } from "./core/user_command_plugin";
 import { BannerPlugin } from "./main/banner_plugin";
 import { ChatGPTPlugin } from "./main/chatgpt/chatgpt_plugin";
 import { ColumnPlugin } from "./main/column_plugin";
@@ -75,6 +76,7 @@ export const CORE_PLUGINS = [
     SanitizePlugin,
     SelectionPlugin,
     SplitPlugin,
+    UserCommandPlugin,
 ];
 
 export const MAIN_PLUGINS = [

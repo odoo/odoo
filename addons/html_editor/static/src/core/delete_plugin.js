@@ -59,13 +59,21 @@ export class DeletePlugin extends Plugin {
             withSequence(5, this.onBeforeInputInsertText.bind(this)),
             this.onBeforeInputDelete.bind(this),
         ],
+        user_commands: [
+            { id: "deleteBackward", run: () => this.delete("backward", "character") },
+            { id: "deleteForward", run: () => this.delete("forward", "character") },
+            { id: "deleteBackwardWord", run: () => this.delete("backward", "word") },
+            { id: "deleteForwardWord", run: () => this.delete("forward", "word") },
+            { id: "deleteBackwardLine", run: () => this.delete("backward", "line") },
+            { id: "deleteForwardLine", run: () => this.delete("forward", "line") },
+        ],
         shortcuts: [
-            { hotkey: "backspace", command: "DELETE_BACKWARD" },
-            { hotkey: "delete", command: "DELETE_FORWARD" },
-            { hotkey: "control+backspace", command: "DELETE_BACKWARD_WORD" },
-            { hotkey: "control+delete", command: "DELETE_FORWARD_WORD" },
-            { hotkey: "control+shift+backspace", command: "DELETE_BACKWARD_LINE" },
-            { hotkey: "control+shift+delete", command: "DELETE_FORWARD_LINE" },
+            { hotkey: "backspace", commandId: "deleteBackward" },
+            { hotkey: "delete", commandId: "deleteForward" },
+            { hotkey: "control+backspace", commandId: "deleteBackwardWord" },
+            { hotkey: "control+delete", commandId: "deleteForwardWord" },
+            { hotkey: "control+shift+backspace", commandId: "deleteBackwardLine" },
+            { hotkey: "control+shift+delete", commandId: "deleteForwardLine" },
         ],
         delete_backward_overrides: withSequence(30, this.deleteBackwardUnmergeable.bind(this)),
         delete_backward_word_overrides: withSequence(20, this.deleteBackwardUnmergeable.bind(this)),
@@ -163,7 +171,7 @@ export class DeletePlugin extends Plugin {
         } else {
             throw new Error("Invalid direction");
         }
-
+        this.getResource("delete_handlers").forEach((handler) => handler());
         this.dispatch("ADD_STEP");
     }
 

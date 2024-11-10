@@ -97,8 +97,52 @@ const handledElemSelector = [...headingTags, "PRE", "BLOCKQUOTE"].join(", ");
 
 export class FontPlugin extends Plugin {
     static name = "font";
-    static dependencies = ["split", "selection"];
+    static dependencies = ["split", "selection", "dom", "format"];
     resources = {
+        user_commands: [
+            {
+                id: "setTagHeading1",
+                title: _t("Heading 1"),
+                description: _t("Big section heading"),
+                icon: "fa-header",
+                run: () => this.shared.setTag({ tagName: "H1" }),
+            },
+            {
+                id: "setTagHeading2",
+                title: _t("Heading 2"),
+                description: _t("Medium section heading"),
+                icon: "fa-header",
+                run: () => this.shared.setTag({ tagName: "H2" }),
+            },
+            {
+                id: "setTagHeading3",
+                title: _t("Heading 3"),
+                description: _t("Small section heading"),
+                icon: "fa-header",
+                run: () => this.shared.setTag({ tagName: "H3" }),
+            },
+            {
+                id: "setTagParagraph",
+                title: _t("Text"),
+                description: _t("Paragraph block"),
+                icon: "fa-paragraph",
+                run: () => this.shared.setTag({ tagName: "P" }),
+            },
+            {
+                id: "setTagQuote",
+                title: _t("Quote"),
+                description: _t("Add a blockquote section"),
+                icon: "fa-quote-right",
+                run: () => this.shared.setTag({ tagName: "blockquote" }),
+            },
+            {
+                id: "setTagPre",
+                title: _t("Code"),
+                description: _t("Add a code section"),
+                icon: "fa-code",
+                run: () => this.shared.setTag({ tagName: "pre" }),
+            },
+        ],
         split_element_block_overrides: [
             this.handleSplitBlockPRE.bind(this),
             this.handleSplitBlockHeading.bind(this),
@@ -106,7 +150,7 @@ export class FontPlugin extends Plugin {
         onInput: this.onInput.bind(this),
         delete_backward_overrides: withSequence(20, this.handleDeleteBackward.bind(this)),
         delete_backward_word_overrides: this.handleDeleteBackward.bind(this),
-        toolbarCategory: [
+        toolbar_groups: [
             withSequence(10, {
                 id: "font",
             }),
@@ -114,10 +158,10 @@ export class FontPlugin extends Plugin {
                 id: "font-size",
             }),
         ],
-        toolbarItems: [
+        toolbar_items: [
             {
                 id: "font",
-                category: "font",
+                groupId: "font",
                 title: _t("Font style"),
                 Component: FontSelector,
                 props: {
@@ -127,7 +171,7 @@ export class FontPlugin extends Plugin {
             },
             {
                 id: "font-size",
-                category: "font-size",
+                groupId: "font-size",
                 title: _t("Font size"),
                 Component: FontSelector,
                 props: {
@@ -138,61 +182,31 @@ export class FontPlugin extends Plugin {
                 },
             },
         ],
-        powerboxCategory: withSequence(30, { id: "format", name: _t("Format") }),
-        powerboxItems: [
+        powerbox_categories: withSequence(30, { id: "format", name: _t("Format") }),
+        powerbox_items: [
             {
-                name: _t("Heading 1"),
-                description: _t("Big section heading"),
-                category: "format",
-                fontawesome: "fa-header",
-                action(dispatch) {
-                    dispatch("SET_TAG", { tagName: "H1" });
-                },
+                categoryId: "format",
+                commandId: "setTagHeading1",
             },
             {
-                name: _t("Heading 2"),
-                description: _t("Medium section heading"),
-                category: "format",
-                fontawesome: "fa-header",
-                action(dispatch) {
-                    dispatch("SET_TAG", { tagName: "H2" });
-                },
+                categoryId: "format",
+                commandId: "setTagHeading2",
             },
             {
-                name: _t("Heading 3"),
-                description: _t("Small section heading"),
-                category: "format",
-                fontawesome: "fa-header",
-                action(dispatch) {
-                    dispatch("SET_TAG", { tagName: "H3" });
-                },
+                categoryId: "format",
+                commandId: "setTagHeading3",
             },
             {
-                category: "format",
-                name: _t("Text"),
-                description: _t("Paragraph block"),
-                fontawesome: "fa-paragraph",
-                action(dispatch) {
-                    dispatch("SET_TAG", { tagName: "P" });
-                },
+                categoryId: "format",
+                commandId: "setTagParagraph",
             },
             {
-                category: "structure",
-                name: _t("Quote"),
-                description: _t("Add a blockquote section"),
-                fontawesome: "fa-quote-right",
-                action(dispatch) {
-                    dispatch("SET_TAG", { tagName: "blockquote" });
-                },
+                categoryId: "structure",
+                commandId: "setTagQuote",
             },
             {
-                category: "structure",
-                name: _t("Code"),
-                description: _t("Add a code section"),
-                fontawesome: "fa-code",
-                action(dispatch) {
-                    dispatch("SET_TAG", { tagName: "pre" });
-                },
+                categoryId: "structure",
+                commandId: "setTagPre",
             },
         ],
         hints: [

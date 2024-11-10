@@ -7,18 +7,23 @@ export class VideoPlugin extends Plugin {
     static name = "video";
     static dependencies = ["embedded_components", "dom", "selection", "link"];
     resources = {
-        powerboxItems: [
+        user_commands: [
             {
-                category: "navigation",
-                name: _t("Video Link"),
-                priority: 70,
+                id: "openVideoSelectorDialog",
+                title: _t("Video Link"),
                 description: _t("Insert a Video"),
-                fontawesome: "fa-play",
-                action: () => {
+                icon: "fa-play",
+                run: () => {
                     this.openVideoSelectorDialog((media) => {
                         this.insertVideo(media);
                     });
                 },
+            },
+        ],
+        powerbox_items: [
+            {
+                categoryId: "navigation",
+                commandId: "openVideoSelectorDialog",
             },
         ],
     };

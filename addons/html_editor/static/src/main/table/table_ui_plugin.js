@@ -11,25 +11,24 @@ import { TablePicker } from "./table_picker";
  */
 export class TableUIPlugin extends Plugin {
     static name = "table_ui";
-    static dependencies = ["overlay", "table"];
+    static dependencies = ["history", "overlay", "table"];
     resources = {
-        powerboxItems: [
+        user_commands: [
             {
-                id: "table",
-                name: _t("Table"),
+                id: "openTablePicker",
+                title: _t("Table"),
                 description: _t("Insert a table"),
-                category: "structure",
-                fontawesome: "fa-table",
-                action: (dispatch) => {
-                    if (this.services.ui.isSmall) {
-                        dispatch("INSERT_TABLE", { cols: 3, rows: 3 });
-                    } else {
-                        dispatch("OPEN_TABLE_PICKER");
-                    }
-                },
+                icon: "fa-table",
+                run: this.openPickerOrInsertTable.bind(this),
             },
         ],
-        powerButtons: ["table"],
+        powerbox_items: [
+            {
+                categoryId: "structure",
+                commandId: "openTablePicker",
+            },
+        ],
+        power_buttons: { commandId: "openTablePicker" },
     };
 
     setup() {
@@ -102,6 +101,14 @@ export class TableUIPlugin extends Plugin {
                 direction: this.config.direction || "ltr",
             },
         });
+    }
+
+    openPickerOrInsertTable() {
+        if (this.services.ui.isSmall) {
+            this.shared.insertTable({ cols: 3, rows: 3 });
+        } else {
+            this.openPicker();
+        }
     }
 
     onMouseMove(ev) {
