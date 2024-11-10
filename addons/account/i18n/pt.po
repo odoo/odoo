@@ -263,7 +263,6 @@ msgstr "%s.copy"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
-#: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "(Discount)"
 msgstr "(Desconto)"
@@ -415,14 +414,6 @@ msgid ""
 msgstr ""
 "<b>%(count)s#</b> Prestação de <b>%(amount)s</b> em <b style='color: "
 "#704A66;'>%(date)s</b>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
-msgid ""
-"<b>Early Payment Discount of %(payment_reference) has been applied.</b>"
-msgstr ""
-"<b>Foi aplicado um Desconto de Pagamento Antecipado de "
-"%(payment_reference).</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -3723,13 +3714,6 @@ msgstr "Passar para"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_report.py:0
-#, python-format
-msgid "Carryover lines for: %s"
-msgstr "Passar as linhas para: %s"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -4247,6 +4231,7 @@ msgstr "Empresas Relacionadas ao Parceiro"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__company_id
 #: model:ir.model.fields,field_description:account.field_account_tax__company_id
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__company_id
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
@@ -5246,11 +5231,6 @@ msgid "DELIVERED DUTY PAID"
 msgstr "ENTREGUE COM DIREITOS PAGOS"
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
-msgid "DOWN"
-msgstr "PARA BAIXO"
-
-#. module: account
 #: model:ir.ui.menu,name:account.menu_board_journal_1
 msgid "Dashboard"
 msgstr "Painel"
@@ -5280,6 +5260,7 @@ msgstr "Verificação de consistência de dados"
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__date
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__date
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__figure_type__date
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -5996,6 +5977,11 @@ msgid "Done"
 msgstr "Concluído"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
+msgid "Down"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "Download"
 msgstr "Transferir"
@@ -6208,6 +6194,11 @@ msgstr "Modo de Desconto por Adiantamento"
 #: model:ir.model.fields,help:account.field_account_payment_term_line__discount_percentage
 msgid "Early Payment Discount granted for this line"
 msgstr "Desconto por Adiantamento conferido para esta linha"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
+msgid "Early Payment Discount of"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
@@ -7194,11 +7185,6 @@ msgid "Growth Comparison"
 msgstr "Comparação de crescimento"
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
-msgid "HALF-UP"
-msgstr "MEIO"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_accounting_entries
 msgid "Has Accounting Entries"
 msgstr "Tem Entradas Contabilísticas"
@@ -7937,6 +7923,12 @@ msgstr ""
 "domínio"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_report_line__tax_tags_formula
+msgid ""
+"Internal field to shorten expression_ids creation for the tax_tags engine"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_incoterm_id
 #: model:ir.model.fields,help:account.field_account_move__invoice_incoterm_id
 #: model:ir.model.fields,help:account.field_account_payment__invoice_incoterm_id
@@ -8450,6 +8442,7 @@ msgstr "Janeiro"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__linked_journal_id
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -9743,6 +9736,11 @@ msgstr ""
 "Navegue facilmente pelos relatórios e veja o que está por detrás dos números"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
+msgid "Nearest"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
 #: model:ir.model.fields,field_description:account.field_account_move__needed_terms
 #: model:ir.model.fields,field_description:account.field_account_payment__needed_terms
@@ -9767,16 +9765,17 @@ msgid "Negative value of amount field if payment_type is outbound"
 msgstr "Valor negativo do campo de valor se payment_type for de saída"
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_report__filter_hierarchy__never
-#: model:ir.model.fields.selection,name:account.selection__res_company__early_pay_discount_computation__excluded
-msgid "Never"
-msgstr "Nunca"
-
-#. module: account
+#. odoo-python
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "Nested group of taxes are not allowed."
 msgstr ""
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_report__filter_hierarchy__never
+#: model:ir.model.fields.selection,name:account.selection__res_company__early_pay_discount_computation__excluded
+msgid "Never"
+msgstr "Nunca"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__new_journal_name
@@ -10766,6 +10765,7 @@ msgstr "Pago Parcialmente"
 #: model:ir.model.fields,field_description:account.field_account_move_line__partner_id
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__partner_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -13642,6 +13642,11 @@ msgid "Tax Tags"
 msgstr "Marcadores de imposto"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_report_line__tax_tags_formula
+msgid "Tax Tags Formula Shortcut"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_search
 msgid "Tax Template"
 msgstr "Modelo de Imposto"
@@ -14195,11 +14200,12 @@ msgid "The company this distribution line belongs to."
 msgstr "A empresa à qual esta linha de distribuição pertence."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid ""
-"The country of the foreign VAT number could not be detected. Please assign a"
-" country to the fiscal position or set a country group"
+"The country code of the foreign VAT number does not match any country in the"
+" group."
 msgstr ""
 
 #. module: account
@@ -15676,11 +15682,6 @@ msgid "Type of the exception activity on record."
 msgstr "Tipo de atividade de exceção registada."
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
-msgid "UP"
-msgstr "PARA CIMA"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
@@ -15827,6 +15828,11 @@ msgstr "Total Não Tributado"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "UoM"
 msgstr "U.M."
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
+msgid "Up"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -16540,7 +16546,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_payment_method.py:0
+#: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid ""
 "You can't have two payment method lines of the same payment type (%s) and "
@@ -16660,6 +16666,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid ""
@@ -17271,6 +17278,11 @@ msgstr ""
 "de fornecedor como paga."
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
+msgid "has been applied."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "here"
 msgstr "aqui"
@@ -17448,12 +17460,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
-#, python-format
-msgid "{percent:0.2f}% recognized on {new_date}"
-msgstr ""
-
-#. module: account
-#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "{percent:0.2f}% to recognize on {new_date}"

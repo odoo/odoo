@@ -5,9 +5,9 @@
 # Translators:
 # Bohdan Lisnenko, 2022
 # Martin Trigaux, 2023
-# Wil Odoo, 2024
 # Roman Dereka <rode@odoo.com>, 2024
 # Vitalii Fedko, 2024
+# Wil Odoo, 2024
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
 # 
 msgid ""
@@ -232,7 +232,6 @@ msgstr "%s.copy"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
-#: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "(Discount)"
 msgstr "(Знижка)"
@@ -384,14 +383,6 @@ msgid ""
 msgstr ""
 "<b>%(count)s#</b> Розтермінування <b>%(amount)s</b> на <b style='color: "
 "#704A66;'>%(date)s</b>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
-msgid ""
-"<b>Early Payment Discount of %(payment_reference) has been applied.</b>"
-msgstr ""
-"<b>Було застосовано знижку на достроковий платіж у розмірі "
-"%(payment_reference).</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1544,13 +1535,15 @@ msgstr ""
 #, python-format
 msgid "Account %s is of payable type, but is used in a sale operation."
 msgstr ""
+"Рахунок %s належить до платіжного типу, але використовується в операції "
+"продажу."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Account %s is of receivable type, but is used in a purchase operation."
-msgstr ""
+msgstr "Рахунок %s має тип дебітор, але використовується в операції купівлі."
 
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
@@ -3678,13 +3671,6 @@ msgstr "Перенести до"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_report.py:0
-#, python-format
-msgid "Carryover lines for: %s"
-msgstr "Перенсти рядки для: %s"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -4204,6 +4190,7 @@ msgstr "Компанії, що стосуються партнера"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__company_id
 #: model:ir.model.fields,field_description:account.field_account_tax__company_id
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__company_id
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
@@ -5201,11 +5188,6 @@ msgid "DELIVERED DUTY PAID"
 msgstr "ПОСТАЧАННЯ ЗІ СПЛАТОЮ МИТА"
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
-msgid "DOWN"
-msgstr "ВНИЗ"
-
-#. module: account
 #: model:ir.ui.menu,name:account.menu_board_journal_1
 msgid "Dashboard"
 msgstr "Панель приладів"
@@ -5235,6 +5217,7 @@ msgstr "Перевірка узгодженості даних"
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__date
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__date
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__figure_type__date
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -5949,6 +5932,11 @@ msgid "Done"
 msgstr "Виконано"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
+msgid "Down"
+msgstr "Вниз"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "Download"
 msgstr "Завантажити"
@@ -6162,6 +6150,11 @@ msgstr "Режим знижки ранньої оплати"
 #: model:ir.model.fields,help:account.field_account_payment_term_line__discount_percentage
 msgid "Early Payment Discount granted for this line"
 msgstr "Знижку ранньої оплати надано на цей рядок"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
+msgid "Early Payment Discount of"
+msgstr "Знижка на попередню оплату"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
@@ -7144,11 +7137,6 @@ msgid "Growth Comparison"
 msgstr "Порівняння зростання"
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
-msgid "HALF-UP"
-msgstr "НАВЕРХ"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_accounting_entries
 msgid "Has Accounting Entries"
 msgstr "Має бухгалтерські записи"
@@ -7891,6 +7879,14 @@ msgstr ""
 "Внутрішнє поле для скорочення створення Expression_ids для механізму домену"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_report_line__tax_tags_formula
+msgid ""
+"Internal field to shorten expression_ids creation for the tax_tags engine"
+msgstr ""
+"Внутрішнє поле для скорочення створення Expression_ids для механізму "
+"tax_tags"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_incoterm_id
 #: model:ir.model.fields,help:account.field_account_move__invoice_incoterm_id
 #: model:ir.model.fields,help:account.field_account_payment__invoice_incoterm_id
@@ -8409,6 +8405,7 @@ msgstr "Січень"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__linked_journal_id
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -9706,6 +9703,11 @@ msgstr ""
 "Легко перейдіть за допомогою звітів і подивіться, що стоїть за цифрами"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
+msgid "Nearest"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
 #: model:ir.model.fields,field_description:account.field_account_move__needed_terms
 #: model:ir.model.fields,field_description:account.field_account_payment__needed_terms
@@ -9730,16 +9732,17 @@ msgid "Negative value of amount field if payment_type is outbound"
 msgstr "Поле негативного значення суми якщо payment_type є вихідним"
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_report__filter_hierarchy__never
-#: model:ir.model.fields.selection,name:account.selection__res_company__early_pay_discount_computation__excluded
-msgid "Never"
-msgstr "Ніколи"
-
-#. module: account
+#. odoo-python
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "Nested group of taxes are not allowed."
 msgstr "Вкладена група податків не допускається."
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_report__filter_hierarchy__never
+#: model:ir.model.fields.selection,name:account.selection__res_company__early_pay_discount_computation__excluded
+msgid "Never"
+msgstr "Ніколи"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__new_journal_name
@@ -10734,6 +10737,7 @@ msgstr "Частково оплачено"
 #: model:ir.model.fields,field_description:account.field_account_move_line__partner_id
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__partner_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -13616,6 +13620,11 @@ msgid "Tax Tags"
 msgstr "Теги податку"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_report_line__tax_tags_formula
+msgid "Tax Tags Formula Shortcut"
+msgstr "Ярлик формули податкових міток"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_search
 msgid "Tax Template"
 msgstr "Шаблон податку"
@@ -13952,6 +13961,8 @@ msgid ""
 "The Availability is set to 'Country Matches' but the field Country is not "
 "set."
 msgstr ""
+"Для параметра Наявність встановлено значення Співставлення по країнам, але "
+"поле Країна не встановлено."
 
 #. module: account
 #. odoo-python
@@ -14175,12 +14186,13 @@ msgid "The company this distribution line belongs to."
 msgstr "Компанія, якій належить цей рядок розповсюдження."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid ""
-"The country of the foreign VAT number could not be detected. Please assign a"
-" country to the fiscal position or set a country group"
-msgstr ""
+"The country code of the foreign VAT number does not match any country in the"
+" group."
+msgstr "Код країни іноземного ПДВ не відповідає жодній країні в групі."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
@@ -15776,11 +15788,6 @@ msgid "Type of the exception activity on record."
 msgstr "Тип дії виключення на записі."
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
-msgid "UP"
-msgstr "ВГОРУ"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
@@ -15929,6 +15936,11 @@ msgstr "Всього без податків"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "UoM"
 msgstr "Одиниця вимірювання"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
+msgid "Up"
+msgstr "Вгору"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -16698,7 +16710,7 @@ msgstr "Ви не можете видалити звіт, який має вар
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_payment_method.py:0
+#: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid ""
 "You can't have two payment method lines of the same payment type (%s) and "
@@ -16835,6 +16847,7 @@ msgstr ""
 " країн."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid ""
@@ -17525,6 +17538,11 @@ msgstr ""
 " оплачене."
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
+msgid "has been applied."
+msgstr "було застосовано."
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "here"
 msgstr "тут"
@@ -17716,12 +17734,6 @@ msgstr "{label}: Запис коригування {new_date}"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
-#, python-format
-msgid "{percent:0.2f}% recognized on {new_date}"
-msgstr "{percent:0.2f}% визнано {new_date}"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "{percent:0.2f}% to recognize on {new_date}"

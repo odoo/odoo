@@ -9,9 +9,9 @@
 # Odoo - Paolo Gatti (pgi), 2023
 # Sebastiano Picchi, 2023
 # Martin Trigaux, 2023
-# Wil Odoo, 2024
 # Simone Rubino, 2024
 # Sergio Zanchetta <primes2h@gmail.com>, 2024
+# Wil Odoo, 2024
 # Marianna Ciofani, 2024
 # 
 msgid ""
@@ -236,7 +236,6 @@ msgstr "%s.copia"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
-#: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "(Discount)"
 msgstr "(Sconto)"
@@ -389,14 +388,6 @@ msgid ""
 msgstr ""
 "<b>%(count)s#</b> Rata di <b>%(amount)s</b> su <b style='color: "
 "#704A66;'>%(date)s</b>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
-msgid ""
-"<b>Early Payment Discount of %(payment_reference) has been applied.</b>"
-msgstr ""
-"<b>Lo sconto per pagamento anticipato del %(payment_reference) è stato "
-"applicato.</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -3706,13 +3697,6 @@ msgstr "Da comunicare a"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_report.py:0
-#, python-format
-msgid "Carryover lines for: %s"
-msgstr "Righe di riporto per: %s"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -3771,7 +3755,7 @@ msgstr "Conto di transizione per cassa"
 #: model:ir.model.fields,field_description:account.field_account_chart_template__default_cash_difference_expense_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_expense_account_id
 msgid "Cash Difference Expense Account"
-msgstr "Conto di ammortamento differenza di cassa"
+msgstr "Conto di costo differenza di cassa"
 
 #. module: account
 #. odoo-python
@@ -3894,7 +3878,7 @@ msgstr "Categoria"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_account_expense_categ_id
 msgid "Category of Expense Account"
-msgstr "Categoria conto di ammortamento"
+msgstr "Categoria conto di costo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_account_income_categ_id
@@ -4231,6 +4215,7 @@ msgstr "Aziende collegate al partner"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__company_id
 #: model:ir.model.fields,field_description:account.field_account_tax__company_id
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__company_id
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
@@ -5231,11 +5216,6 @@ msgid "DELIVERED DUTY PAID"
 msgstr "RESO SDOGANATO"
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
-msgid "DOWN"
-msgstr "DIFETTO"
-
-#. module: account
 #: model:ir.ui.menu,name:account.menu_board_journal_1
 msgid "Dashboard"
 msgstr "Bacheca"
@@ -5265,6 +5245,7 @@ msgstr "Controllo coerenza dei dati"
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__date
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__date
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__figure_type__date
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -5428,7 +5409,7 @@ msgstr "Limite di credito predefinito"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Default Expense Account"
-msgstr "Conto di ammortamento predefinito"
+msgstr "Conto di costo predefinito"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -5982,6 +5963,11 @@ msgid "Done"
 msgstr "Completato"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
+msgid "Down"
+msgstr "Difetto"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "Download"
 msgstr "Scarica"
@@ -6195,6 +6181,11 @@ msgstr "Modalità sconto pagamento anticipato"
 #: model:ir.model.fields,help:account.field_account_payment_term_line__discount_percentage
 msgid "Early Payment Discount granted for this line"
 msgstr "Sconto pagamento anticipato concesso per questa riga"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
+msgid "Early Payment Discount of"
+msgstr "Sconto pagamento anticipato di"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
@@ -6463,12 +6454,12 @@ msgstr "Costi"
 #: model:ir.model.fields,field_description:account.field_product_product__property_account_expense_id
 #: model:ir.model.fields,field_description:account.field_product_template__property_account_expense_id
 msgid "Expense Account"
-msgstr "Conto di ammortamento"
+msgstr "Conto di costo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_account_expense_id
 msgid "Expense Account on Product Template"
-msgstr "Conto di ammortamento nel modello prodotto"
+msgstr "Conto di costo nel modello prodotto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__expense_accrual_account
@@ -7180,11 +7171,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_report__filter_growth_comparison
 msgid "Growth Comparison"
 msgstr "Confronto crescita"
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
-msgid "HALF-UP"
-msgstr "METÀ (PER ECCESSO)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_accounting_entries
@@ -7933,6 +7919,14 @@ msgstr ""
 "motore"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_report_line__tax_tags_formula
+msgid ""
+"Internal field to shorten expression_ids creation for the tax_tags engine"
+msgstr ""
+"Campo interno per diminuire la creazione di expression_ids per il motore "
+"tax_tags"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_incoterm_id
 #: model:ir.model.fields,help:account.field_account_move__invoice_incoterm_id
 #: model:ir.model.fields,help:account.field_account_payment__invoice_incoterm_id
@@ -8452,6 +8446,7 @@ msgstr "Gennaio"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__linked_journal_id
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -8795,7 +8790,7 @@ msgid ""
 msgstr ""
 "Lasciare il campo vuoto per usare il valore predefinito della categoria del "
 "prodotto. Se è stata configurata la contabilità anglosassone con metodo di "
-"valutazione automatico, viene utilizzato il conto di ammortamento."
+"valutazione automatico, viene utilizzato il conto di costo."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue_value
@@ -9752,6 +9747,11 @@ msgstr ""
 "Navigazione agevole tra i rendiconti per capire cosa c'è dietro i numeri"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
+msgid "Nearest"
+msgstr "Più vicino"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
 #: model:ir.model.fields,field_description:account.field_account_move__needed_terms
 #: model:ir.model.fields,field_description:account.field_account_payment__needed_terms
@@ -9777,16 +9777,17 @@ msgstr ""
 "Valore negativo del campo relativo all'importo se payment_type è in uscita"
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_report__filter_hierarchy__never
-#: model:ir.model.fields.selection,name:account.selection__res_company__early_pay_discount_computation__excluded
-msgid "Never"
-msgstr "Mai"
-
-#. module: account
+#. odoo-python
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "Nested group of taxes are not allowed."
 msgstr "I gruppi di imposte nidificati non sono consentiti."
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_report__filter_hierarchy__never
+#: model:ir.model.fields.selection,name:account.selection__res_company__early_pay_discount_computation__excluded
+msgid "Never"
+msgstr "Mai"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__new_journal_name
@@ -10785,6 +10786,7 @@ msgstr "Parzialmente pagata"
 #: model:ir.model.fields,field_description:account.field_account_move_line__partner_id
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__partner_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -12154,7 +12156,7 @@ msgstr "Conto ratei attivi"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__account_id
 msgid "Revenue/Expense Account"
-msgstr "Conto di ammortamento/ricavo"
+msgstr "Conto di costo/ricavo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__reversal_date
@@ -13672,6 +13674,11 @@ msgid "Tax Tags"
 msgstr "Etichette imposta"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_report_line__tax_tags_formula
+msgid "Tax Tags Formula Shortcut"
+msgstr "Scorciatoia formula tag imposte"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_search
 msgid "Tax Template"
 msgstr "Modello imposta"
@@ -14240,14 +14247,15 @@ msgid "The company this distribution line belongs to."
 msgstr "L'azienda a cui appartiene la riga di ripartizione."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid ""
-"The country of the foreign VAT number could not be detected. Please assign a"
-" country to the fiscal position or set a country group"
+"The country code of the foreign VAT number does not match any country in the"
+" group."
 msgstr ""
-"Non è stato possibile individuare il Paese corrispondente al numero IVA "
-"estero. Assegna un Paese alla posizione fiscale o configura un gruppo"
+"Il codice Paese del numero di Partita IVA straniero non corrisponde a nessun"
+" Paese nel gruppo."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
@@ -15868,11 +15876,6 @@ msgid "Type of the exception activity on record."
 msgstr "Tipo di attività eccezione sul record."
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
-msgid "UP"
-msgstr "ECCESSO"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
@@ -16021,6 +16024,11 @@ msgstr "Totale imponibile"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "UoM"
 msgstr "UdM"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
+msgid "Up"
+msgstr "Eccesso"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -16797,7 +16805,7 @@ msgstr "Non è possibile eliminare un rendiconto che presenta varianti."
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_payment_method.py:0
+#: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid ""
 "You can't have two payment method lines of the same payment type (%s) and "
@@ -16937,6 +16945,7 @@ msgstr ""
 "gruppo di Paesi selezionato."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid ""
@@ -17626,6 +17635,11 @@ msgstr ""
 "per il fornitore. Assegnarli per impostare la nota di credito come pagata."
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
+msgid "has been applied."
+msgstr "è stato applicato."
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "here"
 msgstr "qui"
@@ -17817,12 +17831,6 @@ msgstr "{label}: Voce di rettifica di {new_date}"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
-#, python-format
-msgid "{percent:0.2f}% recognized on {new_date}"
-msgstr "{percent:0.2f}% riconosciuta il {new_date}"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "{percent:0.2f}% to recognize on {new_date}"

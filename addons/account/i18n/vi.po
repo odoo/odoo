@@ -7,8 +7,8 @@
 # Thin Tran <trvathin@gmail.com>, 2022
 # Dao Nguyen <trucdao.uel@gmail.com>, 2022
 # Martin Trigaux, 2023
-# Wil Odoo, 2024
 # Nancy Momoland <thanh.np2502@gmail.com>, 2024
+# Wil Odoo, 2024
 # Thi Huong Nguyen, 2024
 # 
 msgid ""
@@ -233,7 +233,6 @@ msgstr "%s.copy"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
-#: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "(Discount)"
 msgstr "(Chiết khấu)"
@@ -385,12 +384,6 @@ msgid ""
 msgstr ""
 "<b>%(count)s#</b> Trả góp của <b>%(amount)s</b> vào ngày <b style='color: "
 "#704A66;'>%(date)s</b>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
-msgid ""
-"<b>Early Payment Discount of %(payment_reference) has been applied.</b>"
-msgstr "<b>Đã áp dụng chiết khấu thanh toán sớm cho %(payment_reference).</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1544,6 +1537,8 @@ msgstr ""
 #, python-format
 msgid "Account %s is of payable type, but is used in a sale operation."
 msgstr ""
+"Loại tài khoản %s là phải trả, nhưng lại được sử dụng trong hoạt động bán "
+"hàng."
 
 #. module: account
 #. odoo-python
@@ -1551,6 +1546,8 @@ msgstr ""
 #, python-format
 msgid "Account %s is of receivable type, but is used in a purchase operation."
 msgstr ""
+"Loại tài khoản %s là phải thu, nhưng lại được sử dụng trong hoạt động bán "
+"hàng."
 
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
@@ -1638,7 +1635,7 @@ msgstr "Nhóm bút toán theo sổ nhật kí"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__account_ids
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Account Mapping"
-msgstr "Tài khoản tương ứng"
+msgstr "Mapping tài khoản"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_reversal
@@ -1673,7 +1670,7 @@ msgstr "Khoản phải trả"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_category_property_form
 msgid "Account Properties"
-msgstr "Tài khoản tài sản"
+msgstr "Thuộc tính tài khoản"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_receivable_id
@@ -2004,17 +2001,17 @@ msgstr "Các tài khoản"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_form
 msgid "Accounts Mapping"
-msgstr "Tài khoản tương ứng"
+msgstr "Mapping tài khoản"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
 msgid "Accounts Mapping Template of Fiscal Position"
-msgstr "Tài khoản khớp trong vị thế tài chính"
+msgstr "Mẫu mapping tài khoản của vị trí tài chính"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
 msgid "Accounts Mapping of Fiscal Position"
-msgstr "Tài khoản khớp trong vị thế tài chính"
+msgstr "Mapping tài khoản của vị trí tài chính"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__account_prefix
@@ -3676,13 +3673,6 @@ msgstr "Mang sang"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_report.py:0
-#, python-format
-msgid "Carryover lines for: %s"
-msgstr "Dòng chuyển tiếp cho: %s"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -4201,6 +4191,7 @@ msgstr "Công ty có liên quan tới đối tác"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__company_id
 #: model:ir.model.fields,field_description:account.field_account_tax__company_id
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__company_id
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
@@ -5196,11 +5187,6 @@ msgid "DELIVERED DUTY PAID"
 msgstr "GIAO ĐÃ NỘP THUẾ"
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
-msgid "DOWN"
-msgstr "GIẢM"
-
-#. module: account
 #: model:ir.ui.menu,name:account.menu_board_journal_1
 msgid "Dashboard"
 msgstr "Bảng thông tin"
@@ -5230,6 +5216,7 @@ msgstr "Kiểm tra tính nhất quán của dữ liệu"
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__date
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__date
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__figure_type__date
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -5945,6 +5932,11 @@ msgid "Done"
 msgstr "Hoàn tất"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
+msgid "Down"
+msgstr "Xuống"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "Download"
 msgstr "Tải xuống"
@@ -6156,6 +6148,11 @@ msgstr "Chế độ chiết khấu thanh toán sớm"
 #: model:ir.model.fields,help:account.field_account_payment_term_line__discount_percentage
 msgid "Early Payment Discount granted for this line"
 msgstr "Được cấp chiết khấu thanh toán sớm cho dòng này"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
+msgid "Early Payment Discount of"
+msgstr "Chiết khấu thanh toán sớm của"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
@@ -6630,7 +6627,7 @@ msgstr "Khu vực kế toán"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template__position_id
 msgid "Fiscal Mapping"
-msgstr "Khớp vị thế"
+msgstr "Mapping tài chính"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6861,7 +6858,7 @@ msgstr "Mã thuế GTGT nước ngoài"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
 msgid "Foreign Vat Header Mode"
-msgstr "Chế độ Tiêu đề Vat ngoại"
+msgstr "Chế độ Header Vat ngoại"
 
 #. module: account
 #. odoo-python
@@ -7134,11 +7131,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_report__filter_growth_comparison
 msgid "Growth Comparison"
 msgstr "So sánh tăng trưởng"
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
-msgid "HALF-UP"
-msgstr "HALF-UP"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_accounting_entries
@@ -7880,6 +7872,13 @@ msgstr ""
 "Trường nội bộ để rút ngắn quá trình tạo expression_ids cho công cụ lọc"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_report_line__tax_tags_formula
+msgid ""
+"Internal field to shorten expression_ids creation for the tax_tags engine"
+msgstr ""
+"Trường nội bộ để rút ngắn quá trình tạo expression_ids cho công cụ tax_tags"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_incoterm_id
 #: model:ir.model.fields,help:account.field_account_move__invoice_incoterm_id
 #: model:ir.model.fields,help:account.field_account_payment__invoice_incoterm_id
@@ -8391,6 +8390,7 @@ msgstr "Tháng Một"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__linked_journal_id
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -9685,6 +9685,11 @@ msgstr ""
 "xảy đằng sau những con số"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
+msgid "Nearest"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
 #: model:ir.model.fields,field_description:account.field_account_move__needed_terms
 #: model:ir.model.fields,field_description:account.field_account_payment__needed_terms
@@ -9709,16 +9714,17 @@ msgid "Negative value of amount field if payment_type is outbound"
 msgstr "Giá trị âm của trường số tiền nếu loại thanh toán là dạng nhận về"
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_report__filter_hierarchy__never
-#: model:ir.model.fields.selection,name:account.selection__res_company__early_pay_discount_computation__excluded
-msgid "Never"
-msgstr "Không bao giờ"
-
-#. module: account
+#. odoo-python
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "Nested group of taxes are not allowed."
 msgstr "Không được phép có nhóm thuế lồng nhau."
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_report__filter_hierarchy__never
+#: model:ir.model.fields.selection,name:account.selection__res_company__early_pay_discount_computation__excluded
+msgid "Never"
+msgstr "Không bao giờ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__new_journal_name
@@ -10712,6 +10718,7 @@ msgstr "Đã trả 1 phần"
 #: model:ir.model.fields,field_description:account.field_account_move_line__partner_id
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__partner_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -10752,12 +10759,12 @@ msgstr "Hạn mức tín dụng cho đối tác"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Partner Mapping"
-msgstr "Khớp đối tác"
+msgstr "Mapping đối tác"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__partner_mapping_line_ids
 msgid "Partner Mapping Lines"
-msgstr "Chi tiết khớp đối tác"
+msgstr "Dòng mapping đối tác"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_name
@@ -10778,7 +10785,7 @@ msgstr "Đối tác đã được thiết lập"
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_partner_mapping
 msgid "Partner mapping for reconciliation models"
-msgstr "Khớp đối tác cho đố tượng đối soát"
+msgstr "Mapping đối tác cho mẫu đối chiếu"
 
 #. module: account
 #. odoo-python
@@ -11237,7 +11244,8 @@ msgstr "Vui lòng đặt một giá trị làm tròn dương hoàn toàn."
 msgid ""
 "Please set at least one of the match texts to create a partner mapping."
 msgstr ""
-"Vui lòng điền ít nhất một nội dung nào đó cho việc khớp lệnh với đối tác."
+"Vui lòng điền ít nhất một văn bản so khớp để tạo một tiêu chí mapping đối "
+"tác."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -13503,17 +13511,17 @@ msgstr "Thông báo ngày chốt thuế"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__tax_ids
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Tax Mapping"
-msgstr "Thuế tương ứng"
+msgstr "Mapping thuế"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
 msgid "Tax Mapping Template of Fiscal Position"
-msgstr "Mẫu thuế tương ứng theo Vị thế tài chính"
+msgstr "Mẫu mapping thuế của vị trí tài chính"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Tax Mapping of Fiscal Position"
-msgstr "Thuế tương ứng theo Vị thế tài chính"
+msgstr "Mapping thuế của vị trí tài chính"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__name
@@ -13575,6 +13583,11 @@ msgstr "Chuỗi thuế"
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__tax_tags
 msgid "Tax Tags"
 msgstr "Từ khóa thuế"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_report_line__tax_tags_formula
+msgid "Tax Tags Formula Shortcut"
+msgstr "Lối tắt công thức thẻ thuế"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_search
@@ -13745,7 +13758,7 @@ msgstr "Thuế được áp dụng"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_form
 msgid "Taxes Mapping"
-msgstr "Thuế tương ứng"
+msgstr "Mapping thuế"
 
 #. module: account
 #. odoo-python
@@ -13912,6 +13925,8 @@ msgid ""
 "The Availability is set to 'Country Matches' but the field Country is not "
 "set."
 msgstr ""
+"Tính khả dụng được đặt là 'Quốc gia trùng khớp' nhưng trường Quốc gia chưa "
+"được thiết lập."
 
 #. module: account
 #. odoo-python
@@ -14138,14 +14153,15 @@ msgid "The company this distribution line belongs to."
 msgstr "Công ty trực thuộc dây chuyền phân phối này."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid ""
-"The country of the foreign VAT number could not be detected. Please assign a"
-" country to the fiscal position or set a country group"
+"The country code of the foreign VAT number does not match any country in the"
+" group."
 msgstr ""
-"Không thể phát hiện quốc gia của mã số thuế GTGT nước ngoài. Vui lòng chỉ "
-"định quốc gia cho vị trí tài chính hoặc thiết lập nhóm quốc gia"
+"Mã quốc gia của số VAT nước ngoài không khớp với bất kỳ quốc gia nào trong "
+"nhóm."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
@@ -14346,7 +14362,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The following regular expression is invalid to create a partner mapping: %s"
-msgstr "Biểu thức chính quy sau không hợp lệ để tạo ánh xạ đối tác: %s"
+msgstr "Biểu thức chính quy sau không hợp lệ để tạo mapping đối tác: %s"
 
 #. module: account
 #. odoo-python
@@ -14474,10 +14490,10 @@ msgid ""
 "- To Match the text anywhere (in label or notes), put your text between .*\n"
 "  e.g: .*N°48748 abc123.*"
 msgstr ""
-"Biểu thức khớp được dùng.\n"
-"- Để Khớp văn bản ở đầu dòng (trong nhãn hoặc ghi chú), chỉ cần điền vào văn bản của bạn.\n"
-"- Để khớp văn bản ở bất kỳ đâu (trong nhãn hoặc ghi chú), hãy đặt văn bản của bạn ở giữa.*\n"
-"  ví dụ: .*N°48748 abc123.*"
+"Mapping sử dụng biểu thức chính quy.\n"
+"- Để khớp văn bản ở đầu dòng (trong nhãn hoặc ghi chú), chỉ cần điền văn bản của bạn.\n"
+"- Để khớp văn bản ở bất kỳ đâu (trong nhãn hoặc ghi chú), hãy đặt văn bản của bạn ở giữa dấu .*\n"
+"  VD: .*N°48748 abc123.*"
 
 #. module: account
 #. odoo-python
@@ -14920,8 +14936,7 @@ msgstr ""
 msgid ""
 "The tax ID of your company in the region mapped by this fiscal position."
 msgstr ""
-"ID thuế của công ty bạn trong khu vực được lập bản đồ theo vị trí tài chính "
-"này."
+"ID thuế của công ty bạn trong khu vực được map theo vị trí tài chính này."
 
 #. module: account
 #. odoo-python
@@ -15729,11 +15744,6 @@ msgid "Type of the exception activity on record."
 msgstr "Loại hoạt động ngoại lệ trên hồ sơ."
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
-msgid "UP"
-msgstr "LÊN"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
@@ -15882,6 +15892,11 @@ msgstr "Giá trị trước thuế"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "UoM"
 msgstr "Đơn vị"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
+msgid "Up"
+msgstr "Lên"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -16647,7 +16662,7 @@ msgstr "Bạn không thể xóa báo cáo có các biến thể."
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_payment_method.py:0
+#: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid ""
 "You can't have two payment method lines of the same payment type (%s) and "
@@ -16783,6 +16798,7 @@ msgstr ""
 "đã chọn."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid ""
@@ -17097,8 +17113,8 @@ msgid ""
 "You cannot remove/deactivate the accounts \"%s\" which are set on the "
 "account mapping of a fiscal position."
 msgstr ""
-"Bạn không thể xóa / hủy kích hoạt tài khoản \"%s\" được cài khớp với tài "
-"khoản của một vị thế tài chính."
+"Bạn không thể xóa/vô hiệu hoá tài khoản \"%s\" đang được cài cho mapping tài"
+" khoản của vị trí tài chính."
 
 #. module: account
 #. odoo-python
@@ -17468,6 +17484,11 @@ msgstr ""
 "là đã thanh toán."
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
+msgid "has been applied."
+msgstr "đã được áp dụng."
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "here"
 msgstr "ở đây"
@@ -17659,12 +17680,6 @@ msgstr "{label}: Đang điều chỉnh bút toán của {new_date}"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
-#, python-format
-msgid "{percent:0.2f}% recognized on {new_date}"
-msgstr "{percent:0.2f}% recognized vào {new_date}"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "{percent:0.2f}% to recognize on {new_date}"
