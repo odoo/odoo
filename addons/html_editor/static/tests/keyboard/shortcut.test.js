@@ -9,13 +9,9 @@ test("shortcut plugin allow registering shortcuts", async () => {
     class TestPlugin extends Plugin {
         static name = "test";
         resources = {
-            shortcuts: [{ hotkey: "a", command: "TEST_CMD" }],
+            user_commands: [{ id: "TEST_CMD", run: () => count++ }],
+            shortcuts: [{ hotkey: "a", commandId: "TEST_CMD" }],
         };
-        handleCommand(command, payload) {
-            if (command === "TEST_CMD") {
-                count++;
-            }
-        }
     }
     await setupEditor(`<p>test[]</p>`, {
         config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
@@ -33,13 +29,9 @@ test.tags("iframe")("shortcut plugin allow registering shortcuts in iframe", asy
     class TestPlugin extends Plugin {
         static name = "test";
         resources = {
-            shortcuts: [{ hotkey: "a", command: "TEST_CMD" }],
+            user_commands: [{ id: "TEST_CMD", run: () => count++ }],
+            shortcuts: [{ hotkey: "a", commandId: "TEST_CMD" }],
         };
-        handleCommand(command, payload) {
-            if (command === "TEST_CMD") {
-                count++;
-            }
-        }
     }
     await setupEditor(`<p>test[]</p>`, {
         config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },

@@ -175,14 +175,18 @@ test("restore a selection when you are not in the editable shouldn't move the fo
         static name = "test";
         static dependencies = ["overlay"];
         resources = {
-            powerboxItems: [
+            user_commands: [
                 {
-                    category: "widget",
-                    name: "Test",
+                    id: "testShowOverlay",
+                    title: "Test",
                     description: "Test",
-                    action: () => {
-                        this.showOverlay();
-                    },
+                    run: this.showOverlay.bind(this),
+                },
+            ],
+            powerbox_items: [
+                {
+                    categoryId: "widget",
+                    commandId: "testShowOverlay",
                 },
             ],
         };

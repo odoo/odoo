@@ -29,10 +29,10 @@ export class YoutubePlugin extends Plugin {
             this.dispatch("ADD_STEP");
             // URL is a YouTube video.
             const embedVideoCommand = {
-                name: _t("Embed Youtube Video"),
+                title: _t("Embed Youtube Video"),
                 description: _t("Embed the youtube video in the document."),
-                fontawesome: "fa-youtube-play",
-                action: async () => {
+                icon: "fa-youtube-play",
+                run: async () => {
                     const videoElement = await this.getYoutubeVideoElement(youtubeUrl[0]);
                     this.shared.domInsert(videoElement);
                     this.dispatch("ADD_STEP");
