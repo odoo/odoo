@@ -1,6 +1,7 @@
 /**
  * @typedef { import("./editor").Editor } Editor
  * @typedef { import("./editor").EditorConfig } EditorConfig
+ * @typedef { import("./core/user_command_plugin").UserCommandPlugin } UserCommandPlugin
  * @typedef { import("./core/history_plugin").HistoryPlugin } HistoryPlugin
  * @typedef { import("./core/selection_plugin").SelectionPlugin } SelectionPlugin
  * @typedef { import("./core/delete_plugin").DeletePlugin } DeletePlugin

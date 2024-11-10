@@ -35,87 +35,92 @@ export class ListPlugin extends Plugin {
     static name = "list";
     static dependencies = ["tabulation", "split", "selection", "delete", "dom"];
     resources = {
+        user_commands: [
+            {
+                id: "toggleList",
+                run: this.toggleListCommand.bind(this),
+            },
+            {
+                id: "toggleListUL",
+                title: _t("Bulleted list"),
+                description: _t("Create a simple bulleted list"),
+                icon: "fa-list-ul",
+                run: () => this.toggleListCommand({ mode: "UL" }),
+            },
+            {
+                id: "toggleListOL",
+                title: _t("Numbered list"),
+                description: _t("Create a list with numbering"),
+                icon: "fa-list-ol",
+                run: () => this.toggleListCommand({ mode: "OL" }),
+            },
+            {
+                id: "toggleListCL",
+                title: _t("Checklist"),
+                description: _t("Track tasks with a checklist"),
+                icon: "fa-check-square-o",
+                run: () => this.toggleListCommand({ mode: "CL" }),
+            },
+        ],
         delete_backward_overrides: this.handleDeleteBackward.bind(this),
         delete_range_overrides: this.handleDeleteRange.bind(this),
         tab_overrides: this.handleTab.bind(this),
         shift_tab_overrides: this.handleShiftTab.bind(this),
         split_element_block_overrides: this.handleSplitBlock.bind(this),
-        toolbarCategory: withSequence(30, {
+        toolbar_groups: withSequence(30, {
             id: "list",
         }),
-        toolbarItems: [
+        toolbar_items: [
             {
                 id: "bulleted_list",
-                category: "list",
-                action(dispatch) {
-                    dispatch("TOGGLE_LIST", { mode: "UL" });
-                },
-                icon: "fa-list-ul",
-                title: _t("Bulleted list"),
-                isFormatApplied: isListActive("UL"),
+                groupId: "list",
+                commandId: "toggleListUL",
+                isActive: isListActive("UL"),
             },
             {
                 id: "numbered_list",
-                category: "list",
-                action(dispatch) {
-                    dispatch("TOGGLE_LIST", { mode: "OL" });
-                },
-                icon: "fa-list-ol",
-                title: _t("Numbered list"),
-                isFormatApplied: isListActive("OL"),
+                groupId: "list",
+                commandId: "toggleListOL",
+                isActive: isListActive("OL"),
             },
             {
                 id: "checklist",
-                category: "list",
-                action(dispatch) {
-                    dispatch("TOGGLE_LIST", { mode: "CL" });
-                },
-                icon: "fa-check-square-o",
-                title: _t("Checklist"),
-                isFormatApplied: isListActive("CL"),
+                groupId: "list",
+                commandId: "toggleListCL",
+                isActive: isListActive("CL"),
             },
         ],
-        powerboxItems: [
+        powerbox_items: [
             {
-                id: "bulleted_list",
-                name: _t("Bulleted list"),
-                description: _t("Create a simple bulleted list"),
-                category: "structure",
-                fontawesome: "fa-list-ul",
-                action(dispatch) {
-                    dispatch("TOGGLE_LIST", { mode: "UL" });
-                },
+                categoryId: "structure",
+                commandId: "toggleListUL",
             },
             {
-                id: "numbered_list",
-                name: _t("Numbered list"),
-                description: _t("Create a list with numbering"),
-                category: "structure",
-                fontawesome: "fa-list-ol",
-                action(dispatch) {
-                    dispatch("TOGGLE_LIST", { mode: "OL" });
-                },
+                categoryId: "structure",
+                commandId: "toggleListOL",
             },
             {
-                id: "checklist",
-                name: _t("Checklist"),
-                description: _t("Track tasks with a checklist"),
-                category: "structure",
-
-                fontawesome: "fa-check-square-o",
-                action(dispatch) {
-                    dispatch("TOGGLE_LIST", { mode: "CL" });
-                },
+                categoryId: "structure",
+                commandId: "toggleListCL",
             },
         ],
         hints: [{ selector: "LI", text: _t("List") }],
         onInput: this.onInput.bind(this),
-        powerButtons: ["bulleted_list", "numbered_list", "checklist"],
+        power_buttons: [
+            { commandId: "toggleListUL" },
+            { commandId: "toggleListOL" },
+            { commandId: "toggleListCL" },
+        ],
     };
 
     setup() {
         this.addDomListener(this.editable, "touchstart", this.onPointerdown);
         this.addDomListener(this.editable, "mousedown", this.onPointerdown);
+    }
+
+    toggleListCommand({ mode } = {}) {
+        this.toggleList(mode);
+        this.dispatch("ADD_STEP");
     }
 
     handleCommand(command, payload) {

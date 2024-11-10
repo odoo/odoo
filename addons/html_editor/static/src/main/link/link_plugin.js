@@ -100,34 +100,29 @@ async function fetchInternalMetaData(url) {
     return result;
 }
 
-const linkItem = {
-    id: "link",
-    title: _t("Link"),
-    action(dispatch) {
-        dispatch("CREATE_LINK_ON_SELECTION");
-    },
-    icon: "fa-link",
-    isFormatApplied: isLinkActive,
-};
-const unlinkItem = {
-    id: "unlink",
-    title: _t("Remove Link"),
-
-    action(dispatch) {
-        dispatch("REMOVE_LINK_FROM_SELECTION");
-    },
-    icon: "fa-unlink",
-    isAvailable: isSelectionHasLink,
-};
-
 export class LinkPlugin extends Plugin {
     static name = "link";
     static dependencies = ["dom", "selection", "split", "line_break", "overlay"];
     // @phoenix @todo: do we want to have createLink and insertLink methods in link plugin?
     static shared = ["createLink", "insertLink", "getPathAsUrlCommand"];
     resources = {
-        onBeforeInput: withSequence(5, this.onBeforeInput.bind(this)),
-        toolbarCategory: [
+        user_commands: [
+            {
+                id: "toggleLinkTools",
+                title: _t("Link"),
+                description: _t("Add a link"),
+                icon: "fa-link",
+                run: this.toggleLinkTools.bind(this),
+            },
+            {
+                id: "removeLinkFromSelection",
+                title: _t("Remove Link"),
+                icon: "fa-unlink",
+                isAvailable: isSelectionHasLink,
+                run: this.removeLinkFromSelection.bind(this),
+            },
+        ],
+        toolbar_groups: [
             withSequence(40, {
                 id: "link",
             }),
@@ -136,51 +131,49 @@ export class LinkPlugin extends Plugin {
                 namespace: "image",
             }),
         ],
-        toolbarItems: [
+        toolbar_items: [
             {
-                ...linkItem,
-                category: "link",
+                id: "link",
+                groupId: "link",
+                commandId: "toggleLinkTools",
+                isActive: isLinkActive,
             },
             {
-                ...unlinkItem,
-                category: "link",
+                id: "unlink",
+                groupId: "link",
+                commandId: "removeLinkFromSelection",
             },
             {
-                ...linkItem,
-                category: "image_link",
+                id: "link",
+                groupId: "image_link",
+                commandId: "toggleLinkTools",
+                isActive: isLinkActive,
             },
             {
-                ...unlinkItem,
-                category: "image_link",
+                id: "unlink",
+                groupId: "image_link",
+                commandId: "removeLinkFromSelection",
             },
         ],
 
-        powerboxCategory: withSequence(50, { id: "navigation", name: _t("Navigation") }),
-        powerboxItems: [
+        powerbox_categories: withSequence(50, { id: "navigation", name: _t("Navigation") }),
+        powerbox_items: [
             {
-                id: "link",
-                name: _t("Link"),
-                description: _t("Add a link"),
-                category: "navigation",
-                fontawesome: "fa-link",
-                action(dispatch) {
-                    dispatch("TOGGLE_LINK");
-                },
+                categoryId: "navigation",
+                commandId: "toggleLinkTools",
             },
             {
-                name: _t("Button"),
+                title: _t("Button"),
                 description: _t("Add a button"),
-                category: "navigation",
-                fontawesome: "fa-link",
-                action(dispatch) {
-                    dispatch("TOGGLE_LINK");
-                },
+                categoryId: "navigation",
+                commandId: "toggleLinkTools",
             },
         ],
+        onBeforeInput: withSequence(5, this.onBeforeInput.bind(this)),
         onSelectionChange: this.handleSelectionChange.bind(this),
         split_element_block_overrides: this.handleSplitBlock.bind(this),
         insert_line_break_element_overrides: this.handleInsertLineBreak.bind(this),
-        powerButtons: ["link"],
+        power_buttons: { commandId: "toggleLinkTools" },
     };
     setup() {
         this.overlay = this.shared.createOverlay(LinkPopover, {}, { sequence: 50 });
@@ -279,10 +272,10 @@ export class LinkPlugin extends Plugin {
      */
     getPathAsUrlCommand(text, url) {
         const pasteAsURLCommand = {
-            name: _t("Paste as URL"),
+            title: _t("Paste as URL"),
             description: _t("Create an URL."),
-            fontawesome: "fa-link",
-            action: () => {
+            icon: "fa-link",
+            run: () => {
                 this.shared.domInsert(this.createLink(url, text));
                 this.dispatch("ADD_STEP");
             },
