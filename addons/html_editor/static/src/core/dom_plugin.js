@@ -27,16 +27,22 @@ import { convertList, getListMode } from "@html_editor/utils/list";
 export class DomPlugin extends Plugin {
     static name = "dom";
     static dependencies = ["selection", "split"];
-    static shared = ["domInsert", "copyAttributes"];
+    static shared = ["domInsert", "copyAttributes", "setTag"];
     resources = {
-        powerboxItems: {
-            name: _t("Separator"),
-            description: _t("Insert a horizontal rule separator"),
-            category: "structure",
-            fontawesome: "fa-minus",
-            action(dispatch) {
-                dispatch("INSERT_SEPARATOR");
+        user_commands: [
+            { id: "insertFontAwesome", run: this.insertFontAwesome.bind(this) },
+            { id: "setTag", run: this.setTag.bind(this) },
+            {
+                id: "insertSeparator",
+                title: _t("Separator"),
+                description: _t("Insert a horizontal rule separator"),
+                icon: "fa-minus",
+                run: this.insertSeparator.bind(this),
             },
+        ],
+        powerbox_items: {
+            categoryId: "structure",
+            commandId: "insertSeparator",
         },
     };
     contentEditableToRemove = new Set();
@@ -428,6 +434,11 @@ export class DomPlugin extends Plugin {
         this.shared.setSelection({ anchorNode, anchorOffset });
     }
 
+    /**
+     * @param {Object} param0
+     * @param {string} param0.tagName
+     * @param {string} [param0.extraClass]
+     */
     setTag({ tagName, extraClass = "" }) {
         tagName = tagName.toUpperCase();
         const cursors = this.shared.preserveSelection();

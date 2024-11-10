@@ -19,6 +19,7 @@
                                     active: state.buttonsActiveState[button.id],
                                     disabled: state.buttonsDisabledState[button.id]
                                 }"
+                                t-att-disabled="state.buttonsDisabledState[button.id]"
                                 t-att-title="button.title"
                                 t-att-name="button.id"
                                 t-on-click="() => this.onButtonClick(button)"

@@ -17,9 +17,54 @@ export class ImagePlugin extends Plugin {
     static name = "image";
     static dependencies = ["history", "link", "powerbox", "dom", "selection"];
     resources = {
+        user_commands: [
+            {
+                id: "deleteImage",
+                title: _t("Remove (DELETE)"),
+                icon: "fa-trash text-danger",
+                run: this.deleteImage.bind(this),
+            },
+            {
+                id: "previewImage",
+                title: _t("Preview image"),
+                icon: "fa-search-plus",
+                run: this.previewImage.bind(this),
+            },
+            {
+                id: "setImageShapeRounded",
+                title: _t("Shape: Rounded"),
+                icon: "fa-square",
+                run: () => this.setImageShape("rounded", { excludeClasses: ["rounded-circle"] }),
+            },
+            {
+                id: "setImageShapeCircle",
+                title: _t("Shape: Circle"),
+                icon: "fa-circle-o",
+                run: () => this.setImageShape("rounded-circle", { excludeClasses: ["rounded"] }),
+            },
+            {
+                id: "setImageShapeShadow",
+                title: _t("Shape: Shadow"),
+                icon: "fa-sun-o",
+                run: () => this.setImageShape("shadow"),
+            },
+            {
+                id: "setImageShapeThumbnail",
+                title: _t("Shape: Thumbnail"),
+                icon: "fa-picture-o",
+                run: () => this.setImageShape("img-thumbnail"),
+            },
+            { id: "resizeImage", run: this.resizeImage.bind(this) },
+            {
+                id: "transformImage",
+                title: _t("Transform the picture (click twice to reset transformation)"),
+                icon: "fa-object-ungroup",
+                run: this.transformImage.bind(this),
+            },
+        ],
         paste_url_overrides: this.handlePasteUrl.bind(this),
         onSelectionChange: this.onSelectionChange.bind(this),
-        toolbarNamespace: [
+        toolbar_namespaces: [
             {
                 id: "image",
                 isApplied: (traversedNodes) =>
@@ -29,7 +74,7 @@ export class ImagePlugin extends Plugin {
                     ),
             },
         ],
-        toolbarCategory: [
+        toolbar_groups: [
             withSequence(23, {
                 id: "image_preview",
                 namespace: "image",
@@ -44,20 +89,16 @@ export class ImagePlugin extends Plugin {
             withSequence(26, { id: "image_transform", namespace: "image" }),
             withSequence(30, { id: "image_delete", namespace: "image" }),
         ],
-        toolbarItems: [
+        toolbar_items: [
             {
                 id: "image_preview",
-                category: "image_preview",
-                action(dispatch) {
-                    dispatch("PREVIEW_IMAGE");
-                },
-                icon: "fa-search-plus",
-                title: _t("Preview image"),
+                groupId: "image_preview",
+                commandId: "previewImage",
             },
             {
                 id: "image_description",
                 title: _t("Edit media description"),
-                category: "image_description",
+                groupId: "image_description",
                 Component: ImageDescription,
                 props: {
                     getDescription: () => this.getImageAttribute("alt"),
@@ -66,108 +107,79 @@ export class ImagePlugin extends Plugin {
             },
             {
                 id: "shape_rounded",
-                category: "image_shape",
-                action(dispatch) {
-                    dispatch("SHAPE_ROUNDED");
-                },
-                title: _t("Shape: Rounded"),
-                icon: "fa-square",
-                isFormatApplied: hasShape(this, "rounded"),
+                groupId: "image_shape",
+                commandId: "setImageShapeRounded",
+                isActive: hasShape(this, "rounded"),
             },
             {
                 id: "shape_circle",
-                category: "image_shape",
-                action(dispatch) {
-                    dispatch("SHAPE_CIRCLE");
-                },
-                title: _t("Shape: Circle"),
-                icon: "fa-circle-o",
-                isFormatApplied: hasShape(this, "rounded-circle"),
+                groupId: "image_shape",
+                commandId: "setImageShapeCircle",
+                isActive: hasShape(this, "rounded-circle"),
             },
             {
                 id: "shape_shadow",
-                category: "image_shape",
-                action(dispatch) {
-                    dispatch("SHAPE_SHADOW");
-                },
-                title: _t("Shape: Shadow"),
-                icon: "fa-sun-o",
-                isFormatApplied: hasShape(this, "shadow"),
+                groupId: "image_shape",
+                commandId: "setImageShapeShadow",
+                isActive: hasShape(this, "shadow"),
             },
             {
                 id: "shape_thumbnail",
-                category: "image_shape",
-                action(dispatch) {
-                    dispatch("SHAPE_THUMBNAIL");
-                },
-                title: _t("Shape: Thumbnail"),
-                icon: "fa-picture-o",
-                isFormatApplied: hasShape(this, "img-thumbnail"),
+                groupId: "image_shape",
+                commandId: "setImageShapeThumbnail",
+                isActive: hasShape(this, "img-thumbnail"),
             },
             {
                 id: "image_padding",
-                category: "image_padding",
+                groupId: "image_padding",
                 title: _t("Image padding"),
                 Component: ImagePadding,
             },
             {
                 id: "resize_default",
-                category: "image_size",
-                action(dispatch) {
-                    dispatch("RESIZE_IMAGE", "");
-                },
+                groupId: "image_size",
+                commandId: "resizeImage",
                 title: _t("Resize Default"),
                 text: _t("Default"),
-                isFormatApplied: () => this.hasImageSize(""),
+                isActive: () => this.hasImageSize(""),
             },
             {
                 id: "resize_100",
-                category: "image_size",
-                action(dispatch) {
-                    dispatch("RESIZE_IMAGE", "100%");
-                },
+                groupId: "image_size",
+                commandId: "resizeImage",
+                commandParams: { size: "100%" },
                 title: _t("Resize Full"),
                 text: "100%",
-                isFormatApplied: () => this.hasImageSize("100%"),
+                isActive: () => this.hasImageSize("100%"),
             },
             {
                 id: "resize_50",
-                category: "image_size",
-                action(dispatch) {
-                    dispatch("RESIZE_IMAGE", "50%");
-                },
+                groupId: "image_size",
+                commandId: "resizeImage",
+                commandParams: { size: "50%" },
                 title: _t("Resize Half"),
                 text: "50%",
-                isFormatApplied: () => this.hasImageSize("50%"),
+                isActive: () => this.hasImageSize("50%"),
             },
             {
                 id: "resize_25",
-                category: "image_size",
-                action(dispatch) {
-                    dispatch("RESIZE_IMAGE", "25%");
-                },
+                groupId: "image_size",
+                commandId: "resizeImage",
+                commandParams: { size: "25%" },
                 title: _t("Resize Quarter"),
                 text: "25%",
-                isFormatApplied: () => this.hasImageSize("25%"),
+                isActive: () => this.hasImageSize("25%"),
             },
             {
                 id: "image_transform",
-                category: "image_transform",
-                action(dispatch) {
-                    dispatch("TRANSFORM_IMAGE");
-                },
-                title: _t("Transform the picture (click twice to reset transformation)"),
-                icon: "fa-object-ungroup",
-                isFormatApplied: () => this.isImageTransformationOpen(),
+                groupId: "image_transform",
+                commandId: "transformImage",
+                isActive: () => this.isImageTransformationOpen(),
             },
             {
                 id: "image_delete",
-                category: "image_delete",
-                action(dispatch) {
-                    dispatch("DELETE_IMAGE");
-                },
-                title: _t("Remove (DELETE)"),
-                icon: "fa-trash text-danger",
+                groupId: "image_delete",
+                commandId: "deleteImage",
             },
         ],
     };
@@ -290,6 +302,62 @@ export class ImagePlugin extends Plugin {
         }
     }
 
+    resizeImage({ size } = {}) {
+        const selectedImg = this.getSelectedImage();
+        if (!selectedImg) {
+            return;
+        }
+        selectedImg.style.width = size || "";
+        this.shared.addStep();
+    }
+
+    transformImage() {
+        const selectedImg = this.getSelectedImage();
+        if (!selectedImg) {
+            return;
+        }
+        this.openImageTransformation(selectedImg);
+    }
+
+    setImageShape(className, { excludeClasses = [] } = {}) {
+        const selectedImg = this.getSelectedImage();
+        if (!selectedImg) {
+            return;
+        }
+        for (const classString of excludeClasses) {
+            if (selectedImg.classList.contains(classString)) {
+                selectedImg.classList.remove(classString);
+            }
+        }
+        selectedImg.classList.toggle(className);
+        this.shared.addStep();
+    }
+
+    previewImage() {
+        const selectedImg = this.getSelectedImage();
+        if (!selectedImg) {
+            return;
+        }
+        const fileModel = {
+            isImage: true,
+            isViewable: true,
+            displayName: selectedImg.src,
+            defaultSource: selectedImg.src,
+            downloadUrl: selectedImg.src,
+        };
+        this.document.getSelection().collapseToEnd();
+        this.fileViewer.open(fileModel);
+    }
+
+    deleteImage() {
+        const selectedImg = this.getSelectedImage();
+        if (selectedImg) {
+            selectedImg.remove();
+            this.closeImageTransformation();
+            this.shared.addStep();
+        }
+    }
+
     onSelectionChange(selectionData) {
         const { anchorNode, focusNode } = selectionData.documentSelection;
         if (!anchorNode && !focusNode) {
@@ -333,10 +401,10 @@ export class ImagePlugin extends Plugin {
             this.shared.domInsert(text);
             this.dispatch("ADD_STEP");
             const embedImageCommand = {
-                name: _t("Embed Image"),
+                title: _t("Embed Image"),
                 description: _t("Embed the image in the document."),
-                fontawesome: "fa-image",
-                action: () => {
+                icon: "fa-image",
+                run: () => {
                     const img = document.createElement("IMG");
                     img.setAttribute("src", url);
                     this.shared.domInsert(img);

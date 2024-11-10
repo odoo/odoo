@@ -125,7 +125,8 @@ export class SelectionPlugin extends Plugin {
         // "collapseIfZWS",
     ];
     resources = {
-        shortcuts: [{ hotkey: "control+a", command: "SELECT_ALL" }],
+        user_commands: { id: "selectAll", run: this.selectAll.bind(this) },
+        shortcuts: [{ hotkey: "control+a", commandId: "selectAll" }],
     };
 
     setup() {
@@ -144,20 +145,12 @@ export class SelectionPlugin extends Plugin {
         });
     }
 
-    handleCommand(command, payload) {
-        switch (command) {
-            case "SELECT_ALL":
-                {
-                    const selection = this.getEditableSelection();
-                    const containerSelector = "#wrap > *, .oe_structure > *, [contenteditable]";
-                    const container =
-                        selection && closestElement(selection.anchorNode, containerSelector);
-                    const [anchorNode, anchorOffset, focusNode, focusOffset] =
-                        boundariesIn(container);
-                    this.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
-                }
-                break;
-        }
+    selectAll() {
+        const selection = this.getEditableSelection();
+        const containerSelector = "#wrap > *, .oe_structure > *, [contenteditable]";
+        const container = selection && closestElement(selection.anchorNode, containerSelector);
+        const [anchorNode, anchorOffset, focusNode, focusOffset] = boundariesIn(container);
+        this.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
     }
 
     resetSelection() {
