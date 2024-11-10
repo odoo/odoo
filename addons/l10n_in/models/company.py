@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from stdnum.in_ import pan, gstin
 
 
@@ -36,6 +36,28 @@ class ResCompany(models.Model):
     )
     l10n_in_pan_type = fields.Char(string="PAN Type", compute="_compute_l10n_in_pan_type")
     l10n_in_gst_state_warning = fields.Char(related="partner_id.l10n_in_gst_state_warning")
+    l10n_in_tan = fields.Char(string="TAN", help="Tax Deduction and Collection Account Number")
+    l10n_in_is_gst_registered = fields.Boolean(string="Register Under GST")
+    l10n_in_tcs = fields.Boolean(string="TCS", inverse='_inverse_l10n_in_tcs')
+    l10n_in_tds = fields.Boolean(string="TDS", inverse='_inverse_l10n_in_tds')
+
+    def _inverse_l10n_in_tcs(self):
+        for company in self:
+            if company.l10n_in_tcs:
+                module_installed = self.env['ir.module.module'].search([('name', '=', 'l10n_in_tcs'), ('state', '=', 'installed')])
+                if not module_installed:
+                    company._l10n_in_install_modules(['l10n_in_tcs'])
+                else:
+                    company._l10n_in_load_tcs_chart_of_accounts_and_taxes(company)
+
+    def _inverse_l10n_in_tds(self):
+        for company in self:
+            if company.l10n_in_tds:
+                module_installed = self.env['ir.module.module'].search([('name', '=', 'l10n_in_tds'), ('state', '=', 'installed')])
+                if not module_installed:
+                    company._l10n_in_install_modules(['l10n_in_tds'])
+                else:
+                    company._l10n_in_load_tds_chart_of_accounts_and_taxes(company)
 
     @api.depends('vat')
     def _compute_l10n_in_hsn_code_digit_and_l10n_in_pan(self):
@@ -85,3 +107,26 @@ class ResCompany(models.Model):
     def action_update_state_as_per_gstin(self):
         self.ensure_one()
         self.partner_id.action_update_state_as_per_gstin()
+
+    @api.constrains('l10n_in_is_gst_registered')
+    def _check_l10n_in_is_gst_registered(self):
+        for record in self:
+            if not record.l10n_in_is_gst_registered:
+                raise UserError(_('Once GST is enabled, it cannot be disabled.'))
+
+    @api.constrains('l10n_in_tcs')
+    def _check_l10n_in_tcs(self):
+        for record in self:
+            if not record.l10n_in_tcs:
+                raise UserError(_('Once TCS is enabled, it cannot be disabled.'))
+
+    @api.constrains('l10n_in_tds')
+    def _check_l10n_in_tds(self):
+        for record in self:
+            if not record.l10n_in_tds:
+                raise UserError(_('Once TDS is enabled, it cannot be disabled.'))
+
+    def _l10n_in_install_modules(self, module_names):
+        modules_sudo = self.env['ir.module.module'].sudo().search([('name', 'in', module_names)])
+        STATES = ['installed', 'to install', 'to upgrade']
+        modules_sudo.filtered(lambda m: m.state not in STATES).button_immediate_install()

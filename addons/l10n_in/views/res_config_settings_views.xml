@@ -10,58 +10,112 @@
                     <field name="group_l10n_in_reseller"/>
                 </setting>
             </block>
-            <xpath expr="//app[@name='account']" position="inside">
+            <xpath expr="//block[@name='fiscal_localization_setting_container']" position="after">
                 <div id="india_integration_section">
                     <block title="Indian Integration" id="india_localization" invisible="country_code != 'IN'">
-                        <setting name="india_production_setting"
-                                 string="Production Environment"
-                                 help="Activate this to start using Indian services in the production environment.">
-                            <field name="l10n_in_edi_production_env"/>
-                            <div class='mt8'
-                                 invisible="not l10n_in_edi_production_env or (not module_l10n_in_edi and not module_l10n_in_gstin_status and not module_l10n_in_ewaybill)">
-                                <button name="l10n_in_edi_buy_iap"
-                                        title="Costs 1 credit per transaction. Free 200 credits will be available for the first time."
-                                        icon="fa-arrow-right"
-                                        type="object"
-                                        string="Buy credits"
-                                        class="btn-link"/>
+                        <setting name="india_tds"
+                                 company_dependent="1"
+                                 help="Enable this to activate Tax Deduction Source and Account base TDS section suggestion."
+                                 documentation="/applications/finance/fiscal_localizations/india.html">
+                            <field name="l10n_in_tds"/>
+                            <div invisible="not l10n_in_tds">
+                                <div class="row">
+                                    <label string="TAN" for="l10n_in_tan" class="col-2 o_light_label"/>
+                                    <field name="l10n_in_tan"/>
+                                </div>
                             </div>
                         </setting>
-                        <setting name="l10n_in_tds_tcs"
-                                 help="Enable this to activate Tax Deduction Source and Tax Collection Source."
-                                 string="TDS and TCS"
+                        <setting name="india_tcs"
+                                 company_dependent="1"
+                                 help="Enable this to activate Tax Collection Source and Account base TCS section suggestion."
                                  documentation="/applications/finance/fiscal_localizations/india.html">
-                            <field name="module_l10n_in_withholding"/>
+                            <field name="l10n_in_tcs"/>
+                            <div invisible="not l10n_in_tcs">
+                                <div class="row">
+                                    <label string="TAN" for="l10n_in_tan" class="col-2 o_light_label"/>
+                                    <field name="l10n_in_tan"/>
+                                </div>
+                            </div>
                         </setting>
-                        <setting name="electronic_invoices_in"
-                                 help="Connect to NIC (National Informatics Center) to submit invoices on posting."
-                                 company_dependent="1"
-                                 documentation="/applications/finance/fiscal_localizations/india.html#india-e-invoicing">
-                            <field name="module_l10n_in_edi"/>
+                        <setting string="Registered Under GST"
+                                 help="Enable this if you have GST number except composition scheme.">
+                            <field name="l10n_in_is_gst_registered"/>
+                            <div invisible="not l10n_in_is_gst_registered">
+                                <div class="row">
+                                    <label string="GST Number" for="l10n_in_gstin" class="col-lg-4 o_light_label"/>
+                                    <field name="l10n_in_gstin"/>
+                                </div>
+                            </div>
                         </setting>
-                        <setting name="electronic_waybill_in"
-                                 help="Connect to NIC (National Informatics Center) to submit e-waybill on posting."
-                                 company_dependent="1"
-                                 documentation="/applications/finance/fiscal_localizations/india.html#indian-e-waybill">
-                            <field name="module_l10n_in_ewaybill" class="oe_inline"/>
-                        </setting>
-                        <setting name="india_gstin_status_api_settings"
-                                 string="Check GST Number Status"
-                                 help="Enable this to check the GST Number status"
-                                 documentation="/applications/finance/fiscal_localizations/india.html#indian-check-gstin-status">
-                            <field name="module_l10n_in_gstin_status" class="oe_inline"/>
-                        </setting>
+                        <t invisible="not l10n_in_is_gst_registered">
+                            <setting name="india_production_setting"
+                                    string="Production Environment"
+                                    help="Activate this to start using Indian services in the production environment.">
+                                <field name="l10n_in_edi_production_env"/>
+                                <div class='mt8'
+                                    invisible="not l10n_in_edi_production_env or (not module_l10n_in_edi and not module_l10n_in_gstin_status and not module_l10n_in_edi_ewaybill and not module_l10n_in_reports_gstr)">
+                                    <button name="l10n_in_edi_buy_iap"
+                                            title="Costs 1 credit per transaction. Free 200 credits will be available for the first time."
+                                            icon="fa-arrow-right"
+                                            type="object"
+                                            string="Buy credits"
+                                            class="btn-link"/>
+                                </div>
+                            </setting>
+                            <setting name="electronic_invoices_in"
+                                    help="Connect to NIC (National Informatics Center) to submit invoices on posting."
+                                    company_dependent="1"
+                                    string="E-Invoicing"
+                                    documentation="/applications/finance/fiscal_localizations/india.html#india-e-invoicing">
+                                <field name="module_l10n_in_edi"/>
+                                <div class="content-group" invisible="not module_l10n_in_edi">
+                                    <div class="text-warning mt16 mb4">
+                                        Save this page and come back here to set up the feature.
+                                    </div>
+                                </div>
+                            </setting>
+                            <setting name="electronic_waybill_in"
+                                    help="Connect to NIC (National Informatics Center) to submit e-waybill on posting."
+                                    company_dependent="1"
+                                    string="E-Waybill"
+                                    documentation="/applications/finance/fiscal_localizations/india.html#india-e-waybill">
+                                <field name="module_l10n_in_edi_ewaybill" class="oe_inline"/>
+                                <div class="content-group" invisible="not module_l10n_in_edi_ewaybill">
+                                    <div class="text-warning mt16 mb4">
+                                        Save this page and come back here to set up the feature.
+                                    </div>
+                                </div>
+                            </setting>
+                            <setting name="india_gstr"
+                                    help="Connect to GST portal to submit GSTR-1 and get GSTR-2B"
+                                    company_dependent="1"
+                                    documentation="/applications/finance/fiscal_localizations/india.html#india-gstr">
+                                <field name="module_l10n_in_reports_gstr" widget="upgrade_boolean"/>
+                                <div class="content-group" invisible="not module_l10n_in_reports_gstr">
+                                    <div class="text-warning mt16 mb4">
+                                        Save this page and come back here to set up the feature.
+                                    </div>
+                                </div>
+                            </setting>
+                            <setting name="india_gstr_api"
+                                    help="This feature helps you to quickly create draft vendor bills using the data your vendor submitted during E-invoicing on the GST portal."
+                                    company_dependent="1"
+                                    invisible="not module_l10n_in_reports_gstr">
+                                <field name="module_l10n_in_gst_api" widget="upgrade_boolean"/>
+                            </setting>
+                            <setting name="india_gstin_status_api_settings"
+                                    string="Check GSTIN Status"
+                                    help="Connect to GST portal and get latest status of GSTIN."
+                                    documentation="/applications/finance/fiscal_localizations/india.html#indian-check-gstin-status">
+                                <field name="module_l10n_in_gstin_status" class="oe_inline"/>
+                            </setting>
+                            <setting string="Enable HSN/SAC Validation" help="HSN/SAC Digit Validation for GST Compliance based on your Aggregate Annual Turnover (AATO).">
+                                <field name="l10n_in_hsn_code_digit"/>
+                            </setting>
+                        </t>
                     </block>
-
                 </div>
             </xpath>
-            <app name="account" position="inside">
-                <block title="Product" name="l10n_in_product_setting_container" invisible="country_code != 'IN'">
-                    <setting string="HSN/SAC Validation" help="HSN/SAC Digit Validation for GST Compliance based on your Aggregate Annual Turnover (AATO).">
-                        <field name="l10n_in_hsn_code_digit"/>
-                    </setting>
-                </block>
-            </app>
             <block id="print_vendor_checks_setting_container" position="inside">
                 <setting id="vendor_payment_order_file" company_dependent="1"
                     help="Generate Vendor Payment Order file(csv file), upload to your bank to make the payments" invisible="country_code != 'IN'">
