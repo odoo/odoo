@@ -2727,7 +2727,7 @@ msgstr ""
 "=======================\n"
 "Với phân hệ này, bạn có thể tự kiểm tra tính nhất quán và không nhất quán của phân hệ kế toán từ menu Báo cáo/Kế toán/Kiểm thử Kế toán.\n"
 "\n"
-"Bạn có thể viết một câu truy vấn để tạo Kiểm thử  Tính nhất quán và sẽ nhận được kết quả kiểm tra ở định dạng PDF có thể được truy cập bằng Menu Báo cáo -> Kiểm thử Kế toán, sau đó chọn kiểm thử và in báo cáo từ nút In trong vùng đầu trang.\n"
+"Bạn có thể viết một câu truy vấn để tạo Kiểm thử  Tính nhất quán và sẽ nhận được kết quả kiểm tra ở định dạng PDF có thể được truy cập bằng Menu Báo cáo -> Kiểm thử Kế toán, sau đó chọn kiểm thử và in báo cáo từ nút In trong vùng header.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_asset
@@ -19663,8 +19663,8 @@ msgid ""
 "Company tagline, which is included in a printed document's header or footer "
 "(depending on the selected layout)."
 msgstr ""
-"Khẩu hiệu của công ty, được đưa vào đầu trang hoặc chân trang của tài liệu "
-"được in (tùy thuộc vào bố cục đã chọn)."
+"Khẩu hiệu của công ty, được đưa vào header hoặc Footer của tài liệu được in "
+"(tùy thuộc vào bố cục đã chọn)."
 
 #. module: base
 #. odoo-python
@@ -21718,7 +21718,7 @@ msgstr "Hiển thị Giờ làm việc trên Lịch"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__header_line
 msgid "Display a header line"
-msgstr "Hiển thị dòng đầu trang"
+msgstr "Hiển thị dòng header"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -25265,12 +25265,12 @@ msgstr "Có lap"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__header_spacing
 msgid "Header spacing"
-msgstr "Khoảng cách đầu trang"
+msgstr "Khoảng cách header"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__company_details
 msgid "Header text displayed at the top of all reports."
-msgstr "Văn bản trong phần đầu trang được hiển thị ở đầu tất cả báo cáo."
+msgstr "Văn bản trong phần header được hiển thị ở đầu tất cả báo cáo."
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_Q
@@ -35954,7 +35954,7 @@ msgstr "Tập tin báo cáo"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__report_footer
 msgid "Report Footer"
-msgstr "Lề dưới báo cáo"
+msgstr "Footer báo cáo"
 
 #. module: base
 #: model:ir.model,name:base.model_report_layout
@@ -39151,6 +39151,8 @@ msgid ""
 "The action \"%s\" cannot be set as the home action because it requires a "
 "record to be selected beforehand."
 msgstr ""
+"Không thể thiết lập tác vụ \"%s\" làm tác vụ trang chủ vì nó yêu cầu phải "
+"chọn trước một bản ghi."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__country_code

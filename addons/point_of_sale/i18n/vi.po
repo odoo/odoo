@@ -27,12 +27,14 @@ msgid ""
 "\n"
 "This issue occurs because the quantity becomes zero after rounding during the conversion. To fix this, adjust the conversion factors or rounding method to ensure that even the smallest quantity in the original unit does not round down to zero in the target unit."
 msgstr ""
+"\n"
+"Sự cố này xảy ra vì số lượng trở thành 0 sau khi làm tròn trong quá trình chuyển đổi. Để khắc phục sự cố này, hãy điều chỉnh hệ số chuyển đổi hoặc phương pháp làm tròn để đảm bảo rằng ngay cả số lượng nhỏ nhất trong đơn vị gốc cũng không làm tròn xuống 0 trong đơn vị mục tiêu."
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/stock_picking.py:0
 msgid " - From \"%(uom_from)s\" to \"%(uom_to)s\""
-msgstr ""
+msgstr " - Từ \"%(uom_from)s\" đến \"%(uom_to)s\""
 
 #. module: point_of_sale
 #. odoo-python
@@ -476,12 +478,12 @@ msgstr "Số thứ tự duy nhất theo phiên cho đơn hàng"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__receipt_footer
 msgid "A short text that will be inserted as a footer in the printed receipt."
-msgstr "Văn bản ngắn sẽ được chèn vào chân trang của tờ in biên lai."
+msgstr "Văn bản ngắn sẽ được chèn vào Footer của tờ in biên lai."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__receipt_header
 msgid "A short text that will be inserted as a header in the printed receipt."
-msgstr "Văn bản ngắn sẽ được chèn vào đầu trang của tờ in biên lai."
+msgstr "Văn bản ngắn sẽ được chèn vào header của tờ in biên lai."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_product__type
@@ -673,7 +675,7 @@ msgstr "Thêm ghi chú đóng phiên..."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Add a custom message to header and footer"
-msgstr "Thêm một thông điệp riêng vào phần đầu trang và chân trang"
+msgstr "Thêm một thông điệp riêng vào phần header và footer"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2012,6 +2014,8 @@ msgid ""
 "Conversion Error: The following unit of measure conversions result in a zero"
 " quantity due to rounding:"
 msgstr ""
+"Lỗi chuyển đổi: Các phép chuyển đổi đơn vị tính sau đây cho kết quả là số "
+"lượng bằng 0 vì làm tròn:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__currency_rate
@@ -2195,7 +2199,7 @@ msgstr "Tùy chỉnh"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_header_or_footer
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_is_header_or_footer
 msgid "Custom Header & Footer"
-msgstr "Đầu trang & chân trang tuỳ chỉnh"
+msgstr "Header & footer tuỳ chỉnh"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__custom_attribute_value_ids
@@ -2959,7 +2963,7 @@ msgstr "Food, but over the counter"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Footer"
-msgstr "Chân trang"
+msgstr "Footer"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__for_all_config
@@ -3158,7 +3162,7 @@ msgstr "Có chi tiết được hoàn tiền "
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Header"
-msgstr "Đầu trang"
+msgstr "Header"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_multigrain_bread_product_template
@@ -4368,8 +4372,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Only administrators can edit receipt headers and footers"
-msgstr ""
-"Chỉ quản trị viên mới có thể chỉnh sửa đầu trang và chân trang của biên lai"
+msgstr "Chỉ quản trị viên mới có thể chỉnh sửa header và Footer của biên lai"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
@@ -5513,7 +5516,7 @@ msgstr "Cung cấp bởi"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 msgid "Powered by Odoo"
-msgstr ""
+msgstr "Cung cấp bởi Odoo"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6040,13 +6043,13 @@ msgstr "Biên lai %s"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__receipt_footer
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_receipt_footer
 msgid "Receipt Footer"
-msgstr "Chân trang biên lai"
+msgstr "Footer biên lai"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__receipt_header
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_receipt_header
 msgid "Receipt Header"
-msgstr "Đầu trang biên lai"
+msgstr "Header biên lai"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6208,7 +6211,7 @@ msgstr "Yêu cầu đã được gửi"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Rescue Sessions"
-msgstr ""
+msgstr "Khôi phục phiên"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6610,7 +6613,7 @@ msgstr "Số lô/sê-ri"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
 msgid "Served by %s"
-msgstr ""
+msgstr "Phục vụ bởi %s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6716,7 +6719,7 @@ msgstr "Thiết lập nhiều giá bán cho một sản phẩm, chiết khấu t
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid "Set the new discount"
-msgstr ""
+msgstr "Thiết lập chiết khấu mới"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7184,7 +7187,7 @@ msgstr "Bao gồm thuế"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_fiscal_position_tax
 msgid "Tax Mapping of Fiscal Position"
-msgstr "Tax mapping của vị trí tài chính"
+msgstr "Mapping thuế của vị trí tài chính"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -7320,6 +7323,8 @@ msgid ""
 "The amount of your payment lines must be rounded to validate the transaction.\n"
 "The rounding precision is %s so you should set %s or %s as payment amount instead of %s."
 msgstr ""
+"Số tiền của các dòng thanh toán phải được làm tròn để xác thực giao dịch.\n"
+"Độ chính xác làm tròn là %s, nên bạn nên đặt %s hoặc %s làm số tiền thanh toán thay vì %s."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8048,6 +8053,9 @@ msgid ""
 "\n"
 "Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"
 msgstr ""
+"Để xóa một sản phẩm, hãy đảm bảo tất cả các phiên điểm bán hàng đều đã đóng.\n"
+"\n"
+"Việc xóa một sản phẩm hiện có trong phiên không khác nào bạn cố gắng giật chiếc bánh hamburger mà khách hàng đang cắn dở; rồi hỗn loạn sẽ xảy ra khi sốt cà chua và mayo bay tứ tung!"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice
@@ -8727,6 +8735,8 @@ msgid ""
 "You do not have permission to open a POS session. Please try opening a "
 "session with a different user"
 msgstr ""
+"Bạn không có quyền mở phiên POS. Vui lòng thử mở phiên bằng tài khoản người "
+"dùng khác"
 
 #. module: point_of_sale
 #. odoo-python

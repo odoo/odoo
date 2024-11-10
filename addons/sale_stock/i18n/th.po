@@ -139,6 +139,14 @@ msgid "Available in stock"
 msgstr "มีในสต็อก"
 
 #. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_sale_order__delivery_status
+msgid ""
+"Blue: Not Delivered/Started\n"
+"            Orange: Partially Delivered\n"
+"            Green: Fully Delivered"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Choose to apply SO lines specific routes."
 msgstr "เลือกใช้เส้นทาง SO เฉพาะ"
@@ -493,17 +501,6 @@ msgid "RETURN"
 msgstr "ส่งคืน"
 
 #. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_sale_order__delivery_status
-msgid ""
-"Red: Late\n"
-"            Orange: To process today\n"
-"            Green: On time"
-msgstr ""
-"สีแดง: มาสาย\n"
-"            สีส้ม: ดำเนินการวันนี้\n"
-"            สีเขียว: ตรงเวลา"
-
-#. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_help_message_template
 msgid ""
 "Reduce back orders with reservations, locations management, smart\n"
@@ -715,7 +712,7 @@ msgstr "สินค้าชิ้นนี้เติมได้ตามต
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__is_storable
 msgid "Track Inventory"
-msgstr ""
+msgstr "ติดตามสินค้าคงคลัง"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking

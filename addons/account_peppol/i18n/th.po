@@ -28,6 +28,10 @@ msgid ""
 "                        The invoice will be sent automatically via Peppol\n"
 "                    </span>"
 msgstr ""
+"<span class=\"mx-1\" invisible=\"'demo_' not in peppol_message_uuid\"> (สาธิต)</span>\n"
+"                    <span class=\"text-muted mx-3\" invisible=\"peppol_move_state != 'to_send'\">\n"
+"                        ใบแจ้งหนี้จะถูกส่งอัตโนมัติผ่าน Peppol\n"
+"                    </span>"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -882,6 +886,8 @@ msgid ""
 "documents. Please check and verify their Peppol endpoint and the Electronic "
 "Invoicing format"
 msgstr ""
+"พาร์ทเนอร์ต่อไปนี้ไม่ได้รับการกำหนดค่าอย่างถูกต้องเพื่อรับเอกสาร Peppol "
+"โปรดตรวจสอบและยืนยันปลายทาง Peppol และรูปแบบใบแจ้งหนี้อิเล็กทรอนิกส์"
 
 #. module: account_peppol
 #. odoo-python
