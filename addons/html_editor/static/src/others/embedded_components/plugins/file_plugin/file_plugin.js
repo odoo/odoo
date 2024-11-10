@@ -9,20 +9,19 @@ export class FilePlugin extends Plugin {
     static name = "file";
     static dependencies = ["embedded_components", "dom", "selection"];
     resources = {
-        powerboxItems: [
+        user_commands: [
             {
-                category: "media",
-                name: _t("File"),
-                priority: 20,
+                id: "openMediaDialog",
+                title: _t("File"),
                 description: _t("Upload a file"),
-                fontawesome: "fa-file",
-                isAvailable: (node) => {
+                icon: "fa-file",
+                isAvailable: (selection) => {
                     return (
                         !this.config.disableFile &&
-                        !!closestElement(node, "[data-embedded='clipboard']")
+                        !closestElement(selection.anchorNode, "[data-embedded='clipboard']")
                     );
                 },
-                action: () => {
+                run: () => {
                     this.openMediaDialog({
                         noVideos: true,
                         noImages: true,
@@ -30,6 +29,12 @@ export class FilePlugin extends Plugin {
                         noDocuments: true,
                     });
                 },
+            },
+        ],
+        powerbox_items: [
+            {
+                categoryId: "media",
+                commandId: "openMediaDialog",
             },
         ],
     };

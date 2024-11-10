@@ -9,19 +9,23 @@ export class ImageCropPlugin extends Plugin {
     static name = "image_crop";
     static dependencies = ["image", "selection"];
     resources = {
-        toolbarCategory: withSequence(27, {
+        user_commands: [
+            {
+                id: "cropImage",
+                run: this.openCropImage.bind(this),
+                title: _t("Crop image"),
+                icon: "fa-crop",
+            },
+        ],
+        toolbar_groups: withSequence(27, {
             id: "image_crop",
             namespace: "image",
         }),
-        toolbarItems: [
+        toolbar_items: [
             {
                 id: "image_crop",
-                category: "image_crop",
-                title: _t("Crop image"),
-                icon: "fa-crop",
-                action(dispatch) {
-                    dispatch("CROP_IMAGE");
-                },
+                commandId: "cropImage",
+                groupId: "image_crop",
             },
         ],
     };
@@ -33,26 +37,19 @@ export class ImageCropPlugin extends Plugin {
         };
     }
 
-    handleCommand(command, payload) {
-        switch (command) {
-            case "CROP_IMAGE": {
-                const selectedImg = this.getSelectedImage();
-                if (!selectedImg) {
-                    return;
-                }
-                this.imageCropProps.media = selectedImg;
-                this.openCropImage();
-                break;
-            }
-        }
-    }
-
     getSelectedImage() {
         const selectedNodes = this.shared.getSelectedNodes();
         return selectedNodes.find((node) => node.tagName === "IMG");
     }
 
     async openCropImage() {
+        const selectedImg = this.getSelectedImage();
+        if (!selectedImg) {
+            return;
+        }
+
+        this.imageCropProps.media = selectedImg;
+
         const onClose = () => {
             registry.category("main_components").remove("ImageCropping");
         };

@@ -7,15 +7,19 @@ export class EmojiPlugin extends Plugin {
     static dependencies = ["overlay", "dom", "selection"];
     static shared = ["showEmojiPicker"];
     resources = {
-        powerboxItems: [
+        user_commands: [
             {
-                category: "widget",
-                name: _t("Emoji"),
+                id: "addEmoji",
+                title: _t("Emoji"),
                 description: _t("Add an emoji"),
-                fontawesome: "fa-smile-o",
-                action: () => {
-                    this.showEmojiPicker();
-                },
+                icon: "fa-smile-o",
+                run: this.showEmojiPicker.bind(this),
+            },
+        ],
+        powerbox_items: [
+            {
+                categoryId: "widget",
+                commandId: "addEmoji",
             },
         ],
     };

@@ -248,17 +248,21 @@ export class HtmlField extends Component {
         }
         if (this.props.codeview) {
             config.resources = {
-                toolbarCategory: withSequence(100, {
+                user_commands: [
+                    {
+                        id: "codeview",
+                        title: _t("Code view"),
+                        icon: "fa-code",
+                        run: this.toggleCodeView.bind(this),
+                    },
+                ],
+                toolbar_groups: withSequence(100, {
                     id: "codeview",
                 }),
-                toolbarItems: {
+                toolbar_items: {
                     id: "codeview",
-                    category: "codeview",
-                    title: _t("Code view"),
-                    icon: "fa-code",
-                    action: () => {
-                        this.toggleCodeView();
-                    },
+                    groupId: "codeview",
+                    commandId: "codeview",
                 },
             };
         }
