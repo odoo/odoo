@@ -2848,6 +2848,7 @@ test("Display message when no filter availible", async () => {
         resModel: "partner",
         searchViewId: false,
     });
+    await contains(`.o_search_panel_sidebar button`).click();
     expect(`.o_search_panel_empty_state`).toHaveCount(1);
     expect(`.o_search_panel_empty_state button`).toHaveCount(1);
 });
@@ -2982,4 +2983,25 @@ test("search panel width is kept when switching between controllers", async () =
     expect(queryFirst(".o_search_panel").offsetWidth).toBe(newWidth);
     await getService("action").switchView("kanban");
     expect(queryFirst(".o_search_panel").offsetWidth).toBe(newWidth);
+});
+
+test("hide search panel if there is no records", async () => {
+    Partner._records = [];
+    Partner._views = {
+        search: /* xml */ `
+            <search>
+                <searchpanel>
+                    <field name="company_id" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        `,
+    };
+
+    await mountWithSearch(TestComponent, {
+        resModel: "partner",
+        searchViewId: false,
+    });
+
+    expect(`.o_search_panel_sidebar`).toHaveCount(1);
+    expect(`.o_search_panel`).toHaveCount(0);
 });
