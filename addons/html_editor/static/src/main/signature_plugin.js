@@ -6,7 +6,7 @@ import { withSequence } from "@html_editor/utils/resource";
 
 export class SignaturePlugin extends Plugin {
     static name = "signature";
-    static dependencies = ["dom"];
+    static dependencies = ["dom", "history"];
     resources = {
         user_commands: [
             {
@@ -34,7 +34,7 @@ export class SignaturePlugin extends Plugin {
         );
         if (currentUser && currentUser.signature) {
             this.shared.domInsert(parseHTML(this.document, currentUser.signature));
-            this.dispatch("ADD_STEP");
+            this.shared.addStep();
         }
     }
 }

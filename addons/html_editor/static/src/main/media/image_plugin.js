@@ -63,7 +63,7 @@ export class ImagePlugin extends Plugin {
             },
         ],
         paste_url_overrides: this.handlePasteUrl.bind(this),
-        onSelectionChange: this.onSelectionChange.bind(this),
+        selectionchange_handlers: this.onSelectionChange.bind(this),
         toolbar_namespaces: [
             {
                 id: "image",
@@ -103,6 +103,7 @@ export class ImagePlugin extends Plugin {
                 props: {
                     getDescription: () => this.getImageAttribute("alt"),
                     getTooltip: () => this.getImageAttribute("title"),
+                    updateImageDescription: this.updateImageDescription.bind(this),
                 },
             },
             {
@@ -134,6 +135,9 @@ export class ImagePlugin extends Plugin {
                 groupId: "image_padding",
                 title: _t("Image padding"),
                 Component: ImagePadding,
+                props: {
+                    onSelected: this.setImagePadding.bind(this),
+                },
             },
             {
                 id: "resize_default",
@@ -200,108 +204,19 @@ export class ImagePlugin extends Plugin {
         this.closeImageTransformation();
     }
 
-    handleCommand(command, payload) {
-        const commandToClassNameDict = {
-            SHAPE_ROUNDED: "rounded",
-            SHAPE_SHADOW: "shadow",
-            SHAPE_CIRCLE: "rounded-circle",
-            SHAPE_THUMBNAIL: "img-thumbnail",
-        };
-
-        switch (command) {
-            case "SHAPE_ROUNDED":
-            case "SHAPE_CIRCLE": {
-                const selectedImg = this.getSelectedImage();
-                if (!selectedImg) {
-                    return;
-                }
-                const mutuallyExclusiveShapes = {
-                    SHAPE_ROUNDED: "rounded-circle",
-                    SHAPE_CIRCLE: "rounded",
-                };
-                selectedImg.classList.remove(mutuallyExclusiveShapes[command]);
-                selectedImg.classList.toggle(commandToClassNameDict[command]);
-                this.dispatch("ADD_STEP");
-                break;
-            }
-            case "SHAPE_SHADOW":
-            case "SHAPE_THUMBNAIL": {
-                const selectedImg = this.getSelectedImage();
-                if (!selectedImg) {
-                    return;
-                }
-                selectedImg.classList.toggle(commandToClassNameDict[command]);
-                this.dispatch("ADD_STEP");
-                break;
-            }
-            case "UPDATE_IMAGE_DESCRIPTION": {
-                const selectedImg = this.getSelectedImage();
-                if (!selectedImg) {
-                    return;
-                }
-                selectedImg.setAttribute("alt", payload.description);
-                selectedImg.setAttribute("title", payload.tooltip);
-                this.dispatch("ADD_STEP");
-                break;
-            }
-            case "RESIZE_IMAGE": {
-                const selectedImg = this.getSelectedImage();
-                if (!selectedImg) {
-                    return;
-                }
-                selectedImg.style.width = payload;
-                this.dispatch("ADD_STEP");
-                break;
-            }
-            case "SET_IMAGE_PADDING": {
-                const selectedImg = this.getSelectedImage();
-                if (!selectedImg) {
-                    return;
-                }
-                for (const classString of selectedImg.classList) {
-                    if (classString.match(/^p-[0-9]$/)) {
-                        selectedImg.classList.remove(classString);
-                    }
-                }
-                selectedImg.classList.add(`p-${payload.padding}`);
-                this.dispatch("ADD_STEP");
-                break;
-            }
-            case "PREVIEW_IMAGE": {
-                const selectedImg = this.getSelectedImage();
-                if (!selectedImg) {
-                    return;
-                }
-                const fileModel = {
-                    isImage: true,
-                    isViewable: true,
-                    displayName: selectedImg.src,
-                    defaultSource: selectedImg.src,
-                    downloadUrl: selectedImg.src,
-                };
-                this.document.getSelection().collapseToEnd();
-                this.fileViewer.open(fileModel);
-                break;
-            }
-            case "TRANSFORM_IMAGE": {
-                const selectedImg = this.getSelectedImage();
-                if (!selectedImg) {
-                    return;
-                }
-                this.openImageTransformation(selectedImg);
-                break;
-            }
-            case "DELETE_IMAGE": {
-                const selectedImg = this.getSelectedImage();
-                if (selectedImg) {
-                    selectedImg.remove();
-                    this.closeImageTransformation();
-                    this.dispatch("ADD_STEP");
-                }
+    setImagePadding({ size } = {}) {
+        const selectedImg = this.getSelectedImage();
+        if (!selectedImg) {
+            return;
+        }
+        for (const classString of selectedImg.classList) {
+            if (classString.match(/^p-[0-9]$/)) {
+                selectedImg.classList.remove(classString);
             }
         }
+        selectedImg.classList.add(`p-${size}`);
+        this.shared.addStep();
     }
-
     resizeImage({ size } = {}) {
         const selectedImg = this.getSelectedImage();
         if (!selectedImg) {
@@ -399,7 +314,7 @@ export class ImagePlugin extends Plugin {
             // Open powerbox with commands to embed media or paste as link.
             // Insert URL as text, revert it later if a command is triggered.
             this.shared.domInsert(text);
-            this.dispatch("ADD_STEP");
+            this.shared.addStep();
             const embedImageCommand = {
                 title: _t("Embed Image"),
                 description: _t("Embed the image in the document."),
@@ -408,7 +323,7 @@ export class ImagePlugin extends Plugin {
                     const img = document.createElement("IMG");
                     img.setAttribute("src", url);
                     this.shared.domInsert(img);
-                    this.dispatch("ADD_STEP");
+                    this.shared.addStep();
                 },
             };
             const commands = [embedImageCommand, this.shared.getPathAsUrlCommand(text, url)];
@@ -430,7 +345,7 @@ export class ImagePlugin extends Plugin {
                 image,
                 document: this.document,
                 destroy: () => this.closeImageTransformation(),
-                onChange: () => this.dispatch("ADD_STEP"),
+                onChange: () => this.shared.addStep(),
             },
         });
     }
@@ -443,5 +358,14 @@ export class ImagePlugin extends Plugin {
         if (this.isImageTransformationOpen()) {
             registry.category("main_components").remove("ImageTransformation");
         }
+    }
+    updateImageDescription({ description, tooltip } = {}) {
+        const selectedImg = this.getSelectedImage();
+        if (!selectedImg) {
+            return;
+        }
+        selectedImg.setAttribute("alt", description);
+        selectedImg.setAttribute("title", tooltip);
+        this.shared.addStep();
     }
 }

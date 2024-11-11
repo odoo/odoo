@@ -9,7 +9,7 @@ function isAvailable(selection) {
 }
 export class BannerPlugin extends Plugin {
     static name = "banner";
-    static dependencies = ["dom", "emoji", "selection"];
+    static dependencies = ["history", "dom", "emoji", "selection"];
     resources = {
         user_commands: [
             {
@@ -102,7 +102,7 @@ export class BannerPlugin extends Plugin {
             bannerElement.before(zws);
         }
         this.shared.setCursorStart(bannerElement.querySelector(".o_editor_banner > div > p"));
-        this.dispatch("ADD_STEP");
+        this.shared.addStep();
     }
 
     onBannerEmojiChange(iconElement) {
@@ -110,7 +110,7 @@ export class BannerPlugin extends Plugin {
             target: iconElement,
             onSelect: (emoji) => {
                 iconElement.textContent = emoji;
-                this.dispatch("ADD_STEP");
+                this.shared.addStep();
             },
         });
     }

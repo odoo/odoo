@@ -24,6 +24,7 @@ import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { PowerboxPlugin } from "@html_editor/main/powerbox/powerbox_plugin";
 import { SearchPowerboxPlugin } from "@html_editor/main/powerbox/search_powerbox_plugin";
 import { withSequence } from "@html_editor/utils/resource";
+import { execCommand } from "./_helpers/userCommands";
 
 function commandNames() {
     return queryAllTexts(".o-we-command-name");
@@ -585,17 +586,17 @@ test("should discard /command insertion from history when command is executed", 
     expect(commandNames(el)).toEqual(["Heading 1"]);
     await press("Enter");
     expect(getContent(el)).toBe("<h1>abc[]</h1>");
-    editor.dispatch("HISTORY_UNDO");
+    execCommand(editor, "historyUndo");
     expect(getContent(el)).toBe("<p>abc[]</p>");
-    editor.dispatch("HISTORY_REDO");
+    execCommand(editor, "historyRedo");
     expect(getContent(el)).toBe("<h1>abc[]</h1>");
-    editor.dispatch("HISTORY_UNDO");
+    execCommand(editor, "historyUndo");
     expect(getContent(el)).toBe("<p>abc[]</p>");
-    editor.dispatch("HISTORY_UNDO");
+    execCommand(editor, "historyUndo");
     expect(getContent(el)).toBe("<p>ab[]</p>");
-    editor.dispatch("HISTORY_UNDO");
+    execCommand(editor, "historyUndo");
     expect(getContent(el)).toBe("<p>a[]</p>");
-    editor.dispatch("HISTORY_UNDO");
+    execCommand(editor, "historyUndo");
     expect(getContent(el)).toBe(
         `<p class="o-we-hint" placeholder='Type "/" for commands'>[]<br></p>`
     );

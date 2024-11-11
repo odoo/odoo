@@ -28,11 +28,14 @@ export class HintPlugin extends Plugin {
     resources = {
         mutation_filtered_classes: ["o-we-hint"],
         is_mutation_record_savable: isMutationRecordSavable,
-        onSelectionChange: this.updateHints.bind(this),
-        onExternalHistorySteps: () => {
+        selectionchange_handlers: this.updateHints.bind(this),
+        external_history_step_handlers: () => {
             this.clearHints();
             this.updateHints();
         },
+        clean_handlers: this.clearHints.bind(this),
+        clean_for_save_handlers: ({ root }) => this.clearHints(root),
+        content_updated_handlers: this.updateHints.bind(this),
         ...(this.config.placeholder && {
             hints: [
                 {
@@ -51,19 +54,6 @@ export class HintPlugin extends Plugin {
     destroy() {
         super.destroy();
         this.clearHints();
-    }
-
-    handleCommand(command, payload) {
-        switch (command) {
-            case "CONTENT_UPDATED": {
-                this.updateHints(payload.root);
-                break;
-            }
-            case "CLEAN":
-            case "CLEAN_FOR_SAVE":
-                this.clearHints(payload.root);
-                break;
-        }
     }
 
     /**

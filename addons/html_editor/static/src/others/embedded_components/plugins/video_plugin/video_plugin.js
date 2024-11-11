@@ -5,7 +5,7 @@ import { renderToElement } from "@web/core/utils/render";
 
 export class VideoPlugin extends Plugin {
     static name = "video";
-    static dependencies = ["embedded_components", "dom", "selection", "link"];
+    static dependencies = ["embedded_components", "dom", "selection", "link", "history"];
     resources = {
         user_commands: [
             {
@@ -41,7 +41,7 @@ export class VideoPlugin extends Plugin {
             }),
         });
         this.shared.domInsert(videoBlock);
-        this.dispatch("ADD_STEP");
+        this.shared.addStep();
     }
 
     /**

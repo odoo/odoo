@@ -20,10 +20,10 @@ export class CollaborationSelectionPlugin extends Plugin {
         "local-overlay",
     ];
     resources = {
-        handleCollaborationNotification: this.handleCollaborationNotification.bind(this),
+        collaboration_notification_handlers: this.handleCollaborationNotification.bind(this),
         getCollaborationPeerMetadata: () => ({ selectionColor: this.selectionColor }),
-        layoutGeometryChange: this.refreshSelection.bind(this),
-        collaborativeSelectionUpdate: this.updateSelection.bind(this),
+        layout_geometry_change_handlers: this.refreshSelection.bind(this),
+        collaborative_selection_update_handlers: this.updateSelection.bind(this),
     };
     selectionInfos = new Map();
 

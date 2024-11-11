@@ -142,7 +142,7 @@ export class NoInlineRootPlugin extends Plugin {
                 nodeAfterCursor.before(p);
             }
             this.shared.setCursorStart(p);
-            this.dispatch("ADD_STEP");
+            this.shared.addStep();
             return true;
         }
         return false;

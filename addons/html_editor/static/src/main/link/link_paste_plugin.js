@@ -8,7 +8,7 @@ export class LinkPastePlugin extends Plugin {
     static name = "link_paste";
     static dependencies = ["link", "clipboard", "selection", "dom"];
     resources = {
-        before_paste: this.removeFullySelectedLink.bind(this),
+        before_paste_handlers: this.removeFullySelectedLink.bind(this),
         paste_text_overrides: this.handlePasteText.bind(this),
     };
 

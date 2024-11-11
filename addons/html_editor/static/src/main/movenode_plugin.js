@@ -11,9 +11,9 @@ const ALLOWED_ELEMENTS =
 
 export class MoveNodePlugin extends Plugin {
     static name = "movenode";
-    static dependencies = ["selection", "position", "local-overlay"];
+    static dependencies = ["selection", "history", "position", "local-overlay"];
     resources = {
-        layoutGeometryChange: () => {
+        layout_geometry_change_handlers: () => {
             if (this.currentMovableElement) {
                 this.setMovableElement(this.currentMovableElement);
             }
@@ -208,7 +208,7 @@ export class MoveNodePlugin extends Plugin {
     setMovableElement(movableElement) {
         this.removeMoveWidget();
         this.currentMovableElement = movableElement;
-        this.getResource("setMovableElement").forEach((cb) => cb(movableElement));
+        this.dispatchTo("set_movable_element_handlers", movableElement);
 
         const containerRect = this.widgetContainer.getBoundingClientRect();
         const anchorBlockRect = this.currentMovableElement.getBoundingClientRect();
@@ -258,7 +258,7 @@ export class MoveNodePlugin extends Plugin {
         }
     }
     removeMoveWidget() {
-        this.getResource("unsetMovableElement").forEach((cb) => cb());
+        this.dispatchTo("unset_movable_element_handlers");
         this.moveWidget?.remove();
         this.moveWidget = undefined;
         this.currentMovableElement = undefined;
@@ -388,7 +388,7 @@ export class MoveNodePlugin extends Plugin {
                 anchorNode: selectionPosition[0],
                 anchorOffset: selectionPosition[1],
             });
-            this.dispatch("ADD_STEP");
+            this.shared.addStep();
         }
     }
     onMousemove(e) {

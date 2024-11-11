@@ -9,14 +9,14 @@ import { getContent } from "../_helpers/selection";
 function addRow(position) {
     return (editor) => {
         const selection = editor.shared.getEditableSelection();
-        editor.dispatch("ADD_ROW", { position, reference: findInSelection(selection, "tr") });
+        editor.shared.addRow(position, findInSelection(selection, "tr"));
     };
 }
 
 function addColumn(position) {
     return (editor) => {
         const selection = editor.shared.getEditableSelection();
-        editor.dispatch("ADD_COLUMN", { position, reference: findInSelection(selection, "td") });
+        editor.shared.addColumn(position, findInSelection(selection, "td"));
     };
 }
 
@@ -26,7 +26,7 @@ function removeRow(row) {
             const selection = editor.shared.getEditableSelection();
             row = findInSelection(selection, "tr");
         }
-        editor.dispatch("REMOVE_ROW", { row });
+        editor.shared.removeRow(row);
     };
 }
 
@@ -36,7 +36,7 @@ function removeColumn(cell) {
             const selection = editor.shared.getEditableSelection();
             cell = findInSelection(selection, "td");
         }
-        editor.dispatch("REMOVE_COLUMN", { cell });
+        editor.shared.removeColumn(cell);
     };
 }
 

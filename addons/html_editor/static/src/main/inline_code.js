@@ -4,9 +4,9 @@ import { DIRECTIONS } from "@html_editor/utils/position";
 
 export class InlineCodePlugin extends Plugin {
     static name = "inline_code";
-    static dependencies = ["selection", "split"];
+    static dependencies = ["selection", "history", "split"];
     resources = {
-        onInput: this.onInput.bind(this),
+        input_handlers: this.onInput.bind(this),
     };
 
     onInput(ev) {
@@ -36,7 +36,7 @@ export class InlineCodePlugin extends Plugin {
         const textHasTwoTicks = /`.*`/.test(textNode.textContent);
         // We don't apply the code tag if there is no content between the two `
         if (textHasTwoTicks && textNode.textContent.replace(/`/g, "").length) {
-            this.dispatch("ADD_STEP");
+            this.shared.addStep();
             const insertedBacktickIndex = offset - 1;
             const textBeforeInsertedBacktick = textNode.textContent.substring(
                 0,
@@ -92,6 +92,6 @@ export class InlineCodePlugin extends Plugin {
                 });
             }
         }
-        this.dispatch("ADD_STEP");
+        this.shared.addStep();
     }
 }

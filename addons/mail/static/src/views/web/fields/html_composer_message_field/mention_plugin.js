@@ -9,7 +9,7 @@ export class MentionPlugin extends Plugin {
     static dependencies = ["overlay", "dom", "history", "selection"];
 
     resources = {
-        onBeforeInput: this.onBeforeInput.bind(this),
+        beforeinput_handlers: this.onBeforeInput.bind(this),
     };
 
     setup() {
@@ -35,7 +35,7 @@ export class MentionPlugin extends Plugin {
         mentionBlock.appendChild(nameNode);
         this.historySavePointRestore();
         this.shared.domInsert(mentionBlock);
-        this.dispatch("ADD_STEP");
+        this.shared.addStep();
     }
 
     onBeforeInput(ev) {

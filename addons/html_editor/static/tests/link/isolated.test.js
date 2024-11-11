@@ -6,6 +6,7 @@ import { tick } from "@odoo/hoot-mock";
 import { getContent, setSelection } from "../_helpers/selection";
 import { cleanLinkArtifacts } from "../_helpers/format";
 import { waitFor } from "@odoo/hoot-dom";
+import { dispatchNormalize } from "../_helpers/dispatch";
 
 test("should pad a link with ZWNBSPs and add visual indication", async () => {
     await testEditor({
@@ -90,7 +91,7 @@ test("should zwnbsp-pad simple text link", async () => {
             // set the selection via the parent
             setSelection({ anchorNode: p, anchorOffset: 1 });
             // insert the zwnbsp again
-            editor.dispatch("NORMALIZE", { node: editor.editable });
+            dispatchNormalize(editor);
         },
         contentAfterEdit: '<p>a\ufeff[]<a href="#/">\ufeffbc\ufeff</a>\ufeffd</p>',
     });
@@ -105,7 +106,7 @@ test("should zwnbsp-pad simple text link", async () => {
             setSelection({ anchorNode: a, anchorOffset: 0 });
             await tick();
             // insert the zwnbsp again
-            editor.dispatch("NORMALIZE", { node: editor.editable });
+            dispatchNormalize(editor);
         },
         contentAfterEdit:
             '<p>a\ufeff<a href="#/" class="o_link_in_selection">\ufeff[]bc\ufeff</a>\ufeffd</p>',
@@ -125,7 +126,7 @@ test("should zwnbsp-pad simple text link", async () => {
             setSelection({ anchorNode: a, anchorOffset: 1 });
             await tick();
             // insert the zwnbsp again
-            editor.dispatch("NORMALIZE", { node: editor.editable });
+            dispatchNormalize(editor);
         },
         contentAfterEdit:
             '<p>a\ufeff<a href="#/" class="o_link_in_selection">\ufeffb[]c\ufeff</a>\ufeffd</p>',
@@ -141,7 +142,7 @@ test("should zwnbsp-pad simple text link", async () => {
             setSelection({ anchorNode: a, anchorOffset: 1 });
             await tick();
             // insert the zwnbsp again
-            editor.dispatch("NORMALIZE", { node: editor.editable });
+            dispatchNormalize(editor);
         },
         contentAfterEdit:
             '<p>a\ufeff<a href="#/" class="o_link_in_selection">\ufeffbc[]\ufeff</a>\ufeffd</p>',
@@ -156,7 +157,7 @@ test("should zwnbsp-pad simple text link", async () => {
             setSelection({ anchorNode: p, anchorOffset: 2 });
             await tick();
             // insert the zwnbsp again
-            editor.dispatch("NORMALIZE", { node: editor.editable });
+            dispatchNormalize(editor);
         },
         contentAfterEdit: '<p>a\ufeff<a href="#/">\ufeffbc\ufeff</a>\ufeff[]d</p>',
     });

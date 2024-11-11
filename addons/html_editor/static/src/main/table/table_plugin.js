@@ -36,70 +36,45 @@ function isUnremovableTableComponent(element, root) {
 export class TablePlugin extends Plugin {
     static name = "table";
     static dependencies = ["dom", "history", "selection", "delete", "split", "color"];
+    static shared = [
+        "insertTable",
+        "addColumn",
+        "addRow",
+        "removeColumn",
+        "removeRow",
+        "moveColumn",
+        "moveRow",
+        "resetTableSize",
+    ];
     resources = {
+        user_commands: [
+            {
+                id: "insertTable",
+                run: (params) => {
+                    this.insertTable(params);
+                },
+            },
+        ],
         tab_overrides: withSequence(20, this.handleTab.bind(this)),
         shift_tab_overrides: withSequence(20, this.handleShiftTab.bind(this)),
         delete_range_overrides: this.handleDeleteRange.bind(this),
         isUnremovable: isUnremovableTableComponent,
         isUnsplittable: (element) =>
             element.tagName === "TABLE" || tableInnerComponents.has(element.tagName),
-        onSelectionChange: this.updateSelectionTable.bind(this),
+        selectionchange_handlers: this.updateSelectionTable.bind(this),
         color_apply_overrides: this.applyTableColor.bind(this),
+        clean_handlers: this.deselectTable.bind(this),
+        clean_for_save_handlers: ({ root }) => this.deselectTable(root),
         modifyTraversedNodes: this.adjustTraversedNodes.bind(this),
         considerNodeFullySelected: (node) => !!closestElement(node, ".o_selected_td"),
+        before_line_break_handlers: this.resetTableSelection.bind(this),
+        before_split_block_handlers: this.resetTableSelection.bind(this),
     };
 
     setup() {
         this.addDomListener(this.editable, "mousedown", this.onMousedown);
         this.addDomListener(this.editable, "mouseup", this.onMouseup);
         this.onMousemove = this.onMousemove.bind(this);
-    }
-
-    handleCommand(command, payload) {
-        switch (command) {
-            case "INSERT_TABLE":
-                this.insertTable(payload);
-                this.dispatch("ADD_STEP");
-                break;
-            case "ADD_COLUMN":
-                this.addColumn(payload);
-                this.dispatch("ADD_STEP");
-                break;
-            case "ADD_ROW":
-                this.addRow(payload);
-                this.dispatch("ADD_STEP");
-                break;
-            case "REMOVE_COLUMN":
-                this.removeColumn(payload);
-                this.dispatch("ADD_STEP");
-                break;
-            case "REMOVE_ROW":
-                this.removeRow(payload);
-                this.dispatch("ADD_STEP");
-                break;
-            case "MOVE_COLUMN":
-                this.moveColumn(payload);
-                this.dispatch("ADD_STEP");
-                break;
-            case "MOVE_ROW":
-                this.moveRow(payload);
-                this.dispatch("ADD_STEP");
-                break;
-            case "RESET_SIZE":
-                this.resetSize(payload);
-                this.dispatch("ADD_STEP");
-                break;
-            case "DELETE_TABLE":
-                this.deleteTable(payload);
-                break;
-            case "RESET_TABLE_SELECTION":
-                this.resetTableSelection();
-                break;
-            case "CLEAN":
-            case "CLEAN_FOR_SAVE":
-                this.deselectTable(payload.root);
-                break;
-        }
     }
 
     handleTab() {
@@ -109,9 +84,9 @@ export class TablePlugin extends Plugin {
             // Move cursor to next cell.
             const shouldAddNewRow = !this.shiftCursorToTableCell(1);
             if (shouldAddNewRow) {
-                this.addRow({ position: "after", reference: findInSelection(selection, "tr") });
+                this.addRow("after", findInSelection(selection, "tr"));
                 this.shiftCursorToTableCell(1);
-                this.dispatch("ADD_STEP");
+                this.shared.addStep();
             }
             return true;
         }
@@ -138,7 +113,7 @@ export class TablePlugin extends Plugin {
         const newTable = this.createTable({ rows, cols });
         let sel = this.shared.getEditableSelection();
         if (!sel.isCollapsed) {
-            this.dispatch("DELETE_SELECTION", sel);
+            this.shared.deleteSelection();
         }
         while (!isBlock(sel.anchorNode)) {
             const anchorNode = sel.anchorNode;
@@ -159,8 +134,9 @@ export class TablePlugin extends Plugin {
     insertTable({ rows = 2, cols = 2 } = {}) {
         const table = this._insertTable({ rows, cols });
         this.shared.setCursorStart(table.querySelector("p"));
+        this.shared.addStep();
     }
-    addColumn({ position, reference } = {}) {
+    addColumn(position, reference) {
         const columnIndex = getColumnIndex(reference);
         const table = closestElement(reference, "table");
         const tableWidth = table.style.width ? parseFloat(table.style.width) : table.clientWidth;
@@ -207,7 +183,7 @@ export class TablePlugin extends Plugin {
         // Fix the table and row's width so it doesn't change.
         table.style.width = tableWidth + "px";
     }
-    addRow({ position, reference } = {}) {
+    addRow(position, reference) {
         const referenceRowHeight = reference.style.height
             ? parseFloat(reference.style.height)
             : reference.clientHeight;
@@ -238,28 +214,25 @@ export class TablePlugin extends Plugin {
             }
         }
     }
-    removeColumn({ cell }) {
+    removeColumn(cell) {
         const table = closestElement(cell, "table");
         const cells = [...closestElement(cell, "tr").querySelectorAll("th, td")];
         const index = cells.findIndex((td) => td === cell);
         const siblingCell = cells[index - 1] || cells[index + 1];
         table.querySelectorAll(`tr td:nth-of-type(${index + 1})`).forEach((td) => td.remove());
-        // @todo @phoenix should I call dispatch('DELETE_TABLE', table) or this.deleteTable?
         // not sure we should move the cursor?
-        siblingCell
-            ? this.shared.setCursorStart(siblingCell)
-            : this.dispatch("DELETE_TABLE", { table });
+        siblingCell ? this.shared.setCursorStart(siblingCell) : this.deleteTable(table);
     }
-    removeRow({ row }) {
+    removeRow(row) {
         const table = closestElement(row, "table");
         const siblingRow = row.previousElementSibling || row.nextElementSibling;
         row.remove();
         // not sure we should move the cursor?
         siblingRow
             ? this.shared.setCursorStart(siblingRow.querySelector("td"))
-            : this.dispatch("DELETE_TABLE", { table });
+            : this.deleteTable(table);
     }
-    moveColumn({ position, cell }) {
+    moveColumn(position, cell) {
         const columnIndex = getColumnIndex(cell);
         const nColumns = cell.parentElement.children.length;
         if (
@@ -280,7 +253,7 @@ export class TablePlugin extends Plugin {
         }
         this.shared.setSelection(selectionToRestore);
     }
-    moveRow({ position, row }) {
+    moveRow(position, row) {
         const selectionToRestore = this.shared.getEditableSelection();
         let adjustedRow;
         if (position === "up") {
@@ -301,7 +274,7 @@ export class TablePlugin extends Plugin {
         }
         this.shared.setSelection(selectionToRestore);
     }
-    resetSize({ table }) {
+    resetTableSize(table) {
         table.removeAttribute("style");
         const cells = [...table.querySelectorAll("tr, td")];
         cells.forEach((cell) => {
@@ -313,7 +286,7 @@ export class TablePlugin extends Plugin {
             }
         });
     }
-    deleteTable({ table }) {
+    deleteTable(table) {
         table = table || findInSelection(this.shared.getEditableSelection(), "table");
         if (!table) {
             return;
@@ -359,14 +332,14 @@ export class TablePlugin extends Plugin {
 
         if (areFullColumnsSelected) {
             for (let index = firstCellColumnIndex; index <= lastCellColumnIndex; index++) {
-                this.removeColumn({ cell: firstRowCells[index] });
+                this.removeColumn(firstRowCells[index]);
             }
             return;
         }
 
         if (areFullRowsSelected) {
             for (let index = firstCellRowIndex; index <= lastCellRowIndex; index++) {
-                this.removeRow({ row: rows[index] });
+                this.removeRow(rows[index]);
             }
             return;
         }

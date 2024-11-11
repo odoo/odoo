@@ -81,7 +81,7 @@ export class DynamicPlaceholderPlugin extends Plugin {
         }
 
         this.shared.domInsert(t);
-        this.dispatch("ADD_STEP");
+        this.shared.addStep();
     }
 
     onClose() {

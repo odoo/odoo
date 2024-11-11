@@ -8,7 +8,7 @@ export const YOUTUBE_URL_GET_VIDEO_ID =
 
 export class YoutubePlugin extends Plugin {
     static name = "youtube";
-    static dependencies = ["history", "powerbox", "link", "dom"];
+    static dependencies = ["history", "history", "powerbox", "link", "dom"];
     static shared = [];
     resources = {
         paste_url_overrides: this.handlePasteUrl.bind(this),
@@ -26,7 +26,7 @@ export class YoutubePlugin extends Plugin {
             // Open powerbox with commands to embed media or paste as link.
             // Insert URL as text, revert it later if a command is triggered.
             this.shared.domInsert(text);
-            this.dispatch("ADD_STEP");
+            this.shared.addStep();
             // URL is a YouTube video.
             const embedVideoCommand = {
                 title: _t("Embed Youtube Video"),
@@ -35,7 +35,7 @@ export class YoutubePlugin extends Plugin {
                 run: async () => {
                     const videoElement = await this.getYoutubeVideoElement(youtubeUrl[0]);
                     this.shared.domInsert(videoElement);
-                    this.dispatch("ADD_STEP");
+                    this.shared.addStep();
                 },
             };
             const commands = [embedVideoCommand, this.shared.getPathAsUrlCommand(text, url)];

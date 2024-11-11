@@ -1,26 +1,23 @@
-import { Editor } from "@html_editor/editor";
 import { Plugin } from "@html_editor/plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { parseHTML } from "@html_editor/utils/html";
 import { describe, expect, test } from "@odoo/hoot";
 import { click, pointerDown, pointerUp, press, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, mockUserAgent, tick } from "@odoo/hoot-mock";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
 import { addStep, deleteBackward, insertText, redo, undo } from "./_helpers/user_actions";
+import { execCommand } from "./_helpers/userCommands";
 
 describe("reset", () => {
     test("should not add mutations in the current step from the normalization when calling reset", async () => {
         const TestPlugin = class extends Plugin {
             static name = "test";
-            handleCommand(commandName) {
-                switch (commandName) {
-                    case "NORMALIZE":
-                        this.editable.firstChild.setAttribute("data-test-normalize", "1");
-                        break;
-                }
-            }
+            resources = {
+                normalize_handlers: () => {
+                    this.editable.firstChild.setAttribute("data-test-normalize", "1");
+                },
+            };
         };
         const { editor, el } = await setupEditor("<p>a</p>", {
             config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
@@ -79,7 +76,7 @@ describe("undo", () => {
         const { el, editor } = await setupEditor(`<p>[]c</p>`);
         const p = el.querySelector("p");
         editor.shared.domInsert("a");
-        editor.dispatch("ADD_STEP");
+        editor.shared.addStep();
         p.prepend(document.createTextNode("b"));
         undo(editor);
         expect(getContent(el)).toBe(`<p>[]c</p>`);
@@ -202,7 +199,7 @@ describe("redo", () => {
         const { el, editor } = await setupEditor(`<p>[]c</p>`);
         const p = el.querySelector("p");
         editor.shared.domInsert("a");
-        editor.dispatch("ADD_STEP");
+        editor.shared.addStep();
         undo(editor);
         expect(getContent(el)).toBe(`<p>[]c</p>`);
         p.prepend(document.createTextNode("b"));
@@ -246,7 +243,7 @@ describe("step", () => {
             stepFunction: async (editor) => {
                 const editable = '<div contenteditable="true">abc</div>';
                 editor.editable.querySelector("div").innerHTML = editable;
-                editor.dispatch("ADD_STEP");
+                editor.shared.addStep();
             },
             contentAfter: `<div contenteditable="false"><div contenteditable="true">abc</div></div>`,
         });
@@ -267,7 +264,7 @@ describe("prevent mutationFilteredClasses to be set from history", () => {
             stepFunction: async (editor) => {
                 const p = editor.editable.querySelector("p");
                 p.className = "x";
-                editor.dispatch("ADD_STEP");
+                editor.shared.addStep();
                 const history = editor.plugins.find((p) => p.constructor.name === "history");
                 expect(history.steps.length).toBe(1);
             },
@@ -329,15 +326,15 @@ describe("makeSavePoint", () => {
         const { el, editor } = await setupEditor(
             `<p>a[b<span style="color: tomato;">c</span>d]e</p>`
         );
-        // The HISTORY_STAGE_SELECTION should have been triggered by the click on
+        // The stageSelection should have been triggered by the click on
         // the editable. As we set the selection programmatically, we dispatch the
         // selection here for the commands that relies on it.
         // If the selection of the editor would be programatically set upon start
         // (like an autofocus feature), it would be the role of the autofocus
-        // feature to trigger the HISTORY_STAGE_SELECTION.
-        editor.dispatch("HISTORY_STAGE_SELECTION");
+        // feature to trigger the stageSelection.
+        editor.shared.stageSelection();
         const restore = editor.shared.makeSavePoint();
-        editor.dispatch("FORMAT_BOLD");
+        execCommand(editor, "formatBold");
         restore();
         expect(getContent(el)).toBe(`<p>a[b<span style="color: tomato;">c</span>d]e</p>`);
     });
@@ -367,7 +364,7 @@ describe("makeSavePoint", () => {
         const savepoint = editor.shared.makeSavePoint();
         // step to consume
         editor.shared.domInsert("z");
-        editor.dispatch("ADD_STEP");
+        editor.shared.addStep();
         let steps = editor.shared.getHistorySteps();
         expect(steps.length).toBe(2);
         const zStep = steps.at(-1);
@@ -514,11 +511,11 @@ describe("shortcut", () => {
         expect(state).toEqual({});
         await insertText(editor, "a");
         expect(state).toEqual({ canUndo: true, canRedo: false });
-        editor.dispatch("HISTORY_UNDO");
+        execCommand(editor, "historyUndo");
         expect(state).toEqual({ canUndo: false, canRedo: true });
-        editor.dispatch("HISTORY_REDO");
+        execCommand(editor, "historyRedo");
         expect(state).toEqual({ canUndo: true, canRedo: false });
-        editor.dispatch("HISTORY_UNDO");
+        execCommand(editor, "historyUndo");
         expect(state).toEqual({ canUndo: false, canRedo: true });
         await insertText(editor, "b");
         expect(state).toEqual({ canUndo: true, canRedo: false });
@@ -526,20 +523,15 @@ describe("shortcut", () => {
     });
 
     test("use handleNewRecords resource", async () => {
-        patchWithCleanup(Editor.prototype, {
-            dispatch(cmd, ...args) {
-                if (cmd === "CONTENT_UPDATED") {
-                    expect.step("CONTENT_UPDATED");
-                }
-                return super.dispatch(cmd, ...args);
-            },
-        });
         const onChange = () => {
             expect.step("onchange");
         };
         const resources = {
             handleNewRecords: () => {
                 expect.step("handleNewRecords");
+            },
+            content_updated_handlers: () => {
+                expect.step("contentUpdated");
             },
         };
         const { editor } = await setupEditor(`<p>[]</p>`, {
@@ -549,9 +541,9 @@ describe("shortcut", () => {
         await insertText(editor, "a");
         expect.verifySteps([
             "handleNewRecords",
-            "CONTENT_UPDATED",
+            "contentUpdated",
             "handleNewRecords",
-            "CONTENT_UPDATED",
+            "contentUpdated",
             "onchange",
         ]);
     });
@@ -575,7 +567,6 @@ describe("destroy", () => {
                     record.addedNodes.item(0).matches(".test")
                 ) {
                     expect.step("dispatch");
-                    this.dispatch("DISPATCH");
                     return false;
                 }
                 return true;

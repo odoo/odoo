@@ -12,7 +12,13 @@ export class EmbeddedComponentPlugin extends Plugin {
         filter_descendants_to_serialize: this.filterDescendantsToSerialize.bind(this),
         is_mutation_record_savable: this.isMutationRecordSavable.bind(this),
         on_change_attribute: this.onChangeAttribute.bind(this),
-        onExternalHistorySteps: this.handleComponents.bind(this, this.editable),
+        clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
+        normalize_handlers: this.normalize.bind(this),
+        restore_savepoint_handlers: () => this.handleComponents(this.editable),
+        history_reset_handlers: () => this.handleComponents(this.editable),
+        history_reset_from_steps_handlers: () => this.handleComponents(this.editable),
+        step_added_handlers: ({ stepCommonAncestor }) => this.handleComponents(stepCommonAncestor),
+        external_step_added_handlers: () => this.handleComponents(this.editable),
     };
 
     setup() {
@@ -31,7 +37,8 @@ export class EmbeddedComponentPlugin extends Plugin {
             }
             return result;
         });
-        // First mount is done during HISTORY_RESET which happens during START_EDITION
+        // First mount is done during history_reset_handlers which happens
+        // when start_edition_handlers are called.
     }
 
     isMutationRecordSavable(record) {
@@ -46,29 +53,6 @@ export class EmbeddedComponentPlugin extends Plugin {
             return false;
         }
         return true;
-    }
-
-    handleCommand(command, payload) {
-        switch (command) {
-            case "NORMALIZE": {
-                this.normalize(payload.node);
-                break;
-            }
-            case "CLEAN_FOR_SAVE": {
-                this.cleanForSave(payload.root);
-                break;
-            }
-            case "RESTORE_SAVEPOINT":
-            case "HISTORY_RESET_FROM_STEPS":
-            case "HISTORY_RESET": {
-                this.handleComponents(this.editable);
-                break;
-            }
-            case "STEP_ADDED": {
-                this.handleComponents(payload.stepCommonAncestor);
-                break;
-            }
-        }
     }
 
     filterDescendantsToSerialize(elem) {
@@ -148,7 +132,7 @@ export class EmbeddedComponentPlugin extends Plugin {
         if (!this.hostToStateChangeManagerMap.has(host)) {
             const config = {
                 host,
-                dispatch: this.dispatch.bind(this),
+                commitStateChanges: () => this.shared.addStep(),
             };
             const stateChangeManager = embedding.getStateChangeManager(config);
             stateChangeManager.setup();
@@ -169,11 +153,7 @@ export class EmbeddedComponentPlugin extends Plugin {
         if (getEditableDescendants) {
             env.getEditableDescendants = getEditableDescendants;
         }
-        this.dispatch("SETUP_NEW_COMPONENT", {
-            name,
-            env,
-            props,
-        });
+        this.dispatchTo("mount_component_handlers", { name, env, props });
         const root = this.app.createRoot(Component, {
             props,
             env,

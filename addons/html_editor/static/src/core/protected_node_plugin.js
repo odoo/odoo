@@ -12,27 +12,13 @@ export class ProtectedNodePlugin extends Plugin {
         is_mutation_record_savable: this.isMutationRecordSavable.bind(this),
         filter_descendants_to_remove: this.filterDescendantsToRemove.bind(this),
         isUnsplittable: isProtecting, // avoid merge
+        clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
+        normalize_handlers: this.normalize.bind(this),
+        before_filter_mutation_record_handlers: this.beforeFilteringMutationRecords.bind(this),
     };
 
     setup() {
         this.protectedNodes = new WeakSet();
-    }
-
-    handleCommand(command, payload) {
-        switch (command) {
-            case "NORMALIZE": {
-                this.normalize(payload.node);
-                break;
-            }
-            case "CLEAN_FOR_SAVE": {
-                this.cleanForSave(payload.root);
-                break;
-            }
-            case "BEFORE_FILTERING_MUTATION_RECORDS": {
-                this.beforeFilteringMutationRecords(payload.records);
-                break;
-            }
-        }
     }
 
     filterDescendantsToRemove(elem) {

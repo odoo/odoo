@@ -7,7 +7,7 @@ import { withSequence } from "@html_editor/utils/resource";
 
 export class ImageCropPlugin extends Plugin {
     static name = "image_crop";
-    static dependencies = ["image", "selection"];
+    static dependencies = ["image", "selection", "history"];
     resources = {
         user_commands: [
             {
@@ -55,7 +55,7 @@ export class ImageCropPlugin extends Plugin {
         };
 
         const onSave = () => {
-            this.dispatch("ADD_STEP");
+            this.shared.addStep();
         };
 
         await loadBundle("html_editor.assets_image_cropper");

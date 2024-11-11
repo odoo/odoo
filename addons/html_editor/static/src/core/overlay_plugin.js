@@ -12,14 +12,9 @@ export class OverlayPlugin extends Plugin {
     static name = "overlay";
     static dependencies = ["history"];
     static shared = ["createOverlay"];
-
-    handleCommand(command) {
-        switch (command) {
-            case "STEP_ADDED":
-                this.container = this.getScrollContainer();
-                break;
-        }
-    }
+    resources = {
+        step_added_handlers: this.getScrollContainer.bind(this),
+    };
 
     overlays = [];
 

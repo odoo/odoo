@@ -6,6 +6,7 @@ import { setFontSize } from "../_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { animationFrame } from "@odoo/hoot-mock";
+import { execCommand } from "../_helpers/userCommands";
 
 test("should change the font size of a few characters", async () => {
     await testEditor({
@@ -33,7 +34,7 @@ test("should change the font size of a whole heading after a triple click", asyn
 
 test("should get ready to type with a different font size", async () => {
     const { editor } = await setupEditor('<p class="p">ab[]cd</p>');
-    editor.dispatch("FORMAT_FONT_SIZE", { size: "36px" });
+    execCommand(editor, "formatFontSize", { size: "36px" });
     await animationFrame();
     expect(".p span").toHaveStyle({ "font-size": "36px" });
     expect(".p span").toHaveAttribute("data-oe-zws-empty-inline", "");

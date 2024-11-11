@@ -84,21 +84,13 @@ export class TableUIPlugin extends Plugin {
         this.addDomListener(this.document, "scroll", closeMenus, true);
     }
 
-    handleCommand(command) {
-        switch (command) {
-            case "OPEN_TABLE_PICKER":
-                this.openPicker();
-                break;
-        }
-    }
-
     openPicker() {
         this.picker.open({
             props: {
-                dispatch: this.dispatch,
                 editable: this.editable,
                 overlay: this.picker,
                 direction: this.config.direction || "ltr",
+                insertTable: (params) => this.shared.insertTable(params),
             },
         });
     }
@@ -159,15 +151,30 @@ export class TableUIPlugin extends Plugin {
         if (!td) {
             return;
         }
+        const withAddStep = (fn) => {
+            return (...args) => {
+                fn(...args);
+                this.shared.addStep();
+            };
+        };
+        const tableMethods = {
+            moveColumn: withAddStep(this.shared.moveColumn),
+            addColumn: withAddStep(this.shared.addColumn),
+            removeColumn: withAddStep(this.shared.removeColumn),
+            moveRow: withAddStep(this.shared.moveRow),
+            addRow: withAddStep(this.shared.addRow),
+            removeRow: withAddStep(this.shared.removeRow),
+            resetTableSize: withAddStep(this.shared.resetTableSize),
+        };
         if (td.cellIndex === 0) {
             this.rowMenu.open({
                 target: td,
                 props: {
                     type: "row",
-                    dispatch: this.dispatch,
                     overlay: this.rowMenu,
                     target: td,
                     dropdownState: this.createDropdownState(this.colMenu),
+                    ...tableMethods,
                 },
             });
         }
@@ -176,11 +183,11 @@ export class TableUIPlugin extends Plugin {
                 target: td,
                 props: {
                     type: "column",
-                    dispatch: this.dispatch,
                     overlay: this.colMenu,
                     target: td,
                     dropdownState: this.createDropdownState(this.rowMenu),
                     direction: this.config.direction || "ltr",
+                    ...tableMethods,
                 },
             });
         }

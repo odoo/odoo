@@ -26,7 +26,7 @@ import { convertList, getListMode } from "@html_editor/utils/list";
 
 export class DomPlugin extends Plugin {
     static name = "dom";
-    static dependencies = ["selection", "split"];
+    static dependencies = ["selection", "history", "split", "delete", "line_break"];
     static shared = ["domInsert", "copyAttributes", "setTag"];
     resources = {
         user_commands: [
@@ -44,54 +44,16 @@ export class DomPlugin extends Plugin {
             categoryId: "structure",
             commandId: "insertSeparator",
         },
+        clean_handlers: this.removeEmptyClassAndStyleAttributes.bind(this),
+        clean_for_save_handlers: ({ root }) => {
+            this.removeEmptyClassAndStyleAttributes(root);
+            for (const el of root.querySelectorAll("hr[contenteditable]")) {
+                el.removeAttribute("contenteditable");
+            }
+        },
+        normalize_handlers: this.normalize.bind(this),
     };
     contentEditableToRemove = new Set();
-
-    handleCommand(command, payload) {
-        switch (command) {
-            case "SET_TAG":
-                this.setTag(payload);
-                break;
-            case "INSERT_FONT_AWESOME":
-                this.insertFontAwesome(payload.faClass);
-                break;
-            case "INSERT_SEPARATOR":
-                this.insertSeparator();
-                break;
-            case "CLEAN":
-                this.removeEmptyClassAndStyleAttributes(payload.root);
-                break;
-            case "CLEAN_FOR_SAVE": {
-                this.removeEmptyClassAndStyleAttributes(payload.root);
-                for (const el of payload.root.querySelectorAll("hr[contenteditable]")) {
-                    el.removeAttribute("contenteditable");
-                }
-                break;
-            }
-            case "NORMALIZE": {
-                // TODO @phoenix: payload.node is expected to be an Element, rename ?
-                if (payload.node.tagName === "HR") {
-                    const node = payload.node;
-                    node.setAttribute(
-                        "contenteditable",
-                        node.hasAttribute("contenteditable")
-                            ? node.getAttribute("contenteditable")
-                            : "false"
-                    );
-                } else {
-                    for (const separator of payload.node.querySelectorAll("hr")) {
-                        separator.setAttribute(
-                            "contenteditable",
-                            separator.hasAttribute("contenteditable")
-                                ? separator.getAttribute("contenteditable")
-                                : "false"
-                        );
-                    }
-                }
-                break;
-            }
-        }
-    }
 
     // Shared
 
@@ -106,7 +68,7 @@ export class DomPlugin extends Plugin {
         let startNode;
         let insertBefore = false;
         if (!selection.isCollapsed) {
-            this.dispatch("DELETE_SELECTION", { selection });
+            this.shared.deleteSelection();
             selection = this.shared.getEditableSelection();
         }
         if (selection.startContainer.nodeType === Node.TEXT_NODE) {
@@ -127,7 +89,7 @@ export class DomPlugin extends Plugin {
             container.textContent = content;
         } else {
             for (const child of content.children) {
-                this.dispatch("NORMALIZE", { node: child });
+                this.dispatchTo("normalize_handlers", child);
             }
             container.replaceChildren(content);
         }
@@ -258,7 +220,7 @@ export class DomPlugin extends Plugin {
         // to have the need new line in the final result
         if (!container.hasChildNodes()) {
             if (this.shared.isUnsplittable(closestBlock(currentNode.nextSibling))) {
-                this.dispatch("INSERT_LINEBREAK_NODE", {
+                this.shared.insertLineBreakNode({
                     targetNode: currentNode.nextSibling,
                     targetOffset: 0,
                 });
@@ -266,7 +228,7 @@ export class DomPlugin extends Plugin {
                 // If we arrive here, the o_enter index should always be 0.
                 const parent = currentNode.nextSibling.parentElement;
                 const index = [...parent.childNodes].indexOf(currentNode.nextSibling);
-                this.dispatch("SPLIT_BLOCK_NODE", {
+                this.shared.splitBlockNode({
                     targetNode: parent,
                     targetOffset: index,
                 });
@@ -411,7 +373,7 @@ export class DomPlugin extends Plugin {
     }
 
     copyAttributes(source, target) {
-        this.dispatch("CLEAN", { root: source });
+        this.dispatchTo("clean_handlers", source);
         for (const attr of source.attributes) {
             if (attr.name === "class") {
                 target.classList.add(...source.classList);
@@ -425,11 +387,11 @@ export class DomPlugin extends Plugin {
     // commands
     // --------------------------------------------------------------------------
 
-    insertFontAwesome(faClass = "fa fa-star") {
+    insertFontAwesome({ faClass = "fa fa-star" } = {}) {
         const fontAwesomeNode = document.createElement("i");
         fontAwesomeNode.className = faClass;
         this.domInsert(fontAwesomeNode);
-        this.dispatch("ADD_STEP");
+        this.shared.addStep();
         const [anchorNode, anchorOffset] = rightPos(fontAwesomeNode);
         this.shared.setSelection({ anchorNode, anchorOffset });
     }
@@ -487,7 +449,7 @@ export class DomPlugin extends Plugin {
             }
         }
         cursors.restore();
-        this.dispatch("ADD_STEP");
+        this.shared.addStep();
     }
 
     insertSeparator() {
@@ -502,7 +464,7 @@ export class DomPlugin extends Plugin {
         if (element && element !== this.editable) {
             element.before(sep);
         }
-        this.dispatch("ADD_STEP");
+        this.shared.addStep();
     }
 
     removeEmptyClassAndStyleAttributes(root) {
@@ -512,6 +474,24 @@ export class DomPlugin extends Plugin {
             }
             if (node.style && !node.style.length) {
                 node.removeAttribute("style");
+            }
+        }
+    }
+
+    normalize(el) {
+        if (el.tagName === "HR") {
+            el.setAttribute(
+                "contenteditable",
+                el.hasAttribute("contenteditable") ? el.getAttribute("contenteditable") : "false"
+            );
+        } else {
+            for (const separator of el.querySelectorAll("hr")) {
+                separator.setAttribute(
+                    "contenteditable",
+                    separator.hasAttribute("contenteditable")
+                        ? separator.getAttribute("contenteditable")
+                        : "false"
+                );
             }
         }
     }

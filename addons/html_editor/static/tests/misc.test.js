@@ -5,13 +5,14 @@ import { click } from "@odoo/hoot-dom";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { getContent, setContent } from "./_helpers/selection";
 import { withSequence } from "@html_editor/utils/resource";
+import { execCommand } from "./_helpers/userCommands";
 
 test("can instantiate a Editor", async () => {
     const { el, editor } = await setupEditor("<p>hel[lo] world</p>", {});
     expect(el.innerHTML).toBe(`<p>hello world</p>`);
     expect(getContent(el)).toBe(`<p>hel[lo] world</p>`);
     setContent(el, "<div>a[dddb]</div>");
-    editor.dispatch("FORMAT_BOLD");
+    execCommand(editor, "formatBold");
     expect(getContent(el)).toBe(`<div>a<strong>[dddb]</strong></div>`);
 });
 
@@ -35,7 +36,7 @@ test.tags("iframe")("can instantiate a Editor in an iframe", async () => {
     expect(el.innerHTML).toBe(`<p>hello world</p>`);
     expect(getContent(el)).toBe(`<p>hel[lo] world</p>`);
     setContent(el, "<div>a[dddb]</div>");
-    editor.dispatch("FORMAT_BOLD");
+    execCommand(editor, "formatBold");
     expect(getContent(el)).toBe(`<div>a<strong>[dddb]</strong></div>`);
 });
 
