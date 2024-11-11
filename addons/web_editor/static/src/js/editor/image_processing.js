@@ -421,12 +421,14 @@ async function _updateImageData(src, key = 'objectURL') {
  */
 async function activateCropper(image, aspectRatio, dataset) {
     image.src = await _loadImageObjectURL(image.getAttribute('src'));
+    const value = _.mapObject(_.pick(dataset, ...cropperDataFields), value => parseFloat(value));
+    console.log(value, image);
     $(image).cropper({
         viewMode: 2,
         dragMode: 'move',
         autoCropArea: 1.0,
         aspectRatio: aspectRatio,
-        data: _.mapObject(_.pick(dataset, ...cropperDataFields), value => parseFloat(value)),
+        data: value,
         // Can't use 0 because it's falsy and cropperjs will then use its defaults (200x100)
         minContainerWidth: 1,
         minContainerHeight: 1,
