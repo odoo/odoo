@@ -42,8 +42,8 @@ export class PowerButtonsPlugin extends Plugin {
     static name = "power_buttons";
     static dependencies = ["selection", "local-overlay", "powerbox", "user_command"];
     resources = {
-        layoutGeometryChange: this.updatePowerButtons.bind(this),
-        onSelectionChange: this.updatePowerButtons.bind(this),
+        layout_geometry_change_handlers: this.updatePowerButtons.bind(this),
+        selectionchange_handlers: this.updatePowerButtons.bind(this),
     };
 
     setup() {

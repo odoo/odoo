@@ -8,11 +8,13 @@ import { Plugin } from "../../plugin";
 
 export class SearchPowerboxPlugin extends Plugin {
     static name = "search_powerbox";
-    static dependencies = ["powerbox", "selection", "history"];
+    static dependencies = ["powerbox", "selection", "history", "user_command"];
     resources = {
-        onBeforeInput: this.onBeforeInput.bind(this),
-        onInput: this.onInput.bind(this),
+        beforeinput_handlers: this.onBeforeInput.bind(this),
+        input_handlers: this.onInput.bind(this),
         delete_handlers: this.update.bind(this),
+        post_undo_handlers: this.update.bind(this),
+        post_redo_handlers: this.update.bind(this),
     };
     setup() {
         const categoryIds = new Set();
@@ -24,14 +26,6 @@ export class SearchPowerboxPlugin extends Plugin {
         }
         this.categories = this.getResource("powerbox_categories");
         this.shouldUpdate = false;
-    }
-    handleCommand(command) {
-        switch (command) {
-            case "HISTORY_UNDO":
-            case "HISTORY_REDO":
-                this.update();
-                break;
-        }
     }
     onBeforeInput(ev) {
         if (ev.data === "/") {

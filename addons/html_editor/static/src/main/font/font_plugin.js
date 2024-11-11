@@ -147,7 +147,7 @@ export class FontPlugin extends Plugin {
             this.handleSplitBlockPRE.bind(this),
             this.handleSplitBlockHeading.bind(this),
         ],
-        onInput: this.onInput.bind(this),
+        input_handlers: this.onInput.bind(this),
         delete_backward_overrides: withSequence(20, this.handleDeleteBackward.bind(this)),
         delete_backward_word_overrides: this.handleDeleteBackward.bind(this),
         toolbar_groups: [
@@ -166,7 +166,12 @@ export class FontPlugin extends Plugin {
                 Component: FontSelector,
                 props: {
                     getItems: () => fontItems,
-                    command: "SET_TAG",
+                    onSelected: (item) => {
+                        this.shared.setTag({
+                            tagName: item.tagName,
+                            extraClass: item.extraClass,
+                        });
+                    },
                 },
             },
             {
@@ -176,8 +181,11 @@ export class FontPlugin extends Plugin {
                 Component: FontSelector,
                 props: {
                     getItems: () => this.fontSizeItems,
+                    onSelected: (item) =>
+                        this.shared.formatSelection("setFontSizeClassName", {
+                            formatProps: { className: item.className },
+                        }),
                     isFontSize: true,
-                    command: "FORMAT_FONT_SIZE_CLASSNAME",
                     document: this.document,
                 },
             },
@@ -355,7 +363,7 @@ export class FontPlugin extends Plugin {
             });
             this.shared.extractContent(this.shared.getEditableSelection());
             fillEmpty(blockEl);
-            this.dispatch("SET_TAG", { tagName: headingToBe });
+            this.shared.setTag({ tagName: headingToBe });
         }
     }
 }

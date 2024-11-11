@@ -2,6 +2,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { deleteBackward, insertText } from "../_helpers/user_actions";
 import { getContent } from "../_helpers/selection";
+import { execCommand } from "../_helpers/userCommands";
 
 describe("collapsed selection", () => {
     test("should insert a char into an empty span without removing the zws", async () => {
@@ -78,7 +79,7 @@ describe("not collapsed selection", () => {
         const { editor, el } = await setupEditor("<p>[abc]def</p>");
         await insertText(editor, "x");
         expect(getContent(el)).toBe("<p>x[]def</p>");
-        editor.dispatch("HISTORY_UNDO");
+        execCommand(editor, "historyUndo");
         expect(getContent(el)).toBe("<p>[abc]def</p>");
     });
 });

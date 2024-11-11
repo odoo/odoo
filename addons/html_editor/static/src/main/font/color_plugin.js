@@ -48,20 +48,19 @@ export class ColorPlugin extends Plugin {
                 id: "backcolor",
                 groupId: "color",
                 title: _t("Background Color"),
-
                 Component: ColorSelector,
                 props: this.getPropsForColorSelector("background"),
             },
         ],
 
-        onSelectionChange: this.updateSelectedColor.bind(this),
-        removeFormat: this.removeAllColor.bind(this),
+        selectionchange_handlers: this.updateSelectedColor.bind(this),
+        remove_format_handlers: this.removeAllColor.bind(this),
     };
 
     setup() {
         this.selectedColors = reactive({ color: "", backgroundColor: "" });
         this.previewableApplyColor = this.shared.makePreviewableOperation((color, mode) =>
-            this.applyColor(color, mode)
+            this._applyColor(color, mode)
         );
     }
 
@@ -74,6 +73,9 @@ export class ColorPlugin extends Plugin {
             type,
             getUsedCustomColors: () => this.getUsedCustomColors(mode),
             getSelectedColors: () => this.selectedColors,
+            applyColor: this.applyColor.bind(this),
+            applyColorPreview: this.applyColorPreview.bind(this),
+            applyColorResetPreview: this.applyColorResetPreview.bind(this),
             focusEditable: () => this.shared.focusEditable(),
         };
     }
@@ -100,21 +102,35 @@ export class ColorPlugin extends Plugin {
                 : rgbToHex(elStyle.backgroundColor);
     }
 
-    handleCommand(command, payload) {
-        switch (command) {
-            case "APPLY_COLOR":
-                this.previewableApplyColor.commit(payload.color, payload.mode);
-                this.updateSelectedColor();
-                break;
-            case "COLOR_PREVIEW":
-                this.previewableApplyColor.preview(payload.color, payload.mode);
-                this.updateSelectedColor();
-                break;
-            case "COLOR_RESET_PREVIEW":
-                this.previewableApplyColor.revert();
-                this.updateSelectedColor();
-                break;
-        }
+    /**
+     * Apply a css or class color on the current selection (wrapped in <font>).
+     *
+     * @param {Object} param
+     * @param {string} param.color hexadecimal or bg-name/text-name class
+     * @param {string} param.mode 'color' or 'backgroundColor'
+     */
+    applyColor({ color, mode }) {
+        this.previewableApplyColor.commit(color, mode);
+        this.updateSelectedColor();
+    }
+    /**
+     * Apply a css or class color on the current selection (wrapped in <font>)
+     * in preview mode so that it can be reset.
+     *
+     * @param {Object} param
+     * @param {string} param.color hexadecimal or bg-name/text-name class
+     * @param {string} param.mode 'color' or 'backgroundColor'
+     */
+    applyColorPreview({ color, mode }) {
+        this.previewableApplyColor.preview(color, mode);
+        this.updateSelectedColor();
+    }
+    /**
+     * Reset the color applied in preview mode.
+     */
+    applyColorResetPreview() {
+        this.previewableApplyColor.revert();
+        this.updateSelectedColor();
     }
 
     removeAllColor() {
@@ -129,7 +145,7 @@ export class ColorPlugin extends Plugin {
                     return hasAnyNodesColor(nodes, mode);
                 };
                 while (hasAnySelectedNodeColor(mode) && max > 0) {
-                    this.applyColor("", mode);
+                    this._applyColor("", mode);
                     someColorWasRemoved = true;
                     max--;
                 }
@@ -147,7 +163,7 @@ export class ColorPlugin extends Plugin {
      * @param {string} color hexadecimal or bg-name/text-name class
      * @param {string} mode 'color' or 'backgroundColor'
      */
-    applyColor(color, mode) {
+    _applyColor(color, mode) {
         if (this.delegateTo("color_apply_overrides", color, mode)) {
             return;
         }

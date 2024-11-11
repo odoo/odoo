@@ -26,7 +26,7 @@ function isFormatted(formatPlugin, format) {
 
 export class FormatPlugin extends Plugin {
     static name = "format";
-    static dependencies = ["selection", "split", "delete"];
+    static dependencies = ["selection", "history", "split", "delete"];
     // TODO ABD: refactor to handle Knowledge comments inside this plugin without sharing mergeAdjacentInlines.
     static shared = [
         "isSelectionFormat",
@@ -124,46 +124,10 @@ export class FormatPlugin extends Plugin {
             },
         ],
         arrows_should_skip: (ev, char, lastSkipped) => char === "\u200b",
-        onBeforeInput: withSequence(20, this.onBeforeInput.bind(this)),
+        beforeinput_handlers: withSequence(20, this.onBeforeInput.bind(this)),
+        clean_for_save_handlers: this.cleanForSave.bind(this),
+        normalize_handlers: this.normalize.bind(this),
     };
-
-    handleCommand(command, payload) {
-        switch (command) {
-            case "FORMAT_BOLD":
-                this.formatSelection("bold");
-                break;
-            case "FORMAT_ITALIC":
-                this.formatSelection("italic");
-                break;
-            case "FORMAT_UNDERLINE":
-                this.formatSelection("underline");
-                break;
-            case "FORMAT_STRIKETHROUGH":
-                this.formatSelection("strikeThrough");
-                break;
-            case "FORMAT_FONT_SIZE":
-                this.formatSelection("fontSize", {
-                    applyStyle: true,
-                    formatProps: { size: payload.size },
-                });
-                break;
-            case "FORMAT_FONT_SIZE_CLASSNAME":
-                this.formatSelection("setFontSizeClassName", {
-                    formatProps: { className: payload.className },
-                });
-                break;
-            case "FORMAT_REMOVE_FORMAT":
-                this.removeFormat();
-                break;
-            case "CLEAN_FOR_SAVE": {
-                this.cleanForSave(payload);
-                break;
-            }
-            case "NORMALIZE":
-                this.normalize(payload.node);
-                break;
-        }
-    }
 
     removeFormat() {
         for (const format of Object.keys(formatsSpecs)) {
@@ -172,10 +136,8 @@ export class FormatPlugin extends Plugin {
             }
             this._formatSelection(format, { applyStyle: false });
         }
-        for (const callback of this.getResource("removeFormat")) {
-            callback();
-        }
-        this.dispatch("ADD_STEP");
+        this.dispatchTo("remove_format_handlers");
+        this.shared.addStep();
     }
 
     /**
@@ -228,7 +190,7 @@ export class FormatPlugin extends Plugin {
 
     formatSelection(...args) {
         if (this._formatSelection(...args)) {
-            this.dispatch("ADD_STEP");
+            this.shared.addStep();
         }
     }
 
