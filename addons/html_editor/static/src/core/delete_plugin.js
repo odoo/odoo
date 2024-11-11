@@ -51,11 +51,11 @@ import { withSequence } from "@html_editor/utils/resource";
 /** @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection */
 
 export class DeletePlugin extends Plugin {
-    static dependencies = ["selection"];
+    static dependencies = ["selection", "history"];
     static name = "delete";
-    static shared = ["deleteRange", "isUnmergeable"];
+    static shared = ["deleteRange", "isUnmergeable", "deleteSelection", "delete"];
     resources = {
-        onBeforeInput: [
+        beforeinput_handlers: [
             withSequence(5, this.onBeforeInputInsertText.bind(this)),
             this.onBeforeInputDelete.bind(this),
         ],
@@ -95,32 +95,6 @@ export class DeletePlugin extends Plugin {
     setup() {
         this.findPreviousPosition = this.makeFindPositionFn("backward");
         this.findNextPosition = this.makeFindPositionFn("forward");
-    }
-
-    handleCommand(command, payload) {
-        switch (command) {
-            case "DELETE_SELECTION":
-                this.deleteSelection();
-                break;
-            case "DELETE_BACKWARD":
-                this.delete("backward", "character");
-                break;
-            case "DELETE_FORWARD":
-                this.delete("forward", "character");
-                break;
-            case "DELETE_BACKWARD_WORD":
-                this.delete("backward", "word");
-                break;
-            case "DELETE_FORWARD_WORD":
-                this.delete("forward", "word");
-                break;
-            case "DELETE_BACKWARD_LINE":
-                this.delete("backward", "line");
-                break;
-            case "DELETE_FORWARD_LINE":
-                this.delete("forward", "line");
-                break;
-        }
     }
 
     // --------------------------------------------------------------------------
@@ -171,8 +145,8 @@ export class DeletePlugin extends Plugin {
         } else {
             throw new Error("Invalid direction");
         }
-        this.getResource("delete_handlers").forEach((handler) => handler());
-        this.dispatch("ADD_STEP");
+        this.dispatchTo("delete_handlers");
+        this.shared.addStep();
     }
 
     // --------------------------------------------------------------------------

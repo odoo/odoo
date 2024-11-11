@@ -177,9 +177,7 @@ export class SelectionPlugin extends Plugin {
                 return;
             }
         }
-        for (const handler of this.getResource("onSelectionChange")) {
-            handler(selectionData);
-        }
+        this.dispatchTo("selectionchange_handlers", selectionData);
     }
 
     /**
@@ -632,9 +630,7 @@ export class SelectionPlugin extends Plugin {
             return false;
         }
 
-        this.getResource("fix_selection_on_editable_root_handlers").forEach((handler) => {
-            handler(selection);
-        });
+        this.dispatchTo("fix_selection_on_editable_root_handlers", selection);
     }
 
     /**

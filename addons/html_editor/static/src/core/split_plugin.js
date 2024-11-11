@@ -8,10 +8,11 @@ import { DIRECTIONS, childNodeIndex, nodeSize } from "../utils/position";
 import { isProtected, isProtecting } from "@html_editor/utils/dom_info";
 
 export class SplitPlugin extends Plugin {
-    static dependencies = ["selection"];
+    static dependencies = ["selection", "history", "delete"];
     static name = "split";
     static shared = [
         "splitBlock",
+        "splitBlockNode",
         "splitElementBlock",
         "splitElement",
         "splitAroundUntil",
@@ -32,30 +33,19 @@ export class SplitPlugin extends Plugin {
             (element) => element.classList.contains("oe_unbreakable"),
             (element) => ["DIV", "SECTION"].includes(element.tagName),
         ],
-        onBeforeInput: this.onBeforeInput.bind(this),
+        beforeinput_handlers: this.onBeforeInput.bind(this),
     };
-
-    handleCommand(command, payload) {
-        switch (command) {
-            case "SPLIT_BLOCK":
-                this._splitBlock();
-                break;
-            case "SPLIT_BLOCK_NODE":
-                this.splitBlockNode(payload);
-                break;
-        }
-    }
 
     // --------------------------------------------------------------------------
     // commands
     // --------------------------------------------------------------------------
     splitBlock() {
+        this.dispatchTo("before_split_block_handlers");
         let selection = this.shared.getEditableSelection();
         if (!selection.isCollapsed) {
             // @todo @phoenix collapseIfZWS is not tested
             // this.shared.collapseIfZWS();
-            this.dispatch("RESET_TABLE_SELECTION");
-            this.dispatch("DELETE_SELECTION");
+            this.shared.deleteSelection();
             selection = this.shared.getEditableSelection();
         }
 
@@ -63,10 +53,6 @@ export class SplitPlugin extends Plugin {
             targetNode: selection.anchorNode,
             targetOffset: selection.anchorOffset,
         });
-    }
-    _splitBlock() {
-        this.splitBlock();
-        this.dispatch("ADD_STEP");
     }
 
     /**
@@ -103,7 +89,13 @@ export class SplitPlugin extends Plugin {
             // unsplittable.  The check must be done from the targetNode up to
             // the block for unsplittables. There are apparently no tests for
             // this.
-            this.dispatch("INSERT_LINEBREAK_ELEMENT", { targetNode, targetOffset });
+
+            // @todo: instead of calling a resource, we should directly use the
+            // method `insertLineBreakElement` of the linebreak plugin. The
+            // reason we don't do it now is because there is a dependency cycle.
+            // We should resolve this todo by resolving the dependency cycle
+            // somehow.
+            this.dispatchTo("split_unsplittable_handlers", { targetNode, targetOffset });
             return [undefined, undefined];
         }
         const restore = prepareUpdate(targetNode, targetOffset);
@@ -151,7 +143,7 @@ export class SplitPlugin extends Plugin {
      * @returns {[HTMLElement, HTMLElement]}
      */
     splitElement(element, offset) {
-        this.dispatch("CLEAN", { root: element });
+        this.dispatchTo("clean_handlers", element);
         // const before = /** @type {HTMLElement} **/ (element.cloneNode());
         /** @type {HTMLElement} **/
         const before = element.cloneNode();
@@ -321,7 +313,8 @@ export class SplitPlugin extends Plugin {
     onBeforeInput(e) {
         if (e.inputType === "insertParagraph") {
             e.preventDefault();
-            this._splitBlock();
+            this.splitBlock();
+            this.shared.addStep();
         }
     }
 }

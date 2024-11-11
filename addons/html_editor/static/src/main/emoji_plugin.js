@@ -4,7 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 
 export class EmojiPlugin extends Plugin {
     static name = "emoji";
-    static dependencies = ["overlay", "dom", "selection"];
+    static dependencies = ["history", "overlay", "dom", "selection"];
     static shared = ["showEmojiPicker"];
     resources = {
         user_commands: [
@@ -50,7 +50,7 @@ export class EmojiPlugin extends Plugin {
                         return;
                     }
                     this.shared.domInsert(str);
-                    this.dispatch("ADD_STEP");
+                    this.shared.addStep();
                 },
             },
             target,
