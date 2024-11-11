@@ -7,7 +7,6 @@ export class Toolbar extends Component {
         toolbar: {
             type: Object,
             shape: {
-                dispatch: Function,
                 getSelection: Function,
                 focusEditable: Function,
                 buttonGroups: {
@@ -91,6 +90,5 @@ export class Toolbar extends Component {
 
 export const toolbarButtonProps = {
     title: String,
-    dispatch: Function,
     getSelection: Function,
 };

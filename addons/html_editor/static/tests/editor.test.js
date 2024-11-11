@@ -69,21 +69,21 @@ test("Remove odoo-editor-editable class after every plugin is destroyed", async 
     expect.verifySteps(["operation"]);
 });
 
-test("CLEAN_FOR_SAVE is done last", async () => {
+test("clean_for_save_listeners is done last", async () => {
     // This test uses custom elements tag `c-div` to make sure they won't fall into
     // a case where they won't be merged anyway.
     // Without the proper fix, this test fails with sibling elements `c-div` merged together
     class TestPlugin extends Plugin {
+        resources = {
+            clean_for_save_handlers: ({ root }) => {
+                for (const el of root.querySelectorAll("c-div")) {
+                    el.removeAttribute("class");
+                }
+            },
+        };
         setup() {
             for (const el of this.editable.querySelectorAll("c-div")) {
                 el.classList.add("oe_unbreakable");
-            }
-        }
-        handleCommand(cmd, payload) {
-            if (cmd === "CLEAN_FOR_SAVE") {
-                for (const el of payload.root.querySelectorAll("c-div")) {
-                    el.removeAttribute("class");
-                }
             }
         }
     }

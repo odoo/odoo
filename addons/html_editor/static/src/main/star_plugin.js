@@ -8,7 +8,7 @@ import { _t } from "@web/core/l10n/translation";
 
 export class StarPlugin extends Plugin {
     static name = "star";
-    static dependencies = ["dom"];
+    static dependencies = ["dom", "history"];
     resources = {
         user_commands: [
             {
@@ -66,7 +66,7 @@ export class StarPlugin extends Plugin {
                     star.classList.toggle("fa-star-o", true);
                     star.classList.toggle("fa-star", false);
                 }
-                this.dispatch("ADD_STEP");
+                this.shared.addStep();
             }
             ev.stopPropagation();
             ev.preventDefault();
@@ -77,6 +77,6 @@ export class StarPlugin extends Plugin {
         const stars = Array.from({ length }, () => '<i class="fa fa-star-o"></i>').join("");
         const html = `\u200B<span contenteditable="false" class="o_stars">${stars}</span>\u200B`;
         this.shared.domInsert(parseHTML(this.document, html));
-        this.dispatch("ADD_STEP");
+        this.shared.addStep();
     }
 }

@@ -81,26 +81,15 @@ export class MediaPlugin extends Plugin {
                 text: "Replace",
             },
         ],
+        clean_handlers: this.clean.bind(this),
         isUnsplittable: isIconElement, // avoid merge
         power_buttons: { commandId: "insertImage" },
+        clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
+        normalize_handlers: this.normalizeMedia.bind(this),
     };
 
     get recordInfo() {
         return this.config.getRecordInfo ? this.config.getRecordInfo() : {};
-    }
-
-    handleCommand(command, payload) {
-        switch (command) {
-            case "NORMALIZE":
-                this.normalizeMedia(payload.node);
-                break;
-            case "CLEAN":
-                this.clean(payload.root);
-                break;
-            case "CLEAN_FOR_SAVE":
-                this.cleanForSave(payload.root);
-                break;
-        }
     }
 
     replaceImage() {
@@ -172,7 +161,7 @@ export class MediaPlugin extends Plugin {
         // Collapse selection after the inserted/replaced element.
         const [anchorNode, anchorOffset] = rightPos(element);
         this.shared.setSelection({ anchorNode, anchorOffset });
-        this.dispatch("ADD_STEP");
+        this.shared.addStep();
     }
 
     openMediaDialog(params = {}) {

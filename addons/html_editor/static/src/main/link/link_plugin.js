@@ -102,7 +102,7 @@ async function fetchInternalMetaData(url) {
 
 export class LinkPlugin extends Plugin {
     static name = "link";
-    static dependencies = ["dom", "selection", "split", "line_break", "overlay"];
+    static dependencies = ["dom", "history", "selection", "split", "line_break", "overlay"];
     // @phoenix @todo: do we want to have createLink and insertLink methods in link plugin?
     static shared = ["createLink", "insertLink", "getPathAsUrlCommand"];
     resources = {
@@ -169,11 +169,13 @@ export class LinkPlugin extends Plugin {
                 commandId: "toggleLinkTools",
             },
         ],
-        onBeforeInput: withSequence(5, this.onBeforeInput.bind(this)),
-        onSelectionChange: this.handleSelectionChange.bind(this),
+        beforeinput_handlers: withSequence(5, this.onBeforeInput.bind(this)),
+        selectionchange_handlers: this.handleSelectionChange.bind(this),
         split_element_block_overrides: this.handleSplitBlock.bind(this),
         insert_line_break_element_overrides: this.handleInsertLineBreak.bind(this),
         power_buttons: { commandId: "toggleLinkTools" },
+        clean_for_save_handlers: ({ root }) => this.removeEmptyLinks(root),
+        normalize_handlers: this.normalizeLink.bind(this),
     };
     setup() {
         this.overlay = this.shared.createOverlay(LinkPopover, {}, { sequence: 50 });
@@ -209,20 +211,11 @@ export class LinkPlugin extends Plugin {
 
     handleCommand(command, payload) {
         switch (command) {
-            case "CREATE_LINK_ON_SELECTION":
-                this.toggleLinkTools(payload.options);
-                break;
-            case "TOGGLE_LINK":
-                this.toggleLinkTools(payload.options);
-                break;
             case "NORMALIZE":
                 this.normalizeLink();
                 break;
             case "CLEAN_FOR_SAVE":
                 this.removeEmptyLinks(payload.root);
-                break;
-            case "REMOVE_LINK_FROM_SELECTION":
-                this.removeLinkFromSelection();
                 break;
         }
     }
@@ -258,7 +251,7 @@ export class LinkPlugin extends Plugin {
             link = this.createLink(url, label);
             this.shared.domInsert(link);
         }
-        this.dispatch("ADD_STEP");
+        this.shared.addStep();
         const linkParent = link.parentElement;
         const linkOffset = Array.from(linkParent.childNodes).indexOf(link);
         this.shared.setSelection(
@@ -277,7 +270,7 @@ export class LinkPlugin extends Plugin {
             icon: "fa-link",
             run: () => {
                 this.shared.domInsert(this.createLink(url, text));
-                this.dispatch("ADD_STEP");
+                this.shared.addStep();
             },
         };
         return pasteAsURLCommand;
@@ -313,7 +306,7 @@ export class LinkPlugin extends Plugin {
             onRemove: () => {
                 this.removeLink();
                 this.overlay.close();
-                this.dispatch("ADD_STEP");
+                this.shared.addStep();
             },
             onCopy: () => {
                 this.overlay.close();
@@ -351,7 +344,7 @@ export class LinkPlugin extends Plugin {
                         this.shared.setCursorEnd(this.linkElement);
                         this.shared.focusEditable();
                         this.removeCurrentLinkIfEmtpy();
-                        this.dispatch("ADD_STEP");
+                        this.shared.addStep();
                     },
                 };
 
@@ -406,7 +399,7 @@ export class LinkPlugin extends Plugin {
                     }
                     this.shared.focusEditable();
                     this.removeCurrentLinkIfEmtpy();
-                    this.dispatch("ADD_STEP");
+                    this.shared.addStep();
                 },
             };
 
@@ -443,7 +436,7 @@ export class LinkPlugin extends Plugin {
                     after = linkElement.nextSibling;
                 }
                 this.shared.setCursorEnd(linkElement);
-                this.dispatch("ADD_STEP");
+                this.shared.addStep();
             }
             return linkElement;
         } else {
@@ -487,7 +480,7 @@ export class LinkPlugin extends Plugin {
             !this.linkElement.hasAttribute("t-att-href")
         ) {
             this.removeLink();
-            this.dispatch("ADD_STEP");
+            this.shared.addStep();
         }
     }
 
@@ -543,7 +536,7 @@ export class LinkPlugin extends Plugin {
                 selectedImageNodes.length === 1 &&
                 selectedImageNodes.length === selectedNodes.length
             ) {
-                this.dispatch("ADD_STEP");
+                this.shared.addStep();
                 return;
             }
         }
@@ -577,7 +570,7 @@ export class LinkPlugin extends Plugin {
             }
             cursors.restore();
         }
-        this.dispatch("ADD_STEP");
+        this.shared.addStep();
     }
 
     removeEmptyLinks(root) {
@@ -639,7 +632,7 @@ export class LinkPlugin extends Plugin {
                 textNodeToReplace.splitText(match[0].length);
                 selection.anchorNode.parentElement.replaceChild(link, textNodeToReplace);
                 this.shared.setCursorStart(nodeForSelectionRestore);
-                this.dispatch("ADD_STEP");
+                this.shared.addStep();
             }
         }
     }
