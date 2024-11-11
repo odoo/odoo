@@ -23,15 +23,6 @@
                                  invisible="survey_access_mode != 'public'"/>
                             <field string="Send by Email" name="send_email" widget="boolean_toggle" options="{'autosave': False}"
                                    invisible="survey_access_mode != 'public'"/>
-                            <field name="partner_ids"
-                                widget="many2many_tags_email"
-                                placeholder="Add existing contacts..." options="{'no_quick_create': True}"
-                                context="{'show_email': True, 'form_view_ref': 'base.view_partner_simple_form'}"
-                                required="True"
-                                invisible="not send_email"/>
-                            <field name="emails"
-                                invisible="survey_users_login_required or not send_email"
-                                placeholder="e.g.  'Rick Sanchez' &lt;rick_sanchez@example.com&gt;, hictor_vugo@example.com"/>
                         </group>
                         <field name="existing_partner_ids" invisible="1"/>
                         <field name="existing_emails" invisible="1"/>
@@ -47,28 +38,31 @@
                                 </div>
                             </group>
                         </div>
-                        <group col="2">
-                            <field name="subject" invisible="not send_email" placeholder="Subject..."/>
+                        <separator invisible="not send_email or survey_access_mode != 'public'" string="Email"/>
+                        <group col="2" invisible="not send_email">
+                            <field name="partner_ids"
+                                string="To"
+                                widget="many2many_tags_email"
+                                placeholder="Add existing contacts..." options="{'no_quick_create': True}"
+                                context="{'show_email': True, 'form_view_ref': 'base.view_partner_simple_form'}"
+                                required="True"/>
+                            <field name="subject" placeholder="Subject..."/>
+                            <field string="Answer Deadline" name="deadline" placeholder="No Deadline"/>
                         </group>
                         <field name="can_edit_body" invisible="1"/>
                         <field name="body" class="oe-bordered-editor border border-1 m-3 p-0 flex-fill"
                             widget="html_mail"
-                            options="{'height': 380}"
+                            options="{'height': 200}"
                             invisible="not send_email"
                             readonly="not can_edit_body" force_save="1"/>
-                        <group invisible="not send_email">
-                            <group>
-                                <field name="attachment_ids" widget="many2many_binary"/>
-                            </group>
-                            <group>
-                                <field name="deadline"/>
-                                <field name="template_id" label="Use template"/>
-                            </group>
-                        </group>
+                        <field name="attachment_ids" widget="mail_composer_attachment_list" invisible="not send_email"/>
                     </group>
                     <footer>
                         <button string="Send" invisible="not send_email" name="action_invite" type="object" class="btn-primary" data-hotkey="q"/>
-                        <button string="Close" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                        <field name="attachment_ids" invisible="not send_email" widget="mail_composer_attachment_selector"/>
+                        <field name="template_id" invisible="not send_email" widget="mail_composer_template_selector"/>
+                        <field name="body" widget="mail_composer_chatgpt" invisible="not send_email or not can_edit_body"/>
                     </footer>
                 </form>
             </field>
