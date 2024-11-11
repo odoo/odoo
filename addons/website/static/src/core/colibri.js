@@ -7,6 +7,74 @@ let owl = null;
 let Markup = null;
 
 export class Colibri {
+    constructor(app, I, el, env) {
+        this.app = app;
+        this.update = null;
+        this.handlers = [];
+        this.startProm = null;
+        const interaction = new I(el, env, this);
+        this.interaction = interaction;
+        interaction.setup();
+        this.startProm = (interaction.willStart() || Promise.resolve()).then(() => {
+            if (interaction.isDestroyed) {
+                return;
+            }
+            const content = I.dynamicContent;
+            if (content) {
+                this.processContent(content);
+            }
+            interaction.start();
+        });
+    }
+
+    scheduleUpdate() {
+        this.app.schedule(this);
+    }
+
+    addDomListener(nodes, event, fn, options) {
+        const handler = ev => {
+            fn.call(this.interaction, ev);
+            this.scheduleUpdate();
+        }
+        for (let node of nodes) {
+            node.addEventListener(event, handler, options);
+            this.handlers.push([node, event, handler, options])
+        }
+    }
+
+    applyTOut(el, value) {
+        if (!Markup) {
+            owl = odoo.loader.modules.get("@odoo/owl");
+            if (owl) {
+                Markup = owl.markup("").constructor;
+            }
+        }
+        if (Markup && value instanceof Markup) {
+            el.innerHTML = value;
+        } else {
+            el.textContent = value;
+        }
+        return this.markup;
+    }
+
+
+    processContent(content) {
+        const fn = this.app.compile(content);
+        const update = fn(this, this.interaction);
+        this.update = update.bind(this.interaction);
+        update.call(this.interaction);
+    }
+
+    destroy() {
+        for (let [el, ev, fn, options] of this.handlers) {
+            el.removeEventListener(ev, fn, options);
+        }
+        this.interaction.destroy();
+        this.interaction.isDestroyed = true;
+    }
+}
+
+export class ColibriApp {
     compiledFns = new Map();
     frame = null;
     queue = new Set(); // interactions to update next frame
@@ -15,49 +83,39 @@ export class Colibri {
         this.env = env;
     }
 
-     attach(el, I) {
-        const interaction = new I(el, this.env, this);
-        // patch destroy to cleanup colibri stuff
-        const destroy = interaction.destroy;
-        interaction.destroy = function () {
-            if (!this.isDestroyed) {
-                this.__colibri__.cleanup?.();
-                for (let [el, ev, fn, options] of this.__colibri__.handlers) {
-                    el.removeEventListener(ev, fn, options);
-                }
-                this.isDestroyed = true;
-                destroy.call(this);
-            }
-        };
-        interaction.setup();
-        const prom = (interaction.willStart() || Promise.resolve()).then(() => {
-            if (interaction.isDestroyed) {
-                return;
-            }
-            const content = I.dynamicContent;
-            if (content) {
-                this.applyContent(interaction, content);
-            }
-            interaction.start();
-        });
-        interaction.__colibri__.startProm = prom;
-        return interaction;
+    attach(el, I) {
+        const colibri = new Colibri(this, I, el, this.env);
+        return colibri;
+        // const interaction = new I(el, this.env, this);
+        // // patch destroy to cleanup colibri stuff
+        // const destroy = interaction.destroy;
+        // interaction.destroy = function () {
+        //     if (!this.isDestroyed) {
+        //         for (let [el, ev, fn, options] of this.__colibri__.handlers) {
+        //             el.removeEventListener(ev, fn, options);
+        //         }
+        //         this.isDestroyed = true;
+        //         destroy.call(this);
+        //     }
+        // };
+        // interaction.setup();
+
+        // return interaction;
     }
 
-    applyContent(interaction, content) {
+
+    compile(content) {
         let fn;
         if (!this.compiledFns.has(content)) {
-            fn = this.compile(content);
+            fn = this._compile(content);
             this.compiledFns.set(content, fn);
         } else {
             fn = this.compiledFns.get(content);
         }
-        const update = fn(this, interaction);
-        interaction.__colibri__.update = update.bind(interaction);
-        update.call(interaction);
+        return fn;
     }
 
-    compile(content) {
+    _compile(content) {
         let nextId = 1;
         let selectors = {}; // sel => variable name
         let attrs = [],
@@ -106,7 +164,7 @@ export class Colibri {
         fnStr += "\n";
         for (let [sel, event, expr] of handlers) {
             const nodes = sel === "_root" || sel === "_body" ? `[${sel.slice(1)}]` : selectors[sel];
-            addLine(`framework.addDomListener(interaction, ${nodes}, \`${event}\`, interaction[\`${expr}\`]);`)
+            addLine(`framework.addDomListener(${nodes}, \`${event}\`, interaction[\`${expr}\`]);`)
         }
 
         // update function
@@ -134,37 +192,14 @@ export class Colibri {
 
         addLine("return update;");
         const fn = new Function("framework", "interaction", fnStr);
-        // console.log(fn.toString());
+        console.log(fn.toString());
         return fn;
     }
 
-    addDomListener(interaction, nodes, event, fn, options) {
-        const handler = ev => {
-            fn.call(interaction, ev);
-            this.schedule(interaction);
-        }
-        for (let node of nodes) {
-            node.addEventListener(event, handler, options);
-            interaction.__colibri__.handlers.push([node, event, handler, options])
-        }
-    }
 
-    applyTOut(el, value) {
-        if (!Markup) {
-            owl = odoo.loader.modules.get("@odoo/owl");
-            if (owl) {
-                Markup = owl.markup("").constructor;
-            }
-        }
-        if (Markup && value instanceof Markup) {
-            el.innerHTML = value;
-        } else {
-            el.textContent = value;
-        }
-        return this.markup;
-    }
-    schedule(interaction) {
-        this.queue.add(interaction);
+
+    schedule(colibri) {
+        this.queue.add(colibri);
         if (!this.frame) {
             this.frame = requestAnimationFrame(() => {
                 this.flush();
@@ -174,9 +209,9 @@ export class Colibri {
     }
 
     flush() {
-        for (let interaction of this.queue) {
-            if (!interaction.isDestroyed) {
-                interaction.__colibri__.update();
+        for (let colibri of this.queue) {
+            if (!colibri.interaction.isDestroyed) {
+                colibri.update();
             }
         }
         this.queue.clear();

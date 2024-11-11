@@ -6,8 +6,8 @@
 export class Interaction {
     static selector = "";
 
-    constructor(el, env, colibri) {
-        this.__colibri__ = { colibri, update: null, handlers: [], startProm: null };
+    constructor(el, env, metadata) {
+        this.__colibri__ = metadata;
         this.isDestroyed = false;
         this.el = el;
         this.env = env;
@@ -39,12 +39,12 @@ export class Interaction {
     }
 
     updateDOM() {
-        this.__colibri__.colibri.schedule(this);
+        this.__colibri__.scheduleUpdate();
     }
 
     addDomListener(target, event, fn, options) {
         const nodes = typeof target === "string" ? this.el.querySelectorAll(target) : [target];
-        this.__colibri__.colibri.addDomListener(this, nodes, event, fn, options);
+        this.__colibri__.addDomListener(nodes, event, fn, options);
     }
 
     mountComponent() {

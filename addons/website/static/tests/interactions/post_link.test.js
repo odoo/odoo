@@ -11,7 +11,7 @@ test("post_link adds and removes class on setup/destroy", async () => {
         <span data-post="/some/url" class="post_link">All</span>
       </div>`);
       expect(core.interactions.length).toBe(1);
-      expect(core.interactions[0].constructor.name).toBe("PostLink");
+      expect(core.interactions[0].interaction.constructor.name).toBe("PostLink");
 
     const span = el.querySelector("span");
     expect(span).toHaveClass("o_post_link_js_loaded");

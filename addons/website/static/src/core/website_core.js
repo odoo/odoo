@@ -1,7 +1,7 @@
 import { registry } from "@web/core/registry";
 import { _t, translationIsReady } from "@web/core/l10n/translation";
 import { Interaction } from "./interaction";
-import { Colibri } from "./colibri";
+import { ColibriApp } from "./colibri";
 import { getTemplate } from "@web/core/templates";
 
 /**
@@ -33,12 +33,12 @@ class WebsiteCore {
         this.env = env;
         this.interactions = [];
         this.roots = [];
-        this.colibri = new Colibri(this.env);
-        this.app = null;
+        this.colibriApp = new ColibriApp(this.env);
+        this.owlApp = null;
     }
 
     async _mountComponent(el, C) {
-        if (!this.app) {
+        if (!this.owlApp) {
             await translationIsReady;
             const { App } = odoo.loader.modules.get("@odoo/owl");
             const appConfig = {
@@ -50,12 +50,12 @@ class WebsiteCore {
                 warnIfNoStaticProps: this.env.debug,
                 translatableAttributes: ["data-tooltip"],
             };
-            this.app = new App(null, appConfig);
+            this.owlApp = new App(null, appConfig);
         }
         if (!this.active) {
             return;
         }
-        const root = this.app.createRoot(C, { props: null, env: this.env });
+        const root = this.owlApp.createRoot(C, { props: null, env: this.env });
         this.roots.push(root);
         const compElem = document.createElement("owl-component");
         compElem.setAttribute("contenteditable", "false");
@@ -85,9 +85,9 @@ class WebsiteCore {
 
     _startInteraction(el, I) {
         if (I.prototype instanceof Interaction) {
-            const interaction = this.colibri.attach(el, I);
+            const interaction = this.colibriApp.attach(el, I);
             this.interactions.push(interaction);
-            return interaction.__colibri__.startProm;
+            return interaction.startProm;
         } else {
             return this._mountComponent(el, I);
         }
