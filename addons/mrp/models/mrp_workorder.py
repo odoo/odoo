@@ -314,7 +314,7 @@ class MrpWorkorder(models.Model):
         for workorder in self:
             # Recompute the duration expected if the qty_producing has been changed:
             # compare with the origin record if it happens during an onchange
-            if workorder.state not in ['done', 'cancel'] and (workorder.qty_producing != workorder.qty_production
+            if workorder.state not in ['done', 'cancel'] and workorder._origin.state not in ['done', 'cancel'] and (workorder.qty_producing != workorder.qty_production
                 or (workorder._origin != workorder and workorder._origin.qty_producing and workorder.qty_producing != workorder._origin.qty_producing)):
                 workorder.duration_expected = workorder._get_duration_expected()
 
