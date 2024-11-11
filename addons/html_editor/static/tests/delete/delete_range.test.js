@@ -23,7 +23,7 @@ async function deleteRange(editor) {
 
 // Tests the DELETE_SELECTION command.
 async function deleteSelection(editor) {
-    editor.dispatch("DELETE_SELECTION");
+    editor.shared.deleteSelection();
 }
 
 describe("deleteRange method", () => {
@@ -260,7 +260,7 @@ describe("deleteRange method", () => {
     });
 });
 
-describe("DELETE_SELECTION command", () => {
+describe("deleteSelection", () => {
     describe("Merge blocks", () => {
         test("should remove fully selected left block and keep second block", async () => {
             // As opposed to the deleteRange method.

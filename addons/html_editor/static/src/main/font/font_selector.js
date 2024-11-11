@@ -10,8 +10,8 @@ export class FontSelector extends Component {
     static props = {
         document: { optional: true },
         getItems: Function,
-        command: String,
         isFontSize: { type: Boolean, optional: true },
+        onSelected: Function,
         ...toolbarButtonProps,
     };
     static components = { Dropdown, DropdownItem };
@@ -61,7 +61,7 @@ export class FontSelector extends Component {
     }
 
     onSelected(item) {
-        this.props.dispatch(this.props.command, item);
+        this.props.onSelected(item);
         this.state.displayName = this.getDisplay();
     }
 }

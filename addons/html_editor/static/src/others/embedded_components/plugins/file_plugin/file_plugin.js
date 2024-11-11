@@ -7,7 +7,7 @@ import { isBlock } from "@html_editor/utils/blocks";
 
 export class FilePlugin extends Plugin {
     static name = "file";
-    static dependencies = ["embedded_components", "dom", "selection"];
+    static dependencies = ["embedded_components", "dom", "selection", "history"];
     resources = {
         user_commands: [
             {
@@ -37,16 +37,8 @@ export class FilePlugin extends Plugin {
                 commandId: "openMediaDialog",
             },
         ],
+        mount_component_handlers: this.setupNewFile.bind(this),
     };
-
-    handleCommand(command, payload) {
-        switch (command) {
-            case "SETUP_NEW_COMPONENT":
-                this.setupNewFile(payload);
-                break;
-        }
-        super.handleCommand(command);
-    }
 
     get recordInfo() {
         return this.config.getRecordInfo ? this.config.getRecordInfo() : {};
@@ -80,7 +72,7 @@ export class FilePlugin extends Plugin {
     onSaveMediaDialog(element, { restoreSelection }) {
         restoreSelection();
         this.shared.domInsert(element);
-        this.dispatch("ADD_STEP");
+        this.shared.addStep();
     }
 
     setupNewFile({ name, env }) {

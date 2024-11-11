@@ -22,13 +22,13 @@ export class CollaborationSelectionAvatarPlugin extends Plugin {
     static name = "collaboration_selection_avatar";
     static dependencies = ["history", "position", "local-overlay", "collaboration_odoo"];
     resources = {
-        handleCollaborationNotification: this.handleCollaborationNotification.bind(this),
+        collaboration_notification_handlers: this.handleCollaborationNotification.bind(this),
         getCollaborationPeerMetadata: () => ({ avatarUrl: this.avatarUrl }),
-        onExternalHistorySteps: this.refreshSelection.bind(this),
-        layoutGeometryChange: this.refreshSelection.bind(this),
-        setMovableElement: this.disableAvatarForElement.bind(this),
-        unsetMovableElement: this.enableAvatars.bind(this),
-        collaborativeSelectionUpdate: this.updateSelection.bind(this),
+        external_history_step_handlers: this.refreshSelection.bind(this),
+        layout_geometry_change_handlers: this.refreshSelection.bind(this),
+        set_movable_element_handlers: this.disableAvatarForElement.bind(this),
+        unset_movable_element_handlers: this.enableAvatars.bind(this),
+        collaborative_selection_update_handlers: this.updateSelection.bind(this),
     };
 
     /** @type {Map<string, SelectionInfo>} */

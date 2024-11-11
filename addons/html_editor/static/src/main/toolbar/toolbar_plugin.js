@@ -105,7 +105,8 @@ export class ToolbarPlugin extends Plugin {
     static dependencies = ["overlay", "selection", "user_command"];
     static shared = ["getToolbarInfo"];
     resources = {
-        onSelectionChange: this.handleSelectionChange.bind(this),
+        selectionchange_handlers: this.handleSelectionChange.bind(this),
+        step_added_handlers: () => this.updateToolbar(),
     };
 
     setup() {
@@ -196,14 +197,6 @@ export class ToolbarPlugin extends Plugin {
         super.destroy();
     }
 
-    handleCommand(command) {
-        switch (command) {
-            case "STEP_ADDED":
-                this.updateToolbar();
-                break;
-        }
-    }
-
     /**
      * @typedef {Object} ToolbarCommandButton
      * @property {string} id
@@ -252,7 +245,6 @@ export class ToolbarPlugin extends Plugin {
 
     getToolbarInfo() {
         return {
-            dispatch: this.dispatch,
             buttonGroups: this.buttonGroups,
             getSelection: () => this.shared.getEditableSelection(),
             state: this.state,

@@ -87,14 +87,6 @@ export class ColumnPlugin extends Plugin {
         showPowerButtons: (selection) => !closestElement(selection.anchorNode, ".o_text_columns"),
     };
 
-    handleCommand(command, payload) {
-        switch (command) {
-            case "COLUMNIZE": {
-                this.columnize(payload);
-                break;
-            }
-        }
-    }
     columnize({ numberOfColumns, addParagraphAfter = true } = {}) {
         const selectionToRestore = this.shared.getEditableSelection();
         const anchor = selectionToRestore.anchorNode;
@@ -109,7 +101,7 @@ export class ColumnPlugin extends Plugin {
             this.createColumns(anchor, numberOfColumns, addParagraphAfter);
         }
         this.shared.setSelection(selectionToRestore);
-        this.dispatch("ADD_STEP");
+        this.shared.addStep();
     }
 
     removeColumns(anchor) {
