@@ -257,6 +257,39 @@ test("sidebar quick search takes DM custom name into account", async () => {
     await contains(".o-mail-DiscussSidebarChannel", { text: "Marc" });
 });
 
+test("sidebar: basic channel settings", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "Hello world",
+        model: "discuss.channel",
+        res_id: channelId,
+        message_type: "comment",
+    });
+    await start();
+    await openDiscuss();
+    await contains(".o-mail-DiscussSidebarChannel");
+    await contains(".o-mail-DiscussSidebarChannel", { text: "Demo" });
+    await contains(".o-mail-DiscussSidebarChannel img[data-alt='Thread Image']");
+    await click(
+        ".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands [title='Channel settings']"
+    );
+    await contains(".o-mail-DiscussSidebar-commandsPopover");
+    await contains("[title='Mark as read']");
+    await contains("[title='Invite People']");
+    await contains("[title='Notification Settings']");
+    await contains("[title='Channel Info']");
+    // Note: Unpin/Leave Conversation is not present here as the channel contains unread messages.
+});
+
 test("sidebar: basic chat rendering", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
@@ -272,9 +305,11 @@ test("sidebar: basic chat rendering", async () => {
     await contains(".o-mail-DiscussSidebarChannel");
     await contains(".o-mail-DiscussSidebarChannel", { text: "Demo" });
     await contains(".o-mail-DiscussSidebarChannel img[data-alt='Thread Image']");
-    await contains(
-        ".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands [title='Unpin Conversation']"
+    await click(
+        ".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands [title='Channel settings']"
     );
+    await contains(".o-mail-DiscussSidebar-commandsPopover");
+    await contains("[title='Unpin Conversation']");
     await contains(".o-mail-DiscussSidebarChannel .badge", { count: 0 });
 });
 
@@ -316,9 +351,11 @@ test("sidebar: open channel and leave it", async () => {
     await click(".o-mail-DiscussSidebarChannel", { text: "General" });
     await contains(".o-mail-Discuss-threadName", { value: "General" });
     await assertSteps([]);
-    await click("[title='Leave this channel']", {
-        parent: [".o-mail-DiscussSidebarChannel.o-active", { text: "General" }],
-    });
+    await click(
+        ".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands [title='Channel settings']"
+    );
+    await contains(".o-mail-DiscussSidebar-commandsPopover");
+    await click("[title='Leave this channel']");
     await click("button", { text: "Leave Conversation" });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "General" });
     await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
@@ -347,6 +384,39 @@ test("sidebar: unpin chat from bus", async () => {
     pyEnv["bus.bus"]._sendone(partner, "discuss.channel/unpin", { id: channelId });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Demo" });
     await contains(".o-mail-Discuss-threadName", { count: 0, value: "Demo" });
+});
+
+test("sidebar: should be able to execute 'Mark as read' from the sidebar and update the needaction counter as well", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "Hello world",
+        model: "discuss.channel",
+        res_id: channelId,
+        message_type: "comment",
+    });
+    onRpcBefore("/discuss/channel/mark_as_read", () => step("mark_as_read"));
+    await start();
+    await openDiscuss();
+    await contains(".o-mail-DiscussSidebarChannel");
+    await contains(".o-mail-DiscussSidebarChannel", { text: "Demo" });
+    await contains(".o-mail-DiscussSidebarChannel img[data-alt='Thread Image']");
+    await contains(".o-mail-DiscussSidebar-badge", { text: "1" });
+    await click(
+        ".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands [title='Channel settings']"
+    );
+    await contains(".o-mail-DiscussSidebar-commandsPopover");
+    await click("[title='Mark as read']");
+    await assertSteps(["mark_as_read"]);
+    await contains(".o-mail-DiscussSidebar-badge", { count: 0 });
 });
 
 test("chat - channel should count unread message [REQUIRE FOCUS]", async () => {
@@ -1130,7 +1200,9 @@ test("Can unpin chat channel", async () => {
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", { text: "Mitchell Admin" });
-    await click(".o-mail-DiscussSidebarChannel [title='Unpin Conversation']");
+    await click(".o-mail-DiscussSidebarChannel [title='Channel settings']");
+    await contains(".o-mail-DiscussSidebar-commandsPopover");
+    await click("[title='Unpin Conversation']");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Mitchell Admin" });
 });
 
@@ -1150,7 +1222,9 @@ test("Unpinning chat should display notification", async () => {
     });
     await start();
     await openDiscuss();
-    await click(".o-mail-DiscussSidebarChannel [title='Unpin Conversation']");
+    await click(".o-mail-DiscussSidebarChannel [title='Channel settings']");
+    await contains(".o-mail-DiscussSidebar-commandsPopover");
+    await click("[title='Unpin Conversation']");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
     await contains(".o_notification:has(.o_notification_bar.bg-info)", {
         text: "You unpinned your conversation with Mario",
@@ -1173,6 +1247,8 @@ test("Can leave channel", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-DiscussSidebarChannel", { text: "General" });
+    await click(".o-mail-DiscussSidebarChannel [title='Channel settings']");
+    await contains(".o-mail-DiscussSidebar-commandsPopover");
     await click("[title='Leave this channel']");
     await click("button", { text: "Leave Conversation" });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "General" });
@@ -1184,7 +1260,9 @@ test("Do no channel_info after unpin", async () => {
     onRpcBefore("/discuss/channel/info", () => step("channel_info"));
     await start();
     await openDiscuss(channelId);
-    await click(".o-mail-DiscussSidebarChannel-commands [title='Unpin Conversation']");
+    await click(".o-mail-DiscussSidebarChannel [title='Channel settings']");
+    await contains(".o-mail-DiscussSidebar-commandsPopover");
+    await click("[title='Unpin Conversation']");
     rpc("/mail/message/post", {
         thread_id: channelId,
         thread_model: "discuss.channel",
@@ -1237,9 +1315,11 @@ test("Unpinning channel closes its chat window", async () => {
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow", { text: "Sales" });
     await openDiscuss();
-    await click("[title='Leave this channel']", {
+    await click("[title='Channel settings']", {
         parent: [".o-mail-DiscussSidebarChannel", { text: "Sales" }],
     });
+    await contains(".o-mail-DiscussSidebar-commandsPopover");
+    await click("[title='Leave this channel']");
     await openFormView("discuss.channel");
     await contains(".o-mail-ChatWindow", { count: 0, text: "Sales" });
 });
@@ -1289,4 +1369,27 @@ test("sidebar: show loading on initial opening", async () => {
         { count: 0 }
     );
     await contains(".o-mail-DiscussSidebarChannel", { text: "General" });
+});
+
+test("sidebar-settings: opens ChannelInvitation or NotificationSettings on clicking respective options", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
+    await start();
+    await openDiscuss();
+    await contains(".o-mail-DiscussSidebarChannel", { text: "Demo" });
+    await click(
+        ".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands [title='Channel settings']"
+    );
+    await contains(".o-mail-DiscussSidebar-commandsPopover");
+    await click("[title='Invite People']");
+    await contains(".o-discuss-ChannelInvitation-has-size-constraints");
+    await click("[title='Notification Settings']");
+    await contains(".o-discuss-NotificationSettings");
 });
