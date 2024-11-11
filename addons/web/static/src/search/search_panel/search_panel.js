@@ -315,6 +315,9 @@ export class SearchPanel extends Component {
     }
 
     updateActiveValues() {
+        if (this.sections.length === 0) {
+            this.state.sidebarExpanded = false;
+        }
         for (const section of this.sections) {
             if (section.type === "category") {
                 this.state.active[section.id] = section.activeValueId;

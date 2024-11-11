@@ -31,6 +31,15 @@ class Foo extends models.Model {
         ],
     });
 
+    _records = [
+        {
+            aaa: "a",
+        },
+        {
+            aaa: "b",
+        },
+    ];
+
     _views = {
         search: `
             <search>
@@ -105,7 +114,7 @@ test(`Rendering with default ControlPanel and SearchPanel`, async () => {
             });
             useSubEnv({ searchModel: this.searchModel });
             onWillStart(async () => {
-                await this.searchModel.load({ resModel: "foo" });
+                await this.searchModel.load({ resModel: "foo" , searchViewId: false});
             });
         }
     }
