@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { _t, translationIsReady } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { Interaction } from "./interaction";
 import { ColibriApp } from "./colibri";
 import { getTemplate } from "@web/core/templates";
@@ -39,7 +39,6 @@ class WebsiteCore {
 
     async _mountComponent(el, C) {
         if (!this.owlApp) {
-            await translationIsReady;
             const { App } = odoo.loader.modules.get("@odoo/owl");
             const appConfig = {
                 name: "Odoo Website",
@@ -107,6 +106,7 @@ class WebsiteCore {
 }
 
 registry.category("services").add("website_core", {
+    dependencies: ["localization"],
     async start(env) {
         const websiteCore = new WebsiteCore(env);
         activeElementRegistry.addEventListener("UPDATE", async (ev) => {
