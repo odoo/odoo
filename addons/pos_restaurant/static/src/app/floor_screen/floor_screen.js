@@ -153,9 +153,8 @@ export class FloorScreen extends Component {
                 table.position_h = table.getX();
                 table.position_v = table.getY();
                 if (table.parent_id) {
-                    this.pos.data.write("restaurant.table", [table.id], {
-                        parent_id: null,
-                    });
+                    this.unMergeTable(table);
+                    this.pos.data.write("restaurant.table", [table.id], { parent_id: null });
                 }
             },
             onWillStartDrag: ({ element, x, y }) => {
@@ -229,12 +228,22 @@ export class FloorScreen extends Component {
                     return;
                 }
                 const oToTrans = this.pos.getActiveOrdersOnTable(table)[0];
-                if (oToTrans) {
-                    this.pos.transferOrder(oToTrans.uuid, this.state.potentialLink.parent);
-                }
                 this.pos.data.write("restaurant.table", [table.id], {
                     parent_id: this.state.potentialLink.parent.id,
                 });
+                if (oToTrans) {
+                    const destinationTable = this.pos.getMainTable(this.state.potentialLink.parent);
+                    const destinationTableOrder =
+                        this.pos.getActiveOrdersOnTable(destinationTable)[0];
+                    this.pos.transferOrder(oToTrans.uuid, this.state.potentialLink.parent, false);
+
+                    if (
+                        Object.keys(oToTrans.last_order_preparation_change.lines).length > 0 &&
+                        destinationTableOrder
+                    ) {
+                        this.pos.sendOrderInPreparation(oToTrans, true);
+                    }
+                }
                 this.state.potentialLink = null;
             },
         });
@@ -536,6 +545,34 @@ export class FloorScreen extends Component {
         newTableData.active = true;
         const table = await this.pos.data.create("restaurant.table", [newTableData]);
         return table[0];
+    }
+    async unMergeTable(table) {
+        const destinationTable = this.pos.getMainTable(table);
+        const destinationTableOrder = this.pos.getActiveOrdersOnTable(destinationTable)?.[0];
+        const orderToRestore = this.pos.models["pos.order"].filter(
+            (o) => (o.table_id?.id === table.id || o.uiState.initialTable) && !o.finalized
+        )[0];
+        if (orderToRestore) {
+            // If no active order on the destination table, restore the original order
+            if (!destinationTableOrder || destinationTableOrder.id === orderToRestore.id) {
+                const order = this.pos.models["pos.order"].getBy("uuid", orderToRestore.uuid);
+                order.update({ table_id: table });
+                this.pos.set_order(order);
+                this.pos.addPendingOrder([order.id]);
+            } else {
+                await this.pos.restoreOrdersToOriginalTable(orderToRestore);
+            }
+
+            const updatePreparationChange = async (order) => {
+                if (Object.keys(order?.last_order_preparation_change?.lines || {}).length > 0) {
+                    await this.pos.sendOrderInPreparationUpdateLastChange(order);
+                }
+            };
+            await updatePreparationChange(orderToRestore);
+            if (destinationTableOrder && destinationTableOrder.id !== orderToRestore.id) {
+                await updatePreparationChange(destinationTableOrder);
+            }
+        }
     }
     _getNewTableNumber() {
         let firstNum = 1;

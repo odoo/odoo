@@ -340,7 +340,13 @@ patch(PosStore.prototype, {
             [...el.classList].find((c) => c.includes("tableId")).split("-")[1]
         );
     },
-    async transferOrder(orderUuid, destinationTable) {
+    getMainTable(table) {
+        while (table.parent_id) {
+            table = table.parent_id;
+        }
+        return table;
+    },
+    async transferOrder(orderUuid, destinationTable, releaseOriginalTable = true) {
         const order = this.models["pos.order"].getBy("uuid", orderUuid);
         const originalTable = order.table_id;
         this.loadingOrderState = false;
@@ -351,22 +357,38 @@ patch(PosStore.prototype, {
             return;
         }
         if (!this.tableHasOrders(destinationTable)) {
+            order.uiState.initialTable = order.table_id.id;
             order.update({ table_id: destinationTable });
             this.set_order(order);
             this.addPendingOrder([order.id]);
         } else {
-            const destinationOrder = this.getActiveOrdersOnTable(destinationTable)[0];
+            const mainTable = this.getMainTable(destinationTable);
+            const destinationOrder = this.getActiveOrdersOnTable(mainTable)[0];
             const linesToUpdate = [];
             for (const orphanLine of order.lines) {
+                if (!orphanLine.uiState.initialOrder) {
+                    orphanLine.uiState.initialOrder = order.id;
+                }
                 const adoptingLine = destinationOrder.lines.find((l) =>
                     l.can_be_merged_with(orphanLine)
                 );
                 if (adoptingLine) {
+                    orphanLine.uiState.mergedLine = {
+                        line: adoptingLine.id,
+                        OrginalQty: adoptingLine.qty,
+                    };
                     adoptingLine.merge(orphanLine);
                 } else {
                     linesToUpdate.push(orphanLine);
                 }
             }
+            order.uiState.initialOrderLines = order.lines.map((line) => line.id);
+            if (destinationTable.uiState.childTable) {
+                destinationTable.uiState.childTable.push(order.table_id.id);
+            } else {
+                destinationTable.uiState.childTable = [order.table_id.id];
+            }
+
             linesToUpdate.forEach((orderline) => {
                 orderline.update({ order_id: destinationOrder });
             });
@@ -374,9 +396,43 @@ patch(PosStore.prototype, {
             if (destinationOrder?.id) {
                 this.addPendingOrder([destinationOrder.id]);
             }
-            await this.deleteOrders([order]);
+            if (releaseOriginalTable) {
+                await this.deleteOrders([order]);
+            }
         }
         await this.setTable(destinationTable);
+    },
+    async restoreOrdersToOriginalTable(order) {
+        const orderlines = (order.uiState.initialOrderLines || [])
+            .map((orderlineId) => this.models["pos.order.line"].getBy("id", orderlineId))
+            .filter(Boolean);
+
+        for (const orderline of orderlines) {
+            if (
+                orderline.uiState.initialOrder === order.id ||
+                orderline.order_id.table_id.uiState?.childTable?.length
+            ) {
+                orderline.update({ order_id: order });
+                if (orderline.uiState.mergedLine) {
+                    const mergedLine = this.models["pos.order.line"].getBy(
+                        "id",
+                        orderline.uiState.mergedLine.line
+                    );
+                    if (mergedLine) {
+                        mergedLine.set_quantity(orderline.uiState.mergedLine.OrginalQty);
+                        this.addPendingOrder([mergedLine.order_id.id]);
+                    }
+                }
+            }
+        }
+
+        const childTable = order.table_id.parent_id.uiState?.childTable || [];
+        order.table_id.parent_id.uiState.childTable = childTable.filter(
+            (id) => id !== order.table_id.id
+        );
+        this.set_order(order);
+        this.addPendingOrder([order.id]);
+        await this.setTable(order.table_id);
     },
     updateTables(...tables) {
         this.data.call("restaurant.table", "update_tables", [
