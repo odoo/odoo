@@ -119,7 +119,7 @@ class IrWebsocket(models.AbstractModel):
         if bus_target := self._get_missed_presences_bus_target():
             data["missed_presences"]._send_presence(bus_target=bus_target)
 
-    def _update_bus_presence(self, inactivity_period, im_status_ids_by_model):
+    def _update_bus_presence(self, inactivity_period):
         if self.env.user and not self.env.user._is_public():
             self.env['bus.presence'].update_presence(
                 inactivity_period,

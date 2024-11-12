@@ -26,10 +26,7 @@ export const imStatusService = {
         const updateBusPresence = () => {
             lastSentInactivity = presence.getInactivityPeriod();
             startAwayTimeout();
-            bus_service.send("update_presence", {
-                inactivity_period: lastSentInactivity,
-                im_status_ids_by_model: {},
-            });
+            bus_service.send("update_presence", { inactivity_period: lastSentInactivity });
         };
         this.updateBusPresence = updateBusPresence;
 
