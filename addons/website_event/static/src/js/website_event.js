@@ -1,10 +1,29 @@
 /** @odoo-module **/
 
 import publicWidget from "@web/legacy/js/public/public_widget";
+import { _t } from "@web/core/l10n/translation";
+import { ReCaptcha } from "@google_recaptcha/js/recaptcha";
 import { rpc } from "@web/core/network/rpc";
 
 // Catch registration form event, because of JS for attendee details
 var EventRegistrationForm = publicWidget.Widget.extend({
+
+    /**
+     * @constructor
+     */
+    init: function () {
+        this._super(...arguments);
+        this._recaptcha = new ReCaptcha();
+        this.notification = this.bindService("notification");
+    },
+
+    /**
+     * @override
+     */
+    willStart: async function () {
+        this._recaptcha.loadLibs();
+        return this._super(...arguments);
+    },
 
     /**
      * @override
@@ -50,6 +69,7 @@ var EventRegistrationForm = publicWidget.Widget.extend({
         const formEl = ev.currentTarget.closest("form");
         const buttonEl = ev.currentTarget.closest("[type='submit']");
         const post = this._getPost();
+<<<<<<< 18.0
         buttonEl.disabled = true;
         return rpc(formEl.action, post).then((modal) => {
             const modalEl = new DOMParser().parseFromString(modal, "text/html").body.firstChild;
@@ -64,8 +84,61 @@ var EventRegistrationForm = publicWidget.Widget.extend({
             const formModal = Modal.getOrCreateInstance(modalEl, {
                 backdrop: "static",
                 keyboard: false,
+||||||| 20e36f91c7de1ff0eb7370fa780a69872ee54485
+        $button.attr('disabled', true);
+        return rpc($form.attr('action'), post).then(function (modal) {
+            var $modal = $(modal);
+            $modal.find('.modal-body > div').removeClass('container'); // retrocompatibility - REMOVE ME in master / saas-19
+            $modal.appendTo(document.body);
+            const modalBS = new Modal($modal[0], {backdrop: 'static', keyboard: false});
+            modalBS.show();
+            $modal.appendTo('body').modal('show');
+            $modal.on('click', '.js_goto_event', function () {
+                $modal.modal('hide');
+                $button.prop('disabled', false);
             });
+            $modal.on('click', '.btn-close', function () {
+                $button.prop('disabled', false);
+=======
+        $button.attr('disabled', true);
+        const self = this;
+        return rpc($form.attr('action'), post).then(async function (modal) {
+            const tokenObj = await self._recaptcha.getToken('website_event_registration');
+            if (tokenObj.error) {
+                self.notification.add(tokenObj.error, {
+                    type: "danger",
+                    title: _t("Error"),
+                    sticky: true,
+                });
+                $button.prop('disabled', false);
+                return false;
+            }
+            var $modal = $(modal);
+            $modal.find('.modal-body > div').removeClass('container'); // retrocompatibility - REMOVE ME in master / saas-19
+            $modal.appendTo(document.body);
+            const modalBS = new Modal($modal[0], {backdrop: 'static', keyboard: false});
+            modalBS.show();
+            $modal.appendTo('body').modal('show');
+            $modal.on('click', '.js_goto_event', function () {
+                $modal.modal('hide');
+                $button.prop('disabled', false);
+            });
+            $modal.on('click', '.btn-close', function () {
+                $button.prop('disabled', false);
+>>>>>>> d29f13b0776624dbf7e63feda7a60f5d128eab28
+            });
+<<<<<<< 18.0
             formModal.show();
+||||||| 20e36f91c7de1ff0eb7370fa780a69872ee54485
+=======
+            $modal.on('submit', 'form', function (ev) {
+                const tokenInput = document.createElement('input');
+                tokenInput.setAttribute('name', 'recaptcha_token_response');
+                tokenInput.setAttribute('type', 'hidden');
+                tokenInput.setAttribute('value', tokenObj.token);
+                ev.currentTarget.appendChild(tokenInput);
+            })
+>>>>>>> d29f13b0776624dbf7e63feda7a60f5d128eab28
         });
     },
 });
