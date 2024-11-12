@@ -172,6 +172,24 @@
     </div>
 </t>
 
+<t t-name="mail.Message.bodyInForward">
+    <div>
+        <span>---------- Forwarded message ----------</span><br/>
+        <span>Date: <t t-esc="date"/></span><br/>
+        <span>From: <t t-esc="name"/> <a t-att-href="'mailto:' + email" target="_blank">&lt;<t t-esc="email"/>&gt;</a></span><br/>
+        <span>Subject: <t t-esc="message.subject || message.default_subject"/></span><br/>
+        <t t-out="body"/>
+    </div>
+</t>
+
+<t t-name="mail.Message.bodyInReply">
+    <div class="o_mail_reply_content">
+        <div class="d-none">
+            <span>On <t t-esc="date"/> <t t-esc="name"/> <a t-att-href="'mailto:' + email" target="_blank">&lt;<t t-esc="email"/>&gt;</a>wrote</span>
+            <blockquote t-out="body"/>
+        </div>
+    </div>
+</t>
 
 <t t-name="mail.Message.expandAction">
     <button class="btn border-0 rounded-0 o-mail-Message-expandBtn" t-att-title="expandText" t-on-click="openMobileActions" t-att-class="{

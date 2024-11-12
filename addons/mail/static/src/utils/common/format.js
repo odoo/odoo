@@ -1,8 +1,10 @@
+import { markup } from "@odoo/owl";
 import { stateToUrl } from "@web/core/browser/router";
 import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 
 import { escape, unaccent } from "@web/core/utils/strings";
 
+const Markup = markup().constructor;
 const urlRegexp =
     /\b(?:https?:\/\/\d{1,3}(?:\.\d{1,3}){3}|(?:https?:\/\/|(?:www\.))[-a-z0-9@:%._+~#=\u00C0-\u024F\u1E00-\u1EFF]{1,256}\.[a-z]{2,13})\b(?:[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|[.]*[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|,(?!$| )|\.(?!$| |\.)|;(?!$| ))*/gi;
 
@@ -232,6 +234,29 @@ async function _generateEmojisOnHtml(htmlString) {
         }
     }
     return htmlString;
+}
+
+export function getNonEditableMentions(body) {
+    const div = document.createElement("div");
+    if (body instanceof Markup) {
+        div.innerHTML = body;
+    } else {
+        div.textContent = body;
+    }
+    const htmlBody = new DOMParser().parseFromString(div.innerHTML, "text/html");
+
+    for (const block of htmlBody.body.querySelectorAll(".o_mail_reply_hide")) {
+        block.classList.remove("o_mail_reply_hide");
+    }
+    // for mentioned partner
+    for (const mention of htmlBody.body.querySelectorAll(".o_mail_redirect")) {
+        mention.setAttribute("contenteditable", false);
+    }
+    // for mentioned channel
+    for (const mention of htmlBody.body.querySelectorAll(".o_channel_redirect")) {
+        mention.setAttribute("contenteditable", false);
+    }
+    return markup(htmlBody.body.innerHTML);
 }
 
 export function htmlToTextContentInline(htmlString) {

@@ -379,6 +379,15 @@ export class Message extends Record {
     }
 
     /** @param {import("models").Thread} thread the thread where the message is shown */
+    canReplyAllandForward(thread) {
+        return (
+            !["discuss.channel", "mail.box"].includes(thread.model) &&
+            ["comment", "email"].includes(this.message_type) &&
+            !this.is_note
+        );
+    }
+
+    /** @param {import("models").Thread} thread the thread where the message is shown */
     canUnfollow(thread) {
         return Boolean(this.thread?.selfFollower && thread?.model === "mail.box");
     }

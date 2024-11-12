@@ -1658,10 +1658,32 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                 if notify_skip_followers:
                     self.assertEqual(
                         message.notified_partner_ids, self.partner_admin,
-                        'notify_skip_followers parameters is either broken, either not propagated')
+                        'notify_skip_followers parameter is either broken, either not propagated')
                 else:
                     self.assertEqual(message.notified_partner_ids, self.partner_employee_2 + self.partner_admin,
                                      'classic notify: followers + recipients - author')
+                self.assertEqual(message.partner_ids, self.partner_admin)
+
+        # check notification UI control parameters
+        for option in (False, 'reply_all', 'forward'):
+            with self.subTest(option=option):
+                composer = self.env['mail.compose.message'].with_user(self.env.user).with_context(
+                    self._get_web_context(self.test_record),
+                ).create({
+                    'body': 'Test Notify Params',
+                    'message_type': 'comment',
+                    'composition_comment_option': option,
+                    'partner_ids': [(4, self.partner_admin.id)],
+                    'subtype_id': self.env.ref('mail.mt_comment').id,
+                })
+                _mail, message = composer._action_send_mail()
+                if option == 'reply_all':
+                    self.assertEqual(
+                        message.notified_partner_ids, self.partner_admin,
+                        'Either reply_all is broken, either notify_skip_followers parameter is broken')
+                else:
+                    self.assertEqual(message.notified_partner_ids, self.partner_employee_2 + self.partner_admin,
+                                        'classic notify: followers + recipients - author')
                 self.assertEqual(message.partner_ids, self.partner_admin)
 
     @users('employee')
