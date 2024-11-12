@@ -40,7 +40,6 @@ export class ColumnPlugin extends Plugin {
                 run: this.columnize.bind(this),
             },
         ],
-        unremovable_node_predicates: isUnremovableColumn,
         powerbox_items: [
             {
                 title: _t("2 columns"),
@@ -83,6 +82,7 @@ export class ColumnPlugin extends Plugin {
                 text: _t("Empty column"),
             },
         ],
+        unremovable_node_predicates: isUnremovableColumn,
         power_buttons_visibility_predicates: ({ anchorNode }) =>
             !closestElement(anchorNode, ".o_text_columns"),
     };

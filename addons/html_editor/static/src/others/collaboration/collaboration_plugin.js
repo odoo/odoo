@@ -26,12 +26,16 @@ export class CollaborationPlugin extends Plugin {
     static id = "collaboration";
     static dependencies = ["history", "selection", "sanitize"];
     resources = {
-        set_attribute_overrides: this.setAttribute.bind(this),
-        history_step_processors: this.processHistoryStep.bind(this),
-        unreversible_step_predicates: this.isUnreversibleStep.bind(this),
+        /** Handlers */
         history_cleaned_handlers: this.onHistoryClean.bind(this),
         history_reset_handlers: this.onHistoryReset.bind(this),
         step_added_handlers: ({ step }) => this.onStepAdded(step),
+
+        /** Overrides */
+        set_attribute_overrides: this.setAttribute.bind(this),
+
+        history_step_processors: this.processHistoryStep.bind(this),
+        unreversible_step_predicates: this.isUnreversibleStep.bind(this),
     };
     static shared = [
         "getBranchIds",
