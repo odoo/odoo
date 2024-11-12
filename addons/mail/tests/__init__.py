@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import test_attachment_controller
-from . import test_binary_controller
 from . import test_discuss_tools
 from . import test_ir_mail_server
 from . import test_ir_ui_menu

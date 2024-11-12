@@ -141,15 +141,14 @@ class MailControllerBinaryCommon(MailControllerCommon):
         for data_user, allowed in subtests:
             user, guest = self._authenticate_pseudo_user(data_user)
             with self.subTest(user=user.name, guest=guest.name, record=record):
-                guest_or_partner = record if record._name == "mail.guest" else record.partner_id
                 if allowed:
                     self.assertEqual(
-                        self._get_avatar_url(guest_or_partner).headers["Content-Disposition"],
-                        f'inline; filename="{guest_or_partner.name}.svg"',
+                        self._get_avatar_url(record).headers["Content-Disposition"],
+                        f'inline; filename="{record.name}.svg"',
                     )
                 else:
                     self.assertEqual(
-                        self._get_avatar_url(guest_or_partner).headers["Content-Disposition"],
+                        self._get_avatar_url(record).headers["Content-Disposition"],
                         "inline; filename=placeholder.png",
                     )
 
@@ -157,13 +156,13 @@ class MailControllerBinaryCommon(MailControllerCommon):
         url = f"/web/image?field=avatar_128&id={record.id}&model={record._name}&unique={fields.Datetime.to_string(record.write_date)}"
         return self.url_open(url)
 
-    def _send_message(self, author, thread_model, thread_id):
-        _user, _guest = self._authenticate_pseudo_user(author)
+    def _post_message(self, document, auth_pseudo_user):
+        _user, _guest = self._authenticate_pseudo_user(auth_pseudo_user)
         self.make_jsonrpc_request(
             route="/mail/message/post",
             params={
-                "thread_model": thread_model,
-                "thread_id": thread_id,
+                "thread_model": document._name,
+                "thread_id": document.id,
                 "post_data": {
                     "body": "Test",
                     "message_type": "comment",
