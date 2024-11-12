@@ -4,16 +4,15 @@ import { startInteraction } from "./helpers";
 import { Interaction } from "@website/core/interaction";
 import { animationFrame, click, dblclick } from "@odoo/hoot-dom";
 
-
 test("crashes if a dynamic content element does not start with t-", async () => {
     class Test extends Interaction {
-        static selector=".test";
+        static selector = ".test";
         static dynamicContent = {
-            "span:click": "doSomething"
-        }
+            "span:click": "doSomething",
+        };
         doSomething() {}
     }
-    
+
     let error = null;
     try {
         await startInteraction(Test, `<div class="test"></div>`);
@@ -21,27 +20,31 @@ test("crashes if a dynamic content element does not start with t-", async () => 
         error = e;
     }
     expect(error).not.toBe(null);
-    expect(error.message).toBe("Invalid directive: 'click' (should start with t-)")
+    expect(error.message).toBe(
+        "Invalid directive: 'click' (should start with t-)",
+    );
 });
 
 describe("event handling", () => {
-
     test("can add a listener on a single element", async () => {
         let clicked = false;
         class Test extends Interaction {
-            static selector=".test";
+            static selector = ".test";
             static dynamicContent = {
-                "span:t-on-click": "doSomething"
-            }
+                "span:t-on-click": "doSomething",
+            };
             doSomething() {
                 clicked = true;
             }
         }
-        
-        const { el } = await startInteraction(Test, `
+
+        const { el } = await startInteraction(
+            Test,
+            `
         <div class="test">
             <span>coucou</span>
-        </div>`);
+        </div>`,
+        );
         expect(clicked).toBe(false);
         await click(el.querySelector("span"));
         expect(clicked).toBe(true);
@@ -50,19 +53,22 @@ describe("event handling", () => {
     test("can add a listener on root element", async () => {
         let clicked = false;
         class Test extends Interaction {
-            static selector=".test";
+            static selector = ".test";
             static dynamicContent = {
-                "_root:t-on-click": "doSomething"
-            }
+                "_root:t-on-click": "doSomething",
+            };
             doSomething() {
                 clicked = true;
             }
         }
-        
-        const { el } = await startInteraction(Test, `
+
+        const { el } = await startInteraction(
+            Test,
+            `
         <div class="test">
             <span>coucou</span>
-        </div>`);
+        </div>`,
+        );
         expect(clicked).toBe(false);
         await click(el.querySelector(".test"));
         expect(clicked).toBe(true);
@@ -71,42 +77,47 @@ describe("event handling", () => {
     test("can add a listener on body element", async () => {
         let clicked = false;
         class Test extends Interaction {
-            static selector=".test";
+            static selector = ".test";
             static dynamicContent = {
-                "_body:t-on-click": "doSomething"
-            }
+                "_body:t-on-click": "doSomething",
+            };
             doSomething() {
                 clicked = true;
             }
         }
-        
-        await startInteraction(Test, `
+
+        await startInteraction(
+            Test,
+            `
         <div class="test">
             <span>coucou</span>
-        </div>`);
+        </div>`,
+        );
         expect(clicked).toBe(false);
         await click(document.body);
         expect(clicked).toBe(true);
     });
 
-
     test("can add a listener on a multiple elements", async () => {
         let clicked = 0;
         class Test extends Interaction {
-            static selector=".test";
+            static selector = ".test";
             static dynamicContent = {
-                "span:t-on-click": "doSomething"
-            }
+                "span:t-on-click": "doSomething",
+            };
             doSomething() {
                 clicked++;
             }
         }
-        
-        const { el } = await startInteraction(Test, `
+
+        const { el } = await startInteraction(
+            Test,
+            `
         <div class="test">
             <span>coucou1</span>
             <span>coucou2</span>
-        </div>`);
+        </div>`,
+        );
         expect(clicked).toBe(0);
         for (let span of el.querySelectorAll("span")) {
             await click(span);
@@ -117,43 +128,49 @@ describe("event handling", () => {
     test("can add multiple listeners on a element", async () => {
         let clicked = 0;
         class Test extends Interaction {
-            static selector=".test";
+            static selector = ".test";
             static dynamicContent = {
                 "span:t-on-click": "doSomething",
                 "span:t-on-dblclick": "doSomething",
-            }
+            };
             doSomething() {
                 clicked++;
             }
         }
-        
-        const { el } = await startInteraction(Test, `
+
+        const { el } = await startInteraction(
+            Test,
+            `
             <div class="test">
                 <span>coucou</span>
-            </div>`);
+            </div>`,
+        );
         expect(clicked).toBe(0);
         const span = el.querySelector("span");
-        await dblclick(span)
+        await dblclick(span);
         // dblclick = 2 clicks and 1 dblcli
-        expect(clicked).toBe(3); 
+        expect(clicked).toBe(3);
     });
 
     test("listener is cleaned up when interaction is stopped", async () => {
         let clicked = 0;
         class Test extends Interaction {
-            static selector=".test";
+            static selector = ".test";
             static dynamicContent = {
-                "span:t-on-click": "doSomething"
-            }
+                "span:t-on-click": "doSomething",
+            };
             doSomething() {
                 clicked++;
             }
         }
-        
-        const { el, core } = await startInteraction(Test, `
+
+        const { el, core } = await startInteraction(
+            Test,
+            `
         <div class="test">
             <span>coucou</span>
-        </div>`);
+        </div>`,
+        );
         expect(clicked).toBe(0);
         await click(el.querySelector("span"));
         expect(clicked).toBe(1);
@@ -165,20 +182,23 @@ describe("event handling", () => {
     test("listener added with addDomListener is cleaned up", async () => {
         let clicked = 0;
         class Test extends Interaction {
-            static selector=".test";
+            static selector = ".test";
 
             setup() {
-                this.addDomListener("span", "click", this.doSomething)
+                this.addDomListener("span", "click", this.doSomething);
             }
             doSomething() {
                 clicked++;
             }
         }
-        
-        const { el, core } = await startInteraction(Test, `
+
+        const { el, core } = await startInteraction(
+            Test,
+            `
         <div class="test">
             <span>coucou</span>
-        </div>`);
+        </div>`,
+        );
         expect(clicked).toBe(0);
         await click(el.querySelector("span"));
         expect(clicked).toBe(1);
@@ -187,14 +207,13 @@ describe("event handling", () => {
         expect(clicked).toBe(1);
     });
 
-
     test("dom is updated after event is dispatched", async () => {
         class Test extends Interaction {
-            static selector=".test";
+            static selector = ".test";
             static dynamicContent = {
                 "span:t-on-click": "doSomething",
-                "span:t-att-data-count": "this.n"
-            }
+                "span:t-att-data-count": "this.n",
+            };
 
             setup() {
                 this.n = 1;
@@ -204,11 +223,14 @@ describe("event handling", () => {
                 this.n++;
             }
         }
-        
-        const { el } = await startInteraction(Test, `
+
+        const { el } = await startInteraction(
+            Test,
+            `
         <div class="test">
             <span>coucou</span>
-        </div>`);
+        </div>`,
+        );
         const span = el.querySelector("span");
         expect(span.dataset.count).toBe("1");
         await click(span);
@@ -221,7 +243,7 @@ describe("event handling", () => {
 describe("lifecycle", () => {
     test("lifecycle methods are called in order", async () => {
         class Test extends Interaction {
-            static selector=".test";
+            static selector = ".test";
             setup() {
                 expect.step("setup");
             }
@@ -235,11 +257,14 @@ describe("lifecycle", () => {
                 expect.step("destroy");
             }
         }
-        
-        const { el, core } = await startInteraction(Test, `
+
+        const { el, core } = await startInteraction(
+            Test,
+            `
             <div class="test">
                 <span>coucou</span>
-            </div>`);
+            </div>`,
+        );
 
         expect.verifySteps(["setup", "willStart", "start"]);
         core.stopInteractions();

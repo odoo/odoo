@@ -13,13 +13,13 @@ test("wait for translation before starting interactions", async () => {
     let started = false;
 
     class Test extends Interaction {
-        static selector=".test";
+        static selector = ".test";
 
         setup() {
             started = true;
         }
     }
-    
+
     const p = startInteraction(Test, `<div class="test"></div>`);
     await animationFrame();
     expect(started).toBe(false);
@@ -28,5 +28,4 @@ test("wait for translation before starting interactions", async () => {
     await p;
     await animationFrame();
     expect(started).toBe(true);
-
 });
