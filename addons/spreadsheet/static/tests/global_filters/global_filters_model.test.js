@@ -361,7 +361,7 @@ test("Can import/export filters", async function () {
             {
                 id: "sheet1",
                 cells: {
-                    A1: { content: `=PIVOT.VALUE("1", "probability")` },
+                    A1: '=PIVOT.VALUE("1", "probability")',
                 },
             },
         ],
@@ -1184,7 +1184,7 @@ test("load data only once if filter is not active (without default value)", asyn
             {
                 id: "sheet1",
                 cells: {
-                    A1: { content: `=PIVOT.VALUE("1", "probability:sum")` },
+                    A1: '=PIVOT.VALUE("1", "probability:sum")',
                 },
             },
         ],
@@ -1233,7 +1233,7 @@ test("load data only once if filter is active (with a default value)", async fun
             {
                 id: "sheet1",
                 cells: {
-                    A1: { content: `=PIVOT.VALUE("1", "probability:sum")` },
+                    A1: '=PIVOT.VALUE("1", "probability:sum")',
                 },
             },
         ],
@@ -1278,7 +1278,7 @@ test("don't reload data if an empty filter is added", async function () {
             {
                 id: "sheet1",
                 cells: {
-                    A1: { content: `=PIVOT.VALUE("1", "probability:sum")` },
+                    A1: '=PIVOT.VALUE("1", "probability:sum")',
                 },
             },
         ],
@@ -1457,10 +1457,10 @@ test("Export global filters for excel", async function () {
     expect(filterSheet).not.toBe(undefined, {
         message: "A sheet to export global filters was created",
     });
-    expect(filterSheet.cells["A1"].content).toBe("Filter");
-    expect(filterSheet.cells["A2"].content).toBe(filter.label);
-    expect(filterSheet.cells["B1"].content).toBe("Value");
-    expect(filterSheet.cells["B2"].content).toBe(
+    expect(filterSheet.cells["A1"]).toBe("Filter");
+    expect(filterSheet.cells["A2"]).toBe(filter.label);
+    expect(filterSheet.cells["B1"]).toBe("Value");
+    expect(filterSheet.cells["B2"]).toBe(
         model.getters.getFilterDisplayValue(filter.label)[0][0].value
     );
     model.exportXLSX(); // should not crash
@@ -1488,11 +1488,11 @@ test("Export from/to global filters for excel", async function () {
     const exportData = { styles: {}, formats: {}, sheets: [] };
     filterPlugin.exportForExcel(exportData);
     const filterSheet = exportData.sheets[0];
-    expect(filterSheet.cells["A1"].content).toBe("Filter");
-    expect(filterSheet.cells["A2"].content).toBe(filter.label);
-    expect(filterSheet.cells["B1"].content).toBe("Value");
-    expect(filterSheet.cells["B2"].content).toBe("43831");
-    expect(filterSheet.cells["C2"].content).toBe("44197");
+    expect(filterSheet.cells["A1"]).toBe("Filter");
+    expect(filterSheet.cells["A2"]).toBe(filter.label);
+    expect(filterSheet.cells["B1"]).toBe("Value");
+    expect(filterSheet.cells["B2"]).toBe("43831");
+    expect(filterSheet.cells["C2"]).toBe("44197");
     expect(filterSheet.formats["B2"]).toBe(1);
     expect(filterSheet.formats["C2"]).toBe(1);
     expect(exportData.formats[1]).toBe("m/d/yyyy");

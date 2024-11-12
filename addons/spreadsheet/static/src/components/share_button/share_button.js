@@ -57,7 +57,7 @@ export class SpreadsheetShareButton extends Component {
         const newCells = data.sheets[data.sheets.length - 1].cells;
         if (this.lastGlobalFilters !== undefined) {
             for (const key of Object.keys(newCells)) {
-                if (this.lastGlobalFilters[key]?.content !== newCells[key].content) {
+                if (this.lastGlobalFilters[key] !== newCells[key]) {
                     globalFilterChanged = true;
                     break;
                 }

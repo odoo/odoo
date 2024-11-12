@@ -316,7 +316,7 @@ test("user context is combined with list context to fetch data", async function 
             {
                 id: "sheet1",
                 cells: {
-                    A1: { content: `=ODOO.LIST("1", "1", "name")` },
+                    A1: '=ODOO.LIST("1", "1", "name")',
                 },
             },
         ],
@@ -733,9 +733,9 @@ test("fetch all and only required fields", async function () {
             {
                 id: "sheet1",
                 cells: {
-                    A1: { content: '=ODOO.LIST(1, 1, "foo")' }, // in the definition
-                    A2: { content: '=ODOO.LIST(1, 1, "product_id")' }, // not in the definition
-                    A3: { content: '=ODOO.LIST(1, 1, "invalid_field")' },
+                    A1: '=ODOO.LIST(1, 1, "foo")', // in the definition
+                    A2: '=ODOO.LIST(1, 1, "product_id")', // not in the definition
+                    A3: '=ODOO.LIST(1, 1, "invalid_field")',
                 },
             },
         ],
@@ -775,9 +775,9 @@ test("fetch all required positions, including the evaluated ones", async functio
             {
                 id: "sheet1",
                 cells: {
-                    A1: { content: '=ODOO.LIST(1, 11, "foo")' },
-                    A2: { content: '=ODOO.LIST(1, A3, "foo")' },
-                    A3: { content: "111" },
+                    A1: '=ODOO.LIST(1, 11, "foo")',
+                    A2: '=ODOO.LIST(1, A3, "foo")',
+                    A3: "111",
                 },
             },
         ],
@@ -832,7 +832,7 @@ test("List record limit is computed during the import and UPDATE_CELL", async fu
             {
                 id: "sheet1",
                 cells: {
-                    A1: { content: `=ODOO.LIST("1", "1", "foo")` },
+                    A1: '=ODOO.LIST("1", "1", "foo")',
                 },
             },
         ],

@@ -183,7 +183,7 @@ test("Last selected spreadsheet is kept when go back from breadcrumb", async fun
         sheets: [
             {
                 id: "sheet1",
-                cells: { A1: { content: `=PIVOT.VALUE("1", "probability")` } },
+                cells: { A1: { content: '=PIVOT.VALUE("1", "probability")' } },
             },
         ],
         pivots: {
