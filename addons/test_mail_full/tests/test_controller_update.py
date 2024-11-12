@@ -4,8 +4,17 @@ from odoo.tests import tagged
 
 @tagged("-at_install", "post_install", "mail_controller")
 class TestPortalMessageUpdateController(MailControllerUpdateCommon):
+
+    def test_message_update_no_message(self):
+        """Test update a non-existing message."""
+        self._execute_subtests(
+            self.fake_message,
+            ((user, False) for user in [self.guest, self.user_admin, self.user_employee, self.user_portal, self.user_public]),
+        )
+
     def test_message_update_portal(self):
-        """Test Only Admin and Portal User can update a portal user message on a record with no assigned partner."""
+        """Test only admin and author can modify content of a message, works if
+        author is a portal user. """
         record = self.env["mail.test.portal.no.partner"].create({"name": "Test"})
         token, bad_token, sign, bad_sign, _ = self._get_sign_token_params(record)
         message = record.message_post(
@@ -30,9 +39,6 @@ class TestPortalMessageUpdateController(MailControllerUpdateCommon):
                 (self.user_employee, False),
                 (self.user_employee, False, token),
                 (self.user_employee, False, sign),
-                (self.user_demo, False),
-                (self.user_demo, False, token),
-                (self.user_demo, False, sign),
                 (self.user_admin, True),
                 (self.user_admin, True, bad_token),
                 (self.user_admin, True, bad_sign),
