@@ -3,7 +3,7 @@ import path from "node:path";
 
 import { parse as babelParser, ParseResult } from "@babel/parser";
 import traverse, { NodePath } from "@babel/traverse";
-import { cloneNode, File } from "@babel/types";
+import { cloneNode, File, ImportDeclaration } from "@babel/types";
 import { parse, print } from "recast"; // https://github.com/benjamn/recast
 
 import { remove_odoo_module_comment } from "../operations/remove_odoo_module_comment";
@@ -171,6 +171,17 @@ export function toAbsolutePath(odooPath: string, env: ExtendedEnv) {
     }
     const dirname = path.dirname(env.inFilePath);
     return path.resolve(dirname, odooPath);
+}
+
+export function getAbsolutePathFromImportDeclaration(
+    declarationPath: NodePath<ImportDeclaration>,
+    env: ExtendedEnv,
+): string {
+    let absolutePath = toAbsolutePath(declarationPath.node.source.value, env);
+    if (!absolutePath.endsWith(".js")) {
+        absolutePath += ".js";
+    }
+    return absolutePath;
 }
 
 // TO IMPROVE

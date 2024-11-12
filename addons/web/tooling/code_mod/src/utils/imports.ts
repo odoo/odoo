@@ -1,5 +1,5 @@
 import { NodePath } from "@babel/traverse";
-import { ImportDeclaration, Program } from "@babel/types";
+import { cloneNode, ImportDeclaration, Program, stringLiteral } from "@babel/types";
 
 import { ExtendedEnv } from "./env";
 import { ensureProgramPath, getProgramPath } from "./node_path";
@@ -38,10 +38,41 @@ export function addImports(path: NodePath | null, imports: ImportDeclaration[], 
     for (const imp of imports) {
         addImport(programPath, imp, env);
     }
-    if (!env.tagAsModified) {
-        debugger
-    }
     env.tagAsModified(env.inFilePath);
+}
+
+
+export function getNormalizedNode(
+    declarationPath: NodePath<ImportDeclaration>,
+    env: ExtendedEnv,
+) {
+    const n = cloneNode(declarationPath.node);
+    n.source.value = normalizeSource(n.source.value, env)
+    return n;
+}
+
+export function normalizeImport(
+    declarationPath: NodePath<ImportDeclaration>,
+    env: ExtendedEnv,
+) {
+    const s = normalizeSource(declarationPath.node.source.value, env);
+    if (s !== declarationPath.node.source.value) {
+        declarationPath.node.source.value = s;
+        env.tagAsModified(env.inFilePath);
+    }
+}
+
+export function normalizeImports(path: NodePath | null, env: ExtendedEnv) {
+    const programPath = ensureProgramPath(path);
+    if (!programPath) {
+        return;
+    }
+    programPath.traverse({
+        ImportDeclaration(path) {
+            normalizeImport(path, env);
+            path.skip();
+        },
+    });
 }
 
 export function removeUnusedImports(path: NodePath | null, env: ExtendedEnv) {
@@ -51,10 +82,10 @@ export function removeUnusedImports(path: NodePath | null, env: ExtendedEnv) {
     }
     const usedSpecifiers = new Set();
     programPath.traverse({
-        ImportDeclaration: (p) => {
+        ImportDeclaration(p) {
             p.skip();
         },
-        Identifier: (p) => {
+        Identifier(p) {
             const path = p.scope.getBinding(p.node.name)?.path || null;
             if (
                 path &&
@@ -67,7 +98,7 @@ export function removeUnusedImports(path: NodePath | null, env: ExtendedEnv) {
         },
     });
     programPath.traverse({
-        ImportDeclaration: (path) => {
+        ImportDeclaration(path) {
             let hasRemovedSomething = false;
             for (const s of path.get("specifiers")) {
                 const name = s.node.local.name;

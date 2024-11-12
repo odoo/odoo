@@ -6,8 +6,8 @@ import { ExtendedEnv } from "../utils/env";
 import { ensureProgramPath, getObjectPropertyPath, getProgramPath } from "../utils/node_path";
 import { DeclarationPattern, ExpressionPattern } from "../utils/pattern";
 import { isViewRegistry } from "../utils/registry";
-import { isJsFile, normalizeSource, toAbsolutePath } from "../utils/utils";
-import { addImports, removeUnusedImports } from "../utils/imports";
+import { getAbsolutePathFromImportDeclaration, isJsFile, normalizeSource } from "../utils/utils";
+import { addImports, getNormalizedNode, removeUnusedImports } from "../utils/imports";
 
 // for ast descriptions see https://github.com/babel/babel/blob/master/packages/babel-parser/ast/spec.md
 
@@ -45,27 +45,6 @@ function getDeclarationPath(id: NodePath<t.Identifier>): NodePath<t.Declaration>
         return path.parentPath;
     }
     return null;
-}
-
-function normalize(
-    declarationPath: NodePath<t.ImportDeclaration>,
-    env: ExtendedEnv,
-): t.ImportDeclaration {
-    const s = normalizeSource(declarationPath.node.source.value, env);
-    const clone = t.cloneNode(declarationPath.node);
-    clone.source = t.stringLiteral(s);
-    return clone;
-}
-
-function getAbsolutePathFromImportDeclaration(
-    declarationPath: NodePath<t.ImportDeclaration>,
-    env: ExtendedEnv,
-): string {
-    let absolutePath = toAbsolutePath(declarationPath.node.source.value, env);
-    if (!absolutePath.endsWith(".js")) {
-        absolutePath += ".js";
-    }
-    return absolutePath;
 }
 
 export function getDefinitionFor(
@@ -137,7 +116,8 @@ function getClassPropertyForProps(
             }
             const declarationPath = getDeclarationPath(path);
             if (declarationPath && declarationPath.isImportDeclaration()) {
-                const declarationNode = normalize(declarationPath, env);
+                const declarationNode = getNormalizedNode(declarationPath, env);
+                debugger
                 declarations.push(declarationNode);
             }
         },
@@ -202,7 +182,7 @@ function copyKeys(
                 if (value.isIdentifier()) {
                     const declarationPath = getDeclarationPath(value);
                     if (declarationPath && declarationPath.isImportDeclaration()) {
-                        const declarationNode = normalize(declarationPath, env);
+                        const declarationNode = getNormalizedNode(declarationPath, env);
                         declarations.push(declarationNode);
                     }
                 }
