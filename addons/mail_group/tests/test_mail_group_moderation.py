@@ -107,7 +107,7 @@ class TestMailGroupModeration(TestMailListCommon):
         rule.email = '"Alice" <alice@test.com>'
         self.assertEqual(rule.email, 'alice@test.com')
 
-    @mute_logger('odoo.addons.base.models.ir_rule', 'odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_moderation_rule_security(self):
         with self.assertRaises(AccessError, msg='Portal should not have access to moderation rules'):
             self.env['mail.group.moderation'].with_user(self.user_portal).browse(self.moderation.ids).email

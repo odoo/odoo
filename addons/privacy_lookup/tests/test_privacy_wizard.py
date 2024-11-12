@@ -45,11 +45,6 @@ class TestPrivacyWizard(TransactionCase):
 
     def test_wizard_multi_company(self):
         # Check that the record is spotted, even if not available on the Reference field
-        self.env['ir.rule'].create({
-            'name': 'Multi-Company Rule',
-            'model_id': self.env.ref('base.model_res_partner').id,
-            'domain_force': "['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]"
-        })
         company_2 = self.env['res.company'].create({'name': 'Company 2'})
         other_partner = self.env['res.partner'].create({
             'name': 'Rintin Tin',

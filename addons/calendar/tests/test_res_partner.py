@@ -54,12 +54,12 @@ class TestResPartner(TransactionCase):
 
         #Test rule to see if ir.rules are applied
         calendar_event_model_id = self.env['ir.model']._get('calendar.event').id
-        self.env['ir.rule'].create({'name': 'test_rule',
-                                    'model_id': calendar_event_model_id,
-                                    'domain_force': [('name', 'not in', ['event_9', 'event_10'])],
-                                    'perm_read': True,
-                                    'perm_create': False,
-                                    'perm_write': False})
+        self.env['ir.access'].create({
+            'name': 'test_rule',
+            'model_id': calendar_event_model_id,
+            'operation': 'r',
+            'domain': [('name', 'not in', ['event_9', 'event_10'])],
+        })
 
         Event.create({'name': 'event_9',
                       'partner_ids': [(6, 0, [test_partner_2.id,
