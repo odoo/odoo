@@ -111,10 +111,10 @@ class TestSubqueries(TransactionCase):
                 ON ("test_new_api_multi"."partner" = "test_new_api_multi__partner"."id")
             WHERE (
                 "test_new_api_multi__partner"."id" IS NULL OR (
-                    NOT ((
+                    ((
                         ("test_new_api_multi__partner"."name" LIKE %s)
                         OR ("test_new_api_multi__partner"."phone" LIKE %s)
-                    ))
+                    )) IS NOT TRUE
                 )
             )
             ORDER BY "test_new_api_multi"."id"
