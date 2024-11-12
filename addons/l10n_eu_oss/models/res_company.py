@@ -150,6 +150,12 @@ class Company(models.Model):
             country = self.account_fiscal_country_id
         chart_template = self.env['account.chart.template']._guess_chart_template(country)
 
+        # If that l10n module isn't installed, it means the company doesn't use any tax report for that country
+        # and thus hasn't nor need those tax report tag
+        is_coa_module_installed = self.env['account.chart.template']._get_chart_template_mapping()[chart_template]['installed']
+        if not is_coa_module_installed:
+            chart_template = None
+
         tag_for_country = EU_TAG_MAP.get(chart_template, {
             'invoice_base_tag': None,
             'invoice_tax_tag': None,
