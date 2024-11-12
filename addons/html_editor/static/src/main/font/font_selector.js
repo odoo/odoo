@@ -28,7 +28,7 @@ export class FontSelector extends Component {
     }
 
     get fontName() {
-        const sel = this.props.getSelection();
+        const sel = this.props.getSelection().deepEditableSelection;
         // if (!sel) {
         //     return "Normal";
         // }
@@ -53,7 +53,7 @@ export class FontSelector extends Component {
     }
 
     get fontSizeName() {
-        const sel = this.props.getSelection();
+        const sel = this.props.getSelection().deepEditableSelection;
         if (!sel) {
             return this.items[0].name;
         }
