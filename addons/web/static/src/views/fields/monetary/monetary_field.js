@@ -109,7 +109,7 @@ export const monetaryField = {
             availableTypes: ["many2one"],
         },
     ],
-    supportedTypes: ["monetary", "float"],
+    supportedTypes: ["monetary", "float", "integer"],
     displayName: _t("Monetary"),
     extractProps: ({ attrs, options }) => ({
         currencyField: options.currency_field,
