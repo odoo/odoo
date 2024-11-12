@@ -895,6 +895,16 @@ class configmanager:
                 "%s: directory is not writable" % d
         return d
 
+    @property
+    def is_testing(self):
+        """Indicate whether the configuration specified to be run in test mode.
+
+        Note that you should probably use: `odoo.modules.module.current_test`
+        if you want to check whether we are running tests.
+        This option is only for launching the server.
+        """
+        return bool(self['test_enable'] or self['test_file'])
+
     def filestore(self, dbname):
         return os.path.join(self['data_dir'], 'filestore', dbname)
 
