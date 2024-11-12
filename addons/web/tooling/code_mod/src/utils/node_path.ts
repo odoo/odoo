@@ -1,5 +1,5 @@
 import traverse, { NodePath } from "@babel/traverse";
-import t, { Node, ObjectExpression, Program } from "@babel/types";
+import { isIdentifier, Node, ObjectExpression, Program } from "@babel/types";
 
 export function getPath(ast: Node | null): NodePath | null {
     if (!ast) {
@@ -38,7 +38,7 @@ export function getObjectPropertyPath(path: NodePath<ObjectExpression> | null, n
         return null;
     }
     for (const p of path.get("properties")) {
-        if (p.isObjectProperty() && t.isIdentifier(p.node.key, { name })) {
+        if (p.isObjectProperty() && isIdentifier(p.node.key, { name })) {
             return p.get("value");
         }
     }

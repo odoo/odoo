@@ -123,9 +123,7 @@ export function executeOnJsFilesInDir(
     while ((fsDirent = fsDir.readSync())) {
         const direntPath = path.join(dirPath, fsDirent.name);
         if (fsDirent.isFile() /*&& direntPath.includes("/static/") **/) {
-            const extendedEnv = Object.create(env) as ExtendedEnv;
-            extendedEnv.inFilePath = direntPath;
-            operation(extendedEnv);
+            operation({ ...env, inFilePath: direntPath });
         } else if (
             fsDirent.isDirectory() &&
             fsDirent.name !== "node_modules" &&

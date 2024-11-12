@@ -38,6 +38,9 @@ export function addImports(path: NodePath | null, imports: ImportDeclaration[], 
     for (const imp of imports) {
         addImport(programPath, imp, env);
     }
+    if (!env.tagAsModified) {
+        debugger
+    }
     env.tagAsModified(env.inFilePath);
 }
 
