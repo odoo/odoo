@@ -2342,15 +2342,7 @@ class MailThread(models.AbstractModel):
                     content = content.as_bytes()
                 elif content is None:
                     continue
-                attachement_values = {
-                    'name': name,
-                    'datas': base64.b64encode(content),
-                    'type': 'binary',
-                    'description': name,
-                    'res_model': model,
-                    'res_id': res_id,
-                    **(info.get('extra_values') or {}),
-                }
+                attachement_values = self._prepare_attachment_post_values(content, name, model, res_id, info)
                 token = False
                 if (cid and cid in body_cids) or (name and name in body_filenames):
                     token = self.env['ir.attachment']._generate_access_token()
@@ -2388,6 +2380,16 @@ class MailThread(models.AbstractModel):
                     return_values['body'] = Markup(lxml.html.tostring(root, pretty_print=False, encoding='unicode'))
         return_values['attachment_ids'] = m2m_attachment_ids
         return return_values
+
+    def _prepare_attachment_post_values(self, content, name, model, res_id, extra_info):
+        return {
+            'name': name,
+            'datas': base64.b64encode(content),
+            'type': 'binary',
+            'description': name,
+            'res_model': model,
+            'res_id': res_id,
+        }
 
     def _process_attachments_for_template_post(self, mail_template):
         """ Model specific management of attachments used with template attachments

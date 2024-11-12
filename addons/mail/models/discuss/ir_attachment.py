@@ -7,21 +7,21 @@ from odoo.addons.mail.tools.discuss import Store
 class IrAttachment(models.Model):
     _inherit = ["ir.attachment"]
 
-    is_voice = fields.Boolean("Is Voice", compute="_compute_is_voice", inverse="_inverse_is_voice")
-    voice_ids = fields.One2many("discuss.voice.metadata", "attachment_id")
+    is_voice = fields.Boolean("Is Voice")
+    # voice_ids = fields.One2many("discuss.voice.metadata", "attachment_id")
 
-    def _compute_is_voice(self):
-        voice_data = dict(self.env['discuss.voice.metadata'].sudo()._read_group(
-            [('attachment_id', 'in', self.ids)], groupby=['attachment_id'], aggregates=['id:recordset'],
-        )) if self else {}
-        for attachment in self:
-            attachment.is_voice = attachment in voice_data
+    # def _compute_is_voice(self):
+    #     voice_data = dict(self.env['discuss.voice.metadata'].sudo()._read_group(
+    #         [('attachment_id', 'in', self.ids)], groupby=['attachment_id'], aggregates=['id:recordset'],
+    #     )) if self else {}
+    #     for attachment in self:
+    #         attachment.is_voice = attachment in voice_data
 
-    def _inverse_is_voice(self):
-        todo = self.sudo().filtered(lambda a: a.is_voice and not a.voice_ids)
-        if todo:
-            self.env["discuss.voice.metadata"].create([{"attachment_id": att.id} for att in todo])
-        self.filtered(lambda a: not a.is_voice).sudo().voice_ids.unlink()
+    # def _inverse_is_voice(self):
+    #     todo = self.sudo().filtered(lambda a: a.is_voice and not a.voice_ids)
+    #     if todo:
+    #         self.env["discuss.voice.metadata"].create([{"attachment_id": att.id} for att in todo])
+    #     self.filtered(lambda a: not a.is_voice).sudo().voice_ids.unlink()
 
     def _bus_channel(self):
         self.ensure_one()
