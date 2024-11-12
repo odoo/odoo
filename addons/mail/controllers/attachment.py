@@ -56,6 +56,7 @@ class AttachmentController(http.Controller):
         if thread_model == "discuss.channel" and not thread.allow_public_upload and not request.env.user._is_internal():
             raise AccessError(_("You are not allowed to upload attachments on this channel."))
         vals = {
+            "is_voice": kwargs.pop("voice", False),
             "name": ufile.filename,
             "raw": ufile.read(),
             "res_id": int(thread_id),

@@ -15,7 +15,7 @@ from odoo.tests import HttpCase, tagged, users
 from odoo.tools import html_escape, mute_logger
 
 
-@tagged("post_install", "-at_install")
+@tagged("post_install", "-at_install", "discuss_channel_internals")
 class TestChannelInternals(MailCommon, HttpCase):
 
     @classmethod
@@ -468,8 +468,14 @@ class TestChannelInternals(MailCommon, HttpCase):
     def test_channel_message_post_with_voice_attachment(self):
         """ Test 'voice' info being supported to create voice metadata. """
         channel = self.env['discuss.channel'].create({'name': 'channel_1'})
-        channel.message_post(attachments=[('audio', b'OggS\x00\x02', {'voice': True})])
-        self.assertTrue(channel.message_ids.attachment_ids.voice_ids, "message's attachment should have voice metadata")
+        channel.message_post(attachments=[('audio', b'OggS\x00\x02', {'extra_values': {'is_voice': True}})])
+        attachment = channel.message_ids.attachment_ids
+        self.assertTrue(attachment.voice_ids, "message's attachment should have voice metadata")
+        self.assertTrue(attachment.is_voice, "message's attachment should be flagged as voice")
+
+        # revert is_voice flag
+        attachment.is_voice = False
+        self.assertFalse(self.env["discuss.voice.metadata"].search([("attachment_id", "in", attachment.ids)]))
 
     @mute_logger('odoo.models.unlink')
     def test_channel_unsubscribe_auto(self):
