@@ -88,6 +88,26 @@ messageActionsRegistry
         onClick: (component) => component.props.message.unfollow(),
         sequence: 60,
     })
+    .add("reply-all", {
+        condition: (component) =>
+            component.props.message.canReplyandForwardToComments(component.props.thread),
+        icon: "fa fa-reply",
+        title: _t("Reply All"),
+        onClick: (component) => {
+            component.onClickReplyMessage();
+        },
+        sequence: 71,
+    })
+    .add("forward", {
+        condition: (component) =>
+            component.props.message.canReplyandForwardToComments(component.props.thread),
+        icon: "fa fa-share",
+        title: _t("Forward"),
+        onClick: (component) => {
+            component.onClickFowardMessage();
+        },
+        sequence: 72,
+    })
     .add("edit", {
         condition: (component) => component.props.message.editable,
         icon: "fa fa-pencil",
