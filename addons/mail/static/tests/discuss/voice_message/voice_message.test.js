@@ -137,10 +137,10 @@ test("make voice message in chat", async () => {
             return super.drawWave(...args);
         },
         async fetchFile() {
-            return super.fetchFile("/mail/static/src/audio/call_02_in_.mp3");
+            return super.fetchFile("/mail/static/src/audio/call-invitation.mp3");
         },
         _fetch(url) {
-            if (url.includes("call_02_in_.mp3")) {
+            if (url.includes("call-invitation.mp3")) {
                 const realFetch = globals.fetch;
                 return realFetch(...arguments);
             }
@@ -190,7 +190,7 @@ test("make voice message in chat", async () => {
     await voicePlayerDrawing;
     await contains(".o-mail-VoicePlayer button[title='Play']");
     await contains(".o-mail-VoicePlayer canvas", { count: 2 }); // 1 for global waveforms, 1 for played waveforms
-    await contains(".o-mail-VoicePlayer", { text: "00 : 04" }); // duration of call_02_in_.mp3
+    await contains(".o-mail-VoicePlayer", { text: "00 : 03" }); // duration of call-invitation_.mp3
     await click(".o-mail-Composer button[title='More Actions']");
     await contains(".dropdown-item:contains('Attach Files')"); // check menu loaded
     await contains(".dropdown-item:contains('Voice Message')", { count: 0 }); // only 1 voice message at a time

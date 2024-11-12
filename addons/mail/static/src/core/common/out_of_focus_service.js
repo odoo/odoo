@@ -3,7 +3,6 @@ import { htmlToTextContentInline } from "@mail/utils/common/format";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { url } from "@web/core/utils/urls";
 
 const PREVIEW_MSG_MAX_SIZE = 350; // optimal for native English speakers
 
@@ -24,6 +23,7 @@ export class OutOfFocusService {
         this.audio = undefined;
         this.multiTab = services.multi_tab;
         this.notificationService = services.notification;
+        this.soundEffectService = services["mail.sound_effects"];
         this.closeFuncs = [];
     }
 
@@ -141,20 +141,9 @@ export class OutOfFocusService {
         }
     }
 
-    async _playSound() {
+    _playSound() {
         if (this.canPlayAudio && this.multiTab.isOnMainTab()) {
-            if (!this.audio) {
-                this.audio = new Audio();
-                this.audio.src = this.audio.canPlayType("audio/ogg; codecs=vorbis")
-                    ? url("/mail/static/src/audio/ting.ogg")
-                    : url("/mail/static/src/audio/ting.mp3");
-            }
-            try {
-                await this.audio.play();
-            } catch {
-                // Ignore errors due to the user not having interracted
-                // with the page before playing the sound.
-            }
+            this.soundEffectService.play("new-message");
         }
     }
 
@@ -168,7 +157,7 @@ export class OutOfFocusService {
 }
 
 export const outOfFocusService = {
-    dependencies: ["multi_tab", "notification"],
+    dependencies: ["multi_tab", "notification", "mail.sound_effects"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services
