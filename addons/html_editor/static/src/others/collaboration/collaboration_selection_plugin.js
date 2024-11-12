@@ -14,10 +14,12 @@ export class CollaborationSelectionPlugin extends Plugin {
     static id = "collaborationSelection";
     static dependencies = ["history", "collaborationOdoo", "localOverlay"];
     resources = {
+        /** Handlers */
         collaboration_notification_handlers: this.handleCollaborationNotification.bind(this),
-        collaboration_peer_metadata_providers: () => ({ selectionColor: this.selectionColor }),
         layout_geometry_change_handlers: this.refreshSelection.bind(this),
         collaborative_selection_update_handlers: this.updateSelection.bind(this),
+
+        collaboration_peer_metadata_providers: () => ({ selectionColor: this.selectionColor }),
     };
     selectionInfos = new Map();
 

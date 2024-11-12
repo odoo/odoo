@@ -23,12 +23,9 @@ export class QWebPlugin extends Plugin {
     static id = "qweb";
     static dependencies = ["overlay", "selection"];
     resources = {
+        /** Handlers */
         selectionchange_handlers: this.onSelectionChange.bind(this),
-        savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
         clean_handlers: this.clearDataAttributes.bind(this),
-        unremovable_node_predicates: (node) =>
-            node.getAttribute?.("t-set") || node.getAttribute?.("t-call"),
-        unsplittable_node_predicates: isUnsplittableQWebElement,
         clean_for_save_handlers: ({ root }) => {
             this.clearDataAttributes(root);
             for (const element of root.querySelectorAll("[t-esc], [t-raw], [t-out], [t-field]")) {
@@ -36,6 +33,11 @@ export class QWebPlugin extends Plugin {
             }
         },
         normalize_handlers: this.normalize.bind(this),
+
+        savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
+        unremovable_node_predicates: (node) =>
+            node.getAttribute?.("t-set") || node.getAttribute?.("t-call"),
+        unsplittable_node_predicates: isUnsplittableQWebElement,
     };
 
     setup() {

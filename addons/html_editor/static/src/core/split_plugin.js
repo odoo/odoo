@@ -31,6 +31,8 @@ export class SplitPlugin extends Plugin {
         "isUnsplittable",
     ];
     resources = {
+        beforeinput_handlers: this.onBeforeInput.bind(this),
+
         unsplittable_node_predicates: [
             // An unremovable element is also unmergeable (as merging two
             // elements results in removing one of them).
@@ -46,7 +48,6 @@ export class SplitPlugin extends Plugin {
             (node) => node.classList?.contains("oe_unbreakable"),
             (node) => ["DIV", "SECTION"].includes(node.nodeName),
         ],
-        beforeinput_handlers: this.onBeforeInput.bind(this),
     };
 
     // --------------------------------------------------------------------------
