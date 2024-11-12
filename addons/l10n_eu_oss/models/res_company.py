@@ -28,8 +28,11 @@ class Company(models.Model):
             ('module', '=', 'account'),
             ('model', '=', 'account.tax.group')])
         for company in self:
-            # instantiate OSS taxes on the first branch with a TAX ID, default on root company
-            company = company.parent_ids.filtered(lambda c: c.vat)[-1:] or company.root_id
+            # instantiate OSS taxes on the highest parent company of the same country that has a tax id
+            relevant_parent_companies = company.parent_ids.filtered(
+                lambda c: c.vat and c.account_fiscal_country_id == company.account_fiscal_country_id
+            )
+            company = relevant_parent_companies[:1] or company.root_id
             invoice_repartition_lines, refund_repartition_lines = company._get_repartition_lines_oss()
             taxes = self.env['account.tax'].search([
                 *self.env['account.tax']._check_company_domain(company),
