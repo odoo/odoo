@@ -36,6 +36,9 @@ class MessagePostSubTestData:
 
 
 class MailControllerCommon(HttpCaseWithUserDemo, MailCommon):
+    # Note that '_get_with_access' is going to call '_get_thread_with_access'
+    # which relies on classic portal parameter given as kwargs on most routes
+    # (aka hash, token, pid)
 
     @classmethod
     def setUpClass(cls):
@@ -47,13 +50,16 @@ class MailControllerCommon(HttpCaseWithUserDemo, MailCommon):
         last_message = cls.env["mail.message"].search([], order="id desc", limit=1)
         cls.fake_message = cls.env["mail.message"].browse(last_message.id + 1000000)
 
-    def _authenticate_user(self, user=None, guest=None):
-        if not user or user == self.user_public:
-            self.authenticate(None, None)
-        else:
+    def _authenticate_pseudo_user(self, pseudo_user):
+        user = pseudo_user if pseudo_user._name == "res.users" else self.user_public
+        guest = pseudo_user if pseudo_user._name == "mail.guest" else self.env["mail.guest"]
+        if user and user != self.user_public:
             self.authenticate(user.login, user.login)
+        else:
+            self.authenticate(None, None)
         if guest:
             self.opener.cookies[guest._cookie_name] = guest._format_auth_cookie()
+        return user, guest
 
     def _get_sign_token_params(self, record):
         if 'access_token' not in record:
@@ -76,15 +82,11 @@ class MailControllerAttachmentCommon(MailControllerCommon):
     def _execute_subtests(self, record, subtests):
         for data_user, allowed, *args in subtests:
             route_kw = args[0] if args else {}
-            user = data_user if data_user._name == "res.users" else self.user_public
-            guest = data_user if data_user._name == "mail.guest" else self.env["mail.guest"]
-            self._authenticate_user(user=user, guest=guest)
+            user, guest = self._authenticate_pseudo_user(data_user)
             with self.subTest(record=record, user=user.name, guest=guest.name, route_kw=route_kw):
                 if allowed:
                     attachment_id = self._upload_attachment(record.id, record._name, route_kw)
-                    attachment = (
-                        self.env["ir.attachment"].sudo().search([("id", "=", attachment_id)])
-                    )
+                    attachment = self.env["ir.attachment"].sudo().search([("id", "=", attachment_id)])
                     self.assertTrue(attachment)
                     self._delete_attachment(attachment, route_kw)
                     self.assertFalse(attachment.exists())
@@ -137,9 +139,7 @@ class MailControllerBinaryCommon(MailControllerCommon):
 
     def _execute_subtests(self, record, subtests):
         for data_user, allowed in subtests:
-            user = data_user if data_user._name == "res.users" else self.user_public
-            guest = data_user if data_user._name == "mail.guest" else self.env["mail.guest"]
-            self._authenticate_user(user=user, guest=guest)
+            user, guest = self._authenticate_pseudo_user(data_user)
             with self.subTest(user=user.name, guest=guest.name, record=record):
                 guest_or_partner = record if record._name == "mail.guest" else record.partner_id
                 if allowed:
@@ -158,9 +158,7 @@ class MailControllerBinaryCommon(MailControllerCommon):
         return self.url_open(url)
 
     def _send_message(self, author, thread_model, thread_id):
-        user = author if author._name == "res.users" else self.user_public
-        guest = author if author._name == "mail.guest" else self.env["mail.guest"]
-        self._authenticate_user(user=user, guest=guest)
+        _user, _guest = self._authenticate_pseudo_user(author)
         self.make_jsonrpc_request(
             route="/mail/message/post",
             params={
@@ -186,14 +184,11 @@ class MailControllerReactionCommon(MailControllerCommon):
         for data_user, allowed, *args in subtests:
             route_kw = args[0] if args else {}
             kwargs = args[1] if len(args) > 1 else {}
-            user = data_user if data_user._name == "res.users" else self.user_public
-            guest = data_user if data_user._name == "mail.guest" else self.env["mail.guest"]
-            self._authenticate_user(user=user, guest=guest)
-            msg = str(message.body) if message != self.fake_message else "fake message"
-            with self.subTest(message=msg, user=user.name, guest=guest.name, route_kw=route_kw):
+            user, guest = self._authenticate_pseudo_user(data_user)
+            with self.subTest(user=user.name, guest=guest.name, route_kw=route_kw):
                 if allowed:
                     self._add_reaction(message, self.reaction, route_kw)
-                    reactions = self._find_reactions(message)
+                    reactions = message.reaction_ids
                     self.assertEqual(len(reactions), 1)
                     expected_partner = kwargs.get("partner")
                     if guest and not expected_partner:
@@ -201,7 +196,7 @@ class MailControllerReactionCommon(MailControllerCommon):
                     else:
                         self.assertEqual(reactions.partner_id, expected_partner or user.partner_id)
                     self._remove_reaction(message, self.reaction, route_kw)
-                    self.assertEqual(len(self._find_reactions(message)), 0)
+                    self.assertFalse(message.reaction_ids)
                 else:
                     with self.assertRaises(
                         JsonRpcException, msg="add reaction should raise NotFound"
@@ -224,22 +219,15 @@ class MailControllerReactionCommon(MailControllerCommon):
             params={"action": "remove", "content": content, "message_id": message.id, **route_kw},
         )
 
-    def _find_reactions(self, message):
-        return self.env["mail.message.reaction"].search([("message_id", "=", message.id)])
-
 
 class MailControllerThreadCommon(MailControllerCommon):
 
     def _execute_message_post_subtests(self, record, tests: list[MessagePostSubTestData]):
         for test in tests:
-            self._authenticate_user(user=test.user, guest=test.guest)
-            with self.subTest(
-                record=record, user=test.user.name, guest=test.guest.name, route_kw=test.route_kw
-            ):
+            self._authenticate_pseudo_user(test.user if (test.user and test.user != self.user_public) else test.guest)
+            with self.subTest(record=record, user=test.user.name, guest=test.guest.name, route_kw=test.route_kw):
                 if test.allowed:
-                    self._message_post(record, test.post_data, test.route_kw)
-                    message = self._find_message(record)
-                    self.assertTrue(message)
+                    message = self._message_post(record, test.post_data, test.route_kw)
                     if test.guest and not test.exp_author:
                         self.assertEqual(message.author_guest_id, test.guest)
                     else:
@@ -262,8 +250,6 @@ class MailControllerThreadCommon(MailControllerCommon):
                 **route_kw,
             },
         )
-
-    def _find_message(self, record):
         return self.env["mail.message"].search(
             [("res_id", "=", record.id), ("model", "=", record._name)], order="id desc", limit=1
         )
@@ -280,11 +266,8 @@ class MailControllerUpdateCommon(MailControllerCommon):
     def _execute_subtests(self, message, subtests):
         for data_user, allowed, *args in subtests:
             route_kw = args[0] if args else {}
-            user = data_user if data_user._name == "res.users" else self.user_public
-            guest = data_user if data_user._name == "mail.guest" else self.env["mail.guest"]
-            self._authenticate_user(user=user, guest=guest)
-            msg = str(message.body) if message != self.fake_message else "fake message"
-            with self.subTest(message=msg, user=user.name, guest=guest.name, route_kw=route_kw):
+            user, guest = self._authenticate_pseudo_user(data_user)
+            with self.subTest(user=user.name, guest=guest.name, route_kw=route_kw):
                 if allowed:
                     self._update_content(message.id, self.alter_message_body, route_kw)
                     self.assertEqual(message.body,
