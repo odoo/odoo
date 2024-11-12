@@ -73,6 +73,24 @@ class ThreadController(http.Controller):
             "messages": messages.ids,
         }
 
+    @http.route("/mail/thread/recipients", methods=["POST"], type="jsonrpc", auth="user")
+    def mail_thread_recipients(self, thread_model, thread_id, message_id=None):
+        """ Fetch discussion-based suggested recipients, creating partners on the fly """
+        thread = self._get_thread_with_access(thread_model, thread_id, mode='read')
+        if message_id:
+            message = self._get_message_with_access(message_id, mode="read")
+            suggested = thread._message_get_suggested_recipients(
+                reply_message=message, no_create=False,
+            )
+        else:
+            suggested = thread._message_get_suggested_recipients(
+                reply_discussion=True, no_create=False,
+            )
+        return [
+            {'id': info['partner_id'], 'email': info['email'], 'name': info['name']}
+            for info in suggested if info['partner_id']
+        ]
+
     @http.route("/mail/partner/from_email", methods=["POST"], type="jsonrpc", auth="user")
     def mail_thread_partner_from_email(self, thread_model, thread_id, emails):
         partners = [

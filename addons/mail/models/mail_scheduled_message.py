@@ -38,6 +38,9 @@ class MailScheduledMessage(models.Model):
         'ir.attachment', 'scheduled_message_attachment_rel',
         'scheduled_message_id', 'attachment_id',
         string='Attachments')
+    composition_comment_option = fields.Selection(
+        [('reply_all', 'Reply-All'), ('forward', 'Forward')],
+        string='Comment Options')  # mainly used for view in specific comment modes
 
     # related document
     model = fields.Char('Related Document Model', required=True)
