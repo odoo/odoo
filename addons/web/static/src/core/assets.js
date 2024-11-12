@@ -183,13 +183,20 @@ assets.getBundle = async function getBundle(bundleName, targetDoc = document) {
  * @param {string} bundleName
  * @returns {Promise[]}
  */
-assets.loadBundle = async function loadBundle(bundleName, targetDoc = document) {
+assets.loadBundle = async function loadBundle(
+    bundleName,
+    { targetDoc = document, css = true, js = true } = {}
+) {
     if (typeof bundleName === "string") {
         const desc = await assets.getBundle(bundleName);
-        return Promise.all([
-            ...(desc.cssLibs || []).map((url) => assets.loadCSS(url, { targetDoc })),
-            ...(desc.jsLibs || []).map((url) => assets.loadJS(url, targetDoc)),
-        ]);
+        const promises = [];
+        if (css && desc.cssLibs) {
+            promises.push(...desc.cssLibs.map((url) => assets.loadCSS(url, { targetDoc })));
+        }
+        if (js && desc.jsLibs) {
+            promises.push(...desc.jsLibs.map((url) => assets.loadJS(url, targetDoc)));
+        }
+        return Promise.all(promises);
     } else {
         throw new Error(
             `loadBundle(bundleName:string) accepts only bundleName argument as a string ! Not ${JSON.stringify(
@@ -208,8 +215,11 @@ export const loadCSS = function (url, targetDoc = document) {
 export const getBundle = function (bundleName) {
     return assets.getBundle(bundleName);
 };
-export const loadBundle = function (bundleName, targetDoc = document) {
-    return assets.loadBundle(bundleName, targetDoc);
+export const loadBundle = function (
+    bundleName,
+    { targetDoc = document, css = true, js = true } = {}
+) {
+    return assets.loadBundle(bundleName, { targetDoc, css, js });
 };
 
 /**
