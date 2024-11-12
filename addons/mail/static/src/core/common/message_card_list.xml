@@ -13,7 +13,7 @@
                     <Message hasActions="false" message="message" thread="props.thread" messageSearch="props.messageSearch"/>
                 </div>
             </div>
-            <span t-if="props.loadMore" t-ref="load-more"/>
+            <span t-if="props.loadMore" class="mb-1" t-ref="load-more"/>
             <p t-if="props.showEmpty !== undefined ? props.showEmpty : props.messages.length === 0" t-esc="emptyText" class="text-center fst-italic text-500 fs-6"/>
         </div>
     </t>
