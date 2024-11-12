@@ -75,17 +75,14 @@ class MailControllerCommon(HttpCaseWithUserDemo, MailCommon):
 
 
 class MailControllerAttachmentCommon(MailControllerCommon):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
 
-    def _execute_subtests(self, record, subtests):
+    def _execute_subtests(self, document, subtests):
         for data_user, allowed, *args in subtests:
             route_kw = args[0] if args else {}
             user, guest = self._authenticate_pseudo_user(data_user)
-            with self.subTest(record=record, user=user.name, guest=guest.name, route_kw=route_kw):
+            with self.subTest(document=document, user=user.name, guest=guest.name, route_kw=route_kw):
                 if allowed:
-                    attachment_id = self._upload_attachment(record.id, record._name, route_kw)
+                    attachment_id = self._upload_attachment(document, route_kw)
                     attachment = self.env["ir.attachment"].sudo().search([("id", "=", attachment_id)])
                     self.assertTrue(attachment)
                     self._delete_attachment(attachment, route_kw)
@@ -94,17 +91,17 @@ class MailControllerAttachmentCommon(MailControllerCommon):
                     with self.assertRaises(
                         HTTPError, msg="upload attachment should raise NotFound"
                     ):
-                        self._upload_attachment(record.id, record._name, route_kw)
+                        self._upload_attachment(document, route_kw)
 
-    def _upload_attachment(self, thread_id, thread_model, route_kw):
+    def _upload_attachment(self, document, route_kw):
         with mute_logger("odoo.http"), file_open("addons/web/__init__.py") as file:
             res = self.url_open(
                 url="/mail/attachment/upload",
                 data={
                     "csrf_token": Request.csrf_token(self),
                     "is_pending": True,
-                    "thread_id": thread_id,
-                    "thread_model": thread_model,
+                    "thread_id": document.id,
+                    "thread_model": document._name,
                     **route_kw,
                 },
                 files={"ufile": file},
@@ -116,8 +113,8 @@ class MailControllerAttachmentCommon(MailControllerCommon):
         self.make_jsonrpc_request(
             route="/mail/attachment/delete",
             params={
-                "attachment_id": attachment["id"],
-                "access_token": attachment["access_token"],
+                "attachment_id": attachment.id,
+                "access_token": attachment.access_token,
                 **route_kw,
             },
         )
