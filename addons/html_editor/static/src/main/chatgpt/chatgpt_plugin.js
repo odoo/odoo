@@ -6,6 +6,8 @@ import { ChatGPTAlternativesDialog } from "./chatgpt_alternatives_dialog";
 import { ChatGPTTranslateDialog } from "./chatgpt_translate_dialog";
 import { LanguageSelector } from "./language_selector";
 import { withSequence } from "@html_editor/utils/resource";
+import { allowsParagraphRelatedElements } from "@html_editor/utils/dom_info";
+import { closestBlock } from "@html_editor/utils/blocks";
 
 export class ChatGPTPlugin extends Plugin {
     static name = "chatgpt";
@@ -63,6 +65,21 @@ export class ChatGPTPlugin extends Plugin {
         const selection = this.shared.getEditableSelection();
         const dialogParams = {
             insert: (content) => {
+                if ([...(content.children || [])].filter(child => child.nodeName === 'P').length > 1) {
+                    // If several paragraphs are to be inserted into an element
+                    // which doesn't accept paragraph elements, replace the
+                    // original element with a paragraph so as not to leave an
+                    // empty block before the insertion.
+                    let selection = this.shared.getEditableSelection();
+                    if (!selection.isCollapsed) {
+                        this.dispatch("DELETE_SELECTION", { selection });
+                        selection = this.shared.getEditableSelection();
+                    }
+                    const startBlock = closestBlock(selection.anchorNode);
+                    if (!allowsParagraphRelatedElements(startBlock)) {
+                        this.dispatch("SET_TAG", { tagName: 'P' });
+                    }
+                }
                 const insertedNodes = this.shared.domInsert(content);
                 this.dispatch("ADD_STEP");
                 // Add a frame around the inserted content to highlight it for 2
