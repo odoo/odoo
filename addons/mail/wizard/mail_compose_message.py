@@ -1177,8 +1177,8 @@ class MailComposer(models.TransientModel):
         """
         recipients_info = self._get_recipients_data(mail_values_dict)
         blacklist_ids = self._get_blacklist_record_ids(mail_values_dict, recipients_info)
-        optout_emails = self._get_optout_emails(mail_values_dict)
-        done_emails = self._get_done_emails(mail_values_dict)
+        optout_emails = [tools.email_normalize(email) for email in self._get_optout_emails(mail_values_dict)]
+        done_emails = [tools.email_normalize(email) for email in self._get_done_emails(mail_values_dict)]
         sent_emails_mapping = {}  # distinct emails sent to each address as {email_address: [mail_values]}
 
         for record_id, mail_values in mail_values_dict.items():
@@ -1199,27 +1199,27 @@ class MailComposer(models.TransientModel):
                 mail_values['state'] = 'cancel'
                 mail_values['failure_type'] = 'mail_email_invalid'
             elif optout_emails and all(
-                    mail_to in optout_emails for mail_to in recipients['mail_to']
+                    mail_to in optout_emails for mail_to in recipients['mail_to_normalized']
                 ):
                 mail_values['state'] = 'cancel'
                 mail_values['failure_type'] = 'mail_optout'
             elif done_emails and all(
-                    mail_to in done_emails for mail_to in recipients['mail_to']
+                    mail_to in done_emails for mail_to in recipients['mail_to_normalized']
                 ):
                 mail_values['state'] = 'cancel'
                 mail_values['failure_type'] = 'mail_dup'
             elif (len(self.attachment_ids) == len(mail_values.get('attachment_ids', []))
                   and all(mail_to in sent_emails_mapping
                           for mail_to
-                          in recipients['mail_to'])
+                          in recipients['mail_to_normalized'])
                   and any(sent_mail.get('subject') == mail_values.get('subject')
                           and sent_mail.get('body') == mail_values.get('body')
-                          for mail_to in recipients['mail_to']
+                          for mail_to in recipients['mail_to_normalized']
                           for sent_mail in sent_emails_mapping[mail_to])):
                 mail_values['state'] = 'cancel'
                 mail_values['failure_type'] = 'mail_dup'
             else:
-                for mail_to in recipients['mail_to']:
+                for mail_to in recipients['mail_to_normalized']:
                     sent_emails_mapping.setdefault(mail_to, []).append(mail_values)
 
         done_emails += sent_emails_mapping.keys()
