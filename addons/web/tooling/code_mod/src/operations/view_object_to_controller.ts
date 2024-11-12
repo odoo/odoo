@@ -7,7 +7,7 @@ import { ensureProgramPath, getObjectPropertyPath, getProgramPath } from "../uti
 import { DeclarationPattern, ExpressionPattern } from "../utils/pattern";
 import { isViewRegistry } from "../utils/registry";
 import { isJsFile, normalizeSource, toAbsolutePath } from "../utils/utils";
-import { addImports } from "../utils/imports";
+import { addImports, removeUnusedImports } from "../utils/imports";
 
 // for ast descriptions see https://github.com/babel/babel/blob/master/packages/babel-parser/ast/spec.md
 
@@ -363,6 +363,7 @@ function viewObjectToController(path: NodePath | null, env: ExtendedEnv) {
                 const controllerValuePath = processView(viewDef, env);
                 if (controllerValuePath) {
                     __added.replaceWith(controllerValuePath);
+                    env.cleaning.add(() => removeUnusedImports(path, env));
                     return;
                 }
             }
