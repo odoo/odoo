@@ -1336,6 +1336,19 @@ class AccountMoveLine(models.Model):
             result = [fname for fname in result if fname not in weirdos]
         return result
 
+    @api.model
+    def _get_default_read_fields(self):
+        weirdos = {'term_key', 'epd_key', 'epd_needed', 'discount_allocation_key', 'discount_allocation_needed'}
+        return [fname for fname in self.fields_get(attributes=()) if fname not in weirdos]
+
+    def read(self, fields=None, load='_classic_read'):
+        fields = fields or self._get_default_read_fields()
+        return super().read(fields, load)
+
+    def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None, **read_kwargs):
+        fields = fields or self._get_default_read_fields()
+        return super().search_read(domain, fields, offset, limit, order, **read_kwargs)
+
     def invalidate_model(self, fnames=None, flush=True):
         # Invalidate cache of related moves
         if fnames is None or 'move_id' in fnames:

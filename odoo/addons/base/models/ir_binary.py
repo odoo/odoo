@@ -71,9 +71,10 @@ class IrBinary(models.AbstractModel):
         if record._name == 'ir.attachment' and field_name in ('raw', 'datas', 'db_datas'):
             return record._to_http_stream()
 
-        record.check_field_access_rights('read', [field_name])
+        field = record._fields[field_name]
+        record._check_field_access(field, 'read')
 
-        if record._fields[field_name].attachment:
+        if field.attachment:
             field_attachment = self.env['ir.attachment'].sudo().search(
                 domain=[('res_model', '=', record._name),
                         ('res_id', '=', record.id),

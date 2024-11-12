@@ -108,6 +108,9 @@ INSERT_BATCH_SIZE = 100
 UPDATE_BATCH_SIZE = 100
 SQL_DEFAULT = psycopg2.extensions.AsIs("DEFAULT")
 
+# hacky-ish way to prevent access to a field through the ORM (except for sudo mode)
+NO_ACCESS = '.'
+
 
 def class_name_to_model_name(classname: str) -> str:
     return regex_camel_case.sub(r'.\1', classname).lower()
@@ -1659,6 +1662,8 @@ class BaseModel(metaclass=MetaModel):
 
         if query.is_empty():
             # optimization: don't execute the query at all
+            if not self.env.su:  # check access to fields
+                self._determine_fields_to_fetch(field_names)
             return self.browse()
 
         fields_to_fetch = self._determine_fields_to_fetch(field_names)
@@ -2841,7 +2846,7 @@ class BaseModel(metaclass=MetaModel):
             fname = f"{fname}.{property_name}"
             raise ValueError(f"Invalid field {fname!r} on model {self._name!r}")
 
-        self.check_field_access_rights('read', [field.name])
+        self._check_field_access(field, 'read')
 
         field_to_flush = field if flush and fname != 'id' else None
         sql_field = SQL.identifier(alias, fname, to_flush=field_to_flush)
@@ -3651,7 +3656,7 @@ class BaseModel(metaclass=MetaModel):
         for fname, field in self._fields.items():
             if allfields and fname not in allfields:
                 continue
-            if not field.is_accessible(self.env):
+            if not self._has_field_access(field, 'read'):
                 continue
 
             description = field.get_description(self.env, attributes=attributes)
@@ -3660,8 +3665,73 @@ class BaseModel(metaclass=MetaModel):
         return res
 
     @api.model
-    def check_field_access_rights(self, operation, field_names):
+    def _has_field_access(self, field: Field, operation: str) -> bool:
+        """ Determine whether the user access rights on the given field for the given operation.
+        You may override this method to customize the access to fields.
+
+        :param field: the field to check
+        :param operation: one of ``create``, ``read``, ``write``, ``unlink``
+        :return: whether the field is accessible
+        """
+        if not field.groups or self.env.su:
+            return True
+        if field.groups == NO_ACCESS:
+            return False
+        return self.env.user.has_groups(field.groups)
+
+    @api.model
+    def _check_field_access(self, field: Field, operation: str) -> None:
+        """Check the user access rights on the given field.
+
+        :param field: the field to check
+        :param operation: one of ``create``, ``read``, ``write``, ``unlink``
+        :raise AccessError: if the user is not allowed to access the provided field
+        """
+        if self._has_field_access(field, operation):
+            return
+
+        _logger.info('Access Denied by ACLs for operation: %s, uid: %s, model: %s, field: %s',
+            operation, self.env.uid, self._name, field.name)
+
+        description = self.env['ir.model']._get(self._name).name
+
+        error_msg = _(
+            "You do not have enough rights to access the field \"%(field)s\""
+            " on %(document_kind)s (%(document_model)s). "
+            "Please contact your system administrator."
+            "\n\nOperation: %(operation)s",
+            field=field.name,
+            document_kind=description,
+            document_model=self._name,
+            operation=operation,
+        )
+
+        if self.env.user._has_group('base.group_no_one'):
+            if field.groups == NO_ACCESS:
+                allowed_groups_msg = _("always forbidden")
+            else:
+                groups_list = [self.env.ref(g) for g in field.groups.split(',')]
+                groups = self.env['res.groups'].union(*groups_list).sorted('id')
+                allowed_groups_msg = _(
+                    "allowed for groups %s",
+                    ', '.join(repr(g.display_name) for g in groups),
+                )
+            error_msg += _(
+                "\nUser: %(user)s"
+                "\nGroups: %(allowed_groups_msg)s",
+                user=self.env.uid,
+                allowed_groups_msg=allowed_groups_msg,
+            )
+
+        raise AccessError(error_msg)
+
+    @api.model
+    def check_field_access_rights(self, operation: str, field_names: list[str] | None) -> list[str]:
         """Check the user access rights on the given fields.
+
+        If `field_names` is not provided, we list accessible fields to the user.
+        Otherwise, an error is raised if we try to access a forbidden field.
+        Note that this function ignores unknown (virtual) fields.
 
         :param str operation: one of ``create``, ``read``, ``write``, ``unlink``
         :param field_names: names of the fields
@@ -3672,56 +3742,27 @@ class BaseModel(metaclass=MetaModel):
         :raise AccessError: if the user is not allowed to access
           the provided fields.
         """
+        warnings.warn(
+            "Deprecated since 19.0, use `_check_field_access` on models."
+            " To get the list of allowed fields, use `fields_get`.",
+            DeprecationWarning,
+        )
         if self.env.su:
             return field_names or list(self._fields)
 
         if not field_names:
-            field_names = [name for name, field in self._fields.items() if field.is_accessible(self.env)]
-        else:
+            return [
+                field_name
+                for field_name, field in self._fields.items()
+                if self._has_field_access(field, operation)
+            ]
+
+        for field_name in field_names:
             # Unknown (or virtual) fields are considered accessible because they will not be read and nothing will be written to them.
-            invalid_fields = [name for name in field_names if name in self._fields and not self._fields[name].is_accessible(self.env)]
-            if invalid_fields:
-                _logger.info('Access Denied by ACLs for operation: %s, uid: %s, model: %s, fields: %s',
-                             operation, self._uid, self._name, ', '.join(invalid_fields))
-
-                description = self.env['ir.model']._get(self._name).name
-
-                error_msg = _(
-                    "You do not have enough rights to access the fields \"%(fields)s\""
-                    " on %(document_kind)s (%(document_model)s). "
-                    "Please contact your system administrator."
-                    "\n\nOperation: %(operation)s",
-                    fields=','.join(invalid_fields),
-                    document_kind=description,
-                    document_model=self._name,
-                    operation=operation,
-                )
-
-                if self.env.user._has_group('base.group_no_one'):
-                    def format_groups(field):
-                        if field.groups == '.':
-                            return _("always forbidden")
-
-                        groups_list = [self.env.ref(g) for g in field.groups.split(',')]
-                        groups = self.env['res.groups'].union(*groups_list).sorted('id')
-                        return _(
-                            "allowed for groups %s",
-                            ', '.join(repr(g.display_name) for g in groups),
-                        )
-
-                    error_msg += _(
-                        "\nUser: %(user)s"
-                        "\nFields:"
-                        "\n%(fields_list)s",
-                        user=self._uid,
-                        fields_list='\n'.join(
-                            '- %s (%s)' % (f, format_groups(self._fields[f]))
-                            for f in sorted(invalid_fields)
-                        ),
-                    )
-
-                raise AccessError(error_msg)
-
+            field = self._fields.get(field_name)
+            if field is None:
+                continue
+            self._check_field_access(field, operation)
         return field_names
 
     @api.readonly
@@ -3744,7 +3785,10 @@ class BaseModel(metaclass=MetaModel):
         order to modify how fields are read from database, see methods
         :meth:`_fetch_query` and :meth:`_read_format`.
         """
-        fields = self.check_field_access_rights('read', fields)
+        if not fields:
+            fields = list(self.fields_get(attributes=()))
+        elif not self and not self.env.su:  # check field access, otherwise done during fetch()
+            self._determine_fields_to_fetch(fields)
         self._origin.fetch(fields)
         return self._read_format(fnames=fields, load=load)
 
@@ -3781,7 +3825,8 @@ class BaseModel(metaclass=MetaModel):
         self.ensure_one()
 
         self.check_access('write')
-        self.check_field_access_rights('write', [field_name])
+        field = self._fields[field_name]
+        self._check_field_access(field, 'write')
 
         valid_langs = set(code for code, _ in self.env['res.lang'].get_installed()) | {'en_US'}
         source_lang = source_lang or 'en_US'
@@ -3791,8 +3836,6 @@ class BaseModel(metaclass=MetaModel):
                 _("The following languages are not activated: %(missing_names)s",
                 missing_names=', '.join(missing_langs))
             )
-
-        field = self._fields[field_name]
 
         if not field.translate:
             return False  # or raise error
@@ -3988,7 +4031,7 @@ class BaseModel(metaclass=MetaModel):
         """ Read from the database in order to fetch ``field`` (:class:`Field`
             instance) for ``self`` in cache.
         """
-        self.check_field_access_rights('read', [field.name])
+        self._check_field_access(field, 'read')
         # determine which fields can be prefetched
         if self._context.get('prefetch_fields', True) and field.prefetch:
             fnames = [
@@ -3997,7 +4040,7 @@ class BaseModel(metaclass=MetaModel):
                 # select fields with the same prefetch group
                 if f.prefetch == field.prefetch
                 # discard fields with groups that the user may not access
-                if f.is_accessible(self.env)
+                if self._has_field_access(f, 'read')
             ]
             if field.name not in fnames:
                 fnames.append(field.name)
@@ -4057,6 +4100,7 @@ class BaseModel(metaclass=MetaModel):
         :param field_names: the list of fields requested
         :param ignore_when_in_cache: whether to ignore fields that are alreay in cache for ``self``
         :return: the list of fields that must be fetched
+        :raise AccessError: when trying to fetch fields to which the user does not have access
         """
         if not field_names:
             return []
@@ -4064,17 +4108,21 @@ class BaseModel(metaclass=MetaModel):
         cache = self.env.cache
 
         fields_to_fetch = []
-        field_names_todo = deque(self.check_field_access_rights('read', field_names))
-        field_names_done = {'id'}  # trick: ignore 'id'
+        fields_todo = deque()
+        fields_done = {self._fields['id']}  # trick: ignore 'id'
+        for field_name in field_names:
+            try:
+                field = self._fields[field_name]
+            except KeyError as e:
+                raise ValueError(f"Invalid field {field_name!r} on {self._name!r}") from e
+            self._check_field_access(field, 'read')
+            fields_todo.append(field)
 
-        while field_names_todo:
-            field_name = field_names_todo.popleft()
-            if field_name in field_names_done:
+        while fields_todo:
+            field = fields_todo.popleft()
+            if field in fields_done:
                 continue
-            field_names_done.add(field_name)
-            field = self._fields.get(field_name)
-            if not field:
-                raise ValueError(f"Invalid field {field_name!r} on model {self._name!r}")
+            fields_done.add(field)
             if ignore_when_in_cache and not any(cache.get_missing_ids(self, field)):
                 # field is already in cache: don't fetch it
                 continue
@@ -4084,10 +4132,11 @@ class BaseModel(metaclass=MetaModel):
                 # optimization: fetch field dependencies
                 for dotname in self.pool.field_depends[field]:
                     dep_field = self._fields[dotname.split('.', 1)[0]]
-                    if (not dep_field.store) or (dep_field.prefetch is True and
-                        dep_field.is_accessible(self.env)
+                    if (not dep_field.store) or (
+                        dep_field.prefetch is True
+                        and self._has_field_access(dep_field, 'read')
                     ):
-                        field_names_todo.append(dep_field.name)
+                        fields_todo.append(dep_field)
 
         return fields_to_fetch
 
@@ -4605,7 +4654,11 @@ class BaseModel(metaclass=MetaModel):
             return True
 
         self.check_access('write')
-        self.check_field_access_rights('write', vals.keys())
+        for field_name in vals:
+            try:
+                self._check_field_access(self._fields[field_name], 'write')
+            except KeyError as e:
+                raise ValueError(f"Invalid field {field_name!r} in {self._name!r}") from e
         env = self.env
 
         bad_names = {'id', 'parent_path'}
@@ -6025,7 +6078,8 @@ class BaseModel(metaclass=MetaModel):
         :return: List of dictionaries containing the asked fields.
         :rtype: list(dict).
         """
-        fields = self.check_field_access_rights('read', fields)
+        if not fields:
+            fields = list(self.fields_get(attributes=()))
         records = self.search_fetch(domain or [], fields, offset=offset, limit=limit, order=order)
 
         # Method _read_format() ignores 'active_test', but it would forward it

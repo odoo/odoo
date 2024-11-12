@@ -200,6 +200,17 @@ class HrEmployee(models.Model):
             result = [field for field in result if field not in ['activity_calendar_event_id', 'rating_ids', 'website_message_ids', 'message_has_sms_error']]
         return result
 
+    def _has_field_access(self, field, operation):
+        # DISCLAIMER: Dirty hack to avoid having to create a bridge module to override only a
+        # groups on a field which is not prefetched (because not stored) but would crash anyway
+        # if we try to read them directly (very uncommon use case). Don't add your field on this
+        # list if you can specify the group on the field directly (as all the other fields).
+        return super()._has_field_access(field, operation) and (
+            self.env.su
+            or self.env.user.has_group("hr.group_hr_user")
+            or field.name not in ('activity_calendar_event_id', 'rating_ids', 'website_message_ids', 'message_has_sms_error')
+        )
+
     @api.depends('name', 'user_id.avatar_1920', 'image_1920')
     def _compute_avatar_1920(self):
         super()._compute_avatar_1920()

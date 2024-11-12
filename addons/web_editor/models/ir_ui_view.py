@@ -146,10 +146,10 @@ class IrUiView(models.Model):
         The method takes care of read and write access of both records/fields.
         """
         record_to.check_access('write')
-        record_to.check_field_access_rights('write', [name_field_to])
-
         field_from = records_from._fields[name_field_from]
         field_to = record_to._fields[name_field_to]
+        record_to._check_field_access(field_to, 'write')
+
         error_callable_msg = "'translate' property of field %r is not callable"
         if not callable(field_from.translate):
             raise ValueError(error_callable_msg % field_from)

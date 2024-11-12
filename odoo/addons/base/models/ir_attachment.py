@@ -445,7 +445,7 @@ class IrAttachment(models.Model):
                         raise AccessError(_("Sorry, you are not allowed to access this document."))
                     if res_field:
                         field = self.env[res_model]._fields[res_field]
-                        if not field.is_accessible(self.env):
+                        if not self._has_field_access(field, 'read'):
                             raise AccessError(_("Sorry, you are not allowed to access this document."))
                 if not (res_model and res_id):
                     continue
