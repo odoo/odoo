@@ -12,6 +12,7 @@ class ResConfigSettings(models.TransientModel):
     module_hr_presence = fields.Boolean(string="Advanced Presence Control")
     module_hr_skills = fields.Boolean(string="Skills Management")
     module_hr_homeworking = fields.Boolean(string="Remote Work")
+    module_hr_contract = fields.Boolean(string="Contracts Management")
     hr_presence_control_login = fields.Boolean(related='company_id.hr_presence_control_login', readonly=False)
     hr_presence_control_email = fields.Boolean(related='company_id.hr_presence_control_email', readonly=False)
     hr_presence_control_ip = fields.Boolean(related='company_id.hr_presence_control_ip', readonly=False)
