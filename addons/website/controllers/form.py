@@ -47,12 +47,10 @@ class WebsiteForm(http.Controller):
                 kwargs = dict(request.params)
                 kwargs.pop('model_name')
                 return self._handle_website_form(model_name, **kwargs)
-            error = _("Suspicious activity detected by captcha.")
         except (ValidationError, UserError) as e:
-            error = e.args[0]
-        return json.dumps({
-            'error': error,
-        })
+            return json.dumps({
+                'error': e.args[0],
+            })
 
     def _handle_website_form(self, model_name, **kwargs):
         model_record = request.env['ir.model'].sudo().search([('model', '=', model_name), ('website_form_access', '=', True)])

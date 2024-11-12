@@ -36,14 +36,12 @@ class IrHttp(models.AbstractModel):
             If no recaptcha private key is set the recaptcha verification
             is considered inactive and this method will return True.
         """
-        res = super()._verify_request_recaptcha_token(action)
-        if not res:
-            return res
+        super()._verify_request_recaptcha_token(action)
         ip_addr = request.httprequest.remote_addr
         token = request.params.pop('recaptcha_token_response', False)
         recaptcha_result = request.env['ir.http']._verify_recaptcha_token(ip_addr, token, action)
         if recaptcha_result in ['is_human', 'no_secret']:
-            return True
+            return
         if recaptcha_result == 'wrong_secret':
             raise ValidationError(_("The reCaptcha private key is invalid."))
         elif recaptcha_result == 'wrong_token':
@@ -53,7 +51,7 @@ class IrHttp(models.AbstractModel):
         elif recaptcha_result == 'bad_request':
             raise UserError(_("The request is invalid or malformed."))
         else:
-            return False
+            raise UserError(_("Suspicious activity detected by google reCAPTCHA."))
 
     @api.model
     def _verify_recaptcha_token(self, ip_addr, token, action=False):

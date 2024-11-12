@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import tools, _
+from odoo.exceptions import UserError
 from odoo.http import route, request
 from odoo.addons.mass_mailing.controllers import main
 
@@ -34,10 +35,12 @@ class MassMailController(main.MassMailController):
 
     @route('/website_mass_mailing/subscribe', type='jsonrpc', website=True, auth='public')
     def subscribe(self, list_id, value, subscription_type, **post):
-        if not request.env['ir.http']._verify_request_recaptcha_token('website_mass_mailing_subscribe'):
+        try:
+            request.env['ir.http']._verify_request_recaptcha_token('website_mass_mailing_subscribe')
+        except UserError as e:
             return {
                 'toast_type': 'danger',
-                'toast_content': _("Suspicious activity detected by captcha."),
+                'toast_content': str(e),
             }
 
         fname = self._get_fname(subscription_type)
