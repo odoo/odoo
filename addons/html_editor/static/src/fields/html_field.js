@@ -286,7 +286,7 @@ export class HtmlField extends Component {
 export const htmlField = {
     component: HtmlField,
     displayName: _t("Html"),
-    supportedTypes: ["html"],
+    supportedTypes: ["html", "text"],
     extractProps({ attrs, options }, dynamicInfo) {
         const editorConfig = {
             mediaModalParams: {
