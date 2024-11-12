@@ -7,6 +7,7 @@ import { createFileViewer } from "@web/core/file_viewer/file_viewer_hook";
 import { boundariesOut } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
 import { ImageTransformButton } from "./image_transform_button";
+import { fillEmpty } from "@html_editor/utils/dom";
 
 function hasShape(imagePlugin, shapeName) {
     return () => imagePlugin.isSelectionShaped(shapeName);
@@ -53,6 +54,11 @@ export class ImagePlugin extends Plugin {
                 icon: "fa-picture-o",
                 run: () => this.setImageShape("img-thumbnail"),
             },
+            {
+                id: "addImageCaption",
+                title: _t("Add a caption"),
+                run: () => this.addImageCaption.bind(this),
+            },
             { id: "resizeImage", run: this.resizeImage.bind(this) },
         ],
         toolbar_namespaces: [
@@ -68,10 +74,11 @@ export class ImagePlugin extends Plugin {
         toolbar_groups: [
             withSequence(23, { id: "image_preview", namespace: "image" }),
             withSequence(24, { id: "image_description", namespace: "image" }),
-            withSequence(25, { id: "image_shape", namespace: "image" }),
-            withSequence(26, { id: "image_padding", namespace: "image" }),
-            withSequence(26, { id: "image_size", namespace: "image" }),
-            withSequence(26, { id: "image_transform", namespace: "image" }),
+            withSequence(25, { id: "image_caption", namespace: "image" }),
+            withSequence(26, { id: "image_shape", namespace: "image" }),
+            withSequence(27, { id: "image_padding", namespace: "image" }),
+            withSequence(27, { id: "image_size", namespace: "image" }),
+            withSequence(27, { id: "image_transform", namespace: "image" }),
             withSequence(30, { id: "image_delete", namespace: "image" }),
         ],
         toolbar_items: [
@@ -90,6 +97,13 @@ export class ImagePlugin extends Plugin {
                     getTooltip: () => this.getImageAttribute("title"),
                     updateImageDescription: this.updateImageDescription.bind(this),
                 },
+            },
+            {
+                id: "image_caption",
+                title: _t("Add a caption"),
+                groupId: "image_description",
+                commandId: "addImageCaption",
+                text: "Caption",
             },
             {
                 id: "shape_rounded",
@@ -173,6 +187,8 @@ export class ImagePlugin extends Plugin {
             },
         ],
         paste_url_overrides: this.handlePasteUrl.bind(this),
+        hints: [{ selector: "FIGCAPTION", text: _t("Write a caption...") }],
+        isUnsplittable: node => node.nodeName === "FIGCAPTION", // avoid merge
     };
 
     setup() {
@@ -281,6 +297,18 @@ export class ImagePlugin extends Plugin {
         const selectedNodes = this.dependencies.selection.getSelectedNodes();
         const selectedImg = selectedNodes.find((node) => node.tagName === "IMG");
         return selectedImg.getAttribute(attributeName) || undefined;
+    }
+
+    addImageCaption() {
+        const selectedImg = this.getSelectedImage();
+        if (!selectedImg) {
+            return;
+        }
+        const caption = this.document.createElement("figcaption");
+        caption.classList.add("figure-caption", "text-muted", "mt-2");
+        fillEmpty(caption);
+        selectedImg.after(caption);
+        this.shared.setSelection({ anchorNode: caption, anchorOffset: 0 });
     }
 
     /**
