@@ -5,17 +5,17 @@ from unittest.mock import patch
 
 import odoo
 from odoo.tools.misc import file_open
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.cloud_storage_azure.tests.test_cloud_storage_azure import TestCloudStorageAzureCommon
-from odoo.addons.mail.tests.common_controllers import MailControllerAttachmentCommon
 
 
 @odoo.tests.tagged("-at_install", "post_install", "mail_controller")
-class TestCloudStorageAttachmentController(MailControllerAttachmentCommon, TestCloudStorageAzureCommon):
+class TestCloudStorageAttachmentController(HttpCaseWithUserDemo, TestCloudStorageAzureCommon):
     def test_cloud_storage_azure_attachment_upload(self):
         """Test uploading an attachment with azure cloud storage."""
         thread = self.env["res.partner"].create({"name": "Test"})
         self.env["ir.config_parameter"].set_param("cloud_storage_provider", "azure")
-        self._authenticate_user(self.user_demo)
+        self.authenticate(self.user_demo.login, self.user_demo.login)
 
         def post(url, **kwargs):
             response = Response()
