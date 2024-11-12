@@ -1,6 +1,5 @@
 import traverse, { Binding, NodePath } from "@babel/traverse";
 import * as t from "@babel/types";
-import { flatMap, fromNullable, Option, some, toNullable } from "fp-ts/Option";
 
 import { ExtendedEnv } from "../utils/env";
 import { ensureProgramPath, getProgramPath } from "../utils/node_path";
@@ -37,12 +36,16 @@ function getLocalIdentifierOfRegistry(
     return null;
 }
 
-function getBinding(id: NodePath<t.Identifier>): Option<Binding> {
-    return fromNullable(id.scope.getBinding(id.node.name));
+function getBinding(id: NodePath<t.Identifier>): Binding | null {
+    return id.scope.getBinding(id.node.name) || null;
 }
 
-function getBindingPath(id: NodePath<t.Identifier>): Option<NodePath> {
-    return flatMap((b: Binding) => some(b.path))(getBinding(id));
+function getBindingPath(id: NodePath<t.Identifier>): NodePath | null {
+    const binding = getBinding(id);
+    if (!binding) {
+        return null;
+    }
+    return binding.path;
 }
 
 const viewRegistryPattern1 = new ExpressionPattern("viewRegistry");
@@ -52,7 +55,7 @@ function isViewRegistry(path: NodePath) {
         return false;
     }
     if (path.isIdentifier()) {
-        const valuePath = toNullable(getBindingPath(path))?.get("init");
+        const valuePath = getBindingPath(path)?.get("init");
         if (!valuePath || valuePath instanceof Array) {
             return false;
         }
@@ -65,7 +68,7 @@ function isViewRegistry(path: NodePath) {
 }
 
 function getDeclarationPath(id: NodePath<t.Identifier>): NodePath<t.Declaration> | null {
-    const path = toNullable(getBindingPath(id));
+    const path = getBindingPath(id);
     if (path && path.parentPath?.isDeclaration()) {
         return path.parentPath;
     }
@@ -97,7 +100,7 @@ export function getDefinitionFor(
     identifier: NodePath<t.Identifier>,
     env: ExtendedEnv,
 ): { path: NodePath; inFilePath: string } | null {
-    const binding = toNullable(getBinding(identifier));
+    const binding = getBinding(identifier);
     if (!binding) {
         return null;
     }
