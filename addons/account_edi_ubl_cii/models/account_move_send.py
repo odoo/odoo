@@ -130,7 +130,7 @@ class AccountMoveSend(models.AbstractModel):
             xml_facturx = self.env['account.edi.xml.cii']._export_invoice(invoice)[0]
 
         # during tests, no wkhtmltopdf, create the attachment for test purposes
-        if tools.config['test_enable']:
+        if tools.config.is_testing:
             self.env['ir.attachment'].create({
                 'name': 'factur-x.xml',
                 'raw': xml_facturx,
