@@ -47,7 +47,7 @@ export class ElementToolboxPlugin extends Plugin {
                 return b.contains(a) ? 1 : -1;
             })
             .map(([element, toolbox]) => ({ element, toolbox }));
-        for (const handler of this.resources.change_selected_toolboxes_listeners || []) {
+        for (const handler of this.getResource("change_selected_toolboxes_listeners")) {
             handler(toolboxes);
         }
         return;
