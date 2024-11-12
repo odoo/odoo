@@ -117,7 +117,6 @@ function getClassPropertyForProps(
             const declarationPath = getDeclarationPath(path);
             if (declarationPath && declarationPath.isImportDeclaration()) {
                 const declarationNode = getNormalizedNode(declarationPath, env);
-                debugger
                 declarations.push(declarationNode);
             }
         },
