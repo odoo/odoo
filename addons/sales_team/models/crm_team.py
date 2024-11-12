@@ -142,7 +142,7 @@ class CrmTeam(models.Model):
     @api.depends('crm_team_member_ids.active')
     def _compute_member_ids(self):
         for team in self:
-            team.member_ids = team.crm_team_member_ids.user_id
+            team.member_ids = team.crm_team_member_ids.user_id.sudo().filtered('active')
 
     def _inverse_member_ids(self):
         for team in self:
