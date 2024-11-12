@@ -35,11 +35,12 @@ class IrHttp(models.AbstractModel):
         if not res:  # check result of google_recaptcha
             return res
 
+        super()._verify_request_recaptcha_token(action)
         ip_addr = request.httprequest.remote_addr
         token = request.params.pop('turnstile_captcha', False)
         turnstile_result = request.env['ir.http']._verify_turnstile_token(ip_addr, token, action)
         if turnstile_result in ['is_human', 'no_secret']:
-            return True
+            return
         if turnstile_result == 'wrong_secret':
             raise ValidationError(_("The Cloudflare turnstile private key is invalid."))
         elif turnstile_result == 'wrong_token':
@@ -49,7 +50,7 @@ class IrHttp(models.AbstractModel):
         elif turnstile_result == 'bad_request':
             raise UserError(_("The request is invalid or malformed."))
         else:  # wrong_action e.g.
-            return False
+            raise UserError(_("Suspicious activity detected by Turnstile CAPTCHA."))
 
     @api.model
     def _verify_turnstile_token(self, ip_addr, token, action=False):

@@ -2,6 +2,7 @@ from contextlib import contextmanager
 from unittest.mock import patch
 
 from odoo import http
+from odoo.exceptions import UserError
 from odoo.tests import HttpCase, tagged
 from odoo.tools import mute_logger
 
@@ -15,7 +16,8 @@ class TestCaptcha(HttpCase):
     @contextmanager
     def patch_captcha_valid(self, validity):
         def _verify_request_recaptcha_token(self, captcha):
-            return validity
+            if not validity:
+                raise UserError("CAPTCHA test")
         with patch.object(self.env.registry['ir.http'], '_verify_request_recaptcha_token', _verify_request_recaptcha_token):
             yield
 
