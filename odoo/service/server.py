@@ -51,7 +51,7 @@ except ImportError:
     setproctitle = lambda x: None
 
 import odoo
-from odoo.modules import get_modules
+from odoo import modules
 from odoo.modules.registry import Registry
 from odoo.release import nt_service_name
 from odoo.tools import config, osutil
@@ -122,7 +122,7 @@ class BaseWSGIServerNoBind(LoggingBaseWSGIServerMixIn, werkzeug.serving.BaseWSGI
 class RequestHandler(werkzeug.serving.WSGIRequestHandler):
     def setup(self):
         # timeout to avoid chrome headless preconnect during tests
-        if config['test_enable'] or config['test_file']:
+        if config['test_enable']:
             self.timeout = 5
         # flag the current thread as handling a http request
         super(RequestHandler, self).setup()
@@ -523,8 +523,7 @@ class ThreadedServer(CommonServer):
             import win32api
             win32api.SetConsoleCtrlHandler(lambda sig: self.signal_handler(sig, None), 1)
 
-        test_mode = config['test_enable'] or config['test_file']
-        if test_mode or (config['http_enable'] and not stop):
+        if config['test_enable'] or (config['http_enable'] and not stop):
             # some tests need the http daemon to be available...
             self.http_spawn()
 
@@ -1321,7 +1320,7 @@ def start(preload=None, stop=False):
     if odoo.evented:
         server = GeventServer(odoo.http.root)
     elif config['workers']:
-        if config['test_enable'] or config['test_file']:
+        if config['test_enable']:
             _logger.warning("Unit testing in workers mode could fail; use --workers 0.")
 
         server = PreforkServer(odoo.http.root)

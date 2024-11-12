@@ -297,7 +297,7 @@ def load_module_graph(
         test_time = 0.0
         test_queries = 0
         test_results = None
-        if tools.config.options['test_enable'] and (needs_update or not updating):
+        if tools.config['test_enable'] and (needs_update or not updating):
             from odoo.tests import loader  # noqa: PLC0415
             suite = loader.make_suite([module_name], 'at_install')
             if suite.countTestCases():
