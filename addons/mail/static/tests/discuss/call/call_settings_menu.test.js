@@ -3,6 +3,7 @@ import {
     click,
     contains,
     defineMailModels,
+    editInput,
     openDiscuss,
     patchUiSize,
     SIZES,
@@ -11,6 +12,7 @@ import {
     step,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
+import { advanceTime } from "@odoo/hoot-mock";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { browser } from "@web/core/browser/browser";
@@ -124,4 +126,7 @@ test("local storage for call settings", async () => {
     await assertSteps(["mail_user_setting_show_only_video: false"]);
     await click("input[title='Blur video background']");
     await assertSteps(["mail_user_setting_use_blur: false"]);
+    await editInput(document.body, ".o-Discuss-CallSettings-thresholdInput", 0.3);
+    await advanceTime(2000); // threshold setting debounce timer
+    await assertSteps(["mail_user_setting_voice_threshold: 0.3"]);
 });
