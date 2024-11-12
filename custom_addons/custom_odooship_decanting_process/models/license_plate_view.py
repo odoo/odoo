@@ -24,7 +24,8 @@ class LicensePlateOrders(models.Model):
         ('not_available', 'Not Available')], string='License Plate State')
     automation_manual = fields.Selection([('automation', 'Automation'),
                                           ('automation_bulk', 'Automation Bulk'),
-                                          ('manual', 'Manual')], string='Automation Manual')
+                                          ('manual', 'Manual'),
+                                          ('xdock','XDOCK')], string='Automation Manual')
     delivery_receipt_order_id = fields.Many2one('delivery.receipt.orders',
                                                 string='Delivery Receipt Order')
     picking_id = fields.Many2one(
