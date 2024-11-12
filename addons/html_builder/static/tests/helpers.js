@@ -5,7 +5,7 @@ import {
     patchWithCleanup,
     getService,
 } from "@web/../tests/web_test_helpers";
-import { defineMailModels } from "@mail/../tests/mail_test_helpers";
+import { defineMailModels, startServer } from "@mail/../tests/mail_test_helpers";
 import { advanceTime, animationFrame, click, queryOne } from "@odoo/hoot-dom";
 import { getWebsiteSnippets } from "./snippets_getter.hoot";
 import { SnippetsMenu } from "@html_builder/builder/snippets_menu";
@@ -32,6 +32,8 @@ export function defineWebsiteModels() {
 }
 
 export async function setupWebsiteBuilder(websiteContent, { snippets } = {}) {
+    const pyEnv = await startServer();
+    pyEnv["website"].create({});
     let editor;
     await mountWithCleanup(WebClient);
     await getService("action").doAction({
@@ -68,6 +70,10 @@ export async function openSnippetsMenu() {
     // linked to the setTimeout in the WebsiteBuilder component
     await advanceTime(200);
     await animationFrame();
+}
+
+export function getEditable(inWrap) {
+    return `<div id="wrap" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">${inWrap}</div>`;
 }
 
 function getSnippetView(snippets) {
