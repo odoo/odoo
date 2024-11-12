@@ -45,8 +45,9 @@ class MailTrackingValue(models.Model):
         def has_field_access(tracking):
             if not tracking.field_id:
                 return env.is_system()
-            model_field = env[tracking.field_id.model]._fields.get(tracking.field_id.name)
-            return model_field.is_accessible(env) if model_field else False
+            model = env[tracking.field_id.model]
+            model_field = model._fields.get(tracking.field_id.name)
+            return model._has_field_access(model_field, 'read') if model_field else False
 
         return self.filtered(has_field_access)
 

@@ -994,6 +994,17 @@ class ProjectTask(models.Model):
                     error_message = _('You cannot write on the following fields on tasks: %(field_list)s', field_list=unauthorized_field_list)
                 raise AccessError(error_message)
 
+    def _has_field_access(self, field, operation):
+        if not super()._has_field_access(field, operation):
+            return False
+        if not self.env.su and self.env.user._is_portal():
+            # additional checks for portal users
+            if operation == 'read':
+                return field.name in self.SELF_READABLE_FIELDS
+            if operation == 'write':
+                return field.name in self.SELF_WRITABLE_FIELDS
+        return True
+
     def _determine_fields_to_fetch(self, field_names, ignore_when_in_cache=False):
         if not self.env.su and self.env.user._is_portal():
             valid_names = self.SELF_READABLE_FIELDS
@@ -1026,18 +1037,6 @@ class ProjectTask(models.Model):
             or not key.startswith('default_')
             or key[8:] in (field for field in self.SELF_WRITABLE_FIELDS if self._fields[field].type not in ('one2many', 'many2many'))
         }
-
-    @api.model
-    def check_field_access_rights(self, operation, field_names):
-        if field_names and operation in ('read', 'write'):
-            self._ensure_fields_are_accessible(field_names, operation)
-        elif not field_names and not self.env.su and self.env.user._is_portal():
-            valid_names = self.SELF_READABLE_FIELDS
-            return [
-                fname for fname in super().check_field_access_rights(operation, field_names)
-                if fname in valid_names
-            ]
-        return super().check_field_access_rights(operation, field_names)
 
     def _set_stage_on_project_from_task(self):
         stage_ids_per_project = defaultdict(list)

@@ -662,13 +662,12 @@ class ResUsers(models.Model):
             self = self.sudo()
         return super().read(fields=fields, load=load)
 
-    @api.model
-    def check_field_access_rights(self, operation, field_names):
-        readable = self.SELF_READABLE_FIELDS
-        if field_names and self == self.env.user and all(key in readable or key.startswith('context_') for key in field_names):
-            # safe fields only, so we read as super-user to bypass access rights
-            self = self.sudo()
-        return super().check_field_access_rights(operation, field_names)
+    def _has_field_access(self, field, operation):
+        return super()._has_field_access(field, operation) or (
+            self == self.env.user
+            and operation == 'read'
+            and (field.name in self.SELF_READABLE_FIELDS or field.name.startswith('context_'))
+        )
 
     @api.model
     def _read_group_select(self, aggregate_spec, query):

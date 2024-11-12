@@ -449,12 +449,11 @@ class TestFieldGroupFeedback(Feedback):
 
         self.assertEqual(
             ctx.exception.args[0],
-            """You do not have enough rights to access the fields "forbidden" on Object For Test Access Right (test_access_right.some_obj). Please contact your system administrator.
+            """You do not have enough rights to access the field "forbidden" on Object For Test Access Right (test_access_right.some_obj). Please contact your system administrator.
 
 Operation: read
 User: %s
-Fields:
-- forbidden (allowed for groups 'User types / Portal', 'Test Group')"""
+Groups: allowed for groups 'User types / Portal', 'Test Group'"""
     % self.user.id
         )
 
@@ -463,12 +462,11 @@ Fields:
 
         self.assertEqual(
             ctx.exception.args[0],
-            """You do not have enough rights to access the fields "forbidden3" on Object For Test Access Right (test_access_right.some_obj). Please contact your system administrator.
+            """You do not have enough rights to access the field "forbidden3" on Object For Test Access Right (test_access_right.some_obj). Please contact your system administrator.
 
 Operation: read
 User: %s
-Fields:
-- forbidden3 (always forbidden)""" % self.user.id
+Groups: always forbidden""" % self.user.id
         )
 
     @mute_logger('odoo.models')
@@ -481,13 +479,11 @@ Fields:
 
         self.assertEqual(
             ctx.exception.args[0],
-            """You do not have enough rights to access the fields "forbidden,forbidden2" on Object For Test Access Right (test_access_right.some_obj). Please contact your system administrator.
+            """You do not have enough rights to access the field "forbidden" on Object For Test Access Right (test_access_right.some_obj). Please contact your system administrator.
 
 Operation: write
 User: %s
-Fields:
-- forbidden (allowed for groups 'User types / Portal', 'Test Group')
-- forbidden2 (allowed for groups 'Test Group')"""
+Groups: allowed for groups 'User types / Portal', 'Test Group'"""
     % self.user.id
         )
 
