@@ -2,8 +2,27 @@ import { DYNAMIC_PLACEHOLDER_PLUGINS } from "@html_editor/plugin_sets";
 import { registry } from "@web/core/registry";
 import { HtmlMailField, htmlMailField } from "../html_mail_field/html_mail_field";
 import { MentionPlugin } from "./mention_plugin";
+import { useState } from "@odoo/owl";
 
 export class HtmlComposerMessageField extends HtmlMailField {
+    static template = "mail.HtmlComposerMessageField";
+
+    setup() {
+        super.setup();
+        this.state = useState({
+            ...this.state,
+            replyState: this.props.record.data.in_reply_mode,
+        });
+    }
+
+    async onClickView() {
+        this.state.replyState = false;
+        for (const block of this.editor.editable.querySelectorAll(".o_mail_reply_hide")) {
+            block.classList.remove("o_mail_reply_hide");
+        }
+        this.editor.editable.focus()
+    }
+
     getConfig() {
         const config = super.getConfig(...arguments);
         config.Plugins = [...config.Plugins, MentionPlugin];
