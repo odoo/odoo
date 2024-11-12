@@ -251,7 +251,7 @@ export class ToolbarPlugin extends Plugin {
     getToolbarInfo() {
         return {
             buttonGroups: this.buttonGroups,
-            getSelection: () => this.dependencies.selection.getEditableSelection(),
+            getSelection: () => this.dependencies.selection.getSelectionData(),
             state: this.state,
             focusEditable: () => this.dependencies.selection.focusEditable(),
         };

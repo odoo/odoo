@@ -273,6 +273,33 @@ test("toolbar works: can select font size", async () => {
     expect(".o-we-toolbar [name='font-size']").toHaveText(oSmallSize);
 });
 
+test.tags("desktop")("toolbar works: display correct font size on select all", async () => {
+    const { el } = await setupEditor("<p>test</p>");
+    expect(getContent(el)).toBe("<p>test</p>");
+
+    // set selection to open toolbar
+    expect(".o-we-toolbar").toHaveCount(0);
+    setContent(el, "<p>[test]</p>");
+    const style = getHtmlStyle(document);
+    const getFontSizeFromVar = (cssVar) => {
+        const strValue = getCSSVariableValue(cssVar, style);
+        const remValue = parseFloat(strValue);
+        const pxValue = convertNumericToUnit(remValue, "rem", "px", style);
+        return Math.round(pxValue);
+    };
+    await waitFor(".o-we-toolbar");
+    await contains(".o-we-toolbar [name='font-size'] .dropdown-toggle").click();
+    await animationFrame();
+    const h1Size = getFontSizeFromVar("h1-font-size").toString();
+    await contains(`.o_font_selector_menu .dropdown-item:contains('${h1Size}')`).click();
+    expect(getContent(el)).toBe(`<p><span class="h1-fs">[test]</span></p>`);
+    setContent(el, `<p><span class="h1-fs">te[]st</span></p>`);
+    await waitForNone(".o-we-toolbar");
+    await press(["ctrl", "a"]); // Select all
+    await waitFor(".o-we-toolbar");
+    expect(".o-we-toolbar [name='font-size']").toHaveText(`${h1Size}`);
+});
+
 test.tags("desktop")("toolbar should not open on keypress tab inside table", async () => {
     const contentBefore = unformat(`
         <table>
