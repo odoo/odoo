@@ -5,6 +5,7 @@ from odoo import fields, models
 
 
 class FleetVehicleTag(models.Model):
+    _name = 'fleet.vehicle.tag'
     _description = 'Vehicle Tag'
 
     name = fields.Char('Tag Name', required=True, translate=True)

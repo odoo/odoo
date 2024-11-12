@@ -4,7 +4,7 @@ from odoo import api, models
 
 
 class HrExpense(models.Model):
-    _inherit = ["hr.expense"]
+    _inherit = "hr.expense"
 
     @api.depends('sale_order_id')
     def _compute_analytic_distribution(self):

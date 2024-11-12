@@ -7,6 +7,7 @@ from odoo import api, fields, models, Command
 
 
 class Test_Testing_UtilitiesA(models.Model):
+    _name = 'test_testing_utilities.a'
     _description = 'Testing Utilities A'
 
     f1 = fields.Char(required=True)
@@ -29,6 +30,7 @@ class Test_Testing_UtilitiesA(models.Model):
 
 
 class Test_Testing_UtilitiesReadonly(models.Model):
+    _name = 'test_testing_utilities.readonly'
     _description = 'Testing Utilities Readonly'
 
     f1 = fields.Integer(default=1, readonly=True)
@@ -41,6 +43,7 @@ class Test_Testing_UtilitiesReadonly(models.Model):
 
 
 class Test_Testing_UtilitiesC(models.Model):
+    _name = 'test_testing_utilities.c'
     _description = 'Testing Utilities C'
 
     name = fields.Char("name", required=True)
@@ -52,12 +55,14 @@ class Test_Testing_UtilitiesC(models.Model):
 
 
 class Test_Testing_UtilitiesM2o(models.Model):
+    _name = 'test_testing_utilities.m2o'
     _description = 'Testing Utilities Many To One'
 
     name = fields.Char(required=True)
 
 
 class Test_Testing_UtilitiesD(models.Model):
+    _name = 'test_testing_utilities.d'
     _description = 'Testing Utilities D'
 
     # used to check that defaults & onchange to m2o work
@@ -78,6 +83,7 @@ class Test_Testing_UtilitiesD(models.Model):
 
 
 class Test_Testing_UtilitiesE(models.Model):
+    _name = 'test_testing_utilities.e'
     _description = 'Testing Utilities E'
 
     m2m = fields.Many2many('test_testing_utilities.sub2')
@@ -100,6 +106,7 @@ class Test_Testing_UtilitiesE(models.Model):
 
 
 class Test_Testing_UtilitiesSub2(models.Model):
+    _name = 'test_testing_utilities.sub2'
     _description = 'Testing Utilities Subtraction 2'
 
     name = fields.Char()
@@ -107,6 +114,7 @@ class Test_Testing_UtilitiesSub2(models.Model):
 
 
 class Test_Testing_UtilitiesF(models.Model):
+    _name = 'test_testing_utilities.f'
     _description = 'Testing Utilities F'
 
     def _get_some(self):
@@ -125,18 +133,21 @@ class Test_Testing_UtilitiesF(models.Model):
 
 
 class Test_Testing_UtilitiesG(models.Model):
+    _name = 'test_testing_utilities.g'
     _description = 'Testing Utilities G'
 
     m2m = fields.Many2many('test_testing_utilities.sub3', readonly=True)
 
 
 class Test_Testing_UtilitiesSub3(models.Model):
+    _name = 'test_testing_utilities.sub3'
     _description = 'Testing Utilities Subtraction 3'
 
     name = fields.Char()
 
 
 class Test_Testing_UtilitiesParent(models.Model):
+    _name = 'test_testing_utilities.parent'
     _description = 'Testing Utilities Parent'
 
     value = fields.Integer(default=1)
@@ -149,6 +160,7 @@ class Test_Testing_UtilitiesParent(models.Model):
 
 
 class Test_Testing_UtilitiesSub(models.Model):
+    _name = 'test_testing_utilities.sub'
     _description = 'Testing Utilities Subtraction'
 
     name = fields.Char(compute='_compute_name')
@@ -173,6 +185,7 @@ class Test_Testing_UtilitiesSub(models.Model):
 
 
 class Test_Testing_UtilitiesRef(models.Model):
+    _name = 'test_testing_utilities.ref'
     _description = 'Testing Utilities ref'
 
     value = fields.Integer(default=1)
@@ -181,6 +194,7 @@ class Test_Testing_UtilitiesRef(models.Model):
 
 
 class Test_Testing_UtilitiesRefSub(models.Model):
+    _name = 'test_testing_utilities.ref.sub'
     _description = 'Testing Utilities Subtraction'
 
     a = fields.Integer()
@@ -191,6 +205,7 @@ class Test_Testing_UtilitiesRefSub(models.Model):
 
 
 class Test_Testing_UtilitiesDefault(models.Model):
+    _name = 'test_testing_utilities.default'
     _description = 'Testing Utilities Default'
 
     value = fields.Integer(default=1)
@@ -210,6 +225,7 @@ class Test_Testing_UtilitiesDefault(models.Model):
 
 # pylint: disable=E0102
 class Test_Testing_UtilitiesSub3(models.Model):  # noqa: F811
+    _name = 'test_testing_utilities.sub3'
     _description = 'Testing Utilities Subtraction 3'
 
     name = fields.Char(compute='_compute_name')
@@ -228,6 +244,7 @@ class Test_Testing_UtilitiesSub3(models.Model):  # noqa: F811
 
 
 class Test_Testing_UtilitiesRecursive(models.Model):
+    _name = 'test_testing_utilities.recursive'
     _description = 'test_testing_utilities.recursive'
 
     one_to_many_id = fields.Many2one('test_testing_utilities.recursive', readonly=True)
@@ -235,6 +252,7 @@ class Test_Testing_UtilitiesRecursive(models.Model):
 
 
 class Test_Testing_UtilitiesOnchange_Parent(models.Model):
+    _name = 'test_testing_utilities.onchange_parent'
     _description = 'Testing Utilities Onchange Parent'
 
     line_ids = fields.One2many('test_testing_utilities.onchange_line', 'parent')
@@ -246,6 +264,7 @@ class Test_Testing_UtilitiesOnchange_Parent(models.Model):
 
 
 class Test_Testing_UtilitiesOnchange_Line(models.Model):
+    _name = 'test_testing_utilities.onchange_line'
     _description = "Testing Utilities Onchange Line"
 
     parent = fields.Many2one('test_testing_utilities.onchange_parent')
@@ -258,6 +277,7 @@ class Test_Testing_UtilitiesOnchange_Line(models.Model):
 
 
 class Test_Testing_UtilitiesOnchange_Count(models.Model):
+    _name = 'test_testing_utilities.onchange_count'
     _description = "Test_Testing_UtilitiesOnchange_Count"
 
     count = fields.Integer()
@@ -273,6 +293,7 @@ class Test_Testing_UtilitiesOnchange_Count(models.Model):
 
 
 class Test_Testing_UtilitiesOnchange_Count_Sub(models.Model):
+    _name = 'test_testing_utilities.onchange_count_sub'
     _description = "Test_Testing_UtilitiesOnchange_Count_Sub"
 
     parent = fields.Many2one('test_testing_utilities.onchange_count')
@@ -280,12 +301,14 @@ class Test_Testing_UtilitiesOnchange_Count_Sub(models.Model):
 
 
 class O2m_Readonly_Subfield_Parent(models.Model):
+    _name = 'o2m_readonly_subfield_parent'
     _description = "O2m_Readonly_Subfield_Parent"
 
     line_ids = fields.One2many('o2m_readonly_subfield_child', 'parent_id')
 
 
 class O2m_Readonly_Subfield_Child(models.Model):
+    _name = 'o2m_readonly_subfield_child'
     _description = "o2m_readonly_subfield_child"
 
     name = fields.Char()
@@ -302,12 +325,14 @@ class O2m_Readonly_Subfield_Child(models.Model):
 
 
 class Test_Testing_UtilitiesReq_Bool(models.Model):
+    _name = 'test_testing_utilities.req_bool'
     _description = 'test_testing_utilities.req_bool'
 
     f_bool = fields.Boolean(required=True)
 
 
 class O2m_Changes_Parent(models.Model):
+    _name = 'o2m_changes_parent'
     _description = 'o2m_changes_parent'
 
     name = fields.Char()
@@ -322,6 +347,7 @@ class O2m_Changes_Parent(models.Model):
 
 
 class O2m_Changes_Children(models.Model):
+    _name = 'o2m_changes_children'
     _description = 'o2m_changes_children'
 
     name = fields.Char()
@@ -337,6 +363,7 @@ class O2m_Changes_Children(models.Model):
 
 
 class O2m_Changes_ChildrenLines(models.Model):
+    _name = 'o2m_changes_children.lines'
     _description = 'o2m_changes_children.lines'
 
     parent_id = fields.Many2one('o2m_changes_children')
@@ -345,6 +372,7 @@ class O2m_Changes_ChildrenLines(models.Model):
 
 
 class ResConfigTest(models.Model):
+    _name = 'res.config.test'
     _inherit = ['res.config.settings']
 
     _description = 'Config test'
@@ -360,6 +388,7 @@ class ResConfigTest(models.Model):
 
 
 class Test_Testing_UtilitiesWide(models.Model):
+    _name = 'test_testing_utilities.wide'
     _description = 'test_testing_utilities.wide'
     _log_access = False
 

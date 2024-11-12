@@ -9,6 +9,7 @@ from datetime import date
 
 
 class AccountLock_Exception(models.Model):
+    _name = 'account.lock_exception'
     _description = "Account Lock Exception"
 
     active = fields.Boolean(

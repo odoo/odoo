@@ -9,6 +9,7 @@ from stdnum.fr import siren
 
 
 class L10n_FrFecExportWizard(models.TransientModel):
+    _name = 'l10n_fr.fec.export.wizard'
     _description = 'Fichier Echange Informatise'
 
     date_from = fields.Date(string='Start Date', required=True, default=lambda self: self._context.get('report_dates', {}).get('date_from'))

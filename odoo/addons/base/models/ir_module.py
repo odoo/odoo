@@ -77,6 +77,7 @@ def assert_log_admin_access(method):
 
 
 class IrModuleCategory(models.Model):
+    _name = 'ir.module.category'
     _description = "Application"
     _order = 'name'
     _allow_sudo_commands = False
@@ -149,6 +150,7 @@ XML_DECLARATION = (
 
 
 class IrModuleModule(models.Model):
+    _name = 'ir.module.module'
     _rec_name = "shortdesc"
     _rec_names_search = ['name', 'shortdesc', 'summary']
     _description = "Module"
@@ -956,6 +958,7 @@ DEP_STATES = STATES + [('unknown', 'Unknown')]
 
 
 class IrModuleModuleDependency(models.Model):
+    _name = 'ir.module.module.dependency'
     _description = "Module dependency"
     _log_access = False  # inserts are done manually, create and write uid, dates are always null
     _allow_sudo_commands = False
@@ -1020,6 +1023,7 @@ class IrModuleModuleDependency(models.Model):
 
 
 class IrModuleModuleExclusion(models.Model):
+    _name = 'ir.module.module.exclusion'
     _description = "Module exclusion"
     _allow_sudo_commands = False
 

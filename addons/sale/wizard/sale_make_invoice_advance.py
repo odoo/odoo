@@ -7,6 +7,7 @@ from odoo.tools import frozendict
 
 
 class SaleAdvancePaymentInv(models.TransientModel):
+    _name = 'sale.advance.payment.inv'
     _description = "Sales Advance Payment Invoice"
 
     advance_payment_method = fields.Selection(

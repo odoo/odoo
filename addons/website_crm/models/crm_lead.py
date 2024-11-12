@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class CrmLead(models.Model):
-    _inherit = ['crm.lead']
+    _inherit = 'crm.lead'
 
     visitor_ids = fields.Many2many('website.visitor', string="Web Visitors")
     visitor_page_count = fields.Integer('# Page Views', compute="_compute_visitor_page_count")

@@ -4,7 +4,7 @@ from odoo import models, fields
 
 
 class ResCompany(models.Model):
-    _inherit = ["res.company"]
+    _inherit = "res.company"
 
     # This field needs to be overridden with `selection_add` in the modules which intends to add report layouts.
     # The xmlID of all the report actions which are actually Check Layouts has to be kept as key of the selection.

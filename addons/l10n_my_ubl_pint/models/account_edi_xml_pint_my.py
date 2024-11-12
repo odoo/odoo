@@ -4,6 +4,7 @@ from odoo import models, _
 
 
 class AccountEdiXmlPint_My(models.AbstractModel):
+    _name = 'account.edi.xml.pint_my'
     _inherit = ["account.edi.xml.ubl_bis3"]
     _description = "Malaysian implementation of Peppol International (PINT) model for Billing"
     """

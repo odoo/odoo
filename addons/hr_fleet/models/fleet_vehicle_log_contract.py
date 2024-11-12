@@ -5,7 +5,7 @@ from odoo import fields, models, _
 
 
 class FleetVehicleLogContract(models.Model):
-    _inherit = ['fleet.vehicle.log.contract']
+    _inherit = 'fleet.vehicle.log.contract'
 
     purchaser_employee_id = fields.Many2one(
         related='vehicle_id.driver_employee_id',

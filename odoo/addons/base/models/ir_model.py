@@ -517,6 +517,7 @@ FIELD_TYPES = [(key, key) for key in sorted(fields.Field.by_type)]
 
 
 class IrModelFields(models.Model):
+    _name = 'ir.model.fields'
     _description = "Fields"
     _order = "name"
     _rec_name = 'field_description'
@@ -1376,6 +1377,7 @@ class IrModelFields(models.Model):
 
 
 class IrModelInherit(models.Model):
+    _name = 'ir.model.inherit'
     _description = "Model Inheritance Tree"
     _log_access = False
 
@@ -1460,6 +1462,7 @@ class IrModelInherit(models.Model):
 
 
 class IrModelFieldsSelection(models.Model):
+    _name = 'ir.model.fields.selection'
     _order = 'sequence, id'
     _description = "Fields Selection"
     _allow_sudo_commands = False
@@ -1993,6 +1996,7 @@ class IrModelRelation(models.Model):
 
 
 class IrModelAccess(models.Model):
+    _name = 'ir.model.access'
     _description = 'Model Access'
     _order = 'model_id,group_id,name,id'
     _allow_sudo_commands = False
@@ -2626,6 +2630,7 @@ class IrModelData(models.Model):
 
 
 class WizardIrModelMenuCreate(models.TransientModel):
+    _name = 'wizard.ir.model.menu.create'
     _description = 'Create Menu Wizard'
 
     menu_id = fields.Many2one('ir.ui.menu', string='Parent Menu', required=True, ondelete='cascade')

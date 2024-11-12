@@ -6,7 +6,7 @@ from odoo import _, api, fields, models
 
 
 class ResCompany(models.Model):
-    _inherit = ["res.company"]
+    _inherit = "res.company"
     _check_company_auto = True
 
     def _default_confirmation_mail_template(self):

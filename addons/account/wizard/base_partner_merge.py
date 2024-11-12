@@ -2,7 +2,7 @@ from odoo import models
 
 
 class BasePartnerMergeAutomaticWizard(models.TransientModel):
-    _inherit = ['base.partner.merge.automatic.wizard']
+    _inherit = 'base.partner.merge.automatic.wizard'
 
     def _get_summable_fields(self):
         """Add to summable fields list, fields created in this module.

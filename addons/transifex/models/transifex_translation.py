@@ -11,6 +11,7 @@ from odoo import models, tools
 
 
 class TransifexTranslation(models.AbstractModel):
+    _name = 'transifex.translation'
     _description = "Transifex Translation"
 
     @tools.ormcache()

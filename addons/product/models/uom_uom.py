@@ -5,7 +5,7 @@ from odoo import api, models, _
 
 
 class UomUom(models.Model):
-    _inherit = ['uom.uom']
+    _inherit = 'uom.uom'
 
     @api.onchange('rounding')
     def _onchange_rounding(self):

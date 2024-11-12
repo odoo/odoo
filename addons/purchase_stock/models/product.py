@@ -6,7 +6,7 @@ from odoo.osv import expression
 
 
 class ProductCategory(models.Model):
-    _inherit = ["product.category"]
+    _inherit = "product.category"
 
     property_account_creditor_price_difference_categ = fields.Many2one(
         'account.account', string="Price Difference Account",
@@ -15,7 +15,7 @@ class ProductCategory(models.Model):
 
 
 class ProductTemplate(models.Model):
-    _inherit = ['product.template']
+    _inherit = 'product.template'
 
     property_account_creditor_price_difference = fields.Many2one(
         'account.account', string="Price Difference Account", company_dependent=True, ondelete='restrict',
@@ -33,7 +33,7 @@ class ProductTemplate(models.Model):
 
 
 class ProductProduct(models.Model):
-    _inherit = ['product.product']
+    _inherit = 'product.product'
 
     purchase_order_line_ids = fields.One2many('purchase.order.line', 'product_id', string="PO Lines") # used to compute quantities
 
@@ -90,7 +90,7 @@ class ProductProduct(models.Model):
 
 
 class ProductSupplierinfo(models.Model):
-    _inherit = ['product.supplierinfo']
+    _inherit = 'product.supplierinfo'
 
     last_purchase_date = fields.Date('Last Purchase', compute='_compute_last_purchase_date')
     show_set_supplier_button = fields.Boolean(

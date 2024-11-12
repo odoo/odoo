@@ -6,7 +6,7 @@ from odoo.exceptions import AccessError
 
 
 class SlideChannel(models.Model):
-    _inherit = ['slide.channel']
+    _inherit = 'slide.channel'
 
     def _get_default_product_id(self):
         product_courses = self.env['product.product'].search(

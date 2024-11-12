@@ -6,7 +6,7 @@ from odoo.exceptions import ValidationError
 
 
 class HrLeaveType(models.Model):
-    _inherit = ["hr.leave.type"]
+    _inherit = "hr.leave.type"
 
     timesheet_generate = fields.Boolean(
         'Generate Timesheets', compute='_compute_timesheet_generate', store=True, readonly=False,
@@ -51,7 +51,7 @@ class HrLeaveType(models.Model):
 
 
 class HrLeave(models.Model):
-    _inherit = ["hr.leave"]
+    _inherit = "hr.leave"
 
     timesheet_ids = fields.One2many('account.analytic.line', 'holiday_id', string="Analytic Lines")
 

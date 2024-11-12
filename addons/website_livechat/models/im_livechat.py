@@ -6,6 +6,7 @@ from odoo.tools.translate import html_translate
 
 
 class Im_LivechatChannel(models.Model):
+    _name = 'im_livechat.channel'
 
     _inherit = ['im_livechat.channel', 'website.published.mixin']
 

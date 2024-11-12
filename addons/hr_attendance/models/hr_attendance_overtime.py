@@ -5,6 +5,7 @@ from odoo import models, fields
 
 
 class HrAttendanceOvertime(models.Model):
+    _name = 'hr.attendance.overtime'
     _description = "Attendance Overtime"
     _rec_name = 'employee_id'
     _order = 'date desc'

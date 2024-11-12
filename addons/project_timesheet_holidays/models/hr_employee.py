@@ -6,7 +6,7 @@ from collections import defaultdict
 
 
 class HrEmployee(models.Model):
-    _inherit = ['hr.employee']
+    _inherit = 'hr.employee'
 
     @api.model_create_multi
     def create(self, vals_list):

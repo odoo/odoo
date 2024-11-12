@@ -5,7 +5,7 @@ from odoo import models, _
 
 
 class Im_LivechatChannel(models.Model):
-    _inherit = ['im_livechat.channel']
+    _inherit = 'im_livechat.channel'
 
     def _get_livechat_discuss_channel_vals(self, anonymous_name, previous_operator_id=None, chatbot_script=None, user_id=None, country_id=None, lang=None):
         discuss_channel_vals = super()._get_livechat_discuss_channel_vals(

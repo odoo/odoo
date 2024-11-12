@@ -20,6 +20,7 @@ _logger = logging.getLogger(__name__)
 
 
 class PosOrder(models.Model):
+    _name = 'pos.order'
     _inherit = ["portal.mixin", "pos.bus.mixin", "pos.load.mixin", "mail.thread"]
     _description = "Point of Sale Orders"
     _order = "date_order desc, name desc, id desc"
@@ -1279,6 +1280,7 @@ class PosOrder(models.Model):
 
 
 class PosOrderLine(models.Model):
+    _name = 'pos.order.line'
     _description = "Point of Sale Order Lines"
     _rec_name = "product_id"
     _inherit = ['pos.load.mixin']
@@ -1650,6 +1652,7 @@ class PosOrderLine(models.Model):
 
 
 class PosPackOperationLot(models.Model):
+    _name = 'pos.pack.operation.lot'
     _description = "Specify product lot/serial number in pos order line"
     _rec_name = "lot_name"
     _inherit = ['pos.load.mixin']
@@ -1669,6 +1672,7 @@ class PosPackOperationLot(models.Model):
 
 
 class AccountCashRounding(models.Model):
+    _name = 'account.cash.rounding'
     _inherit = ['account.cash.rounding', 'pos.load.mixin']
 
     @api.constrains('rounding', 'rounding_method', 'strategy')

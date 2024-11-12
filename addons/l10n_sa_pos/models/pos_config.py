@@ -6,7 +6,7 @@ from odoo.tools.translate import _
 
 
 class PosConfig(models.Model):
-    _inherit = ['pos.config']
+    _inherit = 'pos.config'
 
     def open_ui(self):
         for config in self:

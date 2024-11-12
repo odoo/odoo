@@ -4,7 +4,7 @@ from odoo import api, models
 
 
 class OnboardingOnboarding(models.Model):
-    _inherit = ['onboarding.onboarding']
+    _inherit = 'onboarding.onboarding'
 
     # Invoice Onboarding
     @api.model

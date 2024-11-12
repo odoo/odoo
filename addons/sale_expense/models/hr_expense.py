@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class HrExpense(models.Model):
-    _inherit = ["hr.expense"]
+    _inherit = "hr.expense"
 
     sale_order_id = fields.Many2one('sale.order', compute='_compute_sale_order_id', store=True, string='Customer to Reinvoice', readonly=False, tracking=True,
         # NOTE: only confirmed SO can be selected, but this domain in activated throught the name search with the `sale_expense_all_order`

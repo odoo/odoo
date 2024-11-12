@@ -5,6 +5,7 @@ from odoo import fields, models
 
 
 class IrExports(models.Model):
+    _name = 'ir.exports'
     _description = 'Exports'
     _order = 'name'
 
@@ -14,6 +15,7 @@ class IrExports(models.Model):
 
 
 class IrExportsLine(models.Model):
+    _name = 'ir.exports.line'
     _description = 'Exports Line'
     _order = 'id'
 

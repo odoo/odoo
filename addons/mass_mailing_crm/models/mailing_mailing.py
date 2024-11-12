@@ -6,7 +6,7 @@ from odoo import fields, models, _, tools
 
 
 class MailingMailing(models.Model):
-    _inherit = ['mailing.mailing']
+    _inherit = 'mailing.mailing'
 
     use_leads = fields.Boolean('Use Leads', compute='_compute_use_leads')
     crm_lead_count = fields.Integer('Leads/Opportunities Count', compute='_compute_crm_lead_count')

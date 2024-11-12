@@ -6,6 +6,7 @@ from odoo.osv import expression
 
 
 class EventBooth(models.Model):
+    _name = 'event.booth'
     _description = 'Event Booth'
     _inherit = [
         'event.type.booth',

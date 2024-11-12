@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class ResCompany(models.Model):
-    _inherit = ['res.company']
+    _inherit = 'res.company'
 
     po_lead = fields.Float(string='Purchase Lead Time', required=True,
         help="Margin of error for vendor lead times. When the system "

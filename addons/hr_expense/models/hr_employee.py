@@ -4,7 +4,7 @@ from odoo import fields, models, api
 
 
 class HrEmployeeBase(models.AbstractModel):
-    _inherit = ['hr.employee.base']
+    _inherit = 'hr.employee.base'
 
     filter_for_expense = fields.Boolean(store=False, search='_search_filter_for_expense', groups="hr.group_hr_user")
 
@@ -31,7 +31,7 @@ class HrEmployeeBase(models.AbstractModel):
 
 
 class HrEmployee(models.Model):
-    _inherit = ['hr.employee']
+    _inherit = 'hr.employee'
 
     def _group_hr_expense_user_domain(self):
         # We return the domain only if the group exists for the following reason:
@@ -68,13 +68,13 @@ class HrEmployee(models.Model):
 
 
 class HrEmployeePublic(models.Model):
-    _inherit = ['hr.employee.public']
+    _inherit = 'hr.employee.public'
 
     expense_manager_id = fields.Many2one('res.users', readonly=True)
 
 
 class ResUsers(models.Model):
-    _inherit = ['res.users']
+    _inherit = 'res.users'
 
     expense_manager_id = fields.Many2one(related='employee_id.expense_manager_id', readonly=False)
 

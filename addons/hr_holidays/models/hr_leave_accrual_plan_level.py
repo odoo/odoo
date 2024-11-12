@@ -17,6 +17,7 @@ def _get_selection_days(self):
 
 
 class HrLeaveAccrualLevel(models.Model):
+    _name = 'hr.leave.accrual.level'
     _description = "Accrual Plan Level"
     _order = 'sequence asc'
 

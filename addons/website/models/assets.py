@@ -10,7 +10,7 @@ from odoo import api, models
 
 
 class Web_EditorAssets(models.AbstractModel):
-    _inherit = ['web_editor.assets']
+    _inherit = 'web_editor.assets'
 
     @api.model
     def make_scss_customization(self, url, values):

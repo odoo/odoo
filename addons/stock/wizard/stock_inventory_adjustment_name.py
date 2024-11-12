@@ -5,6 +5,7 @@ from odoo import fields, models, _
 
 
 class StockInventoryAdjustmentName(models.TransientModel):
+    _name = 'stock.inventory.adjustment.name'
     _description = 'Inventory Adjustment Reference / Reason'
 
     quant_ids = fields.Many2many('stock.quant')

@@ -4,6 +4,7 @@ from odoo.osv import expression
 
 
 class L10n_LatamDocumentType(models.Model):
+    _name = 'l10n_latam.document.type'
 
     _description = 'Latam Document Type'
     _order = 'sequence, id'

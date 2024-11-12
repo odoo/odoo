@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class FleetVehicleLogServices(models.Model):
-    _inherit = ['fleet.vehicle.log.services']
+    _inherit = 'fleet.vehicle.log.services'
 
     purchaser_employee_id = fields.Many2one(
         'hr.employee', string="Driver (Employee)",

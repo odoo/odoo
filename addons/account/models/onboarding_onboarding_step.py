@@ -4,7 +4,7 @@ from odoo import _, api, models
 
 
 class OnboardingOnboardingStep(models.Model):
-    _inherit = ['onboarding.onboarding.step']
+    _inherit = 'onboarding.onboarding.step'
 
     # COMMON STEPS
     @api.model

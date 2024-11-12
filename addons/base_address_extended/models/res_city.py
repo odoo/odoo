@@ -6,6 +6,7 @@ from odoo.osv import expression
 
 
 class ResCity(models.Model):
+    _name = 'res.city'
     _description = 'City'
     _order = 'name'
     _rec_names_search = ['name', 'zipcode']

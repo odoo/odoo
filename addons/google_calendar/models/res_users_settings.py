@@ -10,7 +10,7 @@ from odoo.addons.google_account.models.google_service import GOOGLE_TOKEN_ENDPOI
 
 
 class ResUsersSettings(models.Model):
-    _inherit = ["res.users.settings"]
+    _inherit = "res.users.settings"
 
     # Google Calendar tokens and synchronization information.
     google_calendar_rtoken = fields.Char('Refresh Token', copy=False, groups='base.group_system')

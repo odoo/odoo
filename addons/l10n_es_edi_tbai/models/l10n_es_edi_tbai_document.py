@@ -45,6 +45,7 @@ CRC8_TABLE = [
 
 
 class L10n_Es_Edi_TbaiDocument(models.Model):
+    _name = 'l10n_es_edi_tbai.document'
     _description = 'TicketBAI Document'
 
     name = fields.Char(

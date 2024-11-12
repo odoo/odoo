@@ -13,7 +13,7 @@ BATCH_SIZE = 50
 
 
 class Account_Edi_Proxy_ClientUser(models.Model):
-    _inherit = ['account_edi_proxy_client.user']
+    _inherit = 'account_edi_proxy_client.user'
 
     peppol_verification_code = fields.Char(string='SMS verification code')
     proxy_type = fields.Selection(selection_add=[('peppol', 'PEPPOL')], ondelete={'peppol': 'cascade'})

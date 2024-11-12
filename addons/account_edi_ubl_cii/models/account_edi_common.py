@@ -92,6 +92,7 @@ EAS_MAPPING = {
 
 
 class AccountEdiCommon(models.AbstractModel):
+    _name = 'account.edi.common'
     _description = "Common functions for EDI documents: generate the data, the constraints, etc"
 
     # -------------------------------------------------------------------------

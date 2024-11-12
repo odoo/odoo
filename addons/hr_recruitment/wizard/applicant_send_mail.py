@@ -4,6 +4,7 @@ from odoo import api, fields, models, _
 
 
 class ApplicantSendMail(models.TransientModel):
+    _name = 'applicant.send.mail'
     _inherit = ['mail.composer.mixin']
     _description = 'Send mails to applicants'
 

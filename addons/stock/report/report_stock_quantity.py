@@ -5,6 +5,7 @@ from odoo import fields, models, tools
 
 
 class ReportStockQuantity(models.Model):
+    _name = 'report.stock.quantity'
     _auto = False
     _description = 'Stock Quantity Report'
 

@@ -13,6 +13,7 @@ from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarServ
 
 
 class CalendarEvent(models.Model):
+    _name = 'calendar.event'
     _inherit = ['calendar.event', 'google.calendar.sync']
 
     MEET_ROUTE = 'meet.google.com'

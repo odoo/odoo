@@ -6,7 +6,7 @@ from odoo import api, models
 
 
 class Base(models.AbstractModel):
-    _inherit = ['base']
+    _inherit = 'base'
 
     @api.model
     def _get_view_field_attributes(self):

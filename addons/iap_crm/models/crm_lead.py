@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class CrmLead(models.Model):
-    _inherit = ['crm.lead']
+    _inherit = 'crm.lead'
 
     reveal_id = fields.Char(string='Reveal ID') # Technical ID of reveal request done by IAP
 

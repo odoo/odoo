@@ -83,6 +83,7 @@ def get_notify_payloads(channels):
 
 
 class BusBus(models.Model):
+    _name = 'bus.bus'
 
     _description = 'Communication Bus'
 

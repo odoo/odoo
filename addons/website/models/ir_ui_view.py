@@ -15,6 +15,7 @@ _logger = logging.getLogger(__name__)
 
 
 class IrUiView(models.Model):
+    _name = 'ir.ui.view'
 
     _inherit = ["ir.ui.view", "website.seo.metadata"]
 

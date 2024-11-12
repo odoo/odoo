@@ -10,6 +10,7 @@ from odoo.addons.sale_pdf_quote_builder import utils
 
 
 class QuotationDocument(models.Model):
+    _name = 'quotation.document'
     _description = "Quotation's Headers & Footers"
     _inherits = {
         'ir.attachment': 'ir_attachment_id',

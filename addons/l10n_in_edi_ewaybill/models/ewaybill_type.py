@@ -5,6 +5,7 @@ from odoo import api, fields, models, _
 
 
 class L10nInEwaybillType(models.Model):
+    _name = 'l10n.in.ewaybill.type'
     _description = "E-Waybill Document Type"
 
     name = fields.Char("Type")

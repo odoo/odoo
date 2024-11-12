@@ -3,6 +3,7 @@ from odoo import fields, models
 
 
 class Test_Search_PanelSource_Model(models.Model):
+    _name = 'test_search_panel.source_model'
     _description = 'Source Model'
 
     name = fields.Char('Name', required=True)
@@ -16,6 +17,7 @@ class Test_Search_PanelSource_Model(models.Model):
 
 
 class Test_Search_PanelCategory_Target_Model(models.Model):
+    _name = 'test_search_panel.category_target_model'
     _order = 'name'
     _description = 'Category target model'
     _parent_name = 'parent_name_id'
@@ -25,6 +27,7 @@ class Test_Search_PanelCategory_Target_Model(models.Model):
 
 
 class Test_Search_PanelCategory_Target_Model_No_Parent_Name(models.Model):
+    _name = 'test_search_panel.category_target_model_no_parent_name'
     _order = 'id desc'
     _description = 'Category target model'
 
@@ -32,6 +35,7 @@ class Test_Search_PanelCategory_Target_Model_No_Parent_Name(models.Model):
 
 
 class Test_Search_PanelFilter_Target_Model(models.Model):
+    _name = 'test_search_panel.filter_target_model'
     _order = 'name'
     _description = 'Filter target model'
 

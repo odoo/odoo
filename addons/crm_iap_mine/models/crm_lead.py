@@ -5,7 +5,7 @@ from odoo import fields, models, _
 
 
 class CrmLead(models.Model):
-    _inherit = ['crm.lead']
+    _inherit = 'crm.lead'
 
     lead_mining_request_id = fields.Many2one('crm.iap.lead.mining.request', string='Lead Mining Request', index='btree_not_null')
 

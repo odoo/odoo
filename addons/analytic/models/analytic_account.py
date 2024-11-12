@@ -9,6 +9,7 @@ from odoo.tools import groupby
 
 
 class AccountAnalyticAccount(models.Model):
+    _name = 'account.analytic.account'
     _inherit = ['mail.thread']
     _description = 'Analytic Account'
     _order = 'plan_id, name asc'

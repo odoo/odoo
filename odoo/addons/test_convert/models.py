@@ -5,6 +5,7 @@ from odoo import api, fields, models
 
 
 class Test_ConvertTest_Model(models.Model):
+    _name = 'test_convert.test_model'
     _description = "Test Convert Model"
 
     name = fields.Char(translate=True)
@@ -24,6 +25,7 @@ class Test_ConvertTest_Model(models.Model):
 
 
 class Test_ConvertUsered(models.Model):
+    _name = 'test_convert.usered'
     _description = "z test model ignore"
 
     name = fields.Char()

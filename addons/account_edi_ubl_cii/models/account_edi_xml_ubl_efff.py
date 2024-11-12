@@ -6,6 +6,7 @@ import re
 
 
 class AccountEdiXmlUbl_Efff(models.AbstractModel):
+    _name = 'account.edi.xml.ubl_efff'
     _inherit = ["account.edi.xml.ubl_20"]
     _description = "E-FFF (BE)"
 

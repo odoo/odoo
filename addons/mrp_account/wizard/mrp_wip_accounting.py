@@ -8,6 +8,7 @@ from odoo.tools import format_list
 
 
 class MrpAccountWipAccountingLine(models.TransientModel):
+    _name = 'mrp.account.wip.accounting.line'
     _description = 'Account move line to be created when posting WIP account move'
 
     account_id = fields.Many2one('account.account', "Account")
@@ -36,6 +37,7 @@ class MrpAccountWipAccountingLine(models.TransientModel):
 
 
 class MrpAccountWipAccounting(models.TransientModel):
+    _name = 'mrp.account.wip.accounting'
     _description = 'Wizard to post Manufacturing WIP account move'
 
     @api.model

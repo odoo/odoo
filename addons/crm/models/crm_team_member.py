@@ -13,7 +13,7 @@ _logger = logging.getLogger(__name__)
 
 
 class CrmTeamMember(models.Model):
-    _inherit = ['crm.team.member']
+    _inherit = 'crm.team.member'
 
     # assignment
     assignment_enabled = fields.Boolean(related="crm_team_id.assignment_enabled")

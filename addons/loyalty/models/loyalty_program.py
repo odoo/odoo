@@ -8,6 +8,7 @@ from odoo.exceptions import UserError, ValidationError
 
 
 class LoyaltyProgram(models.Model):
+    _name = 'loyalty.program'
     _description = 'Loyalty Program'
     _order = 'sequence'
     _rec_name = 'name'

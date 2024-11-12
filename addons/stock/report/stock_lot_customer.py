@@ -4,6 +4,7 @@ from odoo import fields, models
 
 
 class StockLotReport(models.Model):
+    _name = 'stock.lot.report'
     _description = "Customer Lot Report"
     _rec_name = 'lot_id'
     _auto = False

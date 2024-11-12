@@ -5,6 +5,7 @@ from odoo.exceptions import ValidationError
 
 # We just create a new model
 class TestUnit(models.Model):
+    _name = 'test.unit'
     _description = 'Test Unit'
 
     name = fields.Char('Name', required=True, translate=True)
@@ -21,6 +22,7 @@ class TestUnit(models.Model):
 
 
 class TestUnitLine(models.Model):
+    _name = 'test.unit.line'
     _description = 'Test Unit Line'
 
     name = fields.Char('Name', required=True)
@@ -32,6 +34,7 @@ class TestUnitLine(models.Model):
 
 # in the child object
 class TestBox(models.Model):
+    _name = 'test.box'
     _inherits = {'test.unit': 'unit_id'}
     _description = 'Test Box'
 
@@ -43,6 +46,7 @@ class TestBox(models.Model):
 
 # We add a third level of _inherits
 class TestPallet(models.Model):
+    _name = 'test.pallet'
     _inherits = {'test.box': 'box_id'}
     _description = 'Test Pallet'
 
@@ -53,6 +57,7 @@ class TestPallet(models.Model):
 
 # Another model for another test suite
 class TestAnother_Unit(models.Model):
+    _name = 'test.another_unit'
     _description = 'Another Test Unit'
 
     val1 = fields.Integer('Value 1', required=True)
@@ -63,6 +68,7 @@ class TestAnother_Unit(models.Model):
 
 # the new field is always equals to the first one
 class TestAnother_Box(models.Model):
+    _name = 'test.another_box'
     _inherits = {'test.another_unit': 'another_unit_id'}
     _description = 'Another Test Box'
 

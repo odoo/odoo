@@ -3,6 +3,7 @@ from odoo import api, fields, models, _, Command
 
 
 class AccountFullReconcile(models.Model):
+    _name = 'account.full.reconcile'
     _description = "Full Reconcile"
 
     partial_reconcile_ids = fields.One2many('account.partial.reconcile', 'full_reconcile_id', string='Reconciliation Parts')

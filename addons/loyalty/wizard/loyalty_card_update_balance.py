@@ -5,6 +5,7 @@ from odoo.exceptions import ValidationError
 
 
 class LoyaltyCardUpdateBalance(models.TransientModel):
+    _name = 'loyalty.card.update.balance'
     _description = "Update Loyalty Card Points"
 
     card_id = fields.Many2one(

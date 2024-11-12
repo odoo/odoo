@@ -6,6 +6,7 @@ from odoo import fields, models
 
 
 class CrmTag(models.Model):
+    _name = 'crm.tag'
     _description = "CRM Tag"
 
     def _get_default_color(self):

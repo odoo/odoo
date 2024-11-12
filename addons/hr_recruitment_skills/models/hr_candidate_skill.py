@@ -5,6 +5,7 @@ from odoo.exceptions import ValidationError
 
 
 class HrCandidateSkill(models.Model):
+    _name = 'hr.candidate.skill'
     _description = "Skill level for a candidate"
     _rec_name = 'skill_id'
     _order = "skill_level_id"

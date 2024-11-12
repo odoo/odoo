@@ -4,6 +4,7 @@ import base64
 
 
 class Web_TourTour(models.Model):
+    _name = 'web_tour.tour'
     _description = "Tours"
     _order = "sequence, name, id"
 
@@ -80,6 +81,7 @@ registry.category("web_tour.tours").add("{self.name}", {{
 
 
 class Web_TourTourStep(models.Model):
+    _name = 'web_tour.tour.step'
     _description = "Tour's step"
     _order = "sequence, id"
 

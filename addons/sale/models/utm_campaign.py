@@ -4,7 +4,7 @@ from odoo import fields, models
 
 
 class UtmCampaign(models.Model):
-    _inherit = ['utm.campaign']
+    _inherit = 'utm.campaign'
     _description = 'UTM Campaign'
 
     quotation_count = fields.Integer('Quotation Count',

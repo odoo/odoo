@@ -12,6 +12,7 @@ from .utils import timezone_datetime, make_aware, Intervals
 
 
 class ResourceResource(models.Model):
+    _name = 'resource.resource'
     _description = "Resources"
     _order = "name"
 

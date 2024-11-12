@@ -5,7 +5,7 @@ CHORUS_PRO_PEPPOL_ID = "0009:11000201100044"
 
 
 class AccountEdiXmlUbl_Bis3(models.AbstractModel):
-    _inherit = ['account.edi.xml.ubl_bis3']
+    _inherit = 'account.edi.xml.ubl_bis3'
 
     """
     See Pagero documentation: https://www.pagero.com/onboarding/aife/aife-en#requirements

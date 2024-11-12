@@ -11,6 +11,7 @@ from odoo.tools import float_compare, format_datetime, float_is_zero, float_roun
 
 
 class MrpWorkorder(models.Model):
+    _name = 'mrp.workorder'
     _description = 'Work Order'
     _order = 'sequence, leave_id, date_start, id'
 

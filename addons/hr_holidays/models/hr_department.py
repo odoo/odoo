@@ -9,8 +9,7 @@ import ast
 
 
 class HrDepartment(models.Model):
-
-    _inherit = ['hr.department']
+    _inherit = 'hr.department'
 
     absence_of_today = fields.Integer(
         compute='_compute_leave_count', string='Absence by Today')

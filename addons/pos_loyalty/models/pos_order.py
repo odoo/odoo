@@ -8,7 +8,7 @@ import base64
 
 
 class PosOrder(models.Model):
-    _inherit = ['pos.order']
+    _inherit = 'pos.order'
 
     def validate_coupon_programs(self, point_changes, new_codes):
         """

@@ -12,6 +12,7 @@ class IrDemo_Failure(models.TransientModel):
 
 
 class IrDemo_FailureWizard(models.TransientModel):
+    _name = 'ir.demo_failure.wizard'
     _description = 'Demo Failure wizard'
 
     failure_ids = fields.One2many(

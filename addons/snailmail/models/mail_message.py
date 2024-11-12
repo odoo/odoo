@@ -3,7 +3,7 @@ from odoo import api, fields, models
 
 
 class MailMessage(models.Model):
-    _inherit = ['mail.message']
+    _inherit = 'mail.message'
 
     snailmail_error = fields.Boolean(
         string="Snailmail message in error",

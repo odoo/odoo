@@ -10,6 +10,7 @@ from .project_task import CLOSED_STATES
 
 
 class ProjectMilestone(models.Model):
+    _name = 'project.milestone'
     _description = "Project Milestone"
     _inherit = ['mail.thread']
     _order = 'sequence, deadline, is_reached desc, name'

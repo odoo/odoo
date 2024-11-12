@@ -11,6 +11,7 @@ DAY_SELECT_SELECTION_NO_LAST = tuple(zip(DAY_SELECT_VALUES, (str(i) for i in ran
 
 
 class HrLeaveAccrualPlan(models.Model):
+    _name = 'hr.leave.accrual.plan'
     _description = "Accrual Plan"
 
     active = fields.Boolean(default=True)

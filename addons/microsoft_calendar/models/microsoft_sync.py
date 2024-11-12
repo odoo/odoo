@@ -53,6 +53,7 @@ def microsoft_calendar_token(user):
 
 
 class MicrosoftCalendarSync(models.AbstractModel):
+    _name = 'microsoft.calendar.sync'
     _description = "Synchronize a record with Microsoft Calendar"
 
     microsoft_id = fields.Char('Organizer event Id', copy=False, index=True)

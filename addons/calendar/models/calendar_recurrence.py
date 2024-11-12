@@ -92,6 +92,7 @@ def weekday_to_field(weekday_index):
 
 
 class CalendarRecurrence(models.Model):
+    _name = 'calendar.recurrence'
     _description = 'Event Recurrence Rule'
 
     name = fields.Char(compute='_compute_name', store=True)

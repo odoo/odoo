@@ -4,7 +4,7 @@ from odoo import fields, models
 
 
 class ProductTemplate(models.Model):
-    _inherit = ['product.template']
+    _inherit = 'product.template'
 
     product_add_mode = fields.Selection(
         selection=[

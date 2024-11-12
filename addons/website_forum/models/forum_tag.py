@@ -6,6 +6,7 @@ from odoo.exceptions import AccessError
 
 
 class ForumTag(models.Model):
+    _name = 'forum.tag'
     _description = "Forum Tag"
     _inherit = [
         'mail.thread',

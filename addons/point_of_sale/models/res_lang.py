@@ -2,6 +2,7 @@ from odoo import models, api
 
 
 class ResLang(models.Model):
+    _name = 'res.lang'
     _inherit = ['res.lang', 'pos.load.mixin']
 
     @api.model

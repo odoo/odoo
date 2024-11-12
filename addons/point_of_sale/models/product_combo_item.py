@@ -4,6 +4,7 @@ from odoo import api, models
 
 
 class ProductComboItem(models.Model):
+    _name = 'product.combo.item'
     _inherit = ['product.combo.item', 'pos.load.mixin']
 
     @api.model

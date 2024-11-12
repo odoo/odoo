@@ -4,7 +4,7 @@ from odoo import models
 
 
 class StockValuationAdjustmentLines(models.Model):
-    _inherit = ['stock.valuation.adjustment.lines']
+    _inherit = 'stock.valuation.adjustment.lines'
 
     def _prepare_account_move_line_values(self):
         res = super()._prepare_account_move_line_values()

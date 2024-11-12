@@ -5,6 +5,7 @@ from odoo import fields, models
 
 
 class ReportLayout(models.Model):
+    _name = 'report.layout'
     _description = 'Report Layout'
     _order = 'sequence'
 

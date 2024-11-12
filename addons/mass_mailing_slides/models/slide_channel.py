@@ -5,7 +5,7 @@ from odoo import models, _
 
 
 class SlideChannel(models.Model):
-    _inherit = ["slide.channel"]
+    _inherit = "slide.channel"
 
     def action_mass_mailing_attendees(self):
         domain = repr([('slide_channel_ids', 'in', self.ids)])

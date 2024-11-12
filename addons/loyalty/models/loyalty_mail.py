@@ -8,6 +8,7 @@ from odoo import fields, models
 
 
 class LoyaltyMail(models.Model):
+    _name = 'loyalty.mail'
     _description = 'Loyalty Communication'
 
     active = fields.Boolean(default=True)

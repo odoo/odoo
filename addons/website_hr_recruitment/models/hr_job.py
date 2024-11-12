@@ -8,6 +8,7 @@ from odoo.tools.translate import html_translate
 
 
 class HrJob(models.Model):
+    _name = 'hr.job'
     _inherit = [
         'hr.job',
         'website.seo.metadata',

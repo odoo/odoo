@@ -10,6 +10,7 @@ _logger = logging.getLogger(__name__)
 
 
 class L10n_ArPaymentRegisterWithholding(models.TransientModel):
+    _name = 'l10n_ar.payment.register.withholding'
     _description = 'Payment register withholding lines'
     _check_company_auto = True
 

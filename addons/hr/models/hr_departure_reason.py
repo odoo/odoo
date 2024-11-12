@@ -6,6 +6,7 @@ from odoo.exceptions import UserError
 
 
 class HrDepartureReason(models.Model):
+    _name = 'hr.departure.reason'
     _description = "Departure Reason"
     _order = "sequence"
 

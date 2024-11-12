@@ -5,7 +5,7 @@ from collections import defaultdict
 
 
 class Auth_TotpDevice(models.Model):
-    _inherit = ["auth_totp.device"]
+    _inherit = "auth_totp.device"
 
     def unlink(self):
         """ Notify users when trusted devices are removed from their account. """

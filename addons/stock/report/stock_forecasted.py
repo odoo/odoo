@@ -10,6 +10,7 @@ from odoo.tools import float_is_zero, format_date, float_round, float_compare
 
 
 class StockForecasted_Product_Product(models.AbstractModel):
+    _name = 'stock.forecasted_product_product'
     _description = "Stock Replenishment Report"
 
     @api.model
@@ -442,6 +443,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
 
 
 class StockForecasted_Product_Template(models.AbstractModel):
+    _name = 'stock.forecasted_product_template'
     _description = "Stock Replenishment Report"
     _inherit = ['stock.forecasted_product_product']
 

@@ -7,6 +7,7 @@ SG_TAX_CATEGORIES = {'SR', 'SRCA-S', 'SRCA-C', 'SROVR-RS', 'SROVR-LVG', 'SRLVG',
 
 
 class AccountEdiXmlPint_Sg(models.AbstractModel):
+    _name = 'account.edi.xml.pint_sg'
     _inherit = ["account.edi.xml.ubl_bis3"]
     _description = "Singapore implementation of Peppol International (PINT) model for Billing"
     """

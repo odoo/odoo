@@ -6,8 +6,7 @@ _logger = logging.getLogger(__name__)
 
 
 class IrAttachment(models.Model):
-
-    _inherit = ["ir.attachment"]
+    _inherit = "ir.attachment"
 
     # Technical field used to resolve multiple attachments in a multi-website environment.
     key = fields.Char()

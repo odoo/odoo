@@ -5,7 +5,7 @@ from odoo.exceptions import UserError
 
 
 class ResConfigSettings(models.TransientModel):
-    _inherit = ['res.config.settings']
+    _inherit = 'res.config.settings'
 
     is_edi_proxy_active = fields.Boolean(compute='_compute_is_edi_proxy_active')
     l10n_it_edi_proxy_current_state = fields.Char(compute='_compute_l10n_it_edi_proxy_current_state')

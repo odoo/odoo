@@ -7,6 +7,7 @@ from odoo.exceptions import ValidationError
 
 
 class PrintPrenumberedChecks(models.TransientModel):
+    _name = 'print.prenumbered.checks'
     _description = 'Print Pre-numbered Checks'
 
     next_check_number = fields.Char('Next Check Number', required=True)

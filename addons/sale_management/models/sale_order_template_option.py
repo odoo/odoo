@@ -4,6 +4,7 @@ from odoo import api, fields, models
 
 
 class SaleOrderTemplateOption(models.Model):
+    _name = 'sale.order.template.option'
     _description = "Quotation Template Option"
     _check_company_auto = True
 

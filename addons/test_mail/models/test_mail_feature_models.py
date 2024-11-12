@@ -6,6 +6,7 @@ from odoo import api, fields, models
 
 
 class MailTestRecipients(models.Model):
+    _name = 'mail.test.recipients'
     _description = "Test Recipients Computation"
     _inherit = ['mail.thread']
     _primary_email = 'customer_email'
@@ -37,6 +38,7 @@ class MailTestRecipients(models.Model):
 
 
 class MailTestProperties(models.Model):
+    _name = 'mail.test.properties'
     _description = 'Mail Test Properties'
     _inherit = ['mail.thread']
 

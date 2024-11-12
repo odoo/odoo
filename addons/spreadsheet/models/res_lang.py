@@ -9,7 +9,7 @@ from odoo.addons.spreadsheet.utils.formatting import (
 
 
 class ResLang(models.Model):
-    _inherit = ["res.lang"]
+    _inherit = "res.lang"
 
     @api.model
     def get_locales_for_spreadsheet(self):

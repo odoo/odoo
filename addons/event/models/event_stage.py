@@ -5,6 +5,7 @@ from odoo import fields, models
 
 
 class EventStage(models.Model):
+    _name = 'event.stage'
     _description = 'Event Stage'
     _order = 'sequence, name'
 

@@ -48,6 +48,7 @@ class LangDataDict(frozendict):
 
 
 class ResLang(models.Model):
+    _name = 'res.lang'
     _description = "Languages"
     _order = "active desc,name"
     _allow_sudo_commands = False

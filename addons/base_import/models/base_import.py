@@ -118,7 +118,7 @@ class ImportValidationError(Exception):
 
 
 class Base(models.AbstractModel):
-    _inherit = ['base']
+    _inherit = 'base'
 
     @api.model
     def get_import_templates(self):
@@ -151,7 +151,7 @@ class Base_ImportMapping(models.Model):
 
 
 class ResUsers(models.Model):
-    _inherit = ['res.users']
+    _inherit = 'res.users'
 
     def _can_import_remote_urls(self):
         """ Hook to decide whether the current user is allowed to import

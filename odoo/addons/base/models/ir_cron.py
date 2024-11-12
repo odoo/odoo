@@ -745,6 +745,7 @@ class IrCron(models.Model):
 
 
 class IrCronTrigger(models.Model):
+    _name = 'ir.cron.trigger'
     _description = 'Triggered actions'
     _rec_name = 'cron_id'
     _allow_sudo_commands = False
@@ -762,6 +763,7 @@ class IrCronTrigger(models.Model):
 
 
 class IrCronProgress(models.Model):
+    _name = 'ir.cron.progress'
     _description = 'Progress of Scheduled Actions'
     _rec_name = 'cron_id'
 

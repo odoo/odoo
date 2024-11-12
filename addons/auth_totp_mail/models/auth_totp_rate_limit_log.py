@@ -2,6 +2,7 @@ from odoo import fields, models
 
 
 class AuthTotpRateLimitLog(models.TransientModel):
+    _name = 'auth.totp.rate.limit.log'
     _description = 'TOTP rate limit logs'
 
     def init(self):

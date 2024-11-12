@@ -12,7 +12,7 @@ VALIDATION_KARMA_GAIN = 3
 
 
 class ResUsers(models.Model):
-    _inherit = ['res.users']
+    _inherit = 'res.users'
 
     @property
     def SELF_READABLE_FIELDS(self):

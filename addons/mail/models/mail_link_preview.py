@@ -13,6 +13,7 @@ from odoo.addons.mail.tools.link_preview import get_link_preview_from_url
 
 
 class MailLinkPreview(models.Model):
+    _name = 'mail.link.preview'
     _inherit = ["bus.listener.mixin"]
     _description = "Store link preview data"
 

@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 class IrHttp(models.AbstractModel):
-    _inherit = ['ir.http']
+    _inherit = 'ir.http'
 
     @api.model
     def get_frontend_session_info(self):

@@ -15,7 +15,7 @@ _logger = logging.getLogger(__name__)
 
 
 class Base(models.AbstractModel):
-    _inherit = ['base']
+    _inherit = 'base'
     _mail_defaults_to_email = False
 
     def _valid_field_parameter(self, field, name):

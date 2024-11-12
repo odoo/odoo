@@ -11,6 +11,7 @@ _logger = logger.getLogger(__name__)
 
 
 class MailPushDevice(models.Model):
+    _name = 'mail.push.device'
     _description = "Push Notification Device"
 
     partner_id = fields.Many2one(

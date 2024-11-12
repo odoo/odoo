@@ -10,6 +10,7 @@ from odoo.exceptions import UserError
 
 
 class ReportMrpReport_Bom_Structure(models.AbstractModel):
+    _name = 'report.mrp.report_bom_structure'
     _description = 'BOM Overview Report'
 
     @api.model

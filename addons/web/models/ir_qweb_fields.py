@@ -114,6 +114,7 @@ class IrQwebFieldImage(models.AbstractModel):
 
 
 class IrQwebFieldImage_Url(models.AbstractModel):
+    _name = 'ir.qweb.field.image_url'
     _description = 'Qweb Field Image'
     _inherit = ['ir.qweb.field.image_url']
 

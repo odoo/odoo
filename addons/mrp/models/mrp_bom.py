@@ -520,6 +520,7 @@ class MrpBom(models.Model):
 
 
 class MrpBomLine(models.Model):
+    _name = 'mrp.bom.line'
     _order = "sequence, id"
     _rec_name = "product_id"
     _description = 'Bill of Material Line'
@@ -724,6 +725,7 @@ class MrpBomLine(models.Model):
 
 
 class MrpBomByproduct(models.Model):
+    _name = 'mrp.bom.byproduct'
     _description = 'Byproduct'
     _rec_name = "product_id"
     _check_company_auto = True

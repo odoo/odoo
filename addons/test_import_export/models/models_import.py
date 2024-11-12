@@ -2,30 +2,35 @@ from odoo import fields, models
 
 
 class ImportChar(models.Model):
+    _name = 'import.char'
     _description = 'Tests: Base Import Model, Character'
 
     value = fields.Char()
 
 
 class ImportCharRequired(models.Model):
+    _name = 'import.char.required'
     _description = 'Tests: Base Import Model, Character required'
 
     value = fields.Char(required=True)
 
 
 class ImportCharReadonly(models.Model):
+    _name = 'import.char.readonly'
     _description = 'Tests: Base Import Model, Character readonly'
 
     value = fields.Char(readonly=True)
 
 
 class ImportCharNoreadonly(models.Model):
+    _name = 'import.char.noreadonly'
     _description = 'Tests: Base Import Model, Character No readonly'
 
     value = fields.Char(readonly=True)
 
 
 class ImportCharStillreadonly(models.Model):
+    _name = 'import.char.stillreadonly'
     _description = 'Tests: Base Import Model, Character still readonly'
 
     value = fields.Char(readonly=True)
@@ -33,30 +38,35 @@ class ImportCharStillreadonly(models.Model):
 
 # TODO: complex field (m2m, o2m, m2o)
 class ImportM2o(models.Model):
+    _name = 'import.m2o'
     _description = 'Tests: Base Import Model, Many to One'
 
     value = fields.Many2one('import.m2o.related')
 
 
 class ImportM2oRelated(models.Model):
+    _name = 'import.m2o.related'
     _description = 'Tests: Base Import Model, Many to One related'
 
     value = fields.Integer(default=42)
 
 
 class ImportM2oRequired(models.Model):
+    _name = 'import.m2o.required'
     _description = 'Tests: Base Import Model, Many to One required'
 
     value = fields.Many2one('import.m2o.required.related', required=True)
 
 
 class ImportM2oRequiredRelated(models.Model):
+    _name = 'import.m2o.required.related'
     _description = 'Tests: Base Import Model, Many to One required related'
 
     value = fields.Integer(default=42)
 
 
 class ImportO2m(models.Model):
+    _name = 'import.o2m'
     _description = 'Tests: Base Import Model, One to Many'
 
     name = fields.Char()
@@ -64,6 +74,7 @@ class ImportO2m(models.Model):
 
 
 class ImportO2mChild(models.Model):
+    _name = 'import.o2m.child'
     _description = 'Tests: Base Import Model, One to Many child'
 
     parent_id = fields.Many2one('import.o2m')
@@ -71,6 +82,7 @@ class ImportO2mChild(models.Model):
 
 
 class ImportPreview(models.Model):
+    _name = 'import.preview'
     _description = 'Tests: Base Import Model Preview'
 
     name = fields.Char('Name')
@@ -79,6 +91,7 @@ class ImportPreview(models.Model):
 
 
 class ImportFloat(models.Model):
+    _name = 'import.float'
     _description = 'Tests: Base Import Model Float'
 
     value = fields.Float()
@@ -87,6 +100,7 @@ class ImportFloat(models.Model):
 
 
 class ImportComplex(models.Model):
+    _name = 'import.complex'
     _description = 'Tests: Base Import Model Complex'
 
     f = fields.Float()
@@ -99,6 +113,7 @@ class ImportComplex(models.Model):
 
 
 class ImportPropertiesDefinition(models.Model):
+    _name = 'import.properties.definition'
     _description = 'import.properties.definition'
     _rec_name = 'id'
 
@@ -108,6 +123,7 @@ class ImportPropertiesDefinition(models.Model):
 
 
 class ImportProperties(models.Model):
+    _name = 'import.properties'
     _description = 'import.properties'
 
     properties = fields.Properties(definition='record_definition_id.properties_definition')

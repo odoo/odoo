@@ -9,7 +9,7 @@ from odoo.tools.misc import clean_context
 
 
 class StockPickingType(models.Model):
-    _inherit = ['stock.picking.type']
+    _inherit = 'stock.picking.type'
 
     code = fields.Selection(selection_add=[
         ('repair_operation', 'Repair')
@@ -191,7 +191,7 @@ class StockPickingType(models.Model):
 
 
 class StockPicking(models.Model):
-    _inherit = ['stock.picking']
+    _inherit = 'stock.picking'
 
     is_repairable = fields.Boolean(compute='_compute_is_repairable')
     repair_ids = fields.One2many('repair.order', 'picking_id')

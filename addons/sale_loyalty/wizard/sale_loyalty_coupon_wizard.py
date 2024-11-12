@@ -5,6 +5,7 @@ from odoo.exceptions import ValidationError
 
 
 class SaleLoyaltyCouponWizard(models.TransientModel):
+    _name = 'sale.loyalty.coupon.wizard'
     _description = 'Sale Loyalty - Apply Coupon Wizard'
 
     order_id = fields.Many2one('sale.order', default=lambda self: self.env.context.get('active_id'), required=True)

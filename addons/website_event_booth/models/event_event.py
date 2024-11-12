@@ -5,7 +5,7 @@ from odoo import api, fields, models, _
 
 
 class EventEvent(models.Model):
-    _inherit = ['event.event']
+    _inherit = 'event.event'
 
     exhibition_map = fields.Image(string='Exhibition Map', max_width=1024, max_height=1024)
     # frontend menu management

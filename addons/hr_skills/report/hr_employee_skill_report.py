@@ -4,6 +4,7 @@ from odoo import fields, models, tools
 
 
 class HrEmployeeSkillReport(models.BaseModel):
+    _name = 'hr.employee.skill.report'
     _auto = False
     _inherit = ["hr.manager.department.report"]
     _description = 'Employee Skills Report'

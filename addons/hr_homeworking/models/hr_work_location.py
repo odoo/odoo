@@ -7,7 +7,7 @@ from odoo.addons.hr_homeworking.models.hr_homeworking import DAYS
 
 
 class HrWorkLocation(models.Model):
-    _inherit = ["hr.work.location"]
+    _inherit = "hr.work.location"
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_used_by_employee(self):

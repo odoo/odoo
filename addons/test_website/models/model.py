@@ -6,12 +6,13 @@ from odoo.tools.translate import html_translate
 
 
 class Website(models.Model):
-    _inherit = ["website"]
+    _inherit = "website"
 
     name_translated = fields.Char(translate=True)
 
 
 class TestModel(models.Model):
+    _name = 'test.model'
     _inherit = [
         'website.seo.metadata',
         'website.published.mixin',
@@ -47,6 +48,7 @@ class TestModel(models.Model):
 
 
 class TestSubmodel(models.Model):
+    _name = 'test.submodel'
     _description = 'Website Submodel Test'
 
     name = fields.Char(required=True)
@@ -55,12 +57,14 @@ class TestSubmodel(models.Model):
 
 
 class TestTag(models.Model):
+    _name = 'test.tag'
     _description = 'Website Tag Test'
 
     name = fields.Char(required=True)
 
 
 class TestModelMultiWebsite(models.Model):
+    _name = 'test.model.multi.website'
     _inherit = [
         'website.published.multi.mixin',
     ]
@@ -75,6 +79,7 @@ class TestModelMultiWebsite(models.Model):
 
 
 class TestModelExposed(models.Model):
+    _name = 'test.model.exposed'
     _inherit = [
         'website.seo.metadata',
         'website.published.mixin',

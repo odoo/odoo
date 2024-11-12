@@ -6,6 +6,7 @@ from odoo.addons.hr_homeworking.models.hr_homeworking import DAYS
 
 
 class HomeworkLocationWizard(models.TransientModel):
+    _name = 'homework.location.wizard'
     _description = 'Set Homework Location Wizard'
 
     work_location_id = fields.Many2one('hr.work.location', required=True, string="Location")

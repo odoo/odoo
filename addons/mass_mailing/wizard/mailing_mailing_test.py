@@ -8,6 +8,7 @@ from odoo.tools.misc import file_open
 
 
 class MailingMailingTest(models.TransientModel):
+    _name = 'mailing.mailing.test'
     _description = 'Sample Mail Wizard'
     # allow mailing.mailing.test records to live for 10h (instead of 1h default)
     # used for quality of life in combination with '_default_email_to'

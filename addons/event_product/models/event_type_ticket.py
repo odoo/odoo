@@ -9,7 +9,7 @@ _logger = logging.getLogger(__name__)
 
 
 class EventTypeTicket(models.Model):
-    _inherit = ['event.type.ticket']
+    _inherit = 'event.type.ticket'
     _order = "sequence, price, name, id"
 
     def _default_product_id(self):

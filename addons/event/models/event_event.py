@@ -27,6 +27,7 @@ except ImportError:
 
 
 class EventType(models.Model):
+    _name = 'event.type'
     _description = 'Event Template'
     _order = 'sequence, id'
 

@@ -26,7 +26,7 @@ VAT_COUNTRY_MAPPING = {
 
 
 class ResPartner(models.Model):
-    _inherit = ['res.partner']
+    _inherit = 'res.partner'
 
     partner_gid = fields.Integer('Company database ID')
     additional_info = fields.Char('Additional info')

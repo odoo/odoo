@@ -10,6 +10,7 @@ from odoo.tools.misc import file_open
 
 
 class RatingRating(models.Model):
+    _name = 'rating.rating'
     _description = "Rating"
     _order = 'write_date desc, id desc'
     _rec_name = 'res_name'

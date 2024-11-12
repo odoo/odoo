@@ -5,7 +5,7 @@ from odoo import api, models, fields
 
 
 class StockReturnPicking(models.TransientModel):
-    _inherit = ['stock.return.picking']
+    _inherit = 'stock.return.picking'
 
     def _prepare_picking_default_values(self):
         vals = super()._prepare_picking_default_values()
@@ -15,7 +15,7 @@ class StockReturnPicking(models.TransientModel):
 
 
 class StockReturnPickingLine(models.TransientModel):
-    _inherit = ['stock.return.picking.line']
+    _inherit = 'stock.return.picking.line'
 
     def _prepare_move_default_values(self, new_picking):
         vals = super()._prepare_move_default_values(new_picking)

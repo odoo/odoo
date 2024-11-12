@@ -20,6 +20,7 @@ OPERATORS = {
 
 
 class StockLot(models.Model):
+    _name = 'stock.lot'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = 'Lot/Serial'
     _check_company_auto = True

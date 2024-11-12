@@ -2,6 +2,7 @@ from odoo import models, api
 
 
 class IrUiView(models.Model):
+    _name = 'ir.ui.view'
     _inherit = ['ir.ui.view', 'pos.load.mixin']
 
     @api.model

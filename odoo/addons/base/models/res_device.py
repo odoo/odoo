@@ -14,6 +14,7 @@ _logger = logging.getLogger(__name__)
 
 
 class ResDeviceLog(models.Model):
+    _name = 'res.device.log'
     _description = 'Device Log'
     _rec_names_search = ['platform', 'browser']
 
@@ -137,6 +138,7 @@ class ResDeviceLog(models.Model):
 
 
 class ResDevice(models.Model):
+    _name = 'res.device'
     _inherit = ["res.device.log"]
     _description = "Devices"
     _auto = False

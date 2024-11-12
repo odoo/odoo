@@ -9,7 +9,7 @@ ACCOUNT_DOMAIN = "['&', ('deprecated', '=', False), ('account_type', 'not in', (
 
 
 class ProductCategory(models.Model):
-    _inherit = ["product.category"]
+    _inherit = "product.category"
 
     property_account_income_categ_id = fields.Many2one('account.account', company_dependent=True,
         string="Income Account",
@@ -32,7 +32,7 @@ class ProductCategory(models.Model):
 
 
 class ProductTemplate(models.Model):
-    _inherit = ["product.template"]
+    _inherit = "product.template"
 
     taxes_id = fields.Many2many('account.tax', 'product_taxes_rel', 'prod_id', 'tax_id',
         string="Sales Taxes",
@@ -183,7 +183,7 @@ class ProductTemplate(models.Model):
 
 
 class ProductProduct(models.Model):
-    _inherit = ["product.product"]
+    _inherit = "product.product"
 
     tax_string = fields.Char(compute='_compute_tax_string')
 

@@ -5,7 +5,7 @@ from odoo import api, models, _
 
 
 class ResUsers(models.Model):
-    _inherit = ['res.users']
+    _inherit = 'res.users'
 
     @api.model
     def _get_activity_groups(self):

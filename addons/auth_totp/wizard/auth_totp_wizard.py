@@ -19,6 +19,7 @@ compress = functools.partial(re.sub, r'\s', '')
 
 
 class Auth_TotpWizard(models.TransientModel):
+    _name = 'auth_totp.wizard'
     _description = "2-Factor Setup Wizard"
 
     user_id = fields.Many2one('res.users', required=True, readonly=True)

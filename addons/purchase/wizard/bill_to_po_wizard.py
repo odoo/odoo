@@ -4,6 +4,7 @@ from odoo.exceptions import UserError
 
 
 class BillToPoWizard(models.TransientModel):
+    _name = 'bill.to.po.wizard'
     _description = 'Bill to Purchase Order'
 
     purchase_order_id = fields.Many2one(comodel_name='purchase.order')

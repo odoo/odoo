@@ -15,6 +15,7 @@ _logger = logging.getLogger(__name__)
 
 
 class BaseLanguageImport(models.TransientModel):
+    _name = 'base.language.import'
     _description = "Language Import"
 
     name = fields.Char('Language Name', required=True)

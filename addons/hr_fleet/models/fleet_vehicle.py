@@ -6,7 +6,7 @@ from odoo.exceptions import ValidationError
 
 
 class FleetVehicle(models.Model):
-    _inherit = ['fleet.vehicle']
+    _inherit = 'fleet.vehicle'
 
     mobility_card = fields.Char(compute='_compute_mobility_card', store=True)
     driver_employee_id = fields.Many2one(

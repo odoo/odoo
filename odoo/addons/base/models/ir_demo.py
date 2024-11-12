@@ -5,6 +5,7 @@ from odoo.addons.base.models.ir_module import assert_log_admin_access
 
 
 class IrDemo(models.TransientModel):
+    _name = 'ir.demo'
 
     _description = 'Demo'
 

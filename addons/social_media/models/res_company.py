@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class ResCompany(models.Model):
-    _inherit = ["res.company"]
+    _inherit = "res.company"
 
     social_twitter = fields.Char('X Account')
     social_facebook = fields.Char('Facebook Account')

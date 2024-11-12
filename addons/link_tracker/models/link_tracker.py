@@ -292,6 +292,7 @@ class LinkTracker(models.Model):
 
 
 class LinkTrackerCode(models.Model):
+    _name = 'link.tracker.code'
     _description = "Link Tracker Code"
     _rec_name = 'code'
 
@@ -319,6 +320,7 @@ class LinkTrackerCode(models.Model):
 
 
 class LinkTrackerClick(models.Model):
+    _name = 'link.tracker.click'
     _rec_name = "link_id"
     _description = "Link Tracker Click"
 

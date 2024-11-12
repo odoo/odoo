@@ -20,6 +20,7 @@ except ImportError:
 
 
 class ResCurrency(models.Model):
+    _name = 'res.currency'
     _description = "Currency"
     _rec_names_search = ['name', 'full_name']
     _order = 'active desc, name'
@@ -331,6 +332,7 @@ class ResCurrency(models.Model):
 
 
 class ResCurrencyRate(models.Model):
+    _name = 'res.currency.rate'
     _description = "Currency Rate"
     _rec_names_search = ['name', 'rate']
     _order = "name desc"

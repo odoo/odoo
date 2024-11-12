@@ -16,6 +16,7 @@ _logger = logging.getLogger(__name__)
 
 
 class ForumPost(models.Model):
+    _name = 'forum.post'
     _description = 'Forum Post'
     _inherit = [
         'mail.thread',

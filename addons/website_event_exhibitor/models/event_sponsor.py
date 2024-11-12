@@ -11,6 +11,7 @@ from odoo.tools.translate import html_translate
 
 
 class EventSponsor(models.Model):
+    _name = 'event.sponsor'
     _description = 'Event Sponsor'
     _order = "sequence, sponsor_type_id"
     # _order = 'sponsor_type_id, sequence' TDE FIXME

@@ -12,6 +12,7 @@ _logger = logging.getLogger(__name__)
 
 
 class AccountJournalGroup(models.Model):
+    _name = 'account.journal.group'
     _description = "Account Journal Group"
     _check_company_auto = True
     _check_company_domain = models.check_company_domain_parent_of
@@ -32,6 +33,7 @@ class AccountJournalGroup(models.Model):
 
 
 class AccountJournal(models.Model):
+    _name = 'account.journal'
     _description = "Journal"
     _order = 'sequence, type, code'
     _inherit = ['portal.mixin',

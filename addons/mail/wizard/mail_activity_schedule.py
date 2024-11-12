@@ -12,6 +12,7 @@ from odoo.osv import expression
 
 
 class MailActivitySchedule(models.TransientModel):
+    _name = 'mail.activity.schedule'
     _description = 'Activity schedule plan Wizard'
     _batch_size = 500
 

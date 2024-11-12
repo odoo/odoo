@@ -11,7 +11,7 @@ _logger = logging.getLogger(__name__)
 
 
 class HrEmployeeBase(models.AbstractModel):
-    _inherit = ['hr.employee.base']
+    _inherit = 'hr.employee.base'
 
     email_sent = fields.Boolean(default=False)
     ip_connected = fields.Boolean(default=False)

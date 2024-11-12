@@ -30,6 +30,7 @@ NO_FLAG_COUNTRIES = [
 
 
 class ResCountry(models.Model):
+    _name = 'res.country'
     _description = 'Country'
     _order = 'name'
     _rec_names_search = ['name', 'code']
@@ -151,6 +152,7 @@ class ResCountry(models.Model):
 
 
 class ResCountryGroup(models.Model):
+    _name = 'res.country.group'
     _description = "Country Group"
 
     name = fields.Char(required=True, translate=True)
@@ -159,6 +161,7 @@ class ResCountryGroup(models.Model):
 
 
 class ResCountryState(models.Model):
+    _name = 'res.country.state'
     _description = "Country state"
     _order = 'code'
     _rec_names_search = ['name', 'code']
