@@ -5,6 +5,7 @@ from odoo import fields, models
 
 
 class HrRecruitmentSource(models.Model):
+    _name = 'hr.recruitment.source'
     _description = "Source of Applicants"
     _inherit = ['utm.source.mixin']
 

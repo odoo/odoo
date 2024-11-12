@@ -119,6 +119,7 @@ class CrmLeadForwardToPartner(models.TransientModel):
 
 
 class CrmLeadAssignation(models.TransientModel):
+    _name = 'crm.lead.assignation'
     _description = 'Lead Assignation'
 
     forward_id = fields.Many2one('crm.lead.forward.to.partner', 'Partner Assignment')

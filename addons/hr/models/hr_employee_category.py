@@ -7,6 +7,7 @@ from odoo import fields, models
 
 
 class HrEmployeeCategory(models.Model):
+    _name = 'hr.employee.category'
 
     _description = "Employee Category"
 

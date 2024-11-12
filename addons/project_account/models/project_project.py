@@ -8,7 +8,7 @@ from odoo import models
 
 
 class ProjectProject(models.Model):
-    _inherit = ['project.project']
+    _inherit = 'project.project'
 
     def _add_purchase_items(self, profitability_items, with_action=True):
         domain = self._get_add_purchase_items_domain()

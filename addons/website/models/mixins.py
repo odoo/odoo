@@ -17,6 +17,7 @@ logger = logging.getLogger(__name__)
 
 
 class WebsiteSeoMetadata(models.AbstractModel):
+    _name = 'website.seo.metadata'
 
     _description = 'SEO metadata'
 
@@ -98,6 +99,7 @@ class WebsiteSeoMetadata(models.AbstractModel):
 
 
 class WebsiteCover_PropertiesMixin(models.AbstractModel):
+    _name = 'website.cover_properties.mixin'
 
     _description = 'Cover Properties Website Mixin'
 
@@ -152,6 +154,7 @@ class WebsiteCover_PropertiesMixin(models.AbstractModel):
 
 
 class WebsiteMultiMixin(models.AbstractModel):
+    _name = 'website.multi.mixin'
 
     _description = 'Multi Website Mixin'
 
@@ -173,6 +176,7 @@ class WebsiteMultiMixin(models.AbstractModel):
 
 
 class WebsitePublishedMixin(models.AbstractModel):
+    _name = 'website.published.mixin'
 
     _description = 'Website Published Mixin'
 

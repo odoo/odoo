@@ -6,6 +6,7 @@ from odoo import fields, models
 
 
 class LotLabelLayout(models.TransientModel):
+    _name = 'lot.label.layout'
     _description = 'Choose the sheet layout to print lot labels'
 
     move_line_ids = fields.Many2many('stock.move.line')

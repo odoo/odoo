@@ -5,6 +5,7 @@ from odoo import api, fields, models, tools, _
 
 
 class HrLeaveEmployeeTypeReport(models.Model):
+    _name = 'hr.leave.employee.type.report'
     _description = 'Time Off Summary / Report'
     _auto = False
     _order = "date_from DESC, employee_id"

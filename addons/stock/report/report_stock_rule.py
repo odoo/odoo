@@ -6,6 +6,7 @@ from odoo.exceptions import UserError
 
 
 class ReportStockReport_Stock_Rule(models.AbstractModel):
+    _name = 'report.stock.report_stock_rule'
     _description = 'Stock rule report'
 
     @api.model

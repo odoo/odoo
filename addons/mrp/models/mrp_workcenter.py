@@ -18,6 +18,7 @@ from odoo.tools.misc import get_lang
 
 
 class MrpWorkcenter(models.Model):
+    _name = 'mrp.workcenter'
     _description = 'Work Center'
     _order = "sequence, id"
     _inherit = ['mail.thread', 'resource.mixin']
@@ -401,6 +402,7 @@ class MrpWorkcenter(models.Model):
 
 
 class MrpWorkcenterTag(models.Model):
+    _name = 'mrp.workcenter.tag'
     _description = 'Add tag for the workcenter'
     _order = 'name'
 
@@ -417,6 +419,7 @@ class MrpWorkcenterTag(models.Model):
 
 
 class MrpWorkcenterProductivityLossType(models.Model):
+    _name = 'mrp.workcenter.productivity.loss.type'
     _description = 'MRP Workorder productivity losses'
     _rec_name = 'loss_type'
 
@@ -436,6 +439,7 @@ class MrpWorkcenterProductivityLossType(models.Model):
 
 
 class MrpWorkcenterProductivityLoss(models.Model):
+    _name = 'mrp.workcenter.productivity.loss'
     _description = "Workcenter Productivity Losses"
     _order = "sequence, id"
 
@@ -462,6 +466,7 @@ class MrpWorkcenterProductivityLoss(models.Model):
 
 
 class MrpWorkcenterProductivity(models.Model):
+    _name = 'mrp.workcenter.productivity'
     _description = "Workcenter Productivity Log"
     _order = "id desc"
     _rec_name = "loss_id"
@@ -568,6 +573,7 @@ class MrpWorkcenterProductivity(models.Model):
 
 
 class MrpWorkcenterCapacity(models.Model):
+    _name = 'mrp.workcenter.capacity'
     _description = 'Work Center Capacity'
     _check_company_auto = True
 

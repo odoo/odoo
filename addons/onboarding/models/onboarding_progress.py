@@ -12,6 +12,7 @@ ONBOARDING_PROGRESS_STATES = [
 
 
 class OnboardingProgress(models.Model):
+    _name = 'onboarding.progress'
     _description = 'Onboarding Progress Tracker'
     _rec_name = 'onboarding_id'
 

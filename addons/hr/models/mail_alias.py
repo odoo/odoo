@@ -5,7 +5,7 @@ from odoo import fields, models, _
 
 
 class MailAlias(models.Model):
-    _inherit = ['mail.alias']
+    _inherit = 'mail.alias'
 
     alias_contact = fields.Selection(selection_add=[
         ('employees', 'Authenticated Employees'),

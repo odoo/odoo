@@ -5,6 +5,7 @@ from odoo import fields, models
 
 
 class Test_RpcModel_A(models.Model):
+    _name = 'test_rpc.model_a'
     _description = "Model A"
 
     name = fields.Char(required=True)
@@ -13,6 +14,7 @@ class Test_RpcModel_A(models.Model):
 
 
 class Test_RpcModel_B(models.Model):
+    _name = 'test_rpc.model_b'
     _description = "Model B"
 
     name = fields.Char(required=True)

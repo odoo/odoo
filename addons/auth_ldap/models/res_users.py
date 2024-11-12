@@ -8,7 +8,7 @@ from odoo.modules.registry import Registry
 
 
 class ResUsers(models.Model):
-    _inherit = ["res.users"]
+    _inherit = "res.users"
 
     def _login(self, credential, user_agent_env):
         try:

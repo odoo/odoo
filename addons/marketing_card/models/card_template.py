@@ -9,6 +9,7 @@ TEMPLATE_RATIO = 40 / 21
 
 
 class CardTemplate(models.Model):
+    _name = 'card.template'
     _description = 'Marketing Card Template'
 
     name = fields.Char(required=True)

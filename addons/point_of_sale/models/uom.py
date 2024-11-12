@@ -2,6 +2,7 @@ from odoo import api, fields, models
 
 
 class UomCategory(models.Model):
+    _name = 'uom.category'
     _inherit = ['uom.category', 'pos.load.mixin']
 
     is_pos_groupable = fields.Boolean(string='Group Products in POS',
@@ -17,6 +18,7 @@ class UomCategory(models.Model):
 
 
 class UomUom(models.Model):
+    _name = 'uom.uom'
     _inherit = ['uom.uom', 'pos.load.mixin']
 
     is_pos_groupable = fields.Boolean(related='category_id.is_pos_groupable', readonly=False)

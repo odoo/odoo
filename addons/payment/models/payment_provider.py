@@ -13,6 +13,7 @@ _logger = logging.getLogger(__name__)
 
 
 class PaymentProvider(models.Model):
+    _name = 'payment.provider'
     _description = 'Payment Provider'
     _order = 'module_state, state desc, sequence, name'
     _check_company_auto = True

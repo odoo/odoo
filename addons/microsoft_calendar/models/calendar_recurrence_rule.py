@@ -6,6 +6,7 @@ from odoo.osv import expression
 
 
 class CalendarRecurrence(models.Model):
+    _name = 'calendar.recurrence'
     _inherit = ['calendar.recurrence', 'microsoft.calendar.sync']
 
 

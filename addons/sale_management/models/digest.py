@@ -5,7 +5,7 @@ from odoo.exceptions import AccessError
 
 
 class DigestDigest(models.Model):
-    _inherit = ['digest.digest']
+    _inherit = 'digest.digest'
 
     kpi_all_sale_total = fields.Boolean('All Sales')
     kpi_all_sale_total_value = fields.Monetary(compute='_compute_kpi_sale_total_value')

@@ -2,6 +2,7 @@ from odoo import models, api
 
 
 class ResCurrency(models.Model):
+    _name = 'res.currency'
     _inherit = ['res.currency', 'pos.load.mixin']
 
     @api.model

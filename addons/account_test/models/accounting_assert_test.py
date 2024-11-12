@@ -13,6 +13,7 @@ result = res
 
 
 class AccountingAssertTest(models.Model):
+    _name = 'accounting.assert.test'
     _description = 'Accounting Assert Test'
     _order = "sequence"
 

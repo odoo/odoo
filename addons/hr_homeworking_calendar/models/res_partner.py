@@ -4,7 +4,7 @@ from odoo import models
 
 
 class ResPartner(models.Model):
-    _inherit = ['res.partner']
+    _inherit = 'res.partner'
 
     def get_worklocation(self, start_date, end_date):
         employee_id = self.env['hr.employee'].search([

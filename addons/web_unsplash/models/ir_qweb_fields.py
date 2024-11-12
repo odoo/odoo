@@ -4,7 +4,7 @@ from odoo import models, api
 
 
 class IrQwebFieldImage(models.AbstractModel):
-    _inherit = ['ir.qweb.field.image']
+    _inherit = 'ir.qweb.field.image'
 
     @api.model
     def from_html(self, model, field, element):

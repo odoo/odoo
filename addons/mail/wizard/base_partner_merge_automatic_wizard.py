@@ -5,8 +5,7 @@ from odoo.tools import format_list
 
 
 class BasePartnerMergeAutomaticWizard(models.TransientModel):
-
-    _inherit = ['base.partner.merge.automatic.wizard']
+    _inherit = 'base.partner.merge.automatic.wizard'
 
     def _log_merge_operation(self, src_partners, dst_partner):
         super()._log_merge_operation(src_partners, dst_partner)

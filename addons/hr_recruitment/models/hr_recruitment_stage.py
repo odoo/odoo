@@ -5,6 +5,7 @@ from odoo import api, fields, models, _
 
 
 class HrRecruitmentStage(models.Model):
+    _name = 'hr.recruitment.stage'
     _description = "Recruitment Stages"
     _order = 'sequence'
 

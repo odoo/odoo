@@ -21,6 +21,7 @@ DEFAULT_REVEAL_MONTH_VALID = 6
 
 
 class CrmRevealRule(models.Model):
+    _name = 'crm.reveal.rule'
     _description = 'CRM Lead Generation Rules'
     _order = 'sequence'
 

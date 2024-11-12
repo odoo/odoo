@@ -5,7 +5,7 @@ from odoo import api, models
 
 
 class StockPackageDestination(models.TransientModel):
-    _inherit = ["stock.package.destination"]
+    _inherit = "stock.package.destination"
 
     def _compute_move_line_ids(self):
         destination_without_batch = self.env['stock.package.destination']

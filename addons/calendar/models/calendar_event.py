@@ -65,6 +65,7 @@ def get_weekday_occurence(date):
 
 
 class CalendarEvent(models.Model):
+    _name = 'calendar.event'
     _description = "Calendar Event"
     _order = "start desc"
     _inherit = ["mail.thread"]

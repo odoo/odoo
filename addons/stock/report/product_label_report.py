@@ -10,6 +10,7 @@ import markupsafe
 
 
 class ReportStockLabel_Product_Product_View(models.AbstractModel):
+    _name = 'report.stock.label_product_product_view'
     _description = 'Product Label Report'
 
     def _get_report_values(self, docids, data):
@@ -52,6 +53,7 @@ class ReportStockLabel_Product_Product_View(models.AbstractModel):
 
 
 class ReportStockLabel_Lot_Template_View(models.AbstractModel):
+    _name = 'report.stock.label_lot_template_view'
     _description = 'Lot Label Report'
 
     def _get_report_values(self, docids, data):

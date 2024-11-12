@@ -9,6 +9,7 @@ _logger = logging.getLogger(__name__)
 
 
 class L10n_LatamPaymentRegisterCheck(models.TransientModel):
+    _name = 'l10n_latam.payment.register.check'
     _description = 'Payment register check'
     _check_company_auto = True
 

@@ -4,7 +4,7 @@ from odoo import fields, models
 
 
 class SurveySurvey(models.Model):
-    _inherit = ['survey.survey']
+    _inherit = 'survey.survey'
 
     certification_validity_months = fields.Integer(
         'Validity', required=False,

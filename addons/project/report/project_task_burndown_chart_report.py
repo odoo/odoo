@@ -8,6 +8,7 @@ from odoo.addons.resource.models.utils import filter_domain_leaf
 
 
 class ProjectTaskBurndownChartReport(models.AbstractModel):
+    _name = 'project.task.burndown.chart.report'
     _description = 'Burndown Chart'
     _auto = False
     _order = 'date'

@@ -64,6 +64,7 @@ def att_names(name):
 
 
 class IrUiViewCustom(models.Model):
+    _name = 'ir.ui.view.custom'
     _description = 'Custom View'
     _order = 'create_date desc'  # search(limit=1) should return the last customization
     _rec_name = 'user_id'
@@ -136,6 +137,7 @@ WRONGCLASS = re.compile(r"(@class\s*=|=\s*@class|contains\(@class)")
 
 
 class IrUiView(models.Model):
+    _name = 'ir.ui.view'
     _description = 'View'
     _order = "priority,name,id"
     _allow_sudo_commands = False
@@ -2349,8 +2351,7 @@ class ResetViewArchWizard(models.TransientModel):
 
 
 class Base(models.AbstractModel):
-
-    _inherit = ['base']
+    _inherit = 'base'
 
     _date_name = 'date'         #: field to use for default calendar view
 

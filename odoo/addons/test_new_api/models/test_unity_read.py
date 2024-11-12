@@ -4,6 +4,7 @@ from odoo import models, fields
 
 
 class Test_New_ApiCourse(models.Model):
+    _name = 'test_new_api.course'
     _description = 'a course'
 
     name = fields.Char('Name')
@@ -19,6 +20,7 @@ class Test_New_ApiCourse(models.Model):
 
 
 class Test_New_ApiLesson(models.Model):
+    _name = 'test_new_api.lesson'
     _description = 'a lesson of a course (a day typically)'
 
     name = fields.Char('Name')
@@ -40,6 +42,7 @@ class Test_New_ApiLesson(models.Model):
 
 
 class Test_New_ApiPerson(models.Model):
+    _name = 'test_new_api.person'
     _description = 'a person, can be an author, teacher or attendee of a lesson'
 
     name = fields.Char('Name')
@@ -58,6 +61,7 @@ class Test_New_ApiPerson(models.Model):
 
 
 class Test_New_ApiEmployer(models.Model):
+    _name = 'test_new_api.employer'
     _description = 'the employer of a person'
 
     name = fields.Char('Name')
@@ -65,6 +69,7 @@ class Test_New_ApiEmployer(models.Model):
 
 
 class Test_New_ApiPersonAccount(models.Model):
+    _name = 'test_new_api.person.account'
     _description = 'an account with credentials for a given person'
     _inherits = {'test_new_api.person': 'person_id'}
 

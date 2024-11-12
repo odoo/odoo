@@ -22,7 +22,7 @@ template_function = lambda f: isfunction(f) and hasattr(f, '_l10n_template') and
 
 
 class IrModuleModule(models.Model):
-    _inherit = ["ir.module.module"]
+    _inherit = "ir.module.module"
 
     account_templates = fields.Binary(compute='_compute_account_templates', exportable=False)
 

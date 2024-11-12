@@ -8,14 +8,14 @@ from odoo.osv import expression
 
 
 class SlideChannelPartner(models.Model):
-    _inherit = ['slide.channel.partner']
+    _inherit = 'slide.channel.partner'
 
     nbr_certification = fields.Integer(related='channel_id.nbr_certification')
     survey_certification_success = fields.Boolean('Certified')
 
 
 class SlideChannel(models.Model):
-    _inherit = ['slide.channel']
+    _inherit = 'slide.channel'
 
     members_certified_count = fields.Integer('# Certified Attendees', compute='_compute_members_certified_count')
     nbr_certification = fields.Integer("Number of Certifications", compute='_compute_slides_statistics', store=True)

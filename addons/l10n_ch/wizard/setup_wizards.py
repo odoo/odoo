@@ -3,7 +3,7 @@ from odoo import api, models, fields
 
 
 class AccountSetupBankManualConfig(models.TransientModel):
-    _inherit = ['account.setup.bank.manual.config']
+    _inherit = 'account.setup.bank.manual.config'
 
     @api.onchange('acc_number')
     def _onchange_recompute_qr_iban(self):

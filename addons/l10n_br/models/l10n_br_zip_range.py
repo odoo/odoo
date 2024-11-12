@@ -6,6 +6,7 @@ from odoo.exceptions import ValidationError
 
 
 class L10n_BrZipRange(models.Model):
+    _name = 'l10n_br.zip.range'
     _description = "Brazilian city zip range"
 
     city_id = fields.Many2one("res.city", string="City", required=True)

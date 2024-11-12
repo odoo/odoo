@@ -12,6 +12,7 @@ _logger = logging.getLogger(__name__)
 
 
 class ThemeIrAsset(models.Model):
+    _name = 'theme.ir.asset'
     _description = 'Theme Asset'
 
     key = fields.Char()
@@ -49,6 +50,7 @@ class ThemeIrAsset(models.Model):
 
 
 class ThemeIrUiView(models.Model):
+    _name = 'theme.ir.ui.view'
     _description = 'Theme UI View'
 
     def compute_arch_fs(self):
@@ -108,6 +110,7 @@ class ThemeIrUiView(models.Model):
 
 
 class ThemeIrAttachment(models.Model):
+    _name = 'theme.ir.attachment'
     _description = 'Theme Attachments'
 
     name = fields.Char(required=True)
@@ -131,6 +134,7 @@ class ThemeIrAttachment(models.Model):
 
 
 class ThemeWebsiteMenu(models.Model):
+    _name = 'theme.website.menu'
     _description = 'Website Theme Menu'
 
     name = fields.Char(required=True, translate=True)
@@ -171,6 +175,7 @@ class ThemeWebsiteMenu(models.Model):
 
 
 class ThemeWebsitePage(models.Model):
+    _name = 'theme.website.page'
     _description = 'Website Theme Page'
 
     url = fields.Char()
@@ -210,6 +215,7 @@ class ThemeWebsitePage(models.Model):
 
 
 class ThemeUtils(models.AbstractModel):
+    _name = 'theme.utils'
     _description = 'Theme Utils'
     _auto = False
 
@@ -348,7 +354,7 @@ class ThemeUtils(models.AbstractModel):
 
 
 class IrUiView(models.Model):
-    _inherit = ['ir.ui.view']
+    _inherit = 'ir.ui.view'
 
     theme_template_id = fields.Many2one('theme.ir.ui.view', copy=False)
 
@@ -375,25 +381,25 @@ class IrUiView(models.Model):
 
 
 class IrAsset(models.Model):
-    _inherit = ['ir.asset']
+    _inherit = 'ir.asset'
 
     theme_template_id = fields.Many2one('theme.ir.asset', copy=False)
 
 
 class IrAttachment(models.Model):
-    _inherit = ['ir.attachment']
+    _inherit = 'ir.attachment'
 
     key = fields.Char(copy=False)
     theme_template_id = fields.Many2one('theme.ir.attachment', copy=False)
 
 
 class WebsiteMenu(models.Model):
-    _inherit = ['website.menu']
+    _inherit = 'website.menu'
 
     theme_template_id = fields.Many2one('theme.website.menu', copy=False)
 
 
 class WebsitePage(models.Model):
-    _inherit = ['website.page']
+    _inherit = 'website.page'
 
     theme_template_id = fields.Many2one('theme.website.page', copy=False)

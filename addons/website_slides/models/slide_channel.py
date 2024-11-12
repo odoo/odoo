@@ -18,6 +18,7 @@ _logger = logging.getLogger(__name__)
 
 
 class SlideChannelPartner(models.Model):
+    _name = 'slide.channel.partner'
     _description = 'Channel / Partners (Members)'
     _table = 'slide_channel_partner'
     _rec_name = 'partner_id'

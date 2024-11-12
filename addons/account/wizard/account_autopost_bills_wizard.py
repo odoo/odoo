@@ -2,6 +2,7 @@ from odoo import models, fields
 
 
 class AccountAutopostBillsWizard(models.TransientModel):
+    _name = 'account.autopost.bills.wizard'
     _description = "Autopost Bills Wizard"
 
     partner_id = fields.Many2one("res.partner")

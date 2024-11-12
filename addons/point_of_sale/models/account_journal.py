@@ -6,7 +6,7 @@ from odoo.exceptions import ValidationError
 
 
 class AccountJournal(models.Model):
-    _inherit = ['account.journal']
+    _inherit = 'account.journal'
 
     pos_payment_method_ids = fields.One2many('pos.payment.method', 'journal_id', string='Point of Sale Payment Methods')
 

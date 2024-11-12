@@ -2,6 +2,7 @@ from odoo import api, models
 
 
 class AccountTaxGroup(models.Model):
+    _name = 'account.tax.group'
     _inherit = ['account.tax.group', 'pos.load.mixin']
 
     @api.model

@@ -2,6 +2,7 @@ from odoo import api, fields, models
 
 
 class EventEvent(models.Model):
+    _name = 'event.event'
     _inherit = ['event.event', 'pos.load.mixin']
 
     image_1024 = fields.Image("PoS Image", max_width=1024, max_height=1024)

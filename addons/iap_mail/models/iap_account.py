@@ -4,6 +4,7 @@ from odoo import api, fields, models
 
 
 class IapAccount(models.Model):
+    _name = 'iap.account'
     _inherit = ['iap.account', 'mail.thread']
 
     # Add tracking to the base fields

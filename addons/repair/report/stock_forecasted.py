@@ -5,7 +5,7 @@ from odoo import models
 
 
 class StockForecasted_Product_Product(models.AbstractModel):
-    _inherit = ['stock.forecasted_product_product']
+    _inherit = 'stock.forecasted_product_product'
 
     def _get_reservation_data(self, move):
         if move.repair_id and move.repair_line_type:

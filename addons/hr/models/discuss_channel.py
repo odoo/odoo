@@ -6,7 +6,7 @@ from odoo.exceptions import ValidationError
 
 
 class DiscussChannel(models.Model):
-    _inherit = ['discuss.channel']
+    _inherit = 'discuss.channel'
 
     subscription_department_ids = fields.Many2many(
         'hr.department', string='HR Departments',

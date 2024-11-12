@@ -32,6 +32,7 @@ def _int_to_bytes(value, byteorder='big'):
 
 
 class CertificateKey(models.Model):
+    _name = 'certificate.key'
     _description = 'Cryptographic Keys'
 
     name = fields.Char(string='Name', default="New key")

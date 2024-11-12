@@ -8,7 +8,7 @@ from datetime import datetime
 
 
 class ResourceCalendarLeaves(models.Model):
-    _inherit = ["resource.calendar.leaves"]
+    _inherit = "resource.calendar.leaves"
 
     holiday_id = fields.Many2one("hr.leave", string='Time Off Request')
 
@@ -156,7 +156,7 @@ class ResourceCalendarLeaves(models.Model):
 
 
 class ResourceCalendar(models.Model):
-    _inherit = ["resource.calendar"]
+    _inherit = "resource.calendar"
 
     associated_leaves_count = fields.Integer("Time Off Count", compute='_compute_associated_leaves_count')
 

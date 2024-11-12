@@ -29,7 +29,7 @@ class GamificationBadgeUser(models.Model):
 
 
 class GamificationBadge(models.Model):
-    _inherit = ['gamification.badge']
+    _inherit = 'gamification.badge'
 
     granted_employees_count = fields.Integer(compute="_compute_granted_employees_count")
 

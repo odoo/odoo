@@ -4,6 +4,7 @@ from odoo import _, api, fields, models
 
 
 class AccountMove(models.Model):
+    _name = 'account.move'
     _inherit = ['account.move', 'utm.mixin']
 
     @api.model

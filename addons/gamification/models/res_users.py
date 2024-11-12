@@ -6,7 +6,7 @@ from odoo.tools import SQL
 
 
 class ResUsers(models.Model):
-    _inherit = ['res.users']
+    _inherit = 'res.users'
 
     karma = fields.Integer('Karma', compute='_compute_karma', store=True, readonly=False)
     karma_tracking_ids = fields.One2many('gamification.karma.tracking', 'user_id', string='Karma Changes', groups="base.group_system")

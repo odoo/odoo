@@ -5,6 +5,7 @@ from odoo.exceptions import ValidationError
 
 
 class ProductComboItem(models.Model):
+    _name = 'product.combo.item'
     _description = "Product Combo Item"
     _check_company_auto = True
 

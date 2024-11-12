@@ -3,6 +3,7 @@ from odoo.osv.expression import AND
 
 
 class ProductAttribute(models.Model):
+    _name = 'product.attribute'
     _inherit = ['product.attribute', 'pos.load.mixin']
 
     @api.model
@@ -11,6 +12,7 @@ class ProductAttribute(models.Model):
 
 
 class ProductAttributeCustomValue(models.Model):
+    _name = 'product.attribute.custom.value'
     _inherit = ["product.attribute.custom.value", "pos.load.mixin"]
 
     pos_order_line_id = fields.Many2one('pos.order.line', string="PoS Order Line", ondelete='cascade')
@@ -25,6 +27,7 @@ class ProductAttributeCustomValue(models.Model):
 
 
 class ProductTemplateAttributeLine(models.Model):
+    _name = 'product.template.attribute.line'
     _inherit = ['product.template.attribute.line', 'pos.load.mixin']
 
     @api.model
@@ -38,6 +41,7 @@ class ProductTemplateAttributeLine(models.Model):
 
 
 class ProductTemplateAttributeValue(models.Model):
+    _name = 'product.template.attribute.value'
     _inherit = ['product.template.attribute.value', 'pos.load.mixin']
 
     @api.model

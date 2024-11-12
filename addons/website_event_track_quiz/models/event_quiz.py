@@ -6,6 +6,7 @@ from odoo.exceptions import ValidationError
 
 
 class EventQuiz(models.Model):
+    _name = 'event.quiz'
     _description = "Quiz"
 
     name = fields.Char('Name', required=True, translate=True)
@@ -19,6 +20,7 @@ class EventQuiz(models.Model):
 
 
 class EventQuizQuestion(models.Model):
+    _name = 'event.quiz.question'
     _description = "Content Quiz Question"
     _order = "quiz_id, sequence, id"
 
@@ -49,6 +51,7 @@ class EventQuizQuestion(models.Model):
 
 
 class EventQuizAnswer(models.Model):
+    _name = 'event.quiz.answer'
     _rec_name = "text_value"
     _description = "Question's Answer"
     _order = 'question_id, sequence, id'

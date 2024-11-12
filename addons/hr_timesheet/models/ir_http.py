@@ -5,7 +5,7 @@ from odoo import api, models
 
 
 class IrHttp(models.AbstractModel):
-    _inherit = ['ir.http']
+    _inherit = 'ir.http'
 
     def session_info(self):
         """ The widget 'timesheet_uom' needs to know which UoM conversion factor and which javascript

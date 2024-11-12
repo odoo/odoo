@@ -6,7 +6,7 @@ from odoo.exceptions import AccessError
 
 
 class DigestDigest(models.Model):
-    _inherit = ['digest.digest']
+    _inherit = 'digest.digest'
 
     kpi_project_task_opened = fields.Boolean('Open Tasks')
     kpi_project_task_opened_value = fields.Integer(compute='_compute_project_task_opened_value', export_string_translation=False)

@@ -5,6 +5,7 @@ from odoo.osv import expression
 
 
 class L10n_LatamIdentificationType(models.Model):
+    _name = 'l10n_latam.identification.type'
     _description = "Identification Types"
     _order = 'sequence'
 

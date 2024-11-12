@@ -18,6 +18,7 @@ _logger = logging.getLogger(__name__)
 
 
 class IrProfile(models.Model):
+    _name = 'ir.profile'
     _description = 'Profiling results'
     _log_access = False  # avoid useless foreign key on res_user
     _order = 'session desc, id desc'
@@ -123,6 +124,7 @@ class IrProfile(models.Model):
 
 
 class BaseEnableProfilingWizard(models.TransientModel):
+    _name = 'base.enable.profiling.wizard'
     _description = "Enable profiling for some time"
 
     duration = fields.Selection([

@@ -28,7 +28,7 @@ ALLOWED_DEBUG_MODES = ['', '1', 'assets', 'tests', 'disable-t-cache']
 
 
 class IrHttp(models.AbstractModel):
-    _inherit = ['ir.http']
+    _inherit = 'ir.http'
 
     bots = ["bot", "crawl", "slurp", "spider", "curl", "wget", "facebookexternalhit", "whatsapp", "trendsmapresolver", "pinterest", "instagram"]
 

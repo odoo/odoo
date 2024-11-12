@@ -20,6 +20,7 @@ _logger = logging.getLogger(__name__)
 
 
 class AccountFiscalPosition(models.Model):
+    _name = 'account.fiscal.position'
     _description = 'Fiscal Position'
     _order = 'sequence'
     _check_company_auto = True
@@ -290,6 +291,7 @@ class AccountFiscalPosition(models.Model):
 
 
 class AccountFiscalPositionTax(models.Model):
+    _name = 'account.fiscal.position.tax'
     _description = 'Tax Mapping of Fiscal Position'
     _rec_name = 'position_id'
     _check_company_auto = True
@@ -309,6 +311,7 @@ class AccountFiscalPositionTax(models.Model):
 
 
 class AccountFiscalPositionAccount(models.Model):
+    _name = 'account.fiscal.position.account'
     _description = 'Accounts Mapping of Fiscal Position'
     _rec_name = 'position_id'
     _check_company_auto = True
@@ -331,7 +334,7 @@ class AccountFiscalPositionAccount(models.Model):
 
 
 class ResPartner(models.Model):
-    _inherit = ['res.partner']
+    _inherit = 'res.partner'
 
     fiscal_country_codes = fields.Char(compute='_compute_fiscal_country_codes')
     partner_vat_placeholder = fields.Char(compute='_compute_partner_vat_placeholder')

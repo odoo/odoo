@@ -3,7 +3,7 @@ from odoo import fields, models, _
 
 
 class ResPartner(models.Model):
-    _inherit = ['res.partner']
+    _inherit = 'res.partner'
 
     employee_ids = fields.One2many(
         'hr.employee', 'work_contact_id', string='Employees', groups="hr.group_hr_user",

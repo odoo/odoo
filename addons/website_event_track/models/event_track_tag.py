@@ -7,6 +7,7 @@ from odoo import fields, models
 
 
 class EventTrackTag(models.Model):
+    _name = 'event.track.tag'
     _description = 'Event Track Tag'
     _order = "category_id, sequence, name"
 

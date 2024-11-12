@@ -11,6 +11,7 @@ _logger = logging.getLogger(__name__)
 
 
 class BaseGeo_Provider(models.Model):
+    _name = 'base.geo_provider'
     _description = "Geo Provider"
 
     tech_name = fields.Char(string="Technical Name")

@@ -5,6 +5,7 @@ from odoo import fields, models, _
 
 
 class MailTemplateReset(models.TransientModel):
+    _name = 'mail.template.reset'
     _description = 'Mail Template Reset'
 
     template_ids = fields.Many2many('mail.template')

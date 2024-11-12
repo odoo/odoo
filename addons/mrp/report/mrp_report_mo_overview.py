@@ -10,6 +10,7 @@ from math import log10
 
 
 class ReportMrpReport_Mo_Overview(models.AbstractModel):
+    _name = 'report.mrp.report_mo_overview'
     _description = 'MO Overview Report'
 
     @api.model

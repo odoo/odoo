@@ -14,6 +14,7 @@ _logger = logging.getLogger(__name__)
 
 
 class IrModuleModule(models.Model):
+    _name = 'ir.module.module'
     _description = 'Module'
     _inherit = ['ir.module.module']
 

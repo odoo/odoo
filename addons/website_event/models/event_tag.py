@@ -5,6 +5,7 @@ from odoo import models
 
 
 class EventTag(models.Model):
+    _name = 'event.tag'
     _inherit = ['event.tag', 'website.published.multi.mixin']
 
     def default_get(self, fields_list):

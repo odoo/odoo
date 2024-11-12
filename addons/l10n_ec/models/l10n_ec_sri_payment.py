@@ -5,6 +5,7 @@ from odoo import fields, models
 
 
 class L10n_EcSriPayment(models.Model):
+    _name = 'l10n_ec.sri.payment'
 
     _description = "SRI Payment Method"
     _order = "sequence, id"

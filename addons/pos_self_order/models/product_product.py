@@ -5,7 +5,7 @@ from odoo import api, models, fields
 
 
 class ProductTemplate(models.Model):
-    _inherit = ['product.template']
+    _inherit = 'product.template'
 
     self_order_available = fields.Boolean(
         string="Available in Self Order",
@@ -72,7 +72,7 @@ class ProductTemplate(models.Model):
 
 
 class ProductProduct(models.Model):
-    _inherit = ["product.product"]
+    _inherit = "product.product"
 
     def _filter_applicable_attributes(self, attributes_by_ptal_id: Dict) -> List[Dict]:
         """

@@ -4,7 +4,7 @@ from odoo import fields, models, _
 
 
 class HrJob(models.Model):
-    _inherit = ["hr.job"]
+    _inherit = "hr.job"
 
     survey_id = fields.Many2one(
         'survey.survey', "Interview Form",

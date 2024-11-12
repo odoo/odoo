@@ -5,7 +5,7 @@ from odoo import api, models
 
 
 class StockForecasted_Product_Product(models.AbstractModel):
-    _inherit = ['stock.forecasted_product_product']
+    _inherit = 'stock.forecasted_product_product'
 
     def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reserved_move=False, in_transit=False, read=True):
         line = super()._prepare_report_line(quantity, move_out, move_in, replenishment_filled, product, reserved_move, in_transit, read)

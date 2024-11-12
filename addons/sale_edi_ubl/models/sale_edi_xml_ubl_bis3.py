@@ -2,6 +2,7 @@ from odoo import models, Command
 
 
 class SaleEdiXmlUbl_Bis3(models.AbstractModel):
+    _name = 'sale.edi.xml.ubl_bis3'
     _inherit = ['sale.edi.common', 'account.edi.xml.ubl_bis3']
     _description = "UBL BIS Ordering 3.0"
 

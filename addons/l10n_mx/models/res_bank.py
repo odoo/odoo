@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class ResBank(models.Model):
-    _inherit = ["res.bank"]
+    _inherit = "res.bank"
 
     def _get_fiscal_country_codes(self):
         return ','.join(self.env.companies.mapped('account_fiscal_country_id.code'))
@@ -18,7 +18,7 @@ class ResBank(models.Model):
 
 
 class ResPartnerBank(models.Model):
-    _inherit = ["res.partner.bank"]
+    _inherit = "res.partner.bank"
 
     def _get_fiscal_country_codes(self):
         return ','.join(self.env.companies.mapped('account_fiscal_country_id.code'))

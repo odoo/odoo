@@ -10,6 +10,7 @@ from odoo.addons.sale_pdf_quote_builder import utils
 
 
 class SalePdfFormField(models.Model):
+    _name = 'sale.pdf.form.field'
     _description = "Form fields of inside quotation documents."
     _order = 'name'
 

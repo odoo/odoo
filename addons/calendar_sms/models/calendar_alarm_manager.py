@@ -5,7 +5,7 @@ from odoo import api, models
 
 
 class CalendarAlarm_Manager(models.AbstractModel):
-    _inherit = ['calendar.alarm_manager']
+    _inherit = 'calendar.alarm_manager'
 
     @api.model
     def _send_reminder(self):

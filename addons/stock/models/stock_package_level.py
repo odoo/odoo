@@ -8,6 +8,7 @@ from odoo.tools.float_utils import float_is_zero
 
 
 class StockPackage_Level(models.Model):
+    _name = 'stock.package_level'
     _description = 'Stock Package Level'
     _check_company_auto = True
 

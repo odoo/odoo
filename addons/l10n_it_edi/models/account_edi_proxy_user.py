@@ -9,7 +9,7 @@ _logger = logging.getLogger(__name__)
 
 
 class Account_Edi_Proxy_ClientUser(models.Model):
-    _inherit = ['account_edi_proxy_client.user']
+    _inherit = 'account_edi_proxy_client.user'
 
     proxy_type = fields.Selection(selection_add=[('l10n_it_edi', 'Italian EDI')], ondelete={'l10n_it_edi': 'cascade'})
 

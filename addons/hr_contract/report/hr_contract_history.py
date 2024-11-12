@@ -7,6 +7,7 @@ from collections import defaultdict
 
 
 class HrContractHistory(models.Model):
+    _name = 'hr.contract.history'
     _description = 'Contract history'
     _auto = False
     _order = 'is_under_contract'

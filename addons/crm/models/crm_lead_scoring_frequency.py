@@ -3,6 +3,7 @@ from odoo import fields, models
 
 
 class CrmLeadScoringFrequency(models.Model):
+    _name = 'crm.lead.scoring.frequency'
     _description = 'Lead Scoring Frequency'
 
     variable = fields.Char('Variable', index=True)
@@ -13,6 +14,7 @@ class CrmLeadScoringFrequency(models.Model):
 
 
 class CrmLeadScoringFrequencyField(models.Model):
+    _name = 'crm.lead.scoring.frequency.field'
     _description = 'Fields that can be used for predictive lead scoring computation'
 
     name = fields.Char(related="field_id.field_description")

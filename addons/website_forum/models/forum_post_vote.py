@@ -6,6 +6,7 @@ from odoo.exceptions import UserError, AccessError
 
 
 class ForumPostVote(models.Model):
+    _name = 'forum.post.vote'
     _description = 'Post Vote'
     _order = 'create_date desc, id desc'
 

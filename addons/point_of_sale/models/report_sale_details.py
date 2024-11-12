@@ -10,6 +10,7 @@ from odoo.tools import SQL
 
 
 class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
+    _name = 'report.point_of_sale.report_saledetails'
 
     _description = 'Point of Sale Details'
 

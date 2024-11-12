@@ -13,6 +13,7 @@ UPC_EAN_CONVERSIONS = [
 
 
 class BarcodeNomenclature(models.Model):
+    _name = 'barcode.nomenclature'
     _description = 'Barcode Nomenclature'
 
     name = fields.Char(string='Barcode Nomenclature', required=True, help='An internal identification of the barcode nomenclature')

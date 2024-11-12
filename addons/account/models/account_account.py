@@ -17,6 +17,7 @@ ACCOUNT_CODE_NUMBER_REGEX = re.compile(r'(.*?)(\d*)(\D*?)$')
 
 
 class AccountAccount(models.Model):
+    _name = 'account.account'
     _inherit = ['mail.thread']
     _description = "Account"
     _order = "code, placeholder_code"
@@ -1397,6 +1398,7 @@ class AccountAccount(models.Model):
 
 
 class AccountGroup(models.Model):
+    _name = 'account.group'
     _description = 'Account Group'
     _order = 'code_prefix_start'
     _check_company_auto = True

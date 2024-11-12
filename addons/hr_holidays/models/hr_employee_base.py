@@ -11,7 +11,7 @@ from odoo.addons.resource.models.utils import HOURS_PER_DAY
 
 
 class HrEmployeeBase(models.AbstractModel):
-    _inherit = ["hr.employee.base"]
+    _inherit = "hr.employee.base"
 
     leave_manager_id = fields.Many2one(
         'res.users', string='Time Off',

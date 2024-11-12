@@ -13,7 +13,7 @@ from odoo.exceptions import UserError
 
 
 class HrEmployeePublic(models.Model):
-    _inherit = ['hr.employee.public']
+    _inherit = 'hr.employee.public'
 
     first_contract_date = fields.Date(compute='_compute_manager_only_fields', search='_search_first_contract_date')
 
@@ -26,7 +26,7 @@ class HrEmployeePublic(models.Model):
 
 
 class HrEmployeeBase(models.AbstractModel):
-    _inherit = ["hr.employee.base"]
+    _inherit = "hr.employee.base"
 
     @api.model
     def _get_new_hire_field(self):
@@ -34,7 +34,7 @@ class HrEmployeeBase(models.AbstractModel):
 
 
 class HrEmployee(models.Model):
-    _inherit = ["hr.employee"]
+    _inherit = "hr.employee"
 
     legal_name = fields.Char(compute='_compute_legal_name', store=True, readonly=False, groups="hr.group_hr_user")
     vehicle = fields.Char(string='Company Vehicle', groups="hr.group_hr_user")

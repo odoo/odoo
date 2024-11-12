@@ -4,6 +4,7 @@ from odoo import models
 
 
 class AccountEdiXmlUbl_Nl(models.AbstractModel):
+    _name = 'account.edi.xml.ubl_nl'
     _inherit = ["account.edi.xml.ubl_bis3"]
     _description = "SI-UBL 2.0 (NLCIUS)"
 

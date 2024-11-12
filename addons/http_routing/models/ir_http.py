@@ -42,7 +42,7 @@ class ModelConverter(ir_http.ModelConverter):
 
 
 class IrHttp(models.AbstractModel):
-    _inherit = ['ir.http']
+    _inherit = 'ir.http'
 
     rerouting_limit = 10
 

@@ -8,6 +8,7 @@ from odoo.tools import ormcache, make_index_name, create_index
 
 
 class AccountAnalyticPlan(models.Model):
+    _name = 'account.analytic.plan'
     _description = 'Analytic Plans'
     _parent_store = True
     _rec_name = 'complete_name'
@@ -283,6 +284,7 @@ class AccountAnalyticPlan(models.Model):
 
 
 class AccountAnalyticApplicability(models.Model):
+    _name = 'account.analytic.applicability'
     _description = "Analytic Plan's Applicabilities"
     _check_company_auto = True
     _check_company_domain = models.check_company_domain_parent_of

@@ -8,7 +8,7 @@ from odoo.tools import html2plaintext
 
 
 class SlideChannelPartner(models.Model):
-    _inherit = ['slide.channel.partner']
+    _inherit = 'slide.channel.partner'
 
     def _recompute_completion(self):
         res = super(SlideChannelPartner, self)._recompute_completion()
@@ -66,7 +66,7 @@ class SlideChannelPartner(models.Model):
 
 
 class SlideChannel(models.Model):
-    _inherit = ['slide.channel']
+    _inherit = 'slide.channel'
 
     def _action_add_members(self, target_partners, member_status='joined', raise_on_access=False):
         res = super()._action_add_members(target_partners, member_status=member_status, raise_on_access=raise_on_access)

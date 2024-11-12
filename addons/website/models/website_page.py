@@ -10,6 +10,7 @@ from odoo.tools.translate import _
 
 
 class WebsitePage(models.Model):
+    _name = 'website.page'
     _inherits = {'ir.ui.view': 'view_id'}
     _inherit = [
         'website.published.multi.mixin',

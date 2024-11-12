@@ -14,6 +14,7 @@ from odoo.tools import parse_version
 
 
 class CertificateCertificate(models.Model):
+    _name = 'certificate.certificate'
     _description = 'Certificate'
     _order = 'date_end DESC'
     _check_company_auto = True

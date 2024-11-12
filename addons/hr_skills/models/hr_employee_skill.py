@@ -8,6 +8,7 @@ from collections import defaultdict
 
 
 class HrEmployeeSkill(models.Model):
+    _name = 'hr.employee.skill'
     _description = "Skill level for an employee"
     _order = "skill_type_id, skill_level_id"
     _rec_name = "skill_id"

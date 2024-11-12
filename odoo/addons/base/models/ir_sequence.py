@@ -310,6 +310,7 @@ class IrSequence(models.Model):
 
 
 class IrSequenceDate_Range(models.Model):
+    _name = 'ir.sequence.date_range'
     _description = 'Sequence Date Range'
     _rec_name = "sequence_id"
     _allow_sudo_commands = False

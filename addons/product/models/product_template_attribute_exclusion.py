@@ -4,6 +4,7 @@ from odoo import api, fields, models
 
 
 class ProductTemplateAttributeExclusion(models.Model):
+    _name = 'product.template.attribute.exclusion'
     _description = "Product Template Attribute Exclusion"
     _order = 'product_tmpl_id, id'
 

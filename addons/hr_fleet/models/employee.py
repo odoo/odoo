@@ -6,7 +6,7 @@ from odoo.exceptions import ValidationError
 
 
 class HrEmployee(models.Model):
-    _inherit = ['hr.employee']
+    _inherit = 'hr.employee'
 
     employee_cars_count = fields.Integer(compute="_compute_employee_cars_count", string="Cars", groups="fleet.fleet_group_manager")
     car_ids = fields.One2many(
@@ -87,6 +87,6 @@ class HrEmployee(models.Model):
 
 
 class HrEmployeePublic(models.Model):
-    _inherit = ['hr.employee.public']
+    _inherit = 'hr.employee.public'
 
     mobility_card = fields.Char(readonly=True)

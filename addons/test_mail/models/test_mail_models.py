@@ -31,6 +31,7 @@ class MailTestSimple(models.Model):
 
 
 class MailTestSimpleMainAttachment(models.Model):
+    _name = 'mail.test.simple.main.attachment'
     _description = 'Simple Chatter Model With Main Attachment Management'
     _inherit = ['mail.test.simple', 'mail.thread.main.attachment']
 
@@ -438,6 +439,7 @@ class MailTestComposerSource(models.Model):
 
 
 class MailTestMailTrackingDuration(models.Model):
+    _name = 'mail.test.mail.tracking.duration'
     _description = 'Fake model to test the mixin mail.tracking.duration.mixin'
     _track_duration_field = 'customer_id'
     _inherit = ['mail.thread', 'mail.tracking.duration.mixin']

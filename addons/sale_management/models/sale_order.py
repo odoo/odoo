@@ -8,7 +8,7 @@ from odoo.tools import is_html_empty
 
 
 class SaleOrder(models.Model):
-    _inherit = ['sale.order']
+    _inherit = 'sale.order'
 
     sale_order_template_id = fields.Many2one(
         comodel_name='sale.order.template',

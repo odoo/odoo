@@ -5,7 +5,7 @@ from odoo import models, fields
 
 
 class ResourceCalendarAttendance(models.Model):
-    _inherit = ['resource.calendar.attendance']
+    _inherit = 'resource.calendar.attendance'
 
     def _default_work_entry_type_id(self):
         return self.env.ref('hr_work_entry.work_entry_type_attendance', raise_if_not_found=False)
@@ -21,7 +21,7 @@ class ResourceCalendarAttendance(models.Model):
 
 
 class ResourceCalendarLeaves(models.Model):
-    _inherit = ['resource.calendar.leaves']
+    _inherit = 'resource.calendar.leaves'
 
     work_entry_type_id = fields.Many2one(
         'hr.work.entry.type', 'Work Entry Type',

@@ -10,6 +10,7 @@ from odoo.tools import float_is_zero, format_list
 
 
 class StockPickingBatch(models.Model):
+    _name = 'stock.picking.batch'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Batch Transfer"
     _order = "name desc"

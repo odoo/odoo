@@ -16,6 +16,7 @@ def _csv_row(data, delimiter=',', quote='"'):
 
 
 class L10n_Id_EfakturDocument(models.Model):
+    _name = 'l10n_id_efaktur.document'
     _description = "E-faktur Document"
     _inherit = ["mail.thread", "mail.activity.mixin"]
 

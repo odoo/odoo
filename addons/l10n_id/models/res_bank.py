@@ -26,7 +26,7 @@ def _l10n_id_make_qris_request(endpoint, params):
 
 
 class ResPartnerBank(models.Model):
-    _inherit = ["res.partner.bank"]
+    _inherit = "res.partner.bank"
 
     l10n_id_qris_api_key = fields.Char("QRIS API Key", groups="base.group_system")
     l10n_id_qris_mid = fields.Char("QRIS Merchant ID", groups="base.group_system")

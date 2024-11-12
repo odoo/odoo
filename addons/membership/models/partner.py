@@ -8,7 +8,7 @@ from . import membership
 
 
 class ResPartner(models.Model):
-    _inherit = ['res.partner']
+    _inherit = 'res.partner'
 
     associate_member = fields.Many2one('res.partner', string='Associate Member',
         help="A member with whom you want to associate your membership."

@@ -5,6 +5,7 @@ from odoo import api, fields, models
 
 
 class CrmLead2opportunityPartnerMass(models.TransientModel):
+    _name = 'crm.lead2opportunity.partner.mass'
     _description = 'Convert Lead to Opportunity (in mass)'
     _inherit = ['crm.lead2opportunity.partner']
 

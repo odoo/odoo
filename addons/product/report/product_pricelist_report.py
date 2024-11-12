@@ -4,6 +4,7 @@ from odoo import api, models
 
 
 class ReportProductReport_Pricelist(models.AbstractModel):
+    _name = 'report.product.report_pricelist'
     _description = 'Pricelist Report'
 
     def _get_report_values(self, docids, data):

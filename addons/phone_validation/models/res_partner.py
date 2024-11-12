@@ -5,7 +5,7 @@ from odoo.addons.phone_validation.tools import phone_validation
 
 
 class ResPartner(models.Model):
-    _inherit = ['res.partner']
+    _inherit = 'res.partner'
 
     @api.onchange('phone', 'country_id', 'company_id')
     def _onchange_phone_validation(self):

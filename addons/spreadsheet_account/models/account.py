@@ -11,7 +11,7 @@ from odoo.tools import date_utils
 
 
 class AccountAccount(models.Model):
-    _inherit = ["account.account"]
+    _inherit = "account.account"
 
     @api.model
     def _get_date_period_boundaries(self, date_period, company):

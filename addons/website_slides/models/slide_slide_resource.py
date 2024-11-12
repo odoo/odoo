@@ -9,6 +9,7 @@ from odoo.tools.mimetypes import get_extension
 
 
 class SlideSlideResource(models.Model):
+    _name = 'slide.slide.resource'
     _description = "Additional resource for a particular slide"
     _order = "sequence, id"
 

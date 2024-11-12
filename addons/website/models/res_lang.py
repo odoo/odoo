@@ -7,7 +7,7 @@ from odoo.http import request
 
 
 class ResLang(models.Model):
-    _inherit = ["res.lang"]
+    _inherit = "res.lang"
 
     def write(self, vals):
         if 'active' in vals and not vals['active']:

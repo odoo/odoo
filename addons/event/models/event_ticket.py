@@ -9,6 +9,7 @@ from odoo.tools.misc import formatLang
 
 
 class EventTypeTicket(models.Model):
+    _name = 'event.type.ticket'
     _description = 'Event Template Ticket'
     _order = 'sequence, name, id'
 

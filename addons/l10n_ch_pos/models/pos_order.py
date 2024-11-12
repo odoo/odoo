@@ -3,7 +3,7 @@ from odoo import models
 
 
 class PosOrder(models.Model):
-    _inherit = ["pos.order"]
+    _inherit = "pos.order"
 
     def _get_partner_bank_id(self):
         bank_partner_id = super()._get_partner_bank_id()

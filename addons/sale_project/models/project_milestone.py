@@ -5,7 +5,7 @@ from odoo import api, fields, models, _
 
 
 class ProjectMilestone(models.Model):
-    _inherit = ['project.milestone']
+    _inherit = 'project.milestone'
 
     def _default_sale_line_id(self):
         project_id = self._context.get('default_project_id')

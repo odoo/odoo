@@ -5,6 +5,7 @@ from odoo import api, fields, models
 
 
 class SmsTemplatePreview(models.TransientModel):
+    _name = 'sms.template.preview'
     _description = "SMS Template Preview"
 
     @api.model

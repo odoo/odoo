@@ -147,6 +147,7 @@ class IrQwebField(models.AbstractModel):
 
 
 class IrQwebFieldInteger(models.AbstractModel):
+    _name = 'ir.qweb.field.integer'
     _description = 'Qweb Field Integer'
     _inherit = ['ir.qweb.field']
 
@@ -167,6 +168,7 @@ class IrQwebFieldInteger(models.AbstractModel):
 
 
 class IrQwebFieldFloat(models.AbstractModel):
+    _name = 'ir.qweb.field.float'
     _description = 'Qweb Field Float'
     _inherit = ['ir.qweb.field']
 
@@ -211,6 +213,7 @@ class IrQwebFieldFloat(models.AbstractModel):
 
 
 class IrQwebFieldDate(models.AbstractModel):
+    _name = 'ir.qweb.field.date'
     _description = 'Qweb Field Date'
     _inherit = ['ir.qweb.field']
 
@@ -228,6 +231,7 @@ class IrQwebFieldDate(models.AbstractModel):
 
 
 class IrQwebFieldDatetime(models.AbstractModel):
+    _name = 'ir.qweb.field.datetime'
     _description = 'Qweb Field Datetime'
     _inherit = ['ir.qweb.field']
 
@@ -285,6 +289,7 @@ class IrQwebFieldDatetime(models.AbstractModel):
 
 
 class IrQwebFieldText(models.AbstractModel):
+    _name = 'ir.qweb.field.text'
     _description = 'Qweb Field Text'
     _inherit = ['ir.qweb.field']
 
@@ -297,6 +302,7 @@ class IrQwebFieldText(models.AbstractModel):
 
 
 class IrQwebFieldSelection(models.AbstractModel):
+    _name = 'ir.qweb.field.selection'
     _description = 'Qweb Field Selection'
     _inherit = ['ir.qweb.field']
 
@@ -325,6 +331,7 @@ class IrQwebFieldSelection(models.AbstractModel):
 
 
 class IrQwebFieldMany2one(models.AbstractModel):
+    _name = 'ir.qweb.field.many2one'
     _description = 'Qweb Field Many to One'
     _inherit = ['ir.qweb.field']
 
@@ -339,6 +346,7 @@ class IrQwebFieldMany2one(models.AbstractModel):
 
 
 class IrQwebFieldMany2many(models.AbstractModel):
+    _name = 'ir.qweb.field.many2many'
     _description = 'Qweb field many2many'
     _inherit = ['ir.qweb.field']
 
@@ -351,6 +359,7 @@ class IrQwebFieldMany2many(models.AbstractModel):
 
 
 class IrQwebFieldHtml(models.AbstractModel):
+    _name = 'ir.qweb.field.html'
     _description = 'Qweb Field HTML'
     _inherit = ['ir.qweb.field']
 
@@ -666,6 +675,7 @@ class IrQwebFieldDuration(models.AbstractModel):
 
 
 class IrQwebFieldRelative(models.AbstractModel):
+    _name = 'ir.qweb.field.relative'
     _description = 'Qweb Field Relative'
     _inherit = ['ir.qweb.field']
 
@@ -740,6 +750,7 @@ class IrQwebFieldBarcode(models.AbstractModel):
 
 
 class IrQwebFieldContact(models.AbstractModel):
+    _name = 'ir.qweb.field.contact'
     _description = 'Qweb Field Contact'
     _inherit = ['ir.qweb.field.many2one']
 
@@ -818,6 +829,7 @@ class IrQwebFieldContact(models.AbstractModel):
 
 
 class IrQwebFieldQweb(models.AbstractModel):
+    _name = 'ir.qweb.field.qweb'
     _description = 'Qweb Field qweb'
     _inherit = ['ir.qweb.field.many2one']
 

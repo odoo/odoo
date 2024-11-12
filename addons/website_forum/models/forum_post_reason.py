@@ -5,6 +5,7 @@ from odoo import fields, models
 
 
 class ForumPostReason(models.Model):
+    _name = 'forum.post.reason'
     _description = "Post Closing Reason"
     _order = 'name'
 

@@ -9,6 +9,7 @@ from odoo.tools.misc import formatLang
 
 
 class AccountAccruedOrdersWizard(models.TransientModel):
+    _name = 'account.accrued.orders.wizard'
     _description = 'Accrued Orders Wizard'
     _check_company_auto = True
 

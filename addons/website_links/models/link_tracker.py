@@ -7,7 +7,7 @@ from werkzeug import urls
 
 
 class LinkTracker(models.Model):
-    _inherit = ['link.tracker']
+    _inherit = 'link.tracker'
 
     def action_visit_page_statistics(self):
         return {

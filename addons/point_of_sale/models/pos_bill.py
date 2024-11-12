@@ -4,6 +4,7 @@ from odoo.osv.expression import OR
 
 
 class PosBill(models.Model):
+    _name = 'pos.bill'
     _order = "value"
     _description = "Coins/Bills"
     _inherit = ["pos.load.mixin"]

@@ -5,7 +5,7 @@ from odoo.exceptions import ValidationError
 
 
 class ResCompany(models.Model):
-    _inherit = ["res.company"]
+    _inherit = "res.company"
 
     website_id = fields.Many2one('website', compute='_compute_website_id', store=True)
 

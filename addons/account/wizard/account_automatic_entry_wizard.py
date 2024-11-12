@@ -12,6 +12,7 @@ import json
 
 
 class AccountAutomaticEntryWizard(models.TransientModel):
+    _name = 'account.automatic.entry.wizard'
     _description = 'Create Automatic Entries'
     _check_company_auto = True
 

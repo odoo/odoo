@@ -5,7 +5,7 @@ from odoo import api, models, fields, tools
 
 
 class ResCompany(models.Model):
-    _inherit = ['res.company']
+    _inherit = 'res.company'
 
     def _default_alias_domain_id(self):
         return self.env['mail.alias.domain'].search([], limit=1)

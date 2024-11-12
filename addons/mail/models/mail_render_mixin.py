@@ -41,6 +41,7 @@ def format_time(env, time, tz=False, time_format='medium', lang_code=False):
 
 
 class MailRenderMixin(models.AbstractModel):
+    _name = 'mail.render.mixin'
     _description = 'Mail Render Mixin'
 
     # If True, we trust the value on the model for rendering

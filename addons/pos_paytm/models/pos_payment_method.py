@@ -19,7 +19,7 @@ iv = b'@@@@&&&&####$$$$'
 
 
 class PosPaymentMethod(models.Model):
-    _inherit = ['pos.payment.method']
+    _inherit = 'pos.payment.method'
 
     paytm_tid = fields.Char(string='PayTM Terminal ID', help="Terminal model or Activation code \n ex: 70000123")
     channel_id = fields.Char(string='PayTM Channel ID', default='EDC')

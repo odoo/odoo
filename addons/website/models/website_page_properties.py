@@ -4,6 +4,7 @@ from odoo import api, fields, models
 
 
 class WebsitePagePropertiesBase(models.TransientModel):
+    _name = 'website.page.properties.base'
     _description = "Page Properties Base"
 
     target_model_id = fields.Reference(selection='_selection_target_model_id', required=True)
@@ -128,6 +129,7 @@ class WebsitePagePropertiesBase(models.TransientModel):
 
 
 class WebsitePageProperties(models.TransientModel):
+    _name = 'website.page.properties'
     _description = "Page Properties"
     _inherit = [
         'website.page.properties.base',

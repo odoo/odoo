@@ -17,6 +17,7 @@ _logger = logging.getLogger('odoo.addons.base.partner.merge')
 
 
 class BasePartnerMergeLine(models.TransientModel):
+    _name = 'base.partner.merge.line'
 
     _description = 'Merge Partner Line'
     _order = 'min_id asc'

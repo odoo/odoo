@@ -6,6 +6,7 @@ from odoo.addons.onboarding.models.onboarding_progress import ONBOARDING_PROGRES
 
 
 class OnboardingOnboarding(models.Model):
+    _name = 'onboarding.onboarding'
     _description = 'Onboarding'
     _order = 'sequence asc, id desc'
 

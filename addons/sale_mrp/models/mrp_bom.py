@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 
 
 class MrpBom(models.Model):
-    _inherit = ['mrp.bom']
+    _inherit = 'mrp.bom'
 
     def write(self, vals):
         if not vals.get('active', True) or ('phantom' in self.mapped('type') and vals.get('type', 'phantom') != 'phantom'):

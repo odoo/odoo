@@ -19,6 +19,7 @@ _logger = logging.getLogger(__name__)
 
 
 class L10nInEwaybill(models.Model):
+    _name = 'l10n.in.ewaybill'
     _description = "e-Waybill"
     _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
     _check_company_auto = True

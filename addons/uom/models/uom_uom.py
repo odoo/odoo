@@ -9,6 +9,7 @@ from odoo.exceptions import UserError, ValidationError
 
 
 class UomCategory(models.Model):
+    _name = 'uom.category'
     _description = 'Product UoM Categories'
 
     name = fields.Char('Unit of Measure Category', required=True, translate=True)
@@ -41,6 +42,7 @@ class UomCategory(models.Model):
 
 
 class UomUom(models.Model):
+    _name = 'uom.uom'
     _description = 'Product Unit of Measure'
     _order = "factor DESC, id"
 

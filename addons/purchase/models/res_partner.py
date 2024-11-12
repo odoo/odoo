@@ -5,7 +5,7 @@ from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 
 
 class ResPartner(models.Model):
-    _inherit = ['res.partner']
+    _inherit = 'res.partner'
 
     def _compute_purchase_order_count(self):
         self.purchase_order_count = 0

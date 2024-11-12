@@ -8,6 +8,7 @@ PEGASUS_REGIONS = ['M4R', 'P3Y', 'M6R']
 
 
 class Test_HttpStargate(models.Model):
+    _name = 'test_http.stargate'
     _description = 'Stargate'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
@@ -64,6 +65,7 @@ class Test_HttpStargate(models.Model):
 
 
 class Test_HttpGalaxy(models.Model):
+    _name = 'test_http.galaxy'
     _description = 'Galaxy'
 
     name = fields.Char(required=True, help='The galaxy common name.')

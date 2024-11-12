@@ -11,6 +11,7 @@ UBL_NAMESPACES = {
 
 
 class AccountEdiXmlUbl_20(models.AbstractModel):
+    _name = 'account.edi.xml.ubl_20'
     _inherit = ['account.edi.common']
     _description = "UBL 2.0"
 

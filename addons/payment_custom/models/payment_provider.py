@@ -7,7 +7,7 @@ from odoo.addons.payment_custom import const
 
 
 class PaymentProvider(models.Model):
-    _inherit = ['payment.provider']
+    _inherit = 'payment.provider'
 
     _custom_providers_setup = models.Constraint(
         "CHECK(custom_mode IS NULL OR (code = 'custom' AND custom_mode IS NOT NULL))",

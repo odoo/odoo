@@ -24,7 +24,7 @@ OPERATORS = {
 
 
 class ProductProduct(models.Model):
-    _inherit = ["product.product"]
+    _inherit = "product.product"
 
     stock_quant_ids = fields.One2many('stock.quant', 'product_id') # used to compute quantities
     stock_move_ids = fields.One2many('stock.move', 'product_id') # used to compute quantities
@@ -660,7 +660,7 @@ class ProductProduct(models.Model):
 
 
 class ProductTemplate(models.Model):
-    _inherit = ['product.template']
+    _inherit = 'product.template'
     _check_company_auto = True
 
     is_storable = fields.Boolean(
@@ -1024,7 +1024,7 @@ class ProductTemplate(models.Model):
 
 
 class ProductCategory(models.Model):
-    _inherit = ['product.category']
+    _inherit = 'product.category'
 
     route_ids = fields.Many2many(
         'stock.route', 'stock_route_categ', 'categ_id', 'route_id', 'Routes',
@@ -1082,7 +1082,7 @@ class ProductCategory(models.Model):
 
 
 class ProductPackaging(models.Model):
-    _inherit = ["product.packaging"]
+    _inherit = "product.packaging"
 
     package_type_id = fields.Many2one('stock.package.type', 'Package Type')
     route_ids = fields.Many2many(
@@ -1092,7 +1092,7 @@ class ProductPackaging(models.Model):
 
 
 class UomUom(models.Model):
-    _inherit = ['uom.uom']
+    _inherit = 'uom.uom'
 
     def write(self, values):
         # Users can not update the factor if open stock moves are based on it

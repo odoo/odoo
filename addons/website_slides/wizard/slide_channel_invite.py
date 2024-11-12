@@ -13,6 +13,7 @@ emails_split = re.compile(r"[;,\n\r]+")
 
 
 class SlideChannelInvite(models.TransientModel):
+    _name = 'slide.channel.invite'
     _inherit = ['mail.composer.mixin']
     _description = 'Channel Invitation Wizard'
 

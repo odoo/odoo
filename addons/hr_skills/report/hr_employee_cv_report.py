@@ -6,6 +6,7 @@ from odoo import _, models
 
 
 class ReportHr_SkillsReport_Employee_Cv(models.AbstractModel):
+    _name = 'report.hr_skills.report_employee_cv'
     _description = 'Employee Resume'
 
     def _get_report_values(self, docids, data=None):

@@ -7,7 +7,7 @@ from odoo.addons.mail.tools.discuss import Store
 
 
 class DiscussChannelMember(models.Model):
-    _inherit = ['discuss.channel.member']
+    _inherit = 'discuss.channel.member'
 
     @api.autovacuum
     def _gc_unpin_livechat_sessions(self):

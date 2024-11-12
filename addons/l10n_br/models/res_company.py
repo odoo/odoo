@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class ResCompany(models.Model):
-    _inherit = ["res.company"]
+    _inherit = "res.company"
 
     # ==== Business fields ====
     l10n_br_ie_code = fields.Char(string="IE", related="partner_id.l10n_br_ie_code", readonly=False)  # each state has its own format. Not all of the validation rules can be easily found.

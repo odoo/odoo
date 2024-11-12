@@ -5,6 +5,7 @@ from odoo.exceptions import ValidationError
 
 
 class ProductCombo(models.Model):
+    _name = 'product.combo'
     _description = "Product Combo"
     _order = 'sequence, id'
 

@@ -9,7 +9,7 @@ from odoo.tools.sql import column_exists, create_column
 
 
 class SaleOrderLine(models.Model):
-    _inherit = ["sale.order.line"]
+    _inherit = "sale.order.line"
 
     _name_search_services_index = models.Index("(order_id DESC, sequence, id) WHERE is_service IS TRUE")
 

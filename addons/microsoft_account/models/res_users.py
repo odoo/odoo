@@ -8,7 +8,7 @@ from odoo import api, fields, models, _
 
 
 class ResUsers(models.Model):
-    _inherit = ['res.users']
+    _inherit = 'res.users'
 
     microsoft_calendar_rtoken = fields.Char('Microsoft Refresh Token', copy=False, groups="base.group_system")
     microsoft_calendar_token = fields.Char('Microsoft User token', copy=False, groups="base.group_system")

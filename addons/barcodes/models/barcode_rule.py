@@ -5,6 +5,7 @@ from odoo.exceptions import ValidationError
 
 
 class BarcodeRule(models.Model):
+    _name = 'barcode.rule'
     _description = 'Barcode Rule'
     _order = 'sequence asc, id'
 

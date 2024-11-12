@@ -5,6 +5,7 @@ from odoo import api, fields, models
 
 
 class FleetVehicleOdometer(models.Model):
+    _name = 'fleet.vehicle.odometer'
     _description = 'Odometer log for a vehicle'
     _order = 'date desc'
 

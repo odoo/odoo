@@ -32,6 +32,7 @@ def time_to_float(t):
 
 
 class LunchSupplier(models.Model):
+    _name = 'lunch.supplier'
     _description = 'Lunch Supplier'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 

@@ -9,6 +9,7 @@ from odoo.addons.sms.tools.sms_api import SmsApi
 
 
 class MailingSmsTest(models.TransientModel):
+    _name = 'mailing.sms.test'
     _description = 'Test SMS Mailing'
 
     def _default_numbers(self):

@@ -9,7 +9,7 @@ from odoo.tools import format_list
 
 
 class SurveySurvey(models.Model):
-    _inherit = ['survey.survey']
+    _inherit = 'survey.survey'
 
     slide_ids = fields.One2many(
         'slide.slide', 'survey_id', string="Certification Slides",

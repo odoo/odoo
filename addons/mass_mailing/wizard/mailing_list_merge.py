@@ -6,6 +6,7 @@ from odoo.exceptions import UserError
 
 
 class MailingListMerge(models.TransientModel):
+    _name = 'mailing.list.merge'
     _description = 'Merge Mass Mailing List'
 
     @api.model

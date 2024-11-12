@@ -36,6 +36,7 @@ _logger = logging.getLogger(__name__)
 
 
 class CalendarEvent(models.Model):
+    _name = 'calendar.event'
     _inherit = ['calendar.event', 'microsoft.calendar.sync']
 
     microsoft_recurrence_master_id = fields.Char('Microsoft Recurrence Master Id')

@@ -13,6 +13,7 @@ from odoo.tools.float_utils import float_compare
 
 
 class StockLocation(models.Model):
+    _name = 'stock.location'
     _description = "Inventory Locations"
     _parent_name = "location_id"
     _parent_store = True
@@ -512,6 +513,7 @@ class StockLocation(models.Model):
 
 
 class StockRoute(models.Model):
+    _name = 'stock.route'
     _description = "Inventory Routes"
     _order = 'sequence'
     _check_company_auto = True

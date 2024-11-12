@@ -2,6 +2,7 @@ from odoo import api, fields, models, _
 
 
 class L10n_InSectionAlert(models.Model):
+    _name = 'l10n_in.section.alert'
     _description = "indian section alert"
 
     name = fields.Char("Section Name")

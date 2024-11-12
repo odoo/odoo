@@ -5,6 +5,7 @@ from odoo import _, api, fields, models
 
 
 class FetchmailServer(models.Model):
+    _name = 'fetchmail.server'
     _inherit = ['fetchmail.server', 'google.gmail.mixin']
 
     server_type = fields.Selection(selection_add=[('gmail', 'Gmail OAuth Authentication')], ondelete={'gmail': 'set default'})

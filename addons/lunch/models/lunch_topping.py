@@ -7,6 +7,7 @@ from odoo.tools import formatLang
 
 
 class LunchTopping(models.Model):
+    _name = 'lunch.topping'
     _description = 'Lunch Extras'
 
     name = fields.Char('Name', required=True)

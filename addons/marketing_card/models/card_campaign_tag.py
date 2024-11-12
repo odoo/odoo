@@ -4,6 +4,7 @@ from odoo import fields, models
 
 
 class CardCampaignTag(models.Model):
+    _name = 'card.campaign.tag'
     _description = 'Marketing Card Campaign Tag'
 
     def _get_default_color(self):

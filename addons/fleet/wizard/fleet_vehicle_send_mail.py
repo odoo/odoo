@@ -4,6 +4,7 @@ from odoo import api, fields, models, _
 
 
 class FleetVehicleSendMail(models.TransientModel):
+    _name = 'fleet.vehicle.send.mail'
     _inherit = ['mail.composer.mixin']
     _description = 'Send mails to Drivers'
 

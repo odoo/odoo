@@ -5,6 +5,7 @@ from odoo import fields, models
 
 
 class CrmLeadPlsUpdate(models.TransientModel):
+    _name = 'crm.lead.pls.update'
     _description = "Update the probabilities"
 
     def _get_default_pls_start_date(self):

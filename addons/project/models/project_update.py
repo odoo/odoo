@@ -22,6 +22,7 @@ STATUS_COLOR = {
 
 
 class ProjectUpdate(models.Model):
+    _name = 'project.update'
     _description = 'Project Update'
     _order = 'id desc'
     _inherit = ['mail.thread.cc', 'mail.activity.mixin']

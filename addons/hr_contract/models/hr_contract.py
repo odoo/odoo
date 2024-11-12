@@ -16,6 +16,7 @@ _logger = logging.getLogger(__name__)
 
 
 class HrContract(models.Model):
+    _name = 'hr.contract'
     _description = 'Contract'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _mail_post_access = 'read'

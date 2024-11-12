@@ -2,6 +2,7 @@ from odoo import api, fields, models
 
 
 class L10n_PlL10n_Pl_Tax_Office(models.Model):
+    _name = 'l10n_pl.l10n_pl_tax_office'
     _description = 'Tax Office in Poland'
     _rec_names_search = ['name', 'code']
     _order = 'code'

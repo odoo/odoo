@@ -13,6 +13,7 @@ _logger = logging.getLogger(__name__)
 
 
 class ResCompanyLdap(models.Model):
+    _name = 'res.company.ldap'
     _description = 'Company LDAP configuration'
     _order = 'sequence'
     _rec_name = 'ldap_server'

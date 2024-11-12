@@ -9,6 +9,7 @@ from odoo.osv import expression
 
 
 class ApplicantGetRefuseReason(models.TransientModel):
+    _name = 'applicant.get.refuse.reason'
     _description = 'Get Refuse Reason'
 
     refuse_reason_id = fields.Many2one('hr.applicant.refuse.reason', 'Refuse Reason', required=True)

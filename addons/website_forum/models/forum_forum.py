@@ -14,6 +14,7 @@ MOST_USED_TAGS_COUNT = 5  # Number of tags to track as "most used" to display on
 
 
 class ForumForum(models.Model):
+    _name = 'forum.forum'
     _description = 'Forum'
     _inherit = [
         'mail.thread',

@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class EventTypeMail(models.Model):
-    _inherit = ['event.type.mail']
+    _inherit = 'event.type.mail'
 
     notification_type = fields.Selection(selection_add=[('sms', 'SMS')])
     template_ref = fields.Reference(ondelete={'sms.template': 'cascade'}, selection_add=[('sms.template', 'SMS')])
@@ -17,7 +17,7 @@ class EventTypeMail(models.Model):
 
 
 class EventMail(models.Model):
-    _inherit = ['event.mail']
+    _inherit = 'event.mail'
 
     notification_type = fields.Selection(selection_add=[('sms', 'SMS')])
     template_ref = fields.Reference(ondelete={'sms.template': 'cascade'}, selection_add=[('sms.template', 'SMS')])

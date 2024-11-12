@@ -6,6 +6,7 @@ from odoo.exceptions import ValidationError
 
 
 class SmsAccountCode(models.TransientModel):
+    _name = 'sms.account.code'
     _description = 'SMS Account Verification Code Wizard'
 
     account_id = fields.Many2one('iap.account', required=True)

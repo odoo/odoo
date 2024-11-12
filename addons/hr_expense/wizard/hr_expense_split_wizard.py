@@ -4,6 +4,7 @@ from odoo import fields, models, api, _
 
 
 class HrExpenseSplitWizard(models.TransientModel):
+    _name = 'hr.expense.split.wizard'
     _description = 'Expense Split Wizard'
 
     expense_id = fields.Many2one(comodel_name='hr.expense', string='Expense', required=True)

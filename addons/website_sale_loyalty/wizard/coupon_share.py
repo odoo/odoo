@@ -7,6 +7,7 @@ from odoo.exceptions import UserError, ValidationError
 
 
 class CouponShare(models.TransientModel):
+    _name = 'coupon.share'
     _description = 'Create links that apply a coupon and redirect to a specific page'
 
     def _get_default_website_id(self):

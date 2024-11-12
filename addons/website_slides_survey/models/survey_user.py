@@ -6,7 +6,7 @@ from odoo.osv import expression
 
 
 class SurveyUser_Input(models.Model):
-    _inherit = ['survey.user_input']
+    _inherit = 'survey.user_input'
 
     slide_id = fields.Many2one('slide.slide', 'Related course slide',
         help="The related course slide when there is no membership information")

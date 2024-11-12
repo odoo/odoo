@@ -9,6 +9,7 @@ import textwrap
 
 
 class ChatbotScriptAnswer(models.Model):
+    _name = 'chatbot.script.answer'
     _description = 'Chatbot Script Answer'
     _order = 'script_step_id, sequence, id'
 

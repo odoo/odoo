@@ -4,6 +4,7 @@ from odoo.exceptions import UserError
 
 
 class ProductProduct(models.Model):
+    _name = 'product.product'
     _inherit = ['product.product', 'pos.load.mixin']
 
     @api.model

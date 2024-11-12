@@ -23,6 +23,7 @@ DOMAIN_REGEX = re.compile(r'(-?sum)\((.*)\)')
 
 
 class AccountReport(models.Model):
+    _name = 'account.report'
     _description = "Accounting Report"
     _order = 'sequence, id'
 
@@ -297,6 +298,7 @@ class AccountReport(models.Model):
 
 
 class AccountReportLine(models.Model):
+    _name = 'account.report.line'
     _description = "Accounting Report Line"
     _order = 'sequence, id'
 
@@ -525,6 +527,7 @@ class AccountReportLine(models.Model):
 
 
 class AccountReportExpression(models.Model):
+    _name = 'account.report.expression'
     _description = "Accounting Report Expression"
     _rec_name = 'report_line_name'
 
@@ -841,6 +844,7 @@ class AccountReportExpression(models.Model):
 
 
 class AccountReportColumn(models.Model):
+    _name = 'account.report.column'
     _description = "Accounting Report Column"
     _order = 'sequence, id'
 
@@ -855,6 +859,7 @@ class AccountReportColumn(models.Model):
 
 
 class AccountReportExternalValue(models.Model):
+    _name = 'account.report.external.value'
     _description = 'Accounting Report External Value'
     _check_company_auto = True
     _order = 'date, id'

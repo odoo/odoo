@@ -5,7 +5,7 @@ from odoo import api, models
 
 
 class ResGroups(models.Model):
-    _inherit = ['res.groups']
+    _inherit = 'res.groups'
 
     def write(self, vals):
         """ Automatically subscribe new users to linked slide channels """

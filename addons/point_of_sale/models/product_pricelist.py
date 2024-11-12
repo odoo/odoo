@@ -3,6 +3,7 @@ from odoo import api, fields, models
 
 
 class ProductPricelist(models.Model):
+    _name = 'product.pricelist'
     _inherit = ['product.pricelist', 'pos.load.mixin']
 
     @api.model
@@ -16,6 +17,7 @@ class ProductPricelist(models.Model):
 
 
 class ProductPricelistItem(models.Model):
+    _name = 'product.pricelist.item'
     _inherit = ['product.pricelist.item', 'pos.load.mixin']
 
     @api.model

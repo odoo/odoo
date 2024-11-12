@@ -7,6 +7,7 @@ from odoo.tools import SQL
 
 
 class VendorDelayReport(models.Model):
+    _name = 'vendor.delay.report'
     _description = "Vendor Delay Report"
     _auto = False
 

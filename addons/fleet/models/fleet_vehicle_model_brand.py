@@ -5,6 +5,7 @@ from odoo import api, fields, models
 
 
 class FleetVehicleModelBrand(models.Model):
+    _name = 'fleet.vehicle.model.brand'
     _description = 'Brand of the vehicle'
     _order = 'name asc'
 

@@ -10,7 +10,7 @@ _lt = LazyTranslate(__name__)
 
 
 class Website(models.Model):
-    _inherit = ['website']
+    _inherit = 'website'
 
     #=== DEFAULT METHODS ===#
 

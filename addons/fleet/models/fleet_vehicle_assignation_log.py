@@ -5,6 +5,7 @@ from odoo import api, fields, models
 
 
 class FleetVehicleAssignationLog(models.Model):
+    _name = 'fleet.vehicle.assignation.log'
     _description = "Drivers history on a vehicle"
     _order = "create_date desc, date_start desc"
 

@@ -9,7 +9,7 @@ from pytz import timezone, UTC
 
 
 class ResUsers(models.Model):
-    _inherit = ['res.users']
+    _inherit = 'res.users'
 
     calendar_default_privacy = fields.Selection(
         [('public', 'Public'),

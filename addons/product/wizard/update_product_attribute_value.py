@@ -5,6 +5,7 @@ from odoo.fields import Command
 
 
 class UpdateProductAttributeValue(models.TransientModel):
+    _name = 'update.product.attribute.value'
     _description = "Update product attribute value"
 
     attribute_value_id = fields.Many2one('product.attribute.value', required=True)

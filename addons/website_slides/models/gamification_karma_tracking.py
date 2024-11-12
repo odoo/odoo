@@ -5,7 +5,7 @@ from odoo import _, models
 
 
 class GamificationKarmaTracking(models.Model):
-    _inherit = ['gamification.karma.tracking']
+    _inherit = 'gamification.karma.tracking'
 
     def _get_origin_selection_values(self):
         return (

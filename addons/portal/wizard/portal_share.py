@@ -4,6 +4,7 @@ from odoo import api, fields, models, _
 
 
 class PortalShare(models.TransientModel):
+    _name = 'portal.share'
     _description = 'Portal Sharing'
 
     @api.model

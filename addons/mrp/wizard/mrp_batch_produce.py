@@ -11,6 +11,7 @@ from odoo.tools import OrderedSet
 
 
 class MrpBatchProduce(models.TransientModel):
+    _name = 'mrp.batch.produce'
     _description = 'Produce a batch of production order'
 
     production_id = fields.Many2one('mrp.production', 'Production')

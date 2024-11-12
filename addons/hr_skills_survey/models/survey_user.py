@@ -9,7 +9,7 @@ from odoo.tools import html2plaintext
 
 
 class SurveyUser_Input(models.Model):
-    _inherit = ['survey.user_input']
+    _inherit = 'survey.user_input'
 
     def _mark_done(self):
         """ Will add certification to employee's resume if

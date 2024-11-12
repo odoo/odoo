@@ -5,6 +5,7 @@ from odoo import fields, models, api
 
 
 class PosBusMixin(models.AbstractModel):
+    _name = 'pos.bus.mixin'
     _description = "Bus Mixin"
 
     access_token = fields.Char('Security Token', copy=False)

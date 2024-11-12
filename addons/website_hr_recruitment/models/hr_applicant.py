@@ -6,8 +6,7 @@ from odoo.exceptions import UserError
 
 
 class HrApplicant(models.Model):
-
-    _inherit = ['hr.applicant']
+    _inherit = 'hr.applicant'
 
     def website_form_input_filter(self, request, values):
         if 'partner_name' in values:

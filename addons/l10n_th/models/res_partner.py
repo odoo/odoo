@@ -4,7 +4,7 @@ from odoo import models, fields
 
 
 class ResPartner(models.Model):
-    _inherit = ["res.partner"]
+    _inherit = "res.partner"
 
     l10n_th_branch_name = fields.Char(compute="_compute_l10n_th_branch_name")
 

@@ -32,7 +32,7 @@ temporary hide the incoming http request.
 
 
 class IrQweb(models.AbstractModel):
-    _inherit = ["ir.qweb"]
+    _inherit = "ir.qweb"
 
     def _prepare_environment(self, values):
         irQweb = super()._prepare_environment(values)

@@ -6,7 +6,7 @@ from odoo.tools.misc import format_date
 
 
 class IrMail_Server(models.Model):
-    _inherit = ['ir.mail_server']
+    _inherit = 'ir.mail_server'
 
     active_mailing_ids = fields.One2many(
         comodel_name='mailing.mailing',

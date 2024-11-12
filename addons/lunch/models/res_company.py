@@ -5,7 +5,7 @@ from odoo import models, fields
 
 
 class ResCompany(models.Model):
-    _inherit = ['res.company']
+    _inherit = 'res.company'
 
     lunch_minimum_threshold = fields.Float()
     lunch_notify_message = fields.Html(

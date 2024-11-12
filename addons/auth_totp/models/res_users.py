@@ -21,7 +21,7 @@ compress = functools.partial(re.sub, r'\s', '')
 
 
 class ResUsers(models.Model):
-    _inherit = ['res.users']
+    _inherit = 'res.users'
 
     totp_secret = fields.Char(copy=False, groups=fields.NO_ACCESS, compute='_compute_totp_secret', inverse='_inverse_token')
     totp_enabled = fields.Boolean(string="Two-factor authentication", compute='_compute_totp_enabled', search='_totp_enable_search')

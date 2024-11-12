@@ -8,7 +8,7 @@ from odoo.tools import float_round
 
 
 class ProductProduct(models.Model):
-    _inherit = ['product.product']
+    _inherit = 'product.product'
 
     sales_count = fields.Float(compute='_compute_sales_count', string='Sold', digits='Product Unit of Measure')
 
@@ -99,7 +99,7 @@ class ProductProduct(models.Model):
 
 
 class ProductAttributeCustomValue(models.Model):
-    _inherit = ["product.attribute.custom.value"]
+    _inherit = "product.attribute.custom.value"
 
     sale_order_line_id = fields.Many2one('sale.order.line', string="Sales Order Line", ondelete='cascade')
 
@@ -110,6 +110,6 @@ class ProductAttributeCustomValue(models.Model):
 
 
 class ProductPackaging(models.Model):
-    _inherit = ['product.packaging']
+    _inherit = 'product.packaging'
 
     sales = fields.Boolean("Sales", default=True, help="If true, the packaging can be used for sales orders")

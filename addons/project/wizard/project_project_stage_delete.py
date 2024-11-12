@@ -6,6 +6,7 @@ from odoo import api, fields, models
 
 
 class ProjectProjectStageDeleteWizard(models.TransientModel):
+    _name = 'project.project.stage.delete.wizard'
     _description = 'Project Stage Delete Wizard'
 
     stage_ids = fields.Many2many('project.project.stage', string='Stages To Delete', ondelete='cascade', context={'active_test': False}, export_string_translation=False)

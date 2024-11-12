@@ -5,7 +5,7 @@ from odoo import api, models
 
 
 class Publisher_WarrantyContract(models.AbstractModel):
-    _inherit = ["publisher_warranty.contract"]
+    _inherit = "publisher_warranty.contract"
 
     @api.model
     def _get_message(self):

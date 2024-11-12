@@ -7,7 +7,7 @@ from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarServ
 
 
 class CalendarAttendee(models.Model):
-    _inherit = ['calendar.attendee']
+    _inherit = 'calendar.attendee'
 
     def do_tentative(self):
         # Synchronize event after state change

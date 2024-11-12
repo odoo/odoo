@@ -7,6 +7,7 @@ from odoo.tools.translate import _
 
 
 class CrmLead2opportunityPartner(models.TransientModel):
+    _name = 'crm.lead2opportunity.partner'
     _description = 'Convert Lead to Opportunity (not in mass)'
 
     @api.model

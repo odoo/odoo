@@ -15,6 +15,7 @@ _logger = logging.getLogger(__name__)
 
 
 class ProductTemplate(models.Model):
+    _name = 'product.template'
     _inherit = [
         'rating.mixin',
         'product.template',

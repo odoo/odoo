@@ -22,6 +22,7 @@ _logger = logging.getLogger(__name__)
 
 
 class SlideSlidePartner(models.Model):
+    _name = 'slide.slide.partner'
     _description = 'Slide / Partner decorated m2m'
     _table = 'slide_slide_partner'
     _rec_name = 'partner_id'
@@ -87,6 +88,7 @@ class SlideTag(models.Model):
 
 
 class SlideSlide(models.Model):
+    _name = 'slide.slide'
     _inherit = [
         'mail.thread',
         'image.mixin',

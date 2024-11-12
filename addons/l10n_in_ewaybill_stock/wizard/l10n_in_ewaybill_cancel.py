@@ -3,6 +3,7 @@ from odoo import fields, models
 
 
 class L10nInEwaybillCancel(models.TransientModel):
+    _name = 'l10n.in.ewaybill.cancel'
 
     _description = 'Cancel Ewaybill'
 

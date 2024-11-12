@@ -5,6 +5,7 @@ from odoo import api, fields, models, _
 
 
 class MailPerformanceThread(models.Model):
+    _name = 'mail.performance.thread'
     _description = 'Performance: mail.thread'
     _inherit = ['mail.thread']
 
@@ -21,6 +22,7 @@ class MailPerformanceThread(models.Model):
 
 
 class MailPerformanceTracking(models.Model):
+    _name = 'mail.performance.tracking'
     _description = 'Performance: multi tracking'
     _inherit = ['mail.thread']
 
@@ -86,6 +88,7 @@ class MailTestLang(models.Model):
 
 
 class MailTestTrackAllM2m(models.Model):
+    _name = 'mail.test.track.all.m2m'
     _description = 'Sub-model: pseudo tags for tracking'
     _inherit = ['mail.thread']
 
@@ -93,6 +96,7 @@ class MailTestTrackAllM2m(models.Model):
 
 
 class MailTestTrackAllO2m(models.Model):
+    _name = 'mail.test.track.all.o2m'
     _description = 'Sub-model: pseudo tags for tracking'
     _inherit = ['mail.thread']
 
@@ -101,6 +105,7 @@ class MailTestTrackAllO2m(models.Model):
 
 
 class MailTestTrackAll(models.Model):
+    _name = 'mail.test.track.all'
     _description = 'Test tracking on all field types'
     _inherit = ['mail.thread']
 
@@ -132,6 +137,7 @@ class MailTestTrackAll(models.Model):
 
 
 class MailTestTrackCompute(models.Model):
+    _name = 'mail.test.track.compute'
     _description = "Test tracking with computed fields"
     _inherit = ['mail.thread']
 
@@ -142,6 +148,7 @@ class MailTestTrackCompute(models.Model):
 
 
 class MailTestTrackGroups(models.Model):
+    _name = 'mail.test.track.groups'
     _description = "Test tracking with groups"
     _inherit = ['mail.thread']
 
@@ -151,6 +158,7 @@ class MailTestTrackGroups(models.Model):
 
 
 class MailTestTrackMonetary(models.Model):
+    _name = 'mail.test.track.monetary'
     _description = 'Test tracking monetary field'
     _inherit = ['mail.thread']
 

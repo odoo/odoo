@@ -4,8 +4,7 @@ from odoo import api, fields, models
 
 
 class BaseLanguageInstall(models.TransientModel):
-
-    _inherit = ["base.language.install"]
+    _inherit = "base.language.install"
 
     website_ids = fields.Many2many('website', string='Websites to translate')
 

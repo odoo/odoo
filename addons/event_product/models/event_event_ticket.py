@@ -3,7 +3,7 @@ from odoo import api, models, fields
 
 
 class EventEventTicket(models.Model):
-    _inherit = ['event.event.ticket']
+    _inherit = 'event.event.ticket'
     _order = "event_id, sequence, price, name, id"
 
     price_reduce_taxinc = fields.Float(

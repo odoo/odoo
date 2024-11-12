@@ -4,7 +4,7 @@ from odoo import models
 
 
 class IrAttachment(models.Model):
-    _inherit = ["ir.attachment"]
+    _inherit = "ir.attachment"
 
     def _post_add_create(self, **kwargs):
         super()._post_add_create(**kwargs)

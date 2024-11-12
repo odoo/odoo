@@ -4,6 +4,7 @@ from odoo import fields, models
 
 
 class IapService(models.Model):
+    _name = 'iap.service'
     _description = 'IAP Service'
 
     name = fields.Char(required=True)

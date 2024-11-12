@@ -12,6 +12,7 @@ _logger = logging.getLogger(__name__)
 
 
 class IrRule(models.Model):
+    _name = 'ir.rule'
     _description = 'Record Rule'
     _order = 'model_id DESC,id'
     _MODES = ['read', 'write', 'create', 'unlink']

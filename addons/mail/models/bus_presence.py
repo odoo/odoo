@@ -4,7 +4,7 @@ from odoo import fields, models
 
 
 class BusPresence(models.Model):
-    _inherit = ['bus.presence']
+    _inherit = 'bus.presence'
 
     guest_id = fields.Many2one('mail.guest', 'Guest', ondelete='cascade')
 

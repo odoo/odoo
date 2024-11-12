@@ -5,6 +5,7 @@ from odoo import fields, models, tools, _
 
 
 class LunchCashmoveReport(models.Model):
+    _name = 'lunch.cashmove.report'
     _description = 'Cashmoves report'
     _auto = False
     _order = "date desc"

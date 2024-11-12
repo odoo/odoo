@@ -10,7 +10,7 @@ from odoo.tools import float_round
 
 
 class HrLeave(models.Model):
-    _inherit = ['hr.leave']
+    _inherit = 'hr.leave'
 
     overtime_id = fields.Many2one('hr.attendance.overtime', string='Extra Hours')
     employee_overtime = fields.Float(related='employee_id.total_overtime', groups='base.group_user')

@@ -16,6 +16,7 @@ from odoo.osv import expression
 
 
 class WebsiteTrack(models.Model):
+    _name = 'website.track'
     _description = 'Visited Pages'
     _order = 'visit_datetime DESC'
     _log_access = False
@@ -27,6 +28,7 @@ class WebsiteTrack(models.Model):
 
 
 class WebsiteVisitor(models.Model):
+    _name = 'website.visitor'
     _description = 'Website Visitor'
     _order = 'id DESC'
 

@@ -5,7 +5,7 @@ from odoo import models
 
 
 class MailGroup(models.Model):
-    _inherit = ['mail.group']
+    _inherit = 'mail.group'
 
     def action_go_to_website(self):
         self.ensure_one()

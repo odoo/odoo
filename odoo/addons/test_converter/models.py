@@ -5,6 +5,7 @@ from odoo import models, fields, api
 
 
 class Test_ConverterTest_Model(models.Model):
+    _name = 'test_converter.test_model'
     _description = 'Test Converter Model'
 
     char = fields.Char()
@@ -35,10 +36,12 @@ class Test_ConverterTest_Model(models.Model):
 
 
 class Test_ConverterTest_ModelSub(models.Model):
+    _name = 'test_converter.test_model.sub'
     _description = 'Subtraction For Test Model & Test Converter'
     name = fields.Char()
 
 
 class Test_ConverterMonetary(models.Model):
+    _name = 'test_converter.monetary'
     _description = 'Test Converter Monetary'
     value = fields.Float(digits=(16, 55))

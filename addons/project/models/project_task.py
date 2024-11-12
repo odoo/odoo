@@ -80,6 +80,7 @@ CLOSED_STATES = {
 
 
 class ProjectTask(models.Model):
+    _name = 'project.task'
     _description = "Task"
     _date_name = "date_assign"
     _inherit = [

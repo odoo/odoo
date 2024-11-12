@@ -11,6 +11,7 @@ from odoo.exceptions import UserError
 
 # invoice pdf on their system
 class L10n_Vn_Edi_ViettelSinvoiceTemplate(models.Model):
+    _name = 'l10n_vn_edi_viettel.sinvoice.template'
     _description = 'SInvoice template'
 
     name = fields.Char(
@@ -54,6 +55,7 @@ class L10n_Vn_Edi_ViettelSinvoiceTemplate(models.Model):
 
 # invoice number on their system
 class L10n_Vn_Edi_ViettelSinvoiceSymbol(models.Model):
+    _name = 'l10n_vn_edi_viettel.sinvoice.symbol'
     _description = 'SInvoice symbol'
     """
     The invoice symbols are made of multiple parts.

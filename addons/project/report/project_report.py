@@ -7,6 +7,7 @@ from odoo.addons.rating.models.rating_data import RATING_LIMIT_MIN, RATING_TEXT
 
 
 class ReportProjectTaskUser(models.Model):
+    _name = 'report.project.task.user'
     _description = "Tasks Analysis"
     _order = 'name desc, project_id'
     _auto = False

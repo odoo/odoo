@@ -7,6 +7,7 @@ from odoo.exceptions import ValidationError
 
 
 class RegistrationEditor(models.TransientModel):
+    _name = 'registration.editor'
     _description = 'Edit Attendee Details on Sales Confirmation'
 
     sale_order_id = fields.Many2one('sale.order', 'Sales Order', required=True, ondelete='cascade')

@@ -3,7 +3,7 @@ from odoo.exceptions import UserError, AccessDenied
 
 
 class ResUsersIdentitycheck(models.TransientModel):
-    _inherit = ['res.users.identitycheck']
+    _inherit = 'res.users.identitycheck'
 
     auth_method = fields.Selection(selection_add=[('webauthn', 'Passkey')])
 

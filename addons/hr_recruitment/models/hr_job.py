@@ -10,6 +10,7 @@ from odoo.tools.convert import convert_file
 
 
 class HrJob(models.Model):
+    _name = 'hr.job'
     _inherit = ["mail.alias.mixin", "hr.job"]
     _order = "sequence, name asc"
 

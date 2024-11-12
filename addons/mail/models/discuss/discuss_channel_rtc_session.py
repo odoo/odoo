@@ -14,6 +14,7 @@ _logger = logging.getLogger(__name__)
 
 
 class DiscussChannelRtcSession(models.Model):
+    _name = 'discuss.channel.rtc.session'
     _inherit = ["bus.listener.mixin"]
     _description = 'Mail RTC session'
     _rec_name = 'channel_member_id'

@@ -5,6 +5,7 @@ from odoo import fields, models
 
 
 class HrLeaveMandatoryDay(models.Model):
+    _name = 'hr.leave.mandatory.day'
     _description = 'Mandatory Day'
     _order = 'start_date desc, end_date desc'
 

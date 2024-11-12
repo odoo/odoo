@@ -7,6 +7,7 @@ from odoo.tools.misc import formatLang
 
 
 class AccountBankStatement(models.Model):
+    _name = 'account.bank.statement'
     _description = "Bank Statement"
     _order = "first_line_index desc"
     _check_company_auto = True

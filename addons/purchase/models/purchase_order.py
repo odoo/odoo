@@ -16,6 +16,7 @@ from odoo.exceptions import UserError, ValidationError
 
 
 class PurchaseOrder(models.Model):
+    _name = 'purchase.order'
     _inherit = ['portal.mixin', 'product.catalog.mixin', 'mail.thread', 'mail.activity.mixin']
     _description = "Purchase Order"
     _rec_names_search = ['name', 'partner_ref']

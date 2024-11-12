@@ -3,7 +3,7 @@ from odoo.exceptions import UserError
 
 
 class AccountAccount(models.Model):
-    _inherit = ['account.account']
+    _inherit = 'account.account'
 
     def write(self, vals):
         if (

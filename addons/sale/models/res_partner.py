@@ -7,7 +7,7 @@ from odoo.addons.base.models.res_partner import WARNING_HELP, WARNING_MESSAGE
 
 
 class ResPartner(models.Model):
-    _inherit = ['res.partner']
+    _inherit = 'res.partner'
 
     sale_order_count = fields.Integer(
         string="Sale Order Count",

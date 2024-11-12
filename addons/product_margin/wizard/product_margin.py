@@ -7,6 +7,7 @@ from odoo import api, fields, models, _
 
 
 class ProductMargin(models.TransientModel):
+    _name = 'product.margin'
     _description = 'Product Margin'
 
     from_date = fields.Date('From', default=time.strftime('%Y-01-01'))

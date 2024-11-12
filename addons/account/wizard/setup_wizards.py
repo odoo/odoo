@@ -8,6 +8,7 @@ from odoo.exceptions import ValidationError
 
 
 class AccountFinancialYearOp(models.TransientModel):
+    _name = 'account.financial.year.op'
     _description = 'Opening Balance of Financial Year'
 
     company_id = fields.Many2one(comodel_name='res.company', required=True)
@@ -67,6 +68,7 @@ class AccountFinancialYearOp(models.TransientModel):
 
 
 class AccountSetupBankManualConfig(models.TransientModel):
+    _name = 'account.setup.bank.manual.config'
     _inherits = {'res.partner.bank': 'res_partner_bank_id'}
     _description = 'Bank setup manual config'
     _check_company_auto = True

@@ -5,6 +5,7 @@ from odoo import api, fields, models
 
 
 class Test_Access_RightSome_Obj(models.Model):
+    _name = 'test_access_right.some_obj'
     _description = 'Object For Test Access Right'
 
     val = fields.Integer()
@@ -20,12 +21,14 @@ class Test_Access_RightSome_Obj(models.Model):
 
 
 class Test_Access_RightContainer(models.Model):
+    _name = 'test_access_right.container'
     _description = 'Test Access Right Container'
 
     some_ids = fields.Many2many('test_access_right.some_obj', 'test_access_right_rel', 'container_id', 'some_id')
 
 
 class Test_Access_RightInherits(models.Model):
+    _name = 'test_access_right.inherits'
     _description = 'Object for testing related access rights'
 
     _inherits = {'test_access_right.some_obj': 'some_id'}
@@ -34,12 +37,14 @@ class Test_Access_RightInherits(models.Model):
 
 
 class Test_Access_RightChild(models.Model):
+    _name = 'test_access_right.child'
     _description = 'Object for testing company ir rule'
 
     parent_id = fields.Many2one('test_access_right.some_obj')
 
 
 class Test_Access_RightObj_Categ(models.Model):
+    _name = 'test_access_right.obj_categ'
     _description = "Context dependent searchable model"
 
     name = fields.Char(required=True)

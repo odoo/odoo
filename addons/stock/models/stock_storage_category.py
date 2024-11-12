@@ -5,6 +5,7 @@ from odoo import api, fields, models
 
 
 class StockStorageCategory(models.Model):
+    _name = 'stock.storage.category'
     _description = "Storage Category"
     _order = "name"
 
@@ -45,6 +46,7 @@ class StockStorageCategory(models.Model):
 
 
 class StockStorageCategoryCapacity(models.Model):
+    _name = 'stock.storage.category.capacity'
     _description = "Storage Category Capacity"
     _check_company_auto = True
     _order = "storage_category_id"

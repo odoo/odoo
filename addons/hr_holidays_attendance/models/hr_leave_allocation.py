@@ -9,7 +9,7 @@ from odoo.osv import expression
 
 
 class HrLeaveAllocation(models.Model):
-    _inherit = ['hr.leave.allocation']
+    _inherit = 'hr.leave.allocation'
 
     def default_get(self, fields):
         res = super().default_get(fields)

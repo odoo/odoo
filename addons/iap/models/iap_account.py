@@ -17,6 +17,7 @@ DEFAULT_ENDPOINT = 'https://iap.odoo.com'
 
 
 class IapAccount(models.Model):
+    _name = 'iap.account'
     _description = 'IAP Account'
 
     name = fields.Char()

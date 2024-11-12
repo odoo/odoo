@@ -7,6 +7,7 @@ from odoo import api, fields, models
 
 
 class MailTrackingValue(models.Model):
+    _name = 'mail.tracking.value'
     _description = 'Mail Tracking Value'
     _rec_name = 'field_id'
     _order = 'id DESC'

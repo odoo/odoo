@@ -7,6 +7,7 @@ from odoo import models, api, fields, _
 
 
 class Data_RecycleRecord(models.Model):
+    _name = 'data_recycle.record'
     _description = 'Recycling Record'
 
     active = fields.Boolean('Active', default=True)

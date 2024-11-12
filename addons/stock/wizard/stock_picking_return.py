@@ -6,6 +6,7 @@ from odoo.tools.float_utils import float_is_zero
 
 
 class StockReturnPickingLine(models.TransientModel):
+    _name = 'stock.return.picking.line'
     _rec_name = 'product_id'
     _description = 'Return Picking Line'
 
@@ -78,6 +79,7 @@ class StockReturnPickingLine(models.TransientModel):
 
 
 class StockReturnPicking(models.TransientModel):
+    _name = 'stock.return.picking'
     _description = 'Return Picking'
 
     @api.model

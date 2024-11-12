@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class ResCountry(models.Model):
-    _inherit = ['res.country']
+    _inherit = 'res.country'
 
     enforce_cities = fields.Boolean(
         string='Enforce Cities',

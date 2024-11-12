@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class IrMail_Server(models.Model):
-    _inherit = ['ir.mail_server']
+    _inherit = 'ir.mail_server'
 
     mail_template_ids = fields.One2many(
         comodel_name='mail.template',

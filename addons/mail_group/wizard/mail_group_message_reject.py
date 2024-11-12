@@ -5,6 +5,7 @@ from odoo import api, fields, models, tools, _
 
 
 class MailGroupMessageReject(models.TransientModel):
+    _name = 'mail.group.message.reject'
     _description = 'Reject Group Message'
 
     subject = fields.Char('Subject', store=True, readonly=False, compute='_compute_subject')

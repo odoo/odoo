@@ -6,6 +6,7 @@ from odoo.tools.misc import unquote
 
 
 class ProjectSaleLineEmployeeMap(models.Model):
+    _name = 'project.sale.line.employee.map'
     _description = 'Project Sales line, employee mapping'
 
     def _domain_sale_line_id(self):

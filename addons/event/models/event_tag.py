@@ -7,6 +7,7 @@ from odoo import api, fields, models
 
 
 class EventTagCategory(models.Model):
+    _name = 'event.tag.category'
     _description = "Event Tag Category"
     _order = "sequence"
 
@@ -24,6 +25,7 @@ class EventTagCategory(models.Model):
 
 
 class EventTag(models.Model):
+    _name = 'event.tag'
     _description = "Event Tag"
     _order = "category_sequence, sequence, id"
 

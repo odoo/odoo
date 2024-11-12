@@ -5,6 +5,7 @@ from odoo import fields, models
 
 
 class WebsiteEventMenu(models.Model):
+    _name = 'website.event.menu'
     _description = "Website Event Menu"
     _rec_name = "menu_id"
 

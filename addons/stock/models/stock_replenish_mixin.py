@@ -4,6 +4,7 @@ from odoo import api, fields, models
 
 
 class StockReplenishMixin(models.AbstractModel):
+    _name = 'stock.replenish.mixin'
     _description = 'Product Replenish Mixin'
 
     route_id = fields.Many2one(

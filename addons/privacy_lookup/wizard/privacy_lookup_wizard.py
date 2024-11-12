@@ -9,6 +9,7 @@ from odoo.tools import SQL
 
 
 class PrivacyLookupWizard(models.TransientModel):
+    _name = 'privacy.lookup.wizard'
     _description = 'Privacy Lookup Wizard'
     _transient_max_count = 0
     _transient_max_hours = 24
@@ -209,6 +210,7 @@ class PrivacyLookupWizard(models.TransientModel):
 
 
 class PrivacyLookupWizardLine(models.TransientModel):
+    _name = 'privacy.lookup.wizard.line'
     _description = 'Privacy Lookup Wizard Line'
     _transient_max_count = 0
     _transient_max_hours = 24

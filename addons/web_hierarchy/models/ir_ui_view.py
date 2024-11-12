@@ -22,7 +22,7 @@ HIERARCHY_VALID_ATTRIBUTES = {
 
 
 class IrUiView(models.Model):
-    _inherit = ['ir.ui.view']
+    _inherit = 'ir.ui.view'
 
     type = fields.Selection(selection_add=[('hierarchy', "Hierarchy")])
 

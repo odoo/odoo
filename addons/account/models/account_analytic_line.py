@@ -5,7 +5,7 @@ from odoo.exceptions import UserError, ValidationError
 
 
 class AccountAnalyticLine(models.Model):
-    _inherit = ['account.analytic.line']
+    _inherit = 'account.analytic.line'
     _description = 'Analytic Line'
 
     product_id = fields.Many2one(

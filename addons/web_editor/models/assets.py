@@ -12,6 +12,7 @@ _match_asset_file_url_regex = re.compile(r"^(/_custom/([^/]+))?/(\w+)/([/\w]+\.\
 
 
 class Web_EditorAssets(models.AbstractModel):
+    _name = 'web_editor.assets'
     _description = 'Assets Utils'
 
     @api.model

@@ -8,7 +8,7 @@ log = logging.getLogger(__name__)
 
 
 class AccountMove(models.Model):
-    _inherit = ['account.move']
+    _inherit = 'account.move'
 
     @api.model
     def number2numeric(self, number):

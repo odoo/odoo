@@ -5,6 +5,7 @@ from odoo import api, models, fields
 
 
 class MrpWorkcenter(models.Model):
+    _name = 'mrp.workcenter'
     _inherit = ['mrp.workcenter', 'analytic.mixin']
 
     costs_hour_account_ids = fields.Many2many('account.analytic.account', compute="_compute_costs_hour_account_ids", store=True)
@@ -20,6 +21,6 @@ class MrpWorkcenter(models.Model):
 
 
 class MrpWorkcenterProductivity(models.Model):
-    _inherit = ['mrp.workcenter.productivity']
+    _inherit = 'mrp.workcenter.productivity'
 
     account_move_line_id = fields.Many2one('account.move.line')

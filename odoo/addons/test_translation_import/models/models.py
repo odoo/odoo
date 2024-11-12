@@ -6,6 +6,7 @@ _lt = LazyTranslate(__name__)
 
 
 class TestTranslationImportModel1(models.Model):
+    _name = 'test.translation.import.model1'
     _description = 'Translation Test 1'
 
     name = fields.Char('Name', translate=True, help='Help, English')
@@ -30,6 +31,7 @@ class TestTranslationImportModel1(models.Model):
 
 
 class TestTranslationImportModel2(models.Model):
+    _name = 'test.translation.import.model2'
     _inherits = {'test.translation.import.model1': 'model1_id'}
     _description = 'Translation Test 2'
 

@@ -4,6 +4,7 @@ from odoo import api, fields, models
 
 
 class SaleOrderCancel(models.TransientModel):
+    _name = 'sale.order.cancel'
     _inherit = ['mail.composer.mixin']
     _description = "Sales Order Cancel"
 

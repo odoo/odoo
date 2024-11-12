@@ -3,8 +3,7 @@ from odoo.addons.account.models.chart_template import template
 
 
 class AccountChartTemplate(models.AbstractModel):
-
-    _inherit = ['account.chart.template']
+    _inherit = 'account.chart.template'
 
     # ar base
     @template('ar_base', 'account.account')

@@ -12,6 +12,7 @@ from odoo.tools import html_escape
 
 
 class BlogBlog(models.Model):
+    _name = 'blog.blog'
     _description = 'Blog'
     _inherit = [
         'mail.thread',
@@ -122,6 +123,7 @@ class BlogBlog(models.Model):
 
 
 class BlogTagCategory(models.Model):
+    _name = 'blog.tag.category'
     _description = 'Blog Tag Category'
     _order = 'name'
 
@@ -135,6 +137,7 @@ class BlogTagCategory(models.Model):
 
 
 class BlogTag(models.Model):
+    _name = 'blog.tag'
     _description = 'Blog Tag'
     _inherit = ['website.seo.metadata']
     _order = 'name'
@@ -151,6 +154,7 @@ class BlogTag(models.Model):
 
 
 class BlogPost(models.Model):
+    _name = 'blog.post'
     _description = "Blog Post"
     _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.multi.mixin',
         'website.cover_properties.mixin', 'website.searchable.mixin']

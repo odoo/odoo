@@ -3,6 +3,7 @@ from odoo import api, models
 
 
 class ReportL10n_ChQr_Report_Main(models.AbstractModel):
+    _name = 'report.l10n_ch.qr_report_main'
     _description = 'Swiss QR-bill report'
 
     @api.model

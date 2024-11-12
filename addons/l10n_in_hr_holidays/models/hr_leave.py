@@ -6,7 +6,7 @@ from odoo import models, fields
 
 
 class HrLeave(models.Model):
-    _inherit = ["hr.leave"]
+    _inherit = "hr.leave"
 
     l10n_in_contains_sandwich_leaves = fields.Boolean()
 
