@@ -55,7 +55,11 @@ export class CartPage extends Component {
                 ? this.selfOrder.currentOrder.preset_id?.service_at
                 : config.self_ordering_service_mode;
 
-        if (this.selfOrder.rpcLoading || !this.selfOrder.verifyCart()) {
+        if (
+            this.selfOrder.rpcLoading ||
+            !this.selfOrder.verifyCart() ||
+            !this.selfOrder.verifyPriceLoading()
+        ) {
             return;
         }
 
