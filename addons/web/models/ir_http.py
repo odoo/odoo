@@ -126,7 +126,7 @@ class IrHttp(models.AbstractModel):
             'bundle_params': {
                 'lang': request.session.context['lang'],
             },
-            'test_mode': bool(config['test_enable'] or config['test_file']),
+            'test_mode': config['test_enable'],
             'view_info': self.env['ir.ui.view'].get_view_info(),
         }
         if request.session.debug:
@@ -177,7 +177,7 @@ class IrHttp(models.AbstractModel):
             'bundle_params': {
                 'lang': request.session.context['lang'],
             },
-            'test_mode': bool(config['test_enable'] or config['test_file']),
+            'test_mode': config['test_enable'],
         }
         if request.session.debug:
             session_info['bundle_params']['debug'] = request.session.debug
