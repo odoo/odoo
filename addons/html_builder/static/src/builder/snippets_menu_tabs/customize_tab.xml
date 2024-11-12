@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.CustomizeTab">
+    <t t-if="!props.selectedToolboxes.length">
+        <div class="text-center pt-5">
+            Select a block on your page to style it.
+        </div>
+    </t>
+    <t t-else="">
+        <t t-foreach="props.selectedToolboxes" t-as="selectedToolbox" t-key="selectedToolbox.toolbox.selector">
+            <t t-component="selectedToolbox.toolbox.ToolboxComponent" editingElement="selectedToolbox.element" />
+        </t>
+        <Toolbar class="'flex-wrap h-auto'" toolbar="props.editor.shared.getToolbarInfo()"/>
+    </t>
+</t>
+
+</templates>
