@@ -9,4 +9,4 @@ class TestUi(AccountTestInvoicingCommon, HttpCase):
 
     def test_01_sale_tour(self):
         self.env['res.partner'].create({'name': 'Agrolait', 'email': 'agro@lait.be'})
-        self.start_tour("/odoo", 'sale_tour', login="admin", step_delay=100)
+        self.start_tour("/odoo", 'sale_tour', login="admin")

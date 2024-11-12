@@ -1480,7 +1480,11 @@ actual arch.
     # Node validator
     #------------------------------------------------------
     def _validate_tag_form(self, node, name_manager, node_info):
-        pass
+        self._validate_tag_kanban(node, name_manager, node_info)
+
+    def _validate_tag_kanban(self, node, name_manager, node_info):
+        if node.xpath("//t[@t-name='kanban-box']"):
+            _logger.warning("'kanban-box' is deprecated, define a 'card' template instead")
 
     def _validate_tag_list(self, node, name_manager, node_info):
         # reuse form view validation

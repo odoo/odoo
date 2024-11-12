@@ -249,12 +249,14 @@ class StockValuationLayer(models.Model):
                     'debit': abs(value),
                     'credit': 0,
                     'product_id': product.id,
+                    'quantity': 0,
                 }), (0, 0, {
                     'name': name,
                     'account_id': credit_account_id,
                     'debit': 0,
                     'credit': abs(value),
                     'product_id': product.id,
+                    'quantity': 0,
                 })],
             }
             am_vals_list.append(move_vals)
