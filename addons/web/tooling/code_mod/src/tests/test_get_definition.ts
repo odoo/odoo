@@ -1,11 +1,9 @@
 import { parse } from "@babel/parser";
 import traverse from "@babel/traverse";
 
-import {
-    getDefinitionFor,
-    view_object_to_controller,
-} from "../operations/view_object_to_controller";
+import { view_object_to_controller } from "../operations/view_object_to_controller";
 import { ExtendedEnv } from "../utils/env";
+import { getDefinitionFor } from "../utils/node_path";
 
 function makeParams(fileContents: Record<string, string>): ExtendedEnv {
     const cacheAST = Object.fromEntries(
@@ -25,7 +23,7 @@ function makeParams(fileContents: Record<string, string>): ExtendedEnv {
     return { inFilePath: filePath, getAST, tagAsModified, cleaning: new Set() };
 }
 
-function get_definition(env: ExtendedEnv) {
+function call_get_definition(env: ExtendedEnv) {
     const ast = env.getAST(env.inFilePath);
     if (!ast) {
         return;
@@ -38,7 +36,7 @@ function get_definition(env: ExtendedEnv) {
 }
 
 function call_get_definition_with(fileContents: Record<string, string>) {
-    get_definition(makeParams(fileContents));
+    call_get_definition(makeParams(fileContents));
 }
 
 call_get_definition_with({

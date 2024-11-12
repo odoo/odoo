@@ -1,72 +1,21 @@
-import traverse, { NodePath } from "@babel/traverse";
+import { NodePath } from "@babel/traverse";
 import * as t from "@babel/types";
 
-import { getBinding, getBindingPath } from "../utils/binding";
 import { ExtendedEnv } from "../utils/env";
 import { addImports, getNormalizedNode, removeUnusedImports } from "../utils/imports";
-import { ensureProgramPath, getObjectPropertyPath, getProgramPath } from "../utils/node_path";
+import {
+    ensureProgramPath,
+    getClassPropertyPath,
+    getDeclarationPath,
+    getDefinitionFor,
+    getObjectPropertyPath,
+    getProgramPath,
+} from "../utils/node_path";
 import { DeclarationPattern, ExpressionPattern } from "../utils/pattern";
 import { getLocalIdentifierOfRegistry, isViewRegistry } from "../utils/registry";
-import { getAbsolutePathFromImportDeclaration, isJsFile, normalizeSource } from "../utils/utils";
+import { isJsFile, normalizeSource } from "../utils/utils";
 
 // for ast descriptions see https://github.com/babel/babel/blob/master/packages/babel-parser/ast/spec.md
-
-function getDeclarationPath(id: NodePath<t.Identifier>): NodePath<t.Declaration> | null {
-    const path = getBindingPath(id);
-    if (path && path.parentPath?.isDeclaration()) {
-        return path.parentPath;
-    }
-    return null;
-}
-
-export function getDefinitionFor(
-    identifier: NodePath<t.Identifier>,
-    env: ExtendedEnv,
-): { path: NodePath; inFilePath: string } | null {
-    const binding = getBinding(identifier);
-    if (!binding) {
-        return null;
-    }
-    if (binding.kind === "module") {
-        const path = binding.path;
-        if (path && (path.isImportSpecifier() || path.isImportDefaultSpecifier())) {
-            const parentPath = path.parentPath as NodePath<t.ImportDeclaration>;
-            const absolutePath = getAbsolutePathFromImportDeclaration(parentPath, env);
-            const ast = env.getAST(absolutePath);
-            if (!ast) {
-                return null;
-            }
-            const name =
-                path.isImportSpecifier() && t.isIdentifier(path.node.imported)
-                    ? path.node.imported.name
-                    : null;
-            let res: NodePath | null = null;
-            traverse(ast, {
-                Program(path) {
-                    if (name) {
-                        const b = path.scope.getBinding(name);
-                        if (b) {
-                            res = b.path;
-                        }
-                        path.stop();
-                    }
-                },
-                ExportDefaultDeclaration(path) {
-                    res = path.get("declaration");
-                    path.stop();
-                },
-            });
-            if (!res) {
-                return null;
-            }
-            return { path: res, inFilePath: absolutePath };
-        }
-    }
-    if (["const", "let"].includes(binding.kind)) {
-        return { path: binding.path, inFilePath: env.inFilePath };
-    }
-    return null;
-}
 
 function getClassPropertyForProps(
     path: NodePath<t.ArrowFunctionExpression | t.FunctionExpression | t.ObjectMethod>,
@@ -103,18 +52,6 @@ function getClassPropertyForProps(
     const m = t.classMethod("method", id, params, finalBody);
     m.static = true;
     return m;
-}
-
-function getClassPropertyPath(
-    path: NodePath<t.ClassDeclaration | t.ClassExpression>,
-    name: string,
-) {
-    for (const p of path.get("body").get("body")) {
-        if (p.isClassProperty() && t.isIdentifier(p.node.key, { name })) {
-            return p.get("value");
-        }
-    }
-    return null;
 }
 
 function copyKeys(
