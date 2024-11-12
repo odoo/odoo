@@ -83,8 +83,8 @@ class IrWebsocket(models.AbstractModel):
         return super()._build_bus_channel_list(channels)
 
     @add_guest_to_context
-    def _update_bus_presence(self, inactivity_period, im_status_ids_by_model):
-        super()._update_bus_presence(inactivity_period, im_status_ids_by_model)
+    def _update_bus_presence(self, inactivity_period):
+        super()._update_bus_presence(inactivity_period)
         if not self.env.user or self.env.user._is_public():
             guest = self.env["mail.guest"]._get_guest_from_context()
             if not guest:

@@ -66,10 +66,7 @@ patch(MockServer.prototype, {
      * @param {any} [message.data]
      */
     _performWebsocketRequest({ event_name, data }) {
-        if (event_name === "update_presence") {
-            const { inactivity_period, im_status_ids_by_model } = data;
-            this._mockIrWebsocket__updatePresence(inactivity_period, im_status_ids_by_model);
-        } else if (event_name === "subscribe") {
+        if (event_name === "subscribe") {
             const { channels } = data;
             this.channelsByUser[this.pyEnv?.currentUser] = this.pyEnv
                 ? this._mockIrWebsocket__buildBusChannelList(channels)
