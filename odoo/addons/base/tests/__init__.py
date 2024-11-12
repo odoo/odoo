@@ -19,6 +19,7 @@ from . import test_groups
 from . import test_http_case
 from . import test_i18n
 from . import test_image
+from . import test_install
 from . import test_avatar_mixin
 from . import test_ir_actions
 from . import test_ir_attachment
