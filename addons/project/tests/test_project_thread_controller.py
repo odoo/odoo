@@ -1,10 +1,9 @@
 from odoo.addons.mail.tests.common_controllers import MailControllerThreadCommon, MessagePostSubTestData
-from odoo.addons.portal.tests.test_portal_controller_common import TestPortalControllerCommon
 from odoo.tests import tagged
 
 
 @tagged("-at_install", "post_install", "mail_controller")
-class TestProjectThreadController(MailControllerThreadCommon, TestPortalControllerCommon):
+class TestProjectThreadController(MailControllerThreadCommon):
     def test_message_post_partner_ids_project(self):
         """Test partner_ids of message_post for task.
         Followers of task and followers of related project are allowed to be

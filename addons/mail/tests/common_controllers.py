@@ -55,6 +55,18 @@ class MailControllerCommon(HttpCaseWithUserDemo, MailCommon):
         if guest:
             self.opener.cookies[guest._cookie_name] = guest._format_auth_cookie()
 
+    def _get_sign_token_params(self, record):
+        if 'access_token' not in record:
+            raise ValueError("Test should run with portal installed")
+        access_token = record._portal_ensure_token()
+        partner = record.env["res.partner"].create({"name": "Sign Partner"})
+        _hash = record._sign_token(partner.id)
+        token = {"token": access_token}
+        bad_token = {"token": "incorrect token"}
+        sign = {"hash": _hash, "pid": partner.id}
+        bad_sign = {"hash": "incorrect hash", "pid": partner.id}
+        return token, bad_token, sign, bad_sign, partner
+
 
 class MailControllerAttachmentCommon(MailControllerCommon):
     @classmethod
