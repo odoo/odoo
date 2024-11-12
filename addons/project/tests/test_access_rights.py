@@ -266,7 +266,7 @@ class TestProjectPortalCommon(TestProjectCommon):
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPortalProject(TestProjectPortalCommon):
 
-    @mute_logger('odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_employee_project_access_rights(self):
         pigs = self.project_pigs
 
@@ -288,7 +288,7 @@ class TestPortalProject(TestProjectPortalCommon):
             'project_id': pigs.id})
         tmp_task.with_user(self.user_projectuser).unlink()
 
-    @mute_logger('odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_favorite_project_access_rights(self):
         pigs = self.project_pigs.with_user(self.user_projectuser)
 

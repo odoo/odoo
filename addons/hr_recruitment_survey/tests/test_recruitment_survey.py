@@ -92,7 +92,7 @@ class TestRecruitmentSurvey(common.TransactionCase):
             'job_id': cls.job_restricted_2.id,
         })
 
-    @mute_logger('odoo.addons.base.models.ir_rule')
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_send_survey(self):
         Answer = self.env['survey.user_input']
         invite_recruitment = self._prepare_invite(self.survey_sysadmin, self.job_applicant_sysadmin)
@@ -136,7 +136,7 @@ class TestRecruitmentSurvey(common.TransactionCase):
             invite_recruitment = self._prepare_invite(self.survey_restricted_2, self.job_applicant_restricted_2)
             invite_recruitment.with_user(user).action_invite()
 
-    @mute_logger('odoo.addons.base.models.ir_rule')
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_print_survey(self):
         action_print = self.job_applicant_sysadmin.action_print_survey()
         self.assertEqual(action_print['type'], 'ir.actions.act_url')

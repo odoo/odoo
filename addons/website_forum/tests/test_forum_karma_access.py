@@ -138,7 +138,7 @@ class TestForumCRUD(TestForumCommon):
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestForumKarma(TestForumCommon):
 
-    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
+    @mute_logger('odoo.addons.base.models.ir_access', 'odoo.models')
     def test_answer_question(self):
         Post = self.env['forum.post']
 
@@ -159,7 +159,7 @@ class TestForumKarma(TestForumCommon):
         })
         self.assertEqual(self.user_employee.karma, KARMA['ans'], 'website_forum: wrong karma generation when answering question')
 
-    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
+    @mute_logger('odoo.addons.base.models.ir_access', 'odoo.models')
     def test_ask_question(self):
         Post = self.env['forum.post']
 
@@ -284,7 +284,7 @@ class TestForumKarma(TestForumCommon):
         self.post.with_user(self.user_portal).vote(upvote=False)
         self.assertEqual(self.post.create_uid.karma, 50 + KARMA['gen_que_dwv'], 'website_forum: wrong karma generation of downvoted question author')
 
-    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
+    @mute_logger('odoo.addons.base.models.ir_access', 'odoo.models')
     def test_downvote_crash(self):
         Post = self.env['forum.post']
         self.user_employee.karma = KARMA['ans']
@@ -461,7 +461,7 @@ class TestForumKarma(TestForumCommon):
 
         check_vote_records_count_and_integrity(ORIGIN_COUNT + 1)
 
-    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
+    @mute_logger('odoo.addons.base.models.ir_access', 'odoo.models')
     def test_vote_crash(self):
         Post = self.env['forum.post']
         self.user_employee.karma = KARMA['ans']

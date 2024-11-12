@@ -447,10 +447,9 @@ class MailMessage(models.Model):
         :return: set of allowed message IDs to read, based on document check
         :rtype: set
         """
-        IrModelAccess = self.env['ir.model.access']
         allowed_ids = set()
         for doc_model, doc_dict in model_ids.items():
-            if not IrModelAccess.check(doc_model, 'read', False):
+            if not self.env[doc_model].has_access('read'):
                 continue
             allowed_documents = self._filter_records_for_message_operation(doc_model, list(doc_dict), 'read')
             allowed_ids |= {
