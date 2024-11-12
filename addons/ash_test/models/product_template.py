@@ -22,5 +22,5 @@ class ProductTemplate(models.Model):
     automation_manual_product = fields.Selection([
         ('automation', 'Automation'),
         ('manual', 'Manual'),
-        ('none', 'None'),
-    ], string='Automation Manual Product', default='none')
+        ('automation_bulk', 'Automation Bulk'),
+    ], string='Automation Manual Product', default='manual')
