@@ -47,6 +47,11 @@ export function getProgramPath(ast: Node | null): NodePath<Program> | null {
     return ensureProgramPath(getPath(ast));
 }
 
+export function getProgramPathFrom(env: ExtendedEnv) {
+    const ast = env.getAST(env.inFilePath);
+    return getProgramPath(ast);
+}
+
 export function getObjectPropertyPath(path: NodePath<ObjectExpression> | null, name: string) {
     if (!path) {
         return null;

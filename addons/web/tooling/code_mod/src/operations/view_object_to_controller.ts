@@ -10,6 +10,7 @@ import {
     getDefinitionFor,
     getObjectPropertyPath,
     getProgramPath,
+    getProgramPathFrom,
 } from "../utils/node_path";
 import { DeclarationPattern, ExpressionPattern } from "../utils/pattern";
 import { getLocalIdentifierOfRegistry, isViewRegistry } from "../utils/registry";
@@ -270,5 +271,5 @@ export function view_object_to_controller(env: ExtendedEnv) {
     if (!isJsFile(env.inFilePath)) {
         return;
     }
-    viewObjectToController(getProgramPath(env.getAST(env.inFilePath)), env);
+    viewObjectToController(getProgramPathFrom(env), env);
 }

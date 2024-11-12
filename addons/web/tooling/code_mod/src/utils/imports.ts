@@ -2,7 +2,7 @@ import { NodePath } from "@babel/traverse";
 import { cloneNode, ImportDeclaration, Program } from "@babel/types";
 
 import { ExtendedEnv } from "./env";
-import { ensureProgramPath, getProgramPath } from "./node_path";
+import { ensureProgramPath, getProgramPath, getProgramPathFrom } from "./node_path";
 import { areEquivalentUpToHole } from "./pattern";
 import { isJsFile, normalizeSource } from "./utils";
 
@@ -165,19 +165,19 @@ export function put_imports_on_top(env: ExtendedEnv) {
     if (!isJsFile(env.inFilePath)) {
         return;
     }
-    putImportsOnTop(getProgramPath(env.getAST(env.inFilePath)), env);
+    putImportsOnTop(getProgramPathFrom(env), env);
 }
 
 export function group_imports(env: ExtendedEnv) {
     if (!isJsFile(env.inFilePath)) {
         return;
     }
-    groupImports(getProgramPath(env.getAST(env.inFilePath)), env);
+    groupImports(getProgramPathFrom(env), env);
 }
 
 export function remove_unused_imports(env: ExtendedEnv) {
     if (!isJsFile(env.inFilePath)) {
         return;
     }
-    removeUnusedImports(getProgramPath(env.getAST(env.inFilePath)), env);
+    removeUnusedImports(getProgramPathFrom(env), env);
 }
