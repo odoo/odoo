@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_picking_form_inherit_stock_delivery" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit.stock_delivery</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <label for="delivery_address_id" string="Delivery Address" style="font-weight:bold;"
+                                       invisible="picking_type_code != 'outgoing' or delivery_method != 'classic'"/>
+                <label for="delivery_address_id" string="Pickup Point" style="font-weight:bold;"
+                                        invisible="picking_type_code != 'outgoing' or delivery_method != 'pickup_point'"/>
+                <label for="delivery_address_id" string="Delivery Store" style="font-weight:bold;"
+                                        invisible="picking_type_code != 'outgoing' or delivery_method != 'store'"/>
+                <div class="o_row" invisible="delivery_method != 'pickup_point'">
+                    <field name="delivery_address_id" readonly="1" nolabel="1"/>
+                    <button type="object" name="action_open_pickup_location_selector" icon="fa-pencil" title="Choose"/>
+                </div>
+                <div class="o_row" invisible="delivery_method != 'classic'">
+                    <field name="delivery_address_id" readonly="state in ['cancel', 'done']"/>
+                </div>
+                <div class="o_row" invisible="delivery_method != 'store'">
+                    <field name="delivery_address_id" readonly="1"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

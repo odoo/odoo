@@ -8,7 +8,7 @@ from odoo.exceptions import UserError
 
 
 class StockPicking(models.Model):
-    _inherit = ['stock.picking']
+    _inherit = ['stock.picking', 'pickup.location.mixin']
 
     def _get_default_weight_uom(self):
         return self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
@@ -17,8 +17,15 @@ class StockPicking(models.Model):
         for package in self:
             package.weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
 
+    delivery_address_id = fields.Many2one('res.partner', string='Delivery Address', compute='_compute_delivery_address_id',
+                                          store=True, readonly=False, help="Delivery address for current picking.", tracking=True)
     carrier_price = fields.Float(string="Shipping Cost")
     delivery_type = fields.Selection(related='carrier_id.delivery_type', readonly=True)
+    delivery_method = fields.Selection([
+        ('classic', 'Classic'),
+        ('pickup_point', 'Pickup Point'),
+        ('store', 'Store')
+    ], string="Shipping Method", compute='_compute_delivery_method', default='classic')
     carrier_id = fields.Many2one("delivery.carrier", string="Carrier", check_company=True)
     weight = fields.Float(compute='_cal_weight', digits='Stock Weight', store=True, help="Total weight of the products in the picking.", compute_sudo=True)
     carrier_tracking_ref = fields.Char(string='Tracking Reference', copy=False)
@@ -27,6 +34,24 @@ class StockPicking(models.Model):
     is_return_picking = fields.Boolean(compute='_compute_return_picking')
     return_label_ids = fields.One2many('ir.attachment', compute='_compute_return_label')
     destination_country_code = fields.Char(related='partner_id.country_id.code', string="Destination Country")
+
+    @api.depends('partner_id', 'carrier_id', 'delivery_method')
+    def _compute_delivery_address_id(self):
+        for picking in self:
+            if picking.delivery_method == 'store':
+                picking.delivery_address_id = picking.carrier_id.warehouse_id.partner_id.id
+            elif picking.delivery_method == 'classic':
+                picking.delivery_address_id = picking.partner_id.id
+
+    @api.depends('carrier_id')
+    def _compute_delivery_method(self):
+        for picking in self:
+            if picking.carrier_id.is_pickup:
+                picking.delivery_method = 'pickup_point'
+            elif picking.carrier_id.delivery_type == 'onsite':
+                picking.delivery_method = 'store'
+            else:
+                picking.delivery_method = 'classic'
 
     @api.depends('carrier_id', 'carrier_tracking_ref')
     def _compute_carrier_tracking_url(self):
@@ -221,3 +246,7 @@ class StockPicking(models.Model):
     def _should_generate_commercial_invoice(self):
         self.ensure_one()
         return self.picking_type_id.warehouse_id.partner_id.country_id != self.partner_id.country_id
+
+    @api.model
+    def _get_pickup_point_address_field_name(self):
+        return 'delivery_address_id'

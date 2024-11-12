@@ -3,6 +3,7 @@
 from . import delivery_carrier
 from . import delivery_price_rule
 from . import delivery_zip_prefix
+from . import pickup_location_mixin
 from . import product_category
 from . import res_partner
 from . import sale_order

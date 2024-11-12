@@ -11,7 +11,9 @@ export class LocationSelectorDialog extends Component {
     static components = { Dialog, LocationList, MapContainer };
     static template = 'delivery.locationSelector.dialog';
     static props = {
-        orderId: Number,
+        orderId: {type: Number, optional: true},
+        parentModel: {type: String, optional: true},
+        parentId: {type: Number, optional: true},
         zipCode: String,
         selectedLocationId: { type: String, optional: true},
         save: Function,
@@ -71,7 +73,11 @@ export class LocationSelectorDialog extends Component {
      * @return {Object} The result values.
      */
     async _getLocations(zip) {
-        return rpc(this.getLocationUrl, {order_id: this.props.orderId, zip_code: zip});
+        return rpc(this.getLocationUrl, {
+            res_model: this.props.parentModel,
+            res_id: this.props.parentId,
+            zip_code: zip,
+        });
     }
 
     //--------------------------------------------------------------------------

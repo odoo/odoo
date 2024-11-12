@@ -620,7 +620,7 @@ class SaleOrder(models.Model):
 
     def _remove_delivery_line(self):
         super()._remove_delivery_line()
-        self.pickup_location_data = {}  # Reset the pickup location data.
+        self.delivery_address_id = False  # Reset the pickup location data.
 
     def _get_preferred_delivery_method(self, available_delivery_methods):
         """ Get the preferred delivery method based on available delivery methods for the order.

@@ -5,6 +5,7 @@ from odoo.exceptions import UserError
 
 
 class ChooseDeliveryCarrier(models.TransientModel):
+    _inherit = ['pickup.location.mixin']
     _description = 'Delivery Carrier Selection Wizard'
 
     def _get_default_weight_uom(self):
@@ -17,6 +18,12 @@ class ChooseDeliveryCarrier(models.TransientModel):
         string="Shipping Method",
         required=True,
     )
+    delivery_method = fields.Selection([
+        ('classic', 'Classic'),
+        ('pickup_point', 'Pick Up Point'),
+        ('store', 'Store'),
+    ], string='Delivery Type', compute='_compute_delivery_method', default='classic')
+    state = fields.Selection(related='order_id.state')
     delivery_type = fields.Selection(related='carrier_id.delivery_type')
     delivery_price = fields.Float()
     display_price = fields.Float(string='Cost', readonly=True)
@@ -27,6 +34,23 @@ class ChooseDeliveryCarrier(models.TransientModel):
     delivery_message = fields.Text(readonly=True)
     total_weight = fields.Float(string='Total Order Weight', related='order_id.shipping_weight', readonly=False)
     weight_uom_name = fields.Char(readonly=True, default=_get_default_weight_uom)
+    pickup_point_id = fields.Many2one('res.partner', string="Pickup Point")
+    show_pickup_points = fields.Boolean(compute='_compute_show_pickup_points')
+
+    @api.depends('carrier_id')
+    def _compute_delivery_method(self):
+        for wizard in self:
+            if wizard.carrier_id.is_pickup:
+                wizard.delivery_method = 'pickup_point'
+            elif wizard.carrier_id.delivery_type == 'onsite':
+                wizard.delivery_method = 'store'
+            else:
+                wizard.delivery_method = 'classic'
+
+    @api.depends('carrier_id', 'delivery_type')
+    def _compute_show_pickup_points(self):
+        for wizard in self:
+            wizard.show_pickup_points = wizard.carrier_id.is_pickup
 
     @api.onchange('carrier_id', 'total_weight')
     def _onchange_carrier_id(self):
@@ -91,4 +115,18 @@ class ChooseDeliveryCarrier(models.TransientModel):
         self.order_id.write({
             'recompute_delivery_price': False,
             'delivery_message': self.delivery_message,
+            'delivery_address_id': self.pickup_point_id.id,
         })
+
+    @api.model
+    def _get_pickup_point_address_field_name(self):
+        return 'pickup_point_id'
+
+    def _set_pickup_location(self, pickup_location_data):
+        super()._set_pickup_location(pickup_location_data)
+        # When opening a dialog from another dialog, the first one gets closed
+        # We need to return an action to open the first dialog again
+        action = self.order_id.action_open_delivery_wizard()
+        del action['context']
+        action['res_id'] = self.id
+        return action
