@@ -460,9 +460,5 @@ export function view_object_to_controller(env: ExtendedEnv) {
     if (!isJsFile(env.inFilePath)) {
         return;
     }
-    const ast = env.getAST(env.inFilePath);
-    if (!ast) {
-        return;
-    }
-    viewObjectToController(getProgramPath(ast), env);
+    viewObjectToController(getProgramPath(env.getAST(env.inFilePath)), env);
 }

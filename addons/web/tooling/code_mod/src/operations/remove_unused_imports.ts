@@ -49,9 +49,5 @@ export function remove_unused_imports(env: ExtendedEnv) {
     if (!isJsFile(env.inFilePath)) {
         return;
     }
-    const ast = env.getAST(env.inFilePath);
-    if (!ast) {
-        return;
-    }
-    removeUnusedImports(getProgramPath(ast), env);
+    removeUnusedImports(getProgramPath(env.getAST(env.inFilePath)), env);
 }

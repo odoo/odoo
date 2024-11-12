@@ -1,7 +1,7 @@
 import { NodePath } from "@babel/traverse";
 import { ImportDeclaration } from "@babel/types";
 
-import { Env, ExtendedEnv } from "../utils/env";
+import { ExtendedEnv } from "../utils/env";
 import { ensureProgramPath, getProgramPath } from "../utils/node_path";
 import { areEquivalentUpToHole } from "../utils/pattern";
 import { isJsFile, normalizeSource } from "../utils/utils";
@@ -40,14 +40,9 @@ function groupImports(path: NodePath | null, env: ExtendedEnv) {
     }
 }
 
-export function group_imports(filePath: string, env: Env) {
-    if (!isJsFile(filePath)) {
+export function group_imports(env: ExtendedEnv) {
+    if (!isJsFile(env.inFilePath)) {
         return;
     }
-    const ast = env.getAST(filePath);
-    if (!ast) {
-        return;
-    }
-    console.log("(group_imports) Processing ", filePath);
-    groupImports(getProgramPath(ast), { ...env, inFilePath: filePath });
+    groupImports(getProgramPath(env.getAST(env.inFilePath)), env);
 }

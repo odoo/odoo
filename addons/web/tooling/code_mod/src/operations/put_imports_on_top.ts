@@ -26,9 +26,5 @@ export function put_imports_on_top(env: ExtendedEnv) {
     if (!isJsFile(env.inFilePath)) {
         return;
     }
-    const ast = env.getAST(env.inFilePath);
-    if (!ast) {
-        return;
-    }
-    putImportsOnTop(getProgramPath(ast), env);
+    putImportsOnTop(getProgramPath(env.getAST(env.inFilePath)), env);
 }
