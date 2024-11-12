@@ -4,64 +4,44 @@ from odoo.tests import tagged
 
 @tagged("-at_install", "post_install", "mail_controller")
 class TestPublicBinaryController(MailControllerBinaryCommon):
-    def test_01_guest_avatar_public_record(self):
-        """Test access to open a guest avatar who hasn't sent a message on a public record."""
-        self.env["mail.test.public"].create({"name": "Test"})
+
+    def test_avatar_no_public(self):
+        """Test access to open a guest / partner avatar who hasn't sent a message on a
+        public record."""
+        for source in (self.guest_2, self.user_test.partner_id):
+            self._execute_subtests(
+                source, (
+                    (self.user_public, False),
+                    (self.guest, False),
+                    (self.user_portal, False),
+                    (self.user_employee, True),
+                )
+            )
+
+    def test_avatar_private(self):
+        """Test access to open a partner avatar who has sent a message on a private record."""
+        document = self.env["mail.test.simple.unfollow"].create({"name": "Test"})
+        self._post_message(document, self.user_test)
         self._execute_subtests(
-            self.guest_2,
-            (
+            self.user_test.partner_id, (
                 (self.user_public, False),
                 (self.guest, False),
                 (self.user_portal, False),
                 (self.user_employee, True),
-                (self.user_demo, True),
-                (self.user_admin, True),
-            ),
+            )
         )
 
-    def test_02_guest_avatar_public_record(self):
+    def test_avatar_public(self):
         """Test access to open a guest avatar who has sent a message on a public record."""
-        thread = self.env["mail.test.public"].create({"name": "Test"})
-        self._send_message(self.guest_2, "mail.test.public", thread.id)
-        self._execute_subtests(
-            self.guest_2,
-            (
-                (self.user_public, True),
-                (self.guest, True),
-                (self.user_portal, False),
-                (self.user_employee, True),
-                (self.user_demo, True),
-                (self.user_admin, True),
-            ),
-        )
-
-    def test_01_partner_avatar_public_record(self):
-        """Test access to open a partner avatar who hasn't sent a message on a public record."""
-        self.env["mail.test.public"].create({"name": "Test"})
-        self._execute_subtests(
-            self.user_test,
-            (
-                (self.user_public, False),
-                (self.guest, False),
-                (self.user_portal, False),
-                (self.user_employee, True),
-                (self.user_demo, True),
-                (self.user_admin, True),
-            ),
-        )
-
-    def test_02_partner_avatar_public_record(self):
-        """Test access to open a partner avatar who has sent a message on a public record."""
-        thread = self.env["mail.test.public"].create({"name": "Test"})
-        self._send_message(self.user_test, "mail.test.public", thread.id)
-        self._execute_subtests(
-            self.user_test,
-            (
-                (self.user_public, True),
-                (self.guest, True),
-                (self.user_portal, False),
-                (self.user_employee, True),
-                (self.user_demo, True),
-                (self.user_admin, True),
-            ),
-        )
+        document = self.env["mail.test.access.public"].create({"name": "Test"})
+        for author, source in ((self.guest_2, self.guest_2), (self.user_test, self.user_test.partner_id)):
+            self._post_message(document, author)
+            self._execute_subtests(
+                source,
+                (
+                    (self.user_public, True),
+                    (self.guest, True),
+                    (self.user_portal, True),
+                    (self.user_employee, True),
+                ),
+            )
