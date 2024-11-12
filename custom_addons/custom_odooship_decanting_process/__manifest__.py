@@ -11,6 +11,7 @@
     'depends': ['stock', 'base', 'sale', 'ash_test'],
     'data': [
         'data/delivery_receipt_sequence.xml',
+        'data/automation_bulk_sequence.xml',
         'data/crate_container_configuration_data.xml',
         'security/ir.model.access.csv',
         'security/security.xml',
@@ -24,6 +25,7 @@
         'views/stock_picking_inherit_views.xml',
         'views/res_partner_inherit_views.xml',
         'views/stock_location_inherit_views.xml',
+        'views/automation_bulk_manual_putaway_view.xml',
         'views/menuitem_view.xml',
         # 'views/sales_order_inherit_view.xml',
         'wizard/receipt_wizard_view.xml',

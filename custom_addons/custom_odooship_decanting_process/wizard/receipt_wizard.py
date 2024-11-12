@@ -16,7 +16,8 @@ class DeliveryReceiptWizard(models.TransientModel):
     ], string='State', default='open')
     automation_manual = fields.Selection([('automation', 'Automation'),
                                           ('automation_bulk', 'Automation Bulk'),
-                                          ('manual', 'Manual')], string='Automation Manual')
+                                          ('manual', 'Manual'),
+                                          ('xdock','XDOCK')], string='Automation Manual')
     available_location_ids = fields.Many2many(
         'stock.location', compute='_compute_available_locations', store=False
     )
@@ -43,14 +44,14 @@ class DeliveryReceiptWizard(models.TransientModel):
                 # Filter locations by system_type 'manual' and storage category 'Manual Bulk'
                 locations = self.env['stock.location'].search([
                     ('system_type', '=', 'manual'),
-                    ('storage_category_id.name', '=', 'Manual Bulk')
+                    # ('storage_category_id.name', '=', 'Manual Bulk')
                 ])
                 location_ids = locations.ids
             elif record.automation_manual == 'automation_bulk':
                 # Filter locations by system_type 'geek' and storage category 'geek'
                 locations = self.env['stock.location'].search([
                     ('system_type', '=', 'geek'),
-                    ('storage_category_id.name', '=', 'geek')
+                    # ('storage_category_id.name', '=', 'geek')
                 ])
                 location_ids = locations.ids
 
@@ -198,6 +199,8 @@ class DeliveryReceiptWizardLine(models.TransientModel):
     available_product_ids = fields.Many2many('product.product', string='Available Products', compute='_compute_available_products')
     location_dest_id = fields.Many2one('stock.location', string='Destination location')
     picking_id = fields.Many2one('stock.picking', string='Receipt')
+    product_packaging_id = fields.Many2one('stock.move', string='Packaging')
+    product_packaging_qty = fields.Float(string='Packaging Quantity')
 
     @api.depends('wizard_id.picking_id')
     def _compute_available_products(self):
