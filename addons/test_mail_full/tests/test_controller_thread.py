@@ -1,10 +1,9 @@
 from odoo.addons.mail.tests.common_controllers import MailControllerThreadCommon, MessagePostSubTestData
-from odoo.addons.portal.tests.test_portal_controller_common import TestPortalControllerCommon
 from odoo.tests import tagged
 
 
 @tagged("-at_install", "post_install", "mail_controller")
-class TestPortalThreadController(MailControllerThreadCommon, TestPortalControllerCommon):
+class TestPortalThreadController(MailControllerThreadCommon):
     def test_message_post_access_portal_no_partner(self):
         """Test access of message post for portal without partner."""
         record = self.env["mail.test.portal.no.partner"].create({"name": "Test"})

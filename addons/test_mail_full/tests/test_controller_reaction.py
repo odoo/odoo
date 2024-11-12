@@ -1,10 +1,9 @@
 from odoo.addons.mail.tests.common_controllers import MailControllerReactionCommon
-from odoo.addons.portal.tests.test_portal_controller_common import TestPortalControllerCommon
 from odoo.tests import tagged
 
 
 @tagged("-at_install", "post_install", "mail_controller")
-class TestPortalMessageReactionController(MailControllerReactionCommon, TestPortalControllerCommon):
+class TestPortalMessageReactionController(MailControllerReactionCommon):
 
     def test_message_reaction_portal_no_partner(self):
         """Test access of message reaction for portal without partner."""
