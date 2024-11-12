@@ -345,14 +345,15 @@ actual arch.
                         self._raise_view_error(message, node)
         return True
 
-    @api.constrains('arch_db')
     def _check_xml(self):
         # Sanity checks: the view should not break anything upon rendering!
         # Any exception raised below will cause a transaction rollback.
         partial_validation = self.env.context.get('ir_ui_view_partial_validation')
-        self = self.with_context(validate_view_ids=(self._ids if partial_validation else True))
+        views = self.with_context(validate_view_ids=(self._ids if partial_validation else True))
 
-        for view in self:
+        for view in views:
+            if partial_validation and not view.arch:
+                continue
             try:
                 # verify the view is valid xml and that the inheritance resolves
                 if view.inherit_id:
@@ -505,8 +506,9 @@ actual arch.
             values.update(self._compute_defaults(values))
 
         self.env.registry.clear_cache('templates')
-        result = super(IrUiView, self.with_context(ir_ui_view_partial_validation=True)).create(vals_list)
-        return result.with_env(self.env)
+        result = super().create(vals_list)
+        result.with_context(ir_ui_view_partial_validation=True)._check_xml()
+        return result
 
     def write(self, vals):
         # Keep track if view was modified. That will be useful for the --dev mode
@@ -526,16 +528,9 @@ actual arch.
 
         res = super().write(self._compute_defaults(vals))
 
-        # Check the xml of the view if it gets re-activated.
-        # Ideally, `active` shoud have been added to the `api.constrains` of `_check_xml`,
-        # but the ORM writes and validates regular field (such as `active`) before inverse fields (such as `arch`),
-        # and therefore when writing `active` and `arch` at the same time, `_check_xml` is called twice,
-        # and the first time it tries to validate the view without the modification to the arch,
-        # which is problematic if the user corrects the view at the same time he re-enables it.
-        if vals.get('active'):
-            # Call `_validate_fields` instead of `_check_xml` to have the regular constrains error dialog
-            # instead of the traceback dialog.
-            self._validate_fields(['arch_db'])
+        # Check the xml of the view if it gets re-activated or changed.
+        if vals.get('active') or 'arch_db' in vals:
+            self.filtered('active')._check_xml()
 
         return res
 
@@ -2217,8 +2212,7 @@ actual arch.
             WHERE md.module = %s AND md.name IN %s AND md.noupdate
         """, module, names)))
 
-        for view in views:
-            view._check_xml()
+        views._check_xml()
 
     def _create_all_specific_views(self, processed_modules):
         """To be overriden and have specific view behaviour on create"""
