@@ -6,6 +6,7 @@ from odoo.exceptions import UserError
 
 
 class MailResendMessage(models.TransientModel):
+    _name = 'mail.resend.message'
     _description = 'Email resend wizard'
 
     mail_message_id = fields.Many2one('mail.message', 'Message', readonly=True)
@@ -81,6 +82,7 @@ class MailResendMessage(models.TransientModel):
 
 
 class MailResendPartner(models.TransientModel):
+    _name = 'mail.resend.partner'
     _description = 'Partner with additional information for mail resend'
 
     notification_id = fields.Many2one('mail.notification', string='Notification', required=True, ondelete='cascade')

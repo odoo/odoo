@@ -4,7 +4,7 @@ from odoo import models
 
 
 class ResUsers(models.Model):
-    _inherit = ['res.users']
+    _inherit = 'res.users'
 
     def _get_default_warehouse_id(self):
         # !!! Any change to the following search domain should probably

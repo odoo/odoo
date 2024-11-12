@@ -6,6 +6,7 @@ from odoo.addons.mail.tools.discuss import Store
 
 
 class MailMessageReaction(models.Model):
+    _name = 'mail.message.reaction'
     _description = 'Message Reaction'
     _order = 'id desc'
     _log_access = False

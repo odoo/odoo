@@ -8,6 +8,7 @@ from odoo.osv import expression
 
 
 class LoyaltyRule(models.Model):
+    _name = 'loyalty.rule'
     _description = 'Loyalty Rule'
 
     @api.model

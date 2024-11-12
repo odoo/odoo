@@ -15,6 +15,7 @@ def get_precision(application):
 
 
 class DecimalPrecision(models.Model):
+    _name = 'decimal.precision'
     _description = 'Decimal Precision'
 
     name = fields.Char('Usage', required=True)

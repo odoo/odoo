@@ -10,6 +10,7 @@ from odoo.tools import float_compare, float_round
 
 
 class ProductPackaging(models.Model):
+    _name = 'product.packaging'
     _description = "Product Packaging"
     _order = 'product_id, sequence, id'
     _check_company_auto = True

@@ -6,6 +6,7 @@ from odoo import _, api, fields, models
 
 
 class UtmSource(models.Model):
+    _name = 'utm.source'
     _description = 'UTM Source'
 
     name = fields.Char(string='Source Name', required=True)

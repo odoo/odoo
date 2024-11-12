@@ -8,6 +8,7 @@ from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarServ
 
 
 class GoogleCalendarAccountReset(models.TransientModel):
+    _name = 'google.calendar.account.reset'
     _description = 'Google Calendar Account Reset'
 
     user_id = fields.Many2one('res.users', required=True)

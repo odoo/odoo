@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class WebsiteEventMenu(models.Model):
-    _inherit = ["website.event.menu"]
+    _inherit = "website.event.menu"
 
     menu_type = fields.Selection(
         selection_add=[("meeting_room", "Event Meeting Room Menus")],

@@ -9,6 +9,7 @@ _logger = logging.getLogger(__name__)
 
 
 class Account_PeppolService(models.TransientModel):
+    _name = 'account_peppol.service'
     _order = 'document_name, id'
     _description = 'Peppol Service'
 
@@ -19,6 +20,7 @@ class Account_PeppolService(models.TransientModel):
 
 
 class Account_PeppolServiceWizard(models.TransientModel):
+    _name = 'account_peppol.service.wizard'
     _description = 'Peppol Services Wizard'
 
     edi_user_id = fields.Many2one(comodel_name='account_edi_proxy_client.user', string='EDI user')

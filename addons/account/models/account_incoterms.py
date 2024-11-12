@@ -5,6 +5,7 @@ from odoo import api, fields, models
 
 
 class AccountIncoterms(models.Model):
+    _name = 'account.incoterms'
     _description = 'Incoterms'
 
     name = fields.Char(

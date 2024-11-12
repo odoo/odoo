@@ -15,7 +15,7 @@ CERT_TEMPLATE_NAME = {
 
 
 class CertificateCertificate(models.Model):
-    _inherit = ['certificate.certificate']
+    _inherit = 'certificate.certificate'
 
     def _l10n_sa_get_issuer_name(self):
         self.ensure_one()

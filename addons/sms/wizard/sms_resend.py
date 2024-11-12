@@ -5,6 +5,7 @@ from odoo import _, api, exceptions, fields, models
 
 
 class SmsResendRecipient(models.TransientModel):
+    _name = 'sms.resend.recipient'
     _description = 'Resend Notification'
     _rec_name = 'sms_resend_id'
 
@@ -19,6 +20,7 @@ class SmsResendRecipient(models.TransientModel):
 
 
 class SmsResend(models.TransientModel):
+    _name = 'sms.resend'
     _description = 'SMS Resend'
     _rec_name = 'mail_message_id'
 

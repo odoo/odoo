@@ -17,6 +17,7 @@ GOOGLE_CALENDAR_URL = 'https://www.google.com/calendar/render?'
 
 
 class EventEvent(models.Model):
+    _name = 'event.event'
     _inherit = [
         'event.event',
         'website.seo.metadata',

@@ -5,6 +5,7 @@ from odoo.tools import email_normalize
 
 
 class HrJobPlatform(models.Model):
+    _name = 'hr.job.platform'
     _description = 'Job Platforms'
 
     name = fields.Char(required=True)

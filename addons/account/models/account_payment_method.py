@@ -6,6 +6,7 @@ from odoo.osv import expression
 
 
 class AccountPaymentMethod(models.Model):
+    _name = 'account.payment.method'
     _description = "Payment Methods"
 
     name = fields.Char(required=True, translate=True)
@@ -94,6 +95,7 @@ class AccountPaymentMethod(models.Model):
 
 
 class AccountPaymentMethodLine(models.Model):
+    _name = 'account.payment.method.line'
     _description = "Payment Methods"
     _order = 'sequence, id'
 

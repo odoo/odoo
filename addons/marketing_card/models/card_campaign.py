@@ -6,6 +6,7 @@ from .card_template import TEMPLATE_DIMENSIONS
 
 
 class CardCampaign(models.Model):
+    _name = 'card.campaign'
     _description = 'Marketing Card Campaign'
     _inherit = ['mail.activity.mixin', 'mail.render.mixin', 'mail.thread']
     _order = 'id DESC'

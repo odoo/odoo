@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class ProductProduct(models.Model):
-    _inherit = ["product.product"]
+    _inherit = "product.product"
 
     def action_open_quants(self):
         # Override to hide the `removal_date` column if not needed.
@@ -15,7 +15,7 @@ class ProductProduct(models.Model):
 
 
 class ProductTemplate(models.Model):
-    _inherit = ['product.template']
+    _inherit = 'product.template'
 
     use_expiration_date = fields.Boolean(string='Use Expiration Date',
         help='When this box is ticked, you have the possibility to specify dates to manage'

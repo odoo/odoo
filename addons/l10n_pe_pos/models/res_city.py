@@ -3,6 +3,7 @@ from odoo import api, models
 
 
 class ResCity(models.Model):
+    _name = 'res.city'
     _inherit = ["res.city", "pos.load.mixin"]
 
     @api.model

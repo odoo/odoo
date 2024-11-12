@@ -4,8 +4,7 @@ from odoo.exceptions import UserError
 
 
 class ResCompany(models.Model):
-
-    _inherit = ["res.company"]
+    _inherit = "res.company"
 
     l10n_ar_gross_income_number = fields.Char(
         related='partner_id.l10n_ar_gross_income_number', string='Gross Income Number', readonly=False,

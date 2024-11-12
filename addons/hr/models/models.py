@@ -6,7 +6,7 @@ from odoo.addons.mail.tools.alias_error import AliasError
 
 
 class Base(models.AbstractModel):
-    _inherit = ['base']
+    _inherit = 'base'
 
     def _alias_get_error(self, message, message_dict, alias):
         if alias.alias_contact == 'employees':

@@ -22,7 +22,7 @@ class Test_UninstallModel(models.Model):
 
 
 class ResUsers(models.Model):
-    _inherit = ['res.users']
+    _inherit = 'res.users'
 
     _test_uninstall_res_user_unique_constraint = models.Constraint(
         'unique (password)',

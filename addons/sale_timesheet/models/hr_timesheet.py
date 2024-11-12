@@ -21,7 +21,7 @@ TIMESHEET_INVOICE_TYPES = [
 
 
 class AccountAnalyticLine(models.Model):
-    _inherit = ['account.analytic.line']
+    _inherit = 'account.analytic.line'
 
     def _domain_so_line(self):
         domain = expression.AND([

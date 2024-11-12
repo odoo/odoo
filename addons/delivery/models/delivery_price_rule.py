@@ -14,6 +14,7 @@ VARIABLE_SELECTION = [
 
 
 class DeliveryPriceRule(models.Model):
+    _name = 'delivery.price.rule'
     _description = "Delivery Price Rules"
     _order = 'sequence, list_price, id'
 

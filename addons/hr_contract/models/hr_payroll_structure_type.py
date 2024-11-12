@@ -5,6 +5,7 @@ from odoo import fields, models
 
 
 class HrPayrollStructureType(models.Model):
+    _name = 'hr.payroll.structure.type'
     _description = 'Salary Structure Type'
 
     name = fields.Char('Salary Structure Type')

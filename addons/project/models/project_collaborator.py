@@ -4,6 +4,7 @@ from odoo import api, fields, models
 
 
 class ProjectCollaborator(models.Model):
+    _name = 'project.collaborator'
     _description = 'Collaborators in project shared'
 
     project_id = fields.Many2one('project.project', 'Project Shared', domain=[('privacy_visibility', '=', 'portal')], required=True, readonly=True, export_string_translation=False)

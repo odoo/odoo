@@ -8,7 +8,7 @@ from odoo.addons.website.tools import add_form_signature
 
 
 class IrQwebFieldContact(models.AbstractModel):
-    _inherit = ['ir.qweb.field.contact']
+    _inherit = 'ir.qweb.field.contact'
 
     @api.model
     def get_available_options(self):
@@ -22,7 +22,7 @@ class IrQwebFieldContact(models.AbstractModel):
 
 
 class IrQwebFieldHtml(models.AbstractModel):
-    _inherit = ['ir.qweb.field.html']
+    _inherit = 'ir.qweb.field.html'
 
     @api.model
     def value_to_html(self, value, options):

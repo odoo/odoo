@@ -6,7 +6,7 @@ from odoo import models
 
 
 class CalendarAttendee(models.Model):
-    _inherit = ['calendar.attendee']
+    _inherit = 'calendar.attendee'
 
     def do_tentative(self):
         # Synchronize event after state change

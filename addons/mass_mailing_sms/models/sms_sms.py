@@ -8,7 +8,7 @@ from odoo.tools.mail import TEXT_URL_REGEX
 
 
 class SmsSms(models.Model):
-    _inherit = ['sms.sms']
+    _inherit = 'sms.sms'
 
     mailing_id = fields.Many2one('mailing.mailing', string='Mass Mailing')
     # Linking to another field than the comodel id allows to use the ORM to create

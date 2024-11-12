@@ -6,6 +6,7 @@ from odoo.exceptions import ValidationError
 
 
 class HrDepartment(models.Model):
+    _name = 'hr.department'
     _description = "Department"
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = "name"

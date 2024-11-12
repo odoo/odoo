@@ -11,7 +11,7 @@ _logger = logging.getLogger(__name__)
 
 
 class PosConfig(models.Model):
-    _inherit = ['pos.config']
+    _inherit = 'pos.config'
 
     def open_ui(self):
         for config in self:
@@ -24,7 +24,7 @@ class PosConfig(models.Model):
 
 
 class PosSession(models.Model):
-    _inherit = ['pos.session']
+    _inherit = 'pos.session'
 
     def _check_session_timing(self):
         self.ensure_one()
@@ -44,7 +44,7 @@ LINE_FIELDS = ['notice', 'product_id', 'qty', 'price_unit', 'discount', 'tax_ids
 
 
 class PosOrder(models.Model):
-    _inherit = ['pos.order']
+    _inherit = 'pos.order'
 
     l10n_fr_hash = fields.Char(string="Inalteralbility Hash", readonly=True, copy=False)
     l10n_fr_secure_sequence_number = fields.Integer(string="Inalteralbility No Gap Sequence #", readonly=True, copy=False)
@@ -156,7 +156,7 @@ class PosOrder(models.Model):
 
 
 class PosOrderLine(models.Model):
-    _inherit = ["pos.order.line"]
+    _inherit = "pos.order.line"
 
     def write(self, vals):
         # restrict the operation in case we are trying to write a forbidden field

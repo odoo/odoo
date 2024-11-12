@@ -9,6 +9,7 @@ import json
 
 
 class AccountResequenceWizard(models.TransientModel):
+    _name = 'account.resequence.wizard'
     _description = 'Remake the sequence of Journal Entries.'
 
     sequence_number_reset = fields.Char(compute='_compute_sequence_number_reset')

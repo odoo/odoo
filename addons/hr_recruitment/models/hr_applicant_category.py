@@ -7,6 +7,7 @@ from odoo import fields, models
 
 
 class HrApplicantCategory(models.Model):
+    _name = 'hr.applicant.category'
     _description = "Category of applicant"
 
     def _get_default_color(self):

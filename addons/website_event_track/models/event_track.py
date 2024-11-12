@@ -12,6 +12,7 @@ from odoo.tools.translate import _, html_translate
 
 
 class EventTrack(models.Model):
+    _name = 'event.track'
     _description = 'Event Track'
     _order = 'priority, date'
     _inherit = ['mail.thread', 'mail.activity.mixin', 'website.seo.metadata', 'website.published.mixin']

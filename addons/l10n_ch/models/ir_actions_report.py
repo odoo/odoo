@@ -12,7 +12,7 @@ CH_QR_CROSS_FILE = Path('../static/src/img/CH-Cross_7mm.png') # Image file conta
 
 
 class IrActionsReport(models.Model):
-    _inherit = ['ir.actions.report']
+    _inherit = 'ir.actions.report'
 
     @api.model
     def get_available_barcode_masks(self):

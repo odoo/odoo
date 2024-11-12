@@ -7,6 +7,7 @@ from odoo.exceptions import UserError
 
 
 class UtmMedium(models.Model):
+    _name = 'utm.medium'
     _description = 'UTM Medium'
     _order = 'name'
 

@@ -6,7 +6,7 @@ import re
 
 
 class L10n_LatamDocumentType(models.Model):
-    _inherit = ["l10n_latam.document.type"]
+    _inherit = "l10n_latam.document.type"
 
     internal_type = fields.Selection(
         selection_add=[

@@ -5,7 +5,7 @@ from odoo import models
 
 
 class HrWorkEntry(models.Model):
-    _inherit = ['hr.work.entry']
+    _inherit = 'hr.work.entry'
 
     def _filter_french_part_time_entries(self):
         french_part_time_work_entries = self.filtered(lambda w:

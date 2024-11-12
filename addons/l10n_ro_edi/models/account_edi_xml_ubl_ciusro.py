@@ -11,6 +11,7 @@ def get_formatted_sector_ro(city: str):
 
 
 class AccountEdiXmlUbl_Ro(models.AbstractModel):
+    _name = 'account.edi.xml.ubl_ro'
     _inherit = ["account.edi.xml.ubl_bis3"]
     _description = "CIUS RO"
 

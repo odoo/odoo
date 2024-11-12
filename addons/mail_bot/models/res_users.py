@@ -6,7 +6,7 @@ from odoo import models, fields, _
 
 
 class ResUsers(models.Model):
-    _inherit = ['res.users']
+    _inherit = 'res.users'
 
     odoobot_state = fields.Selection(
         [

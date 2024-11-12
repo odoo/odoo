@@ -19,6 +19,7 @@ _logger = logging.getLogger(__name__)
 
 
 class DigestDigest(models.Model):
+    _name = 'digest.digest'
     _description = 'Digest'
 
     # Digest description

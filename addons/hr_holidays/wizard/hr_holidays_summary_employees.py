@@ -6,6 +6,7 @@ from odoo import api, fields, models
 
 
 class HrHolidaysSummaryEmployee(models.TransientModel):
+    _name = 'hr.holidays.summary.employee'
 
     _description = 'HR Time Off Summary Report By Employee'
 

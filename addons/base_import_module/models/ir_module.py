@@ -29,7 +29,7 @@ MAX_FILE_SIZE = 100 * 1024 * 1024  # in megabytes
 
 
 class IrModuleModule(models.Model):
-    _inherit = ["ir.module.module"]
+    _inherit = "ir.module.module"
 
     imported = fields.Boolean(string="Imported Module")
     module_type = fields.Selection([

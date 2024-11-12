@@ -8,7 +8,7 @@ from .base_automation import get_webhook_request_payload
 
 
 class IrActionsServer(models.Model):
-    _inherit = ["ir.actions.server"]
+    _inherit = "ir.actions.server"
 
     name = fields.Char(compute='_compute_name', store=True, readonly=False)
 

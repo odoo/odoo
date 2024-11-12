@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class ProductSupplierinfo(models.Model):
-    _inherit = ['product.supplierinfo']
+    _inherit = 'product.supplierinfo'
 
     is_subcontractor = fields.Boolean('Subcontracted', compute='_compute_is_subcontractor', help="Choose a vendor of type subcontractor if you want to subcontract the product")
 
@@ -18,7 +18,7 @@ class ProductSupplierinfo(models.Model):
 
 
 class ProductProduct(models.Model):
-    _inherit = ['product.product']
+    _inherit = 'product.product'
 
     def _prepare_sellers(self, params=False):
         if params and params.get('subcontractor_ids'):

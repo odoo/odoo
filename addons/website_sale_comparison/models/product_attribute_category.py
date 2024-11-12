@@ -4,6 +4,7 @@ from odoo import fields, models
 
 
 class ProductAttributeCategory(models.Model):
+    _name = 'product.attribute.category'
     _description = "Product Attribute Category"
     _order = 'sequence, id'
 

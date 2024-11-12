@@ -39,6 +39,7 @@ def format_vat_number(partner):
 
 
 class AccountEdiXmlOioubl_201(models.AbstractModel):
+    _name = 'account.edi.xml.oioubl_201'
     _inherit = ['account.edi.xml.ubl_20']
     _description = "OIOUBL 2.01"
 

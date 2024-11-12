@@ -4,7 +4,7 @@ from odoo import models
 
 
 class StockReturnPicking(models.TransientModel):
-    _inherit = ['stock.return.picking']
+    _inherit = 'stock.return.picking'
 
     def _get_proc_values(self, line):
         vals = super()._get_proc_values(line)

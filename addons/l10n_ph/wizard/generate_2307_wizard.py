@@ -7,6 +7,7 @@ from odoo.addons.l10n_ph import utils
 
 
 class L10n_Ph_2307Wizard(models.TransientModel):
+    _name = 'l10n_ph_2307.wizard'
     _description = "Exports 2307 data to a XLS file."
 
     moves_to_export = fields.Many2many("account.move", string="Joural To Include")

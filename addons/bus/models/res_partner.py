@@ -4,6 +4,7 @@ from odoo import fields, models
 
 
 class ResPartner(models.Model):
+    _name = 'res.partner'
     _inherit = ["res.partner", "bus.listener.mixin"]
 
     im_status = fields.Char('IM Status', compute='_compute_im_status')

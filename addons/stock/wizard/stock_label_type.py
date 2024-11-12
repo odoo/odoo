@@ -5,6 +5,7 @@ from odoo import _, fields, models
 
 
 class PickingLabelType(models.TransientModel):
+    _name = 'picking.label.type'
     _description = 'Choose whether to print product or lot/sn labels'
 
     picking_ids = fields.Many2many('stock.picking')

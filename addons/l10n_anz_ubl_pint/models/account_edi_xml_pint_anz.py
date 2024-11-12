@@ -5,6 +5,7 @@ ANZ_TAX_CATEGORIES = {'S', 'E', 'Z', 'G', 'O'}
 
 
 class AccountEdiXmlPint_Anz(models.AbstractModel):
+    _name = 'account.edi.xml.pint_anz'
     _inherit = ["account.edi.xml.ubl_bis3"]
     _description = "Australia & New Zealand implementation of Peppol International (PINT) model for Billing"
     """

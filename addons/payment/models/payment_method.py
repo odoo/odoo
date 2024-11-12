@@ -10,6 +10,7 @@ from odoo.addons.payment.const import REPORT_REASONS_MAPPING
 
 
 class PaymentMethod(models.Model):
+    _name = 'payment.method'
     _description = "Payment Method"
     _order = 'active desc, sequence, name'
 

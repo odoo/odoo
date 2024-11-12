@@ -5,6 +5,7 @@ from odoo import fields, models
 
 
 class HrSkillType(models.Model):
+    _name = 'hr.skill.type'
     _description = "Skill Type"
     _order = "name"
 

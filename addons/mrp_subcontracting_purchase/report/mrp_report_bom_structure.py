@@ -5,7 +5,7 @@ from odoo import api, models
 
 
 class ReportMrpReport_Bom_Structure(models.AbstractModel):
-    _inherit = ['report.mrp.report_bom_structure']
+    _inherit = 'report.mrp.report_bom_structure'
 
     @api.model
     def _is_buy_route(self, rules, product, bom):

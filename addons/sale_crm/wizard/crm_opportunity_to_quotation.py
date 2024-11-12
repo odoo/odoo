@@ -6,6 +6,7 @@ from odoo.exceptions import UserError
 
 
 class CrmQuotationPartner(models.TransientModel):
+    _name = 'crm.quotation.partner'
     _description = 'Create new or use existing Customer on new Quotation'
 
     @api.model

@@ -18,6 +18,7 @@ _logger = logging.getLogger(__name__)
 
 
 class CrmTeam(models.Model):
+    _name = 'crm.team'
     _inherit = ['mail.alias.mixin', 'crm.team']
     _description = 'Sales Team'
 

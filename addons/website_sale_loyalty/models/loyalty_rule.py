@@ -5,7 +5,7 @@ from odoo.exceptions import ValidationError
 
 
 class LoyaltyRule(models.Model):
-    _inherit = ['loyalty.rule']
+    _inherit = 'loyalty.rule'
 
     website_id = fields.Many2one(related='program_id.website_id', store=True)
 

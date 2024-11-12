@@ -13,6 +13,7 @@ from odoo.tools.misc import unique
 
 
 class ProductProduct(models.Model):
+    _name = 'product.product'
     _description = "Product Variant"
     _inherits = {'product.template': 'product_tmpl_id'}
     _inherit = ['mail.thread', 'mail.activity.mixin']

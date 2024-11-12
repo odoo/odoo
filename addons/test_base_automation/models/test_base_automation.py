@@ -6,6 +6,7 @@ from odoo import fields, models, api
 
 
 class BaseAutomationLeadTest(models.Model):
+    _name = 'base.automation.lead.test'
     _description = "Automated Rule Test"
 
     name = fields.Char(string='Subject', required=True)
@@ -56,11 +57,13 @@ class BaseAutomationLeadTest(models.Model):
 
 
 class BaseAutomationLeadThreadTest(models.Model):
+    _name = 'base.automation.lead.thread.test'
     _description = "Automated Rule Test With Thread"
     _inherit = ['base.automation.lead.test', 'mail.thread']
 
 
 class BaseAutomationLineTest(models.Model):
+    _name = 'base.automation.line.test'
     _description = "Automated Rule Line Test"
 
     name = fields.Char()
@@ -69,6 +72,7 @@ class BaseAutomationLineTest(models.Model):
 
 
 class BaseAutomationLinkTest(models.Model):
+    _name = 'base.automation.link.test'
     _description = "Automated Rule Link Test"
 
     name = fields.Char()
@@ -76,6 +80,7 @@ class BaseAutomationLinkTest(models.Model):
 
 
 class BaseAutomationLinkedTest(models.Model):
+    _name = 'base.automation.linked.test'
     _description = "Automated Rule Linked Test"
 
     name = fields.Char()
@@ -83,6 +88,7 @@ class BaseAutomationLinkedTest(models.Model):
 
 
 class Test_Base_AutomationProject(models.Model):
+    _name = 'test_base_automation.project'
     _description = 'test_base_automation.project'
 
     name = fields.Char()
@@ -94,6 +100,7 @@ class Test_Base_AutomationProject(models.Model):
 
 
 class Test_Base_AutomationTask(models.Model):
+    _name = 'test_base_automation.task'
     _description = 'test_base_automation.task'
 
     name = fields.Char()
@@ -111,22 +118,26 @@ class Test_Base_AutomationTask(models.Model):
 
 
 class Test_Base_AutomationStage(models.Model):
+    _name = 'test_base_automation.stage'
     _description = 'test_base_automation.stage'
     name = fields.Char()
 
 
 class Test_Base_AutomationTag(models.Model):
+    _name = 'test_base_automation.tag'
     _description = 'test_base_automation.tag'
     name = fields.Char()
 
 
 # pylint: disable=E0102
 class BaseAutomationLeadThreadTest(models.Model):  # noqa: F811
+    _name = 'base.automation.lead.thread.test'
     _inherit = ["base.automation.lead.test", "mail.thread"]
     _description = "Threaded Lead Test"
 
 
 class BaseAutomationModelWithRecnameChar(models.Model):
+    _name = 'base.automation.model.with.recname.char'
     _description = "Model with Char as _rec_name"
     _rec_name = "description"
     description = fields.Char()
@@ -134,6 +145,7 @@ class BaseAutomationModelWithRecnameChar(models.Model):
 
 
 class BaseAutomationModelWithRecnameM2o(models.Model):
+    _name = 'base.automation.model.with.recname.m2o'
     _description = "Model with Many2one as _rec_name and name_create"
     _rec_name = "user_id"
     user_id = fields.Many2one("base.automation.model.with.recname.char", string='Responsible')

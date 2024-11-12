@@ -11,6 +11,7 @@ _logger = logging.getLogger(__name__)
 
 
 class IapAutocompleteApi(models.AbstractModel):
+    _name = 'iap.autocomplete.api'
     _description = 'IAP Partner Autocomplete API'
     _DEFAULT_ENDPOINT = 'https://partner-autocomplete.odoo.com'
 

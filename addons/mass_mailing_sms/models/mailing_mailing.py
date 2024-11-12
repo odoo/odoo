@@ -14,7 +14,7 @@ _logger = logging.getLogger(__name__)
 
 
 class MailingMailing(models.Model):
-    _inherit = ['mailing.mailing']
+    _inherit = 'mailing.mailing'
 
     @api.model
     def default_get(self, fields):

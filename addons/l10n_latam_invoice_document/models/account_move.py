@@ -8,8 +8,7 @@ from odoo.tools.sql import column_exists, create_column
 
 
 class AccountMove(models.Model):
-
-    _inherit = ["account.move"]
+    _inherit = "account.move"
 
     _unique_name = models.UniqueIndex(
         "(name, journal_id)"

@@ -14,6 +14,7 @@ from odoo.tools import SQL
 
 
 class CrmTeam(models.Model):
+    _name = 'crm.team'
     _inherit = ['mail.thread']
     _description = "Sales Team"
     _order = "sequence ASC, create_date DESC, id DESC"

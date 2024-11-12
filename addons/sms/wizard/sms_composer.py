@@ -10,6 +10,7 @@ from odoo.exceptions import UserError
 
 
 class SmsComposer(models.TransientModel):
+    _name = 'sms.composer'
     _description = 'Send SMS Wizard'
 
     @api.model

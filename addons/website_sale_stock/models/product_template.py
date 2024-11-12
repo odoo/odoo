@@ -8,7 +8,7 @@ from odoo.addons.website.models import ir_http
 
 
 class ProductTemplate(models.Model):
-    _inherit = ['product.template']
+    _inherit = 'product.template'
 
     allow_out_of_stock_order = fields.Boolean(string='Continue selling when out-of-stock', default=True)
 

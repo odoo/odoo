@@ -6,7 +6,7 @@ from odoo import api, fields, models
 
 
 class HrResumeLine(models.Model):
-    _inherit = ['hr.resume.line']
+    _inherit = 'hr.resume.line'
 
     display_type = fields.Selection(selection_add=[('certification', 'Certification')])
     department_id = fields.Many2one(related="employee_id.department_id", store=True)

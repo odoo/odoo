@@ -6,7 +6,7 @@ from odoo.osv import expression
 
 
 class SlideSlidePartner(models.Model):
-    _inherit = ['slide.slide.partner']
+    _inherit = 'slide.slide.partner'
 
     user_input_ids = fields.One2many('survey.user_input', 'slide_partner_id', 'Certification attempts')
     survey_scoring_success = fields.Boolean('Certification Succeeded', compute='_compute_survey_scoring_success', store=True)
@@ -45,7 +45,7 @@ class SlideSlidePartner(models.Model):
 
 
 class SlideSlide(models.Model):
-    _inherit = ['slide.slide']
+    _inherit = 'slide.slide'
 
     name = fields.Char(compute='_compute_name', readonly=False, store=True)
     slide_category = fields.Selection(selection_add=[

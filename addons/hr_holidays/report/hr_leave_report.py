@@ -5,6 +5,7 @@ from odoo.osv import expression
 
 
 class HrLeaveReport(models.Model):
+    _name = 'hr.leave.report'
     _description = 'Time Off Summary / Report'
     _inherit = ["hr.manager.department.report"]
     _auto = False

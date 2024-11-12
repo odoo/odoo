@@ -5,6 +5,7 @@ from odoo.tools import html2plaintext, cleanup_xml_node
 
 
 class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
+    _name = 'purchase.edi.xml.ubl_bis3'
     _inherit = ['account.edi.xml.ubl_bis3']
     _description = "UBL BIS 3 Peppol Order transaction 3.4"
 

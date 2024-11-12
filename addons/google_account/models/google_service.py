@@ -35,6 +35,7 @@ def _get_client_secret(ICP_sudo, service):
 
 
 class GoogleService(models.AbstractModel):
+    _name = 'google.service'
     _description = 'Google Service'
 
     def _get_client_id(self, service):

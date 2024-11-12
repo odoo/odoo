@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class HrLeaveAccrualLevel(models.Model):
-    _inherit = ["hr.leave.accrual.level"]
+    _inherit = "hr.leave.accrual.level"
 
     frequency_hourly_source = fields.Selection(
         selection=[

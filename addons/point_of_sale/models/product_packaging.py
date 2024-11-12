@@ -3,6 +3,7 @@ from odoo.osv.expression import AND
 
 
 class ProductPackaging(models.Model):
+    _name = 'product.packaging'
     _inherit = ['product.packaging', 'pos.load.mixin']
 
     @api.model

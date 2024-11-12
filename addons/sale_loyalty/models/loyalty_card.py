@@ -4,7 +4,7 @@ from odoo import fields, models
 
 
 class LoyaltyCard(models.Model):
-    _inherit = ['loyalty.card']
+    _inherit = 'loyalty.card'
 
     order_id = fields.Many2one(
         comodel_name='sale.order',

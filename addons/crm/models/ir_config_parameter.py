@@ -6,7 +6,7 @@ from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 
 
 class IrConfig_Parameter(models.Model):
-    _inherit = ['ir.config_parameter']
+    _inherit = 'ir.config_parameter'
 
     def write(self, vals):
         result = super().write(vals)

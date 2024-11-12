@@ -8,6 +8,7 @@ from odoo.tools.float_utils import float_compare
 
 
 class ProductRemoval(models.Model):
+    _name = 'product.removal'
     _description = 'Removal Strategy'
 
     name = fields.Char('Name', required=True, translate=True)
@@ -15,6 +16,7 @@ class ProductRemoval(models.Model):
 
 
 class StockPutawayRule(models.Model):
+    _name = 'stock.putaway.rule'
     _order = 'sequence,product_id'
     _description = 'Putaway Rule'
     _check_company_auto = True

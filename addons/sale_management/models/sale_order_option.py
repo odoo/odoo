@@ -5,6 +5,7 @@ from odoo.exceptions import UserError
 
 
 class SaleOrderOption(models.Model):
+    _name = 'sale.order.option'
     _description = "Sale Options"
     _order = 'sequence, id'
 

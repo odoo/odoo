@@ -15,6 +15,7 @@ _logger = logging.getLogger(__name__)
 
 
 class GoogleGmailMixin(models.AbstractModel):
+    _name = 'google.gmail.mixin'
 
     _description = 'Google Gmail Mixin'
 

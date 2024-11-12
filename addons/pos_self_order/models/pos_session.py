@@ -5,7 +5,7 @@ from odoo import models, api, _, fields
 
 
 class PosSession(models.Model):
-    _inherit = ['pos.session']
+    _inherit = 'pos.session'
 
     @api.model
     def _load_pos_self_data_domain(self, data):

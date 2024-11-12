@@ -18,6 +18,7 @@ DR_CREATE_STEP_MANUAL = 50000
 
 
 class Data_RecycleModel(models.Model):
+    _name = 'data_recycle.model'
     _description = 'Recycling Model'
     _order = 'name'
 

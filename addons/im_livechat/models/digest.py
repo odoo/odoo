@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class DigestDigest(models.Model):
-    _inherit = ['digest.digest']
+    _inherit = 'digest.digest'
 
     kpi_livechat_rating = fields.Boolean('% of Happiness')
     kpi_livechat_rating_value = fields.Float(digits=(16, 2), compute='_compute_kpi_livechat_rating_value')

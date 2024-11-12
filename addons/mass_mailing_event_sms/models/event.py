@@ -5,7 +5,7 @@ from odoo import models
 
 
 class EventEvent(models.Model):
-    _inherit = ["event.event"]
+    _inherit = "event.event"
 
     def action_mass_mailing_attendees(self):
         # Minimal override: set form view being the one mixing sms and mail (not prioritized one)

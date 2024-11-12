@@ -26,7 +26,7 @@ TAX_SYSTEM = [
 
 
 class ResCompany(models.Model):
-    _inherit = ['res.company']
+    _inherit = 'res.company'
 
     l10n_it_codice_fiscale = fields.Char(string="Codice Fiscale", size=16, related='partner_id.l10n_it_codice_fiscale',
         store=True, readonly=False, help="Fiscal code of your company")

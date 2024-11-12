@@ -19,6 +19,7 @@ _logger = logging.getLogger(__name__)
 
 
 class HrLeaveType(models.Model):
+    _name = 'hr.leave.type'
     _description = "Time Off Type"
     _order = 'sequence'
 

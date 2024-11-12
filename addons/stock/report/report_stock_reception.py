@@ -8,6 +8,7 @@ from odoo.tools import float_compare, float_is_zero, format_date
 
 
 class ReportStockReport_Reception(models.AbstractModel):
+    _name = 'report.stock.report_reception'
     _description = "Stock Reception Report"
 
     @api.model

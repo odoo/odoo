@@ -174,6 +174,7 @@ def check_identity(fn):
 
 
 class ResGroups(models.Model):
+    _name = 'res.groups'
     _description = "Access Groups"
     _rec_name = 'full_name'
     _order = 'name'
@@ -299,6 +300,7 @@ class ResGroups(models.Model):
 
 
 class ResUsersLog(models.Model):
+    _name = 'res.users.log'
     _order = 'id desc'
     _description = 'Users Log'
     # Uses the magical fields `create_uid` and `create_date` for recording logins.
@@ -1445,7 +1447,7 @@ ResUsersPatchedInTest = ResUsers
 # TODO: reorganize or split the file to avoid declaring classes multiple times
 # pylint: disable=E0102
 class ResGroups(models.Model):  # noqa: F811
-    _inherit = ['res.groups']
+    _inherit = 'res.groups'
 
     implied_ids = fields.Many2many('res.groups', 'res_groups_implied_rel', 'gid', 'hid',
         string='Inherits', help='Users of this group automatically inherit those groups')
@@ -1620,7 +1622,7 @@ class UsersImplied(models.Model):
 
 # pylint: disable=E0102
 class ResGroups(models.Model):  # noqa: F811
-    _inherit = ['res.groups']
+    _inherit = 'res.groups'
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -1840,7 +1842,7 @@ class ResGroups(models.Model):  # noqa: F811
 
 
 class IrModuleCategory(models.Model):
-    _inherit = ["ir.module.category"]
+    _inherit = "ir.module.category"
 
     def write(self, values):
         res = super().write(values)
@@ -1856,7 +1858,7 @@ class IrModuleCategory(models.Model):
 
 # pylint: disable=E0102
 class ResUsers(models.Model):  # noqa: F811
-    _inherit = ['res.users']
+    _inherit = 'res.users'
 
     user_group_warning = fields.Text(string="User Group Warning", compute="_compute_user_group_warning")
 
@@ -2210,6 +2212,7 @@ class ChangePasswordUser(models.TransientModel):
 
 
 class ChangePasswordOwn(models.TransientModel):
+    _name = 'change.password.own'
     _description = "User, change own password wizard"
     _transient_max_hours = 0.1
 
@@ -2242,7 +2245,7 @@ KEY_CRYPT_CONTEXT = CryptContext(
 
 # pylint: disable=E0102
 class ResUsers(models.Model):  # noqa: F811
-    _inherit = ['res.users']
+    _inherit = 'res.users'
 
     api_key_ids = fields.One2many('res.users.apikeys', 'user_id', string="API Keys")
 
@@ -2297,6 +2300,7 @@ class ResUsers(models.Model):  # noqa: F811
 
 
 class ResUsersApikeys(models.Model):
+    _name = 'res.users.apikeys'
     _description = 'Users API Keys'
     _auto = False # so we can have a secret column
     _allow_sudo_commands = False
@@ -2420,6 +2424,7 @@ class ResUsersApikeys(models.Model):
 
 
 class ResUsersApikeysDescription(models.TransientModel):
+    _name = 'res.users.apikeys.description'
     _description = 'API Key Description'
 
     def _selection_duration(self):
@@ -2502,6 +2507,7 @@ class ResUsersApikeysDescription(models.TransientModel):
 
 
 class ResUsersApikeysShow(models.AbstractModel):
+    _name = 'res.users.apikeys.show'
     _description = 'Show API Key'
 
     # the field 'id' is necessary for the onchange that returns the value of 'key'

@@ -6,6 +6,7 @@ from odoo.osv import expression
 
 
 class ProductTag(models.Model):
+    _name = 'product.tag'
     _description = 'Product Tag'
     _order = 'sequence, id'
 

@@ -9,6 +9,7 @@ from odoo.tools import html_escape
 
 
 class MailBot(models.AbstractModel):
+    _name = 'mail.bot'
     _description = 'Mail Bot'
 
     def _apply_logic(self, channel, values, command=None):

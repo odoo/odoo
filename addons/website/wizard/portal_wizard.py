@@ -4,7 +4,7 @@ from odoo import models
 
 
 class PortalWizardUser(models.TransientModel):
-    _inherit = ['portal.wizard.user']
+    _inherit = 'portal.wizard.user'
 
     def _get_similar_users_domain(self, portal_users_with_email):
         """ Returns the domain needed to find the users that have the same email

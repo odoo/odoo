@@ -4,10 +4,12 @@ from odoo import fields, models, api, Command
 
 
 class TtuProduct(models.Model):
+    _name = 'ttu.product'
     _description = 'ttu.product'
 
 
 class TtuRoot(models.Model):
+    _name = 'ttu.root'
     _description = 'ttu.root'
 
     product_id = fields.Many2one('ttu.product')
@@ -87,6 +89,7 @@ class TtuRoot(models.Model):
 
 
 class TtuChild(models.Model):
+    _name = 'ttu.child'
     _description = 'ttu.child'
 
     product_id = fields.Many2one('ttu.product')
@@ -152,6 +155,7 @@ class TtuChild(models.Model):
 
 
 class TtuGrandchild(models.Model):
+    _name = 'ttu.grandchild'
     _description = 'ttu.grandchild'
 
     product_id = fields.Many2one('ttu.product')

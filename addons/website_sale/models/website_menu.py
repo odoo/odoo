@@ -4,7 +4,7 @@ from odoo import models
 
 
 class WebsiteMenu(models.Model):
-    _inherit = ['website.menu']
+    _inherit = 'website.menu'
 
     def _compute_visible(self):
         """ Hide '/shop' menus to the public user if only logged-in users can access it. """

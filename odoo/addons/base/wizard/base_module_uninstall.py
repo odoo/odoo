@@ -5,6 +5,7 @@ from odoo import api, fields, models
 
 
 class BaseModuleUninstall(models.TransientModel):
+    _name = 'base.module.uninstall'
     _description = "Module Uninstall"
 
     show_all = fields.Boolean()

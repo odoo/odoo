@@ -13,6 +13,7 @@ from odoo.tools.translate import html_translate
 
 
 class WebsiteMenu(models.Model):
+    _name = 'website.menu'
 
     _description = "Website Menu"
 

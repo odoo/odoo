@@ -5,6 +5,7 @@ from odoo import _, api, fields, models, tools
 
 
 class MailThreadCc(models.AbstractModel):
+    _name = 'mail.thread.cc'
     _inherit = ['mail.thread']
     _description = 'Email CC management'
 

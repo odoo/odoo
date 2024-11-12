@@ -16,6 +16,7 @@ _logger = logging.getLogger(__name__)
 
 
 class Publisher_WarrantyContract(AbstractModel):
+    _name = 'publisher_warranty.contract'
     _description = 'Publisher Warranty Contract'
 
     @api.model

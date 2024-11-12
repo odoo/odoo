@@ -115,6 +115,7 @@ class MailingTestOptout(models.Model):
 
 
 class MailingTestPartner(models.Model):
+    _name = 'mailing.test.partner'
     _description = 'Mailing Model with partner_id'
     _inherit = ['mail.thread.blacklist']
     _primary_email = 'email_from'

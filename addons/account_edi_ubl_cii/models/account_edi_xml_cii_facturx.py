@@ -17,6 +17,7 @@ CII_NAMESPACES = {
 
 
 class AccountEdiXmlCii(models.AbstractModel):
+    _name = 'account.edi.xml.cii'
     _inherit = ['account.edi.common']
     _description = "Factur-x/XRechnung CII 2.2.0"
 

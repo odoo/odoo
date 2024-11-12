@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class EventEvent(models.Model):
-    _inherit = ["event.event"]
+    _inherit = "event.event"
 
     @api.depends("event_type_id", "website_menu", "community_menu")
     def _compute_community_menu(self):

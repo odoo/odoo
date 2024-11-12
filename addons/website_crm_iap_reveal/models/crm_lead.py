@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class CrmLead(models.Model):
-    _inherit = ['crm.lead']
+    _inherit = 'crm.lead'
 
     reveal_ip = fields.Char(string='IP Address')
     reveal_iap_credits = fields.Integer(string='IAP Credits')

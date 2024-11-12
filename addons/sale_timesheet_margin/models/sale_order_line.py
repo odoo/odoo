@@ -4,7 +4,7 @@ from odoo import api, models
 
 
 class SaleOrderLine(models.Model):
-    _inherit = ["sale.order.line"]
+    _inherit = "sale.order.line"
 
     @api.depends('analytic_line_ids.amount', 'qty_delivered_method')
     def _compute_purchase_price(self):

@@ -7,6 +7,7 @@ import requests
 
 
 class MailIceServer(models.Model):
+    _name = 'mail.ice.server'
     _description = 'ICE server'
 
     server_type = fields.Selection([('stun', 'stun:'), ('turn', 'turn:')], string='Type', required=True, default='stun')

@@ -7,7 +7,7 @@ from odoo import Command
 
 
 class EventEvent(models.Model):
-    _inherit = ['event.event']
+    _inherit = 'event.event'
 
     event_booth_ids = fields.One2many(
         'event.booth', 'event_id', string='Booths', copy=True,

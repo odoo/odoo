@@ -13,6 +13,7 @@ from odoo.exceptions import ValidationError
 
 
 class L10n_Eg_EdiThumbDrive(models.Model):
+    _name = 'l10n_eg_edi.thumb.drive'
     _description = 'Thumb drive used to sign invoices in Egypt'
 
     user_id = fields.Many2one('res.users', required=True, default=lambda self: self.env.user)

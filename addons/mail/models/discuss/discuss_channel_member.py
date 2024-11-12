@@ -17,6 +17,7 @@ SFU_MODE_THRESHOLD = 3
 
 
 class DiscussChannelMember(models.Model):
+    _name = 'discuss.channel.member'
     _inherit = ["bus.listener.mixin"]
     _description = "Channel Member"
     _rec_names_search = ["channel_id", "partner_id", "guest_id"]

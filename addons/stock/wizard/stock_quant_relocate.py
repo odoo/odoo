@@ -7,6 +7,7 @@ from odoo import fields, models, api
 
 
 class StockQuantRelocate(models.TransientModel):
+    _name = 'stock.quant.relocate'
     _description = 'Stock Quantity Relocation'
 
     quant_ids = fields.Many2many('stock.quant')

@@ -13,6 +13,7 @@ _logger = logging.getLogger(__name__)
 
 
 class CalendarRecurrence(models.Model):
+    _name = 'calendar.recurrence'
     _inherit = ['calendar.recurrence', 'google.calendar.sync']
 
 

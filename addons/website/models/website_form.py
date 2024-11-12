@@ -8,7 +8,7 @@ from odoo.osv import expression
 
 
 class Website(models.Model):
-    _inherit = ['website']
+    _inherit = 'website'
 
     def _website_form_last_record(self):
         if request and request.session.form_builder_model_model:
@@ -17,6 +17,7 @@ class Website(models.Model):
 
 
 class IrModel(models.Model):
+    _name = 'ir.model'
     _description = 'Models'
     _inherit = ['ir.model']
 

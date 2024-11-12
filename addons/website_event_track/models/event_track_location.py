@@ -5,6 +5,7 @@ from odoo import fields, models
 
 
 class EventTrackLocation(models.Model):
+    _name = 'event.track.location'
     _description = 'Event Track Location'
     _order = 'sequence, id'
 

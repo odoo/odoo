@@ -3,7 +3,7 @@ from odoo import models
 
 
 class IrQweb(models.AbstractModel):
-    _inherit = ["ir.qweb"]
+    _inherit = "ir.qweb"
 
     def _get_bundles_to_pregenarate(self):
         js_assets, css_assets = super()._get_bundles_to_pregenarate()

@@ -17,6 +17,7 @@ from .project_task import CLOSED_STATES
 
 
 class ProjectProject(models.Model):
+    _name = 'project.project'
     _description = "Project"
     _inherit = [
         'portal.mixin',

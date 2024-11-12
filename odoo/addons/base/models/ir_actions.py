@@ -50,6 +50,7 @@ class LoggerProxy:
 
 
 class IrActionsActions(models.Model):
+    _name = 'ir.actions.actions'
     _description = 'Actions'
     _table = 'ir_actions'
     _order = 'name'
@@ -255,6 +256,7 @@ class IrActionsActions(models.Model):
 
 
 class IrActionsAct_Window(models.Model):
+    _name = 'ir.actions.act_window'
     _description = 'Action Window'
     _table = 'ir_act_window'
     _inherit = ['ir.actions.actions']
@@ -407,6 +409,7 @@ VIEW_TYPES = [
 
 
 class IrActionsAct_WindowView(models.Model):
+    _name = 'ir.actions.act_window.view'
     _description = 'Action Window View'
     _table = 'ir_act_window_view'
     _rec_name = 'view_id'
@@ -423,6 +426,7 @@ class IrActionsAct_WindowView(models.Model):
 
 
 class IrActionsAct_Window_Close(models.Model):
+    _name = 'ir.actions.act_window_close'
     _description = 'Action Window Close'
     _inherit = ['ir.actions.actions']
     _table = 'ir_actions'
@@ -439,6 +443,7 @@ class IrActionsAct_Window_Close(models.Model):
 
 
 class IrActionsAct_Url(models.Model):
+    _name = 'ir.actions.act_url'
     _description = 'Action URL'
     _table = 'ir_act_url'
     _inherit = ['ir.actions.actions']
@@ -1147,6 +1152,7 @@ class IrActionsTodo(models.Model):
 
 
 class IrActionsClient(models.Model):
+    _name = 'ir.actions.client'
     _description = 'Client Action'
     _inherit = ['ir.actions.actions']
     _table = 'ir_act_client'

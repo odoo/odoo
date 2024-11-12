@@ -5,7 +5,7 @@ from odoo import api, fields, models, _
 
 
 class EventEvent(models.Model):
-    _inherit = ["event.event"]
+    _inherit = "event.event"
 
     track_ids = fields.One2many('event.track', 'event_id', 'Tracks')
     track_count = fields.Integer('Track Count', compute='_compute_track_count')

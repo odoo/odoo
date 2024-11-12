@@ -4,7 +4,7 @@ from odoo import fields, models
 
 
 class ResPartner(models.Model):
-    _inherit = ['res.partner']
+    _inherit = 'res.partner'
 
     loyalty_card_count = fields.Integer(
         string="Active loyalty cards",

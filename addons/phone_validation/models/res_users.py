@@ -5,7 +5,7 @@ from odoo import _, models
 
 
 class ResUsers(models.Model):
-    _inherit = ['res.users']
+    _inherit = 'res.users'
 
     def _deactivate_portal_user(self, **post):
         """Blacklist the phone of the user after deleting it."""

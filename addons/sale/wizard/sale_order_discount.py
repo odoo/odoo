@@ -8,6 +8,7 @@ from odoo.fields import Command
 
 
 class SaleOrderDiscount(models.TransientModel):
+    _name = 'sale.order.discount'
     _description = "Discount Wizard"
 
     sale_order_id = fields.Many2one(

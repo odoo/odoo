@@ -3,6 +3,7 @@ from odoo import api, models
 
 
 class ProductCategory(models.Model):
+    _name = 'product.category'
     _inherit = ['product.category', 'pos.load.mixin']
 
     @api.model

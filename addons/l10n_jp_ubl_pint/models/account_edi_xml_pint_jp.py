@@ -2,6 +2,7 @@ from odoo import fields, models
 
 
 class AccountEdiXmlPint_Jp(models.AbstractModel):
+    _name = 'account.edi.xml.pint_jp'
     _inherit = ["account.edi.xml.ubl_bis3"]
     _description = "Japanese implementation of Peppol International (PINT) model for Billing"
     """

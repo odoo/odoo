@@ -4,6 +4,7 @@ from odoo.osv.expression import AND
 
 
 class ReportPos_HrSingle_Employee_Sales_Report(models.AbstractModel):
+    _name = 'report.pos_hr.single_employee_sales_report'
     _inherit = ['report.point_of_sale.report_saledetails']
     _description = 'Session sales details for a single employee'
 

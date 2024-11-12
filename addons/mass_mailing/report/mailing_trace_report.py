@@ -5,6 +5,7 @@ from odoo import fields, models, tools
 
 
 class MailingTraceReport(models.Model):
+    _name = 'mailing.trace.report'
     _auto = False
     _description = 'Mass Mailing Statistics'
 

@@ -128,6 +128,7 @@ class AnalyticPlanFieldsMixin(models.AbstractModel):
 
 
 class AccountAnalyticLine(models.Model):
+    _name = 'account.analytic.line'
     _inherit = ['analytic.plan.fields.mixin']
     _description = 'Analytic Line'
     _order = 'date desc, id desc'

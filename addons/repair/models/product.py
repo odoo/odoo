@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 
 
 class ProductProduct(models.Model):
-    _inherit = ["product.product"]
+    _inherit = "product.product"
 
     product_catalog_product_is_in_repair = fields.Boolean(
         compute='_compute_product_is_in_repair',
@@ -38,6 +38,6 @@ class ProductProduct(models.Model):
 
 
 class ProductTemplate(models.Model):
-    _inherit = ["product.template"]
+    _inherit = "product.template"
 
     create_repair = fields.Boolean('Create Repair', help="Create a linked Repair Order on Sale Order confirmation of this product.", groups='stock.group_stock_user')

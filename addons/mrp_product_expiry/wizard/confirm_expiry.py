@@ -5,7 +5,7 @@ from odoo import api, fields, models, _
 
 
 class ExpiryPickingConfirmation(models.TransientModel):
-    _inherit = ['expiry.picking.confirmation']
+    _inherit = 'expiry.picking.confirmation'
 
     production_ids = fields.Many2many('mrp.production', readonly=True)
     workorder_id = fields.Many2one('mrp.workorder', readonly=True)

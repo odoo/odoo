@@ -59,7 +59,7 @@ def get_request_website():
 
 
 class IrHttp(models.AbstractModel):
-    _inherit = ['ir.http']
+    _inherit = 'ir.http'
 
     def routing_map(self, key=None):
         if not key and request:

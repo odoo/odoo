@@ -7,6 +7,7 @@ from odoo.exceptions import UserError
 
 
 class BaseModuleUpgrade(models.TransientModel):
+    _name = 'base.module.upgrade'
     _description = "Upgrade Module"
 
     @api.model
