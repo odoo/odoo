@@ -1088,7 +1088,8 @@ def extract_spreadsheet_terms(fileobj, keywords, comment_tags, options):
     data = json.load(fileobj)
     for sheet in data.get('sheets', []):
         for cell in sheet['cells'].values():
-            content = cell.get('content', '')
+            # 'cell' was an object in versions <saas-18.1
+            content = cell if isinstance(cell, str) else cell.get('content', '')
             if content.startswith('='):
                 terms += extract_formula_terms(content)
             else:

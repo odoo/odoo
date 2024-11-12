@@ -26,13 +26,13 @@ test("Odoo formulas are migrated", () => {
         ],
     };
     const migratedData = load(data);
-    expect(migratedData.sheets[0].cells.A1.content).toBe(`=PIVOT.VALUE("1")`);
-    expect(migratedData.sheets[0].cells.A2.content).toBe(`=PIVOT.HEADER("1")`);
-    expect(migratedData.sheets[0].cells.A3.content).toBe(`=ODOO.FILTER.VALUE("1")`);
-    expect(migratedData.sheets[0].cells.A4.content).toBe(`=ODOO.LIST("1")`);
-    expect(migratedData.sheets[0].cells.A5.content).toBe(`=ODOO.LIST.HEADER("1")`);
-    expect(migratedData.sheets[0].cells.A6.content).toBe(`=ODOO.PIVOT.POSITION("1")`);
-    expect(migratedData.sheets[0].cells.A7.content).toBe(`=PIVOT.VALUE("1")`);
+    expect(migratedData.sheets[0].cells.A1).toBe(`=PIVOT.VALUE("1")`);
+    expect(migratedData.sheets[0].cells.A2).toBe(`=PIVOT.HEADER("1")`);
+    expect(migratedData.sheets[0].cells.A3).toBe(`=ODOO.FILTER.VALUE("1")`);
+    expect(migratedData.sheets[0].cells.A4).toBe(`=ODOO.LIST("1")`);
+    expect(migratedData.sheets[0].cells.A5).toBe(`=ODOO.LIST.HEADER("1")`);
+    expect(migratedData.sheets[0].cells.A6).toBe(`=ODOO.PIVOT.POSITION("1")`);
+    expect(migratedData.sheets[0].cells.A7).toBe(`=PIVOT.VALUE("1")`);
 });
 
 test("Pivot 'day' arguments are migrated", () => {
@@ -53,14 +53,12 @@ test("Pivot 'day' arguments are migrated", () => {
         ],
     };
     const migratedData = load(data);
-    expect(migratedData.sheets[0].cells.A1.content).toBe(`=PIVOT.VALUE("1","07/21/2022")`);
-    expect(migratedData.sheets[0].cells.A2.content).toBe(`=PIVOT.HEADER("1","12/11/2022")`);
-    expect(migratedData.sheets[0].cells.A3.content).toBe(`=PIVOT.VALUE("1","07/21/2021")`);
-    expect(migratedData.sheets[0].cells.A4.content).toBe(`=PIVOT.VALUE("1","test")`);
-    expect(migratedData.sheets[0].cells.A5.content).toBe(
-        `=PIVOT.VALUE("1","07/21/2021")+"21/07/2021"`
-    );
-    expect(migratedData.sheets[0].cells.A6.content).toBe(`=BAD_FORMULA(`);
+    expect(migratedData.sheets[0].cells.A1).toBe(`=PIVOT.VALUE("1","07/21/2022")`);
+    expect(migratedData.sheets[0].cells.A2).toBe(`=PIVOT.HEADER("1","12/11/2022")`);
+    expect(migratedData.sheets[0].cells.A3).toBe(`=PIVOT.VALUE("1","07/21/2021")`);
+    expect(migratedData.sheets[0].cells.A4).toBe(`=PIVOT.VALUE("1","test")`);
+    expect(migratedData.sheets[0].cells.A5).toBe(`=PIVOT.VALUE("1","07/21/2021")+"21/07/2021"`);
+    expect(migratedData.sheets[0].cells.A6).toBe(`=BAD_FORMULA(`);
 });
 
 test("Global filters: pivot fields is correctly added", () => {
@@ -472,11 +470,11 @@ test("Pivot formulas are migrated from 9 to 10", () => {
         ],
     };
     const migratedData = load(data);
-    expect(migratedData.sheets[0].cells.A1.content).toBe(`=PIVOT.VALUE("1")`);
-    expect(migratedData.sheets[0].cells.A2.content).toBe(`=PIVOT.HEADER("1")`);
-    expect(migratedData.sheets[0].cells.A3.content).toBe(`=ODOO.PIVOT.POSITION("1")`);
-    expect(migratedData.sheets[0].cells.A4.content).toBe(`=PIVOT("1")`);
-    expect(migratedData.sheets[0].cells.A5.content).toBe(`=PIVOT.VALUE("1")`);
+    expect(migratedData.sheets[0].cells.A1).toBe(`=PIVOT.VALUE("1")`);
+    expect(migratedData.sheets[0].cells.A2).toBe(`=PIVOT.HEADER("1")`);
+    expect(migratedData.sheets[0].cells.A3).toBe(`=ODOO.PIVOT.POSITION("1")`);
+    expect(migratedData.sheets[0].cells.A4).toBe(`=PIVOT("1")`);
+    expect(migratedData.sheets[0].cells.A5).toBe(`=PIVOT.VALUE("1")`);
 });
 
 test("Pivot formulas using pivot positions are migrated (11 to 12)", () => {
@@ -499,14 +497,12 @@ test("Pivot formulas using pivot positions are migrated (11 to 12)", () => {
         ],
     };
     const migratedData = load(data);
-    expect(migratedData.sheets[0].cells.A1.content).toBe(
+    expect(migratedData.sheets[0].cells.A1).toBe(
         `=-PIVOT.VALUE("1","balance","#account_id",12,"date:quarter","4/"&ODOO.FILTER.VALUE("Year"))`
     );
-    expect(migratedData.sheets[0].cells.A2.content).toBe(`=PIVOT.HEADER("1","#account_id",14)`);
-    expect(migratedData.sheets[0].cells.A3.content).toBe(
-        `=ODOO.PIVOT.POSITION("1","account_id",14)`
-    );
-    expect(migratedData.sheets[0].cells.A4.content).toBe(`=ODOO.PIVOT.POSITION("1",14)`);
+    expect(migratedData.sheets[0].cells.A2).toBe(`=PIVOT.HEADER("1","#account_id",14)`);
+    expect(migratedData.sheets[0].cells.A3).toBe(`=ODOO.PIVOT.POSITION("1","account_id",14)`);
+    expect(migratedData.sheets[0].cells.A4).toBe(`=ODOO.PIVOT.POSITION("1",14)`);
 });
 
 test("Odoo version is exported", () => {
