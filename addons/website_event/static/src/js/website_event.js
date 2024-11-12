@@ -1,10 +1,29 @@
 /** @odoo-module **/
 
 import publicWidget from "@web/legacy/js/public/public_widget";
+import { _t } from "@web/core/l10n/translation";
+import { ReCaptcha } from "@google_recaptcha/js/recaptcha";
 import { jsonrpc } from "@web/core/network/rpc_service";
 
 // Catch registration form event, because of JS for attendee details
 var EventRegistrationForm = publicWidget.Widget.extend({
+
+    /**
+     * @constructor
+     */
+    init: function () {
+        this._super(...arguments);
+        this._recaptcha = new ReCaptcha();
+        this.notification = this.bindService("notification");
+    },
+
+    /**
+     * @override
+     */
+    willStart: async function () {
+        this._recaptcha.loadLibs();
+        return this._super(...arguments);
+    },
 
     /**
      * @override
@@ -47,7 +66,18 @@ var EventRegistrationForm = publicWidget.Widget.extend({
         var $button = $(ev.currentTarget).closest('[type="submit"]');
         const post = this._getPost();
         $button.attr('disabled', true);
-        return jsonrpc($form.attr('action'), post).then(function (modal) {
+        const self = this;
+        return jsonrpc($form.attr('action'), post).then(async function (modal) {
+            const tokenObj = await self._recaptcha.getToken('website_event_registration');
+            if (tokenObj.error) {
+                self.notification.add(tokenObj.error, {
+                    type: "danger",
+                    title: _t("Error"),
+                    sticky: true,
+                });
+                $button.prop('disabled', false);
+                return false;
+            }
             var $modal = $(modal);
             $modal.find('.modal-body > div').removeClass('container'); // retrocompatibility - REMOVE ME in master / saas-19
             $modal.appendTo(document.body);
@@ -61,6 +91,13 @@ var EventRegistrationForm = publicWidget.Widget.extend({
             $modal.on('click', '.btn-close', function () {
                 $button.prop('disabled', false);
             });
+            $modal.on('submit', 'form', function (ev) {
+                const tokenInput = document.createElement('input');
+                tokenInput.setAttribute('name', 'recaptcha_token_response');
+                tokenInput.setAttribute('type', 'hidden');
+                tokenInput.setAttribute('value', tokenObj.token);
+                ev.currentTarget.appendChild(tokenInput);
+            })
         });
     },
 });
