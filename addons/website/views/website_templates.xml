@@ -215,6 +215,7 @@
 
     <xpath expr="//header" position="before">
         <t t-set="cta_btn_text" t-value="False"/>
+        <t t-set="header_content_width" t-valuef="container"/>
         <t t-set="cta_btn_href">/contactus</t>
         <t t-set="extra_items_toggle_aria_label">Extra items button</t>
         <t t-set="primary_additional_colors" t-value="False"/>
@@ -531,7 +532,7 @@
         <t t-call="website.navbar">
             <t t-set="_navbar_classes" t-valuef="d-none d-lg-block shadow-sm"/>
 
-            <div id="o_main_nav" class="o_main_nav container">
+            <div id="o_main_nav" t-attf-class="o_main_nav #{header_content_width}">
                 <!-- Brand -->
                 <t t-call="website.placeholder_header_brand">
                     <t t-set="_link_class" t-valuef="me-4"/>
@@ -605,7 +606,7 @@
             <t t-set="_navbar_classes" t-valuef="d-none d-lg-block shadow-sm"/>
             <t t-set="_navbar_expand_class" t-valuef=""/>
 
-            <div id="o_main_nav" class="o_main_nav container d-grid py-0 o_grid_header_3_cols">
+            <div id="o_main_nav" t-attf-class="o_main_nav d-grid py-0 o_grid_header_3_cols #{header_content_width}">
                 <!-- Nav Toggler -->
                 <t t-call="website.navbar_toggler">
                     <t t-set="_toggler_class" t-valuef="btn me-auto p-2"/>
@@ -739,7 +740,7 @@
         <t t-call="website.navbar">
             <t t-set="_navbar_classes" t-valuef="d-none d-lg-block py-0 shadow-sm"/>
 
-            <div id="o_main_nav" class="o_main_nav container align-items-stretch">
+            <div id="o_main_nav" t-attf-class="o_main_nav align-items-stretch #{header_content_width}">
                 <!-- Brand -->
                 <t t-call="website.placeholder_header_brand">
                     <t t-set="_link_class" t-valuef="d-flex align-items-center me-4 p-2"/>
@@ -825,7 +826,7 @@
         <t t-call="website.navbar">
             <t t-set="_navbar_classes" t-valuef="d-none d-lg-block pt-3 shadow-sm"/>
 
-            <div id="o_main_nav" class="o_main_nav container flex-wrap">
+            <div id="o_main_nav" t-attf-class="o_main_nav flex-wrap #{header_content_width}">
                 <div class="o_header_hide_on_scroll d-grid align-items-center w-100 o_grid_header_3_cols pb-3">
                     <ul class="navbar-nav align-items-center gap-1">
                         <!-- Search bar -->
@@ -894,7 +895,7 @@
 
             <div id="o_main_nav" class="o_main_nav flex-wrap">
                 <div aria-label="Top" class="o_header_hide_on_scroll border-bottom o_border_contrast">
-                    <div class="container d-flex justify-content-between flex-wrap w-100">
+                    <div t-attf-class="#{header_content_width} d-flex justify-content-between flex-wrap w-100">
                         <ul class="o_header_search_left_col navbar-nav flex-wrap">
                             <!-- Language Selector -->
                             <t t-call="website.placeholder_header_language_selector">
@@ -926,7 +927,7 @@
                         </ul>
                     </div>
                 </div>
-                <div aria-label="Bottom" class="container d-grid align-items-center w-100 py-2 o_grid_header_3_cols">
+                <div aria-label="Bottom" t-attf-class="#{header_content_width} d-grid align-items-center w-100 py-2 o_grid_header_3_cols">
                     <!-- Navbar -->
                     <t t-call="website.navbar_nav">
                         <t t-set="_nav_class" t-valuef="me-4"/>
@@ -998,7 +999,7 @@
             <t t-set="_navbar_classes" t-valuef="o_header_force_no_radius d-none d-lg-block p-0 shadow-sm"/>
 
             <div id="o_main_nav" class="o_main_nav">
-                <div aria-label="Top" class="container d-flex align-items-center justify-content-between py-3">
+                <div aria-label="Top" t-attf-class="#{header_content_width} d-flex align-items-center justify-content-between py-3">
                     <!-- Brand -->
                     <t t-call="website.placeholder_header_brand">
                         <t t-set="_link_class" t-valuef="me-4"/>
@@ -1049,7 +1050,7 @@
                     </ul>
                 </div>
                 <div aria-label="Bottom" t-if="is_view_active('website.header_text_element') or is_view_active('website.header_social_links')" class="o_header_sales_one_bot o_header_hide_on_scroll gap-3 py-2">
-                    <ul class="navbar-nav container justify-content-between align-items-center">
+                    <ul t-attf-class="#{header_content_width} navbar-nav justify-content-between align-items-center">
                         <!-- Text element -->
                         <t t-call="website.placeholder_header_text_element">
                             <t t-set="_txt_elt_content" t-valuef="list"/>
@@ -1092,7 +1093,7 @@
             <div id="o_main_nav" class="o_main_nav">
                 <div class="o_header_hide_on_scroll">
                     <div aria-label="Top" t-if="is_view_active('website.header_text_element') or is_view_active('website.header_social_links') or is_view_active('website.header_language_selector')" class="o_header_sales_two_top py-1">
-                        <ul class="navbar-nav container d-grid h-100 px-3 o_grid_header_3_cols">
+                        <ul t-attf-class="#{header_content_width} navbar-nav d-grid h-100 px-3 o_grid_header_3_cols">
                             <!-- Return empty placeholder if the element is not active to keep the right layout -->
                             <li class="o_header_sales_two_lang_selector_placeholder" t-if="is_view_active('website.header_language_selector') == False"/>
                             <!-- Language Selector -->
@@ -1116,7 +1117,7 @@
                             </t>
                         </ul>
                     </div>
-                    <div aria-label="Middle" class="container d-flex justify-content-between align-items-center py-1">
+                    <div aria-label="Middle" t-attf-class="#{header_content_width} d-flex justify-content-between align-items-center py-1">
                         <!-- Brand -->
                         <t t-call="website.placeholder_header_brand">
                             <t t-set="_link_class" t-valuef="me-4"/>
@@ -1145,7 +1146,7 @@
                     </div>
                 </div>
                 <div aria-label="Bottom" class="border-top o_border_contrast">
-                    <div class="container d-flex justify-content-between">
+                    <div t-attf-class="#{header_content_width} d-flex justify-content-between">
                         <!-- Navbar -->
                         <t t-call="website.navbar_nav">
                             <t t-set="_nav_class" t-valuef="align-items-center me-4 py-1"/>
@@ -1196,7 +1197,7 @@
             <div id="o_main_nav" class="o_main_nav">
                 <div aria-label="Top" t-if="is_view_active('website.header_text_element') or is_view_active('website.header_social_links') or is_view_active('website.header_search_box') or is_view_active('website.header_call_to_action')"
                      class="o_header_sales_three_top o_header_hide_on_scroll position-relative border-bottom z-1 o_border_contrast">
-                    <div class="container d-flex justify-content-between gap-3 h-100">
+                    <div t-attf-class="#{header_content_width} d-flex justify-content-between gap-3 h-100">
                         <ul class="navbar-nav align-items-center gap-3 py-1">
                             <!-- Social -->
                             <t t-call="website.placeholder_header_social_links"/>
@@ -1222,7 +1223,7 @@
                         </ul>
                     </div>
                 </div>
-                <div aria-label="Bottom" class="container d-flex align-items-center py-2">
+                <div aria-label="Bottom" t-attf-class="#{header_content_width} d-flex align-items-center py-2">
                     <!-- Brand -->
                     <t t-call="website.placeholder_header_brand">
                         <t t-set="_link_class" t-valuef="me-4"/>
@@ -1285,7 +1286,7 @@
             <t t-set="_navbar_classes" t-valuef="o_header_sales_four_top o_header_force_no_radius d-none d-lg-block p-0 shadow-sm z-1"/>
 
             <div id="o_main_nav" class="o_main_nav">
-                <div aria-label="Top" class="container d-flex">
+                <div aria-label="Top" t-attf-class="#{header_content_width} d-flex">
                     <!-- Navbar -->
                     <t t-call="website.navbar_nav">
                         <t t-set="_nav_class" t-valuef="align-items-center me-auto pe-3"/>
@@ -1333,7 +1334,7 @@
                     </ul>
                 </div>
                 <div aria-label="Bottom" class="o_header_sales_four_bot o_header_hide_on_scroll z-0">
-                    <div class="container">
+                    <div t-attf-class="#{header_content_width}">
                         <ul class="navbar-nav d-grid align-items-center py-2 o_grid_header_3_cols">
                             <!-- Search bar -->
                             <li class="o_header_sales_four_search_placeholder" t-if="is_view_active('website.header_search_box') == False"/>
@@ -1507,11 +1508,11 @@
 <!-- "Rounded box" template -->
 <template id="template_header_boxed" inherit_id="website.layout" name="Template Header Rounded Box" active="False">
     <xpath expr="//header//nav" position="replace">
-        <div class="container py-3 px-0">
+        <div t-attf-class="#{header_content_width} py-3 px-0">
             <t t-call="website.navbar">
                 <t t-set="_navbar_classes" t-valuef="o_full_border d-none d-lg-block rounded-pill px-3 shadow-sm"/>
 
-                <div id="o_main_nav" class="o_main_nav container">
+                <div id="o_main_nav" t-attf-class="#{header_content_width} o_main_nav">
                     <!-- Brand -->
                     <t t-call="website.placeholder_header_brand">
                         <t t-set="_link_class" t-valuef="me-4"/>
@@ -1681,6 +1682,18 @@
 <template id="header_hoverable_dropdown" inherit_id="website.layout" name="Header Hoverable Dropdown" active="False">
     <xpath expr="//header" position="attributes">
         <attribute name="t-attf-class" add="o_hoverable_dropdown" separator=" "/>
+    </xpath>
+</template>
+
+<template id="header_width_small" inherit_id="website.layout" active="False">
+    <xpath expr="//t[@t-set='header_content_width']" position="attributes">
+        <attribute name="t-valuef">o_container_small</attribute>
+    </xpath>
+</template>
+
+<template id="header_width_full" inherit_id="website.layout" active="False">
+    <xpath expr="//t[@t-set='header_content_width']" position="attributes">
+        <attribute name="t-valuef">container-fluid</attribute>
     </xpath>
 </template>
 
