@@ -3,41 +3,13 @@ import * as t from "@babel/types";
 
 import { getBinding, getBindingPath } from "../utils/binding";
 import { ExtendedEnv } from "../utils/env";
+import { addImports, getNormalizedNode, removeUnusedImports } from "../utils/imports";
 import { ensureProgramPath, getObjectPropertyPath, getProgramPath } from "../utils/node_path";
 import { DeclarationPattern, ExpressionPattern } from "../utils/pattern";
-import { isViewRegistry } from "../utils/registry";
+import { getLocalIdentifierOfRegistry, isViewRegistry } from "../utils/registry";
 import { getAbsolutePathFromImportDeclaration, isJsFile, normalizeSource } from "../utils/utils";
-import { addImports, getNormalizedNode, removeUnusedImports } from "../utils/imports";
 
 // for ast descriptions see https://github.com/babel/babel/blob/master/packages/babel-parser/ast/spec.md
-
-function getLocalIdentifierOfRegistry(
-    path: NodePath | null,
-    env: ExtendedEnv,
-): NodePath<t.Identifier> | null {
-    const programPath = ensureProgramPath(path);
-    if (!programPath) {
-        return null;
-    }
-    for (const p of programPath.get("body")) {
-        if (!p.isImportDeclaration()) {
-            continue;
-        }
-        const s = normalizeSource(p.node.source.value, env);
-        if (s !== "@web/core/registry") {
-            continue;
-        }
-        for (const s of p.get("specifiers")) {
-            if (s.isImportSpecifier()) {
-                const imported = s.get("imported");
-                if (imported.isIdentifier({ name: "registry" })) {
-                    return s.get("local");
-                }
-            }
-        }
-    }
-    return null;
-}
 
 function getDeclarationPath(id: NodePath<t.Identifier>): NodePath<t.Declaration> | null {
     const path = getBindingPath(id);

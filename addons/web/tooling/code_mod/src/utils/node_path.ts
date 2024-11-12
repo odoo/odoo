@@ -9,6 +9,7 @@ export function getPath(ast: Node | null): NodePath | null {
     try {
         traverse(ast, {
             enter(p) {
+                debugger
                 path = p;
                 path.stop();
             },

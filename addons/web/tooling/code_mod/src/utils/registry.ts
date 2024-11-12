@@ -1,7 +1,56 @@
 import { NodePath } from "@babel/traverse";
+import { Identifier } from "@babel/types";
 
 import { getBindingPath } from "./binding";
-import { ExpressionPattern } from "./pattern";
+import { ExtendedEnv } from "./env";
+import { ensureProgramPath } from "./node_path";
+import { areEquivalentUpToHole, ExpressionPattern } from "./pattern";
+import { normalizeSource } from "./utils";
+
+export function getLocalIdentifierOfRegistry(
+    path: NodePath | null,
+    env: ExtendedEnv,
+): NodePath<Identifier> | null {
+    const programPath = ensureProgramPath(path);
+    if (!programPath) {
+        return null;
+    }
+    for (const p of programPath.get("body")) {
+        if (!p.isImportDeclaration()) {
+            continue;
+        }
+        const s = normalizeSource(p.node.source.value, env);
+        if (s !== "@web/core/registry") {
+            continue;
+        }
+        for (const s of p.get("specifiers")) {
+            if (s.isImportSpecifier()) {
+                const imported = s.get("imported");
+                if (imported.isIdentifier({ name: "registry" })) {
+                    return s.get("local");
+                }
+            }
+        }
+    }
+    return null;
+}
+
+function isRegistry(path: NodePath, env: ExtendedEnv) {
+    const localPath = getLocalIdentifierOfRegistry(path, env);
+    if (!localPath) {
+        return false;
+    }
+    return _isRegistry(path, localPath);
+}
+
+function _isRegistry(path: NodePath, localPath: NodePath<Identifier>) {
+    if (!path.isIdentifier()) {
+        return false;
+    }
+    if (areEquivalentUpToHole(path, localPath)) {
+        return true;
+    }
+}
 
 const viewRegistryPattern1 = new ExpressionPattern("viewRegistry");
 const viewRegistryPattern2 = new ExpressionPattern("registry.category('views')");

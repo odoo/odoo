@@ -2,14 +2,15 @@ import { opendirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
 import { parse as babelParser, ParseResult } from "@babel/parser";
-import traverse, { NodePath } from "@babel/traverse";
-import { cloneNode, File, ImportDeclaration } from "@babel/types";
+import { NodePath } from "@babel/traverse";
+import { cloneNode, File, ImportDeclaration, Program } from "@babel/types";
 import { parse, print } from "recast"; // https://github.com/benjamn/recast
 
 import { remove_odoo_module_comment } from "../operations/remove_odoo_module_comment";
 import { view_object_to_controller } from "../operations/view_object_to_controller";
 import { Env, ExtendedEnv } from "./env";
 import { group_imports, remove_unused_imports } from "./imports";
+import { getProgramPath } from "./node_path";
 
 const parser = {
     parse(data: string) {
@@ -57,18 +58,8 @@ function getAST(filePath: string): File | null {
     return null;
 }
 
-export function getNodePath(filePath: string): NodePath<File> | null {
-    const ast = getAST(filePath);
-    if (!ast) {
-        return null;
-    }
-    let nodePath: NodePath<File> | null = null;
-    traverse(ast, {
-        File(path) {
-            nodePath = path;
-        },
-    });
-    return nodePath;
+export function getNodePath(filePath: string): NodePath<Program> | null {
+    return getProgramPath(getAST(filePath));
 }
 
 export function makeGetAST() {
