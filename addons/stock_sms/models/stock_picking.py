@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, _
+from odoo import models, modules, _
 
 import threading
 
@@ -24,7 +24,7 @@ class StockPicking(models.Model):
                     and picking.picking_type_id.code == 'outgoing' \
                     and (picking.partner_id.mobile or picking.partner_id.phone)
             if is_delivery and not getattr(threading.current_thread(), 'testing', False) \
-                    and not self.env.registry.in_test_mode() \
+                    and not modules.module.current_test \
                     and not picking.company_id.has_received_warning_stock_sms \
                     and picking.company_id.stock_move_sms_validation:
                 warn_sms_pickings |= picking
@@ -47,7 +47,7 @@ class StockPicking(models.Model):
 
     def _send_confirmation_email(self):
         super()._send_confirmation_email()
-        if not self.env.context.get('skip_sms') and not getattr(threading.current_thread(), 'testing', False) and not self.env.registry.in_test_mode():
+        if not self.env.context.get('skip_sms') and not modules.module.current_test:
             pickings = self.filtered(lambda p: p.company_id.stock_move_sms_validation and p.picking_type_id.code == 'outgoing' and (p.partner_id.mobile or p.partner_id.phone))
             for picking in pickings:
                 # Sudo as the user has not always the right to read this sms template.

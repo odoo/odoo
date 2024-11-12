@@ -6,9 +6,9 @@ import ast
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, modules
 from odoo.exceptions import UserError
-from odoo.tools import config, split_every
+from odoo.tools import _, split_every
 from odoo.osv import expression
 
 # When recycle_mode = automatic, _recycle_records calls action_validate.
@@ -108,7 +108,7 @@ class Data_RecycleModel(models.Model):
     def _recycle_records(self, batch_commits=False):
         self.env.flush_all()
         records_to_clean = []
-        is_test = bool(config['test_enable'] or config['test_file'])
+        is_test = modules.module.current_test
 
         existing_recycle_records = self.env['data_recycle.record'].with_context(
             active_test=False).search([('recycle_model_id', 'in', self.ids)])

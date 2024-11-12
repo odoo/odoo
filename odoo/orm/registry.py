@@ -169,7 +169,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         self.models: dict[str, type[BaseModel]] = {}    # model name/model instance mapping
         self._sql_constraints = set()  # type: ignore
         self._database_translated_fields: set[str] = set()  # names of translated fields in database "{model}.{field_name}"
-        if config['test_enable'] or config['test_file']:
+        if config['test_enable']:
             from odoo.tests.result import OdooTestResult  # noqa: PLC0415
             self._assertion_report: OdooTestResult | None = OdooTestResult()
         else:

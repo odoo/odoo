@@ -4,12 +4,11 @@ from datetime import datetime, timedelta
 
 import hashlib
 import pytz
-import threading
 
-from odoo import fields, models, api, _
+from odoo import api, fields, models, modules
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
-from odoo.tools import split_every, SQL
+from odoo.tools import _, split_every, SQL
 from odoo.tools.misc import _format_time_ago
 from odoo.http import request
 from odoo.osv import expression
@@ -337,7 +336,7 @@ class WebsiteVisitor(models.Model):
         Visitors were previously archived but we came to the conclusion that
         archived visitors have very little value and bloat the database for no
         reason. """
-        auto_commit = not getattr(threading.current_thread(), 'testing', False)
+        auto_commit = not modules.module.current_test
         visitor_model = self.env['website.visitor']
         visitor_ids = visitor_model.sudo().search(self._inactive_visitors_domain(), limit=limit).ids
         visitor_done = 0
