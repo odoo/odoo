@@ -354,12 +354,10 @@ class MailMessage(models.Model):
 
     @api.model
     def _find_allowed_doc_ids(self, model_ids):
-        IrModelAccess = self.env['ir.model.access']
         allowed_ids = set()
         for doc_model, doc_dict in model_ids.items():
-            if not IrModelAccess.check(doc_model, 'read', False):
-                continue
-            allowed_ids |= self._find_allowed_model_wise(doc_model, doc_dict)
+            if self.env[doc_model].has_access('read'):
+                allowed_ids |= self._find_allowed_model_wise(doc_model, doc_dict)
         return allowed_ids
 
     def _check_access(self, operation: str) -> tuple | None:

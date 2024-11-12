@@ -623,12 +623,13 @@ class TestSaleMrpKitBom(TransactionCase):
 
     def test_sale_kit_qty_change(self):
 
-        # Create record rule
+        # Create access rule preventing access to everyone
         mrp_bom_model = self.env['ir.model']._get('mrp.bom')
-        self.env['ir.rule'].create({
+        self.env['ir.access'].create({
             'name': "No one allowed to access BoMs",
             'model_id': mrp_bom_model.id,
-            'domain_force': [(0, '=', 1)],
+            'operation': 'rwcd',
+            'domain': "[(0, '=', 1)]",
         })
 
         # Create BoM

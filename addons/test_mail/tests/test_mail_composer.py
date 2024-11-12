@@ -1239,7 +1239,7 @@ class TestComposerInternals(TestMailComposer):
         self.assertEqual(composer.subject, parent_subject)
 
     @users('user_rendering_restricted')
-    @mute_logger('odoo.tests', 'odoo.addons.base.models.ir_rule', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    @mute_logger('odoo.tests', 'odoo.addons.base.models.ir_access', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     def test_mail_composer_rights_attachments(self):
         """ Ensure a user without write access to a template can send an email"""
         template_1 = self.template.copy({

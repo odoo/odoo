@@ -106,10 +106,11 @@ class TestUi(BaseTestUi):
             "company_ids": [Command.clear(), Command.link(company1.id), Command.link(company2.id)]
         })
 
-        self.env["ir.rule"].create({
+        self.env["ir.access"].create({
             "name": "multiCompany rule",
-            "domain_force": '["|", ("company_id", "=", False), ("company_id", "in", company_ids)]',
-            "model_id": self.env["ir.model"]._get("test.model_multicompany").id
+            "model_id": self.env["ir.model"]._get("test.model_multicompany").id,
+            "operation": "rwcd",
+            "domain": '["|", ("company_id", "=", False), ("company_id", "in", company_ids)]',
         })
 
         self.env["test.model_multicompany"].create({"name": "p1"})
@@ -136,10 +137,11 @@ class TestUi(BaseTestUi):
             "company_ids": [Command.clear(), Command.link(company1.id), Command.link(company2.id)]
         })
 
-        self.env["ir.rule"].create({
+        self.env["ir.access"].create({
             "name": "multiCompany rule",
-            "domain_force": '["|", ("company_id", "=", False), ("company_id", "in", company_ids)]',
-            "model_id": self.env["ir.model"]._get("test.model_multicompany").id
+            "model_id": self.env["ir.model"]._get("test.model_multicompany").id,
+            "operation": "rwcd",
+            "domain": '["|", ("company_id", "=", False), ("company_id", "in", company_ids)]',
         })
 
         self.env["test.model_multicompany"].create({"name": "p1"})
@@ -167,10 +169,11 @@ class TestUi(BaseTestUi):
             "company_ids": [Command.clear(), Command.link(company1.id), Command.link(company2.id)]
         })
 
-        self.env["ir.rule"].create({
+        self.env["ir.access"].create({
             "name": "multiCompany rule",
-            "domain_force": '["|", ("company_id", "=", False), ("company_id", "in", company_ids)]',
-            "model_id": self.env["ir.model"]._get("test.model_multicompany").id
+            "model_id": self.env["ir.model"]._get("test.model_multicompany").id,
+            "operation": "rwcd",
+            "domain": '["|", ("company_id", "=", False), ("company_id", "in", company_ids)]',
         })
 
         self.env["test.model_multicompany"].create({"name": "p1"})

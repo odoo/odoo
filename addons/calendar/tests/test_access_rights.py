@@ -37,7 +37,7 @@ class TestAccessRights(TransactionCase):
         return [r[field] for r in data]
 
     # don't spam logs with ACL failures from portal
-    @mute_logger('odoo.addons.base.models.ir_rule')
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_privacy(self):
         event = self.create_event(
             self.john,

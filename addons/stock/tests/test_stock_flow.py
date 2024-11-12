@@ -40,7 +40,7 @@ class TestStockFlow(TestStockCommon):
         cls.SDozA = cls.ProductObj.create({'name': 'SuperDozon-A', 'is_storable': True, 'uom_id': cls.uom_sdozen.id})
         cls.UnitA = cls.ProductObj.create({'name': 'Unit-A', 'is_storable': True})
 
-    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
+    @mute_logger('odoo.addons.base.models.ir_access', 'odoo.models')
     def test_00_picking_create_and_transfer_quantity(self):
         """ Basic stock operation on incoming and outgoing shipment. """
         LotObj = self.env['stock.lot']

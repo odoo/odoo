@@ -1378,7 +1378,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
             )
         self.assertEqual(msg.subject, '1st line 2nd line')
 
-    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.addons.mail.models.mail_mail')
+    @mute_logger('odoo.addons.base.models.ir_access', 'odoo.addons.mail.models.mail_mail')
     def test_portal_acls(self):
         self.test_record.message_subscribe((self.partner_1 | self.user_employee.partner_id).ids)
 
