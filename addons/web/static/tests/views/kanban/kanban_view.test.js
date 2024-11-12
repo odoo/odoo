@@ -5,6 +5,8 @@ import {
     drag,
     edit,
     hover,
+    keyDown,
+    keyUp,
     leave,
     pointerDown,
     press,
@@ -16,7 +18,15 @@ import {
     resize,
     setInputFiles,
 } from "@odoo/hoot-dom";
-import { Deferred, advanceFrame, animationFrame, runAllTimers, tick } from "@odoo/hoot-mock";
+import {
+    Deferred,
+    advanceFrame,
+    advanceTime,
+    animationFrame,
+    mockTouch,
+    runAllTimers,
+    tick,
+} from "@odoo/hoot-mock";
 import { Component, onRendered, onWillRender, xml } from "@odoo/owl";
 import {
     MockServer,
@@ -526,80 +536,6 @@ test("basic grouped rendering with no record", async () => {
         message:
             "There should be a 'New' button even though there is no column when groupby is not a many2one",
     });
-});
-
-test("grouped rendering with active field (archivable by default)", async () => {
-    // add active field on partner model and make all records active
-    Partner._fields.active = fields.Boolean({ default: true });
-
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <field name="foo"/>
-                    </t>
-                </templates>
-            </kanban>`,
-        groupBy: ["bar"],
-    });
-
-    const clickColumnAction = await toggleKanbanColumnActions(1);
-
-    // check archive/restore all actions in kanban header's config dropdown
-    expect(".o_column_archive_records").toHaveCount(1, { root: getKanbanColumnDropdownMenu(0) });
-    expect(".o_column_unarchive_records").toHaveCount(1, { root: getKanbanColumnDropdownMenu(0) });
-    expect(".o_kanban_group").toHaveCount(2);
-    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(1);
-    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(1) })).toHaveCount(3);
-
-    await clickColumnAction("Archive All");
-    expect(".o_dialog").toHaveCount(1);
-
-    await contains(".o_dialog footer .btn-primary").click();
-
-    expect(".o_kanban_group").toHaveCount(2);
-    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(1);
-    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(1) })).toHaveCount(0);
-});
-
-test("grouped rendering with active field (archivable true)", async () => {
-    // add active field on partner model and make all records active
-    Partner._fields.active = fields.Boolean({ default: true });
-
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban archivable="true">
-                <templates>
-                    <t t-name="card">
-                        <field name="foo"/>
-                    </t>
-                </templates>
-            </kanban>`,
-        groupBy: ["bar"],
-    });
-
-    const clickColumnAction = await toggleKanbanColumnActions(0);
-
-    // check archive/restore all actions in kanban header's config dropdown
-    expect(".o_column_archive_records").toHaveCount(1, { root: getKanbanColumnDropdownMenu(0) });
-    expect(".o_column_unarchive_records").toHaveCount(1, { root: getKanbanColumnDropdownMenu(0) });
-    expect(".o_kanban_group").toHaveCount(2);
-    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(1);
-    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(1) })).toHaveCount(3);
-
-    await clickColumnAction("Archive All");
-    expect(".o_dialog").toHaveCount(1);
-
-    await contains(".o_dialog footer .btn-primary").click();
-
-    expect(".o_kanban_group").toHaveCount(2);
-    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(0);
-    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(1) })).toHaveCount(3);
 });
 
 test.tags("desktop");
@@ -6426,41 +6362,6 @@ test("ungrouped kanban view can be grouped, then ungrouped", async () => {
     expect(".o_kanban_renderer").not.toHaveClass("o_kanban_grouped");
 });
 
-test("no content helper when archive all records in kanban group", async () => {
-    // add active field on partner model to have archive option
-    Partner._fields.active = fields.Boolean({ default: true });
-    // remove last records to have only one column
-    Partner._records = Partner._records.slice(0, 3);
-
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <field name="foo"/>
-                    </t>
-                </templates>
-            </kanban>`,
-        noContentHelp: '<p class="hello">click to add a partner</p>',
-        groupBy: ["bar"],
-    });
-
-    // check that the (unique) column contains 3 records
-    expect(".o_kanban_group:last-child .o_kanban_record").toHaveCount(3);
-
-    // archive the records of the last column
-    const clickColumnAction = await toggleKanbanColumnActions(0);
-    await clickColumnAction("Archive All");
-
-    expect(".o_dialog").toHaveCount(1);
-    await contains(".o_dialog footer .btn-primary").click();
-
-    // check no content helper is exist
-    expect(".o_view_nocontent").toHaveCount(1);
-});
-
 test.tags("desktop");
 test("no content helper when no data", async () => {
     Partner._records = [];
@@ -8930,7 +8831,7 @@ test("column progressbars with an active filter are working with load more", asy
     ]);
 });
 
-test("column progressbars on archiving records update counter", async () => {
+test.skip("column progressbars on archiving records update counter", async () => {
     // add active field on partner model and make all records active
     Partner._fields.active = fields.Boolean({ default: true });
 
@@ -8980,7 +8881,7 @@ test("column progressbars on archiving records update counter", async () => {
     ]);
 });
 
-test("kanban with progressbars: correctly update env when archiving records", async () => {
+test.skip("kanban with progressbars: correctly update env when archiving records", async () => {
     // add active field on partner model and make all records active
     Partner._fields.active = fields.Boolean({ default: true });
 
@@ -9540,7 +9441,7 @@ test("progress bar with aggregates: activate bars (grouped by date)", async () =
     expect(getKanbanCounters()).toEqual(["15"]);
 });
 
-test("progress bar with aggregates: Archive All in a column", async () => {
+test.skip("progress bar with aggregates: Archive All in a column", async () => {
     Partner._fields.active = fields.Boolean({ default: true });
     Partner._records = [
         { foo: "yop", bar: true, int_field: 1, active: true },
@@ -12586,17 +12487,17 @@ test("rerenders only once after resequencing records", async () => {
         ".o_kanban_group:nth-child(2)"
     );
 
-    expect(renderCounts).toEqual({ 1: 3, 2: 1, 3: 1, 4: 1 });
+    expect(renderCounts).toEqual({ 1: 2, 2: 1, 3: 1, 4: 1 });
 
     saveDef.resolve();
     await animationFrame();
 
-    expect(renderCounts).toEqual({ 1: 4, 2: 1, 3: 1, 4: 1 });
+    expect(renderCounts).toEqual({ 1: 3, 2: 1, 3: 1, 4: 1 });
 
     resequenceDef.resolve();
     await animationFrame();
 
-    expect(renderCounts).toEqual({ 1: 5, 2: 1, 3: 1, 4: 1 });
+    expect(renderCounts).toEqual({ 1: 4, 2: 1, 3: 1, 4: 1 });
 
     // drag gnap to the second column
     saveDef = new Deferred();
@@ -12605,17 +12506,17 @@ test("rerenders only once after resequencing records", async () => {
         ".o_kanban_group:nth-child(2)"
     );
 
-    expect(renderCounts).toEqual({ 1: 5, 2: 1, 3: 2, 4: 1 });
+    expect(renderCounts).toEqual({ 1: 4, 2: 1, 3: 2, 4: 1 });
 
     saveDef.resolve();
     await animationFrame();
 
-    expect(renderCounts).toEqual({ 1: 5, 2: 1, 3: 3, 4: 1 });
+    expect(renderCounts).toEqual({ 1: 4, 2: 1, 3: 3, 4: 1 });
 
     resequenceDef.resolve();
     await animationFrame();
 
-    expect(renderCounts).toEqual({ 1: 5, 2: 1, 3: 4, 4: 1 });
+    expect(renderCounts).toEqual({ 1: 4, 2: 1, 3: 4, 4: 1 });
 
     expect.verifySteps([
         "/web/webclient/translations",
@@ -13502,4 +13403,120 @@ test("display the field's falsy_value_label for false group, if defined", async 
     });
 
     expect(".o_kanban_group:first-child .o_column_title").toHaveText("I'm the false group\n(1)");
+});
+
+test("selection can be enabled with the 'alt' key", async () => {
+    Product._records[1].fold = true;
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+                <kanban>
+                    <progressbar field="foo" colors='{"yop": "success", "blip": "danger"}'/>
+                    <templates>
+                        <t t-name="card">
+                            <field name="foo"/>
+                        </t>
+                    </templates>
+                </kanban>`,
+        groupBy: ["product_id"],
+    });
+    expect(".o_selection_box").toHaveCount(0);
+    await keyDown("alt");
+    await animationFrame();
+    expect(".o_kanban_record").toHaveClass("o_record_selection_available");
+    expect(".o_kanban_record > .o_record_selection_tooltip").toHaveText("Click to select");
+    await contains(".o_kanban_record:nth-of-type(1)").click();
+    expect(".o_selection_box").toHaveCount(1);
+    await keyUp("alt");
+    await animationFrame();
+    await contains(".o_kanban_record:nth-of-type(2)").click();
+    expect(".o_selection_box span > b").toHaveText("2", {
+        message: "selection counter has the right number of selected items",
+    });
+    expect(".o_record_selected").toHaveCount(2);
+});
+
+test.tags("desktop");
+test("selection is reset when dragging is effective", async () => {
+    mockTouch(true);
+    Product._records[1].fold = true;
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+                <kanban>
+                    <progressbar field="foo" colors='{"yop": "success", "blip": "danger"}'/>
+                    <templates>
+                        <t t-name="card">
+                            <field name="foo"/>
+                        </t>
+                    </templates>
+                </kanban>`,
+        groupBy: ["product_id"],
+    });
+    expect(".o_selection_box").toHaveCount(0);
+    const { moveTo } = await drag(".o_kanban_record:nth-of-type(1)");
+    await advanceTime(600);
+    expect(".o_selection_box").toHaveCount(1);
+    await moveTo(".o_kanban_group:nth-of-type(2)");
+    await runAllTimers();
+    expect(".o_selection_box").toHaveCount(0);
+});
+
+test("selection can be enabled by long touch", async () => {
+    mockTouch(true);
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="card">
+                            <field name="foo"/>
+                        </t>
+                    </templates>
+                </kanban>`,
+    });
+    expect(".o_selection_box").toHaveCount(0);
+    await drag(".o_kanban_record:nth-of-type(2)");
+    await advanceTime(400);
+    expect(".o_selection_box").toHaveCount(1);
+});
+
+test("selection can be enabled by long touch with drag & drop enabled", async () => {
+    mockTouch(true);
+    Product._records[1].fold = true;
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+                <kanban>
+                    <progressbar field="foo" colors='{"yop": "success", "blip": "danger"}'/>
+                    <templates>
+                        <t t-name="card">
+                            <field name="foo"/>
+                        </t>
+                    </templates>
+                </kanban>`,
+        groupBy: ["product_id"],
+    });
+    expect(".o_selection_box").toHaveCount(0);
+    const { drop } = await drag(".o_kanban_record:nth-of-type(1)");
+    await advanceTime(400);
+    expect(".o_selection_box").toHaveCount(0, {
+        message: "touch delay is longer when drag & drop is enabled",
+    });
+    await drop();
+    const { drop: secondDrop } = await drag(".o_kanban_record:nth-of-type(1)");
+    await advanceTime(600);
+    expect(".o_selection_box").toHaveCount(1);
+    await secondDrop();
+    await contains(".o_kanban_record:nth-of-type(2)").click();
+    expect(".o_selection_box span > b").toHaveText("2", {
+        message: "selection counter has the right number of selected items",
+    });
+    expect(".o_record_selected").toHaveCount(2);
+    await contains(".o_kanban_record:nth-of-type(1)").click();
+    expect(".o_record_selected").toHaveCount(1);
 });

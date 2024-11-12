@@ -671,7 +671,7 @@ test("SelectCreateDialog calls on_selected with every record matching the domain
     await animationFrame();
 
     await contains("thead .o_list_record_selector input").click();
-    await contains(".o_list_selection_box .o_list_select_domain").click();
+    await contains(".o_selection_box .o_select_domain").click();
     await clickModalButton({ text: "Select" });
 });
 
@@ -695,7 +695,7 @@ test("SelectCreateDialog calls on_selected with every record matching without se
     await animationFrame();
 
     await contains("thead .o_list_record_selector input").click();
-    await contains(".o_list_selection_box").click();
+    await contains(".o_selection_box").click();
     await clickModalButton({ text: "Select", index: 1 });
 });
 

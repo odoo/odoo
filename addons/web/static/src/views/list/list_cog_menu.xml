@@ -2,9 +2,6 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ListCogMenu" t-inherit="web.CogMenu">
-        <xpath expr="//t[@t-if='state.printItems.length']" position="before">
-            <t t-slot="default"/>
-        </xpath>
         <xpath expr="//t[@t-if='state.printItems.length']/Dropdown" position="before">
             <div role="separator" class="dropdown-divider"/>
         </xpath>
