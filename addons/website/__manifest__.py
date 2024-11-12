@@ -291,7 +291,8 @@
             'website/static/src/interactions/**/*',
             'website/static/src/snippets/s_table_of_content/000.js',
             'website/static/src/snippets/s_table_of_content/000.scss',
-
+            'website/static/src/snippets/s_faq_horizontal/000.js',
+            'website/static/src/snippets/s_faq_horizontal/000.scss',
         ],
         'web.tests_assets': [
             'website/static/tests/website_service_mock.js',
