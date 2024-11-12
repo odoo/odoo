@@ -201,7 +201,7 @@ class BaseFollowersTest(MailCommon):
         test_record.write({'message_partner_ids': [(4, partner0.id), (4, partner1.id)]})
         self.assertEqual(test_record.message_follower_ids.partner_id, partner1)
 
-    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
+    @mute_logger('odoo.addons.base.models.ir_access', 'odoo.models')
     def test_followers_inverse_message_partner_access_rights(self):
         """ Make sure we're not bypassing security checks by setting a partner
         instead of a follower """
