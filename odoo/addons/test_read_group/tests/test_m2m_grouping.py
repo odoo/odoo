@@ -125,10 +125,11 @@ class TestM2MGrouping(TransactionCaseWithUserDemo):
     def test_complex_case(self):
         # group tasks with some ir.rule on users
         users_model = self.env['ir.model']._get(self.users._name)
-        self.env['ir.rule'].create({
+        self.env['ir.access'].create({
             'name': "Only The Lone Wanderer allowed",
             'model_id': users_model.id,
-            'domain_force': [('id', '=', self.users[0].id)],
+            'operation': 'rwcd',
+            'domain': str([('id', '=', self.users[0].id)]),
         })
 
         # warmup
