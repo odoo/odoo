@@ -1,12 +1,14 @@
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import {
     deleteConfirmationMessage,
     ConfirmationDialog,
 } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { CogMenu } from "@web/search/cog_menu/cog_menu";
+import { omit } from "@web/core/utils/objects";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { useSetupAction } from "@web/search/action_hook";
+import { ActionMenus, STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
 import { Layout } from "@web/search/layout";
 import { usePager } from "@web/search/pager_hook";
 import { SearchBar } from "@web/search/search_bar/search_bar";
@@ -17,10 +19,12 @@ import { standardViewProps } from "@web/views/standard_view_props";
 import { MultiRecordViewButton } from "@web/views/view_button/multi_record_view_button";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { addFieldDependencies, extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
+import { KanbanCogMenu } from "./kanban_cog_menu";
 import { KanbanRenderer } from "./kanban_renderer";
 import { useProgressBar } from "./progress_bar_hook";
+import { SelectionBox } from "@web/views/view_components/selection_box";
 
-import { Component, reactive, useRef, useState } from "@odoo/owl";
+import { Component, reactive, useEffect, useRef, useState } from "@odoo/owl";
 
 const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection", "many2many"];
 
@@ -28,7 +32,16 @@ const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection", "m
 
 export class KanbanController extends Component {
     static template = `web.KanbanView`;
-    static components = { Layout, KanbanRenderer, MultiRecordViewButton, SearchBar, CogMenu };
+    static components = {
+        ActionMenus,
+        DropdownItem,
+        Layout,
+        KanbanRenderer,
+        MultiRecordViewButton,
+        SearchBar,
+        CogMenu: KanbanCogMenu,
+        SelectionBox,
+    };
     static props = {
         ...standardViewProps,
         editable: { type: Boolean, optional: true },
@@ -169,6 +182,64 @@ export class KanbanController extends Component {
             }
         });
         this.searchBarToggler = useSearchBarToggler();
+        useEffect(
+            () => {
+                this.onSelectionChanged();
+            },
+            () => [this.model.root.selection?.length, this.model.root.isDomainSelected]
+        );
+    }
+
+    get display() {
+        const { controlPanel } = this.props.display;
+        if (!controlPanel) {
+            return this.props.display;
+        }
+        return {
+            ...this.props.display,
+            controlPanel: {
+                ...controlPanel,
+                layoutActions: !this.hasSelectedRecords,
+            },
+        };
+    }
+
+    get actionMenuItems() {
+        const { actionMenus } = this.props.info;
+        const staticActionItems = Object.entries(this.getStaticActionMenuItems())
+            .filter(([key, item]) => item.isAvailable === undefined || item.isAvailable())
+            .sort(([k1, item1], [k2, item2]) => (item1.sequence || 0) - (item2.sequence || 0))
+            .map(([key, item]) =>
+                Object.assign(
+                    { key, groupNumber: STATIC_ACTIONS_GROUP_NUMBER },
+                    omit(item, "isAvailable")
+                )
+            );
+
+        return {
+            action: [...staticActionItems, ...(actionMenus?.action || [])],
+            print: actionMenus?.print,
+        };
+    }
+
+    get actionMenuProps() {
+        return {
+            getActiveIds: () => this.model.root.selection.map((r) => r.resId),
+            context: this.props.context,
+            domain: this.props.domain,
+            items: this.actionMenuItems,
+            isDomainSelected: this.model.root.isDomainSelected,
+            resModel: this.model.root.resModel,
+            onActionExecuted: () => this.model.load(),
+        };
+    }
+
+    get hasSelectedRecords() {
+        return this.model.root.selection?.length || this.isDomainSelected;
+    }
+
+    get isDomainSelected() {
+        return this.model.root.isDomainSelected;
     }
 
     get modelParams() {
@@ -231,6 +302,17 @@ export class KanbanController extends Component {
             return classList.join(" ");
         }
         return this.props.className;
+    }
+
+    async onSelectionChanged() {
+        if (this.props.onSelectionChanged) {
+            const resIds = await this.model.root.getResIds(true);
+            this.props.onSelectionChanged(resIds);
+        }
+    }
+
+    getStaticActionMenuItems() {
+        return {};
     }
 
     async deleteRecord(record) {

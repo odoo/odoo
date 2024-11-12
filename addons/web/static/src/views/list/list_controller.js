@@ -28,6 +28,7 @@ import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 import { session } from "@web/session";
 import { ListCogMenu } from "./list_cog_menu";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { SelectionBox } from "@web/views/view_components/selection_box";
 
 import {
     Component,
@@ -53,6 +54,7 @@ export class ListController extends Component {
         SearchBar,
         CogMenu: ListCogMenu,
         DropdownItem,
+        SelectionBox,
     };
     static props = {
         ...standardViewProps,
@@ -175,12 +177,9 @@ export class ListController extends Component {
 
         useEffect(
             () => {
-                if (this.props.onSelectionChanged) {
-                    const resIds = this.model.root.selection.map((record) => record.resId);
-                    this.props.onSelectionChanged(resIds);
-                }
+                this.onSelectionChanged();
             },
-            () => [this.model.root.selection.length]
+            () => [this.model.root.selection.length, this.model.root.isDomainSelected]
         );
         this.searchBarToggler = useSearchBarToggler();
         this.firstLoad = true;
@@ -248,6 +247,13 @@ export class ListController extends Component {
      * @param {Record} record
      */
     async onRecordSaved(record) {}
+
+    async onSelectionChanged() {
+        if (this.props.onSelectionChanged) {
+            const resIds = await this.model.root.getResIds(true);
+            this.props.onSelectionChanged(resIds);
+        }
+    }
 
     /**
      * onWillSaveRecord is a callBack that will be executed before the
@@ -422,19 +428,12 @@ export class ListController extends Component {
         };
     }
 
-    async onSelectDomain() {
-        await this.model.root.selectDomain(true);
-        if (this.props.onSelectionChanged) {
-            const resIds = await this.model.root.getResIds(true);
-            this.props.onSelectionChanged(resIds);
-        }
+    get hasSelectedRecords() {
+        return this.model.root.selection.length || this.isDomainSelected;
     }
 
-    onUnselectAll() {
-        this.model.root.selection.forEach((record) => {
-            record.toggleSelection(false);
-        });
-        this.model.root.selectDomain(false);
+    get isDomainSelected() {
+        return this.model.root.isDomainSelected;
     }
 
     evalViewModifier(modifier) {
@@ -443,28 +442,6 @@ export class ListController extends Component {
 
     get className() {
         return this.props.className;
-    }
-
-    get hasSelectedRecords() {
-        return this.nbSelected || this.isDomainSelected;
-    }
-
-    get nbSelected() {
-        return this.model.root.selection.length;
-    }
-
-    get isPageSelected() {
-        const root = this.model.root;
-        return root.selection.length === root.records.length;
-    }
-
-    get isDomainSelected() {
-        return this.model.root.isDomainSelected;
-    }
-
-    get nbTotal() {
-        const list = this.model.root;
-        return list.isGrouped ? list.recordCount : list.count;
     }
 
     get defaultExportList() {

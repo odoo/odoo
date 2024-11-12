@@ -30,6 +30,7 @@ export class CogMenu extends ActionMenus {
         context: { type: ActionMenus.props.context, optional: true },
         resModel: { type: ActionMenus.props.resModel, optional: true },
         items: { ...ActionMenus.props.items, optional: true },
+        slots: { type: Object, optional: true },
     };
     static defaultProps = {
         ...ActionMenus.defaultProps,
