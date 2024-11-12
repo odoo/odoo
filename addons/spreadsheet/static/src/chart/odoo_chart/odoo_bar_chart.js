@@ -7,7 +7,7 @@ const { chartRegistry } = registries;
 const {
     getBarChartDatasets,
     CHART_COMMON_OPTIONS,
-    getBarChartLayout,
+    getChartLayout,
     getBarChartScales,
     getBarChartTooltip,
     getChartTitle,
@@ -75,7 +75,7 @@ function createOdooChartRuntime(chart, getters) {
         options: {
             ...CHART_COMMON_OPTIONS,
             indexAxis: chart.horizontal ? "y" : "x",
-            layout: getBarChartLayout(definition),
+            layout: getChartLayout(definition),
             scales: getBarChartScales(definition, chartData),
             plugins: {
                 title: getChartTitle(definition),
