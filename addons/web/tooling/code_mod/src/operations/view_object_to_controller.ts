@@ -30,7 +30,7 @@ function getLocalIdentifierOfRegistry(
         for (const s of p.get("specifiers")) {
             if (s.isImportSpecifier()) {
                 const imported = s.get("imported");
-                if (imported.isIdentifier({ name: "regsitry " })) {
+                if (imported.isIdentifier({ name: "registry" })) {
                     return s.get("local");
                 }
             }
