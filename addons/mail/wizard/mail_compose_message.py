@@ -116,6 +116,9 @@ class MailComposeMessage(models.TransientModel):
         string='Composition mode', default='comment')
     composition_batch = fields.Boolean(
         'Batch composition', compute='_compute_composition_batch')  # more than 1 record (raw source)
+    composition_comment_option = fields.Selection(
+        [('reply_all', 'Reply-All'), ('forward', 'Forward')],
+        string='Comment Options')  # mainly used for view in specific comment modes
     model = fields.Char('Related Document Model', compute='_compute_model', readonly=False, store=True)
     model_is_thread = fields.Boolean('Thread-Enabled', compute='_compute_model_is_thread')
     res_ids = fields.Text('Related Document IDs', compute='_compute_res_ids', readonly=False, store=True)
@@ -602,11 +605,14 @@ class MailComposeMessage(models.TransientModel):
         notification parameter. """
         self.filtered(lambda c: c.composition_mode != 'comment').notify_author_mention = False
 
-    @api.depends('composition_mode')
+    @api.depends('composition_mode', 'composition_comment_option')
     def _compute_notify_skip_followers(self):
         """ Used only in 'comment' mode, controls 'notify_skip_followers' notification
-        parameter. """
+        parameter. 'Reply-All' behavior triggers skipping followers. """
         self.filtered(lambda c: c.composition_mode != 'comment').notify_skip_followers = False
+        self.filtered(
+            lambda c: c.composition_mode == 'comment' and c.composition_comment_option == 'reply_all'
+        ).notify_skip_followers = True
 
     @api.depends('composition_mode', 'model', 'res_ids', 'template_id')
     def _compute_scheduled_date(self):
@@ -698,6 +704,7 @@ class MailComposeMessage(models.TransientModel):
                 'attachment_ids': post_values.pop('attachment_ids'),
                 'author_id': post_values.pop('author_id'),
                 'body': post_values.pop('body'),
+                'composition_comment_option': wizard.composition_comment_option,
                 'is_note': wizard.subtype_is_log,
                 'model': wizard.model,
                 'partner_ids': post_values.pop('partner_ids'),
@@ -756,7 +763,6 @@ class MailComposeMessage(models.TransientModel):
             ActiveModel = ActiveModel.with_context(
                 mail_post_autofollow_author_skip=True,
             )
-
         messages = self.env['mail.message']
         for res_id, post_values in post_values_all.items():
             if ActiveModel._name == 'mail.thread':

@@ -7,9 +7,9 @@ import { MessageNotificationPopover } from "@mail/core/common/message_notificati
 import { MessageReactionMenu } from "@mail/core/common/message_reaction_menu";
 import { MessageReactions } from "@mail/core/common/message_reactions";
 import { RelativeTime } from "@mail/core/common/relative_time";
-import { htmlToTextContentInline } from "@mail/utils/common/format";
+import { getNonEditableMentions, htmlToTextContentInline, parseEmail } from "@mail/utils/common/format";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
-import { renderToElement } from "@web/core/utils/render";
+import { renderToMarkup, renderToElement } from "@web/core/utils/render";
 
 import {
     Component,
@@ -453,6 +453,30 @@ export class Message extends Component {
         });
     }
 
+    openFullComposer(name, context) {
+        const actionContext = {
+            ...context,
+            default_model: this.props.thread.model,
+            default_res_ids: [this.props.thread.id],
+            default_subject: this.message.subject || this.message.default_subject,
+            default_subtype_xmlid: "mail.mt_comment",
+        };
+        const action = {
+            name: name,
+            type: "ir.actions.act_window",
+            res_model: "mail.compose.message",
+            view_mode: "form",
+            views: [[false, "form"]],
+            target: "new",
+            context: actionContext,
+        };
+        this.env.services.action.doAction(action, {
+            onClose: () => {
+                this.props.thread.fetchNewMessages();
+            },
+        });
+    }
+
     /** @param {MouseEvent} [ev] */
     openMobileActions(ev) {
         if (!isMobileOS()) {
@@ -495,6 +519,78 @@ export class Message extends Component {
         }
         this.state.showTranslation =
             !this.state.showTranslation && Boolean(message.translationValue);
+    }
+
+    async onClickMessageForward() {
+        const email_from = this.message.author?.email ? this.message.author.email : this.message.email_from;
+        const [name, email] = parseEmail(email_from);
+        const datetimeFormatted = _t("%(date)s at %(time)s", {
+            date: this.message.datetime.toFormat("ccc, MMM d, yyyy"),
+            time: this.message.datetime.toFormat("hh:mm a"),
+        });
+
+        const body = renderToMarkup(
+            "mail.Message.bodyInForward",
+            {
+                body: getNonEditableMentions(this.message.body),
+                date: datetimeFormatted,
+                email,
+                message: this.message,
+                name: name || email,
+            }
+        );
+
+        const attachmentIds = this.message.attachment_ids.map((attachment) => attachment.id);
+        const newAttachmentIds = await this.env.services.orm.call(
+            "ir.attachment",
+            "copy",
+            [attachmentIds],
+            {
+                default: { res_model: "mail.compose.message", res_id: 0 },
+            }
+        );
+
+        const context = {
+            default_attachment_ids: newAttachmentIds,
+            default_body: body,
+            default_composition_mode: "comment",
+            default_composition_comment_option: "forward",
+        };
+        this.openFullComposer(_t("Forward message"), context);
+    }
+
+    async onClickMessageReplyAll() {
+        const partners = await rpc("/mail/thread/recipients", {
+            thread_model: this.props.thread.model,
+            thread_id: this.props.thread.id,
+            message_id: this.message.id,
+        });
+        const recipientIds = partners.map((data) => data.id);
+        const email_from = this.message.author?.email ? this.message.author.email : this.message.email_from;
+        const [name, email] = parseEmail(email_from);
+        const datetimeFormatted = _t("%(date)s at %(time)s", {
+            date: this.message.datetime.toFormat("ccc, MMM d, yyyy"),
+            time: this.message.datetime.toFormat("hh:mm a"),
+        });
+
+        const body = renderToMarkup(
+            "mail.Message.bodyInReply",
+            {
+                body: getNonEditableMentions(this.message.body),
+                date: datetimeFormatted,
+                email,
+                message: this.message,
+                name: name || email,
+            }
+        );
+
+        const context = {
+            default_body: body,
+            default_composition_mode: "comment",
+            default_composition_comment_option: "reply_all",
+            default_partner_ids: recipientIds,
+        };
+        this.openFullComposer(_t("Reply All"), context);
     }
 }
 
