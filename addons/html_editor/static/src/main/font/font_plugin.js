@@ -143,13 +143,6 @@ export class FontPlugin extends Plugin {
                 run: () => this.dependencies.dom.setTag({ tagName: "pre" }),
             },
         ],
-        split_element_block_overrides: [
-            this.handleSplitBlockPRE.bind(this),
-            this.handleSplitBlockHeading.bind(this),
-        ],
-        input_handlers: this.onInput.bind(this),
-        delete_backward_overrides: withSequence(20, this.handleDeleteBackward.bind(this)),
-        delete_backward_word_overrides: this.handleDeleteBackward.bind(this),
         toolbar_groups: [
             withSequence(10, {
                 id: "font",
@@ -227,6 +220,17 @@ export class FontPlugin extends Plugin {
             { selector: "PRE", text: _t("Code") },
             { selector: "BLOCKQUOTE", text: _t("Quote") },
         ],
+
+        /** Handlers */
+        input_handlers: this.onInput.bind(this),
+
+        /** Overrides */
+        split_element_block_overrides: [
+            this.handleSplitBlockPRE.bind(this),
+            this.handleSplitBlockHeading.bind(this),
+        ],
+        delete_backward_overrides: withSequence(20, this.handleDeleteBackward.bind(this)),
+        delete_backward_word_overrides: this.handleDeleteBackward.bind(this),
     };
 
     get fontSizeItems() {

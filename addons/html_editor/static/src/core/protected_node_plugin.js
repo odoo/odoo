@@ -14,12 +14,14 @@ export class ProtectedNodePlugin extends Plugin {
     static id = "protectedNode";
     static shared = ["setProtectingNode"];
     resources = {
-        savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
-        removable_descendants_providers: this.filterDescendantsToRemove.bind(this),
-        unsplittable_node_predicates: isProtecting, // avoid merge
+        /** Handlers */
         clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
         normalize_handlers: this.normalize.bind(this),
         before_filter_mutation_record_handlers: this.beforeFilteringMutationRecords.bind(this),
+
+        unsplittable_node_predicates: isProtecting, // avoid merge
+        savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
+        removable_descendants_providers: this.filterDescendantsToRemove.bind(this),
     };
 
     setup() {

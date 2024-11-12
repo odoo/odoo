@@ -51,6 +51,7 @@ export class DomPlugin extends Plugin {
             categoryId: "structure",
             commandId: "insertSeparator",
         },
+        /** Handlers */
         clean_handlers: this.removeEmptyClassAndStyleAttributes.bind(this),
         clean_for_save_handlers: ({ root }) => {
             this.removeEmptyClassAndStyleAttributes(root);
