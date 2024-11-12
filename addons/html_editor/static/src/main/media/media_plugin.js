@@ -72,8 +72,6 @@ export class MediaPlugin extends Plugin {
                 },
             },
         ],
-        powerbox_categories: withSequence(40, { id: "media", name: _t("Media") }),
-        powerbox_items: getPowerboxItems(this),
         toolbar_groups: withSequence(29, {
             id: "replace_image",
             namespace: "image",
@@ -86,11 +84,16 @@ export class MediaPlugin extends Plugin {
                 text: "Replace",
             },
         ],
-        clean_handlers: this.clean.bind(this),
-        unsplittable_node_predicates: isIconElement, // avoid merge
+        powerbox_categories: withSequence(40, { id: "media", name: _t("Media") }),
+        powerbox_items: getPowerboxItems(this),
         power_buttons: { commandId: "insertImage" },
+
+        /** Handlers */
+        clean_handlers: this.clean.bind(this),
         clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
         normalize_handlers: this.normalizeMedia.bind(this),
+
+        unsplittable_node_predicates: isIconElement, // avoid merge
     };
 
     get recordInfo() {
