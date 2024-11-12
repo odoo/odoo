@@ -62,3 +62,45 @@ wTourUtils.registerWebsitePreviewTour(
         },
     ]
 );
+
+wTourUtils.registerWebsitePreviewTour(
+    "website_snippet_background_video",
+    {
+        test: true,
+        url: "/",
+        edition: true,
+    }, () => [
+        ...wTourUtils.dragNDrop({
+            id: "s_text_block",
+            name: "Text",
+        }),
+        {
+            content: "Click on the text block.",
+            trigger: ":iframe #wrap section.s_text_block",
+            run: "click",
+        },
+        {
+            content: "Click on the 'Background Video' button option.",
+            trigger: "we-button[data-name='bg_video_toggler_opt']",
+            run: "click",
+        },
+        {
+            content: "Click on the first sample video in the modal.",
+            trigger: "#video-suggestion .o_sample_video",
+            run: "click",
+        },
+        {
+            content: "Check the video is select.",
+            trigger: "textarea.is-valid",
+        },
+        {
+            content: "Click on the 'Add' button to apply the selected video as the background.",
+            trigger: ".modal-footer button.btn-primary",
+            run: "click",
+        },
+        {
+            content: "Verify that the video is set as the background of the snippet.",
+            trigger: ":iframe #wrap section.o_background_video",
+        },
+    ]
+);
