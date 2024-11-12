@@ -15,7 +15,6 @@ const macroSchema = {
             action: { type: Function },
             trigger: { type: [Function, String], optional: true },
             timeout: { type: Number, optional: true },
-            onTimeout: { type: Function, optional: true },
         },
     },
     onComplete: { type: Function, optional: true },
@@ -58,10 +57,12 @@ export const ACTION_HELPERS = {
 
 const mutex = new Mutex();
 
-class Macro {
+class TimeoutError extends Error {}
+
+export class Macro {
     currentIndex = 0;
     isComplete = false;
-    errored = false;
+    calledBack = false;
     constructor(descr) {
         try {
             validate(descr, macroSchema);
@@ -75,6 +76,27 @@ class Macro {
         this.onComplete = this.onComplete || (() => {});
         this.onStep = this.onStep || (() => {});
         this.stepElFound = new Array(this.steps.length).fill(false);
+        this.stepHasStarted = new Array(this.steps.length).fill(false);
+    }
+
+    async start(target = document) {
+        this.observer = new MacroMutationObserver(() => this.debounceAdvance("mutation"));
+        this.observer.observe(target);
+        this.debounceAdvance("next");
+    }
+
+    getDebounceDelay() {
+        let delay = Math.max(this.checkDelay ?? 750, 50);
+        // Called only once per step.
+        if (!this.stepHasStarted[this.currentIndex]) {
+            delay = this.currentIndex === 0 ? 0 : 50;
+            this.stepHasStarted[this.currentIndex] = true;
+            if (this.currentStep?.initialDelay) {
+                const initialDelay = parseFloat(this.currentStep.initialDelay());
+                delay = initialDelay >= 0 ? initialDelay : delay;
+            }
+        }
+        return delay;
     }
 
     async advance() {
@@ -86,7 +108,9 @@ class Macro {
         if (this.isComplete) {
             return;
         }
-        this.setTimer();
+        if (this.currentStep.trigger) {
+            this.setTimer();
+        }
         let proceedToAction = true;
         if (this.currentStep.trigger) {
             proceedToAction = this.findTrigger();
@@ -99,7 +123,7 @@ class Macro {
                 // If falsy action result, it means the action worked properly.
                 // So we can proceed to the next step.
                 this.increment();
-                await this.advance();
+                this.debounceAdvance("next");
             }
         }
     }
@@ -184,35 +208,74 @@ class Macro {
         const timeout = this.currentStep.timeout || this.timeout;
         if (timeout > 0) {
             this.timer = browser.setTimeout(() => {
-                if (this.currentStep.onTimeout) {
-                    this.safeCall(this.currentStep.onTimeout, this.currentStep, this.currentIndex);
-                } else {
-                    this.stop("Step timeout");
-                }
+                this.stop(new TimeoutError(timeout));
             }, timeout);
         }
     }
 
     clearTimer() {
+        this.resetDebounce();
         if (this.timer) {
             browser.clearTimeout(this.timer);
         }
     }
 
+    resetDebounce() {
+        if (this.debouncedAdvance) {
+            browser.clearTimeout(this.debouncedAdvance);
+        }
+    }
+
+    /**
+     * @param {"next"|"mutation"} from
+     */
+    debounceAdvance(from) {
+        this.resetDebounce();
+        // Make sure to take the only possible path.
+        // A step always starts with "next".
+        // A step can only be continued with "mutation".
+        // We abort when the macro is finished or if a mutex occurs afterwards.
+        if (
+            this.isComplete ||
+            (from === "next" && this.stepHasStarted[this.currentIndex]) ||
+            (from === "mutation" && !this.stepHasStarted[this.currentIndex]) ||
+            (from === "mutation" && this.currentElement)
+        ) {
+            return;
+        }
+        this.debouncedAdvance = browser.setTimeout(
+            () => mutex.exec(() => this.advance()),
+            this.getDebounceDelay()
+        );
+    }
+
     stop(error) {
         this.clearTimer();
         this.isComplete = true;
-        if (error) {
-            this.errored = true;
-            if (this.onError) {
-                this.onError(error, this.currentStep, this.currentIndex);
-            } else {
-                console.error(error);
+        if (this.observer) {
+            this.observer.disconnect();
+        }
+        if (!this.calledBack) {
+            this.calledBack = true;
+            if (error) {
+                if (error instanceof TimeoutError) {
+                    if (typeof this.onTimeout === "function") {
+                        this.onTimeout(error.message, this.currentStep, this.currentIndex);
+                    } else {
+                        console.error("Step timeout");
+                    }
+                } else {
+                    if (typeof this.onError === "function") {
+                        this.onError(error, this.currentStep, this.currentIndex);
+                    } else {
+                        console.error(error);
+                    }
+                }
+            } else if (this.currentIndex === this.steps.length) {
+                mutex.getUnlockedDef().then(() => {
+                    this.onComplete();
+                });
             }
-        } else if (this.currentIndex === this.steps.length && !this.errored) {
-            mutex.getUnlockedDef().then(() => {
-                this.onComplete();
-            });
         }
         return;
     }
