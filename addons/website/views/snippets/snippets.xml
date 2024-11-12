@@ -1198,6 +1198,20 @@
                        data-img="/website/static/src/img/snippets_options/header_template_sidebar.svg"/>
         </we-select>
 
+        <!-- Header Content Width - Options -->
+        <we-button-group string="Content Width" data-dependencies="!header_sidebar_opt"
+                         data-no-preview="true" data-reload="/">
+                <we-button title="Small"
+                           data-img="/website/static/src/img/snippets_options/content_width_small.svg"
+                           data-customize-website-views="website.header_width_small"/>
+                <we-button title="Regular"
+                           data-img="/website/static/src/img/snippets_options/content_width_normal.svg"
+                           data-customize-website-views=""/>
+                <we-button title="Full"
+                           data-img="/website/static/src/img/snippets_options/content_width_full.svg"
+                           data-customize-website-views="website.header_width_full"/>
+        </we-button-group>
+
         <!-- Header Sidebar Template - Options -->
         <we-input string="Width"
                   class="o_we_sublevel_1"
@@ -1563,6 +1577,7 @@
                        data-customize-website-variable="'headline'"
                        data-img="/website/static/src/img/snippets_options/footer_template_headline.svg"/>
         </we-select>
+
         <!-- Colors -->
         <we-colorpicker string="Colors"
                         data-customize-website-color="" data-color="footer"
@@ -1582,6 +1597,8 @@
                        data-customize-website-views="website.template_footer_slideout"
                        data-customize-website-variable="'slideout_shadow'"/>
         </we-select>
+
+        <!-- Copyright -->
         <we-checkbox string="Copyright"
                 data-name="footer_copyright_opt"
                 data-customize-website-views="website.footer_no_copyright|"
