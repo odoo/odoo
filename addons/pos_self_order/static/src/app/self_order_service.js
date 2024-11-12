@@ -734,6 +734,16 @@ export class SelfOrder extends Reactive {
         return result;
     }
 
+    verifyPriceLoading() {
+        if (this.priceLoading) {
+            this.notification.add(_t("Please wait until the price is loaded"), {
+                type: "danger",
+            });
+            return false;
+        }
+        return true;
+    }
+
     getProductDisplayPrice(product) {
         if (this.currentOrder.takeaway) {
             return product.price_info.display_price_alternative;
