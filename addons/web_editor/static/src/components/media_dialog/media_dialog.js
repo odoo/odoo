@@ -197,6 +197,7 @@ export class MediaDialog extends Component {
                 } else if ([TABS.VIDEOS.id, TABS.DOCUMENTS.id].includes(this.state.activeTab)) {
                     const parentEl = this.props.media.parentElement;
                     if (
+                        parentEl &&
                         parentEl.tagName === "A" &&
                         parentEl.children.length === 1 &&
                         this.props.media.tagName === "IMG"
