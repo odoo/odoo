@@ -7,7 +7,7 @@ const { chartRegistry } = registries;
 const {
     getPieChartDatasets,
     CHART_COMMON_OPTIONS,
-    getPieChartLayout,
+    getChartLayout,
     getPieChartTooltip,
     getChartTitle,
     getPieChartLegend,
@@ -46,7 +46,7 @@ function createOdooChartRuntime(chart, getters) {
         },
         options: {
             ...CHART_COMMON_OPTIONS,
-            layout: getPieChartLayout(definition),
+            layout: getChartLayout(definition),
             plugins: {
                 title: getChartTitle(definition),
                 legend: getPieChartLegend(definition, chartData),
