@@ -59,7 +59,8 @@ class StockMoveLine(models.Model):
     def _compute_sale_price(self):
         for move_line in self:
             if move_line.move_id.sale_line_id:
-                unit_price = move_line.move_id.sale_line_id.price_reduce_taxinc
+                global_discount = move_line.move_id.sale_line_id.get_global_discount()
+                unit_price = move_line.move_id.sale_line_id.price_reduce_taxinc - global_discount
                 qty = move_line.product_uom_id._compute_quantity(move_line.quantity, move_line.move_id.sale_line_id.product_uom)
             else:
                 unit_price = move_line.product_id.list_price

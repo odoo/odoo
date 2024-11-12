@@ -68,3 +68,37 @@ class SaleOrder(models.Model):
                     filtered_res[coupon] = filtered_rewards
             res = filtered_res
         return res
+
+    def get_reward_ids(self):
+        return self.order_line.filtered(lambda line: line.is_reward_line).mapped('reward_id')
+
+
+class SaleOrderLine(models.Model):
+    _inherit = ['sale.order.line']
+
+    def get_reward_line_price(self, product):
+        return sum(self.order_id.order_line.filtered(
+            lambda line: line.product_id == product).mapped('price_reduce_taxinc')
+        ) / self.product_uom_qty if self.product_uom_qty else 0
+
+    def get_global_discount(self):
+        discount_amount = super().get_global_discount()
+        reward_ids = self.order_id.get_reward_ids()
+        for reward in reward_ids:
+            if reward.reward_type == "discount":
+                if reward.discount_applicability == "cheapest":
+                    discount_amount += self.get_reward_line_price(reward.discount_line_product_id) if self == self.order_id._cheapest_line() else 0
+                elif reward.discount_applicability in ("specific", "order"):
+                    if reward.discount_applicability == "specific":
+                        lines = self.order_id.order_line.filtered(
+                            lambda line: line.product_id in reward.discount_product_ids and line.product_id == self.product_id
+                        )
+                    else:
+                        lines = self.order_id.order_line.filtered(
+                            lambda line: not (line.is_reward_line or line.is_delivery)
+                        )
+                    reward_line_amount = self.get_reward_line_price(reward.discount_line_product_id)
+                    discount_amount += (self.price_reduce_taxinc / sum(lines.mapped('price_reduce_taxinc'))) * reward_line_amount if lines else 0
+            elif reward.reward_type == "product" and self.product_id == reward.reward_product_id:
+                discount_amount += self.get_reward_line_price(reward.discount_line_product_id)
+        return discount_amount * -1
