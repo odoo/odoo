@@ -2,7 +2,7 @@ import { parse } from "@babel/parser";
 import traverse, { NodePath } from "@babel/traverse";
 import * as t from "@babel/types";
 
-// modif of isNodesEquivalent from @babel/types (added arg holes + custom part)
+// modif of isNodesEquivalent from @babel/types (added arg holes + custom part + self calls adapted)
 export function areEquivalentUpToHole(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     a: any,

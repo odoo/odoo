@@ -1,10 +1,13 @@
-import traverse, { Binding, NodePath } from "@babel/traverse";
+import traverse, { NodePath } from "@babel/traverse";
 import * as t from "@babel/types";
 
+import { getBinding, getBindingPath } from "../utils/binding";
 import { ExtendedEnv } from "../utils/env";
-import { ensureProgramPath, getProgramPath } from "../utils/node_path";
-import { areEquivalentUpToHole, DeclarationPattern, ExpressionPattern } from "../utils/pattern";
+import { ensureProgramPath, getObjectPropertyPath, getProgramPath } from "../utils/node_path";
+import { DeclarationPattern, ExpressionPattern } from "../utils/pattern";
+import { isViewRegistry } from "../utils/registry";
 import { isJsFile, normalizeSource, toAbsolutePath } from "../utils/utils";
+import { addImports } from "../utils/imports";
 
 // for ast descriptions see https://github.com/babel/babel/blob/master/packages/babel-parser/ast/spec.md
 
@@ -34,37 +37,6 @@ function getLocalIdentifierOfRegistry(
         }
     }
     return null;
-}
-
-function getBinding(id: NodePath<t.Identifier>): Binding | null {
-    return id.scope.getBinding(id.node.name) || null;
-}
-
-function getBindingPath(id: NodePath<t.Identifier>): NodePath | null {
-    const binding = getBinding(id);
-    if (!binding) {
-        return null;
-    }
-    return binding.path;
-}
-
-const viewRegistryPattern1 = new ExpressionPattern("viewRegistry");
-const viewRegistryPattern2 = new ExpressionPattern("registry.category('views')");
-function isViewRegistry(path: NodePath) {
-    if (!path.isExpression()) {
-        return false;
-    }
-    if (path.isIdentifier()) {
-        const valuePath = getBindingPath(path)?.get("init");
-        if (!valuePath || valuePath instanceof Array) {
-            return false;
-        }
-        if (valuePath.isExpression()) {
-            return Boolean(viewRegistryPattern2.detect(valuePath));
-        }
-        return false;
-    }
-    return Boolean(viewRegistryPattern1.detect(path) || viewRegistryPattern2.detect(path));
 }
 
 function getDeclarationPath(id: NodePath<t.Identifier>): NodePath<t.Declaration> | null {
@@ -182,15 +154,6 @@ function getClassPropertyForProps(
     return m;
 }
 
-function getObjectPropertyPath(path: NodePath<t.ObjectExpression>, name: string) {
-    for (const p of path.get("properties")) {
-        if (p.isObjectProperty() && t.isIdentifier(p.node.key, { name })) {
-            return p.get("value");
-        }
-    }
-    return null;
-}
-
 function getClassPropertyPath(
     path: NodePath<t.ClassDeclaration | t.ClassExpression>,
     name: string,
@@ -201,41 +164,6 @@ function getClassPropertyPath(
         }
     }
     return null;
-}
-
-function addImport(imp: t.ImportDeclaration, programPath: NodePath<t.Program>, env: ExtendedEnv) {
-    const source = normalizeSource(imp.source.value, env);
-    for (const p of programPath.get("body")) {
-        if (!p.isImportDeclaration()) {
-            continue;
-        }
-        const pSource = normalizeSource(p.node.source.value, env);
-        if (source !== pSource) {
-            continue;
-        }
-        for (const specifier of imp.specifiers) {
-            if (p.node.specifiers.some((s) => areEquivalentUpToHole(specifier, s))) {
-                continue;
-            }
-            p.node.specifiers.push(specifier);
-        }
-        return;
-    }
-    programPath.node.body.unshift(imp);
-}
-
-function addImports(path: NodePath, imports: t.ImportDeclaration[], env: ExtendedEnv) {
-    if (!imports.length) {
-        return;
-    }
-    const program = path.findParent((path) => path.isProgram()) as NodePath<t.Program> | null;
-    if (!program) {
-        return;
-    }
-    for (const imp of imports) {
-        addImport(imp, program, env);
-    }
-    env.tagAsModified(env.inFilePath);
 }
 
 function copyKeys(
@@ -299,15 +227,6 @@ function copyKeys(
 const addPattern2Args = new ExpressionPattern("__target.add(__key, __added)");
 const addPattern3Args = new ExpressionPattern("__target.add(__key, __added, __y)");
 const declarationPattern = new DeclarationPattern("const __id = __def");
-
-// function clearProperties(viewDef: NodePath<t.ObjectExpression>) {
-//     for (const p of viewDef.get("properties")) {
-//         if (p.isObjectProperty() && p.get("key").isIdentifier({ name: "Controller" })) {
-//             continue;
-//         }
-//         p.remove();
-//     }
-// }
 
 function getViewDef(path: NodePath, env: ExtendedEnv): NodePath<t.ObjectExpression> | null {
     if (path.isObjectExpression()) {
@@ -443,7 +362,6 @@ function viewObjectToController(path: NodePath | null, env: ExtendedEnv) {
             if (viewDef && viewDef.isObjectExpression()) {
                 const controllerValuePath = processView(viewDef, env);
                 if (controllerValuePath) {
-                    // clearProperties(viewDef);
                     __added.replaceWith(controllerValuePath);
                     return;
                 }
