@@ -193,7 +193,7 @@ test("should display invitations", async () => {
             .get_result()
     );
     await contains(".o-discuss-CallInvitation");
-    await waitForSteps(["play - incoming-call"]);
+    await waitForSteps(["play - call-invitation"]);
     // Simulate stop receiving call invitation
 
     pyEnv["bus.bus"]._sendone(
@@ -204,7 +204,7 @@ test("should display invitations", async () => {
         }).get_result()
     );
     await contains(".o-discuss-CallInvitation", { count: 0 });
-    await waitForSteps(["stop - incoming-call"]);
+    await waitForSteps(["stop - call-invitation"]);
 });
 
 test("can share screen", async () => {
@@ -296,11 +296,11 @@ test("join/leave sounds are only played on main tab", async () => {
     await click("[title='Start a Call']", { target: env1 });
     await contains(".o-discuss-Call", { target: env1 });
     await contains(".o-discuss-Call", { target: env2 });
-    await waitForSteps(["tab1 - play - channel-join"]);
+    await waitForSteps(["tab1 - play - call-join"]);
     await click("[title='Disconnect']:not([disabled])", { target: env1 });
     await contains(".o-discuss-Call", { target: env1, count: 0 });
     await contains(".o-discuss-Call", { target: env2, count: 0 });
-    await waitForSteps(["tab1 - play - channel-leave"]);
+    await waitForSteps(["tab1 - play - call-leave"]);
 });
 
 test("'Start a meeting' in mobile", async () => {

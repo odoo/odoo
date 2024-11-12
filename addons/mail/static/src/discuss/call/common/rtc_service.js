@@ -344,7 +344,7 @@ export class Rtc extends Record {
         this.state.pttReleaseTimeout = browser.setTimeout(() => {
             this.setTalking(false);
             if (!this.selfSession?.isMute) {
-                this.soundEffectsService.play("push-to-talk-off", { volume: 0.3 });
+                this.soundEffectsService.play("ptt-release", { volume: 0.3 });
             }
         }, Math.max(this.store.settings.voice_active_duration || 0, duration));
     }
@@ -359,7 +359,7 @@ export class Rtc extends Record {
         }
         browser.clearTimeout(this.state.pttReleaseTimeout);
         if (!this.selfSession.isTalking && !this.selfSession.isMute) {
-            this.soundEffectsService.play("push-to-talk-on", { volume: 0.3 });
+            this.soundEffectsService.play("ptt-press", { volume: 0.3 });
         }
         this.setTalking(true);
     }
@@ -413,13 +413,13 @@ export class Rtc extends Record {
             this.pttExtService.unsubscribe();
             this.network?.disconnect();
             this.clear();
-            this.soundEffectsService.play("channel-leave");
+            this.soundEffectsService.play("call-leave");
         }
     }
 
     async deafen() {
         await this.setDeaf(true);
-        this.soundEffectsService.play("deafen");
+        this.soundEffectsService.play("earphone-off");
     }
 
     /**
@@ -446,7 +446,7 @@ export class Rtc extends Record {
 
     async mute() {
         await this.setMute(true);
-        this.soundEffectsService.play("mute");
+        this.soundEffectsService.play("mic-off");
     }
 
     /**
@@ -478,7 +478,7 @@ export class Rtc extends Record {
 
     async undeafen() {
         await this.setDeaf(false);
-        this.soundEffectsService.play("undeafen");
+        this.soundEffectsService.play("earphone-on");
     }
 
     async unmute() {
@@ -487,7 +487,7 @@ export class Rtc extends Record {
         } else {
             await this.resetAudioTrack({ force: true });
         }
-        this.soundEffectsService.play("unmute");
+        this.soundEffectsService.play("mic-on");
     }
 
     //----------------------------------------------------------------------
@@ -822,7 +822,7 @@ export class Rtc extends Record {
         if (!this.state.channel?.id) {
             return;
         }
-        this.soundEffectsService.play("channel-join");
+        this.soundEffectsService.play("call-join");
         this.state.hasPendingRequest = false;
         await this.resetAudioTrack({ force: audio });
         if (!this.state.channel?.id) {
