@@ -143,6 +143,10 @@ class TestDomain(TransactionExpressionCase):
                     f"Incorrect result for search([('name', 'not in', {list(subset)})])",
                 )
 
+        # =like check
+        self.assertListEqual(self._search(EmptyChar, [('name', '=like', 'na%')]).mapped('name'), ['name'])
+        self.assertListEqual(self._search(EmptyChar, ['!', ('name', '=like', 'na%')]).mapped('name'), ['', False, False])
+
     def test_empty_translation(self):
         records_en = self.env['test_new_api.indexed_translation'].with_context(lang='en_US').create([
             {'name': 'English'},
