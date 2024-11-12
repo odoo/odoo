@@ -66,7 +66,7 @@ export class ColorPlugin extends Plugin {
     setup() {
         this.selectedColors = reactive({ color: "", backgroundColor: "" });
         this.previewableApplyColor = this.dependencies.history.makePreviewableOperation(
-            (color, mode) => this._applyColor(color, mode)
+            (color, mode, previewMode) => this._applyColor(color, mode, previewMode)
         );
     }
 
@@ -128,7 +128,8 @@ export class ColorPlugin extends Plugin {
      * @param {string} param.mode 'color' or 'backgroundColor'
      */
     applyColorPreview({ color, mode }) {
-        this.previewableApplyColor.preview(color, mode);
+        // Preview the color before applying it.
+        this.previewableApplyColor.preview(color, mode, true);
         this.updateSelectedColor();
     }
     /**
@@ -170,9 +171,10 @@ export class ColorPlugin extends Plugin {
      *
      * @param {string} color hexadecimal or bg-name/text-name class
      * @param {string} mode 'color' or 'backgroundColor'
+     * @param {boolean} [previewMode=false] true - apply color in preview mode
      */
-    _applyColor(color, mode) {
-        if (this.delegateTo("color_apply_overrides", color, mode)) {
+    _applyColor(color, mode, previewMode = false) {
+        if (this.delegateTo("color_apply_overrides", color, mode, previewMode)) {
             return;
         }
         let selection = this.dependencies.selection.getEditableSelection();
