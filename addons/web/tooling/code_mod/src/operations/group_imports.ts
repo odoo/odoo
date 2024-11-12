@@ -7,9 +7,6 @@ import { areEquivalentUpToHole } from "../utils/pattern";
 import { isJsFile, normalizeSource } from "../utils/utils";
 
 function groupImports(path: NodePath | null, env: ExtendedEnv) {
-    if (!path) {
-        return;
-    }
     const programPath = ensureProgramPath(path);
     if (!programPath) {
         return;

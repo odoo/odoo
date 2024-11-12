@@ -1,6 +1,6 @@
 import traverse, { Binding, NodePath } from "@babel/traverse";
 import * as t from "@babel/types";
-import { flatMap, fromNullable, none, Option, some, toNullable } from "fp-ts/Option";
+import { flatMap, fromNullable, Option, some, toNullable } from "fp-ts/Option";
 
 import { ExtendedEnv } from "../utils/env";
 import { ensureProgramPath, getProgramPath } from "../utils/node_path";
@@ -10,12 +10,12 @@ import { isJsFile, normalizeSource, toAbsolutePath } from "../utils/utils";
 // for ast descriptions see https://github.com/babel/babel/blob/master/packages/babel-parser/ast/spec.md
 
 function getLocalIdentifierOfRegistry(
-    path: NodePath,
+    path: NodePath | null,
     env: ExtendedEnv,
-): Option<NodePath<t.Identifier>> {
+): NodePath<t.Identifier> | null {
     const programPath = ensureProgramPath(path);
     if (!programPath) {
-        return none;
+        return null;
     }
     for (const p of programPath.get("body")) {
         if (!p.isImportDeclaration()) {
@@ -29,12 +29,12 @@ function getLocalIdentifierOfRegistry(
             if (s.isImportSpecifier()) {
                 const imported = s.get("imported");
                 if (imported.isIdentifier({ name: "regsitry " })) {
-                    return fromNullable(s.get("local"));
+                    return s.get("local");
                 }
             }
         }
     }
-    return none;
+    return null;
 }
 
 function getBinding(id: NodePath<t.Identifier>): Option<Binding> {
@@ -420,7 +420,7 @@ function processView(viewDef: NodePath<t.ObjectExpression>, env: ExtendedEnv) {
 function viewObjectToController(path: NodePath | null, env: ExtendedEnv) {
     const programPath = ensureProgramPath(path);
     if (!programPath) {
-        return;
+        return null;
     }
     const localPath = getLocalIdentifierOfRegistry(programPath, env);
     if (!localPath) {
