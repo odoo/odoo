@@ -46,12 +46,14 @@ class TestCommonSaleTimesheet(TestSaleProjectCommon):
             'name': 'Gregor Clegane',
             'user_id': cls.user_employee_company_B.id,
             'hourly_cost': 15,
+            'company_id': cls.company_data_2['company'].id, # user and employee are assigned to different companies. That's why we have set them to the same company.
         })
 
         cls.manager_company_B = cls.env['hr.employee'].create({
             'name': 'Cersei Lannister',
             'user_id': cls.user_manager_company_B.id,
             'hourly_cost': 45,
+            'company_id': cls.company_data_2['company'].id,
         })
 
         # Account and project

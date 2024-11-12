@@ -1185,3 +1185,25 @@ class TestSaleTimesheetAnalyticPlan(TestCommonSaleTimesheet):
             'employee_id': self.employee_manager.id,
             'so_line': so_line.id,
         })
+
+    def test_sol_and_analytic_distribution_access_multi_company(self):
+        """
+        Step:
+            1) Create two companies and two users with employees.
+            2) Create a sale order with Company A.
+            3) Confirm the sale order.
+            4) Remove the company_id from the project.
+            5) Select the default company B and remove Company A.
+            6) Add a timesheet to the task.
+        """
+        self.so.project_id.company_id = False
+        self.user_employee_company_B.groups_id += self.env.ref('hr_timesheet.group_timesheet_manager')
+        timesheet = self.env['account.analytic.line'].with_user(self.user_employee_company_B).create({
+            'name': 'Task with SOL',
+            'project_id': self.so.project_id.id,
+            'task_id': self.so.tasks_ids[1].id,
+            'employee_id': self.user_employee_company_B.employee_id.id,
+            'so_line': self.so.tasks_ids[1].sale_line_id.id,
+        })
+        self.assertEqual({str(timesheet.account_id.id): 100}, self.so.tasks_ids[1].sale_line_id.analytic_distribution,
+                        "The timesheet should have the same accounts as in the analytic distribution of the so_line")
