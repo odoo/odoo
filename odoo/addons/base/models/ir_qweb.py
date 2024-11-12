@@ -928,7 +928,7 @@ class IrQweb(models.AbstractModel):
             values.setdefault('res_company', self.env.company.sudo())
             values.update(
                 request=request,  # might be unbound if we're not in an httprequest context
-                test_mode_enabled=bool(config['test_enable'] or config['test_file']),
+                test_mode_enabled=config['test_enable'],
                 json=scriptsafe,
                 quote_plus=werkzeug.urls.url_quote_plus,
                 time=safe_eval.time,

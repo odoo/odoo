@@ -7,7 +7,6 @@ import os
 import re
 import subprocess
 import tempfile
-import threading
 import unittest
 from ast import literal_eval
 from collections import OrderedDict
@@ -23,7 +22,7 @@ from markupsafe import Markup
 from reportlab.graphics.barcode import createBarcodeDrawing
 from reportlab.pdfbase.pdfmetrics import getFont, TypeFace
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, modules, tools, _
 from odoo.exceptions import UserError, AccessError, RedirectWarning
 from odoo.service import security
 from odoo.http import request, root
@@ -459,7 +458,7 @@ class IrActionsReport(models.Model):
         :param image_format union['jpg', 'png']: format of the image
         :return list[bytes|None]:
         """
-        if (tools.config['test_enable'] or tools.config['test_file']) and not self.env.context.get('force_image_rendering'):
+        if (modules.module.current_test or tools.config['test_enable']) and not self.env.context.get('force_image_rendering'):
             return [None] * len(bodies)
         if not wkhtmltoimage_version or wkhtmltoimage_version < parse_version('0.12.0'):
             raise UserError(_('wkhtmltoimage 0.12.0^ is required in order to render images from html'))
@@ -608,7 +607,7 @@ class IrActionsReport(models.Model):
                     if len(bodies) > 1:
                         v = subprocess.run([_get_wkhtmltopdf_bin(), '--version'], stdout=subprocess.PIPE, check=True, encoding="utf-8")
                         if '(with patched qt)' not in v.stdout:
-                            if getattr(threading.current_thread(), 'testing', False):
+                            if modules.module.current_test or tools.config['test_enable']:
                                 raise unittest.SkipTest("Unable to convert multiple documents via wkhtmltopdf using unpatched QT")
                             raise UserError(_("Tried to convert multiple documents in wkhtmltopdf using unpatched QT"))
 
@@ -992,7 +991,7 @@ class IrActionsReport(models.Model):
         data.setdefault('report_type', 'pdf')
         # In case of test environment without enough workers to perform calls to wkhtmltopdf,
         # fallback to render_html.
-        if (tools.config['test_enable'] or tools.config['test_file']) and not self.env.context.get('force_report_rendering'):
+        if (modules.module.current_test or tools.config['test_enable']) and not self.env.context.get('force_report_rendering'):
             return self._render_qweb_html(report_ref, res_ids, data=data)
 
         self = self.with_context(webp_as_jpg=True)
