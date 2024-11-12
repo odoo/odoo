@@ -425,6 +425,7 @@ export class Wysiwyg extends Component {
             showEmptyElementHint: this.options.showEmptyElementHint,
             controlHistoryFromDocument: this.options.controlHistoryFromDocument,
             initialHistoryId: this._serverLastStepId,
+            disableCheckbox: this.options.disableCheckbox,
             // TODO other places in this file call this.options.getContentEditableAreas
             // without the extension here. It does not seem to be a problem (it
             // was like that before o_editor_banner elements were considered
