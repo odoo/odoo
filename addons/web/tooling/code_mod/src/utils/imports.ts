@@ -1,5 +1,5 @@
 import { NodePath } from "@babel/traverse";
-import { cloneNode, ImportDeclaration, Program, stringLiteral } from "@babel/types";
+import { cloneNode, ImportDeclaration, Program } from "@babel/types";
 
 import { ExtendedEnv } from "./env";
 import { ensureProgramPath, getProgramPath } from "./node_path";
@@ -41,20 +41,13 @@ export function addImports(path: NodePath | null, imports: ImportDeclaration[], 
     env.tagAsModified(env.inFilePath);
 }
 
-
-export function getNormalizedNode(
-    declarationPath: NodePath<ImportDeclaration>,
-    env: ExtendedEnv,
-) {
+export function getNormalizedNode(declarationPath: NodePath<ImportDeclaration>, env: ExtendedEnv) {
     const n = cloneNode(declarationPath.node);
-    n.source.value = normalizeSource(n.source.value, env)
+    n.source.value = normalizeSource(n.source.value, env);
     return n;
 }
 
-export function normalizeImport(
-    declarationPath: NodePath<ImportDeclaration>,
-    env: ExtendedEnv,
-) {
+export function normalizeImport(declarationPath: NodePath<ImportDeclaration>, env: ExtendedEnv) {
     const s = normalizeSource(declarationPath.node.source.value, env);
     if (s !== declarationPath.node.source.value) {
         declarationPath.node.source.value = s;
