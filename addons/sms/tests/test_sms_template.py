@@ -52,7 +52,7 @@ class TestSmsTemplateAccessRights(TransactionCase):
                 sms_template.unlink()
 
     @users('user_system')
-    @mute_logger('odoo.models.unlink', 'odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.models.unlink', 'odoo.addons.base.models.ir_access')
     def test_access_rights_system(self):
         admin = self.env.ref('base.user_admin')
         for sms_template in self.env['sms.template'].browse(self.sms_templates.ids):

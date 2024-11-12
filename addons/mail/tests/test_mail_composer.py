@@ -137,7 +137,7 @@ class TestMailComposerForm(TestMailComposer):
         self.assertEqual(message.partner_ids, partner_private + partner_classic)
         self.assertEqual(message.subject, f'{test_record.name}')
 
-    @mute_logger('odoo.addons.base.models.ir_rule', 'odoo.addons.mail.models.mail_mail')
+    @mute_logger('odoo.addons.base.models.ir_access', 'odoo.addons.mail.models.mail_mail')
     @users('employee')
     def test_composer_default_recipients_private_norights(self):
         """ Test usage of a private partner in composer when not having the

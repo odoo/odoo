@@ -98,7 +98,7 @@ class TestMailGroupMessage(TestMailListCommon):
         self.assertEqual(len(mails), len(self.test_group.member_ids) - 1)
         self.assertNotIn(self.test_group_member_1.email, mails.mapped('email_to'), 'Should not have send the email to the original author')
 
-    @mute_logger('odoo.addons.base.models.ir_rule')
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_mail_group_message_security_groups(self):
         user_group = self.env.ref('base.group_partner_manager')
         self.test_group.access_group_id = user_group
@@ -125,7 +125,7 @@ class TestMailGroupMessage(TestMailListCommon):
         with self.assertRaises(AccessError, msg='User not in the group should not have access to accepted message'):
             self.test_group_msg_2_accepted.with_user(self.user_portal).check_access('read')
 
-    @mute_logger('odoo.addons.base.models.ir_rule')
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_mail_group_message_security_public(self):
         self.test_group.access_mode = 'public'
 

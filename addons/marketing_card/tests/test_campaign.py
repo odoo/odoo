@@ -261,21 +261,21 @@ class TestMarketingCardSecurity(MarketingCardCommon):
     @mute_logger('odoo.addons.mail.models.mail_render_mixin')
     def test_campaign_field_paths(self):
         """Check that card updates are performed as the current user."""
-        # restrict reading from partner states (flush to apply new rule)
-        rules = self.env['ir.rule'].sudo().create([{
+        # restrict reading from partner titles (flush to apply new rule)
+        model_id = self.env['ir.model']._get_id('res.country.state')
+        self.env['ir.access'].sudo().search([('model_id', '=', model_id)]).unlink()
+        self.env['ir.access'].sudo().create([{
             'name': 'marketing card user read partner state',
-            'domain_force': repr([(0, '=', 1)]),
-            'groups': self.env.ref('marketing_card.marketing_card_group_user').ids,
-            'model_id': self.env['ir.model']._get_id('res.country.state'),
-            'perm_read': True,
+            'model_id': model_id,
+            'group_id': self.env.ref('marketing_card.marketing_card_group_user').id,
+            'operation': 'r',
+            'domain': "[(0, '=', 1)]",
         }, {
             'name': 'system user read partner state',
-            'domain_force': repr([(1, '=', 1)]),
-            'groups': self.env.ref('base.group_system').ids,
-            'model_id': self.env['ir.model']._get_id('res.country.state'),
-            'perm_read': True,
+            'model_id': model_id,
+            'group_id': self.env.ref('base.group_system').id,
+            'operation': 'r',
         }])
-        rules.flush_recordset()
         # set a state as sudo and invalidate to force fetch as test user
         self.marketing_card_user.partner_id.state_id = self.env['res.country.state'].sudo().create({
             'name': 'test marketing card state',

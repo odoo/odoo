@@ -391,10 +391,11 @@ class TestSubqueries(TransactionCase):
 
     def test_related_simple(self):
         model = self.env['test_orm.related'].with_user(self.env.ref('base.user_admin'))
-        self.env['ir.rule'].create({
+        self.env['ir.access'].create({
             'name': 'related_foo',
             'model_id': self.env['ir.model']._get('test_orm.related_foo').id,
-            'domain_force': "[('id', '<', 1000)]",
+            'operation': 'rwcd',
+            'domain': "[('id', '<', 1000)]",
         })
 
         # warmup
@@ -428,15 +429,17 @@ class TestSubqueries(TransactionCase):
 
     def test_related_multi(self):
         model = self.env['test_orm.related'].with_user(self.env.ref('base.user_admin'))
-        self.env['ir.rule'].create({
+        self.env['ir.access'].create({
             'name': 'related_foo',
             'model_id': self.env['ir.model']._get('test_orm.related_foo').id,
-            'domain_force': "[('id', '<', 1000)]",
+            'operation': 'rwcd',
+            'domain': "[('id', '<', 1000)]",
         })
-        self.env['ir.rule'].create({
+        self.env['ir.access'].create({
             'name': 'related_bar',
             'model_id': self.env['ir.model']._get('test_orm.related_bar').id,
-            'domain_force': "[('id', '<', 1000)]",
+            'operation': 'rwcd',
+            'domain': "[('id', '<', 1000)]",
         })
 
         # warmup
@@ -698,20 +701,23 @@ class TestSubqueries(TransactionCase):
 
     def test_related_inherited(self):
         model = self.env['test_orm.related_inherits'].with_user(self.env.ref('base.user_admin'))
-        self.env['ir.rule'].create({
+        self.env['ir.access'].create({
             'name': 'related',
             'model_id': self.env['ir.model']._get('test_orm.related').id,
-            'domain_force': "[('id', '<', 1000)]",
+            'operation': 'rwcd',
+            'domain': "[('id', '<', 1000)]",
         })
-        self.env['ir.rule'].create({
+        self.env['ir.access'].create({
             'name': 'related_foo',
             'model_id': self.env['ir.model']._get('test_orm.related_foo').id,
-            'domain_force': "[('id', '<', 1000)]",
+            'operation': 'rwcd',
+            'domain': "[('id', '<', 1000)]",
         })
-        self.env['ir.rule'].create({
+        self.env['ir.access'].create({
             'name': 'related_bar',
             'model_id': self.env['ir.model']._get('test_orm.related_bar').id,
-            'domain_force': "[('id', '<', 1000)]",
+            'operation': 'rwcd',
+            'domain': "[('id', '<', 1000)]",
         })
 
         # warmup
@@ -974,10 +980,11 @@ class TestFlushSearch(TransactionCase):
 
     def test_flush_fields_in_access_rules(self):
         model = self.model.with_user(self.env.ref('base.user_admin'))
-        self.env['ir.rule'].create({
+        self.env['ir.access'].create({
             'name': 'city_rule',
             'model_id': self.env['ir.model']._get(model._name).id,
-            'domain_force': str([('name', 'like', 'a')]),
+            'operation': 'rwcd',
+            'domain': "[('name', 'like', 'a')]",
         })
         model.search([])
 
