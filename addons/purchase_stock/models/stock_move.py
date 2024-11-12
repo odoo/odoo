@@ -57,7 +57,7 @@ class StockMove(models.Model):
                     l.value, order.currency_id, order.company_id, l.create_date, round=False)))
             total_invoiced_value = 0
             invoiced_qty = 0
-            for invoice_line in line.sudo().invoice_lines:
+            for invoice_line in line._get_po_line_invoice_lines_su():
                 if invoice_line.move_id.state != 'posted':
                     continue
                 if invoice_line.tax_ids:
