@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo import api, fields, models, _
 from odoo.tools import email_normalize
 
@@ -452,13 +449,3 @@ class MailTestComposerSource(models.Model):
 
     def _mail_get_partner_fields(self, introspect_fields=False):
         return ['customer_id']
-
-
-class MailTestPublicThread(models.Model):
-    """A model inheriting from mail.thread with public read and write access
-    to test some public and guest interactions."""
-    _description = "Portal Public Thread"
-    _name = "mail.test.public"
-    _inherit = ["mail.thread"]
-
-    name = fields.Char("Name")
