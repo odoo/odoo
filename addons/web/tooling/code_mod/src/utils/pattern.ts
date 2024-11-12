@@ -90,7 +90,7 @@ function getRelativeLocation(path: NodePath, otherPath: NodePath): string {
     return removePrefix(otherPath.getPathLocation(), prefix).replaceAll(/\[(\d+)\]/g, ".$1");
 }
 
-export class ExpressionPattern {
+class Pattern {
     _holes: Set<string>;
     _pathLocations: Record<string, string>;
     _ast: t.Node | null;
@@ -100,10 +100,13 @@ export class ExpressionPattern {
         this._pathLocations = {};
         this._ast = null;
         traverse(fileAST, {
-            Expression: (__path: NodePath<t.Expression>) => {
+            enter: (__path) => {
+                if (!this.hasTargetType(__path) || __path.parentPath === null) {
+                    return;
+                }
                 this._ast = __path.node;
                 __path.parentPath.traverse({
-                    Identifier: (path: NodePath<t.Identifier>) => {
+                    Identifier: (path) => {
                         const { name } = path.node;
                         if (/__.+/.test(name)) {
                             this._holes.add(name);
@@ -115,8 +118,13 @@ export class ExpressionPattern {
             },
         });
     }
-
-    detect(path: NodePath<t.Expression>) {
+    hasTargetType(path: NodePath): boolean {
+        return false;
+    }
+    detect(path: NodePath) {
+        if (!this.hasTargetType(path)) {
+            return false;
+        }
         const holes: Record<string, null | NodePath | NodePath[]> = Object.fromEntries(
             [...this._holes].map((name) => [name, null]),
         );
@@ -132,44 +140,14 @@ export class ExpressionPattern {
     }
 }
 
-// refactor
-export class DeclarationPattern {
-    _holes: Set<string>;
-    _pathLocations: Record<string, string>;
-    _ast: t.Node | null;
-    constructor(expr: string) {
-        const fileAST = parse(expr, { sourceType: "module" });
-        this._holes = new Set();
-        this._pathLocations = {};
-        this._ast = null;
-        traverse(fileAST, {
-            VariableDeclaration: (__path: NodePath<t.VariableDeclaration>) => {
-                this._ast = __path.node;
-                __path.parentPath.traverse({
-                    Identifier: (path) => {
-                        const { name } = path.node;
-                        if (/__.+/.test(name)) {
-                            this._holes.add(name);
-                            this._pathLocations[name] = getRelativeLocation(__path, path);
-                        }
-                    },
-                });
-                __path.stop();
-            },
-        });
+export class ExpressionPattern extends Pattern {
+    hasTargetType(path: NodePath): boolean {
+        return path.isExpression();
     }
-    detect(path: NodePath<t.Declaration>) {
-        const holes: Record<string, null | NodePath | NodePath[]> = Object.fromEntries(
-            [...this._holes].map((name) => [name, null]),
-        );
-        const equivalentUpToHoles = areEquivalentUpToHole(this._ast, path.node, holes); // we should get paths here if possible -> refactor
-        if (equivalentUpToHoles) {
-            const values: Record<string, NodePath | NodePath[]> = {};
-            for (const name in holes) {
-                values[name] = path.get(this._pathLocations[name]);
-            }
-            return values;
-        }
-        return false;
+}
+
+export class DeclarationPattern extends Pattern {
+    hasTargetType(path: NodePath) {
+        return path.isVariableDeclaration();
     }
 }
