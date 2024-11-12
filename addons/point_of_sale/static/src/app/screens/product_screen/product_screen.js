@@ -23,7 +23,6 @@ import {
     ControlButtons,
     ControlButtonsPopup,
 } from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons";
-import { pick } from "@web/core/utils/objects";
 import { unaccent } from "@web/core/utils/strings";
 import { CameraBarcodeScanner } from "@point_of_sale/app/screens/product_screen/camera_barcode_scanner";
 
@@ -85,52 +84,6 @@ export class ProductScreen extends Component {
         this.numberBuffer.use({
             useWithBarcode: true,
         });
-    }
-    getAncestorsAndCurrent() {
-        const selectedCategory = this.pos.selectedCategory;
-        return selectedCategory
-            ? [undefined, ...selectedCategory.allParents, selectedCategory]
-            : [selectedCategory];
-    }
-    getChildCategories(selectedCategory) {
-        return selectedCategory
-            ? [...selectedCategory.child_ids]
-            : this.pos.models["pos.category"].filter((category) => !category.parent_id);
-    }
-
-    getCategoriesList(list, allParents, depth) {
-        return list.map((category) => {
-            if (category.id === allParents[depth]?.id && category.child_ids?.length) {
-                return [
-                    category,
-                    this.getCategoriesList(category.child_ids, allParents, depth + 1),
-                ];
-            }
-            return category;
-        });
-    }
-
-    getCategoriesAndSub() {
-        const rootCategories = this.pos.models["pos.category"].filter(
-            (category) => !category.parent_id
-        );
-        const selected = this.pos.selectedCategory ? [this.pos.selectedCategory] : [];
-        const allParents = selected.concat(this.pos.selectedCategory?.allParents || []).reverse();
-        return this.getCategoriesList(rootCategories, allParents, 0)
-            .flat(Infinity)
-            .map(this.getChildCategoriesInfo, this);
-    }
-
-    getChildCategoriesInfo(category) {
-        return {
-            ...pick(category, "id", "name", "color"),
-            imgSrc:
-                this.pos.config.show_category_images && category.has_image
-                    ? `/web/image?model=pos.category&field=image_128&id=${category.id}`
-                    : undefined,
-            isSelected: this.getAncestorsAndCurrent().includes(category),
-            isChildren: this.getChildCategories(this.pos.selectedCategory).includes(category),
-        };
     }
 
     getNumpadButtons() {
