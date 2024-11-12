@@ -223,7 +223,7 @@ if __name__ == '__main__':
             'odoo.modules.loading': {'level': 'CRITICAL'},
             'odoo.sql_db': {'level': 'CRITICAL'},
             'odoo.models.unlink': {'level': 'WARNING'},
-            'odoo.addons.base.models.ir_model': {'level': "WARNING"},
+            'odoo.addons.base.models.ir_access': {'level': "WARNING"},
         }
     })
 

@@ -336,10 +336,11 @@ class TestDiscussChannelAccess(MailCommon):
                     ) from e
             else:
                 try:
-                    with self.assertRaises(AccessError), mute_logger("odoo.sql_db"), mute_logger(
-                        "odoo.addons.base.models.ir_model"
-                    ), mute_logger("odoo.addons.base.models.ir_rule"), mute_logger(
-                        "odoo.models.unlink"
+                    with (
+                        self.assertRaises(AccessError),
+                        mute_logger("odoo.sql_db"),
+                        mute_logger("odoo.addons.base.models.ir_access"),
+                        mute_logger("odoo.models.unlink"),
                     ):
                         self._execute_action_channel(
                             user_key, channel_key, membership, operation, result, for_sub_channel
@@ -416,10 +417,11 @@ class TestDiscussChannelAccess(MailCommon):
                     ) from e
             else:
                 try:
-                    with self.assertRaises(AccessError), mute_logger("odoo.sql_db"), mute_logger(
-                        "odoo.addons.base.models.ir_model"
-                    ), mute_logger("odoo.addons.base.models.ir_rule"), mute_logger(
-                        "odoo.models.unlink"
+                    with (
+                        self.assertRaises(AccessError),
+                        mute_logger("odoo.sql_db"),
+                        mute_logger("odoo.addons.base.models.ir_access"),
+                        mute_logger("odoo.models.unlink"),
                     ):
                         try:
                             self._execute_action_member(

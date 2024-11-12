@@ -15,7 +15,7 @@ from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 class TestHolidaysFlow(TestHrHolidaysCommon):
 
-    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
+    @mute_logger('odoo.addons.base.models.ir_access', 'odoo.models')
     def test_00_leave_request_flow_unlimited(self):
         """ Testing leave request flow: unlimited type of leave request """
         Requests = self.env['hr.leave']
@@ -74,7 +74,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         hol12_manager_group.action_approve()
         self.assertEqual(hol1_user_group.state, 'validate', 'hr_holidays: validates leave request should be in validate state')
 
-    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
+    @mute_logger('odoo.addons.base.models.ir_access', 'odoo.models')
     def test_01_leave_request_flow_limited(self):
         """ Testing leave request flow: limited type of leave request """
         with freeze_time('2022-01-15'):

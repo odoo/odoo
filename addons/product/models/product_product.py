@@ -292,7 +292,7 @@ class ProductProduct(models.Model):
     def _compute_product_code(self):
         for product in self:
             product.code = product.default_code
-            if self.env['ir.model.access'].check('product.supplierinfo', 'read', False):
+            if self.env['product.supplierinfo'].has_access('read'):
                 for supplier_info in product.seller_ids:
                     if supplier_info.partner_id.id == product._context.get('partner_id'):
                         product.code = supplier_info.product_code or product.default_code

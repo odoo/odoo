@@ -15,25 +15,23 @@ class IrModelAccessTest(TransactionCase):
     def setUpClass(cls):
         super(IrModelAccessTest, cls).setUpClass()
 
-        cls.env['ir.model.access'].create({
+        cls.env['ir.access'].create({
             'name': "read",
-            'model_id': cls.env['ir.model'].search([("model", "=", "res.company")]).id,
+            'model_id': cls.env['ir.model']._get("res.company").id,
             'group_id': cls.env.ref("base.group_public").id,
-            'perm_read': False,
+            'operation': False,
         })
-
-        cls.env['ir.model.access'].create({
+        cls.env['ir.access'].create({
             'name': "read",
-            'model_id': cls.env['ir.model'].search([("model", "=", "res.company")]).id,
+            'model_id': cls.env['ir.model']._get("res.company").id,
             'group_id': cls.env.ref("base.group_portal").id,
-            'perm_read': True,
+            'operation': "r",
         })
-
-        cls.env['ir.model.access'].create({
+        cls.env['ir.access'].create({
             'name': "read",
-            'model_id': cls.env['ir.model'].search([("model", "=", "res.company")]).id,
+            'model_id': cls.env['ir.model']._get("res.company").id,
             'group_id': cls.env.ref("base.group_user").id,
-            'perm_read': True,
+            'operation': "r",
         })
 
         cls.portal_user = new_test_user(
