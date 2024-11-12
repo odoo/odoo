@@ -42,6 +42,7 @@
                                 options="{'no_quick_create': True}" context="{'show_email':True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
                         </div>
                         <field name="subject" placeholder="Welcome to MyCompany!" required="True"/>
+                        <field name="reply_to" invisible="not reply_to" readonly="True"/>
                     </group>
                     <field name="can_edit_body" invisible="1"/>
                     <div invisible="composition_mode == 'mass_mail'">

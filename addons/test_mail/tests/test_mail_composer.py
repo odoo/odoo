@@ -2801,10 +2801,7 @@ class TestComposerResultsMass(TestMailComposer):
                                         fields_values={
                                             'email_from': self.partner_employee_2.email_formatted,
                                             'mail_server_id': self.mail_server_domain,
-                                            'reply_to': formataddr((
-                                                f'{self.env.user.company_id.name} {record.name}',
-                                                f'{self.alias_catchall}@{self.alias_domain}'
-                                            )),
+                                            'reply_to': 'info@test.example.com',
                                             'subject': exp_subject,
                                         },
                                        )
@@ -3211,19 +3208,13 @@ class TestComposerResultsMass(TestMailComposer):
                     'body_content': f'TemplateBody {record.name}',
                     # single email event if email field is multi-email
                     'email_from': formataddr((self.user_employee.name, 'email.from.1@test.example.com')),
-                    'reply_to': formataddr((
-                        f'{self.env.user.company_id.name} {record.name}',
-                        f'{self.alias_catchall}@{self.alias_domain}'
-                    )),
+                    'reply_to': 'info@test.example.com',
                     'subject': f'TemplateSubject {record.name}',
                 },
                 fields_values={
                     # currently holding multi-email 'email_from'
                     'email_from': self.partner_employee.email_formatted,
-                    'reply_to': formataddr((
-                        f'{self.env.user.company_id.name} {record.name}',
-                        f'{self.alias_catchall}@{self.alias_domain}'
-                    )),
+                    'reply_to': 'info@test.example.com',
                 },
                 mail_message=record.message_ids[0],  # message copy is kept
             )
@@ -3253,11 +3244,11 @@ class TestComposerResultsMass(TestMailComposer):
                                 author=self.partner_employee,
                                 email_values={
                                     'email_from': self.partner_employee_2.email_formatted,
-                                    'reply_to': self.partner_employee_2.email_formatted,
+                                    'reply_to': 'info@test.example.com',
                                 },
                                 fields_values={
                                     'email_from': self.partner_employee_2.email_formatted,
-                                    'reply_to': self.partner_employee_2.email_formatted,
+                                    'reply_to': 'info@test.example.com',
                                 },
                                )
 

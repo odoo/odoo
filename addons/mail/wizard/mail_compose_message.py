@@ -1059,7 +1059,7 @@ class MailComposeMessage(models.TransientModel):
         if not self.reply_to_force_new:
             # compute alias-based reply-to in batch
             reply_to_values = RecordsModel.browse(res_ids)._notify_get_reply_to(default=False)
-        if self.reply_to_force_new:
+        if self.reply_to_force_new or self.reply_to:
             reply_to_values = self._render_field('reply_to', res_ids)
 
         # Handle per-record update
@@ -1180,6 +1180,7 @@ class MailComposeMessage(models.TransientModel):
                 'attachment_ids': [attach.id for attach in self.attachment_ids],
                 'body': self.body or '',
                 'email_from': self.email_from,
+                'reply_to': self.reply_to,
                 'partner_ids': self.partner_ids.ids,
                 'scheduled_date': self.scheduled_date,
                 'subject': self.subject or '',
