@@ -18,11 +18,11 @@ const StorePatch = {
             /** @this {import("models").Store} */
             onUpdate() {
                 if (this.ringingThreads.length > 0) {
-                    this.env.services["mail.sound_effects"].play("incoming-call", {
+                    this.env.services["mail.sound_effects"].play("call-invitation", {
                         loop: true,
                     });
                 } else {
-                    this.env.services["mail.sound_effects"].stop("incoming-call");
+                    this.env.services["mail.sound_effects"].stop("call-invitation");
                 }
             },
         });
