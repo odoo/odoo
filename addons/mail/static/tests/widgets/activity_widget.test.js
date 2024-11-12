@@ -253,7 +253,7 @@ test("list activity widget: batch selection from list", async (assert) => {
     // We select 2 among the 3 partners created above and click on the clock of one of them
     await click(".o_list_record_selector .o-checkbox", { target: matildeRow });
     await click(".o_list_record_selector .o-checkbox", { target: marioRow });
-    await contains(".o_list_selection_box", { text: "2 selected" });
+    await contains(".o_selection_box", { text: "2 selected" });
     await click(".o-mail-ActivityButton", { target: matildeRow });
     await contains(".o-mail-ActivityListPopover button", {
         text: "Schedule an activity on selected records",

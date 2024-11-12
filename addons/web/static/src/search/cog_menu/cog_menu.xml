@@ -10,6 +10,7 @@
                     </button>
 
                     <t t-set-slot="content">
+                        <t t-slot="default"/>
                         <t t-if="state.printItems.length">
                             <Dropdown t-if="state.printItems.length > 1">
                                 <button>
