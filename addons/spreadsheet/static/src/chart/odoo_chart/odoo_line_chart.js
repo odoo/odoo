@@ -7,7 +7,7 @@ const { chartRegistry } = registries;
 const {
     getLineChartDatasets,
     CHART_COMMON_OPTIONS,
-    getLineChartLayout,
+    getChartLayout,
     getLineChartScales,
     getLineChartTooltip,
     getChartTitle,
@@ -81,7 +81,7 @@ function createOdooChartRuntime(chart, getters) {
         },
         options: {
             ...CHART_COMMON_OPTIONS,
-            layout: getLineChartLayout(definition),
+            layout: getChartLayout(definition),
             scales: getLineChartScales(definition, chartData),
             plugins: {
                 title: getChartTitle(definition),
