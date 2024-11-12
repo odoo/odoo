@@ -51,7 +51,11 @@ export class CartPage extends Component {
         const type = this.selfOrder.config.self_ordering_mode;
         const takeAway = this.selfOrder.currentOrder.take_away;
 
-        if (this.selfOrder.rpcLoading || !this.selfOrder.verifyCart()) {
+        if (
+            this.selfOrder.rpcLoading ||
+            !this.selfOrder.verifyCart() ||
+            !this.selfOrder.verifyPriceLoading()
+        ) {
             return;
         }
 
