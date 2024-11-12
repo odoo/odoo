@@ -4,7 +4,7 @@ import { Identifier } from "@babel/types";
 import { getBindingPath } from "./binding";
 import { ExtendedEnv } from "./env";
 import { ensureProgramPath } from "./node_path";
-import { areEquivalentUpToHole, ExpressionPattern } from "./pattern";
+import { ExpressionPattern } from "./pattern";
 import { normalizeSource } from "./utils";
 
 export function getLocalIdentifierOfRegistry(
@@ -33,23 +33,6 @@ export function getLocalIdentifierOfRegistry(
         }
     }
     return null;
-}
-
-function isRegistry(path: NodePath, env: ExtendedEnv) {
-    const localPath = getLocalIdentifierOfRegistry(path, env);
-    if (!localPath) {
-        return false;
-    }
-    return _isRegistry(path, localPath);
-}
-
-function _isRegistry(path: NodePath, localPath: NodePath<Identifier>) {
-    if (!path.isIdentifier()) {
-        return false;
-    }
-    if (areEquivalentUpToHole(path, localPath)) {
-        return true;
-    }
 }
 
 const viewRegistryPattern1 = new ExpressionPattern("viewRegistry");
