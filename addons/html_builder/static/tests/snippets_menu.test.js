@@ -12,7 +12,7 @@ import {
     waitFor,
 } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, openSnippetsMenu, setupWebsiteBuilder } from "./helpers";
+import { defineWebsiteModels, openSnippetsMenu, setupWebsiteBuilder, getEditable } from "./helpers";
 
 defineWebsiteModels();
 
@@ -60,19 +60,32 @@ test("navigate between builder tab don't fetch snippet description again", async
 });
 
 test("undo and redo buttons", async () => {
-    const { getEditor } = await setupWebsiteBuilder("<p> Text </p>");
+    const { getEditor } = await setupWebsiteBuilder(getEditable("<p> Text </p>"));
     expect(".o_menu_systray .o-website-btn-custo-primary").toHaveCount(1);
     await openSnippetsMenu();
+    expect(":iframe #wrap").not.toHaveClass("o_dirty");
+    expect(":iframe #wrap").toHaveClass("o_editable");
     const editor = getEditor();
-    setContent(editor.editable, "<p> Text[] </p>");
+    setContent(
+        editor.editable,
+        getEditable(
+            '<div id="wrap" class="o_editable" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch"><p> Text[] </p></div>'
+        )
+    );
     await insertText(editor, "a");
-    expect(editor.editable).toHaveInnerHTML("<p> Texta </p>");
+    expect(editor.editable).toHaveInnerHTML(
+        '<div id="wrap" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch"> <div id="wrap" class="o_editable o_dirty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch"> <p> Texta </p> </div> </div>'
+    );
     await animationFrame();
     await click(".o-snippets-menu button.fa-undo");
     await animationFrame();
-    expect(editor.editable).toHaveInnerHTML("<p> Text </p>");
+    expect(editor.editable).toHaveInnerHTML(
+        '<div id="wrap" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch" class="o_editable"> <p> Text </p> </div>'
+    );
     await click(".o-snippets-menu button.fa-repeat");
-    expect(editor.editable).toHaveInnerHTML("<p> Texta </p>");
+    expect(editor.editable).toHaveInnerHTML(
+        '<div id="wrap" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch"> <div id="wrap" class="o_editable o_dirty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch"> <p> Texta </p> </div> </div>'
+    );
 });
 
 test("display group snippet", async () => {
