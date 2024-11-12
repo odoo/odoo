@@ -146,7 +146,8 @@ export class ColibriApp {
             (fnStr += new Array(indent + 2).join("  ") + txt);
         const applyToSelector = (sel, fn) => {
             if (sel === "_root" || sel === "_body") {
-                addLine(`${fn(sel.slice(1))};\n`);
+                const target = sel === "_root" ? "root" : "document.body";
+                addLine(`${fn(target)};\n`);
             } else {
                 addLine(`for (let node of ${selectors[sel]}) {\n`);
                 addLine(`  ${fn("node")}\n`);
@@ -163,7 +164,7 @@ export class ColibriApp {
         // start function
         fnStr += "\n";
         for (let [sel, event, expr] of handlers) {
-            const nodes = sel === "_root" || sel === "_body" ? `[${sel.slice(1)}]` : selectors[sel];
+            const nodes = sel === "_root" ? "[root]" : (sel === "_body" ? "[document.body]" : selectors[sel]);
             addLine(`framework.addDomListener(${nodes}, \`${event}\`, interaction[\`${expr}\`]);`)
         }
 
