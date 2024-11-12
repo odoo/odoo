@@ -30,6 +30,7 @@
         # QWeb templates
         'views/delivery_form_templates.xml',
         'views/templates.xml',
+        'views/website_sale_templates.xml',
 
         # Model views.
         'views/account_move_views.xml',
