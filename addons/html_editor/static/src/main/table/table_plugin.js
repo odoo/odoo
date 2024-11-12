@@ -66,20 +66,25 @@ export class TablePlugin extends Plugin {
                 },
             },
         ],
+
+        /** Handlers */
+        selectionchange_handlers: this.updateSelectionTable.bind(this),
+        clean_handlers: this.deselectTable.bind(this),
+        clean_for_save_handlers: ({ root }) => this.deselectTable(root),
+        before_line_break_handlers: this.resetTableSelection.bind(this),
+        before_split_block_handlers: this.resetTableSelection.bind(this),
+
+        /** Overrides */
         tab_overrides: withSequence(20, this.handleTab.bind(this)),
         shift_tab_overrides: withSequence(20, this.handleShiftTab.bind(this)),
         delete_range_overrides: this.handleDeleteRange.bind(this),
+        color_apply_overrides: this.applyTableColor.bind(this),
+
         unremovable_node_predicates: isUnremovableTableComponent,
         unsplittable_node_predicates: (node) =>
             node.nodeName === "TABLE" || tableInnerComponents.has(node.nodeName),
-        selectionchange_handlers: this.updateSelectionTable.bind(this),
-        color_apply_overrides: this.applyTableColor.bind(this),
-        clean_handlers: this.deselectTable.bind(this),
-        clean_for_save_handlers: ({ root }) => this.deselectTable(root),
-        traversed_nodes_processors: this.adjustTraversedNodes.bind(this),
         fully_selected_node_predicates: (node) => !!closestElement(node, ".o_selected_td"),
-        before_line_break_handlers: this.resetTableSelection.bind(this),
-        before_split_block_handlers: this.resetTableSelection.bind(this),
+        traversed_nodes_processors: this.adjustTraversedNodes.bind(this),
     };
 
     setup() {

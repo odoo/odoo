@@ -58,6 +58,7 @@ export class ColorPlugin extends Plugin {
             },
         ],
 
+        /** Handlers */
         selectionchange_handlers: this.updateSelectedColor.bind(this),
         remove_format_handlers: this.removeAllColor.bind(this),
     };

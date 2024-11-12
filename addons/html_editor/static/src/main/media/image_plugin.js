@@ -62,8 +62,6 @@ export class ImagePlugin extends Plugin {
                 run: this.transformImage.bind(this),
             },
         ],
-        paste_url_overrides: this.handlePasteUrl.bind(this),
-        selectionchange_handlers: this.onSelectionChange.bind(this),
         toolbar_namespaces: [
             {
                 id: "image",
@@ -75,17 +73,11 @@ export class ImagePlugin extends Plugin {
             },
         ],
         toolbar_groups: [
-            withSequence(23, {
-                id: "image_preview",
-                namespace: "image",
-            }),
+            withSequence(23, { id: "image_preview", namespace: "image" }),
             withSequence(24, { id: "image_description", namespace: "image" }),
             withSequence(25, { id: "image_shape", namespace: "image" }),
             withSequence(26, { id: "image_padding", namespace: "image" }),
-            withSequence(26, {
-                id: "image_size",
-                namespace: "image",
-            }),
+            withSequence(26, { id: "image_size", namespace: "image" }),
             withSequence(26, { id: "image_transform", namespace: "image" }),
             withSequence(30, { id: "image_delete", namespace: "image" }),
         ],
@@ -186,6 +178,8 @@ export class ImagePlugin extends Plugin {
                 commandId: "deleteImage",
             },
         ],
+        selectionchange_handlers: this.onSelectionChange.bind(this),
+        paste_url_overrides: this.handlePasteUrl.bind(this),
     };
 
     setup() {

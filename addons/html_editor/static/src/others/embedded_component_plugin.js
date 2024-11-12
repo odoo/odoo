@@ -9,17 +9,19 @@ export class EmbeddedComponentPlugin extends Plugin {
     static id = "embeddedComponents";
     static dependencies = ["history", "protectedNode"];
     resources = {
-        serializable_descendants_processors: this.processDescendantsToSerialize.bind(this),
-        savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
-        attribute_change_handlers: this.onChangeAttribute.bind(this),
-        attribute_change_processors: this.onChangeAttribute.bind(this),
-        clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
+        /** Handlers */
         normalize_handlers: this.normalize.bind(this),
+        clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
+        attribute_change_handlers: this.onChangeAttribute.bind(this),
         restore_savepoint_handlers: () => this.handleComponents(this.editable),
         history_reset_handlers: () => this.handleComponents(this.editable),
         history_reset_from_steps_handlers: () => this.handleComponents(this.editable),
         step_added_handlers: ({ stepCommonAncestor }) => this.handleComponents(stepCommonAncestor),
         external_step_added_handlers: () => this.handleComponents(this.editable),
+
+        serializable_descendants_processors: this.processDescendantsToSerialize.bind(this),
+        attribute_change_processors: this.onChangeAttribute.bind(this),
+        savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
     };
 
     setup() {

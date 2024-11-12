@@ -109,14 +109,6 @@ export class PowerboxPlugin extends Plugin {
         "updatePowerbox",
     ];
     resources = {
-        hints: {
-            text: _t('Type "/" for commands'),
-            target,
-        },
-        powerbox_categories: [
-            withSequence(10, { id: "structure", name: _t("Structure") }),
-            withSequence(60, { id: "widget", name: _t("Widget") }),
-        ],
         user_commands: {
             id: "openPowerbox",
             run: () =>
@@ -125,11 +117,19 @@ export class PowerboxPlugin extends Plugin {
                     categories: this.getResource("powerbox_categories"),
                 }),
         },
+        powerbox_categories: [
+            withSequence(10, { id: "structure", name: _t("Structure") }),
+            withSequence(60, { id: "widget", name: _t("Widget") }),
+        ],
         power_buttons: withSequence(100, {
             commandId: "openPowerbox",
             title: _t("More options"),
             icon: "fa-ellipsis-v",
         }),
+        hints: {
+            text: _t('Type "/" for commands'),
+            target,
+        },
     };
 
     setup() {

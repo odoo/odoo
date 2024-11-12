@@ -131,10 +131,12 @@ export class FormatPlugin extends Plugin {
                 isDisabled: (sel, nodes) => !this.hasAnyFormat(nodes),
             },
         ],
-        intangible_char_for_keyboard_navigation_predicates: (_, char) => char === "\u200b",
+        /** Handlers */
         beforeinput_handlers: withSequence(20, this.onBeforeInput.bind(this)),
         clean_for_save_handlers: this.cleanForSave.bind(this),
         normalize_handlers: this.normalize.bind(this),
+
+        intangible_char_for_keyboard_navigation_predicates: (_, char) => char === "\u200b",
     };
 
     removeFormat() {

@@ -62,10 +62,6 @@ export class DeletePlugin extends Plugin {
     static id = "delete";
     static shared = ["deleteRange", "deleteSelection", "delete"];
     resources = {
-        beforeinput_handlers: [
-            withSequence(5, this.onBeforeInputInsertText.bind(this)),
-            this.onBeforeInputDelete.bind(this),
-        ],
         user_commands: [
             { id: "deleteBackward", run: () => this.delete("backward", "character") },
             { id: "deleteForward", run: () => this.delete("forward", "character") },
@@ -82,6 +78,12 @@ export class DeletePlugin extends Plugin {
             { hotkey: "control+shift+backspace", commandId: "deleteBackwardLine" },
             { hotkey: "control+shift+delete", commandId: "deleteForwardLine" },
         ],
+        /** Handlers */
+        beforeinput_handlers: [
+            withSequence(5, this.onBeforeInputInsertText.bind(this)),
+            this.onBeforeInputDelete.bind(this),
+        ],
+        /** Overrides */
         delete_backward_overrides: withSequence(30, this.deleteBackwardUnmergeable.bind(this)),
         delete_backward_word_overrides: withSequence(20, this.deleteBackwardUnmergeable.bind(this)),
         delete_backward_line_overrides: this.deleteBackwardUnmergeable.bind(this),

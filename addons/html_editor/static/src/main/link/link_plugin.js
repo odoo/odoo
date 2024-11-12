@@ -129,14 +129,10 @@ export class LinkPlugin extends Plugin {
                 run: this.removeLinkFromSelection.bind(this),
             },
         ],
+
         toolbar_groups: [
-            withSequence(40, {
-                id: "link",
-            }),
-            withSequence(30, {
-                id: "image_link",
-                namespace: "image",
-            }),
+            withSequence(40, { id: "link" }),
+            withSequence(30, { id: "image_link", namespace: "image" }),
         ],
         toolbar_items: [
             {
@@ -176,13 +172,18 @@ export class LinkPlugin extends Plugin {
                 commandId: "toggleLinkTools",
             },
         ],
+
+        power_buttons: { commandId: "toggleLinkTools" },
+
+        /** Handlers */
         beforeinput_handlers: withSequence(5, this.onBeforeInput.bind(this)),
         selectionchange_handlers: this.handleSelectionChange.bind(this),
-        split_element_block_overrides: this.handleSplitBlock.bind(this),
-        insert_line_break_element_overrides: this.handleInsertLineBreak.bind(this),
-        power_buttons: { commandId: "toggleLinkTools" },
         clean_for_save_handlers: ({ root }) => this.removeEmptyLinks(root),
         normalize_handlers: this.normalizeLink.bind(this),
+
+        /** Overrides */
+        split_element_block_overrides: this.handleSplitBlock.bind(this),
+        insert_line_break_element_overrides: this.handleInsertLineBreak.bind(this),
     };
     setup() {
         this.overlay = this.dependencies.overlay.createOverlay(LinkPopover, {}, { sequence: 50 });

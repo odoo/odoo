@@ -62,14 +62,7 @@ export class ListPlugin extends Plugin {
                 run: () => this.toggleListCommand({ mode: "CL" }),
             },
         ],
-        delete_backward_overrides: this.handleDeleteBackward.bind(this),
-        delete_range_overrides: this.handleDeleteRange.bind(this),
-        tab_overrides: this.handleTab.bind(this),
-        shift_tab_overrides: this.handleShiftTab.bind(this),
-        split_element_block_overrides: this.handleSplitBlock.bind(this),
-        toolbar_groups: withSequence(30, {
-            id: "list",
-        }),
+        toolbar_groups: withSequence(30, { id: "list" }),
         toolbar_items: [
             {
                 id: "bulleted_list",
@@ -104,14 +97,24 @@ export class ListPlugin extends Plugin {
                 commandId: "toggleListCL",
             },
         ],
-        hints: [{ selector: "LI", text: _t("List") }],
         power_buttons: [
             { commandId: "toggleListUL" },
             { commandId: "toggleListOL" },
             { commandId: "toggleListCL" },
         ],
+
+        hints: [{ selector: "LI", text: _t("List") }],
+
+        /** Handlers */
         input_handlers: this.onInput.bind(this),
         normalize_handlers: this.normalize.bind(this),
+
+        /** Overrides */
+        delete_backward_overrides: this.handleDeleteBackward.bind(this),
+        delete_range_overrides: this.handleDeleteRange.bind(this),
+        tab_overrides: this.handleTab.bind(this),
+        shift_tab_overrides: this.handleShiftTab.bind(this),
+        split_element_block_overrides: this.handleSplitBlock.bind(this),
     };
 
     setup() {

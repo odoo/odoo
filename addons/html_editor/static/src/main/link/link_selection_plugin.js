@@ -59,14 +59,16 @@ export class LinkSelectionPlugin extends Plugin {
     // TODO ABD: refactor to handle Knowledge comments inside this plugin without sharing padLinkWithZwnbsp.
     static shared = ["padLinkWithZwnbsp"];
     resources = {
-        system_classes: ["o_link_in_selection"],
+        /** Handlers */
         selectionchange_handlers: this.resetLinkInSelection.bind(this),
         clean_handlers: (root) => this.removeFEFFs(root, { preserveSelection: true }),
         clean_for_save_handlers: this.cleanForSave.bind(this),
+        normalize_handlers: (el) => this.normalize(el || this.editable),
+
+        system_classes: ["o_link_in_selection"],
         intangible_char_for_keyboard_navigation_predicates: (ev, char, lastSkipped) =>
             // Skip first FEFF, but not the second one (unless shift is pressed).
             char === "\uFEFF" && (ev.shiftKey || lastSkipped !== "\uFEFF"),
-        normalize_handlers: (el) => this.normalize(el || this.editable),
     };
 
     /**

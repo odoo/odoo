@@ -37,18 +37,23 @@ export class TabulationPlugin extends Plugin {
             { id: "tab", run: this.handleTab.bind(this) },
             { id: "shiftTab", run: this.handleShiftTab.bind(this) },
         ],
-        delete_forward_overrides: this.handleDeleteForward.bind(this),
         shortcuts: [
             { hotkey: "tab", commandId: "tab" },
             { hotkey: "shift+tab", commandId: "shiftTab" },
         ],
-        unsplittable_node_predicates: isEditorTab, // avoid merge
+
+        /** Handlers */
         clean_for_save_handlers: ({ root }) => {
             for (const tab of root.querySelectorAll("span.oe-tabs")) {
                 tab.removeAttribute("contenteditable");
             }
         },
         normalize_handlers: this.normalize.bind(this),
+
+        /** Overrides */
+        delete_forward_overrides: this.handleDeleteForward.bind(this),
+
+        unsplittable_node_predicates: isEditorTab, // avoid merge
     };
 
     handleTab() {
