@@ -40,8 +40,7 @@ export class BusBus extends models.Model {
         const IrWebSocket = this.env["ir.websocket"];
 
         if (event_name === "update_presence") {
-            const { inactivity_period, im_status_ids_by_model } = data;
-            IrWebSocket._update_presence(inactivity_period, im_status_ids_by_model);
+            IrWebSocket._update_presence(data.inactivity_period);
         } else if (event_name === "subscribe") {
             const { channels } = data;
             this.channelsByUser[this.env?.uid] = channels;

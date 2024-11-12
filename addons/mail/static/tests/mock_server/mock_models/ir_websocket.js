@@ -1,42 +1,9 @@
 import { busModels } from "@bus/../tests/bus_test_helpers";
 
-import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
-
 import { makeKwArgs } from "@web/../tests/web_test_helpers";
 import { isIterable } from "@web/core/utils/arrays";
 
 export class IrWebSocket extends busModels.IrWebSocket {
-    /**
-     * @override
-     * @type {typeof busModels.WebSocket["prototype"]["_get_im_status"]}
-     */
-    _im_status_to_store(store, imStatusIdsByModel) {
-        /** @type {import("mock_models").MailGuest} */
-        const MailGuest = this.env["mail.guest"];
-        /** @type {import("mock_models").ResPartner} */
-        const ResPartner = this.env["res.partner"];
-
-        const { "mail.guest": guestIds, "res.partner": partnerIds } = imStatusIdsByModel;
-        if (guestIds) {
-            store.add(
-                "mail.guest",
-                MailGuest.browse(guestIds).map((guest) => ({
-                    id: guest.id,
-                    im_status: guest.im_status,
-                }))
-            );
-        }
-        if (partnerIds) {
-            store.add(
-                "res.partner",
-                ResPartner.browse(partnerIds).map((partner) => ({
-                    id: partner.id,
-                    im_status: partner.im_status,
-                }))
-            );
-        }
-    }
-
     /**
      * @override
      * @type {typeof busModels.IrWebSocket["prototype"]["_build_bus_channel_list"]}
@@ -95,26 +62,5 @@ export class IrWebSocket extends busModels.IrWebSocket {
             }
         }
         return channels;
-    }
-    /**
-     * @param {number} inactivityPeriod
-     * @param {number[]} imStatusIdsByModel
-     */
-    _update_presence(inactivityPeriod, imStatusIdsByModel) {
-        super._update_presence(inactivityPeriod, imStatusIdsByModel);
-
-        /** @type {import("mock_models").BusBus} */
-        const BusBus = this.env["bus.bus"];
-        /** @type {import("mock_models").ResPartner} */
-        const ResPartner = this.env["res.partner"];
-
-        const store = new mailDataHelpers.Store();
-        this._im_status_to_store(store, imStatusIdsByModel);
-        if (Object.keys(store.get_result()).length > 0) {
-            if (this.env.user) {
-                const [partner] = ResPartner.read(this.env.user.partner_id);
-                BusBus._sendone(partner, "mail.record/insert", store.get_result());
-            }
-        }
     }
 }
