@@ -55,6 +55,9 @@ class HrContract(models.Model):
     country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True)
     contract_type_id = fields.Many2one('hr.contract.type', "Contract Type", tracking=True)
     contracts_count = fields.Integer(related='employee_id.contracts_count', groups="hr_contract.group_hr_contract_employee_manager")
+    default_contract_id = fields.Many2one(
+        'hr.contract', string="Contract Template",
+        domain="[('company_id', '=', company_id), ('employee_id', '=', False)]")
 
     """
         kanban_state:
@@ -83,6 +86,18 @@ class HrContract(models.Model):
     def _compute_calendar_mismatch(self):
         for contract in self:
             contract.calendar_mismatch = contract.resource_calendar_id != contract.employee_id.resource_calendar_id
+
+    @api.model
+    def _get_ignored_fields_to_copy(self):
+        return {'id', 'default_contract_id', 'employee_id', 'name', 'date_start', 'date_end', 'state'}
+
+    @api.onchange('default_contract_id')
+    def _onchange_default_contract_id(self):
+        ignored_fields = self._get_ignored_fields_to_copy()
+        if self.default_contract_id:
+            for field in self.default_contract_id._fields:
+                if field not in ignored_fields and not self.env['hr.contract']._fields[field].related:
+                    self[field] = self.default_contract_id[field]
 
     def _get_salary_costs_factor(self):
         self.ensure_one()
@@ -333,6 +348,9 @@ class HrContract(models.Model):
 
         if 'state' in vals and 'kanban_state' not in vals:
             self.write({'kanban_state': 'normal'})
+
+        if 'default_contract_id' in vals:
+            self.message_post(body=_('All fields have been pasted from template [%s].', self.default_contract_id.name))
 
         return res
 
