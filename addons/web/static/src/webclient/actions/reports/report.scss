@@ -230,3 +230,57 @@ span[itemprop="streetAddress"] {
 hr {
     border: 1px solid
 }
+
+.btn {
+    font-weight: #{$btn-font-weight};
+    line-height: #{$btn-line-height};
+    color: #{$btn-color};
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: #{$btn-padding-x} #{$btn-padding-y};
+    font-size: #{$btn-font-size};
+    border-radius: 0.25rem;
+}
+
+// 1. Render buttons defined in '$o-btns-bs-override' and '$o-btns-bs-outline-override'
+//    maps.
+@each $-name, $-value in $o-btns-bs-override {
+    .btn-#{$-name} {
+        background-color: o-safe-get($-value, background);
+        border: 1px solid o-safe-get($-value, border);
+        color: o-safe-get($-value, color);
+    }
+    .btn-fill-#{$-name} {
+        background-color: o-safe-get($-value, background);
+        border: 1px solid o-safe-get($-value, border);
+        color: o-safe-get($-value, color);
+    }
+}
+
+
+@each $-name, $-value in $o-btns-bs-outline-override {
+    .btn-outline-#{$-name} {
+        border: 1px solid o-safe-get($-value, border);
+        color: o-safe-get($-value, color);
+    }
+}
+
+// // 2. Render '$theme-colors' buttons excluding the ones already generated
+//    using the custom maps.
+@each $-name, $-color in $theme-colors {
+    @if (not map-get($o-btns-bs-override, $-name)) {
+        .btn-#{$-name} {
+            background-color: o-color($-name);
+            border: 1px solid o-color($-name);
+            color: o-color($-name);
+        }
+    }
+
+
+    @if (not map-get($o-btns-bs-outline-override, $-name)) {
+        .btn-outline-#{$-name} {
+            border: 1px solid o-color($-name);
+            color: o-color($-name);
+        }
+    }
+}
