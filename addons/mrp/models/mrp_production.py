@@ -1733,12 +1733,7 @@ class MrpProduction(models.Model):
                 if extra_vals:
                     move.move_line_ids.write(extra_vals)
             # workorder duration need to be set to calculate the price of the product
-            for workorder in order.workorder_ids:
-                if workorder.state not in ('done', 'cancel'):
-                    workorder.duration_expected = workorder._get_duration_expected()
-                if workorder.duration == 0.0:
-                    workorder.duration = workorder.duration_expected
-                    workorder.duration_unit = round(workorder.duration / max(workorder.qty_produced, 1), 2)
+            order.workorder_ids._update_duration()
             order._cal_price(moves_to_do_by_order[order.id])
         moves_to_finish = self.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
         moves_to_finish.picked = True

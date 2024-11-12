@@ -876,6 +876,14 @@ class MrpWorkorder(models.Model):
         if self.qty_producing:
             self.qty_producing = quantity
 
+    def _update_duration(self):
+        for workorder in self:
+            if workorder.state not in ('done', 'cancel'):
+                workorder.duration_expected = workorder._get_duration_expected()
+            if workorder.duration == 0.0:
+                workorder.duration = workorder.duration_expected
+                workorder.duration_unit = round(workorder.duration / max(workorder.qty_produced, 1), 2)
+
     def get_working_duration(self):
         """Get the additional duration for 'open times' i.e. productivity lines with no date_end."""
         self.ensure_one()
