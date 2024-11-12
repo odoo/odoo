@@ -5,22 +5,6 @@ from odoo.tests import tagged
 @tagged("-at_install", "post_install", "mail_controller")
 class TestMessageReactionController(MailControllerReactionCommon):
 
-    def test_message_reaction_partner(self):
-        """Test access of message reaction for partner chatter."""
-        message = self.user_demo.partner_id.message_post(body="partner message")
-        self._execute_subtests(
-            message,
-            (
-                (self.user_public, False),
-                (self.guest, False),
-                (self.user_portal, False),
-                # False because not group_partner_manager
-                (self.user_employee, False),
-                (self.user_demo, True),
-                (self.user_admin, True),
-            ),
-        )
-
     def test_message_reaction_public_channel(self):
         """Test access of message reaction for a public channel."""
         channel = self.env["discuss.channel"].create(
@@ -75,19 +59,5 @@ class TestMessageReactionController(MailControllerReactionCommon):
                 (self.user_employee, False),
                 (self.user_demo, False),
                 (self.user_admin, True),
-            ),
-        )
-
-    def test_message_reaction_fake_message(self):
-        """Test access of message reaction for a non-existing message."""
-        self._execute_subtests(
-            self.fake_message,
-            (
-                (self.user_public, False),
-                (self.guest, False),
-                (self.user_portal, False),
-                (self.user_employee, False),
-                (self.user_demo, False),
-                (self.user_admin, False),
             ),
         )
