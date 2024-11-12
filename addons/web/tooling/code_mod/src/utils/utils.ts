@@ -6,7 +6,10 @@ import traverse, { NodePath } from "@babel/traverse";
 import { cloneNode, File } from "@babel/types";
 import { parse, print } from "recast"; // https://github.com/benjamn/recast
 
+import { remove_odoo_module_comment } from "../operations/remove_odoo_module_comment";
+import { view_object_to_controller } from "../operations/view_object_to_controller";
 import { Env, ExtendedEnv } from "./env";
+import { group_imports, remove_unused_imports } from "./imports";
 
 const parser = {
     parse(data: string) {
@@ -186,6 +189,24 @@ export function normalizeSource(source: string, env: ExtendedEnv) {
         source = source.replace(ENTERPRISE_PATH, "@").replace("/static/src/", "/");
     }
     return source;
+}
+
+const OPERATIONS: Record<string, (env: ExtendedEnv) => void> = {
+    view_object_to_controller,
+    remove_odoo_module_comment,
+    group_imports,
+    remove_unused_imports,
+};
+
+export function processOperation(operation: string) {
+    const operations: ((env: ExtendedEnv) => void)[] = [];
+    for (const op of operation.split(",")) {
+        if (!OPERATIONS[op]) {
+            throw new Error(`Operation: ${op} not known`);
+        }
+        operations.push(OPERATIONS[op]);
+    }
+    return operations;
 }
 
 // TO IMPROVE
