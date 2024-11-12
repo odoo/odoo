@@ -171,6 +171,7 @@ class ResPartner(models.Model):
         self._update_peppol_state_per_company(vals=vals)
         return res
 
+    @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
         if res:
