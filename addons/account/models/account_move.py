@@ -3029,6 +3029,19 @@ class AccountMove(models.Model):
             result = [fname for fname in result if fname not in weirdos]
         return result
 
+    @api.model
+    def _get_default_read_fields(self):
+        weirdos = {'needed_terms', 'quick_encoding_vals', 'payment_term_details'}
+        return [fname for fname in self.fields_get(attributes=()) if fname not in weirdos]
+
+    def read(self, fields=None, load='_classic_read'):
+        fields = fields or self._get_default_read_fields()
+        return super().read(fields, load)
+
+    def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None, **read_kwargs):
+        fields = fields or self._get_default_read_fields()
+        return super().search_read(domain, fields, offset, limit, order, **read_kwargs)
+
     def copy_data(self, default=None):
         default = dict(default or {})
         vals_list = super().copy_data(default)

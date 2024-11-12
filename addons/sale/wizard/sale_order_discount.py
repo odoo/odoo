@@ -73,15 +73,15 @@ class SaleOrderDiscount(models.TransientModel):
     def _get_discount_product(self):
         """Return product.product used for discount line"""
         self.ensure_one()
-        discount_product = self.company_id.sale_discount_product_id
+        company = self.company_id
+        discount_product = company.sale_discount_product_id
         if not discount_product:
             if (
                 self.env['product.product'].has_access('create')
-                and self.company_id.has_access('write')
-                and self.company_id._filtered_access('write')
-                and self.company_id.check_field_access_rights('write', ['sale_discount_product_id'])
+                and company.has_access('write')
+                and company._has_field_access(company._fields['sale_discount_product_id'], 'write')
             ):
-                self.company_id.sale_discount_product_id = self.env['product.product'].create(
+                company.sale_discount_product_id = self.env['product.product'].create(
                     self._prepare_discount_product_values()
                 )
             else:
@@ -90,7 +90,7 @@ class SaleOrderDiscount(models.TransientModel):
                     " You can either use a per-line discount, or ask an administrator to grant the"
                     " discount the first time."
                 ))
-            discount_product = self.company_id.sale_discount_product_id
+            discount_product = company.sale_discount_product_id
         return discount_product
 
     def _create_discount_lines(self):

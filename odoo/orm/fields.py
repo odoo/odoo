@@ -23,9 +23,6 @@ if typing.TYPE_CHECKING:
     from .models import BaseModel
 T = typing.TypeVar("T")
 
-# hacky-ish way to prevent access to a field through the ORM (except for sudo mode)
-NO_ACCESS='.'
-
 IR_MODELS = (
     'ir.model', 'ir.model.data', 'ir.model.fields', 'ir.model.fields.selection',
     'ir.model.relation', 'ir.model.constraint', 'ir.module.module',
@@ -905,14 +902,6 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
     def is_editable(self):
         """ Return whether the field can be editable in a view. """
         return not self.readonly
-
-    def is_accessible(self, env):
-        """ Return whether the field is accessible from the given environment. """
-        if not self.groups or env.is_superuser():
-            return True
-        if self.groups == NO_ACCESS:
-            return False
-        return env.user.has_groups(self.groups)
 
     ############################################################################
     #
