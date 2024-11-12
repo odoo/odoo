@@ -168,7 +168,8 @@ export class DiscussCoreCommon {
         if (
             !channel.isCorrespondentOdooBot &&
             channel.channel_type !== "channel" &&
-            this.store.self.type === "partner"
+            this.store.self.type === "partner" &&
+            channel.selfMember
         ) {
             // disabled on non-channel threads and
             // on "channel" channels for performance reasons
