@@ -24,7 +24,7 @@ import {
     setInputRange,
     uncheck,
 } from "@odoo/hoot-dom";
-import { advanceTime, animationFrame, mockTouch, mockUserAgent } from "@odoo/hoot-mock";
+import { advanceTime, animationFrame, mockFetch, mockTouch, mockUserAgent } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import { EventList } from "@web/../lib/hoot-dom/helpers/events";
 import { mountForTest, parseUrl, waitForIframes } from "../local_helpers";
@@ -42,24 +42,15 @@ const formatKeyBoardEvent = (ev) =>
  * @param {(ev: Event) => string} [formatStep]
  */
 const monitorEvents = (target, formatStep) => {
-    const handleEvent = (element, type) => {
-        const passive = type !== "submit";
-        const off = on(
-            element,
-            type,
-            (ev) => {
-                const step = formatStep(ev);
-                if (step) {
-                    expect.step(formatStep(ev));
+    const handleEvent = (element, type) =>
+        after(
+            on(element, type, (ev) => {
+                const formattedStep = formatStep(ev);
+                if (formattedStep) {
+                    expect.step(formattedStep);
                 }
-                if (!passive) {
-                    ev.preventDefault();
-                }
-            },
-            { passive }
+            })
         );
-        after(off);
-    };
 
     formatStep ||= (ev) => `${ev.currentTarget.tagName.toLowerCase()}.${ev.type}`;
 
@@ -1385,6 +1376,52 @@ describe(parseUrl(import.meta.url), () => {
             "form.keydown",
             "form.submit",
             "button.keyup",
+            "form.keyup",
+        ]);
+    });
+
+    test("form submissions are redirected to mocked fetch", async () => {
+        await mountForTest(/* xml */ `
+            <form action="/submit/url" method="POST">
+                <input type="hidden" name="csrf_token" value="CSRF_TOKEN_VALUE" />
+                <input type="text" name="name" />
+                <input type="number" name="experience" />
+                <input type="file" name="picture" />
+            </form>
+        `);
+
+        mockFetch((url, { body, method }) => {
+            expect.step(new URL(url).pathname);
+
+            expect(method).toBe("post");
+            expect(body).toBeInstanceOf(FormData);
+            expect(body.get("csrf_token")).toBe("CSRF_TOKEN_VALUE");
+            expect(body.get("name")).toBe("Pierre");
+            expect(body.get("experience")).toBe("3");
+            expect(body.get("picture").name).toBe("/picture_128.png");
+        });
+
+        await click("[name=name]");
+        await fill("Pierre");
+
+        await press("tab");
+        await fill(3);
+
+        await press("tab");
+        await setInputFiles(new File([], "/picture_128.png"));
+
+        expect.verifySteps([]);
+
+        monitorEvents("form");
+
+        // Trigger submit
+        await press("enter");
+
+        expect.verifySteps([
+            "form.keydown",
+            "form.submit",
+            "form.formdata",
+            "/submit/url",
             "form.keyup",
         ]);
     });
