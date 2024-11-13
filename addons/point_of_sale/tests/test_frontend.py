@@ -1533,6 +1533,22 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_admin).open_ui()
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PosCategoriesOrder', login="pos_admin")
 
+    def test_autofill_cash_count(self):
+        """Make sure that when the decimal separator is a comma, the shown orderline price is correct.
+        """
+        lang = self.env['res.lang'].search([('code', '=', self.pos_user.lang)])
+        lang.write({'thousands_sep': '.', 'decimal_point': ','})
+        self.env["product.product"].create(
+            {
+                "available_in_pos": True,
+                "list_price": 123456,
+                "name": "Test Expensive",
+                "taxes_id": False
+            }
+        )
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, "AutofillCashCount", login="pos_user")
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
