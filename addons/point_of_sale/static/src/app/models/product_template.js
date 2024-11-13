@@ -191,7 +191,7 @@ export class ProductTemplate extends Base {
     }
 
     get searchString() {
-        const fields = ["display_name", "description_sale", "description", "default_code"];
+        const fields = ["display_name", "description_sale", "description"];
         return fields
             .map((field) => this[field] || "")
             .filter(Boolean)
