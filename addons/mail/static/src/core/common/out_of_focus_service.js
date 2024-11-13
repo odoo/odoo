@@ -51,10 +51,11 @@ export class OutOfFocusService {
                 notificationTitle = author.name;
             }
         }
-        const notificationContent = htmlToTextContentInline(message.body).substring(
-            0,
-            PREVIEW_MSG_MAX_SIZE
-        );
+        const messageBodyText =
+            message.isBodyEmpty && !message.isEmpty && message.attachment_ids.length > 0
+                ? message.messagePreviewText
+                : htmlToTextContentInline(message.body);
+        const notificationContent = messageBodyText.substring(0, PREVIEW_MSG_MAX_SIZE);
         this.sendNotification({
             message: notificationContent,
             sound: message.thread?.model === "discuss.channel",

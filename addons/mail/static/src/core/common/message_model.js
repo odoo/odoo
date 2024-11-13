@@ -365,6 +365,47 @@ export class Message extends Record {
         );
     }
 
+    get messagePreviewText() {
+        if (!(this.isBodyEmpty && this.attachment_ids.length) || this.subtype_description) {
+            return this.inlineBody || this.subtype_description;
+        }
+        const { attachment_ids: attachments } = this;
+        if (!attachments || attachments.length === 0) return "";
+
+        const attachmentName =
+            attachments[0].mimetype === "audio/mpeg" && attachments[0].voice
+                ? _t("Voice Message")
+                : attachments[0].name || "";
+
+        switch (attachments.length) {
+            case 1:
+                return attachmentName;
+            case 2:
+                return _t("%(attachmentname)s and %(count)s other attachment.", {
+                    attachmentname: attachmentName,
+                    count: attachments.length - 1,
+                });
+            default:
+                return _t("%(attachmentname)s and %(count)s other attachments.", {
+                    attachmentname: attachmentName,
+                    count: attachments.length - 1,
+                });
+        }
+    }
+
+    get messagePreviewIcon() {
+        const { attachment_ids: attachments } = this;
+        if (!attachments || attachments.length === 0) return "";
+        const { isImage, isVideo, mimetype, voice } = attachments[0];
+
+        return (
+            (isImage && "fa-picture-o") ||
+            (mimetype === "audio/mpeg" && (voice ? "fa-microphone" : "fa-headphones")) ||
+            (isVideo && "fa-video-camera") ||
+            "fa-file"
+        );
+    }
+
     /** @param {import("models").Thread} thread the thread where the message is shown */
     canAddReaction(thread) {
         return Boolean(!this.is_transient && this.thread);

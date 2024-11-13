@@ -921,6 +921,113 @@ test("preview should display last needaction message preview even if there is a 
     });
 });
 
+test("should display attachment name with correct icon when message contains only an attachment", async () => {
+    /*
+        |-----------------------|--------------------|
+        | Attachment Type       | Icon Class         |
+        |-----------------------|--------------------|
+        | Audio message         | 'fa-microphone'    |
+        | Image attachment      | 'fa-picture-o'     |
+        | Audio attachment      | 'fa-headphones'    |
+        | Video message         | 'fa-video-camera'  |
+        | File attachment       | 'fa-file'          |
+        |-----------------------|--------------------|
+    */
+
+    const pyEnv = await startServer();
+    const partners = pyEnv["res.partner"].create(
+        Array.from({ length: 5 }, (_, i) => ({ name: `Partner${i + 1}` }))
+    );
+    const channelIds = pyEnv["discuss.channel"].create(
+        Array.from({ length: 5 }, (_, i) => ({ name: `test${i + 1}` }))
+    );
+
+    const attachments = [
+        {
+            mimetype: "audio/mpeg",
+            name: "voicemessage",
+            icon: "fa-microphone",
+            text: "Voice Message",
+            voice_ids: [Command.create({ display_name: "voicemessage" })],
+        },
+        { mimetype: "video/mp4", name: "Video.mp4", icon: "fa-video-camera", text: "Video.mp4" },
+        { mimetype: "application/pdf", name: "File.pdf", icon: "fa-file", text: "File.pdf" },
+        { mimetype: "image/jpeg", name: "Image.jpeg", icon: "fa-picture-o", text: "Image.jpeg" },
+        { mimetype: "audio/mpeg", name: "Audio.mp3", icon: "fa-headphones", text: "Audio.mp3" },
+    ];
+
+    pyEnv["mail.message"].create(
+        attachments.map((attachment, i) => ({
+            attachment_ids: [
+                Command.create({
+                    mimetype: attachment.mimetype,
+                    name: attachment.name,
+                    res_id: channelIds[i],
+                    res_model: "discuss.channel",
+                    voice_ids: attachment.voice_ids || [],
+                }),
+            ],
+            author_id: partners[i],
+            body: "",
+            model: "discuss.channel",
+            res_id: channelIds[i],
+        }))
+    );
+
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+
+    for (const [index, attachment] of attachments.entries()) {
+        await contains(
+            `.o-mail-NotificationItem:nth-child(${index + 1}) .o-mail-NotificationItem-text`,
+            { text: `Partner${index + 1}: ${attachment.text}` }
+        );
+        await contains(
+            `.o-mail-NotificationItem:nth-child(${index + 1}) .o-mail-NotificationItem-text i.${
+                attachment.icon
+            }`,
+            { count: 1 }
+        );
+    }
+});
+
+test("should display the name of the first attachment when more than 1 attachment is uploaded at once", async () => {
+    const pyEnv = await startServer();
+    const partner1 = pyEnv["res.partner"].create({ name: "Partner" });
+    const channel1 = pyEnv["discuss.channel"].create({ name: "test" });
+    pyEnv["mail.message"].create({
+        attachment_ids: [
+            Command.create({
+                mimetype: "application/pdf",
+                name: "File.pdf",
+                res_id: channel1,
+                res_model: "discuss.channel",
+            }),
+            Command.create({
+                mimetype: "image/jpeg",
+                name: "Image.jpeg",
+                res_id: channel1,
+                res_model: "discuss.channel",
+            }),
+            Command.create({
+                mimetype: "video/mp4",
+                name: "Video.mp4",
+                res_id: channel1,
+                res_model: "discuss.channel",
+            }),
+        ],
+        author_id: partner1,
+        body: "",
+        model: "discuss.channel",
+        res_id: channel1,
+    });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await contains(".o-mail-NotificationItem-text", {
+        text: "Partner: File.pdf and 2 other attachments.",
+    });
+});
+
 test("single preview for channel if it has unread and needaction messages", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Partner1" });

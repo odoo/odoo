@@ -3970,6 +3970,24 @@ class MailThread(models.AbstractModel):
         else:
             icon = '/web/static/img/odoo-icon-192x192.png'
 
+        if not body and not message.body and message.attachment_ids:
+            total_attachments = len(message.attachment_ids)
+            first_attachment = message.attachment_ids[0]
+            first_attachment_label = _('Voice message') if first_attachment.voice_ids else first_attachment.name
+
+            if total_attachments == 1:
+                body = first_attachment_label
+            else:
+                body = self.env._(
+                    "%(attachment_name)s and %(count)d other attachment.",
+                    attachment_name=first_attachment_label,
+                    count=total_attachments - 1,
+                ) if total_attachments == 2 else self.env._(
+                    "%(attachment_name)s and %(count)d other attachments.",
+                    attachment_name=first_attachment_label,
+                    count=total_attachments - 1,
+                )
+
         return {
             'title': title,
             'options': {
