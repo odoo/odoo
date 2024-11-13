@@ -869,6 +869,8 @@ export class PosStore extends Reactive {
             this.hasJustAddedProduct = false;
         }, 3000);
 
+        this.addPendingOrder([order.id]);
+
         // FIXME: If merged with another line, this returned object is useless.
         return line;
     }
