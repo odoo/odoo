@@ -15,10 +15,24 @@ patch(PaymentScreen.prototype, {
         return super.nextScreen;
     },
     async afterOrderValidation(suggestToSync = true) {
+        // Delete orders from the original table if it has been merged with another table
+        const orderToDelete = [];
+        const changedTables = [];
+        let tables = this.currentOrder?.table_id?.children || [];
+        while (tables.length) {
+            const orders = tables
+                .map((t) => t["<-pos.order.table_id"].filter((o) => !o.finalized))
+                .flat();
+
+            orderToDelete.push(...orders);
+            changedTables.push(...tables);
+            tables = tables.flatMap((table) => table.children);
+        }
+        if (orderToDelete.length) {
+            await this.pos.deleteOrders(orderToDelete);
+        }
+
         // After the order has been validated the tables have no reason to be merged anymore.
-        const changedTables = this.pos.models["restaurant.table"]?.filter(
-            (t) => t.parent_id && t.parent_id.id === this.currentOrder.table_id?.id
-        );
         if (changedTables?.length) {
             for (const table of changedTables) {
                 this.pos.data.write("restaurant.table", [table.id], { parent_id: null });
