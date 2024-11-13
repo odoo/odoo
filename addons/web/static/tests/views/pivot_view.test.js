@@ -3767,3 +3767,19 @@ test("middle clicking on a cell triggers a doAction", async () => {
     expect("table").toHaveClass("o_enable_linking");
     await contains(".o_pivot_cell_value:eq(1)").click({ ctrlKey: true }); // should trigger a do_action
 });
+
+test("display '0' for empty int field values in grouped pivot view", async () => {
+    Partner._records[0].foo = false;
+
+    await mountView({
+        type: "pivot",
+        resModel: "partner",
+        arch: `
+            <pivot o_enable_linking="1">
+                <field name="foo" type="row"/>
+            </pivot>`,
+        groupBy: ["foo"],
+    });
+
+    expect(queryAllTexts("tbody th")).toEqual(["Total", "1", "2", "17", "0"]);
+});

@@ -848,11 +848,11 @@ export class ListRenderer extends Component {
 
     getGroupDisplayName(group) {
         if (group.groupByField.type === "boolean") {
-            return group.value === undefined ? _t("None") : group.value ? _t("Yes") : _t("No");
+            return group.value ? _t("Yes") : _t("No");
+        } else if (group.groupByField.type === "integer") {
+            return group.displayName || "0";
         } else {
-            return group.value === undefined || group.value === false
-                ? _t("None")
-                : group.displayName;
+            return group.displayName || _t("None");
         }
     }
 
