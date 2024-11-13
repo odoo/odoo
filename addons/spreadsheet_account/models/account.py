@@ -81,6 +81,7 @@ class AccountAccount(models.Model):
             )
         return domain
 
+    @api.readonly
     @api.model
     def spreadsheet_move_line_action(self, args):
         domain = self._build_spreadsheet_formula_domain(args)
@@ -94,6 +95,7 @@ class AccountAccount(models.Model):
             "name": _("Journal items for account prefix %s", ", ".join(args["codes"])),
         }
 
+    @api.readonly
     @api.model
     def spreadsheet_fetch_debit_credit(self, args_list):
         """Fetch data for ODOO.CREDIT, ODOO.DEBIT and ODOO.BALANCE formulas
@@ -118,6 +120,7 @@ class AccountAccount(models.Model):
 
         return results
 
+    @api.readonly
     @api.model
     def get_account_group(self, account_types):
         data = self._read_group(

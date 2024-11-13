@@ -6,6 +6,7 @@ from odoo.tools import date_utils
 class ResCompany(models.Model):
     _inherit = "res.company"
 
+    @api.readonly
     @api.model
     def get_fiscal_dates(self, payload):
         companies = self.env["res.company"].browse(
