@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+    <record id="event_registration_ticket_view_form" model="ir.ui.view">
+        <field name="name">event.registration.form.inherit</field>
+        <field name="model">event.registration</field>
+        <field name="inherit_id" ref="event_product.event_registration_ticket_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_pos_order" type="object"
+                        class="oe_stat_button" icon="fa-usd"
+                        groups="point_of_sale.group_pos_user"
+                        invisible="not pos_order_id">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">PoS Order</span>
+                        </div>
+                </button>
+            </xpath>
+            <group name="transaction" position="inside">
+                <field name="pos_order_id" invisible="not pos_order_id" />
+            </group>
+        </field>
+    </record>
+</data></odoo>

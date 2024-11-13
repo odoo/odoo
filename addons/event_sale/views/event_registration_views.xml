@@ -9,29 +9,13 @@
             <field name="event_id" position="after">
                 <field name="sale_order_id" optional="hide"/>
             </field>
-            <field name="state" position="after">
-                <field name="sale_status" optional="show" widget="badge"
-                    decoration-success="sale_status == 'sold'"
-                    decoration-danger="sale_status == 'to_pay'"/>
-            </field>
-        </field>
-    </record>
-
-    <record id="event_registration_view_graph" model="ir.ui.view">
-        <field name="name">event.registration.graph.inherit.event.sale</field>
-        <field name="model">event.registration</field>
-        <field name="inherit_id" ref="event.view_event_registration_graph"/>
-        <field name="arch" type="xml">
-            <field name="event_id" position="after">
-                <field name="sale_status"/>
-            </field>
         </field>
     </record>
 
     <record id="event_registration_ticket_view_form" model="ir.ui.view">
         <field name="name">event.registration.form.inherit</field>
         <field name="model">event.registration</field>
-        <field name="inherit_id" ref="event.view_event_registration_form" />
+        <field name="inherit_id" ref="event_product.event_registration_ticket_view_form" />
         <field name="arch" type="xml">
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button name="action_view_sale_order" type="object"
@@ -42,20 +26,10 @@
                             <span class="o_stat_text">Sale Order</span>
                         </div>
                 </button>
-                <field name="sale_order_id" invisible="1"/>
             </xpath>
-            <xpath expr="//group" position="before">
-                <field name="sale_status" invisible="1"/>
-                <widget name="web_ribbon" title="Sold" bg_color="text-bg-success"
-                    invisible="sale_status != 'sold'"/>
-                <widget name="web_ribbon" title="Not Sold" bg_color="text-bg-info"
-                    invisible="sale_status in ('sold', 'free') or not id"/>
-            </xpath>
-            <group name="utm_link" position="before">
-                <group string="Transaction" groups="base.group_no_one">
-                    <field name="sale_order_id"/>
-                    <field name="sale_order_line_id" readonly="1" invisible="not sale_order_id"/>
-                </group>
+            <group name="transaction" position="inside">
+                <field name="sale_order_id"/>
+                <field name="sale_order_line_id" readonly="1" invisible="not sale_order_id"/>
             </group>
         </field>
     </record>
