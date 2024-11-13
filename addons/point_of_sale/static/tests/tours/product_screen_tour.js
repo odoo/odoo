@@ -392,3 +392,24 @@ registry.category("web_tour.tours").add("PosCategoriesOrder", {
             },
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("AutofillCashCount", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Test Expensive"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+            ProductScreen.isShown(),
+            Chrome.clickMenuOption("Close Register"),
+            {
+                trigger: ".fa-clone.btn-secondary",
+                run: "click",
+            },
+            ProductScreen.cashDifferenceIs(0),
+        ].flat(),
+});

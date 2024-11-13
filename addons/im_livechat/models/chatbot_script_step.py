@@ -372,7 +372,7 @@ class ChatbotScriptStep(models.Model):
         if fields is None:
             fields = ["answer_ids", "message", "type"]
         for step in self:
-            data = self._read_format(
+            data = step._read_format(
                 [f for f in fields if f not in {"answer_ids", "message", "type"}], load=False
             )[0]
             if "answer_ids" in fields:

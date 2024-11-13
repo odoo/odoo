@@ -114,7 +114,7 @@ export class PaymentScreen extends Component {
         if (
             paymentMethod.type === "pay_later" &&
             (!this.currentOrder.to_invoice ||
-                this.pos.data["ir.module.module"].find((m) => m.name === "pos_settle_due")
+                this.pos.models["ir.module.module"].find((m) => m.name === "pos_settle_due")
                     ?.state !== "installed")
         ) {
             this.notification.add(
