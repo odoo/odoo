@@ -4157,6 +4157,7 @@ class TestMrpOrder(TestMrpCommon):
     def test_batch_production_02(self):
         """ Test the wizard mrp.batch.produce with a single tracked serial.
         """
+        self.env['stock.picking.type'].search([('code', '=', 'mrp_operation')]).use_create_components_lots = True
         self.product_1.tracking = 'serial'
         self.product_4.tracking = 'serial'
         self.product_4.uom_id = self.uom_unit
@@ -4196,6 +4197,7 @@ class TestMrpOrder(TestMrpCommon):
     def test_batch_production_03(self):
         """ Test the wizard mrp.batch.produce with a mix of lot and serial.
         """
+        self.env['stock.picking.type'].search([('code', '=', 'mrp_operation')]).use_create_components_lots = True
         self.product_1.tracking = 'serial'
         self.product_2.tracking = 'lot'
         self.product_4.tracking = 'serial'
