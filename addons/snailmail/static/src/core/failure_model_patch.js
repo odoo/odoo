@@ -11,7 +11,7 @@ patch(Failure.prototype, {
     },
     get body() {
         if (this.type === "snail") {
-            return _t("An error occurred when sending a letter with Snailmail.");
+            return { text: _t("An error occurred when sending a letter with Snailmail.") };
         }
         return super.body;
     },

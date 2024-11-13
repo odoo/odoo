@@ -30,7 +30,10 @@
                 <div class="d-flex">
                     <div class="o-mail-NotificationItem-text text-truncate opacity-75" t-att-class="{ 'fw-bold': !props.muted }">
                         <t t-slot="body-icon"/>
-                        <t t-if="props.body" t-esc="props.body" name="notificationBody"/>
+                        <t t-if="props.body" name="notificationBody">
+                            <i t-if="props.body.icon" class="me-1 fa fa-fw" t-att-class="props.body.icon"/>
+                            <t t-out="props.body.text" />
+                        </t>
                     </div>
                     <div class="flex-grow-1"/>
                     <div class="d-flex align-items-center">

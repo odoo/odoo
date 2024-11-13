@@ -77,7 +77,7 @@ patch(MessagingMenu.prototype, {
     },
     get installationRequest() {
         return {
-            body: _t("Come here often? Install Odoo on your device!"),
+            body: { text: _t("Come here often? Install Odoo on your device!") },
             displayName: _t("%s has a suggestion", this.store.odoobot.name),
             onClick: () => {
                 this.pwa.show();
