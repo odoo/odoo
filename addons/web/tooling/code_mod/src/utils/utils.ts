@@ -8,7 +8,7 @@ import { parse, print } from "recast"; // https://github.com/benjamn/recast
 
 import { remove_odoo_module_comment } from "../operations/remove_odoo_module_comment";
 import { view_object_to_controller } from "../operations/view_object_to_controller";
-import { Env, ExtendedEnv } from "./env";
+import { PartialEnv, Env } from "./env";
 import { group_imports, remove_unused_imports } from "./imports";
 import { getProgramPath } from "./node_path";
 
@@ -106,8 +106,8 @@ export function isXmlFile(filePath: string) {
 
 export function executeOnJsFilesInDir(
     dirPath: string,
-    env: Env,
-    operation: (env: ExtendedEnv) => void,
+    env: PartialEnv,
+    operation: (env: Env) => void,
 ) {
     const fsDir = opendirSync(dirPath);
     let fsDirent;
@@ -134,7 +134,7 @@ export const ODOO_PATH = "/home/odoo/src/odoo/";
 export const ENTERPRISE_PATH = "/home/odoo/src/enterprise/";
 
 const regex = /@(\w+)(\/.*)/;
-export function toAbsolutePath(odooPath: string, env: ExtendedEnv) {
+export function toAbsolutePath(odooPath: string, env: Env) {
     const match = odooPath.match(regex);
     if (match) {
         const [, addonName, tail] = match;
@@ -166,7 +166,7 @@ export function toAbsolutePath(odooPath: string, env: ExtendedEnv) {
 
 export function getAbsolutePathFromImportDeclaration(
     declarationPath: NodePath<ImportDeclaration>,
-    env: ExtendedEnv,
+    env: Env,
 ): string {
     let absolutePath = toAbsolutePath(declarationPath.node.source.value, env);
     if (!absolutePath.endsWith(".js")) {
@@ -176,7 +176,7 @@ export function getAbsolutePathFromImportDeclaration(
 }
 
 // TO IMPROVE
-export function normalizeSource(source: string, env: ExtendedEnv) {
+export function normalizeSource(source: string, env: Env) {
     if (source.startsWith("@")) {
         return source;
     }
@@ -191,7 +191,11 @@ export function normalizeSource(source: string, env: ExtendedEnv) {
     return source;
 }
 
-const OPERATIONS: Record<string, (env: ExtendedEnv) => void> = {
+/**
+ * EXECUTE
+ */
+
+const OPERATIONS: Record<string, (env: Env) => void> = {
     view_object_to_controller,
     remove_odoo_module_comment,
     group_imports,
@@ -199,7 +203,7 @@ const OPERATIONS: Record<string, (env: ExtendedEnv) => void> = {
 };
 
 export function processOperation(operation: string) {
-    const operations: ((env: ExtendedEnv) => void)[] = [];
+    const operations: ((env: Env) => void)[] = [];
     for (const op of operation.split(",")) {
         if (!OPERATIONS[op]) {
             throw new Error(`Operation: ${op} not known`);
@@ -222,7 +226,7 @@ export function processAddonsPath(addonsPath: string) {
 const SEP =
     "\n=====================================================================================================\n";
 export function execute(
-    operations: ((env: ExtendedEnv) => void)[],
+    operations: ((env: Env) => void)[],
     directoriesToProcess: string[],
     write = false,
 ) {

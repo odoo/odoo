@@ -1,7 +1,7 @@
 import { NodePath } from "@babel/traverse";
 import * as t from "@babel/types";
 
-import { ExtendedEnv } from "../utils/env";
+import { Env } from "../utils/env";
 import { addImports, getNormalizedNode, removeUnusedImports } from "../utils/imports";
 import {
     ensureProgramPath,
@@ -9,7 +9,6 @@ import {
     getDeclarationPath,
     getDefinitionFor,
     getObjectPropertyPath,
-    getProgramPath,
     getProgramPathFrom,
 } from "../utils/node_path";
 import { DeclarationPattern, ExpressionPattern } from "../utils/pattern";
@@ -21,7 +20,7 @@ import { isJsFile, normalizeSource } from "../utils/utils";
 function getClassPropertyForProps(
     path: NodePath<t.ArrowFunctionExpression | t.FunctionExpression | t.ObjectMethod>,
     declarations: t.ImportDeclaration[],
-    env: ExtendedEnv,
+    env: Env,
 ) {
     // remove view param
     const params = [...path.node.params];
@@ -58,7 +57,7 @@ function getClassPropertyForProps(
 function copyKeys(
     objectPath: NodePath<t.ObjectExpression>,
     targetPath: NodePath<t.ClassDeclaration | t.ClassExpression>,
-    env: ExtendedEnv,
+    env: Env,
 ) {
     const body = targetPath.node.body.body;
     let someThingCopied = false;
@@ -113,11 +112,9 @@ function copyKeys(
     return { someThingCopied, declarations };
 }
 
-const addPattern2Args = new ExpressionPattern("__target.add(__key, __added)");
-const addPattern3Args = new ExpressionPattern("__target.add(__key, __added, __y)");
 const declarationPattern = new DeclarationPattern("const __id = __def");
 
-function getViewDef(path: NodePath, env: ExtendedEnv): NodePath<t.ObjectExpression> | null {
+function getViewDef(path: NodePath, env: Env): NodePath<t.ObjectExpression> | null {
     if (path.isObjectExpression()) {
         return path;
     }
@@ -141,7 +138,7 @@ function getViewDef(path: NodePath, env: ExtendedEnv): NodePath<t.ObjectExpressi
 function createController(
     viewDef: NodePath<t.ObjectExpression>,
     controllerValuePath: NodePath<t.Identifier>,
-    env: ExtendedEnv,
+    env: Env,
 ) {
     const id = viewDef.scope.generateUidIdentifier("Controller");
     const newControllerDeclaration = t.classDeclaration(
@@ -160,7 +157,7 @@ function createController(
 
 // use recursivity
 
-function getImportForController(id: NodePath<t.Identifier>, env: ExtendedEnv) {
+function getImportForController(id: NodePath<t.Identifier>, env: Env) {
     const d = getDefinitionFor(id, env);
     if (d) {
         const s = normalizeSource(d.inFilePath, { ...env, inFilePath: d.inFilePath });
@@ -170,15 +167,19 @@ function getImportForController(id: NodePath<t.Identifier>, env: ExtendedEnv) {
     return null;
 }
 
-function processView(viewDef: NodePath<t.ObjectExpression>, env: ExtendedEnv) {
+function processView(viewDef: NodePath<t.ObjectExpression>, env: Env) {
     const controllerValuePath = getObjectPropertyPath(viewDef, "Controller");
     if (!controllerValuePath) {
         // view is maybe an extension
-        const spreadElement = viewDef.get("properties").find((p) => p.isSpreadElement());
-        if (spreadElement) {
-            const arg = spreadElement.get("argument");
+        const spreadElements = viewDef.get("properties").filter((p) => p.isSpreadElement());
+        if (spreadElements.length === 1) {
+            const arg = spreadElements[0].get("argument");
             if (arg.isIdentifier()) {
                 const definition = getDefinitionFor(arg, env);
+                if (definition?.path && definition.inFilePath !== env.inFilePath) {
+                    view_object_to_controller({ ...env, inFilePath: definition.inFilePath });
+                    debugger
+                }
                 let controllerValuePath: NodePath<unknown> | null = null;
 
                 if (definition?.path && definition.path.isVariableDeclarator()) {
@@ -228,7 +229,9 @@ function processView(viewDef: NodePath<t.ObjectExpression>, env: ExtendedEnv) {
     return null;
 }
 
-function viewObjectToController(path: NodePath | null, env: ExtendedEnv) {
+const addPattern2Args = new ExpressionPattern("__target.add(__key, __added)");
+const addPattern3Args = new ExpressionPattern("__target.add(__key, __added, __y)");
+function viewObjectToController(path: NodePath | null, env: Env) {
     const programPath = ensureProgramPath(path);
     if (!programPath) {
         return null;
@@ -267,7 +270,7 @@ function viewObjectToController(path: NodePath | null, env: ExtendedEnv) {
     });
 }
 
-export function view_object_to_controller(env: ExtendedEnv) {
+export function view_object_to_controller(env: Env) {
     if (!isJsFile(env.inFilePath)) {
         return;
     }

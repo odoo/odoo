@@ -2,14 +2,14 @@ import { NodePath } from "@babel/traverse";
 import { Identifier } from "@babel/types";
 
 import { getBindingPath } from "./binding";
-import { ExtendedEnv } from "./env";
+import { Env } from "./env";
 import { ensureProgramPath } from "./node_path";
 import { ExpressionPattern } from "./pattern";
 import { normalizeSource } from "./utils";
 
 export function getLocalIdentifierOfRegistry(
     path: NodePath | null,
-    env: ExtendedEnv,
+    env: Env,
 ): NodePath<Identifier> | null {
     const programPath = ensureProgramPath(path);
     if (!programPath) {

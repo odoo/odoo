@@ -1,6 +1,6 @@
 import { writeFileSync } from "fs";
 
-import { ExtendedEnv } from "../utils/env";
+import { Env } from "../utils/env";
 import { getFileContent, isJsFile } from "../utils/utils";
 
 export function removeOdooModuleCommentFromFileContent(fileContent: string) {
@@ -11,7 +11,7 @@ export function removeOdooModuleCommentFromFileContent(fileContent: string) {
     return { fileContent: fileContent.slice(match[1].length), changed: true };
 }
 
-export function remove_odoo_module_comment(env: ExtendedEnv) {
+export function remove_odoo_module_comment(env: Env) {
     const { inFilePath: filePath } = env;
     if (!isJsFile(filePath)) {
         return;

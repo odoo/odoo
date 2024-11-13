@@ -12,7 +12,7 @@ import {
 } from "@babel/types";
 
 import { getBinding, getBindingPath } from "./binding";
-import { ExtendedEnv } from "./env";
+import { Env } from "./env";
 import { getAbsolutePathFromImportDeclaration } from "./utils";
 
 export function getPath(ast: Node | null): NodePath | null {
@@ -47,7 +47,7 @@ export function getProgramPath(ast: Node | null): NodePath<Program> | null {
     return ensureProgramPath(getPath(ast));
 }
 
-export function getProgramPathFrom(env: ExtendedEnv) {
+export function getProgramPathFrom(env: Env) {
     const ast = env.getAST(env.inFilePath);
     return getProgramPath(ast);
 }
@@ -86,7 +86,7 @@ export function getDeclarationPath(id: NodePath<Identifier>): NodePath<Declarati
 
 export function getDefinitionFor(
     identifier: NodePath<Identifier>,
-    env: ExtendedEnv,
+    env: Env,
 ): { path: NodePath; inFilePath: string } | null {
     const binding = getBinding(identifier);
     if (!binding) {

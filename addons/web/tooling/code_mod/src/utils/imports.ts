@@ -1,12 +1,12 @@
 import { NodePath } from "@babel/traverse";
 import { cloneNode, ImportDeclaration, Program } from "@babel/types";
 
-import { ExtendedEnv } from "./env";
-import { ensureProgramPath, getProgramPath, getProgramPathFrom } from "./node_path";
+import { Env } from "./env";
+import { ensureProgramPath, getProgramPathFrom } from "./node_path";
 import { areEquivalentUpToHole } from "./pattern";
 import { isJsFile, normalizeSource } from "./utils";
 
-function addImport(programPath: NodePath<Program>, imp: ImportDeclaration, env: ExtendedEnv) {
+function addImport(programPath: NodePath<Program>, imp: ImportDeclaration, env: Env) {
     const source = normalizeSource(imp.source.value, env);
     for (const p of programPath.get("body")) {
         if (!p.isImportDeclaration()) {
@@ -27,7 +27,7 @@ function addImport(programPath: NodePath<Program>, imp: ImportDeclaration, env: 
     programPath.node.body.unshift(imp);
 }
 
-export function addImports(path: NodePath | null, imports: ImportDeclaration[], env: ExtendedEnv) {
+export function addImports(path: NodePath | null, imports: ImportDeclaration[], env: Env) {
     if (!imports.length) {
         return;
     }
@@ -41,13 +41,13 @@ export function addImports(path: NodePath | null, imports: ImportDeclaration[], 
     env.tagAsModified(env.inFilePath);
 }
 
-export function getNormalizedNode(declarationPath: NodePath<ImportDeclaration>, env: ExtendedEnv) {
+export function getNormalizedNode(declarationPath: NodePath<ImportDeclaration>, env: Env) {
     const n = cloneNode(declarationPath.node);
     n.source.value = normalizeSource(n.source.value, env);
     return n;
 }
 
-export function normalizeImport(declarationPath: NodePath<ImportDeclaration>, env: ExtendedEnv) {
+export function normalizeImport(declarationPath: NodePath<ImportDeclaration>, env: Env) {
     const s = normalizeSource(declarationPath.node.source.value, env);
     if (s !== declarationPath.node.source.value) {
         declarationPath.node.source.value = s;
@@ -55,7 +55,7 @@ export function normalizeImport(declarationPath: NodePath<ImportDeclaration>, en
     }
 }
 
-export function normalizeImports(path: NodePath | null, env: ExtendedEnv) {
+export function normalizeImports(path: NodePath | null, env: Env) {
     const programPath = ensureProgramPath(path);
     if (!programPath) {
         return;
@@ -68,7 +68,7 @@ export function normalizeImports(path: NodePath | null, env: ExtendedEnv) {
     });
 }
 
-export function removeUnusedImports(path: NodePath | null, env: ExtendedEnv) {
+export function removeUnusedImports(path: NodePath | null, env: Env) {
     const programPath = ensureProgramPath(path);
     if (!programPath) {
         return;
@@ -109,7 +109,7 @@ export function removeUnusedImports(path: NodePath | null, env: ExtendedEnv) {
     });
 }
 
-export function groupImports(path: NodePath | null, env: ExtendedEnv) {
+export function groupImports(path: NodePath | null, env: Env) {
     const programPath = ensureProgramPath(path);
     if (!programPath) {
         return;
@@ -143,7 +143,7 @@ export function groupImports(path: NodePath | null, env: ExtendedEnv) {
     }
 }
 
-function putImportsOnTop(path: NodePath | null, env: ExtendedEnv) {
+function putImportsOnTop(path: NodePath | null, env: Env) {
     const programPath = ensureProgramPath(path);
     if (!programPath) {
         return;
@@ -161,21 +161,21 @@ function putImportsOnTop(path: NodePath | null, env: ExtendedEnv) {
     env.tagAsModified(env.inFilePath);
 }
 
-export function put_imports_on_top(env: ExtendedEnv) {
+export function put_imports_on_top(env: Env) {
     if (!isJsFile(env.inFilePath)) {
         return;
     }
     putImportsOnTop(getProgramPathFrom(env), env);
 }
 
-export function group_imports(env: ExtendedEnv) {
+export function group_imports(env: Env) {
     if (!isJsFile(env.inFilePath)) {
         return;
     }
     groupImports(getProgramPathFrom(env), env);
 }
 
-export function remove_unused_imports(env: ExtendedEnv) {
+export function remove_unused_imports(env: Env) {
     if (!isJsFile(env.inFilePath)) {
         return;
     }
