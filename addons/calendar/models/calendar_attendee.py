@@ -86,6 +86,8 @@ class Attendee(models.Model):
             partners -= self.env.user.partner_id
             mapped_followers[partners] |= event
         for partners, events in mapped_followers.items():
+            if not partners:
+                continue
             events.message_subscribe(partner_ids=partners.ids)
 
     def _unsubscribe_partner(self):
