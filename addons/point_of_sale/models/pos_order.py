@@ -1388,7 +1388,7 @@ class PosOrderLine(models.Model):
             filtered(lambda q: float_compare(q.quantity, 0, precision_rounding=q.product_id.uom_id.rounding) > 0).\
             mapped('lot_id')
 
-        return available_lots.read(['id', 'name'])
+        return available_lots.read(['id', 'name', 'product_qty'])
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_order_state(self):
