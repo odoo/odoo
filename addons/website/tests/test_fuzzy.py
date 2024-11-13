@@ -162,7 +162,7 @@ class TestAutoComplete(TransactionCase):
 
     def _check_highlight(self, term, value):
         """ Verifies if a term is highlighted in a value """
-        self.assertTrue(f'<span class="text-primary">{term}</span>' in value.lower(),
+        self.assertTrue(f'<span class="text-primary text-primary-emphasis">{term}</span>' in value.lower(),
                         "Term must be highlighted")
 
     def test_01_few_results(self):
