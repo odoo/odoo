@@ -2248,7 +2248,7 @@ class TestBoM(TestMrpCommon):
         })
         operation = self.env['mrp.routing.workcenter'].create({
             'name': 'Operation',
-            'workcenter_id': self.env.ref('mrp.mrp_workcenter_1').id,
+            'workcenter_id': mrp_workcenter_1.id,
             'bom_id': bom.id,
         })
         bom.bom_line_ids.operation_id = operation
