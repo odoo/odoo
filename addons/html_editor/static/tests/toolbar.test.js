@@ -354,6 +354,46 @@ test("toolbar should not open on keypress tab inside table", async () => {
     expect(".o-we-toolbar").toHaveCount(0);
 });
 
+test("toolbar open on single selected cell in table", async () => {
+    const contentBefore = unformat(`
+        <table class="table table-bordered o_table">
+            <tbody>
+                <tr>
+                    <td><p>[]<br></p></td>
+                    <td><p><br></p></td>
+                </tr>
+                <tr>
+                    <td><p><br></p></td>
+                    <td><p><br></p></td>
+                </tr>
+            </tbody>
+        </table>
+    `);
+
+    const { el } = await setupEditor(contentBefore);
+    const targetTd = el.querySelector("td");
+    const mouseDownPositionX = targetTd.getBoundingClientRect().left + 10;
+    const mouseDownPositionY = targetTd.getBoundingClientRect().top + 10;
+    const mouseMoveDiff = 40;
+    manuallyDispatchProgrammaticEvent(targetTd, "mousedown", {
+        clientX: mouseDownPositionX,
+        clientY: mouseDownPositionY,
+    });
+    // Simulate mousemove horizontally for 40px.
+    manuallyDispatchProgrammaticEvent(targetTd, "mousemove", {
+        clientX: mouseDownPositionX + mouseMoveDiff,
+        clientY: mouseDownPositionY,
+    });
+    manuallyDispatchProgrammaticEvent(targetTd, "mouseup", {
+        clientX: mouseDownPositionX + mouseMoveDiff,
+        clientY: mouseDownPositionY,
+    });
+    await animationFrame();
+    await tick();
+    expect(targetTd).toHaveClass("o_selected_td");
+    expect(".o-we-toolbar").toHaveCount(1);
+});
+
 test.tags("desktop");
 test("toolbar should close on keypress tab inside table", async () => {
     const contentBefore = unformat(`
