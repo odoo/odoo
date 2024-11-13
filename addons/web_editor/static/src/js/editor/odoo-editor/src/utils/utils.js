@@ -1669,7 +1669,7 @@ export function isUnbreakable(node) {
                 node.getAttribute('t-out') ||
                 node.getAttribute('t-raw')) ||
                 node.getAttribute('t-field')) ||
-        node.classList.contains('oe_unbreakable')
+        node.matches(".oe_unbreakable, a.btn, a[role='tab'], a[role='button']")
     );
 }
 
