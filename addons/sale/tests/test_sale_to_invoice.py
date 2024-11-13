@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch
+
 from odoo import fields
 from odoo.fields import Command
 from odoo.tests import Form, tagged
@@ -1082,3 +1084,74 @@ class TestSaleToInvoice(TestSaleCommon):
         self.assertEqual(inv.invoice_line_ids[1].name, f"{so.order_line[1].name}", "When the description is the product name, the invoice line name should only be the description")
         self.assertEqual(inv.invoice_line_ids[2].name, f"{so.order_line[2].name}", "When description contains the product name, the invoice line name should only be the description")
         self.assertEqual(inv.invoice_line_ids[3].name, f"{so.order_line[3].product_id.display_name} {so.order_line[3].name}", "When the product name contains the description, the invoice line name should contain the product name and the description")
+
+    def test_credit_note_automatic_matching(self):
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.company_data['product_service_delivery'].id,
+                }),
+            ],
+        })
+        sale_order.action_confirm()
+
+        sale_order.order_line.qty_delivered = 1
+
+        invoice = sale_order._create_invoices()
+        invoice.action_post()
+
+        sale_order.order_line.qty_delivered = 0
+
+        with patch.object(self.env.registry['account.move'], '_refunds_origin_required', lambda move: True):
+            wizard_context = {
+                'active_model': 'sale.order',
+                'active_id': sale_order.id,
+            }
+            credit_note = self.env['sale.advance.payment.inv'].with_context(wizard_context).create({})._create_invoices(sale_order)
+        credit_note.action_post()
+
+        self.assertEqual(credit_note.reversed_entry_id.id, invoice.id)
+
+    def test_credit_note_no_automatic_matching(self):
+        product = self.company_data['product_service_delivery']
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+        })
+        sale_line1 = self.env['sale.order.line'].create({
+            'product_id': product.id,
+            'product_uom_qty': 1,
+            'price_unit': 200.0,
+            'order_id': sale_order.id,
+        })
+        sale_line2 = self.env['sale.order.line'].create({
+            'product_id': product.id,
+            'product_uom_qty': 1,
+            'price_unit': 100.0,
+            'order_id': sale_order.id,
+        })
+        sale_order.action_confirm()
+
+        sale_line1.qty_delivered = 1
+
+        invoice = sale_order._create_invoices()
+        invoice.action_post()
+
+        sale_line2.qty_delivered = 1
+        sale_line1.qty_delivered = 0
+
+        with patch.object(self.env.registry['account.move'], '_refunds_origin_required', lambda move: True):
+            wizard_context = {
+                'active_model': 'sale.order',
+                'active_id': sale_order.id,
+            }
+            credit_note = self.env['sale.advance.payment.inv'].with_context(wizard_context).create({})._create_invoices(sale_order)
+        credit_note.action_post()
+
+        # The invoice contains one invoice line
+        self.assertEqual(len(invoice.invoice_line_ids), 1)
+        # the credit note contains 2
+        self.assertEqual(len(credit_note.invoice_line_ids), 2)
+        # so the credit note cannot be considered a reversal of the invoice
+        self.assertFalse(credit_note.reversed_entry_id)
