@@ -267,5 +267,15 @@ registry.category("web_tour.tours").add("LotTour", {
             inLeftSide({
                 trigger: ".info-list:contains('SN 3')",
             }),
+
+            // Verify if the serial number can be reused for the current order
+            Chrome.createFloatingOrder(),
+            ProductScreen.clickDisplayedProduct("Product A"),
+            ProductScreen.enterLastLotNumber("5"),
+            ProductScreen.clickDisplayedProduct("Product A"),
+            ProductScreen.enterLastLotNumber("3"),
+            inLeftSide({
+                trigger: ".info-list:not(:contains('SN 3'))",
+            }),
         ].flat(),
 });
