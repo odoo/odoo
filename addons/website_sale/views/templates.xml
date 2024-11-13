@@ -2291,7 +2291,7 @@
             >
                 <!-- We don't allow public users to have multiple delivery addresses. -->
                 <t t-if="is_invoice">
-                    <t t-set="new_address_href" t-valuef="/shop/address?address_type=billing"/>
+                    <t t-set="new_address_href" t-valuef="/shop/address?address_type=billing&amp;use_delivery_as_billing={{use_delivery_as_billing}}"/>
                 </t>
                 <t t-else="">
                     <t
