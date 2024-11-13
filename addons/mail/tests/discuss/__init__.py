@@ -12,8 +12,8 @@ from . import test_discuss_channel_member
 from . import test_discuss_message_update_controller
 from . import test_discuss_sub_channels
 from . import test_discuss_thread_controller
-from . import test_guest_feature
 from . import test_message_controller
+from . import test_guest_feature
 from . import test_toggle_upload
 from . import test_load_messages
 from . import test_rtc

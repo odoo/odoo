@@ -1,14 +1,10 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-import odoo
-from odoo.addons.mail.tests.test_thread_controller import (
-    MessagePostSubTestData,
-    TestThreadControllerCommon,
-)
+from odoo.addons.mail.tests.common_controllers import MailControllerThreadCommon, MessagePostSubTestData
+from odoo.tests import tagged
 
 
-@odoo.tests.tagged("-at_install", "post_install")
-class TestDiscussThreadController(TestThreadControllerCommon):
+@tagged("-at_install", "post_install", "mail_controller")
+class TestDiscussThreadController(MailControllerThreadCommon):
+
     def test_internal_channel_message_post_access(self):
         """Test access of message_post on internal channel."""
         channel = self.env["discuss.channel"].create({"name": "Internal Channel"})

@@ -3,7 +3,7 @@
 
 from odoo import exceptions, tools
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.addons.mail.tests.mail_tracking_duration_mixin_case import MailTrackingDurationMixinCase
+from odoo.addons.mail.tests.common_tracking import MailTrackingDurationMixinCase
 from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.tests.common import tagged, users
 from odoo.tools import mute_logger
@@ -14,7 +14,7 @@ class TestMailTrackingDurationMixin(MailTrackingDurationMixinCase):
 
     @classmethod
     def setUpClass(cls):
-        super().setUpClass('mail.test.mail.tracking.duration')
+        super().setUpClass('mail.test.track.duration.mixin')
 
     def test_mail_tracking_duration(self):
         self._test_record_duration_tracking()
