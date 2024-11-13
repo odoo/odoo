@@ -1,16 +1,17 @@
-import { opendirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { opendirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
 import { parse as babelParser, ParseResult } from "@babel/parser";
 import { NodePath } from "@babel/traverse";
-import { cloneNode, File, ImportDeclaration, Program } from "@babel/types";
+import { cloneNode, File, Program } from "@babel/types";
 import { parse, print } from "recast"; // https://github.com/benjamn/recast
 
 import { remove_odoo_module_comment } from "../operations/remove_odoo_module_comment";
 import { view_object_to_controller } from "../operations/view_object_to_controller";
-import { PartialEnv, Env } from "./env";
+import { Env, PartialEnv } from "./env";
 import { group_imports, remove_unused_imports } from "./imports";
 import { getProgramPath } from "./node_path";
+import { ODOO_PATH } from "./file_path";
 
 const parser = {
     parse(data: string) {
@@ -96,14 +97,6 @@ export function makeGetAST() {
     };
 }
 
-export function isJsFile(filePath: string) {
-    return path.extname(filePath) === ".js";
-}
-
-export function isXmlFile(filePath: string) {
-    return path.extname(filePath) === ".xml";
-}
-
 export function executeOnJsFilesInDir(
     dirPath: string,
     env: PartialEnv,
@@ -126,74 +119,6 @@ export function executeOnJsFilesInDir(
     }
     fsDir.closeSync();
 }
-
-export type AbsolutPath = string; // of the form /a/b/c.js (normalized)
-export type OdooPath = string; // of the form @web/a/b/c (normalized)
-
-export const ODOO_PATH = "/home/odoo/src/odoo/";
-export const ENTERPRISE_PATH = "/home/odoo/src/enterprise/";
-
-const regex = /@(\w+)(\/.*)/;
-export function toAbsolutePath(odooPath: string, env: Env) {
-    const match = odooPath.match(regex);
-    if (match) {
-        const [, addonName, tail] = match;
-        let prefix;
-        try {
-            const p = path.join(ODOO_PATH, "addons", addonName);
-            const s = statSync(p);
-            if (s.isDirectory()) {
-                prefix = p;
-            }
-        } catch {
-            try {
-                const p = path.join(ENTERPRISE_PATH, addonName);
-                const s = statSync(p);
-                if (s.isDirectory()) {
-                    prefix = p;
-                }
-            } catch {
-                // wrong odooPath?
-            }
-        }
-        if (prefix) {
-            return path.normalize(path.join(prefix, "/static/src/", tail));
-        }
-    }
-    const dirname = path.dirname(env.filePath);
-    return path.resolve(dirname, odooPath);
-}
-
-export function getAbsolutePathFromImportDeclaration(
-    declarationPath: NodePath<ImportDeclaration>,
-    env: Env,
-): string {
-    let absolutePath = toAbsolutePath(declarationPath.node.source.value, env);
-    if (!absolutePath.endsWith(".js")) {
-        absolutePath += ".js";
-    }
-    return absolutePath;
-}
-
-// TO IMPROVE
-export function normalizeSource(source: string, env: Env) {
-    if (source.startsWith("@")) {
-        return source;
-    }
-    const dir = path.dirname(env.filePath);
-    source = path.resolve(dir, source);
-    const p = path.join(ODOO_PATH, "addons/");
-    if (source.startsWith(p)) {
-        source = source.replace(p, "@").replace("/static/src/", "/");
-    } else if (source.startsWith(ENTERPRISE_PATH)) {
-        source = source.replace(ENTERPRISE_PATH, "@").replace("/static/src/", "/");
-    }
-    return source;
-}
-
-/**
- * EXECUTE
- */
 
 const OPERATIONS: Record<string, (env: Env) => void> = {
     view_object_to_controller,

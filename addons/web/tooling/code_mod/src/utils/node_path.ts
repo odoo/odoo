@@ -13,7 +13,7 @@ import {
 
 import { getBinding, getBindingPath } from "./binding";
 import { Env } from "./env";
-import { getAbsolutePathFromImportDeclaration } from "./utils";
+import { getAbsolutePathFromImportDeclaration } from "./file_path";
 
 export function getPath(ast: Node | null): NodePath | null {
     if (!ast) {

@@ -3,9 +3,9 @@ import { Identifier } from "@babel/types";
 
 import { getBindingPath } from "./binding";
 import { Env } from "./env";
+import { normalizeSource } from "./file_path";
 import { ensureProgramPath } from "./node_path";
 import { ExpressionPattern } from "./pattern";
-import { normalizeSource } from "./utils";
 
 export function getLocalIdentifierOfRegistry(
     path: NodePath | null,

@@ -1,7 +1,7 @@
 import { NodePath } from "@babel/traverse";
 import * as t from "@babel/types";
 
-import { actionOnJsFile } from "../utils/decorators";
+import { toActionOnJsFile } from "../utils/decorators";
 import { Env } from "../utils/env";
 import { addImports, getNormalizedNode, removeUnusedImports } from "../utils/imports";
 import {
@@ -13,7 +13,7 @@ import {
 } from "../utils/node_path";
 import { DeclarationPattern, ExpressionPattern } from "../utils/pattern";
 import { getLocalIdentifierOfRegistry, isViewRegistry } from "../utils/registry";
-import { normalizeSource } from "../utils/utils";
+import { normalizeSource } from "../utils/file_path";
 
 // for ast descriptions see https://github.com/babel/babel/blob/master/packages/babel-parser/ast/spec.md
 
@@ -155,8 +155,6 @@ function createController(
     return newControllerDeclarationPath.get("id") as NodePath<t.Identifier>;
 }
 
-// use recursivity
-
 function getImportForController(id: NodePath<t.Identifier>, env: Env) {
     const d = getDefinitionFor(id, env);
     if (d) {
@@ -228,20 +226,36 @@ function processView(viewDef: NodePath<t.ObjectExpression>, env: Env) {
     return null;
 }
 
+function processViewPath(viewPath: NodePath, env: Env) {
+    const viewDef = getViewDef(viewPath, env);
+    if (viewDef?.isClassDeclaration || viewDef?.isClassExpression) {
+        return true;
+    }
+    if (viewDef?.isObjectExpression()) {
+        const controllerValuePath = processView(viewDef, env);
+        if (controllerValuePath) {
+            viewPath.replaceWith(controllerValuePath);
+            return true;
+        }
+    }
+    return false;
+}
+
 const addPattern2Args = new ExpressionPattern("__target.add(__key, __added)");
 const addPattern3Args = new ExpressionPattern("__target.add(__key, __added, __y)");
-function viewObjectToController(path: NodePath | null, env: Env): void {
+function getViewRegistryElementPaths(path: NodePath | null, env: Env) {
     const programPath = ensureProgramPath(path);
     if (!programPath) {
-        return;
+        return [];
     }
     const localPath = getLocalIdentifierOfRegistry(programPath, env);
     if (!localPath) {
-        return;
+        return [];
     }
+    const viewPaths: NodePath[] = [];
     programPath.traverse({
         CallExpression(path) {
-            const { __target, __added, __key } =
+            const { __target, __added } =
                 addPattern2Args.detect(path) || addPattern3Args.detect(path) || {};
             if (!__target || !__added || __target instanceof Array || __added instanceof Array) {
                 return;
@@ -249,24 +263,25 @@ function viewObjectToController(path: NodePath | null, env: Env): void {
             if (!isViewRegistry(__target)) {
                 return;
             }
-            const viewDef = getViewDef(__added, env);
-            if (viewDef && viewDef.isObjectExpression()) {
-                const controllerValuePath = processView(viewDef, env);
-                if (controllerValuePath) {
-                    __added.replaceWith(controllerValuePath);
-                    env.cleaning.add(() => removeUnusedImports(path, env));
-                    return;
-                }
-            }
-            if (__key instanceof Array) {
-                return;
-            }
-            console.log(
-                `Not changed in (${env.filePath}): `,
-                __key.isStringLiteral() ? __key.node.value : "non identifier key",
-            );
+            viewPaths.push(__added);
         },
     });
+    return viewPaths;
 }
 
-export const view_object_to_controller = actionOnJsFile(viewObjectToController);
+function viewObjectToController(path: NodePath | null, env: Env): void {
+    const viewPaths = getViewRegistryElementPaths(path, env);
+    let logUnprocessed = false;
+    for (const viewPath of viewPaths) {
+        const sucess = processViewPath(viewPath, env);
+        if (!sucess) {
+            logUnprocessed = true;
+        }
+    }
+    env.cleaning.add(() => removeUnusedImports(path, env));
+    if (logUnprocessed) {
+        console.log(`Unprocessed views in ${env.filePath}`);
+    }
+}
+
+export const view_object_to_controller = toActionOnJsFile(viewObjectToController);

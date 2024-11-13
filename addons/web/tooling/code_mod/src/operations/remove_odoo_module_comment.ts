@@ -1,7 +1,8 @@
 import { writeFileSync } from "fs";
 
 import { Env } from "../utils/env";
-import { getFileContent, isJsFile } from "../utils/utils";
+import { isJsFile } from "../utils/file_path";
+import { getFileContent } from "../utils/utils";
 
 export function removeOdooModuleCommentFromFileContent(fileContent: string) {
     const match = fileContent.match(/^(\n*[^\n]+@odoo-module([^\n]+)\n+)/); // improve regex

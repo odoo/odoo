@@ -1,11 +1,11 @@
 import { NodePath } from "@babel/traverse";
 import { cloneNode, ImportDeclaration, Program } from "@babel/types";
 
-import { actionOnJsFile } from "./decorators";
+import { toActionOnJsFile } from "./decorators";
 import { Env } from "./env";
+import { normalizeSource } from "./file_path";
 import { ensureProgramPath } from "./node_path";
 import { areEquivalentUpToHole } from "./pattern";
-import { normalizeSource } from "./utils";
 
 function addImport(programPath: NodePath<Program>, imp: ImportDeclaration, env: Env) {
     const source = normalizeSource(imp.source.value, env);
@@ -162,6 +162,6 @@ function putImportsOnTop(path: NodePath | null, env: Env) {
     env.tagAsModified(env.filePath);
 }
 
-export const put_imports_on_top = actionOnJsFile(putImportsOnTop);
-export const group_imports = actionOnJsFile(groupImports);
-export const remove_unused_imports = actionOnJsFile(removeUnusedImports);
+export const put_imports_on_top = toActionOnJsFile(putImportsOnTop);
+export const group_imports = toActionOnJsFile(groupImports);
+export const remove_unused_imports = toActionOnJsFile(removeUnusedImports);
