@@ -105,6 +105,42 @@ const $writeText = $clipboard?.writeText.bind($clipboard);
 //-----------------------------------------------------------------------------
 
 /**
+ * Returns the constructor of the given value, and if it is "Object": tries to
+ * infer the actual constructor name from the string representation of the object.
+ *
+ * This is needed for cursed JavaScript objects such as "Arguments", which is an
+ * array-like object without a proper constructor.
+ *
+ * @param {any} value
+ */
+const getConstructor = (value) => {
+    const { constructor } = value;
+    if (constructor !== Object) {
+        return constructor;
+    }
+    const str = value.toString();
+    const match = str.match(R_OBJECT);
+    if (!match || match[1] === "Object") {
+        return constructor;
+    }
+
+    // Custom constructor
+    const className = match[1];
+    if (!objectConstructors.has(className)) {
+        objectConstructors.set(
+            className,
+            class {
+                static name = className;
+                constructor(...values) {
+                    Object.assign(this, ...values);
+                }
+            }
+        );
+    }
+    return objectConstructors.get(className);
+};
+
+/**
  * @param {(...args: any[]) => any} fn
  */
 const getFunctionString = (fn) => {
@@ -187,8 +223,9 @@ const _formatHumanReadable = (value, length) => {
                 humanReadableValue = hValue;
                 length += hValue.length;
             } else {
+                const constructor = getConstructor(value);
                 const constructorPrefix =
-                    value.constructor.name === "Array" ? "" : `${value.constructor.name} `;
+                    constructor.name === "Array" ? "" : `${constructor.name} `;
                 const content = [];
                 if (values.length) {
                     const bitSize = $max(
@@ -209,10 +246,10 @@ const _formatHumanReadable = (value, length) => {
             }
         } else {
             const keys = $keys(value);
-            const constructorPrefix =
-                value.constructor.name === "Object" ? "" : `${value.constructor.name} `;
+            const constructor = getConstructor(value);
+            const constructorPrefix = constructor.name === "Object" ? "" : `${constructor.name} `;
             const content = [];
-            if (value.constructor.name !== "Window" && keys.length) {
+            if (constructor.name !== "Window" && keys.length) {
                 const bitSize = $max(
                     MIN_HUMAN_READABLE_SIZE,
                     $floor(MAX_HUMAN_READABLE_SIZE / keys.length)
@@ -255,11 +292,12 @@ const R_ASYNC_FUNCTION = /^\s*async/;
 const R_CLASS = /^[A-Z][a-z]/;
 const R_NAMED_FUNCTION = /^\s*(async\s+)?function/;
 const R_INVISIBLE_CHARACTERS = /[\u00a0\u200b-\u200d\ufeff]/g;
-const R_OBJECT = /^\[object \w+\]$/;
+const R_OBJECT = /^\[object ([\w-]+)\]$/;
 
 const dmp = new DiffMatchPatch();
 const { DIFF_INSERT, DIFF_DELETE } = DiffMatchPatch;
 
+const objectConstructors = new Map();
 const windowTarget = {
     addEventListener: window.addEventListener.bind(window),
     removeEventListener: window.removeEventListener.bind(window),
@@ -423,6 +461,7 @@ export function deepCopy(value) {
             return "<anonymous function>";
         }
     }
+
     if (typeof value === "object" && !Markup.isMarkup(value)) {
         if (value instanceof String || value instanceof Number || value instanceof Boolean) {
             return value;
@@ -430,20 +469,16 @@ export function deepCopy(value) {
         if (isNode(value)) {
             // Nodes
             return value.cloneNode(true);
-        } else if (isIterable(value)) {
-            // Iterables
-            const copy = [...value].map(deepCopy);
-            if (value instanceof Set || value instanceof Map) {
-                return new value.constructor(copy);
-            } else {
-                return copy;
-            }
         } else if (value instanceof Date) {
             // Dates
-            return new value.constructor(value);
+            return new (getConstructor(value))(value);
+        } else if (isIterable(value)) {
+            // Iterables
+            const values = [...value].map(deepCopy);
+            return $isArray(value) ? values : new (getConstructor(value))(values);
         } else {
             // Other objects
-            return $fromEntries($entries(value).map(([key, value]) => [key, deepCopy(value)]));
+            return $fromEntries($ownKeys(value).map((key) => [key, deepCopy(value[key])]));
         }
     }
     return value;
@@ -641,6 +676,7 @@ export function formatTechnical(
             cache.add(value);
             const startIndent = " ".repeat((depth + 1) * 2);
             const endIndent = " ".repeat(depth * 2);
+            const constructor = getConstructor(value);
             if (value instanceof RegExp || value instanceof Error) {
                 return `${baseIndent}${value.toString()}`;
             } else if (value instanceof Date) {
@@ -648,8 +684,7 @@ export function formatTechnical(
             } else if (isNode(value)) {
                 return `<${toSelector(value)} />`;
             } else if (isIterable(value)) {
-                const proto =
-                    value.constructor.name === "Array" ? "" : `${value.constructor.name} `;
+                const proto = constructor.name === "Array" ? "" : `${constructor.name} `;
                 const content = [...value].map(
                     (val) =>
                         `${startIndent}${formatTechnical(val, {
@@ -662,13 +697,12 @@ export function formatTechnical(
                     content.length ? `\n${content.join("")}${endIndent}` : ""
                 }]`;
             } else {
-                const proto =
-                    value.constructor.name === "Object" ? "" : `${value.constructor.name} `;
-                const content = $entries(value)
-                    .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
+                const proto = constructor.name === "Object" ? "" : `${constructor.name} `;
+                const content = $ownKeys(value)
+                    .sort()
                     .map(
-                        ([k, v]) =>
-                            `${startIndent}${k}: ${formatTechnical(v, {
+                        (key) =>
+                            `${startIndent}${key}: ${formatTechnical(value[key], {
                                 cache,
                                 depth: depth + 1,
                                 isObjectValue: true,
@@ -800,7 +834,7 @@ export function getTypeOf(value) {
             if (value instanceof RegExp) {
                 return "regex";
             }
-            if (Array.isArray(value)) {
+            if ($isArray(value)) {
                 const types = [...value].map(getTypeOf);
                 const arrayType = new Set(types).size === 1 ? types[0] : "any";
                 if (arrayType.endsWith("[]")) {
@@ -1012,7 +1046,7 @@ export function match(value, ...matchers) {
         }
         let strValue = String(value);
         if (R_OBJECT.test(strValue)) {
-            strValue = value.constructor.name;
+            strValue = getConstructor(value).name;
         }
         if (matcher instanceof RegExp) {
             return matcher.test(strValue);
