@@ -38,6 +38,7 @@ export function getLocalIdentifierOfRegistry(
 const viewRegistryPattern1 = new ExpressionPattern("viewRegistry");
 const viewRegistryPattern2 = new ExpressionPattern("registry.category('views')");
 
+/** heuristic */
 export function isViewRegistry(path: NodePath) {
     if (!path.isExpression()) {
         return false;

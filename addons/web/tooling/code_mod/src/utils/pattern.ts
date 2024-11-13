@@ -128,7 +128,7 @@ class Pattern {
         const holes: Record<string, null | NodePath | NodePath[]> = Object.fromEntries(
             [...this._holes].map((name) => [name, null]),
         );
-        const equivalentUpToHoles = areEquivalentUpToHole(this._ast, path.node, holes); // we should get paths here if possible -> refactor
+        const equivalentUpToHoles = areEquivalentUpToHole(this._ast, path.node, holes);
         if (equivalentUpToHoles) {
             const values: Record<string, NodePath | NodePath[]> = {};
             for (const name in holes) {

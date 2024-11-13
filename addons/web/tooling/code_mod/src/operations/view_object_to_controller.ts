@@ -128,7 +128,7 @@ function getViewDef(path: NodePath, env: Env): NodePath<t.ObjectExpression> | nu
             return null;
         }
         if (__viewDef.isObjectExpression()) {
-            env.cleaning.add(() => declarationPath.remove());
+            env.cleanups.add(() => declarationPath.remove());
             return __viewDef;
         }
     }
@@ -227,8 +227,9 @@ function processView(viewDef: NodePath<t.ObjectExpression>, env: Env) {
 }
 
 function processViewPath(viewPath: NodePath, env: Env) {
+    debugger
     const viewDef = getViewDef(viewPath, env);
-    if (viewDef?.isClassDeclaration || viewDef?.isClassExpression) {
+    if (viewDef?.isClassDeclaration() || viewDef?.isClassExpression()) {
         return true;
     }
     if (viewDef?.isObjectExpression()) {
@@ -278,7 +279,7 @@ function viewObjectToController(path: NodePath | null, env: Env): void {
             logUnprocessed = true;
         }
     }
-    env.cleaning.add(() => removeUnusedImports(path, env));
+    env.cleanups.add(() => removeUnusedImports(path, env));
     if (logUnprocessed) {
         console.log(`Unprocessed views in ${env.filePath}`);
     }

@@ -1,4 +1,4 @@
-import traverse, { NodePath } from "@babel/traverse";
+import { NodePath } from "@babel/traverse";
 import {
     ClassDeclaration,
     ClassExpression,
@@ -6,7 +6,6 @@ import {
     Identifier,
     ImportDeclaration,
     isIdentifier,
-    Node,
     ObjectExpression,
     Program,
 } from "@babel/types";
@@ -14,24 +13,6 @@ import {
 import { getBinding, getBindingPath } from "./binding";
 import { Env } from "./env";
 import { getAbsolutePathFromImportDeclaration } from "./file_path";
-
-export function getPath(ast: Node | null): NodePath | null {
-    if (!ast) {
-        return null;
-    }
-    let path = null;
-    try {
-        traverse(ast, {
-            enter(p) {
-                path = p;
-                path.stop();
-            },
-        });
-    } catch {
-        console.log("(getPath) Unable to traverse ast");
-    }
-    return path;
-}
 
 export function ensureProgramPath(path: NodePath | null): NodePath<Program> | null {
     if (!path) {
@@ -41,15 +22,6 @@ export function ensureProgramPath(path: NodePath | null): NodePath<Program> | nu
         return path;
     }
     return path.findParent((p) => p.isProgram()) as NodePath<Program> | null;
-}
-
-export function getProgramPath(ast: Node | null): NodePath<Program> | null {
-    return ensureProgramPath(getPath(ast));
-}
-
-export function getProgramPathFrom(env: Env) {
-    const ast = env.getAST(env.filePath);
-    return getProgramPath(ast);
 }
 
 export function getObjectPropertyPath(path: NodePath<ObjectExpression> | null, name: string) {
@@ -97,8 +69,8 @@ export function getDefinitionFor(
         if (path && (path.isImportSpecifier() || path.isImportDefaultSpecifier())) {
             const parentPath = path.parentPath as NodePath<ImportDeclaration>;
             const absolutePath = getAbsolutePathFromImportDeclaration(parentPath, env);
-            const ast = env.getAST(absolutePath);
-            if (!ast) {
+            const programPath = env.getProgramPath(absolutePath);
+            if (!programPath) {
                 return null;
             }
             const name =
@@ -106,21 +78,20 @@ export function getDefinitionFor(
                     ? path.node.imported.name
                     : null;
             let res: NodePath | null = null;
-            traverse(ast, {
-                Program(path) {
-                    if (name) {
-                        const b = path.scope.getBinding(name);
-                        if (b) {
-                            res = b.path;
-                        }
+
+            if (name) {
+                const b = path.scope.getBinding(name);
+                if (b) {
+                    res = b.path;
+                }
+            } else {
+                programPath.traverse({
+                    ExportDefaultDeclaration(path) {
+                        res = path.get("declaration");
                         path.stop();
-                    }
-                },
-                ExportDefaultDeclaration(path) {
-                    res = path.get("declaration");
-                    path.stop();
-                },
-            });
+                    },
+                });
+            }
             if (!res) {
                 return null;
             }
