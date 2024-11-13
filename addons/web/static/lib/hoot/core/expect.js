@@ -2117,7 +2117,7 @@ export class TestResult {
     expectedAssertions = 0;
     expectedErrors = 0;
     pass = true;
-    /** @type {string[]} */
+    /** @type {any[]} */
     steps = [];
     /** @type {Test | null} */
     test = null;

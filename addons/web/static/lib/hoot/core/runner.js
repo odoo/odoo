@@ -4,7 +4,7 @@ import { Deferred, on, setFrameRate } from "@odoo/hoot-dom";
 import { markRaw, reactive, toRaw } from "@odoo/owl";
 import { cleanupDOM } from "@web/../lib/hoot-dom/helpers/dom";
 import { enableEventLogs } from "@web/../lib/hoot-dom/helpers/events";
-import { cleanupTime } from "@web/../lib/hoot-dom/helpers/time";
+import { cleanupTime, setupTime } from "@web/../lib/hoot-dom/helpers/time";
 import { isIterable, parseRegExp } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import {
     Callbacks,
@@ -189,8 +189,6 @@ const getDefaultPresets = () =>
             },
         ],
     ]);
-
-const noop = () => {};
 
 /**
  * @param {Event} ev
@@ -397,10 +395,8 @@ export class Runner {
     _started = false;
     _startTime = 0;
 
-    /** @type {(reason?: any) => any} */
-    _rejectCurrent = noop;
-    /** @type {(value?: any) => any} */
-    _resolveCurrent = noop;
+    /** @type {null | (value?: any) => any} */
+    _resolveCurrent = null;
 
     /**
      * @param {typeof DEFAULT_CONFIG} [config]
@@ -955,7 +951,6 @@ export class Runner {
             const timeout = $floor(test.config.timeout || this.config.timeout);
             const timeoutPromise = new Promise((resolve, reject) => {
                 // Set abort signal
-                this._rejectCurrent = reject;
                 this._resolveCurrent = resolve;
 
                 if (timeout && !this.debug) {
@@ -973,8 +968,6 @@ export class Runner {
             // Run test
             await Promise.race([testPromise, timeoutPromise])
                 .catch((error) => {
-                    this._rejectCurrent = noop; // prevents loop
-
                     if (handleError) {
                         return handleError(error);
                     } else {
@@ -982,8 +975,7 @@ export class Runner {
                     }
                 })
                 .finally(() => {
-                    this._rejectCurrent = noop;
-                    this._resolveCurrent = noop;
+                    this._resolveCurrent = null;
 
                     if (timeoutId) {
                         clearTimeout(timeoutId);
@@ -1083,12 +1075,15 @@ export class Runner {
     async stop() {
         this._currentJobs = [];
         this.state.status = "done";
-        this.totalTime = formatTime($now() - this._startTime);
 
-        if (this._resolveCurrent !== noop) {
+        if (this._resolveCurrent) {
             this._resolveCurrent();
+
+            // `stop` will be called again after test has been resolved.
             return false;
         }
+
+        this.totalTime = formatTime($now() - this._startTime);
 
         while (this._missedCallbacks.length) {
             await this._missedCallbacks.shift()();
@@ -1633,7 +1628,6 @@ export class Runner {
             return true;
         }
 
-        this._rejectCurrent(error);
         return false;
     }
 
@@ -1711,7 +1705,7 @@ export class Runner {
             !this.debug && on(window, "pointerdown", warnUserEvent),
             !this.debug && on(window, "keydown", warnUserEvent)
         );
-        this.beforeEach(this.fixture.setup);
+        this.beforeEach(this.fixture.setup, setupTime);
         this.afterEach(
             cleanupWindow,
             cleanupNetwork,

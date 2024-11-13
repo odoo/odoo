@@ -1,5 +1,5 @@
 import { expect, getFixture, test } from "@odoo/hoot";
-import { microTick } from "@odoo/hoot-dom";
+import { microTick, tick } from "@odoo/hoot-dom";
 
 /** @type {typeof OdooModuleLoader} */
 const ModuleLoader = Object.getPrototypeOf(odoo.loader.constructor);
@@ -31,7 +31,7 @@ test.tags("headless")("define: simple case", async () => {
 
     expect.verifySteps([]);
 
-    await microTick();
+    await tick();
 
     expect.verifySteps(["check done"]);
 });

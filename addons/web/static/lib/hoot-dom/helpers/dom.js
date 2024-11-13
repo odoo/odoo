@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { HootDomError, getTag, isFirefox, isIterable, parseRegExp } from "../hoot_dom_utils";
-import { Deferred, waitUntil } from "./time";
+import { waitUntil } from "./time";
 
 /**
  * @typedef {number | [number, number] | {
@@ -1873,7 +1873,7 @@ export function queryValue(target, options) {
  * @see {@link waitUntil}
  * @param {Target} target
  * @param {QueryOptions & WaitOptions} [options]
- * @returns {Deferred<Element>}
+ * @returns {Promise<Element>}
  * @example
  *  const button = await waitFor(`button`);
  *  button.click();
