@@ -2,7 +2,6 @@
 
 from . import test_attachment_controller
 from . import test_binary_controller
-from . import test_controller_common
 from . import test_discuss_tools
 from . import test_ir_mail_server
 from . import test_ir_ui_menu
@@ -18,7 +17,6 @@ from . import test_message_update_controller
 from . import test_res_company
 from . import test_res_partner
 from . import test_res_users
-from . import test_res_users_settings
 from . import test_thread_controller
 from . import test_uninstall
 from . import test_update_notification

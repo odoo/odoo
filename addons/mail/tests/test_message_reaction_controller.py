@@ -1,65 +1,10 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-import odoo
-from odoo.tests import JsonRpcException
-from odoo.addons.mail.tests.test_controller_common import TestControllerCommon
+from odoo.addons.mail.tests.common_controllers import MailControllerReactionCommon
+from odoo.tests import tagged
 
 
-@odoo.tests.tagged("-at_install", "post_install")
-class TestMessageReactionControllerCommon(TestControllerCommon):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.reaction = "😊"
+@tagged("-at_install", "post_install", "mail_controller")
+class TestMessageReactionController(MailControllerReactionCommon):
 
-    def _execute_subtests(self, message, subtests):
-        for data_user, allowed, *args in subtests:
-            route_kw = args[0] if args else {}
-            kwargs = args[1] if len(args) > 1 else {}
-            user = data_user if data_user._name == "res.users" else self.user_public
-            guest = data_user if data_user._name == "mail.guest" else self.env["mail.guest"]
-            self._authenticate_user(user=user, guest=guest)
-            msg = str(message.body) if message != self.fake_message else "fake message"
-            with self.subTest(message=msg, user=user.name, guest=guest.name, route_kw=route_kw):
-                if allowed:
-                    self._add_reaction(message, self.reaction, route_kw)
-                    reactions = self._find_reactions(message)
-                    self.assertEqual(len(reactions), 1)
-                    expected_partner = kwargs.get("partner")
-                    if guest and not expected_partner:
-                        self.assertEqual(reactions.guest_id, guest)
-                    else:
-                        self.assertEqual(reactions.partner_id, expected_partner or user.partner_id)
-                    self._remove_reaction(message, self.reaction, route_kw)
-                    self.assertEqual(len(self._find_reactions(message)), 0)
-                else:
-                    with self.assertRaises(
-                        JsonRpcException, msg="add reaction should raise NotFound"
-                    ):
-                        self._add_reaction(message, self.reaction, route_kw)
-                    with self.assertRaises(
-                        JsonRpcException, msg="remove reaction should raise NotFound"
-                    ):
-                        self._remove_reaction(message, self.reaction, route_kw)
-
-    def _add_reaction(self, message, content, route_kw):
-        self.make_jsonrpc_request(
-            route="/mail/message/reaction",
-            params={"action": "add", "content": content, "message_id": message.id, **route_kw},
-        )
-
-    def _remove_reaction(self, message, content, route_kw):
-        self.make_jsonrpc_request(
-            route="/mail/message/reaction",
-            params={"action": "remove", "content": content, "message_id": message.id, **route_kw},
-        )
-
-    def _find_reactions(self, message):
-        return self.env["mail.message.reaction"].search([("message_id", "=", message.id)])
-
-
-@odoo.tests.tagged("-at_install", "post_install")
-class TestMessageReactionController(TestMessageReactionControllerCommon):
     def test_message_reaction_partner(self):
         """Test access of message reaction for partner chatter."""
         message = self.user_demo.partner_id.message_post(body="partner message")

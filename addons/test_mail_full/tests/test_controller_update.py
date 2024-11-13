@@ -1,14 +1,10 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-import odoo
-from odoo.addons.mail.tests.test_message_update_controller import TestMessageUpdateControllerCommon
+from odoo.addons.mail.tests.common_controllers import MailControllerUpdateCommon
 from odoo.addons.portal.tests.test_portal_controller_common import TestPortalControllerCommon
+from odoo.tests import tagged
 
 
-@odoo.tests.tagged("-at_install", "post_install")
-class TestPortalMessageUpdateController(
-    TestMessageUpdateControllerCommon, TestPortalControllerCommon
-):
+@tagged("-at_install", "post_install", "mail_controller")
+class TestPortalMessageUpdateController(MailControllerUpdateCommon, TestPortalControllerCommon):
     def test_message_update_portal(self):
         """Test Only Admin and Portal User can update a portal user message on a record with no assigned partner."""
         record = self.env["mail.test.portal.no.partner"].create({"name": "Test"})
