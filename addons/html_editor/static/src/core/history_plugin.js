@@ -280,12 +280,10 @@ export class HistoryPlugin extends Plugin {
      * @returns { MutationRecord[] } processed records
      */
     processNewRecords(records) {
-        this.setIdOnRecords(records);
         records = this.filterMutationRecords(records);
         if (!records.length) {
             return [];
         }
-        this.getResource("handleNewRecords").forEach((cb) => cb(records));
         this.stageRecords(records);
         return records;
     }
@@ -308,7 +306,11 @@ export class HistoryPlugin extends Plugin {
      * @param { MutationRecord[] } records
      */
     handleNewRecords(records) {
-        if (this.processNewRecords(records).length) {
+        const filteredRecords = this.processNewRecords(records);
+        if (filteredRecords.length) {
+            this.getResource("handleNewRecords").forEach((cb) => cb(filteredRecords));
+            // Process potential new records adds by handleNewRecords.
+            this.processNewRecords(this.observer.takeRecords());
             this.dispatchContentUpdated();
         }
     }
@@ -423,6 +425,7 @@ export class HistoryPlugin extends Plugin {
      * @param { MutationRecord[] } records
      */
     stageRecords(records) {
+        this.setIdOnRecords(records);
         // @todo @phoenix test this feature.
         // There is a case where node A is added and node B is a descendant of
         // node A where node B was not in the observed tree) then node B is
