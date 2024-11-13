@@ -40,7 +40,7 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
                 "Configurable Chair",
                 "1",
                 "11.0",
-                "Fabrics: Other: Custom Fabric, Metal, Red"
+                "Red, Metal, Fabrics: Other: Custom Fabric"
             ),
 
             // Orderlines with the same attributes should be merged
@@ -54,7 +54,7 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
                 "Configurable Chair",
                 "2",
                 "22.0",
-                "Fabrics: Other: Custom Fabric, Metal, Red"
+                "Red, Metal, Fabrics: Other: Custom Fabric"
             ),
 
             // Orderlines with different attributes shouldn't be merged
@@ -67,7 +67,7 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
                 "Configurable Chair",
                 "1",
                 "10.0",
-                "Leather, Metal, Blue"
+                "Blue, Metal, Leather"
             ),
 
             // Inactive variant attributes should not be displayed
