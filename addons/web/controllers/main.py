@@ -1987,6 +1987,10 @@ class ReportController(http.Controller):
             if type in ['qweb-pdf', 'qweb-text']:
                 converter = 'pdf' if type == 'qweb-pdf' else 'text'
                 extension = 'pdf' if type == 'qweb-pdf' else 'txt'
+                # In case of test environment without enough workers to perform calls to wkhtmltopdf,
+                # fallback to render_html.
+                if (odoo.tools.config['test_enable'] or odoo.tools.config['test_file']) and not request.env.context.get('force_report_rendering'):
+                    extension = 'html'
 
                 pattern = '/report/pdf/' if type == 'qweb-pdf' else '/report/text/'
                 reportname = url.split(pattern)[1].split('?')[0]
