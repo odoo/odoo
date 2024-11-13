@@ -1,10 +1,12 @@
-import { expect, test } from "@odoo/hoot";
-import { click } from "@odoo/hoot-dom";
+import { expect, test, describe } from "@odoo/hoot";
+import { click, queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
+
 import { mountView } from "@web/../tests/web_test_helpers";
 
-import { defineProjectModels } from "./project_models";
+import { defineProjectModels, ProjectTask } from "./project_models";
 
+describe.current.tags("desktop");
 defineProjectModels();
 
 test("project.task (kanban): check task state widget", async () => {
@@ -43,4 +45,41 @@ test("project.task (kanban): check task state widget", async () => {
     expect(".o-dropdown--menu").toHaveCount(0, {
         message: "When trying to click on the waiting icon, no dropdown menu should display",
     });
+});
+
+test("project.task (form): check task state widget", async () => {
+    ProjectTask._views = {
+        form: `<form js_class="project_task_form">
+                    <field name="project_id"/>
+                    <field name="name"/>
+                    <field name="state" widget="project_task_state_selection" nolabel="1"/>
+                </form>`,
+    };
+    await mountView({
+        resModel: "project.task",
+        resId: 1,
+        type: "form",
+    });
+    await click("button.o_state_button");
+    await animationFrame();
+    expect(queryAllTexts(".state_selection_field_menu > .dropdown-item")).toEqual([
+        "In Progress",
+        "Changes Requested",
+        "Approved",
+        "Cancelled",
+        "Done",
+    ]);
+    await click("button.o_state_button");
+
+    await mountView({
+        resModel: "project.task",
+        resId: 3,
+        type: "form",
+    });
+    await click("button.o_state_button:contains('Waiting')");
+    await animationFrame();
+    expect(queryAllTexts(".state_selection_field_menu > .dropdown-item")).toEqual([
+        "Cancelled",
+        "Done",
+    ]);
 });
