@@ -1239,7 +1239,8 @@ class AccountTax(models.Model):
                     tax_amount = 0.0
                 tax_data['tax_amount'] = tax_amount
                 tax_data['tax_amount_factorized'] = tax_data['tax_amount'] * tax_data['_factor']
-                if rounding_method == 'round_per_line' or (not special_mode and tax_data['price_include'] and round_price_include):
+                if rounding_method == 'round_per_line' \
+                        or ((special_mode == 'total_included' or (not special_mode and tax_data['price_include'])) and round_price_include):
                     tax_data['tax_amount_factorized'] = float_round(tax_data['tax_amount_factorized'], precision_rounding=prec_rounding)
             elif quid == 'base':
                 extra_base = 0.0
@@ -1254,7 +1255,8 @@ class AccountTax(models.Model):
                     'extra_base': extra_base,
                     'total_tax_amount': total_tax_amount,
                 }))
-                if rounding_method == 'round_per_line' or (not special_mode and tax_data['price_include'] and round_price_include):
+                if rounding_method == 'round_per_line' \
+                        or ((special_mode == 'total_included' or (not special_mode and tax_data['price_include'])) and round_price_include):
                     tax_data['base'] = float_round(tax_data['base'], precision_rounding=prec_rounding)
                     tax_data['display_base'] = float_round(tax_data['display_base'], precision_rounding=prec_rounding)
 
