@@ -57,9 +57,7 @@ class PortalChatter(http.Controller):
         return store.get_result()
 
     @http.route('/mail/chatter_fetch', type='jsonrpc', auth='public', website=True)
-    def portal_message_fetch(
-            self, thread_model, thread_id, limit=10, after=None, before=None, **kw
-    ):
+    def portal_message_fetch(self, thread_model, thread_id, fetch_params=None, **kw):
         # Only search into website_message_ids, so apply the same domain to perform only one search
         # extract domain from the 'website_message_ids' field
         model = request.env[thread_model]
@@ -83,7 +81,7 @@ class PortalChatter(http.Controller):
             if not request.env.user._is_internal():
                 domain = expression.AND([Message._get_search_domain_share(), domain])
             Message = request.env["mail.message"].sudo()
-        res = Message._message_fetch(domain, None, before, after, None, limit)
+        res = Message._message_fetch(domain, **(fetch_params or {}))
         messages = res.pop("messages")
         return {
             **res,

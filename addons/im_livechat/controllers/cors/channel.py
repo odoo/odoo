@@ -7,9 +7,9 @@ from odoo.addons.im_livechat.tools.misc import force_guest_env
 
 class LivechatChannelController(ChannelController):
     @route("/im_livechat/cors/channel/messages", methods=["POST"], type="jsonrpc", auth="public", cors="*")
-    def livechat_channel_messages(self, guest_token, channel_id, before=None, after=None, limit=30, around=None):
+    def livechat_channel_messages(self, guest_token, channel_id, fetch_params=None):
         force_guest_env(guest_token)
-        return self.discuss_channel_messages(channel_id, before, after, limit, around)
+        return self.discuss_channel_messages(channel_id, fetch_params)
 
     @route("/im_livechat/cors/channel/mark_as_read", methods=["POST"], type="jsonrpc", auth="public", cors="*")
     def livechat_channel_mark_as_read(self, guest_token, **kwargs):
