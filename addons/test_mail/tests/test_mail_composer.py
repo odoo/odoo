@@ -1690,6 +1690,35 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
         self.assertEqual(message.subtype_id, self.env.ref('mail.mt_comment'))
         self.assertEqual(message.partner_ids, self.partner_1 | self.partner_2)
 
+    def test_mail_composer_recipients_email_only(self):
+        """Check that messages can be sent to standalone emails, with no associated partner."""
+        email_addrs = [
+            'test1@test.lan', 'test2@test.lan', '"Formatted" <FORMATTED.EMAIL@TEST.LAN>',
+            'test.multi.1@test.lan, test.multi.2@test.lan, "Formatted" <FORMATTED.EMAIL@TEST.LAN>, InvalidEmailMulti',
+            'InvalidEmail', ''
+        ]
+        notified_emails = {
+            'test1@test.lan', 'test2@test.lan', 'test.multi.1@test.lan', 'test.multi.2@test.lan',
+            '"Formatted" <formatted.email@test.lan>', 'InvalidEmail', False
+        }
+        mail_to_vals = {
+            'test1@test.lan', 'test2@test.lan', 'test.multi.1@test.lan,test.multi.2@test.lan,"Formatted" <formatted.email@test.lan>',
+            '"Formatted" <formatted.email@test.lan>', 'InvalidEmail', ''
+        }
+        records = self.env['mail.test.ticket'].create([
+            {'name': f'Test {email}', 'email_from': email}
+            for email in email_addrs
+        ])
+        composer = self.env['mail.compose.message'].with_context(self._get_web_context(records)).create({})
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            composer._action_send_mail()
+
+        self.assertEqual(len(self._new_mails), 6, 'Should have created 1 mail.mail per record')
+        self.assertEqual(len(self._mails), 4, 'Should have sent 1 email per record with a valid email')
+        self.assertEqual(self._new_mails.notification_ids.mapped('notification_status'), ['sent', 'sent', 'sent', 'sent', 'sent', 'sent', 'exception', 'exception'])
+        self.assertEqual(set(self._new_mails.notification_ids.mapped('mail_email_address')), set(notified_emails), 'Email address should be retained on the notification')
+        self.assertEqual(set(self._new_mails.mapped('email_to')), mail_to_vals, 'Should have sent emails to the default recipients')
+
     @users('employee')
     def test_mail_composer_recipients_status(self):
         test_record = self.test_record
@@ -2577,6 +2606,8 @@ class TestComposerResultsMass(TestMailComposer):
         self.assertFalse(self._new_mails.exists(), 'Should have deleted mail.mail records')
         self.assertEqual(len(self._new_msgs), 2, 'Should have created 1 mail.mail per record')
         self.assertEqual(self._new_msgs.exists(), self._new_msgs, 'Should not have deleted mail.message records')
+        self.assertEqual(len(self._new_notifs), 2, 'Should have created 1 mail.notification per record')
+        self.assertEqual(self._new_notifs.exists(), self._new_notifs, 'Should not have deleted mail.notification')
 
         # force composer auto_delete field
         composer_form = Form(self.env['mail.compose.message'].with_context(
@@ -2593,6 +2624,8 @@ class TestComposerResultsMass(TestMailComposer):
         self.assertEqual(self._new_mails.exists(), self._new_mails, 'Should not have deleted mail.mail records')
         self.assertEqual(len(self._new_msgs), 2, 'Should have created 1 mail.mail per record')
         self.assertEqual(self._new_msgs.exists(), self._new_msgs, 'Should not have deleted mail.message records')
+        self.assertEqual(len(self._new_notifs), 2, 'Should have created 1 mail.notification per recipient per record')
+        self.assertEqual(self._new_notifs.exists(), self._new_notifs, 'Should not have deleted mail.notification')
 
         # check composer auto_delete_keep_log
         composer_form = Form(self.env['mail.compose.message'].with_context(
@@ -2608,8 +2641,9 @@ class TestComposerResultsMass(TestMailComposer):
         self.assertEqual(len(self._mails), 2, 'Should have sent 1 email per record')
         self.assertEqual(len(self._new_mails), 2, 'Should have created 1 mail.mail per record')
         self.assertFalse(self._new_mails.exists(), 'Should have deleted mail.mail records')
-        self.assertEqual(len(self._new_msgs), 2, 'Should have created 1 mail.mail per record')
+        self.assertEqual(len(self._new_msgs), 2, 'Should have created 1 mail.message per record')
         self.assertFalse(self._new_msgs.exists(), 'Should have deleted mail.message records')
+        self.assertFalse(self._new_notifs, 'Should not create notifications when removing logs in mass mode')
 
     @users('employee')
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
@@ -3313,6 +3347,41 @@ class TestComposerResultsMass(TestMailComposer):
         with self.mock_mail_gateway(mail_unlink_sent=False):
             composer._action_send_mail()
         self.assertNotSentEmail()
+
+        # 7: invalid email in mass mode is exception, unless deleting messages
+        # If keeping logs, then it is useful to let users know that the logged message was not actually sent
+        # If not keeping logs, then the message would not appear anyway and we can cancel it to avoid creating it
+        invalid_partners = self.env['res.partner'].create([
+            {'name': 'Invalid', 'email': 'InvalidEmail'},
+            {'name': 'NoEmail', 'email': ''},
+        ])
+        invalid_records = self.env[self.test_record._name].create([
+            {'name': f'Test {customer.email}', 'customer_id': customer.id}
+            for customer in invalid_partners
+        ])
+        composer = self.env['mail.compose.message'].with_context(self._get_web_context(invalid_records)).create({})
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            composer._action_send_mail()
+
+        self.assertEqual(len(self._new_mails), 2, 'Should have created 1 mail.mail per record')
+        self.assertEqual(self._new_mails.mapped('state'), ['exception', 'exception'], 'All emails should be errors')
+        self.assertEqual(
+            self._new_mails.notification_ids.mapped('notification_status'), ['exception', 'exception'],
+        )
+        self.assertEqual(
+            self._new_mails.notification_ids.mapped('failure_type'), ['mail_email_invalid', 'mail_email_missing'],
+            'One email should fail because missing, the other because invalid'
+        )
+
+        composer = self.env['mail.compose.message'].with_context(self._get_web_context(invalid_records)).create({
+            'auto_delete': True,
+            'auto_delete_keep_log': False,
+        })
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            composer._action_send_mail()
+        self.assertEqual(len(self._new_mails), 2)
+        self.assertEqual(self._new_mails.mapped('state'), ['cancel', 'cancel'])
+        self.assertFalse(self._new_mails.notification_ids)
 
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')

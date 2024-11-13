@@ -1494,7 +1494,7 @@ class MailCase(common.TransactionCase, MockEmail):
         """
         partners = self.env['res.partner'].sudo().concat(*list(p['partner'] for i in recipients_info for p in i['notif'] if p.get('partner')))
         email_addrs = [email for i in recipients_info for p in i['notif'] for email in p.get('email_to', []) if not p.get('partner')]
-        base_domain = ['|', ('res_partner_id', 'in', partners.ids), ('res_partner_id.email_normalized', 'in', email_addrs)]
+        base_domain = ['|', ('res_partner_id', 'in', partners.ids), ('mail_email_address', 'in', email_addrs)]
         if messages is not None:
             base_domain += [('mail_message_id', 'in', messages.ids)]
         notifications = self.env['mail.notification'].sudo().search(base_domain)
@@ -1590,7 +1590,7 @@ class MailCase(common.TransactionCase, MockEmail):
                 # find notification
                 notif = notifications.filtered(
                     lambda n: n.mail_message_id == message
-                    and ((partner and n.res_partner_id == partner) or n.res_partner_id.email_normalized in email_to_lst)
+                    and ((partner and n.res_partner_id == partner) or n.mail_email_address in email_to_lst)
                     and n.notification_type == ntype
                 )
                 self.assertEqual(len(notif), 1,
