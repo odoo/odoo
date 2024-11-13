@@ -656,22 +656,20 @@
     }
 
     .oe_no_translation_content {
-        // hide content but show the translate button
+        // hide content but show the translate button EN
         height: 0px;
 
-        div{
-            :not(.btn) {
-                display: none;
-            }
+        .o_field_translate:not(.o_field_input_buttons):not(.btn) {
+            display: none;
+        }
+        
+        .o_field_translate.btn {
+            // hide language button for current language
+            visibility: hidden !important;
+            margin-top: -10px;
 
-            .btn {
-                width: 100% !important;
-                margin-left: 0px;
-                visibility: hidden;
-            }
-
-            .btn:after {
-                // force the the translate button to EN
+            // force the the translate button to EN
+            &:after {
                 content: 'EN';
                 visibility: visible;
             }
