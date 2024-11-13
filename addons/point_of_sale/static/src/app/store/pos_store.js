@@ -2041,14 +2041,7 @@ export class PosStore extends Reactive {
             if (this._shouldLoadOrders()) {
                 try {
                     this.setLoadingOrderState(true);
-                    const orders = await this.getServerOrders();
-                    if (orders && orders.length > 0) {
-                        const message = _t(
-                            "%s orders have been loaded from the server. ",
-                            orders.length
-                        );
-                        this.notification.add(message);
-                    }
+                    await this.getServerOrders();
                 } finally {
                     this.setLoadingOrderState(false);
                     this.showScreen("TicketScreen");
