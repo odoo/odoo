@@ -149,7 +149,7 @@ export class SplitBillScreen extends Component {
     }
 
     back() {
-        this.pos.showScreen("ProductScreen");
+        this.pos.showNumpadScreen("ProductScreen");
     }
 }
 

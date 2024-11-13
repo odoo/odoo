@@ -79,6 +79,6 @@ patch(Navbar.prototype, {
         });
     },
     onClickPlanButton() {
-        this.pos.showScreen("FloorScreen", { floor: this.floor });
+        this.pos.showNumpadScreen("FloorScreen", { floor: this.floor });
     },
 });

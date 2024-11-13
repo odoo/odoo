@@ -48,7 +48,7 @@ export class Navbar extends Component {
     }
     onClickScan() {
         if (!this.pos.scanning) {
-            this.pos.showScreen("ProductScreen");
+            this.showNumpadScreen("ProductScreen");
             this.pos.mobile_pane = "right";
         }
         this.pos.scanning = !this.pos.scanning;

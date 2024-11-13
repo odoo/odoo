@@ -6,12 +6,7 @@ import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Component, onMounted, useState, reactive, onWillRender } from "@odoo/owl";
 import { CategorySelector } from "@point_of_sale/app/components/category_selector/category_selector";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
-import {
-    BACKSPACE,
-    Numpad,
-    getButtons,
-    DEFAULT_LAST_ROW,
-} from "@point_of_sale/app/components/numpad/numpad";
+import { Numpad } from "@point_of_sale/app/components/numpad/numpad";
 import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { OrderWidget } from "@point_of_sale/app/components/order_widget/order_widget";
@@ -19,13 +14,11 @@ import { OrderSummary } from "@point_of_sale/app/screens/product_screen/order_su
 import { ProductInfoPopup } from "@point_of_sale/app/components/popups/product_info_popup/product_info_popup";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { ProductCard } from "@point_of_sale/app/components/product_card/product_card";
-import {
-    ControlButtons,
-    ControlButtonsPopup,
-} from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons";
+import { ControlButtons } from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons";
 import { pick } from "@web/core/utils/objects";
 import { unaccent } from "@web/core/utils/strings";
 import { CameraBarcodeScanner } from "@point_of_sale/app/screens/product_screen/camera_barcode_scanner";
+import { OrderEditor } from "@point_of_sale/app/components/order_editor/order_editor";
 
 export class ProductScreen extends Component {
     static template = "point_of_sale.ProductScreen";
@@ -40,6 +33,7 @@ export class ProductScreen extends Component {
         OrderSummary,
         ProductCard,
         CameraBarcodeScanner,
+        OrderEditor,
     };
     static props = {};
 
@@ -131,47 +125,6 @@ export class ProductScreen extends Component {
             isSelected: this.getAncestorsAndCurrent().includes(category),
             isChildren: this.getChildCategories(this.pos.selectedCategory).includes(category),
         };
-    }
-
-    getNumpadButtons() {
-        const colorClassMap = {
-            [this.env.services.localization.decimalPoint]: "o_colorlist_item_color_transparent_6",
-            Backspace: "o_colorlist_item_color_transparent_1",
-            "-": "o_colorlist_item_color_transparent_3",
-        };
-
-        return getButtons(DEFAULT_LAST_ROW, [
-            { value: "quantity", text: _t("Qty") },
-            { value: "discount", text: _t("%"), disabled: !this.pos.config.manual_discount },
-            {
-                value: "price",
-                text: _t("Price"),
-                disabled: !this.pos.cashierHasPriceControlRights(),
-            },
-            BACKSPACE,
-        ]).map((button) => ({
-            ...button,
-            class: `
-                ${colorClassMap[button.value] || ""}
-                ${this.pos.numpadMode === button.value ? "active" : ""}
-                ${button.value === "quantity" ? "numpad-qty rounded-0 rounded-top mb-0" : ""}
-                ${button.value === "price" ? "numpad-price rounded-0 rounded-bottom mt-0" : ""}
-                ${
-                    button.value === "discount"
-                        ? "numpad-discount my-0 rounded-0 border-top border-bottom"
-                        : ""
-                }
-            `,
-        }));
-    }
-    onNumpadClick(buttonValue) {
-        if (["quantity", "discount", "price"].includes(buttonValue)) {
-            this.numberBuffer.capture();
-            this.numberBuffer.reset();
-            this.pos.numpadMode = buttonValue;
-            return;
-        }
-        this.numberBuffer.sendKey(buttonValue);
     }
     get currentOrder() {
         return this.pos.get_order();
@@ -273,9 +226,6 @@ export class ProductScreen extends Component {
             { code: lotBarcode }
         );
         this.numberBuffer.reset();
-    }
-    displayAllControlPopup() {
-        this.dialog.add(ControlButtonsPopup);
     }
     get selectedOrderlineQuantity() {
         return this.currentOrder.get_selected_orderline()?.get_quantity_str();

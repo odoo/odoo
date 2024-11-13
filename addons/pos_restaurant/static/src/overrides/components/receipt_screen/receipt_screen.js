@@ -18,7 +18,7 @@ patch(ReceiptScreen.prototype, {
         this.currentOrder.uiState.screen_data.value = "";
         this.currentOrder.uiState.locked = true;
         this.pos.selectedOrderUuid = originalOrderUuid;
-        this.pos.showScreen("ProductScreen");
+        this.pos.showNumpadScreen("ProductScreen");
     },
     isContinueSplitting() {
         if (

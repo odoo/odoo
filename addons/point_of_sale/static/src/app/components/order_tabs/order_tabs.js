@@ -22,7 +22,7 @@ export class OrderTabs extends Component {
     }
     async newFloatingOrder() {
         const order = this.pos.add_new_order();
-        this.pos.showScreen("ProductScreen");
+        this.pos.showNumpadScreen("ProductScreen");
         this.dialog.closeAll();
         return order;
     }
@@ -30,12 +30,13 @@ export class OrderTabs extends Component {
         this.pos.set_order(order);
         const previousOrderScreen = order.get_screen_data();
 
-        const props = {};
         if (previousOrderScreen?.name === "PaymentScreen") {
-            props.orderUuid = order.uuid;
+            this.pos.showScreen("PaymentScreen", {
+                orderUuid: order.uuid,
+            });
         }
 
-        this.pos.showScreen(previousOrderScreen?.name || "ProductScreen", props);
+        this.pos.showNumpadScreen("ProductScreen");
         this.dialog.closeAll();
     }
 }

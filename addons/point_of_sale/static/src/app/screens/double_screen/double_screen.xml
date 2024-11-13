@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.DoubleScreen">
+        <div class="h-100 w-100 d-flex">
+            <div t-if="!ui.isSmall" class="h-100 w-25">
+                <t t-component="leftScreen" t-props="leftProps" />
+            </div>
+            <div t-if="!ui.isSmall" class="h-100 w-75">
+                <t t-component="rightScreen" t-props="rightProps" />
+            </div>
+            <div class="h-100 w-100" t-if="ui.isSmall">
+                <t t-component="mobileComponent" t-props="mobileProps" />
+            </div>
+        </div>
+    </t>
+</templates>
