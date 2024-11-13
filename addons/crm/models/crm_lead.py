@@ -64,7 +64,6 @@ CRM_LEAD_FIELDS_TO_MERGE = [
 PARTNER_FIELDS_TO_SYNC = [
     'lang',
     'mobile',
-    'title',
     'function',
     'website',
 ]
@@ -176,7 +175,6 @@ class CrmLead(models.Model):
         compute='_compute_partner_name', readonly=False, store=True,
         help='The name of the future partner company that will be created while converting the lead into opportunity')
     function = fields.Char('Job Position', compute='_compute_function', readonly=False, store=True)
-    title = fields.Many2one('res.partner.title', string='Title', compute='_compute_title', readonly=False, store=True)
     email_from = fields.Char(
         'Email', tracking=40, index='trigram',
         compute='_compute_email_from', inverse='_inverse_email_from', readonly=False, store=True)
@@ -382,13 +380,6 @@ class CrmLead(models.Model):
         for lead in self:
             if not lead.function or lead.partner_id.function:
                 lead.function = lead.partner_id.function
-
-    @api.depends('partner_id')
-    def _compute_title(self):
-        """ compute the new values when partner_id has changed """
-        for lead in self:
-            if not lead.title or lead.partner_id.title:
-                lead.title = lead.partner_id.title
 
     @api.depends('partner_id')
     def _compute_mobile(self):
@@ -1881,7 +1872,6 @@ class CrmLead(models.Model):
             'phone': self.phone,
             'mobile': self.mobile,
             'email': email_parts[0] if email_parts else False,
-            'title': self.title.id,
             'function': self.function,
             # address
             'street': self.street,
