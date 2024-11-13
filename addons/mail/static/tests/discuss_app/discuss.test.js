@@ -61,7 +61,7 @@ test("sanity check", async () => {
             channels_as_member: true,
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
-        '/mail/inbox/messages - {"limit":30}',
+        '/mail/inbox/messages - {"fetch_params":{"limit":30}}',
     ]);
     await contains(".o-mail-DiscussSidebar");
     await contains("h4:contains(Your inbox is empty)");
@@ -310,7 +310,7 @@ test("No load more when fetch below fetch limit of 60", async () => {
     }
     onRpcBefore("/discuss/channel/messages", (args) => {
         asyncStep("/discuss/channel/messages");
-        expect(args.limit).toBe(60);
+        expect(args.fetch_params.limit).toBe(60);
     });
     await start();
     await openDiscuss(channelId);
@@ -674,7 +674,7 @@ test("initially load messages from inbox", async () => {
     });
     onRpcBefore("/mail/inbox/messages", (args) => {
         asyncStep("/discuss/inbox/messages");
-        expect(args.limit).toBe(30);
+        expect(args.fetch_params.limit).toBe(30);
     });
     await start();
     await openDiscuss();

@@ -7,9 +7,9 @@ from odoo.addons.mail.tools.discuss import Store
 
 class MailboxController(http.Controller):
     @http.route("/mail/inbox/messages", methods=["POST"], type="jsonrpc", auth="user", readonly=True)
-    def discuss_inbox_messages(self, search_term=None, before=None, after=None, limit=30, around=None):
+    def discuss_inbox_messages(self, fetch_params=None):
         domain = [("needaction", "=", True)]
-        res = request.env["mail.message"]._message_fetch(domain, search_term=search_term, before=before, after=after, around=around, limit=limit)
+        res = request.env["mail.message"]._message_fetch(domain, **(fetch_params or {}))
         messages = res.pop("messages")
         return {
             **res,
@@ -18,9 +18,9 @@ class MailboxController(http.Controller):
         }
 
     @http.route("/mail/history/messages", methods=["POST"], type="jsonrpc", auth="user", readonly=True)
-    def discuss_history_messages(self, search_term=None, before=None, after=None, limit=30, around=None):
+    def discuss_history_messages(self, fetch_params=None):
         domain = [("needaction", "=", False)]
-        res = request.env["mail.message"]._message_fetch(domain, search_term=search_term, before=before, after=after, around=around, limit=limit)
+        res = request.env["mail.message"]._message_fetch(domain, **(fetch_params or {}))
         messages = res.pop("messages")
         return {
             **res,
@@ -29,9 +29,9 @@ class MailboxController(http.Controller):
         }
 
     @http.route("/mail/starred/messages", methods=["POST"], type="jsonrpc", auth="user", readonly=True)
-    def discuss_starred_messages(self, search_term=None, before=None, after=None, limit=30, around=None):
+    def discuss_starred_messages(self, fetch_params=None):
         domain = [("starred_partner_ids", "in", [request.env.user.partner_id.id])]
-        res = request.env["mail.message"]._message_fetch(domain, search_term=search_term, before=before, after=after, around=around, limit=limit)
+        res = request.env["mail.message"]._message_fetch(domain, **(fetch_params or {}))
         messages = res.pop("messages")
         return {
             **res,

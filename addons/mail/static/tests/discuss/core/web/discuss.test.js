@@ -60,7 +60,7 @@ test("can create a new channel", async () => {
             channels_as_member: true,
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
-        '/mail/inbox/messages - {"limit":30}',
+        '/mail/inbox/messages - {"fetch_params":{"limit":30}}',
     ]);
     await contains(".o-mail-Discuss");
     await contains(".o-mail-DiscussSidebar-item", { text: "abc", count: 0 });
@@ -89,7 +89,7 @@ test("can create a new channel", async () => {
             method: "channel_create",
             model: "discuss.channel",
         })}`,
-        `/discuss/channel/messages - {"channel_id":${channelId},"limit":60,"around":${selfMember.new_message_separator}}`,
+        `/discuss/channel/messages - {"channel_id":${channelId},"fetch_params":{"limit":60,"around":${selfMember.new_message_separator}}}`,
     ]);
 });
 
@@ -129,7 +129,7 @@ test("can make a DM chat", async () => {
             channels_as_member: true,
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
-        '/mail/inbox/messages - {"limit":30}',
+        '/mail/inbox/messages - {"fetch_params":{"limit":30}}',
     ]);
     await contains(".o-mail-Discuss");
     await contains(".o-mail-DiscussSidebar-item", { text: "Mario", count: 0 });
@@ -157,7 +157,7 @@ test("can make a DM chat", async () => {
             method: "channel_get",
             model: "discuss.channel",
         })}`,
-        `/discuss/channel/messages - {"channel_id":${channelId},"limit":60,"around":0}`,
+        `/discuss/channel/messages - {"channel_id":${channelId},"fetch_params":{"limit":60,"around":0}}`,
     ]);
 });
 

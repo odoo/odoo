@@ -24,13 +24,13 @@ class ThreadController(http.Controller):
         return Store(thread, as_thread=True, request_list=request_list).get_result()
 
     @http.route("/mail/thread/messages", methods=["POST"], type="jsonrpc", auth="user")
-    def mail_thread_messages(self, thread_model, thread_id, search_term=None, before=None, after=None, around=None, limit=30):
+    def mail_thread_messages(self, thread_model, thread_id, fetch_params=None):
         domain = [
             ("res_id", "=", int(thread_id)),
             ("model", "=", thread_model),
             ("message_type", "!=", "user_notification"),
         ]
-        res = request.env["mail.message"]._message_fetch(domain, search_term=search_term, before=before, after=after, around=around, limit=limit)
+        res = request.env["mail.message"]._message_fetch(domain, **(fetch_params or {}))
         messages = res.pop("messages")
         if not request.env.user._is_public():
             messages.set_message_done()
