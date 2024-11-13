@@ -80,7 +80,7 @@ export function getDefinitionFor(
             let res: NodePath | null = null;
 
             if (name) {
-                const b = path.scope.getBinding(name);
+                const b = programPath.scope.getBinding(name);
                 if (b) {
                     res = b.path;
                 }
