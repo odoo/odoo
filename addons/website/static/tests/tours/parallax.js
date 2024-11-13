@@ -23,7 +23,7 @@ registerWebsitePreviewTour("test_parallax", {
     trigger: ":iframe .s_cover span[data-gl-filter='blur']",
 },
     changeOption("Parallax", "we-toggler"),
-    changeOption("Parallax", 'we-button[data-select-data-attribute="0"]'),
+    changeOption("Parallax", 'we-button[data-set-parallax-type="none"]'),
 {
     content: "Check that the data related to the filter have been transferred to the new target",
     trigger: ":iframe .s_cover[data-gl-filter='blur']",
@@ -33,7 +33,7 @@ registerWebsitePreviewTour("test_parallax", {
     trigger: ":iframe .s_cover.o_modified_image_to_save",
 },
     changeOption("Parallax", "we-toggler"),
-    changeOption("Parallax", 'we-button[data-select-data-attribute="1"]'),
+    changeOption("Parallax", 'we-button[data-set-parallax-type="fixed"]'),
 {
     content: "Check that the 'o_modified_image_to_save' class has been deleted from the old target",
     trigger: ":iframe .s_cover:not(.o_modified_image_to_save)",
@@ -47,10 +47,16 @@ registerWebsitePreviewTour("test_parallax", {
     trigger: ":iframe span.s_parallax_bg[data-gl-filter='blur']",
 },
     changeOption("Parallax", "we-toggler"),
-    changeOption("Parallax", 'we-button[data-select-data-attribute="1.5"]'),
+    changeOption("Parallax", 'we-button[data-set-parallax-type="top"]'),
 {
     content: "Check that the option was correctly applied",
     trigger: ':iframe span.s_parallax_bg[style*=top][style*=bottom][style*=transform]',
+},
+    changeOption("Parallax", "we-toggler"),
+    changeOption("Parallax", 'we-button[data-set-parallax-type="zoom_in"]'),
+{
+    content: "Check that the option was correctly applied",
+    trigger: ':iframe span.s_parallax_bg[style*="transform: scale("]',
 },
     ...clickOnSave(),
     ...clickOnEditAndWaitEditMode(),

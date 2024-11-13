@@ -498,17 +498,17 @@
              t-att-data-selector="selector"
              t-att-data-exclude="exclude"
              t-att-data-target="target">
-            <we-select string="Parallax"
+            <we-select string="Scroll Effect"
                        class="o_we_sublevel_2"
-                       data-attribute-name="scrollBackgroundRatio"
-                       data-attribute-default-value="0"
                        data-parallax-type-opt="true"
                        data-no-preview="true"
                        data-dependencies="bg_image_opt">
-                <we-button data-name="parallax_none_opt" data-select-data-attribute="0">None</we-button>
-                <we-button data-select-data-attribute="1">Fixed</we-button>
-                <we-button data-name="parallax_top_opt" data-select-data-attribute="1.5">Bottom to Top</we-button>
-                <we-button data-name="parallax_bottom_opt" data-select-data-attribute="-1.5">Top to Bottom</we-button>
+                <we-button data-name="parallax_none_opt" data-set-parallax-type="none">None</we-button>
+                <we-button data-set-parallax-type="fixed">Fixed</we-button>
+                <we-button data-name="parallax_top_opt" data-set-parallax-type="top">Parallax to Top</we-button>
+                <we-button data-name="parallax_bottom_opt" data-set-parallax-type="bottom">Parallax to Bottom</we-button>
+                <we-button data-name="parallax_zoom_in_opt" data-set-parallax-type="zoom_in">Zoom In</we-button>
+                <we-button data-name="parallax_zoom_out_opt" data-set-parallax-type="zoom_out">Zoom Out</we-button>
             </we-select>
             <we-range string="Intensity"
                       class="o_we_sublevel_3"
@@ -530,6 +530,26 @@
                       data-min="0"
                       data-max="-3"
                       data-step="0.15"/> <!-- Make sure this cannot land on 1 -->
+            <we-range string="Intensity"
+                      class="o_we_sublevel_3"
+                      data-dependencies="parallax_zoom_in_opt"
+                      data-select-data-attribute=""
+                      data-attribute-name="scrollBackgroundRatio"
+                      data-attribute-default-value="0"
+                      data-no-preview="true"
+                      data-min="0"
+                      data-max="3"
+                      data-step="0.15"/> <!-- Make sure this cannot land on 1 -->
+            <we-range string="Intensity"
+                      class="o_we_sublevel_3"
+                      data-dependencies="parallax_zoom_out_opt"
+                      data-select-data-attribute=""
+                      data-attribute-name="scrollBackgroundRatio"
+                      data-attribute-default-value="0"
+                      data-no-preview="true"
+                      data-min="0"
+                      data-max="0.95"
+                      data-step="0.05"/>
         </div>
         <div data-js="BackgroundVideo"
              t-att-data-selector="selector"
