@@ -77,7 +77,7 @@ export class PartnerList extends Component {
     getPartners() {
         const searchWord = unaccent((this.state.query || "").trim(), false);
         const partners = this.pos.models["res.partner"].getAll();
-        const exactMatches = partners.filter((product) => product.exactMatch(searchWord));
+        const exactMatches = partners.filter((partner) => partner.exactMatch(searchWord));
 
         if (exactMatches.length > 0) {
             return exactMatches;

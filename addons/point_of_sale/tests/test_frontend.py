@@ -1561,6 +1561,37 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'LotTour', login="pos_user")
 
+    def test_product_search(self):
+        """Verify that the product search works correctly"""
+        self.env['product.product'].create([
+            {
+                'name': 'Test Product 1',
+                'list_price': 100,
+                'taxes_id': False,
+                'available_in_pos': True,
+                'barcode': '1234567890123',
+                'default_code': 'TESTPROD1',
+            },
+            {
+                'name': 'Test Product 2',
+                'list_price': 100,
+                'taxes_id': False,
+                'available_in_pos': True,
+                'barcode': '1234567890124',
+                'default_code': 'TESTPROD2',
+            },
+            {
+                'name': 'Apple',
+                'list_price': 100,
+                'taxes_id': False,
+                'available_in_pos': True,
+            },
+        ])
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ProductSearchTour', login="pos_user")
+
+
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
     browser_size = '375x667'
