@@ -208,7 +208,7 @@ class AccountTestInvoicingCommon(ProductCommon):
             login='accountman',
             password='accountman',
             email='accountman@test.com',
-            groups_id=cls.get_default_groups().ids,
+            group_ids=cls.get_default_groups().ids,
             company_id=cls.env.company.id,
         )
 

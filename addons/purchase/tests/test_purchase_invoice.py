@@ -374,7 +374,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         the po, it is the same that is mentioned in the bill.
         """
         # Required for `analytic.group_analytic_accounting` to be visible in the view
-        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
+        self.env.user.group_ids += self.env.ref('analytic.group_analytic_accounting')
         analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test'})
         analytic_account_default = self.env['account.analytic.account'].create({'name': 'default', 'plan_id': analytic_plan.id})
         analytic_account_manual = self.env['account.analytic.account'].create({'name': 'manual', 'plan_id': analytic_plan.id})
@@ -402,8 +402,8 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         self.assertRecordValues(aml, [{'analytic_distribution': analytic_distribution_manual}])
 
     def test_purchase_order_analytic_account_product_change(self):
-        self.env.user.groups_id += self.env.ref('account.group_account_readonly')
-        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
+        self.env.user.group_ids += self.env.ref('account.group_account_readonly')
+        self.env.user.group_ids += self.env.ref('analytic.group_analytic_accounting')
 
         analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test'})
         analytic_account_super = self.env['account.analytic.account'].create({'name': 'Super Account', 'plan_id': analytic_plan.id})
@@ -452,7 +452,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         and with an account prefix set in the distribution model,
         the default analytic account is correctly set during the conversion from po to invoice
         """
-        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
+        self.env.user.group_ids += self.env.ref('analytic.group_analytic_accounting')
         analytic_plan_default = self.env['account.analytic.plan'].create({
             'name': 'default',
             'applicability_ids': [Command.create({
@@ -1170,7 +1170,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
             'name': 'Purchase user',
             'login': 'purchaseUser',
             'email': 'pu@odoo.com',
-            'groups_id': [Command.set([group_purchase_user.id, group_employee.id, group_partner_manager.id])],
+            'group_ids': [Command.set([group_purchase_user.id, group_employee.id, group_partner_manager.id])],
         })
         po1 = self.env['purchase.order'].with_context(tracking_disable=True).create({
             'partner_id': self.partner_a.id,

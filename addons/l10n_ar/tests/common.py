@@ -713,7 +713,7 @@ class TestAr(AccountTestInvoicingCommon):
 
     def _prepare_multicurrency_values(self):
         # Enable multi currency
-        self.env.user.write({'groups_id': [(4, self.env.ref('base.group_multi_currency').id)]})
+        self.env.user.write({'group_ids': [(4, self.env.ref('base.group_multi_currency').id)]})
         # Set ARS as main currency
         self._set_today_rate(self.env.ref('base.ARS'), 1.0)
         # Set Rates for USD currency

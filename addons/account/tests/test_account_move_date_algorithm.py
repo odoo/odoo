@@ -267,7 +267,7 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
                 'account.group_account_invoice',
         ):
             with self.subTest(group=group), closing(self.cr.savepoint()):
-                self.env.user.groups_id = [Command.set(self.env.ref(group).ids)]
+                self.env.user.group_ids = [Command.set(self.env.ref(group).ids)]
 
                 self.assertTrue(self.env.user.has_group(group))
 

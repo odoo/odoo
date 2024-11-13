@@ -18,8 +18,8 @@ class TestFormCreate(TransactionCase):
             # By default, it's the `group` `group_account_readonly` which is required to see it, in the `account` module
             # But once `account_accountant` gets installed, it becomes `account.group_account_manager`
             # https://github.com/odoo/enterprise/blob/bfa643278028da0bfabded2f87ccb7e323d697c1/account_accountant/views/product_views.xml#L9
-            self.env.user.groups_id += self.env.ref('account.group_account_readonly')
-            self.env.user.groups_id += self.env.ref('account.group_account_manager')
+            self.env.user.group_ids += self.env.ref('account.group_account_readonly')
+            self.env.user.group_ids += self.env.ref('account.group_account_manager')
         partner_form = Form(self.env['res.partner'])
         partner_form.name = 'a partner'
         # YTI: Clean that brol

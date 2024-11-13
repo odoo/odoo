@@ -56,7 +56,7 @@
         <field name="signature" type="html"><span>--<br/>+A. Kaczmarczyk</span></field>
         <field name="company_ids" eval="[(4, ref('l10n_{{code}}_hr_payroll.res_company_{{code}}'))]"/>
         <field name="company_id" ref="l10n_{{code}}_hr_payroll.res_company_{{code}}"/>
-        <field name="groups_id" eval="[(6,0,[ref('base.group_user')])]"/>
+        <field name="group_ids" eval="[(6,0,[ref('base.group_user')])]"/>
     </record>
 
     <record id="l10n_{{code}}_res_partner_antonina_work_address" model="res.partner">

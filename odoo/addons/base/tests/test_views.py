@@ -2283,7 +2283,7 @@ class TestViews(ViewCase):
                 %s
                 <searchpanel>
                     %s
-                    <field name="groups_id" select="multi" domain="[('%s', '=', %s)]" enable_counters="1"/>
+                    <field name="group_ids" select="multi" domain="[('%s', '=', %s)]" enable_counters="1"/>
                 </searchpanel>
             </search>
         """
@@ -2701,7 +2701,7 @@ class TestViews(ViewCase):
             'name': 'A User',
             'login': 'a_user',
             'email': 'a@user.com',
-            'groups_id': [(4, self.env.ref('base.group_user').id)],
+            'group_ids': [(4, self.env.ref('base.group_user').id)],
         })
 
         def validate(template, field, demo=True, no_add=False):
@@ -2865,7 +2865,7 @@ class TestViews(ViewCase):
         - a `groups` attribute on the field in the Python model
         This is an edge case and it worths a unit test."""
         self.patch(self.env.registry['res.partner'].name, 'groups', 'base.group_system')
-        self.env.user.groups_id += self.env.ref('base.group_multi_company')
+        self.env.user.group_ids += self.env.ref('base.group_multi_company')
         view = self.View.create({
             'name': 'foo',
             'model': 'res.partner',
@@ -3120,7 +3120,7 @@ class TestViews(ViewCase):
         # added elements should be validated
         self.assertInvalid(
             """<form position="inside">
-                <field name="groups_id" domain="[('invalid_field', '=', 'dummy')]"/>
+                <field name="group_ids" domain="[('invalid_field', '=', 'dummy')]"/>
             </form>""",
             """Unknown field "res.groups.invalid_field" in domain of <field name="group_ids"> ([('invalid_field', '=', 'dummy')]))""",
             inherit_id=view0.id,
@@ -3133,8 +3133,8 @@ class TestViews(ViewCase):
         )
         view2 = self.assertValid(
             """<form position="inside">
-                <field name="groups_id" domain="[('name', '=', name)]"/>
-                <label for="groups_id"/>
+                <field name="group_ids" domain="[('name', '=', name)]"/>
+                <label for="group_ids"/>
             </form>""",
             inherit_id=view1.id,
         )
@@ -3166,8 +3166,8 @@ class TestViews(ViewCase):
         # implementation does not flag the inner element to be validated, which
         # prevents to locate the corresponding element inside the arch
         self.assertValid(
-            """<field name="groups_id" position="before">
-                <label for="groups_id" position="move"/>
+            """<field name="group_ids" position="before">
+                <label for="group_ids" position="move"/>
             </field>""",
             inherit_id=view2.id,
         )
@@ -3194,7 +3194,7 @@ class TestViews(ViewCase):
         view = self.assertValid(
             """
                 <form>
-                    <field name="groups_id" class="canary"/>
+                    <field name="group_ids" class="canary"/>
                 </form>
             """
         )
@@ -3208,7 +3208,7 @@ class TestViews(ViewCase):
         self.assertEqual(view.id, view_data['id'], "The view returned should be test_views_test_view_ref")
         view_data = self.env['ir.ui.view'].with_context(form_view_ref='base.test_views_test_view_ref').get_view(view.id)
         tree = etree.fromstring(view_data['arch'])
-        field_groups_id = tree.xpath('//field[@name="groups_id"]')[0]
+        field_groups_id = tree.xpath('//field[@name="group_ids"]')[0]
         self.assertEqual(
             len(field_groups_id.xpath(".//*[@class='canary']")),
             0,

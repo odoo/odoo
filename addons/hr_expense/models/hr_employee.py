@@ -41,7 +41,7 @@ class HrEmployee(models.Model):
         # This is a problem because the `group_hr_expense_user` record has already been created but
         # not its associated `ir.model.data` which makes `self.env.ref(...)` fail.
         group = self.env.ref('hr_expense.group_hr_expense_team_approver', raise_if_not_found=False)
-        return [('groups_id', 'in', group.ids)] if group else []
+        return [('all_group_ids', 'in', group.ids)] if group else []
 
     expense_manager_id = fields.Many2one(
         comodel_name='res.users',

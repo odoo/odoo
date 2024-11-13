@@ -20,7 +20,7 @@ class TestUi(AccountTestInvoicingCommon, TestUICommon):
         self.user_demo.sudo().partner_id.company_id = self.env.company
         # Avoid Billing/Shipping address page
         user_demo.write({
-            'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id)],
+            'group_ids': [(5, 0), (4, self.env.ref('base.group_user').id)],
             'street': '215 Vine St',
             'city': 'Scranton',
             'zip': '18503',

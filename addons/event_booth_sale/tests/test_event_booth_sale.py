@@ -162,7 +162,7 @@ class TestEventBoothSaleInvoice(AccountTestInvoicingCommon, TestEventBoothSaleWD
         super().setUpClass()
 
         # Add group `group_account_invoice` to user_sales_salesman to allow to pay the invoice
-        cls.user_sales_salesman.groups_id += cls.env.ref('account.group_account_invoice')
+        cls.user_sales_salesman.group_ids += cls.env.ref('account.group_account_invoice')
 
     @users('user_sales_salesman')
     def test_event_booth_with_invoice(self):

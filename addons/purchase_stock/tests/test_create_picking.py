@@ -86,7 +86,7 @@ class TestCreatePicking(common.TestProductCommon):
         self.assertEqual(self.po.state, 'to approve', 'Purchase: PO state should be "to approve".')
 
         # PO approved by manager
-        self.po.env.user.groups_id += self.env.ref("purchase.group_purchase_manager")
+        self.po.env.user.group_ids += self.env.ref("purchase.group_purchase_manager")
         self.po.button_approve()
         self.assertEqual(self.po.state, 'purchase', 'PO state should be "Purchase".')
 
@@ -454,7 +454,7 @@ class TestCreatePicking(common.TestProductCommon):
 
     def test_07_differed_schedule_date(self):
         # Required for `reception_steps` to be visible in the view
-        self.env.user.groups_id += self.env.ref('stock.group_adv_location')
+        self.env.user.group_ids += self.env.ref('stock.group_adv_location')
         warehouse = self.env['stock.warehouse'].search([], limit=1)
 
         with Form(warehouse) as w:
@@ -646,8 +646,8 @@ class TestCreatePicking(common.TestProductCommon):
         self.assertEqual(purchase_order.picking_ids.move_ids.price_unit, 0)
 
     def test_return_to_vendor_multi_step(self):
-        self.env.user.groups_id += self.env.ref('stock.group_stock_multi_locations')
-        self.env.user.groups_id += self.env.ref('stock.group_adv_location')
+        self.env.user.group_ids += self.env.ref('stock.group_stock_multi_locations')
+        self.env.user.group_ids += self.env.ref('stock.group_adv_location')
         warehouse = self.env['stock.warehouse'].search([], limit=1)
 
         with Form(warehouse) as w:

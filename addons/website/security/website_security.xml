@@ -16,11 +16,11 @@
     </record>
 
     <record id="base.default_user" model="res.users">
-        <field name="groups_id" eval="[(4, ref('group_website_designer'))]"/>
+        <field name="group_ids" eval="[(4, ref('group_website_designer'))]"/>
     </record>
     <!-- FIXME: groups on existing users should probably be updated when implied_ids is, or existing users don't get the relevant implied groups on module installation... -->
     <record id="base.user_admin" model="res.users">
-        <field name="groups_id" eval="[(4, ref('website.group_website_designer'))]"/>
+        <field name="group_ids" eval="[(4, ref('website.group_website_designer'))]"/>
     </record>
 
     <!-- NOTE: this group implication is needed so that any admin user can do the website onboarding
@@ -34,7 +34,7 @@
     <record id="website_menu" model="ir.rule">
         <field name="name">Website menu: group_ids</field>
         <field name="model_id" ref="model_website_menu"/>
-        <field name="domain_force">['|', ('group_ids', '=', False), ('group_ids', 'in', user.groups_id.ids)]</field>
+        <field name="domain_force">['|', ('group_ids', '=', False), ('group_ids', 'in', user.all_group_ids.ids)]</field>
     </record>
 
     <record id="website_designer_edit_qweb" model="ir.rule">

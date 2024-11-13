@@ -91,7 +91,7 @@ class TestMailGroupMessage(TestMailListCommon):
         with self.assertRaises(AccessError, msg='Portal should not have access to pending messages'):
             self.test_group_msg_1_pending.with_user(self.user_portal).check_access('read')
 
-        self.user_portal.groups_id |= user_group
+        self.user_portal.group_ids |= user_group
         with self.assertRaises(AccessError, msg='Non moderator should have access to only accepted message'):
             self.test_group_msg_1_pending.with_user(self.user_portal).check_access('read')
 
@@ -104,7 +104,7 @@ class TestMailGroupMessage(TestMailListCommon):
         self.assertEqual(self.test_group_msg_2_accepted.with_user(self.user_portal).moderation_status, 'accepted',
                          msg='Portal should have access to accepted messages')
 
-        self.user_portal.groups_id -= user_group
+        self.user_portal.group_ids -= user_group
         with self.assertRaises(AccessError, msg='User not in the group should not have access to accepted message'):
             self.test_group_msg_2_accepted.with_user(self.user_portal).check_access('read')
 

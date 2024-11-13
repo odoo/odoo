@@ -258,8 +258,8 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         # Sets the warehouse to do two-steps receptions
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
         grp_multi_step_rule = self.env.ref('stock.group_adv_location')
-        self.env.user.write({'groups_id': [(3, grp_multi_loc.id)]})
-        self.env.user.write({'groups_id': [(3, grp_multi_step_rule.id)]})
+        self.env.user.write({'group_ids': [(3, grp_multi_loc.id)]})
+        self.env.user.write({'group_ids': [(3, grp_multi_step_rule.id)]})
         wh.reception_steps = 'two_steps'
 
         # Create a reordering rule for the product and

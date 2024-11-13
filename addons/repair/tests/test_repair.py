@@ -122,7 +122,7 @@ class TestRepair(common.TransactionCase):
             'partner_id': cls.res_partner_12.id,
         })
 
-        cls.env.user.groups_id |= cls.env.ref('stock.group_stock_user')
+        cls.env.user.group_ids |= cls.env.ref('stock.group_stock_user')
 
     def _create_simple_repair_order(self):
         product_to_repair = self.product_product_5

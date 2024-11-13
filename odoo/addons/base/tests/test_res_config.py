@@ -175,7 +175,7 @@ class TestResConfigExecute(TransactionCase):
         settings_only_user = ResUsers.create({
             'name': 'Sleepy Joe',
             'login': 'sleepy',
-            'groups_id': [Command.link(group_system.id)],
+            'group_ids': [Command.link(group_system.id)],
         })
 
         # If not enabled (like in demo data), landing on res.config will try

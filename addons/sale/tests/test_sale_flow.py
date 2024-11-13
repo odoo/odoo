@@ -11,7 +11,7 @@ class TestSaleFlow(TestSaleCommonBase):
         user = cls.env['res.users'].create({
             'name': 'Because I am saleman!',
             'login': 'saleman',
-            'groups_id': [(6, 0, cls.env.user.groups_id.ids), (4, cls.env.ref('account.group_account_user').id)],
+            'group_ids': [(6, 0, cls.env.user.group_ids.ids), (4, cls.env.ref('account.group_account_user').id)],
         })
         user.partner_id.email = 'saleman@test.com'
 

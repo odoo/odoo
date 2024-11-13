@@ -886,7 +886,7 @@ class ResUsers(models.Model):
         if 'group_ids' in values:
             users_before = self.filtered(lambda u: u._is_internal())
             if self._apply_groups_to_existing_employees():
-                # if modify groups_id content, compute the delta of groups to apply
+                # if modify group_ids content, compute the delta of groups to apply
                 # the new ones to other existing users
                 old_groups = self._default_groups()
 

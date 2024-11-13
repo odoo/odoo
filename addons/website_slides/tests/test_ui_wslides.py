@@ -137,7 +137,7 @@ class TestUi(TestUICommon):
         user_demo = self.user_demo
         user_demo.write({
             'karma': 1,
-            'groups_id': [(6, 0, self.env.ref('base.group_user').ids)]
+            'group_ids': [(6, 0, self.env.ref('base.group_user').ids)]
         })
 
         self.start_tour('/slides', 'course_member', login=user_demo.login)
@@ -146,7 +146,7 @@ class TestUi(TestUICommon):
         user_demo = self.user_demo
         user_demo.write({
             'karma': 1,
-            'groups_id': [(6, 0, (self.env.ref('base.group_user') | self.env.ref('website_slides.group_website_slides_officer')).ids)]
+            'group_ids': [(6, 0, (self.env.ref('base.group_user') | self.env.ref('website_slides.group_website_slides_officer')).ids)]
         })
 
         self.start_tour('/slides', 'course_member', login=user_demo.login)
@@ -161,7 +161,7 @@ class TestUi(TestUICommon):
         # group_website_designer
         user_demo = self.user_demo
         user_demo.write({
-            'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id), (4, self.env.ref('website.group_website_restricted_editor').id)]
+            'group_ids': [(5, 0), (4, self.env.ref('base.group_user').id), (4, self.env.ref('website.group_website_restricted_editor').id)]
         })
         user_demo = self.user_demo
         self.env['slide.slide.partner'].create({
@@ -180,7 +180,7 @@ class TestUi(TestUICommon):
     def test_course_reviews_elearning_officer(self):
         user_demo = self.user_demo
         user_demo.write({
-            'groups_id': [(6, 0, (self.env.ref('base.group_user') | self.env.ref('website_slides.group_website_slides_officer')).ids)]
+            'group_ids': [(6, 0, (self.env.ref('base.group_user') | self.env.ref('website_slides.group_website_slides_officer')).ids)]
         })
 
         # The user must be a course member before being able to post a log note.
@@ -197,7 +197,7 @@ class TestUiPublisher(HttpCaseGamification):
     def test_course_publisher_elearning_manager(self):
         user_demo = self.user_demo
         user_demo.write({
-            'groups_id': [
+            'group_ids': [
                 (5, 0),
                 (4, self.env.ref('base.group_user').id),
                 (4, self.env.ref('website_slides.group_website_slides_manager').id)
@@ -257,7 +257,7 @@ class TestUiPublisherYoutube(HttpCaseGamification):
         # remove membership because we need to be able to join the course during the tour
         user_demo = self.user_demo
         user_demo.write({
-            'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id)]
+            'group_ids': [(5, 0), (4, self.env.ref('base.group_user').id)]
         })
         self.env.ref('website_slides.slide_channel_demo_3_furn0')._remove_membership(self.env.ref('base.partner_demo').ids)
 
@@ -266,7 +266,7 @@ class TestUiPublisherYoutube(HttpCaseGamification):
     def test_course_publisher_elearning_manager(self):
         user_demo = self.user_demo
         user_demo.write({
-            'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id), (4, self.env.ref('website_slides.group_website_slides_manager').id)]
+            'group_ids': [(5, 0), (4, self.env.ref('base.group_user').id), (4, self.env.ref('website_slides.group_website_slides_manager').id)]
         })
 
         self.start_tour(self.env['website'].get_client_action_url('/slides'), 'course_publisher', login=user_demo.login)

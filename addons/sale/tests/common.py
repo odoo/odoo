@@ -45,11 +45,11 @@ class SaleCommon(
 
     @classmethod
     def _enable_pricelists(cls):
-        cls.env.user.groups_id += cls.env.ref('product.group_product_pricelist')
+        cls.env.user.group_ids += cls.env.ref('product.group_product_pricelist')
 
     @classmethod
     def _enable_discounts(cls):
-        cls.env.user.groups_id += cls.group_discount_per_so_line
+        cls.env.user.group_ids += cls.group_discount_per_so_line
 
 
 class TestSaleCommonBase(TransactionCase):
@@ -73,7 +73,7 @@ class TestSaleCommonBase(TransactionCase):
                 'email': 'default_user_salesman@example.com',
                 'signature': '--\nMark',
                 'notification_type': 'email',
-                'groups_id': [(6, 0, cls.env.ref('sales_team.group_sale_salesman').ids)],
+                'group_ids': [(6, 0, cls.env.ref('sales_team.group_sale_salesman').ids)],
                 'company_ids': [(6, 0, company.ids)],
                 'company_id': company.id,
             }),
@@ -81,7 +81,7 @@ class TestSaleCommonBase(TransactionCase):
                 'name': 'default_user_portal',
                 'login': 'default_user_portal.comp%s' % company.id,
                 'email': 'default_user_portal@gladys.portal',
-                'groups_id': [(6, 0, [cls.env.ref('base.group_portal').id])],
+                'group_ids': [(6, 0, [cls.env.ref('base.group_portal').id])],
                 'company_ids': [(6, 0, company.ids)],
                 'company_id': company.id,
             }),
@@ -89,7 +89,7 @@ class TestSaleCommonBase(TransactionCase):
                 'name': 'default_user_employee',
                 'login': 'default_user_employee.comp%s' % company.id,
                 'email': 'default_user_employee@example.com',
-                'groups_id': [(6, 0, [cls.env.ref('base.group_user').id])],
+                'group_ids': [(6, 0, [cls.env.ref('base.group_user').id])],
                 'company_ids': [(6, 0, company.ids)],
                 'company_id': company.id,
             }),

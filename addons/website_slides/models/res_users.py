@@ -13,7 +13,7 @@ class ResUsers(models.Model):
         users = super().create(vals_list)
         for user in users:
             self.env['slide.channel'].sudo().search([
-                ('enroll_group_ids', 'in', user.groups_id.ids)
+                ('enroll_group_ids', 'in', user.all_group_ids.ids)
             ])._action_add_members(user.partner_id)
         return users
 

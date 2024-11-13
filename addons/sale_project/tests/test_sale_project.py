@@ -231,7 +231,7 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
         # Ensure user don't have edit right access to the project
         group_sale_manager = self.env.ref('sales_team.group_sale_manager')
         group_project_user = self.env.ref('project.group_project_user')
-        self.env.user.write({'groups_id': [(6, 0, [group_sale_manager.id, group_project_user.id])]})
+        self.env.user.write({'group_ids': [(6, 0, [group_sale_manager.id, group_project_user.id])]})
         sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,

@@ -137,7 +137,7 @@ class TestExpensesMailImport(TestExpenseCommon):
         )
 
         # With Multi currency access
-        self.expense_user_employee.groups_id |= self.env.ref('base.group_multi_currency')
+        self.expense_user_employee.group_ids |= self.env.ref('base.group_multi_currency')
         assertParsedValues(
             "product_a foo bar $2205.92 elite barbarians",
             self.company_data['currency'],

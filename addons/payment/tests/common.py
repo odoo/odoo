@@ -161,7 +161,7 @@ class PaymentCommon(BaseCommon):
 
     @classmethod
     def _prepare_user(cls, user, group_xmlid):
-        user.groups_id = [Command.link(cls.env.ref(group_xmlid).id)]
+        user.group_ids = [Command.link(cls.env.ref(group_xmlid).id)]
         # Flush and invalidate the cache to allow checking access rights.
         user.flush_recordset()
         user.invalidate_recordset()

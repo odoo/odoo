@@ -454,7 +454,7 @@ class TestCreateEvents(TestCommon):
             'login': 'portal@user',
             'email': 'portal@user',
             'name': 'PortalUser',
-            'groups_id': [Command.set([portal_group.id])],
+            'group_ids': [Command.set([portal_group.id])],
             })
 
         # Mock event from Microsoft and sync event with Odoo through self.attendee_user (synced user).

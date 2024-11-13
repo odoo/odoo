@@ -1948,7 +1948,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         })
 
         grp_uom = self.env.ref('uom.group_uom')
-        self.env.user.write({'groups_id': [(4, grp_uom.id)]})
+        self.env.user.write({'group_ids': [(4, grp_uom.id)]})
         uom_unit = self.env.ref('uom.product_uom_unit')
         uom_hundred = self.env['uom.uom'].create({
             'name': '100 x U',
