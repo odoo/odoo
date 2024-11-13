@@ -51,6 +51,14 @@ patch(PosStore.prototype, {
                 taxes_id: taxeIds.map((tax) => ["link", tax]),
                 _event_id: event.id,
             });
+
+            // Disable products
+            for (const ticket of event.event_ticket_ids) {
+                const productTmpl = ticket.product_id.product_tmpl_id;
+                if (productTmpl) {
+                    productTmpl.available_in_pos = false;
+                }
+            }
         }
     },
 });

@@ -11,11 +11,6 @@ class EventRegistration(models.Model):
     # TDE FIXME: maybe add an onchange on sale_order_id
     sale_order_id = fields.Many2one('sale.order', string='Sales Order', ondelete='cascade', copy=False)
     sale_order_line_id = fields.Many2one('sale.order.line', string='Sales Order Line', ondelete='cascade', copy=False)
-    sale_status = fields.Selection(string="Sale Status", selection=[
-            ('to_pay', 'Not Sold'),
-            ('sold', 'Sold'),
-            ('free', 'Free'),
-        ], compute="_compute_registration_status", compute_sudo=True, store=True, precompute=True)
     state = fields.Selection(default=None, compute="_compute_registration_status", store=True, readonly=False, precompute=True)
     utm_campaign_id = fields.Many2one(compute='_compute_utm_campaign_id', readonly=False,
         store=True, ondelete="set null")
@@ -23,6 +18,9 @@ class EventRegistration(models.Model):
         store=True, ondelete="set null")
     utm_medium_id = fields.Many2one(compute='_compute_utm_medium_id', readonly=False,
         store=True, ondelete="set null")
+
+    def _has_order(self):
+        return super()._has_order() or self.sale_order_id
 
     @api.depends('sale_order_id.state', 'sale_order_id.currency_id', 'sale_order_id.amount_total')
     def _compute_registration_status(self):
@@ -39,6 +37,7 @@ class EventRegistration(models.Model):
                 (registrations - sold_registrations).sale_status = 'to_pay'
                 sold_registrations.filtered(lambda reg: not reg.state or reg.state in {'draft', 'cancel'}).state = "open"
                 (registrations - sold_registrations - cancelled_registrations).state = 'draft'
+        super()._compute_registration_status()
 
         # set default value to free and open if none was set yet
         for registration in self:
