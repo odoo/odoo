@@ -100,6 +100,7 @@ class SpreadsheetMixin(models.AbstractModel):
     def _onchange_data_(self):
         self._check_spreadsheet_data()
 
+    @api.readonly
     @api.model
     def get_display_names_for_spreadsheet(self, args):
         ids_per_model = defaultdict(list)
