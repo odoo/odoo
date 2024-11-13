@@ -17,7 +17,6 @@ function _execute(dirPath: string, env: PartialEnv, operation: (env: Env) => voi
     while ((fsDirent = fsDir.readSync())) {
         const direntPath = path.join(dirPath, fsDirent.name);
         if (fsDirent.isFile()) {
-            debugger
             operation({ ...env, filePath: direntPath });
         } else if (fsDirent.isDirectory() && !IS_EXCLUDED_FOLDER(direntPath)) {
             _execute(direntPath, env, operation);
@@ -56,7 +55,7 @@ export function execute(
         }
 
         let count = 1;
-        for (const filePath in modifiedFiles) {
+        for (const filePath of modifiedFiles()) {
             const code = getCode(filePath);
             if (!code) {
                 continue;

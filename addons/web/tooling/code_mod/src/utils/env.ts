@@ -102,11 +102,18 @@ export function prepareEnv(
         return cacheProgramPath.get(filePath) || null;
     }
 
+    function* modifiedFiles() {
+        for (const filePath of modified) {
+            yield filePath;
+        }
+    }
+
     return {
         clearCaches() {
             cacheFileContent.clear();
             cacheAST.clear();
             cacheProgramPath.clear();
+            modified.clear();
         },
         getCode(filePath: string): string | null {
             const ast = cacheAST.get(filePath);
@@ -128,10 +135,6 @@ export function prepareEnv(
                 modified.add(filePath);
             }
         },
-        *modifiedFiles() {
-            for (const filePath of modified) {
-                yield filePath;
-            }
-        },
+        modifiedFiles,
     };
 }

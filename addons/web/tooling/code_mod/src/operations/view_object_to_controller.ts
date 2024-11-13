@@ -227,7 +227,6 @@ function processView(viewDef: NodePath<t.ObjectExpression>, env: Env) {
 }
 
 function processViewPath(viewPath: NodePath, env: Env) {
-    debugger
     const viewDef = getViewDef(viewPath, env);
     if (viewDef?.isClassDeclaration() || viewDef?.isClassExpression()) {
         return true;
