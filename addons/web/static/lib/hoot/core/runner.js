@@ -1040,6 +1040,7 @@ export class Runner {
             await this._callbacks.call("after-post-test", test, handleError);
 
             this._pushTest(test);
+            this.totalTime = formatTime($now() - this._startTime);
 
             if (this.config.bail && this._failed >= this.config.bail) {
                 return this.stop();
@@ -1082,8 +1083,6 @@ export class Runner {
             // `stop` will be called again after test has been resolved.
             return false;
         }
-
-        this.totalTime = formatTime($now() - this._startTime);
 
         while (this._missedCallbacks.length) {
             await this._missedCallbacks.shift()();
@@ -1622,8 +1621,7 @@ export class Runner {
             return false;
         }
 
-        lastResults.errors.push(error);
-        lastResults.caughtErrors++;
+        lastResults.registerError(error);
         if (lastResults.expectedErrors >= lastResults.caughtErrors) {
             return true;
         }

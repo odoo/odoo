@@ -27,27 +27,27 @@ export class Test extends Job {
     static FAILED = 2;
     static ABORTED = 3;
 
-    formattedCode = "";
+    formatted = false;
     logs = reactive({
         error: 0,
         warn: 0,
     });
-    /** @type {import("./expect").TestResult[]} */
+    /** @type {import("./expect").CaseResult[]} */
     results = reactive([]);
     /** @type {() => MaybePromise<void> | null} */
     run = null;
-    /** @type {string} */
     runFnString = "";
     status = Test.SKIPPED;
 
     get code() {
-        if (!this.formattedCode) {
-            this.formattedCode = this.formatFunctionSource();
+        if (!this.formatted) {
+            this.formatted = true;
+            this.runFnString = this.formatFunctionSource(this.runFnString);
         }
-        return this.formattedCode;
+        return this.runFnString;
     }
 
-    /** @returns {typeof Test["prototype"]["results"][number]} */
+    /** @returns {import("./expect").CaseResult | null} */
     get lastResults() {
         return this.results.at(-1);
     }
@@ -58,15 +58,18 @@ export class Test extends Job {
     setRunFn(fn) {
         this.run = fn ? async () => fn() : null;
         if (fn) {
+            this.formatted = false;
             this.runFnString = fn.toString();
         }
     }
 
-    formatFunctionSource() {
-        let stringFn = this.runFnString;
+    /**
+     * @param {string} stringFn
+     */
+    formatFunctionSource(stringFn) {
+        let modifiers = "";
+        let startingLine = 0;
         if (this.name) {
-            let prefix = "";
-            const tags = [];
             for (const tag of this.tags) {
                 if (this.parent.tags.includes(tag)) {
                     continue;
@@ -76,25 +79,20 @@ export class Test extends Job {
                     case Tag.DEBUG:
                     case Tag.SKIP:
                     case Tag.ONLY: {
-                        prefix += `.${tag.key}`;
+                        modifiers += `.${tag.key}`;
                         break;
-                    }
-                    default: {
-                        tags.push(stringify(tag.name));
                     }
                 }
             }
-            if (tags.length) {
-                prefix += `.tags(${tags.join(", ")})`;
-            }
 
-            stringFn = `test${prefix}(${stringify(this.name)}, ${stringFn});`;
+            startingLine++;
+            stringFn = `test${modifiers}(${stringify(this.name)}, ${stringFn});`;
         }
 
         const lines = stringFn.split("\n");
 
         let toTrim = null;
-        for (let i = 1; i < lines.length; i++) {
+        for (let i = startingLine; i < lines.length; i++) {
             if (!lines[i].trim()) {
                 continue;
             }
@@ -104,7 +102,7 @@ export class Test extends Job {
             }
         }
         if (toTrim) {
-            for (let i = 1; i < lines.length; i++) {
+            for (let i = startingLine; i < lines.length; i++) {
                 lines[i] = lines[i].slice(toTrim);
             }
         }
