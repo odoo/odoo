@@ -8,7 +8,6 @@ import { memoize } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
 import { isRelational } from "@web/model/relational_model/utils";
-import { isNull } from "@web/views/utils";
 import { ColumnProgress } from "@web/views/view_components/column_progress";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { registry } from "@web/core/registry";
@@ -101,20 +100,13 @@ export class KanbanHeader extends Component {
 
     get groupName() {
         const { groupByField, displayName } = this.group;
-        let name = displayName;
         if (groupByField.type === "boolean") {
-            name = name ? _t("Yes") : _t("No");
-        } else if (!name) {
-            if (
-                isRelational(groupByField) ||
-                groupByField.type === "date" ||
-                groupByField.type === "datetime" ||
-                isNull(name)
-            ) {
-                name = this._getEmptyGroupLabel(groupByField.name);
-            }
+            return displayName ? _t("Yes") : _t("No");
+        } else if (groupByField.type === "integer") {
+            return displayName || "0";
+        } else {
+            return displayName || this._getEmptyGroupLabel(groupByField.name);
         }
-        return name;
     }
 
     get groupAggregate() {

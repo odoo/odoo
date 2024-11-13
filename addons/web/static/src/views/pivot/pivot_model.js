@@ -1576,12 +1576,12 @@ export class PivotModel extends Model {
     _sanitizeLabel(value, groupBy, config) {
         const { metaData } = config;
         const fieldName = groupBy.split(":")[0];
-        if (
-            fieldName &&
-            metaData.fields[fieldName] &&
-            metaData.fields[fieldName].type === "boolean"
-        ) {
-            return value === undefined ? _t("None") : value ? _t("Yes") : _t("No");
+        if (fieldName && metaData.fields[fieldName]) {
+            if (metaData.fields[fieldName].type === "boolean") {
+                return value === undefined ? _t("None") : value ? _t("Yes") : _t("No");
+            } else if (metaData.fields[fieldName].type === "integer") {
+                return value || "0";
+            }
         }
         if (value === false) {
             return this._getEmptyGroupLabel(fieldName);
