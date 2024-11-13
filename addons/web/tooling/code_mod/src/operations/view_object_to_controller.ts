@@ -1,6 +1,7 @@
 import { NodePath } from "@babel/traverse";
 import * as t from "@babel/types";
 
+import { actionOnJsFile } from "../utils/decorators";
 import { Env } from "../utils/env";
 import { addImports, getNormalizedNode, removeUnusedImports } from "../utils/imports";
 import {
@@ -9,11 +10,10 @@ import {
     getDeclarationPath,
     getDefinitionFor,
     getObjectPropertyPath,
-    getProgramPathFrom,
 } from "../utils/node_path";
 import { DeclarationPattern, ExpressionPattern } from "../utils/pattern";
 import { getLocalIdentifierOfRegistry, isViewRegistry } from "../utils/registry";
-import { isJsFile, normalizeSource } from "../utils/utils";
+import { normalizeSource } from "../utils/utils";
 
 // for ast descriptions see https://github.com/babel/babel/blob/master/packages/babel-parser/ast/spec.md
 
@@ -178,7 +178,6 @@ function processView(viewDef: NodePath<t.ObjectExpression>, env: Env) {
                 const definition = getDefinitionFor(arg, env);
                 if (definition?.path && definition.filePath !== env.filePath) {
                     view_object_to_controller({ ...env, filePath: definition.filePath });
-                    debugger;
                 }
                 let controllerValuePath: NodePath<unknown> | null = null;
 
@@ -231,10 +230,10 @@ function processView(viewDef: NodePath<t.ObjectExpression>, env: Env) {
 
 const addPattern2Args = new ExpressionPattern("__target.add(__key, __added)");
 const addPattern3Args = new ExpressionPattern("__target.add(__key, __added, __y)");
-function viewObjectToController(path: NodePath | null, env: Env) {
+function viewObjectToController(path: NodePath | null, env: Env): void {
     const programPath = ensureProgramPath(path);
     if (!programPath) {
-        return null;
+        return;
     }
     const localPath = getLocalIdentifierOfRegistry(programPath, env);
     if (!localPath) {
@@ -270,9 +269,4 @@ function viewObjectToController(path: NodePath | null, env: Env) {
     });
 }
 
-export function view_object_to_controller(env: Env) {
-    if (!isJsFile(env.filePath)) {
-        return;
-    }
-    viewObjectToController(getProgramPathFrom(env), env);
-}
+export const view_object_to_controller = actionOnJsFile(viewObjectToController);

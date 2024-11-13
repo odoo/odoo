@@ -1,10 +1,11 @@
 import { NodePath } from "@babel/traverse";
 import { cloneNode, ImportDeclaration, Program } from "@babel/types";
 
+import { actionOnJsFile } from "./decorators";
 import { Env } from "./env";
-import { ensureProgramPath, getProgramPathFrom } from "./node_path";
+import { ensureProgramPath } from "./node_path";
 import { areEquivalentUpToHole } from "./pattern";
-import { isJsFile, normalizeSource } from "./utils";
+import { normalizeSource } from "./utils";
 
 function addImport(programPath: NodePath<Program>, imp: ImportDeclaration, env: Env) {
     const source = normalizeSource(imp.source.value, env);
@@ -161,23 +162,6 @@ function putImportsOnTop(path: NodePath | null, env: Env) {
     env.tagAsModified(env.filePath);
 }
 
-export function put_imports_on_top(env: Env) {
-    if (!isJsFile(env.filePath)) {
-        return;
-    }
-    putImportsOnTop(getProgramPathFrom(env), env);
-}
-
-export function group_imports(env: Env) {
-    if (!isJsFile(env.filePath)) {
-        return;
-    }
-    groupImports(getProgramPathFrom(env), env);
-}
-
-export function remove_unused_imports(env: Env) {
-    if (!isJsFile(env.filePath)) {
-        return;
-    }
-    removeUnusedImports(getProgramPathFrom(env), env);
-}
+export const put_imports_on_top = actionOnJsFile(putImportsOnTop);
+export const group_imports = actionOnJsFile(groupImports);
+export const remove_unused_imports = actionOnJsFile(removeUnusedImports);
