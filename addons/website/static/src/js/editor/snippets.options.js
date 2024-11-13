@@ -2434,16 +2434,29 @@ options.registry.Parallax = options.Class.extend({
      *
      * @see this.selectClass for parameters
      */
-    async selectDataAttribute(previewMode, widgetValue, params) {
-        await this._super(...arguments);
-        if (params.attributeName !== 'scrollBackgroundRatio') {
-            return;
+    async setParallaxType(previewMode, widgetValue, params) {
+        const isParallax = widgetValue !== "none";
+        this.$target[0].classList.toggle("parallax", isParallax);
+        this.$target[0].classList.toggle("s_parallax_is_fixed", widgetValue === "fixed");
+        this.$target[0].classList.toggle("s_parallax_no_overflow_hidden", widgetValue === "none" || widgetValue === "fixed");
+        const typeValues = {
+            "none": 0,
+            "fixed": 1,
+            "top": 1.5,
+            "bottom": -1.5,
+            "zoom_in": 1.2,
+            "zoom_out": 0.2,
+        };
+        this.$target[0].dataset.scrollBackgroundRatio = typeValues[widgetValue];
+        // Set a parallax type only if there is a zoom option selected.
+        // This is to avoid useless element in the DOM since in the animation
+        // we need the type only for zoom options.
+        if (widgetValue === "zoom_in" || widgetValue === "zoom_out") {
+            this.$target[0].dataset.parallaxType = widgetValue;
+        } else {
+            delete this.$target[0].dataset.parallaxType;
         }
 
-        const isParallax = (widgetValue !== '0');
-        this.$target.toggleClass('parallax', isParallax);
-        this.$target.toggleClass('s_parallax_is_fixed', widgetValue === '1');
-        this.$target.toggleClass('s_parallax_no_overflow_hidden', (widgetValue === '0' || widgetValue === '1'));
         if (isParallax) {
             if (!this.parallaxEl) {
                 this.parallaxEl = document.createElement('span');
@@ -2474,16 +2487,15 @@ options.registry.Parallax = options.Class.extend({
      * @override
      */
     async _computeWidgetState(methodName, params) {
-        if (methodName === 'selectDataAttribute' && params.parallaxTypeOpt) {
-            const attrName = params.attributeName;
-            const attrValue = (this.$target[0].dataset[attrName] || params.attributeDefaultValue).trim();
-            switch (attrValue) {
-                case '0':
-                case '1': {
-                    return attrValue;
-                }
+        if (methodName === "setParallaxType" && params.parallaxTypeOpt) {
+            const attributeValue = parseFloat(this.$target[0].dataset.scrollBackgroundRatio?.trim() || 0)
+            switch (attributeValue) {
+                case 0:
+                    return "none";
+                case 1:
+                    return "fixed";
                 default: {
-                    return (attrValue.startsWith('-') ? '-1.5' : '1.5');
+                    return this.$target[0].dataset.parallaxType || (attributeValue > 0 ? "top" : "bottom");
                 }
             }
         }

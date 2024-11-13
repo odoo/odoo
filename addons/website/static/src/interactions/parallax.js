@@ -31,6 +31,8 @@ export class Parallax extends Interaction {
         this.styleTop = undefined;
         this.styleBottom = undefined;
         this.styleTransform = undefined;
+        this.isZoomIn = undefined;
+        this.isZoomOut = undefined;
     }
 
     start() {
@@ -46,33 +48,57 @@ export class Parallax extends Interaction {
         this.viewportHeight = document.body.clientHeight;
         this.parallaxHeight = this.el.getBoundingClientRect().height;
 
-        // The parallax is in the viewport if it is between these two values 
+        // The parallax is in the viewport if it is between these two values
         // min : bottom of the parallax in at the top of the page
         // max : top of the parallax in at the bottom of the page
-        this.minScrollPos = - this.parallaxHeight;
+        this.minScrollPos = -this.parallaxHeight;
         this.maxScrollPos = this.viewportHeight;
 
         this.ratio = this.speed * (this.viewportHeight / 10);
 
         this.styleTop = -Math.abs(this.ratio) + "px";
         this.styleBottom = -Math.abs(this.ratio) + "px";
+
+        const parallaxType = this.el.dataset.parallaxType;
+        this.isZoomIn = parallaxType === "zoom_in";
+        this.isZoomOut = parallaxType === "zoom_out";
+
         this.onScroll();
     }
 
     onScroll() {
         const currentPosition = this.el.getBoundingClientRect().top;
-        if (this.speed === 0
-            || this.speed === 1
-            || currentPosition < this.minScrollPos
-            || currentPosition > this.maxScrollPos) {
+        if (
+            this.speed === 0 ||
+            this.speed === 1 ||
+            currentPosition < this.minScrollPos ||
+            currentPosition > this.maxScrollPos
+        ) {
             return;
         }
+        // Calculate progress based on the element's visible range
+        const scrollRange = this.maxScrollPos - this.minScrollPos;
+        const progress = Math.min(
+            1,
+            Math.max(0, (currentPosition - this.minScrollPos) / scrollRange)
+        );
 
-        const r = 1 / (this.minScrollPos - this.maxScrollPos);
-        const offset = 1 - 2 * this.minScrollPos * r;
-        const movement = - Math.round(this.ratio * (r * currentPosition + offset));
+        if (this.isZoomIn) {
+            const initialZoom = 1;
+            const maxZoom = this.speed + 1;
 
-        this.styleTransform = "translateY(" + movement + "px)";
+            this.styleTransform = `scale(${initialZoom + (maxZoom - initialZoom) * progress})`;
+        } else if (this.isZoomOut) {
+            const initialZoom = this.speed + 1;
+
+            this.styleTransform = `scale(${initialZoom - (initialZoom - 1) * progress})`;
+        } else {
+            const r = 1 / (this.minScrollPos - this.maxScrollPos);
+            const offset = 1 - 2 * this.minScrollPos * r;
+            const movement = -Math.round(this.ratio * (r * currentPosition + offset));
+
+            this.styleTransform = "translateY(" + movement + "px)";
+        }
     }
 }
 
