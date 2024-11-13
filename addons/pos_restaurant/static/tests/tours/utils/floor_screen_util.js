@@ -113,6 +113,20 @@ export function linkTables(child, parent) {
         },
     };
 }
+export function unlinkTables(child, parent) {
+    return {
+        content: `Drag table ${child} away from table ${parent} to unlink them`,
+        trigger: table({ name: child }).trigger,
+        async run(helpers) {
+            await helpers.drag_and_drop(`div.floor-map`, {
+                position: {
+                    bottom: 0,
+                },
+                relative: true,
+            });
+        },
+    };
+}
 export function isChildTable(child) {
     return {
         content: `Verify that table ${child} is a child table`,

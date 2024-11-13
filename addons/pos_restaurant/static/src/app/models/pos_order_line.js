@@ -18,11 +18,14 @@ patch(PosOrderline.prototype, {
             this.skip_change = !this.skip_change;
         }
     },
+    showSkipChange() {
+        return this.skip_change && !this.uiState.hideSkipChangeClass && !this.origin_order_id;
+    },
     getDisplayClasses() {
         return {
             ...super.getDisplayClasses(),
             "has-change": this.uiState.hasChange && this.config.module_pos_restaurant,
-            "skip-change": this.skip_change && this.config.module_pos_restaurant,
+            "skip-change": this.showSkipChange() && this.config.module_pos_restaurant,
         };
     },
 });

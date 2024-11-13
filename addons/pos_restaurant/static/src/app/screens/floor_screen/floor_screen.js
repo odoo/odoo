@@ -139,9 +139,8 @@ export class FloorScreen extends Component {
                 table.position_h = table.getX();
                 table.position_v = table.getY();
                 if (table.parent_id) {
-                    this.pos.data.write("restaurant.table", [table.id], {
-                        parent_id: null,
-                    });
+                    this.unMergeTable(table);
+                    this.pos.data.write("restaurant.table", [table.id], { parent_id: null });
                 }
             },
             onWillStartDrag: ({ element, x, y }) => {
@@ -216,7 +215,7 @@ export class FloorScreen extends Component {
                 }
                 const oToTrans = this.pos.getActiveOrdersOnTable(table)[0];
                 if (oToTrans) {
-                    this.pos.transferOrder(oToTrans.uuid, this.state.potentialLink.parent);
+                    this.pos.mergeTableOrders(oToTrans.uuid, this.state.potentialLink.parent);
                 }
                 this.pos.data.write("restaurant.table", [table.id], {
                     parent_id: this.state.potentialLink.parent.id,
@@ -527,6 +526,23 @@ export class FloorScreen extends Component {
         newTableData.active = true;
         const table = await this.pos.data.create("restaurant.table", [newTableData]);
         return table[0];
+    }
+    async unMergeTable(table) {
+        const mainOrder = this.pos.getActiveOrdersOnTable(table.rootTable)?.[0];
+        const orderToRestore =
+            table["<-pos.order.origin_table_id"].find((o) => !o.finalized) ||
+            table["<-pos.order.table_id"].find((o) => !o.finalized);
+        if (orderToRestore) {
+            // If no active order on the destination table, restore the original order
+            if (!mainOrder || mainOrder.id === orderToRestore.id) {
+                const order = this.pos.models["pos.order"].getBy("uuid", orderToRestore.uuid);
+                order.table_id = table;
+                this.pos.setOrder(order);
+                this.pos.addPendingOrder([order.id]);
+            } else {
+                await this.pos.restoreOrdersToOriginalTable(orderToRestore, mainOrder);
+            }
+        }
     }
     _getNewTableNumber() {
         let firstNum = 1;
@@ -923,9 +939,6 @@ export class FloorScreen extends Component {
         }
 
         return changeCount;
-    }
-    getChildren(table) {
-        return this.pos.models["restaurant.table"].filter((t) => t.parent_id?.id === table.id);
     }
     async uploadImage(event) {
         const file = event.target.files[0];
