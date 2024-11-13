@@ -67,7 +67,7 @@
                         </group>
                         <group name="allocation_validation" id="allocation_requests" string="Allocation Requests">
                             <field name="requires_allocation" widget="radio" options="{'horizontal':true}"/>
-                            <field name="employee_requests" widget="radio" invisible="requires_allocation == 'no'"/>
+                            <field name="employee_requests" widget="radio" invisible="requires_allocation != 'yes'"/>
                             <field name="allocation_validation_type" string="Approval" widget="radio" invisible="requires_allocation == 'no'"/>
                         </group>
                     </group>
