@@ -43,7 +43,7 @@ class PaymentTransaction(models.Model):
         """
         self.ensure_one()
 
-        base_url = self.get_base_url()
+        base_url = self.provider_id.get_base_url()
         return_route = WorldlineController._return_url
         return_url_params = urls.url_encode({'provider_id': str(self.provider_id.id)})
         return_url = f'{urls.url_join(base_url, return_route)}?{return_url_params}'
