@@ -26,7 +26,7 @@ from collections import OrderedDict
 from collections.abc import Iterable, Mapping, MutableMapping, MutableSet
 from contextlib import ContextDecorator, contextmanager
 from difflib import HtmlDiff
-from functools import wraps
+from functools import reduce, wraps
 from itertools import islice, groupby as itergroupby
 from operator import itemgetter
 from typing import TYPE_CHECKING
@@ -1049,6 +1049,9 @@ class OrderedSet(MutableSet):
 
     def __repr__(self):
         return f'{type(self).__name__}({list(self)!r})'
+
+    def intersection(self, *others):
+        return reduce(OrderedSet.__and__, others, self)
 
 
 class LastOrderedSet(OrderedSet):
