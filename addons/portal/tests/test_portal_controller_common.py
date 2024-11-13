@@ -1,11 +1,7 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-import odoo
-from odoo.addons.mail.tests.test_controller_common import TestControllerCommon
+from odoo.addons.mail.tests.common_controllers import MailControllerCommon
 
 
-@odoo.tests.tagged("-at_install", "post_install")
-class TestPortalControllerCommon(TestControllerCommon):
+class TestPortalControllerCommon(MailControllerCommon):
     def _get_sign_token_params(self, record):
         access_token = record._portal_ensure_token()
         partner = record.env["res.partner"].create({"name": "Sign Partner"})
