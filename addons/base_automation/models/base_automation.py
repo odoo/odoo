@@ -11,6 +11,8 @@ from dateutil.relativedelta import relativedelta
 from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools import safe_eval
+from odoo.exceptions import ValidationError
+from odoo.tools.misc import mute_logger
 
 _logger = logging.getLogger(__name__)
 
@@ -116,6 +118,29 @@ class BaseAutomation(models.Model):
                     "for a deleted record.  It simply does not work."
                 ),
             }}
+
+    @api.constrains('filter_pre_domain', 'filter_domain', 'model_id')
+    def _check_filter_domain(self):
+        for action in self.sudo():
+            ctx = action._get_eval_context()
+            for filter_name in ['filter_pre_domain', 'filter_domain']:
+                filter = action[filter_name]
+                if not filter:
+                    continue
+                try:
+                    domain = safe_eval.safe_eval(filter, ctx)
+                    query = action.env[action.model_id.model].sudo().with_context(ctx)._search(domain)
+                    sql, params = query.select()
+                    # Execute the search in EXPLAIN mode, to have the query parser
+                    # verify it. EXPLAIN will make sure the query is never actually executed
+                    # An alternative to EXPLAIN would be a LIMIT 0 clause, but the semantics
+                    # of a falsy `limit` parameter when calling _search() do not permit it.
+                    with mute_logger('odoo.sql_db'):
+                        self.env.cr.execute(f'EXPLAIN {sql}', params)
+                except Exception as e:
+                    field = action._fields.get(filter_name)
+                    raise ValidationError(
+                        _('Invalid %s: %s\n\n%s', field.name, filter, e))
 
     @api.model_create_multi
     def create(self, vals_list):
