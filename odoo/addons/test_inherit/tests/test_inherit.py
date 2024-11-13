@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import models, fields
+from odoo.addons import base
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.tests import common
-from ..models.mother_inherit_4 import TestInheritMother
+from odoo.addons import test_inherit
 
 
 class test_inherits(common.TransactionCase):
@@ -60,6 +62,48 @@ class test_inherits(common.TransactionCase):
         self.assertEqual(field.string, "Template")
         self.assertTrue(field.required)
 
+    def test_21_field_extension_type(self):
+        def setup(Cls):
+            model = Cls._build_model(self.registry, self.env.cr)
+            self.env[model._name]._prepare_setup()
+            self.env[model._name]._setup_base()
+            self.env[model._name]._setup_fields()
+
+        with self.assertLogs('odoo.fields', level="WARNING") as capture:
+            class Test_inheritModel1(models.Model, test_inherit.TestInheritMother):
+                _description = "new model 1"
+                partner_id = fields.Many2one['base.ResUsers'](string="a")
+            setup(Test_inheritModel1)
+            self.assertEqual(len(capture.output), 1, "Exactly one warning should be logged")
+            self.assertIn("test_inherit.model1.partner_id' field cannot have multiple types: ['res.partner', 'res.users']", capture.output[0])
+            del self.registry['test_inherit.model1']
+
+        with self.assertNoLogs('odoo.fields', level="WARNING"):
+            # no log because the previous wrong type does not change the default comodel
+            class Test_inheritModel2(models.Model, test_inherit.TestInheritMother):
+                _description = "new model 2"
+                partner_id = fields.Many2one['base.ResPartner'](string="b")
+            setup(Test_inheritModel2)
+            del self.registry['test_inherit.model2']
+
+        with self.assertNoLogs('odoo.fields', level="WARNING"):
+            class Test_inheritModel3(models.AbstractModel):
+                _description = "new model 3"
+                template_id = fields.Many2one['test_inherit.TestInheritMother']()
+                toto_partner_id = fields.Many2one['base.ResPartner'](related="template_id.partner_id", string="c")
+            setup(Test_inheritModel3)
+            del self.registry['test_inherit.model3']
+
+        with self.assertLogs('odoo.fields', level="WARNING") as capture:
+            class Test_inheritModel4(models.AbstractModel):
+                _description = "new model 4"
+                template_id = fields.Many2one['test_inherit.TestInheritMother']()
+                toto_user_id = fields.Many2one['base.ResPartner'](related="template_id.partner_id.user_id", string="d")
+            setup(Test_inheritModel4)
+            del self.registry['test_inherit.model4']
+            self.assertEqual(len(capture.output), 1, "Exactly one warning should be logged")
+            self.assertIn("test_inherit.model4.toto_user_id' field cannot have multiple types: ['res.users', 'res.partner']", capture.output[0])
+
     def test_30_depends_extension(self):
         """ check that @depends on overridden compute methods extends dependencies """
         mother = self.env['test.inherit.mother']
@@ -87,9 +131,57 @@ class test_inherits(common.TransactionCase):
         model = self.env['test_inherit_parent']
         self.assertEqual(bool(model._fields['foo']), True)
 
+    def test_50_define_model_with_mixin(self):
+        class First:
+            def foo(self):
+                return
+
+        class NewTestInheritModel1(models.AbstractModel):
+            pass
+
+        class NewTestInheritModel2(models.AbstractModel):
+            pass
+
+        # class NewTestInheritModel2(models.Extension, NewTestInheritModel2):
+        #     pass
+
+        with self.assertRaisesRegex(TypeError, r"The Odoo models should only contain Odoo model without any other python classes."):
+            class NewTestInheritModelFail(models.AbstractModel, First):
+                pass
+
+        with self.assertRaisesRegex(TypeError, r"The new Model 'InheritOdooModelClass' must contain the Odoo model type \('AbstractModel', 'Model', 'TransientModel'\)"):
+            class InheritOdooModelClass(NewTestInheritModel1, NewTestInheritModel2):
+                pass
+
+        class InheritOdooModelClass2(models.Model, NewTestInheritModel1, NewTestInheritModel2):
+            pass
+
+        # with self.assertRaisesRegex(TypeError, r"Only the new models should contain the Odoo model type"):
+        #     class NewTestInheritModel1(models.Model, NewTestInheritModel1):  # noqa: F811
+        #         pass
+
+        class NewTestInheritModel1(NewTestInheritModel1):  # noqa: F811
+            pass
+
+        with self.assertRaisesRegex(TypeError, r"The Odoo models should only contain Odoo model without any other python classes."):
+            class InheritOdooModelClass(First, NewTestInheritModel1):
+                pass
+
+        with self.assertRaisesRegex(TypeError, r"The Odoo models should only contain Odoo model without any other python classes."):
+            class Inherit3OdooModelClass(models.Model, NewTestInheritModel1, First):
+                pass
+
+        with self.assertRaisesRegex(TypeError, r"The Odoo models should only contain Odoo model without any other python classes."):
+            class Inherit4OdooModelClass(models.Model, First, test_inherit.TestInheritMother):
+                pass
+
+        with self.assertRaisesRegex(TypeError, r"The Odoo models should only contain Odoo model without any other python classes."):
+            class Inherit2OdooModelClass(First, models.Model, NewTestInheritModel1):
+                pass
+
     def test_60_inherit_with_python(self):
         self.assertEqual(self.env['test.inherit.mother'].foo(), 42)
-        self.assertEqual(self.env[TestInheritMother._name].foo(), 42)
+        self.assertEqual(self.env[test_inherit.TestInheritMother._name].foo(), 42)
         self.assertEqual(self.env['test.inherit.mother'].browse(1).surname, 'Mother A')
 
 

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, tools
+from odoo.addons import base
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(base.ResPartner):
 
     street_name = fields.Char(
         'Street Name', compute='_compute_street_data', inverse='_inverse_street_data', store=True)
