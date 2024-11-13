@@ -95,5 +95,11 @@
         <field name="perm_read" eval="False"/>
     </record>
 
+    <record id="ir_rule_hr_departure_reason_multi_company" model="ir.rule">
+        <field name="name">Departure Reason: multi company</field>
+        <field name="model_id" ref="model_hr_departure_reason"/>
+        <field name="domain_force">[('country_code', 'in', user.env.companies.mapped('country_code') + [False])]</field>
+    </record>
+
 </data>
 </odoo>
