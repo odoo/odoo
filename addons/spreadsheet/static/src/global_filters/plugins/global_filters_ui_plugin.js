@@ -10,7 +10,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
 import { Domain } from "@web/core/domain";
-import { constructDateRange, getPeriodOptions, QUARTER_OPTIONS } from "@web/search/utils/dates";
+import { constructDateRange, QUARTER_OPTIONS } from "@web/search/utils/dates";
 
 import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
 import CommandResult from "@spreadsheet/o_spreadsheet/cancelled_reason";
@@ -221,11 +221,10 @@ export default class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
                 if (!value || value.yearOffset === undefined) {
                     return "";
                 }
-                const periodOptions = getPeriodOptions(DateTime.local());
                 const year = String(DateTime.local().year + value.yearOffset);
-                const period = periodOptions.find(({ id }) => value.period === id);
-                let periodStr = period && period.description;
-                // Named months aren't in getPeriodOptions
+                const period = QUARTER_OPTIONS[value.period];
+                let periodStr = period && "Q" + period.setParam.quarter; // we do not want the translated value (like T1 in French)
+                // Named months aren't in QUARTER_OPTIONS
                 if (!period) {
                     periodStr =
                         MONTHS[value.period] && String(MONTHS[value.period].value).padStart(2, "0");
