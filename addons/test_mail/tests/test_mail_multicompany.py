@@ -479,7 +479,7 @@ class TestMultiCompanyRedirect(MailCommon, HttpCase):
             }
         ])
 
-        self.authenticate('admin', 'admin')
+        self.authenticate(self.user_admin.login, self.user_admin.login)
         companies = []
         for mc_record in mc_records:
             with self.subTest(mc_record=mc_record):
