@@ -316,6 +316,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         url = '/shop'
         if search:
             post['search'] = search
+        if attrib_list:
+            post['attribute_value'] = attrib_list
 
         options = self._get_search_options(
             category=category,
