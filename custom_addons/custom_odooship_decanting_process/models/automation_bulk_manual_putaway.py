@@ -5,6 +5,7 @@ import json
 import requests
 from odoo.exceptions import UserError, ValidationError
 
+
 _logger = logging.getLogger(__name__)
 class AutomationBulkManual(models.Model):
     _name = "automation.bulk.manual.putaway"
@@ -25,18 +26,18 @@ class AutomationBulkManual(models.Model):
     automation_bulk_manual_putaway_line_ids = fields.One2many('automation.bulk.manual.putaway.line', 'automation_bulk_manual_id', string="Product Lines")
 
 
-    @api.model
-    def create(self, vals):
-        # Check the type of automation_manual and assign the correct sequence
-        if vals.get('automation_manual') == 'automation_bulk':
-            # Retrieve the sequence for automation bulk
-            vals['name'] = self.env['ir.sequence'].next_by_code('automation.bulk.manual.putaway') or _('New')
-        else:
-            # Retrieve the sequence for manual
-            vals['name'] = self.env['ir.sequence'].next_by_code('automation.bulk.manual.putaway') or _('New')
-
-        return super(AutomationBulkManual, self).create(vals)
-
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            # Check if name should be generated based on the selection field
+            if not vals.get('name') or vals['name'] == _('New'):
+                if vals.get('automation_manual') == 'automation_bulk':
+                    # Generate sequence for automation bulk
+                    vals['name'] = self.env['ir.sequence'].next_by_code('automation.bulk.putaway') or _('New')
+                elif vals.get('automation_manual') == 'manual':
+                    # Generate sequence for manual putaway
+                    vals['name'] = self.env['ir.sequence'].next_by_code('manual.putaway') or _('New')
+        return super(AutomationBulkManual, self).create(vals_list)
 
     def send_message_to_automation(self):
         """Send data to external system with exact payload structure."""
