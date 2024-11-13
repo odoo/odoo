@@ -37,8 +37,7 @@ class TestHolidaysOvertime(TransactionCase):
         cls.leave_type_no_alloc = cls.env['hr.leave.type'].create({
             'name': 'Overtime Compensation No Allocation',
             'company_id': cls.company.id,
-            'requires_allocation': 'no',
-            'overtime_deductible': True,
+            'requires_allocation': 'extra_hours',
         })
         cls.leave_type_employee_allocation = cls.env['hr.leave.type'].create({
             'name': 'Overtime Compensation Employee Allocation',
