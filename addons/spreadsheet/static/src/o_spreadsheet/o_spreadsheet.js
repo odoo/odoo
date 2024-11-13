@@ -9971,6 +9971,9 @@
             }
         }
         setColorScaleColor(target, color) {
+            if (!isColorValid(color)) {
+                return;
+            }
             const point = this.state.rules.colorScale[target];
             if (point) {
                 point.color = Number.parseInt(color.substr(1), 16);
@@ -43458,9 +43461,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.54';
-    __info__.date = '2024-11-08T12:23:04.819Z';
-    __info__.hash = 'fdfa7dc';
+    __info__.version = '16.0.55';
+    __info__.date = '2024-11-13T15:37:39.251Z';
+    __info__.hash = '6984990';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
