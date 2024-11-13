@@ -127,7 +127,10 @@ class TestDiscussFullPerformance(HttpCase):
         }, headers={"Cookie": f"{self.guest._cookie_name}={self.guest._format_auth_cookie()};"})
         # add needaction
         self.users[0].notification_type = 'inbox'
-        message = self.channel_channel_public_1.message_post(body='test', message_type='comment', author_id=self.users[2].partner_id.id, partner_ids=self.users[0].partner_id.ids)
+        message = self.channel_channel_public_1.message_post(body='test', author_id=self.users[2].partner_id.id, message_type='comment', partner_ids=self.users[0].partner_id.ids)
+        members = self.channel_channel_public_1.channel_member_ids
+        member = members.filtered(lambda m: m.partner_id == self.users[0].partner_id).with_user(self.users[0])
+        member._mark_as_read(message.id)
         # add star
         message.toggle_message_starred()
         self.env.company.sudo().name = 'YourCompany'
