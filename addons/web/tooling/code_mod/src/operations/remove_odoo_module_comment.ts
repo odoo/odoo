@@ -12,7 +12,7 @@ export function removeOdooModuleCommentFromFileContent(fileContent: string) {
 }
 
 export function remove_odoo_module_comment(env: Env) {
-    const { filePath: filePath } = env;
+    const { filePath } = env;
     if (!isJsFile(filePath)) {
         return;
     }
