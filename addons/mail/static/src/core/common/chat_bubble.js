@@ -16,12 +16,12 @@ class ChatBubblePreview extends Component {
         return this.props.chatWindow.thread;
     }
 
-    get previewContent() {
+    get previewText() {
         const lastMessage = this.thread?.newestPersistentOfAllMessage;
         if (!lastMessage) {
             return false;
         }
-        return lastMessage.inlineBody;
+        return lastMessage.previewText;
     }
 }
 
