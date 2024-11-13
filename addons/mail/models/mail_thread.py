@@ -25,7 +25,7 @@ from markupsafe import Markup, escape
 from requests import Session
 from werkzeug import urls
 
-from odoo import _, api, exceptions, fields, models, Command
+from odoo import _, api, exceptions, fields, models, Command, tools
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.web_push import push_to_end_point, DeviceUnreachableError
 from odoo.exceptions import MissingError, AccessError
@@ -3858,6 +3858,29 @@ class MailThread(models.AbstractModel):
             icon = "/web/image/res.partner/%d/avatar_128" % author_id
         else:
             icon = '/web/static/img/odoo-icon-192x192.png'
+
+        if tools.is_html_empty(body) and message.attachment_ids:
+            total_attachments = len(message.attachment_ids)
+            # sudo: ir.attachment - access voice_ids linked to an attachment, if present.
+            attachments = message.attachment_ids.sudo()
+
+            def get_attachment_label(attachment):
+                return self.env._("Voice Message") if attachment.voice_ids else attachment.name
+
+            if total_attachments == 1:
+                body = get_attachment_label(attachments[0])
+            elif total_attachments == 2:
+                body = self.env._(
+                    "%(file1)s and %(file2)s",
+                    file1=get_attachment_label(attachments[0]),
+                    file2=get_attachment_label(attachments[1]),
+                )
+            else:
+                body = self.env._(
+                    "%(file1)s and %(count)d other attachments",
+                    file1=get_attachment_label(attachments[0]),
+                    count=total_attachments - 1,
+                )
 
         return {
             'title': title,
