@@ -107,8 +107,8 @@ export class KanbanHeader extends Component {
         } else if (!name) {
             if (
                 isRelational(groupByField) ||
-                groupByField.type === "date" ||
-                groupByField.type === "datetime" ||
+                groupByField.value === undefined ||
+                groupByField.displayName === false ||
                 isNull(name)
             ) {
                 name = this._getEmptyGroupLabel(groupByField.name);
