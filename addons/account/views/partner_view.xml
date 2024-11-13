@@ -204,16 +204,13 @@
                         <field name="duplicated_bank_account_partners_count" invisible="1"/>
                         <field name="show_credit_limit" invisible="1"/>
                         <group>
-                            <group string="Bank Accounts" name="banks" groups="account.group_account_invoice,account.group_account_readonly">
-                                <field name="bank_ids" nolabel="1" context="{'default_partner_id': id}" widget="auto_save_res_partner">
-                                    <list>
-                                        <field name="sequence" widget="handle"/>
-                                        <field name="acc_number"/>
-                                        <field name="bank_id"/>
-                                        <field name="allow_out_payment"/>
-                                        <field name="acc_holder_name" column_invisible="True"/>
-                                    </list>
-                                </field>
+                            <group string="General" name="general" groups="account.group_account_invoice,account.group_account_readonly">
+                                <field name="bank_ids" context="{'default_partner_id': id}" domain="[('partner_id','=', id)]" widget="many2many_tags_banks" options="{'color_field': 'color', 'allow_out_payment_field': 'allow_out_payment', 'edit_tags': True}"/>
+                                <field name="property_account_receivable_id" required="is_coa_installed" invisible="not is_coa_installed"/>
+                                <field name="property_account_payable_id" required="is_coa_installed" invisible="not is_coa_installed"/>
+                                <field name="autopost_bills" groups="account.group_account_invoice,account.group_account_readonly"/>
+                                <field name="ignore_abnormal_invoice_amount" groups="base.group_no_one"/>
+                                <field name="ignore_abnormal_invoice_date" groups="base.group_no_one"/>
                             </group>
                             <group id="invoice_send_settings"
                                    string="Customer Invoices"
@@ -223,12 +220,6 @@
                                 <field name="invoice_template_pdf_report_id"
                                        invisible="not display_invoice_template_pdf_report_id"
                                        options="{'no_create': True, 'no_edit': True}"/>
-                            </group>
-                            <group string="Accounting Entries" name="accounting_entries" invisible="not is_coa_installed" groups="account.group_account_readonly">
-                                <field name="is_coa_installed" invisible="1"/>
-                                <field name="currency_id" invisible="1"/>
-                                <field name="property_account_receivable_id" required="is_coa_installed"/>
-                                <field name="property_account_payable_id" required="is_coa_installed"/>
                             </group>
                             <group string="Credit Limits"
                                    name="credit_limits"
@@ -241,11 +232,6 @@
                                     <field name="use_partner_credit_limit"/>
                                     <field name="credit_limit" class="oe_inline" invisible="not use_partner_credit_limit"/>
                                 </div>
-                            </group>
-                            <group name='accounting_automation' string='Automation'>
-                                <field name="autopost_bills" groups="account.group_account_invoice,account.group_account_readonly"/>
-                                <field name="ignore_abnormal_invoice_amount" groups="base.group_no_one"/>
-                                <field name="ignore_abnormal_invoice_date" groups="base.group_no_one"/>
                             </group>
                         </group>
                     </page>

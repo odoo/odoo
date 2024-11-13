@@ -222,7 +222,6 @@ class NewLeadNotification(TestCrmCommon):
         """Check default creates value used when creating client from suggested
         recipients (customer)."""
         lead_details_for_contact = {
-            'title': self.env.ref('base.res_partner_title_mister').id,
             'street': '3rd Floor, Room 3-C',
             'street2': '123 Arlington Avenue',
             'zip': '13202',
