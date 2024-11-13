@@ -37,7 +37,7 @@ patch(ControlButtons.prototype, {
                 const guestCount = parseInt(inputNumber, 10) || 0;
                 if (guestCount == 0 && this.currentOrder.lines.length === 0) {
                     this.pos.removeOrder(this.currentOrder);
-                    this.pos.showScreen("FloorScreen");
+                    this.pos.showNumpadScreen("FloorScreen");
                     return;
                 }
                 this.currentOrder.setCustomerCount(guestCount);
@@ -50,7 +50,7 @@ patch(ControlButtons.prototype, {
         this.pos.isOrderTransferMode = true;
         const orderUuid = this.pos.get_order().uuid;
         this.pos.get_order().setBooked(true);
-        this.pos.showScreen("FloorScreen");
+        this.pos.showNumpadScreen("FloorScreen");
         document.addEventListener(
             "click",
             async (ev) => {

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.OrderEditor">
+        <div t-att-class="{'d-none': ui.isSmall and pos.mobile_pane !== 'left'}"
+            class="w-100 leftpane d-flex flex-column p-2 h-100">
+            <OrderSummary t-if="this.pos.get_order()" />
+            <div t-else="" class="flex-grow-1" />
+            <div class="pads">
+                <div t-attf-class="control-buttons d-flex justify-content-between gap-2 w-100 py-2">
+                    <ControlButtons t-if="!ui.isSmall and this.pos.get_order()" onClickMore.bind="displayAllControlPopup"/>
+                </div>
+                <div class="subpads d-flex flex-column gap-2">
+                    <Numpad t-if="pos.get_order() and pos.get_order()?.uiState.selected_orderline_uuid or !pos.get_order()" class="'d-grid m-n1'" buttons="getNumpadButtons()" onClick.bind="onNumpadClick"/>
+                    <ActionpadWidget
+                        t-if="this.pos.get_order()"
+                        partner="currentOrder?.get_partner()"
+                        onClickMore.bind="displayAllControlPopup"
+                        actionName.translate="Payment"
+                        actionToTrigger="() => pos.pay()"
+                        showActionButton="!currentOrder?.is_empty()"
+                    />
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

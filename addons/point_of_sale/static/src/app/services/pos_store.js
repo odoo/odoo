@@ -33,6 +33,7 @@ import { ActionScreen } from "@point_of_sale/app/screens/action_screen";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { CashMovePopup } from "@point_of_sale/app/components/popups/cash_move_popup/cash_move_popup";
 import { ClosePosPopup } from "@point_of_sale/app/components/popups/closing_popup/closing_popup";
+import { OrderEditor } from "../components/order_editor/order_editor";
 
 export class PosStore extends Reactive {
     loadingSkipButtonIsShown = false;
@@ -455,7 +456,7 @@ export class PosStore extends Reactive {
         }
 
         this.markReady();
-        this.showScreen(this.firstScreen);
+        this.showNumpadScreen("ProductScreen");
     }
 
     get productListViewMode() {
@@ -1411,6 +1412,19 @@ export class PosStore extends Reactive {
             true
         );
     }
+    showNumpadScreen(name, props = {}) {
+        const components = registry.category("pos_screens").get(name);
+
+        this.showScreen("DoubleScreen", {
+            left: OrderEditor,
+            right: components,
+            rightProps: props,
+        });
+
+        if (components.storeOnOrder ?? true) {
+            this.get_order()?.set_screen_data({ name, props });
+        }
+    }
     showScreen(name, props) {
         if (name === "ProductScreen") {
             this.get_order()?.deselect_orderline();
@@ -1770,7 +1784,7 @@ export class PosStore extends Reactive {
             [PaymentScreen, ActionScreen].includes(this.mainScreen.component)
         ) {
             this.mobile_pane = this.mainScreen.component === PaymentScreen ? "left" : "right";
-            this.showScreen("ProductScreen");
+            this.showNumpadScreen("ProductScreen");
         }
     }
 

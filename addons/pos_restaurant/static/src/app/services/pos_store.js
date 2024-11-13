@@ -42,7 +42,7 @@ patch(PosStore.prototype, {
             this.config.module_pos_restaurant &&
             this.mainScreen.component.name !== "TicketScreen"
         ) {
-            this.showScreen("FloorScreen");
+            this.showNumpadScreen("FloorScreen");
         }
     },
     // using the same floorplan.
@@ -112,7 +112,7 @@ patch(PosStore.prototype, {
                 // We check that it's in ReceiptScreen because we want to keep the order if it's in a tipping state
                 this.removeOrder(order);
             }
-            this.showScreen("FloorScreen", { floor: table?.floor });
+            this.showNumpadScreen("FloorScreen", { floor: table?.floor });
         }
     },
     getReceiptHeaderData(order) {
@@ -140,7 +140,7 @@ patch(PosStore.prototype, {
     },
     closeScreen() {
         if (this.config.module_pos_restaurant && !this.get_order()) {
-            return this.showScreen("FloorScreen");
+            this.showNumpadScreen("FloorScreen");
         }
         return super.closeScreen(...arguments);
     },
@@ -275,14 +275,15 @@ patch(PosStore.prototype, {
             const orders = this.getTableOrders(table.id);
             if (orders.length > 0) {
                 this.set_order(orders[0]);
-                const props = {};
                 if (orders[0].get_screen_data().name === "PaymentScreen") {
-                    props.orderUuid = orders[0].uuid;
+                    this.showScreen("PaymentScreen", {
+                        orderUuid: orders[0].uuid,
+                    });
                 }
-                this.showScreen(orders[0].get_screen_data().name, props);
+                this.showNumpadScreen("ProductScreen");
             } else {
                 this.add_new_order({ table_id: table });
-                this.showScreen("ProductScreen");
+                this.showNumpadScreen("ProductScreen");
             }
         }
     },
