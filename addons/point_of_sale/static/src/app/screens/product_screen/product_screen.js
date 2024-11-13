@@ -358,9 +358,17 @@ export class ProductScreen extends Component {
     }
 
     getProductsBySearchWord(searchWord) {
-        return fuzzyLookup(unaccent(searchWord, false), this.products, (product) =>
+        const exactMatches = this.products.filter((product) => product.exactMatch(searchWord));
+
+        if (exactMatches.length > 0 && searchWord.length > 2) {
+            return exactMatches;
+        }
+
+        const fuzzyMatches = fuzzyLookup(unaccent(searchWord, false), this.products, (product) =>
             unaccent(product.searchString, false)
         );
+
+        return Array.from(new Set([...exactMatches, ...fuzzyMatches]));
     }
 
     addMainProductsToDisplay(products) {
