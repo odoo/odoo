@@ -31,6 +31,8 @@ export class Notification extends Record {
     notification_status;
     /** @type {string} */
     notification_type;
+    /** @type {string} */
+    email;
     failure = Record.one("Failure", {
         inverse: "notifications",
         /** @this {import("models").Notification} */

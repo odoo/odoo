@@ -252,6 +252,9 @@ class MailMail(models.Model):
 
         return res
 
+    def _postprocess_sent_message_filter_notif_mails(self):
+        return self
+
     def _postprocess_sent_message(self, success_pids, failure_reason=False, failure_type=None):
         """Perform any post-processing necessary after sending ``mail``
         successfully, including deleting it completely along with its
@@ -260,7 +263,7 @@ class MailMail(models.Model):
 
         :return: True
         """
-        notif_mails_ids = [mail.id for mail in self if mail.is_notification]
+        notif_mails_ids = self._postprocess_sent_message_filter_notif_mails().ids
         if notif_mails_ids:
             notifications = self.env['mail.notification'].search([
                 ('notification_type', '=', 'email'),
@@ -838,3 +841,35 @@ class MailMail(models.Model):
         if post_send_callback:
             post_send_callback(self.ids)
         return True
+
+    def _notification_values_from_emails(self):
+        """Get list of base notification values to create a notification for an existing email.
+
+        Recipient-specific values should be added separately.
+        """
+        return [
+            {
+                'author_id': mail.author_id.id,
+                'is_read': True,  # no mechanism to update this for outgoing emails
+                'mail_mail_id': mail.id,
+                'mail_message_id': mail.mail_message_id.id,
+                'notification_type': 'email',
+                'notification_status': mail._get_notification_status(),
+                'failure_type': mail._get_notification_failure_type(),
+            }
+            for mail in self
+        ]
+
+    def _get_notification_failure_type(self):
+        """Return the equivalent failure type for notifications."""
+        return 'mail_email_invalid' if self.failure_type in ("mail_bl", "mail_optout", "mail_dup") else self.failure_type
+
+    def _get_notification_status(self):
+        """Return the equivalent status for notifications based on state."""
+        return {
+            'outgoing': 'ready',
+            'sent': 'sent',
+            'received': 'sent',
+            'exception': 'exception',
+            'cancel': 'canceled',
+        }.get(self.state, 'ready')
