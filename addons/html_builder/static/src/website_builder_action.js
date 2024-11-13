@@ -29,11 +29,15 @@ class WebsiteBuilder extends Component {
         });
         this.state = useState({ isEditing: false });
         this.websiteService = useService("website");
+        // TODO: to remove: this is only needed to not use the website systray
+        // when using the "website preview" app.
+        this.websiteService.useMysterious = true;
 
         onWillStart(async () => {
             const [backendWebsiteRepr] = await Promise.all([
                 this.orm.call("website", "get_current_website"),
                 this.websiteService.fetchWebsites(),
+                this.websiteService.fetchUserGroups(),
             ]);
             this.backendWebsiteId = unslugHtmlDataObject(backendWebsiteRepr).id;
             this.initialUrl = `/website/force/${encodeURIComponent(this.backendWebsiteId)}`;
@@ -41,6 +45,7 @@ class WebsiteBuilder extends Component {
         });
         this.addSystrayItems();
         onWillDestroy(() => {
+            this.websiteService.useMysterious = false;
             registry.category("systray").remove("website.WebsiteSystrayItem");
         });
     }
