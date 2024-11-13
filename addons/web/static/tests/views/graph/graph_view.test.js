@@ -2837,3 +2837,16 @@ test("missing deleted property field definition is created", async function () {
         ]
     );
 });
+
+test("display '0' for empty int field values in grouped graph view", async () => {
+    Foo._records[0].foo = false;
+
+    const view = await mountView({
+        type: "graph",
+        resModel: "foo",
+        groupBy: ["foo"],
+        arch: /* xml */ `<graph type="pie" />`,
+    });
+
+    checkLabels(view, ["2", "4", "24", "42", "48", "53", "63", "0"]);
+});

@@ -17593,3 +17593,36 @@ test("add custom field button not shown to non-system users (wo opt. col.)", asy
 
     expect("table .o_optional_columns_dropdown_toggle").toHaveCount(0);
 });
+
+test(`display 'None' for empty char field values in grouped list view`, async () => {
+    Foo._records[0].foo = false;
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list open_form_view="True">
+                <field name="foo"/>
+            </list>
+        `,
+        groupBy: ["foo"],
+    });
+
+    expect(`tbody tr:nth-child(3)`).toHaveText("None (1)");
+});
+
+test(`display '0' for empty int field values in grouped list view`, async () => {
+    Foo._records[0].int_field = 0;
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list expand="1">
+                <field name="foo"/>
+            </list>`,
+        groupBy: ["int_field"],
+    });
+
+    expect(`tbody tr:nth-child(3)`).toHaveText("0 (1)");
+});

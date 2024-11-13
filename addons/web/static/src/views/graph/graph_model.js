@@ -414,6 +414,8 @@ export class GraphModel extends Model {
                     const { type } = fields[fieldName];
                     if (type === "boolean") {
                         label = `${val}`; // toUpperCase?
+                    } else if (type === "integer") {
+                        label = val === false ? "0" : `${val}`;
                     } else if (val === false) {
                         label = this._getDefaultFilterLabel(gb);
                     } else if (["many2many", "many2one"].includes(type)) {
