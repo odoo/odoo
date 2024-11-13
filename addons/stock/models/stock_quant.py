@@ -584,7 +584,7 @@ class StockQuant(models.Model):
         for record in self:
             name = [record.location_id.display_name]
             if record.lot_id:
-                name.append(record.lot_id.name)
+                name.append(record.lot_id.display_name)
             if record.package_id:
                 name.append(record.package_id.name)
             if record.owner_id:
