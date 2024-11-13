@@ -90,11 +90,11 @@ class TestMassMailing(TestMailFullCommon):
                 elif recipient in (recipient_dup_1, recipient_dup_2, recipient_dup_4):
                     recipient_info['trace_status'] = "cancel"
                     recipient_info['failure_type'] = "mail_dup"
-                # void: error (failed mail)
+                # void: cancel (cancel mail)
                 elif recipient == recipient_void_1:
                     recipient_info['trace_status'] = 'cancel'
                     recipient_info['failure_type'] = "mail_email_missing"
-                # falsy: error (failed mail)
+                # falsy: cancel (cancel mail)
                 elif recipient == recipient_falsy_1:
                     recipient_info['trace_status'] = "cancel"
                     recipient_info['failure_type'] = "mail_email_invalid"

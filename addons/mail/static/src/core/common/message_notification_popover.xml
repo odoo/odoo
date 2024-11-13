@@ -11,6 +11,7 @@
                     <t t-esc="props.message.getPersonaName(notification.res_partner_id)"/>
                     <t t-if="notification.res_partner_id.email and !notification.isFailure"> (<t t-out="notification.res_partner_id.email"/>)</t>
                 </span>
+                <span t-elif="notification.mail_email_address" t-out="notification.mail_email_address"/>
                 <span class="ms-1 text-muted" t-if="notification.isFailure">(<t t-esc="notification.failureMessage"/>)</span>
             </div>
             <div t-if="props.message.incoming_email_cc or props.message.incoming_email_to" t-foreach="(props.message.incoming_email_cc || []).concat(props.message.incoming_email_to || [])" t-as="incomingEmail" t-key="incomingEmail_index">
@@ -24,6 +25,7 @@
                     <t t-esc="props.message.getPersonaName(notification.res_partner_id)"/>
                     <t t-if="notification.res_partner_id.email and !notification.isFailure"> (<t t-out="notification.res_partner_id.email"/>)</t>
                 </span>
+                <span t-elif="notification.mail_email_address" t-out="notification.mail_email_address"/>
                 <span class="ms-1 text-muted" t-if="notification.isFailure">(<t t-esc="notification.failureMessage"/>)</span>
             </div>
         </div>
