@@ -186,10 +186,17 @@ class CustomerPortal(Controller):
         })
 
         if post and request.httprequest.method == 'POST':
+            login = post.pop("login")
             if not partner.can_edit_vat():
                 post['country_id'] = str(partner.country_id.id)
 
             error, error_message = self.details_form_validate(post)
+            if not login:
+                error["login"] = "missing"
+                error_message.append(_("Some required fields are empty."))
+            elif self.env["res.users"].search([("login", "=", login),("website_id", "=", self.env.user.website_id.id)], limit=1):
+                error["login"] = "Duplicate"
+                error_message.append(_("You can not have two users with the same login."))
             values.update({'error': error, 'error_message': error_message})
             values.update(post)
             if not error:
@@ -203,6 +210,10 @@ class CustomerPortal(Controller):
                 values.update({'zip': values.pop('zipcode', '')})
                 self.on_account_update(values, partner)
                 partner.sudo().write(values)
+                if request.env.user.login != login:
+                    request.env.user.write({"login": login})
+                    # update session token so the user does not get logged out
+                    request.session.session_token = self.env.user._compute_session_token(request.session.sid)
                 if redirect:
                     return request.redirect(redirect)
                 return request.redirect('/my/home')
