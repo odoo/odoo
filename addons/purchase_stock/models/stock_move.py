@@ -100,8 +100,12 @@ class StockMove(models.Model):
             # in assigned state. However, the move date is the scheduled date until move is
             # done, then date of actual move processing. See:
             # https://github.com/odoo/odoo/blob/2f789b6863407e63f90b3a2d4cc3be09815f7002/addons/stock/models/stock_move.py#L36
+            convert_date = fields.Date.context_today(self)
+            # use currency rate at bill date when invoice before receipt
+            if float_compare(line.qty_invoiced, received_qty, precision_rounding=line.product_uom_id.rounding) > 0:
+                convert_date = max(line.sudo().invoice_lines.move_id.filtered(lambda m: m.state == 'posted').mapped('invoice_date'), default=convert_date)
             price_unit = order.currency_id._convert(
-                price_unit, order.company_id.currency_id, order.company_id, fields.Date.context_today(self), round=False)
+                price_unit, order.company_id.currency_id, order.company_id, convert_date, round=False)
         if self.product_id.lot_valuated:
             return dict.fromkeys(self.lot_ids, price_unit)
         return {self.env['stock.lot']: price_unit}
