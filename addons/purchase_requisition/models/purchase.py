@@ -294,7 +294,7 @@ class PurchaseOrderLine(models.Model):
                     name = pol._get_product_purchase_description(pol.product_id.with_context(product_ctx))
                     if line.product_description_variants:
                         name += '\n' + line.product_description_variants
-                    pol.name = name
+                    pol.name = (pol.name or name) if pol.order_id.requisition_id.type_id.line_copy == 'copy' else name
                     break
         super(PurchaseOrderLine, po_lines_without_requisition)._compute_price_unit_and_date_planned_and_name()
 
