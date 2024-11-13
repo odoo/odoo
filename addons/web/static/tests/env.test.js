@@ -233,3 +233,26 @@ test(`mountComponent: can pass props to the root component`, async () => {
     });
     expect(getFixture()).toHaveText("text from props");
 });
+
+test(`env.isReady is resolved after services are loaded`, async () => {
+    const deferred = new Deferred();
+
+    registerService("test", [], async (env) => {
+        expect.step("before");
+        env.isReady.then(() => {
+            expect.step("env ready");
+        });
+
+        const result = await deferred;
+        expect.step("after");
+        return result;
+    });
+
+    const envCreationPromise = makeMockEnv();
+    await tick(); // wait for startServices
+    expect.verifySteps(["before"]);
+
+    deferred.resolve();
+    await envCreationPromise;
+    expect.verifySteps(["after", "env ready"]);
+});
