@@ -9,6 +9,7 @@ import {
 } from '@website/js/tours/tour_utils';
 
 registerWebsitePreviewTour('edit_menus', {
+    checkDelay: 100,
     url: '/',
 }, () => [
     // Add a megamenu item from the menu.
