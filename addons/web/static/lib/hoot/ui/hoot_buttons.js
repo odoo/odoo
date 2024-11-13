@@ -81,7 +81,7 @@ export class HootButtons extends Component {
                             type="'test'"
                             id="runnerState.failedIds"
                             class="'bg-btn p-2 whitespace-nowrap transition-colors'"
-                            title.translate="Run failed tests"
+                            title="'Run failed tests'"
                             onClick="onRunFailedClick"
                         >
                             Run failed <strong>tests</strong>
@@ -90,7 +90,7 @@ export class HootButtons extends Component {
                             type="'suite'"
                             id="failedSuites"
                             class="'bg-btn p-2 whitespace-nowrap transition-colors'"
-                            title.translate="Run failed suites"
+                            title="'Run failed suites'"
                             onClick="onRunFailedClick"
                         >
                             Run failed <strong>suites</strong>
