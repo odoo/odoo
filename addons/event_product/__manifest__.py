@@ -5,6 +5,7 @@
     'depends': ['event', 'product', 'account'],
     'data': [
         'views/event_ticket_views.xml',
+        'views/event_registration_views.xml',
         'data/event_product_data.xml',
     ],
     'demo': [
