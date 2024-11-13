@@ -273,6 +273,7 @@ function viewObjectToController(path: NodePath | null, env: Env): void {
     const viewPaths = getViewRegistryElementPaths(path, env);
     let logUnprocessed = false;
     for (const viewPath of viewPaths) {
+        debugger
         const sucess = processViewPath(viewPath, env);
         if (!sucess) {
             logUnprocessed = true;
