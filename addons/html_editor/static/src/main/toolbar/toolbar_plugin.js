@@ -8,6 +8,7 @@ import { registry } from "@web/core/registry";
 import { ToolbarMobile } from "./mobile_toolbar";
 import { debounce } from "@web/core/utils/timing";
 import { omit, pick } from "@web/core/utils/objects";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 
 /** @typedef { import("@html_editor/core/selection_plugin").EditorSelection } EditorSelection */
 /** @typedef { import("@html_editor/core/user_command_plugin").UserCommand } UserCommand */
@@ -304,7 +305,10 @@ export class ToolbarPlugin extends Plugin {
             return true;
         }
         const isCollapsed = selectionData.editableSelection.isCollapsed;
-        return !isCollapsed && this.getFilterTraverseNodes().length;
+        if (isCollapsed) {
+            return !!closestElement(selectionData.editableSelection.anchorNode, "td.o_selected_td");
+        }
+        return this.getFilterTraverseNodes().length;
     }
 
     shouldPreventClosing(selectionData) {
