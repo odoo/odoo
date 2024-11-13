@@ -22,6 +22,9 @@ class MailNotification(models.Model):
     mail_mail_id = fields.Many2one('mail.mail', 'Mail', index=True, help='Optional mail_mail ID. Used mainly to optimize searches.')
     # recipient
     res_partner_id = fields.Many2one('res.partner', 'Recipient', index=True, ondelete='cascade')
+    # set if no matching partner exists (mass mail)
+    # must be normalized except if notification is cancel/failure from invalid email
+    mail_email_address = fields.Char(help='Recipient email address')
     # status
     notification_type = fields.Selection([
         ('inbox', 'Inbox'), ('email', 'Email')
@@ -47,12 +50,19 @@ class MailNotification(models.Model):
         ("mail_from_invalid", "Invalid from address"),
         ("mail_from_missing", "Missing from address"),
         ("mail_smtp", "Connection failed (outgoing mail server problem)"),
-        ], string='Failure type')
+        # mass mode
+        ("mail_bl", "Blacklisted Address"),
+        ("mail_optout", "Opted Out"),
+        ("mail_dup", "Duplicated Email")], string='Failure type')
     failure_reason = fields.Text('Failure reason', copy=False)
 
     _notification_partner_required = models.Constraint(
-        "CHECK(notification_type NOT IN ('email', 'inbox') OR res_partner_id IS NOT NULL)",
-        'Customer is required for inbox / email notification',
+        "CHECK(notification_type != 'inbox' OR res_partner_id IS NOT NULL)",
+        'Customer is required for inbox notification',
+    )
+    _notification_partner_or_email_required = models.Constraint(
+        "CHECK(notification_type != 'email' OR failure_type IS NOT NULL OR res_partner_id IS NOT NULL OR COALESCE(mail_email_address, '') != '')",
+        'Customer or email is required for inbox / email notification',
     )
     _res_partner_id_is_read_notification_status_mail_message_id = models.Index("(res_partner_id, is_read, notification_status, mail_message_id)")
     _author_id_notification_status_failure = models.Index("(author_id, notification_status) WHERE notification_status IN ('bounce', 'exception')")
@@ -111,7 +121,7 @@ class MailNotification(models.Model):
         """Returns only the notifications to show on the web client."""
         def _filter_unimportant_notifications(notif):
             if notif.notification_status in ['bounce', 'exception', 'canceled'] \
-                    or notif.res_partner_id.partner_share:
+                    or notif.res_partner_id.partner_share or notif.mail_email_address:
                 return True
             subtype = notif.mail_message_id.subtype_id
             return not subtype or subtype.track_recipients
@@ -120,6 +130,7 @@ class MailNotification(models.Model):
 
     def _to_store_defaults(self, target):
         return [
+            "mail_email_address",
             "failure_type",
             "mail_message_id",
             "notification_status",
