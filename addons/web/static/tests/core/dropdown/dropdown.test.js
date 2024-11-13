@@ -1,4 +1,4 @@
-import { after, destroy, expect, getFixture, mountOnFixture, test } from "@odoo/hoot";
+import { expect, getFixture, test } from "@odoo/hoot";
 import {
     click,
     hover,
@@ -10,9 +10,9 @@ import {
     resize,
 } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, runAllTimers } from "@odoo/hoot-mock";
-import { App, Component, onMounted, onPatched, useState, xml } from "@odoo/owl";
+import { Component, onMounted, onPatched, useState, xml } from "@odoo/owl";
 
-import { getMockEnv, makeMockEnv } from "@web/../tests/_framework/env_test_helpers";
+import { makeMockEnv } from "@web/../tests/_framework/env_test_helpers";
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import { defineParams, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
@@ -20,9 +20,6 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { _t } from "@web/core/l10n/translation";
-import { MainComponentsContainer } from "@web/core/main_components_container";
-import { getTemplate } from "@web/core/templates";
 
 const DROPDOWN_TOGGLE = ".o-dropdown.dropdown-toggle";
 const DROPDOWN_MENU = ".o-dropdown--menu.dropdown-menu";
@@ -964,35 +961,6 @@ test("multi-level dropdown: parent closing modes on item selection", async () =>
 });
 
 test("multi-level dropdown: recursive template can be rendered", async () => {
-    // FIXME: There is currently no way to register additional templates
-    // in mountWithCleanup nor mountOnFixture.
-    async function mountWithTemplate(ComponentClass, template) {
-        const config = {
-            env: getMockEnv() || (await makeMockEnv()),
-            props: {},
-            translateFn: _t,
-            getTemplate,
-        };
-
-        getFixture().classList.add("o_web_client");
-
-        const app = new App(ComponentClass, {
-            name: `TEST: ${ComponentClass.name}`,
-            test: true,
-            warnIfNoStaticProps: true,
-            ...config,
-        });
-
-        after(() => destroy(app));
-
-        app.addTemplates(template);
-
-        const component = app.mount(getFixture());
-        await mountOnFixture(MainComponentsContainer, { ...config, props: {} });
-
-        return component;
-    }
-
     class Parent extends Component {
         static template = "recursive.Template";
         static props = [];
@@ -1030,27 +998,28 @@ test("multi-level dropdown: recursive template can be rendered", async () => {
         }
     }
 
-    await mountWithTemplate(
-        Parent,
-        `<t t-name="recursive.Template">
-            <Dropdown state="dropdown">
-                <button><t t-esc="name" /></button>
-                <t t-set-slot="content">
-                    <t t-foreach="items" t-as="item" t-key="item_index">
+    await mountWithCleanup(Parent, {
+        templates: {
+            ["recursive.Template"]: /* xml */ `
+                <Dropdown state="dropdown">
+                    <button><t t-esc="name" /></button>
+                    <t t-set-slot="content">
+                        <t t-foreach="items" t-as="item" t-key="item_index">
 
-                        <t t-if="!item.children.length">
-                            <DropdownItem><t t-esc="item.name"/></DropdownItem>
-                        </t>
+                            <t t-if="!item.children.length">
+                                <DropdownItem><t t-esc="item.name"/></DropdownItem>
+                            </t>
 
-                        <t t-else="" t-call="recursive.Template">
-                            <t t-set="name" t-value="item.name" />
-                            <t t-set="items" t-value="item.children" />
+                            <t t-else="" t-call="recursive.Template">
+                                <t t-set="name" t-value="item.name" />
+                                <t t-set="items" t-value="item.children" />
+                            </t>
                         </t>
                     </t>
-                </t>
-            </Dropdown>
-        </t>`
-    );
+                </Dropdown>
+            `,
+        },
+    });
 
     // Each sub-dropdown needs a tick to open
     await animationFrame();
