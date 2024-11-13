@@ -1370,9 +1370,16 @@ class PosOrderLine(models.Model):
             ('product_id', '=', product_id),
         ])
 
-        if existing_lots_sudo and existing_lots_sudo[0].product_id.tracking == 'serial':
-            existing_lots_sudo = existing_lots_sudo.filtered(lambda l: float_compare(l.product_qty, 1, precision_rounding=l.product_uom_id.rounding) >= 0)
-
+        if existing_lots_sudo and existing_lots_sudo[0].product_id.tracking in ['serial', 'lot']:
+            existing_lots_sudo = existing_lots_sudo.filtered(
+                lambda lot: float_compare(
+                    self.env['stock.quant'].search(
+                        [('on_hand', '=', True), ('lot_id', '=', lot.id)], limit=1
+                    ).quantity,
+                    1,
+                    precision_rounding=lot.product_uom_id.rounding
+                ) >= 0
+            )
         return existing_lots_sudo.read(['id', 'name'])
 
     @api.ondelete(at_uninstall=False)
