@@ -471,6 +471,20 @@
                 width: auto;
             }
         }
+
+        .o_field_widget {
+            &.o_field_many2one_avatar {
+                display: block;
+            }
+
+            &.o_field_many2many_tags_avatar {
+                display: inline;
+
+                .o_tag_badge_text {
+                    line-height: 1;
+                }
+            }
+        }
     }
 
     @include media-breakpoint-up(sm) {
