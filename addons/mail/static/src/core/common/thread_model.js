@@ -567,10 +567,13 @@ export class Thread extends Record {
         // ordered messages received: newest to oldest
         return await rpc(this.getFetchRoute(), {
             ...this.getFetchParams(),
-            limit: !around && around !== 0 ? this.store.FETCH_LIMIT : this.store.FETCH_LIMIT * 2,
-            after,
-            around,
-            before,
+            fetch_params: {
+                limit:
+                    !around && around !== 0 ? this.store.FETCH_LIMIT : this.store.FETCH_LIMIT * 2,
+                after,
+                around,
+                before,
+            },
         });
     }
 
