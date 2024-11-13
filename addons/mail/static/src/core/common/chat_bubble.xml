@@ -16,11 +16,16 @@
     <t t-name="mail.ChatBubblePreview">
         <div class="o-mail-ChatBubble-preview o-mail-ChatBubble-menu px-0 py-1 shadow-sm border border-secondary bg-100 rounded">
             <div class="text-truncate base-fs fw-bolder mb-0 mx-2" t-esc="props.chatWindow.displayName"/>
-            <div t-if="previewContent" class="text-truncate small mx-2 text-muted">
+            <t t-set="message" t-value="thread?.newestPersistentOfAllMessage" />
+            <div t-if="previewText" class="text-truncate small mx-2 text-muted">
                 <t t-call="mail.message_preview_prefix">
-                    <t t-set="message" t-value="thread?.newestPersistentOfAllMessage"/>
+                    <t t-set="message" t-value="message"/>
                 </t>
-                <t t-esc="previewContent"/>
+                <t t-if="message.hasOnlyAttachments">
+                    <i class="fa me-1" t-att-class="message.previewIcon"/>
+                    <t t-out="message.previewText" />
+                </t>
+                <t t-else="" t-out="previewText" />
             </div>
         </div>
     </t>

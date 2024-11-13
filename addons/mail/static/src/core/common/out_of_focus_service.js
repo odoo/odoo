@@ -1,5 +1,3 @@
-import { htmlToTextContentInline } from "@mail/utils/common/format";
-
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -53,10 +51,7 @@ export class OutOfFocusService {
                 notificationTitle = author.name;
             }
         }
-        const notificationContent = htmlToTextContentInline(message.body).substring(
-            0,
-            PREVIEW_MSG_MAX_SIZE
-        );
+        const notificationContent = message.previewText.substring(0, PREVIEW_MSG_MAX_SIZE);
         this.sendNotification({
             message: notificationContent,
             sound: message.thread?.model === "discuss.channel",

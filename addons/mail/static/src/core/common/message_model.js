@@ -358,6 +358,53 @@ export class Message extends Record {
         );
     }
 
+    get hasOnlyAttachments() {
+        return this.isBodyEmpty && this.attachment_ids.length > 0;
+    }
+
+    get previewText() {
+        if (!this.hasOnlyAttachments) {
+            return this.inlineBody || this.subtype_description;
+        }
+        const { attachment_ids: attachments } = this;
+        if (!attachments || attachments.length === 0) {
+            return "";
+        }
+        switch (attachments.length) {
+            case 1:
+                return attachments[0].previewName;
+            case 2:
+                return _t("%(file1)s and %(file2)s", {
+                    file1: attachments[0].previewName,
+                    file2: attachments[1].previewName,
+                    count: attachments.length - 1,
+                });
+            default:
+                return _t("%(file1)s and %(count)s other attachments", {
+                    file1: attachments[0].previewName,
+                    count: attachments.length - 1,
+                });
+        }
+    }
+
+    get previewIcon() {
+        const { attachment_ids: attachments } = this;
+        if (!attachments || attachments.length === 0) {
+            return "";
+        }
+        const firstAttachment = attachments[0];
+        switch (true) {
+            case firstAttachment.isImage:
+                return "fa-picture-o";
+            case firstAttachment.mimetype === "audio/mpeg":
+                return firstAttachment.voice ? "fa-microphone" : "fa-headphones";
+            case firstAttachment.isVideo:
+                return "fa-video-camera";
+            default:
+                return "fa-file";
+        }
+    }
+
     /** @param {import("models").Thread} thread the thread where the message is shown */
     canAddReaction(thread) {
         return Boolean(!this.is_transient && this.thread && !this.thread.isTransient);
