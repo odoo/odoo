@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
@@ -17,14 +16,25 @@ class HrDepartureWizard(models.TransientModel):
 
         return departure_date or fields.Date.today()
 
-    departure_reason_id = fields.Many2one("hr.departure.reason", default=lambda self: self.env['hr.departure.reason'].search([], limit=1), required=True)
+    def _get_default_employee_ids(self):
+        active_ids = self.env.context.get('active_ids', [])
+        if active_ids:
+            return self.env['hr.employee'].browse(active_ids).filtered(lambda e: e.company_id in self.env.companies)
+        return self.env['hr.employee']
+
+    def _get_domain_employee_ids(self):
+        return [('active', '=', True), ('company_id', 'in', self.env.companies.ids)]
+
+    departure_reason_id = fields.Many2one("hr.departure.reason", required=True,
+        default=lambda self: self.env['hr.departure.reason'].search([], limit=1),
+    )
     departure_description = fields.Html(string="Additional Information")
     departure_date = fields.Date(string="Departure Date", required=True, default=_get_default_departure_date)
     employee_ids = fields.Many2many(
         'hr.employee', string='Employees', required=True,
-        default=lambda self: self.env.context.get('active_ids', []),
+        default=_get_default_employee_ids,
         context={'active_test': False},
-        domain=[('active', '=', True)],
+        domain=_get_domain_employee_ids,
     )
 
     def action_register_departure(self):
