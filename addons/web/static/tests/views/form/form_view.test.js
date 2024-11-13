@@ -12007,7 +12007,7 @@ test(`an empty json object does not pass the required check`, async () => {
             this.props.record.update({ [this.props.name]: JSON.parse(ev.target.value) });
         }
     }
-    fieldsRegistry.add("json", { component: JsonField });
+    fieldsRegistry.add("my_json", { component: JsonField });
 
     mockService("notification", {
         add(message, params) {
@@ -12020,7 +12020,7 @@ test(`an empty json object does not pass the required check`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
-        arch: `<form><field name="json_field" widget="json" required="1"/></form>`,
+        arch: `<form><field name="json_field" widget="my_json" required="1"/></form>`,
     });
 
     await contains(`.o_field_widget[name=json_field] input`).edit("{}");
