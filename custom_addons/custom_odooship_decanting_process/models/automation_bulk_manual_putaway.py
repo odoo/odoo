@@ -30,10 +30,10 @@ class AutomationBulkManual(models.Model):
         # Check the type of automation_manual and assign the correct sequence
         if vals.get('automation_manual') == 'automation_bulk':
             # Retrieve the sequence for automation bulk
-            vals['name'] = self.env['ir.sequence'].next_by_code('automation.bulk.putaway') or _('New')
+            vals['name'] = self.env['ir.sequence'].next_by_code('automation.bulk.manual.putaway') or _('New')
         else:
             # Retrieve the sequence for manual
-            vals['name'] = self.env['ir.sequence'].next_by_code('manual.putaway') or _('New')
+            vals['name'] = self.env['ir.sequence'].next_by_code('automation.bulk.manual.putaway') or _('New')
 
         return super(AutomationBulkManual, self).create(vals)
 
