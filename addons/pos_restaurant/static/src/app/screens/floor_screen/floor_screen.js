@@ -8,15 +8,7 @@ import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/n
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
-import {
-    Component,
-    onMounted,
-    useRef,
-    useState,
-    onWillStart,
-    useEffect,
-    useExternalListener,
-} from "@odoo/owl";
+import { Component, onMounted, useRef, useState, useEffect, useExternalListener } from "@odoo/owl";
 import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { loadImage } from "@point_of_sale/utils";
 import { getDataURLFromFile } from "@web/core/utils/urls";
@@ -237,8 +229,8 @@ export class FloorScreen extends Component {
         this.useResizeHook();
         onMounted(() => {
             this.pos.openOpeningControl();
+            this.resetTable();
         });
-        onWillStart(this.onWillStart);
         useEffect(
             () => {
                 this.computeFloorSize();
@@ -356,7 +348,7 @@ export class FloorScreen extends Component {
             this.state.floorWidth = `${positionH}px`;
         }
     }
-    async onWillStart() {
+    async resetTable() {
         this.pos.searchProductWord = "";
         const table = this.pos.selectedTable;
         if (table) {
