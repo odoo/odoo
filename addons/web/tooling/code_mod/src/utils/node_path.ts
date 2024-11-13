@@ -48,7 +48,7 @@ export function getProgramPath(ast: Node | null): NodePath<Program> | null {
 }
 
 export function getProgramPathFrom(env: Env) {
-    const ast = env.getAST(env.inFilePath);
+    const ast = env.getAST(env.filePath);
     return getProgramPath(ast);
 }
 
@@ -87,7 +87,7 @@ export function getDeclarationPath(id: NodePath<Identifier>): NodePath<Declarati
 export function getDefinitionFor(
     identifier: NodePath<Identifier>,
     env: Env,
-): { path: NodePath; inFilePath: string } | null {
+): { path: NodePath; filePath: string } | null {
     const binding = getBinding(identifier);
     if (!binding) {
         return null;
@@ -124,11 +124,11 @@ export function getDefinitionFor(
             if (!res) {
                 return null;
             }
-            return { path: res, inFilePath: absolutePath };
+            return { path: res, filePath: absolutePath };
         }
     }
     if (["const", "let"].includes(binding.kind)) {
-        return { path: binding.path, inFilePath: env.inFilePath };
+        return { path: binding.path, filePath: env.filePath };
     }
     return null;
 }

@@ -114,7 +114,7 @@ export function executeOnJsFilesInDir(
     while ((fsDirent = fsDir.readSync())) {
         const direntPath = path.join(dirPath, fsDirent.name);
         if (fsDirent.isFile() /*&& direntPath.includes("/static/") **/) {
-            operation({ ...env, inFilePath: direntPath });
+            operation({ ...env, filePath: direntPath });
         } else if (
             fsDirent.isDirectory() &&
             fsDirent.name !== "node_modules" &&
@@ -160,7 +160,7 @@ export function toAbsolutePath(odooPath: string, env: Env) {
             return path.normalize(path.join(prefix, "/static/src/", tail));
         }
     }
-    const dirname = path.dirname(env.inFilePath);
+    const dirname = path.dirname(env.filePath);
     return path.resolve(dirname, odooPath);
 }
 
@@ -180,7 +180,7 @@ export function normalizeSource(source: string, env: Env) {
     if (source.startsWith("@")) {
         return source;
     }
-    const dir = path.dirname(env.inFilePath);
+    const dir = path.dirname(env.filePath);
     source = path.resolve(dir, source);
     const p = path.join(ODOO_PATH, "addons/");
     if (source.startsWith(p)) {

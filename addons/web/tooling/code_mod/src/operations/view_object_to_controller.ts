@@ -151,7 +151,7 @@ function createController(
         .getStatementParent()
         ?.getPrevSibling() as NodePath<t.ClassDeclaration>;
     copyKeys(viewDef, newControllerDeclarationPath, env);
-    env.tagAsModified(env.inFilePath);
+    env.tagAsModified(env.filePath);
     return newControllerDeclarationPath.get("id") as NodePath<t.Identifier>;
 }
 
@@ -160,7 +160,7 @@ function createController(
 function getImportForController(id: NodePath<t.Identifier>, env: Env) {
     const d = getDefinitionFor(id, env);
     if (d) {
-        const s = normalizeSource(d.inFilePath, { ...env, inFilePath: d.inFilePath });
+        const s = normalizeSource(d.filePath, { ...env, filePath: d.filePath });
         const i = t.importDeclaration([t.importSpecifier(id.node, id.node)], t.stringLiteral(s));
         return i;
     }
@@ -176,9 +176,9 @@ function processView(viewDef: NodePath<t.ObjectExpression>, env: Env) {
             const arg = spreadElements[0].get("argument");
             if (arg.isIdentifier()) {
                 const definition = getDefinitionFor(arg, env);
-                if (definition?.path && definition.inFilePath !== env.inFilePath) {
-                    view_object_to_controller({ ...env, inFilePath: definition.inFilePath });
-                    debugger
+                if (definition?.path && definition.filePath !== env.filePath) {
+                    view_object_to_controller({ ...env, filePath: definition.filePath });
+                    debugger;
                 }
                 let controllerValuePath: NodePath<unknown> | null = null;
 
@@ -195,7 +195,7 @@ function processView(viewDef: NodePath<t.ObjectExpression>, env: Env) {
                 if (definition && controllerValuePath && controllerValuePath?.isIdentifier()) {
                     const i = getImportForController(controllerValuePath, {
                         ...env,
-                        inFilePath: definition.inFilePath,
+                        filePath: definition.filePath,
                     });
                     if (i) {
                         addImports(viewDef, [i], env);
@@ -209,21 +209,21 @@ function processView(viewDef: NodePath<t.ObjectExpression>, env: Env) {
         const definition = getDefinitionFor(controllerValuePath, env);
         if (definition && definition.path.isClassDeclaration()) {
             const { someThingCopied, declarations } = copyKeys(viewDef, definition.path, env);
-            env.tagAsModified(env.inFilePath);
-            if (someThingCopied && definition.inFilePath !== env.inFilePath) {
+            env.tagAsModified(env.filePath);
+            if (someThingCopied && definition.filePath !== env.filePath) {
                 if (declarations.length) {
                     addImports(definition.path, declarations, {
                         ...env,
-                        inFilePath: definition.inFilePath,
+                        filePath: definition.filePath,
                     });
                 }
-                env.tagAsModified(definition.inFilePath);
+                env.tagAsModified(definition.filePath);
             }
             return controllerValuePath;
         }
     } else if (controllerValuePath?.isClassExpression()) {
         copyKeys(viewDef, controllerValuePath, env);
-        env.tagAsModified(env.inFilePath);
+        env.tagAsModified(env.filePath);
         return controllerValuePath;
     }
     return null;
@@ -263,7 +263,7 @@ function viewObjectToController(path: NodePath | null, env: Env) {
                 return;
             }
             console.log(
-                `Not changed in (${env.inFilePath}): `,
+                `Not changed in (${env.filePath}): `,
                 __key.isStringLiteral() ? __key.node.value : "non identifier key",
             );
         },
@@ -271,7 +271,7 @@ function viewObjectToController(path: NodePath | null, env: Env) {
 }
 
 export function view_object_to_controller(env: Env) {
-    if (!isJsFile(env.inFilePath)) {
+    if (!isJsFile(env.filePath)) {
         return;
     }
     viewObjectToController(getProgramPathFrom(env), env);

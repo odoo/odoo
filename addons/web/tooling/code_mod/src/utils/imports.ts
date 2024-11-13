@@ -38,7 +38,7 @@ export function addImports(path: NodePath | null, imports: ImportDeclaration[], 
     for (const imp of imports) {
         addImport(programPath, imp, env);
     }
-    env.tagAsModified(env.inFilePath);
+    env.tagAsModified(env.filePath);
 }
 
 export function getNormalizedNode(declarationPath: NodePath<ImportDeclaration>, env: Env) {
@@ -51,7 +51,7 @@ export function normalizeImport(declarationPath: NodePath<ImportDeclaration>, en
     const s = normalizeSource(declarationPath.node.source.value, env);
     if (s !== declarationPath.node.source.value) {
         declarationPath.node.source.value = s;
-        env.tagAsModified(env.inFilePath);
+        env.tagAsModified(env.filePath);
     }
 }
 
@@ -98,12 +98,12 @@ export function removeUnusedImports(path: NodePath | null, env: Env) {
                 if (!usedSpecifiers.has(name)) {
                     hasRemovedSomething = true;
                     s.remove();
-                    env.tagAsModified(env.inFilePath);
+                    env.tagAsModified(env.filePath);
                 }
             }
             if (hasRemovedSomething && !path.node.specifiers.length) {
                 path.remove();
-                env.tagAsModified(env.inFilePath);
+                env.tagAsModified(env.filePath);
             }
         },
     });
@@ -123,7 +123,7 @@ export function groupImports(path: NodePath | null, env: Env) {
         if (!importDeclarations[sourceName]) {
             if (sourceName !== i.node.source.value) {
                 i.node.source.value = sourceName;
-                env.tagAsModified(env.inFilePath);
+                env.tagAsModified(env.filePath);
             }
             importDeclarations[sourceName] = i;
             continue;
@@ -139,7 +139,7 @@ export function groupImports(path: NodePath | null, env: Env) {
             importDeclarations[sourceName].node.specifiers.push(s.node);
         }
         i.remove();
-        env.tagAsModified(env.inFilePath);
+        env.tagAsModified(env.filePath);
     }
 }
 
@@ -158,25 +158,25 @@ function putImportsOnTop(path: NodePath | null, env: Env) {
         }
     }
     programPath.node.body = [...imports, ...others];
-    env.tagAsModified(env.inFilePath);
+    env.tagAsModified(env.filePath);
 }
 
 export function put_imports_on_top(env: Env) {
-    if (!isJsFile(env.inFilePath)) {
+    if (!isJsFile(env.filePath)) {
         return;
     }
     putImportsOnTop(getProgramPathFrom(env), env);
 }
 
 export function group_imports(env: Env) {
-    if (!isJsFile(env.inFilePath)) {
+    if (!isJsFile(env.filePath)) {
         return;
     }
     groupImports(getProgramPathFrom(env), env);
 }
 
 export function remove_unused_imports(env: Env) {
-    if (!isJsFile(env.inFilePath)) {
+    if (!isJsFile(env.filePath)) {
         return;
     }
     removeUnusedImports(getProgramPathFrom(env), env);

@@ -1,7 +1,7 @@
 import { File } from "@babel/types";
 
 export interface Env extends PartialEnv {
-    inFilePath: string;
+    filePath: string;
 }
 
 export interface PartialEnv {

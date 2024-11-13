@@ -20,11 +20,11 @@ function makeParams(fileContents: Record<string, string>): Env {
         modifiedAST.add(filePath);
     }
     const filePath = Object.keys(fileContents)[0];
-    return { inFilePath: filePath, getAST, tagAsModified, cleaning: new Set() };
+    return { filePath: filePath, getAST, tagAsModified, cleaning: new Set() };
 }
 
 function call_get_definition(env: Env) {
-    const ast = env.getAST(env.inFilePath);
+    const ast = env.getAST(env.filePath);
     if (!ast) {
         return;
     }
