@@ -10,9 +10,6 @@ export function isJsFile(filePath: string) {
     return path.extname(filePath) === ".js";
 }
 
-export type AbsolutPath = string; // of the form /a/b/c.js (normalized)
-export type OdooPath = string; // of the form @web/a/b/c (normalized)
-
 export const ODOO_PATH = "/home/odoo/src/odoo/";
 export const ENTERPRISE_PATH = "/home/odoo/src/enterprise/";
 
@@ -72,4 +69,13 @@ export function normalizeSource(source: string, env: Env) {
         source = source.replace(ENTERPRISE_PATH, "@").replace("/static/src/", "/");
     }
     return source;
+}
+
+export function processAddonsPathArg(addonsPath: string) {
+    return addonsPath.split(",").map((dirPath) => {
+        if (path.isAbsolute(dirPath)) {
+            return dirPath;
+        }
+        return path.join(ODOO_PATH, dirPath);
+    });
 }

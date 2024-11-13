@@ -3,6 +3,7 @@ import * as t from "@babel/types";
 
 import { toActionOnJsFile } from "../utils/decorators";
 import { Env } from "../utils/env";
+import { normalizeSource } from "../utils/file_path";
 import { addImports, getNormalizedNode, removeUnusedImports } from "../utils/imports";
 import {
     ensureProgramPath,
@@ -13,7 +14,6 @@ import {
 } from "../utils/node_path";
 import { DeclarationPattern, ExpressionPattern } from "../utils/pattern";
 import { getLocalIdentifierOfRegistry, isViewRegistry } from "../utils/registry";
-import { normalizeSource } from "../utils/file_path";
 
 // for ast descriptions see https://github.com/babel/babel/blob/master/packages/babel-parser/ast/spec.md
 

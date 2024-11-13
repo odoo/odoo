@@ -1,6 +1,8 @@
 import { parseArgs } from "node:util";
 
-import { execute, processAddonsPath, processOperation } from "./utils/utils";
+import { processOperationArg } from "./operations/operations";
+import { processAddonsPathArg } from "./utils/file_path";
+import { execute } from "./utils/utils";
 
 const { values } = parseArgs({
     options: {
@@ -10,7 +12,8 @@ const { values } = parseArgs({
     },
 });
 
-const directories = processAddonsPath(values["addons-path"]);
-const operations = processOperation(values["operation"]);
+const directories = processAddonsPathArg(values["addons-path"]);
+const operations = processOperationArg(values["operation"]);
+const write = values["write"];
 
-execute(operations, directories, values["write"]);
+execute(operations, directories, write);

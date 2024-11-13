@@ -6,12 +6,8 @@ import { NodePath } from "@babel/traverse";
 import { cloneNode, File, Program } from "@babel/types";
 import { parse, print } from "recast"; // https://github.com/benjamn/recast
 
-import { remove_odoo_module_comment } from "../operations/remove_odoo_module_comment";
-import { view_object_to_controller } from "../operations/view_object_to_controller";
 import { Env, PartialEnv } from "./env";
-import { group_imports, remove_unused_imports } from "./imports";
 import { getProgramPath } from "./node_path";
-import { ODOO_PATH } from "./file_path";
 
 const parser = {
     parse(data: string) {
@@ -97,6 +93,14 @@ export function makeGetAST() {
     };
 }
 
+function IS_EXCLUDED_FOLDER(directoryPath: string): boolean {
+    return (
+        !directoryPath.endsWith("/node_modules") &&
+        !directoryPath.endsWith("/static/lib") &&
+        !directoryPath.endsWith("/.git")
+    );
+}
+
 export function executeOnJsFilesInDir(
     dirPath: string,
     env: PartialEnv,
@@ -106,46 +110,13 @@ export function executeOnJsFilesInDir(
     let fsDirent;
     while ((fsDirent = fsDir.readSync())) {
         const direntPath = path.join(dirPath, fsDirent.name);
-        if (fsDirent.isFile() /*&& direntPath.includes("/static/") **/) {
+        if (fsDirent.isFile()) {
             operation({ ...env, filePath: direntPath });
-        } else if (
-            fsDirent.isDirectory() &&
-            fsDirent.name !== "node_modules" &&
-            !direntPath.includes("/static/lib") &&
-            !direntPath.includes("/.git/") //&& !direntPath.includes("/tests/") // remove
-        ) {
+        } else if (fsDirent.isDirectory() && !IS_EXCLUDED_FOLDER(direntPath)) {
             executeOnJsFilesInDir(direntPath, env, operation);
         }
     }
     fsDir.closeSync();
-}
-
-const OPERATIONS: Record<string, (env: Env) => void> = {
-    view_object_to_controller,
-    remove_odoo_module_comment,
-    group_imports,
-    remove_unused_imports,
-};
-
-export function processOperation(operation: string) {
-    const operations: ((env: Env) => void)[] = [];
-    for (const op of operation.split(",")) {
-        if (!OPERATIONS[op]) {
-            throw new Error(`Operation: ${op} not known`);
-        }
-        operations.push(OPERATIONS[op]);
-    }
-    return operations;
-}
-
-// TO IMPROVE
-export function processAddonsPath(addonsPath: string) {
-    return addonsPath.split(",").map((dirPath) => {
-        if (path.isAbsolute(dirPath)) {
-            return dirPath;
-        }
-        return path.join(ODOO_PATH, dirPath);
-    });
 }
 
 const SEP =
@@ -156,6 +127,7 @@ export function execute(
     write = false,
 ) {
     const { cacheAST, modifiedAST, isModified, getAST, tagAsModified } = makeGetAST();
+
     for (const operation of operations) {
         const cleaning: Set<() => void> = new Set();
         const env = { getAST, tagAsModified, cleaning };
