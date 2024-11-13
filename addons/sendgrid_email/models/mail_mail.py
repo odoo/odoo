@@ -467,5 +467,4 @@ class SendGridEmail(models.Model):
         for mail in self:
             if mail.temp_id:
                 mail.sent = mail.sent_count
-            else:
-                return super(SendGridEmail, self)._compute_statistics()
+        return super(SendGridEmail, self)._compute_statistics()

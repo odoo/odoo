@@ -20,6 +20,7 @@
 #
 ###############################################################################
 #from . import purchase_order
+from . import twilio_messages_log
 from . import res_partner
 #from . import sale_order
 from . import twilio_account

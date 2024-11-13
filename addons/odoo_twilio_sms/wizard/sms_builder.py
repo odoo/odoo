@@ -22,6 +22,10 @@
 from odoo import fields, models, _
 from twilio.rest import Client
 from twilio.base.exceptions import TwilioException
+import logging
+from datetime import datetime
+
+_logger = logging.getLogger(__name__)
 
 
 class SmsBuilder(models.TransientModel):
@@ -49,6 +53,7 @@ class SmsBuilder(models.TransientModel):
 
     def action_confirm_sms(self):
         """Send sms to the corresponding user by using the twilio connection"""
+        active_id = self.env[self._context.get('active_model')].browse(self._context.get('active_id'))
         try:
             client = Client(self.account_id.account_sid,
                             self.account_id.auth_token)
@@ -60,6 +65,29 @@ class SmsBuilder(models.TransientModel):
             if message.sid:
                 message_data = _("Message Sent!")
                 type_data = 'success'
+                _logger.info("SMS sent successfully via Twilio with SID: %s", message.sid)
+                active_id.message_post(
+                    body=f"SMS sent successfully to {message.to}: {message.body}",
+                    message_type="notification",
+                    subtype_xmlid="mail.mt_note",
+                )
+                msg_dict = {
+                    "account_sid": message.account_sid,
+                    "body": message.body,
+                    "date_sent": datetime.now(),
+                    "direction": message.direction,
+                    "error_code": message.error_code,
+                    "error_message": message.error_message,
+                    "from_phone": message.from_,
+                    "messaging_service_sid": message.messaging_service_sid,
+                    "sid": message.sid,
+                    "status": message.status,
+                    "to_phone": message.to,
+                    "uri": message.uri,
+                    "res_model": self._context.get('active_model'),
+                    "res_id": self._context.get('active_id'),
+                }
+                log_message = self.env['twilio.message.log'].sudo().create(msg_dict)
             else:
                 message_data = _("Message Not Sent!")
                 type_data = 'warning'

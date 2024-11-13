@@ -49,6 +49,7 @@
             'views/twilio_sms_template_views.xml',
             'views/twilio_sms_views.xml',
             'views/crm_lead_views.xml',
+            'views/twilio_message_log.xml',
             'wizard/sms_builder_views.xml'
     ],
     'external_dependencies': {

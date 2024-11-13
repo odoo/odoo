@@ -14,7 +14,7 @@ class TwilioWebhookController(http.Controller):
             resp = MessagingResponse()
             resp.message("Thank you for contacting!")
             response_text = str(resp)
-            _logger.info("Twilio SMS response sent successfully.")
+            _logger.info("Twilio SMS response sent successfully.", resp)
             return request.make_response(response_text, headers=[('Content-Type', 'text/xml')])
         except Exception as e:
             _logger.error("Error in Twilio webhook processing: %s", str(e), exc_info=True)
