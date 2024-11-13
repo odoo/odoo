@@ -4916,6 +4916,31 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo.state, 'done')
         self.assertEqual(mo.workorder_ids[0].duration_expected, 1440.0)
 
+    def test_plan_depending_workorder(self):
+        """
+        Checks that modifying the real duration of a workorder depending on other workorders that have already been started works.
+        """
+        # create a production with two workorders, one depending on the other
+        self.env.user.groups_id += self.env.ref('mrp.group_mrp_routings')
+        self.env.user.groups_id -= self.env.ref('mrp.group_mrp_workorder_dependencies')
+
+        self.bom_3.operation_ids[1].blocked_by_operation_ids = [Command.link(self.bom_3.operation_ids[0].id)]
+
+        # Create a production, then start the first workorder and try to modify the duration of the second one
+        production_form = Form(self.env['mrp.production'])
+        production_form.bom_id = self.bom_3
+        production = production_form.save()
+        production.action_confirm()
+        production.workorder_ids[0].button_start()
+
+        production_form = Form(production)
+        with production_form.workorder_ids.edit(1) as wo:
+            wo.duration = 15
+        production = production_form.save()
+
+        self.assertEqual(production.workorder_ids[1].duration, 15)
+
+
 @tagged('-at_install', 'post_install')
 class TestTourMrpOrder(HttpCase):
     def test_mrp_order_product_catalog(self):
