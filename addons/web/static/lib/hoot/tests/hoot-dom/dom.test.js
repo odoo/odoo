@@ -378,7 +378,9 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
     });
 
     test("waitFor: rejects", async () => {
-        await expect(waitFor("never", { timeout: 1 })).rejects.toThrow();
+        await expect(waitFor("never", { timeout: 1 })).rejects.toThrow(
+            `Could not find elements matching "never" within 1 milliseconds`
+        );
     });
 
     test("waitFor: add new element", async () => {
