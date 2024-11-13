@@ -8,7 +8,7 @@ import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_
 import { registry } from "@web/core/registry";
 import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import { back, inLeftSide, selectButton } from "@point_of_sale/../tests/pos/tours/utils/common";
-import { scan_barcode } from "@point_of_sale/../tests/generic_helpers/utils";
+import { scan_barcode, negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 import * as ProductConfiguratorPopup from "@point_of_sale/../tests/pos/tours/utils/product_configurator_util";
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
@@ -427,5 +427,36 @@ registry.category("web_tour.tours").add("AutofillCashCount", {
                 run: "click",
             },
             ProductScreen.cashDifferenceIs(0),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("ProductSearchTour", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.searchProduct("Test Product"),
+            ProductScreen.productIsDisplayed("Apple").map(negateStep),
+            ProductScreen.productIsDisplayed("Test Product 1"),
+            ProductScreen.productIsDisplayed("Test Product 2"),
+            ProductScreen.searchProduct("Apple"),
+            ProductScreen.productIsDisplayed("Test Product 1").map(negateStep),
+            ProductScreen.productIsDisplayed("Test Product 2").map(negateStep),
+            ProductScreen.searchProduct("Test Produt"), // typo to test the fuzzy search
+            ProductScreen.productIsDisplayed("Test Product 1"),
+            ProductScreen.productIsDisplayed("Test Product 2"),
+            ProductScreen.searchProduct("1234567890123"),
+            ProductScreen.productIsDisplayed("Test Product 2").map(negateStep),
+            ProductScreen.productIsDisplayed("Test Product 1"),
+            ProductScreen.searchProduct("1234567890124"),
+            ProductScreen.productIsDisplayed("Test Product 1").map(negateStep),
+            ProductScreen.productIsDisplayed("Test Product 2"),
+            ProductScreen.searchProduct("TESTPROD1"),
+            ProductScreen.productIsDisplayed("Test Product 2").map(negateStep),
+            ProductScreen.productIsDisplayed("Test Product 1"),
+            ProductScreen.searchProduct("TESTPROD2"),
+            ProductScreen.productIsDisplayed("Test Product 1").map(negateStep),
+            ProductScreen.productIsDisplayed("Test Product 2"),
         ].flat(),
 });

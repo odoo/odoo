@@ -1992,9 +1992,7 @@ export class PosStore extends WithLazyGetterTrap {
 
         if (searchWord !== "") {
             list = this.addMainProductsToDisplay(
-                fuzzyLookup(unaccent(searchWord, false), allProducts, (product) =>
-                    unaccent(product.searchString, false)
-                )
+                this.getProductsBySearchWord(searchWord, allProducts)
             );
         } else if (this.selectedCategory?.id) {
             list = this.selectedCategory.associatedProducts;
@@ -2026,6 +2024,20 @@ export class PosStore extends WithLazyGetterTrap {
                   }
                   return a.display_name.localeCompare(b.display_name);
               });
+    }
+
+    getProductsBySearchWord(searchWord, products) {
+        const exactMatches = products.filter((product) => product.exactMatch(searchWord));
+
+        if (exactMatches.length > 0 && searchWord.length > 2) {
+            return exactMatches;
+        }
+
+        const fuzzyMatches = fuzzyLookup(unaccent(searchWord, false), products, (product) =>
+            unaccent(product.searchString, false)
+        );
+
+        return Array.from(new Set([...exactMatches, ...fuzzyMatches]));
     }
 }
 
