@@ -155,8 +155,9 @@ class IrHttp(models.AbstractModel):
             slug = re.sub(r"[$&+,:;=?@#|'<>.^*()%!\-{}/\\\~]", '-', slug)
             slug = re.sub(r'--+', '-', slug)
             slug = re.sub(r'([^\w-])+', '', slug)
-            if (len(slug.strip('-')) > 0):
-                slugified_segments.append(slug.strip('-').lower())
+            slug = slug.strip('-')
+            if (len(slug) > 0):
+                slugified_segments.append(slug.lower())
         slugified_str = ("-").join(slugified_segments)
         return slugified_str[:max_length] if max_length > 0 else slugified_str
 
