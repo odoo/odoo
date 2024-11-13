@@ -3,6 +3,7 @@
 import math
 import re
 
+import psycopg2
 from werkzeug import urls
 
 from odoo import http, tools, _, SUPERUSER_ID
@@ -161,6 +162,28 @@ class CustomerPortal(Controller):
         """
         return {}
 
+    def _prepare_my_details_values_and_return(self, values, partner, redirect):
+        """Values for /my/account routes template rendering.
+
+        Adds the Countries, States in the values.
+        """
+        countries = request.env['res.country'].sudo().search([])
+        states = request.env['res.country.state'].sudo().search([])
+
+        values.update({
+            'partner': partner,
+            'countries': countries,
+            'states': states,
+            'has_check_vat': hasattr(request.env['res.partner'], 'check_vat'),
+            'partner_can_edit_vat': partner.can_edit_vat(),
+            'redirect': redirect,
+            'page_name': 'my_details',
+        })
+        response = request.render("portal.portal_my_details", values)
+        response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+        response.headers['Content-Security-Policy'] = "frame-ancestors 'self'"
+        return response
+
     @route(['/my/counters'], type='jsonrpc', auth="user", website=True, readonly=True)
     def counters(self, counters, **kw):
         cache = request.session.get('portal_counters', {}).copy()
@@ -186,13 +209,29 @@ class CustomerPortal(Controller):
         })
 
         if post and request.httprequest.method == 'POST':
+            login = post.pop("login")
             if not partner.can_edit_vat():
                 post['country_id'] = str(partner.country_id.id)
 
             error, error_message = self.details_form_validate(post)
+            if not login:
+                error["login"] = "missing"
+                error_message.append(_("Login ID can not be empty!"))
             values.update({'error': error, 'error_message': error_message})
             values.update(post)
             if not error:
+                if request.env.user.login != login:
+                    try:
+                        request.env.user.write({"login": login})
+                        self.env.cr.commit()
+                        # update session token so the user does not get logged out
+                        request.session.session_token = request.env.user._compute_session_token(request.session.sid)
+                    except (ValidationError, psycopg2.errors.UniqueViolation) as e:
+                        request.env.cr.rollback()
+                        error["login"] = "Duplicate"
+                        error_message.append(_("You can not have two users with the same login."))
+                        values.update({'error': error, 'error_message': error_message})
+                        return self._prepare_my_details_values_and_return(values, partner, redirect)
                 values = {key: post[key] for key in self._get_mandatory_fields()}
                 values.update({key: post[key] for key in self._get_optional_fields() if key in post})
                 for field in set(['country_id', 'state_id']) & set(values.keys()):
@@ -207,23 +246,7 @@ class CustomerPortal(Controller):
                     return request.redirect(redirect)
                 return request.redirect('/my/home')
 
-        countries = request.env['res.country'].sudo().search([])
-        states = request.env['res.country.state'].sudo().search([])
-
-        values.update({
-            'partner': partner,
-            'countries': countries,
-            'states': states,
-            'has_check_vat': hasattr(request.env['res.partner'], 'check_vat'),
-            'partner_can_edit_vat': partner.can_edit_vat(),
-            'redirect': redirect,
-            'page_name': 'my_details',
-        })
-
-        response = request.render("portal.portal_my_details", values)
-        response.headers['X-Frame-Options'] = 'SAMEORIGIN'
-        response.headers['Content-Security-Policy'] = "frame-ancestors 'self'"
-        return response
+        return self._prepare_my_details_values_and_return(values, partner, redirect)
 
     def on_account_update(self, values, partner):
         pass
