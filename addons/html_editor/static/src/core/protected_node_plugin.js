@@ -5,34 +5,27 @@ import { childNodes } from "../utils/dom_traversal";
 const PROTECTED_SELECTOR = `[data-oe-protected="true"],[data-oe-protected=""]`;
 const UNPROTECTED_SELECTOR = `[data-oe-protected="false"]`;
 
+/**
+ * @typedef { Object } ProtectedNodeShared
+ * @property { ProtectedNodePlugin['setProtectingNode'] } setProtectingNode
+ */
+
 export class ProtectedNodePlugin extends Plugin {
-    static name = "protected_node";
+    static id = "protectedNode";
     static shared = ["setProtectingNode"];
     resources = {
-        is_mutation_record_savable: this.isMutationRecordSavable.bind(this),
-        filter_descendants_to_remove: this.filterDescendantsToRemove.bind(this),
-        isUnsplittable: isProtecting, // avoid merge
+        /** Handlers */
+        clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
+        normalize_handlers: this.normalize.bind(this),
+        before_filter_mutation_record_handlers: this.beforeFilteringMutationRecords.bind(this),
+
+        unsplittable_node_predicates: isProtecting, // avoid merge
+        savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
+        removable_descendants_providers: this.filterDescendantsToRemove.bind(this),
     };
 
     setup() {
         this.protectedNodes = new WeakSet();
-    }
-
-    handleCommand(command, payload) {
-        switch (command) {
-            case "NORMALIZE": {
-                this.normalize(payload.node);
-                break;
-            }
-            case "CLEAN_FOR_SAVE": {
-                this.cleanForSave(payload.root);
-                break;
-            }
-            case "BEFORE_FILTERING_MUTATION_RECORDS": {
-                this.beforeFilteringMutationRecords(payload.records);
-                break;
-            }
-        }
     }
 
     filterDescendantsToRemove(elem) {

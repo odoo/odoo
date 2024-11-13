@@ -96,17 +96,54 @@ const headingTags = ["H1", "H2", "H3", "H4", "H5", "H6"];
 const handledElemSelector = [...headingTags, "PRE", "BLOCKQUOTE"].join(", ");
 
 export class FontPlugin extends Plugin {
-    static name = "font";
-    static dependencies = ["split", "selection"];
+    static id = "font";
+    static dependencies = ["split", "selection", "dom", "format"];
     resources = {
-        split_element_block: [
-            this.handleSplitBlockPRE.bind(this),
-            this.handleSplitBlockHeading.bind(this),
+        user_commands: [
+            {
+                id: "setTagHeading1",
+                title: _t("Heading 1"),
+                description: _t("Big section heading"),
+                icon: "fa-header",
+                run: () => this.dependencies.dom.setTag({ tagName: "H1" }),
+            },
+            {
+                id: "setTagHeading2",
+                title: _t("Heading 2"),
+                description: _t("Medium section heading"),
+                icon: "fa-header",
+                run: () => this.dependencies.dom.setTag({ tagName: "H2" }),
+            },
+            {
+                id: "setTagHeading3",
+                title: _t("Heading 3"),
+                description: _t("Small section heading"),
+                icon: "fa-header",
+                run: () => this.dependencies.dom.setTag({ tagName: "H3" }),
+            },
+            {
+                id: "setTagParagraph",
+                title: _t("Text"),
+                description: _t("Paragraph block"),
+                icon: "fa-paragraph",
+                run: () => this.dependencies.dom.setTag({ tagName: "P" }),
+            },
+            {
+                id: "setTagQuote",
+                title: _t("Quote"),
+                description: _t("Add a blockquote section"),
+                icon: "fa-quote-right",
+                run: () => this.dependencies.dom.setTag({ tagName: "blockquote" }),
+            },
+            {
+                id: "setTagPre",
+                title: _t("Code"),
+                description: _t("Add a code section"),
+                icon: "fa-code",
+                run: () => this.dependencies.dom.setTag({ tagName: "pre" }),
+            },
         ],
-        onInput: this.onInput.bind(this),
-        handle_delete_backward: withSequence(20, this.handleDeleteBackward.bind(this)),
-        handle_delete_backward_word: this.handleDeleteBackward.bind(this),
-        toolbarCategory: [
+        toolbar_groups: [
             withSequence(10, {
                 id: "font",
             }),
@@ -114,85 +151,63 @@ export class FontPlugin extends Plugin {
                 id: "font-size",
             }),
         ],
-        toolbarItems: [
+        toolbar_items: [
             {
                 id: "font",
-                category: "font",
+                groupId: "font",
                 title: _t("Font style"),
                 Component: FontSelector,
                 props: {
                     getItems: () => fontItems,
-                    command: "SET_TAG",
+                    onSelected: (item) => {
+                        this.dependencies.dom.setTag({
+                            tagName: item.tagName,
+                            extraClass: item.extraClass,
+                        });
+                    },
                 },
             },
             {
                 id: "font-size",
-                category: "font-size",
+                groupId: "font-size",
                 title: _t("Font size"),
                 Component: FontSelector,
                 props: {
                     getItems: () => this.fontSizeItems,
+                    onSelected: (item) =>
+                        this.dependencies.format.formatSelection("setFontSizeClassName", {
+                            formatProps: { className: item.className },
+                        }),
                     isFontSize: true,
-                    command: "FORMAT_FONT_SIZE_CLASSNAME",
                     document: this.document,
                 },
             },
         ],
-        powerboxCategory: withSequence(30, { id: "format", name: _t("Format") }),
-        powerboxItems: [
+        powerbox_categories: withSequence(30, { id: "format", name: _t("Format") }),
+        powerbox_items: [
             {
-                name: _t("Heading 1"),
-                description: _t("Big section heading"),
-                category: "format",
-                fontawesome: "fa-header",
-                action(dispatch) {
-                    dispatch("SET_TAG", { tagName: "H1" });
-                },
+                categoryId: "format",
+                commandId: "setTagHeading1",
             },
             {
-                name: _t("Heading 2"),
-                description: _t("Medium section heading"),
-                category: "format",
-                fontawesome: "fa-header",
-                action(dispatch) {
-                    dispatch("SET_TAG", { tagName: "H2" });
-                },
+                categoryId: "format",
+                commandId: "setTagHeading2",
             },
             {
-                name: _t("Heading 3"),
-                description: _t("Small section heading"),
-                category: "format",
-                fontawesome: "fa-header",
-                action(dispatch) {
-                    dispatch("SET_TAG", { tagName: "H3" });
-                },
+                categoryId: "format",
+                commandId: "setTagHeading3",
             },
             {
-                category: "format",
-                name: _t("Text"),
-                description: _t("Paragraph block"),
-                fontawesome: "fa-paragraph",
-                action(dispatch) {
-                    dispatch("SET_TAG", { tagName: "P" });
-                },
+                categoryId: "format",
+                commandId: "setTagParagraph",
             },
             {
-                category: "structure",
-                name: _t("Quote"),
-                description: _t("Add a blockquote section"),
-                fontawesome: "fa-quote-right",
-                action(dispatch) {
-                    dispatch("SET_TAG", { tagName: "blockquote" });
-                },
+                categoryId: "structure",
+                commandId: "setTagQuote",
             },
             {
-                category: "structure",
-                name: _t("Code"),
-                description: _t("Add a code section"),
-                fontawesome: "fa-code",
-                action(dispatch) {
-                    dispatch("SET_TAG", { tagName: "pre" });
-                },
+                categoryId: "structure",
+                commandId: "setTagPre",
             },
         ],
         hints: [
@@ -205,6 +220,17 @@ export class FontPlugin extends Plugin {
             { selector: "PRE", text: _t("Code") },
             { selector: "BLOCKQUOTE", text: _t("Quote") },
         ],
+
+        /** Handlers */
+        input_handlers: this.onInput.bind(this),
+
+        /** Overrides */
+        split_element_block_overrides: [
+            this.handleSplitBlockPRE.bind(this),
+            this.handleSplitBlockHeading.bind(this),
+        ],
+        delete_backward_overrides: withSequence(20, this.handleDeleteBackward.bind(this)),
+        delete_backward_word_overrides: this.handleDeleteBackward.bind(this),
     };
 
     get fontSizeItems() {
@@ -247,11 +273,11 @@ export class FontPlugin extends Plugin {
             const p = this.document.createElement("p");
             closestPre.after(p);
             fillEmpty(p);
-            this.shared.setCursorStart(p);
+            this.dependencies.selection.setCursorStart(p);
         } else {
             const lineBreak = this.document.createElement("br");
             targetNode.insertBefore(lineBreak, targetNode.childNodes[targetOffset]);
-            this.shared.setCursorEnd(lineBreak);
+            this.dependencies.selection.setCursorEnd(lineBreak);
         }
         return true;
     }
@@ -268,7 +294,7 @@ export class FontPlugin extends Plugin {
             headingTags.includes(element.tagName)
         );
         if (closestHeading) {
-            const [, newElement] = this.shared.splitElementBlock(params);
+            const [, newElement] = this.dependencies.split.splitElementBlock(params);
             // @todo @phoenix: if this condition can be anticipated before the split,
             // handle the splitBlock only in such case.
             if (
@@ -278,7 +304,7 @@ export class FontPlugin extends Plugin {
                 const p = this.document.createElement("P");
                 newElement.replaceWith(p);
                 p.replaceChildren(this.document.createElement("br"));
-                this.shared.setCursorStart(p);
+                this.dependencies.selection.setCursorStart(p);
             }
             return true;
         }
@@ -300,16 +326,14 @@ export class FontPlugin extends Plugin {
             return;
         }
         // Check if unremovable.
-        if (
-            this.getResource("isUnremovable").some((predicate) => predicate(closestHandledElement))
-        ) {
+        if (this.getResource("unremovable_node_predicates").some((p) => p(closestHandledElement))) {
             return;
         }
         const p = this.document.createElement("p");
         p.append(...closestHandledElement.childNodes);
         closestHandledElement.after(p);
         closestHandledElement.remove();
-        this.shared.setCursorStart(p);
+        this.dependencies.selection.setCursorStart(p);
         return true;
     }
 
@@ -317,7 +341,7 @@ export class FontPlugin extends Plugin {
         if (ev.data !== " ") {
             return;
         }
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         const blockEl = closestBlock(selection.anchorNode);
         const leftDOMPath = leftLeafOnlyNotBlockPath(selection.anchorNode);
         let spaceOffset = selection.anchorOffset;
@@ -333,15 +357,17 @@ export class FontPlugin extends Plugin {
         if (/^(#{1,6})\s$/.test(precedingText)) {
             const numberOfHash = precedingText.length - 1;
             const headingToBe = headingTags[numberOfHash - 1];
-            this.shared.setSelection({
+            this.dependencies.selection.setSelection({
                 anchorNode: blockEl.firstChild,
                 anchorOffset: 0,
                 focusNode: selection.focusNode,
                 focusOffset: selection.focusOffset,
             });
-            this.shared.extractContent(this.shared.getEditableSelection());
+            this.dependencies.selection.extractContent(
+                this.dependencies.selection.getEditableSelection()
+            );
             fillEmpty(blockEl);
-            this.dispatch("SET_TAG", { tagName: headingToBe });
+            this.dependencies.dom.setTag({ tagName: headingToBe });
         }
     }
 }

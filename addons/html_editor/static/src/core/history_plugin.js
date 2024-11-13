@@ -77,34 +77,67 @@ import { childNodes, descendants, getCommonAncestor } from "../utils/dom_travers
  * @property { Function } revert
  */
 
+/**
+ * @typedef { Object } HistoryShared
+ * @property { HistoryPlugin['addExternalStep'] } addExternalStep
+ * @property { HistoryPlugin['addStep'] } addStep
+ * @property { HistoryPlugin['canRedo'] } canRedo
+ * @property { HistoryPlugin['canUndo'] } canUndo
+ * @property { HistoryPlugin['disableObserver'] } disableObserver
+ * @property { HistoryPlugin['enableObserver'] } enableObserver
+ * @property { HistoryPlugin['getHistorySteps'] } getHistorySteps
+ * @property { HistoryPlugin['getNodeById'] } getNodeById
+ * @property { HistoryPlugin['makePreviewableOperation'] } makePreviewableOperation
+ * @property { HistoryPlugin['makeSavePoint'] } makeSavePoint
+ * @property { HistoryPlugin['makeSnapshotStep'] } makeSnapshotStep
+ * @property { HistoryPlugin['redo'] } redo
+ * @property { HistoryPlugin['reset'] } reset
+ * @property { HistoryPlugin['resetFromSteps'] } resetFromSteps
+ * @property { HistoryPlugin['serializeSelection'] } serializeSelection
+ * @property { HistoryPlugin['stageSelection'] } stageSelection
+ * @property { HistoryPlugin['undo'] } undo
+ */
+
 export class HistoryPlugin extends Plugin {
-    static name = "history";
-    static dependencies = ["dom", "selection", "sanitize"];
+    static id = "history";
+    static dependencies = ["selection", "sanitize"];
     static shared = [
-        "reset",
-        "canUndo",
+        "addExternalStep",
+        "addStep",
         "canRedo",
-        "makeSavePoint",
-        "makePreviewableOperation",
-        "makeSnapshotStep",
+        "canUndo",
         "disableObserver",
         "enableObserver",
-        "addExternalStep",
         "getHistorySteps",
-        "historyResetFromSteps",
-        "serializeSelection",
         "getNodeById",
+        "makePreviewableOperation",
+        "makeSavePoint",
+        "makeSnapshotStep",
+        "redo",
+        "reset",
+        "resetFromSteps",
+        "serializeSelection",
+        "stageSelection",
+        "undo",
     ];
     resources = {
-        shortcuts: [
-            { hotkey: "control+z", command: "HISTORY_UNDO" },
-            { hotkey: "control+y", command: "HISTORY_REDO" },
-            { hotkey: "control+shift+z", command: "HISTORY_REDO" },
+        user_commands: [
+            { id: "historyUndo", run: this.undo.bind(this) },
+            { id: "historyRedo", run: this.redo.bind(this) },
         ],
+        shortcuts: [
+            { hotkey: "control+z", commandId: "historyUndo" },
+            { hotkey: "control+y", commandId: "historyRedo" },
+            { hotkey: "control+shift+z", commandId: "historyRedo" },
+        ],
+        start_edition_handlers: () => {
+            this.enableObserver();
+            this.reset(this.config.content);
+        },
     };
 
     setup() {
-        this.mutationFilteredClasses = new Set(this.getResource("mutation_filtered_classes"));
+        this.mutationFilteredClasses = new Set(this.getResource("system_classes"));
         this._onKeyupResetContenteditableNodes = [];
         this.addDomListener(this.document, "beforeinput", this._onDocumentBeforeInput.bind(this));
         this.addDomListener(this.document, "input", this._onDocumentInput.bind(this));
@@ -114,26 +147,6 @@ export class HistoryPlugin extends Plugin {
         this.observer = new MutationObserver(this.handleNewRecords.bind(this));
         this._cleanups.push(() => this.observer.disconnect());
         this.clean();
-    }
-    handleCommand(command, payload) {
-        switch (command) {
-            case "START_EDITION":
-                this.enableObserver();
-                this.reset(this.config.content);
-                break;
-            case "HISTORY_UNDO":
-                this.undo();
-                break;
-            case "HISTORY_REDO":
-                this.redo();
-                break;
-            case "ADD_STEP":
-                this.addStep();
-                break;
-            case "HISTORY_STAGE_SELECTION":
-                this.stageSelection();
-                break;
-        }
     }
 
     clean() {
@@ -152,8 +165,12 @@ export class HistoryPlugin extends Plugin {
         this.nodeToIdMap = new WeakMap();
         this.idToNodeMap = new Map();
         this.setNodeId(this.editable);
-        this.dispatch("HISTORY_CLEAN");
+        this.dispatchTo("history_cleaned_handlers");
     }
+    /**
+     * @param {string} id
+     * @returns {Node}
+     */
     getNodeById(id) {
         return this.idToNodeMap.get(id);
     }
@@ -166,12 +183,12 @@ export class HistoryPlugin extends Plugin {
         this.clean();
         this.stageSelection();
         this.steps.push(this.makeSnapshotStep());
-        this.dispatch("HISTORY_RESET", { content });
+        this.dispatchTo("history_reset_handlers", content);
     }
     /**
      * @param { HistoryStep[] } steps
      */
-    historyResetFromSteps(steps) {
+    resetFromSteps(steps) {
         this.disableObserver();
         this.editable.replaceChildren();
         this.clean();
@@ -181,10 +198,10 @@ export class HistoryPlugin extends Plugin {
         }
         this.steps = steps;
         // todo: to test
-        this.getResource("historyResetFromSteps").forEach((cb) => cb());
+        this.dispatchTo("history_reset_from_steps_handlers");
 
         this.enableObserver();
-        this.dispatch("HISTORY_RESET_FROM_STEPS");
+        this.dispatchTo("history_reset_from_steps_handlers");
     }
     makeSnapshotStep() {
         return {
@@ -212,7 +229,7 @@ export class HistoryPlugin extends Plugin {
      * @param { HistoryStep } step
      */
     processHistoryStep(step) {
-        for (const fn of this.getResource("process_history_step")) {
+        for (const fn of this.getResource("history_step_processors")) {
             step = fn(step);
         }
         return step;
@@ -264,9 +281,7 @@ export class HistoryPlugin extends Plugin {
         if (!root) {
             return;
         }
-        this.dispatch("CONTENT_UPDATED", {
-            root,
-        });
+        this.dispatchTo("content_updated_handlers", root);
     }
 
     /**
@@ -294,10 +309,8 @@ export class HistoryPlugin extends Plugin {
      * @param { MutationRecord[] } records
      */
     filterMutationRecords(records) {
-        this.dispatch("BEFORE_FILTERING_MUTATION_RECORDS", {
-            records,
-        });
-        for (const callback of this.getResource("is_mutation_record_savable")) {
+        this.dispatchTo("before_filter_mutation_record_handlers", records);
+        for (const callback of this.getResource("savable_mutation_record_predicates")) {
             records = records.filter(callback);
         }
 
@@ -373,7 +386,7 @@ export class HistoryPlugin extends Plugin {
      * when reverting the step.
      */
     stageSelection() {
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         if (
             this.currentStep.mutations.find((m) =>
                 ["characterData", "remove", "add"].includes(m.type)
@@ -428,14 +441,12 @@ export class HistoryPlugin extends Plugin {
                         value: record.target.getAttribute(record.attributeName),
                         oldValue: record.oldValue,
                     });
-                    for (const cb of this.getResource("on_change_attribute")) {
-                        cb({
-                            target: record.target,
-                            attributeName: record.attributeName,
-                            oldValue: record.oldValue,
-                            value: record.target.getAttribute(record.attributeName),
-                        });
-                    }
+                    this.dispatchTo("attribute_change_handlers", {
+                        target: record.target,
+                        attributeName: record.attributeName,
+                        oldValue: record.oldValue,
+                        value: record.target.getAttribute(record.attributeName),
+                    });
                     break;
                 }
                 case "childList": {
@@ -523,7 +534,7 @@ export class HistoryPlugin extends Plugin {
             return false;
         }
         const stepCommonAncestor = this.getMutationsRoot(currentStep.mutations) || this.editable;
-        this.dispatch("NORMALIZE", { node: stepCommonAncestor });
+        this.dispatchTo("normalize_handlers", stepCommonAncestor);
         this.handleObserverRecords();
 
         currentStep.previousStepId = this.steps.at(-1)?.id;
@@ -545,10 +556,7 @@ export class HistoryPlugin extends Plugin {
             this.stepsStates.set(currentStep.id, stepState);
         }
         this.stageSelection();
-        this.dispatch("STEP_ADDED", {
-            step: currentStep,
-            stepCommonAncestor,
-        });
+        this.dispatchTo("step_added_handlers", { step: currentStep, stepCommonAncestor });
         this.config.onChange?.();
         return currentStep;
     }
@@ -582,6 +590,7 @@ export class HistoryPlugin extends Plugin {
             this.addStep({ stepState: "undo" });
             // Consider the last position of the history as an undo.
         }
+        this.dispatchTo("post_undo_handlers");
     }
     redo() {
         this.handleObserverRecords();
@@ -601,6 +610,7 @@ export class HistoryPlugin extends Plugin {
             this.setSerializedSelection(this.steps[pos].selection);
             this.addStep({ stepState: "redo" });
         }
+        this.dispatchTo("post_redo_handlers");
     }
     /**
      * @param { SerializedSelection } selection
@@ -622,7 +632,7 @@ export class HistoryPlugin extends Plugin {
             newSelection.focusNode = focusNode;
             newSelection.focusOffset = selection.focusOffset;
         }
-        this.shared.setSelection(newSelection, { normalize: false });
+        this.dependencies.selection.setSelection(newSelection, { normalize: false });
         // @todo @phoenix add this in the selection or table plugin.
         // // If a table must be selected, ensure it's in the same tick.
         // this._handleSelectionInTable();
@@ -651,13 +661,13 @@ export class HistoryPlugin extends Plugin {
      * @param { number } index
      */
     isReversibleStep(index) {
-        for (const cb of this.getResource("is_reversible_step")) {
-            const result = cb(index);
-            if (typeof result !== "undefined") {
-                return result;
-            }
+        const step = this.steps[index];
+        if (!step) {
+            return false;
         }
-        return Boolean(this.steps[index]);
+        return !this.getResource("unreversible_step_predicates").some((predicate) =>
+            predicate(step)
+        );
     }
     /**
      * Get the step index in the history to redo.
@@ -703,15 +713,17 @@ export class HistoryPlugin extends Plugin {
             this.revertMutations(stepToRevert.mutations);
         }
         this.applyMutations(newStep.mutations);
-        this.dispatch("NORMALIZE", {
-            node: this.getMutationsRoot(newStep.mutations) || this.editable,
-        });
+        this.dispatchTo(
+            "normalize_handlers",
+            this.getMutationsRoot(newStep.mutations) || this.editable
+        );
         this.steps.splice(index, 0, newStep);
         for (const stepToApply of stepsAfterNewStep) {
             this.applyMutations(stepToApply.mutations);
         }
         // Reapply the uncommited draft, since this is not an operation which should cancel it
         this.applyMutations(this.currentStep.mutations);
+        this.dispatchTo("external_step_added_handlers");
     }
     /**
      * @param { HistoryMutation[] } mutations
@@ -733,17 +745,16 @@ export class HistoryPlugin extends Plugin {
                     const node = this.idToNodeMap.get(mutation.id);
                     if (node) {
                         let value = this.getAttributeValue(mutation.attributeName, mutation.value);
-                        for (const cb of this.getResource("on_change_attribute")) {
-                            value =
-                                cb(
-                                    {
-                                        target: node,
-                                        attributeName: mutation.attributeName,
-                                        oldValue: mutation.oldValue,
-                                        value,
-                                    },
-                                    { forNewStep }
-                                ) || value;
+                        for (const cb of this.getResource("attribute_change_processors")) {
+                            value = cb(
+                                {
+                                    target: node,
+                                    attributeName: mutation.attributeName,
+                                    oldValue: mutation.oldValue,
+                                    value,
+                                },
+                                { forNewStep }
+                            );
                         }
                         this.setAttribute(node, mutation.attributeName, value);
                     }
@@ -802,18 +813,17 @@ export class HistoryPlugin extends Plugin {
                             mutation.attributeName,
                             mutation.oldValue
                         );
-                        for (const cb of this.getResource("on_change_attribute")) {
-                            value =
-                                cb(
-                                    {
-                                        target: node,
-                                        attributeName: mutation.attributeName,
-                                        oldValue: mutation.value,
-                                        value,
-                                        reverse: true,
-                                    },
-                                    { forNewStep }
-                                ) || value;
+                        for (const cb of this.getResource("attribute_change_processors")) {
+                            value = cb(
+                                {
+                                    target: node,
+                                    attributeName: mutation.attributeName,
+                                    oldValue: mutation.value,
+                                    value,
+                                    reverse: true,
+                                },
+                                { forNewStep }
+                            );
                         }
                         this.setAttribute(node, mutation.attributeName, value);
                     }
@@ -891,7 +901,7 @@ export class HistoryPlugin extends Plugin {
         const step = this.steps.at(-1);
         let applied = false;
         // TODO ABD TODO @phoenix: selection may become obsolete, it should evolve with mutations.
-        const selectionToRestore = this.shared.preserveSelection();
+        const selectionToRestore = this.dependencies.selection.preserveSelection();
         return () => {
             if (applied) {
                 return;
@@ -905,7 +915,7 @@ export class HistoryPlugin extends Plugin {
             this.handleObserverRecords();
             // TODO ABD TODO @phoenix: evaluate if the selection is not restorable at the desired position
             selectionToRestore.restore();
-            this.dispatch("RESTORE_SAVEPOINT");
+            this.dispatchTo("restore_savepoint_handlers");
         };
     }
     /**
@@ -1000,12 +1010,10 @@ export class HistoryPlugin extends Plugin {
      * @param { string } attributeValue
      */
     setAttribute(node, attributeName, attributeValue) {
-        for (const cb of this.getResource("set_attribute")) {
-            const result = cb(node, attributeName, attributeValue);
-            if (result) {
-                return;
-            }
+        if (this.delegateTo("set_attribute_overrides", node, attributeName, attributeValue)) {
+            return;
         }
+
         // if attributeValue is falsy but not null, we still need to apply it
         if (attributeValue !== null) {
             node.setAttribute(attributeName, attributeValue);
@@ -1030,7 +1038,7 @@ export class HistoryPlugin extends Plugin {
         let [unserializedNode, nodeMap] = this._unserializeNode(node, this.idToNodeMap);
         const fakeNode = this.document.createElement("fake-el");
         fakeNode.appendChild(unserializedNode);
-        this.shared.sanitize(fakeNode, { IN_PLACE: true });
+        this.dependencies.sanitize.sanitize(fakeNode, { IN_PLACE: true });
         unserializedNode = fakeNode.firstChild;
 
         if (unserializedNode) {
@@ -1066,15 +1074,9 @@ export class HistoryPlugin extends Plugin {
         if (node.nodeType === Node.TEXT_NODE) {
             result.textValue = node.nodeValue;
         } else if (node.nodeType === Node.ELEMENT_NODE) {
-            let childrenToSerialize;
-            for (const cb of this.getResource("filter_descendants_to_serialize")) {
-                childrenToSerialize = cb(node);
-                if (childrenToSerialize) {
-                    break;
-                }
-            }
-            if (!childrenToSerialize) {
-                childrenToSerialize = childNodes(node);
+            let childrenToSerialize = childNodes(node);
+            for (const cb of this.getResource("serializable_descendants_processors")) {
+                childrenToSerialize = cb(node, childrenToSerialize);
             }
             result.tagName = node.tagName;
             result.children = [];

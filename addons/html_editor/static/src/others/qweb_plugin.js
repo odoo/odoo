@@ -2,26 +2,47 @@ import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { leftPos, rightPos } from "@html_editor/utils/position";
 import { QWebPicker } from "./qweb_picker";
+import { isElement } from "@html_editor/utils/dom_info";
 
-const isUnsplittableQWebElement = (element) =>
-    element.tagName === "T" ||
-    ["t-field", "t-if", "t-elif", "t-else", "t-foreach", "t-value", "t-esc", "t-out", "t-raw"].some(
-        (attr) => element.getAttribute(attr)
-    );
+const isUnsplittableQWebElement = (node) =>
+    isElement(node) &&
+    (node.tagName === "T" ||
+        [
+            "t-field",
+            "t-if",
+            "t-elif",
+            "t-else",
+            "t-foreach",
+            "t-value",
+            "t-esc",
+            "t-out",
+            "t-raw",
+        ].some((attr) => node.getAttribute(attr)));
 
 export class QWebPlugin extends Plugin {
-    static name = "qweb";
+    static id = "qweb";
     static dependencies = ["overlay", "selection"];
     resources = {
-        onSelectionChange: this.onSelectionChange.bind(this),
-        is_mutation_record_savable: this.isMutationRecordSavable.bind(this),
-        isUnremovable: (element) => element.getAttribute("t-set") || element.getAttribute("t-call"),
-        isUnsplittable: isUnsplittableQWebElement,
+        /** Handlers */
+        selectionchange_handlers: this.onSelectionChange.bind(this),
+        clean_handlers: this.clearDataAttributes.bind(this),
+        clean_for_save_handlers: ({ root }) => {
+            this.clearDataAttributes(root);
+            for (const element of root.querySelectorAll("[t-esc], [t-raw], [t-out], [t-field]")) {
+                element.removeAttribute("contenteditable");
+            }
+        },
+        normalize_handlers: this.normalize.bind(this),
+
+        savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
+        unremovable_node_predicates: (node) =>
+            node.getAttribute?.("t-set") || node.getAttribute?.("t-call"),
+        unsplittable_node_predicates: isUnsplittableQWebElement,
     };
 
     setup() {
         this.editable.classList.add("odoo-editor-qweb");
-        this.picker = this.shared.createOverlay(QWebPicker, {
+        this.picker = this.dependencies.overlay.createOverlay(QWebPicker, {
             positionOptions: { position: "top-start" },
         });
         this.addDomListener(this.editable, "click", this.onClick);
@@ -43,25 +64,6 @@ export class QWebPlugin extends Plugin {
         return true;
     }
 
-    handleCommand(command, payload) {
-        switch (command) {
-            case "NORMALIZE":
-                this.normalize(payload.node);
-                break;
-            case "CLEAN":
-                this.clearDataAttributes(payload.root);
-                break;
-            case "CLEAN_FOR_SAVE":
-                this.clearDataAttributes(payload.root);
-                for (const element of payload.root.querySelectorAll(
-                    "[t-esc], [t-raw], [t-out], [t-field]"
-                )) {
-                    element.removeAttribute("contenteditable");
-                }
-                break;
-        }
-    }
-
     /**
      * @param { SelectionData } selectionData
      */
@@ -75,7 +77,12 @@ export class QWebPlugin extends Plugin {
             // select the whole qweb node
             const [anchorNode, anchorOffset] = leftPos(qwebNode);
             const [focusNode, focusOffset] = rightPos(qwebNode);
-            this.shared.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
+            this.dependencies.selection.setSelection({
+                anchorNode,
+                anchorOffset,
+                focusNode,
+                focusOffset,
+            });
         }
     }
 
