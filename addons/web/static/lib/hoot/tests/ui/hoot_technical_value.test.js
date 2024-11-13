@@ -1,10 +1,10 @@
 /** @odoo-module */
 
-import { describe, expect, mountOnFixture, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import { click } from "@odoo/hoot-dom";
 import { animationFrame, Deferred } from "@odoo/hoot-mock";
 import { Component, reactive, useState, xml } from "@odoo/owl";
-import { parseUrl } from "../local_helpers";
+import { mountForTest, parseUrl } from "../local_helpers";
 
 import { HootTechnicalValue } from "../../ui/hoot_technical_value";
 
@@ -26,7 +26,7 @@ const mountTechnicalValue = async (defaultValue) => {
         }
     }
 
-    await mountOnFixture(TechnicalValueParent);
+    await mountForTest(TechnicalValueParent);
 
     return updateValue;
 };
