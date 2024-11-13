@@ -545,6 +545,29 @@ const parseKeyStrokes = (keyStrokes, options) =>
     });
 
 /**
+ * Redirects all 'submit' events to explicit network requests.
+ *
+ * This allows the `mockFetch` helper to take control over submit requests.
+ *
+ * @param {SubmitEvent} ev
+ */
+const redirectSubmit = (ev) => {
+    if (isPrevented(ev)) {
+        return;
+    }
+
+    ev.preventDefault();
+
+    /** @type {HTMLFormElement} */
+    const form = ev.target;
+
+    globalThis.fetch(form.action, {
+        method: form.method,
+        body: new FormData(form, ev.submitter),
+    });
+};
+
+/**
  * @param {Event} ev
  */
 const registerFileInput = ({ target }) => {
@@ -2415,6 +2438,8 @@ export function setupEventActions(fixture) {
     removeChangeTargetListeners();
 
     fixture.addEventListener("click", registerFileInput, { capture: true });
+    fixture.addEventListener("focus", registerFileInput, { capture: true });
+    fixture.addEventListener("submit", redirectSubmit);
 
     // Runtime global variables
     $assign(runTime, getDefaultRunTimeValue());
