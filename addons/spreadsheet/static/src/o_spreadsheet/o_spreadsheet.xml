@@ -148,10 +148,12 @@
           <button class="o-add-button" t-on-click="setCustomColor">Add</button>
         </div>
       </div>
-      <div class="o-separator"/>
-      <div class="o-buttons">
-        <button t-on-click="resetColor" class="o-cancel">Reset</button>
-      </div>
+      <t t-if="!props.disableNoColor">
+        <div class="o-separator"/>
+        <div class="o-buttons">
+          <button t-on-click="resetColor" class="o-cancel">Reset</button>
+        </div>
+      </t>
     </div>
   </t>
 
@@ -2405,6 +2407,7 @@ https://fontawesome.com/license -->
             dropdownDirection="'left'"
             onColorPicked="(color) => this.setColorScaleColor(thresholdType, color)"
             currentColor="getThresholdColor(threshold)"
+            disableNoColor="true"
           />
         </div>
       </div>
@@ -3239,7 +3242,7 @@ https://fontawesome.com/license -->
   </t>
 </odoo>
 <!--
-  __info__.version = '16.0.54';
-  __info__.date = '2024-11-08T12:23:07.462Z';
-  __info__.hash = 'fdfa7dc';
+  __info__.version = '16.0.55';
+  __info__.date = '2024-11-13T15:37:43.062Z';
+  __info__.hash = '6984990';
 -->
