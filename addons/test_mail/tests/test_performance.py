@@ -1521,6 +1521,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                             ),
                             "mail.notification": [
                                 {
+                                    "mail_email_address": False,
                                     "failure_type": False,
                                     "id": notif_1.id,
                                     "mail_message_id": message.id,
@@ -1532,6 +1533,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     },
                                 },
                                 {
+                                    "mail_email_address": False,
                                     "failure_type": False,
                                     "id": notif_2.id,
                                     "mail_message_id": message.id,
@@ -1634,6 +1636,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                             ),
                             "mail.notification": [
                                 {
+                                    "mail_email_address": False,
                                     "failure_type": False,
                                     "id": notif_1.id,
                                     "mail_message_id": message.id,
@@ -1645,6 +1648,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     },
                                 },
                                 {
+                                    "mail_email_address": False,
                                     "failure_type": False,
                                     "id": notif_2.id,
                                     "mail_message_id": message.id,
