@@ -33,6 +33,7 @@ export class MailNotification extends models.ServerModel {
     get _to_store_defaults() {
         return [
             "failure_type",
+            "mail_email_address",
             "mail_message_id",
             "notification_status",
             "notification_type",
