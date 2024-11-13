@@ -29,7 +29,7 @@
                         class="oe_stat_button"
                         icon="fa-history"
                         type="object"
-                        invisible="total_overtime == 0.0"
+                        invisible="total_overtime == 0.0 or company_id not in allowed_company_ids"
                         groups="hr_attendance.group_hr_attendance_officer">
                     <div class="o_stat_info">
                         <span class="o_stat_value text-success" invisible="total_overtime &lt; 0">
@@ -41,6 +41,24 @@
                         <span class="o_stat_text">Extra Hours</span>
                     </div>
                 </button>
+                <!-- same but disabled when employee company is not selected -->
+                <button name="action_open_last_month_overtime"
+                    class="oe_stat_button disabled"
+                    disabled="1"
+                    icon="fa-history"
+                    type="object"
+                    invisible="total_overtime == 0.0 or company_id in allowed_company_ids"
+                    groups="hr_attendance.group_hr_attendance_officer">
+                <div class="o_stat_info">
+                    <span class="o_stat_value text-success" invisible="total_overtime &lt; 0">
+                        <field name="total_overtime" widget="float_time"/>
+                    </span>
+                    <span class="o_stat_value text-danger" invisible="total_overtime &gt;= 0">
+                        <field name="total_overtime" widget="float_time"/>
+                    </span>
+                    <span class="o_stat_text">Extra Hours</span>
+                </div>
+            </button>
             </xpath>
             <xpath expr="//group[@name='managers']" position="inside">
                 <field name="attendance_manager_id" string="Attendance" widget="many2one_avatar_user"/>

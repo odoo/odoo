@@ -8,13 +8,31 @@
         <field name="arch" type="xml">
             <div name="button_box" position="inside">
                 <field name="has_work_entries" invisible="1"/>
-                <button invisible="not has_work_entries" type="object" class="oe_stat_button" id="open_work_entries"
-                    icon="fa-calendar" name="action_open_work_entries">
+                <button invisible="not has_work_entries or company_id not in allowed_company_ids" 
+                    id="open_work_entries"
+                    icon="fa-calendar" 
+                    class="oe_stat_button" 
+                    type="object" 
+                    name="action_open_work_entries">
                     <div class="o_stat_info">
-                            <span class="o_stat_text">
-                            Work Entries
-                            </span>
-                        </div>
+                        <span class="o_stat_text">
+                        Work Entries
+                        </span>
+                    </div>
+                </button>
+                <!-- same but disabled when company not selected -->
+                <button invisible="not has_work_entries or company_id in allowed_company_ids" 
+                    id="open_work_entries"
+                    icon="fa-calendar" 
+                    class="oe_stat_button disabled" 
+                    disabled="1" 
+                    type="object" 
+                    name="action_open_work_entries">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">
+                        Work Entries
+                        </span>
+                    </div>
                 </button>
             </div>
         </field>

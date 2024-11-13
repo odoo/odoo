@@ -46,7 +46,44 @@
                                 'default_resource_calendar_id': resource_calendar_id.id or False,
                                 'from_action_open_contract': True,
                             }"
-                            invisible="employee_type not in ['employee', 'student', 'trainee']">
+                            invisible="employee_type not in ['employee', 'student', 'trainee'] or company_id not in allowed_company_ids">
+                            <div invisible="not first_contract_date" class="o_stat_info">
+                                <span class="o_stat_text text-success" invisible="contract_warning" title="In Contract Since"> In Contract Since</span>
+                                <span class="o_stat_value text-success" invisible="contract_warning">
+                                    <field name="first_contract_date" readonly="1"/>
+                                </span>
+                                <span class="o_stat_text text-danger" invisible="not contract_warning" title="In Contract Since">
+                                    In Contract Since
+                                </span>
+                                <span class="o_stat_value text-danger" invisible="not contract_warning">
+                                    <field name="first_contract_date" readonly="1"/>
+                                </span>
+                            </div>
+                            <div invisible="first_contract_date" class="o_stat_info">
+                                <span class="o_stat_value text-danger">
+                                    <field name="contracts_count"/>
+                                </span>
+                                <span invisible="contracts_count != 1" class="o_stat_text text-danger" >
+                                    Contract
+                                </span>
+                                <span invisible="contracts_count == 1" class="o_stat_text text-danger">
+                                    Contracts
+                                </span>
+                            </div>
+                        </button>
+                        <!-- same but disabled for when the employee's company is not selected in the widget -->
+                        <button name="action_open_contract"
+                            class="oe_stat_button disabled"
+                            icon="fa-book"
+                            type="object"
+                            groups="hr_contract.group_hr_contract_manager"
+                            context="{
+                                'default_employee_id': id,
+                                'default_resource_calendar_id': resource_calendar_id.id or False,
+                                'from_action_open_contract': True,
+                            }"
+                            disabled="1"
+                            invisible="employee_type not in ['employee', 'student', 'trainee'] or company_id in allowed_company_ids">
                             <div invisible="not first_contract_date" class="o_stat_info">
                                 <span class="o_stat_text text-success" invisible="contract_warning" title="In Contract Since"> In Contract Since</span>
                                 <span class="o_stat_value text-success" invisible="contract_warning">
