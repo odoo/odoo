@@ -71,15 +71,15 @@ class TestIrDefault(TransactionCase):
                          {})
 
         # default with a condition
-        IrDefault.search([('field_id.model', '=', 'res.partner.title')]).unlink()
-        IrDefault.set('res.partner.title', 'shortcut', 'X')
-        IrDefault.set('res.partner.title', 'shortcut', 'Mr', condition='name=Mister')
-        self.assertEqual(IrDefault._get_model_defaults('res.partner.title'),
-                         {'shortcut': 'X'})
-        self.assertEqual(IrDefault._get_model_defaults('res.partner.title', condition='name=Miss'),
+        IrDefault.search([('field_id.model', '=', 'res.partner')]).unlink()
+        IrDefault.set('res.partner', 'street', 'X')
+        IrDefault.set('res.partner', 'street', 'Mr', condition='name=Mister')
+        self.assertEqual(IrDefault._get_model_defaults('res.partner'),
+                         {'street': 'X'})
+        self.assertEqual(IrDefault._get_model_defaults('res.partner', condition='name=Miss'),
                          {})
-        self.assertEqual(IrDefault._get_model_defaults('res.partner.title', condition='name=Mister'),
-                         {'shortcut': 'Mr'})
+        self.assertEqual(IrDefault._get_model_defaults('res.partner', condition='name=Mister'),
+                         {'street': 'Mr'})
 
     def test_invalid(self):
         """ check error cases with 'ir.default' """
@@ -101,12 +101,12 @@ class TestIrDefault(TransactionCase):
         IrDefault.search([('field_id.model', '=', 'res.partner')]).unlink()
 
         # set a record as a default value
-        title = self.env['res.partner.title'].create({'name': 'President'})
-        IrDefault.set('res.partner', 'title', title.id)
-        self.assertEqual(IrDefault._get_model_defaults('res.partner'), {'title': title.id})
+        country_id = self.env['res.country'].create({'name': 'country', 'code': 'ZZ'})
+        IrDefault.set('res.partner', 'country_id', country_id.id)
+        self.assertEqual(IrDefault._get_model_defaults('res.partner'), {'country_id': country_id.id})
 
         # delete the record, and check the presence of the default value
-        title.unlink()
+        country_id.unlink()
         self.assertEqual(IrDefault._get_model_defaults('res.partner'), {})
 
     def test_multi_company_defaults(self):
