@@ -3,6 +3,7 @@
 import { Composer } from "@mail/core/common/composer";
 import { Typing } from "@mail/discuss/typing/common/typing";
 
+import { onWillDestroy } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
@@ -25,6 +26,9 @@ patch(Composer.prototype, {
         super.setup();
         this.typingNotified = false;
         this.stopTypingDebounced = useDebounced(this.stopTyping.bind(this), SHORT_TYPING);
+        onWillDestroy(() => {
+            this.stopTyping();
+        });
     },
     /**
      * Notify the server of the current typing status
