@@ -28,8 +28,13 @@ import { session } from "@web/session";
  * @returns {OdooEnv}
  */
 export function makeEnv() {
+    const bus = new EventBus();
+    const prom = new Promise((resolve) => {
+        bus.addEventListener("SERVICES-LOADED", resolve, { once: true });
+    });
     return {
-        bus: new EventBus(),
+        bus,
+        isReady: prom,
         services: {},
         debug: odoo.debug,
         get isSmall() {
@@ -132,6 +137,7 @@ async function _startServices(env, toStart) {
         startServicesPromise = null;
     });
     await startServicesPromise;
+    env.bus.trigger("SERVICES-LOADED");
     if (toStart.size) {
         const missingDeps = new Set();
         for (const service of toStart.values()) {
