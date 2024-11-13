@@ -659,7 +659,8 @@ class Channel(models.Model):
         """
         Automatically set the message posted by the current user as seen for themselves.
         """
-        self._set_last_seen_message(message, notify=False)
+        if message.is_current_user_or_guest_author:
+            self._set_last_seen_message(message, notify=False)
         return super()._message_post_after_hook(message, msg_vals)
 
     def _check_can_update_message_content(self, message):
