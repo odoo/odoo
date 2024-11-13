@@ -705,9 +705,9 @@ class Channel(models.Model):
         """
         Automatically set the message posted by the current user as seen for themselves.
         """
-        if current_channel_member := self.env["discuss.channel.member"].search([
+        if (current_channel_member := self.env["discuss.channel.member"].search([
             ("channel_id", "=", self.id), ("is_self", "=", True)
-        ]):
+        ])) and message.is_current_user_or_guest_author:
             current_channel_member._set_last_seen_message(message, notify=False)
             current_channel_member._set_new_message_separator(message.id + 1, sync=True)
         return super()._message_post_after_hook(message, msg_vals)
