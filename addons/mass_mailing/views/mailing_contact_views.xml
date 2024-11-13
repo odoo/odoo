@@ -48,7 +48,6 @@
                     <button name="action_add_to_mailing_list" string="Add to List" type="object"/>
                 </header>
                 <field name="create_date" optional="show"/>
-                <field name="title_id" optional="hide"/>
                 <field name="name" optional="show" readonly="1"/>
                 <field name="company_name"/>
                 <field name="email" readonly="1"/>
@@ -114,7 +113,6 @@
                                 <field name="email" widget="email"/>
                                 <field name="is_blacklisted" invisible="1"/>
                             </div>
-                            <field name="title_id" placeholder="e.g. Miss or Mister"/>
                             <field name="company_name"/>
                             <field name="country_id" options="{'no_open': True, 'no_create': True}"/>
                         </group>

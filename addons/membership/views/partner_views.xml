@@ -93,7 +93,7 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <notebook position="inside">
+                <page name="internal_notes" position="before">
                     <page string="Membership" name="membership">
                         <group>
                             <group>
@@ -136,7 +136,7 @@
                         </field>
 
                     </page>
-                </notebook>
+                </page>
             </field>
         </record>
 </odoo>

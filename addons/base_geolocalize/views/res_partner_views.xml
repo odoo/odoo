@@ -5,7 +5,7 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//notebook[last()]" position="inside">
+                <xpath expr="//page[@name='internal_notes']" position="before">
                     <page string="Partner Assignment" name="geo_location">
                         <group>
                             <group string="Geolocation">

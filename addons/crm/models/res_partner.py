@@ -25,7 +25,6 @@ class ResPartner(models.Model):
                     phone=lead.phone,
                     mobile=lead.mobile,
                     function=lead.function,
-                    title=lead.title.id,
                     website=lead.website,
                     street=lead.street,
                     street2=lead.street2,

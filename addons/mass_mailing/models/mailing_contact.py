@@ -32,7 +32,6 @@ class MailingContact(models.Model):
     first_name = fields.Char('First Name')
     last_name = fields.Char('Last Name')
     company_name = fields.Char(string='Company Name')
-    title_id = fields.Many2one('res.partner.title', string='Title')
     email = fields.Char('Email')
     list_ids = fields.Many2many(
         'mailing.list', 'mailing_subscription',
