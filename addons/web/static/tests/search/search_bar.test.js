@@ -1,4 +1,4 @@
-import { expect, mountOnFixture, test } from "@odoo/hoot";
+import { expect, test } from "@odoo/hoot";
 import {
     click,
     hover,
@@ -26,6 +26,7 @@ import {
     fields,
     getFacetTexts,
     models,
+    mountWithCleanup,
     mountWithSearch,
     onRpc,
     removeFacet,
@@ -235,7 +236,7 @@ test("autocomplete menu clickout interactions", async () => {
         resModel: "partner",
         searchMenuTypes: [],
         searchViewId: false,
-        searchViewArch: `
+        searchViewArch: /* xml */ `
             <search>
                 <field name="bar"/>
                 <field name="birthday"/>
@@ -247,7 +248,7 @@ test("autocomplete menu clickout interactions", async () => {
     });
 
     // Create an input outside of the search panel to simulate another input outside of the search panel
-    await mountOnFixture(/* xml */ `<input id="foo"/>`);
+    await mountWithCleanup(/* xml */ `<input id="foo"/>`);
 
     expect(`.o_searchview_autocomplete`).toHaveCount(0);
 

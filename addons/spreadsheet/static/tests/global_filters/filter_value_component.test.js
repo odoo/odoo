@@ -1,18 +1,17 @@
-import { makeMockEnv, contains, onRpc } from "@web/../tests/web_test_helpers";
-import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
-import { describe, expect, test, getFixture, mountOnFixture } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-mock";
+import { describe, expect, getFixture, test } from "@odoo/hoot";
 import { click } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
+import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
+import { contains, makeMockEnv, mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
 
 import { Model } from "@odoo/o-spreadsheet";
-import { FilterValue } from "@spreadsheet/global_filters/components/filter_value/filter_value";
 import {
     addGlobalFilter,
     setCellContent,
     setCellFormat,
 } from "@spreadsheet/../tests/helpers/commands";
 import { toRangeData } from "@spreadsheet/../tests/helpers/zones";
-import { getTemplate } from "@web/core/templates";
+import { FilterValue } from "@spreadsheet/global_filters/components/filter_value/filter_value";
 import { user } from "@web/core/user";
 
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
@@ -24,8 +23,8 @@ defineSpreadsheetModels();
  *
  * @param {{ model: Model, filter: object}} props
  */
-async function mountFilterValueComponent(env, props) {
-    await mountOnFixture(FilterValue, { props, env, getTemplate });
+async function mountFilterValueComponent(props) {
+    await mountWithCleanup(FilterValue, { props });
 }
 
 test("basic text filter", async function () {
@@ -36,7 +35,7 @@ test("basic text filter", async function () {
         type: "text",
         label: "Text Filter",
     });
-    await mountFilterValueComponent(env, { model, filter: model.getters.getGlobalFilter("42") });
+    await mountFilterValueComponent({ model, filter: model.getters.getGlobalFilter("42") });
     await contains("input").edit("foo");
     expect(model.getters.getGlobalFilterValue("42")).toBe("foo", { message: "value is set" });
 });
@@ -54,7 +53,7 @@ test("text filter with range", async function () {
     setCellContent(model, "A1", "foo");
     setCellContent(model, "A2", "0");
     setCellFormat(model, "A2", "0.00");
-    await mountFilterValueComponent(env, { model, filter: model.getters.getGlobalFilter("42") });
+    await mountFilterValueComponent({ model, filter: model.getters.getGlobalFilter("42") });
     const fixture = getFixture();
     const select = fixture.querySelector("select");
     const options = [...fixture.querySelectorAll("option")];
@@ -84,7 +83,7 @@ test("relational filter with domain", async function () {
         modelName: "partner",
         domainOfAllowedValues: [["display_name", "=", "Bob"]],
     });
-    await mountFilterValueComponent(env, { model, filter: model.getters.getGlobalFilter("42") });
+    await mountFilterValueComponent({ model, filter: model.getters.getGlobalFilter("42") });
     await click(".o_multi_record_selector input");
     await animationFrame();
     expect.verifySteps(["name_search"]);
@@ -109,7 +108,7 @@ test("relational filter with a contextual domain", async function () {
         modelName: "partner",
         domainOfAllowedValues: '[["user_ids", "in", [uid]]]',
     });
-    await mountFilterValueComponent(env, { model, filter: model.getters.getGlobalFilter("42") });
+    await mountFilterValueComponent({ model, filter: model.getters.getGlobalFilter("42") });
     await click(".o_multi_record_selector input");
     await animationFrame();
     expect.verifySteps(["name_search"]);

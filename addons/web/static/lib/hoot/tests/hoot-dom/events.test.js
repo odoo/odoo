@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { after, describe, expect, getFixture, mountOnFixture, test } from "@odoo/hoot";
+import { after, describe, expect, getFixture, test } from "@odoo/hoot";
 import {
     clear,
     click,
@@ -27,7 +27,7 @@ import {
 import { advanceTime, animationFrame, mockTouch, mockUserAgent } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import { EventList } from "@web/../lib/hoot-dom/helpers/events";
-import { parseUrl, waitForIframes } from "../local_helpers";
+import { mountForTest, parseUrl, waitForIframes } from "../local_helpers";
 
 /**
  * @param {KeyboardEvent} ev
@@ -82,7 +82,7 @@ const BLACK_LISTED_EVENT_TYPES = ["selectionchange"];
 
 describe(parseUrl(import.meta.url), () => {
     test("clear", async () => {
-        await mountOnFixture(/* xml */ `<input type="text" value="Test" />`);
+        await mountForTest(/* xml */ `<input type="text" value="Test" />`);
 
         expect("input").toHaveValue("Test");
         expect.verifySteps([]);
@@ -106,7 +106,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("clear: email", async () => {
-        await mountOnFixture(/* xml */ `<input type="email" value="john@doe.com" />`);
+        await mountForTest(/* xml */ `<input type="email" value="john@doe.com" />`);
 
         expect("input").toHaveValue("john@doe.com");
 
@@ -117,7 +117,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("clear: number", async () => {
-        await mountOnFixture(/* xml */ `<input type="number" value="421" />`);
+        await mountForTest(/* xml */ `<input type="number" value="421" />`);
 
         expect("input").toHaveValue(421);
 
@@ -128,7 +128,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("clear: files", async () => {
-        await mountOnFixture(/* xml */ `<input type="file" />`);
+        await mountForTest(/* xml */ `<input type="file" />`);
         const file = new File([""], "file.txt");
 
         expect("input").not.toHaveValue();
@@ -146,7 +146,7 @@ describe(parseUrl(import.meta.url), () => {
     test("click", async () => {
         mockTouch(false);
 
-        await mountOnFixture(/* xml */ `<button autofocus="" type="button">Click me</button>`);
+        await mountForTest(/* xml */ `<button autofocus="" type="button">Click me</button>`);
         monitorEvents("button");
 
         const events = await click("button");
@@ -175,7 +175,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("dblclick", async () => {
-        await mountOnFixture(/* xml */ `<button autofocus="" type="button">Click me</button>`);
+        await mountForTest(/* xml */ `<button autofocus="" type="button">Click me</button>`);
         monitorEvents("button");
 
         await dblclick("button");
@@ -208,7 +208,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("triple click", async () => {
-        await mountOnFixture(/* xml */ `<button autofocus="" type="button">Click me</button>`);
+        await mountForTest(/* xml */ `<button autofocus="" type="button">Click me</button>`);
 
         const allEvents = new EventList(
             // trigger 3 clicks
@@ -258,7 +258,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("click on disabled element", async () => {
-        await mountOnFixture(/* xml */ `<button type="button" disabled="">Click me</button>`);
+        await mountForTest(/* xml */ `<button type="button" disabled="">Click me</button>`);
 
         monitorEvents("button");
 
@@ -279,7 +279,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("click on common parent", async () => {
-        await mountOnFixture(/* xml */ `
+        await mountForTest(/* xml */ `
             <main class="parent">
                 <button class="first">A</button>
                 <div>
@@ -348,7 +348,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("click can be dispatched with pointer events prevented", async () => {
-        await mountOnFixture(/* xml */ `<button type="button">Click me</button>`);
+        await mountForTest(/* xml */ `<button type="button">Click me</button>`);
 
         const prevent = (ev) => ev.preventDefault();
 
@@ -366,7 +366,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("click: iframe", async () => {
-        await mountOnFixture(/* xml */ `
+        await mountForTest(/* xml */ `
             <button>Click me</button>
             <iframe srcdoc="&lt;button&gt;iframe button&lt;/button&gt;" />
         `);
@@ -388,7 +388,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("drag & drop: draggable items", async () => {
-        await mountOnFixture(/* xml */ `
+        await mountForTest(/* xml */ `
             <ul>
                 <li id="first-item" draggable="true">Item 1</li>
                 <li id="second-item" draggable="true">Item 2</li>
@@ -551,7 +551,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("drag & drop: non-draggable items", async () => {
-        await mountOnFixture(/* xml */ `
+        await mountForTest(/* xml */ `
             <ul>
                 <li id="first-item">Item 1</li>
                 <li id="second-item">Item 2</li>
@@ -745,7 +745,7 @@ describe(parseUrl(import.meta.url), () => {
     test("drag & drop: touch environment", async () => {
         mockTouch(true);
 
-        await mountOnFixture(/* xml */ `
+        await mountForTest(/* xml */ `
             <ul>
                 <li id="first-item">Item 1</li>
                 <li id="second-item">Item 2</li>
@@ -781,7 +781,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("fill: text", async () => {
-        await mountOnFixture(/* xml */ `<input type="text" value="" />`);
+        await mountForTest(/* xml */ `<input type="text" value="" />`);
 
         expect("input").not.toHaveValue();
         expect.verifySteps([]);
@@ -804,7 +804,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("fill: text with previous value", async () => {
-        await mountOnFixture(/* xml */ `<input type="text" value="Test" />`);
+        await mountForTest(/* xml */ `<input type="text" value="Test" />`);
 
         expect("input").toHaveValue("Test");
 
@@ -815,7 +815,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("fill: number", async () => {
-        await mountOnFixture(/* xml */ `<input type="number" />`);
+        await mountForTest(/* xml */ `<input type="number" />`);
 
         expect("input").not.toHaveValue();
 
@@ -826,7 +826,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("fill: email", async () => {
-        await mountOnFixture(/* xml */ `<input type="email" />`);
+        await mountForTest(/* xml */ `<input type="email" />`);
 
         expect("input").not.toHaveValue();
 
@@ -837,7 +837,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("edit on empty value", async () => {
-        await mountOnFixture(/* xml */ `<input type="text" />`);
+        await mountForTest(/* xml */ `<input type="text" />`);
 
         await click("input");
 
@@ -875,7 +875,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("edit on existing value", async () => {
-        await mountOnFixture(/* xml */ `<input type="text" value="Test" />`);
+        await mountForTest(/* xml */ `<input type="text" value="Test" />`);
 
         await click("input");
         await animationFrame();
@@ -909,7 +909,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("edit: iframe", async () => {
-        await mountOnFixture(/* xml */ `
+        await mountForTest(/* xml */ `
             <input type="text" />
             <iframe srcdoc="&lt;input type='text' /&gt;" />
         `);
@@ -941,7 +941,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("setInputFiles: single file", async () => {
-        await mountOnFixture(/* xml */ `<input type="file" />`);
+        await mountForTest(/* xml */ `<input type="file" />`);
         const file1 = new File([""], "file1.txt");
         const file2 = new File([""], "file2.txt");
 
@@ -961,7 +961,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("setInputFiles: multiple files", async () => {
-        await mountOnFixture(/* xml */ `<input type="file" multiple="multiple" />`);
+        await mountForTest(/* xml */ `<input type="file" multiple="multiple" />`);
         const file1 = new File([""], "file1.txt");
         const file2 = new File([""], "file2.txt");
 
@@ -980,7 +980,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("setInputFiles: hidden input with label", async () => {
-        await mountOnFixture(/* xml */ `
+        await mountForTest(/* xml */ `
             <label for="file-input">Label</label>
             <input id="file-input" style="display: none" type="file" />
         `);
@@ -996,7 +996,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("setInputFiles: hidden input with programmatic click", async () => {
-        await mountOnFixture(/* xml */ `
+        await mountForTest(/* xml */ `
             <button>upload</button>
             <input style="display: none" type="file" />
         `);
@@ -1014,7 +1014,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("setInputRange: basic case and events", async () => {
-        await mountOnFixture(/* xml */ `<input type="range" min="10" max="40" />`);
+        await mountForTest(/* xml */ `<input type="range" min="10" max="40" />`);
 
         monitorEvents("input");
 
@@ -1045,7 +1045,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("setInputRange: out of min and max values", async () => {
-        await mountOnFixture(/* xml */ `<input type="range" min="10" max="40" />`);
+        await mountForTest(/* xml */ `<input type="range" min="10" max="40" />`);
 
         await setInputRange("input", 5);
 
@@ -1057,7 +1057,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("hover", async () => {
-        await mountOnFixture(/* xml */ `<button type="button">Click me</button>`);
+        await mountForTest(/* xml */ `<button type="button">Click me</button>`);
         monitorEvents("button");
 
         await hover("button");
@@ -1077,7 +1077,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("leave", async () => {
-        await mountOnFixture(/* xml */ `<button type="button">Click me</button>`);
+        await mountForTest(/* xml */ `<button type="button">Click me</button>`);
 
         await hover("button");
 
@@ -1096,7 +1096,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("keyDown", async () => {
-        await mountOnFixture(/* xml */ `<input type="text" />`);
+        await mountForTest(/* xml */ `<input type="text" />`);
 
         await click("input");
 
@@ -1115,7 +1115,7 @@ describe(parseUrl(import.meta.url), () => {
     test("multiple keyDown should be flagged as repeated", async () => {
         let events;
 
-        await mountOnFixture(/* xml */ `<input type="text" />`);
+        await mountForTest(/* xml */ `<input type="text" />`);
 
         await click("input");
 
@@ -1158,7 +1158,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("pointerDown", async () => {
-        await mountOnFixture(/* xml */ `<button type="button">Click me</button>`);
+        await mountForTest(/* xml */ `<button type="button">Click me</button>`);
         monitorEvents("button");
 
         await pointerDown("button");
@@ -1184,7 +1184,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("press key on text input", async () => {
-        await mountOnFixture(/* xml */ `<input type="text" />`);
+        await mountForTest(/* xml */ `<input type="text" />`);
 
         await click("input");
 
@@ -1197,7 +1197,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("press key on number input", async () => {
-        await mountOnFixture(/* xml */ `<input type="number" />`);
+        await mountForTest(/* xml */ `<input type="number" />`);
 
         expect("input").not.toHaveValue();
 
@@ -1212,7 +1212,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("press arrow keys on input", async () => {
-        await mountOnFixture(/* xml */ `<input value="value" />`);
+        await mountForTest(/* xml */ `<input value="value" />`);
 
         await click("input");
 
@@ -1261,7 +1261,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("insert character updates selection", async () => {
-        await mountOnFixture(/* xml */ `<input value="abc" />`);
+        await mountForTest(/* xml */ `<input value="abc" />`);
 
         await click("input");
 
@@ -1292,7 +1292,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("press 'Enter' on form input", async () => {
-        await mountOnFixture(/* xml */ `
+        await mountForTest(/* xml */ `
             <form t-on-submit.prevent="">
                 <input type="text" />
             </form>
@@ -1327,7 +1327,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("press 'Enter' on form button", async () => {
-        await mountOnFixture(/* xml */ `
+        await mountForTest(/* xml */ `
             <form t-on-submit.prevent="">
                 <button type="button" />
             </form>
@@ -1359,7 +1359,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("press 'Enter' on form submit button", async () => {
-        await mountOnFixture(/* xml */ `
+        await mountForTest(/* xml */ `
             <form t-on-submit.prevent="">
                 <button type="submit" />
             </form>
@@ -1390,7 +1390,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("press 'Space' on checkbox input", async () => {
-        await mountOnFixture(/* xml */ `<input type="checkbox" checked="" />`);
+        await mountForTest(/* xml */ `<input type="checkbox" checked="" />`);
 
         expect("input").toHaveProperty("checked", true);
 
@@ -1417,7 +1417,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("press 'Backspace' on number input", async () => {
-        await mountOnFixture(/* xml */ `<input type="number" value="421" />`);
+        await mountForTest(/* xml */ `<input type="number" value="421" />`);
 
         expect("input").toHaveValue(421);
 
@@ -1432,7 +1432,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("press 'Enter' on textarea", async () => {
-        await mountOnFixture(/* xml */ `<textarea t-att-value="'aaa'" />`);
+        await mountForTest(/* xml */ `<textarea t-att-value="'aaa'" />`);
 
         expect("textarea").toHaveValue("aaa");
 
@@ -1445,7 +1445,7 @@ describe(parseUrl(import.meta.url), () => {
     test("special keys modifiers: Windows", async () => {
         mockUserAgent("windows");
 
-        await mountOnFixture(/* xml */ `<input />`);
+        await mountForTest(/* xml */ `<input />`);
 
         await click("input");
 
@@ -1471,7 +1471,7 @@ describe(parseUrl(import.meta.url), () => {
     test("special keys modifiers: Mac", async () => {
         mockUserAgent("mac");
 
-        await mountOnFixture(/* xml */ `<input />`);
+        await mountForTest(/* xml */ `<input />`);
 
         await click("input");
 
@@ -1495,7 +1495,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("compose shift, alt and control and a key", async () => {
-        await mountOnFixture(/* xml */ `<input />`);
+        await mountForTest(/* xml */ `<input />`);
 
         await click("input");
 
@@ -1534,7 +1534,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("scroll", async () => {
-        await mountOnFixture(/* xml */ `
+        await mountForTest(/* xml */ `
             <div class="scrollable" style="height: 200px; width: 200px; overflow: auto;">
                 <div style="height: 2000px; width: 2000px;"></div>
             </div>
@@ -1558,7 +1558,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("resize", async () => {
-        await mountOnFixture(/* xml */ `
+        await mountForTest(/* xml */ `
             <div class="resizable" style="height: 200px; width: 200px; overflow: auto;"/>
         `);
 
@@ -1582,7 +1582,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("select", async () => {
-        await mountOnFixture(/* xml */ `
+        await mountForTest(/* xml */ `
             <select>
                 <option value="a">A</option>
                 <option value="b">B</option>
@@ -1604,7 +1604,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("can trigger synthetic event handlers", async () => {
-        await mountOnFixture(
+        await mountForTest(
             class extends Component {
                 static props = {};
                 static template = xml`
@@ -1623,7 +1623,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("synthetic event handlers are not cleaned up between tests", async () => {
-        await mountOnFixture(
+        await mountForTest(
             class extends Component {
                 static props = {};
                 static template = xml`

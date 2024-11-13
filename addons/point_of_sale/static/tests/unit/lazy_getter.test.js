@@ -1,8 +1,9 @@
-import { describe, expect, mountOnFixture, test } from "@odoo/hoot";
+import { beforeEach, expect, test } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-dom";
 import { Component, onWillRender, reactive, useState, xml } from "@odoo/owl";
-import { animationFrame } from "@odoo/hoot-mock";
+import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
+
 import { WithLazyGetterTrap, clearGettersCache } from "@point_of_sale/lazy_getter";
-import { patch } from "@web/core/utils/patch";
 import { zip } from "@web/core/utils/arrays";
 
 /**
@@ -43,6 +44,8 @@ function makeUnorderedVerifySteps() {
 }
 
 const unorderedExpect = makeUnorderedVerifySteps();
+
+beforeEach(clearGettersCache);
 
 class AppStore extends WithLazyGetterTrap {
     constructor() {
@@ -148,167 +151,152 @@ class Root extends Component {
 `;
 }
 
-describe("lazy getters", () => {
-    test("each getter should only be called once and only when needed", async () => {
-        const unpatch = patch(AppStore.prototype, {
-            get ab() {
-                unorderedExpect.step("ab");
-                return super.ab;
-            },
-            get abc() {
-                unorderedExpect.step("abc");
-                return super.abc;
-            },
-            get bc() {
-                unorderedExpect.step("bc");
-                return super.bc;
-            },
-            get cd() {
-                unorderedExpect.step("cd");
-                return super.cd;
-            },
-        });
-
-        const store = reactive(new AppStore());
-
-        await mountOnFixture(Root, { env: { store }, warnIfNoStaticProps: false });
-
-        unorderedExpect.verifySteps(["ab", "abc", "bc", "cd"]);
-
-        store.a = 1;
-
-        // Before rerendering, the getters should not be called
-        unorderedExpect.verifySteps([]);
-
-        await animationFrame();
-        // Only during rerendering that the getters are called
-        unorderedExpect.verifySteps(["ab", "abc"]);
-
-        store.b = 1;
-        unorderedExpect.verifySteps([]);
-        await animationFrame();
-        unorderedExpect.verifySteps(["bc", "ab", "abc"]);
-
-        store.c = 1;
-        unorderedExpect.verifySteps([]);
-        await animationFrame();
-        unorderedExpect.verifySteps(["cd", "bc", "abc"]);
-
-        store.d = 1;
-        unorderedExpect.verifySteps([]);
-        await animationFrame();
-        unorderedExpect.verifySteps(["cd"]);
-
-        unpatch();
-        clearGettersCache();
+test("each getter should only be called once and only when needed", async () => {
+    patchWithCleanup(AppStore.prototype, {
+        get ab() {
+            unorderedExpect.step("ab");
+            return super.ab;
+        },
+        get abc() {
+            unorderedExpect.step("abc");
+            return super.abc;
+        },
+        get bc() {
+            unorderedExpect.step("bc");
+            return super.bc;
+        },
+        get cd() {
+            unorderedExpect.step("cd");
+            return super.cd;
+        },
     });
 
-    test("only dependent components rerender", async () => {
-        const unpatches = [A, B, C, D, AB, ABC, CD, BC].map((Class) => {
-            return patch(Class.prototype, {
-                onWillRender() {
-                    unorderedExpect.step(Class);
-                    return super.onWillRender();
-                },
-            });
-        });
+    const store = reactive(new AppStore());
 
-        const store = reactive(new AppStore());
-        await mountOnFixture(Root, { env: { store }, warnIfNoStaticProps: false });
-        unorderedExpect.verifySteps([A, B, C, D, AB, ABC, BC, CD]);
+    await mountWithCleanup(Root, { env: { store }, warnIfNoStaticProps: false });
 
-        store.a = 1;
-        await animationFrame();
-        unorderedExpect.verifySteps([A, AB, ABC]);
+    unorderedExpect.verifySteps(["ab", "abc", "bc", "cd"]);
 
-        store.b = 1;
-        await animationFrame();
-        unorderedExpect.verifySteps([B, AB, ABC, BC]);
+    store.a = 1;
 
-        store.c = 1;
-        await animationFrame();
-        unorderedExpect.verifySteps([C, ABC, BC, CD]);
+    // Before rerendering, the getters should not be called
+    unorderedExpect.verifySteps([]);
 
-        store.d = 1;
-        await animationFrame();
-        unorderedExpect.verifySteps([D, CD]);
+    await animationFrame();
+    // Only during rerendering that the getters are called
+    unorderedExpect.verifySteps(["ab", "abc"]);
 
-        for (const unpatch of unpatches) {
-            unpatch();
-        }
-        clearGettersCache();
-    });
+    store.b = 1;
+    unorderedExpect.verifySteps([]);
+    await animationFrame();
+    unorderedExpect.verifySteps(["bc", "ab", "abc"]);
 
-    test("only dependent getters are called and in correct order", () => {
-        clearGettersCache();
+    store.c = 1;
+    unorderedExpect.verifySteps([]);
+    await animationFrame();
+    unorderedExpect.verifySteps(["cd", "bc", "abc"]);
 
-        const unpatch = patch(AppStore.prototype, {
-            get ab() {
-                const result = super.ab;
-                unorderedExpect.step("ab");
-                return result;
-            },
-            get abc() {
-                const result = super.abc;
-                unorderedExpect.step("abc");
-                return result;
-            },
-            get bc() {
-                const result = super.bc;
-                unorderedExpect.step("bc");
-                return result;
-            },
-            get cd() {
-                const result = super.cd;
-                unorderedExpect.step("cd");
-                return result;
-            },
-            get x() {
-                const result = super.x;
-                unorderedExpect.step("x");
-                return result;
-            },
-            get y() {
-                const result = super.y;
-                unorderedExpect.step("y");
-                return result;
+    store.d = 1;
+    unorderedExpect.verifySteps([]);
+    await animationFrame();
+    unorderedExpect.verifySteps(["cd"]);
+});
+
+test("only dependent components rerender", async () => {
+    for (const Class of [A, B, C, D, AB, ABC, CD, BC]) {
+        patchWithCleanup(Class.prototype, {
+            onWillRender() {
+                unorderedExpect.step(Class);
+                return super.onWillRender();
             },
         });
-        const store = reactive(new AppStore());
+    }
 
-        expect(store.y).toBe(0);
-        unorderedExpect.verifySteps(["ab", "bc", "cd", "abc", "x", "y"], [["ab", "abc", "x", "y"]]);
+    const store = reactive(new AppStore());
+    await mountWithCleanup(Root, { env: { store }, warnIfNoStaticProps: false });
+    unorderedExpect.verifySteps([A, B, C, D, AB, ABC, BC, CD]);
 
-        store.a = 1;
-        expect(store.y).toBe(10);
-        unorderedExpect.verifySteps(["ab", "abc", "x", "y"], [["ab", "abc", "x", "y"]]);
+    store.a = 1;
+    await animationFrame();
+    unorderedExpect.verifySteps([A, AB, ABC]);
 
-        store.b = 1;
-        expect(store.y).toBe(21);
-        unorderedExpect.verifySteps(
-            ["ab", "bc", "abc", "x", "y"],
-            [
-                ["ab", "abc", "x", "y"],
-                ["bc", "x", "y"],
-            ]
-        );
+    store.b = 1;
+    await animationFrame();
+    unorderedExpect.verifySteps([B, AB, ABC, BC]);
 
-        store.c = 1;
-        expect(store.y).toBe(24);
-        unorderedExpect.verifySteps(
-            ["abc", "bc", "cd", "x", "y"],
-            [
-                ["abc", "x", "y"],
-                ["bc", "x", "y"],
-                ["cd", "y"],
-            ]
-        );
+    store.c = 1;
+    await animationFrame();
+    unorderedExpect.verifySteps([C, ABC, BC, CD]);
 
-        store.d = 1;
-        expect(store.y).toBe(25);
-        unorderedExpect.verifySteps(["cd", "y"], [["cd", "y"]]);
+    store.d = 1;
+    await animationFrame();
+    unorderedExpect.verifySteps([D, CD]);
+});
 
-        unpatch();
-        clearGettersCache();
+test("only dependent getters are called and in correct order", () => {
+    patchWithCleanup(AppStore.prototype, {
+        get ab() {
+            const result = super.ab;
+            unorderedExpect.step("ab");
+            return result;
+        },
+        get abc() {
+            const result = super.abc;
+            unorderedExpect.step("abc");
+            return result;
+        },
+        get bc() {
+            const result = super.bc;
+            unorderedExpect.step("bc");
+            return result;
+        },
+        get cd() {
+            const result = super.cd;
+            unorderedExpect.step("cd");
+            return result;
+        },
+        get x() {
+            const result = super.x;
+            unorderedExpect.step("x");
+            return result;
+        },
+        get y() {
+            const result = super.y;
+            unorderedExpect.step("y");
+            return result;
+        },
     });
+    const store = reactive(new AppStore());
+
+    expect(store.y).toBe(0);
+    unorderedExpect.verifySteps(["ab", "bc", "cd", "abc", "x", "y"], [["ab", "abc", "x", "y"]]);
+
+    store.a = 1;
+    expect(store.y).toBe(10);
+    unorderedExpect.verifySteps(["ab", "abc", "x", "y"], [["ab", "abc", "x", "y"]]);
+
+    store.b = 1;
+    expect(store.y).toBe(21);
+    unorderedExpect.verifySteps(
+        ["ab", "bc", "abc", "x", "y"],
+        [
+            ["ab", "abc", "x", "y"],
+            ["bc", "x", "y"],
+        ]
+    );
+
+    store.c = 1;
+    expect(store.y).toBe(24);
+    unorderedExpect.verifySteps(
+        ["abc", "bc", "cd", "x", "y"],
+        [
+            ["abc", "x", "y"],
+            ["bc", "x", "y"],
+            ["cd", "y"],
+        ]
+    );
+
+    store.d = 1;
+    expect(store.y).toBe(25);
+    unorderedExpect.verifySteps(["cd", "y"], [["cd", "y"]]);
 });

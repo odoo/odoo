@@ -1,4 +1,4 @@
-import { expect, mountOnFixture, test } from "@odoo/hoot";
+import { expect, test } from "@odoo/hoot";
 import { queryAllTexts, queryFirst } from "@odoo/hoot-dom";
 import { advanceFrame, animationFrame } from "@odoo/hoot-mock";
 import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
@@ -168,7 +168,7 @@ test("Simple sorting in multiple groups", async () => {
         }
     }
 
-    await mountWithCleanup(List);
+    await mountWithCleanup(List, { noMainContainer: true });
 
     expect(".list").toHaveCount(3);
     expect(".item").toHaveCount(9);
@@ -233,7 +233,7 @@ test("Sorting in groups with distinct per-axis scrolling", async () => {
         }
     }
 
-    await mountOnFixture(List);
+    await mountWithCleanup(List);
 
     expect(".list").toHaveCount(3);
     expect(".item").toHaveCount(9);
