@@ -5559,6 +5559,7 @@ class StockMove(TransactionCase):
             - some move are reserved
             - switching from a stockable product when qty_available is not zero
             - switching the product type when there are already done moves
+            - switching the product tracking
         """
         self.product.is_storable = False
         move_in = self.env['stock.move'].create({
@@ -5573,19 +5574,13 @@ class StockMove(TransactionCase):
         move_in._action_confirm()
         move_in._action_assign()
 
-        # Check raise UserError(_("You can not change the type of a product that is currently reserved on a stock
-        with self.assertRaises(UserError):
-            self.product.is_storable = True
-        move_in._action_cancel()
-
         self.product.is_storable = True
+        move_in._action_done()
+
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 10)
         # cache corruption
         self.product.qty_available = 10
-
-        # Check raise UserError(_("Available quantity should be set to zero before changing type"))
-        with self.assertRaises(UserError):
-            self.product.is_storable = False
+        self.assertEqual(self.product.tracking, 'none')
 
         move_out = self.env['stock.move'].create({
             'name': 'test_customer',
@@ -5598,13 +5593,29 @@ class StockMove(TransactionCase):
         })
         move_out._action_confirm()
         move_out._action_assign()
+
+        self.product.tracking = 'lot'
+
+        lot_1 = self.env['stock.lot'].create({
+            'product_id': self.product.id,
+            'name': 'lot 1',
+        })
+
+        move_out.move_line_ids[0].lot_id = lot_1
         move_out.quantity = self.product.qty_available
         move_out.picked = True
         move_out._action_done()
 
-        # Check raise UserError(_("You can not change the type of a product that was already used."))
-        with self.assertRaises(UserError):
-            self.product.is_storable = False
+        self.product.tracking = 'serial'
+        sn_01, sn_02, sn_03, sn_04, sn_05 = self.env['stock.lot'].create([{
+            'product_id': self.product.id,
+            'name': name,
+        } for name in ['SN01', 'SN02', 'SN03', 'SN04', 'SN05']])
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1, lot_id=sn_01)
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1, lot_id=sn_02)
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1, lot_id=sn_03)
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1, lot_id=sn_04)
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1, lot_id=sn_05)
 
         move2 = self.env['stock.move'].create({
             'name': 'test_customer',
@@ -5619,11 +5630,25 @@ class StockMove(TransactionCase):
         move2._action_confirm()
         move2._action_assign()
 
-        with self.assertRaises(UserError):
-            self.product.is_storable = False
-        move2._action_cancel()
-        with self.assertRaises(UserError):
-            self.product.is_storable = False
+        self.assertRecordValues(move2.move_line_ids, [
+            {'lot_id': sn_01.id},
+            {'lot_id': sn_02.id},
+            {'lot_id': sn_03.id},
+            {'lot_id': sn_04.id},
+            {'lot_id': sn_05.id},
+        ])
+
+        self.product.is_storable = False
+
+        self.assertRecordValues(move2.move_line_ids, [
+            {'lot_id': sn_01.id},
+            {'lot_id': sn_02.id},
+            {'lot_id': sn_03.id},
+            {'lot_id': sn_04.id},
+            {'lot_id': sn_05.id},
+        ])
+        move_out.picked = True
+        move_out._action_done()
 
     def test_edit_done_picking_1(self):
         """ Add a new move line in a done picking should generate an
