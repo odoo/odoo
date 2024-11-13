@@ -19,24 +19,28 @@ import { user } from "@web/core/user";
 export const AVATAR_SIZE = 25;
 
 export class CollaborationSelectionAvatarPlugin extends Plugin {
-    static name = "collaboration_selection_avatar";
-    static dependencies = ["history", "position", "local-overlay", "collaboration_odoo"];
+    static id = "collaboration_selection_avatar";
+    static dependencies = ["history", "position", "localOverlay", "collaborationOdoo"];
     resources = {
-        handleCollaborationNotification: this.handleCollaborationNotification.bind(this),
-        getCollaborationPeerMetadata: () => ({ avatarUrl: this.avatarUrl }),
-        onExternalHistorySteps: this.refreshSelection.bind(this),
-        layoutGeometryChange: this.refreshSelection.bind(this),
-        setMovableElement: this.disableAvatarForElement.bind(this),
-        unsetMovableElement: this.enableAvatars.bind(this),
-        collaborativeSelectionUpdate: this.updateSelection.bind(this),
+        /** Handlers */
+        collaboration_notification_handlers: this.handleCollaborationNotification.bind(this),
+        external_history_step_handlers: this.refreshSelection.bind(this),
+        layout_geometry_change_handlers: this.refreshSelection.bind(this),
+        set_movable_element_handlers: this.disableAvatarForElement.bind(this),
+        unset_movable_element_handlers: this.enableAvatars.bind(this),
+        collaborative_selection_update_handlers: this.updateSelection.bind(this),
+
+        collaboration_peer_metadata_providers: () => ({ avatarUrl: this.avatarUrl }),
     };
 
     /** @type {Map<string, SelectionInfo>} */
     selectionInfos = new Map();
 
     setup() {
-        this.avatarOverlay = this.shared.makeLocalOverlay("oe-avatars-overlay");
-        this.avatarsCountersOverlay = this.shared.makeLocalOverlay("oe-avatars-counters-overlay");
+        this.avatarOverlay = this.dependencies.localOverlay.makeLocalOverlay("oe-avatars-overlay");
+        this.avatarsCountersOverlay = this.dependencies.localOverlay.makeLocalOverlay(
+            "oe-avatars-counters-overlay"
+        );
         this.avatarUrl = `${
             browser.location.origin
         }/web/image?model=res.users&field=avatar_128&id=${encodeURIComponent(user.userId)}`;
@@ -65,9 +69,10 @@ export class CollaborationSelectionAvatarPlugin extends Plugin {
      */
     drawPeerAvatar(selectionInfo) {
         const { selection, peerId } = selectionInfo;
-        const { avatarUrl, peerName = _t("Anonymous") } = this.shared.getPeerMetadata(peerId);
-        const anchorNode = this.shared.getNodeById(selection.anchorNodeId);
-        const focusNode = this.shared.getNodeById(selection.focusNodeId);
+        const { avatarUrl, peerName = _t("Anonymous") } =
+            this.dependencies.collaborationOdoo.getPeerMetadata(peerId);
+        const anchorNode = this.dependencies.history.getNodeById(selection.anchorNodeId);
+        const focusNode = this.dependencies.history.getNodeById(selection.focusNodeId);
         if (!anchorNode || !focusNode) {
             return;
         }

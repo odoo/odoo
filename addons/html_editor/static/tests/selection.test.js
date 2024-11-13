@@ -12,7 +12,7 @@ import { insertText, tripleClick } from "./_helpers/user_actions";
 
 test("getEditableSelection should work, even if getSelection returns null", async () => {
     const { editor } = await setupEditor("<p>a[b]</p>");
-    let selection = editor.shared.getEditableSelection();
+    let selection = editor.shared.selection.getEditableSelection();
     expect(selection.startOffset).toBe(1);
     expect(selection.endOffset).toBe(2);
 
@@ -21,7 +21,7 @@ test("getEditableSelection should work, even if getSelection returns null", asyn
         getSelection: () => null,
     });
 
-    selection = editor.shared.getEditableSelection();
+    selection = editor.shared.selection.getEditableSelection();
     expect(selection.startOffset).toBe(1);
     expect(selection.endOffset).toBe(2);
 });
@@ -29,9 +29,9 @@ test("getEditableSelection should work, even if getSelection returns null", asyn
 test("plugins should be notified when ranges are removed", async () => {
     let count = 0;
     class TestPlugin extends Plugin {
-        static name = "test";
+        static id = "test";
         resources = {
-            onSelectionChange: () => count++,
+            selectionchange_handlers: () => count++,
         };
     }
 
@@ -76,31 +76,31 @@ test("fix selection P in the beggining being a direct child of the editable p be
 describe("documentSelectionIsInEditable", () => {
     test("documentSelectionIsInEditable should be true", async () => {
         const { editor } = await setupEditor("<p>a[]b</p>");
-        const selectionData = editor.shared.getSelectionData();
+        const selectionData = editor.shared.selection.getSelectionData();
         expect(selectionData.documentSelectionIsInEditable).toBe(true);
     });
 
     test("documentSelectionIsInEditable should be false when it is set outside the editable", async () => {
         const { editor } = await setupEditor("<p>ab</p>");
-        const selectionData = editor.shared.getSelectionData();
+        const selectionData = editor.shared.selection.getSelectionData();
         expect(selectionData.documentSelectionIsInEditable).toBe(false);
     });
 
     test("documentSelectionIsInEditable should be false when it is set outside the editable after retrieving it", async () => {
         const { editor } = await setupEditor("<p>ab[]</p>");
         const selection = document.getSelection();
-        let selectionData = editor.shared.getSelectionData();
+        let selectionData = editor.shared.selection.getSelectionData();
         expect(selectionData.documentSelectionIsInEditable).toBe(true);
         selection.setPosition(document.body);
         // value is updated directly !
-        selectionData = editor.shared.getSelectionData();
+        selectionData = editor.shared.selection.getSelectionData();
         expect(selectionData.documentSelectionIsInEditable).toBe(false);
     });
 });
 
 test("setEditableSelection should not crash if getSelection returns null", async () => {
     const { editor } = await setupEditor("<p>a[b]</p>");
-    let selection = editor.shared.getEditableSelection();
+    let selection = editor.shared.selection.getEditableSelection();
     expect(selection.startOffset).toBe(1);
     expect(selection.endOffset).toBe(2);
 
@@ -109,7 +109,7 @@ test("setEditableSelection should not crash if getSelection returns null", async
         getSelection: () => null,
     });
 
-    selection = editor.shared.setSelection({
+    selection = editor.shared.selection.setSelection({
         anchorNode: editor.editable.firstChild,
         anchorOffset: 0,
     });
@@ -121,7 +121,7 @@ test("setEditableSelection should not crash if getSelection returns null", async
 
 test("modifySelection should not crash if getSelection returns null", async () => {
     const { editor } = await setupEditor("<p>a[b]</p>");
-    let selection = editor.shared.getEditableSelection();
+    let selection = editor.shared.selection.getEditableSelection();
     expect(selection.startOffset).toBe(1);
     expect(selection.endOffset).toBe(2);
 
@@ -130,7 +130,7 @@ test("modifySelection should not crash if getSelection returns null", async () =
         getSelection: () => null,
     });
 
-    selection = editor.shared.modifySelection("extend", "backward", "word");
+    selection = editor.shared.selection.modifySelection("extend", "backward", "word");
 
     // Selection could not be modified.
     expect(selection.startOffset).toBe(1);
@@ -141,7 +141,9 @@ test("setSelection should not set the selection outside the editable", async () 
     const { editor, el } = await setupEditor("<p>a[b]</p>");
     editor.document.getSelection().setPosition(document.body);
     await tick();
-    const selection = editor.shared.setSelection(editor.shared.getEditableSelection());
+    const selection = editor.shared.selection.setSelection(
+        editor.shared.selection.getEditableSelection()
+    );
     expect(el.contains(selection.anchorNode)).toBe(true);
 });
 
@@ -172,23 +174,27 @@ test("restore a selection when you are not in the editable shouldn't move the fo
     }
 
     class TestPlugin extends Plugin {
-        static name = "test";
+        static id = "test";
         static dependencies = ["overlay"];
         resources = {
-            powerboxItems: [
+            user_commands: [
                 {
-                    category: "widget",
-                    name: "Test",
+                    id: "testShowOverlay",
+                    title: "Test",
                     description: "Test",
-                    action: () => {
-                        this.showOverlay();
-                    },
+                    run: this.showOverlay.bind(this),
+                },
+            ],
+            powerbox_items: [
+                {
+                    categoryId: "widget",
+                    commandId: "testShowOverlay",
                 },
             ],
         };
 
         setup() {
-            this.overlay = this.shared.createOverlay(TestInput);
+            this.overlay = this.dependencies.overlay.createOverlay(TestInput);
         }
 
         showOverlay() {
@@ -207,17 +213,17 @@ test("restore a selection when you are not in the editable shouldn't move the fo
     expect(getActiveElement()).toBe(queryOne("input.test"));
 
     // Something trigger restore
-    const cursors = editor.shared.preserveSelection();
+    const cursors = editor.shared.selection.preserveSelection();
     cursors.restore();
     expect(getActiveElement()).toBe(queryOne("input.test"));
 });
 
 test("set a collapse selection in a contenteditable false should move it after this node", async () => {
     const { el, editor } = await setupEditor(`<p>ab<span contenteditable="false">cd</span>ef</p>`);
-    editor.shared.setSelection({
+    editor.shared.selection.setSelection({
         anchorNode: queryOne("span[contenteditable='false']"),
         anchorOffset: 1,
     });
-    editor.shared.focusEditable();
+    editor.shared.selection.focusEditable();
     expect(getContent(el)).toBe(`<p>ab<span contenteditable="false">cd</span>[]ef</p>`);
 });
