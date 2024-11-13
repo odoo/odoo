@@ -91,7 +91,6 @@
                                 <field name="partner_id" widget="res_partner_many2one"
                                     context="{
                                         'default_name': contact_name,
-                                        'default_title': title,
                                         'default_street': street,
                                         'default_street2': street2,
                                         'default_city': city,
@@ -136,7 +135,6 @@
                                         'default_company_name': type == 'opportunity' and partner_name,
                                         'default_street2': street2,
                                         'default_city': city,
-                                        'default_title': title,
                                         'default_state_id': state_id,
                                         'default_zip': zip,
                                         'default_country_id': country_id,
@@ -189,7 +187,6 @@
                                 <label for="contact_name"/>
                                 <div class="o_row">
                                     <field name="contact_name"/>
-                                    <field name="title" placeholder="Title" domain="[]" options='{"no_open": True}'/>
                                 </div>
                                 <field name="is_blacklisted" invisible="1"/>
                                 <field name="phone_blacklisted" invisible="1"/>
@@ -300,7 +297,6 @@
                                         <label for="contact_name_page_lead"/>
                                         <div class="o_row">
                                             <field name="contact_name" id="contact_name_page_lead"/>
-                                            <field name="title" placeholder="Title" domain="[]" options='{"no_open": True}'/>
                                         </div>
                                         <field name="function"/>
                                         <label for="mobile_page_lead" class="oe_inline"/>
@@ -476,7 +472,6 @@
                         <field name="mobile" invisible="1"/>
                         <field name="website" invisible="1"/>
                         <field name="function" invisible="1"/>
-                        <field name="title" invisible="1"/>
                         <field name="activity_ids" invisible="1"/>
                     </group>
                 </form>

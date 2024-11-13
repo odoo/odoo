@@ -2,46 +2,6 @@
 <odoo>
     <data>
 
-        <!-- Partner Titles -->
-        <record id="view_partner_title_tree" model="ir.ui.view">
-            <field name="name">res.partner.title.list</field>
-            <field name="model">res.partner.title</field>
-            <field name="arch" type="xml">
-                <list string="Partner Titles" editable="bottom">
-                    <field name="name"/>
-                    <field name="shortcut"/>
-                </list>
-            </field>
-        </record>
-        <record id="view_partner_title_form" model="ir.ui.view">
-            <field name="name">res.partner.title.form</field>
-            <field name="model">res.partner.title</field>
-            <field name="arch" type="xml">
-                <form string="Partner Titles">
-                    <sheet>
-                        <group col="4">
-                            <field name="name"/>
-                            <field name="shortcut"/>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <record id="action_partner_title_contact" model="ir.actions.act_window">
-            <field name="name">Contact Titles</field>
-            <field name="res_model">res.partner.title</field>
-            <field name="domain">[]</field>
-            <field name="context">{}</field>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    Create a Title
-                </p><p>
-                    Manage Contact Titles as well as their abbreviations (e.g. "Mr.", "Mrs.", etc).
-                </p>
-            </field>
-        </record>
-
         <!-- PARTNER TREE VIEW + MUTI_EDIT: VISIBLE FIELDS WITH ONCHANGE ON BASE/PARTNER
              VIEW WON'T BE EDITABLE ON "MULTI_EDIT" MODE:
                 - parent_id
@@ -144,11 +104,20 @@
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
                 <form string="Partners">
-                <div class="alert alert-warning oe_edit_only" role="alert" name="warning_tax" invisible="not same_vat_partner_id">
-                  A partner with the same <span><field name="vat_label" /></span> already exists (<field name="same_vat_partner_id" context="{'show_address': False, 'show_vat': False}"/>), are you sure you want to create a new one?
-                </div>
-                <div class="alert alert-warning oe_edit_only" role="alert" name="warning_company" invisible="not same_company_registry_partner_id">
-                  A partner with the same <span><field name="company_registry_label" /></span> already exists (<field name="same_company_registry_partner_id" context="{'show_address': False, 'show_vat': False}"/>), are you sure you want to create a new one?
+                <div class="alert alert-warning oe_edit_only" role="alert" name="warning_tax" invisible="not same_vat_partner_id and not same_company_registry_partner_id">
+                    Potential duplicates:
+                    <span invisible="not same_vat_partner_id or same_company_registry_partner_id">
+                        <field name="same_vat_partner_id" context="{'show_address': False, 'show_vat': False}"/>
+                        (Same Tax ID <field name="vat_label"/>)
+                    </span>
+                    <span invisible="same_vat_partner_id or not same_company_registry_partner_id">
+                        <field name="same_company_registry_partner_id" context="{'show_address': False, 'show_vat': False}"/>
+                        (Same Company Registry <field name="company_registry_label"/>)
+                    </span>
+                    <span invisible="not same_vat_partner_id or not same_company_registry_partner_id">
+                        <field name="same_vat_partner_id" context="{'show_address': False, 'show_vat': False}"/>
+                        (Same Tax ID <field name="vat_label"/> and Company Registry <field name="company_registry_label"/>)
+                    </span>
                 </div>
                 <sheet>
                     <div class="oe_button_box" name="button_box"/>
@@ -204,8 +173,6 @@
                             <field name="mobile" widget="phone"/>
                             <field name="email" widget="email" context="{'gravatar_image': True}" required="user_ids"/>
                             <field name="website" string="Website" widget="url" placeholder="e.g. https://www.odoo.com"/>
-                            <field name="title" options='{"no_open": True}' placeholder="e.g. Mister"
-                                invisible="is_company"/>
                             <field name="lang" invisible="active_lang_count &lt;= 1"/>
                             <field name="category_id" widget="many2many_tags" options="{'color_field': 'color'}"
                                    placeholder='e.g. "B2B", "VIP", "Consulting", ...'/>
@@ -214,7 +181,7 @@
 
                     <notebook colspan="4">
                         <page string="Contacts &amp; Addresses" name="contact_addresses" autofocus="autofocus">
-                            <field name="child_ids" mode="kanban" context="{'default_parent_id': id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_lang': lang, 'default_user_id': user_id, 'default_type': 'other'}">
+                            <field name="child_ids" mode="kanban" context="{'hide_country_from_state':1, 'default_parent_id': id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_lang': lang, 'default_user_id': user_id, 'default_type': 'other'}">
                                 <kanban color="color">
                                     <field name="color"/>
                                     <field name="type"/>
@@ -228,7 +195,7 @@
                                                 <field name="name" invisible="not name" class="fw-bold"/>
                                                 <field name="type" invisible="name" class="fw-bold"/>
                                                 <field name="function"/>
-                                                <field name="email" widget="email"/>
+                                                <field name="email"/>
                                                 <div t-if="record.type.raw_value != 'contact'">
                                                     <div>
                                                         <field class="me-1" name="zip"/>
@@ -246,27 +213,11 @@
                                 <form string="Contact / Address">
                                     <sheet>
                                         <field name="type" required="1" widget="radio" options="{'horizontal': true}"/>
-                                        <div class="text-muted oe_edit_only">
-                                            <p class="mb-0" invisible="type != 'contact'">
-                                                <span>Use this to organize the contact details of employees of a given company (e.g. CEO, CFO, ...).</span>
-                                            </p>
-                                            <p class="mb-0" invisible="type != 'invoice'">
-                                                <span>Preferred address for all invoices. Selected by default when you invoice an order that belongs to this company.</span>
-                                            </p>
-                                            <p class="mb-0" invisible="type != 'delivery'">
-                                                <span>Preferred address for all deliveries. Selected by default when you deliver an order that belongs to this company.</span>
-                                            </p>
-                                            <p class="mb-0" invisible="type != 'other'">
-                                                <span>Other address for the company (e.g. subsidiary, ...)</span>
-                                            </p>
-                                        </div>
                                         <hr/>
                                         <group>
                                             <group>
-                                                <field name="name" string="Contact Name" required="type == 'contact'"
+                                                <field name="name" string="Name" required="type == 'contact'"
                                                      placeholder="e.g. New Address"/>
-                                                <field name="title" options="{'no_open': True}" placeholder="e.g. Mr."
-                                                    invisible="type != 'contact'"/>
                                                 <field name="function" placeholder="e.g. Sales Director"
                                                     invisible="type != 'contact'"/>
                                                 <label for="street" string="Address" invisible="type == 'contact'"/>
@@ -304,10 +255,10 @@
                                 <group string="Purchase" name="purchase" priority="2">
                                 </group>
                                 <group name="misc" string="Misc">
-                                    <field name="company_registry" invisible="parent_id"/>
+                                    <field name="company_registry" invisible="parent_id or not is_company"/>
                                     <field name="ref" string="Reference"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" readonly="parent_id" force_save="1"/>
-                                    <field name="company_id" invisible="1"/> <!-- need to be able to to compute based on the company even without multi company groups -->
+                                    <field name="company_id" invisible="1"/> <!-- need to be able to compute based on the company even without multi company groups -->
                                     <field name="industry_id" invisible="not is_company" options="{'no_create': True}"/>
                                 </group>
                             </group>

@@ -187,7 +187,6 @@ class TestCRMLead(TestCrmCommon):
             'is_company': True,
             'lang': 'en_US',
             'mobile': '123456789',
-            'title': self.env.ref('base.res_partner_title_mister').id,
             'function': 'My function',
         })
         lead_data = {
@@ -217,7 +216,6 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead.lang_id, self.lang_en)
         self.assertEqual(lead.phone, lead_data['phone'], "Phone should keep its initial value")
         self.assertEqual(lead.mobile, empty_partner.mobile, "Mobile from partner should be set on the lead")
-        self.assertEqual(lead.title, empty_partner.title, "Title from partner should be set on the lead")
         self.assertEqual(lead.function, empty_partner.function, "Function from partner should be set on the lead")
         self.assertEqual(lead.website, lead_data['website'], "Website should keep its initial value")
 

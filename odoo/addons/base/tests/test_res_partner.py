@@ -328,9 +328,9 @@ class TestPartner(TransactionCaseWithUserDemo):
             'parent_id': parent_contact.id,
         })
 
-        self.assertEqual(child_contact.with_context(lang='en_US').display_name, 'Parent, Other Address')
+        self.assertEqual(child_contact.with_context(lang='en_US').display_name, 'Parent, Other')
 
-        self.assertEqual(child_contact.with_context(lang='fr_FR').display_name, 'Parent, Autre adresse')
+        self.assertEqual(child_contact.with_context(lang='fr_FR').display_name, 'Parent, Autre')
 
 
 @tagged('res_partner')

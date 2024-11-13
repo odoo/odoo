@@ -231,5 +231,8 @@ class ResCountryState(models.Model):
 
     @api.depends('country_id')
     def _compute_display_name(self):
+        if self.env.context.get('hide_country_from_state'):
+            return super()._compute_display_name()
+
         for record in self:
             record.display_name = f"{record.name} ({record.country_id.code})"
