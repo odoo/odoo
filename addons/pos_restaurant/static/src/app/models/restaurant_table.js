@@ -85,5 +85,15 @@ export class RestaurantTable extends Base {
     getName() {
         return this.table_number.toString();
     }
+    get children() {
+        return this["<-restaurant.table.parent_id"];
+    }
+    get rootTable() {
+        let table = this;
+        while (table.parent_id) {
+            table = table.parent_id;
+        }
+        return table;
+    }
 }
 registry.category("pos_available_models").add(RestaurantTable.pythonModel, RestaurantTable);

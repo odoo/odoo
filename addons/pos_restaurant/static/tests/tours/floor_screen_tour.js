@@ -147,7 +147,12 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
             ProductScreen.isShown(),
             Chrome.clickPlanButton(),
             FloorScreen.selectedFloorIs("Second Floor"),
-
+        ].flat(),
+});
+registry.category("web_tour.tours").add("TableMergeUnmergeTour", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
             // Check the linking of tables
             FloorScreen.clickFloor("Main Floor"),
             FloorScreen.clickTable("104"),
@@ -181,18 +186,92 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
 
             FloorScreen.linkTables("105", "104"),
             // Check that the tables are unlinked when the child table is dragged
-            {
-                content: "Drag table 5 to the bottom of the screen to unlink it",
-                trigger: FloorScreen.table({ name: "105" }).trigger,
-                async run(helpers) {
-                    await helpers.drag_and_drop(`div.floor-map`, {
-                        position: {
-                            bottom: 0,
-                        },
-                        relative: true,
-                    });
-                },
-            },
+            FloorScreen.unlinkTables("105", "104"),
             Utils.negateStep(FloorScreen.isChildTable("105")),
+
+            // Verify that tables are unlinked and original orders are restored after dragging a child table.
+            FloorScreen.isShown(),
+            FloorScreen.clickTable("104"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            Chrome.clickPlanButton(),
+            FloorScreen.isShown(),
+
+            FloorScreen.clickTable("105"),
+            ProductScreen.clickDisplayedProduct("Minute Maid"),
+            Chrome.clickPlanButton(),
+            FloorScreen.isShown(),
+
+            // Link tables 105 and 104
+            FloorScreen.linkTables("105", "104"),
+            FloorScreen.isChildTable("105"),
+
+            // Check merged orders
+            FloorScreen.clickTable("105"),
+            Chrome.isTabActive("104 & 105"),
+            inLeftSide(ProductScreen.orderLineHas("Coca-Cola", "1.0")),
+            inLeftSide(ProductScreen.orderLineHas("Minute Maid", "1.0")),
+            Chrome.clickPlanButton(),
+            FloorScreen.isShown(),
+
+            // Unlink tables and verify restoration of original orders
+            FloorScreen.unlinkTables("105", "104"),
+            Utils.negateStep(FloorScreen.isChildTable("105")),
+
+            // Check original orders for table 104
+            FloorScreen.clickTable("104"),
+            inLeftSide(ProductScreen.orderLineHas("Coca-Cola", "1.0")),
+            ProductScreen.clickOrderButton(),
+            {
+                ...Dialog.confirm(),
+                content: "Acknowledge printing error (test does not use a printer).",
+            },
+            ProductScreen.orderlinesHaveNoChange(),
+            Chrome.clickPlanButton(),
+            FloorScreen.isShown(),
+
+            // Check original orders for table 105
+            FloorScreen.clickTable("105"),
+            inLeftSide(ProductScreen.orderLineHas("Minute Maid", "1.0")),
+            ProductScreen.clickOrderButton(),
+            {
+                ...Dialog.confirm(),
+                content: "Acknowledge printing error (test does not use a printer).",
+            },
+            ProductScreen.orderlinesHaveNoChange(),
+            Chrome.clickPlanButton(),
+            FloorScreen.isShown(),
+
+            // Relink tables and verify
+            FloorScreen.linkTables("105", "104"),
+            FloorScreen.clickTable("105"),
+            Chrome.isTabActive("104 & 105"),
+            ProductScreen.orderlinesHaveNoChange(),
+
+            // Add a new product to the merged order
+            ProductScreen.clickDisplayedProduct("Minute Maid"),
+            ProductScreen.orderlineIsToOrder("Minute Maid"),
+            ProductScreen.clickOrderButton(),
+            {
+                ...Dialog.confirm(),
+                content: "Acknowledge printing error (test does not use a printer).",
+            },
+            ProductScreen.orderlinesHaveNoChange(),
+
+            // Unlink tables again and verify restoration
+            Chrome.clickPlanButton(),
+            FloorScreen.isShown(),
+            FloorScreen.unlinkTables("105", "104"),
+            Utils.negateStep(FloorScreen.isChildTable("105")),
+
+            // Verify orders after unlinking
+            FloorScreen.clickTable("105"),
+            inLeftSide(ProductScreen.orderLineHas("Minute Maid", "1.0")),
+            Chrome.clickPlanButton(),
+            FloorScreen.isShown(),
+            FloorScreen.clickTable("104"),
+            inLeftSide(ProductScreen.orderLineHas("Coca-Cola", "1.0")),
+            inLeftSide(ProductScreen.orderLineHas("Minute Maid", "1.0")),
+            Chrome.clickPlanButton(),
+            FloorScreen.isShown(),
         ].flat(),
 });
