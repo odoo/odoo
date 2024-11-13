@@ -14,6 +14,28 @@ const isSmall = utils.isSmall;
 const viewRegistry = registry.category("views");
 const fieldRegistry = registry.category("fields");
 
+const validFieldTypes = [
+    "binary",
+    "boolean",
+    "json",
+    "integer",
+    "float",
+    "monetary",
+    "properties",
+    "properties_definition",
+    "reference",
+    "many2one_reference",
+    "many2one",
+    "one2many",
+    "many2many",
+    "selection",
+    "date",
+    "datetime",
+    "char",
+    "text",
+    "html",
+];
+
 const supportedInfoValidation = {
     type: Array,
     element: Object,
@@ -39,7 +61,12 @@ fieldRegistry.addValidation({
     displayName: { type: String, optional: true },
     supportedAttributes: supportedInfoValidation,
     supportedOptions: supportedInfoValidation,
-    supportedTypes: { type: Array, element: String, optional: true },
+    supportedTypes: {
+        type: Array,
+        element: String,
+        optional: true,
+        validate: (array) => array.every((x) => validFieldTypes.includes(x)),
+    },
     extractProps: { type: Function, optional: true },
     isEmpty: { type: Function, optional: true },
     isValid: { type: Function, optional: true }, // Override the validation for the validation visual feedbacks
