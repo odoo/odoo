@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="FieldMany2ManyTagsBanksTagsList" t-inherit="web.TagsList" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_tag_badge_text')]" position="after">
+            <i t-if="tag.allowOutPayment" class="ms-1 fa fa-unlock"/>
+        </xpath>
+    </t>
+</templates>

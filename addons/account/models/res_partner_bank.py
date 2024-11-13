@@ -48,6 +48,7 @@ class ResPartnerBank(models.Model):
     )
     currency_id = fields.Many2one(tracking=True)
     lock_trust_fields = fields.Boolean(compute='_compute_lock_trust_fields')
+    color = fields.Integer(compute='_compute_color')
 
     @api.constrains('journal_id')
     def _check_journal_id(self):
@@ -338,3 +339,8 @@ class ResPartnerBank(models.Model):
                 else:
                     name = f'{acc.acc_number} ({trusted_label})'
                 acc.display_name = name
+
+    @api.depends('allow_out_payment')
+    def _compute_color(self):
+        for bank in self:
+            bank.color = 10 if bank.allow_out_payment else 1
