@@ -8,15 +8,7 @@ import { NumberPopup } from "@point_of_sale/app/utils/input_popups/number_popup"
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { useService } from "@web/core/utils/hooks";
-import {
-    Component,
-    onMounted,
-    useRef,
-    useState,
-    onWillStart,
-    useEffect,
-    useExternalListener,
-} from "@odoo/owl";
+import { Component, onMounted, useRef, useState, useEffect, useExternalListener } from "@odoo/owl";
 import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 import { loadImage } from "@point_of_sale/utils";
 import { getDataURLFromFile } from "@web/core/utils/urls";
@@ -241,8 +233,9 @@ export class FloorScreen extends Component {
         this.useResizeHook();
         onMounted(() => {
             this.pos.openOpeningControl();
+            this.pos.searchProductWord = "";
+            this.pos.unsetTable();
         });
-        onWillStart(this.onWillStart);
         useEffect(
             () => {
                 this.computeFloorSize();
@@ -359,10 +352,6 @@ export class FloorScreen extends Component {
             this.state.floorHeight = `${positionV}px`;
             this.state.floorWidth = `${positionH}px`;
         }
-    }
-    async onWillStart() {
-        this.pos.searchProductWord = "";
-        await this.pos.unsetTable();
     }
     get floorBackround() {
         return this.activeFloor.floor_background_image
