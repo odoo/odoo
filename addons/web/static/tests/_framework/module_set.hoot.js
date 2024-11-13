@@ -1,7 +1,8 @@
 // ! WARNING: this module cannot depend on modules not ending with ".hoot" (except libs) !
 
 import { describe, dryRun, globals, start, stop } from "@odoo/hoot";
-import { Deferred, watchKeys, watchListeners } from "@odoo/hoot-mock";
+import { Deferred, microTick } from "@odoo/hoot-dom";
+import { watchKeys, watchListeners } from "@odoo/hoot-mock";
 import { whenReady } from "@odoo/owl";
 
 import { mockBrowserFactory } from "./mock_browser.hoot";
@@ -131,7 +132,7 @@ const fetchDependencies = async (addons) => {
     }
     if (addonsToFetch.length) {
         if (!dependencyBatch.length) {
-            dependencyBatchPromise = new Promise(setTimeout).then(() => {
+            dependencyBatchPromise = Deferred.resolve().then(() => {
                 const module_names = [...new Set(dependencyBatch)];
                 dependencyBatch = [];
                 return orm("ir.module.module.dependency", "all_dependencies", [], { module_names });
@@ -544,7 +545,7 @@ let dependencyBatchPromise = null;
 let nextRpcId = 1e9;
 
 // Invoke tests after the module loader finished loading.
-setTimeout(runTests);
+microTick().then(runTests);
 
 //-----------------------------------------------------------------------------
 // Exports
