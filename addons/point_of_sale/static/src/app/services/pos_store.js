@@ -377,7 +377,8 @@ export class PosStore extends WithLazyGetterTrap {
             if (order && (await this._onBeforeDeleteOrder(order))) {
                 if (
                     typeof order.id === "number" &&
-                    Object.keys(order.last_order_preparation_change).length > 0
+                    Object.keys(order.last_order_preparation_change).length > 0 &&
+                    !order.isTransferedOrder
                 ) {
                     await this.sendOrderInPreparation(order, true);
                 }
