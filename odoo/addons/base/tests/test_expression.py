@@ -1351,7 +1351,7 @@ class TestQueries(TransactionCase):
         Model = self.env['res.partner']
         domain = [
             '&', ('name', 'like', 'foo'),
-                 '|', ('title', '=', 1), '!', ('ref', '=', '42'),
+                 '|', ('country_id', '=', 1), '!', ('ref', '=', '42'),
         ]
         Model.search(domain)
 
@@ -1363,7 +1363,7 @@ class TestQueries(TransactionCase):
                     ("res_partner"."active" IS TRUE) AND
                     ("res_partner"."name" LIKE %s)
                 ) AND (
-                    ("res_partner"."title" = %s) OR (
+                    ("res_partner"."country_id" = %s) OR (
                         ("res_partner"."ref" != %s) OR
                         "res_partner"."ref" IS NULL
                     )
@@ -1438,21 +1438,21 @@ class TestQueries(TransactionCase):
 
     def test_translated_field(self):
         self.env['res.lang']._activate_lang('fr_FR')
-        Model = self.env['res.partner.title'].with_context(lang='fr_FR')
+        Model = self.env['res.country'].with_context(lang='fr_FR')
         Model.search([('name', 'ilike', 'foo')])
 
         with self.assertQueries(['''
-            SELECT "res_partner_title"."id"
-            FROM "res_partner_title"
-            WHERE (COALESCE("res_partner_title"."name"->>%s, "res_partner_title"."name"->>%s) LIKE %s)
-            ORDER BY COALESCE("res_partner_title"."name"->>%s, "res_partner_title"."name"->>%s)
+            SELECT "res_country"."id"
+            FROM "res_country"
+            WHERE (COALESCE("res_country"."name"->>%s, "res_country"."name"->>%s) LIKE %s)
+            ORDER BY COALESCE("res_country"."name"->>%s, "res_country"."name"->>%s)
         ''']):
             Model.search([('name', 'like', 'foo')])
 
         with self.assertQueries(['''
             SELECT COUNT(*)
-            FROM "res_partner_title"
-            WHERE ("res_partner_title"."id" = %s)
+            FROM "res_country"
+            WHERE ("res_country"."id" = %s)
         ''']):
             Model.search_count([('id', '=', 1)])
 

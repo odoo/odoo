@@ -5,11 +5,6 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='child_ids']//div[hasclass('oe_edit_only')]" position="inside">
-                <p class="mb-0" invisible="type != 'facturae_ac'">
-                    <span>Administrative Center for Spain Public Administrations. Used in Spanish electronic invoices.</span>
-                </p>
-            </xpath>
             <xpath expr="//field[@name='child_ids']//form//field[@name='name']" position="after">
                 <field name="l10n_es_edi_facturae_ac_center_code" invisible="type != 'facturae_ac'"/>
                 <field name="l10n_es_edi_facturae_ac_role_type_ids" widget="many2many_tags" invisible="type != 'facturae_ac'"/>

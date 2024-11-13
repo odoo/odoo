@@ -24,9 +24,6 @@ please go to http://translations.launchpad.net/openerp-costa-rica.
         'account',
     ],
     'auto_install': ['account'],
-    'data': [
-        'data/l10n_cr_res_partner_title.xml',
-    ],
     'demo': [
         'demo/demo_company.xml',
     ],

@@ -180,15 +180,6 @@ class ResPartnerCategory(models.Model):
         return domain
 
 
-class ResPartnerTitle(models.Model):
-    _name = 'res.partner.title'
-    _order = 'name'
-    _description = 'Partner Title'
-
-    name = fields.Char(string='Title', required=True, translate=True)
-    shortcut = fields.Char(string='Abbreviation', translate=True)
-
-
 class ResPartner(models.Model):
     _name = 'res.partner'
     _description = 'Contact'
@@ -223,7 +214,6 @@ class ResPartner(models.Model):
 
     name = fields.Char(index=True, default_export_compatible=True)
     complete_name = fields.Char(compute='_compute_complete_name', store=True, index=True)
-    title: ResPartnerTitle = fields.Many2one('res.partner.title')
     parent_id: ResPartner = fields.Many2one('res.partner', string='Related Company', index=True)
     parent_name = fields.Char(related='parent_id.name', readonly=True, string='Parent name')
     child_ids: ResPartner = fields.One2many('res.partner', 'parent_id', string='Contact', domain=[('active', '=', True)], context={'active_test': False})
@@ -259,9 +249,9 @@ class ResPartner(models.Model):
     function = fields.Char(string='Job Position')
     type = fields.Selection(
         [('contact', 'Contact'),
-         ('invoice', 'Invoice Address'),
-         ('delivery', 'Delivery Address'),
-         ('other', 'Other Address'),
+         ('invoice', 'Invoice'),
+         ('delivery', 'Delivery'),
+         ('other', 'Other'),
         ], string='Address Type',
         default='contact')
     # address fields
@@ -306,6 +296,8 @@ class ResPartner(models.Model):
                                           store=True)
     company_name = fields.Char('Company Name')
     barcode = fields.Char(help="Use a barcode to identify this contact.", copy=False, company_dependent=True)
+
+    partner_properties = fields.Properties('Properties', definition='company_id.partner_properties_definition', copy=True)
 
     # hack to allow using plain browse record in qweb views, and used in ir.qweb.field.contact
     self: ResPartner = fields.Many2one(comodel_name='res.partner', compute='_compute_get_ids')
@@ -356,7 +348,9 @@ class ResPartner(models.Model):
         if self.type == 'delivery':
             return "base/static/img/truck.png"
         if self.type == 'invoice':
-            return "base/static/img/money.png"
+            return "base/static/img/bill.png"
+        if self.type == 'other':
+            return "base/static/img/puzzle.png"
         return super()._avatar_get_placeholder_path()
 
     def _get_complete_name(self):
