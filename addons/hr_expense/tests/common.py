@@ -45,7 +45,7 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
         })
 
         # Allow the current accounting user to access the expenses.
-        cls.env.user.groups_id |= group_expense_manager
+        cls.env.user.group_ids |= group_expense_manager
 
         # Create analytic account
         cls.analytic_plan = cls.env['account.analytic.plan'].create({'name': 'Expense Plan Test'})

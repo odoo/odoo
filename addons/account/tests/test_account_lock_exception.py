@@ -25,7 +25,7 @@ class TestAccountLockException(AccountTestInvoicingCommon):
             login='other_user',
             password='password',
             email='other_user@example.com',
-            groups_id=cls.get_default_groups().ids,
+            group_ids=cls.get_default_groups().ids,
             company_id=cls.env.company.id,
         )
 

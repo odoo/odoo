@@ -127,7 +127,7 @@ class TestWebsiteResUsers(TransactionCase):
         self.assertEqual(user.website_id, website)
         self.assertTrue(user._is_portal())
         with self.assertRaises(ValidationError):
-            user.groups_id = [
+            user.group_ids = [
                 Command.link(self.env.ref('base.group_user').id),
                 Command.unlink(self.env.ref('base.group_portal').id),
             ]

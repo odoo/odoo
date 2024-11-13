@@ -37,37 +37,37 @@ class TestRecruitmentInterviewer(MailCommon):
         """
         interviewer_group = self.env.ref('hr_recruitment.group_hr_recruitment_interviewer')
 
-        self.assertFalse(interviewer_group.id in self.simple_user.groups_id.ids, "Simple User should not be interviewer")
+        self.assertFalse(interviewer_group.id in self.simple_user.all_group_ids.ids, "Simple User should not be interviewer")
 
         self.job.interviewer_ids = self.simple_user.ids
-        self.assertTrue(interviewer_group.id in self.simple_user.groups_id.ids, "Simple User should be added as interviewer")
+        self.assertTrue(interviewer_group.id in self.simple_user.all_group_ids.ids, "Simple User should be added as interviewer")
 
         self.job.write({'interviewer_ids': [(5, 0, 0)]})
-        self.assertFalse(interviewer_group.id in self.simple_user.groups_id.ids, "Simple User should be removed from interviewer")
+        self.assertFalse(interviewer_group.id in self.simple_user.all_group_ids.ids, "Simple User should be removed from interviewer")
 
         applicant = self.env['hr.applicant'].create({
             'candidate_id': self.env['hr.candidate'].create({'partner_name': 'toto'}).id,
             'job_id': self.job.id,
             'interviewer_ids': self.simple_user.ids,
         })
-        self.assertTrue(interviewer_group.id in self.simple_user.groups_id.ids, "Simple User should be added as interviewer")
+        self.assertTrue(interviewer_group.id in self.simple_user.all_group_ids.ids, "Simple User should be added as interviewer")
 
         applicant.interviewer_ids = False
-        self.assertFalse(interviewer_group.id in self.simple_user.groups_id.ids, "Simple User should be removed from interviewer")
+        self.assertFalse(interviewer_group.id in self.simple_user.all_group_ids.ids, "Simple User should be removed from interviewer")
 
         self.job.interviewer_ids = self.simple_user.ids
         applicant.interviewer_ids = self.simple_user.ids
-        self.assertTrue(interviewer_group.id in self.simple_user.groups_id.ids, "Simple User should be added as interviewer")
+        self.assertTrue(interviewer_group.id in self.simple_user.all_group_ids.ids, "Simple User should be added as interviewer")
 
         applicant.interviewer_ids = False
-        self.assertTrue(interviewer_group.id in self.simple_user.groups_id.ids, "Simple User should stay interviewer")
+        self.assertTrue(interviewer_group.id in self.simple_user.all_group_ids.ids, "Simple User should stay interviewer")
 
         self.job.write({'interviewer_ids': [(5, 0, 0)]})
         applicant.interviewer_ids = self.simple_user.ids
-        self.assertTrue(interviewer_group.id in self.simple_user.groups_id.ids, "Simple User should stay interviewer")
+        self.assertTrue(interviewer_group.id in self.simple_user.all_group_ids.ids, "Simple User should stay interviewer")
 
         applicant.interviewer_ids = False
-        self.assertFalse(interviewer_group.id in self.simple_user.groups_id.ids, "Simple User should be removed from interviewer")
+        self.assertFalse(interviewer_group.id in self.simple_user.all_group_ids.ids, "Simple User should be removed from interviewer")
 
     def test_interviewer_access_rights(self):
         candidate = self.env['hr.candidate'].create({'partner_name': 'toto'})

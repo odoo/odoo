@@ -138,7 +138,7 @@ class TestReorderingRule(TransactionCase):
               thus go to stock
         """
         # Required for `warehouse_id` to be visible in the view
-        self.env.user.groups_id += self.env.ref('stock.group_stock_multi_locations')
+        self.env.user.group_ids += self.env.ref('stock.group_stock_multi_locations')
         warehouse_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
         subloc_1 = self.env['stock.location'].create({'name': 'subloc_1', 'location_id': warehouse_1.lot_stock_id.id})
         subloc_2 = self.env['stock.location'].create({'name': 'subloc_2', 'location_id': warehouse_1.lot_stock_id.id})
@@ -247,7 +247,7 @@ class TestReorderingRule(TransactionCase):
 
         # create reordering rules
         # Required for `warehouse_id` to be visible in the view
-        self.env['res.users'].browse(2).groups_id += self.env.ref('stock.group_stock_multi_locations')
+        self.env['res.users'].browse(2).group_ids += self.env.ref('stock.group_stock_multi_locations')
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'].with_user(2))
         orderpoint_form.warehouse_id = warehouse_1
         orderpoint_form.location_id = outside_loc
@@ -721,7 +721,7 @@ class TestReorderingRule(TransactionCase):
         different purchase order lines (one for each orderpoint)
         """
         # Required for `warehouse_id` to be visible in the view
-        self.env.user.groups_id += self.env.ref('stock.group_stock_multi_locations')
+        self.env.user.group_ids += self.env.ref('stock.group_stock_multi_locations')
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
         stock_location = warehouse.lot_stock_id
         sub_location = self.env['stock.location'].create({'name': 'subloc_1', 'location_id': stock_location.id})
@@ -1122,7 +1122,7 @@ class TestReorderingRule(TransactionCase):
         user = self.env['res.users'].create({
             'name': 'Inventory Manager',
             'login': 'inv_manager',
-            'groups_id': [(6, 0, [self.env.ref('stock.group_stock_user').id])]
+            'group_ids': [(6, 0, [self.env.ref('stock.group_stock_user').id])]
         })
         product = self.env['product.product'].create({
             'name': 'Storable Product',

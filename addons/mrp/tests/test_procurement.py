@@ -700,7 +700,7 @@ class TestProcurement(TestMrpCommon):
         on the correct BoMs
         """
         # Required for `picking_type_id` to be visible in the view
-        self.env.user.groups_id += self.env.ref('stock.group_adv_location')
+        self.env.user.group_ids += self.env.ref('stock.group_adv_location')
         warehouse = self.env.ref('stock.warehouse0')
 
         stock_location01 = warehouse.lot_stock_id

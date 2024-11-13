@@ -21,7 +21,7 @@ class TestAccessRights(BaseUsersCommon, SaleCommon):
             'email': 'default_user_salesman_2@example.com',
             'signature': '--\nMark',
             'notification_type': 'email',
-            'groups_id': [(6, 0, cls.group_sale_salesman.ids)],
+            'group_ids': [(6, 0, cls.group_sale_salesman.ids)],
         })
 
         # Create the SO with a specific salesperson

@@ -58,5 +58,5 @@ class PurchaseTestCommon(TestStockCommon):
             'name': "Purchase User",
             'login': "pu",
             'email': "purchaseuser@yourcompany.com",
-            'groups_id': [(6, 0, [cls.env.ref('purchase.group_purchase_user').id])],
+            'group_ids': [(6, 0, [cls.env.ref('purchase.group_purchase_user').id])],
             })

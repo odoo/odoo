@@ -601,7 +601,7 @@ class SlideChannel(models.Model):
             if record.user_id == self.env.user:
                 record.can_upload = True
             elif record.upload_group_ids:
-                record.can_upload = bool(record.upload_group_ids & self.env.user.groups_id)
+                record.can_upload = bool(record.upload_group_ids & self.env.user.group_ids)
             else:
                 record.can_upload = self.env.user.has_group('website_slides.group_website_slides_manager')
 

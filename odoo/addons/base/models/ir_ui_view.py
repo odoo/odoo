@@ -172,7 +172,7 @@ class IrUiView(models.Model):
                                     compute='_compute_model_data_id', search='_search_model_data_id')
     xml_id = fields.Char(string="External ID", compute='_compute_xml_id',
                          help="ID of the view defined in xml file")
-    groups_id = fields.Many2many('res.groups', 'ir_ui_view_group_rel', 'view_id', 'group_id',
+    group_ids = fields.Many2many('res.groups', 'ir_ui_view_group_rel', 'view_id', 'group_id',
                                  string='Groups', help="If this field is empty, the view applies to all users. Otherwise, the view applies to the users of those groups only.")
     mode = fields.Selection([('primary', "Base view"), ('extension', "Extension View")],
                             string="View inheritance mode", default='primary', required=True,
@@ -420,10 +420,10 @@ actual arch.
 
         return True
 
-    @api.constrains('type', 'groups_id', 'inherit_id')
+    @api.constrains('type', 'group_ids', 'inherit_id')
     def _check_groups(self):
         for view in self:
-            if (view.groups_id and
+            if (view.group_ids and
                 view.inherit_id and
                 view.mode != 'primary'):
                 raise ValidationError(_("Inherited view cannot have 'Groups' define on the record. Use 'groups' attributes inside the view definition"))
@@ -666,7 +666,7 @@ actual arch.
             return self.inherit_id._check_view_access()
         if set(self.group_ids.ids) & set(self.env.user._get_group_ids()):
             return True
-        if self.groups_id:
+        if self.group_ids:
             error = _(
                 "View '%(name)s' accessible only to groups %(groups)s ",
                 name=self.key,

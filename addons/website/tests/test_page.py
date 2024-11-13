@@ -558,7 +558,7 @@ class WithContext(HttpCase):
             'arch': self.page.arch.replace('I am a generic page', 'I am a specific page not available for visitors'),
             'is_published': True,
             'visibility': 'restricted_group',
-            'groups_id': [Command.link(self.ref('website.group_website_designer'))],
+            'group_ids': [Command.link(self.ref('website.group_website_designer'))],
         })
         # Access page as anonymous visitor.
         self.authenticate(None, None)

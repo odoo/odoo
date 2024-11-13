@@ -549,12 +549,12 @@ class RecipientsNotificationTest(MailCommon):
             'phone': '+32455998877',
         })
         cls.user_1, cls.user_2 = cls.env['res.users'].with_context(no_reset_password=True).create([
-            {'groups_id': [(4, cls.env.ref('base.group_portal').id)],
+            {'group_ids': [(4, cls.env.ref('base.group_portal').id)],
              'login': '_login_portal',
              'notification_type': 'email',
              'partner_id': cls.common_partner.id,
             },
-            {'groups_id': [(4, cls.env.ref('base.group_user').id)],
+            {'group_ids': [(4, cls.env.ref('base.group_user').id)],
              'login': '_login_internal',
              'notification_type': 'inbox',
              'partner_id': cls.common_partner.id,
@@ -583,7 +583,7 @@ class RecipientsNotificationTest(MailCommon):
                         user = next((user for user in partner.user_ids), self.env['res.users'])
                 self.assertEqual(partner_data['active'], partner.active)
                 if user:
-                    self.assertEqual(partner_data['groups'], set(user.groups_id.ids))
+                    self.assertEqual(partner_data['groups'], set(user.group_ids.ids))
                     self.assertEqual(partner_data['notif'], user.notification_type)
                     self.assertEqual(partner_data['uid'], user.id)
                 else:
@@ -659,21 +659,21 @@ class RecipientsNotificationTest(MailCommon):
         user_2_1, user_2_2, user_2_3 = self.env['res.users'].sudo().with_context(no_reset_password=True).create([
             {'company_ids': [(6, 0, cids)],
              'company_id': self.company_admin.id,
-             'groups_id': [(4, self.env.ref('base.group_portal').id)],
+             'group_ids': [(4, self.env.ref('base.group_portal').id)],
              'login': '_login2_portal',
              'notification_type': 'email',
              'partner_id': shared_partner.id,
             },
             {'company_ids': [(6, 0, cids)],
              'company_id': self.company_admin.id,
-             'groups_id': [(4, self.env.ref('base.group_user').id)],
+             'group_ids': [(4, self.env.ref('base.group_user').id)],
              'login': '_login2_internal',
              'notification_type': 'inbox',
              'partner_id': shared_partner.id,
             },
             {'company_ids': [(6, 0, cids)],
              'company_id': company_other.id,
-             'groups_id': [(4, self.env.ref('base.group_user').id), (4, self.env.ref('base.group_partner_manager').id)],
+             'group_ids': [(4, self.env.ref('base.group_user').id), (4, self.env.ref('base.group_partner_manager').id)],
              'login': '_login2_manager',
              'notification_type': 'inbox',
              'partner_id': shared_partner.id,

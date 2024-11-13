@@ -191,13 +191,13 @@ class TestAPI(MailCommon, TestRecipients):
             {
                 'company_id': self.env.user.company_id.id,
                 'email': 'test.ordering@test.example.com',
-                'groups_id': [(4, self.env.ref('base.group_portal').id)],
+                'group_ids': [(4, self.env.ref('base.group_portal').id)],
                 'login': 'order_portal',
                 'name': 'Portal Test User for ordering',
             }, {
                 'company_id': self.env.user.company_id.id,
                 'email': 'test.ordering@test.example.com',
-                'groups_id': [(4, self.env.ref('base.group_user').id)],
+                'group_ids': [(4, self.env.ref('base.group_user').id)],
                 'login': 'order_internal',
                 'name': 'Zuper Internal Test User for ordering',  # name based: after portal
             }

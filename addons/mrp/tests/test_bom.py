@@ -613,7 +613,7 @@ class TestBoM(TestMrpCommon):
         })
 
         # Required to display `operation_ids` in the form view
-        self.env.user.groups_id += self.env.ref("mrp.group_mrp_routings")
+        self.env.user.group_ids += self.env.ref("mrp.group_mrp_routings")
         with Form(bom_crumble) as bom:
             with bom.bom_line_ids.new() as line:
                 line.product_id = butter
@@ -781,7 +781,7 @@ class TestBoM(TestMrpCommon):
         })
 
         # Required to display `operation_ids` in the form view
-        self.env.user.groups_id += self.env.ref("mrp.group_mrp_routings")
+        self.env.user.group_ids += self.env.ref("mrp.group_mrp_routings")
         with Form(bom_drawer) as bom:
             with bom.bom_line_ids.new() as line:
                 line.product_id = screw
@@ -1380,8 +1380,8 @@ class TestBoM(TestMrpCommon):
         bom_from_mo_2.active = False  # Archives the created BoM to avoid to use it for the next MOs
 
         # Generates a BoM from a confirmed MO using operations and by-products.
-        self.env.user.groups_id += self.env.ref('mrp.group_mrp_byproducts')  # Enables by-products.
-        self.env.user.groups_id += self.env.ref('mrp.group_mrp_routings')  # Enables workorders.
+        self.env.user.group_ids += self.env.ref('mrp.group_mrp_byproducts')  # Enables by-products.
+        self.env.user.group_ids += self.env.ref('mrp.group_mrp_routings')  # Enables workorders.
         # Produces 3 qties to check if the operations' duration will be correctly divided by 3.
         mo_3 = create_mo(3)
         mo_3.action_confirm()
@@ -1427,7 +1427,7 @@ class TestBoM(TestMrpCommon):
         then to generate a new BoM from this MO.
         Checks the generated BoM has the expected BoM lines UoM and quantity.
         """
-        self.env.user.groups_id += self.env.ref('uom.group_uom')
+        self.env.user.group_ids += self.env.ref('uom.group_uom')
         uom_unit = self.env.ref('uom.product_uom_unit')
         uom_dozen = self.env.ref('uom.product_uom_dozen')
         # Creates some products.
@@ -1465,7 +1465,7 @@ class TestBoM(TestMrpCommon):
         """ Creates a Manufacturing Order without BoM then to generate a new BoM from this MO and
         modifies by-products values.
         """
-        self.env.user.groups_id += self.env.ref('mrp.group_mrp_byproducts')  # Enables by-products.
+        self.env.user.group_ids += self.env.ref('mrp.group_mrp_byproducts')  # Enables by-products.
         # Creates some products.
         common_vals = {'is_storable': True}
         finished_product = self.env['product.product'].create(dict(common_vals, name="Banana Bread"))
@@ -1533,7 +1533,7 @@ class TestBoM(TestMrpCommon):
         Checks the BoM will be marked as updated in the right situation, and checks the "Update BoM"
         action update the MO accordingly to the changes done in the BoM.
         """
-        self.env.user.groups_id += self.env.ref('mrp.group_mrp_byproducts')
+        self.env.user.group_ids += self.env.ref('mrp.group_mrp_byproducts')
         # Creates a BoM.
         common_vals = {'is_storable': True}
         finished_product = self.env['product.product'].create(dict(common_vals, name="Monster in Jar"))
@@ -1650,7 +1650,7 @@ class TestBoM(TestMrpCommon):
         then modifies the BoM's component's quantity and update the MO.
         Checks the MO's raw moves' quantities are correctly updated.
         """
-        self.env.user.groups_id += self.env.ref('uom.group_uom')
+        self.env.user.group_ids += self.env.ref('uom.group_uom')
         uom_unit = self.env.ref('uom.product_uom_unit')
         uom_dozen = self.env.ref('uom.product_uom_dozen')
         # Creates a BoM.
@@ -1818,7 +1818,7 @@ class TestBoM(TestMrpCommon):
         replacing one of its BoM line's product. Updates the MO and checks a new
         move for this product was created in the MO's picking.
         """
-        self.env.user.groups_id += self.env.ref('stock.group_adv_location')
+        self.env.user.group_ids += self.env.ref('stock.group_adv_location')
         self.warehouse_1.manufacture_steps = 'pbm'
 
         # Creates a MO.

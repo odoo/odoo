@@ -58,7 +58,7 @@ class MailControllerCommon(HttpCase, MailCommon):
             notification_type='inbox',
         )
         # whatever default creation values, we need a "no partner manager" user
-        cls.user_employee_nopartner.write({'groups_id': [(3, cls.env.ref('base.group_partner_manager').id)]})
+        cls.user_employee_nopartner.write({'group_ids': [(3, cls.env.ref('base.group_partner_manager').id)]})
 
     def _authenticate_pseudo_user(self, pseudo_user):
         user = pseudo_user if pseudo_user._name == "res.users" else self.user_public

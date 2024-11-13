@@ -95,7 +95,7 @@ class TestPartnerVCard(HttpCase):
 
     def test_check_partner_access_for_user(self):
         self.env['res.users'].create({
-            'groups_id': [Command.set([self.env.ref('base.group_public').id])],
+            'group_ids': [Command.set([self.env.ref('base.group_public').id])],
             'name': 'Test User',
             'login': 'testuser',
             'password': 'testuser',

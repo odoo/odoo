@@ -63,7 +63,7 @@ class MailGroup(models.Model):
     moderation_rule_count = fields.Integer(string='Moderated emails count', compute='_compute_moderation_rule_count')
     moderation_rule_ids = fields.One2many('mail.group.moderation', 'mail_group_id', string='Moderated Emails')
     moderator_ids = fields.Many2many('res.users', 'mail_group_moderator_rel', string='Moderators',
-                                     domain=lambda self: [('groups_id', 'in', self.env.ref('base.group_user').id)])
+                                     domain=lambda self: [('all_group_ids', 'in', self.env.ref('base.group_user').id)])
     moderation_notify = fields.Boolean(
         string='Automatic notification',
         help='People receive an automatic notification about their message being waiting for moderation.')

@@ -81,7 +81,7 @@ class TestGetCurrentWebsite(HttpCaseWithUserDemo):
             'website_id': website.id,
             'login': 'sad@mail.com',
             'name': 'Hope Fully',
-            'groups_id': [
+            'group_ids': [
                 Command.link(self.env.ref('base.group_portal').id),
                 Command.unlink(self.env.ref('base.group_user').id),
             ],

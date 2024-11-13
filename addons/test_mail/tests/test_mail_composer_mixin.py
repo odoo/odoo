@@ -41,8 +41,8 @@ class TestMailComposerMixin(MailCommon, TestRecipients):
             notification_type='inbox',
             signature='--\nErnest'
         )
-        cls.user_rendering_restricted.groups_id -= cls.env.ref('mail.group_mail_template_editor')
-        cls.user_employee.groups_id += cls.env.ref('mail.group_mail_template_editor')
+        cls.user_rendering_restricted.group_ids -= cls.env.ref('mail.group_mail_template_editor')
+        cls.user_employee.group_ids += cls.env.ref('mail.group_mail_template_editor')
 
         cls._activate_multi_lang(
             layout_arch_db='<body><t t-out="message.body"/> English Layout for <t t-esc="model_description"/></body>',

@@ -2366,7 +2366,7 @@ class TestSinglePicking(TestStockCommon):
 
     def test_owner_1(self):
         # Required for `owner_id` to be visible in the view
-        self.env.user.groups_id += self.env.ref("stock.group_tracking_owner")
+        self.env.user.group_ids += self.env.ref("stock.group_tracking_owner")
         """Make a receipt, set an owner and validate"""
         owner1 = self.env['res.partner'].create({'name': 'owner'})
         receipt = self.env['stock.picking'].create({
@@ -2418,7 +2418,7 @@ class TestSinglePicking(TestStockCommon):
 
         # We need to activate multi-locations to use putaway rules.
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
-        self.env.user.write({'groups_id': [(4, grp_multi_loc.id)]})
+        self.env.user.write({'group_ids': [(4, grp_multi_loc.id)]})
         putaway_product = self.env['stock.putaway.rule'].create({
             'product_id': self.productA.id,
             'location_in_id': stock_location.id,

@@ -242,7 +242,7 @@ class TestAPIKeys(common.HttpCase):
         u = self.env['res.users'].create({
             'name': 'a',
             'login': 'a',
-            'groups_id': self.env.ref('base.group_user').ids,
+            'group_ids': self.env.ref('base.group_user').ids,
         })
         with self.assertRaises(AccessError):
             k2.with_user(u).remove()

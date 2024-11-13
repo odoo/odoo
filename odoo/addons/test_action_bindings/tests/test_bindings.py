@@ -15,7 +15,7 @@ class TestActionBindings(common.TransactionCase):
         # create action bindings, and check the returned bindings
         action1 = self.env.ref('base.action_attachment')
         action2 = self.env.ref('base.ir_default_menu_action')
-        action3 = self.env['ir.actions.report'].search([('groups_id', '=', False)], limit=1)
+        action3 = self.env['ir.actions.report'].search([('group_ids', '=', False)], limit=1)
         action1.binding_model_id = action2.binding_model_id \
                                  = action3.binding_model_id \
                                  = self.env['ir.model']._get('res.partner')
@@ -34,8 +34,8 @@ class TestActionBindings(common.TransactionCase):
 
         # add a group on an action, and check that it is not returned
         group = self.env.ref('base.group_system')
-        action2.groups_id += group
-        self.env.user.groups_id -= group
+        action2.group_ids += group
+        self.env.user.group_ids -= group
 
         bindings = Actions.get_bindings('res.partner')
         self.assertItemsEqual(

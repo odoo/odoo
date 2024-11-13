@@ -88,7 +88,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
         Check that all MO are reachable through the procurement group.
         """
         # Required for `manufacture_steps` to be visible in the view
-        self.env.user.groups_id += self.env.ref("stock.group_adv_location")
+        self.env.user.group_ids += self.env.ref("stock.group_adv_location")
         with Form(self.warehouse) as warehouse:
             warehouse.manufacture_steps = 'pbm'
 
@@ -133,7 +133,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
         Check that all MO are reachable through the procurement group.
         """
         # Required for `manufacture_steps` to be visible in the view
-        self.env.user.groups_id += self.env.ref("stock.group_adv_location")
+        self.env.user.group_ids += self.env.ref("stock.group_adv_location")
         with Form(self.warehouse) as warehouse:
             warehouse.manufacture_steps = 'pbm_sam'
         production, _, product_to_build, product_to_use_1, product_to_use_2 = self.generate_mo(qty_base_1=4, qty_final=4, picking_type_id=self.warehouse.manu_type_id)

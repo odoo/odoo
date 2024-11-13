@@ -10,7 +10,7 @@ class TestMrpAnalyticAccount(TransactionCase):
         # The group 'mrp.group_mrp_routings' is required to make the field
         # 'workorder_ids' visible in the view of 'mrp.production'. The subviews
         #  of `workorder_ids` must be present in many tests to create records.
-        cls.env.user.groups_id += (
+        cls.env.user.group_ids += (
             cls.env.ref('analytic.group_analytic_accounting')
             + cls.env.ref('mrp.group_mrp_routings')
         )
