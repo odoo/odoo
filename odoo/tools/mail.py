@@ -785,12 +785,13 @@ def email_split_and_format(text, keep_invalid=False):
     formataddr. """
     return [formataddr((name, email)).lstrip('@') for (name, email) in email_split_tuples(text, keep_invalid=keep_invalid)]
 
-def email_split_and_format_normalize(text):
+
+def email_split_and_format_normalize(text, keep_invalid=False):
     """ Same as 'email_split_and_format' but normalizing email. """
     return [
         formataddr(
             (name, _normalize_email(email))
-        ) for (name, email) in email_split_tuples(text)
+        ) for (name, email) in email_split_tuples(text, keep_invalid=keep_invalid)
     ]
 
 def email_normalize(text, strict=True):
