@@ -251,9 +251,10 @@
                     <t t-if="availability_check" t-foreach="tickets" t-as="ticket">
                         <t t-foreach="range(1, ticket['quantity'] + 1)" t-as="att_counter" name="attendee_loop">
                             <t t-set="counter" t-value="counter + 1"/>
-                            <div class="modal-body">
+                            <input class="d-none" type="text" t-attf-name="#{counter}-event_ticket_id" t-attf-value="#{ticket['id']}"/>
+                            <div t-if="event.specific_question_ids" class="modal-body">
                                 <h5 t-attf-class="mt-1 pb-2 #{'border-bottom' if event.question_ids else ''}">Ticket #<span t-out="counter"/> <small class="text-muted">- <span t-out="ticket['name']"/></small></h5>
-                                <div t-if="event.specific_question_ids" class="row">
+                                <div class="row">
                                     <t t-foreach="event.specific_question_ids" t-as="question">
                                         <div class="col-lg-6 mt-2">
                                             <t t-call="website_event.registration_event_question">
@@ -262,7 +263,6 @@
                                         </div>
                                     </t>
                                 </div>
-                                <input class="d-none" type="text" t-attf-name="#{counter}-event_ticket_id" t-attf-value="#{ticket['id']}"/>
                             </div>
                         </t>
                     </t>
