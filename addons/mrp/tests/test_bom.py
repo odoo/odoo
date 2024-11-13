@@ -2446,25 +2446,29 @@ class TestBoM(TestMrpCommon):
 
 @tagged('-at_install', 'post_install')
 class TestTourBoM(HttpCase):
-    def test_mrp_bom_product_catalog(self):
-        product = self.env['product.product'].create({
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.product = cls.env['product.product'].create({
             'name': 'test1',
             'is_storable': True,
         })
-        bom = self.env['mrp.bom'].create({
-            'product_id': product.id,
-            'product_tmpl_id': product.product_tmpl_id.id,
+        cls.bom = cls.env['mrp.bom'].create({
+            'product_id': cls.product.id,
+            'product_tmpl_id': cls.product.product_tmpl_id.id,
             'product_qty': 1,
-            'type': 'normal'
+            'type': 'normal',
         })
+    
+    def test_mrp_bom_product_catalog(self):
 
-        self.assertEqual(len(bom.bom_line_ids), 0)
+        self.assertEqual(len(self.bom.bom_line_ids), 0)
 
         action = self.env.ref('mrp.mrp_bom_form_action')
-        url = '/web#model=mrp.bom&view_type=form&action=%s&id=%s' % (str(action.id), str(bom.id))
+        url = '/web#model=mrp.bom&view_type=form&action=%s&id=%s' % (str(action.id), str(self.bom.id))
 
         self.start_tour(url, 'test_mrp_bom_product_catalog', login='admin')
-        self.assertEqual(len(bom.bom_line_ids), 1)
+        self.assertEqual(len(self.bom.bom_line_ids), 1)
 
     def test_manufacture_from_bom(self):
         """
