@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="form_view_message_log">
+            <field name="name">twilio.message.log.form</field>
+            <field name="model">twilio.message.log</field>
+            <field name="arch" type="xml">
+                <form string="Message Log">
+                    <sheet>
+                        <group>
+                            <field name="account_sid"/>
+                            <field name="body"/>
+                            <field name="date_sent"/>
+                            <field name="direction"/>
+                            <field name="error_code"/>
+                            <field name="error_message"/>
+                            <field name="from_phone"/>
+                            <field name="to_phone"/>
+                            <field name="messaging_service_sid"/>
+                            <field name="sid"/>
+                            <field name="uri"/>
+                            <field name="res_model"/>
+                            <field name="res_id"/>
+                            <field name="status"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="tree_view_message_log">
+            <field name="name">twilio.message.log.tree</field>
+            <field name="model">twilio.message.log</field>
+            <field name="arch" type="xml">
+                <tree string="Message Log">
+                    <field name="res_model"/>
+                    <field name="res_id"/>
+                    <field name="date_sent"/>
+                    <field name="direction"/>
+                    <field name="from_phone"/>
+                    <field name="to_phone"/>
+                    <field name="status"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_message_log">
+            <field name="name">Message Log</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">twilio.message.log</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_message_log"
+                  name="Message Log"
+                  action="action_message_log"/>
+    </data>
+</odoo>
+
