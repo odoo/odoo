@@ -3,6 +3,7 @@
 import json
 import math
 import re
+import base64
 
 from werkzeug import urls
 from werkzeug.exceptions import Forbidden
