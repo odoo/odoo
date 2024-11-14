@@ -5,7 +5,7 @@ import { DIRECTIONS } from "@html_editor/utils/position";
 
 export class InlineCodePlugin extends Plugin {
     static id = "inlineCode";
-    static dependencies = ["selection", "history"];
+    static dependencies = ["selection", "history", "input"];
     resources = {
         input_handlers: this.onInput.bind(this),
     };
