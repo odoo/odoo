@@ -110,7 +110,7 @@
             </CabeceraFactura>
             <DatosFactura t-if="is_emission">
                 <FechaOperacion t-if="delivery_date" t-out="format_date(delivery_date)"/>
-                <DescripcionFactura t-out="origin or 'manual'"/>
+                <DescripcionFactura t-out="origin"/>
                 <DetallesFactura>
                     <IDDetalleFactura t-foreach="base_lines" t-as="base_line">
                         <DescripcionDetalle t-out="base_line['description']"/>
