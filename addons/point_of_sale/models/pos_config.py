@@ -607,6 +607,8 @@ class PosConfig(models.Model):
                     field_groups = self.env['res.groups'].concat(*(self.env.ref(it) for it in field_group_xmlids))
                     field_groups.write({'implied_ids': [(4, self.env.ref(field.implied_group).id)]})
 
+    def _configure_fiscal_position_and_pricelist(self):
+        pass
 
     def execute(self):
         return {
