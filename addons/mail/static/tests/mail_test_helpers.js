@@ -17,6 +17,7 @@ import {
     restoreRegistry,
     serverState,
     webModels,
+    mockEmojiLoading,
 } from "@web/../tests/web_test_helpers";
 import { contains } from "./mail_test_helpers_contains";
 
@@ -98,6 +99,7 @@ patch(busService, {
 //-----------------------------------------------------------------------------
 
 export function defineMailModels() {
+    mockEmojiLoading();
     defineParams({ suite: "mail" }, "replace");
     return defineModels(mailModels);
 }
