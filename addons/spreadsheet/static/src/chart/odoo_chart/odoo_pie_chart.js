@@ -15,14 +15,28 @@ const {
     truncateLabel,
 } = chartHelpers;
 
+export class OdooPieChart extends OdooChart {
+    constructor(definition, sheetId, getters) {
+        super(definition, sheetId, getters);
+        this.isDoughnut = definition.isDoughnut;
+    }
+
+    getDefinition() {
+        return {
+            ...super.getDefinition(),
+            isDoughnut: this.isDoughnut,
+        };
+    }
+}
+
 chartRegistry.add("odoo_pie", {
     match: (type) => type === "odoo_pie",
-    createChart: (definition, sheetId, getters) => new OdooChart(definition, sheetId, getters),
+    createChart: (definition, sheetId, getters) => new OdooPieChart(definition, sheetId, getters),
     getChartRuntime: createOdooChartRuntime,
     validateChartDefinition: (validator, definition) =>
-        OdooChart.validateChartDefinition(validator, definition),
-    transformDefinition: (definition) => OdooChart.transformDefinition(definition),
-    getChartDefinitionFromContextCreation: () => OdooChart.getDefinitionFromContextCreation(),
+        OdooPieChart.validateChartDefinition(validator, definition),
+    transformDefinition: (definition) => OdooPieChart.transformDefinition(definition),
+    getChartDefinitionFromContextCreation: () => OdooPieChart.getDefinitionFromContextCreation(),
     name: _t("Pie"),
 });
 
@@ -39,7 +53,7 @@ function createOdooChartRuntime(chart, getters) {
     };
 
     const config = {
-        type: "pie",
+        type: definition.isDoughnut ? "doughnut" : "pie",
         data: {
             labels: chartData.labels.map(truncateLabel),
             datasets: getPieChartDatasets(definition, chartData),
