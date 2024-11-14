@@ -31,7 +31,7 @@ export function defineWebsiteModels() {
     defineModels([Website, IrUiView]);
 }
 
-export async function setupWebsiteBuilder(websiteContent) {
+export async function setupWebsiteBuilder(websiteContent, { snippets } = {}) {
     let editor;
     await mountWithCleanup(WebClient);
     await getService("action").doAction({
@@ -47,6 +47,14 @@ export async function setupWebsiteBuilder(websiteContent) {
         },
     });
 
+    if (snippets) {
+        patchWithCleanup(IrUiView.prototype, {
+            render_public_asset: () => {
+                return getSnippetView(snippets);
+            },
+        });
+    }
+
     const iframe = queryOne("iframe[data-src='/website/force/1']");
     iframe.contentDocument.body.innerHTML = `<div id="wrapwrap">${websiteContent}</div>`;
     return { getEditor: () => editor };
@@ -60,4 +68,21 @@ export async function openSnippetsMenu() {
     // linked to the setTimeout in the WebsiteBuilder component
     await advanceTime(200);
     await animationFrame();
+}
+
+function getSnippetView(snippets) {
+    const { snippet_groups, snippet_custom, snippet_structure, snippet_content } = snippets;
+    return `
+    <snippets id="snippet_groups" string="Categories">
+        ${(snippet_groups || []).join("")}
+    </snippets>
+    <snippets id="snippet_structure" string="Structure">
+        ${(snippet_structure || []).join("")}
+    </snippets>
+    <snippets id="snippet_custom" string="Custom">
+        ${(snippet_custom || []).join("")}
+    </snippets>
+    <snippets id="snippet_content" string="Inner Content">
+        ${(snippet_content || []).join("")}
+    </snippets>`;
 }
