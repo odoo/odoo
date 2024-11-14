@@ -1,0 +1,31 @@
+.o_field_customRadio {
+    > span, > button {
+        flex: 0 0 auto;
+    }
+    @include media-breakpoint-down(md) {
+        display: inline-block;
+    }
+    .o_radio_input {
+        outline: none;
+    }
+
+    .o_radio_item {
+        flex: 0 0 auto;
+    }
+
+    .o_horizontal {
+        display: inline-flex;
+        flex-wrap: wrap;
+
+        .o_radio_item {
+            margin-right: $o-form-spacing-unit * 2;
+        }
+    }
+
+    .o_vertical {
+        flex-flow: column nowrap;
+        .o_radio_item {
+            margin-bottom: $o-form-spacing-unit;
+        }
+    }
+}

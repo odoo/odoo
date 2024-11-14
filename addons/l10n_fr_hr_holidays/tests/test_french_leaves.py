@@ -133,7 +133,7 @@ class TestFrenchLeaves(TransactionCase):
             'employee_id': self.employee.id,
             'request_date_from': '2021-09-10',
             'request_date_to': '2021-09-10',
-            'request_unit_half': True,
+            'request_unit': 'half_day',
             'request_date_from_period': 'am',
         })
         # Since the employee works on the afternoon, the date_to is not post-poned
@@ -353,7 +353,7 @@ class TestFrenchLeaves(TransactionCase):
             'employee_id': self.employee.id,
             'request_date_from': '2024-07-29',
             'request_date_to': '2024-07-29',
-            'request_unit_half': True,
+            'request_unit': 'half_day',
             'request_date_from_period': 'am',
         })
         self.assertEqual(leave.number_of_days, 0.5, 'The duration should be 0.5 day.')

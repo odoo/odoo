@@ -272,7 +272,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         leave = self.env['hr.leave'].new({
             'employee_id': self.employee_emp.id,
             'holiday_status_id': self.holidays_type_1.id,
-            'request_unit_hours': True,
+            'request_unit': 'hour',
             'request_date_from': date(2019, 5, 6),
             'request_date_to': date(2019, 5, 6),
             'request_hour_from': 8,  # 8:00 AM in the employee's timezone
@@ -289,7 +289,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         leave = self.env['hr.leave'].new({
             'employee_id': self.employee_emp.id,
             'holiday_status_id': self.holidays_type_1.id,
-            'request_unit_hours': True,
+            'request_unit': 'hour',
             'company_id': company.id,
             'request_date_from': date(2019, 5, 6),
             'request_date_to': date(2019, 5, 6),
@@ -1046,7 +1046,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'name': 'OT Comp (4 hours)',
             'employee_id': employee.id,
             'holiday_status_id': comp_leave_type.id,
-            'request_unit_hours': True,
+            'request_unit': 'hour',
             'request_date_from': '2019-12-26',
             'request_date_to': '2019-12-26',
             'request_hour_from': 8,
