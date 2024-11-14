@@ -14,6 +14,7 @@
     'data': [
         'data/mail_template_data.xml',
         'views/gamification_badge_views.xml',
+        'views/portal_views.xml',
         'views/website_profile.xml',
         'views/website_views.xml',
         'security/ir.model.access.csv',

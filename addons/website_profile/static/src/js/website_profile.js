@@ -2,6 +2,7 @@ import publicWidget from "@web/legacy/js/public/public_widget";
 import { rpc } from "@web/core/network/rpc";
 import { loadWysiwygFromTextarea } from "@web_editor/js/frontend/loadWysiwygFromTextarea";
 import { redirect } from "@web/core/utils/urls";
+import { _t } from "@web/core/l10n/translation";
 
 publicWidget.registry.websiteProfile = publicWidget.Widget.extend({
     selector: '.o_wprofile_email_validation_container',
@@ -40,9 +41,7 @@ publicWidget.registry.websiteProfile = publicWidget.Widget.extend({
 publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
     selector: '.o_wprofile_editor_form',
     read_events: {
-        'click .o_forum_profile_pic_edit': '_onEditProfilePicClick',
-        'change .o_forum_file_upload': '_onFileUploadChange',
-        'click .o_forum_profile_pic_clear': '_onProfilePicClearClick',
+        "change .o_file_upload": "_onFileUploadChange",
         'click .o_forum_profile_bio_edit': '_onProfileBioEditClick',
         'click .o_forum_profile_bio_cancel_edit': '_onProfileBioCancelEditClick',
     },
@@ -57,7 +56,6 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
         }
 
         const textareaEl = this.el.querySelector("textarea.o_wysiwyg_loader");
-
         const options = {
             recordInfo: {
                 context: this._getContext(),
@@ -74,6 +72,11 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
         }
 
         this._wysiwyg = await loadWysiwygFromTextarea(this, textareaEl, options);
+        this.notification = this.bindService("notification");
+        const profileInputEl = document.querySelector(".current_picture");
+        if (profileInputEl) {
+            profileInputEl.value = document.querySelector(".o_wportal_avatar_img").src || null;
+        }
 
         return Promise.all([def]);
     },
@@ -86,38 +89,36 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
      * @private
      * @param {Event} ev
      */
-    _onEditProfilePicClick: function (ev) {
-        ev.preventDefault();
-        ev.currentTarget.closest("form").querySelector(".o_forum_file_upload").click();
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
     _onFileUploadChange: function (ev) {
         if (!ev.currentTarget.files.length) {
             return;
         }
         const formEl = ev.currentTarget.closest("form");
-        var reader = new window.FileReader();
-        reader.readAsDataURL(ev.currentTarget.files[0]);
+        const reader = new FileReader();
+        const file = ev.currentTarget.files[0];
+        const self = this; // Preserve context
         reader.onload = function (ev) {
-            formEl.querySelector(".o_wforum_avatar_img").src = ev.target.result;
+            const img = new Image();
+            img.onload = () => {
+                formEl.querySelector(".o_wportal_avatar_img").src = ev.target.result;
+            };
+            img.onerror = () => {
+                self.notification.add(_t("The selected image is broken or invalid."), {
+                    type: "danger",
+                });
+                formEl.querySelector("input[type=file]").value = null;
+                formEl.querySelector(".o_wportal_avatar_img").src = document.querySelector(".current_picture").value;
+            };
+
+            img.src = ev.target.result;
         };
-        formEl.querySelector("#forum_clear_image")?.remove();
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onProfilePicClearClick: function (ev) {
-        const formEl = ev.currentTarget.closest("form");
-        formEl.querySelector(".o_wforum_avatar_img").src = "/web/static/img/placeholder.png";
-        const inputElement = document.createElement("input");
-        inputElement.setAttribute("name", "clear_image");
-        inputElement.setAttribute("id", "forum_clear_image");
-        inputElement.setAttribute("type", "hidden");
-        formEl.append(inputElement);
+        reader.onerror = () => {
+            this.notification.add(_t("Failed to read the selected image."), {
+                type: "danger",
+            });
+        };
+
+        reader.readAsDataURL(file);
     },
 
     /**
