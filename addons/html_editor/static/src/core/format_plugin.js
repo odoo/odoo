@@ -297,16 +297,10 @@ export class FormatPlugin extends Plugin {
                     if (!formatSpec.isFormatted(tag, formatProps)) {
                         tag.after(node);
                         tag.remove();
-                        formatSpec.addStyle(
-                            getOrCreateSpan(node, inlineAncestors),
-                            formatProps
-                        );
+                        formatSpec.addStyle(getOrCreateSpan(node, inlineAncestors), formatProps);
                     }
                 } else if (formatName !== "fontSize" || formatProps.size !== undefined) {
-                    formatSpec.addStyle(
-                        getOrCreateSpan(node, inlineAncestors),
-                        formatProps
-                    );
+                    formatSpec.addStyle(getOrCreateSpan(node, inlineAncestors), formatProps);
                 }
             }
         }
@@ -335,7 +329,11 @@ export class FormatPlugin extends Plugin {
             }
         }
 
-        if (selectedNodes[0] && selectedNodes[0].textContent === "\u200B") {
+        if (
+            selectedNodes.length === 1 &&
+            selectedNodes[0] &&
+            selectedNodes[0].textContent === "\u200B"
+        ) {
             this.dependencies.selection.setCursorStart(selectedNodes[0]);
         } else if (selectedNodes.length) {
             const firstNode = selectedNodes[0];
