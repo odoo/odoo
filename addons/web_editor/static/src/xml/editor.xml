@@ -297,6 +297,12 @@
                 <div id="redo" data-call="redo" class="btn fa fa-repeat"/>
             </div>
 
+            <div t-if="props.showDynamicplaceholder" id="dynamic-placeholder" class="btn-group">
+                <div id="open-dynamic-placeholder" class="btn editor-ignore" title="Use dynamic placeholders for personalization">
+                    <span class="fa fa-hashtag fa-fw" />
+                </div>
+            </div>
+
             <t t-slot="default"/>
         </div>
     </t>
