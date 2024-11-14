@@ -466,6 +466,11 @@ export class DomPlugin extends Plugin {
                 if (extraClass) {
                     newEl.classList.add(extraClass);
                 }
+                if (block.nodeName === "LI") {
+                    this.getResource("handle_list_style_position").some((handler) =>
+                        handler({ block, newEl })
+                    );
+                }
             } else {
                 // eg do not change a <div> into a h1: insert the h1
                 // into it instead.

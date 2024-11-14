@@ -99,6 +99,7 @@ export class HintPlugin extends Plugin {
     }
 
     makeHint(el, text) {
+        this.getResource("handle_placeholder_position").some((handler) => handler({ el }));
         el.setAttribute("placeholder", text);
         el.classList.add("o-we-hint");
     }
@@ -106,6 +107,7 @@ export class HintPlugin extends Plugin {
     removeHint(el) {
         el.removeAttribute("placeholder");
         removeClass(el, "o-we-hint");
+        el.style.removeProperty("--placeholder-left");
         if (this.hint === el) {
             this.hint = null;
         }

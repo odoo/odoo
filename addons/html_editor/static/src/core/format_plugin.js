@@ -189,7 +189,11 @@ export class FormatPlugin extends Plugin {
     }
 
     formatSelection(...args) {
-        if (this._formatSelection(...args)) {
+        let hasFormatted = false;
+        for (const cb of this.getResource("formatSelection") || []) {
+            hasFormatted = cb(...args);
+        }
+        if (this._formatSelection(...args) || hasFormatted) {
             this.dispatch("ADD_STEP");
         }
     }
@@ -231,6 +235,21 @@ export class FormatPlugin extends Plugin {
                 )
         );
         const selectedTextNodes = selectedNodes.length ? selectedNodes : selectedNodesInTds;
+        const unformattedTextNodes = selectedNodes.filter((n) => {
+            const listItem = closestElement(n, "li");
+            if (listItem && this.shared.isNodeContentsFullySelected(listItem)) {
+                const hasFontSizeStyle =
+                    formatName === "setFontSizeClassName"
+                        ? listItem.classList.contains(formatProps.className)
+                        : listItem.style.fontSize;
+                return !hasFontSizeStyle;
+            }
+            return true;
+        });
+
+        const textNodesToFormat = unformattedTextNodes.length
+            ? unformattedTextNodes
+            : selectedNodesInTds;
 
         const selectedFieldNodes = new Set(
             this.shared
@@ -239,11 +258,11 @@ export class FormatPlugin extends Plugin {
                 .filter(Boolean)
         );
         const formatSpec = formatsSpecs[formatName];
-        for (const selectedTextNode of selectedTextNodes) {
+        for (const textNode of textNodesToFormat) {
             const inlineAncestors = [];
             /** @type { Node } */
-            let currentNode = selectedTextNode;
-            let parentNode = selectedTextNode.parentElement;
+            let currentNode = textNode;
+            let parentNode = textNode.parentElement;
 
             // Remove the format on all inline ancestors until a block or an element
             // with a class that is not related to font size (in case the formatting
@@ -281,26 +300,26 @@ export class FormatPlugin extends Plugin {
             const firstBlockOrClassHasFormat = formatSpec.isFormatted(parentNode, formatProps);
             if (firstBlockOrClassHasFormat && !applyStyle) {
                 formatSpec.addNeutralStyle &&
-                    formatSpec.addNeutralStyle(getOrCreateSpan(selectedTextNode, inlineAncestors));
-            } else if (!firstBlockOrClassHasFormat && applyStyle) {
+                    formatSpec.addNeutralStyle(getOrCreateSpan(textNode, inlineAncestors));
+            } else if (
+                (!firstBlockOrClassHasFormat || parentNode.nodeName === "LI") &&
+                applyStyle
+            ) {
                 const tag = formatSpec.tagName && this.document.createElement(formatSpec.tagName);
                 if (tag) {
-                    selectedTextNode.after(tag);
-                    tag.append(selectedTextNode);
+                    textNode.after(tag);
+                    tag.append(textNode);
 
                     if (!formatSpec.isFormatted(tag, formatProps)) {
-                        tag.after(selectedTextNode);
+                        tag.after(textNode);
                         tag.remove();
                         formatSpec.addStyle(
-                            getOrCreateSpan(selectedTextNode, inlineAncestors),
+                            getOrCreateSpan(textNode, inlineAncestors),
                             formatProps
                         );
                     }
                 } else if (formatName !== "fontSize" || formatProps.size !== undefined) {
-                    formatSpec.addStyle(
-                        getOrCreateSpan(selectedTextNode, inlineAncestors),
-                        formatProps
-                    );
+                    formatSpec.addStyle(getOrCreateSpan(textNode, inlineAncestors), formatProps);
                 }
             }
         }
@@ -317,8 +336,8 @@ export class FormatPlugin extends Plugin {
             const siblings = [...zws.parentElement.childNodes];
             if (
                 !isBlock(zws.parentElement) &&
-                selectedTextNodes.includes(siblings[0]) &&
-                selectedTextNodes.includes(siblings[siblings.length - 1])
+                textNodesToFormat.includes(siblings[0]) &&
+                textNodesToFormat.includes(siblings[siblings.length - 1])
             ) {
                 zws.parentElement.setAttribute("data-oe-zws-empty-inline", "");
             } else {
@@ -329,8 +348,8 @@ export class FormatPlugin extends Plugin {
             }
         }
 
-        if (selectedTextNodes[0] && selectedTextNodes[0].textContent === "\u200B") {
-            this.shared.setCursorStart(selectedTextNodes[0]);
+        if (textNodesToFormat[0] && textNodesToFormat[0].textContent === "\u200B") {
+            this.shared.setCursorStart(textNodesToFormat[0]);
         } else if (selectedTextNodes.length) {
             const firstNode = selectedTextNodes[0];
             const lastNode = selectedTextNodes[selectedTextNodes.length - 1];
