@@ -1,24 +1,25 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-import argparse
 import os
 import re
 import sys
-from pathlib import Path
 
 import jinja2
 
 from . import Command
 
+
 class Scaffold(Command):
     """ Generates an Odoo module skeleton. """
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.epilog = "Built-in templates available are: %s" % ', '.join(
+            d for d in os.listdir(builtins())
+            if d != 'base'
+        )
+
     def run(self, cmdargs):
         # TODO: bash completion file
-        parser = argparse.ArgumentParser(
-            prog=f'{Path(sys.argv[0]).name} {self.name}',
-            description=self.__doc__,
-            epilog=self.epilog(),
-        )
+        parser = self.parser
         parser.add_argument(
             '-t', '--template', type=template, default=template('default'),
             help="Use a custom module template, can be a template name or the"
@@ -47,11 +48,6 @@ class Scaffold(Command):
             params=params,
         )
 
-    def epilog(self):
-        return "Built-in templates available are: %s" % ', '.join(
-            d for d in os.listdir(builtins())
-            if d != 'base'
-        )
 
 builtins = lambda *args: os.path.join(
     os.path.abspath(os.path.dirname(__file__)),

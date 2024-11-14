@@ -1,10 +1,6 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-import argparse
-import os
 import secrets
 import sys
 import textwrap
-from pathlib import Path
 
 from passlib.hash import pbkdf2_sha512
 
@@ -21,13 +17,9 @@ class GenProxyToken(Command):
         return '-'.join(textwrap.wrap(token, split_size))
 
     def run(self, cmdargs):
-        parser = argparse.ArgumentParser(
-            prog=f'{Path(sys.argv[0]).name} {self.name}',
-            description=self.__doc__.strip()
-        )
-        parser.add_argument('-c', '--config', type=str, help="Specify an alternate config file")
-        parser.add_argument('--token-length', type=int, help="Token Length", default=16)
-        args, _ = parser.parse_known_args()
+        self.parser.add_argument('-c', '--config', type=str, help="Specify an alternate config file")
+        self.parser.add_argument('--token-length', type=int, help="Token Length", default=16)
+        args, _ = self.parser.parse_known_args()
         if args.config:
             config.rcfile = args.config
         token = self.generate_token(length=args.token_length)

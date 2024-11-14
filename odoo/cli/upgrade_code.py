@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import argparse
 import sys
 
 import os.path
@@ -9,12 +8,6 @@ from typing import Iterator
 from types import ModuleType
 
 from . import Command
-
-"""
-Script method is add into the /upgrade/code directory.
-Every script should be in a file corresponding to his upgrade version (script for the )
-
-"""
 
 AVAILABLE_EXT = ('py', 'js', 'css', 'scss', 'xml', 'csv')
 
@@ -111,6 +104,10 @@ class UpgradeCode(Command):
     """ Rewrite the entire source code using the scripts found at /odoo/upgrade_code """
 
     name = 'upgrade_code'
+    description = """
+        Script method is add into the /upgrade/code directory.
+        Every script should be in a file corresponding to his upgrade version.
+    """
 
     def run(self, cmdargs):
         odoo = Path(__file__).parent.parent.parent
@@ -121,7 +118,7 @@ class UpgradeCode(Command):
             str(next(odoo.glob('addons'))),
         ]
 
-        parser = argparse.ArgumentParser()
+        parser = self.parser
         parser.add_argument('--addons-path', default=','.join(addons_path),
             help="[str] comma separated string representing the odoo addons path")
         parser.add_argument('-g', '--glob', default='**/*',

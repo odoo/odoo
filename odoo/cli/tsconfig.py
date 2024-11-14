@@ -1,11 +1,7 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-import argparse
 import glob
 import json
 import os
 import re
-import sys
-from pathlib import Path
 
 from . import Command
 from odoo.modules.module import MANIFEST_NAMES
@@ -33,12 +29,8 @@ class TSConfig(Command):
                 modules.remove((name, path))
 
     def run(self, cmdargs):
-        parser = argparse.ArgumentParser(
-            prog=f'{Path(sys.argv[0]).name} {self.name}',
-            description=self.__doc__.strip()
-        )
-        parser.add_argument('--addons-path', type=str, nargs=1, dest="paths")
-        args = parser.parse_args(args=cmdargs)
+        self.parser.add_argument('--addons-path', type=str, nargs=1, dest="paths")
+        args = self.parser.parse_args(args=cmdargs)
 
         paths = list(map(self.clean_path, args.paths[0].split(',')))
         modules = {}

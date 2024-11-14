@@ -1,10 +1,8 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import code
 import logging
 import os
 import signal
 import sys
-from pathlib import Path
 
 import odoo
 from odoo.modules.registry import Registry
@@ -56,7 +54,7 @@ class Shell(Command):
     supported_shells = ['ipython', 'ptpython', 'bpython', 'python']
 
     def init(self, args):
-        config.parser.prog = f'{Path(sys.argv[0]).name} {self.name}'
+        config.parser.prog = self.prog_name
         config.parse_config(args, setup_logging=True)
         cli_server.report_configuration()
         server.start(preload=[], stop=True)
