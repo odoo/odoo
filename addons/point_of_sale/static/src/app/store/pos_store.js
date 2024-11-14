@@ -35,6 +35,7 @@ import { ActionScreen } from "@point_of_sale/app/screens/action_screen";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { CashMovePopup } from "@point_of_sale/app/navbar/cash_move_popup/cash_move_popup";
 import { ClosePosPopup } from "../navbar/closing_popup/closing_popup";
+import { user } from "@web/core/user";
 
 const { DateTime } = luxon;
 
@@ -1771,6 +1772,9 @@ export class PosStore extends Reactive {
                 },
             }
         );
+    }
+    async allowProductCreation() {
+        return await user.hasGroup("base.group_system");
     }
     async orderDetails(order) {
         this.dialog.add(FormViewDialog, {
