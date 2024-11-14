@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from markupsafe import Markup
 from unittest.mock import patch
 from unittest.mock import DEFAULT
@@ -134,77 +131,73 @@ class TestAPI(MailCommon, TestRecipients):
 
     @users('employee')
     def test_mail_partner_find_from_emails(self):
-        """ Test '_mail_find_partner_from_emails'. Multi mode is mainly targeting
+        """ Test '_partner_find_from_emails'. Multi mode is mainly targeting
         finding or creating partners based on record information or message
         history. """
         existing_partners = self.env['res.partner'].sudo().search([])
         tickets = self.ticket_records.with_user(self.env.user)
         self.assertEqual(len(tickets), 8)
-        res = tickets._mail_find_partner_from_emails(
-            [ticket.email_from for ticket in tickets],
-            force_create=True,
-        )
+        res = tickets._partner_find_from_emails({ticket: [ticket.email_from] for ticket in tickets}, no_create=False)
         self.assertEqual(len(tickets), len(res))
 
         # fetch partners that should have been created
         new = self.env['res.partner'].search([('email_normalized', '=', 'paulette@test.example.com')])
-        self.assertEqual(len(new), 2, 'FIXME: created twice because does not check for duplicated when creating')
-        # self.assertEqual(len(new), 1, 'Should have created once the customer, even if found in various duplicates')
+        self.assertEqual(len(new), 1, 'Should have created once the customer, even if found in various duplicates')
         self.assertNotIn(new, existing_partners)
         new_wrong = self.env['res.partner'].search([('email', '=', 'wrong')])
-        self.assertFalse(new_wrong)
-        # self.assertEqual(len(new_wrong), 1, 'Should have created once the wrong email')
-        # self.assertNotIn(new, new_wrong)
+        self.assertEqual(len(new_wrong), 1, 'Should have created once the wrong email')
+        self.assertNotIn(new, new_wrong)
         new_multi = self.env['res.partner'].search([('email_normalized', '=', 'multi@test.example.com')])
         self.assertEqual(len(new_multi), 1, 'Should have created a based for multi email, using the first found email')
         self.assertNotIn(new, new_multi)
 
         # assert results: found / create partners and their values (if applies)
         record_customer_values = {
-            # 'company_id': self.user_employee.company_id,  # FIXME: does not respect customer info propagation
+            'company_id': self.user_employee.company_id,
             'email': 'paulette@test.example.com',
-            # 'mobile': '+32455998877',
+            'mobile': '+32455998877',
             'name': 'Paulette Vachette',
-            # 'phone': 'wrong',
+            'phone': 'wrong',
         }
         expected_all = [
-            (new[1], [record_customer_values]),  # FIXME: duplicate, wrong name, ...
-            (new[0], [{'email': 'paulette@test.example.com', 'name': 'Maybe Paulette'}]),  # FIXME: duplicate, wrong name, ...
+            (new, [record_customer_values]),
+            (new, [record_customer_values]),
             (new_multi, [{  # not the actual record customer hence no mobile / phone, see _get_customer_information
-                # 'company_id': self.user_employee.company_id,
+                'company_id': self.user_employee.company_id,
                 'email': 'multi@test.example.com',
                 'mobile': False,
                 'name': 'Multi Customer',
                 'phone': False,
             }]),
-            (new_wrong, [{
-                'company_id': self.env['res.company'],
+            (new_wrong, [{  # invalid email but can be fixed afterwards -> matches a potential customer
+                'company_id': self.user_employee.company_id,
                 'email': 'wrong',
-                'mobile': False,
                 'name': 'wrong',
+                'mobile': '+32455000001',
                 'phone': False,
             }]),
-            (new_wrong, [{
-                'company_id': self.env['res.company'],
+            (new_wrong, [{  # invalid email but can be fixed afterwards -> matches a potential customer
+                'company_id': self.user_employee.company_id,
                 'email': 'wrong',
-                'mobile': False,
                 'name': 'wrong',
+                'mobile': '+32455000001',
                 'phone': False,
             }]),
             (self.env['res.partner'], [{}]),
             (self.test_partner, [{}]),
             (self.env['res.partner'], [{}]),
         ]
-        for partners, (exp_partners, exp_values_list) in zip(res, expected_all):
-            with self.subTest(ticket_name=exp_partners.name):
-                self.assertEqual(partners, exp_partners)
+        for ticket, (exp_partners, exp_values_list) in zip(tickets, expected_all):
+            partners = res[ticket.id]
+            with self.subTest(ticket_name=ticket.name):
+                self.assertEqual(partners, exp_partners, f'Found {partners.name} instead of {exp_partners.name}')
                 for partner, exp_values in zip(partners, exp_values_list):
                     for fname, fvalue in exp_values.items():
                         self.assertEqual(partners[fname], fvalue)
 
     @users('employee')
     def test_mail_partner_find_from_emails_ordering(self):
-        """ Test '_mail_find_partner_from_emails' on a single record, to test notably
+        """ Test '_partner_find_from_emails' on a single record, to test notably
         ordering and filtering. """
         self.user_employee.write({'company_ids': [(4, self.company_2.id)]})
         # create a mess, mix of portal / internal users + customer, to test ordering
@@ -251,16 +244,14 @@ class TestAPI(MailCommon, TestRecipients):
             (self.env['res.partner'], self.env['res.partner'], self.env['res.partner']),
             # one result, easy yay
             (dupe_partners[3], self.env['res.partner'], dupe_partners[3]),
-            # various partners: should be id ASC FIXME
-            # (dupe_partners[1] + dupe_partners[3], self.env['res.partner'], dupe_partners[1]),
-            (dupe_partners[1] + dupe_partners[3], self.env['res.partner'], dupe_partners[3]),  # complete_name asc -> remove me when fixed
+            # various partners: should be id ASC, not name-based
+            (dupe_partners[1] + dupe_partners[3], self.env['res.partner'], dupe_partners[1]),
             # involving matching company check: matching company wins
             (dupe_partners, self.env['res.partner'], dupe_partners[2]),
             # users > partner
             (portal_user.partner_id + dupe_partners, self.env['res.partner'], portal_user.partner_id),
-            # internal user > any other user FIXME not correctly computed
-            # (portal_user.partner_id + internal_user.partner_id + dupe_partners, self.env['res.partner'], internal_user.partner_id),
-            (portal_user.partner_id + internal_user.partner_id + dupe_partners, self.env['res.partner'], portal_user.partner_id),  # internal user > any other user -> remove me when fixed
+            # internal user > any other user
+            (portal_user.partner_id + internal_user.partner_id + dupe_partners, self.env['res.partner'], internal_user.partner_id),
             # follower > any other thing
             (internal_user.partner_id + dupe_partners, dupe_partners[0], dupe_partners[0]),
         ]:
@@ -271,15 +262,13 @@ class TestAPI(MailCommon, TestRecipients):
                 self.ticket_record.message_subscribe(followers.ids)
 
                 ticket = self.ticket_record.with_user(self.env.user)
-                res = ticket._mail_find_partner_from_emails(
-                    [ticket.email_from, 'test.ordering@test.example.com'],
-                    force_create=False,
-                    records=ticket,
-                )
+                partners = ticket._partner_find_from_emails(
+                    {ticket: [ticket.email_from, 'test.ordering@test.example.com']},
+                    no_create=True,
+                )[ticket.id]
 
-                # new - linked to record: not existing, hence not found
-                self.assertFalse(res[0])
-                self.assertEqual(res[1], expected, f'Found {res[1].name} instead of {expected.name}')
+                # should find just one partner, the other one is not linked to any partner
+                self.assertEqual(partners, expected, f'Found {partners.name} instead of {expected.name}')
 
                 all_partners.active = True
                 (portal_user + internal_user).active = True
@@ -290,29 +279,43 @@ class TestAPI(MailCommon, TestRecipients):
         """ On a given record, give several emails and check it is effectively
         based on record information. """
         ticket = self.ticket_record.with_user(self.env.user)
-        res = ticket._mail_find_partner_from_emails(
-            [
+        partners = ticket._partner_find_from_emails(
+            {ticket: [
                 'raoul@test.example.com',
                 ticket.email_from,
                 self.test_partner.email,
-            ],
-            force_create=True,
-        )
+            ]},
+            no_create=False,
+        )[ticket.id]
 
         # new - extra email
-        other = res[0]
-        # self.assertEqual(other.company_id, self.user_employee.company_id)
+        other = partners[0]
+        self.assertEqual(other.company_id, self.user_employee.company_id)
         self.assertEqual(other.email, "raoul@test.example.com")
         self.assertFalse(other.mobile)
         self.assertEqual(other.name, "raoul@test.example.com")
         # new - linked to record
-        customer = res[1]
-        # self.assertEqual(customer.company_id, self.user_employee.company_id)
+        customer = partners[1]
+        self.assertEqual(customer.company_id, self.user_employee.company_id)
         self.assertEqual(customer.email, "paulette@test.example.com")
-        # self.assertEqual(customer.mobile, "+32455998877", "Should come from record, see '_get_customer_information'")
+        self.assertEqual(customer.mobile, "+32455998877", "Should come from record, see '_get_customer_information'")
         self.assertEqual(customer.name, "Paulette Vachette")
         # found
-        self.assertEqual(res[2], self.test_partner)
+        self.assertEqual(partners[2], self.test_partner)
+
+    @users('employee')
+    def test_mail_partner_find_from_emails_tweaks(self):
+        """ Misc tweaks of '_partner_find_from_emails' """
+        ticket = self.ticket_record.with_user(self.env.user)
+        partner = ticket._partner_find_from_emails_single(
+            [ticket.email_from],
+            additional_values={'paulette@test.example.com': {'name': 'Forced Name', 'company_id': False}},
+            no_create=False)
+        self.assertFalse(partner.company_id, 'Forced by additional values')
+        self.assertEqual(partner.email, 'paulette@test.example.com')
+        self.assertEqual(partner.mobile, '+32455998877')
+        self.assertEqual(partner.name, 'Forced Name', 'Forced by additional values')
+        self.assertEqual(partner.phone, 'wrong')
 
     @users('employee')
     def test_message_get_default_recipients(self):
@@ -408,7 +411,11 @@ class TestAPI(MailCommon, TestRecipients):
             'partner_id': self.partner_employee.id,
             'reason': 'Responsible',
         }, {
-            'create_values': {'mobile': '+32455998877', 'phone': 'wrong'},
+            'create_values': {
+                'company_id': self.env.user.company_id.id,
+                'mobile': '+32455998877',
+                'phone': 'wrong',
+            },
             'email': '"Paulette Vachette" <paulette@test.example.com>',
             'lang': None,
             'name': '"Paulette Vachette" <paulette@test.example.com>',
@@ -466,9 +473,7 @@ class TestAPI(MailCommon, TestRecipients):
         self.assertEqual(message.subtype_id, self.env.ref('mail.mt_note'))
 
         # clear the content when having attachments should show edit label
-        ticket_record._message_update_content(
-            message, "",
-        )
+        ticket_record._message_update_content(message, "",)
         self.assertEqual(message.attachment_ids, attachments)
         self.assertEqual(message.body, Markup('<span class="o-mail-Message-edited"></span>'))
         # update the content with new attachments
@@ -504,14 +509,10 @@ class TestAPI(MailCommon, TestRecipients):
             message_type="comment",
             subtype_id=self.env.ref('mail.mt_comment').id,
         )
-        ticket_record._message_update_content(
-            message, "<p>New Body 1</p>"
-        )
+        ticket_record._message_update_content(message, "<p>New Body 1</p>")
 
         message.sudo().write({'subtype_id': self.env.ref('mail.mt_note')})
-        ticket_record._message_update_content(
-            message, "<p>New Body 2</p>"
-        )
+        ticket_record._message_update_content(message, "<p>New Body 2</p>")
 
         # cannot edit notifications
         for message_type in ['notification', 'user_notification', 'email', 'email_outgoing', 'auto_comment']:
@@ -697,26 +698,8 @@ class TestDiscuss(MailCommon, TestRecipients):
                 partner_ids=[self.user_employee.partner_id.id])
         message.with_user(self.user_employee).set_message_done()
         self.assertMailNotifications(message, [{'notif': [{'partner': self.partner_employee, 'type': 'inbox', 'is_read': True}]}])
-        # TDE TODO: it seems bus notifications could be checked
 
-    def test_set_star(self):
-        msg = self.test_record.with_user(self.user_admin).message_post(body='My Body', subject='1')
-        msg_emp = self.env['mail.message'].with_user(self.user_employee).browse(msg.id)
-
-        # Admin set as starred
-        msg.toggle_message_starred()
-        self.assertTrue(msg.starred)
-
-        # Employee set as starred
-        msg_emp.toggle_message_starred()
-        self.assertTrue(msg_emp.starred)
-
-        # Do: Admin unstars msg
-        msg.toggle_message_starred()
-        self.assertFalse(msg.starred)
-        self.assertTrue(msg_emp.starred)
-
-    def test_delete_starred_message(self):
+    def test_message_starred(self):
         msg = self.test_record.message_post(body="Hello!", message_type="comment")
         msg_2 = self.test_record.message_post(body="Goodbye!", message_type="comment")
         msg.with_user(self.user_admin).toggle_message_starred()
@@ -766,7 +749,7 @@ class TestDiscuss(MailCommon, TestRecipients):
             check_unique=False,
         )
 
-    def test_inbox_message_fetch_needaction(self):
+    def test_message_fetch_needaction(self):
         user1 = self.env['res.users'].create({'login': 'user1', 'name': 'User 1'})
         user1.notification_type = 'inbox'
         user2 = self.env['res.users'].create({'login': 'user2', 'name': 'User 2'})
@@ -787,6 +770,28 @@ class TestDiscuss(MailCommon, TestRecipients):
         self.assertEqual(res["messages"][0].id, message2.id)
         res = self.env['mail.message'].with_user(user2)._message_fetch(domain=[['needaction', '=', True]])
         self.assertEqual(len(res["messages"]), 2)
+
+    @users("employee")
+    def test_unlink_notification_message(self):
+        message = self.test_record.with_user(self.user_admin).message_notify(
+            body='test',
+            partner_ids=[self.partner_2.id],
+        )
+        self.assertEqual(len(message), 1, "Test message should have been posted")
+        self.test_record.unlink()
+        self.assertFalse(message.exists(), "Test message should have been deleted")
+
+
+@tagged('mail_thread')
+class TestNotification(MailCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.test_record = cls.env['mail.test.simple'].create({
+            'name': 'Test',
+            'email_from': 'ignasse@example.com'
+        })
 
     def test_notification_has_error_filter(self):
         """Ensure message_has_error filter is only returning threads for which
@@ -815,19 +820,6 @@ class TestDiscuss(MailCommon, TestRecipients):
         # and the failure from employee's message should not be taken into account for admin
         threads_admin = self.test_record.with_user(self.user_admin).search([('message_has_error', '=', True)])
         self.assertEqual(len(threads_admin), 0)
-
-    @users("employee")
-    def test_unlink_notification_message(self):
-        channel = self.env['discuss.channel'].create({'name': 'testChannel'})
-        channel.with_user(self.user_admin).message_notify(
-            body='test',
-            partner_ids=[self.partner_2.id],
-        )
-        channel_message = self.env['mail.message'].sudo().search([('model', '=', 'discuss.channel'), ('res_id', 'in', channel.ids)])
-        self.assertEqual(len(channel_message), 1, "Test message should have been posted")
-        channel.sudo().unlink()
-        remaining_message = channel_message.exists()
-        self.assertEqual(len(remaining_message), 0, "Test message should have been deleted")
 
 
 @tagged('mail_thread', 'mail_nothread')
