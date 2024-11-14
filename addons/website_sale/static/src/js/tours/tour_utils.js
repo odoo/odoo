@@ -24,19 +24,19 @@ export function assertCartAmounts({taxes = false, untaxed = false, total = false
     }
     if (untaxed) {
         steps.push({
-            content: 'Check if the tax is correct',
+            content: 'Check if the subtotal is correct',
             trigger: `tr#order_total_untaxed .oe_currency_value:contains(/^${untaxed}$/)`,
         });
     }
     if (total) {
         steps.push({
-            content: 'Check if the tax is correct',
+            content: 'Check if the total is correct',
             trigger: `tr#order_total .oe_currency_value:contains(/^${total}$/)`,
         });
     }
     if (delivery) {
         steps.push({
-            content: 'Check if the tax is correct',
+            content: 'Check if the delivery is correct',
             trigger: `tr#order_delivery .oe_currency_value:contains(/^${delivery}$/)`,
         });
     }

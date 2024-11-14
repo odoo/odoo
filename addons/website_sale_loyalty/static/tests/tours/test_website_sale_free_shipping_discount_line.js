@@ -1,7 +1,41 @@
 import { registry } from "@web/core/registry";
-import * as wsTourUtils from '@website_sale/js/tours/tour_utils';
+import {
+    addToCart,
+    assertCartAmounts,
+    confirmOrder,
+    goToCart,
+    goToCheckout,
+    pay,
+} from '@website_sale/js/tours/tour_utils';
 
-registry.category("web_tour.tours").add('check_shipping_discount', {
+function assertRewardAmounts(rewards, visibleOnly) {
+    const steps = [];
+    const currencyValue = `.oe_currency_value${visibleOnly ? ':visible' : ':not(:visible)'}`;
+    for (const [reward, amount] of Object.entries(rewards)) {
+        steps.push({
+            content: `check if ${reward} reward is correct`,
+            trigger: `[data-reward-type=${reward}] ${currencyValue}:contains(/^${amount}$/)`,
+        });
+    }
+    return steps;
+}
+
+function selectDelivery(provider) {
+    return {
+        content: `select ${provider} shipping`,
+        trigger: `li[name=o_delivery_method]:contains(${provider}) input`,
+        run: 'click',
+    };
+}
+
+const waitForPaymentPage = {
+    content: "wait for Payment page to load",
+    trigger: '.o_total_card:contains(Order summary)',
+};
+
+const webTours = registry.category('web_tour.tours');
+
+webTours.add('check_shipping_discount', {
     url: '/shop?search=Plumbus',
     checkDelay: 50,
     steps: () => [
@@ -20,69 +54,66 @@ registry.category("web_tour.tours").add('check_shipping_discount', {
             trigger: '#product_detail form[action^="/shop/cart/update"] #add_to_cart',
             run: "click",
         },
-        wsTourUtils.goToCart({ quantity: 3 }),
-        wsTourUtils.goToCheckout(),
-        {
-            content: "select delivery2",
-            trigger: 'li[name=o_delivery_method]:contains(delivery2) input',
-            run: "click",
-        },
-        {
-            content: "open cart overview",
-            trigger: '.o_total_card button.accordion-button',
-            run: "click",
-        },
-        {
-            content: "check if delivery price is correct",
-            trigger: '#order_delivery .oe_currency_value:contains(10.00)',
-        },
-        {
-            content: "check if shipping discount is correct",
-            trigger: '[data-reward-type=shipping] .oe_currency_value:contains(- 6.00)',
-        },
+        goToCart({ quantity: 3 }),
+        goToCheckout(),
+        selectDelivery("delivery2"),
+        ...assertCartAmounts({
+            delivery: "10.00", // delivery2 is $10, ignoring shipping discount
+            total: "304.00", // $100 per Plumbus, plus discounted delivery
+        }),
+        ...assertRewardAmounts({ shipping: "- 6.00" }),
         {
             content: "pay with eWallet",
             trigger: 'form[name=claim_reward] a.btn-primary:contains(Pay with eWallet)',
             run: 'click',
         },
-        {
-            trigger: ".o_total_card:contains(order summary)",
-        },
-        {
-            content: "wait for accordion to collapse, then reopen",
-            trigger: '.o_total_card button.accordion-button.collapsed',
-            run: 'click',
-        },
-        {
-            content: "check eWallet discount",
-            trigger: "[data-reward-type=discount] .oe_currency_value:contains(- 304.00)",
-        },
-        {
-            content: "select delivery1",
-            trigger: 'li[name=o_delivery_method]:contains(delivery1) input',
-            run: 'click',
-        },
-        {
-            content: "check for eWallet update after shipping cost change",
-            trigger: "[data-reward-type=discount] .oe_currency_value:contains(- 300.00)",
-        },
-        {
-            content: "check if new delivery price is correct",
-            trigger: '#order_delivery .oe_currency_value:contains(5.00)',
-        },
-        {
-            content: "check if new shipping discount is correct",
-            trigger: '[data-reward-type=shipping] .oe_currency_value:contains(- 5.00)',
-        },
+        waitForPaymentPage,
+        ...assertRewardAmounts({ discount: "- 304.00" }),
+        selectDelivery("delivery1"),
+        ...assertCartAmounts({ delivery: "5.00" }),
+        ...assertRewardAmounts({ discount: "- 300.00", shipping: "- 5.00" }),
         {
             content: "confirm shipping method",
             trigger: '.o_total_card a[name=website_sale_main_button]',
             run: 'click',
         },
+        pay(),
+    ],
+});
+
+webTours.add('update_shipping_after_discount', {
+    url: '/shop',
+    checkDelay: 50,
+    steps: () => [
+        ...addToCart({ productName: "Plumbus" }),
+        goToCart(),
         {
-            content: "confirm order using eWallet as payment",
-            trigger: '.o_total_card button[name=o_payment_submit_button]',
+            content: "use eWallet to check it doesn't impact `free_over` shipping",
+            trigger: 'a.btn-primary:contains(Pay with eWallet)',
             run: 'click',
         },
+        goToCheckout(),
+        selectDelivery("delivery1"),
+        ...assertCartAmounts({
+            total: "0.00", // $100 total is covered by eWallet
+            delivery: "0.00", // $100 is over $75 `free_over` amount, so free shipping
+        }),
+        confirmOrder(),
+        waitForPaymentPage,
+        {
+            content: "enter discount code",
+            trigger: 'form[name=coupon_code] input[name=promo]',
+            run: 'edit test-50pc',
+        },
+        {
+            content: "apply discount code",
+            trigger: 'form[name=coupon_code] .a-submit',
+            run: 'click',
+        },
+        ...assertCartAmounts({
+            total: "0.00", // $50 total is covered by eWallet
+            delivery: "5.00", // $50 is below $75 `free_over` amount, so no free shipping
+        }),
+        ...assertRewardAmounts({ discount: "- 50.00" }), // eWallet & promo code are both $50
     ],
 });
