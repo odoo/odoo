@@ -181,14 +181,17 @@ function factory(dependencies) {
             }
             this.threadView.topbar.openInvitePopoverView();
         }
-
+        getThreadIdentifyingDataFromActiveId(activeId) {
+            const [model, id] = typeof this.initActiveId === "number"
+                ? ["mail.channel", this.initActiveId]
+                : this.initActiveId.split("_");
+            return { model, id };
+        }
         /**
          * Opens thread from init active id if the thread exists.
          */
         openInitThread() {
-            const [model, id] = typeof this.initActiveId === 'number'
-                ? ['mail.channel', this.initActiveId]
-                : this.initActiveId.split('_');
+            const { model, id } = this.getThreadIdentifyingDataFromActiveId(this.initActiveId);
             const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
                 id: model !== 'mail.box' ? Number(id) : id,
                 model,
@@ -221,8 +224,10 @@ function factory(dependencies) {
                 this.env.bus.trigger('do-action', {
                     action: 'mail.action_discuss',
                     options: {
+                        additional_context: {
+                            active_id: this.threadToActiveId(thread),
+                        },
                         name: this.env._t("Discuss"),
-                        active_id: this.threadToActiveId(this),
                         clear_breadcrumbs: false,
                         on_reverse_breadcrumb: () => this.close(), // this is useless, close is called by destroy anyway
                     },
