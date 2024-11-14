@@ -8,6 +8,7 @@ import email
 import email.policy
 import hashlib
 import hmac
+import itertools
 import json
 import lxml
 import logging
@@ -1838,6 +1839,117 @@ class MailThread(models.AbstractModel):
     # ------------------------------------------------------
     # RECIPIENTS MANAGEMENT TOOLS
     # ------------------------------------------------------
+
+    def _partner_find_from_emails_single(self, emails, avoid_alias=True, filter_found=None, force_create=True):
+        """ Shortcut version of '_partner_find_from_emails', two usages
+          * record._partner_find_from_emails_single([..]) on a singleton recordset
+            to skip dictionaries manipulation;
+          * MailThread._partner_find_from_emails_single([..]) to use as a generic
+            tool method, without any record-based context values propagation;
+        """
+        if self:  # void recordset allowed as tool mixin method
+            self.ensure_one()
+        return self._partner_find_from_emails(
+            {self: emails}, avoid_alias=avoid_alias, filter_found=filter_found, force_create=force_create
+        )[self.id]
+
+    def _partner_find_from_emails(self, records_emails, avoid_alias=True, filter_found=None, force_create=True):
+        """ Find or create partners based on emails. Result is contextualized
+        based on records, calling 'Model._get_customer_information()' to populate
+        new partners data. It relies on 'ResPartner._find_or_create_from_emails()'
+        for name / email parsing and record creation.
+
+        :param dict records_emails: for each record in self, list of emails linked
+            to this record e.g. {<crm.lead, 4>: ['"Customer" <customer@test.example.com>']};
+        :param bool avoid_alias: skip link for any email matching existing aliases
+            notably to avoid creating contacts that could mess with mailgateway;
+        :param filter_found: if given, filters found partners based on emails;
+        :param bool force_create: create partners for unfound mails. Set to False
+            if just the search feature is requested;
+
+        :return: for each record ID, a ResPartner recordset containing found
+            (or created) partners based on given emails. As emails are normalized
+            less partners maybe present compared to input if duplicates are
+            present;
+        :rtype: dict
+        """
+        if self and len(self) != len(records_emails):
+            raise ValueError('Invoke with either self maching records_emails, either on a void recordset.')
+        # when invoked through MailThread, ids may come from records_emails (not recommanded tool usage)
+        res_ids = self.ids or [record.id for record in records_emails]
+        found_results = dict.fromkeys(res_ids, self.env['res.partner'])
+        # email_key is email_normalized, unless email is wrong and cannot be normalized
+        # in which case the raw input is used instead, to distinguish various wrong
+        # inputs
+        emails_all = []
+        emails_key_all = []
+        emails_key_company = {}
+        emails_key_res_ids = {}
+
+        # fetch company information (as sudo, as we should not crash for that)
+        records_company = self.sudo()._mail_get_companies()
+        # fetch model-related additional information
+        emails_normalized_info = self._get_customer_information()
+
+        # classify email / company and email / record IDs
+        for record, mails in records_emails.items():
+            mails = records_emails.get(record, [])
+            record_company = records_company.get(record.id, self.env['res.company'])
+            for mail in mails:
+                mail_normalized = email_normalize(mail, strict=False)
+                email_key = mail_normalized or mail
+                emails_key_res_ids.setdefault(email_key, []).append(record.id)
+                if record_company and email_key:  # False is not interesting anyway
+                    emails_key_company[email_key] = record_company
+                emails_all.append(mail)
+                emails_key_all.append(mail_normalized)
+        if not emails_all:  # early skip, no need to do searches / ...
+            return found_results
+
+        # fetch information used to find existing partners, beware portal/public who
+        # cannot read followers
+        followers = self.sudo().message_partner_ids
+        aliases = self.env['mail.alias'].sudo().search(
+            [('alias_full_name', 'in', emails_key_all)]
+        ) if avoid_alias else self.env['mail.alias'].sudo()
+        emails_ban = aliases.mapped('alias_full_name')
+
+        # inspired notably from odoo/odoo@80a0b45df806ffecfb068b5ef05ae1931d655810
+        def sort_key(p):
+            return (
+                p == self.env.user.partner_id,                      # prioritize user
+                p in followers,                                     # then followers
+                not p.partner_share,                                # prioritize internal users
+                bool(p.user_ids),                                   # prioritize portal users
+                p.company_id in emails_key_company.get(
+                    p.email_normalized, self.env['res.company']
+                ),                                                  # then partner associated w/ records
+                not p.company_id,                                   # then company-agnostic to avoid issues
+            )
+
+        partners = self.env['res.partner']._find_or_create_from_emails(
+            emails_all,
+            additional_values={
+                mail_key: {
+                    'company_id': emails_key_company.get(
+                        mail_key, self.env['res.company']
+                    ).id,
+                    **emails_normalized_info.get(mail_key, {}),
+                } for mail_key in emails_key_all
+            },
+            ban_emails=emails_ban,
+            filter_found=filter_found,
+            force_create=force_create,
+            sort_key=sort_key,
+            sort_reverse=True,  # False < True, simplified writing sort
+        )
+
+        for mail, partner in zip(emails_all, partners):
+            mail_key = email_normalize(mail, strict=False) or mail
+            for res_id in emails_key_res_ids[mail_key]:
+                # use an "OR" to avoid duplicates in returned recordset
+                found_results[res_id] |= partner
+        return found_results
 
     def _message_add_suggested_recipient(self, result, partner=None, email=None, lang=None, reason=''):
         """ Called by _message_get_suggested_recipients, to add a suggested
