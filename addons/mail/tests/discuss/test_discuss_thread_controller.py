@@ -79,6 +79,7 @@ class TestDiscussThreadController(MailControllerThreadCommon):
             {"name": "Public Channel", "group_public_id": None}
         )
         no_emails = []
+        existing_emails = [self.user_employee.email]
         partner_emails = [self.user_employee.email, "test@example.com"]
 
         def test_emails(user, allowed, exp_emails, exp_author=None):
@@ -96,8 +97,8 @@ class TestDiscussThreadController(MailControllerThreadCommon):
                 test_emails(self.user_public, True, no_emails),
                 test_emails(self.guest, True, no_emails),
                 test_emails(self.user_portal, True, no_emails),
-                # restricted because not base.group_partner_manager
-                test_emails(self.user_employee_nopartner, True, no_emails),
+                # restricted because not base.group_partner_manager: find existing only
+                test_emails(self.user_employee_nopartner, True, existing_emails),
                 test_emails(self.user_employee, True, partner_emails),
                 test_emails(self.user_admin, True, partner_emails),
             ),
