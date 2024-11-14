@@ -123,7 +123,7 @@ class Foo extends models.Model {
             amount: 1200,
             currency_id: 2,
             reference: "bar,1",
-            properties: [],
+            properties: {},
         },
         {
             id: 2,
@@ -135,7 +135,7 @@ class Foo extends models.Model {
             m2m: [1, 2, 3],
             amount: 500,
             reference: "res.currency,1",
-            properties: [],
+            properties: {},
         },
         {
             id: 3,
@@ -147,7 +147,7 @@ class Foo extends models.Model {
             m2m: [],
             amount: 300,
             reference: "res.currency,2",
-            properties: [],
+            properties: {},
         },
         {
             id: 4,
@@ -158,7 +158,7 @@ class Foo extends models.Model {
             m2o: 1,
             m2m: [1],
             amount: 0,
-            properties: [],
+            properties: {},
         },
     ];
 }
@@ -14959,7 +14959,7 @@ test(`Properties: char`, async () => {
     Bar._records[0].definitions = [definition];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition, value: "CHAR" }];
+            record.properties = { [definition.name]: "CHAR" };
         }
     }
 
@@ -15006,7 +15006,7 @@ test(`Properties: boolean`, async () => {
     Bar._records[0].definitions = [definition];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition, value: true }];
+            record.properties = { [definition.name]: true };
         }
     }
 
@@ -15049,7 +15049,7 @@ test(`Properties: integer`, async () => {
     Bar._records[0].definitions = [definition];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition, value: 123 }];
+            record.properties = { [definition.name]: 123 };
         }
     }
 
@@ -15096,7 +15096,7 @@ test(`Properties: float`, async () => {
     Bar._records[0].definitions = [definition];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition, value: record.id === 4 ? false : 123.45 }];
+            record.properties = { [definition.name]: record.id === 4 ? false : 123.45 };
         }
     }
 
@@ -15143,7 +15143,7 @@ test(`Properties: date`, async () => {
     Bar._records[0].definitions = [definition];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition, value: "2022-12-12" }];
+            record.properties = { [definition.name]: "2022-12-12" };
         }
     }
 
@@ -15187,7 +15187,7 @@ test(`Properties: datetime`, async () => {
     Bar._records[0].definitions = [definition];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition, value: "2022-12-12 12:12:00" }];
+            record.properties = { [definition.name]: "2022-12-12 12:12:00" };
         }
     }
 
@@ -15239,7 +15239,7 @@ test(`Properties: selection`, async () => {
     Bar._records[0].definitions = [definition];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition, value: "b" }];
+            record.properties = { [definition.name]: "b" };
         }
     }
 
@@ -15287,7 +15287,7 @@ test(`Properties: tags`, async () => {
     Bar._records[0].definitions = [definition];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition, value: ["a", "c"] }];
+            record.properties = { [definition.name]: ["a", "c"] };
         }
     }
 
@@ -15339,7 +15339,7 @@ test(`Properties: many2one`, async () => {
     Bar._records[0].definitions = [definition];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition, value: [1, "USD"] }];
+            record.properties = { [definition.name]: [1, "USD"] };
         }
     }
 
@@ -15384,7 +15384,7 @@ test(`Properties: many2many`, async () => {
     Bar._records[0].definitions = [definition];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition, value: [[1, "USD"]] }];
+            record.properties = { [definition.name]: [[1, "USD"]] };
         }
     }
 
@@ -15422,9 +15422,9 @@ test(`multiple sources of properties definitions`, async () => {
     Bar._records[1].definitions = [definition1];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition0, value: "0" }];
+            record.properties = { [definition0.name]: "0" };
         } else if (record.m2o === 2) {
-            record.properties = [{ ...definition1, value: true }];
+            record.properties = { [definition1.name]: true };
         }
     }
 
@@ -15467,9 +15467,12 @@ test(`toggle properties`, async () => {
     Bar._records[1].definitions = [definition1, definition2];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition0, value: "0" }];
+            record.properties = { [definition0.name]: "0" };
         } else if (record.m2o === 2) {
-            record.properties = [definition1, { ...definition2, value: true }];
+            record.properties = {
+                [definition1.name]: false,
+                [definition2.name]: true,
+            };
         }
     }
 
@@ -15512,7 +15515,7 @@ test(`properties: optional show/hide (no config in local storage)`, async () => 
     Bar._records[0].definitions = [definition];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition, value: "0" }];
+            record.properties = { [definition.name]: "0" };
         }
     }
 
@@ -15541,7 +15544,7 @@ test(`properties: optional show/hide (config from local storage)`, async () => {
     Bar._records[0].definitions = [definition];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition, value: "0" }];
+            record.properties = { [definition.name]: "0" };
         }
     }
 
@@ -15576,7 +15579,7 @@ test(`properties: optional show/hide (at reload, config from local storage)`, as
     Bar._records[0].definitions = [definition];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition, value: "0" }];
+            record.properties = { [definition.name]: "0" };
         }
     }
 
@@ -15622,7 +15625,7 @@ test(`reload properties definitions when domain change`, async () => {
     Bar._records[0].definitions = [definition0];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition0, value: "AA" }];
+            record.properties = { [definition0.name]: "AA" };
         }
     }
 
@@ -15669,7 +15672,7 @@ test(`do not reload properties definitions when page change`, async () => {
     Bar._records[0].definitions = [definition0];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition0, value: "0" }];
+            record.properties = { [definition0.name]: "0" };
         }
     }
 
@@ -15705,7 +15708,7 @@ test(`load properties definitions only once when grouped`, async () => {
     Bar._records[0].definitions = [definition0];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition0, value: "0" }];
+            record.properties = { [definition0.name]: "0" };
         }
     }
 
@@ -15742,7 +15745,7 @@ test(`Invisible Properties`, async () => {
     Bar._records[0].definitions = [definition];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition, value: 123 }];
+            record.properties = { [definition.name]: 123 };
         }
     }
 
@@ -16215,7 +16218,7 @@ test(`properties do not disappear after domain change`, async () => {
     Bar._records[0].definitions = [definition0];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition0, value: "AA" }];
+            record.properties = { [definition0.name]: "AA" };
         }
     }
 
