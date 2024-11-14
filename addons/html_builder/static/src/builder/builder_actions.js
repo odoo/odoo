@@ -44,3 +44,20 @@ registry.category("website-builder-actions").add("styleAction", {
         styleMap[styleName]?.apply(editingElement, value);
     },
 });
+
+registry.category("website-builder-actions").add("attributeAction", {
+    isActive: ({ editingElement, param: attributeName }) => {
+        return editingElement.hasAttribute(attributeName);
+    },
+    apply: ({ editingElement, param: attributeName, value }) => {
+        if (value) {
+            editingElement.setAttribute(attributeName, value);
+        } else {
+            editingElement.removeAttribute(attributeName);
+        }
+    },
+    clean: ({ editingElement, param: attributeName }) => {
+        console.warn("attributeAction clean");
+        editingElement.removeAttribute(attributeName);
+    },
+});

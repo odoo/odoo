@@ -9,7 +9,7 @@
     </t>
     <t t-else="">
         <t t-foreach="props.selectedToolboxes" t-as="selectedToolbox" t-key="selectedToolbox.toolbox.selector">
-            <WithSubEnv env="{editingElement: selectedToolbox.element}">
+            <WithSubEnv env="{editingElement: selectedToolbox.element, weContext: {}}">
                 <t t-component="selectedToolbox.toolbox.ToolboxComponent" />
             </WithSubEnv>
         </t>
