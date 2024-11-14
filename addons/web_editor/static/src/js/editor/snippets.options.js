@@ -1,6 +1,6 @@
 import { attachComponent } from "@web_editor/js/core/owl_utils";
 import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ConfirmationDialog, AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { throttleForAnimation, debounce } from "@web/core/utils/timing";
 import { clamp } from "@web/core/utils/numbers";
 import { scrollTo } from "@web_editor/js/common/scrolling";
@@ -4527,7 +4527,30 @@ const SnippetOptionWidget = publicWidget.Widget.extend({
             }
 
             // Call widget option methods and update $target
-            await this._select(previewMode, widget);
+            try {
+                await this._select(previewMode, widget);
+            }
+            catch (error) {
+                const snippetElement = this.$target.closest('[data-snippet]');
+                const snippetName = snippetElement.length ? snippetElement[0].dataset.snippet : null;
+                this.trigger_up("get_snippet_versions", {
+                    snippetName: snippetName,
+                    onSuccess: snippetVersions => {
+                        const isUpToDate = snippetVersions && ["vjs", "vcss", "vxml"].every(key => snippetElement[0].dataset[key] === snippetVersions[key]);
+                        if (!isUpToDate) {
+                            if (!controlledSnippets.has(snippetName)) {
+                                controlledSnippets.add(snippetName);
+                                this.dialog.add(AlertDialog, {
+                                    body: "This snippet is outdated, some options might have changed and cause issues. You can replace it by a newer version"
+                                });
+                            }
+                        }
+                        else {
+                            throw error
+                        }
+                    },
+                });
+            }
 
             // If it is not preview mode, the user selected the option for good
             // (so record the action)
@@ -9327,92 +9350,6 @@ registry.many2one = SnippetOptionWidget.extend({
                     node.textContent = defaultText;
                 }
             }));
-    },
-});
-/**
- * Allows to display a warning message on outdated snippets.
- */
-registry.VersionControl = SnippetOptionWidget.extend({
-
-    //--------------------------------------------------------------------------
-    // Options
-    //--------------------------------------------------------------------------
-
-    /**
-     * Replaces an outdated snippet by its new version.
-     */
-    async replaceSnippet() {
-        // Getting the new block version.
-        let newBlockEl;
-        this.trigger_up("find_snippet_template", {
-            snippet: this.$target[0],
-            callback: (snippet) => {
-                newBlockEl = snippet.baseBody.cloneNode(true);
-            },
-        });
-        // Removing the eventual dialog previews.
-        newBlockEl.querySelectorAll(".s_dialog_preview").forEach(previewEl => previewEl.remove());
-        // Replacing the block.
-        this.options.wysiwyg.odooEditor.historyPauseSteps();
-        this.$target[0].classList.add("d-none"); // Hiding the block to replace it smoothly.
-        this.$target[0].insertAdjacentElement("beforebegin", newBlockEl);
-        // Initializing the new block as if it was dropped: the mutex needs to
-        // be free for that so we wait for it first.
-        this.options.wysiwyg.waitForEmptyMutexAction().then(async () => {
-            await new Promise((resolve) => {
-                this.options.wysiwyg.snippetsMenuBus.trigger("CALL_POST_SNIPPET_DROP", {
-                    $snippet: $(newBlockEl),
-                    onSuccess: resolve,
-                });
-            });
-            await new Promise(resolve => {
-                this.trigger_up("remove_snippet",
-                    {$snippet: this.$target, onSuccess: resolve, shouldRecordUndo: false}
-                );
-            });
-            this.options.wysiwyg.odooEditor.historyUnpauseSteps();
-            newBlockEl.classList.remove("oe_snippet_body");
-            this.options.wysiwyg.odooEditor.historyStep();
-        });
-    },
-    /**
-     * Allows to still access the options of an outdated block, despite the
-     * warning.
-     */
-    discardAlert() {
-        const alertEl = this.$el[0].querySelector("we-alert");
-        const optionsSectionEl = this.$overlay.data("$optionsSection")[0];
-        alertEl.remove();
-        optionsSectionEl.classList.remove("o_we_outdated_block_options");
-        // Preventing the alert to reappear at each render.
-        controlledSnippets.add(this.$target[0].dataset.snippet);
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _renderCustomXML(uiFragment) {
-        const snippetName = this.$target[0].dataset.snippet;
-        // Do not display the alert if it was previously discarded.
-        if (controlledSnippets.has(snippetName)) {
-            return;
-        }
-        this.trigger_up("get_snippet_versions", {
-            snippetName: snippetName,
-            onSuccess: snippetVersions => {
-                const isUpToDate = snippetVersions && ["vjs", "vcss", "vxml"].every(key => this.$target[0].dataset[key] === snippetVersions[key]);
-                if (!isUpToDate) {
-                    uiFragment.prepend(renderToElement("web_editor.outdated_block_message"));
-                    // Hide the other options, to only have the alert displayed.
-                    const optionsSectionEl = this.$overlay.data("$optionsSection")[0];
-                    optionsSectionEl.classList.add("o_we_outdated_block_options");
-                }
-            },
-        });
     },
 });
 

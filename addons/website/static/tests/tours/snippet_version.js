@@ -34,38 +34,3 @@ registerWebsitePreviewTour("snippet_version_1", {
 },
     ...clickOnSave(),
 ]);
-registerWebsitePreviewTour("snippet_version_2", {
-    edition: true,
-    url: "/",
-}, () => [
-{
-    content: "Edit s_test_snip",
-    trigger: ':iframe #wrap.o_editable .s_test_snip',
-    run: "click",
-},
-{
-    trigger:
-        "we-customizeblock-options:contains(Test snip) .snippet-option-VersionControl > we-alert",
-},
-{
-    content: "Edit text_image",
-    trigger: ':iframe #wrap.o_editable .s_text_image',
-    run: "click",
-},
-{
-    trigger:
-        "we-customizeblock-options:contains(Text - Image) .snippet-option-VersionControl  > we-alert",
-},
-{
-    content: "Edit s_share",
-    trigger: ':iframe #wrap.o_editable .s_share',
-    run: "click",
-},
-{
-    trigger:
-        "we-customizeblock-options:contains(Share) .snippet-option-VersionControl > we-alert",
-},
-{
-    content: "s_share is outdated",
-    trigger: ':iframe body',
-}]);
