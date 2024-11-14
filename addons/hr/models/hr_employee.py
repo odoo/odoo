@@ -222,7 +222,8 @@ class HrEmployeePrivate(models.Model):
         # cache, and interpreted as an access error
         self._check_private_fields(field_names)
         self.flush_model(field_names)
-        public = self.env['hr.employee.public'].search_fetch(domain, field_names, offset, limit, order)
+        employees_data = self.env['hr.employee.public'].search_read(domain, field_names, offset, limit, order)
+        public = self.env['hr.employee.public'].browse(emp['id'] for emp in employees_data)
         employees = self.browse(public._ids)
         employees._copy_cache_from(public, field_names)
         return employees
