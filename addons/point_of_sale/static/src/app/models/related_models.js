@@ -903,6 +903,13 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 const oldRecord = indexedRecords[model][modelKey][record[modelKey]];
                 if (oldRecord) {
                     oldStates[model][oldRecord[modelKey]] = oldRecord.serializeState();
+                    for (const [f, p] of Object.entries(modelClasses[model]?.extraFields || {})) {
+                        if (X2MANY_TYPES.has(p.type)) {
+                            record[f] = oldRecord[f]?.map((r) => r.id) || [];
+                            continue;
+                        }
+                        record[f] = oldRecord[f]?.id || false;
+                    }
                 }
 
                 const result = create(model, record, true, false, true);
