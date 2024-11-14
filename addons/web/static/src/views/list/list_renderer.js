@@ -969,6 +969,10 @@ export class ListRenderer extends Component {
         return this.props.evalViewModifier(columnInvisible);
     }
 
+    evalCreateInvisible(createInvisible) {
+        return this.props.evalViewModifier(createInvisible);
+    }
+
     getGroupDisplayName(group) {
         if (group.groupByField.type === "boolean") {
             return group.value === undefined ? _t("None") : group.value ? _t("Yes") : _t("No");

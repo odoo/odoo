@@ -112,7 +112,7 @@
                 >
                     <t t-foreach="creates" t-as="create" t-key="create_index">
                         <a
-                            t-if="create.type === 'create'"
+                            t-if="create.type === 'create' and !evalCreateInvisible(create.invisible)"
                             href="#"
                             role="button"
                             t-att-class="create_index !== 0 ? 'ml16' : ''"
@@ -122,7 +122,7 @@
                             <t t-esc="create.string"/>
                         </a>
                         <ViewButton
-                            t-if="create.type === 'button'"
+                            t-if="create.type === 'button' and !evalCreateInvisible(create.invisible)"
                             className="`${create.className} ${create_index !== 0 ? 'ml16' : ''}`"
                             clickParams="create.clickParams"
                             icon="create.icon"
