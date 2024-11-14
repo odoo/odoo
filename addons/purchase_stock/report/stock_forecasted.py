@@ -16,7 +16,7 @@ class ReplenishmentReport(models.AbstractModel):
         res = super()._compute_draft_quantity_count(product_template_ids, product_variant_ids, wh_location_ids)
         domain = [('state', 'in', ['draft', 'sent', 'to approve'])]
         domain += self._product_purchase_domain(product_template_ids, product_variant_ids)
-        warehouse_id = self.env.context.get('warehouse', False)
+        warehouse_id = self.env['stock.warehouse']._get_warehouse_id_from_context()
         if warehouse_id:
             domain += [('order_id.picking_type_id.warehouse_id', '=', warehouse_id)]
         po_lines = self.env['purchase.order.line'].search(domain)

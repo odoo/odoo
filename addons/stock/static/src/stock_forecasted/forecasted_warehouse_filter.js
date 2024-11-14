@@ -22,10 +22,14 @@ export class ForecastedWarehouseFilter extends Component {
     }
 
     get activeWarehouse(){
-        if (this.context.warehouse)
-            return this.warehouses.find(w => w.id == this.context.warehouse);
-        else
-            return this.warehouses[0];
+        let warehouseId = null;
+        if (Array.isArray(this.context.warehouse)) {
+            const validWarehouseIds = this.context.warehouse.filter(Number.isInteger);
+            warehouseId = validWarehouseIds.length ? validWarehouseIds[0] : null;
+        } else if (Number.isInteger(this.context.warehouse)) {
+            warehouseId = this.context.warehouse;
+        }
+        return warehouseId ? this.warehouses.find((w) => w.id == warehouseId) : this.warehouses[0];
     }
 }
 
