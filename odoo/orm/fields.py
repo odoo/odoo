@@ -979,15 +979,6 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
         """
         return False if value is None else value
 
-    def convert_to_record_multi(self, values, records):
-        """ Convert a list of values from the cache format to the record format.
-        Some field classes may override this method to add optimizations for
-        batch processing.
-        """
-        # spare the method lookup overhead
-        convert = self.convert_to_record
-        return [convert(value, record) for value, record in zip(values, records)]
-
     def convert_to_read(self, value, record, use_display_name=True):
         """ Convert ``value`` from the record format to the format returned by
         method :meth:`BaseModel.read`.
@@ -1216,7 +1207,7 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
         #
         if self.store and record.id:
             # real record: fetch from database
-            recs = record._in_cache_without(self)
+            recs = self._in_cache_without(record, PREFETCH_MAX)
             try:
                 recs._fetch_field(self)
             except AccessError:
@@ -1241,7 +1232,7 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
                 value = self.convert_to_cache(False, record, validate=False)
                 env.cache.set(record, self, value)
             else:
-                recs = record if self.recursive else record._in_cache_without(self)
+                recs = record if self.recursive else self._in_cache_without(record, PREFETCH_MAX)
                 try:
                     self.compute_value(recs)
                 except (AccessError, MissingError):
@@ -1293,34 +1284,18 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
 
         return self.convert_to_record(value, record)
 
-    def mapped(self, records):
-        """ Return the values of ``self`` for ``records``, either as a list
-        (scalar fields), or as a recordset (relational fields).
-
-        This method is meant to be used internally and has very little benefit
-        over a simple call to `~odoo.models.BaseModel.mapped()` on a recordset.
-        """
-        if self.name == 'id':
-            # not stored in cache
-            return list(records._ids)
-
-        if self.compute and self.store:
-            # process pending computations
-            self.recompute(records)
-
-        # retrieve values in cache, and fetch missing ones
-        vals = records.env.cache.get_until_miss(records, self)
-        while len(vals) < len(records):
-            # It is important to construct a 'remaining' recordset with the
-            # _prefetch_ids of the original recordset, in order to prefetch as
-            # many records as possible. If not done this way, scenarios such as
-            # [rec.line_ids.mapped('name') for rec in recs] would generate one
-            # query per record in `recs`!
-            remaining = records.__class__(records.env, records._ids[len(vals):], records._prefetch_ids)
-            self.__get__(next(iter(remaining)))
-            vals += records.env.cache.get_until_miss(remaining, self)
-
-        return self.convert_to_record_multi(vals, records)
+    def _in_cache_without(self, record, limit=None):
+        """ Return records to prefetch that have no value in cache. """
+        ids = expand_ids(record.id, record._prefetch_ids)
+        ids = record.env.cache.get_missing_ids(record.browse(ids), self)
+        if limit:
+            ids = itertools.islice(ids, limit)
+        # Those records are aimed at being either fetched, or computed.  But the
+        # method '_fetch_field' is not correct with new records: it considers
+        # them as forbidden records, and clears their cache!  On the other hand,
+        # compute methods are not invoked with a mix of real and new records for
+        # the sake of code simplicity.
+        return record.browse(ids)
 
     def __set__(self, records, value):
         """ set the value of field ``self`` on ``records`` """
