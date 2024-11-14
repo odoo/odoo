@@ -14,7 +14,7 @@ class ResPartner(models.Model):
         """
         return {
             'name', 'phone', 'email', 'street', 'street2', 'city', 'state_id', 'country_id', 'zip',
-            'zipcode', 'vat', 'company_name',
+            'zipcode', 'vat', 'company_name', 'image_1920'
         }
 
     def _can_edit_name(self):
