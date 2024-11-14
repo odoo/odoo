@@ -1077,7 +1077,12 @@ class MailingMailing(models.Model):
         return self._action_send_mail(res_ids)
 
     def _action_send_mail(self, res_ids=None):
-        author_id = self.env.user.partner_id.id
+        partner_id = self.env.user.partner_id
+        if partner_id == self.env.ref('base.partner_root'):
+            # If current user is odoobot, take mailing responsible as author
+            author_id = self.user_id.partner_id.id
+        else:
+            author_id = partner_id.id
 
         for mailing in self:
             context_user = mailing.user_id or mailing.write_uid or self.env.user
