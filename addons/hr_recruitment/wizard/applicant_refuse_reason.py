@@ -72,8 +72,10 @@ class ApplicantGetRefuseReason(models.TransientModel):
 
         refused_applications = self.applicant_ids
         if self.duplicates_count and self.duplicates:
-            duplicate_domain = self.applicant_ids._get_similar_applicants_domain()
-            duplicate_domain = expression.AND([duplicate_domain, [('application_status', '!=', 'refused')]])
+            duplicate_domain = expression.AND([
+                [('candidate_id', 'any', self.applicant_ids.candidate_id._get_similar_candidates_domain())],
+                [('application_status', '!=', 'refused')]
+            ])
             duplicates_ids = self.env['hr.applicant'].search(duplicate_domain)
             refused_applications |= duplicates_ids
             refuse_bodies = {}
