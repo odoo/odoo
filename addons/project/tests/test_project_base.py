@@ -13,6 +13,7 @@ class TestProjectCommon(TransactionCase):
         super(TestProjectCommon, cls).setUpClass()
         cls.env.company.resource_calendar_id.tz = "Europe/Brussels"
 
+        user_group_partner_manager = cls.env.ref('base.group_partner_manager')
         user_group_employee = cls.env.ref('base.group_user')
         user_group_project_user = cls.env.ref('project.group_project_user')
         user_group_project_manager = cls.env.ref('project.group_project_manager')
@@ -48,13 +49,13 @@ class TestProjectCommon(TransactionCase):
             'login': 'armandel',
             'password': 'armandel',
             'email': 'armande.projectuser@example.com',
-            'groups_id': [(6, 0, [user_group_employee.id, user_group_project_user.id])]
+            'groups_id': [(6, 0, [user_group_employee.id, user_group_project_user.id, user_group_partner_manager.id])]
         })
         cls.user_projectmanager = Users.create({
             'name': 'Bastien ProjectManager',
             'login': 'bastien',
             'email': 'bastien.projectmanager@example.com',
-            'groups_id': [(6, 0, [user_group_employee.id, user_group_project_manager.id])]})
+            'groups_id': [(6, 0, [user_group_employee.id, user_group_project_manager.id, user_group_partner_manager.id])]})
 
         # Test 'Pigs' project
         cls.project_pigs = cls.env['project.project'].with_context({'mail_create_nolog': True}).create({

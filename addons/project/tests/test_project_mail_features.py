@@ -290,10 +290,7 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
                 for suggested, expected in zip(suggested_all, expected_all):
                     self.assertDictEqual(suggested, expected)
                 # check recipients, which creates them (simulating discuss in a quick way)
-                self.env["res.partner"]._find_or_create_from_emails(
-                    [sug['email'] for sug in suggested_all],
-                    additional_values={email_normalize(sug['email']): sug.get('create_values') or {} for sug in suggested_all},
-                )
+                task.with_user(self.user_projectuser)._partner_find_from_emails_single([sug['email'] for sug in suggested_all])
                 new_partner_cc = self.env['res.partner'].search([('email_normalized', '=', 'new.cc@test.agrolait.com')])
                 self.assertEqual(new_partner_cc.email, 'new.cc@test.agrolait.com')
                 self.assertEqual(new_partner_cc.name, 'New Cc')
