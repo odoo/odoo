@@ -8,7 +8,7 @@ import { Plugin } from "../../plugin";
 
 export class SearchPowerboxPlugin extends Plugin {
     static id = "searchPowerbox";
-    static dependencies = ["powerbox", "selection", "history"];
+    static dependencies = ["powerbox", "selection", "history", "input"];
     resources = {
         beforeinput_handlers: this.onBeforeInput.bind(this),
         input_handlers: this.onInput.bind(this),

@@ -12,7 +12,7 @@ import { DIRECTIONS, leftPos, rightPos } from "../utils/position";
  */
 
 export class LineBreakPlugin extends Plugin {
-    static dependencies = ["selection", "history", "delete"];
+    static dependencies = ["selection", "history", "input", "delete"];
     static id = "lineBreak";
     static shared = ["insertLineBreak", "insertLineBreakNode", "insertLineBreakElement"];
     resources = {
