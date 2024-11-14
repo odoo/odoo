@@ -99,7 +99,7 @@ const handledElemSelector = [...headingTags, "PRE", "BLOCKQUOTE"].join(", ");
 
 export class FontPlugin extends Plugin {
     static id = "font";
-    static dependencies = ["split", "selection", "dom", "format"];
+    static dependencies = ["input", "split", "selection", "dom", "format"];
     resources = {
         user_commands: [
             {
