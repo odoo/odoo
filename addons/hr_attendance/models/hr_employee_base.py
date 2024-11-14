@@ -13,6 +13,8 @@ class HrEmployeeBase(models.AbstractModel):
         Attendance has the second highest priority after login
         """
         super()._compute_presence_state()
+        if not self.env.user.has_group('hr_attendance.group_hr_attendance_officer'):
+            return
         employees = self.filtered(lambda e: e.hr_presence_state != "present")
         employee_to_check_working = self.filtered(lambda e: e.attendance_state == "checked_out"
                                                             and e.hr_presence_state == "out_of_working_hour")

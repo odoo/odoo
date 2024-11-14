@@ -31,7 +31,10 @@ class HrEmployeeBase(models.AbstractModel):
 
     @api.model
     def _get_new_hire_field(self):
-        return 'first_contract_date'
+        if self.env.user.has_group('hr.group_hr_user'):
+            return 'first_contract_date'
+        else:
+            return super()._get_new_hire_field()
 
 
 class HrEmployee(models.Model):
