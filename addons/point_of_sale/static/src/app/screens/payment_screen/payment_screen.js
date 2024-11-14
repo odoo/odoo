@@ -362,8 +362,9 @@ export class PaymentScreen extends Component {
         }
 
         // 3. Post process.
-        if (syncOrderResult && syncOrderResult.length > 0 && this.currentOrder.waitForPushOrder()) {
-            await this.postPushOrderResolve(syncOrderResult.map((res) => res.id));
+        const postPushOrders = syncOrderResult.filter((order) => order.waitForPushOrder());
+        if (postPushOrders.length > 0) {
+            await this.postPushOrderResolve(postPushOrders.map((order) => order.id));
         }
 
         await this.afterOrderValidation(!!syncOrderResult && syncOrderResult.length > 0);
