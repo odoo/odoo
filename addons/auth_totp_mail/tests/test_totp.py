@@ -3,15 +3,14 @@
 
 import logging
 
-from odoo.tests import tagged
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.tests import tagged, HttpCase
 from odoo.addons.auth_totp.tests.test_totp import TestTOTPMixin
 
 _logger = logging.getLogger(__name__)
 
 
 @tagged('post_install', '-at_install')
-class TestTOTPInvite(HttpCaseWithUserDemo, TestTOTPMixin):
+class TestTOTPInvite(TestTOTPMixin, HttpCase):
 
     def test_totp_administration(self):
         # If not enabled (like in demo data), landing on res.config will try
