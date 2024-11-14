@@ -6,7 +6,7 @@ import { MailTestProperties } from "@test_mail/../tests/mock_server/models/mail_
 import { MailTestSimpleMainAttachment } from "./mock_server/models/mail_test_simple_main_attachment";
 import { MailTestSimple } from "@test_mail/../tests/mock_server/models/mail_test_simple";
 import { MailTestTrackAll } from "@test_mail/../tests/mock_server/models/mail_test_track_all";
-import { defineModels, defineParams } from "@web/../tests/web_test_helpers";
+import { defineModels, defineParams, mockEmojiLoading } from "@web/../tests/web_test_helpers";
 
 export const testMailModels = {
     ...mailModels,
@@ -20,6 +20,7 @@ export const testMailModels = {
 };
 
 export function defineTestMailModels() {
+    mockEmojiLoading();
     defineParams({ suite: "test_mail" }, "replace");
     defineModels(testMailModels);
 }
