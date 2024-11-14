@@ -23,6 +23,7 @@ export class OdooBarChart extends OdooChart {
         this.verticalAxisPosition = definition.verticalAxisPosition;
         this.stacked = definition.stacked;
         this.axesDesign = definition.axesDesign;
+        this.horizontal = definition.horizontal;
     }
 
     getDefinition() {
@@ -32,6 +33,7 @@ export class OdooBarChart extends OdooChart {
             stacked: this.stacked,
             axesDesign: this.axesDesign,
             trend: this.trend,
+            horizontal: this.horizontal,
         };
     }
 }
