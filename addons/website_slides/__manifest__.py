@@ -184,7 +184,6 @@ Featuring
             'website/static/src/libs/zoomodoo/zoomodoo.js',
             'web/static/src/core/**/*.js',
             'web/static/src/env.js',
-            ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
 
             'website_slides/static/src/scss/website_slides.scss',
             'website_slides/static/lib/pdfslidesviewer/PDFSlidesViewer.js',

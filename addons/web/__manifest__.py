@@ -39,9 +39,6 @@ This module provides the core of the Odoo Web Client.
         # Examples:
         #   > web_editor.assets_snippets_menu = assets needed by components defined in the "web_editor" module.
 
-        'web.assets_emoji': [
-            'web/static/src/core/emoji_picker/emoji_data.js'
-        ],
         'web.assets_backend': [
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_backend_helpers'),
@@ -225,7 +222,6 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/src/core/commands/**/*'),
             ('remove', 'web/static/src/core/debug/debug_menu.js'),
             ('remove', 'web/static/src/core/file_viewer/file_viewer.dark.scss'),
-            ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
             'web/static/src/core/commands/default_providers.js',
             'web/static/src/core/commands/command_palette.js',
             'web/static/src/public/error_notifications.js',
@@ -365,7 +361,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/session.js',
             'web/static/src/core/utils/transitions.scss',
             'web/static/src/core/**/*',
-            ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'), # always lazy-loaded
         ],
         'web._assets_primary_variables': [
             'web/static/src/scss/primary_variables.scss',

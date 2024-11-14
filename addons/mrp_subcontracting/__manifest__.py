@@ -100,7 +100,6 @@
 
             'web/static/src/core/utils/transitions.scss',
             'web/static/src/core/**/*',
-            ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
             'web/static/src/search/**/*',
             'web/static/src/views/*.js',
             'web/static/src/views/*.xml',

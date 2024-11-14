@@ -170,7 +170,7 @@ test("Posting message should transform relevant data to emoji.", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "test :P :laughing:");
+    await insertText(".o-mail-Composer-input", "test :P XD");
     await press("Enter");
     await contains(".o-mail-Message-body", { text: "test 😛 😆" });
 });

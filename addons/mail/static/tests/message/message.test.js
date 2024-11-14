@@ -664,11 +664,11 @@ test("Reaction summary", async () => {
     await contains(".o-mail-Message", { text: "Hello world" });
     const partnerNames = ["Foo", "Bar", "FooBar", "Bob", "Baz"];
     const expectedSummaries = [
-        "😅:sweat_smile: reacted by Foo",
-        "😅:sweat_smile: reacted by Foo and Bar",
-        "😅:sweat_smile: reacted by Foo, Bar, and FooBar",
-        "😅:sweat_smile: reacted by Foo, Bar, FooBar, and 1 other",
-        "😅:sweat_smile: reacted by Foo, Bar, FooBar, and 2 others",
+        "😅:grinning_face_with_sweat: reacted by Foo",
+        "😅:grinning_face_with_sweat: reacted by Foo and Bar",
+        "😅:grinning_face_with_sweat: reacted by Foo, Bar, and FooBar",
+        "😅:grinning_face_with_sweat: reacted by Foo, Bar, FooBar, and 1 other",
+        "😅:grinning_face_with_sweat: reacted by Foo, Bar, FooBar, and 2 others",
     ];
     for (const [idx, name] of partnerNames.entries()) {
         const partner_id = pyEnv["res.partner"].create({ name });

@@ -7,9 +7,10 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { ResPartner } from "@mail/../tests/mock_server/mock_models/res_partner";
 import { describe, test } from "@odoo/hoot";
-import { defineModels, fields, models } from "@web/../tests/web_test_helpers";
+import { defineModels, fields, models, mockEmojiLoading } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
+mockEmojiLoading();
 
 test("status bar duration field used in form view", async () => {
     class Stage extends models.Model {

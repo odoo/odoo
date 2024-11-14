@@ -6,6 +6,9 @@ import { getContent, setSelection } from "./_helpers/selection";
 import { insertText } from "./_helpers/user_actions";
 import { loader } from "@web/core/emoji_picker/emoji_picker";
 import { execCommand } from "./_helpers/userCommands";
+import { mockEmojiLoading } from "@web/../tests/web_test_helpers";
+
+mockEmojiLoading();
 
 test("should insert a banner with focus inside followed by a paragraph", async () => {
     const { el, editor } = await setupEditor("<p>Test[]</p>");
