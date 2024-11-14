@@ -109,7 +109,6 @@ patch(MockServer.prototype, {
                 "subtype_xmlid",
                 "parent_id",
                 "partner_emails",
-                "partner_additional_values",
             ]) {
                 if (args.post_data[allowedField] !== undefined) {
                     finalData[allowedField] = args.post_data[allowedField];
@@ -149,7 +148,7 @@ patch(MockServer.prototype, {
             return { "mail.message": this._mockMailMessageMessageFormat([args.message_id]) };
         }
         if (route === "/mail/partner/from_email") {
-            return this._mockRouteMailPartnerFromEmail(args.emails, args.additional_values);
+            return this._mockRouteMailPartnerFromEmail(args.thread_model, args.thread_id, args.emails);
         }
         if (route === "/mail/read_subscription_data") {
             const follower_id = args.follower_id;
@@ -398,7 +397,7 @@ patch(MockServer.prototype, {
      * @param {string[]} emails
      * @returns {Object[]} list of partner data
      */
-    _mockRouteMailPartnerFromEmail(emails, additional_values = {}) {
+    _mockRouteMailPartnerFromEmail(thread_model, thread_id, emails) {
         const partners = emails.map(
             (email) => this.pyEnv["res.partner"].search([["email", "=", email]])[0]
         );
@@ -408,7 +407,6 @@ patch(MockServer.prototype, {
                 partners[index] = this.pyEnv["res.partner"].create({
                     email,
                     name: email,
-                    ...(additional_values[email] || {}),
                 });
             }
         }
