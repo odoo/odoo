@@ -493,14 +493,13 @@ export class Composer extends Component {
             );
             if (newPartners.length !== 0) {
                 const recipientEmails = [];
-                const recipientAdditionalValues = {};
                 newPartners.forEach((recipient) => {
                     recipientEmails.push(recipient.email);
-                    recipientAdditionalValues[recipient.email] = recipient.create_values || {};
                 });
                 const partners = await rpc("/mail/partner/from_email", {
+                    thread_model: this.thread.model,
+                    thread_id: this.thread.id,
                     emails: recipientEmails,
-                    additional_values: recipientAdditionalValues,
                 });
                 for (const index in partners) {
                     const partnerData = partners[index];
