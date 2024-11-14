@@ -528,12 +528,39 @@
         </div>
     </template>
 
+    <template id="portal_profile_picture_card" name="Portal Profile Picture">
+        <div class="o_portal_picture_card">
+            <div class="d-flex justify-content-center">
+                <input type="file" class="d-none o_file_upload" t-att-name="image_field_name" accept="image/*"/>
+                <img class="o_wportal_avatar_img w-75 mb-3" t-att-src="image_src" />
+            </div>
+            <div class="text-center">
+                <a class="o_portal_profile_pic_edit btn btn-primary" aria-label="Edit">
+                    <i class="fa fa-pencil fa-1g float-sm-none float-md-start" title="Edit"></i>
+                </a>
+                <a class="btn border-primary o_portal_profile_pic_clear" aria-label="Clear">
+                    <i class="fa fa-trash-o float-sm-none float-md-end" title="Clear"></i>
+                </a>
+            </div>
+        </div>
+    </template>
+
     <template id="portal_my_details">
         <t t-call="portal.portal_layout">
             <t t-set="additional_title">Contact Details</t>
-            <form action="/my/account" method="post">
-                <div class="row o_portal_details">
-                    <div class="col-lg-8">
+            <form action="/my/account" method="post" enctype="multipart/form-data">
+                <div class="row o_portal_details d-flex flex-md-row-reverse">
+                    <div class="col-md-3">
+                        <div class="card o_card_people">
+                            <div class="card-body">
+                                <t t-call="portal.portal_profile_picture_card">
+                                    <t t-set="image_field_name" t-value="'image_1920'"/>
+                                    <t t-set="image_src" t-value="website.image_url(partner, 'avatar_128')"/>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-9">
                         <div class="row">
                             <t t-call="portal.portal_my_details_fields"/>
                             <input type="hidden" name="redirect" t-att-value="redirect"/>
