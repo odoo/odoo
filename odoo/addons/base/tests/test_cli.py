@@ -45,6 +45,10 @@ class TestCommand(BaseCase):
             self.assertFalse('\n' in cmd.__doc__ or len(cmd.__doc__) > 120,
                 msg=f"Command {name}'s docstring format is invalid for 'odoo-bin help'")
 
+    def test_unknown_command(self):
+        command_output = self.run_command('bonbon', check=False).stderr.strip()
+        self.assertEqual(command_output, "Unknown command 'bonbon'")
+
     def test_help(self):
         expected = {
             'cloc',
