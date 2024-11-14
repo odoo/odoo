@@ -175,6 +175,9 @@ class MailingMailing(models.Model):
         default=_get_default_mail_server_id,
         help="Use a specific mail server in priority. Otherwise Odoo relies on the first outgoing mail server available (based on their sequencing) as it does for normal mails.")
     contact_list_ids = fields.Many2many('mailing.list', 'mail_mass_mailing_list_rel', string='Mailing Lists')
+    use_exclusion_list = fields.Boolean(
+        'Use Exclusion List', default=True, copy=False,
+        help='Prevent sending messages to blacklisted contacts. Disable only when absolutely necessary.')
     # Mailing Filter
     mailing_filter_id = fields.Many2one(
         'mailing.filter', string='Favorite Filter',
@@ -1106,6 +1109,7 @@ class MailingMailing(models.Model):
                 'reply_to_force_new': mailing.reply_to_mode == 'new',
                 'subject': mailing.subject,
                 'template_id': False,
+                'use_exclusion_list': mailing.use_exclusion_list,
             }
             if mailing.reply_to_mode == 'new':
                 composer_values['reply_to'] = mailing.reply_to

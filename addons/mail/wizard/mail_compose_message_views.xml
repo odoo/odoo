@@ -53,7 +53,7 @@
                                 context="{'force_email': True, 'show_email': True, 'form_view_ref': 'base.view_partner_simple_form', 'forward_mode': True}"/>
                         </div>
                         <field name="subject" placeholder="e.g. Welcome to MyCompany!" required="True"/>
-                        <field name="reply_to" placeholder='Recipient Followers'
+                        <field name="reply_to" placeholder="e.g. info@company.com"
                             invisible="reply_to_mode == 'update'"
                             required="reply_to_mode != 'update'"/>
                     </group>
@@ -77,6 +77,7 @@
                             <!-- mass mailing -->
                             <field name="reply_to_force_new" invisible="1"/>
                             <field name="reply_to_mode" invisible="composition_mode != 'mass_mail'" widget="radio"/>
+                            <field name="use_exclusion_list" invisible="1"/>
                         </page>
                     </notebook>
                     <footer>
