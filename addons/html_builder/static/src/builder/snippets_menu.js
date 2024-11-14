@@ -1,6 +1,6 @@
 import { Editor } from "@html_editor/editor";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
-import { Component, EventBus, onWillDestroy, useState, useSubEnv } from "@odoo/owl";
+import { Component, EventBus, onWillDestroy, onWillStart, useState, useSubEnv } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { registry } from "@web/core/registry";
 import { BuilderOverlayPlugin } from "./plugins/builder_overlay/builder_overlay_plugin";
@@ -86,6 +86,9 @@ export class SnippetsMenu extends Component {
                 snippetsName: this.props.snippetsName,
             })
         );
+        onWillStart(async () => {
+            await this.snippetModel.load();
+        });
 
         useSubEnv({
             editor: this.editor,

@@ -1,4 +1,4 @@
-import { Component, markup, onWillStart } from "@odoo/owl";
+import { Component, markup } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { RPCError } from "@web/core/network/rpc";
@@ -46,9 +46,6 @@ export class BlockTab extends Component {
         this.orm = useService("orm");
         this.company = useService("company");
 
-        onWillStart(async () => {
-            await this.props.snippetModel.load();
-        });
         const copyOnDrag = copyElementOnDrag();
         useDraggable({
             ref: this.env.builderRef,

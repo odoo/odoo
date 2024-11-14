@@ -4,8 +4,6 @@ import { uniqueId } from "@web/core/utils/functions";
 import { Reactive } from "@web/core/utils/reactive";
 import { escape } from "@web/core/utils/strings";
 
-const cacheSnippetTemplate = {};
-
 export class SnippetModel extends Reactive {
     constructor(services, { websiteId, snippetsName }) {
         super();
@@ -50,15 +48,12 @@ export class SnippetModel extends Reactive {
     }
 
     async load() {
-        if (!cacheSnippetTemplate[this.snippetsName]) {
-            cacheSnippetTemplate[this.snippetsName] = this.orm.silent.call(
-                "ir.ui.view",
-                "render_public_asset",
-                [this.snippetsName, {}],
-                { context: { rendering_bundle: true, website_id: this.websiteId } }
-            );
-        }
-        const html = await cacheSnippetTemplate[this.snippetsName];
+        const html = await this.orm.silent.call(
+            "ir.ui.view",
+            "render_public_asset",
+            [this.snippetsName, {}],
+            { context: { rendering_bundle: true, website_id: this.websiteId } }
+        );
         const snippetsDocument = new DOMParser().parseFromString(html, "text/html");
         this.computeSnippetTemplates(snippetsDocument);
     }
