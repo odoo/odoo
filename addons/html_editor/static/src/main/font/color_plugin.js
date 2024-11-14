@@ -210,7 +210,7 @@ export class ColorPlugin extends Plugin {
 
         const hexColor = rgbToHex(color).toLowerCase();
         const selectedNodes = selectionNodes.filter((node) => {
-            if (mode === "backgroundColor") {
+            if (mode === "backgroundColor" && color) {
                 return !closestElement(node, "table.o_selected_table");
             }
             const li = closestElement(node, "li");
