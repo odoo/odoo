@@ -784,6 +784,8 @@ Attempting to double-book your time off won't magically make your vacation 2x be
             for leave in leaves:
                 employees |= leave._get_employees_from_holiday_type()
             leave_data = leave_type.get_allocation_data(employees, date_from)
+            
+            # Check if negative allocations are allowed
             if leave_type.allows_negative:
                 max_excess = leave_type.max_allowed_negative
                 for employee in employees:
@@ -791,14 +793,37 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                         raise ValidationError(_("There is no valid allocation to cover that request."))
                 continue
 
+            # Refined allocation search for relevant allocations only
+            allocation_records = self.env['hr.leave.allocation'].search([
+                ('employee_id', 'in', employees.ids),
+                ('holiday_status_id', '=', leave_type.id),
+                ('state', '=', 'validate'),  # Only consider validated allocations
+                '|',  # Logical OR to handle cases with open-ended allocation dates
+                ('date_to', '=', False),
+                ('date_to', '>=', min(leave.request_date_to for leave in leaves)),
+                '|',
+                ('date_from', '=', False),
+                ('date_from', '<=', max(leave.request_date_from for leave in leaves))
+            ])
+            # Check for any valid allocation covering the leave request period
+            valid_allocation = any(
+                allocation.date_from or datetime.min <= leave.request_date_from <= leave.request_date_to <= allocation.date_to or datetime.max
+                for leave in leaves
+                for allocation in allocation_records
+            )
+            if not valid_allocation:
+                raise ValidationError(_("The leave dates are outside the allocation period."))
+            # Get previous allocation data ignoring current leave ids
             previous_leave_data = leave_type.with_context(
                 ignored_leave_ids=leaves.ids
             ).get_allocation_data(employees, date_from)
             for employee in employees:
                 previous_emp_data = previous_leave_data[employee] and previous_leave_data[employee][0][1]['virtual_excess_data']
                 emp_data = leave_data[employee] and leave_data[employee][0][1]['virtual_excess_data']
+                # Continue if there is no excess data for both current and previous allocations
                 if not previous_emp_data and not emp_data:
                     continue
+                # Raise validation error if allocation data mismatch
                 if previous_emp_data != emp_data and len(emp_data) >= len(previous_emp_data):
                     raise ValidationError(_("There is no valid allocation to cover that request."))
 
