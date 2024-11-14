@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server 18.1alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-17 09:50+0000\n"
-"PO-Revision-Date: 2024-10-17 09:50+0000\n"
+"POT-Creation-Date: 2024-12-16 16:01+0000\n"
+"PO-Revision-Date: 2024-12-16 16:01+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -55,20 +55,9 @@ msgstr ""
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_config_settings_view_form
 msgid ""
-"<span class=\"o_form_label\">\n"
-"                                Fattura Elettronica mode\n"
-"                            </span>\n"
-"                            <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\"/>"
-msgstr ""
-
-#. module: l10n_it_edi
-#: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_config_settings_view_form
-msgid "<span class=\"o_form_label\">Allow Odoo to process invoices</span>"
-msgstr ""
-
-#. module: l10n_it_edi
-#: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_config_settings_view_form
-msgid "A Demo service is in use."
+"<span class=\"text-muted\">\n"
+"                                    By checking this box, I authorize Odoo to send and receive my invoices using the Sistema di Interscambio (SDI).\n"
+"                                </span>"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -91,11 +80,6 @@ msgstr ""
 #: code:addons/l10n_it_edi/models/res_company.py:0
 msgid ""
 "All fields about the Economic and Administrative Index must be completed."
-msgstr ""
-
-#. module: l10n_it_edi
-#: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_config_settings_view_form
-msgid "An Official or Test service has been registered."
 msgstr ""
 
 #. module: l10n_it_edi
@@ -132,11 +116,6 @@ msgstr ""
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_edi_state__being_sent
 msgid "Being Sent To SdI"
-msgstr ""
-
-#. module: l10n_it_edi
-#: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_config_settings_view_form
-msgid "By checking this box, I accept that Odoo may process my invoices."
 msgstr ""
 
 #. module: l10n_it_edi
@@ -280,8 +259,8 @@ msgid "Dati Bollo"
 msgstr ""
 
 #. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_config_settings__l10n_it_edi_demo_mode__demo
-msgid "Demo"
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_config_settings_view_form
+msgid "Default Purchase Journal"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -296,7 +275,14 @@ msgid "Destination Code must have between 6 and 7 characters."
 msgstr ""
 
 #. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_edi_proxy_client_user__display_name
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__display_name
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move_send__display_name
+#: model:ir.model.fields,field_description:l10n_it_edi.field_ir_attachment__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_ddt__display_name
+#: model:ir.model.fields,field_description:l10n_it_edi.field_res_company__display_name
+#: model:ir.model.fields,field_description:l10n_it_edi.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:l10n_it_edi.field_res_partner__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -332,6 +318,11 @@ msgid "Errors occurred while creating the e-invoice file:"
 msgstr ""
 
 #. module: l10n_it_edi
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_config_settings_view_form
+msgid "Fattura Electronica (FatturaPA)"
+msgstr ""
+
+#. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_partner__invoice_edi_format__it_edi_xml
 msgid "FatturaPA"
 msgstr ""
@@ -354,7 +345,14 @@ msgid "Fiscal code of your company"
 msgstr ""
 
 #. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_edi_proxy_client_user__id
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__id
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move_send__id
+#: model:ir.model.fields,field_description:l10n_it_edi.field_ir_attachment__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_ddt__id
+#: model:ir.model.fields,field_description:l10n_it_edi.field_res_company__id
+#: model:ir.model.fields,field_description:l10n_it_edi.field_res_config_settings__id
+#: model:ir.model.fields,field_description:l10n_it_edi.field_res_partner__id
 msgid "ID"
 msgstr ""
 
@@ -375,15 +373,6 @@ msgstr ""
 msgid ""
 "If one of Share Capital or Sole Shareholder is present, then they must be "
 "both filled out."
-msgstr ""
-
-#. module: l10n_it_edi
-#: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_config_settings_view_form
-msgid ""
-"In demo mode Odoo will just simulate the sending of invoices to the government.<br/>\n"
-"                                In test mode (experimental) Odoo will send the invoices to a non-production service.\n"
-"                                Saving this change will direct all companies on this database to this use this configuration.\n"
-"                                Once registered for testing or official, the mode cannot be changed."
 msgstr ""
 
 #. module: l10n_it_edi
@@ -412,8 +401,9 @@ msgid "Invoices must have exactly one VAT tax set per line."
 msgstr ""
 
 #. module: l10n_it_edi
-#: model:ir.model.fields,field_description:l10n_it_edi.field_res_config_settings__is_edi_proxy_active
-msgid "Is Edi Proxy Active"
+#: model:ir.model.fields,field_description:l10n_it_edi.field_res_company__l10n_it_edi_purchase_journal_id
+#: model:ir.model.fields,field_description:l10n_it_edi.field_res_config_settings__l10n_it_edi_purchase_journal_id
+msgid "Italian Default Purchase Journal"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -438,11 +428,6 @@ msgid "L10N It Edi Attachment File"
 msgstr ""
 
 #. module: l10n_it_edi
-#: model:ir.model.fields,field_description:l10n_it_edi.field_res_config_settings__l10n_it_edi_demo_mode
-msgid "L10N It Edi Demo Mode"
-msgstr ""
-
-#. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_edi_header
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__l10n_it_edi_header
 msgid "L10N It Edi Header"
@@ -455,18 +440,19 @@ msgid "L10N It Edi Is Self Invoice"
 msgstr ""
 
 #. module: l10n_it_edi
-#: model:ir.model.fields,field_description:l10n_it_edi.field_res_config_settings__l10n_it_edi_proxy_current_state
-msgid "L10N It Edi Proxy Current State"
-msgstr ""
-
-#. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_company__l10n_it_edi_proxy_user_id
 msgid "L10N It Edi Proxy User"
 msgstr ""
 
 #. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_res_company__l10n_it_edi_register
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_config_settings__l10n_it_edi_register
 msgid "L10N It Edi Register"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_res_config_settings__l10n_it_edi_show_purchase_journal_id
+msgid "L10N It Edi Show Purchase Journal"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -531,11 +517,6 @@ msgstr ""
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_ddt__name
 msgid "Numero DDT"
-msgstr ""
-
-#. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_config_settings__l10n_it_edi_demo_mode__prod
-msgid "Official"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -793,22 +774,15 @@ msgid "Tender Unique Identifier"
 msgstr ""
 
 #. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_config_settings__l10n_it_edi_demo_mode__test
-msgid "Test (experimental)"
+#. odoo-python
+#: code:addons/l10n_it_edi/models/res_company.py:0
+msgid "The Italian default purchase journal requires a default account."
 msgstr ""
 
 #. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid "The Origin Document Date cannot be in the future."
-msgstr ""
-
-#. module: l10n_it_edi
-#. odoo-python
-#: code:addons/l10n_it_edi/models/res_config_settings.py:0
-msgid ""
-"The company has already registered with the service as 'Test' or 'Official',"
-" it cannot change."
 msgstr ""
 
 #. module: l10n_it_edi
