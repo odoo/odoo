@@ -220,6 +220,7 @@ class AccountMoveSend(models.TransientModel):
                 'mimetype': attachment.mimetype,
                 'placeholder': False,
                 'mail_template_id': mail_template.id,
+                'protect_from_deletion': True,
             }
             for attachment in mail_template.attachment_ids
         ]
