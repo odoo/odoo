@@ -29,12 +29,12 @@ class AccountMoveSend(models.TransientModel):
         return values
 
     @api.model
-    def _get_wizard_vals_restrict_to(self, only_options):
+    def _get_wizard_vals_restrict_to(self, only_options, enforce_gov_edi=False):
         # EXTENDS 'account'
-        values = super()._get_wizard_vals_restrict_to(only_options)
+        values = super()._get_wizard_vals_restrict_to(only_options, enforce_gov_edi=enforce_gov_edi)
         return {
-            'l10n_it_edi_checkbox_xml_export': False,
-            'l10n_it_edi_checkbox_send': False,
+            'l10n_it_edi_checkbox_xml_export': enforce_gov_edi,
+            'l10n_it_edi_checkbox_send': enforce_gov_edi,
             **values,
         }
 
