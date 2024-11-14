@@ -763,7 +763,7 @@ export class SelfOrder extends Reactive {
     verifyCart() {
         let result = true;
         for (const line of this.currentOrder.unsentLines) {
-            if (line.combo_parent_uuid) {
+            if (line.combo_parent_id?.uuid) {
                 continue;
             }
 
