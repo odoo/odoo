@@ -19,7 +19,7 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
             OfflineUtil.setOfflineMode(),
             ProductScreen.addOrderline("Letter Tray", "10", "5"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Addison Olson"),
+            ProductScreen.clickCustomer("Partner Full"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.validateButtonIsHighlighted(true),
