@@ -5,6 +5,7 @@
         <div
             t-ref="ref"
             t-att-class="defaultClassObj"
+            t-attf-style="--animation-time: {{ constructor.animationTime }}ms"
             t-att-role="props.role"
             t-on-pointerenter="() => props.holdOnHover and position.lock()"
             t-on-pointerleave="() => props.holdOnHover and position.unlock()"
@@ -14,7 +15,7 @@
                 t-props="props.componentProps"
                 close="props.close"
             />
-            <div t-if="props.arrow" class="popover-arrow"/>
+            <div t-if="props.arrow" class="popover-arrow position-absolute z-n1"/>
         </div>
     </t>
 
