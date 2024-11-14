@@ -276,10 +276,10 @@ class ProductProduct(models.Model):
         # We may receive a location or warehouse from the context, either by explicit
         # python code or by the use of dummy fields in the search view.
         # Normalize them into a list.
-        location = self.env.context.get('location')
+        location = self.env.context.get('location') or self.env.context.get('search_location')
         if location and not isinstance(location, list):
             location = [location]
-        warehouse = self.env.context.get('warehouse_id')
+        warehouse = self.env.context.get('warehouse_id') or self.env.context.get('search_warehouse')
         if warehouse and not isinstance(warehouse, list):
             warehouse = [warehouse]
         # filter by location and/or warehouse
@@ -453,8 +453,9 @@ class ProductProduct(models.Model):
     @api.model
     def fields_get(self, allfields=None, attributes=None):
         res = super().fields_get(allfields, attributes)
-        if self._context.get('location') and isinstance(self._context['location'], int):
-            location = self.env['stock.location'].browse(self._context['location'])
+        context_location = self._context.get('location') or self._context.get('search_location')
+        if context_location and isinstance(context_location, int):
+            location = self.env['stock.location'].browse(context_location)
             if location.usage == 'supplier':
                 if res.get('virtual_available'):
                     res['virtual_available']['string'] = _('Future Receipts')
