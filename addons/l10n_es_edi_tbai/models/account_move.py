@@ -287,7 +287,7 @@ class AccountMove(models.Model):
 
         return {
             **self._l10n_es_tbai_get_credit_note_values(),
-            'origin': self.invoice_origin,
+            'origin': self.invoice_origin and self.invoice_origin[:250] or 'manual',
             'taxes': taxes,
             'rate':  abs(self.amount_total / self.amount_total_signed) if self.amount_total else 1,
             'base_lines': base_lines,
