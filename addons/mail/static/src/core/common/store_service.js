@@ -491,7 +491,6 @@ export class Store extends BaseStore {
         });
         const partner_ids = validMentions?.partners.map((partner) => partner.id) ?? [];
         const recipientEmails = [];
-        const recipientAdditionalValues = {};
         if (!isNote) {
             const recipientIds = thread.suggestedRecipients
                 .filter((recipient) => recipient.persona && recipient.checked)
@@ -500,7 +499,6 @@ export class Store extends BaseStore {
                 .filter((recipient) => recipient.checked && !recipient.persona)
                 .forEach((recipient) => {
                     recipientEmails.push(recipient.email);
-                    recipientAdditionalValues[recipient.email] = recipient.create_values;
                 });
             partner_ids.push(...recipientIds);
         }
@@ -535,7 +533,6 @@ export class Store extends BaseStore {
         if (recipientEmails.length) {
             Object.assign(params, {
                 partner_emails: recipientEmails,
-                partner_additional_values: recipientAdditionalValues,
             });
         }
         return params;

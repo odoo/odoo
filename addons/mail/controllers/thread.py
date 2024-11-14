@@ -41,10 +41,10 @@ class ThreadController(http.Controller):
         }
 
     @http.route("/mail/partner/from_email", methods=["POST"], type="jsonrpc", auth="user")
-    def mail_thread_partner_from_email(self, emails, additional_values=None):
+    def mail_thread_partner_from_email(self, thread_model, thread_id, emails):
         partners = [
             {"id": partner.id, "name": partner.name, "email": partner.email}
-            for partner in request.env["res.partner"]._find_or_create_from_emails(emails, additional_values=additional_values)
+            for partner in request.env[thread_model].browse(thread_id)._partner_find_from_emails_single(emails)
         ]
         return partners
 
@@ -79,16 +79,16 @@ class ThreadController(http.Controller):
             key=lambda it: (it["parent_model"] or "", it["res_model"] or "", it["internal"], it["sequence"]),
         )
 
-    def _prepare_post_data(self, post_data, thread, **kwargs):
+    def _prepare_post_data(self, post_data, thread, partner_emails=None, **kwargs):
         partners = request.env["res.partner"].browse(post_data.pop("partner_ids", []))
         if "body" in post_data:
             post_data["body"] = Markup(post_data["body"])  # contains HTML such as @mentions
-        if "partner_emails" in kwargs and request.env.user.has_group("base.group_partner_manager"):
+        if partner_emails:
             partners |= request.env["res.partner"].browse(
                 partner.id
-                for partner in request.env["res.partner"]._find_or_create_from_emails(
-                    kwargs["partner_emails"],
-                    additional_values=kwargs.get("partner_additional_values", {})
+                for partner in thread._partner_find_from_emails_single(
+                    partner_emails,
+                    force_create=request.env.user.has_group("base.group_partner_manager"),
                 )
             )
         if not request.env.user._is_internal():
