@@ -24,6 +24,7 @@ import { busService } from "@bus/services/bus_service";
 import { mailGlobal } from "@mail/utils/common/misc";
 import { Component, onMounted, onPatched, onWillDestroy, status } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
+import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 import { registry } from "@web/core/registry";
 import { MEDIAS_BREAKPOINTS, utils as uiUtils } from "@web/core/ui/ui_service";
 import { useServiceProtectMethodHandling } from "@web/core/utils/hooks";
@@ -348,6 +349,7 @@ export async function start(options) {
     }
     env.testEnv = true;
     await mountWithCleanup(WebClient, { env, target });
+    await loadEmoji();
     return Object.assign(env, { ...options?.env, target });
 }
 

@@ -3,7 +3,6 @@ import { Component, toRaw, useComponent, useState, xml } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { download } from "@web/core/network/download";
 import { registry } from "@web/core/registry";
-import { MessageReactionButton } from "./message_reaction_button";
 import { useService } from "@web/core/utils/hooks";
 import { discussComponentRegistry } from "./discuss_component_registry";
 import { Deferred } from "@web/core/utils/concurrency";
@@ -11,6 +10,7 @@ import { EMOJI_PICKER_PROPS, EmojiPicker } from "@web/core/emoji_picker/emoji_pi
 import { Dialog } from "@web/core/dialog/dialog";
 import { onExternalClick } from "@mail/utils/common/hooks";
 import { convertBrToLineBreak } from "@mail/utils/common/format";
+import { QuickReactionMenu } from "@mail/core/common/quick_reaction_menu";
 
 const { DateTime } = luxon;
 
@@ -45,10 +45,11 @@ class EmojiPickerMobile extends Component {
 
 messageActionsRegistry
     .add("reaction", {
-        callComponent: MessageReactionButton,
+        callComponent: QuickReactionMenu,
         props: (component) => ({
             message: component.props.message,
             action: messageActionsRegistry.get("reaction"),
+            messageActive: component.isActive,
         }),
         condition: (component) => component.props.message.canAddReaction(component.props.thread),
         icon: "oi oi-smile-add",
