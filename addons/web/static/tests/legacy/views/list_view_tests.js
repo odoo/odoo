@@ -20843,4 +20843,44 @@ QUnit.module("Views", (hooks) => {
         await toggleMenuItem(target, "My filter");
         assert.containsOnce(target, ".o_list_renderer th[data-name='properties.property_char']");
     });
+
+    QUnit.test("select records range with shift click on several page", async (assert) => {
+        assert.expect(5);
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `<tree limit="3">
+                    <field name="foo"/>
+                    <field name="int_field"/>
+                </tree>`,
+        });
+
+        await click(target.querySelectorAll(".o_data_row .o_list_record_selector input")[0]);
+        assert.containsOnce(
+            target.querySelector(".o_control_panel_actions"),
+            ".o_list_selection_box"
+        );
+        assert.containsNone(target.querySelector(".o_list_selection_box"), ".o_list_select_domain");
+        assert.strictEqual(
+            target.querySelector(".o_list_selection_box").textContent.trim(),
+            "1 selected"
+        );
+        assert.strictEqual(
+            document.querySelectorAll(".o_data_row .o_list_record_selector input:checked").length,
+            1
+        );
+        // click the pager next button
+        await click(target.querySelector(".o_pager_next"));
+        // shift click the first record of the second page
+        await triggerEvents(
+            target.querySelectorAll(".o_data_row .o_list_record_selector input")[0],
+            null,
+            [["keydown", { key: "Shift", shiftKey: true }], "click"]
+        );
+        assert.strictEqual(
+            target.querySelector(".o_list_selection_box").textContent.trim(),
+            "1 selected  Select all 4"
+        );
+    });
 });
