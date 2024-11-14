@@ -6430,6 +6430,24 @@ class BaseModel(metaclass=MetaModel):
                 return self.browse(rec.id for rec in self if rec[func])
         return self.browse(rec.id for rec in self if func(rec))
 
+    def partitionned(self, func) -> tuple[Self, Self]:
+        """Return the records in ``self`` satisfying and not satisfying ``func``.
+
+        :param func: a function or a dot-separated sequence of field names
+        :type func: callable or str
+        :return: tuple of recordsets satisfying func and not satisfying func
+
+        .. code-block:: python3
+
+            # keep records whose company is the current user's and others
+            records.partitionned(lambda r: r.company_id == user.company_id)
+
+            # only keep records whose partner is a company
+            real_records, new_records = records.partitionned("id")
+        """
+        truthy = self.filtered(func)
+        return truthy, self - truthy
+
     def grouped(self, key):
         """Eagerly groups the records of ``self`` by the ``key``, returning a
         dict from the ``key``'s result to recordsets. All the resulting
