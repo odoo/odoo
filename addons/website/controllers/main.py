@@ -30,6 +30,7 @@ from odoo.addons.base.models.ir_qweb import QWebException
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 from odoo.addons.portal.controllers.web import Home
 from odoo.addons.web.controllers.binary import Binary
+from odoo.addons.web.controllers.session import Session
 from odoo.addons.website.tools import get_base_domain
 from odoo.tools.json import scriptsafe as json
 
@@ -1044,6 +1045,14 @@ class Website(Home):
                     return action_res
 
         return request.redirect('/')
+
+
+class WebsiteSession(Session):
+
+    # Force auth='public', required for logout
+    @http.route(auth="public")
+    def logout(self, *args, **kw):
+        return super().logout(*args, **kw)
 
 
 class WebsiteBinary(Binary):
