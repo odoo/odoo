@@ -218,7 +218,9 @@ export const One2many = makeFieldGenerator("one2many", {
     requiredKeys: ["relation"],
 });
 
-export const Properties = makeFieldGenerator("properties");
+export const Properties = makeFieldGenerator("properties", {
+    requiredKeys: ["definition_record", "definition_record_field"],
+});
 
 export const PropertiesDefinition = makeFieldGenerator("properties_definition");
 
