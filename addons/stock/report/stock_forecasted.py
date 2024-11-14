@@ -132,11 +132,7 @@ class ReplenishmentReport(models.AbstractModel):
         assert product_template_ids or product_variant_ids
         res = {}
 
-        if self.env.context.get('warehouse') and isinstance(self.env.context['warehouse'], int):
-            warehouse = self.env['stock.warehouse'].browse(self.env.context.get('warehouse'))
-        else:
-            warehouse = self.env['stock.warehouse'].browse(self.get_warehouses()[0]['id'])
-
+        warehouse = self.env['stock.warehouse'].browse(self.env['stock.warehouse']._get_warehouse_id_from_context() or self.get_warehouses()[0]['id'])
         wh_location_ids = [loc['id'] for loc in self.env['stock.location'].search_read(
             [('id', 'child_of', warehouse.view_location_id.id)],
             ['id'],
