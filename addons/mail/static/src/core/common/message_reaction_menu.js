@@ -45,15 +45,15 @@ export class MessageReactionMenu extends Component {
             },
             () => [this.props.message.reactions.length]
         );
-        onMounted(async () => {
+        if (!loader.loaded) {
+            loader.onEmojiLoaded(() => (this.state.emojiLoaded = true));
+        }
+        onMounted(() => {
+            void this.state.emojiLoaded;
             if (!loader.loaded) {
                 loadEmoji();
             }
         });
-        if (!loader.loaded) {
-            loader.onEmojiLoaded(() => (this.state.emojiLoaded = true));
-        }
-        onMounted(() => void this.state.emojiLoaded);
         onPatched(() => void this.state.emojiLoaded);
     }
 

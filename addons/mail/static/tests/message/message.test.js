@@ -548,6 +548,7 @@ test("Can open emoji picker after edit mode", async () => {
     await click(".o-mail-Message-moreMenu [title='Edit']");
     await click(".o-mail-Message a", { text: "save" });
     await click("[title='Add a Reaction']");
+    await click(".o-mail-QuickReactionMenu [title='Open Emoji Picker']");
     await contains(".o-EmojiPicker");
 });
 
@@ -566,6 +567,7 @@ test("Can add a reaction", async () => {
     await start();
     await openDiscuss(channelId);
     await click("[title='Add a Reaction']");
+    await click(".o-mail-QuickReactionMenu [title='Open Emoji Picker']");
     await click(".o-Emoji", { text: "😅" });
     await contains(".o-mail-MessageReaction", { text: "😅1" });
 });
@@ -585,7 +587,7 @@ test("Can remove a reaction", async () => {
     await start();
     await openDiscuss(channelId);
     await click("[title='Add a Reaction']");
-    await click(".o-Emoji", { text: "😅" });
+    await click(".o-mail-QuickReactionMenu button", { text: "😅" });
     await click(".o-mail-MessageReaction");
     await contains(".o-mail-MessageReaction", { count: 0 });
 });
@@ -637,7 +639,7 @@ test("Can quickly add a reaction", async () => {
     await start();
     await openDiscuss(channelId);
     await click("[title='Add a Reaction']");
-    await click(".o-Emoji", { text: "😅" });
+    await click(".o-mail-QuickReactionMenu button", { text: "😅" });
     await contains(".o-mail-MessageReaction", { text: "😅1" });
     await hover(".o-mail-MessageReactions");
     await click("button[title='Add Reaction']");
@@ -674,10 +676,7 @@ test("Reaction summary", async () => {
         pyEnv["res.partner"].create({ name, user_ids: [Command.link(userId)] });
         await withUser(userId, async () => {
             await click("[title='Add a Reaction']");
-            await click(".o-Emoji", {
-                after: ["span", { textContent: "Smileys & Emotion" }],
-                text: "😅",
-            });
+            await click(".o-mail-QuickReactionMenu button", { text: "😅" });
             await contains(".o-mail-MessageReaction", { text: `😅${idx + 1}` });
             await hover(".o-mail-MessageReaction");
             await contains(".o-mail-MessageReactionList-preview", {
@@ -703,9 +702,9 @@ test("Add the same reaction twice from the emoji picker", async () => {
     await start();
     await openDiscuss(channelId);
     await click("[title='Add a Reaction']");
-    await click(".o-Emoji", { text: "😅" });
+    await click(".o-mail-QuickReactionMenu button", { text: "😅" });
     await click("[title='Add a Reaction']");
-    await click(".o-Emoji", { text: "😅" });
+    await click(".o-mail-QuickReactionMenu button", { text: "😅" });
     await contains(".o-mail-MessageReaction", { text: "😅1" });
 });
 
@@ -1815,7 +1814,7 @@ test("Click on view reactions shows the reactions on the message", async () => {
     await start();
     await openDiscuss(channelId);
     await click("[title='Add a Reaction']");
-    await click(".o-Emoji", { text: "😅" });
+    await click(".o-mail-QuickReactionMenu button", { text: "😅" });
     await contains(".o-mail-MessageReaction", { text: "😅1" });
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='View Reactions']");

@@ -33,7 +33,7 @@ test("Only two quick actions are shown", async () => {
     // message data from post contains no reaction, wait now to avoid overriding newer value later
     await waitNotifications([env, "discuss.channel/new_message"]);
     await click("[title='Add a Reaction']");
-    await click(".o-Emoji", { text: "😅" });
+    await click(".o-mail-QuickReactionMenu button", { text: "😅" });
     await contains(".o-mail-MessageReaction", { text: "😅" });
     await contains(".o-mail-Message-actions i", { count: 3 });
     await contains("[title='Add a Reaction']");

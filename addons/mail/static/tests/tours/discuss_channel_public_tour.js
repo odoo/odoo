@@ -106,6 +106,10 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             run: "hover && click .o-mail-Message [title='Add a Reaction']",
         },
         {
+            trigger: ".o-mail-QuickReactionMenu [title='Open Emoji Picker']",
+            run: "click",
+        },
+        {
             trigger: ".o-EmojiPicker .o-Emoji:contains('🙂')",
             run: "click",
         },
