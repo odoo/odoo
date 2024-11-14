@@ -164,7 +164,7 @@ class AccountMoveSend(models.TransientModel):
         }
 
     @api.model
-    def _get_wizard_vals_restrict_to(self, only_options):
+    def _get_wizard_vals_restrict_to(self, only_options, enforce_gov_edi=False):
         return {
             'checkbox_download': False,
             'checkbox_send_mail': False,
