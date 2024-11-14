@@ -985,6 +985,7 @@ class TestSaleToInvoice(TestSaleCommon):
                 Command.create({
                     'product_id': self.company_data['product_delivery_no'].id,
                     'product_uom_qty': 20,
+                    'price_unit': 30,
                 }),
             ],
         })
@@ -1008,6 +1009,8 @@ class TestSaleToInvoice(TestSaleCommon):
         self.assertEqual(line.qty_invoiced, 10)
         line.qty_delivered = 15
         self.assertEqual(line.qty_invoiced, 10)
+        self.assertEqual(line.untaxed_amount_invoiced, 300)
+        self.assertEqual(sale_order.amount_to_invoice, 300)
 
     def test_salesperson_in_invoice_followers(self):
         """

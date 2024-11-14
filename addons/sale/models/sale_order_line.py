@@ -847,7 +847,7 @@ class SaleOrderLine(models.Model):
         for line in self:
             amount_invoiced = 0.0
             for invoice_line in line._get_invoice_lines():
-                if invoice_line.move_id.state == 'posted':
+                if invoice_line.move_id.state == 'posted' or invoice_line.move_id.payment_state == 'invoicing_legacy':
                     invoice_date = invoice_line.move_id.invoice_date or fields.Date.today()
                     if invoice_line.move_id.move_type == 'out_invoice':
                         amount_invoiced += invoice_line.currency_id._convert(invoice_line.price_subtotal, line.currency_id, line.company_id, invoice_date)
