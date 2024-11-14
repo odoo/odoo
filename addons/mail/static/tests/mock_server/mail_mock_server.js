@@ -640,7 +640,6 @@ export async function mail_message_post(request) {
         thread_id,
         thread_model,
         partner_emails,
-        partner_additional_values,
         canned_response_ids,
     } = await parseRequestParams(request);
     if (canned_response_ids) {
@@ -658,7 +657,7 @@ export async function mail_message_post(request) {
                 post_data.partner_ids.push(partner[0].id);
             } else {
                 const partner_id = ResPartner.create(
-                    Object.assign({ email }, partner_additional_values[email] || {})
+                    Object.assign({ email })
                 );
                 post_data.partner_ids.push(partner_id);
             }
@@ -784,7 +783,9 @@ async function mail_thread_partner_from_email(request) {
     /** @type {import("mock_models").ResPartner} */
     const ResPartner = this.env["res.partner"];
 
-    const { emails, additional_values = {} } = await parseRequestParams(request);
+    const { thread_model, thread_id, emails } = await parseRequestParams(request);
+    // use variables, but don't actually implement py in JS, much effort for nothing
+    this.env[thread_model].browse(thread_id);
     const partners = emails.map((email) => ResPartner.search([["email", "=", email]])[0]);
     for (const index in partners) {
         if (!partners[index]) {
@@ -792,7 +793,6 @@ async function mail_thread_partner_from_email(request) {
             partners[index] = ResPartner.create({
                 email,
                 name: email,
-                ...(additional_values[email] || {}),
             });
         }
     }
