@@ -6,7 +6,7 @@ from unittest.mock import patch
 from odoo import Command
 
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
-from odoo.tests import loaded_demo_data, tagged
+from odoo.tests import tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
 from datetime import date, timedelta
@@ -520,9 +520,24 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         })
 
         # Set customers
-        cls.partner_test_1 = cls.env['res.partner'].create({'name': 'Partner Test 1'})
-        cls.partner_test_2 = cls.env['res.partner'].create({'name': 'Partner Test 2'})
-        cls.partner_test_3 = cls.env['res.partner'].create({'name': 'Partner Test 3'})
+        partners = cls.env['res.partner'].create([
+            {'name': 'Partner Test 1'},
+            {'name': 'Partner Test 2'},
+            {'name': 'Partner Test 3'},
+            {
+                'name': 'Partner Full',
+                'email': 'partner.full@example.com',
+                'street': '77 Santa Barbara Rd',
+                'city': 'Pleasant Hill',
+                'state_id': cls.env.ref('base.state_us_5').id,
+                'zip': '94523',
+                'country_id': cls.env.ref('base.us').id,
+            }
+        ])
+        cls.partner_test_1 = partners[0]
+        cls.partner_test_2 = partners[1]
+        cls.partner_test_3 = partners[2]
+        cls.partner_full = partners[3]
 
         # Change the default sale pricelist of customers,
         # so the js tests can expect deterministically this pricelist when selecting a customer.
@@ -533,11 +548,6 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
 @tagged('post_install', '-at_install')
 class TestUi(TestPointOfSaleHttpCommon):
     def test_01_pos_basic_order(self):
-        if not loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
-
-        # Verify that the tip product is not taxable
         self.tip.write({
             'taxes_id': False
         })
@@ -572,9 +582,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(email_count, 1)
 
     def test_02_pos_with_invoiced(self):
-        if not loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
         self.pos_user.write({
             'groups_id': [
                 (4, self.env.ref('account.group_account_invoice').id),
@@ -605,9 +612,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_pos_tour('ProductConfiguratorTour')
 
     def test_05_ticket_screen(self):
-        if not loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
         self.pos_user.write({
             'groups_id': [
                 (4, self.env.ref('account.group_account_invoice').id),
