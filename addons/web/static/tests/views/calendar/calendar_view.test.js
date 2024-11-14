@@ -4629,12 +4629,18 @@ test(`calendar render properties in popover`, async () => {
         definition_record_field: "definitions",
     });
     Event._records[0].type_id = 1;
-    Event._records[0].properties = [
+    Event._records[0].properties = {
+        property_1: "hello",
+        property_2: "b",
+        property_3: "hidden",
+    };
+
+    EventType._fields.definitions = fields.PropertiesDefinition();
+    EventType._records[0].definitions = [
         {
             name: "property_1",
             string: "My Char",
             type: "char",
-            value: "hello",
             view_in_cards: true,
         },
         {
@@ -4646,7 +4652,6 @@ test(`calendar render properties in popover`, async () => {
                 ["b", "B"],
                 ["c", "C"],
             ],
-            value: "b",
             default: "c",
             view_in_cards: true,
         },
@@ -4654,15 +4659,8 @@ test(`calendar render properties in popover`, async () => {
             name: "property_3",
             string: "Hidden Char",
             type: "char",
-            value: "hidden",
             view_in_cards: false,
         },
-    ];
-
-    EventType._fields.definitions = fields.PropertiesDefinition();
-    EventType._records[0].definitions = [
-        { name: "event_prop_1", string: "My Char", type: "char" },
-        { name: "event_prop_2", string: "My Selection", type: "selection" },
     ];
 
     await mountView({
@@ -4688,7 +4686,6 @@ test(`calendar create record with default properties`, async () => {
     Event._fields.properties = fields.Properties({
         definition_record: "type_id",
         definition_record_field: "definitions",
-        default: [{ name: "event_prop", string: "Hello", type: "char" }],
     });
     Event._views = {
         form: `
@@ -4713,6 +4710,9 @@ test(`calendar create record with default properties`, async () => {
                 <field name="properties"/>
             </calendar>
         `,
+        context: {
+            default_properties: [{ name: "event_prop", string: "Hello", type: "char" }],
+        },
     });
     await selectTimeRange("2016-12-15 06:00:00", "2016-12-15 08:00:00");
     expect(`.modal`).toHaveCount(1);
