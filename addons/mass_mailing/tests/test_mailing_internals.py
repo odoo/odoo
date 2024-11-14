@@ -739,12 +739,13 @@ class TestMassMailFeatures(MassMailCommon, CronMixinCase):
             'mailing_domain': [('id', 'in', (partner_a | partner_b).ids)],
             'body_html': 'This is mass mail marketing demo'
         })
+        self.assertEqual(mailing.user_id, self.user_marketing)
         mailing.action_put_in_queue()
         self.assertEqual(mailing.email_from, self.env.user.email_formatted)
         with self.mock_mail_gateway(mail_unlink_sent=False), self.enter_registry_test_mode():
             self.env.ref('mass_mailing.ir_cron_mass_mailing_queue').sudo().method_direct_trigger()
 
-        author = self.env.ref('base.user_root').partner_id
+        author = self.user_marketing.partner_id
         email_values = {'email_from': mailing.email_from}
         self.assertMailTraces(
             [{'partner': partner_a, 'email_values': email_values},
@@ -781,7 +782,7 @@ Email: <a id="url5" href="mailto:test@odoo.com">test@odoo.com</a></div>""",
         with self.mock_mail_gateway(mail_unlink_sent=False), self.enter_registry_test_mode():
             self.env.ref('mass_mailing.ir_cron_mass_mailing_queue').sudo().method_direct_trigger()
 
-        author = self.env.ref('base.user_root').partner_id
+        author = self.user_marketing.partner_id
         email_values = {'email_from': mailing.email_from}
         self.assertMailTraces(
             [{'email': 'fleurus@example.com', 'email_values': email_values},
