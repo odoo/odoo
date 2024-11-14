@@ -230,6 +230,44 @@ class TestMessageController(HttpCaseWithUserDemo):
         )
 
     @mute_logger("odoo.addons.http_routing.models.ir_http", "odoo.http")
+    def test_mail_partner_from_email_authenticated(self):
+        self.authenticate(None, None)
+        self.opener.cookies[self.guest._cookie_name] = self.guest._format_auth_cookie()
+        res5 = self.url_open(
+            url="/mail/message/post",
+            data=json.dumps(
+                {
+                    "params": {
+                        "thread_model": "discuss.channel",
+                        "thread_id": self.channel.id,
+                        "post_data": {
+                            "body": "test",
+                        },
+                        "partner_emails": ["john2@test.be"],
+                        "partner_additional_values": {"john2@test.be": {'phone': '123456789'}},
+                        "partner_emails": ["john2@test.be", "john3@test.be"],  # Both emails in one request
+                        "partner_additional_values": {
+                            "john2@test.be": {'phone': '123456789'},  # Original partner
+                            "john3 <john3@test.be>": {'phone': '987654321'}  # Name-Addr formatted partner
+                        },
+                    },
+                }
+            ),
+            headers={"Content-Type": "application/json"},
+        )
+        self.assertEqual(res5.status_code, 200)
+        self.assertEqual(
+            1,
+            self.env["res.partner"].search_count([('email', '=', "john2@test.be"), ('phone', '=', "123456789")]),
+            "authenticated users can create a partner from an email from message_post",
+        )
+        self.assertEqual(
+            1,
+            self.env["res.partner"].search_count([('email', '=', "john3@test.be"), ('phone', '=', "987654321")]),
+            "additional_values should be handled correctly when using keys in name_addr format",
+        )
+
+    @mute_logger("odoo.addons.http_routing.models.ir_http", "odoo.http")
     def test_mail_partner_from_email_unauthenticated(self):
         self.authenticate(None, None)
         self.opener.cookies[self.guest._cookie_name] = self.guest._format_auth_cookie()
