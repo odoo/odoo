@@ -1,18 +1,22 @@
 import { Component, EventBus, useSubEnv } from "@odoo/owl";
+import { Dropdown } from "@web/core/dropdown/dropdown";
 import { basicContainerWeWidgetProps, useWeComponent } from "../builder_helpers";
 
-export class ButtonGroup extends Component {
-    static template = "html_builder.ButtonGroup";
+export class WeSelect extends Component {
+    static template = "html_builder.WeSelect";
     static props = {
         ...basicContainerWeWidgetProps,
-        slots: { type: Object, optional: true },
+        label: { type: String, optional: true },
+        slots: Object,
     };
-
+    static components = {
+        Dropdown,
+    };
     setup() {
         useWeComponent();
         const bus = new EventBus();
         useSubEnv({
-            actionBus: bus,
+            weSelectBus: bus,
         });
     }
 }

@@ -5,6 +5,8 @@ import { ToolboxRow } from "./ToolboxRow";
 import { WeButton } from "./WeButton";
 import { Button } from "./Button";
 import { NumberInput } from "./NumberInput";
+import { WeSelect } from "./WeSelect";
+import { WeSelectItem } from "./WeSelectItem";
 
 export const defaultOptionComponents = {
     ToolboxRow,
@@ -14,4 +16,6 @@ export const defaultOptionComponents = {
     WeButton,
     Button,
     NumberInput,
+    WeSelect,
+    WeSelectItem,
 };

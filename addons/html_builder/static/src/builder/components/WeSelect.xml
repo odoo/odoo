@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.WeSelect">
+    <Dropdown>
+        <button class="btn btn-primary mx-1" t-att-title="props.title" t-out="props.label"/>
+        <t t-set-slot="content">
+            <t t-slot="default" />
+        </t>
+    </Dropdown>
+</t>
+
+</templates>
