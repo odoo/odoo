@@ -115,11 +115,21 @@ class StockForecasted(models.AbstractModel):
         assert product_template_ids or product_ids
         res = {}
 
+<<<<<<< saas-17.4
         if self.env.context.get('warehouse_id') and isinstance(self.env.context['warehouse_id'], int):
             warehouse = self.env['stock.warehouse'].browse(self.env.context.get('warehouse_id'))
         else:
             warehouse = self.env['stock.warehouse'].search([['active', '=', True]])[0]
 
+||||||| 562e053de5b0265d255df49d6f20140247d76740
+        if self.env.context.get('warehouse') and isinstance(self.env.context['warehouse'], int):
+            warehouse = self.env['stock.warehouse'].browse(self.env.context.get('warehouse'))
+        else:
+            warehouse = self.env['stock.warehouse'].search([['active', '=', True]])[0]
+
+=======
+        warehouse = self.env['stock.warehouse'].browse(self.env['stock.warehouse']._get_warehouse_id_from_context()) or self.env['stock.warehouse'].search([['active', '=', True]])[0]
+>>>>>>> f2b65aa9a8ca39dc5b12a2c9e6681a05a23aa131
         wh_location_ids = [loc['id'] for loc in self.env['stock.location'].search_read(
             [('id', 'child_of', warehouse.view_location_id.id)],
             ['id'],
