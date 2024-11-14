@@ -6,7 +6,7 @@ import { url } from "@web/core/utils/urls";
 
 export class MentionPlugin extends Plugin {
     static id = "mention";
-    static dependencies = ["overlay", "dom", "history", "selection"];
+    static dependencies = ["overlay", "dom", "history", "input", "selection"];
 
     resources = {
         beforeinput_handlers: this.onBeforeInput.bind(this),

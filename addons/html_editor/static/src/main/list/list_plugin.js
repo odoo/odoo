@@ -33,7 +33,7 @@ function isListActive(listMode) {
 
 export class ListPlugin extends Plugin {
     static id = "list";
-    static dependencies = ["tabulation", "history", "split", "selection", "delete", "dom"];
+    static dependencies = ["tabulation", "history", "input", "split", "selection", "delete", "dom"];
     resources = {
         user_commands: [
             {
