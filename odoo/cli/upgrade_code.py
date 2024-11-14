@@ -39,6 +39,9 @@ from types import ModuleType
 from typing import Iterator
 
 ROOT = Path(__file__).parent.parent
+UPGRADE = ROOT / 'upgrade_code'
+AVAILABLE_EXT = ('.py', '.js', '.css', '.scss', '.xml', '.csv')
+
 
 try:
     import odoo.addons
@@ -55,13 +58,16 @@ except ImportError:
     import release
     from parse_version import parse_version
     class Command:
-        pass
+        """ Simplified version of the one in command.py, for standalone execution """
+        @property
+        def parser(self):
+            return argparse.ArgumentParser(
+                prog=Path(sys.argv[0]).name,
+                description=__doc__.replace('/odoo/upgrade_code', str(UPGRADE)),
+                formatter_class=argparse.RawDescriptionHelpFormatter,
+            )
     config = None
     initialize_sys_path = None
-
-
-UPGRADE = ROOT / 'upgrade_code'
-AVAILABLE_EXT = ('.py', '.js', '.css', '.scss', '.xml', '.csv')
 
 
 class FileAccessor:
@@ -169,18 +175,8 @@ def migrate(
 class UpgradeCode(Command):
     """ Rewrite the entire source code using the scripts found at /odoo/upgrade_code """
     name = 'upgrade_code'
-    prog_name = Path(sys.argv[0]).name
 
     def __init__(self):
-        self.parser = argparse.ArgumentParser(
-            prog=(
-                f"{self.prog_name} [--addons-path=PATH,...] {self.name}"
-                if config else
-                self.prog_name
-            ),
-            description=__doc__.replace('/odoo/upgrade_code', str(UPGRADE)),
-            formatter_class=argparse.RawDescriptionHelpFormatter,
-        )
         group = self.parser.add_mutually_exclusive_group(required=True)
         group.add_argument(
             '--script',

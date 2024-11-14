@@ -4,7 +4,6 @@ import optparse
 import os
 import signal
 import sys
-from pathlib import Path
 
 import odoo
 from odoo.modules.registry import Registry
@@ -56,7 +55,7 @@ class Shell(Command):
     supported_shells = ['ipython', 'ptpython', 'bpython', 'python']
 
     def init(self, args):
-        config.parser.prog = f'{Path(sys.argv[0]).name} {self.name}'
+        config.parser.prog = self.prog
 
         group = optparse.OptionGroup(config.parser, "Shell options")
         group.add_option(

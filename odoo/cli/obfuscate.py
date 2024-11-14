@@ -1,4 +1,3 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import odoo
 import sys
 import optparse
@@ -134,6 +133,7 @@ class Obfuscate(Command):
 
     def run(self, cmdargs):
         parser = odoo.tools.config.parser
+        parser.prog = self.prog
         group = optparse.OptionGroup(parser, "Populate Configuration")
         group.add_option('--pwd', dest="pwd", default=False, help="Cypher password")
         group.add_option('--fields', dest="fields", default=False, help="List of table.columns to obfuscate/unobfuscate: table1.column1,table2.column1,table2.column2")
