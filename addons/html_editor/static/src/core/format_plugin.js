@@ -345,7 +345,11 @@ export class FormatPlugin extends Plugin {
             }
         }
 
-        if (unformattedTextNodes[0] && unformattedTextNodes[0].textContent === "\u200B") {
+        if (
+            unformattedTextNodes.length === 1 &&
+            unformattedTextNodes[0] &&
+            unformattedTextNodes[0].textContent === "\u200B"
+        ) {
             this.dependencies.selection.setCursorStart(unformattedTextNodes[0]);
         } else if (selectedNodes.length) {
             const firstNode = selectedNodes[0];
