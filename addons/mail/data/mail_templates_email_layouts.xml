@@ -63,7 +63,7 @@
 <div t-out="message.body" style="font-size: 13px;"/>
 <ul t-if="tracking_values">
     <t t-foreach="tracking_values" t-as="tracking">
-        <li><t t-out="tracking[0]"/>: <t t-out="tracking[1]"/> &#8594; <t t-out="tracking[2]"/></li>
+        <li><t t-out="tracking[0]"/>: <t t-if="tracking[1]" t-out="tracking[1]"/><em t-else="">None</em> &#8594; <t t-if="tracking[2]" t-out="tracking[2]"/><em t-else="">None</em></li>
     </t>
 </ul>
 <t class="o_signature">
