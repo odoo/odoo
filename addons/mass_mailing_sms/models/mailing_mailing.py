@@ -236,6 +236,7 @@ class MailingMailing(models.Model):
             'mass_keep_log': self.keep_archives,
             'mass_force_send': self.sms_force_send,
             'mass_sms_allow_unsubscribe': self.sms_allow_unsubscribe,
+            'use_exclusion_list': self.use_exclusion_list,
         }
 
     def _action_send_mail(self, res_ids=None):

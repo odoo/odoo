@@ -460,12 +460,31 @@ class TestMassMailing(TestMassMailCommon):
         self.assertEqual(len(self.env['mail.mail'].sudo().search([('mailing_id', '=', mailing.id)])), 3,
                          "Only the 3 sent mails have been created, the canceled ones have not been created")
 
+        # Same test but with the option use_exclusion_list set to False
+        mailing = mailing.copy()
+        mailing.use_exclusion_list = False
+
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            mailing.action_send_mail()
+
+        self.assertMailTraces(
+            [{
+                'email': record.email_normalized,
+                'email_to_mail': record.email_from,
+            } for record in recipients],
+            mailing, recipients, check_mail=True
+        )
+        self.assertEqual(mailing.canceled, 0)
+
     @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mailing_w_blacklist_nomixin(self):
         """Test that blacklist is applied even if the target model doesn't inherit
         from mail.thread.blacklist."""
         test_records = self._create_mailing_test_records(model='mailing.test.simple', count=2)
+        # Normalize email_from for assertMailTraces
+        for test_record in test_records:
+            test_record.email_from = email_normalize(test_record.email_from)
         self.mailing_bl.write({
             'mailing_domain': [('id', 'in', test_records.ids)],
             'mailing_model_id': self.env['ir.model']._get('mailing.test.simple').id,
@@ -478,13 +497,26 @@ class TestMassMailing(TestMassMailCommon):
         with self.mock_mail_gateway(mail_unlink_sent=False):
             self.mailing_bl.action_send_mail()
         self.assertMailTraces([
-            {'email': email_normalize(test_records[0].email_from), 'trace_status': 'cancel', 'failure_type': 'mail_bl'},
-            {'email': email_normalize(test_records[1].email_from), 'trace_status': 'sent'},
-        ], self.mailing_bl, test_records, check_mail=False)
+            {'email': test_records[0].email_from, 'trace_status': 'cancel', 'failure_type': 'mail_bl'},
+            {'email': test_records[1].email_from, 'trace_status': 'sent'},
+        ], self.mailing_bl, test_records, check_mail=True)
 
         self.assertEqual(self.mailing_bl.canceled, 1)
         self.assertEqual(len(self.env['mail.mail'].sudo().search([('mailing_id', '=', self.mailing_bl.id)])), 1,
                          "Only the sent mail has been created, the canceled one has not been created")
+
+        # Same test but with the option use_exclusion_list set to False
+        mailing_no_blacklist = self.mailing_bl.copy()
+        mailing_no_blacklist.use_exclusion_list = False
+
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            mailing_no_blacklist.action_send_mail()
+
+        self.assertMailTraces([
+            {'email': test_records[0].email_from, 'trace_status': 'sent'},
+            {'email': test_records[1].email_from, 'trace_status': 'sent'},
+        ], mailing_no_blacklist, test_records, check_mail=True)
+        self.assertEqual(mailing_no_blacklist.canceled, 0)
 
     @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_mail')
