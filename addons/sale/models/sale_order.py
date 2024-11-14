@@ -1462,6 +1462,14 @@ class SaleOrder(models.Model):
         # sale order without "billing" access rights. However, he should not be able to create an invoice from scratch.
         return self.env['account.move'].sudo().with_context(default_move_type='out_invoice').create(invoice_vals_list)
 
+    @api.model
+    def _find_and_set_reversed_entry(self, moves):
+        for credit_note in moves.filtered_domain([('move_type', '=', 'out_refund')]):
+            related_sale_lines = credit_note.invoice_line_ids.sale_line_ids
+            reversed_candidate = related_sale_lines.invoice_lines.move_id.filtered_domain([('move_type', '=', 'out_invoice')])
+            if len(reversed_candidate) == 1 and all(reversed_candidate in sale_line.invoice_lines.move_id for sale_line in related_sale_lines):
+                credit_note.reversed_entry_id = reversed_candidate
+
     def _create_invoices(self, grouped=False, final=False, date=None):
         """ Create invoice(s) for the given Sales Order(s).
 
@@ -1585,6 +1593,7 @@ class SaleOrder(models.Model):
         # is actually negative or not
         if final:
             moves.sudo().filtered(lambda m: m.amount_total < 0).action_switch_move_type()
+            self._find_and_set_reversed_entry(moves)
         for move in moves:
             if final:
                 # Downpayment might have been determined by a fixed amount set by the user.
