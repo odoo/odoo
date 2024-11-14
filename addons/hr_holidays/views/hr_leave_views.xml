@@ -224,7 +224,7 @@
                 <field name="state" widget="statusbar" statusbar_visible="confirm,validate,cancel"/>
             </header>
             <sheet>
-                <div class="alert alert-info" role="alert" invisible="not request_unit_hours or not tz_mismatch">
+                <div class="alert alert-info" role="alert" invisible="request_unit != 'hour' or not tz_mismatch">
                     <span>The employee has a different timezone than yours! Here dates and times are displayed in the employee's timezone</span>
                     (<field name="tz"/>).
                 </div>
@@ -240,6 +240,7 @@
                         <group name="col_left">
                             <field name="employee_id" invisible="1" readonly="1" force_save="1"/>
                             <field name="employee_company_id" invisible="1"/>
+                            <!-- selection of time off type -->
                             <field name="holiday_status_id" force_save="1"
                                 domain="[
                                     '|',
@@ -259,15 +260,23 @@
                             <field name="date_to" invisible="1"/>
                             <field name="request_date_from" invisible="1"/>
                             <field name="request_date_to" invisible="1"/>
-                            <!-- half day or custom hours: only show one date -->
-                            <label for="request_date_from" invisible="not request_unit_half and not request_unit_hours" string="Date" />
-                            <label for="request_date_from" invisible="request_unit_half or request_unit_hours" string="Dates" />
-                            <div class="o_row" invisible="not request_unit_half and not request_unit_hours">
-                                <field name="request_date_from" class="oe_inline" string="Date" readonly="state != 'confirm'" />
-                                <field name="request_date_from_period" invisible="not request_unit_half" required="request_unit_half" readonly="state != 'confirm'"/>
+                            <!-- selection for request unit: show days / half days for half day, show days / half days / custom hours for hours -->
+                            <!-- don't show selection for days -->
+                            <label for="request_unit" string="Period" invisible="not leave_type_request_unit or leave_type_request_unit == 'day'"/>
+                            <div class="o_row" invisible = "leave_type_request_unit != 'half_day'">
+                                <field name="request_unit" widget="customRadio" class="oe_inline" options="{'horizontal':true, 'hiddenItems': ['hour']}"/>
                             </div>
-                            <!-- full days: show date start/end with daterange -->
-                            <div class="o_row" invisible="request_unit_half or request_unit_hours">
+                            <div class="o_row" invisible = "leave_type_request_unit != 'hour'">
+                                <field name="request_unit" widget="customRadio" class="oe_inline" options="{'horizontal':true}"/>
+                            </div>
+                            <!-- labels: show "dates" for full days but only one "date" for half days / custom hours -->
+                            <label for="request_date_from" invisible="request_unit == 'day'" string="Date" />
+                            <label for="request_date_from" invisible="request_unit != 'day'" string="Dates" />
+                            <div class="o_row" invisible="request_unit == 'day'">
+                                <field name="request_date_from" class="oe_inline" string="Date" readonly="state != 'confirm'" />
+                                <field name="request_date_from_period" invisible="request_unit != 'half_day'" required="request_unit == 'half_day'" readonly="state != 'confirm'" widget="radio" options="{'horizontal':true}"/>
+                            </div>
+                            <div class="o_row" invisible="request_unit != 'day'">
                                 <field
                                     name="request_date_from"
                                     widget="daterange"
@@ -276,29 +285,22 @@
                                     options="{'end_date_field': 'request_date_to'}"/>
                                 <field name="request_date_to" invisible="1" />
                             </div>
-                            <label for="request_unit_half" string="" invisible="leave_type_request_unit == 'day'"/>
-                            <div class="o_row o_row_readonly oe_edit_only" style="margin-left: -2px;" invisible="leave_type_request_unit == 'day'">
-                                <field name="request_unit_half" class="oe_inline" invisible="leave_type_request_unit == 'day'" readonly="state != 'confirm'" />
-                                <label for="request_unit_half" invisible="leave_type_request_unit == 'day'" />
-                                <field name="request_unit_hours" invisible="leave_type_request_unit != 'hour'" readonly="state != 'confirm'" class="ms-5" />
-                                <label for="request_unit_hours" invisible="leave_type_request_unit != 'hour'" />
-                            </div>
-                            <label for="request_hour_from" string="" invisible="not request_unit_hours"/>
-                            <div class="o_row o_row_readonly" invisible="not request_unit_hours">
+                            <label for="request_hour_from" string="" invisible="request_unit != 'hour'"/>
+                            <div class="o_row o_row_readonly" invisible="request_unit != 'hour'">
                                 <label for="request_hour_from" string="From" />
-                                <field name="request_hour_from" invisible="not request_unit_hours" readonly="state == 'validate'" required="request_unit_hours" widget="float_time_selection" placeholder="00:00"/>
+                                <field name="request_hour_from" invisible="request_unit != 'hour'" readonly="state == 'validate'" required="request_unit == 'hour'" widget="float_time_selection" placeholder="00:00"/>
                                 <label for="request_hour_to" string="To" />
-                                <field name="request_hour_to" invisible="not request_unit_hours" readonly="state == 'validate'" required="request_unit_hours" widget="float_time_selection"/>
+                                <field name="request_hour_to" invisible="request_unit != 'hour'" readonly="state == 'validate'" required="request_unit == 'hour'" widget="float_time_selection"/>
                             </div>
                             <field name="number_of_days" invisible="1"/>
                             <field name="number_of_hours" invisible="1"/>
-                            <field name="duration_display" readonly="1"/>
+                            <field name="duration_display" string="Duration" readonly="1"/>
                         </group>
                         <div name="duration_warning" class="alert alert-warning my-2" invisible="not leave_type_increases_duration" role="alert">
                             <span >You can only take this time off in whole days, so if your schedule has half days, it won't be used efficiently.</span>
                         </div>
                         <group>
-                            <field name="name" readonly="state != 'confirm'" widget="text" placeholder="Add a description..." />
+                            <field name="name" readonly="state != 'confirm'" widget="text" string="Reason" placeholder="Provide a reason for your request" />
                             <field name="user_id" invisible="1" />
                             <field name="leave_type_support_document" invisible="1" />
                             <label for="supported_attachment_ids" string="Supporting Document" invisible="not leave_type_support_document or state not in ('confirm', 'validate1')" />

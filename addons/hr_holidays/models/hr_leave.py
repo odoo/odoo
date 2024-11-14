@@ -210,8 +210,8 @@ class HrLeave(models.Model):
         ('am', 'Morning'), ('pm', 'Afternoon')],
         string="Date Period Start", default='am')
     # request type
-    request_unit_half = fields.Boolean('Half Day', compute='_compute_request_unit_half', store=True, readonly=False)
-    request_unit_hours = fields.Boolean('Custom Hours', compute='_compute_request_unit_hours', store=True, readonly=False)
+    request_unit = fields.Selection([('day', 'Day'), ('half_day', 'Half Day'), ('hour', 'Hour')],
+                                    string='Request Unit', default='day')
     # view
     is_hatched = fields.Boolean('Hatched', compute='_compute_is_hatched')
     is_striked = fields.Boolean('Striked', compute='_compute_is_hatched')
@@ -286,28 +286,27 @@ class HrLeave(models.Model):
             leave.resource_calendar_id = calendar or self.env.company.resource_calendar_id
 
     @api.depends('request_date_from_period', 'request_hour_from', 'request_hour_to', 'request_date_from', 'request_date_to',
-                 'request_unit_half', 'request_unit_hours', 'employee_id')
+                 'request_unit', 'employee_id')
     def _compute_date_from_to(self):
         for holiday in self:
             if not holiday.request_date_from:
                 holiday.date_from = False
-            elif not holiday.request_unit_half and not holiday.request_unit_hours and not holiday.request_date_to:
+            elif holiday.request_unit == 'day' and not holiday.request_date_to:
                 holiday.date_to = False
             else:
-                if (holiday.request_unit_half or holiday.request_unit_hours) and holiday.request_date_to != holiday.request_date_from:
+                if holiday.request_unit != 'day' and holiday.request_date_to != holiday.request_date_from:
                     holiday.request_date_to = holiday.request_date_from
-
-
+                
                 day_period = {
                     'am': 'morning',
                     'pm': 'afternoon'
-                }.get(holiday.request_date_from_period, None) if holiday.request_unit_half else None
+                }.get(holiday.request_date_from_period, None) if holiday.request_unit == 'half_day' else None
 
 
                 compensated_request_date_from = holiday.request_date_from
                 compensated_request_date_to = holiday.request_date_to
 
-                if holiday.request_unit_hours:
+                if holiday.request_unit == 'hour':
                     hour_from = holiday.request_hour_from
                     hour_to = holiday.request_hour_to
                 else:
@@ -316,18 +315,6 @@ class HrLeave(models.Model):
 
                 holiday.date_from = self._to_utc(compensated_request_date_from, hour_from, holiday.employee_id or holiday)
                 holiday.date_to = self._to_utc(compensated_request_date_to, hour_to, holiday.employee_id or holiday)
-
-    @api.depends('holiday_status_id', 'request_unit_hours')
-    def _compute_request_unit_half(self):
-        for holiday in self:
-            if holiday.holiday_status_id or holiday.request_unit_hours:
-                holiday.request_unit_half = False
-
-    @api.depends('holiday_status_id', 'request_unit_half')
-    def _compute_request_unit_hours(self):
-        for holiday in self:
-            if holiday.holiday_status_id or holiday.request_unit_half:
-                holiday.request_unit_hours = False
 
     def _get_employee_domain(self):
         domain = [
@@ -352,7 +339,7 @@ class HrLeave(models.Model):
                 holiday.holiday_status_id = False
             elif holiday.employee_id.user_id != self.env.user and holiday._origin.employee_id != holiday.employee_id:
                 if holiday.employee_id and not holiday.holiday_status_id.with_context(employee_id=holiday.employee_id.id).has_valid_allocation:
-                    holiday.holiday_status_id = False
+                    holiday.holiday_status_id = False          
 
     @api.depends('employee_id')
     def _compute_department_id(self):
@@ -907,7 +894,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                 "%(employee)s on Time Off : %(duration)s",
                 employee=holiday.employee_id.name or holiday.category_id.name,
                 duration=holiday.duration_display)
-            allday_value = not holiday.request_unit_half
+            allday_value = holiday.request_unit != 'half_day'
             if holiday.leave_type_request_unit == 'hour':
                 allday_value = float_compare(holiday.number_of_days, 1.0, 1) >= 0
             meeting_values = {

@@ -40,7 +40,7 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
             'holiday_status_id': self.leave_type.id,
             'request_date_from': date(2015, 11, 2),
             'request_date_to': date(2015, 11, 2),
-            'request_unit_hours': True,
+            'request_unit': 'hour',
             'request_hour_from': 11,
             'request_hour_to': 17,
         })

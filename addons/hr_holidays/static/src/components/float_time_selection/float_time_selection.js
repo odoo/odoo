@@ -43,6 +43,12 @@ export class FloatTimeSelectionField extends FloatTimeField {
 
     onCharHoursClick(ev) {
         ev.preventDefault();
+        // We need to open the popover with the current time values
+        const initialValue = this.props.record.data[this.props.name];
+        const { hours, minutes } = floatToHoursMinutes(initialValue);
+        this.timeValues.hours = hours;
+        this.timeValues.minutes = minutes;
+        this.timeValues.floatValue = initialValue;
         this.popover.open(ev.currentTarget, {
             timeValues: this.timeValues,
             onTimeChange: this.onTimeChange.bind(this),
