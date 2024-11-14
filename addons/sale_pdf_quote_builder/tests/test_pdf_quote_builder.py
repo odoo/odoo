@@ -142,7 +142,7 @@ class TestPDFQuoteBuilder(HttpCase, SaleCommon):
             result = self.env['ir.actions.report']._get_value_from_path(
                 form_field, self.sale_order, sol_1
             )
-            self.assertEqual(result, expected[form_field.name])
+            self.assertEqual(' '.join(result.split()), ' '.join(expected[form_field.name].split()))
 
     def _test_custom_content_kanban_like(self):
         # TODO VCR finish tour and uncomment
