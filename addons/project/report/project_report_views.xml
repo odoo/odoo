@@ -5,7 +5,7 @@
             <field name="name">report.project.task.user.pivot</field>
             <field name="model">report.project.task.user</field>
             <field name="arch" type="xml">
-                <pivot string="Tasks Analysis" display_quantity="1" sample="1" disable_linking="1">
+                <pivot string="Tasks Analysis" display_quantity="1" sample="1" js_class="project_task_analysis_pivot">
                     <field name="project_id" type="row"/>
                     <field name="working_hours_open" widget="timesheet_uom"/>
                     <field name="working_hours_close" widget="timesheet_uom"/>
@@ -33,7 +33,7 @@
             <field name="name">report.project.task.user.graph</field>
             <field name="model">report.project.task.user</field>
             <field name="arch" type="xml">
-                <graph string="Tasks Analysis" sample="1" disable_linking="1">
+                <graph string="Tasks Analysis" sample="1" js_class="project_task_analysis_graph">
                      <field name="project_id"/>
                      <field name="stage_id"/>
                      <field name="nbr" invisible="1"/>
@@ -43,7 +43,7 @@
                  </graph>
              </field>
         </record>
-    
+
 
         <!-- We need to create an fsm view here so that we can prevent the
         remaining_hours_so field from being automatically added to the fsm view
