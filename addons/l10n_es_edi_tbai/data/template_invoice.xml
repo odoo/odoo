@@ -106,7 +106,7 @@
                 </t>
             </CabeceraFactura>
             <DatosFactura t-if="is_emission">
-                <DescripcionFactura t-out="invoice.invoice_origin or 'manual'"/>
+                <DescripcionFactura t-out="invoice.invoice_origin and invoice.invoice_origin[:250] or 'manual'"/>
                 <DetallesFactura>
                     <IDDetalleFactura t-foreach="invoice_lines" t-as="line_values">
                         <t t-set="line" t-value="line_values['line']"/>
