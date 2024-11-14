@@ -137,6 +137,14 @@ class TestSelfAccessRights(TestHrCommon):
     def testReadOtherEmployee(self):
         with self.assertRaises(AccessError):
             self.hubert_emp.with_user(self.richard).read(self.protected_fields_emp.keys())
+        # Check simple user can read all public fields of private employee
+        public_fields = [
+            field_name
+            for field_name in self.env['hr.employee.public']._fields
+            if field_name in self.env['hr.employee']._fields
+        ]
+        res = self.hubert_emp.with_user(self.richard).read(public_fields)
+        self.assertEqual(len(public_fields), len(res[0]))
 
     # Write hr.employee #
     def testWriteSelfEmployee(self):
