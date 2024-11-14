@@ -425,13 +425,13 @@ class MassMailCommon(MailCommon, MassMailCase):
     def setUpClass(cls):
         super(MassMailCommon, cls).setUpClass()
 
-        cls.user_marketing = mail_new_test_user(
+        cls.user_marketing, cls.user_marketing_1 = [mail_new_test_user(
             cls.env,
             groups='base.group_user,base.group_partner_manager,mass_mailing.group_mass_mailing_user',
-            login='user_marketing',
-            name='Martial Marketing',
-            signature='--\nMartial',
-        )
+            login=f'user_marketing{suffix}',
+            name=f'Martial Marketing{suffix}',
+            signature=f'--\nMartial{suffix}',
+        ) for suffix in ('', '_1')]
 
         cls.email_reply_to = 'MyCompany SomehowAlias <test.alias@test.mycompany.com>'
 
