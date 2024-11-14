@@ -7,6 +7,8 @@ import {
     loadImageInfo,
     applyModifications,
 } from "@web_editor/js/editor/image_processing";
+import * as gridUtils from "@web_editor/js/common/grid_layout_utils";
+import * as masonryUtils from "@web_editor/js/common/masonry_layout_utils";
 
 /**
  * This class provides layout methods for interacting with the ImageGallery
@@ -15,16 +17,34 @@ import {
  * layout mode and changing the number of columns.
  */
 options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async notify(name) {
+        if (name === "change_container_width") {
+            const mode = this._getMode();
+            const relayoutRequiredModes = ["grid", "masonry"];
+            if (relayoutRequiredModes.includes(mode)) {
+                await this._relayout();
+            }
+        } else {
+            this._super(...arguments);
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
     /**
-     * Get the image target's layout mode (slideshow, masonry, grid or nomode).
+     * Get the image target's layout mode (slideshow, masonry, grid or col).
      *
      * @private
-     * @returns {String('slideshow'|'masonry'|'grid'|'nomode')}
+     * @returns {String('slideshow'|'masonry'|'grid'|'col')}
      */
     _getMode() {
         var mode = 'slideshow';
@@ -34,8 +54,8 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
         if (this.$target.hasClass('o_grid')) {
             mode = 'grid';
         }
-        if (this.$target.hasClass('o_nomode')) {
-            mode = 'nomode';
+        if (this.$target[0].classList.contains("o_col")) {
+            mode = "col";
         }
         return mode;
     },
@@ -44,22 +64,26 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
      *
      * @private
      */
-    _grid() {
+    async _grid() {
         const imgs = this._getImgHolderEls();
-        var $row = $('<div/>', {class: 'row s_nb_column_fixed'});
-        var columns = this._getColumns();
-        var colClass = 'col-lg-' + (12 / columns);
-        var $container = this._replaceContent($row);
-
-        imgs.forEach((img, index) => {
-            const $img = $(img.cloneNode(true));
-            var $col = $('<div/>', {class: colClass});
-            $col.append($img).appendTo($row);
-            if ((index + 1) % columns === 0) {
-                $row = $('<div/>', {class: 'row s_nb_column_fixed'});
-                $row.appendTo($container);
-            }
+        const columnCount = this._getColumns();
+        const mobileColumnCount = this._getMobileColumns();
+        const rowEl = document.createElement("div");
+        rowEl.classList.add("row", "s_nb_column_fixed");
+        const $container = this._replaceContent($(rowEl));
+        imgs.forEach((imgEl) => {
+            const imgContainerEl = document.createElement("div");
+            imgContainerEl.classList.add(
+                `col-${12 / mobileColumnCount}`,
+                `col-lg-${12 / columnCount}`
+            );
+            rowEl.appendChild(imgContainerEl);
+            const clonedImgEl = imgEl.cloneNode(true);
+            imgContainerEl.appendChild(clonedImgEl);
         });
+        // Wait for images to load to ensure grid areas are properly calculated.
+        await wUtils.onceAllImagesLoaded($container);
+        gridUtils._toggleGridMode($container[0]);
         this.$target.css('height', '');
     },
     /**
@@ -70,46 +94,51 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
      */
     _masonry() {
         const imgs = this._getImgHolderEls();
-        var columns = this._getColumns();
-        var colClass = 'col-lg-' + (12 / columns);
-        var cols = [];
 
-        var $row = $('<div/>', {class: 'row s_nb_column_fixed'});
-        this._replaceContent($row);
+        // Create initial row structure
+        const rowEl = document.createElement("div");
+        rowEl.classList.add("row", "s_nb_column_fixed");
+        const $container = this._replaceContent($(rowEl));
 
-        // Create columns
-        for (var c = 0; c < columns; c++) {
-            var $col = $('<div/>', {class: 'o_masonry_col o_snippet_not_selectable ' + colClass});
-            $row.append($col);
-            cols.push($col[0]);
-        }
+        // Add images to container
+        imgs.forEach((imgEl) => {
+            const clonedImgEl = imgEl.cloneNode(true);
+            rowEl.appendChild(clonedImgEl);
+        });
 
-        // Dispatch images in columns by always putting the next one in the
-        // smallest-height column
-        return new Promise(async resolve => {
-            for (const imgEl of imgs) {
-                let min = Infinity;
-                let smallestColEl;
-                for (const colEl of cols) {
-                    const imgEls = colEl.querySelectorAll("img");
-                    const lastImgRect = imgEls.length && imgEls[imgEls.length - 1].getBoundingClientRect();
-                    const height = lastImgRect ? Math.round(lastImgRect.top + lastImgRect.height) : 0;
-                    if (height < min) {
-                        min = height;
-                        smallestColEl = colEl;
-                    }
-                }
-                // Only on Chrome: appended images are sometimes invisible
-                // and not correctly loaded from cache, we use a clone of the
-                // image to force the loading.
-                smallestColEl.append(imgEl.cloneNode(true));
-                await wUtils.onceAllImagesLoaded(this.$target);
-            }
-            resolve();
+        return masonryUtils.toggleMasonryMode($container[0]);
+    },
+    /**
+     * Displays the images with the "column" layout.
+     *
+     * @private
+     * @returns {Promise}
+     */
+    _col() {
+        const imgEls = this._getImgHolderEls();
+        const columnCount = this._getColumns();
+        const mobileColumnCount = this._getMobileColumns();
+
+        // Create initial row structure
+        const rowEl = document.createElement("div");
+        rowEl.classList.add("row", "s_nb_column_fixed", "o_col_mode");
+        this._replaceContent($(rowEl));
+
+        // Add images to container
+        imgEls.forEach((imgEl) => {
+            const imgContainerEl = document.createElement("div");
+            imgContainerEl.classList.add(
+                "o_col_col",
+                `col-${12 / mobileColumnCount}`,
+                `col-lg-${12 / columnCount}`
+            );
+            rowEl.appendChild(imgContainerEl);
+            const clonedImgEl = imgEl.cloneNode(true);
+            imgContainerEl.appendChild(clonedImgEl);
         });
     },
     /**
-     * Allows to change the images layout. @see grid, masonry, nomode, slideshow
+     * Allows to change the images layout. @see grid, masonry, col, slideshow
      *
      * @private
      * @param {string} modeName
@@ -118,9 +147,8 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
     async _setMode(modeName) {
         modeName = modeName || 'slideshow'; // FIXME should not be needed
         this.$target.css('height', '');
-        this.$target
-            .removeClass('o_nomode o_masonry o_grid o_slideshow')
-            .addClass('o_' + modeName);
+        this.$target[0].classList.remove("o_masonry", "o_grid", "o_col", "o_slideshow");
+        this.$target[0].classList.add("o_" + modeName);
         // Used to prevent the editor's "unbreakable protection mechanism" from
         // restoring Image Wall adaptations (images removed > new images added
         // to the container & layout updates) when adding new images to the
@@ -131,27 +159,6 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
         await this[`_${modeName}`]();
         this.trigger_up('cover_update');
         await this._refreshPublicWidgets();
-    },
-    /**
-     * Displays the images with the standard layout: floating images.
-     *
-     * @private
-     */
-    _nomode() {
-        var $row = $('<div/>', {class: 'row s_nb_column_fixed'});
-        const imgs = this._getItemsGallery();
-        const imgHolderEls = this._getImgHolderEls();
-
-        this._replaceContent($row);
-
-        imgs.forEach((img, index) => {
-            var wrapClass = 'col-lg-3';
-            if (img.width >= img.height * 2 || img.width > 600) {
-                wrapClass = 'col-lg-6';
-            }
-            var $wrap = $('<div/>', {class: wrapClass}).append(imgHolderEls[index]);
-            $row.append($wrap);
-        });
     },
     /**
      * Displays the images with a "slideshow" layout.
@@ -230,6 +237,15 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
      */
     _getColumns: function () {
         return parseInt(this.$target.attr('data-columns')) || 3;
+    },
+    /**
+     * Returns the currently selected mobile column option.
+     *
+     * @private
+     * @returns {integer}
+     */
+    _getMobileColumns: function () {
+        return parseInt(this.$target[0].dataset.mobileColumns) || 1;
     },
     /**
      * @override
@@ -365,12 +381,28 @@ options.registry.gallery = options.registry.GalleryLayout.extend({
         return this._relayout();
     },
     /**
-     * Allows to change the images layout. @see grid, masonry, nomode, slideshow
+     * Allows to change the number of columns on mobile when displaying
+     * images in different layout.
+     *
+     * @see this.selectClass for parameters
+     */
+    mobileColumns(previewMode, widgetValue, params) {
+        const nbColumns = parseInt(widgetValue || "1");
+        this.$target[0].setAttribute("data-mobile-columns", nbColumns);
+
+        return this._relayout();
+    },
+    /**
+     * Allows to change the images layout. @see grid, masonry, col, slideshow
      *
      * @see this.selectClass for parameters
      */
     mode(previewMode, widgetValue, params) {
-        return this._setMode(widgetValue);
+        // Set the mode during preview only if it differs from the current mode
+        // to avoid redundant calls.
+        if (previewMode && widgetValue !== this._getMode()) {
+            return this._setMode(widgetValue);
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -395,6 +427,9 @@ options.registry.gallery = options.registry.GalleryLayout.extend({
             }
             case 'columns': {
                 return `${this._getColumns()}`;
+            }
+            case "mobileColumns": {
+                return `${this._getMobileColumns()}`;
             }
         }
         return this._super(...arguments);

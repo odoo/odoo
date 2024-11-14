@@ -683,17 +683,24 @@
 </template>
 
 <!-- Grid layout options -->
-<template id="grid_layout_options">
+<template id="grid_layout_add_elements">
     <we-button-group t-att-class="indent and 'o_we_sublevel_1'" string="Add Elements" data-no-preview="true" data-dependencies="grid_mode">
         <we-button class="o_we_bg_brand_primary o_grid" data-add-element="image" title="Image" data-name="image">Image</we-button>
         <we-button class="o_we_bg_brand_primary o_grid" data-add-element="text" title="Text" data-name="text">Text</we-button>
         <we-button class="o_we_bg_brand_primary o_grid" data-add-element="button" title="Button" data-name="button">Button</we-button>
     </we-button-group>
+</template>
+<template id="grid_layout_spacing">
     <we-row t-att-class="indent and 'o_we_sublevel_1'" string="Spacing (Y, X)">
         <we-input data-dependencies="grid_mode" data-select-style="" data-css-property="row-gap" data-unit="px" data-prevent-important="true" data-apply-to=".row.o_grid_mode"/>
         <we-input data-dependencies="grid_mode" data-select-style="" data-css-property="column-gap" data-unit="px" data-max="60" data-prevent-important="true" data-apply-to=".row.o_grid_mode"/>
     </we-row>
 </template>
+<template id="grid_layout_options">
+    <t t-call="website.grid_layout_add_elements"/>
+    <t t-call="website.grid_layout_spacing"/>
+</template>
+
 
 <template id="vertical_alignment_option">
     <we-button-group t-att-class="indent and 'o_we_sublevel_1'" string="Vert. Alignment" title="Vertical Alignment" data-dependencies="normal_mode">
