@@ -209,7 +209,7 @@ export class ColorPlugin extends Plugin {
         }
 
         const selectedNodes =
-            mode === "backgroundColor"
+            mode === "backgroundColor" && color
                 ? selectionNodes.filter((node) => !closestElement(node, "table.o_selected_table"))
                 : selectionNodes;
 
