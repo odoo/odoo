@@ -107,21 +107,10 @@ class WebsiteMenu(models.Model):
 
     def write(self, values):
         self.env.registry.clear_cache('templates')
+        res = super().write(values)
         if 'group_ids' in values:
-            commands = values['group_ids'] or []
-            designer_group_id = self.env.ref('website.group_website_designer').id
-            link_designer_group = Command.link(designer_group_id)
-            for record in self:
-                # Simulate write.
-                ids = set(record.group_ids.mapped('id'))
-                for command, record_id in commands:
-                    if command == Command.LINK:
-                        ids.add(record_id)
-                    elif command == Command.UNLINK and record_id in ids:
-                        ids.remove(record_id)
-                if ids and designer_group_id not in ids:
-                    commands.append(link_designer_group)
-        return super().write(values)
+            self.filtered('group_ids').group_ids += self.env.ref('website.group_website_designer')
+        return res
 
     def unlink(self):
         self.env.registry.clear_cache('templates')
