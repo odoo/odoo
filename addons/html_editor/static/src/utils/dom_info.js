@@ -465,7 +465,7 @@ export function allowsParagraphRelatedElements(node) {
 
 export const phrasingContent = new Set(["#text", ...phrasingTagNames]);
 const flowContent = new Set([...phrasingContent, ...paragraphRelatedElements, "DIV", "HR"]);
-const listItem = new Set(["LI"]);
+export const listItem = new Set(["LI"]);
 
 const allowedContent = {
     BLOCKQUOTE: phrasingContent, // HTML spec: flow content
