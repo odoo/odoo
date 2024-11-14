@@ -110,10 +110,9 @@ class ResPartner(models.Model):
         return self.create(create_values)
 
     @api.model
-    def _find_or_create_from_emails(self, emails, filter_found=None,
-                                    additional_values=None,
-                                    sort_key=None, sort_reverse=True,
-                                    no_create=False):
+    def _find_or_create_from_emails(self, emails, ban_emails=None,
+                                    filter_found=None, additional_values=None,
+                                    no_create=False, sort_key=None, sort_reverse=True):
         """ Based on a list of emails, find or (optionally) create partners.
         If an email is not unique (e.g. multi-email input), only the first found
         valid email in input is considered. Filter and sort options allow to
@@ -127,7 +126,9 @@ class ResPartner(models.Model):
         allows fixing typos / wrong emails.
 
         :param list emails: list of emails that can be formatted;
-        :param filter_found: if given, filters found partners based on emails;
+        :param list ban_emails: optional list of banished emails e.g. because
+          it may interfere with master data like aliases;
+        :param callable filter_found: if given, filters found partners based on emails;
         :param dict additional_values: additional values per normalized or
           raw invalid email given to partner creation. Typically used to
           propagate a company_id and customer information from related record.
@@ -154,13 +155,13 @@ class ResPartner(models.Model):
         # for existing partners based on those emails
         emails_normalized = {email_normalized
                              for _name, email_normalized in name_emails
-                             if email_normalized}
+                             if email_normalized and email_normalized not in (ban_emails or [])}
         # find partners for invalid (but not void) emails, aka either invalid email
         # either no email and a name that will be used as email
         names = {
             name.strip()
             for name, email_normalized in name_emails
-            if not email_normalized and name.strip()
+            if not email_normalized and name.strip() and name.strip() not in (ban_emails or [])
         }
         if emails_normalized or names:
             domains = []
@@ -192,6 +193,7 @@ class ResPartner(models.Model):
                     **additional_values.get(email_normalized, {}),
                 }
                 for name, email_normalized in notfound_name_emails
+                if email_normalized not in (ban_emails or [])
             ]
             # create partners for invalid emails (aka name and not email_normalized)
             # without any existing partner
@@ -201,7 +203,7 @@ class ResPartner(models.Model):
                     'email': name,
                     **additional_values.get(name, {}),
                 }
-                for name in names if name not in partners.mapped('email')
+                for name in names if name not in partners.mapped('email') and name not in (ban_emails or [])
             ]
             # create partners once
             if tocreate_vals_list:
