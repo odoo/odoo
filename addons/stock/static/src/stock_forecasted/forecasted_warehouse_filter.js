@@ -21,16 +21,15 @@ export class ForecastedWarehouseFilter extends Component {
         this.props.setWarehouseInContext(Number(id));
     }
 
-    get activeWarehouse() {
-        let warehouseIds = null;
+    get activeWarehouse(){
+        let warehouseId = null;
         if (Array.isArray(this.context.warehouse)) {
-            warehouseIds = this.context.warehouse;
-        } else {
-            warehouseIds = [this.context.warehouse];
+            const validWarehouseIds = this.context.warehouse.filter(Number.isInteger);
+            warehouseId = validWarehouseIds.length ? validWarehouseIds[0] : null;
+        } else if (Number.isInteger(this.context.warehouse)) {
+            warehouseId = this.context.warehouse;
         }
-        return warehouseIds ?
-            this.warehouses.find(w => warehouseIds.includes(w.id)) :
-            this.warehouses[0];
+        return warehouseId ? this.warehouses.find((w) => w.id == warehouseId) : this.warehouses[0];
     }
 }
 
