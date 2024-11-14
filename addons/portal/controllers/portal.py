@@ -3,6 +3,7 @@
 import json
 import math
 import re
+import base64
 
 import psycopg2
 from werkzeug import urls
@@ -410,6 +411,7 @@ class CustomerPortal(Controller):
         return {
             'partner_sudo': partner_sudo,  # If set, customer is editing an existing address
             'partner_id': partner_sudo.id,
+            'website': request.website,
             'current_partner': current_partner,
             'commercial_partner': current_partner.commercial_partner_id,
             'is_commercial_address': not current_partner or partner_sudo == commercial_partner,
@@ -559,6 +561,14 @@ class CustomerPortal(Controller):
         ResPartner = request.env['res.partner']
         partner_fields = ResPartner._fields
         authorized_partner_fields = request.env['res.partner']._get_frontend_writable_fields()
+        # here we remove the image field from the form_data and convert it to base64
+        # and then add it to the address_values.
+        if "remove_profile" in form_data:
+            address_values["image_1920"] = False
+        else:
+            image_1920 = form_data.pop("image_1920", None)
+            if image_1920:
+                address_values["image_1920"] = base64.b64encode(image_1920.read()).decode("utf-8")
         for key, value in form_data.items():
             if isinstance(value, str):
                 value = value.strip()

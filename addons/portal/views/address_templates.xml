@@ -379,19 +379,38 @@
                 <hr class="w-100"/>
             </div>
             <button id="save_address" class="btn btn-primary w-100 w-md-auto order-1 order-md-3 ms-auto gap-2">
-                <t name="save_address_label">Save Address</t>
+                <t t-out="save_button_label">
+                    Save Address
+                </t>
                 <i class="fw-light fa fa-angle-right ms-2"/>
             </button>
         </div>
     </template>
 
+    <template id="portal_profile_picture_card" name="Portal Profile Picture">
+        <div class="o_portal_picture_card">
+            <div class="d-flex justify-content-center">
+                <input type="file" class="d-none o_file_upload" t-att-name="image_field" accept="image/*"/>
+                <img class="o_wportal_avatar_img w-75 mb-3" t-att-src="image_src" />
+            </div>
+            <div class="text-center">
+                <a class="o_portal_profile_pic_edit btn btn-primary" aria-label="Edit">
+                    <i class="fa fa-pencil float-sm-none float-md-start" title="Edit"></i>
+                </a>
+                <a class="btn border-primary o_portal_profile_pic_clear" aria-label="Clear">
+                    <i class="fa fa-trash-o float-sm-none float-md-end" title="Clear"></i>
+                </a>
+            </div>
+        </div>
+    </template>
+    
     <template id="portal.portal_my_details" name="Contact Details">
         <t t-set="no_footer" t-value="1"/>
         <t t-call="portal.portal_layout">
             <t t-set="additional_title">Contact Details</t>
             <div class="o_customer_address_fill">
                 <div class="row">
-                    <div name="address_div" class="oe_clear_stucture col-12 col-lg-8">
+                    <div name="address_div" class="oe_clear_stucture col-12">
                         <div>
                             <div id="errors"/> <!-- for js -->
                             <form
@@ -402,10 +421,28 @@
                                 t-att-data-company-country-code="res_company.country_id.code"
                                 t-att-data-submit-url="'/my/address/submit'"
                             >
-                                <div name="address_details" class="row">
-                                    <t t-call="portal.address_form_fields"/>
+                                <div name="address_details" class="row d-flex flex-column-reverse flex-md-row">
+                                    <div class="col-md-9">
+                                        <div class="row">
+                                            <t t-call="portal.address_form_fields"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="card o_card_people mt-3">
+                                            <div class="card-body">
+                                                <t t-call="portal.portal_profile_picture_card">
+                                                    <t t-set="image_field" t-value="'image_1920'"/>
+                                                    <t t-set="image_src" t-value="website.image_url(partner_sudo, 'avatar_128')"/>
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <t t-call="portal.address_footer"/>
+                                <div class="col-md-9">
+                                    <t t-call="portal.address_footer">
+                                        <t t-set="save_button_label" t-value="'Save'"/>
+                                    </t>
+                                </div>
                             </form>
                         </div>
                     </div>

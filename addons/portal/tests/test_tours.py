@@ -32,3 +32,6 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
     def test_03_skip_to_content(self):
         self.start_tour("/", "skip_to_content", login="portal")
+
+    def test_04_update_portal_profile_picture(self):
+        self.start_tour("/", "portal_profile_update", login="portal")

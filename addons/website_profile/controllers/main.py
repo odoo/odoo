@@ -132,7 +132,7 @@ class WebsiteProfile(http.Controller):
             'website_description': kwargs.get('description'),
         }
 
-        if 'clear_image' in kwargs:
+        if 'remove_profile' in kwargs:
             values['image_1920'] = False
         elif kwargs.get('ufile'):
             image = kwargs.get('ufile').read()
