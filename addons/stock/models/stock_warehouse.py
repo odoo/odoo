@@ -667,6 +667,26 @@ class Warehouse(models.Model):
         }
         return sub_locations
 
+    @api.model
+    def _get_warehouse_id_from_context(self):
+        """
+        Helper method used to extract a single id from the context.
+
+        The `warehouse_id` dummy field of the `product.template` model is meant to
+        to be used in the `product_template_search_form_view_stock` search view in
+        order to add a `warehouse` context key. That key can therefore be any of
+        the following types: Int, String, List(Int?, String?).
+        """
+        context_warehouse = self.env.context.get('warehouse', False)
+        if context_warehouse:
+            if isinstance(context_warehouse, int):
+                return context_warehouse
+            elif isinstance(context_warehouse, list):
+                relevant_context = list(filter(lambda key: isinstance(key, int), context_warehouse))
+                if relevant_context:
+                    return relevant_context[0]
+        return False
+
     def _valid_barcode(self, barcode, company_id):
         location = self.env['stock.location'].with_context(active_test=False).search([
             ('barcode', '=', barcode),
