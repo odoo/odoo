@@ -474,6 +474,22 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         Test that the production stock account is optional, and we will fallback on input/output accounts.
         """
         product_category_all = self.product_category
+        a_in, a_out, a_val = self.env['account.account'].create([{
+            'name': 'Stock Interim (Received)',
+            'code': '1102',
+            'account_type': 'asset_current',
+        }, {
+            'name': 'Stock Interim (Delivered)',
+            'code': '1103',
+            'account_type': 'asset_current',
+        }, {
+            'name': 'VALU Account',
+            'code': '000003',
+            'account_type': 'asset_current',
+        }])
+        product_category_all.property_stock_account_input_categ_id = a_in
+        product_category_all.property_stock_account_output_categ_id = a_out
+        product_category_all.property_stock_valuation_account_id = a_val
         product_category_all.property_cost_method = 'fifo'
         product_category_all.property_valuation = 'real_time'
         # set the production account to False
