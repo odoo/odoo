@@ -7,7 +7,6 @@ export class Toolbar extends Component {
         toolbar: {
             type: Object,
             shape: {
-                dispatch: Function,
                 getSelection: Function,
                 focusEditable: Function,
                 buttonGroups: {
@@ -24,26 +23,24 @@ export class Toolbar extends Component {
                                     validate: (button) => {
                                         const base = {
                                             id: String,
-                                            category: String,
+                                            groupId: String,
                                             title: String,
-                                            inherit: { type: String, optional: true },
+                                            isAvailable: { type: Function, optional: true },
                                         };
                                         if (button.Component) {
                                             validate(button, {
                                                 ...base,
                                                 Component: Function,
                                                 props: { type: Object, optional: true },
-                                                isAvailable: { type: Function, optional: true },
                                             });
                                         } else {
                                             validate(button, {
                                                 ...base,
-                                                action: Function,
+                                                run: Function,
                                                 icon: { type: String, optional: true },
                                                 text: { type: String, optional: true },
-                                                isFormatApplied: { type: Function, optional: true },
-                                                hasFormat: { type: Function, optional: true },
-                                                isAvailable: { type: Function, optional: true },
+                                                isActive: { type: Function, optional: true },
+                                                isDisabled: { type: Function, optional: true },
                                             });
                                         }
                                         return true;
@@ -86,13 +83,12 @@ export class Toolbar extends Component {
     }
 
     onButtonClick(button) {
-        button.action(this.props.toolbar.dispatch);
+        button.run();
         this.props.toolbar.focusEditable();
     }
 }
 
 export const toolbarButtonProps = {
     title: String,
-    dispatch: Function,
     getSelection: Function,
 };

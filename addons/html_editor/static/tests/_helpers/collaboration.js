@@ -1,6 +1,5 @@
 import { HistoryPlugin } from "@html_editor/core/history_plugin";
 import { CollaborationPlugin } from "@html_editor/others/collaboration/collaboration_plugin";
-import { Plugin } from "@html_editor/plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { createDOMPathGenerator } from "@html_editor/utils/dom_traversal";
 import { DIRECTIONS } from "@html_editor/utils/position";
@@ -77,38 +76,29 @@ export const setupMultiEditor = async (spec) => {
                 selection = parseMultipleTextualSelection(editable, peerId);
             },
             config: {
-                Plugins: [
-                    ...defaultPlugins,
-                    CollaborationPlugin,
-                    class TestHistoryAdapterPlugin extends Plugin {
-                        static name = "test-history-adapter";
-                        handleCommand(commandId, payload) {
-                            switch (commandId) {
-                                case "COLLABORATION_STEP_ADDED":
-                                    peerInfo.steps.push(payload);
-                                    break;
-                                case "HISTORY_MISSING_PARENT_STEP":
-                                    historyMissingParentSteps(peerInfos, peerInfo, payload);
-                                    break;
-                            }
-                        }
-                    },
-                    ...(spec.Plugins || []),
-                ],
+                Plugins: [...defaultPlugins, CollaborationPlugin, ...(spec.Plugins || [])],
                 collaboration: { peerId },
-                resources: spec.resources,
+                resources: {
+                    ...spec.resources,
+                    collaboration_step_added_handlers: (step) => {
+                        peerInfo.steps.push(step);
+                    },
+                    history_missing_parent_step_handlers: (params) => {
+                        historyMissingParentSteps(peerInfos, peerInfo, params);
+                    },
+                },
             },
         });
         peerInfo.editor = base.editor;
         if (selection && selection.anchorNode) {
-            base.editor.shared.setSelection(selection);
+            base.editor.shared.selection.setSelection(selection);
             base.plugins.get("history").stageSelection();
         } else {
             base.editor.document.getSelection().removeAllRanges();
         }
         peerInfo.plugins = base.plugins;
         // TODO @phoenix refactor tests, no need to assign every plugin individually
-        const getPlugin = (name) => base.editor.plugins.find((x) => x.constructor.name === name);
+        const getPlugin = (id) => base.editor.plugins.find((x) => x.constructor.id === id);
         peerInfo.collaborationPlugin = getPlugin("collaboration");
         peerInfo.historyPlugin = getPlugin("history");
     }

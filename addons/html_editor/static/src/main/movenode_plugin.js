@@ -10,10 +10,10 @@ const ALLOWED_ELEMENTS =
     "h1, h2, h3, p, hr, pre, blockquote, ul, ol, table, [data-embedded], .o_text_columns, .o_editor_banner, .oe_movable";
 
 export class MoveNodePlugin extends Plugin {
-    static name = "movenode";
-    static dependencies = ["selection", "position", "local-overlay"];
+    static id = "movenode";
+    static dependencies = ["selection", "history", "position", "localOverlay"];
     resources = {
-        layoutGeometryChange: () => {
+        layout_geometry_change_handlers: () => {
             if (this.currentMovableElement) {
                 this.setMovableElement(this.currentMovableElement);
             }
@@ -39,15 +39,23 @@ export class MoveNodePlugin extends Plugin {
         this.addDomListener(this.document, "touchmove", this.onDocumentMousemove, true);
 
         // This container help to add zone into which the mouse can activate the move widget.
-        this.widgetHookContainer = this.shared.makeLocalOverlay("oe-widget-hooks-container");
+        this.widgetHookContainer = this.dependencies.localOverlay.makeLocalOverlay(
+            "oe-widget-hooks-container"
+        );
         // This container contains the differents widgets.
-        this.widgetContainer = this.shared.makeLocalOverlay("oe-widgets-container");
+        this.widgetContainer =
+            this.dependencies.localOverlay.makeLocalOverlay("oe-widgets-container");
         // This container contains the jquery helper element.
-        this.dragHelperContainer = this.shared.makeLocalOverlay("oe-movenode-helper-container");
+        this.dragHelperContainer = this.dependencies.localOverlay.makeLocalOverlay(
+            "oe-movenode-helper-container"
+        );
         // This container contains drop zones. They are the zones that handle where the drop should happen.
-        this.dropzonesContainer = this.shared.makeLocalOverlay("oe-dropzones-container");
+        this.dropzonesContainer =
+            this.dependencies.localOverlay.makeLocalOverlay("oe-dropzones-container");
         // This container contains drop hint. The final rectangle showed to the user.
-        this.dropzoneHintContainer = this.shared.makeLocalOverlay("oe-dropzone-hint-container");
+        this.dropzoneHintContainer = this.dependencies.localOverlay.makeLocalOverlay(
+            "oe-dropzone-hint-container"
+        );
 
         // Uncomment line for debugging tranparent zones
         // this.widgetHookContainer.classList.add("debug");
@@ -208,7 +216,7 @@ export class MoveNodePlugin extends Plugin {
     setMovableElement(movableElement) {
         this.removeMoveWidget();
         this.currentMovableElement = movableElement;
-        this.getResource("setMovableElement").forEach((cb) => cb(movableElement));
+        this.dispatchTo("set_movable_element_handlers", movableElement);
 
         const containerRect = this.widgetContainer.getBoundingClientRect();
         const anchorBlockRect = this.currentMovableElement.getBoundingClientRect();
@@ -258,7 +266,7 @@ export class MoveNodePlugin extends Plugin {
         }
     }
     removeMoveWidget() {
-        this.getResource("unsetMovableElement").forEach((cb) => cb());
+        this.dispatchTo("unset_movable_element_handlers");
         this.moveWidget?.remove();
         this.moveWidget = undefined;
         this.currentMovableElement = undefined;
@@ -384,11 +392,11 @@ export class MoveNodePlugin extends Plugin {
                 previousParent.append(p);
             }
             const selectionPosition = endPos(movableElement);
-            this.shared.setSelection({
+            this.dependencies.selection.setSelection({
                 anchorNode: selectionPosition[0],
                 anchorOffset: selectionPosition[1],
             });
-            this.dispatch("ADD_STEP");
+            this.dependencies.history.addStep();
         }
     }
     onMousemove(e) {

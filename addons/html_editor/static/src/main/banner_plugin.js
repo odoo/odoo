@@ -4,57 +4,76 @@ import { parseHTML } from "@html_editor/utils/html";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 
-function isAvailable(node) {
-    return !!closestElement(node, ".o_editor_banner");
+function isAvailable(selection) {
+    return !closestElement(selection.anchorNode, ".o_editor_banner");
 }
 export class BannerPlugin extends Plugin {
-    static name = "banner";
-    static dependencies = ["dom", "emoji", "selection"];
+    static id = "banner";
+    static dependencies = ["history", "dom", "emoji", "selection"];
     resources = {
-        powerboxCategory: withSequence(20, { id: "banner", name: _t("Banner") }),
-        powerboxItems: [
+        user_commands: [
             {
-                category: "banner",
-                name: _t("Banner Info"),
+                id: "banner_info",
+                title: _t("Banner Info"),
                 description: _t("Insert an info banner"),
-                fontawesome: "fa-info-circle",
+                icon: "fa-info-circle",
                 isAvailable,
-                action: () => {
+                run: () => {
                     this.insertBanner(_t("Banner Info"), "💡", "info");
                 },
             },
             {
-                category: "banner",
-                name: _t("Banner Success"),
-                description: _t("Insert an success banner"),
-                fontawesome: "fa-check-circle",
+                id: "banner_success",
+                title: _t("Banner Success"),
+                description: _t("Insert a success banner"),
+                icon: "fa-check-circle",
                 isAvailable,
-                action: () => {
+                run: () => {
                     this.insertBanner(_t("Banner Success"), "✅", "success");
                 },
             },
             {
-                category: "banner",
-                name: _t("Banner Warning"),
-                description: _t("Insert an warning banner"),
-                fontawesome: "fa-exclamation-triangle",
+                id: "banner_warning",
+                title: _t("Banner Warning"),
+                description: _t("Insert a warning banner"),
+                icon: "fa-exclamation-triangle",
                 isAvailable,
-                action: () => {
+                run: () => {
                     this.insertBanner(_t("Banner Warning"), "⚠️", "warning");
                 },
             },
             {
-                category: "banner",
-                name: _t("Banner Danger"),
-                description: _t("Insert an danger banner"),
-                fontawesome: "fa-exclamation-circle",
+                id: "banner_danger",
+                title: _t("Banner Danger"),
+                description: _t("Insert a danger banner"),
+                icon: "fa-exclamation-circle",
                 isAvailable,
-                action: () => {
+                run: () => {
                     this.insertBanner(_t("Banner Danger"), "❌", "danger");
                 },
             },
         ],
-        showPowerButtons: (selection) => !closestElement(selection.anchorNode, ".o_editor_banner"),
+        powerbox_categories: withSequence(20, { id: "banner", name: _t("Banner") }),
+        powerbox_items: [
+            {
+                commandId: "banner_info",
+                categoryId: "banner",
+            },
+            {
+                commandId: "banner_success",
+                categoryId: "banner",
+            },
+            {
+                commandId: "banner_warning",
+                categoryId: "banner",
+            },
+            {
+                commandId: "banner_danger",
+                categoryId: "banner",
+            },
+        ],
+        power_buttons_visibility_predicates: ({ anchorNode }) =>
+            !closestElement(anchorNode, ".o_editor_banner"),
     };
 
     setup() {
@@ -75,7 +94,7 @@ export class BannerPlugin extends Plugin {
                 </div>
             </div`
         ).childNodes[0];
-        this.shared.domInsert(bannerElement);
+        this.dependencies.dom.insert(bannerElement);
         // If the first child of editable is contenteditable false element
         // a chromium bug prevents selecting the container. Prepend a
         // zero-width space so it's no longer the first child.
@@ -83,16 +102,18 @@ export class BannerPlugin extends Plugin {
             const zws = document.createTextNode("\u200B");
             bannerElement.before(zws);
         }
-        this.shared.setCursorStart(bannerElement.querySelector(".o_editor_banner > div > p"));
-        this.dispatch("ADD_STEP");
+        this.dependencies.selection.setCursorStart(
+            bannerElement.querySelector(".o_editor_banner > div > p")
+        );
+        this.dependencies.history.addStep();
     }
 
     onBannerEmojiChange(iconElement) {
-        this.shared.showEmojiPicker({
+        this.dependencies.emoji.showEmojiPicker({
             target: iconElement,
             onSelect: (emoji) => {
                 iconElement.textContent = emoji;
-                this.dispatch("ADD_STEP");
+                this.dependencies.history.addStep();
             },
         });
     }

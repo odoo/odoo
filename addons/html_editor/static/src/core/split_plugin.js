@@ -1,72 +1,72 @@
 import { Plugin } from "../plugin";
 import { isBlock } from "../utils/blocks";
-import { fillEmpty } from "../utils/dom";
+import { fillEmpty, splitTextNode } from "../utils/dom";
 import { isTextNode, isVisible } from "../utils/dom_info";
 import { prepareUpdate } from "../utils/dom_state";
 import { childNodes, closestElement, firstLeaf, lastLeaf } from "../utils/dom_traversal";
 import { DIRECTIONS, childNodeIndex, nodeSize } from "../utils/position";
 import { isProtected, isProtecting } from "@html_editor/utils/dom_info";
 
+/**
+ * @typedef { Object } SplitShared
+ * @property { SplitPlugin['isUnsplittable'] } isUnsplittable
+ * @property { SplitPlugin['splitAroundUntil'] } splitAroundUntil
+ * @property { SplitPlugin['splitBlock'] } splitBlock
+ * @property { SplitPlugin['splitBlockNode'] } splitBlockNode
+ * @property { SplitPlugin['splitElement'] } splitElement
+ * @property { SplitPlugin['splitElementBlock'] } splitElementBlock
+ * @property { SplitPlugin['splitSelection'] } splitSelection
+ */
+
 export class SplitPlugin extends Plugin {
-    static dependencies = ["selection"];
-    static name = "split";
+    static dependencies = ["selection", "history", "delete", "lineBreak"];
+    static id = "split";
     static shared = [
         "splitBlock",
+        "splitBlockNode",
         "splitElementBlock",
         "splitElement",
         "splitAroundUntil",
-        "splitTextNode",
         "splitSelection",
         "isUnsplittable",
     ];
     resources = {
-        isUnsplittable: [
+        beforeinput_handlers: this.onBeforeInput.bind(this),
+
+        unsplittable_node_predicates: [
             // An unremovable element is also unmergeable (as merging two
             // elements results in removing one of them).
             // An unmergeable element is unsplittable and vice-versa (as
             // split and merge are reverse operations from one another).
             // Therefore, unremovable nodes are also unsplittable.
-            (element) => this.getResource("isUnremovable").some((predicate) => predicate(element)),
+            (node) =>
+                this.getResource("unremovable_node_predicates").some((predicate) =>
+                    predicate(node)
+                ),
             // "Unbreakable" is a legacy term that means unsplittable and
             // unmergeable.
-            (element) => element.classList.contains("oe_unbreakable"),
-            (element) => ["DIV", "SECTION"].includes(element.tagName),
+            (node) => node.classList?.contains("oe_unbreakable"),
+            (node) => ["DIV", "SECTION"].includes(node.nodeName),
         ],
-        onBeforeInput: this.onBeforeInput.bind(this),
     };
-
-    handleCommand(command, payload) {
-        switch (command) {
-            case "SPLIT_BLOCK":
-                this._splitBlock();
-                break;
-            case "SPLIT_BLOCK_NODE":
-                this.splitBlockNode(payload);
-                break;
-        }
-    }
 
     // --------------------------------------------------------------------------
     // commands
     // --------------------------------------------------------------------------
     splitBlock() {
-        let selection = this.shared.getEditableSelection();
+        this.dispatchTo("before_split_block_handlers");
+        let selection = this.dependencies.selection.getEditableSelection();
         if (!selection.isCollapsed) {
             // @todo @phoenix collapseIfZWS is not tested
             // this.shared.collapseIfZWS();
-            this.dispatch("RESET_TABLE_SELECTION");
-            this.dispatch("DELETE_SELECTION");
-            selection = this.shared.getEditableSelection();
+            this.dependencies.delete.deleteSelection();
+            selection = this.dependencies.selection.getEditableSelection();
         }
 
         return this.splitBlockNode({
             targetNode: selection.anchorNode,
             targetOffset: selection.anchorOffset,
         });
-    }
-    _splitBlock() {
-        this.splitBlock();
-        this.dispatch("ADD_STEP");
     }
 
     /**
@@ -77,18 +77,17 @@ export class SplitPlugin extends Plugin {
      */
     splitBlockNode({ targetNode, targetOffset }) {
         if (targetNode.nodeType === Node.TEXT_NODE) {
-            targetOffset = this.splitTextNode(targetNode, targetOffset);
+            targetOffset = splitTextNode(targetNode, targetOffset);
             targetNode = targetNode.parentElement;
         }
         const blockToSplit = closestElement(targetNode, isBlock);
+        const params = { targetNode, targetOffset, blockToSplit };
 
-        for (const callback of this.getResource("split_element_block")) {
-            if (callback({ targetNode, targetOffset, blockToSplit })) {
-                return [undefined, undefined];
-            }
+        if (this.delegateTo("split_element_block_overrides", params)) {
+            return [undefined, undefined];
         }
 
-        return this.splitElementBlock({ targetNode, targetOffset, blockToSplit });
+        return this.splitElementBlock(params);
     }
     /**
      * @param {Object} param0
@@ -104,7 +103,7 @@ export class SplitPlugin extends Plugin {
             // unsplittable.  The check must be done from the targetNode up to
             // the block for unsplittables. There are apparently no tests for
             // this.
-            this.dispatch("INSERT_LINEBREAK_ELEMENT", { targetNode, targetOffset });
+            this.dependencies.lineBreak.insertLineBreakElement({ targetNode, targetOffset });
             return [undefined, undefined];
         }
         const restore = prepareUpdate(targetNode, targetOffset);
@@ -130,16 +129,17 @@ export class SplitPlugin extends Plugin {
         removeEmptyAndFill(lastLeaf(beforeElement));
         removeEmptyAndFill(firstLeaf(afterElement));
 
-        this.shared.setCursorStart(afterElement);
+        this.dependencies.selection.setCursorStart(afterElement);
 
         return [beforeElement, afterElement];
     }
 
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
     isUnsplittable(node) {
-        return (
-            node.nodeType === Node.ELEMENT_NODE &&
-            this.getResource("isUnsplittable").some((predicate) => predicate(node))
-        );
+        return this.getResource("unsplittable_node_predicates").some((p) => p(node));
     }
 
     /**
@@ -152,7 +152,7 @@ export class SplitPlugin extends Plugin {
      * @returns {[HTMLElement, HTMLElement]}
      */
     splitElement(element, offset) {
-        this.dispatch("CLEAN", { root: element });
+        this.dispatchTo("clean_handlers", element);
         // const before = /** @type {HTMLElement} **/ (element.cloneNode());
         /** @type {HTMLElement} **/
         const before = element.cloneNode();
@@ -237,53 +237,13 @@ export class SplitPlugin extends Plugin {
         return beforeSplit || afterSplit || limitAncestor;
     }
 
-    /**
-     * Splits a text node in two parts.
-     * If the split occurs at the beginning or the end, the text node stays
-     * untouched and unsplit. If a split actually occurs, the original text node
-     * still exists and become the right part of the split.
-     *
-     * Note: if split after or before whitespace, that whitespace may become
-     * invisible, it is up to the caller to replace it by nbsp if needed.
-     *
-     * @param {Text} textNode
-     * @param {number} offset
-     * @param {boolean} originalNodeSide Whether the original node ends up on left
-     * or right after the split
-     * @returns {number} The parentOffset if the cursor was between the two text
-     *          node parts after the split.
-     */
-    splitTextNode(textNode, offset, originalNodeSide = DIRECTIONS.RIGHT) {
-        const document = textNode.ownerDocument;
-        let parentOffset = childNodeIndex(textNode);
-
-        if (offset > 0) {
-            parentOffset++;
-
-            if (offset < textNode.length) {
-                const left = textNode.nodeValue.substring(0, offset);
-                const right = textNode.nodeValue.substring(offset);
-                if (originalNodeSide === DIRECTIONS.LEFT) {
-                    const newTextNode = document.createTextNode(right);
-                    textNode.after(newTextNode);
-                    textNode.nodeValue = left;
-                } else {
-                    const newTextNode = document.createTextNode(left);
-                    textNode.before(newTextNode);
-                    textNode.nodeValue = right;
-                }
-            }
-        }
-        return parentOffset;
-    }
-
     splitSelection() {
         let { startContainer, startOffset, endContainer, endOffset, direction } =
-            this.shared.getEditableSelection();
+            this.dependencies.selection.getEditableSelection();
         const isInSingleContainer = startContainer === endContainer;
         if (isTextNode(endContainer) && endOffset > 0 && endOffset < nodeSize(endContainer)) {
             const endParent = endContainer.parentNode;
-            const splitOffset = this.splitTextNode(endContainer, endOffset);
+            const splitOffset = splitTextNode(endContainer, endOffset);
             endContainer = endParent.childNodes[splitOffset - 1] || endParent.firstChild;
             if (isInSingleContainer) {
                 startContainer = endContainer;
@@ -295,7 +255,7 @@ export class SplitPlugin extends Plugin {
             startOffset > 0 &&
             startOffset < nodeSize(startContainer)
         ) {
-            this.splitTextNode(startContainer, startOffset);
+            splitTextNode(startContainer, startOffset);
             startOffset = 0;
             if (isInSingleContainer) {
                 endOffset = startContainer.textContent.length;
@@ -316,13 +276,14 @@ export class SplitPlugin extends Plugin {
                       focusNode: startContainer,
                       focusOffset: startOffset,
                   };
-        return this.shared.setSelection(selection, { normalize: false });
+        return this.dependencies.selection.setSelection(selection, { normalize: false });
     }
 
     onBeforeInput(e) {
         if (e.inputType === "insertParagraph") {
             e.preventDefault();
-            this._splitBlock();
+            this.splitBlock();
+            this.dependencies.history.addStep();
         }
     }
 }

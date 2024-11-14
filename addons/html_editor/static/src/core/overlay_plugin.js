@@ -5,21 +5,21 @@ import { throttleForAnimation } from "@web/core/utils/timing";
 import { findUpTo } from "@html_editor/utils/dom_traversal";
 
 /**
- * Provide the following feature:
+ * @typedef { Object } OverlayShared
+ * @property { OverlayPlugin['createOverlay'] } createOverlay
+ */
+
+/**
+ * Provides the following feature:
  * - adding a component in overlay above the editor, with proper positioning
  */
 export class OverlayPlugin extends Plugin {
-    static name = "overlay";
+    static id = "overlay";
     static dependencies = ["history"];
     static shared = ["createOverlay"];
-
-    handleCommand(command) {
-        switch (command) {
-            case "STEP_ADDED":
-                this.container = this.getScrollContainer();
-                break;
-        }
-    }
+    resources = {
+        step_added_handlers: this.getScrollContainer.bind(this),
+    };
 
     overlays = [];
 
@@ -41,6 +41,14 @@ export class OverlayPlugin extends Plugin {
         }
     }
 
+    /**
+     * Creates an overlay component and adds it to the list of overlays.
+     *
+     * @param {Function} Component
+     * @param {Object} [props={}]
+     * @param {Object} [options]
+     * @returns {Overlay}
+     */
     createOverlay(Component, props = {}, options) {
         const overlay = new Overlay(this, Component, () => this.container, props, options);
         this.overlays.push(overlay);
@@ -103,8 +111,8 @@ export class Overlay {
                     getContainer: this.getContainer,
                     close: this.close.bind(this),
                     history: {
-                        enableObserver: this.plugin.shared.enableObserver,
-                        disableObserver: this.plugin.shared.disableObserver,
+                        enableObserver: this.plugin.dependencies.history.enableObserver,
+                        disableObserver: this.plugin.dependencies.history.disableObserver,
                     },
                 }),
                 {

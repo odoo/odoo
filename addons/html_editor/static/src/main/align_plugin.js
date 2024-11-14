@@ -2,30 +2,21 @@ import { Plugin } from "@html_editor/plugin";
 import { closestBlock } from "@html_editor/utils/blocks";
 import { isVisibleTextNode } from "@html_editor/utils/dom_info";
 
-export class JustifyPlugin extends Plugin {
-    static name = "justify";
+export class AlignPlugin extends Plugin {
+    static id = "align";
     static dependencies = ["selection"];
-
-    handleCommand(command) {
-        switch (command) {
-            case "JUSTIFY_LEFT":
-                this.align("left");
-                break;
-            case "JUSTIFY_RIGHT":
-                this.align("right");
-                break;
-            case "JUSTIFY_CENTER":
-                this.align("center");
-                break;
-            case "JUSTIFY_FULL":
-                this.align("justify");
-                break;
-        }
-    }
+    resources = {
+        user_commands: [
+            { id: "alignLeft", run: () => this.align("left") },
+            { id: "alignRight", run: () => this.align("right") },
+            { id: "alignCenter", run: () => this.align("center") },
+            { id: "justify", run: () => this.align("justify") },
+        ],
+    };
 
     align(mode) {
         const visitedBlocks = new Set();
-        const traversedNode = this.shared.getTraversedNodes();
+        const traversedNode = this.dependencies.selection.getTraversedNodes();
         for (const node of traversedNode) {
             if (isVisibleTextNode(node)) {
                 const block = closestBlock(node);

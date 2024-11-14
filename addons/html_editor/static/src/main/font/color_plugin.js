@@ -22,55 +22,72 @@ import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { withSequence } from "@html_editor/utils/resource";
 
+/**
+ * @typedef { Object } ColorShared
+ * @property { ColorPlugin['colorElement'] } colorElement
+ * @property { ColorPlugin['getPropsForColorSelector'] } getPropsForColorSelector
+ */
 export class ColorPlugin extends Plugin {
-    static name = "color";
+    static id = "color";
     static dependencies = ["selection", "split", "history", "format"];
-    static shared = ["colorElement"];
+    static shared = ["colorElement", "getPropsForColorSelector"];
     resources = {
-        toolbarCategory: withSequence(25, {
+        user_commands: [
+            {
+                id: "applyColor",
+                run: this.applyColor.bind(this),
+            },
+        ],
+        toolbar_groups: withSequence(25, {
             id: "color",
         }),
-        toolbarItems: [
+        toolbar_items: [
             {
                 id: "forecolor",
-                category: "color",
+                groupId: "color",
                 title: _t("Font Color"),
                 Component: ColorSelector,
-                props: {
-                    type: "foreground",
-                    getUsedCustomColors: () => this.getUsedCustomColors("color"),
-                    getSelectedColors: () => this.selectedColors,
-                    focusEditable: () => this.shared.focusEditable(),
-                },
+                props: this.getPropsForColorSelector("foreground"),
             },
             {
                 id: "backcolor",
-                category: "color",
+                groupId: "color",
                 title: _t("Background Color"),
-
                 Component: ColorSelector,
-                props: {
-                    type: "background",
-                    getUsedCustomColors: () => this.getUsedCustomColors("background"),
-                    getSelectedColors: () => this.selectedColors,
-                    focusEditable: () => this.shared.focusEditable(),
-                },
+                props: this.getPropsForColorSelector("background"),
             },
         ],
 
-        onSelectionChange: this.updateSelectedColor.bind(this),
-        removeFormat: this.removeAllColor.bind(this),
+        /** Handlers */
+        selectionchange_handlers: this.updateSelectedColor.bind(this),
+        remove_format_handlers: this.removeAllColor.bind(this),
     };
 
     setup() {
         this.selectedColors = reactive({ color: "", backgroundColor: "" });
-        this.previewableApplyColor = this.shared.makePreviewableOperation((color, mode) =>
-            this.applyColor(color, mode)
+        this.previewableApplyColor = this.dependencies.history.makePreviewableOperation(
+            (color, mode) => this._applyColor(color, mode)
         );
     }
 
+    /**
+     * @param {'foreground'|'background'} type
+     */
+    getPropsForColorSelector(type) {
+        const mode = type === "foreground" ? "color" : "background";
+        return {
+            type,
+            getUsedCustomColors: () => this.getUsedCustomColors(mode),
+            getSelectedColors: () => this.selectedColors,
+            applyColor: this.applyColor.bind(this),
+            applyColorPreview: this.applyColorPreview.bind(this),
+            applyColorResetPreview: this.applyColorResetPreview.bind(this),
+            focusEditable: () => this.dependencies.selection.focusEditable(),
+        };
+    }
+
     updateSelectedColor() {
-        const nodes = this.shared.getTraversedNodes().filter(isTextNode);
+        const nodes = this.dependencies.selection.getTraversedNodes().filter(isTextNode);
         if (nodes.length === 0) {
             return;
         }
@@ -91,21 +108,35 @@ export class ColorPlugin extends Plugin {
                 : rgbToHex(elStyle.backgroundColor);
     }
 
-    handleCommand(command, payload) {
-        switch (command) {
-            case "APPLY_COLOR":
-                this.previewableApplyColor.commit(payload.color, payload.mode);
-                this.updateSelectedColor();
-                break;
-            case "COLOR_PREVIEW":
-                this.previewableApplyColor.preview(payload.color, payload.mode);
-                this.updateSelectedColor();
-                break;
-            case "COLOR_RESET_PREVIEW":
-                this.previewableApplyColor.revert();
-                this.updateSelectedColor();
-                break;
-        }
+    /**
+     * Apply a css or class color on the current selection (wrapped in <font>).
+     *
+     * @param {Object} param
+     * @param {string} param.color hexadecimal or bg-name/text-name class
+     * @param {string} param.mode 'color' or 'backgroundColor'
+     */
+    applyColor({ color, mode }) {
+        this.previewableApplyColor.commit(color, mode);
+        this.updateSelectedColor();
+    }
+    /**
+     * Apply a css or class color on the current selection (wrapped in <font>)
+     * in preview mode so that it can be reset.
+     *
+     * @param {Object} param
+     * @param {string} param.color hexadecimal or bg-name/text-name class
+     * @param {string} param.mode 'color' or 'backgroundColor'
+     */
+    applyColorPreview({ color, mode }) {
+        this.previewableApplyColor.preview(color, mode);
+        this.updateSelectedColor();
+    }
+    /**
+     * Reset the color applied in preview mode.
+     */
+    applyColorResetPreview() {
+        this.previewableApplyColor.revert();
+        this.updateSelectedColor();
     }
 
     removeAllColor() {
@@ -116,11 +147,13 @@ export class ColorPlugin extends Plugin {
             for (const mode of colorModes) {
                 let max = 40;
                 const hasAnySelectedNodeColor = (mode) => {
-                    const nodes = this.shared.getTraversedNodes().filter(isTextNode);
+                    const nodes = this.dependencies.selection
+                        .getTraversedNodes()
+                        .filter(isTextNode);
                     return hasAnyNodesColor(nodes, mode);
                 };
                 while (hasAnySelectedNodeColor(mode) && max > 0) {
-                    this.applyColor("", mode);
+                    this._applyColor("", mode);
                     someColorWasRemoved = true;
                     max--;
                 }
@@ -138,13 +171,11 @@ export class ColorPlugin extends Plugin {
      * @param {string} color hexadecimal or bg-name/text-name class
      * @param {string} mode 'color' or 'backgroundColor'
      */
-    applyColor(color, mode) {
-        for (const cb of this.getResource("colorApply") || []) {
-            if (cb(color, mode)) {
-                return;
-            }
+    _applyColor(color, mode) {
+        if (this.delegateTo("color_apply_overrides", color, mode)) {
+            return;
         }
-        let selection = this.shared.getEditableSelection();
+        let selection = this.dependencies.selection.getEditableSelection();
         let selectionNodes;
         // Get the <font> nodes to color
         if (selection.isCollapsed) {
@@ -155,9 +186,9 @@ export class ColorPlugin extends Plugin {
             ) {
                 zws = selection.anchorNode;
             } else {
-                zws = this.shared.insertAndSelectZws();
+                zws = this.dependencies.format.insertAndSelectZws();
             }
-            selection = this.shared.setSelection(
+            selection = this.dependencies.selection.setSelection(
                 {
                     anchorNode: zws,
                     anchorOffset: 0,
@@ -166,8 +197,8 @@ export class ColorPlugin extends Plugin {
             );
             selectionNodes = [zws];
         } else {
-            selection = this.shared.splitSelection();
-            selectionNodes = this.shared
+            selection = this.dependencies.split.splitSelection();
+            selectionNodes = this.dependencies.selection
                 .getSelectedNodes()
                 .filter((node) => isContentEditable(node) && node.nodeName !== "T");
             if (isEmptyBlock(selection.endContainer)) {
@@ -181,7 +212,7 @@ export class ColorPlugin extends Plugin {
                 : selectionNodes;
 
         const selectedFieldNodes = new Set(
-            this.shared
+            this.dependencies.selection
                 .getSelectedNodes()
                 .map((n) => closestElement(n, "*[t-field],*[t-out],*[t-esc]"))
                 .filter(Boolean)
@@ -200,7 +231,7 @@ export class ColorPlugin extends Plugin {
                         selectedNodes.includes(child)
                     );
                     if (selectedChildren.length) {
-                        font = this.shared.splitAroundUntil(selectedChildren, font);
+                        font = this.dependencies.split.splitAroundUntil(selectedChildren, font);
                     } else {
                         font = [];
                     }
@@ -275,7 +306,7 @@ export class ColorPlugin extends Plugin {
                 fontsSet.delete(font);
             }
         }
-        this.shared.setSelection(selection, { normalize: false });
+        this.dependencies.selection.setSelection(selection, { normalize: false });
     }
 
     getUsedCustomColors(mode) {
@@ -295,7 +326,7 @@ export class ColorPlugin extends Plugin {
      *
      * @param {Element} element
      * @param {string} color hexadecimal or bg-name/text-name class
-     * @param {string} mode 'color' or 'backgroundColor'
+     * @param {'color'|'backgroundColor'} mode 'color' or 'backgroundColor'
      */
     colorElement(element, color, mode) {
         const newClassName = element.className

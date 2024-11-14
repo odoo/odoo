@@ -78,9 +78,22 @@ export const CLIPBOARD_WHITELISTS = {
     styledTags: ["SPAN", "B", "STRONG", "I", "S", "U", "FONT", "TD"],
 };
 
+/**
+ * @typedef {Object} ClipboardShared
+ * @property {ClipboardPlugin['pasteText']} pasteText
+ */
+
 export class ClipboardPlugin extends Plugin {
-    static name = "clipboard";
-    static dependencies = ["dom", "selection", "sanitize", "history", "split"];
+    static id = "clipboard";
+    static dependencies = [
+        "dom",
+        "selection",
+        "sanitize",
+        "history",
+        "split",
+        "delete",
+        "lineBreak",
+    ];
     static shared = ["pasteText"];
 
     setup() {
@@ -93,9 +106,9 @@ export class ClipboardPlugin extends Plugin {
 
     onCut(ev) {
         this.onCopy(ev);
-        this.dispatch("HISTORY_STAGE_SELECTION");
-        this.dispatch("DELETE_SELECTION");
-        this.dispatch("ADD_STEP");
+        this.dependencies.history.stageSelection();
+        this.dependencies.delete.deleteSelection();
+        this.dependencies.history.addStep();
     }
 
     /**
@@ -103,15 +116,15 @@ export class ClipboardPlugin extends Plugin {
      */
     onCopy(ev) {
         ev.preventDefault();
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         const commonAncestor = selection.commonAncestorContainer;
         if (commonAncestor && commonAncestor.nodeType === Node.ELEMENT_NODE) {
-            this.dispatch("CLEAN", { root: commonAncestor });
+            this.dispatchTo("clean_handlers", commonAncestor);
         }
         let clonedContents = selection.cloneContents();
         if (!clonedContents.hasChildNodes()) {
             if (commonAncestor && commonAncestor.nodeType === Node.ELEMENT_NODE) {
-                this.dispatch("NORMALIZE", { node: commonAncestor });
+                this.dispatchTo("normalize_handlers", commonAncestor);
             }
             return;
         }
@@ -199,7 +212,7 @@ export class ClipboardPlugin extends Plugin {
         ev.clipboardData.setData("text/html", odooHtml);
         ev.clipboardData.setData("application/vnd.odoo.odoo-editor", odooHtml);
         if (commonAncestor && commonAncestor.nodeType === Node.ELEMENT_NODE) {
-            this.dispatch("NORMALIZE", { node: commonAncestor });
+            this.dispatchTo("normalize_handlers", commonAncestor);
         }
     }
 
@@ -207,7 +220,7 @@ export class ClipboardPlugin extends Plugin {
      * Handle safe pasting of html or plain text into the editor.
      */
     onPaste(ev) {
-        let selection = this.shared.getEditableSelection();
+        let selection = this.dependencies.selection.getEditableSelection();
         if (!selection.anchorNode.isConnected) {
             return;
         }
@@ -218,18 +231,18 @@ export class ClipboardPlugin extends Plugin {
 
         ev.preventDefault();
 
-        this.dispatch("HISTORY_STAGE_SELECTION");
+        this.dependencies.history.stageSelection();
 
-        this.getResource("before_paste").forEach((handler) => handler(selection));
+        this.dispatchTo("before_paste_handlers", selection);
         // refresh selection after potential changes from `before_paste` handlers
-        selection = this.shared.getEditableSelection();
+        selection = this.dependencies.selection.getEditableSelection();
 
         this.handlePasteUnsupportedHtml(selection, ev.clipboardData) ||
             this.handlePasteOdooEditorHtml(ev.clipboardData) ||
             this.handlePasteHtml(selection, ev.clipboardData) ||
             this.handlePasteText(selection, ev.clipboardData);
 
-        this.dispatch("ADD_STEP");
+        this.dependencies.history.addStep();
     }
     /**
      * @param {EditorSelection} selection
@@ -239,7 +252,7 @@ export class ClipboardPlugin extends Plugin {
         const targetSupportsHtmlContent = isHtmlContentSupported(selection.anchorNode);
         if (!targetSupportsHtmlContent) {
             const text = clipboardData.getData("text/plain");
-            this.shared.domInsert(text);
+            this.dependencies.dom.insert(text);
             return true;
         }
     }
@@ -250,9 +263,9 @@ export class ClipboardPlugin extends Plugin {
         const odooEditorHtml = clipboardData.getData("application/vnd.odoo.odoo-editor");
         if (odooEditorHtml) {
             const fragment = parseHTML(this.document, odooEditorHtml);
-            this.shared.sanitize(fragment);
+            this.dependencies.sanitize.sanitize(fragment);
             if (fragment.hasChildNodes()) {
-                this.shared.domInsert(fragment);
+                this.dependencies.dom.insert(fragment);
             }
             return true;
         }
@@ -274,14 +287,14 @@ export class ClipboardPlugin extends Plugin {
             if (files.length && !clipboardElem.querySelector("table")) {
                 // @phoenix @todo: should it be handled in image plugin?
                 return this.addImagesFiles(files).then((html) => {
-                    this.shared.domInsert(html);
-                    this.dispatch("ADD_STEP");
+                    this.dependencies.dom.insert(html);
+                    this.dependencies.history.addStep();
                 });
             } else {
                 if (closestElement(selection.anchorNode, "a")) {
-                    this.shared.domInsert(clipboardElem.textContent);
+                    this.dependencies.dom.insert(clipboardElem.textContent);
                 } else {
-                    this.shared.domInsert(clipboardElem);
+                    this.dependencies.dom.insert(clipboardElem);
                 }
             }
             return true;
@@ -293,7 +306,7 @@ export class ClipboardPlugin extends Plugin {
      */
     handlePasteText(selection, clipboardData) {
         const text = clipboardData.getData("text/plain");
-        if (this.getResource("handle_paste_text").some((handler) => handler(selection, text))) {
+        if (this.delegateTo("paste_text_overrides", selection, text)) {
             return;
         } else {
             this.pasteText(selection, text);
@@ -316,19 +329,19 @@ export class ClipboardPlugin extends Plugin {
                     return replaceContent;
                 });
             });
-            this.shared.domInsert(modifiedTextFragment);
+            this.dependencies.dom.insert(modifiedTextFragment);
             if (textIndex < textFragments.length) {
                 // Break line by inserting new paragraph and
                 // remove current paragraph's bottom margin.
                 const p = closestElement(selection.anchorNode, "p");
-                if (this.shared.isUnsplittable(closestBlock(selection.anchorNode))) {
-                    this.dispatch("INSERT_LINEBREAK");
+                if (this.dependencies.split.isUnsplittable(closestBlock(selection.anchorNode))) {
+                    this.dependencies.lineBreak.insertLineBreak();
                 } else {
-                    const [pBefore] = this.shared.splitBlock();
+                    const [pBefore] = this.dependencies.split.splitBlock();
                     if (p) {
                         pBefore.style.marginBottom = "0px";
                     }
-                    selection = this.shared.getEditableSelection();
+                    selection = this.dependencies.selection.getEditableSelection();
                 }
             }
             textIndex++;
@@ -344,7 +357,7 @@ export class ClipboardPlugin extends Plugin {
      */
     prepareClipboardData(clipboardData) {
         const fragment = parseHTML(this.document, clipboardData);
-        this.shared.sanitize(fragment);
+        this.dependencies.sanitize.sanitize(fragment);
         const container = this.document.createElement("fake-container");
         container.append(fragment);
 
@@ -409,7 +422,10 @@ export class ClipboardPlugin extends Plugin {
                     const isEmptyLine = block.firstChild.nodeName === "BR";
                     // Split blocks around it until only the BR remains in the
                     // block.
-                    const remainingBrContainer = this.shared.splitAroundUntil(br, block);
+                    const remainingBrContainer = this.dependencies.split.splitAroundUntil(
+                        br,
+                        block
+                    );
                     // Remove the container unless it represented an empty line.
                     if (!isEmptyLine) {
                         remainingBrContainer.remove();
@@ -580,13 +596,13 @@ export class ClipboardPlugin extends Plugin {
         if (image || fileTransferItems.length || htmlTransferItem) {
             if (this.document.caretPositionFromPoint) {
                 const range = this.document.caretPositionFromPoint(ev.clientX, ev.clientY);
-                this.shared.setSelection({
+                this.dependencies.selection.setSelection({
                     anchorNode: range.offsetNode,
                     anchorOffset: range.offset,
                 });
             } else if (this.document.caretRangeFromPoint) {
                 const range = this.document.caretRangeFromPoint(ev.clientX, ev.clientY);
-                this.shared.setSelection({
+                this.dependencies.selection.setSelection({
                     anchorNode: range.startContainer,
                     anchorOffset: range.startOffset,
                 });
@@ -595,16 +611,16 @@ export class ClipboardPlugin extends Plugin {
         if (image) {
             const fragment = this.document.createDocumentFragment();
             fragment.append(image);
-            this.shared.domInsert(fragment);
-            this.dispatch("ADD_STEP");
+            this.dependencies.dom.insert(fragment);
+            this.dependencies.history.addStep();
         } else if (fileTransferItems.length) {
             const html = await this.addImagesFiles(fileTransferItems);
-            this.shared.domInsert(html);
-            this.dispatch("ADD_STEP");
+            this.dependencies.dom.insert(html);
+            this.dependencies.history.addStep();
         } else if (htmlTransferItem) {
             htmlTransferItem.getAsString((pastedText) => {
-                this.shared.domInsert(this.prepareClipboardData(pastedText));
-                this.dispatch("ADD_STEP");
+                this.dependencies.dom.insert(this.prepareClipboardData(pastedText));
+                this.dependencies.history.addStep();
             });
         }
     }

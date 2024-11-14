@@ -33,16 +33,16 @@ test("is notified when content is changed", async () => {
 });
 
 test("plugin destruction is reverse of instantiation order", async () => {
-    function makeTestPlugin(name, dependencies = []) {
+    function makeTestPlugin(id, dependencies = []) {
         return class TestPlugin extends Plugin {
-            static name = name;
+            static id = id;
             static dependencies = dependencies;
 
             setup() {
-                expect.step(`setup: ${name}`);
+                expect.step(`setup: ${id}`);
             }
             destroy() {
-                expect.step(`destroy: ${name}`);
+                expect.step(`destroy: ${id}`);
             }
         };
     }
@@ -55,7 +55,7 @@ test("plugin destruction is reverse of instantiation order", async () => {
 
 test("Remove odoo-editor-editable class after every plugin is destroyed", async () => {
     class TestPlugin extends Plugin {
-        static name = "test";
+        static id = "test";
         destroy() {
             const p = this.editable.querySelector("p");
             if (closestElement(p, "div")) {
@@ -69,21 +69,22 @@ test("Remove odoo-editor-editable class after every plugin is destroyed", async 
     expect.verifySteps(["operation"]);
 });
 
-test("CLEAN_FOR_SAVE is done last", async () => {
+test("clean_for_save_listeners is done last", async () => {
     // This test uses custom elements tag `c-div` to make sure they won't fall into
     // a case where they won't be merged anyway.
     // Without the proper fix, this test fails with sibling elements `c-div` merged together
     class TestPlugin extends Plugin {
+        static id = "test";
+        resources = {
+            clean_for_save_handlers: ({ root }) => {
+                for (const el of root.querySelectorAll("c-div")) {
+                    el.removeAttribute("class");
+                }
+            },
+        };
         setup() {
             for (const el of this.editable.querySelectorAll("c-div")) {
                 el.classList.add("oe_unbreakable");
-            }
-        }
-        handleCommand(cmd, payload) {
-            if (cmd === "CLEAN_FOR_SAVE") {
-                for (const el of payload.root.querySelectorAll("c-div")) {
-                    el.removeAttribute("class");
-                }
             }
         }
     }

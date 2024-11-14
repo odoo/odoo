@@ -1,61 +1,65 @@
+import { splitTextNode } from "@html_editor/utils/dom";
 import { Plugin } from "../plugin";
 import { CTYPES } from "../utils/content_types";
 import { getState, isFakeLineBreak, prepareUpdate } from "../utils/dom_state";
 import { DIRECTIONS, leftPos, rightPos } from "../utils/position";
 
+/**
+ * @typedef { Object } LineBreakShared
+ * @property { LineBreakPlugin['insertLineBreak'] } insertLineBreak
+ * @property { LineBreakPlugin['insertLineBreakElement'] } insertLineBreakElement
+ * @property { LineBreakPlugin['insertLineBreakNode'] } insertLineBreakNode
+ */
+
 export class LineBreakPlugin extends Plugin {
-    static dependencies = ["selection", "split"];
-    static name = "line_break";
-    static shared = ["insertLineBreakElement"];
+    static dependencies = ["selection", "history", "delete"];
+    static id = "lineBreak";
+    static shared = ["insertLineBreak", "insertLineBreakNode", "insertLineBreakElement"];
     resources = {
-        onBeforeInput: this.onBeforeInput.bind(this),
+        beforeinput_handlers: this.onBeforeInput.bind(this),
+        split_unsplittable_handlers: this.insertLineBreakElement.bind(this),
     };
 
-    handleCommand(command, payload) {
-        switch (command) {
-            case "INSERT_LINEBREAK":
-                this.insertLineBreak();
-                break;
-            case "INSERT_LINEBREAK_NODE":
-                this.insertLineBreakNode(payload);
-                break;
-            case "INSERT_LINEBREAK_ELEMENT":
-                this.insertLineBreakElement(payload);
-                break;
-        }
-    }
-
     insertLineBreak() {
-        let selection = this.shared.getEditableSelection();
+        this.dispatchTo("before_line_break_handlers");
+        let selection = this.dependencies.selection.getEditableSelection();
         if (!selection.isCollapsed) {
             // @todo @phoenix collapseIfZWS is not tested
             // this.shared.collapseIfZWS();
-            this.dispatch("RESET_TABLE_SELECTION");
-            this.dispatch("DELETE_SELECTION");
-            selection = this.shared.getEditableSelection();
+            this.dependencies.delete.deleteSelection();
+            selection = this.dependencies.selection.getEditableSelection();
         }
 
         const targetNode = selection.anchorNode;
         const targetOffset = selection.anchorOffset;
 
         this.insertLineBreakNode({ targetNode, targetOffset });
-        this.dispatch("ADD_STEP");
+        this.dependencies.history.addStep();
     }
+
+    /**
+     * @param {Object} params
+     * @param {Node} params.targetNode
+     * @param {number} params.targetOffset
+     */
     insertLineBreakNode({ targetNode, targetOffset }) {
         if (targetNode.nodeType === Node.TEXT_NODE) {
-            targetOffset = this.shared.splitTextNode(targetNode, targetOffset);
+            targetOffset = splitTextNode(targetNode, targetOffset);
             targetNode = targetNode.parentElement;
         }
 
-        for (const callback of this.getResource("handle_insert_line_break_element")) {
-            if (callback({ targetNode, targetOffset })) {
-                return;
-            }
+        if (this.delegateTo("insert_line_break_element_overrides", { targetNode, targetOffset })) {
+            return;
         }
 
         this.insertLineBreakElement({ targetNode, targetOffset });
     }
 
+    /**
+     * @param {Object} params
+     * @param {HTMLElement} params.targetNode
+     * @param {number} params.targetOffset
+     */
     insertLineBreakElement({ targetNode, targetOffset }) {
         const restore = prepareUpdate(targetNode, targetOffset);
 
@@ -90,17 +94,20 @@ export class LineBreakPlugin extends Plugin {
         // if (anchor.nodeName === "A" && brEls.includes(anchor.firstChild)) {
         //     brEls.forEach((br) => anchor.before(br));
         //     const pos = rightPos(brEls[brEls.length - 1]);
-        //     this.shared.setSelection({ anchorNode: pos[0], anchorOffset: pos[1] });
+        //     this.dependencies.selection.setSelection({ anchorNode: pos[0], anchorOffset: pos[1] });
         // } else if (anchor.nodeName === "A" && brEls.includes(anchor.lastChild)) {
         //     brEls.forEach((br) => anchor.after(br));
         //     const pos = rightPos(brEls[0]);
-        //     this.shared.setSelection({ anchorNode: pos[0], anchorOffset: pos[1] });
+        //     this.dependencies.selection.setSelection({ anchorNode: pos[0], anchorOffset: pos[1] });
         // }
         for (const el of brEls) {
             // @todo @phoenix we don t want to setSelection multiple times
             if (el.parentNode) {
                 const pos = rightPos(el);
-                this.shared.setSelection({ anchorNode: pos[0], anchorOffset: pos[1] });
+                this.dependencies.selection.setSelection({
+                    anchorNode: pos[0],
+                    anchorOffset: pos[1],
+                });
                 break;
             }
         }

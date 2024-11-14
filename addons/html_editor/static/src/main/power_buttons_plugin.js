@@ -2,53 +2,86 @@ import { Plugin } from "@html_editor/plugin";
 import { closestBlock } from "@html_editor/utils/blocks";
 import { isEmptyBlock } from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { _t } from "@web/core/l10n/translation";
+import { omit, pick } from "@web/core/utils/objects";
+
+/** @typedef {import("./powerbox/powerbox_plugin").PowerboxCommand} PowerboxCommand */
+
+/**
+ * @typedef {Object} PowerButton
+ * @property {string} commandId
+ * @property {Object} [commandParams]
+ * @property {string} [title] Can be inferred from the user command
+ * @property {string} [icon] Can be inferred from the user command
+ */
+/**
+ * A power button is added by referencing an existing user command.
+ *
+ * Example:
+ *
+ * resources = {
+ *      user_commands: [
+ *          {
+ *              id: myCommand,
+ *              run: myCommandFunction,
+ *              title: _t("My Command"),
+ *              icon: "fa-bug",
+ *          },
+ *      ],
+ *      power_buttons: [
+ *          {
+ *              commandId: "myCommand",
+ *              commandParams: { myParam: "myValue" },
+ *              title: _t("My Power Button"), // overrides the user command's `title`
+ *              // `icon` is derived from the user command
+ *          }
+ *      ],
+ * };
+ */
 
 export class PowerButtonsPlugin extends Plugin {
-    static name = "power_buttons";
-    static dependencies = ["selection", "local-overlay", "powerbox"];
+    static id = "powerButtons";
+    static dependencies = ["selection", "localOverlay", "powerbox", "userCommand"];
     resources = {
-        layoutGeometryChange: this.updatePowerButtons.bind(this),
-        onSelectionChange: this.updatePowerButtons.bind(this),
+        layout_geometry_change_handlers: this.updatePowerButtons.bind(this),
+        selectionchange_handlers: this.updatePowerButtons.bind(this),
     };
 
     setup() {
-        this.buttons = this.getResource("powerButtons")
-            .map((id) => this.getResource("powerboxItems").find((item) => item.id === id))
-            .filter(Boolean);
-        this.buttons.push({
-            id: "more_options",
-            name: _t("More options"),
-            fontawesome: "fa-ellipsis-v",
-            action: () => {
-                this.openPowerbox();
-            },
-        });
-        this.powerButtonsOverlay = this.shared.makeLocalOverlay("oe-power-buttons-overlay");
-        this.categories = this.getResource("powerboxCategory");
-        this.commands = this.getResource("powerboxItems").map((command) => ({
-            ...command,
-            categoryName: this.categories.find((category) => category.id === command.category).name,
-        }));
+        this.powerButtonsOverlay = this.dependencies.localOverlay.makeLocalOverlay(
+            "oe-power-buttons-overlay"
+        );
         this.createPowerButtons();
     }
 
     createPowerButtons() {
-        this.powerButtons = document.createElement("div");
-        this.powerButtons.className = `o_we_power_buttons d-flex justify-content-center d-none`;
-        for (const button of this.buttons) {
-            const btn = document.createElement("div");
-            btn.className = `power_button btn px-2 py-1 cursor-pointer fa ${button.fontawesome}`;
-            btn.title = button.name;
-            btn.addEventListener("click", () => this.applyCommand(button));
-            this.powerButtons.appendChild(btn);
-        }
-        this.powerButtonsOverlay.appendChild(this.powerButtons);
+        /** @returns {HTMLButtonElement} */
+        const itemToButton = (/**@type {PowerButton} */ item) => {
+            const command = this.dependencies.userCommand.getCommand(item.commandId);
+            const composedPowerButton = {
+                ...pick(command, "title", "icon"),
+                ...omit(item, "commandId", "commandParams"),
+                run: () => command.run(item.commandParams),
+            };
+            const btn = this.document.createElement("button");
+            btn.className = `power_button btn px-2 py-1 cursor-pointer fa ${composedPowerButton.icon}`;
+            btn.title = composedPowerButton.title;
+            this.addDomListener(btn, "click", () => this.applyCommand(composedPowerButton.run));
+            return btn;
+        };
+
+        this.powerButtonsContainer = this.document.createElement("div");
+        this.powerButtonsContainer.className = `o_we_power_buttons d-flex justify-content-center d-none`;
+
+        /** @type {PowerButton[]} */
+        const powerButtons = this.getResource("power_buttons");
+        this.powerButtonsContainer.append(...powerButtons.map(itemToButton));
+        this.powerButtonsOverlay.append(this.powerButtonsContainer);
     }
 
     updatePowerButtons() {
-        this.powerButtons.classList.add("d-none");
-        const { editableSelection, documentSelectionIsInEditable } = this.shared.getSelectionData();
+        this.powerButtonsContainer.classList.add("d-none");
+        const { editableSelection, documentSelectionIsInEditable } =
+            this.dependencies.selection.getSelectionData();
         if (!documentSelectionIsInEditable) {
             return;
         }
@@ -61,13 +94,13 @@ export class PowerButtonsPlugin extends Plugin {
             !this.services.ui.isSmall &&
             !closestElement(editableSelection.anchorNode, "td") &&
             !block.style.textAlign &&
-            this.getResource("showPowerButtons").every((showPowerButtons) =>
-                showPowerButtons(editableSelection)
+            this.getResource("power_buttons_visibility_predicates").every((predicate) =>
+                predicate(editableSelection)
             )
         ) {
-            this.powerButtons.classList.remove("d-none");
+            this.powerButtonsContainer.classList.remove("d-none");
             const direction = closestElement(element, "[dir]")?.getAttribute("dir");
-            this.powerButtons.setAttribute("dir", direction);
+            this.powerButtonsContainer.setAttribute("dir", direction);
             this.setPowerButtonsPosition(block, direction);
         }
     }
@@ -83,7 +116,7 @@ export class PowerButtonsPlugin extends Plugin {
         overlayStyles.top = "0px";
         overlayStyles.left = "0px";
         const blockRect = block.getBoundingClientRect();
-        const buttonsRect = this.powerButtons.getBoundingClientRect();
+        const buttonsRect = this.powerButtonsContainer.getBoundingClientRect();
         if (direction === "rtl") {
             overlayStyles.left =
                 blockRect.right -
@@ -98,21 +131,13 @@ export class PowerButtonsPlugin extends Plugin {
         overlayStyles.height = blockRect.height + "px";
     }
 
-    async applyCommand(command) {
-        const btns = [...this.powerButtons.querySelectorAll(".btn")];
+    /**
+     * @param {Function} commandFn
+     */
+    async applyCommand(commandFn) {
+        const btns = [...this.powerButtonsContainer.querySelectorAll(".btn")];
         btns.forEach((btn) => btn.classList.add("disabled"));
-        await command.action(this.dispatch);
+        await commandFn();
         btns.forEach((btn) => btn.classList.remove("disabled"));
-    }
-
-    openPowerbox() {
-        const selection = this.shared.getEditableSelection();
-        this.enabledCommands = this.commands.filter(
-            (cmd) => !cmd.isAvailable?.(selection.anchorNode)
-        );
-        this.shared.openPowerbox({
-            commands: this.enabledCommands,
-            categories: this.categories,
-        });
     }
 }

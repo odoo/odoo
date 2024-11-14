@@ -50,69 +50,60 @@ import { withSequence } from "@html_editor/utils/resource";
 
 /** @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection */
 
+/**
+ * @typedef {Object} DeleteShared
+ * @property { DeletePlugin['delete'] } delete
+ * @property { DeletePlugin['deleteRange'] } deleteRange
+ * @property { DeletePlugin['deleteSelection'] } deleteSelection
+ */
+
 export class DeletePlugin extends Plugin {
-    static dependencies = ["selection"];
-    static name = "delete";
-    static shared = ["deleteRange", "isUnmergeable"];
+    static dependencies = ["selection", "history"];
+    static id = "delete";
+    static shared = ["deleteRange", "deleteSelection", "delete"];
     resources = {
-        onBeforeInput: [
+        user_commands: [
+            { id: "deleteBackward", run: () => this.delete("backward", "character") },
+            { id: "deleteForward", run: () => this.delete("forward", "character") },
+            { id: "deleteBackwardWord", run: () => this.delete("backward", "word") },
+            { id: "deleteForwardWord", run: () => this.delete("forward", "word") },
+            { id: "deleteBackwardLine", run: () => this.delete("backward", "line") },
+            { id: "deleteForwardLine", run: () => this.delete("forward", "line") },
+        ],
+        shortcuts: [
+            { hotkey: "backspace", commandId: "deleteBackward" },
+            { hotkey: "delete", commandId: "deleteForward" },
+            { hotkey: "control+backspace", commandId: "deleteBackwardWord" },
+            { hotkey: "control+delete", commandId: "deleteForwardWord" },
+            { hotkey: "control+shift+backspace", commandId: "deleteBackwardLine" },
+            { hotkey: "control+shift+delete", commandId: "deleteForwardLine" },
+        ],
+        /** Handlers */
+        beforeinput_handlers: [
             withSequence(5, this.onBeforeInputInsertText.bind(this)),
             this.onBeforeInputDelete.bind(this),
         ],
-        shortcuts: [
-            { hotkey: "backspace", command: "DELETE_BACKWARD" },
-            { hotkey: "delete", command: "DELETE_FORWARD" },
-            { hotkey: "control+backspace", command: "DELETE_BACKWARD_WORD" },
-            { hotkey: "control+delete", command: "DELETE_FORWARD_WORD" },
-            { hotkey: "control+shift+backspace", command: "DELETE_BACKWARD_LINE" },
-            { hotkey: "control+shift+delete", command: "DELETE_FORWARD_LINE" },
-        ],
-        handle_delete_backward: withSequence(30, this.deleteBackwardUnmergeable.bind(this)),
-        handle_delete_backward_word: withSequence(20, this.deleteBackwardUnmergeable.bind(this)),
-        handle_delete_backward_line: this.deleteBackwardUnmergeable.bind(this),
-        handle_delete_forward: withSequence(20, this.deleteForwardUnmergeable.bind(this)),
-        handle_delete_forward_word: this.deleteForwardUnmergeable.bind(this),
-        handle_delete_forward_line: this.deleteForwardUnmergeable.bind(this),
+        /** Overrides */
+        delete_backward_overrides: withSequence(30, this.deleteBackwardUnmergeable.bind(this)),
+        delete_backward_word_overrides: withSequence(20, this.deleteBackwardUnmergeable.bind(this)),
+        delete_backward_line_overrides: this.deleteBackwardUnmergeable.bind(this),
+        delete_forward_overrides: withSequence(20, this.deleteForwardUnmergeable.bind(this)),
+        delete_forward_word_overrides: this.deleteForwardUnmergeable.bind(this),
+        delete_forward_line_overrides: this.deleteForwardUnmergeable.bind(this),
 
         // @todo @phoenix: move these predicates to different plugins
-        isUnremovable: [
-            (element) => element.classList.contains("oe_unremovable"),
+        unremovable_node_predicates: [
+            (node) => node.classList?.contains("oe_unremovable"),
             // Website stuff?
-            (element) => element.classList.contains("o_editable"),
+            (node) => node.classList?.contains("o_editable"),
             // Monetary field
-            (element) => element.matches("[data-oe-type='monetary'] > span"),
+            (node) => node.matches?.("[data-oe-type='monetary'] > span"),
         ],
     };
 
     setup() {
         this.findPreviousPosition = this.makeFindPositionFn("backward");
         this.findNextPosition = this.makeFindPositionFn("forward");
-    }
-
-    handleCommand(command, payload) {
-        switch (command) {
-            case "DELETE_SELECTION":
-                this.deleteSelection();
-                break;
-            case "DELETE_BACKWARD":
-                this.delete("backward", "character");
-                break;
-            case "DELETE_FORWARD":
-                this.delete("forward", "character");
-                break;
-            case "DELETE_BACKWARD_WORD":
-                this.delete("backward", "word");
-                break;
-            case "DELETE_FORWARD_WORD":
-                this.delete("forward", "word");
-                break;
-            case "DELETE_BACKWARD_LINE":
-                this.delete("backward", "line");
-                break;
-            case "DELETE_FORWARD_LINE":
-                this.delete("forward", "line");
-                break;
-        }
     }
 
     // --------------------------------------------------------------------------
@@ -122,12 +113,12 @@ export class DeletePlugin extends Plugin {
     /**
      * @param {EditorSelection} [selection]
      */
-    deleteSelection(selection = this.shared.getEditableSelection()) {
+    deleteSelection(selection = this.dependencies.selection.getEditableSelection()) {
         // @todo @phoenix: handle non-collapsed selection around a ZWS
         // see collapseIfZWS
 
         // Normalize selection
-        selection = this.shared.setSelection(selection);
+        selection = this.dependencies.selection.setSelection(selection);
 
         if (selection.isCollapsed) {
             return;
@@ -139,10 +130,8 @@ export class DeletePlugin extends Plugin {
             this.fullyIncludeLinks,
         ]);
 
-        for (const callback of this.getResource("handle_delete_range")) {
-            if (callback(range)) {
-                return;
-            }
+        if (this.delegateTo("delete_range_overrides", range)) {
+            return;
         }
 
         range = this.deleteRange(range);
@@ -154,7 +143,7 @@ export class DeletePlugin extends Plugin {
      * @param {"character"|"word"|"line"} granularity
      */
     delete(direction, granularity) {
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
 
         if (!selection.isCollapsed) {
             this.deleteSelection(selection);
@@ -165,8 +154,8 @@ export class DeletePlugin extends Plugin {
         } else {
             throw new Error("Invalid direction");
         }
-
-        this.dispatch("ADD_STEP");
+        this.dispatchTo("delete_handlers");
+        this.dependencies.history.addStep();
     }
 
     // --------------------------------------------------------------------------
@@ -179,20 +168,17 @@ export class DeletePlugin extends Plugin {
      */
     deleteBackward(selection, granularity) {
         // Normalize selection
-        const { endContainer, endOffset } = this.shared.setSelection(selection);
+        const { endContainer, endOffset } = this.dependencies.selection.setSelection(selection);
 
         let range = this.getRangeForDelete(endContainer, endOffset, "backward", granularity);
 
         const resourceIds = {
-            character: "handle_delete_backward",
-            word: "handle_delete_backward_word",
-            line: "handle_delete_backward_line",
+            character: "delete_backward_overrides",
+            word: "delete_backward_word_overrides",
+            line: "delete_backward_line_overrides",
         };
-        const handlers = this.getResource(resourceIds[granularity]);
-        for (const handler of handlers) {
-            if (handler(range)) {
-                return;
-            }
+        if (this.delegateTo(resourceIds[granularity], range)) {
+            return;
         }
 
         range = this.adjustRange(range, [
@@ -210,20 +196,17 @@ export class DeletePlugin extends Plugin {
      */
     deleteForward(selection, granularity) {
         // Normalize selection
-        const { startContainer, startOffset } = this.shared.setSelection(selection);
+        const { startContainer, startOffset } = this.dependencies.selection.setSelection(selection);
 
         let range = this.getRangeForDelete(startContainer, startOffset, "forward", granularity);
 
         const resourceIds = {
-            character: "handle_delete_forward",
-            word: "handle_delete_forward_word",
-            line: "handle_delete_forward_line",
+            character: "delete_forward_overrides",
+            word: "delete_forward_word_overrides",
+            line: "delete_forward_line_overrides",
         };
-        const handlers = this.getResource(resourceIds[granularity]);
-        for (const handler of handlers) {
-            if (handler(range)) {
-                return;
-            }
+        if (this.delegateTo(resourceIds[granularity], range)) {
+            return;
         }
 
         range = this.adjustRange(range, [
@@ -243,7 +226,7 @@ export class DeletePlugin extends Plugin {
                 break;
             case "word":
                 ({ focusNode: destContainer, focusOffset: destOffset } =
-                    this.shared.modifySelection("extend", direction, "word"));
+                    this.dependencies.selection.modifySelection("extend", direction, "word"));
                 break;
             case "line":
                 [destContainer, destOffset] = this.findLineBoundary(node, offset, direction);
@@ -521,16 +504,7 @@ export class DeletePlugin extends Plugin {
     // conditionally unremovable (e.g. a table cell is only removable if its
     // ancestor table is also being removed).
     isUnremovable(node, root = undefined) {
-        // For now, there's no use case of unremovable text nodes.
-        // Should this change, the predicates must be adapted to take a Node
-        // instead of an Element as argument.
-        if (node.nodeType === Node.TEXT_NODE) {
-            return false;
-        }
-        if (node.nodeType !== Node.ELEMENT_NODE) {
-            return true;
-        }
-        return this.getResource("isUnremovable").some((predicate) => predicate(node, root));
+        return this.getResource("unremovable_node_predicates").some((p) => p(node, root));
     }
 
     // Returns true if the entire subtree rooted at node was removed.
@@ -540,7 +514,7 @@ export class DeletePlugin extends Plugin {
         const remove = (node) => {
             let customHandling = false;
             let customIsUnremovable;
-            for (const cb of this.getResource("filter_descendants_to_remove")) {
+            for (const cb of this.getResource("removable_descendants_providers")) {
                 const descendantsToRemove = cb(node);
                 if (descendantsToRemove) {
                     for (const descendant of descendantsToRemove) {
@@ -646,10 +620,7 @@ export class DeletePlugin extends Plugin {
      * merge are reverse operations from one another).
      */
     isUnmergeable(node) {
-        return (
-            node.nodeType === Node.ELEMENT_NODE &&
-            this.getResource("isUnsplittable").some((predicate) => predicate(node))
-        );
+        return this.getResource("unsplittable_node_predicates").some((p) => p(node));
     }
 
     joinBlocks(left, right, commonAncestor) {
@@ -1181,7 +1152,7 @@ export class DeletePlugin extends Plugin {
 
     onBeforeInputInsertText(ev) {
         if (ev.inputType === "insertText") {
-            const selection = this.shared.getEditableSelection();
+            const selection = this.dependencies.selection.getEditableSelection();
             if (!selection.isCollapsed) {
                 this.deleteSelection();
             }
@@ -1217,9 +1188,15 @@ export class DeletePlugin extends Plugin {
 
         if (isEmpty(closestUnmergeable) && !this.isUnremovable(closestUnmergeable)) {
             closestUnmergeable.remove();
-            this.shared.setSelection({ anchorNode: destContainer, anchorOffset: destOffset });
+            this.dependencies.selection.setSelection({
+                anchorNode: destContainer,
+                anchorOffset: destOffset,
+            });
         } else {
-            this.shared.setSelection({ anchorNode: sourceContainer, anchorOffset: sourceOffset });
+            this.dependencies.selection.setSelection({
+                anchorNode: sourceContainer,
+                anchorOffset: sourceOffset,
+            });
         }
         return true;
     }
@@ -1257,7 +1234,7 @@ export class DeletePlugin extends Plugin {
             range.startContainer,
             range.startOffset
         );
-        this.shared.setSelection({ anchorNode, anchorOffset });
+        this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
     }
 
     // @todo: no need for this once selection in the editable root is corrected?

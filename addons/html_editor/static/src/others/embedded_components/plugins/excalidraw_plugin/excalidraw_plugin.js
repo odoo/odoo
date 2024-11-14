@@ -4,27 +4,30 @@ import { renderToElement } from "@web/core/utils/render";
 import { ExcalidrawDialog } from "@html_editor/others/embedded_components/plugins/excalidraw_plugin/excalidraw_dialog/excalidraw_dialog";
 
 export class ExcalidrawPlugin extends Plugin {
-    static name = "excalidraw";
-    static dependencies = ["embedded_components", "dom", "selection", "link"];
+    static id = "excalidraw";
+    static dependencies = ["embeddedComponents", "dom", "selection", "link", "history"];
     resources = {
-        powerboxItems: [
+        user_commands: [
             {
-                category: "navigation",
-                name: _t("Drawing Board"),
-                priority: 70,
+                id: "insertDrawingBoard",
+                title: _t("Drawing Board"),
                 description: _t("Insert an Excalidraw Board"),
-                fontawesome: "fa-pencil-square-o",
-                action: () => {
-                    this.insertDrawingBoard();
-                },
+                icon: "fa-pencil-square-o",
+                run: this.insertDrawingBoard.bind(this),
+            },
+        ],
+        powerbox_items: [
+            {
+                categoryId: "navigation",
+                commandId: "insertDrawingBoard",
             },
         ],
     };
 
     insertDrawingBoard() {
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         let restoreSelection = () => {
-            this.shared.setSelection(selection);
+            this.dependencies.selection.setSelection(selection);
         };
         this.services.dialog.add(
             ExcalidrawDialog,
@@ -36,9 +39,8 @@ export class ExcalidrawPlugin extends Plugin {
                             embeddedProps: JSON.stringify({ source: href }),
                         }
                     );
-                    this.shared.domInsert(templateBlock);
-
-                    this.dispatch("ADD_STEP");
+                    this.dependencies.dom.insert(templateBlock);
+                    this.dependencies.history.addStep();
 
                     restoreSelection = () => {};
                 },

@@ -1868,7 +1868,7 @@ describe("save image", () => {
         sendBeaconDef = new Deferred();
         setSelectionInHtmlField(".test_target");
         await insertText(htmlEditor, "a");
-        htmlEditor.dispatch("ADD_STEP");
+        htmlEditor.shared.history.addStep();
         await formController.beforeUnload();
         await sendBeaconDef;
 
@@ -1877,7 +1877,7 @@ describe("save image", () => {
         const imageContainerElement = parseHTML(htmlEditor.document, imageContainerHTML).firstChild;
         const paragraph = htmlEditor.editable.querySelector(".test_target");
         htmlEditor.editable.replaceChild(imageContainerElement, paragraph);
-        htmlEditor.dispatch("ADD_STEP");
+        htmlEditor.shared.history.addStep();
 
         // Simulate an urgent save before the end of the RPC roundtrip for the
         // image.

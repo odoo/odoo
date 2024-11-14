@@ -6,10 +6,9 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 
 const REGEX_BOOTSTRAP_COLUMN = /(?:^| )col(-[a-zA-Z]+)?(-\d+)?(?:$| )/;
 
-function isUnremovableColumn(element, root) {
+function isUnremovableColumn(node, root) {
     const isColumnInnerStructure =
-        element.tagName === "DIV" &&
-        [...element.classList].some((cls) => /^row$|^col$|^col-/.test(cls));
+        node.nodeName === "DIV" && [...node.classList].some((cls) => /^row$|^col$|^col-/.test(cls));
 
     if (!isColumnInnerStructure) {
         return false;
@@ -17,65 +16,63 @@ function isUnremovableColumn(element, root) {
     if (!root) {
         return true;
     }
-    const closestColumnContainer = closestElement(element, "div.o_text_columns");
+    const closestColumnContainer = closestElement(node, "div.o_text_columns");
     return !root.contains(closestColumnContainer);
 }
 
-function columnisAvailable(numberOfColumns) {
-    return (node) => {
-        const row = closestElement(node, ".o_text_columns .row");
-        return row && row.childElementCount === numberOfColumns;
+function columnIsAvailable(numberOfColumns) {
+    return (selection) => {
+        const row = closestElement(selection.anchorNode, ".o_text_columns .row");
+        return !(row && row.childElementCount === numberOfColumns);
     };
 }
 
 export class ColumnPlugin extends Plugin {
-    static name = "column";
-    static dependencies = ["selection"];
+    static id = "column";
+    static dependencies = ["selection", "history"];
     resources = {
-        isUnremovable: isUnremovableColumn,
-        powerboxItems: [
+        user_commands: [
             {
-                name: _t("2 columns"),
+                id: "columnize",
+                title: _t("Columnize"),
+                description: _t("Convert into columns"),
+                icon: "fa-columns",
+                run: this.columnize.bind(this),
+            },
+        ],
+        powerbox_items: [
+            {
+                title: _t("2 columns"),
                 description: _t("Convert into 2 columns"),
-                category: "structure",
-                fontawesome: "fa-columns",
-                isAvailable: columnisAvailable(2),
-                action(dispatch) {
-                    dispatch("COLUMNIZE", { numberOfColumns: 2 });
-                },
+                categoryId: "structure",
+                isAvailable: columnIsAvailable(2),
+                commandId: "columnize",
+                commandParams: { numberOfColumns: 2 },
             },
             {
-                name: _t("3 columns"),
+                title: _t("3 columns"),
                 description: _t("Convert into 3 columns"),
-                category: "structure",
-                fontawesome: "fa-columns",
-                isAvailable: columnisAvailable(3),
-                action(dispatch) {
-                    dispatch("COLUMNIZE", { numberOfColumns: 3 });
-                },
+                categoryId: "structure",
+                isAvailable: columnIsAvailable(3),
+                commandId: "columnize",
+                commandParams: { numberOfColumns: 3 },
             },
             {
-                name: _t("4 columns"),
+                title: _t("4 columns"),
                 description: _t("Convert into 4 columns"),
-                category: "structure",
-                fontawesome: "fa-columns",
-                isAvailable: columnisAvailable(4),
-                action(dispatch) {
-                    dispatch("COLUMNIZE", { numberOfColumns: 4 });
-                },
+                categoryId: "structure",
+                isAvailable: columnIsAvailable(4),
+                commandId: "columnize",
+                commandParams: { numberOfColumns: 4 },
             },
             {
-                name: _t("Remove columns"),
+                title: _t("Remove columns"),
                 description: _t("Back to one column"),
-                category: "structure",
-                fontawesome: "fa-columns",
-                isAvailable(node) {
-                    const row = closestElement(node, ".o_text_columns .row");
-                    return !row;
-                },
-                action(dispatch) {
-                    dispatch("COLUMNIZE", { numberOfColumns: 0 });
-                },
+                categoryId: "structure",
+                isAvailable: (selection) =>
+                    !!closestElement(selection.anchorNode, ".o_text_columns .row"),
+                commandId: "columnize",
+                commandParams: { numberOfColumns: 0 },
             },
         ],
         hints: [
@@ -85,21 +82,13 @@ export class ColumnPlugin extends Plugin {
                 text: _t("Empty column"),
             },
         ],
-        showPowerButtons: (selection) => !closestElement(selection.anchorNode, ".o_text_columns"),
+        unremovable_node_predicates: isUnremovableColumn,
+        power_buttons_visibility_predicates: ({ anchorNode }) =>
+            !closestElement(anchorNode, ".o_text_columns"),
     };
 
-    handleCommand(command, payload) {
-        switch (command) {
-            case "COLUMNIZE": {
-                const { numberOfColumns, addParagraphAfter } = payload;
-                this.columnize(numberOfColumns, addParagraphAfter);
-                this.dispatch("ADD_STEP");
-                break;
-            }
-        }
-    }
-    columnize(numberOfColumns, addParagraphAfter = true) {
-        const selectionToRestore = this.shared.getEditableSelection();
+    columnize({ numberOfColumns, addParagraphAfter = true } = {}) {
+        const selectionToRestore = this.dependencies.selection.getEditableSelection();
         const anchor = selectionToRestore.anchorNode;
         const hasColumns = !!closestElement(anchor, ".o_text_columns");
         if (hasColumns) {
@@ -111,7 +100,8 @@ export class ColumnPlugin extends Plugin {
         } else if (numberOfColumns) {
             this.createColumns(anchor, numberOfColumns, addParagraphAfter);
         }
-        this.shared.setSelection(selectionToRestore);
+        this.dependencies.selection.setSelection(selectionToRestore);
+        this.dependencies.history.addStep();
     }
 
     removeColumns(anchor) {

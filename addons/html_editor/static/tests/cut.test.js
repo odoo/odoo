@@ -61,7 +61,7 @@ describe("range not collapsed", () => {
         await testEditor({
             contentBefore: "<p>a[bcd]e</p>",
             stepFunction: async (editor) => {
-                const history = editor.plugins.find((p) => p.constructor.name === "history");
+                const history = editor.plugins.find((p) => p.constructor.id === "history");
                 const historyStepsCount = history.steps.length;
                 cut(editor);
                 expect(history.steps.length).toBe(historyStepsCount + 1);

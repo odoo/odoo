@@ -10,7 +10,6 @@
                                 <t t-component="button.Component"
                                     t-props="button.props"
                                     title="button.title"
-                                    dispatch.bind="props.toolbar.dispatch"
                                     getSelection.bind="props.toolbar.getSelection"/>
                             </t>
                             <button t-else=""
@@ -19,6 +18,7 @@
                                     active: state.buttonsActiveState[button.id],
                                     disabled: state.buttonsDisabledState[button.id]
                                 }"
+                                t-att-disabled="state.buttonsDisabledState[button.id]"
                                 t-att-title="button.title"
                                 t-att-name="button.id"
                                 t-on-click="() => this.onButtonClick(button)"
