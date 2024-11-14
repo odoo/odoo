@@ -7,7 +7,7 @@ import { OTHER_LONG_TYPING } from "@mail/discuss/typing/common/typing_service";
 import { Command } from "@mail/../tests/helpers/command";
 import { start } from "@mail/../tests/helpers/test_utils";
 
-import { click, contains, insertText } from "@web/../tests/utils";
+import { click, contains, insertText, step, assertSteps } from "@web/../tests/utils";
 
 QUnit.module("typing");
 
@@ -391,14 +391,14 @@ QUnit.test("switching to another channel triggers notify_typing to stop", async 
         hasTimeControl: true,
         async mockRPC(route, args) {
             if (route === "/discuss/channel/notify_typing") {
-                assert.step(`notify_typing:${args.is_typing}`);
+                step(`notify_typing:${args.is_typing}`);
             }
         },
     });
     await openDiscuss(chatId);
     await insertText(".o-mail-Composer-input", "a");
-    assert.verifySteps(["notify_typing:true"]);
+    await assertSteps(["notify_typing:true"]);
     await click(".o-mail-DiscussSidebar-item", { text: "general" });
     await advanceTime(SHORT_TYPING / 2);
-    assert.verifySteps(["notify_typing:false"]);
+    await assertSteps(["notify_typing:false"]);
 });

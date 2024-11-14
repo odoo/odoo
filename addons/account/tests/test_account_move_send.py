@@ -1061,3 +1061,20 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
 
         self.assertTrue(self._get_mail_message(invoice))  # email was sent
         self.assertEqual(res['type'], 'ir.actions.act_window_close')  # the download which is a default value didn't happen
+
+    def test_is_move_sent_state(self):
+        # Post a move, nothing sent yet
+        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
+        self.assertFalse(invoice.is_move_sent)
+        # Send via send & print
+        wizard = self.create_send_and_print(invoice)
+        wizard.action_send_and_print()
+        self.assertTrue(invoice.is_move_sent)
+        # Revert move to draft
+        invoice.button_draft()
+        self.assertTrue(invoice.is_move_sent)
+        # Unlink PDF
+        pdf_report = invoice.invoice_pdf_report_id
+        self.assertTrue(pdf_report)
+        invoice.invoice_pdf_report_id.unlink()
+        self.assertTrue(invoice.is_move_sent)
