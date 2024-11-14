@@ -348,8 +348,10 @@ export class Many2XAutocomplete extends Component {
                             e instanceof RPCError &&
                             e.exceptionName === "odoo.exceptions.ValidationError"
                         ) {
-                            const context = this.getCreationContext(request);
-                            return this.openMany2X({ context });
+                            return this.openMany2X({
+                                context: this.getCreationContext(request),
+                                nextRecordsContext: this.props.context,
+                            });
                         }
                         throw e;
                     }
@@ -378,11 +380,14 @@ export class Many2XAutocomplete extends Component {
         }
 
         if (request.length && canCreateEdit) {
-            const context = this.getCreationContext(request);
             options.push({
                 label: _t("Create and edit..."),
                 classList: "o_m2o_dropdown_option o_m2o_dropdown_option_create_edit",
-                action: () => this.openMany2X({ context }),
+                action: () =>
+                    this.openMany2X({
+                        context: this.getCreationContext(request),
+                        nextRecordsContext: this.props.context,
+                    }),
             });
         }
 
@@ -472,7 +477,7 @@ export function useOpenMany2XRecord({
     const orm = useService("orm");
 
     return async function openDialog(
-        { resId = false, forceModel = null, title, context },
+        { resId = false, forceModel = null, title, context, nextRecordsContext },
         immediate = false
     ) {
         const model = forceModel || resModel;
@@ -498,6 +503,7 @@ export function useOpenMany2XRecord({
                 preventEdit: !canWrite,
                 title,
                 context,
+                nextRecordsContext,
                 mode,
                 resId,
                 resModel: model,
