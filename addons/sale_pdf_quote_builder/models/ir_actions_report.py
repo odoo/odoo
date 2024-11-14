@@ -213,10 +213,10 @@ class IrActionsReport(models.Model):
                         new_key = prefix + form_key
 
                         # Modifying the form flags to force some characteristics
-                        # 1. text fields that are already filled get marked as readonly
+                        # 1. make all text fields read-only
                         # 2. make all text fields support multiline
                         form_flags = reader_annot.get('/Ff', 0)
-                        readonly_flag = 1 if field_names[form_key] else 0  # 1st bit sets readonly
+                        readonly_flag = 1  # 1st bit sets readonly
                         multiline_flag = 1 << 12  # 13th bit sets multiline text
                         new_flags = form_flags | readonly_flag | multiline_flag
 
