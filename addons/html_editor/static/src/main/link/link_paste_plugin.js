@@ -5,11 +5,11 @@ import { Plugin } from "@html_editor/plugin";
 import { leftPos } from "@html_editor/utils/position";
 
 export class LinkPastePlugin extends Plugin {
-    static name = "link_paste";
+    static id = "linkPaste";
     static dependencies = ["link", "clipboard", "selection", "dom"];
     resources = {
-        before_paste: this.removeFullySelectedLink.bind(this),
-        handle_paste_text: this.handlePasteText.bind(this),
+        before_paste_handlers: this.removeFullySelectedLink.bind(this),
+        paste_text_overrides: this.handlePasteText.bind(this),
     };
 
     /**
@@ -49,13 +49,10 @@ export class LinkPastePlugin extends Plugin {
             this.handlePasteTextUrlInsideLink(text, url);
             return;
         }
-        const isHandled = this.getResource("handle_paste_url").some((handler) =>
-            handler(text, url)
-        );
-        if (isHandled) {
+        if (this.delegateTo("paste_url_overrides", text, url)) {
             return;
         }
-        this.shared.insertLink(url, text);
+        this.dependencies.link.insertLink(url, text);
     }
     /**
      * @param {string} text
@@ -67,9 +64,9 @@ export class LinkPastePlugin extends Plugin {
         if (isImageUrl(url)) {
             const img = this.document.createElement("IMG");
             img.setAttribute("src", url);
-            this.shared.domInsert(img);
+            this.dependencies.dom.insert(img);
         } else {
-            this.shared.domInsert(text);
+            this.dependencies.dom.insert(text);
         }
     }
     /**
@@ -85,9 +82,11 @@ export class LinkPastePlugin extends Plugin {
             // Even indexes will always be plain text, and odd indexes will always be URL.
             // A url cannot be transformed inside an existing link.
             if (i % 2 && !selectionIsInsideALink) {
-                this.shared.domInsert(this.shared.createLink(url, splitAroundUrl[i]));
+                this.dependencies.dom.insert(
+                    this.dependencies.link.createLink(url, splitAroundUrl[i])
+                );
             } else if (splitAroundUrl[i] !== "") {
-                this.shared.pasteText(selection, splitAroundUrl[i]);
+                this.dependencies.clipboard.pasteText(selection, splitAroundUrl[i]);
             }
         }
     }
@@ -102,7 +101,7 @@ export class LinkPastePlugin extends Plugin {
             const start = leftPos(link);
             link.remove();
             // @doto @phoenix do we still want normalize:false?
-            this.shared.setSelection({
+            this.dependencies.selection.setSelection({
                 anchorNode: start[0],
                 anchorOffset: start[1],
                 normalize: false,

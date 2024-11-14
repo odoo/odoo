@@ -10,14 +10,14 @@ const base64Img =
     "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
 
 test("image can be selected", async () => {
-    const { editor } = await setupEditor(`
+    const { plugins } = await setupEditor(`
         <img src="${base64Img}">
     `);
 
     await click("img");
     await waitFor(".o-we-toolbar");
     expect(".btn-group[name='image_shape']").toHaveCount(1);
-    const selectionPlugin = editor.plugins.find((p) => p.constructor.name === "selection");
+    const selectionPlugin = plugins.get("selection");
     expect(selectionPlugin.getSelectedNodes()[0].tagName).toBe("IMG");
 });
 

@@ -21,85 +21,91 @@ const getPowerboxItems = (plugin) => {
     const powerboxItems = [];
     if (!plugin.config.disableImage) {
         powerboxItems.push({
-            id: "image",
-            name: _t("Image"),
-            description: _t("Insert an image"),
-            category: "media",
-            fontawesome: "fa-file-image-o",
-            async action() {
-                await plugin.openMediaDialog();
-            },
+            categoryId: "media",
+            commandId: "insertImage",
         });
     }
     if (!plugin.config.disableVideo) {
         powerboxItems.push({
-            name: _t("Video"),
-            description: _t("Insert a video"),
-            category: "media",
-            fontawesome: "fa-file-video-o",
-            action() {
-                plugin.openMediaDialog({
-                    noVideos: false,
-                    noImages: true,
-                    noIcons: true,
-                    noDocuments: true,
-                });
-            },
+            categoryId: "media",
+            commandId: "insertVideo",
         });
     }
     return powerboxItems;
 };
 
+/**
+ * @typedef { Object } MediaShared
+ * @property { MediaPlugin['savePendingImages'] } savePendingImages
+ */
+
 export class MediaPlugin extends Plugin {
-    static name = "media";
+    static id = "media";
     static dependencies = ["selection", "history", "dom", "dialog"];
     static shared = ["savePendingImages"];
     resources = {
-        powerboxCategory: withSequence(40, { id: "media", name: _t("Media") }),
-        powerboxItems: getPowerboxItems(this),
-        toolbarCategory: withSequence(29, {
+        user_commands: [
+            {
+                id: "replaceImage",
+                title: _t("Replace media"),
+                run: this.replaceImage.bind(this),
+            },
+            {
+                id: "insertImage",
+                title: _t("Image"),
+                description: _t("Insert an image"),
+                icon: "fa-file-image-o",
+                run: this.openMediaDialog.bind(this),
+            },
+            {
+                id: "insertVideo",
+                title: _t("Video"),
+                description: _t("Insert a video"),
+                icon: "fa-file-video-o",
+                run: () => {
+                    this.openMediaDialog({
+                        noVideos: false,
+                        noImages: true,
+                        noIcons: true,
+                        noDocuments: true,
+                    });
+                },
+            },
+        ],
+        toolbar_groups: withSequence(29, {
             id: "replace_image",
             namespace: "image",
         }),
-        toolbarItems: [
+        toolbar_items: [
             {
                 id: "replace_image",
-                category: "replace_image",
-                action(dispatch) {
-                    dispatch("REPLACE_IMAGE");
-                },
-                title: _t("Replace media"),
+                groupId: "replace_image",
+                commandId: "replaceImage",
                 text: "Replace",
             },
         ],
-        isUnsplittable: isIconElement, // avoid merge
-        powerButtons: ["image"],
+        powerbox_categories: withSequence(40, { id: "media", name: _t("Media") }),
+        powerbox_items: getPowerboxItems(this),
+        power_buttons: { commandId: "insertImage" },
+
+        /** Handlers */
+        clean_handlers: this.clean.bind(this),
+        clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
+        normalize_handlers: this.normalizeMedia.bind(this),
+
+        unsplittable_node_predicates: isIconElement, // avoid merge
     };
 
     get recordInfo() {
         return this.config.getRecordInfo ? this.config.getRecordInfo() : {};
     }
 
-    handleCommand(command, payload) {
-        switch (command) {
-            case "NORMALIZE":
-                this.normalizeMedia(payload.node);
-                break;
-            case "CLEAN":
-                this.clean(payload.root);
-                break;
-            case "CLEAN_FOR_SAVE":
-                this.cleanForSave(payload.root);
-                break;
-            case "REPLACE_IMAGE": {
-                const selectedNodes = this.shared.getSelectedNodes();
-                const node = selectedNodes.find((node) => node.tagName === "IMG");
-                if (node) {
-                    this.openMediaDialog({ node });
-                    this.dispatch("ADD_STEP");
-                }
-                break;
-            }
+    replaceImage() {
+        const selectedNodes = this.dependencies.selection.getSelectedNodes();
+        const node = selectedNodes.find((node) => node.tagName === "IMG");
+        if (node) {
+            this.openMediaDialog({ node });
+            this.dependencies.history.addStep();
         }
     }
 
@@ -158,17 +164,17 @@ export class MediaPlugin extends Plugin {
                 node.replaceWith(element);
             }
         } else {
-            this.shared.domInsert(element);
+            this.dependencies.dom.insert(element);
         }
         // Collapse selection after the inserted/replaced element.
         const [anchorNode, anchorOffset] = rightPos(element);
-        this.shared.setSelection({ anchorNode, anchorOffset });
-        this.dispatch("ADD_STEP");
+        this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
+        this.dependencies.history.addStep();
     }
 
     openMediaDialog(params = {}) {
         const { resModel, resId, field, type } = this.recordInfo;
-        const mediaDialogClosedPromise = this.shared.addDialog(MediaDialog, {
+        const mediaDialogClosedPromise = this.dependencies.dialog.addDialog(MediaDialog, {
             resModel,
             resId,
             useMediaLibrary: !!(
