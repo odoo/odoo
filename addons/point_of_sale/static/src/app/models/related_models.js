@@ -623,8 +623,13 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
             },
             deleteMany(records) {
                 const result = [];
-                for (const record of records) {
-                    result.push(delete_(model, record));
+                let counter = 0;
+                while (records.length > 0) {
+                    result.push(delete_(model, records[0]));
+                    counter++;
+                    if (counter > 1000) {
+                        throw new Error("Too many records to delete");
+                    }
                 }
                 return result;
             },

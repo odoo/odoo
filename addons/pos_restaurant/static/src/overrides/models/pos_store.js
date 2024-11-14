@@ -91,6 +91,12 @@ patch(PosStore.prototype, {
             tableByIds[table.id].uiState.skipCount = table.skip_changes;
         }
     },
+    getEmptyOrderScreen() {
+        if (this.config.module_pos_restaurant) {
+            return { name: "FloorScreen", props: { floor: this.selectedTable?.floor } };
+        }
+        return super.getEmptyOrderScreen(...arguments);
+    },
     get categoryCount() {
         const orderChange = this.getOrderChanges().orderlines;
 
