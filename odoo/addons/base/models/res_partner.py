@@ -956,6 +956,51 @@ class Partner(models.Model):
         warnings.warn("Partner._email_send has not done anything but raise errors since 15.0", stacklevel=2, category=DeprecationWarning)
         return True
 
+    def _address_get_type_id_children(self, adr_pref, visited):
+        """Scan all the descendants address filtered by type
+
+        It is using yield (self.type, self.id) in order to process this soft data
+        and avoid running an extra query if it is not needed
+        """
+        self.ensure_one()
+
+        yield self.type, self.id
+
+        self.check_access_rights("read")
+        self.flush(["active", "display_name", "is_company", "name", "parent_id", "partner_share", "type"])
+        query = """WITH RECURSIVE descendants AS (
+            SELECT *, LPAD(id::TEXT, 10, '0') AS path
+            FROM res_partner AS parent
+            WHERE id = %%(partner_id)s
+
+            UNION ALL
+
+            SELECT res_partner.*, d.path || '>' || LPAD(res_partner.id::TEXT, 10, '0') AS path
+            FROM res_partner
+            JOIN descendants d
+            ON res_partner.parent_id = d.id
+            WHERE (res_partner.is_company IS FALSE OR res_partner.is_company IS NULL)
+                AND res_partner.id NOT IN %%(visited)s
+                AND %(query_rule)s
+        )
+        SELECT DISTINCT ON (type)
+        type, id
+        FROM descendants
+        WHERE type IN %%(adr_pref)s
+        ORDER BY type, path, %(order)s
+        """
+        query_obj = self._where_calc([])
+        self._apply_ir_rules(query_obj)
+        where_clause, where_clause_params = query_obj.get_sql()[1:]
+        where_clause = where_clause or "TRUE"
+        query_rule = self.env.cr.mogrify(where_clause, where_clause_params).decode("UTF-8")
+        self.env.cr.execute(
+            query % {"order": self._order or "id", "query_rule": query_rule},
+            {"partner_id": self.id, "adr_pref": tuple(adr_pref), "visited": tuple(visited or [0])},
+        )
+        partner_types_ids = self.env.cr.fetchall()
+        yield from partner_types_ids
+
     def address_get(self, adr_pref=None):
         """ Find contacts/addresses of the right type(s) by doing a depth-first-search
         through descendants within company boundaries (stop at entities flagged ``is_company``)
@@ -970,19 +1015,12 @@ class Partner(models.Model):
         for partner in self:
             current_partner = partner
             while current_partner:
-                to_scan = [current_partner]
-                # Scan descendants, DFS
-                while to_scan:
-                    record = to_scan.pop(0)
-                    visited.add(record)
-                    if record.type in adr_pref and not result.get(record.type):
-                        result[record.type] = record.id
-                    if len(result) == len(adr_pref):
-                        return result
-                    to_scan = [c for c in record.child_ids
-                                 if c not in visited
-                                 if not c.is_company] + to_scan
-
+                for partner_type, partner_id in current_partner._address_get_type_id_children(adr_pref-set(result), visited):
+                    if partner_type in adr_pref and not result.get(partner_type):
+                        result[partner_type] = partner_id
+                        if len(result) == len(adr_pref):
+                            return result
+                visited.add(current_partner.id)
                 # Continue scanning at ancestor if current_partner is not a commercial entity
                 if current_partner.is_company or not current_partner.parent_id:
                     break
