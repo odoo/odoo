@@ -247,26 +247,37 @@ test("reset emoji picker scroll value after an emoji is picked", async () => {
 
 test("keep emoji picker scroll value independent if two or more different emoji pickers are used", async () => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "roblox-jaywalking" });
+    const channel_member_ids = [
+        Command.create({
+            fold_state: "open",
+            partner_id: serverState.partnerId,
+        }),
+    ];
+    pyEnv["discuss.channel"].create([
+        { name: "roblox-jaywalking", channel_member_ids },
+        { name: "Sales", channel_member_ids },
+    ]);
     await start();
-    pyEnv["mail.message"].create({
-        author_id: serverState.partnerId,
-        body: "This is a message",
-        attachment_ids: [],
-        message_type: "comment",
-        model: "discuss.channel",
-        res_id: channelId,
+    await click("button[aria-label='Emojis']", {
+        parent: [".o-mail-ChatWindow", { text: "Sales" }],
     });
-    await openDiscuss(channelId);
-    await click("[title='Add a Reaction']");
-    await contains(".o-EmojiPicker-content", { scroll: 0 });
-    await scroll(".o-EmojiPicker-content", 150);
-    await click("button[aria-label='Emojis']");
-    await contains(".o-mail-PickerContent .o-EmojiPicker-content", { scroll: 0 });
     await scroll(".o-EmojiPicker-content", 200);
-    await click("[title='Add a Reaction']");
+    await contains(".o-EmojiPicker-content", { scroll: 200 });
+    await click("button[aria-label='Emojis']", {
+        parent: [".o-mail-ChatWindow", { text: "Sales" }],
+    });
+    await contains(".o-EmojiPicker-content", { count: 0 });
+    await click("button[aria-label='Emojis']", {
+        parent: [".o-mail-ChatWindow", { text: "roblox-jaywalking" }],
+    });
+    await scroll(".o-EmojiPicker-content", 150);
     await contains(".o-EmojiPicker-content", { scroll: 150 });
-    await click("button[aria-label='Emojis']");
+    await click("button[aria-label='Emojis']", {
+        parent: [".o-mail-ChatWindow", { text: "roblox-jaywalking" }],
+    });
+    await click("button[aria-label='Emojis']", {
+        parent: [".o-mail-ChatWindow", { text: "Sales" }],
+    });
     await contains(".o-EmojiPicker-content", { scroll: 200 });
 });
 
