@@ -70,7 +70,7 @@ from .fields_temporal import Datetime
 from .fields_textual import Char
 
 from .identifiers import NewId
-from .utils import OriginIds, expand_ids, check_pg_name, check_object_name, check_property_field_value_name, origin_ids, READ_GROUP_ALL_TIME_GRANULARITY, READ_GROUP_TIME_GRANULARITY, READ_GROUP_NUMBER_GRANULARITY
+from .utils import OriginIds, check_pg_name, check_object_name, check_property_field_value_name, origin_ids, READ_GROUP_ALL_TIME_GRANULARITY, READ_GROUP_TIME_GRANULARITY, READ_GROUP_NUMBER_GRANULARITY
 from odoo.osv import expression
 
 import typing
@@ -6357,19 +6357,6 @@ class BaseModel(metaclass=MetaModel):
     # Record traversal and update
     #
 
-    def _mapped_func(self, func):
-        """ Apply function ``func`` on all records in ``self``, and return the
-            result as a list or a recordset (if ``func`` returns recordsets).
-        """
-        if self:
-            vals = [func(rec) for rec in self]
-            if isinstance(vals[0], BaseModel):
-                return vals[0].union(*vals)         # union of all recordsets
-            return vals
-        else:
-            vals = func(self)
-            return vals if isinstance(vals, BaseModel) else []
-
     def mapped(self, func):
         """Apply ``func`` on all records in ``self``, and return the result as a
         list or a recordset (if ``func`` return recordsets). In the latter
@@ -6400,13 +6387,34 @@ class BaseModel(metaclass=MetaModel):
         """
         if not func:
             return self                 # support for an empty path of fields
+
         if isinstance(func, str):
-            recs = self
-            for name in func.split('.'):
-                recs = recs._fields[name].mapped(recs)
-            return recs
+            # special case: sequence of field names
+            *rel_field_names, field_name = func.split('.')
+            records = self
+            for rel_field_name in rel_field_names:
+                records = records[rel_field_name]
+            if len(records) > PREFETCH_MAX:
+                # fetch fields for all recordset in case we have a recordset
+                # that is larger than the prefetch
+                records.fetch([field_name])
+            field = records._fields[field_name]
+            getter = field.__get__
+            if field.relational:
+                # union of records
+                return getter(records)
+            return [getter(record) for record in records]
+
+        if self:
+            vals = [func(rec) for rec in self]
+            if isinstance(vals[0], BaseModel):
+                return vals[0].union(*vals)
+            return vals
         else:
-            return self._mapped_func(func)
+            # we want to follow-up the comodel from the function
+            # so we pass an empty recordset
+            vals = func(self)
+            return vals if isinstance(vals, BaseModel) else []
 
     def filtered(self, func) -> Self:
         """Return the records in ``self`` satisfying ``func``.
@@ -6423,11 +6431,14 @@ class BaseModel(metaclass=MetaModel):
             # only keep records whose partner is a company
             records.filtered("partner_id.is_company")
         """
+        if not func:
+            # align with mapped()
+            return self
         if isinstance(func, str):
             if '.' in func:
                 return self.browse(rec.id for rec in self if any(rec.mapped(func)))
-            else:  # Avoid costly mapped
-                return self.browse(rec.id for rec in self if rec[func])
+            # avoid costly mapped
+            func = self._fields[func].__get__
         return self.browse(rec.id for rec in self if func(rec))
 
     def grouped(self, key):
@@ -6974,22 +6985,6 @@ class BaseModel(metaclass=MetaModel):
     def _cache(self):
         """ Return the cache of ``self``, mapping field names to values. """
         return RecordCache(self)
-
-    def _in_cache_without(self, field, limit=PREFETCH_MAX):
-        """ Return records to prefetch that have no value in cache for ``field``
-            (:class:`Field` instance), including ``self``.
-            Return at most ``limit`` records.
-        """
-        ids = expand_ids(self.id, self._prefetch_ids)
-        ids = self.env.cache.get_missing_ids(self.browse(ids), field)
-        if limit:
-            ids = itertools.islice(ids, limit)
-        # Those records are aimed at being either fetched, or computed.  But the
-        # method '_fetch_field' is not correct with new records: it considers
-        # them as forbidden records, and clears their cache!  On the other hand,
-        # compute methods are not invoked with a mix of real and new records for
-        # the sake of code simplicity.
-        return self.browse(ids)
 
     def invalidate_model(self, fnames=None, flush=True):
         """ Invalidate the cache of all records of ``self``'s model, when the
