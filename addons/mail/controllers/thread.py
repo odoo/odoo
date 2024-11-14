@@ -6,7 +6,12 @@ from werkzeug.exceptions import NotFound
 
 from odoo import http
 from odoo.http import request
+<<<<<<< 18.0
 from odoo.tools import frozendict
+||||||| fb9472a09d49322a43f483ced1df0702c507c519
+=======
+from odoo.tools import email_normalize
+>>>>>>> d7b59554123dc0a2117ae22ef70c8dae65aa47b8
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 from odoo.addons.mail.tools.discuss import Store
 
@@ -132,11 +137,43 @@ class ThreadController(http.Controller):
         )
         if not thread:
             raise NotFound()
+<<<<<<< 18.0
         if not request.env[thread_model]._get_thread_with_access(thread_id, "write"):
             thread.env.context = frozendict(
                 thread.env.context, mail_create_nosubscribe=True, mail_post_autofollow=False
             )
         post_data = {
+||||||| fb9472a09d49322a43f483ced1df0702c507c519
+        if "body" in post_data:
+            post_data["body"] = Markup(post_data["body"])  # contains HTML such as @mentions
+        new_partners = []
+        if "partner_emails" in kwargs:
+            new_partners = [record.id for record in request.env["res.partner"]._find_or_create_from_emails(
+                kwargs["partner_emails"], kwargs.get("partner_additional_values", {})
+            )]
+        post_data["partner_ids"] = list(set((post_data.get("partner_ids", [])) + new_partners))
+        if "everyone" in special_mentions:
+            post_data["partner_ids"] = [channel_member.partner_id.id for channel_member in thread.channel_member_ids if channel_member.partner_id]
+        message = thread.message_post(
+            **{
+=======
+        if "body" in post_data:
+            post_data["body"] = Markup(post_data["body"])  # contains HTML such as @mentions
+        new_partners = []
+        if "partner_emails" in kwargs:
+            additional_values = {
+                email_normalize(email, strict=False) or email: values
+                for email, values in kwargs.get("partner_additional_values", {}).items()
+            }
+            new_partners = [record.id for record in request.env["res.partner"]._find_or_create_from_emails(
+                kwargs["partner_emails"], additional_values
+            )]
+        post_data["partner_ids"] = list(set((post_data.get("partner_ids", [])) + new_partners))
+        if "everyone" in special_mentions:
+            post_data["partner_ids"] = [channel_member.partner_id.id for channel_member in thread.channel_member_ids if channel_member.partner_id]
+        message = thread.message_post(
+            **{
+>>>>>>> d7b59554123dc0a2117ae22ef70c8dae65aa47b8
                 key: value
                 for key, value in post_data.items()
                 if key in thread._get_allowed_message_post_params()
