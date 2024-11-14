@@ -33,7 +33,7 @@ export function assertPathName(pathName, trigger) {
         trigger: trigger,
         run: () => {
             if (!window.location.pathname.startsWith(pathName)) {
-                console.error(`We should be on ${pathName}.`);
+                console.error(`We should be on ${pathName} but it's ${window.location.pathname}`);
             }
         }
     };
