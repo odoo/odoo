@@ -8,6 +8,7 @@ from operator import attrgetter
 
 from odoo.exceptions import MissingError, UserError
 from odoo.tools import SQL, OrderedSet, sql, unique
+from odoo.tools.constants import PREFETCH_MAX
 from odoo.tools.misc import SENTINEL, Sentinel, unquote
 
 from .commands import Command
@@ -35,8 +36,34 @@ class _Relational(Field[M], typing.Generic[M]):
         # base case: do the regular access
         if records is None or len(records._ids) <= 1:
             return super().__get__(records, owner)
-        # multirecord case: use mapped
-        return self.mapped(records)
+
+        # multi-record case
+        if self.compute and self.store:
+            self.recompute(records)
+
+        # retrieve values in cache, and fetch missing ones
+        env = records.env
+        vals = env.cache.get_until_miss(records, self)
+
+        if self.store and len(vals) < len(records) - PREFETCH_MAX:
+            # a lot of missing records, just fetch that field
+            remaining = records[len(vals):]
+            remaining.fetch([self.name])
+            vals += records.env.cache.get_until_miss(remaining, self)
+
+        while len(vals) < len(records):
+            remaining = records.__class__(records.env, records._ids[len(vals):], records._prefetch_ids)
+            self.__get__(next(iter(remaining)))
+            vals += records.env.cache.get_until_miss(remaining, self)
+
+        assert len(vals) == len(records), "Some records are not in cache"
+        return self.convert_to_record_multi(vals, records)
+
+    def convert_to_record_multi(self, values, records):
+        """ Convert a list of (relational field) values from the cache format to
+        the record format, for the sake of optimization.
+        """
+        raise NotImplementedError
 
     def setup_nonrelated(self, model):
         super().setup_nonrelated(model)
