@@ -1114,10 +1114,6 @@ test.tags("desktop")(
             form: '<form><field name="name"/></form>',
         };
 
-        const nameSearchProm = new Deferred();
-        onRpc("name_search", () => {
-            nameSearchProm.resolve();
-        });
         await mountView({
             type: "form",
             resModel: "partner",
@@ -1130,7 +1126,6 @@ test.tags("desktop")(
         });
 
         await contains(`div[name="timmy"] input`).edit("Ralts", { confirm: false });
-        await nameSearchProm;
         await runAllTimers();
         await clickFieldDropdownItem("timmy", "Create and edit...");
         //await testUtils.fields.many2one.createAndEdit("timmy", "Ralts");
@@ -1154,40 +1149,11 @@ test.tags("desktop")(
 test.tags("desktop")(
     "Many2ManyTagsField: make tag name input field blank on Save&New on desktop",
     async () => {
-        expect.assertions(4);
-
         PartnerType._views = {
             form: '<form><field name="name"/></form>',
         };
 
-        let onchangeCalls = 0;
-        const nameSearchProm = new Deferred();
-        onRpc("onchange", (args) => {
-            if (onchangeCalls === 0) {
-                expect(args.kwargs.context).toEqual(
-                    {
-                        allowed_company_ids: [1],
-                        default_name: "hello",
-                        lang: "en",
-                        tz: "taht",
-                        uid: 7,
-                    },
-                    { message: "context should have default_name with 'hello' as value" }
-                );
-            }
-            if (onchangeCalls === 1) {
-                expect(args.kwargs.context).toEqual({
-                    allowed_company_ids: [1],
-                    lang: "en",
-                    tz: "taht",
-                    uid: 7,
-                });
-            }
-            onchangeCalls++;
-        });
-        onRpc("name_search", () => {
-            nameSearchProm.resolve();
-        });
+        onRpc("onchange", (args) => expect.step(args.kwargs.context));
         await mountView({
             type: "form",
             resModel: "partner",
@@ -1196,16 +1162,73 @@ test.tags("desktop")(
         });
 
         await contains(".o_field_widget input").edit("hello", { confirm: false });
-        await nameSearchProm;
-        await animationFrame();
+        await runAllTimers();
         await clickFieldDropdownItem("timmy", "Create and edit...");
-        await animationFrame();
 
         expect(".modal .o_form_view input").toHaveValue("hello");
 
         // Create record with save & new
         await contains(".modal .btn-primary:nth-child(2)").click();
         expect(".modal .o_form_view input").toHaveValue("");
+
+        expect.verifySteps([
+            { allowed_company_ids: [1], default_name: "hello", lang: "en", tz: "taht", uid: 7 },
+            { allowed_company_ids: [1], lang: "en", tz: "taht", uid: 7 },
+        ]);
+    }
+);
+
+test.tags("desktop")(
+    "Many2ManyTagsField: Save&New in many2many_tags with default_ keys in context",
+    async () => {
+        PartnerType._views = {
+            form: `
+            <form>
+                <field name="name"/>
+                <field name="color"/>
+            </form>`,
+        };
+
+        onRpc("onchange", (args) => expect.step(args.kwargs.context));
+        await mountView({
+            type: "form",
+            resModel: "partner",
+            arch: `
+            <form>
+                <field name="timmy" widget="many2many_tags" context="{'default_color': 3}"/>
+            </form>`,
+            resId: 1,
+        });
+
+        await contains(".o_field_widget input").edit("hello", { confirm: false });
+        await runAllTimers();
+        await clickFieldDropdownItem("timmy", "Create and edit...");
+
+        expect(".modal .o_field_widget[name=name] input").toHaveValue("hello");
+        expect(".modal .o_field_widget[name=color] input").toHaveValue("3");
+
+        // Create record with save & new
+        await contains(".modal .btn-primary:nth-child(2)").click();
+        expect(".modal .o_field_widget[name=name] input").toHaveValue("");
+        expect(".modal .o_field_widget[name=color] input").toHaveValue("3");
+
+        expect.verifySteps([
+            {
+                allowed_company_ids: [1],
+                default_name: "hello",
+                default_color: 3,
+                lang: "en",
+                tz: "taht",
+                uid: 7,
+            },
+            {
+                allowed_company_ids: [1],
+                default_color: 3,
+                lang: "en",
+                tz: "taht",
+                uid: 7,
+            },
+        ]);
     }
 );
 
@@ -1225,10 +1248,6 @@ test.tags("desktop")(
             search: "<search/>",
         };
 
-        let nameSearchProm = new Deferred();
-        onRpc("name_search", () => {
-            nameSearchProm.resolve();
-        });
         await mountView({
             type: "form",
             resModel: "turtle",
@@ -1245,8 +1264,7 @@ test.tags("desktop")(
         expect(".o_field_many2many_tags.o_field_widget .badge .o_delete").toHaveCount(1);
 
         await clickFieldDropdown("partner_ids");
-        await nameSearchProm;
-        await animationFrame();
+        await runAllTimers();
         expect(
             ".o-autocomplete.dropdown li.o_m2o_start_typing a:contains(Start typing...)"
         ).toHaveCount(1);
@@ -1258,14 +1276,10 @@ test.tags("desktop")(
         await contains(".modal .modal-footer .o_form_button_cancel").click();
 
         // type something that doesn't exist
-        nameSearchProm = new Deferred();
         await contains(".o_field_many2many_tags input").edit("Something that does not exist", {
             confirm: false,
         });
-
-        await press("ArrowDown");
-        await nameSearchProm;
-        await animationFrame();
+        await runAllTimers();
 
         expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(2);
 
@@ -1276,10 +1290,8 @@ test.tags("desktop")(
         // remove icon should still be there as it doesn't delete records but rather remove links
         expect(".o_field_many2many_tags.o_field_widget .badge .o_delete").toHaveCount(1);
 
-        nameSearchProm = new Deferred();
         await clickFieldDropdown("partner_ids");
-        await nameSearchProm;
-        await animationFrame();
+        await runAllTimers();
 
         // only Search More option should be available
         expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(1);
@@ -1294,14 +1306,8 @@ test.tags("desktop")(
         await contains(".modal .modal-footer .o_form_button_cancel").click();
 
         // type something that does exist in multiple occurrences
-        // LPE: to check with AAB
-        nameSearchProm = new Deferred();
         await contains(".o_field_many2many_tags input").edit("Pa", { confirm: false });
-
-        await press("ArrowUp");
-        await animationFrame();
-        await nameSearchProm;
-        await animationFrame();
+        await runAllTimers();
 
         // only Search More option should be available
         expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(1);
