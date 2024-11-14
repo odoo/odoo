@@ -898,6 +898,23 @@ class IrModelFields(models.Model):
                     if field and all(m in modules_to_remove for m in field._modules):
                         inherit_fields_to_remove_ids.add(self._get(model_name_, field_record.name).id)
 
+        inherit_fields_to_remove = self.browse(inherit_fields_to_remove_ids) - self
+        if inherit_fields_to_remove:
+            # when upgrade some customzied modules may not be loaded which may also override the fields
+            self.env['ir.model.data'].flush_model()
+            self.env['ir.module.module'].flush_model()
+            fields_not_loaded_ids = self.env.execute_query(SQL("""
+                SELECT array_agg(imd.res_id)
+                  FROM ir_model_data imd
+                  JOIN ir_module_module imm
+                    ON imd.module = imm.name
+                   AND imd.module NOT IN %s
+                   AND imm.state IN ('to upgrade', 'installed')
+                   AND imd.res_id IN %s
+                   AND imd.model = 'ir.model.fields'
+            """, tuple(self.pool._init_modules), tuple(inherit_fields_to_remove.ids)))
+            inherit_fields_to_remove -= self.browse(fields_not_loaded_ids or [])
+
         return self.browse(inherit_fields_to_remove_ids) - self
 
     def _prepare_update(self):

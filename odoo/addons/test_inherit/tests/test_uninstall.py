@@ -143,16 +143,60 @@ def test_inherited_fields_after_uninstall(env):
         ('test.inherit.owl', 'height'): False,
         ('test.inherit.pet', 'name'): False,
         ('test.inherit.pet', 'height'): False,
-    }, ignore={
-        # improve it if you can
-        # ir.model.data is not removed when the module is uninstalled
-        ('test.inherit.bird', 'name'): ('ir.model.data',),
-        ('test.inherit.bird', 'height'): ('ir.model.data',),
-        ('test.inherit.owl', 'name'): ('ir.model.data',),
-        ('test.inherit.owl', 'height'): ('ir.model.data',),
-        ('test.inherit.pet', 'name'): ('ir.model.data',),
-        ('test.inherit.pet', 'height'): ('ir.model.data',),
     })
     module_test_inherit_depends.button_immediate_uninstall()
 
     test_fields(initial_expected)
+    module_test_inherit_depends.button_immediate_install()
+    module_test_inherit_inherits_depends.button_immediate_install()
+    # special case when upgrade a third party module cannot be loaded while uninstalling
+    # assume the third party module also extends test.inherit.animal.height
+    env['ir.module.module'].create({'name': 'third_party_module', 'state': 'to upgrade'})
+    # assume the third party module was installed before the test_inherit_inherits_depends module
+    # so all fields created by model inheritance and delegation belongs to module test_inherit_inherits_depends
+    env['ir.model.data'].create({
+        'model': 'ir.model.fields',
+        'res_id': env['ir.model.fields'].search([('model', '=', 'test.inherit.animal'), ('name', '=', 'height')]).id,
+        'name': "field_test_inherit_animal__height",
+        'module': 'third_party_module',
+    })
+    module_test_inherit_depends.button_immediate_uninstall()
+    test_fields({
+        ('test.inherit.animal', 'name'): False,
+        ('test.inherit.animal', 'height'): True,
+        ('test.inherit.bird', 'name'): True,
+        ('test.inherit.bird', 'height'): True,
+        ('test.inherit.owl', 'name'): True,
+        ('test.inherit.owl', 'height'): True,
+        ('test.inherit.pet', 'name'): True,
+        ('test.inherit.pet', 'height'): True,
+    }, ignore={
+        ('test.inherit.animal', 'height'): ('registry',),
+        ('test.inherit.bird', 'height'): ('registry',),
+        ('test.inherit.owl', 'height'): ('registry',),
+        ('test.inherit.pet', 'height'): ('registry', 'column'),  # ignore column is not ideal but acceptable
+    })
+    module_test_inherit_inherits_depends.button_immediate_uninstall()
+
+    module_test_inherit_depends.button_immediate_install()
+    module_test_inherit_inherits_depends.button_immediate_install()
+    # assume the third party module is installed after the test_inherit_inherits_depends module
+    # so all fields created by model inheritance and delegation belongs to module third_party_module
+    height_fields = env['ir.model.fields'].search([('model', 'in', ('test.inherit.bird', 'test.inherit.owl', 'test.inherit.pet')), ('name', '=', 'height')])
+    env['ir.model.data'].search([('model', '=', 'ir.model.fields'), ('res_id', 'in', height_fields.ids)]).module = 'third_party_module'
+    module_test_inherit_depends.button_immediate_uninstall()
+    test_fields({
+        ('test.inherit.animal', 'name'): False,
+        ('test.inherit.animal', 'height'): True,
+        ('test.inherit.bird', 'name'): True,
+        ('test.inherit.bird', 'height'): True,
+        ('test.inherit.owl', 'name'): True,
+        ('test.inherit.owl', 'height'): True,
+        ('test.inherit.pet', 'name'): True,
+        ('test.inherit.pet', 'height'): True,
+    }, ignore={
+        ('test.inherit.animal', 'height'): ('registry',),
+        ('test.inherit.bird', 'height'): ('registry',),
+        ('test.inherit.owl', 'height'): ('registry',),
+        ('test.inherit.pet', 'height'): ('registry', 'column'),  # ignore column is not ideal but acceptable
+    })
