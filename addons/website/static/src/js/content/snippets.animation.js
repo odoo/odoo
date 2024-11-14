@@ -597,6 +597,50 @@ async function waitForCarouselToFinishSliding(carouselEl) {
     });
 }
 
+publicWidget.registry.CarouselSingleSlide = publicWidget.Widget.extend({
+    selector: ".carousel.o_slide_single",
+    events: {
+    },
+    disabledInEditableMode: false,
+
+
+    /**
+     * @override
+     */
+    async start() {
+    await this._super(...arguments);
+
+    if (!uiUtils.isSmall()) {
+        const items = this.el.querySelectorAll(".carousel .carousel-item");
+        const innerClassName = this.el.querySelector('.carousel-inner').classList.value; // Get the first class (assuming it's always there)
+        const minPerSlide = this._helper_ncards(innerClassName);
+
+        // Loop through each item in the carousel and clone the necessary number of items
+        for (const el of items) {
+            let next = el.nextElementSibling;
+
+            for (let i = 1; i < minPerSlide; i++) {
+                if (!next) {
+                    // If we reach the end, wrap around to the first item
+                    next = items[0];
+                }
+
+                const cloneChild = next.cloneNode(true);
+                el.appendChild(cloneChild.firstElementChild); // Append the first child of the cloned item
+
+                next = next.nextElementSibling; // Move to the next sibling
+            }
+        }
+    }
+},
+
+    _helper_ncards(className) {
+        const match = className.match(/o_carousel_chunksize_(\d)/);
+        return match ? parseInt(match[1], 10) : false;
+}
+
+});
+
 /**
  * This class is used to fix carousel auto-slide behavior in Odoo 17.4 and up.
  * It handles upgrade cases from lower versions.

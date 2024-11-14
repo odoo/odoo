@@ -1278,6 +1278,72 @@ $-o-carousel-controllers-size: map-get($spacers, 5);
     }
 }
 
+// Carousel new scrolling animation
+// Single scroll animation
+
+.o_carousel_chunksize_1 .child{
+    --translate_x_carousel: 100%;
+    --translate_x_carousel_neg: -100%;
+}
+.o_carousel_chunksize_2{
+    --translate_x_carousel: 50%;
+    --translate_x_carousel_neg: -50%;
+}
+.o_carousel_chunksize_3{
+    --translate_x_carousel: 33.333%;
+    --translate_x_carousel_neg: -33.333%;
+}
+.o_carousel_chunksize_4{
+    --translate_x_carousel: 25%;
+     --translate_x_carousel_neg: -25%;
+}
+
+
+
+.carousel.o_slide_single {
+    @media (min-width: 768px) {
+        .carousel-inner .carousel-item.active,
+        .carousel-inner .carousel-item-next,
+        .carousel-inner .carousel-item-prev {
+            display: flex;
+        }
+
+        // This is necessary to avoid a bad  overlapping of the items
+        .carousel-inner{
+            padding-left: 0;
+            padding-right: 0;
+        }
+        .carousel-item {
+            padding-left: 0;
+            padding-right: 0;
+            //border: solid green 2px;
+        }
+
+        .carousel-item{
+            transition: transform .4s ease-in-out;
+        }
+
+        .carousel-inner .carousel-item-end.active,
+        .carousel-inner .carousel-item-next{
+            transform: translateX(var(--translate_x_carousel));
+        }
+
+        .carousel-inner .carousel-item-start.active,
+        .carousel-inner .carousel-item-prev{
+            transform: translateX(var(--translate_x_carousel_neg));
+        }
+
+        .s_dynamic_snipper_row {
+            background-color: white;
+        }
+
+        .carousel-inner .carousel-item-end,
+        .carousel-inner .carousel-item-start {
+            transform: translateX(0);
+        }
+    }
+}
+
 // Parallax
 .parallax {
     // TODO this introduces a limitation: no dropdown will be able to

@@ -13,6 +13,13 @@
                   data-select-data-attribute="1s" data-name="speed_opt" data-attribute-name="carouselInterval" data-no-preview="true"
                   data-unit="s" data-save-unit="ms" data-step="0.1"/>
             <t t-out="0"/>
+            <div data-no-preview="true" t-attf-data-selector="#{snippet_selector}" data-target=".carousel">
+            <we-button-group string="Scrolling Mode">
+                <we-button data-select-class="slide">All</we-button>
+                <we-button data-select-class="slide o_slide_single">Single</we-button>
+            </we-button-group>
+            </div>
+
         </t>
     </template>
     <template id="s_dynamic_snippet_carousel_options" inherit_id="website.snippet_options">
