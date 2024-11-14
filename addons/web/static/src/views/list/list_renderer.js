@@ -1704,7 +1704,8 @@ export class ListRenderer extends Component {
         if (!this.canSelectRecord) {
             return;
         }
-        if (this.shiftKeyMode && this.lastCheckedRecord) {
+        const isRecordPresent = this.props.list.records.includes(this.lastCheckedRecord);
+        if (this.shiftKeyMode && isRecordPresent) {
             this.toggleRecordShiftSelection(record);
         } else {
             record.toggleSelection();
