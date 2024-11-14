@@ -12,6 +12,10 @@ var promiseJsAssets;
  **/
 
 patch(Wysiwyg.prototype, {
+    setup() {
+        super.setup();
+        this.isSnippetsMenuVisible = false;
+    },
     /**
      * Add options to load Wysiwyg in an iframe.
      *
@@ -48,6 +52,31 @@ patch(Wysiwyg.prototype, {
         super.destroy();
     },
 
+    /**
+     * Add or remove iframe classes depending on the snippets menu folding
+     * state, in order to be able to add/remove enough blank space for it
+     * through css rules.
+     */
+    handleSnippetsDisplay() {
+        const iframe = this.$iframe?.[0];
+        if (!iframe || !iframe.isConnected) {
+            return;
+        }
+        iframe.classList.toggle("has_snippets_sidebar", this.isSnippetsMenuVisible);
+    },
+
+    /**
+     * Hook called when the wysiwyg fullscreen state changes (allows overrides).
+     *
+     * @param {Boolean} isFullscreen
+     */
+    onToggleFullscreen(isFullscreen) {},
+
+    onSnippetsFoldChange(folded) {
+        this.isSnippetsMenuVisible = !folded;
+        this.handleSnippetsDisplay();
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -81,6 +110,8 @@ patch(Wysiwyg.prototype, {
         this.$iframe = $('<iframe class="wysiwyg_iframe o_iframe">').css({
             width: '100%'
         });
+        this.isSnippetsMenuVisible = this.snippetsMenu && !this.snippetsMenu.folded;
+        this.handleSnippetsDisplay();
         var avoidDoubleLoad = 0; // this bug only appears on some configurations.
 
         // resolve promise on load
@@ -115,8 +146,10 @@ patch(Wysiwyg.prototype, {
                     self.$iframe.parents().toggleClass('o_form_fullscreen_ancestor', full);
                     $(window).trigger("resize"); // induce a resize() call and let other backend elements know (the navbar extra items management relies on this)
                     if (self.env.onToggleFullscreen) {
+                        // `onToggleFullscreen` in the `env` is deprecated, use the instance function instead
                         self.env.onToggleFullscreen();
                     }
+                    self.onToggleFullscreen(full);
                 });
                 resolve();
             };
@@ -154,6 +187,7 @@ patch(Wysiwyg.prototype, {
 
         return def.then(() => {
             this.options.onIframeUpdated();
+            this.handleSnippetsDisplay();
         });
     },
 
