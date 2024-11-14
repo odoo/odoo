@@ -643,7 +643,7 @@ class SaleOrder(models.Model):
                 order.amount_to_invoice = 0.0
                 continue
 
-            invoices = order.invoice_ids.filtered(lambda x: x.state == 'posted')
+            invoices = order.invoice_ids.filtered(lambda x: x.state == 'posted' or x.payment_state == 'invoicing_legacy')
             # Note: A negative amount can happen, since we can invoice more than the sales order amount.
             # Care has to be taken when summing amount_to_invoice of multiple orders.
             # E.g. consider one invoiced order with -100 and one uninvoiced order of 100: 100 + -100 = 0
