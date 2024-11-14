@@ -63,4 +63,5 @@
             ('include', 'website.assets_builder'),
         ],
     },
+    'license': 'LGPL-3',
 }
