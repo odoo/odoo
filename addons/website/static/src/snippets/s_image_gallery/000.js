@@ -1,6 +1,7 @@
 import { uniqueId } from "@web/core/utils/functions";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { renderToElement } from "@web/core/utils/render";
+import * as masonryUtils from "@web_editor/js/common/masonry_layout_utils";
 
 
 const GalleryWidget = publicWidget.Widget.extend({
@@ -16,6 +17,10 @@ const GalleryWidget = publicWidget.Widget.extend({
     start() {
         this._super(...arguments);
         this.originalSources = [...this.el.querySelectorAll("img")].map(img => img.getAttribute("src"));
+
+        if (this.el.classList.contains("o_masonry")) {
+            masonryUtils.observeMasonryContainerResize(this.el);
+        }
     },
 
     //--------------------------------------------------------------------------

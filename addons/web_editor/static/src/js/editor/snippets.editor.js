@@ -4768,6 +4768,26 @@ class SnippetsMenu extends Component {
                 gridUtils._reloadLazyImages(gridItemEl);
             }
 
+            // For s_image_gallery:
+            // Relayout when mobile preview is toggled to ensure images are
+            // correctly redistributed as the column count changes when toggling
+            // between mobile and desktop views.
+            const GALLERY_LAYOUT_CLASSES = ["o_masonry", "o_grid"];
+            const GALLERY_OPTION_JS_IDENTIFIER = "gallery";
+            const imageGallerySnippets = this.snippetEditors.filter((snippet) => 
+                GALLERY_LAYOUT_CLASSES.some(className => 
+                    snippet.$target[0]?.classList.contains(className)
+                )
+            );
+            imageGallerySnippets.forEach(async (imageGallerySnippet) => {
+                const galleryOptionClass = imageGallerySnippet.__parentedChildren?.find(
+                    (child) => child.data.js === GALLERY_OPTION_JS_IDENTIFIER
+                );
+                if (galleryOptionClass && typeof galleryOptionClass._relayout === "function") {
+                    await galleryOptionClass._relayout();
+                }
+            });
+
             const isMobilePreview = weUtils.isMobileView(this.$body[0]);
             for (const invisibleOverrideEl of this.getEditableArea().find('.o_snippet_mobile_invisible, .o_snippet_desktop_invisible')) {
                 const isMobileHidden = invisibleOverrideEl.classList.contains("o_snippet_mobile_invisible");
