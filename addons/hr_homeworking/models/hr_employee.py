@@ -56,7 +56,7 @@ class HrEmployee(models.Model):
         super()._compute_presence_icon()
         dayfield = self._get_current_day_location_field()
         for employee in self:
-            today_employee_location_id = employee.exceptional_location_id or employee[dayfield]
+            today_employee_location_id = employee.sudo().exceptional_location_id or employee[dayfield]
             if not today_employee_location_id or employee.hr_icon_display.startswith('presence_holiday'):
                 continue
             employee.hr_icon_display = f'presence_{today_employee_location_id.location_type}'
