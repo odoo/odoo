@@ -4,17 +4,17 @@ import { user } from "@web/core/user";
 
 import {
     addGlobalFilter,
+    redo,
     selectCell,
     setCellContent,
     undo,
-    redo,
 } from "@spreadsheet/../tests/helpers/commands";
 import {
     getCell,
     getCellContent,
     getCellFormula,
-    getCellValue,
     getCells,
+    getCellValue,
     getEvaluatedCell,
     getEvaluatedGrid,
 } from "@spreadsheet/../tests/helpers/getters";
@@ -29,14 +29,14 @@ import {
     defineSpreadsheetActions,
     defineSpreadsheetModels,
     generateListDefinition,
-    getBasicServerData,
+    Partner,
+    Product,
 } from "@spreadsheet/../tests/helpers/data";
 
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 const { DEFAULT_LOCALE, PIVOT_TABLE_CONFIG } = spreadsheet.constants;
 const { toZone } = spreadsheet.helpers;
 const { cellMenuRegistry } = spreadsheet.registries;
-
 
 describe.current.tags("headless");
 defineSpreadsheetModels();
@@ -79,17 +79,25 @@ test("Boolean fields are correctly formatted", async () => {
 });
 
 test("properties field displays property display names", async () => {
-    const serverData = getBasicServerData();
-    serverData.models.partner.records = [
+    Product._records = [
         {
-            partner_properties: [
-                { name: "dbfc66e0afaa6a8d", type: "date", string: "prop 1", default: false },
-                { name: "f80b6fb58d0d4c72", type: "integer", string: "prop 2", default: 0 },
+            id: 1,
+            properties_definitions: [
+                { name: "dbfc66e0afaa6a8d", type: "date", string: "prop 1" },
+                { name: "f80b6fb58d0d4c72", type: "integer", string: "prop 2" },
             ],
         },
     ];
+    Partner._records = [
+        {
+            product_id: 1,
+            partner_properties: {
+                dbfc66e0afaa6a8d: false,
+                f80b6fb58d0d4c72: 0,
+            },
+        },
+    ];
     const { model } = await createSpreadsheetWithList({
-        serverData,
         columns: ["partner_properties"],
     });
     expect(getCellValue(model, "A2")).toBe("prop 1, prop 2");
@@ -635,7 +643,7 @@ test("Can see record on vectorized list index", async function () {
     model.dispatch("CREATE_SHEET", { sheetId: "42" });
     model.dispatch("ACTIVATE_SHEET", {
         sheetIdFrom: model.getters.getActiveSheetId(),
-        sheetIdTo: "42"
+        sheetIdTo: "42",
     });
     setCellContent(model, "C1", "1");
     setCellContent(model, "C2", "2");

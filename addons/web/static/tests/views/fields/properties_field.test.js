@@ -69,7 +69,10 @@ async function changeType(propertyType) {
 // Separators tests utils
 // -----------------------------------------
 
-async function makePropertiesGroupView(properties) {
+/**
+ * @param {boolean[]} propertySpecs
+ */
+async function makePropertiesGroupView(propertySpecs) {
     // mock random function to have predictable auto generated properties names
     let counter = 1;
     patchWithCleanup(PropertiesField.prototype, {
@@ -81,19 +84,24 @@ async function makePropertiesGroupView(properties) {
 
     onRpc("has_access", () => true);
 
-    Partner._records[1].properties = properties.map((isSeparator, index) => {
-        return {
-            name: `property_${index + 1}`,
-            string: isSeparator ? `Separator ${index + 1}` : `Property ${index + 1}`,
+    const { properties } = Partner._records[1];
+    const definitions = propertySpecs.map((isSeparator, i) => {
+        const property = {
+            name: `property_${i + 1}`,
+            string: isSeparator ? `Separator ${i + 1}` : `Property ${i + 1}`,
             type: isSeparator ? "separator" : "char",
         };
+        properties[property.name] = false;
+        return property;
     });
+
+    ResCompany._records[0].definitions = definitions;
 
     // unfold all separators
     window.localStorage.setItem(
         "properties.fold,res.company,37",
         JSON.stringify(
-            Partner._records[1].properties
+            definitions
                 .filter((property) => property.type === "separator")
                 .map((property) => property.name)
         )
@@ -165,84 +173,37 @@ class Partner extends models.Model {
         {
             id: 1,
             display_name: "first partner",
-            properties: [
-                {
-                    name: "property_1",
-                    string: "My Char",
-                    type: "char",
-                    value: "char value",
-                    view_in_cards: true,
-                },
-                {
-                    name: "property_2",
-                    string: "My Selection",
-                    type: "selection",
-                    selection: [
-                        ["a", "A"],
-                        ["b", "B"],
-                        ["c", "C"],
-                    ],
-                    value: "b",
-                    default: "c",
-                    view_in_cards: true,
-                },
-            ],
+            properties: {
+                property_1: "char value",
+                property_2: "b",
+            },
             company_id: 37,
         },
         {
             id: 2,
             display_name: "second partner",
-            properties: [
-                {
-                    name: "property_1",
-                    string: "My Char",
-                    type: "char",
-                    value: "char value",
-                    view_in_cards: true,
-                },
-                {
-                    name: "property_2",
-                    string: "My Selection",
-                    type: "selection",
-                    selection: [
-                        ["a", "A"],
-                        ["b", "B"],
-                        ["c", "C"],
-                    ],
-                    value: "c",
-                    default: "c",
-                    view_in_cards: true,
-                },
-                {
-                    name: "property_3",
-                    string: "My Char 3",
-                    type: "char",
-                    value: "char value 3",
-                },
-                {
-                    name: "property_4",
-                    string: "My Char 4",
-                    type: "char",
-                    value: "char value 4",
-                    view_in_cards: true,
-                },
-            ],
+            properties: {
+                property_1: "char value",
+                property_2: "c",
+                property_3: "char value 3",
+                property_4: "char value 4",
+            },
             company_id: 37,
         },
         {
             id: 3,
             display_name: "third partner",
-            properties: [
-                { name: "property_1", type: "char" },
-                { name: "property_3", type: "char", definition_changed: true },
-                { name: "property_4", type: "char" },
-            ],
+            properties: {
+                property_1: false,
+                property_3: false,
+                property_4: false,
+            },
             company_id: 37,
         },
         {
             id: 4,
             display_name: "fourth partner",
-            properties: [],
+            properties: {},
             company_id: 37,
         },
     ];
@@ -311,6 +272,7 @@ class User extends models.Model {
         },
     ];
 }
+
 defineModels([Partner, ResCompany, User]);
 
 /**
@@ -356,7 +318,7 @@ test("properties: no access to parent", async () => {
     expect(".o_field_properties:first-child .o_field_property_open_popover").toHaveCount(0, {
         message: "The edit definition button must not be in the view",
     });
-    expect(".o_field_properties:first-child .o_property_field_value input").toHaveValue(
+    expect(".o_field_properties:first-child .o_property_field_value input:first").toHaveValue(
         "char value"
     );
 });
@@ -396,7 +358,7 @@ test("properties: access to parent", async () => {
         message: "The edit definition button must be in the view",
     });
 
-    expect(".o_field_properties:first-child .o_property_field_value input").toHaveValue(
+    expect(".o_field_properties:first-child .o_property_field_value input:first").toHaveValue(
         "char value"
     );
 
@@ -449,7 +411,7 @@ test("properties: access to parent", async () => {
     // Discard the form view and check that the properties take its old values
     await clickCancel();
     await animationFrame();
-    expect(".o_property_field:first-child .o_property_field_value input").toHaveValue(
+    expect(".o_property_field:first-child .o_property_field_value input:first").toHaveValue(
         "char value",
         { message: "Discarding the form view should reset the old values" }
     );
@@ -459,6 +421,9 @@ test("properties: access to parent", async () => {
  * Test the creation of a new property.
  */
 test("properties: add a new property", async () => {
+    ResCompany._records[0].definitions.pop();
+    ResCompany._records[0].definitions.pop();
+
     onRpc("has_access", () => true);
 
     await mountView({
@@ -512,10 +477,8 @@ test("properties: add a new property", async () => {
     expect(newProperty).toHaveText("Property 3");
 });
 
-/**
- * Test the selection property.
- */
-test.tags("desktop")("properties: selection", async () => {
+test.tags("desktop", "focus required");
+test("properties: selection", async () => {
     onRpc("has_access", () => true);
 
     await mountView({
@@ -1103,14 +1066,17 @@ test.tags("desktop")("properties: many2one 'Search more...'", async () => {
             id: 1,
             company_id: 37,
             display_name: "Pierre",
-            properties: [
-                {
-                    name: "many_2_one",
-                    type: "many2one",
-                    string: "My Many-2-one",
-                    comodel: "partner",
-                },
-            ],
+            properties: {
+                many_2_one: false,
+            },
+        },
+    ];
+    ResCompany._records[0].definitions = [
+        {
+            name: "many_2_one",
+            type: "many2one",
+            string: "My Many-2-one",
+            comodel: "partner",
         },
     ];
     Partner._views[["list", false]] = /* xml */ `
@@ -1194,22 +1160,24 @@ test("properties: date(time) property manipulations", async () => {
     Partner._records.push({
         id: 5000,
         display_name: "third partner",
-        properties: [
-            {
-                name: "property_1",
-                string: "My Date",
-                type: "date",
-                value: "2019-01-01",
-            },
-            {
-                name: "property_2",
-                string: "My DateTime",
-                type: "datetime",
-                value: "2019-01-01 10:00:00",
-            },
-        ],
+        properties: {
+            property_1: "2019-01-01",
+            property_2: "2019-01-01 10:00:00",
+        },
         company_id: 37,
     });
+    ResCompany._records[0].definitions = [
+        {
+            name: "property_1",
+            string: "My Date",
+            type: "date",
+        },
+        {
+            name: "property_2",
+            string: "My DateTime",
+            type: "datetime",
+        },
+    ];
     onRpc(({ method, args }) => {
         expect.step(method);
         if (method === "has_access") {
@@ -1407,24 +1375,28 @@ test("properties: kanban view with date and datetime property fields", async () 
     Partner._records.push({
         id: 40,
         display_name: "fifth partner",
-        properties: [
-            {
-                name: "property_1",
-                string: "My Date",
-                type: "date",
-                value: "2019-01-01",
-                view_in_cards: true,
-            },
-            {
-                name: "property_2",
-                string: "My DateTime",
-                type: "datetime",
-                value: "2019-01-01 10:00:00",
-                view_in_cards: true,
-            },
-        ],
+        properties: {
+            property_1: "2019-01-01",
+            property_2: "2019-01-01 10:00:00",
+        },
         company_id: 37,
     });
+    ResCompany._records[0].definitions = [
+        {
+            name: "property_1",
+            string: "My Date",
+            type: "date",
+            value: "2019-01-01",
+            view_in_cards: true,
+        },
+        {
+            name: "property_2",
+            string: "My DateTime",
+            type: "datetime",
+            value: "2019-01-01 10:00:00",
+            view_in_cards: true,
+        },
+    ];
 
     await mountView({
         type: "kanban",
@@ -1451,26 +1423,24 @@ test("properties: kanban view with date and datetime property fields", async () 
 });
 
 test("properties: kanban view with multiple sources of properties definitions", async () => {
-    const definition = {
-        name: "property_integer",
-        string: "My Integer",
-        type: "integer",
-        view_in_cards: true,
-    };
     ResCompany._records.push({
         id: 38,
         name: "Company 2",
-        definitions: [definition],
+        definitions: [
+            {
+                name: "property_integer",
+                string: "My Integer",
+                type: "integer",
+                view_in_cards: true,
+            },
+        ],
     });
     Partner._records.push({
         id: 10,
         display_name: "other partner",
-        properties: [
-            {
-                ...definition,
-                value: 1,
-            },
-        ],
+        properties: {
+            property_integer: 1,
+        },
         company_id: 38,
     });
 
@@ -1507,45 +1477,47 @@ test("properties: kanban view with label and border", async () => {
     Partner._records.push({
         id: 12,
         display_name: "fifth partner",
-        properties: [
-            {
-                name: "property_integer",
-                string: "My Integer",
-                type: "integer",
-                value: 12,
-                view_in_cards: true,
-            },
-            {
-                name: "property_float",
-                string: "My Float",
-                type: "float",
-                value: 12.2,
-                view_in_cards: true,
-            },
-            {
-                name: "property_date",
-                string: "My Date",
-                type: "date",
-                value: "2023-06-05",
-                view_in_cards: true,
-            },
-            {
-                name: "property_datetime",
-                string: "My Datetime",
-                type: "datetime",
-                value: "2023-06-05 11:05:00",
-                view_in_cards: true,
-            },
-            {
-                name: "property_checkbox",
-                string: "My Checkbox",
-                type: "boolean",
-                value: true,
-                view_in_cards: true,
-            },
-        ],
+        properties: {
+            property_integer: 12,
+            property_float: 12.2,
+            property_date: "2023-06-05",
+            property_datetime: "2023-06-05 11:05:00",
+            property_checkbox: true,
+        },
         company_id: 37,
     });
+    ResCompany._records[0].definitions.push(
+        {
+            name: "property_integer",
+            string: "My Integer",
+            type: "integer",
+            view_in_cards: true,
+        },
+        {
+            name: "property_float",
+            string: "My Float",
+            type: "float",
+            view_in_cards: true,
+        },
+        {
+            name: "property_date",
+            string: "My Date",
+            type: "date",
+            view_in_cards: true,
+        },
+        {
+            name: "property_datetime",
+            string: "My Datetime",
+            type: "datetime",
+            view_in_cards: true,
+        },
+        {
+            name: "property_checkbox",
+            string: "My Checkbox",
+            type: "boolean",
+            view_in_cards: true,
+        }
+    );
 
     await mountView({
         type: "kanban",
@@ -1721,8 +1693,7 @@ test("properties: default value", async () => {
     await animationFrame();
     await closePopover();
 
-    const newProperty = queryFirst(".o_field_properties .o_property_field:nth-child(3)");
-    expect(queryFirst(".o_property_field_value input", { root: newProperty })).toHaveValue(
+    expect(".o_field_properties .o_property_field:last .o_property_field_value input").toHaveValue(
         "First Default Value"
     );
 
@@ -1747,7 +1718,7 @@ test("properties: default value", async () => {
 
         expect(queryFirst(".o_property_field_value input", { root: property })).toHaveValue("");
     };
-    await checkProperty(newProperty);
+    await checkProperty(".o_field_properties .o_property_field:last");
     const existingProperty = queryFirst(".o_field_properties .o_property_field:nth-child(1)");
     await checkProperty(existingProperty);
 });
@@ -1839,6 +1810,8 @@ test("properties: close property popover once clicked on delete icon", async () 
  * In that case, some properties start without the flag "definition_deleted".
  */
 test("properties: form view and falsy domain, properties are not empty", async () => {
+    ResCompany._records[0].definitions.splice(1, 1);
+
     onRpc("has_access", () => true);
     await mountView({
         type: "form",
@@ -1894,6 +1867,8 @@ test("properties: form view and falsy domain, properties are not empty", async (
  * In that case, all properties start with the flag "definition_deleted".
  */
 test("properties: form view and falsy domain, properties are empty", async () => {
+    ResCompany._records[0].definitions = [];
+
     onRpc("has_access", () => true);
     await mountView({
         type: "form",
@@ -2482,28 +2457,12 @@ test.tags("desktop")("properties: onChange return new properties", async () => {
 });
 
 test("new property, change record, change property type", async () => {
-    const records = Partner._records;
-    records[0].properties = [];
-    records[1].properties = [];
+    for (const record of Partner._records) {
+        record.properties = {};
+    }
+    ResCompany._records[0].definitions = [];
+
     onRpc("has_access", () => true);
-    onRpc("web_save", ({ args }) => {
-        if (args[0][0] === 1) {
-            // On property creation in first record, add a copy with empty value in
-            // second record
-            records[1].properties.push({
-                ...args[1].properties[0],
-            });
-            records[1].properties[0].value = "";
-        } else {
-            // When changing type of second record's properties, also apply it to
-            // first record and the property's value should be reset on name change
-            records[0].properties[0].type = args[1].properties[0].type;
-            if (records[0].properties[0].name !== args[1].properties[0].name) {
-                records[0].properties[0].value = null;
-            }
-            records[0].properties[0].name = args[1].properties[0].name;
-        }
-    });
 
     await mountView({
         type: "form",
