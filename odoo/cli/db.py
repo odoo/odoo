@@ -1,5 +1,3 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-import argparse
 import io
 import urllib.parse
 import sys
@@ -16,20 +14,19 @@ from ..tools import config
 
 eprint = partial(print, file=sys.stderr, flush=True)
 
+
 class Db(Command):
     """ Create, drop, dump, load databases """
     name = 'db'
-
-    def run(self, cmdargs):
-        """Command-line version of the database manager.
+    description = """
+        Command-line version of the database manager.
 
         Doesn't provide a `create` command as that's not useful. Commands are
         all filestore-aware.
-        """
-        parser = argparse.ArgumentParser(
-            prog=f'{Path(sys.argv[0]).name} {self.name}',
-            description=self.__doc__.strip()
-        )
+    """
+
+    def run(self, cmdargs):
+        parser = self.parser
         parser.add_argument('-c', '--config')
         parser.add_argument('-D', '--data-dir')
         parser.add_argument('--addons-path')

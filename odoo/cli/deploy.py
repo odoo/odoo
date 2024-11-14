@@ -1,18 +1,17 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-import argparse
 import os
 import requests
 import sys
 import tempfile
 import zipfile
-from pathlib import Path
 
 from . import Command
 
+
 class Deploy(Command):
     """Deploy a module on an Odoo instance"""
+
     def __init__(self):
-        super(Deploy, self).__init__()
+        super().__init__()
         self.session = requests.session()
 
     def deploy_module(self, module_path, url, login, password, db='', force=False):
@@ -61,10 +60,7 @@ class Deploy(Command):
             raise
 
     def run(self, cmdargs):
-        parser = argparse.ArgumentParser(
-            prog=f'{Path(sys.argv[0]).name} {self.name}',
-            description=self.__doc__
-        )
+        parser = self.parser
         parser.add_argument('path', help="Path of the module to deploy")
         parser.add_argument('url', nargs='?', help='Url of the server (default=http://localhost:8069)', default="http://localhost:8069")
         parser.add_argument('--db', dest='db', help='Database to use if server does not use db-filter.')
