@@ -194,6 +194,9 @@ class SaleOrderLine(models.Model):
         self.filtered('is_delivery').order_id.filtered('carrier_id').carrier_id = False
         return super(SaleOrderLine, self).unlink()
 
+    def _get_expected_date_sol_domain(self):
+        return super()._get_expected_date_sol_domain() + [('is_delivery', '=', False)]
+
     def _is_delivery(self):
         self.ensure_one()
         return self.is_delivery

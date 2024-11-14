@@ -546,23 +546,48 @@ class SaleOrder(models.Model):
                 total += (line.price_subtotal * 100)/(100-line.discount) if line.discount != 100 else (line.price_unit * line.product_uom_qty)
             order.amount_undiscounted = total
 
+    def _get_expected_date_sol_domain(self):
+        return [
+            ("order_id", "in", self.ids),
+            ("state", "!=", "cancel"),
+            ("display_type", "=", False),
+        ]
+
     @api.depends('order_line.customer_lead', 'date_order', 'state')
     def _compute_expected_date(self):
         """ For service and consumable, we only take the min dates. This method is extended in sale_stock to
             take the picking_policy of SO into account.
         """
-        self.mapped("order_line")  # Prefetch indication
+        max_min_customer_lead_sos = {
+            res["order_id"][0]: (res["min_customer_lead"], res["max_customer_lead"])
+            for res in self.env["sale.order.line"].read_group(
+                self._get_expected_date_sol_domain(),
+                ["order_id", "min_customer_lead:min(customer_lead)", "max_customer_lead:max(customer_lead)"],
+                ["order_id"],
+                lazy=False,
+            )
+        }
         for order in self:
-            if order.state == 'cancel':
+            current_so_customer_lead = max_min_customer_lead_sos.get(order._origin.id)
+            if order.state == "cancel" or not current_so_customer_lead:
                 order.expected_date = False
                 continue
-            dates_list = order.order_line.filtered(
-                lambda line: not line.display_type and not line._is_delivery()
-            ).mapped(lambda line: line and line._expected_date())
+            dates_list = [order._expected_date_so(customer_lead) for customer_lead in current_so_customer_lead]
             if dates_list:
                 order.expected_date = order._select_expected_date(dates_list)
             else:
                 order.expected_date = False
+
+    def _expected_date_so(self, customer_lead):
+        """
+        Returns the expected of a SO given a customer lead time.
+        """
+        self.ensure_one()
+        if self.state == "sale" and self.date_order:
+            order_date = self.date_order
+        else:
+            order_date = fields.Datetime.now()
+        return order_date + timedelta(days=customer_lead or 0.0)
 
     def _select_expected_date(self, expected_dates):
         self.ensure_one()
