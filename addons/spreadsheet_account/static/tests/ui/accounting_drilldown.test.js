@@ -47,10 +47,15 @@ test("Create drill down domain", async () => {
                         codes: ["100"],
                         company_id: null,
                         include_unposted: false,
-                        date_range: {
+                        date_from: {
                             range_type: "year",
                             year: 2020,
                         },
+                        date_to: {
+                            range_type: "year",
+                            year: 9999,
+                        },
+                        partner_ids: [""],
                     },
                 ]);
                 return drillDownAction;
@@ -99,11 +104,16 @@ test("Create drill down domain when month date is a reference", async () => {
                         codes: ["100"],
                         company_id: null,
                         include_unposted: false,
-                        date_range: {
+                        date_from: {
                             month: 2,
                             range_type: "month",
                             year: 2024,
                         },
+                        date_to: {
+                            range_type: "year",
+                            year: 9999,
+                        },
+                        partner_ids: [""],
                     },
                 ]);
                 return {};
@@ -132,12 +142,17 @@ test("Create drill down domain when date uses a non-standard locale", async () =
                         codes: ["100"],
                         company_id: null,
                         include_unposted: false,
-                        date_range: {
+                        date_from: {
                             range_type: "day",
                             year: 2002,
                             month: 2,
                             day: 1,
                         },
+                        date_to: {
+                            range_type: "year",
+                            year: 9999,
+                        },
+                        partner_ids: [""],
                     },
                 ]);
                 return {};

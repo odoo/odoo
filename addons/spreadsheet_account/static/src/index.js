@@ -19,25 +19,56 @@ cellMenuRegistry.add("move_lines_see_records", {
         const sheetId = position.sheetId;
         const cell = env.model.getters.getCell(position);
         const { args } = getFirstAccountFunction(cell.compiledFormula.tokens);
-        let [codes, date_range, offset, companyId, includeUnposted] = args
-            .map(astToFormula)
-            .map((arg) => env.model.getters.evaluateFormulaResult(sheetId, arg));
-        codes = toString(codes?.value).split(",");
+        let codes, partner_ids = "";
+        let date_from, date_to, offset, companyId, includeUnposted = false;
+        if ( cell.content.startsWith("=ODOO.PARTNER.BALANCE") ) {
+            [partner_ids, codes, date_from, date_to, offset, companyId, includeUnposted] = args
+                .map(astToFormula)
+                .map((arg) => env.model.getters.evaluateFormulaResult(sheetId, arg));
+        } else {
+            [codes, date_from, date_to, offset, companyId, includeUnposted] = args
+                .map(astToFormula)
+                .map((arg) => env.model.getters.evaluateFormulaResult(sheetId, arg));
+        }
+        try {
+            codes = toString(codes?.value).split(",");
+        } catch {
+            codes = [];
+        }
         const locale = env.model.getters.getLocale();
-        const dateRange = parseAccountingDate(date_range, locale);
+        let dateFrom;
+        try {
+            if ( !date_from?.value ) {
+                date_from = { value: 1900 }
+            }
+            dateFrom = parseAccountingDate(date_from, locale);
+        } catch {
+            dateFrom = parseAccountingDate({ value: 1900 }, locale);
+        } 
+        let dateTo;
+        try {
+            if ( !date_to?.value ) {
+                date_to = { value: 9999 }
+            }
+            dateTo = parseAccountingDate(date_to, locale);
+        } catch {
+            dateTo = parseAccountingDate({ value: 9999 }, locale);
+        }
         offset = parseInt(offset?.value) || 0;
-        dateRange.year += offset || 0;
+        dateFrom.year += offset || 0;
+        dateTo.year += offset || 0;
         companyId = parseInt(companyId?.value) || null;
         try {
             includeUnposted = toBoolean(includeUnposted.value);
         } catch {
             includeUnposted = false;
         }
+        const partnerIds = toString(partner_ids).split(",")
 
         const action = await env.services.orm.call(
             "account.account",
             "spreadsheet_move_line_action",
-            [camelToSnakeObject({ dateRange, companyId, codes, includeUnposted })]
+            [camelToSnakeObject({ dateFrom, dateTo, companyId, codes, includeUnposted, partnerIds })]
         );
         await env.services.action.doAction(action);
     },

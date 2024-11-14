@@ -48,7 +48,12 @@ test("evaluation with reference to a month period", async () => {
                     {
                         codes: ["100"],
                         company_id: null,
-                        date_range: {
+                        date_from: {
+                            month: 2,
+                            range_type: "month",
+                            year: 2022,
+                        },
+                        date_to: {
                             month: 2,
                             range_type: "month",
                             year: 2022,
@@ -62,9 +67,9 @@ test("evaluation with reference to a month period", async () => {
         },
     });
     setCellContent(model, "B1", "02/2022");
-    setCellContent(model, "A1", `=ODOO.CREDIT("100", B1)`);
-    setCellContent(model, "A2", `=ODOO.DEBIT("100", B1)`);
-    setCellContent(model, "A3", `=ODOO.BALANCE("100", B1)`);
+    setCellContent(model, "A1", `=ODOO.CREDIT("100", B1, B1)`);
+    setCellContent(model, "A2", `=ODOO.DEBIT("100", B1, B1)`);
+    setCellContent(model, "A3", `=ODOO.BALANCE("100", B1, B1)`);
     await waitForDataLoaded(model);
     expect(getCellValue(model, "A1")).toBe(16);
     expect(getCellValue(model, "A2")).toBe(42);
@@ -75,9 +80,9 @@ test("evaluation with reference to a month period", async () => {
 
 test("Functions are correctly formatted", async () => {
     const model = await createModelWithDataSource();
-    setCellContent(model, "A1", `=ODOO.CREDIT("100", "2022")`);
-    setCellContent(model, "A2", `=ODOO.DEBIT("100", "2022")`);
-    setCellContent(model, "A3", `=ODOO.BALANCE("100", "2022")`);
+    setCellContent(model, "A1", `=ODOO.CREDIT("100", "2022", "2022")`);
+    setCellContent(model, "A2", `=ODOO.DEBIT("100", "2022", "2022")`);
+    setCellContent(model, "A3", `=ODOO.BALANCE("100", "2022", "2022")`);
     await waitForDataLoaded(model);
     expect(getEvaluatedCell(model, "A1").format).toBe("#,##0.00[$€]");
     expect(getEvaluatedCell(model, "A2").format).toBe("#,##0.00[$€]");
@@ -92,7 +97,7 @@ test("Functions with a wrong company id is correctly in error", async () => {
             }
         },
     });
-    setCellContent(model, "A1", `=ODOO.CREDIT("100", "2022", 0, 123456)`);
+    setCellContent(model, "A1", `=ODOO.CREDIT("100", "2022", "2022", 0, 123456)`);
     await waitForDataLoaded(model);
     expect(getEvaluatedCell(model, "A1").message).toBe("Currency not available for this company.");
 });
@@ -104,8 +109,10 @@ test("formula with invalid date", async () => {
     setCellContent(model, "A3", `=ODOO.BALANCE("100", -1)`);
     setCellContent(model, "A4", `=ODOO.BALANCE("100", "not a valid period")`);
     setCellContent(model, "A5", `=ODOO.BALANCE("100", 1900)`); // this should be ok
-    setCellContent(model, "A6", `=ODOO.BALANCE("100", 1900, -1)`);
+    setCellContent(model, "A6", `=ODOO.BALANCE("100", 1900,, -1)`);
     setCellContent(model, "A7", `=ODOO.DEBIT("100", 1899)`);
+    setCellContent(model, "A8", `=ODOO.DEBIT("100", 2024, 9999)`);
+    setCellContent(model, "A9", `=ODOO.DEBIT("100", 2024, 9999, 1)`);
     await waitForDataLoaded(model);
     const errorMessage = `'%s' is not a valid period. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`;
     expect(getEvaluatedCell(model, "A1").message).toBe("0 is not a valid year.");
@@ -115,6 +122,8 @@ test("formula with invalid date", async () => {
     expect(getEvaluatedCell(model, "A5").value).toBe(0);
     expect(getEvaluatedCell(model, "A6").message).toBe("1899 is not a valid year.");
     expect(getEvaluatedCell(model, "A7").message).toBe("1899 is not a valid year.");
+    expect(getEvaluatedCell(model, "A8").value).toBe(0);
+    expect(getEvaluatedCell(model, "A9").message).toBe("10000 is not a valid year.");
 });
 
 test("Evaluation with multiple account codes", async () => {
@@ -173,70 +182,95 @@ test("Server requests", async () => {
             }
         },
     });
-    setCellContent(model, "A1", `=ODOO.BALANCE("100", "2022")`);
-    setCellContent(model, "A2", `=ODOO.CREDIT("100", "01/2022")`);
-    setCellContent(model, "A3", `=ODOO.DEBIT("100","Q2/2022")`);
-    setCellContent(model, "A4", `=ODOO.BALANCE("10", "2021")`);
-    setCellContent(model, "A5", `=ODOO.CREDIT("10", "2022", -1)`); // same payload as A4: should only be called once
-    setCellContent(model, "A6", `=ODOO.DEBIT("5", "2021", 0, 2)`);
-    setCellContent(model, "A7", `=ODOO.DEBIT("5", "05/04/2021", 1)`);
-    setCellContent(model, "A8", `=ODOO.BALANCE("5", "2022",,,FALSE)`);
-    setCellContent(model, "A9", `=ODOO.BALANCE("100", "05/05/2022",,,TRUE)`);
-    setCellContent(model, "A10", `=ODOO.BALANCE(33,2021,-2)`);
+    setCellContent(model, "A1", `=ODOO.BALANCE("100", "2022", "2022")`);
+    setCellContent(model, "A2", `=ODOO.CREDIT("100", "01/2022", "01/2022")`);
+    setCellContent(model, "A3", `=ODOO.DEBIT("100","Q2/2022", "Q2/2022")`);
+    setCellContent(model, "A4", `=ODOO.BALANCE("10", "2021", "2021")`);
+    setCellContent(model, "A5", `=ODOO.CREDIT("10", "2022", "2022", -1)`); // same payload as A4: should only be called once
+    setCellContent(model, "A6", `=ODOO.DEBIT("5", "2021", "2021", 0, 2)`);
+    setCellContent(model, "A7", `=ODOO.DEBIT("5", "05/04/2021", "05/04/2021", 1)`);
+    setCellContent(model, "A8", `=ODOO.BALANCE("5", "2022", "2022",,,FALSE)`);
+    setCellContent(model, "A9", `=ODOO.BALANCE("100", "05/05/2022", "05/05/2022",,,TRUE)`);
+    setCellContent(model, "A10", `=ODOO.BALANCE(33,2021, 2021,-2)`);
+    setCellContent(model, "A11", `=ODOO.BALANCE("101", 2021, "Q2/2022")`);
+    setCellContent(model, "A12", `=ODOO.BALANCE("101", 2021)`);
     await waitForDataLoaded(model);
 
     expect.verifySteps([
         camelToSnakeObject({
-            dateRange: parseAccountingDate({ value: "2022" }, locale),
+            dateFrom: parseAccountingDate({ value: "2022"}, locale),
+            dateTo: parseAccountingDate({ value: "2022"}, locale),
             codes: ["100"],
             companyId: null,
             includeUnposted: false,
         }),
         camelToSnakeObject({
-            dateRange: parseAccountingDate({ value: "01/2022" }, locale),
+            dateFrom: parseAccountingDate({ value: "01/2022"}, locale),
+            dateTo: parseAccountingDate({ value: "01/2022"}, locale),
             codes: ["100"],
             companyId: null,
             includeUnposted: false,
         }),
         camelToSnakeObject({
-            dateRange: parseAccountingDate({ value: "Q2/2022" }, locale),
+            dateFrom: parseAccountingDate({ value: "Q2/2022"}, locale),
+            dateTo: parseAccountingDate({ value: "Q2/2022"}, locale),
             codes: ["100"],
             companyId: null,
             includeUnposted: false,
         }),
         camelToSnakeObject({
-            dateRange: parseAccountingDate({ value: "2021" }, locale),
+            dateFrom: parseAccountingDate({ value: "2021"}, locale),
+            dateTo: parseAccountingDate({ value: "2021"}, locale),
             codes: ["10"],
             companyId: null,
             includeUnposted: false,
         }),
         camelToSnakeObject({
-            dateRange: parseAccountingDate({ value: "2021" }, locale),
+            dateFrom: parseAccountingDate({ value: "2021"}, locale),
+            dateTo: parseAccountingDate({ value: "2021"}, locale),
             codes: ["5"],
             companyId: 2,
             includeUnposted: false,
         }),
         camelToSnakeObject({
-            dateRange: parseAccountingDate({ value: "05/04/2022" }, locale),
+            dateFrom: parseAccountingDate({ value: "05/04/2022"}, locale),
+            dateTo: parseAccountingDate({ value: "05/04/2022"}, locale),
             codes: ["5"],
             companyId: null,
             includeUnposted: false,
         }),
         camelToSnakeObject({
-            dateRange: parseAccountingDate({ value: "2022" }, locale),
+            dateFrom: parseAccountingDate({ value: "2022"}, locale),
+            dateTo: parseAccountingDate({ value: "2022"}, locale),
             codes: ["5"],
             companyId: null,
             includeUnposted: false,
         }),
         camelToSnakeObject({
-            dateRange: parseAccountingDate({ value: "05/05/2022" }, locale),
+            dateFrom: parseAccountingDate({ value: "05/05/2022"}, locale),
+            dateTo: parseAccountingDate({ value: "05/05/2022"}, locale),
             codes: ["100"],
             companyId: null,
             includeUnposted: true,
         }),
         camelToSnakeObject({
-            dateRange: parseAccountingDate({ value: "2019" }, locale),
+            dateFrom: parseAccountingDate({ value: "2019" }, locale),
+            dateTo: parseAccountingDate({ value: "2019" }, locale),
             codes: ["33"],
+            companyId: null,
+            includeUnposted: false,
+        }),
+        camelToSnakeObject({
+            dateFrom: parseAccountingDate({ value: "2021" }, locale),
+            dateTo: parseAccountingDate({ value: "Q2/2022" }, locale),
+            codes: ["101"],
+            companyId: null,
+            includeUnposted: false,
+        }),
+        camelToSnakeObject({
+            dateFrom: parseAccountingDate({ value: "2021" }, locale),
+            dateTo: parseAccountingDate({ value: "9999" }, locale),
+            codes: ["101"],
             companyId: null,
             includeUnposted: false,
         }),
@@ -255,15 +289,16 @@ test("Server requests with multiple account codes", async () => {
             }
         },
     });
-    setCellContent(model, "A1", `=ODOO.BALANCE("100,200", "2022")`);
-    setCellContent(model, "A2", `=ODOO.CREDIT("100,200", "2022")`);
-    setCellContent(model, "A3", `=ODOO.DEBIT("100,200","2022")`);
+    setCellContent(model, "A1", `=ODOO.BALANCE("100,200", "2022", "2022")`);
+    setCellContent(model, "A2", `=ODOO.CREDIT("100,200", "2022", "2022")`);
+    setCellContent(model, "A3", `=ODOO.DEBIT("100,200", "2022", "2022")`);
     await waitForDataLoaded(model);
 
     expect.verifySteps([
         "spreadsheet_fetch_debit_credit",
         camelToSnakeObject({
-            dateRange: parseAccountingDate({ value: "2022" }, locale),
+            dateFrom: parseAccountingDate({ value: "2022"}, locale),
+            dateTo: parseAccountingDate({ value: "2022"}, locale),
             codes: ["100", "200"],
             companyId: null,
             includeUnposted: false,
@@ -285,7 +320,7 @@ test("account group formula as input to balance formula", async () => {
         },
     });
     setCellContent(model, "A1", `=ODOO.ACCOUNT.GROUP("income")`);
-    setCellContent(model, "A2", `=ODOO.BALANCE(A1, 2022)`);
+    setCellContent(model, "A2", `=ODOO.BALANCE(A1, 2022, 2022)`);
     expect(getCellValue(model, "A1")).toBe("Loading...");
     expect(getCellValue(model, "A2")).toBe("Loading...");
     await waitForDataLoaded(model);
@@ -294,7 +329,8 @@ test("account group formula as input to balance formula", async () => {
     expect.verifySteps([
         "spreadsheet_fetch_debit_credit",
         camelToSnakeObject({
-            dateRange: parseAccountingDate({ value: "2022" }, locale),
+            dateFrom: parseAccountingDate({ value: "2022"}, locale),
+            dateTo: parseAccountingDate({ value: "2022"}, locale),
             codes: ["100104", "200104"],
             companyId: null,
             includeUnposted: false,
@@ -316,8 +352,8 @@ test("two concurrent requests on different accounts", async () => {
         },
     });
     setCellContent(model, "A1", `=ODOO.ACCOUNT.GROUP("income")`);
-    setCellContent(model, "A2", `=ODOO.BALANCE(A1, 2022)`); // batched only when A1 resolves
-    setCellContent(model, "A3", `=ODOO.BALANCE("100", 2022)`); // batched directly
+    setCellContent(model, "A2", `=ODOO.BALANCE(A1, 2022, 2022)`); // batched only when A1 resolves
+    setCellContent(model, "A3", `=ODOO.BALANCE("100", 2022, 2022)`); // batched directly
     expect(getCellValue(model, "A1")).toBe("Loading...");
     expect(getCellValue(model, "A2")).toBe("Loading...");
     expect(getCellValue(model, "A3")).toBe("Loading...");
@@ -332,14 +368,16 @@ test("two concurrent requests on different accounts", async () => {
     expect.verifySteps([
         "spreadsheet_fetch_debit_credit",
         camelToSnakeObject({
-            dateRange: parseAccountingDate({ value: "2022" }, locale),
+            dateFrom: parseAccountingDate({ value: "2022"}, locale),
+            dateTo: parseAccountingDate({ value: "2022"}, locale),
             codes: ["100"],
             companyId: null,
             includeUnposted: false,
         }),
         "spreadsheet_fetch_debit_credit",
         camelToSnakeObject({
-            dateRange: parseAccountingDate({ value: "2022" }, locale),
+            dateFrom: parseAccountingDate({ value: "2022"}, locale),
+            dateTo: parseAccountingDate({ value: "2022"}, locale),
             codes: ["100104", "200104"],
             companyId: null,
             includeUnposted: false,
@@ -357,7 +395,13 @@ test("date with non-standard locale", async () => {
                         {
                             codes: ["100"],
                             company_id: null,
-                            date_range: {
+                            date_from: {
+                                range_type: "day",
+                                year: 2002,
+                                month: 2,
+                                day: 1,
+                            },
+                            date_to: {
                                 range_type: "day",
                                 year: 2002,
                                 month: 2,
@@ -374,9 +418,9 @@ test("date with non-standard locale", async () => {
     const myLocale = { ...locale, dateFormat: "d/mmm/yyyy" };
     model.dispatch("UPDATE_LOCALE", { locale: myLocale });
     setCellContent(model, "A1", "=DATE(2002, 2, 1)");
-    setCellContent(model, "A2", "=ODOO.BALANCE(100, A1)");
-    setCellContent(model, "A3", "=ODOO.CREDIT(100, A1)");
-    setCellContent(model, "A4", "=ODOO.DEBIT(100, A1)");
+    setCellContent(model, "A2", "=ODOO.BALANCE(100, A1, A1)");
+    setCellContent(model, "A3", "=ODOO.CREDIT(100, A1, A1)");
+    setCellContent(model, "A4", "=ODOO.DEBIT(100, A1, A1)");
     await waitForDataLoaded(model);
     expect(getEvaluatedCell(model, "A1").formattedValue).toBe("1/Feb/2002");
     expect(getCellValue(model, "A2")).toBe(116);
@@ -411,12 +455,12 @@ test("parseAccountingDate", () => {
         year: 2022,
         quarter: 4,
     });
-    // A number below 3000 is interpreted as a year.
+    // A number below 10000 is interpreted as a year.
     // It's interpreted as a regular spreadsheet date otherwise
-    expect(parseAccountingDate({ value: "3005" }, locale)).toEqual({
+    expect(parseAccountingDate({ value: "10005" }, locale)).toEqual({
         rangeType: "day",
-        year: 1908,
-        month: 3,
+        year: 1927,
+        month: 5,
         day: 23,
     });
 });
