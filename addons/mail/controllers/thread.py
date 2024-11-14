@@ -6,6 +6,7 @@ from werkzeug.exceptions import NotFound
 
 from odoo import http
 from odoo.http import request
+from odoo.tools import email_normalize
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 from odoo.addons.mail.tools.discuss import Store
 
@@ -109,8 +110,12 @@ class ThreadController(http.Controller):
             post_data["body"] = Markup(post_data["body"])  # contains HTML such as @mentions
         new_partners = []
         if "partner_emails" in kwargs:
+            additional_values = {
+                email_normalize(email, strict=False) or email: values
+                for email, values in kwargs.get("partner_additional_values", {}).items()
+            }
             new_partners = [record.id for record in request.env["res.partner"]._find_or_create_from_emails(
-                kwargs["partner_emails"], kwargs.get("partner_additional_values", {})
+                kwargs["partner_emails"], additional_values
             )]
         post_data["partner_ids"] = list(set((post_data.get("partner_ids", [])) + new_partners))
         if "everyone" in special_mentions:
