@@ -79,22 +79,29 @@ class EventRegistration(models.Model):
         buy tickets, not when bootstrapping a database. """
         return super(EventRegistration, self.with_context(event_lead_rule_skip=True))._load_records_write(values)
 
-    def _apply_lead_generation_rules(self):
+    def _apply_lead_generation_rules(self, event_lead_rules=False):
         leads = self.env['crm.lead']
         open_registrations = self.filtered(lambda reg: reg.state == 'open')
         done_registrations = self.filtered(lambda reg: reg.state == 'done')
 
-        leads += self.env['event.lead.rule'].search(
-            [('lead_creation_trigger', '=', 'create')]
-        ).sudo()._run_on_registrations(self)
+        if event_lead_rules:
+            create_lead_rules = event_lead_rules.filtered(lambda rule: rule.lead_creation_trigger == 'create')
+        else:
+            create_lead_rules = self.env['event.lead.rule'].search([('lead_creation_trigger', '=', 'create')])
+
+        leads += create_lead_rules.sudo()._run_on_registrations(self)
         if open_registrations:
-            leads += self.env['event.lead.rule'].search(
-                [('lead_creation_trigger', '=', 'confirm')]
-            ).sudo()._run_on_registrations(open_registrations)
+            if event_lead_rules:
+                confirm_lead_rules = event_lead_rules.filtered(lambda rule: rule.lead_creation_trigger == 'confirm')
+            else:
+                confirm_lead_rules = self.env['event.lead.rule'].search([('lead_creation_trigger', '=', 'confirm')])
+            leads += confirm_lead_rules.sudo()._run_on_registrations(open_registrations)
         if done_registrations:
-            leads += self.env['event.lead.rule'].search(
-                [('lead_creation_trigger', '=', 'done')]
-            ).sudo()._run_on_registrations(done_registrations)
+            if event_lead_rules:
+                done_lead_rules = event_lead_rules.filtered(lambda rule: rule.lead_creation_trigger == 'done')
+            else:
+                done_lead_rules = self.env['event.lead.rule'].search([('lead_creation_trigger', '=', 'done')])
+            leads += done_lead_rules.sudo()._run_on_registrations(done_registrations)
         return leads
 
     def _update_leads(self, new_vals, lead_tracked_vals):
