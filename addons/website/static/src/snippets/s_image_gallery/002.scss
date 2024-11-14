@@ -9,26 +9,8 @@
         }
     }
 
-    &.o_grid {
-        &.o_spc-none div.row {
-            margin-bottom: 0px;
-        }
-
-        &.o_spc-small div.row > div {
-            margin-bottom: $spacer;
-        }
-
-        &.o_spc-medium div.row > div {
-            margin-bottom: $spacer * 2;
-        }
-
-        &.o_spc-big div.row > div {
-            margin-bottom: $spacer * 3;
-        }
-    }
-
-    &.o_masonry {
-        &.o_spc-none div.o_masonry_col {
+    &.o_col {
+        &.o_spc-none div.o_col_col {
             padding: 0;
 
             > img, > a > img, > .media_iframe_video {
@@ -36,7 +18,7 @@
             }
         }
 
-        &.o_spc-small div.o_masonry_col {
+        &.o_spc-small div.o_col_col {
             padding: 0 ($spacer * .5);
 
             > img, > a > img, > .media_iframe_video {
@@ -44,7 +26,7 @@
             }
         }
 
-        &.o_spc-medium div.o_masonry_col {
+        &.o_spc-medium div.o_col_col {
             padding: 0 $spacer;
 
             > img, > a > img, > .media_iframe_video {
@@ -52,34 +34,12 @@
             }
         }
 
-        &.o_spc-big div.o_masonry_col {
+        &.o_spc-big div.o_col_col {
             padding: 0 ($spacer * 1.5);
 
             > img, > a > img, > .media_iframe_video {
                 margin-bottom: $spacer * 3 !important;
             }
-        }
-    }
-
-    &.o_nomode {
-        &.o_spc-none .row > div {
-            padding-top: 0;
-            padding-bottom: 0;
-        }
-
-        &.o_spc-small .row > div {
-            padding-top: $spacer * .5;
-            padding-bottom: $spacer * .5;
-        }
-
-        &.o_spc-medium .row > div {
-            padding-top: $spacer;
-            padding-bottom: $spacer;
-        }
-
-        &.o_spc-big .row > div {
-            padding-top: $spacer * 1.5;
-            padding-bottom: $spacer * 1.5;
         }
     }
 
