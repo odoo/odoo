@@ -44,7 +44,7 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             ProductScreen.clickPayButton(),
             PaymentScreen.isShown(),
             Chrome.clickMenuOption("Orders"),
-            TicketScreen.nthRowContains(3, "Partner Test 2", false),
+            TicketScreen.nthRowContains(2, "Partner Test 2", false),
             Chrome.createFloatingOrder(),
             ProductScreen.addOrderline("Desk Pad", "2", "4"),
             ProductScreen.clickPayButton(),
