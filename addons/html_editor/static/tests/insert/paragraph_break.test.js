@@ -3,6 +3,9 @@ import { press } from "@odoo/hoot-dom";
 import { tick } from "@odoo/hoot-mock";
 import { testEditor } from "../_helpers/editor";
 import { insertText, splitBlock } from "../_helpers/user_actions";
+import { unformat } from "../_helpers/format";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 
 describe("Selection collapsed", () => {
     describe("Basic", () => {
@@ -87,6 +90,25 @@ describe("Selection collapsed", () => {
                 contentBefore: `<p>abc<a href="#" title="document" data-mimetype="application/pdf" class="o_image"></a>[]</p>`,
                 stepFunction: splitBlock,
                 contentAfter: `<p>abc<a href="#" title="document" data-mimetype="application/pdf" class="o_image"></a></p><p>[]<br></p>`,
+            });
+        });
+        test("should not split block with conditional template", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <h1 t-if="true">
+                        <t t-out="Hello"></t>
+                        []<t t-out="World"></t>
+                    </h1>
+                `),
+                stepFunction: splitBlock,
+                contentAfter: unformat(`
+                    <h1 t-if="true">
+                        <t t-out="Hello"></t>
+                        <br>
+                        []<t t-out="World"></t>
+                    </h1>
+                `),
+                config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
             });
         });
     });
