@@ -167,8 +167,8 @@ paymentForm.include({
         this.call('ui', 'unblock');
         // Paypal throws an error if the popup is closed before it can load;
         // this case should be treated as an onCancel event.
-        if (message !== "Detected popup close") {
-            this._displayErrorDialog(_t("Payment processing failed"), error.message);
+        if (message !== "Detected popup close" && !(error instanceof RPCError)) {
+            this._displayErrorDialog(_t("Payment processing failed"), message);
         }
     },
 });
