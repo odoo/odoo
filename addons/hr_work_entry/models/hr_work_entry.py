@@ -8,7 +8,7 @@ import itertools
 from psycopg2 import OperationalError
 from odoo.exceptions import UserError
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, _
 from odoo.osv import expression
 
 
@@ -67,9 +67,7 @@ class HrWorkEntry(models.Model):
         """,
         'Validated work entries cannot overlap',
     )
-
-    def init(self):
-        tools.create_index(self._cr, "hr_work_entry_date_start_date_stop_index", self._table, ["date_start", "date_stop"])
+    _date_start_date_stop_index = models.Index("(date_start, date_stop)")
 
     @api.depends('work_entry_type_id', 'employee_id')
     def _compute_name(self):
