@@ -218,17 +218,6 @@ export class LinkPlugin extends Plugin {
         this.removeLinkShortcut();
     }
 
-    handleCommand(command, payload) {
-        switch (command) {
-            case "NORMALIZE":
-                this.normalizeLink();
-                break;
-            case "CLEAN_FOR_SAVE":
-                this.removeEmptyLinks(payload.root);
-                break;
-        }
-    }
-
     // -------------------------------------------------------------------------
     // Commands
     // -------------------------------------------------------------------------
