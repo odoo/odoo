@@ -6,7 +6,8 @@
         <field name="inherit_id" ref="mail_group.mail_group_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
-                <button type="object" class="oe_stat_button" icon="fa-globe" name="action_go_to_website">
+                <button type="object" class="oe_stat_button" name="action_go_to_website">
+                    <i class="fa fa-fw o_button_icon fa-globe text-success" title="Mail group accessible on website"/>
                     <div class="o_form_field o_stat_info">
                         <span class="o_stat_text">Go to <br/>Website</span>
                     </div>
