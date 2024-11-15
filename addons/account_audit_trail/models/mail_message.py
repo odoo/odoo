@@ -197,7 +197,7 @@ class Message(models.Model):
     def write(self, vals):
         if (
             vals.keys() & {'res_id', 'res_model', 'message_type', 'subtype_id'}
-            or ('subject' in vals and any(self.mapped('subject')))
+            or ('subject' in vals and any(' '.join(s.subject.splitlines()) != vals['subject'] for s in self if s.subject))
             or ('body' in vals and any(self.mapped('body')))
         ):
             self._except_audit_log()
