@@ -54,7 +54,7 @@ registry.category("web_tour.tours").add("check_shipping_discount", {
         },
         {
             content: "check eWallet discount",
-            trigger: "[data-reward-type=discount] .oe_currency_value:contains(373.75)",
+            trigger: "[data-reward-type=discount] .oe_currency_value:contains(325.00)",
             isCheck: true,
         },
         {
@@ -63,7 +63,7 @@ registry.category("web_tour.tours").add("check_shipping_discount", {
         },
         {
             content: "check for eWallet update after shipping cost change",
-            trigger: "[data-reward-type=discount] .oe_currency_value:contains(345.00)",
+            trigger: "[data-reward-type=discount] .oe_currency_value:contains(300.00)",
             isCheck: true,
         },
         {
