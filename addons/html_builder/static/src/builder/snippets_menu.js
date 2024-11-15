@@ -58,8 +58,8 @@ export class SnippetsMenu extends Component {
                 disableFloatingToolbar: true,
                 Plugins: [...MAIN_PLUGINS, ...BUILDER_PLUGIN],
                 onChange: () => {
-                    this.state.canUndo = this.editor.shared.canUndo();
-                    this.state.canRedo = this.editor.shared.canRedo();
+                    this.state.canUndo = this.editor.shared.history.canUndo();
+                    this.state.canRedo = this.editor.shared.history.canRedo();
                     editorBus.trigger("STEP_ADDED");
                 },
                 resources: {
@@ -118,11 +118,11 @@ export class SnippetsMenu extends Component {
     }
 
     undo() {
-        this.editor.dispatch("HISTORY_UNDO");
+        this.editor.shared.history.undo();
     }
 
     redo() {
-        this.editor.dispatch("HISTORY_REDO");
+        this.editor.shared.history.redo();
     }
 }
 

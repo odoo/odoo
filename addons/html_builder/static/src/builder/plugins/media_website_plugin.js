@@ -3,7 +3,7 @@ import { MEDIA_SELECTOR, isProtected } from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 
 export class MediaWebsitePlugin extends Plugin {
-    static name = "media_website";
+    static id = "media_website";
     static dependencies = ["media", "selection"];
 
     setup() {
@@ -31,7 +31,10 @@ export class MediaWebsitePlugin extends Plugin {
             if (!isEditable && targetEl.classList.contains("o_editable_media")) {
                 isEditable = shouldEditableMediaBeEditable(targetEl);
             }
-            if (isEditable && !isProtected(this.shared.getEditableSelection().anchorNode)) {
+            if (
+                isEditable &&
+                !isProtected(this.dependencies.selection.getEditableSelection().anchorNode)
+            ) {
                 this.onDblClickEditableMedia(targetEl);
             }
         });
@@ -39,7 +42,7 @@ export class MediaWebsitePlugin extends Plugin {
 
     onDblClickEditableMedia(mediaEl) {
         const params = { node: mediaEl };
-        const sel = this.shared.getEditableSelection();
+        const sel = this.dependencies.selection.getEditableSelection();
 
         if (!sel.rangeCount) {
             return;
@@ -47,7 +50,7 @@ export class MediaWebsitePlugin extends Plugin {
         const range = sel.getRangeAt(0);
         const editableEl =
             closestElement(params.node || range.startContainer, ".o_editable") || this.editable;
-        this.shared.openMediaDialog(params, editableEl);
+        this.dependencies.media.openMediaDialog(params, editableEl);
     }
 }
 

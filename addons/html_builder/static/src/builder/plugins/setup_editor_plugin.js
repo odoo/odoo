@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 
 export class SetupEditorPlugin extends Plugin {
-    static name = "setup_editor_plugin";
+    static id = "setup_editor_plugin";
 
     setup() {
         // Add the `o_editable` class on the editable elements

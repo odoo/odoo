@@ -30,10 +30,10 @@ export class SpacingOption extends Component {
     }
     changeSpacingX(spacing) {
         this.target.style["column-gap"] = `${spacing}px`;
-        this.env.editor.dispatch("ADD_STEP");
+        this.env.editor.shared.history.addStep();
     }
     changeSpacingY(spacing) {
         this.target.style["row-gap"] = `${spacing}px`;
-        this.env.editor.dispatch("ADD_STEP");
+        this.env.editor.shared.history.addStep();
     }
 }

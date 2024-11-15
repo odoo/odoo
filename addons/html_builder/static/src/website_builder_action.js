@@ -83,7 +83,9 @@ class WebsiteBuilder extends Component {
 
     onIframeLoad(ev) {
         // history.pushState(null, "", ev.target.contentWindow.location.pathname);
-        loadBundle("html_builder.inside_builder_style", this.websiteContent.el.contentDocument);
+        loadBundle("html_builder.inside_builder_style", {
+            targetDoc: this.websiteContent.el.contentDocument,
+        });
     }
 }
 

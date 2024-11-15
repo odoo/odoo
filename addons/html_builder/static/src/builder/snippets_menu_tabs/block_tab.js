@@ -60,16 +60,16 @@ export class BlockTab extends Component {
             },
             onDragStart: () => {
                 copyOnDrag.insert();
-                this.props.editor.shared.displayDropZone("p, img");
+                this.props.editor.shared.dropzone.displayDropZone("p, img");
             },
             onDrag: ({ element }) => {
-                this.props.editor.shared.dragElement(element);
+                this.props.editor.shared.dropzone.dragElement(element);
             },
             onDrop: ({ element }) => {
                 const { x, y, height, width } = element.getClientRects()[0];
                 const { category, id } = element.dataset;
                 const snippet = this.props.snippetModel.getSnippet(category, id);
-                this.props.editor.shared.dropElement(snippet.content.cloneNode(true), {
+                this.props.editor.shared.dropzone.dropElement(snippet.content.cloneNode(true), {
                     x,
                     y,
                     height,
@@ -83,7 +83,7 @@ export class BlockTab extends Component {
     }
 
     openSnippetDialog(snippet) {
-        this.props.editor.shared.displayDropZone("section");
+        this.props.editor.shared.dropzone.displayDropZone("section");
 
         this.dialog.add(
             AddSnippetDialog,
@@ -91,12 +91,14 @@ export class BlockTab extends Component {
                 selectedSnippet: snippet,
                 snippetModel: this.props.snippetModel,
                 selectSnippet: (snippet) => {
-                    this.props.editor.shared.addElementToCenter(snippet.content.cloneNode(true));
+                    this.props.editor.shared.dropzone.addElementToCenter(
+                        snippet.content.cloneNode(true)
+                    );
                 },
                 installModule: this.onClickInstall.bind(this),
             },
             {
-                onClose: () => this.props.editor.shared.clearDropZone(),
+                onClose: () => this.props.editor.shared.dropzone.clearDropZone(),
             }
         );
     }
