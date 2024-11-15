@@ -79,7 +79,7 @@ Many2oneUserValueWidget.include({
         const modelHasWebsiteId = !!websiteIdField["website_id"];
         if (modelHasWebsiteId && !this.options.domain.find(arr => arr[0] === "website_id")) {
             this.options.domain =
-                Domain.and([this.options.domain, wUtils.websiteDomain(this)]).toList();
+                Domain.and([this.options.domain, weUtils.websiteDomain(this)]).toList();
         }
         return this.options.domain;
     },
@@ -1404,7 +1404,7 @@ options.registry.ReplaceMedia.include({
         selectEl.dataset.noPreview = 'true';
         selectEl.classList.add('o_we_sublevel_1');
         selectEl.setAttribute('string', _t("Page Anchor"));
-        const anchors = await wUtils.loadAnchors(urlWithoutAnchor);
+        const anchors = await weUtils.loadAnchors(urlWithoutAnchor);
         for (const anchor of anchors) {
             const weButtonEl = document.createElement('we-button');
             weButtonEl.dataset.setAnchor = anchor;
@@ -2889,7 +2889,7 @@ options.registry.DeviceVisibility = options.Class.extend({
         }
 
         // Update invisible elements.
-        const isMobile = wUtils.isMobile(this);
+        const isMobile = weUtils.isMobile(this);
         this.trigger_up('snippet_option_visibility_update', {show: widgetValue !== (isMobile ? 'no_mobile' : 'no_desktop')});
     },
     /**
@@ -4530,7 +4530,7 @@ options.registry.layout_column.include({
      * @override
      */
     _isMobile() {
-        return wUtils.isMobile(this);
+        return weUtils.isMobile(this);
     },
 });
 
@@ -4539,7 +4539,7 @@ options.registry.SnippetMove.include({
      * @override
      */
     _isMobile() {
-        return wUtils.isMobile(this);
+        return weUtils.isMobile(this);
     },
 });
 

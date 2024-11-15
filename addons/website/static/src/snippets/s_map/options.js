@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import options from '@web_editor/js/editor/snippets.options';
-import {generateGMapIframe, generateGMapLink} from '@website/js/utils';
+import weUtils from "@web_editor/js/common/utils";
 
 options.registry.Map = options.Class.extend({
     /**
@@ -12,7 +12,7 @@ options.registry.Map = options.Class.extend({
         // is dropped, the iframe already exists and doesn't need to be added
         // again.
         if (!this.$target[0].querySelector('.s_map_embedded')) {
-            const iframeEl = generateGMapIframe();
+            const iframeEl = weUtils.generateGMapIframe();
             this.$target[0].querySelector('.s_map_color_filter').before(iframeEl);
             this._updateSource();
         }
@@ -69,7 +69,7 @@ options.registry.Map = options.Class.extend({
         const $embedded = this.$target.find('.s_map_embedded');
         const $info = this.$target.find('.missing_option_warning');
         if (dataset.mapAddress) {
-            const url = generateGMapLink(dataset);
+            const url = weUtils.generateGMapLink(dataset);
             if (url !== $embedded.attr('src')) {
                 $embedded.attr('src', url);
             }

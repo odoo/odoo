@@ -1,5 +1,5 @@
 import publicWidget from "@web/legacy/js/public/public_widget";
-import wUtils from "@website/js/utils";
+import weUtils from "@web_editor/js/common/utils";
 
 publicWidget.registry.postLink = publicWidget.Widget.extend({
     selector: '.post_link',
@@ -36,6 +36,6 @@ publicWidget.registry.postLink = publicWidget.Widget.extend({
                 data[key.slice(5)] = value;
             }
         }
-        wUtils.sendRequest(url, data);
+        weUtils.sendRequest(url, data);
     },
 });

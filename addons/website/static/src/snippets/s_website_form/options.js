@@ -9,7 +9,6 @@ import { _t } from "@web/core/l10n/translation";
 import { memoize } from "@web/core/utils/functions";
 import { renderToElement } from "@web/core/utils/render";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
-import wUtils from '@website/js/utils';
 
 let currentActionName;
 
@@ -490,7 +489,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         // Get the email_to value from the data-for attribute if it exists. We
         // use it if there is no value on the email_to input.
         const formId = this.$target[0].id;
-        const dataForValues = wUtils.getParsedDataFor(formId, this.$target[0].ownerDocument);
+        const dataForValues = weUtils.getParsedDataFor(formId, this.$target[0].ownerDocument);
         if (dataForValues) {
             this.dataForEmailTo = dataForValues['email_to'];
         }

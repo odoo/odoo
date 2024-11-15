@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
-import wUtils from "@website/js/utils";
+import weUtils from "@web_editor/js/common/utils";
 
 export const cartHandlerMixin = {
     getRedirectOption() {
@@ -21,7 +21,7 @@ export const cartHandlerMixin = {
         } else if (this.stayOnPageOption) {
             return this._addToCartInPage(params);
         }
-        return wUtils.sendRequest('/shop/cart/update', params);
+        return weUtils.sendRequest('/shop/cart/update', params);
     },
     /**
      * @private

@@ -1,7 +1,7 @@
 import options from "@web_editor/js/editor/snippets.options";
 import dynamicSnippetOptions from "@website/snippets/s_dynamic_snippet/options";
 
-import wUtils from "@website/js/utils";
+import weUtils from "@web_editor/js/common/utils";
 
 const dynamicSnippetBlogPostsOptions = dynamicSnippetOptions.extend({
     /**
@@ -48,7 +48,7 @@ const dynamicSnippetBlogPostsOptions = dynamicSnippetOptions.extend({
      * @returns {Promise}
      */
     _fetchBlogs: function () {
-        return this.orm.searchRead("blog.blog", wUtils.websiteDomain(this), ["id", "name"]);
+        return this.orm.searchRead("blog.blog", weUtils.websiteDomain(this), ["id", "name"]);
     },
     /**
      *

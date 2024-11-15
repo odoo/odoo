@@ -1,7 +1,6 @@
 import options from "@web_editor/js/editor/snippets.options";
 import s_dynamic_snippet_carousel_options from "@website/snippets/s_dynamic_snippet_carousel/options";
-
-import wUtils from "@website/js/utils";
+import weUtils from "@web_editor/js/common/utils";
 
 const alternativeSnippetRemovedOptions = [
     'filter_opt', 'product_category_opt', 'product_tag_opt', 'product_names_opt',
@@ -48,7 +47,7 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
      * @returns {Promise}
      */
     _fetchProductCategories: function () {
-        return this.orm.searchRead("product.public.category", wUtils.websiteDomain(this), ["id", "name"]);
+        return this.orm.searchRead("product.public.category", weUtils.websiteDomain(this), ["id", "name"]);
     },
     /**
      *

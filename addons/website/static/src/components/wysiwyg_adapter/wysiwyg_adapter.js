@@ -6,10 +6,8 @@ import { useService, useBus } from "@web/core/utils/hooks";
 import { redirect } from "@web/core/utils/urls";
 import { useHotkey } from '@web/core/hotkeys/hotkey_hook';
 import { Wysiwyg } from "@web_editor/js/wysiwyg/wysiwyg";
-import weUtils from '@web_editor/js/common/utils';
 import { isMediaElement } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
-import { cloneContentEls, checkAndNotifySEO } from "@website/js/utils";
-
+import weUtils from "@web_editor/js/common/utils";
 import { EditMenuDialog, MenuDialog } from "../dialog/edit_menu";
 import { WebsiteDialog } from '../dialog/dialog';
 import { PageOption } from "./page_options";
@@ -1042,7 +1040,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 const embedTemplateEl = embedCodeEl.querySelector(".s_embed_code_saved");
                 if (embedTemplateEl) {
                     embedCodeEl.querySelector(".s_embed_code_embedded")
-                        .replaceChildren(cloneContentEls(embedTemplateEl.content, true));
+                        .replaceChildren(weUtils.cloneContentEls(embedTemplateEl.content, true));
                 }
             }
             await super._saveElement($clonedEl, context, withLang, ...rest);
@@ -1197,7 +1195,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                     res_model: model,
                 }).then(
                     (seo_data) =>
-                        checkAndNotifySEO(seo_data, OptimizeSEODialog, {
+                        weUtils.checkAndNotifySEO(seo_data, OptimizeSEODialog, {
                             notification: this.notificationService,
                             dialog: this.dialogs,
                         }),

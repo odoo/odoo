@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import options from "@web_editor/js/editor/snippets.options";
-import wUtils from "@website/js/utils";
+import weUtils from "@web_editor/js/common/utils";
 
 options.registry.Group = options.Class.extend({
     init() {
@@ -49,7 +49,7 @@ options.registry.Group = options.Class.extend({
      * @see this.selectClass for parameters
      */
     createGroup: async function (previewMode, widgetValue, params) {
-        const result = await wUtils.prompt({
+        const result = await weUtils.prompt({
             id: "editor_new_mail_group_subscribe",
             window_title: _t("New Mail Group"),
             input: _t("Name"),

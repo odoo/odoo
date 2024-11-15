@@ -5,7 +5,6 @@ import { delay } from "@web/core/utils/concurrency";
 import { getDataURLFromFile, redirect } from "@web/core/utils/urls";
 import weUtils from '@web_editor/js/common/utils';
 import { _t } from "@web/core/l10n/translation";
-import { svgToPNG, webpToPNG } from "@website/js/utils";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
@@ -341,10 +340,10 @@ export class PaletteSelectionScreen extends Component {
     async updatePalettes() {
         let img = this.state.logo;
         if (img.startsWith('data:image/svg+xml')) {
-            img = await svgToPNG(img);
+            img = await weUtils.svgToPNG(img);
         }
         if (img.startsWith('data:image/webp')) {
-            img = await webpToPNG(img);
+            img = await weUtils.webpToPNG(img);
         }
         img = img.split(',')[1];
         const [color1, color2] = await this.orm.call('base.document.layout',

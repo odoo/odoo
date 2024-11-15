@@ -1,5 +1,5 @@
 import CourseJoin from "@website_slides/js/slides_course_join";
-import wUtils from "@website/js/utils";
+import weUtils from "@web_editor/js/common/utils";
 
 const CourseJoinWidget = CourseJoin.courseJoinWidget;
 
@@ -27,7 +27,7 @@ CourseJoinWidget.include({
         if (this.channel.channelEnroll === 'payment' && !this.publicUser) {
             const self = this;
             this.beforeJoin().then(function () {
-                wUtils.sendRequest('/shop/cart/update', {
+                weUtils.sendRequest('/shop/cart/update', {
                     product_id: self.productId,
                     express: 1,
                 });

@@ -1,6 +1,6 @@
 import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
 import options from "@web_editor/js/editor/snippets.options";
-import wUtils from '@website/js/utils';
+import weUtils from "@web_editor/js/common/utils";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 import {
@@ -103,7 +103,7 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
                 // and not correctly loaded from cache, we use a clone of the
                 // image to force the loading.
                 smallestColEl.append(imgEl.cloneNode(true));
-                await wUtils.onceAllImagesLoaded(this.$target);
+                await weUtils.onceAllImagesLoaded(this.$target);
             }
             resolve();
         });

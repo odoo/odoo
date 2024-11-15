@@ -1,6 +1,6 @@
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { _t } from "@web/core/l10n/translation";
-import { cloneContentEls } from "@website/js/utils";
+import weUtils from "@web_editor/js/common/utils";
 
 const EmbedCodeWidget = publicWidget.Widget.extend({
     selector: ".s_embed_code",
@@ -35,7 +35,7 @@ const EmbedCodeWidget = publicWidget.Widget.extend({
         // been introduced by a script.
         if (!this.editableMode) {
             const templateContent = this.el.querySelector("template.s_embed_code_saved").content;
-            this.embedCodeEl.replaceChildren(cloneContentEls(templateContent));
+            this.embedCodeEl.replaceChildren(weUtils.cloneContentEls(templateContent));
         }
     },
 });

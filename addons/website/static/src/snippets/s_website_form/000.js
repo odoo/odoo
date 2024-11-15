@@ -20,7 +20,7 @@ import { addLoadingEffect } from "@web/core/utils/ui";
 import { scrollTo } from "@web_editor/js/common/scrolling";
 const DEBOUNCE = 400;
 const { DateTime } = luxon;
-import wUtils from '@website/js/utils';
+import weUtils from "@web_editor/js/common/utils";
 
     publicWidget.registry.EditModeWebsiteForm = publicWidget.Widget.extend({
         selector: '.s_website_form form, form.s_website_form', // !compatibility
@@ -131,7 +131,7 @@ import wUtils from '@website/js/utils';
             // Because, using t-att- inside form make it non-editable
             // Data-fill-with attribute is given during registry and is used by
             // to know which user data should be used to prfill fields.
-            let dataForValues = wUtils.getParsedDataFor(this.el.id, document);
+            let dataForValues = weUtils.getParsedDataFor(this.el.id, document);
             this.editTranslations = !!this._getContext(true).edit_translations;
             // On the "edit_translations" mode, a <span/> with a translated term
             // will replace the attribute value, leading to some inconsistencies

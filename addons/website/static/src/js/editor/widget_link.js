@@ -3,6 +3,7 @@ import { patch } from "@web/core/utils/patch";
 
 import { onWillStart, status, useEffect } from '@odoo/owl';
 import wUtils from "@website/js/utils";
+import weUtils from "@web_editor/js/common/utils";
 import { debounce } from "@web/core/utils/timing";
 
 const LINK_DEBOUNCE = 1000;
@@ -70,7 +71,7 @@ patch(LinkTools.prototype, {
                     $pageAnchor[0].querySelector('we-toggler').textContent = weTogglerText;
                 };
                 const urlWithoutHash = urlInputValue.split("#")[0];
-                wUtils.loadAnchors(urlWithoutHash, this.$editable[0].ownerDocument.body).then(anchors => {
+                weUtils.loadAnchors(urlWithoutHash, this.$editable[0].ownerDocument.body).then(anchors => {
                     for (const anchor of anchors) {
                         const $option = $('<we-button class="dropdown-item">');
                         $option.text(anchor);

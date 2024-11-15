@@ -6,7 +6,7 @@ import {throttleForAnimation} from "@web/core/utils/timing";
 import { isVisible } from "@web/core/utils/ui";
 import { utils as uiUtils, MEDIAS_BREAKPOINTS, SIZES } from "@web/core/ui/ui_service";
 import {setUtmsHtmlDataset} from '@website/js/content/inject_dom';
-import wUtils from "@website/js/utils";
+import weUtils from "@web_editor/js/common/utils";
 import { ObservingCookieWidgetMixin } from "@website/snippets/observing_cookie_mixin";
 
 // TODO In master, export this class too or merge it with PopupWidget
@@ -393,7 +393,7 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
         this._super(...arguments);
         const policyLinkEl = this.el.querySelector(".o_cookies_bar_text_policy");
         if (policyLinkEl && window.location.pathname === new URL(policyLinkEl.href).pathname) {
-            this.toggleEl = wUtils.cloneContentEls(`
+            this.toggleEl = weUtils.cloneContentEls(`
             <button class="o_cookies_bar_toggle btn btn-info btn-sm rounded-circle d-flex gap-2 align-items-center position-fixed pe-auto">
                 <i class="fa fa-eye" alt="" aria-hidden="true"></i> <span class="o_cookies_bar_toggle_label"></span>
             </button>
@@ -426,7 +426,7 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
             this.toggleEl.style.removeProperty("--cookies-bar-toggle-inset-block-end");
         } else {
             // Lazy-loaded images don't have a height yet. We need to await them
-            wUtils.onceAllImagesLoaded($(popupEl)).then(() => {
+            weUtils.onceAllImagesLoaded($(popupEl)).then(() => {
                 const popupHeight = popupEl.querySelector(".modal-content").offsetHeight;
                 const toggleMargin = 8;
                 // Avoid having the toggleEl over another button, but if the

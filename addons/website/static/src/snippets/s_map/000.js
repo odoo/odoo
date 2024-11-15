@@ -1,5 +1,5 @@
 import publicWidget from '@web/legacy/js/public/public_widget';
-import {generateGMapLink, generateGMapIframe} from '@website/js/utils';
+import weUtils from "@web_editor/js/common/utils";
 import { ObservingCookieWidgetMixin } from "@website/snippets/observing_cookie_mixin";
 
 publicWidget.registry.Map = publicWidget.Widget.extend(ObservingCookieWidgetMixin, {
@@ -16,9 +16,9 @@ publicWidget.registry.Map = publicWidget.Widget.extend(ObservingCookieWidgetMixi
             // In such cases, reconstruct the iframe.
             const dataset = this.el.dataset;
             if (dataset.mapAddress) {
-                const iframeEl = generateGMapIframe();
+                const iframeEl = weUtils.generateGMapIframe();
                 this.el.querySelector('.s_map_color_filter').before(iframeEl);
-                this._manageIframeSrc(this.el, generateGMapLink(dataset));
+                this._manageIframeSrc(this.el, weUtils.generateGMapLink(dataset));
             }
         }
         return this._super(...arguments);

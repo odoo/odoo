@@ -5,7 +5,7 @@ import { CheckBox } from '@web/core/checkbox/checkbox';
 import { useService, useBus } from '@web/core/utils/hooks';
 import { Component, xml, useState } from "@odoo/owl";
 import { OptimizeSEODialog } from "@website/components/dialog/seo";
-import { checkAndNotifySEO } from "@website/js/utils";
+import weUtils from "@web_editor/js/common/utils";
 
 const websiteSystrayRegistry = registry.category('website_systray');
 
@@ -63,7 +63,7 @@ class PublishSystray extends Component {
                         res_id: mainObject.id,
                         res_model: mainObject.model,
                     });
-                    checkAndNotifySEO(seo_data, OptimizeSEODialog, {
+                    weUtils.checkAndNotifySEO(seo_data, OptimizeSEODialog, {
                         notification: this.notificationService,
                         dialog: this.dialogService,
                     });

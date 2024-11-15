@@ -11,7 +11,7 @@ import { unslugHtmlDataObject } from '../../services/website_service';
 import {OptimizeSEODialog} from '@website/components/dialog/seo';
 import { WebsiteDialog } from "@website/components/dialog/dialog";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
-import wUtils from '@website/js/utils';
+import weUtils from "@web_editor/js/common/utils";
 import { renderToElement } from "@web/core/utils/render";
 import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
@@ -77,7 +77,7 @@ export class WebsitePreview extends Component {
             this.backendWebsiteId = unslugHtmlDataObject(backendWebsiteRepr).id;
 
             const encodedPath = encodeURIComponent(this.path);
-            if (this.websiteDomain && !wUtils.isHTTPSorNakedDomainRedirection(this.websiteDomain, window.location.origin)) {
+            if (this.websiteDomain && !weUtils.isHTTPSorNakedDomainRedirection(this.websiteDomain, window.location.origin)) {
                 // The website domain might be the naked one while the naked one
                 // is actually redirecting to `www` (or the other way around).
                 // In such a case, we need to consider those 2 from the same
@@ -313,7 +313,7 @@ export class WebsitePreview extends Component {
      * the iframe's url (it is clearer for the user).
      */
     _replaceBrowserUrl() {
-        if (!wUtils.isHTTPSorNakedDomainRedirection(this.iframe.el.contentWindow.location.origin, window.location.origin)) {
+        if (!weUtils.isHTTPSorNakedDomainRedirection(this.iframe.el.contentWindow.location.origin, window.location.origin)) {
             // If another domain ends up loading in the iframe (for example,
             // if the iframe is being redirected and has no initial URL, so it
             // loads "about:blank"), do not push that into the history
