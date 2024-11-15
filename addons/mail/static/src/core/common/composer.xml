@@ -79,14 +79,18 @@
                 </div>
             </div>
             <div class="o-mail-Composer-footer overflow-auto">
-                <AttachmentList
-                    t-if="allowUpload and props.composer.attachments.length > 0"
-                    attachments="props.composer.attachments"
-                    unlinkAttachment.bind="(...args) => attachmentUploader.unlink(...args)"
-                    imagesHeight="75"/>
-                <Picker t-props="picker"/>
+                    <AttachmentList
+                        t-if="allowUpload and props.composer.attachments.length > 0"
+                        attachments="props.composer.attachments"
+                        unlinkAttachment.bind="(...args) => attachmentUploader.unlink(...args)"
+                        imagesHeight="75"/>
+                    <div t-if="thread?.model === 'discuss.channel' and !compact" class="o-discuss-composerFooterHint d-flex">
+                        <span class="o-discuss-composerFooterHint-separator flex-grow-1"/>
+                        <span class="flex-shrink-0 text-muted small ms-1" t-out="props.composer.footerHint"/>
+                    </div>
+                    <Picker t-props="picker"/>
+                </div>
             </div>
-        </div>
         <div t-if="props.composer.message" class="d-flex align-items-center gap-1 w-100">
             <span t-if="props.composer.message" class="text-muted px-1 small" t-out="CANCEL_OR_SAVE_EDIT_TEXT" t-on-click="onClickCancelOrSaveEditText"/>
             <span class="flex-grow-1"/>

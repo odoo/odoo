@@ -2,6 +2,7 @@ import { useSequential } from "@mail/utils/common/hooks";
 import { status, useComponent, useEffect, useState } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
+import { _t } from "@web/core/l10n/translation";
 
 class UseSuggestion {
     constructor(comp) {
@@ -11,6 +12,12 @@ class UseSuggestion {
                 this.update();
                 if (this.search.position === undefined || !this.search.delimiter) {
                     return; // nothing else to fetch
+                }
+                if (this.search.delimiter === ";" && this.search.term.length === 0) {
+                    return; // only trigger fetching canned response when extra character provided
+                }
+                if (this.search.delimiter === ":" && this.search.term.length === 0) {
+                    this.composer.footerHint = _t(`Type ";" to insert a canned response`);
                 }
                 if (this.composer.store.self.type !== "partner") {
                     return; // guests cannot access fetch suggestion method
@@ -63,6 +70,7 @@ class UseSuggestion {
         );
         useEffect(
             () => {
+                this.composer.footerHint = "";
                 this.detect();
             },
             () => [this.composer.selection.start, this.composer.selection.end, this.composer.text]
@@ -173,7 +181,7 @@ class UseSuggestion {
         const text = this.composer.text;
         let before = text.substring(0, this.search.position + 1);
         let after = text.substring(position, text.length);
-        if (this.search.delimiter === ":") {
+        if (this.search.delimiter === ";") {
             before = text.substring(0, this.search.position);
             after = text.substring(position, text.length);
         }

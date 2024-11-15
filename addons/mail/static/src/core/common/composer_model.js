@@ -27,6 +27,7 @@ export class Composer extends Record {
     mentionedChannels = Record.many("Thread");
     cannedResponses = Record.many("mail.canned.response");
     text = "";
+    footerHint = "";
     thread = Record.one("Thread");
     /** @type {{ start: number, end: number, direction: "forward" | "backward" | "none"}}*/
     selection = {

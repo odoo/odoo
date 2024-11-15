@@ -16,7 +16,8 @@ export class SuggestionService {
     }
 
     getSupportedDelimiters(thread) {
-        return [["@"], ["#"], [":"]];
+        // detecting ":" as it was the old delimiter for canned responses and we want to make a hint to the user while user still uses it
+        return [["@"], ["#"], [";"], [":"]];
     }
 
     async fetchSuggestions({ delimiter, term }, { thread } = {}) {
@@ -29,7 +30,7 @@ export class SuggestionService {
             case "#":
                 await this.fetchThreads(cleanedSearchTerm);
                 break;
-            case ":":
+            case ";":
                 await this.store.cannedReponses.fetch();
                 break;
         }
@@ -123,8 +124,10 @@ export class SuggestionService {
             }
             case "#":
                 return this.searchChannelSuggestions(cleanedSearchTerm, sort);
-            case ":":
-                return this.searchCannedResponseSuggestions(cleanedSearchTerm, sort);
+            case ";":
+                if (term.length > 0) {
+                    return this.searchCannedResponseSuggestions(cleanedSearchTerm, sort);
+                }
         }
         return {
             type: undefined,
