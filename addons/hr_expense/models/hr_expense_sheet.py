@@ -597,9 +597,9 @@ class HrExpenseSheet(models.Model):
 
     def action_reset_expense_sheets(self):
         self.filtered(lambda sheet: sheet.state not in {'draft', 'submit'})._check_can_reset_approval()
-        self._do_reverse_moves()
+        self.sudo()._do_reverse_moves()
         self._do_reset_approval()
-        self.account_move_ids = [Command.clear()]
+        self.sudo().account_move_ids = [Command.clear()]
 
     def action_register_payment(self):
         ''' Open the account.payment.register wizard to pay the selected journal entries.
