@@ -306,8 +306,13 @@ export class ProductScreen extends Component {
             .slice(0, 100);
 
         return this.searchWord !== ""
-            ? list
-            : list.sort((a, b) => a.display_name.localeCompare(b.display_name));
+            ? list.sort((a, b) => b.is_favorite - a.is_favorite)
+            : list.sort((a, b) => {
+                  if (b.is_favorite !== a.is_favorite) {
+                      return b.is_favorite - a.is_favorite;
+                  }
+                  return a.display_name.localeCompare(b.display_name);
+              });
     }
 
     getProductsBySearchWord(searchWord) {
