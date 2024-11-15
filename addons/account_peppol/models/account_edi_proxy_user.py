@@ -15,7 +15,7 @@ BATCH_SIZE = 50
 class AccountEdiProxyClientUser(models.Model):
     _inherit = 'account_edi_proxy_client.user'
 
-    peppol_verification_code = fields.Char(string='SMS verification code')
+    peppol_verification_code = fields.Char(string='SMS verification code')  # TODO remove in master
     proxy_type = fields.Selection(selection_add=[('peppol', 'PEPPOL')], ondelete={'peppol': 'cascade'})
 
     # -------------------------------------------------------------------------
@@ -282,11 +282,54 @@ class AccountEdiProxyClientUser(models.Model):
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
 
+    @handle_demo
+    def _peppol_migrate_registration(self):
+        """Migrates AWAY from Odoo's SMP."""
+        self.ensure_one()
+        response = self._call_peppol_proxy(endpoint='/api/peppol/1/migrate_peppol_registration')
+        if migration_key := response.get('migration_key'):
+            self.company_id.account_peppol_migration_key = migration_key
+
+    def _get_company_details(self):
+        self.ensure_one()
+        return {
+            'peppol_company_name': self.company_id.display_name,
+            'peppol_company_vat': self.company_id.vat,
+            'peppol_company_street': self.company_id.street,
+            'peppol_company_city': self.company_id.city,
+            'peppol_company_zip': self.company_id.zip,
+            'peppol_country_code': self.company_id.country_id.code,
+            'peppol_phone_number': self.company_id.account_peppol_phone_number,
+            'peppol_contact_email': self.company_id.account_peppol_contact_email,
+            'peppol_migration_key': self.company_id.account_peppol_migration_key,
+        }
+
+    def _peppol_register_sender(self):
+        self.ensure_one()
+        params = {
+            'company_details': self._get_company_details(),
+        }
+        self._call_peppol_proxy(
+            endpoint='/api/peppol/1/register_sender',
+            params=params,
+        )
+        self.company_id.account_peppol_proxy_state = 'sender'
+
+    def _peppol_register_receiver(self):
+        self.ensure_one()
+        params = {
+            'company_details': self._get_company_details(),
+            'supported_identifiers': list(self.company_id._peppol_supported_document_types())
+        }
+        self._call_peppol_proxy(
+            endpoint='/api/peppol/1/register_receiver',
+            params=params,
+        )
+        self.company_id.account_peppol_proxy_state = 'smp_registration'
+
     def _peppol_register_sender_as_receiver(self):
         self.ensure_one()
-
         company = self.company_id
-        edi_identification = self._get_proxy_identification(company, 'peppol')
 
         if company.account_peppol_proxy_state != 'sender':
             # a participant can only try registering as a receiver if they are currently a sender
@@ -294,10 +337,11 @@ class AccountEdiProxyClientUser(models.Model):
             raise UserError(
                 _('Cannot register a user with a %s application', peppol_state_translated))
 
+        edi_identification = self._get_proxy_identification(company, 'peppol')
         self._check_company_on_peppol(company, edi_identification)
 
         self._call_peppol_proxy(
-            endpoint='/api/peppol/2/register_participant',
+            endpoint='/api/peppol/1/register_sender_as_receiver',
             params={
                 'migration_key': company.account_peppol_migration_key,
                 'supported_identifiers': list(company._peppol_supported_document_types())

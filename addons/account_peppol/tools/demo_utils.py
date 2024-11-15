@@ -74,6 +74,9 @@ def _mock_make_request(func, self, *args, **kwargs):
     return {
         'ack': lambda _user, _args, _kwargs: {},
         'activate_participant': lambda _user, _args, _kwargs: {},
+        'register_sender': lambda _user, _args, _kwargs: {},
+        'register_receiver': lambda _user, _args, _kwargs: {},
+        'register_sender_as_receiver': lambda _user, _args, _kwargs: {},
         'get_all_documents': _mock_get_all_documents,
         'get_document': _mock_get_document,
         'participant_status': lambda _user, _args, _kwargs: {'peppol_state': 'receiver'},
@@ -84,11 +87,14 @@ def _mock_make_request(func, self, *args, **kwargs):
 def _mock_button_verify_partner_endpoint(func, self, *args, **kwargs):
     self.ensure_one()
     old_value = self.peppol_verification_state
+    company = kwargs.get('company') or self.env.company
     endpoint, eas, edi_format = self.peppol_endpoint, self.peppol_eas, self.invoice_edi_format
     if endpoint and eas and edi_format:
-        self.peppol_verification_state = 'valid'
-        self.invoice_sending_method = 'peppol'
-        self._log_verification_state_update(self.env.company, old_value, 'valid')
+        self.with_company(company).peppol_verification_state = 'valid'
+        self.with_company(company).invoice_sending_method = 'peppol'
+        self._log_verification_state_update(company, old_value, 'valid')
+    else:
+        self.with_company(company).peppol_verification_state = 'not_valid'
 
 
 def _mock_get_peppol_verification_state(func, self, *args, **kwargs):
@@ -170,7 +176,7 @@ def _mock_update_user_data(func, self, *args, **kwargs):
 
 
 def _mock_migrate_participant(func, self, *args, **kwargs):
-    self.account_peppol_migration_key = 'I9cz9yw*ruDM%4VSj94s'
+    self.company_id.account_peppol_migration_key = 'demo_migration_key'
 
 
 def _mock_check_company_on_peppol(func, self, *args, **kwargs):
@@ -181,12 +187,13 @@ _demo_behaviour = {
     '_make_request': _mock_make_request,
     'button_account_peppol_check_partner_endpoint': _mock_button_verify_partner_endpoint,
     '_get_peppol_verification_state': _mock_get_peppol_verification_state,
+    '_peppol_migrate_registration': _mock_migrate_participant,
     'button_peppol_sender_registration': _mock_user_creation,
     'button_deregister_peppol_participant': _mock_deregister_participant,
-    'button_migrate_peppol_registration': _mock_migrate_participant,
     'button_update_peppol_user_data': _mock_update_user_data,
     'button_peppol_smp_registration': _mock_receiver_registration,
     'button_check_peppol_verification_code': _mock_check_verification_code,
+    'button_register_peppol_participant': _mock_user_creation,
     '_check_company_on_peppol': _mock_check_company_on_peppol,
 }
 
