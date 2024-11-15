@@ -1,0 +1,13 @@
+
+.o-autocomplete {
+    .ui-menu-item {
+        &.o_replenish_autocomplete_partner_link {
+            > a {
+                color: $link-color;
+                &.ui-state-active:not(.o_m2o_start_typing) {
+                    color: $link-hover-color;
+                }
+            }
+        }
+    }
+}
