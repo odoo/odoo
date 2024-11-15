@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_account_move_filter" model="ir.ui.view">
+            <field name="name">account.move.select</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_account_move_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='status']" position="inside">
+                    <filter string="Veri*Factu State"
+                            name="l10n_es_edi_verifactu_state"
+                            context="{'group_by': 'l10n_es_edi_verifactu_state'}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_account_invoice_filter" model="ir.ui.view">
+            <field name="name">account.invoice.select</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='status']" position="inside">
+                    <filter string="Veri*Factu State"
+                            name="l10n_es_edi_verifactu_state"
+                            context="{'group_by': 'l10n_es_edi_verifactu_state'}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_move_tree" model="ir.ui.view">
+            <field name="name">account.move.tree</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_tree"/>
+            <field name="arch" type="xml">
+                <field name="state" position="after">
+                    <field name="l10n_es_edi_verifactu_state" optional="hide"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_invoice_tree" model="ir.ui.view">
+            <field name="name">account.invoice.tree</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_invoice_tree"/>
+            <field name="arch" type="xml">
+                <field name="state" position="after">
+                    <field name="l10n_es_edi_verifactu_state" optional="hide"/>
+                </field>
+            </field>
+        </record>
+
+
+        <record id="view_move_form_inherit_l10n_es_edi_verifactu" model="ir.ui.view">
+            <field name="name">account.move.form.inherit.l10n_es_edi_verifactu</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@id='header_right_group']" position="inside">
+                    <field name="l10n_es_edi_verifactu_state"/>
+                </xpath>
+                <xpath expr="//button[@name='button_cancel']" position="after">
+                    <field name="l10n_es_edi_verifactu_show_cancel_button" invisible="1"/>
+                    <button name="l10n_es_edi_verifactu_button_cancel"
+                            string="Request Veri*Factu Cancellation"
+                            type="object"
+                            groups="account.group_account_invoice"
+                            invisible="not l10n_es_edi_verifactu_show_cancel_button"/>
+                </xpath>
+                <xpath expr="//notebook" position="inside">
+                    <page
+                        id="verifactu_tab"
+                        string="Veri*Factu"
+                        invisible="not l10n_es_edi_verifactu_record_document_ids"
+                    >
+                        <field name="l10n_es_edi_verifactu_record_document_ids"
+                               string="Veri*Factu Records"
+                               readonly="True">
+                            <tree string="Veri*Factu Records">
+                                <field name="create_date"/>
+                                <field name="id"/>
+                                <field name="response_time"/>
+                                <field name="state"/>
+                                <button type="object" name="unlink" class="fa fa-fw" icon="fa-trash" title="Delete"
+                                        confirm="This operation is irreversible. Do you really want to delete the document?"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
