@@ -500,6 +500,9 @@ class TestUi(odoo.tests.HttpCase):
     def test_website_media_dialog_image_shape(self):
         self.start_tour("/", 'website_media_dialog_image_shape', login='admin')
 
+    def test_website_media_dialog_insert_media(self):
+        self.start_tour("/", "website_media_dialog_insert_media", login="admin")
+
     def test_website_text_font_size(self):
         self.start_tour('/@/', 'website_text_font_size', login='admin', timeout=300)
 
