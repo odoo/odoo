@@ -7,13 +7,13 @@ import json
 from ast import literal_eval
 from datetime import timedelta
 from itertools import chain, product
-from unittest.mock import DEFAULT, patch
+from unittest.mock import patch
 
 from odoo import Command
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.mail.wizard.mail_compose_message import MailComposeMessage
-from odoo.addons.test_mail.models.test_mail_models import MailTestTicket
+from odoo.addons.test_mail.models.mail_test_ticket import MailTestTicket
 from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.fields import Datetime as FieldDatetime
 from odoo.exceptions import AccessError, UserError
