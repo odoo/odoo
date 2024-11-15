@@ -52,7 +52,7 @@ import {
 } from "@spreadsheet/../tests/helpers/pivot";
 import { toRangeData } from "@spreadsheet/../tests/helpers/zones";
 import { FILTER_DATE_OPTION } from "@spreadsheet/assets_backend/constants";
-import { GlobalFiltersUIPlugin } from "@spreadsheet/global_filters/plugins/global_filters_ui_plugin";
+import { GlobalFiltersCoreViewPlugin } from "@spreadsheet/global_filters/plugins/global_filters_core_view_plugin";
 import { RELATIVE_DATE_RANGE_TYPES } from "@spreadsheet/helpers/constants";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 import { PivotUIGlobalFilterPlugin } from "@spreadsheet/pivot/index";
@@ -1453,7 +1453,7 @@ test("Export global filters for excel", async function () {
     await addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER);
     const [filter] = model.getters.getGlobalFilters();
     const filterPlugin = model["handlers"].find(
-        (handler) => handler instanceof GlobalFiltersUIPlugin
+        (handler) => handler instanceof GlobalFiltersCoreViewPlugin
     );
     const exportData = { styles: [], sheets: [] };
     filterPlugin.exportForExcel(exportData);
@@ -1487,7 +1487,7 @@ test("Export from/to global filters for excel", async function () {
     });
     const [filter] = model.getters.getGlobalFilters();
     const filterPlugin = model["handlers"].find(
-        (handler) => handler instanceof GlobalFiltersUIPlugin
+        (handler) => handler instanceof GlobalFiltersCoreViewPlugin
     );
     const exportData = { styles: {}, formats: {}, sheets: [] };
     filterPlugin.exportForExcel(exportData);
