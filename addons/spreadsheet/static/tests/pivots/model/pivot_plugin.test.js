@@ -291,7 +291,7 @@ test("user context is combined with pivot context to fetch data", async function
             {
                 id: "sheet1",
                 cells: {
-                    A1: { content: `=PIVOT.VALUE(1, "probability")` },
+                    A1: '=PIVOT.VALUE(1, "probability")',
                 },
             },
         ],
@@ -348,7 +348,7 @@ test("Context is purged from PivotView related keys", async function (assert) {
             {
                 id: "sheet1",
                 cells: {
-                    A1: { content: `=ODOO.PIVOT(1, "probability")` },
+                    A1: '=ODOO.PIVOT(1, "probability")',
                 },
             },
         ],
@@ -395,8 +395,8 @@ test("fetch metadata only once per model", async function () {
             {
                 id: "sheet1",
                 cells: {
-                    A1: { content: `=PIVOT.VALUE(1, "probability")` },
-                    A2: { content: `=PIVOT.VALUE(2, "probability")` },
+                    A1: '=PIVOT.VALUE(1, "probability")',
+                    A2: '=PIVOT.VALUE(2, "probability")',
                 },
             },
         ],
@@ -544,9 +544,9 @@ test("display loading while data is not fully available", async function () {
             {
                 id: "sheet1",
                 cells: {
-                    A1: { content: `=PIVOT.HEADER(1, "measure", "probability:sum")` },
-                    A2: { content: `=PIVOT.HEADER(1, "product_id", 37)` },
-                    A3: { content: `=PIVOT.VALUE(1, "probability:sum")` },
+                    A1: '=PIVOT.HEADER(1, "measure", "probability:sum")',
+                    A2: '=PIVOT.HEADER(1, "product_id", 37)',
+                    A3: '=PIVOT.VALUE(1, "probability:sum")',
                 },
             },
         ],
@@ -1476,8 +1476,8 @@ test("can import a pivot with a calculated field", async function () {
             {
                 id: "sheet1",
                 cells: {
-                    A1: { content: '=PIVOT.VALUE(1,"probability")' },
-                    A2: { content: '=PIVOT.VALUE(1,"probability*2")' },
+                    A1: '=PIVOT.VALUE(1,"probability")',
+                    A2: '=PIVOT.VALUE(1,"probability*2")',
                 },
             },
         ],

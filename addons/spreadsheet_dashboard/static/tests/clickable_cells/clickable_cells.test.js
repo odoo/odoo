@@ -23,7 +23,7 @@ test("A link in a dashboard should be clickable", async () => {
     const data = {
         sheets: [
             {
-                cells: { A1: { content: "[Odoo](https://odoo.com)" } },
+                cells: { A1: "[Odoo](https://odoo.com)" },
             },
         ],
     };
@@ -36,8 +36,8 @@ test("Invalid pivot/list formulas should not be clickable", async () => {
         sheets: [
             {
                 cells: {
-                    A1: { content: `=PIVOT.VALUE("1", "measure")` },
-                    A2: { content: `=ODOO.LIST("1", 1, "name")` },
+                    A1: '=PIVOT.VALUE("1", "measure")',
+                    A2: '=ODOO.LIST("1", 1, "name")',
                 },
             },
         ],
@@ -52,8 +52,8 @@ test("pivot/list formulas should be clickable", async () => {
         sheets: [
             {
                 cells: {
-                    A1: { content: `=PIVOT.VALUE("1", "probability", "bar", "false")` },
-                    A2: { content: `=ODOO.LIST(1, 1, "foo")` },
+                    A1: { content: '=PIVOT.VALUE("1", "probability", "bar", "false")' },
+                    A2: { content: '=ODOO.LIST(1, 1, "foo")' },
                 },
             },
         ],

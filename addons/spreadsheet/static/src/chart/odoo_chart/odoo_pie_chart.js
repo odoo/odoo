@@ -1,12 +1,19 @@
-import * as spreadsheet from "@odoo/o-spreadsheet";
+import { registries, chartHelpers } from "@odoo/o-spreadsheet";
 import { _t } from "@web/core/l10n/translation";
 import { OdooChart } from "./odoo_chart";
 
-const { chartRegistry } = spreadsheet.registries;
-const { INTERACTIVE_LEGEND_CONFIG } = spreadsheet.constants;
+const { chartRegistry } = registries;
 
-const { getDefaultChartJsRuntime, chartFontColor, ColorGenerator, formatTickValue } =
-    spreadsheet.helpers;
+const {
+    getPieChartDatasets,
+    CHART_COMMON_OPTIONS,
+    getPieChartLayout,
+    getPieChartTooltip,
+    getChartTitle,
+    getPieChartLegend,
+    getChartShowValues,
+    truncateLabel,
+} = chartHelpers;
 
 chartRegistry.add("odoo_pie", {
     match: (type) => type === "odoo_pie",
@@ -22,76 +29,33 @@ chartRegistry.add("odoo_pie", {
 function createOdooChartRuntime(chart, getters) {
     const background = chart.background || "#FFFFFF";
     const { datasets, labels } = chart.dataSource.getData();
-    const locale = getters.getLocale();
-    const dataSetsLength = Math.max(0, ...datasets.map((ds) => ds?.data?.length ?? 0));
-    const backgroundColors = getPieColors(new ColorGenerator(dataSetsLength), datasets);
-    const chartJsConfig = getPieConfiguration(chart, labels, locale, backgroundColors);
-    chartJsConfig.options = {
-        ...chartJsConfig.options,
-        ...getters.getChartDatasetActionCallbacks(chart),
-    };
-    for (const { label, data } of datasets) {
-        const dataset = {
-            label,
-            data,
-            borderColor: "#FFFFFF",
-            backgroundColor: backgroundColors,
-            hoverOffset: 30,
-        };
-        chartJsConfig.data.datasets.push(dataset);
-    }
-    return { background, chartJsConfig };
-}
+    const definition = chart.getDefinition();
+    definition.dataSets = datasets.map(() => ({ trend: definition.trend }));
 
-function getPieConfiguration(chart, labels, locale, colors) {
-    const color = chartFontColor(chart.background);
-    const config = getDefaultChartJsRuntime(chart, labels, color, { locale });
-    config.type = chart.type.replace("odoo_", "");
-    const legend = {
-        ...config.options.legend,
-        display: chart.legendPosition !== "none",
-        ...INTERACTIVE_LEGEND_CONFIG,
-        labels: {
-            color,
-            usePointStyle: true,
-            generateLabels: (_chart) =>
-                _chart.data.labels.map((label, index) => ({
-                    text: label,
-                    strokeStyle: colors[index],
-                    fillStyle: colors[index],
-                    pointStyle: "rect",
-                    hidden: false,
-                    lineWidth: 2,
-                })),
+    const chartData = {
+        labels,
+        dataSetsValues: datasets.map((ds) => ({ data: ds.data, label: ds.label })),
+        locale: getters.getLocale(),
+    };
+
+    const config = {
+        type: "pie",
+        data: {
+            labels: chartData.labels.map(truncateLabel),
+            datasets: getPieChartDatasets(definition, chartData),
         },
-    };
-    legend.position = chart.legendPosition;
-    config.options.plugins = config.options.plugins || {};
-    config.options.plugins.legend = legend;
-    config.options.layout = {
-        padding: { left: 20, right: 20, top: chart.title ? 10 : 25, bottom: 10 },
-    };
-    config.options.plugins.tooltip = {
-        callbacks: {
-            title: function (tooltipItem) {
-                return tooltipItem.label;
+        options: {
+            ...CHART_COMMON_OPTIONS,
+            layout: getPieChartLayout(definition),
+            plugins: {
+                title: getChartTitle(definition),
+                legend: getPieChartLegend(definition, chartData),
+                tooltip: getPieChartTooltip(definition, chartData),
+                chartShowValuesPlugin: getChartShowValues(definition, chartData),
             },
+            ...getters.getChartDatasetActionCallbacks(chart),
         },
     };
 
-    config.options.plugins.chartShowValuesPlugin = {
-        showValues: chart.showValues,
-        callback: formatTickValue({ locale }),
-    };
-    return config;
-}
-
-function getPieColors(colors, dataSetsValues) {
-    const pieColors = [];
-    const maxLength = Math.max(...dataSetsValues.map((ds) => ds.data.length));
-    for (let i = 0; i <= maxLength; i++) {
-        pieColors.push(colors.next());
-    }
-
-    return pieColors;
+    return { background, chartJsConfig: config };
 }

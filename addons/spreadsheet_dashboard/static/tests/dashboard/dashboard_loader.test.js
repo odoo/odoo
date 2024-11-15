@@ -208,7 +208,7 @@ test("async formulas are correctly evaluated", async () => {
             {
                 id: "sheet1",
                 cells: {
-                    A1: { content: `=ODOO.CURRENCY.RATE("EUR","USD")` }, // an async formula
+                    A1: '=ODOO.CURRENCY.RATE("EUR","USD")', // an async formula
                 },
             },
         ],

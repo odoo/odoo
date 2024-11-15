@@ -96,6 +96,8 @@ test("Odoo bar chart runtime loads the data", async () => {
                 borderWidth: 1,
                 data: [1, 3],
                 label: "Count",
+                xAxisID: "x",
+                yAxisID: "y",
             },
         ],
         labels: ["false", "true"],
@@ -163,9 +165,10 @@ test("Odoo line chart runtime loads the data", async () => {
                 borderColor: "#4EA7F2",
                 data: [1, 3],
                 label: "Count",
-                lineTension: 0,
+                tension: 0,
                 fill: false,
                 pointBackgroundColor: "#4EA7F2",
+                yAxisID: "y",
             },
         ],
         labels: ["false", "true"],
@@ -187,7 +190,7 @@ test("Area charts are supported", async () => {
     });
     let runtime = model.getters.getChartRuntime(chartId).chartJsConfig;
     expect(runtime.options.scales.x.stacked).toBe(undefined);
-    expect(runtime.options.scales.y.stacked).toBe(undefined);
+    expect(runtime.options.scales.y.stacked).toBe(false);
     expect(runtime.data.datasets[0].fill).toBe("origin");
     model.dispatch("UPDATE_CHART", {
         definition: { ...definition, fillArea: true, stacked: true },
@@ -412,10 +415,10 @@ test("Bar chart with stacked attribute is supported", async () => {
         sheetId,
     });
     expect(model.getters.getChartRuntime(chartId).chartJsConfig.options.scales.x.stacked).toBe(
-        undefined
+        false
     );
     expect(model.getters.getChartRuntime(chartId).chartJsConfig.options.scales.y.stacked).toBe(
-        undefined
+        false
     );
 });
 
@@ -506,7 +509,7 @@ test("Line chart with stacked attribute is supported", async () => {
         undefined
     );
     expect(model.getters.getChartRuntime(chartId).chartJsConfig.options.scales.y.stacked).toBe(
-        undefined
+        false
     );
 });
 
@@ -892,4 +895,52 @@ test("Odoo line and bar charts display only horizontal grid lines", async () => 
 
     expect(barChartConfig.options.scales.x.grid.display).toBe(false);
     expect(barChartConfig.options.scales.y.grid.display).toBe(true);
+});
+
+test("Can configure the chart datasets", async () => {
+    const searchParams = { comparison: null, context: {}, domain: [], groupBy: [], orderBy: [] };
+    const metaData = {
+        groupBy: ["name", "bar"],
+        measure: "probability",
+        order: null,
+        resModel: "partner",
+    };
+
+    const serverData = getBasicServerData();
+    serverData.models.partner.records = [
+        { name: "Frank", bar: true, probability: 10, foo: 5 },
+        { name: "Marc", bar: false, probability: 2, foo: 5 },
+    ];
+    const { model } = await createSpreadsheetWithChart({
+        type: "odoo_bar",
+        serverData,
+        definition: { type: "odoo_bar", metaData, searchParams },
+    });
+    await waitForDataLoaded(model);
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    let definition = model.getters.getChartDefinition(chartId);
+    expect(definition.dataSets).toEqual([{}, {}]);
+
+    model.dispatch("UPDATE_CHART", {
+        definition: { ...definition, dataSets: [{ label: "My dataset" }, { label: "Second" }] },
+        id: chartId,
+        sheetId,
+    });
+    definition = model.getters.getChartDefinition(chartId);
+    expect(definition.dataSets).toEqual([{ label: "My dataset" }, { label: "Second" }]);
+
+    model.dispatch("UPDATE_CHART", {
+        definition: {
+            ...definition,
+            searchParams: { ...searchParams, domain: [["bar", "=", false]] },
+        },
+        id: chartId,
+        sheetId,
+    });
+    model.dispatch("REFRESH_ALL_DATA_SOURCES");
+    await waitForDataLoaded(model);
+    definition = model.getters.getChartDefinition(chartId);
+    // the second dataset was dropped from the definition since there is now only a single dataset in the data source
+    expect(definition.dataSets).toEqual([{ label: "My dataset" }]);
 });

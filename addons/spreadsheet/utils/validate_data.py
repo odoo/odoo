@@ -28,7 +28,8 @@ def links_urls(data):
     link_prefix = "odoo://view/"
     for sheet in data.get("sheets", []):
         for cell in sheet.get("cells", {}).values():
-            content = cell.get("content", "")
+            # 'cell' was an object in versions <saas-18.1
+            content = cell if isinstance(cell, str) else cell.get("content", "")
             match = re.match(markdown_link_regex, content)
             if match and match.group(2).startswith(link_prefix):
                 urls.append(match.group(2))
