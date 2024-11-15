@@ -3206,7 +3206,7 @@ class MailThread(models.AbstractModel):
                         user.partner_id,
                         "mail.message/inbox",
                         Store(
-                            message.with_user(user).with_context(allowed_company_ids=None),
+                            message.with_user(user).with_context(allowed_company_ids=[]),
                             msg_vals=msg_vals,
                             for_current_user=True,
                             add_followers=True,
