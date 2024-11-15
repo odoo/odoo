@@ -3,6 +3,14 @@ import { Plugin } from "@html_editor/plugin";
 export class SetupEditorPlugin extends Plugin {
     static id = "setup_editor_plugin";
 
+    resources = {
+        clean_for_save_handlers: ({ root }) => {
+            root.querySelectorAll(".o_editable").forEach((el) => {
+                el.classList.remove("o_editable");
+            });
+        },
+    };
+
     setup() {
         // Add the `o_editable` class on the editable elements
         const editableEls = Array.from(this.editable.querySelectorAll("[data-oe-model]"))
@@ -24,15 +32,5 @@ export class SetupEditorPlugin extends Plugin {
             .filter((el) => !el.hasAttribute("data-oe-sanitize-prevent-edition"));
         editableEls.concat(Array.from(this.editable.querySelectorAll(".o_editable")));
         editableEls.forEach((el) => el.classList.add("o_editable"));
-    }
-    handleCommand(command, payload) {
-        switch (command) {
-            case "CLEAN_FOR_SAVE": {
-                this.editable.querySelectorAll(".o_editable").forEach((el) => {
-                    el.classList.remove("o_editable");
-                });
-                break;
-            }
-        }
     }
 }
