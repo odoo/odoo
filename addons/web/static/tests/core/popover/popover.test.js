@@ -1,11 +1,11 @@
 import { expect, getFixture, test } from "@odoo/hoot";
-import { queryOne, resize, scroll, waitFor } from "@odoo/hoot-dom";
-import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
-import { Component, xml } from "@odoo/owl";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
-
+import { queryOne, queryRect, resize, scroll, waitFor } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
+import { Component, useRef, xml } from "@odoo/owl";
+import { defineStyle, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { Popover } from "@web/core/popover/popover";
-import { usePosition } from "@web/core/position/position_hook";
+import { usePopover } from "@web/core/popover/popover_hook";
+import { patch } from "@web/core/utils/patch";
 
 class Content extends Component {
     static props = ["*"];
@@ -38,229 +38,183 @@ test("popover can have more than one custom class", async () => {
 
 test("popover is rendered nearby target (default)", async () => {
     expect.assertions(2);
-    class TestPopover extends Popover {
-        onPositioned(el, { direction, variant }) {
-            expect(direction).toBe("bottom");
-            expect(variant).toBe("middle");
-        }
-    }
-
-    await mountWithCleanup(TestPopover, {
+    await mountWithCleanup(
+        `<div id="target" style="background-color: royalblue; width: 50px; height: 50px; position: absolute; top: 50%; left: 50%;"/>`
+    );
+    await mountWithCleanup(Popover, {
         props: {
-            target: getFixture(),
-            class: "custom-popover popover-custom",
+            target: queryOne("#target"),
             component: Content,
+            onPositioned: (_, { direction, variant }) => {
+                expect(direction).toBe("bottom");
+                expect(variant).toBe("middle");
+            },
         },
+        noMainContainer: true,
     });
 });
 
 test("popover is rendered nearby target (bottom)", async () => {
     expect.assertions(2);
-    class TestPopover extends Popover {
-        onPositioned(el, { direction, variant }) {
-            expect(direction).toBe("bottom");
-            expect(variant).toBe("middle");
-        }
-    }
+    await mountWithCleanup(
+        `<div id="target" style="background-color: royalblue; width: 50px; height: 50px; position: absolute; top: 50%; left: 50%;"/>`
+    );
 
-    await mountWithCleanup(TestPopover, {
+    await mountWithCleanup(Popover, {
         props: {
-            target: getFixture(),
+            target: queryOne("#target"),
             position: "bottom",
             component: Content,
+            onPositioned: (_, { direction, variant }) => {
+                expect(direction).toBe("bottom");
+                expect(variant).toBe("middle");
+            },
         },
+        noMainContainer: true,
     });
 });
 
 test("popover is rendered nearby target (top)", async () => {
     expect.assertions(2);
-    class TestPopover extends Popover {
-        onPositioned(el, { direction, variant }) {
-            expect(direction).toBe("top");
-            expect(variant).toBe("middle");
-        }
-    }
+    await mountWithCleanup(
+        `<div id="target" style="background-color: royalblue; width: 50px; height: 50px; position: absolute; top: 50%; left: 50%;"/>`
+    );
 
-    await mountWithCleanup(TestPopover, {
+    await mountWithCleanup(Popover, {
         props: {
-            target: getFixture(),
+            target: queryOne("#target"),
             position: "top",
             component: Content,
+            onPositioned: (_, { direction, variant }) => {
+                expect(direction).toBe("top");
+                expect(variant).toBe("middle");
+            },
         },
+        noMainContainer: true,
     });
 });
 
 test("popover is rendered nearby target (left)", async () => {
     expect.assertions(2);
-    class TestPopover extends Popover {
-        onPositioned(el, { direction, variant }) {
-            expect(direction).toBe("left");
-            expect(variant).toBe("middle");
-        }
-    }
+    await mountWithCleanup(
+        `<div id="target" style="background-color: royalblue; width: 50px; height: 50px; position: absolute; top: 50%; left: 50%;"/>`
+    );
 
-    await mountWithCleanup(TestPopover, {
+    await mountWithCleanup(Popover, {
         props: {
-            target: getFixture(),
+            target: queryOne("#target"),
             position: "left",
             component: Content,
+            onPositioned: (_, { direction, variant }) => {
+                expect(direction).toBe("left");
+                expect(variant).toBe("middle");
+            },
         },
+        noMainContainer: true,
     });
 });
 
 test("popover is rendered nearby target (right)", async () => {
     expect.assertions(2);
-    class TestPopover extends Popover {
-        onPositioned(el, { direction, variant }) {
-            expect(direction).toBe("right");
-            expect(variant).toBe("middle");
-        }
-    }
+    await mountWithCleanup(
+        `<div id="target" style="background-color: royalblue; width: 50px; height: 50px; position: absolute; top: 50%; left: 50%;"/>`
+    );
 
-    await mountWithCleanup(TestPopover, {
+    await mountWithCleanup(Popover, {
         props: {
-            target: getFixture(),
+            target: queryOne("#target"),
             position: "right",
             component: Content,
+            onPositioned: (_, { direction, variant }) => {
+                expect(direction).toBe("right");
+                expect(variant).toBe("middle");
+            },
         },
+        noMainContainer: true,
     });
 });
 
 test("popover is rendered nearby target (bottom-start)", async () => {
     expect.assertions(2);
-    class TestPopover extends Popover {
-        onPositioned(el, { direction, variant }) {
-            expect(direction).toBe("bottom");
-            expect(variant).toBe("start");
-        }
-    }
+    await mountWithCleanup(
+        `<div id="target" style="background-color: royalblue; width: 50px; height: 50px; position: absolute; top: 50%; left: 50%;"/>`
+    );
 
-    await mountWithCleanup(TestPopover, {
+    await mountWithCleanup(Popover, {
         props: {
-            target: getFixture(),
+            target: queryOne("#target"),
             position: "bottom-start",
             component: Content,
+            onPositioned: (_, { direction, variant }) => {
+                expect(direction).toBe("bottom");
+                expect(variant).toBe("start");
+            },
         },
+        noMainContainer: true,
     });
 });
 
 test("popover is rendered nearby target (bottom-middle)", async () => {
     expect.assertions(2);
-    class TestPopover extends Popover {
-        onPositioned(el, { direction, variant }) {
-            expect(direction).toBe("bottom");
-            expect(variant).toBe("middle");
-        }
-    }
+    await mountWithCleanup(
+        `<div id="target" style="background-color: royalblue; width: 50px; height: 50px; position: absolute; top: 50%; left: 50%;"/>`
+    );
 
-    await mountWithCleanup(TestPopover, {
+    await mountWithCleanup(Popover, {
         props: {
-            target: getFixture(),
+            target: queryOne("#target"),
             position: "bottom-middle",
             component: Content,
+            onPositioned: (_, { direction, variant }) => {
+                expect(direction).toBe("bottom");
+                expect(variant).toBe("middle");
+            },
         },
+        noMainContainer: true,
     });
 });
 
 test("popover is rendered nearby target (bottom-end)", async () => {
     expect.assertions(2);
-    class TestPopover extends Popover {
-        onPositioned(el, { direction, variant }) {
-            expect(direction).toBe("bottom");
-            expect(variant).toBe("end");
-        }
-    }
+    await mountWithCleanup(
+        `<div id="target" style="background-color: royalblue; width: 50px; height: 50px; position: absolute; top: 50%; left: 50%;"/>`
+    );
 
-    await mountWithCleanup(TestPopover, {
+    await mountWithCleanup(Popover, {
         props: {
-            target: getFixture(),
+            target: queryOne("#target"),
             position: "bottom-end",
             component: Content,
+            onPositioned: (_, { direction, variant }) => {
+                expect(direction).toBe("bottom");
+                expect(variant).toBe("end");
+            },
         },
+        noMainContainer: true,
     });
 });
 
 test("popover is rendered nearby target (bottom-fit)", async () => {
     expect.assertions(2);
-    class TestPopover extends Popover {
-        onPositioned(el, { direction, variant }) {
-            expect(direction).toBe("bottom");
-            expect(variant).toBe("fit");
-        }
-    }
+    await mountWithCleanup(
+        `<div id="target" style="background-color: royalblue; width: 50px; height: 50px; position: absolute; top: 50%; left: 50%;"/>`
+    );
 
-    await mountWithCleanup(TestPopover, {
+    await mountWithCleanup(Popover, {
         props: {
-            target: getFixture(),
+            target: queryOne("#target"),
             position: "bottom-fit",
             component: Content,
+            onPositioned: (_, { direction, variant }) => {
+                expect(direction).toBe("bottom");
+                expect(variant).toBe("fit");
+            },
         },
+        noMainContainer: true,
     });
-});
-
-test("reposition popover should properly change classNames", async () => {
-    await resize({ height: 300 });
-
-    class TestPopover extends Popover {
-        setup() {
-            // Don't call super.setup() in order to replace the use of usePosition hook...
-            this.position = usePosition("ref", () => this.props.target, {
-                container,
-                onPositioned: this.onPositioned.bind(this),
-                position: this.props.position,
-            });
-        }
-    }
-
-    // Force some style, to make this test independent of screen size
-    await mountWithCleanup(/* xml */ `
-        <div class="container" style="width: 450px; height: 450px; display: flex; align-items: center; justify-content: center;">
-            <div class="popover-target" style="width: 50px; height: 50px;" />
-        </div>
-    `);
-
-    const container = queryOne(".container");
-
-    await mountWithCleanup(TestPopover, {
-        props: {
-            target: queryOne(".popover-target"),
-            component: Content,
-            animation: false,
-        },
-    });
-
-    const popover = queryOne("#popover");
-    popover.style.height = "100px";
-    popover.style.width = "100px";
-
-    // Should have classes for a "bottom-middle" placement
-    expect(".o_popover").toHaveClass(
-        "o_popover popover mw-100 o-popover--with-arrow bs-popover-bottom o-popover--bm"
-    );
-    expect(".popover-arrow").toHaveClass("popover-arrow start-0 end-0 mx-auto");
-
-    // Change container style and force update
-    container.style.height = "125px"; // height of popper + 1/2 reference
-    container.style.alignItems = "flex-end";
-    await resize();
-    await runAllTimers();
-    await animationFrame();
-
-    expect(".o_popover").toHaveClass(
-        "o_popover popover mw-100 o-popover--with-arrow bs-popover-end o-popover--re"
-    );
-    expect(".popover-arrow").toHaveClass("popover-arrow");
 });
 
 test("within iframe", async () => {
-    let popoverEl;
-    class TestPopover extends Popover {
-        onPositioned(el, { direction }) {
-            popoverEl = el;
-            expect.step(direction);
-        }
-    }
-
     await mountWithCleanup(/* xml */ `
         <iframe class="container" style="height: 200px; display: flex" srcdoc="&lt;div id='target' style='height:400px;'&gt;Within iframe&lt;/div&gt;" />
     `);
@@ -268,11 +222,14 @@ test("within iframe", async () => {
     await waitFor(":iframe #target");
 
     const popoverTarget = queryOne(":iframe #target");
-    await mountWithCleanup(TestPopover, {
+    const comp = await mountWithCleanup(Popover, {
         props: {
             target: popoverTarget,
             component: Content,
             animation: false,
+            onPositioned: (_, { direction }) => {
+                expect.step(direction);
+            },
         },
     });
 
@@ -281,10 +238,10 @@ test("within iframe", async () => {
     expect(":iframe .o_popover").toHaveCount(0);
 
     // The popover should be rendered in the correct position
-    const marginTop = parseFloat(getComputedStyle(popoverEl).marginTop);
+    const marginTop = queryRect(".popover-arrow").height;
     const { top: targetTop, left: targetLeft } = popoverTarget.getBoundingClientRect();
     const { top: iframeTop, left: iframeLeft } = queryOne("iframe").getBoundingClientRect();
-    let popoverBox = popoverEl.getBoundingClientRect();
+    let popoverBox = comp.popoverRef.el.getBoundingClientRect();
     let expectedTop = iframeTop + targetTop + popoverTarget.offsetHeight + marginTop;
     const expectedLeft =
         iframeLeft + targetLeft + (popoverTarget.offsetWidth - popoverBox.width) / 2;
@@ -294,7 +251,7 @@ test("within iframe", async () => {
     await scroll(popoverTarget.ownerDocument.documentElement, { y: 100 });
     await animationFrame();
     expect.verifySteps(["bottom"]);
-    popoverBox = popoverEl.getBoundingClientRect();
+    popoverBox = comp.popoverRef.el.getBoundingClientRect();
     expectedTop -= 100;
     expect(Math.floor(popoverBox.top)).toBe(Math.floor(expectedTop));
     expect(Math.floor(popoverBox.left)).toBe(Math.floor(expectedLeft));
@@ -336,13 +293,6 @@ test("within iframe -- wrong element class", async () => {
 });
 
 test("popover fixed position", async () => {
-    class TestPopover extends Popover {
-        onPositioned() {
-            super.onPositioned(...arguments);
-            expect.step("onPositioned");
-        }
-    }
-
     await mountWithCleanup(/* xml */ `
         <div class="container" style="width: 450px; height: 450px; display: flex">
             <div class="popover-target" style="width: 50px; height: 50px;" />
@@ -351,12 +301,15 @@ test("popover fixed position", async () => {
 
     const container = queryOne(".container");
 
-    await mountWithCleanup(TestPopover, {
+    await mountWithCleanup(Popover, {
         props: {
             target: container,
             position: "bottom-fit",
             fixedPosition: true,
             component: Content,
+            onPositioned() {
+                expect.step("onPositioned");
+            },
         },
     });
 
@@ -392,8 +345,91 @@ test("popover with arrow and onPositioned", async () => {
     });
 
     expect.verifySteps(["onPositioned (from override)", "onPositioned (from props)"]);
-    expect(".o_popover").toHaveClass(
-        "o_popover popover mw-100 o-popover--with-arrow bs-popover-bottom o-popover--bm"
-    );
-    expect(".o_popover > .popover-arrow").toHaveClass("start-0 end-0 mx-auto");
+    expect(".o_popover").toHaveClass("o_popover popover mw-100 bs-popover-auto");
+    expect(".o_popover").toHaveAttribute("data-popper-placement", "bottom");
+    expect(".o_popover > .popover-arrow").toHaveClass("position-absolute z-n1");
+});
+
+test("arrow follows target and can get sucked", async () => {
+    let container;
+    patch(Popover, { animationTime: 0 });
+    patch(Popover.prototype, {
+        get positioningOptions() {
+            return {
+                ...super.positioningOptions,
+                container: () => container.el,
+            };
+        },
+    });
+    defineStyle(/* css */ `
+        .my-popover {
+            height: 100px;
+            width: 100px;
+        }
+        .popover-container {
+            background-color: beige;
+            display: flex;
+            width: 200px;
+            height: 200px;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .popover-target {
+            background-color: bisque;
+            width: 50px;
+            height: 50px;
+        }
+    `);
+    class Parent extends Component {
+        static props = ["*"];
+        static template = xml`
+            <div class="popover-container" t-ref="popover-container">
+                <div class="popover-target" t-ref="popover-target" t-on-click="openPopover"/>
+            </div>
+        `;
+        setup() {
+            container = useRef("popover-container");
+            this.target = useRef("popover-target");
+            this.popover = usePopover(Content, { popoverClass: "my-popover" });
+        }
+    }
+    const parent = await mountWithCleanup(Parent);
+    async function openPopover() {
+        parent.popover.open(parent.target.el);
+        return animationFrame();
+    }
+    await openPopover();
+
+    // Initial position of arrow should be at the middle of the target
+    let arrowRect = queryRect(".popover-arrow");
+    let targetRect = queryRect(".popover-target");
+    const initial = {
+        top: targetRect.bottom,
+        left: targetRect.left + targetRect.width / 2 - arrowRect.width / 2,
+    };
+    expect(".popover-arrow").toHaveRect(initial);
+    expect(".popover-arrow").not.toHaveClass("sucked");
+
+    // Move the target to the left of the container, arrow should still be at the middle
+    container.el.style.justifyContent = "flex-start";
+    await openPopover();
+    arrowRect = queryRect(".popover-arrow");
+    targetRect = queryRect(".popover-target");
+    const newPosition = {
+        top: targetRect.bottom,
+        left: targetRect.left + targetRect.width / 2 - arrowRect.width / 2,
+    };
+    expect(newPosition).not.toBe(initial);
+    expect(".popover-arrow").toHaveRect(newPosition);
+    expect(".popover-arrow").not.toHaveClass("sucked");
+
+    // Move the target further to the left, arrow should get sucked
+    parent.target.el.style.marginLeft = "-100px";
+    await openPopover();
+    arrowRect = queryRect(".popover-arrow");
+    const popoverRect = queryRect(".my-popover");
+    expect(arrowRect.top).toBeWithin(popoverRect.top, popoverRect.bottom - arrowRect.height);
+    expect(arrowRect.left).toBeWithin(popoverRect.left, popoverRect.right - arrowRect.width);
+    expect(".popover-arrow").toHaveClass("sucked");
+    expect(".popover-arrow").not.toBeVisible();
 });

@@ -24,12 +24,6 @@ import {
  * @property {() => void} unlock allows further positioning updates (triggers an update right away)
  */
 
-/** @type {UsePositionOptions} */
-const DEFAULTS = {
-    margin: 0,
-    position: "bottom",
-};
-
 const POSITION_BUS = Symbol("position-bus");
 
 /**
@@ -59,8 +53,9 @@ export function usePosition(refName, getTarget, options = {}) {
             // No compute needed
             return;
         }
-        const repositionOptions = { ...DEFAULTS, ...omit(options, "onPositioned") };
+        const repositionOptions = omit(options, "onPositioned");
         const solution = reposition(ref.el, targetEl, repositionOptions);
+        options.position = `${solution.direction}-${solution.variant}`; // memorize last position
         options.onPositioned?.(ref.el, solution);
     };
 

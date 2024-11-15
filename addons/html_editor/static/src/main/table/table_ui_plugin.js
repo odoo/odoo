@@ -58,13 +58,7 @@ export class TableUIPlugin extends Plugin {
         this.colMenu = this.dependencies.overlay.createOverlay(TableMenu, {
             positionOptions: {
                 position: "top-fit",
-                onPositioned: (el, solution) => {
-                    // Only accept top position as solution.
-                    if (solution.direction !== "top") {
-                        el.style.display = "none"; // avoid glitch
-                        this.colMenu.close();
-                    }
-                },
+                flip: false,
             },
         });
         /** @type {import("@html_editor/core/overlay_plugin").Overlay} */

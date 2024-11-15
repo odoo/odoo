@@ -67,6 +67,7 @@ export class TourPointer extends Component {
         };
         Object.defineProperty(positionOptions, "position", {
             get: () => this.position,
+            set: () => {}, // do not let the position hook change the position
             enumerable: true,
         });
         const position = usePosition(

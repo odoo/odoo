@@ -1,27 +1,29 @@
-/*!rtl:begin:ignore*/
 .o_popover {
-	&.o-popover--with-arrow {
-		margin: map-get($spacers, 2);
+	> .popover-arrow {
+		--safety-margin: calc((var(--popover-arrow-width) / 4) - 1px);
+		--position-min: var(--safety-margin);
+		--position-center: calc(50% - var(--popover-arrow-width) / 2);
+		--position-max: calc(100% - var(--popover-arrow-width) - var(--safety-margin));
+		transition: opacity var(--animation-time), transform var(--animation-time);
+		opacity: 1;
 	}
 
-	.popover-arrow {
-		position: absolute;
+	/* rtl:begin:ignore */
+	&[data-popper-placement^="top"] > .popover-arrow.sucked {
+		opacity: 0;
+		transform: translateY(-100%);
 	}
-
-	&.o-popover--ts .popover-arrow, &.o-popover--bs .popover-arrow {
-		left: $popover-border-radius;
+	&[data-popper-placement^="right"] > .popover-arrow.sucked {
+		opacity: 0;
+		transform: translateX(100%);
 	}
-
-	&.o-popover--te .popover-arrow, &.o-popover--be .popover-arrow {
-		right: $popover-border-radius;
+	&[data-popper-placement^="bottom"] > .popover-arrow.sucked {
+		opacity: 0;
+		transform: translateY(100%);
 	}
-
-	&.o-popover--ls .popover-arrow, &.o-popover--rs .popover-arrow {
-		top: $popover-border-radius;
+	&[data-popper-placement^="left"] > .popover-arrow.sucked {
+		opacity: 0;
+		transform: translateX(-100%);
 	}
-
-	&.o-popover--le .popover-arrow, &.o-popover--re .popover-arrow {
-		bottom: $popover-border-radius;
-	}
+	/* rtl:end:ignore */
 }
-/*!rtl:end:ignore*/
