@@ -30,12 +30,10 @@ export class WebClient extends Component {
             );
         }
         this.localization = localization;
-        let isWebsiteConfiguration = false;
-        if(browser.sessionStorage && (this.currentAction = browser.sessionStorage.getItem("current_action"))){
-            isWebsiteConfiguration = this.currentAction.includes("action_website_configuration");
-        }
+        const storedAction = browser.sessionStorage.getItem("current_action");
+        const lastAction = JSON.parse(storedAction || "{}");
         this.state = useState({
-            fullscreen: isWebsiteConfiguration
+            fullscreen: (lastAction && lastAction.target) || false,
         });
 
         this.title.setParts({ zopenerp: "Odoo" }); // zopenerp is easy to grep
