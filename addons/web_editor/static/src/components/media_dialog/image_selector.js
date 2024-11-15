@@ -89,7 +89,7 @@ export class ImageSelector extends FileSelector {
         this.MIN_ROW_HEIGHT = 128;
 
         this.fileMimetypes = IMAGE_MIMETYPES.join(',');
-        this.isImageField = !!this.props.media?.closest("[data-oe-type=image]") || !!this.env.addFieldImage;
+        this.isImageField = !!(this.props.media && this.props.media.closest("[data-oe-type=image]")) || !!this.env.addFieldImage;
     }
 
     get canLoadMore() {
