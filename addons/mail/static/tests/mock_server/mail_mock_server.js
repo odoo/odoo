@@ -1041,6 +1041,9 @@ async function processRequest(request) {
         ];
         store.add(this.env["mail.canned.response"].search(domain));
     }
+    if (args.messages) {
+        store.add(MailMessage.search([["id", "in", args.messages]]));
+    }
     return store;
 }
 

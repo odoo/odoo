@@ -104,7 +104,7 @@ $o-discuss-talkingColor: lighten($success, 5%);
     }
 }
 
-a.o_mail_redirect, a.o_channel_redirect, a.o-discuss-mention {
+a.o_mail_redirect, a.o_channel_redirect, a.o-discuss-mention, a.o_message_redirect {
     @include rfs($btn-font-size-sm, $btn-font-size-sm);
     border-radius: $btn-border-radius-sm;
     padding: 0rem 0.1875rem;
@@ -112,7 +112,7 @@ a.o_mail_redirect, a.o_channel_redirect, a.o-discuss-mention {
     font-weight: $font-weight-bold;
 }
 
-a.o_mail_redirect, a.o_channel_redirect {
+a.o_mail_redirect, a.o_channel_redirect, a.o_message_redirect {
     @include o-mention-variant(rgba($primary, .15), rgba($primary, .25), darken($primary, 10%), rgba($primary, .2), rgba($primary, .5), darken($primary, 15%));
 }
 

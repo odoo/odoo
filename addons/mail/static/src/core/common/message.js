@@ -34,7 +34,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
-import { url } from "@web/core/utils/urls";
+import { getOrigin, url } from "@web/core/utils/urls";
 import { messageActionsRegistry, useMessageActions } from "./message_actions";
 import { cookie } from "@web/core/browser/cookie";
 import { rpc } from "@web/core/network/rpc";
@@ -191,7 +191,9 @@ export class Message extends Component {
         useEffect(
             () => {
                 if (!this.state.isEditing) {
-                    this.prepareMessageBody(this.messageBody.el);
+                    this.prepareMessageBody(this.messageBody.el)?.then(() =>
+                        this.prepareMessageBody(this.messageBody.el, false)
+                    );
                 }
             },
             () => [this.state.isEditing, this.message.body]
@@ -405,19 +407,45 @@ export class Message extends Component {
     }
 
     /** @param {HTMLElement} bodyEl */
-    prepareMessageBody(bodyEl) {
+    prepareMessageBody(bodyEl, fetchIfNotFound = true) {
         if (!bodyEl) {
             return;
         }
-        const linkEls = bodyEl.querySelectorAll(".o_channel_redirect");
+
+        /** @param {HTMLAnchorElement} el */
+        function getMsgLinkOrigin(el) {
+            return `${el.protocol}//${el.host}`;
+        }
+
+        const linkEls = bodyEl.getElementsByTagName("a");
+        const msgIds = [];
         for (const linkEl of linkEls) {
-            const text = linkEl.textContent.substring(1); // remove '#' prefix
-            const icon = linkEl.classList.contains("o_channel_redirect_asThread")
-                ? "fa fa-comments-o"
-                : "fa fa-hashtag";
-            const iconEl = renderToElement("mail.Message.mentionedChannelIcon", { icon });
-            linkEl.replaceChildren(iconEl);
-            linkEl.insertAdjacentText("beforeend", ` ${text}`);
+            if (linkEl.classList.contains("o_channel_redirect")) {
+                const text = linkEl.textContent.substring(1); // remove '#' prefix
+                const icon = linkEl.classList.contains("o_channel_redirect_asThread")
+                    ? "fa fa-comments-o"
+                    : "fa fa-hashtag";
+                const iconEl = renderToElement("mail.Message.mentionedChannelIcon", { icon });
+                linkEl.replaceChildren(iconEl);
+                linkEl.insertAdjacentText("beforeend", ` ${text}`);
+            } else if (getMsgLinkOrigin(linkEl) === getOrigin()) {
+                const match = linkEl.pathname.match(/^\/mail\/message\/(\d+)$/);
+                if (match) {
+                    const msg = this.store["mail.message"].insert(parseInt(match[1]));
+                    if (fetchIfNotFound && !msg.thread?.displayName) {
+                        msgIds.push(msg.id);
+                    }
+                    const threadName = msg.thread?.displayName ?? _t("Unknown");
+                    const msgLink = renderToElement("mail.Message.messageLink", { threadName });
+                    linkEl.replaceChildren(msgLink);
+                    linkEl.classList.add("o_message_redirect");
+                }
+            }
+        }
+        if (msgIds.length) {
+            return this.store.fetchData({
+                messages: [...(this.store.fetchParams.messages ?? []), ...msgIds],
+            });
         }
     }
 
