@@ -583,6 +583,8 @@ class EventEvent(models.Model):
         return events
 
     def write(self, vals):
+        if 'name' in vals and vals['name'] == '':
+            raise ValidationError("The event title cannot be empty.")
         if 'stage_id' in vals and 'kanban_state' not in vals:
             # reset kanban state when changing stage
             vals['kanban_state'] = 'normal'

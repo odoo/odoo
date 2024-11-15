@@ -7,6 +7,7 @@ from freezegun import freeze_time
 from odoo import Command, exceptions
 from odoo.addons.test_event_full.tests.common import TestEventFullCommon
 from odoo.tests.common import users
+from odoo.exceptions import ValidationError
 
 
 class TestEventEvent(TestEventFullCommon):
@@ -74,6 +75,12 @@ class TestEventEvent(TestEventFullCommon):
             self.assertFalse(event.is_finished)
             self.assertTrue(event.is_ongoing)
             self.assertTrue(event.event_registrations_started)
+
+    def test_event_write_with_empty_name_raises_validation_error(self):
+        test_event = self.env['event.event'].browse(self.test_event.ids)
+
+        with self.assertRaises(ValidationError, msg="The event title cannot be empty."):
+            test_event.write({'name': ''})
 
     @freeze_time('2021-12-01 11:00:00')
     @users('event_user')
