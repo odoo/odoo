@@ -6,16 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-08 10:14+0000\n"
-"PO-Revision-Date: 2024-09-25 09:19-0600\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2024-11-28 09:54+0000\n"
+"PO-Revision-Date: 2024-11-28 09:54+0000\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: \n"
-"Language: es\n"
+"Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.5\n"
 
 #. module: l10n_ar_withholding
 #. odoo-python
@@ -56,7 +55,7 @@ msgstr "<span>Cantidad</span>"
 #. module: l10n_ar_withholding
 #: model_terms:ir.ui.view,arch_db:l10n_ar_withholding.report_payment_receipt_document
 msgid "<span>Base</span>"
-msgstr ""
+msgstr "<span>Base</span>"
 
 #. module: l10n_ar_withholding
 #: model_terms:ir.ui.view,arch_db:l10n_ar_withholding.report_payment_receipt_document
@@ -67,6 +66,16 @@ msgstr "<span>Impuesto</span>"
 #: model_terms:ir.ui.view,arch_db:l10n_ar_withholding.report_payment_receipt_document
 msgid "<span>Withholding number</span>"
 msgstr "<span>Número de retención</span>"
+
+#. module: l10n_ar_withholding
+#. odoo-python
+#: code:addons/l10n_ar_withholding/wizards/account_payment_register.py:0
+msgid ""
+"A payment cannot have withholding if the payment method has no outstanding "
+"accounts"
+msgstr ""
+"Un pago no puede tener retención si el método de pago no tiene cuentas "
+"pendientes."
 
 #. module: l10n_ar_withholding
 #: model_terms:ir.ui.view,arch_db:l10n_ar_withholding.view_afip_earnings_table_scale_form
@@ -100,8 +109,8 @@ msgstr "Plantilla de plan de cuentas"
 msgid ""
 "Account that will be set on lines created to represent the tax base amounts."
 msgstr ""
-"Cuenta que se mostrará en las líneas creadas para representar las cantidades "
-"base de impuestos."
+"Cuenta que se mostrará en las líneas creadas para representar las cantidades"
+" base de impuestos."
 
 #. module: l10n_ar_withholding
 #: model:ir.model.fields,field_description:l10n_ar_withholding.field_l10n_ar_earnings_scale_line__percentage
@@ -155,8 +164,8 @@ msgid ""
 "Base amount = Tax base + tax bases applied this month to the same tax and "
 "partner - non-taxable amount"
 msgstr ""
-"Monto base = Base del impuesto + montos bases de impuesto aplicados este mes "
-"al mismo impuesto y al mismo contacto - mínimo no imponible"
+"Monto base = Base del impuesto + montos bases de impuesto aplicados este mes"
+" al mismo impuesto y al mismo contacto - mínimo no imponible"
 
 #. module: l10n_ar_withholding
 #: model:ir.model.fields,help:l10n_ar_withholding.field_l10n_ar_earnings_scale_line__scale_id
@@ -169,11 +178,11 @@ msgid ""
 "column."
 msgstr ""
 "Cálculo del impuesto de retención: Del monto imponible (monto base + montos "
-"base aplicados en este mes al mismo impuesto y al mismo contacto - mínimo no "
-"imponible) restar el monto inmediato anterior a la columna 'S/ Excedente de "
-"$' para detectar con que fila trabajar y aplicar el porcentaje de dicha fila "
-"al resultado de la resta. Luego agregar a dicho monto el monto de la columna "
-"'$'. "
+"base aplicados en este mes al mismo impuesto y al mismo contacto - mínimo no"
+" imponible) restar el monto inmediato anterior a la columna 'S/ Excedente de"
+" $' para detectar con que fila trabajar y aplicar el porcentaje de dicha "
+"fila al resultado de la resta. Luego agregar a dicho monto el monto de la "
+"columna '$'. "
 
 #. module: l10n_ar_withholding
 #: model_terms:ir.ui.view,arch_db:l10n_ar_withholding.view_account_payment_register_form
@@ -256,7 +265,8 @@ msgstr "Escala de ganancias"
 #: model:ir.model.fields,help:l10n_ar_withholding.field_account_tax__l10n_ar_scale_id
 msgid "Earnings table scale if tax type is 'Earnings Scale'."
 msgstr ""
-"Tabla de escala de ganancias si el tipo de impuesto es 'Escala de ganancias'."
+"Tabla de escala de ganancias si el tipo de impuesto es 'Escala de "
+"ganancias'."
 
 #. module: l10n_ar_withholding
 #: model:ir.model.fields,field_description:l10n_ar_withholding.field_l10n_ar_earnings_scale_line__from_amount
@@ -271,10 +281,10 @@ msgstr "Fecha desde"
 #. module: l10n_ar_withholding
 #: model:ir.model.fields,help:l10n_ar_withholding.field_l10n_ar_earnings_scale_line__excess_amount
 msgid ""
-"From the taxable amount (tax base + tax bases applied this month to same tax "
-"and partner - non-taxable minimum) subtract the immediately previous amount "
-"of this column to detect which row to work with and apply the percentage of "
-"said row to the result of the subtraction."
+"From the taxable amount (tax base + tax bases applied this month to same tax"
+" and partner - non-taxable minimum) subtract the immediately previous amount"
+" of this column to detect which row to work with and apply the percentage of"
+" said row to the result of the subtraction."
 msgstr ""
 "Al monto imponible (monto base + montos bases aplicados este mes al mismo "
 "impuesto y contacto - mínimo no imponible) restar el monto inmediato "
@@ -473,7 +483,7 @@ msgstr "S/ Excedente de $"
 #. module: l10n_ar_withholding
 #: model:ir.model.fields.selection,name:l10n_ar_withholding.selection__account_tax__l10n_ar_type_tax_use__sale
 msgid "Sales"
-msgstr ""
+msgstr "Ventas"
 
 #. module: l10n_ar_withholding
 #: model:ir.model.fields,field_description:l10n_ar_withholding.field_account_tax__l10n_ar_scale_id
@@ -543,15 +553,15 @@ msgid ""
 msgstr ""
 "Para obtener el monto de retención primero al monto retenible (monto base + "
 "montos bases aplicados este mes al mismo impuesto y contacto - mínimo no "
-"imponible) restar el monto inmediato anterior de la columna 'S/ Exced. of $' "
-"para detectar con que fila trabajar y aplicar el porcentaje de dicha fila al "
-"resultado de la resta. Luego sumar el monto de esta columna al resultado de "
-"aplicar el porcentaje."
+"imponible) restar el monto inmediato anterior de la columna 'S/ Exced. of $'"
+" para detectar con que fila trabajar y aplicar el porcentaje de dicha fila "
+"al resultado de la resta. Luego sumar el monto de esta columna al resultado "
+"de aplicar el porcentaje."
 
 #. module: l10n_ar_withholding
 #: model_terms:ir.ui.view,arch_db:l10n_ar_withholding.view_account_payment_form
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #. module: l10n_ar_withholding
 #: model:ir.model.fields,help:l10n_ar_withholding.field_account_tax__l10n_ar_non_taxable_amount
@@ -627,14 +637,14 @@ msgstr ""
 #. module: l10n_ar_withholding
 #: model:ir.model,name:l10n_ar_withholding.model_l10n_ar_earnings_scale
 msgid "l10n_ar.earnings.scale"
-msgstr ""
+msgstr "l10n_ar.earnings.scale"
 
 #. module: l10n_ar_withholding
 #: model:ir.model,name:l10n_ar_withholding.model_l10n_ar_earnings_scale_line
 msgid "l10n_ar.earnings.scale.line"
-msgstr ""
+msgstr "l10n_ar.earnings.scale.line"
 
 #. module: l10n_ar_withholding
 #: model:ir.model.fields,field_description:l10n_ar_withholding.field_l10n_ar_partner_tax__ref
 msgid "ref"
-msgstr ""
+msgstr "ref"
