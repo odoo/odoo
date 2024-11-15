@@ -3,6 +3,7 @@ import { Base } from "./related_models";
 import { _t } from "@web/core/l10n/translation";
 import { roundPrecision } from "@web/core/utils/numbers";
 import { getTaxesAfterFiscalPosition, getTaxesValues } from "./utils/tax_utils";
+import { markup } from "@odoo/owl";
 
 /**
  * ProductProduct, shadow of product.product in python.
@@ -271,6 +272,10 @@ export class ProductTemplate extends Base {
             });
         });
         return isCombinationArchived;
+    }
+
+    get productDescriptionMarkup() {
+        return this.public_description ? markup(this.public_description) : "";
     }
 }
 registry.category("pos_available_models").add(ProductTemplate.pythonModel, ProductTemplate);
