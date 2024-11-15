@@ -27,17 +27,28 @@ beforeEach(() => {
 test('do not send typing notification on typing "/" command', async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "channel" });
-    onRpcBefore("/discuss/channel/notify_typing", () => asyncStep("notify_typing"));
+    let testEnded = false;
+    onRpcBefore("/discuss/channel/notify_typing", () => {
+        if (!testEnded) {
+            asyncStep("notify_typing");
+        }
+    });
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "/");
     await waitForSteps([]); // No rpc done
+    testEnded = true;
 });
 
 test('do not send typing notification on typing after selecting suggestion from "/" command', async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "channel" });
-    onRpcBefore("/discuss/channel/notify_typing", () => asyncStep("notify_typing"));
+    let testEnded = false;
+    onRpcBefore("/discuss/channel/notify_typing", () => {
+        if (!testEnded) {
+            asyncStep("notify_typing");
+        }
+    });
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "/");
@@ -45,18 +56,25 @@ test('do not send typing notification on typing after selecting suggestion from 
     await contains(".o-mail-Composer-suggestion strong", { count: 0 });
     await insertText(".o-mail-Composer-input", " is user?");
     await waitForSteps([]); // No rpc done"
+    testEnded = true;
 });
 
 test("send is_typing on adding emoji", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "channel" });
-    onRpcBefore("/discuss/channel/notify_typing", () => asyncStep("notify_typing"));
+    let testEnded = false;
+    onRpcBefore("/discuss/channel/notify_typing", () => {
+        if (!testEnded) {
+            asyncStep("notify_typing");
+        }
+    });
     await start();
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await insertText("input[placeholder='Search for an emoji']", "Santa Claus");
     await click(".o-Emoji", { text: "🎅" });
     await waitForSteps(["notify_typing"]);
+    testEnded = true;
 });
 
 test("add an emoji after a command", async () => {
