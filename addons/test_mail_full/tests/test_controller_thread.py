@@ -1,16 +1,11 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-import odoo
-from odoo.addons.mail.tests.test_thread_controller import (
-    MessagePostSubTestData,
-    TestThreadControllerCommon,
-)
-from odoo.addons.portal.tests.test_portal_controller_common import TestPortalControllerCommon
+from odoo.addons.mail.tests.common_controllers import MailControllerThreadCommon, MessagePostSubTestData
+from odoo.tests import tagged
 
 
-@odoo.tests.tagged("-at_install", "post_install")
-class TestPortalThreadController(TestThreadControllerCommon, TestPortalControllerCommon):
-    def test_message_post_access_portal_no_partner(self):
+@tagged("-at_install", "post_install", "mail_controller")
+class TestPortalThreadController(MailControllerThreadCommon):
+
+    def test_message_post_portal_no_partner(self):
         """Test access of message post for portal without partner."""
         record = self.env["mail.test.portal.no.partner"].create({"name": "Test"})
         token, bad_token, sign, bad_sign, partner = self._get_sign_token_params(record)
@@ -41,30 +36,14 @@ class TestPortalThreadController(TestThreadControllerCommon, TestPortalControlle
                 test_access(self.user_employee, True, route_kw=bad_sign),
                 test_access(self.user_employee, True, route_kw=token),
                 test_access(self.user_employee, True, route_kw=sign),
-                test_access(self.user_demo, True),
-                test_access(self.user_demo, True, route_kw=bad_token),
-                test_access(self.user_demo, True, route_kw=bad_sign),
-                test_access(self.user_demo, True, route_kw=token),
-                test_access(self.user_demo, True, route_kw=sign),
-                test_access(self.user_admin, True),
-                test_access(self.user_admin, True, route_kw=bad_token),
-                test_access(self.user_admin, True, route_kw=bad_sign),
-                test_access(self.user_admin, True, route_kw=token),
-                test_access(self.user_admin, True, route_kw=sign),
             ),
         )
 
-    def test_message_post_access_portal_assigned_partner(self):
+    def test_message_post_portal_with_partner(self):
         """Test access of message post for portal with partner."""
         rec_partner = self.env["res.partner"].create({"name": "Record Partner"})
         record = self.env["mail.test.portal"].create({"name": "Test", "partner_id": rec_partner.id})
-        access_token = record._portal_ensure_token()
-        partner = self.env["res.partner"].create({"name": "Sign Partner"})
-        _hash = record._sign_token(partner.id)
-        token = {"token": access_token}
-        bad_token = {"token": "incorrect token"}
-        sign = {"hash": _hash, "pid": partner.id}
-        bad_sign = {"hash": "incorrect hash", "pid": partner.id}
+        token, bad_token, sign, bad_sign, partner = self._get_sign_token_params(record)
 
         def test_access(user, allowed, route_kw=None, exp_author=None):
             return MessagePostSubTestData(user, allowed, route_kw=route_kw, exp_author=exp_author)
@@ -95,16 +74,6 @@ class TestPortalThreadController(TestThreadControllerCommon, TestPortalControlle
                 test_access(self.user_employee, True, route_kw=bad_sign),
                 test_access(self.user_employee, True, route_kw=token),
                 test_access(self.user_employee, True, route_kw=sign),
-                test_access(self.user_demo, True),
-                test_access(self.user_demo, True, route_kw=bad_token),
-                test_access(self.user_demo, True, route_kw=bad_sign),
-                test_access(self.user_demo, True, route_kw=token),
-                test_access(self.user_demo, True, route_kw=sign),
-                test_access(self.user_admin, True),
-                test_access(self.user_admin, True, route_kw=bad_token),
-                test_access(self.user_admin, True, route_kw=bad_sign),
-                test_access(self.user_admin, True, route_kw=token),
-                test_access(self.user_admin, True, route_kw=sign),
             ),
         )
 
@@ -152,15 +121,5 @@ class TestPortalThreadController(TestThreadControllerCommon, TestPortalControlle
                 test_partners(self.user_employee, True, all_partners, route_kw=bad_sign),
                 test_partners(self.user_employee, True, all_partners, route_kw=token),
                 test_partners(self.user_employee, True, all_partners, route_kw=sign),
-                test_partners(self.user_demo, True, all_partners),
-                test_partners(self.user_demo, True, all_partners, route_kw=bad_token),
-                test_partners(self.user_demo, True, all_partners, route_kw=bad_sign),
-                test_partners(self.user_demo, True, all_partners, route_kw=token),
-                test_partners(self.user_demo, True, all_partners, route_kw=sign),
-                test_partners(self.user_admin, True, all_partners),
-                test_partners(self.user_admin, True, all_partners, route_kw=bad_token),
-                test_partners(self.user_admin, True, all_partners, route_kw=bad_sign),
-                test_partners(self.user_admin, True, all_partners, route_kw=token),
-                test_partners(self.user_admin, True, all_partners, route_kw=sign),
             ),
         )

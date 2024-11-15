@@ -1,15 +1,9 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-import odoo
-from odoo.addons.mail.tests.test_thread_controller import (
-    MessagePostSubTestData,
-    TestThreadControllerCommon,
-)
-from odoo.addons.portal.tests.test_portal_controller_common import TestPortalControllerCommon
+from odoo.addons.mail.tests.common_controllers import MailControllerThreadCommon, MessagePostSubTestData
+from odoo.tests import tagged
 
 
-@odoo.tests.tagged("-at_install", "post_install")
-class TestProjectThreadController(TestThreadControllerCommon, TestPortalControllerCommon):
+@tagged("-at_install", "post_install", "mail_controller")
+class TestProjectThreadController(MailControllerThreadCommon):
     def test_message_post_partner_ids_project(self):
         """Test partner_ids of message_post for task.
         Followers of task and followers of related project are allowed to be

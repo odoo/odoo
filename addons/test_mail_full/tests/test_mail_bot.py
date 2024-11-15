@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from unittest.mock import patch
 
 from odoo.addons.mail.tests.common import MailCommon
@@ -14,7 +11,7 @@ class TestOdoobot(MailCommon, TestRecipients):
 
     @classmethod
     def setUpClass(cls):
-        super(TestOdoobot, cls).setUpClass()
+        super().setUpClass()
         cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
 
         cls.odoobot = cls.env.ref("base.partner_root")

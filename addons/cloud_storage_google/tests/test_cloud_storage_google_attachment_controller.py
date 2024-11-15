@@ -1,25 +1,19 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import json
 import re
 
 import odoo
 from odoo.tools.misc import file_open
-from odoo.addons.cloud_storage_google.tests.test_cloud_storage_google import (
-    TestCloudStorageGoogleCommon,
-)
-from odoo.addons.mail.tests.test_attachment_controller import TestAttachmentControllerCommon
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.addons.cloud_storage_google.tests.test_cloud_storage_google import TestCloudStorageGoogleCommon
 
 
-@odoo.tests.tagged("-at_install", "post_install")
-class TestCloudStorageAttachmentController(
-    TestAttachmentControllerCommon, TestCloudStorageGoogleCommon
-):
+@odoo.tests.tagged("-at_install", "post_install", "mail_controller")
+class TestCloudStorageAttachmentController(HttpCaseWithUserDemo, TestCloudStorageGoogleCommon):
     def test_cloud_storage_google_attachment_upload(self):
         """Test uploading an attachment with google cloud storage."""
         thread = self.env["res.partner"].create({"name": "Test"})
         self.env["ir.config_parameter"].set_param("cloud_storage_provider", "google")
-        self._authenticate_user(self.user_demo)
+        self.authenticate(self.user_demo.login, self.user_demo.login)
 
         with file_open("addons/web/__init__.py") as file:
             res = self.url_open(
