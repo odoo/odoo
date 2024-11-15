@@ -19,6 +19,7 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
             // Go by default to home category
 
             Chrome.startPoS(),
+            ProductScreen.firstProductIsFavorite("Whiteboard Pen"),
             ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1.0", "5.10"),
             ProductScreen.clickDisplayedProduct("Desk Organizer", true, "2.0", "10.20"),
             ProductScreen.clickDisplayedProduct("Letter Tray", true, "1.0", "5.28"),
