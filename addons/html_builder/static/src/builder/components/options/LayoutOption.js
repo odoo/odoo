@@ -43,7 +43,7 @@ export class LayoutOption extends Component {
             return;
         }
         _toggleGridMode(this.env.editingElement.querySelector(".container"));
-        this.env.editor.dispatch("ADD_STEP");
+        this.env.editor.shared.history.addStep();
     }
     setColumnLayout() {
         // Toggle normal mode only if grid mode was activated (as it's in
@@ -70,7 +70,7 @@ export class LayoutOption extends Component {
         rowEl.style.removeProperty("--grid-item-padding-y");
         rowEl.style.removeProperty("gap");
         // todo: should use the shared/dependencies/plugins instead when the cleaning PR is merged?
-        this.env.editor.dispatch("ADD_STEP");
+        this.env.editor.shared.history.addStep();
     }
     changeColumnCount(nbColumns) {
         console.warn(`changeColumnCount:`, nbColumns);

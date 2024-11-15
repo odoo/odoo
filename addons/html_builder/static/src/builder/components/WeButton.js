@@ -31,7 +31,9 @@ export class WeButton extends Component {
                 }
             });
         }
-        this.call = this.env.editor.shared.makePreviewableOperation(this.callActions.bind(this));
+        this.call = this.env.editor.shared.history.makePreviewableOperation(
+            this.callActions.bind(this)
+        );
     }
     callActions() {
         this.env.buttonGroupBus?.trigger("BEFORE_CALL_ACTIONS");

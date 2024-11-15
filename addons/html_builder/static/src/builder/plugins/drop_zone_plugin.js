@@ -2,7 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { closest, touching } from "@web/core/utils/ui";
 
 export class DropZonePlugin extends Plugin {
-    static name = "dropzone";
+    static id = "dropzone";
     static dependencies = ["history"];
     static shared = [
         "displayDropZone",
@@ -14,7 +14,7 @@ export class DropZonePlugin extends Plugin {
 
     displayDropZone(selector) {
         this.clearDropZone();
-        this.historySavePointRestore = this.shared.makeSavePoint();
+        this.historySavePointRestore = this.dependencies.history.makeSavePoint();
         const targets = this.editable.querySelectorAll(selector);
 
         const createDropZone = () => {
@@ -35,7 +35,7 @@ export class DropZonePlugin extends Plugin {
         }
 
         // TODO: hack: we need to add a step here to avoid floating content (remove history warning)
-        this.dispatch("ADD_STEP");
+        this.dependencies.history.addStep();
     }
 
     clearDropZone() {
@@ -74,7 +74,7 @@ export class DropZonePlugin extends Plugin {
         }
         this.clearDropZone();
         addAfter ? target.after(elementToAdd) : target.before(elementToAdd);
-        this.dispatch("ADD_STEP");
+        this.dependencies.history.addStep();
     }
 
     addElementToCenter(elementToAdd) {
@@ -89,6 +89,6 @@ export class DropZonePlugin extends Plugin {
         }
         this.clearDropZone();
         addAfter ? target.after(elementToAdd) : target.before(elementToAdd);
-        this.dispatch("ADD_STEP");
+        this.dependencies.history.addStep();
     }
 }
