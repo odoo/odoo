@@ -31,8 +31,15 @@ class ProductTemplate(models.Model):
     )
     lot_valuated = fields.Boolean(
         "Valuation by Lot/Serial number",
+        compute='_compute_lot_valuated', store=True, readonly=False,
         help="If checked, the valuation will be specific by Lot/Serial number.",
     )
+
+    @api.depends('tracking')
+    def _compute_lot_valuated(self):
+        for product in self:
+            if product.tracking == 'none':
+                product.lot_valuated = False
 
     @api.depends_context('company')
     @api.depends('categ_id.property_cost_method')
