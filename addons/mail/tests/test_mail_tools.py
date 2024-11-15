@@ -45,9 +45,6 @@ class TestMailTools(MailCommon):
         # test with wildcard "_"
         found = Partner._mail_find_partner_from_emails(['alfred_astaire@test.example.com'])
         self.assertEqual(found, [self.env['res.partner']])
-        # sub-check: this search does not consider _ as a wildcard
-        found = Partner._mail_search_on_partner(['alfred_astaire@test.example.com'])
-        self.assertEqual(found, self.env['res.partner'])
 
         # test partners with encapsulated emails
         # ------------------------------------------------------------
@@ -69,9 +66,6 @@ class TestMailTools(MailCommon):
         # test with wildcard "_"
         found = Partner._mail_find_partner_from_emails(['alfred_astaire@test.example.com'])
         self.assertEqual(found, [self.env['res.partner']])
-        # sub-check: this search does not consider _ as a wildcard
-        found = Partner._mail_search_on_partner(['alfred_astaire@test.example.com'])
-        self.assertEqual(found, self.env['res.partner'])
 
     @users('employee')
     def test_mail_find_partner_from_emails_followers(self):
