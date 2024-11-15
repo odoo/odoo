@@ -14,7 +14,7 @@ export class NumberInput extends Component {
     setup() {
         useWeComponent();
         this.state = useState(this.getState());
-        this.applyValue = this.env.editor.shared.makePreviewableOperation((value) => {
+        this.applyValue = this.env.editor.shared.history.makePreviewableOperation((value) => {
             for (const [actionId, actionParam] of this.getActions()) {
                 actionsRegistry.get(actionId).apply({
                     editingElement: this.env.editingElement,
