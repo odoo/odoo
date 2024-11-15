@@ -30,9 +30,6 @@ class ProductTemplate(models.Model):
         # Deletion forbidden (at least through unlink)
         return self.env.ref('uom.product_uom_unit')
 
-    def _get_default_uom_po_id(self):
-        return self.default_get(['uom_id']).get('uom_id') or self._get_default_uom_id()
-
     def _read_group_categ_id(self, categories, domain, order):
         category_ids = self.env.context.get('default_categ_id')
         if not category_ids and self.env.context.get('group_expand'):
@@ -100,7 +97,7 @@ class ProductTemplate(models.Model):
     uom_name = fields.Char(string='Unit of Measure Name', related='uom_id.name', readonly=True)
     uom_po_id = fields.Many2one(
         'uom.uom', 'Purchase UoM',
-        default=_get_default_uom_po_id, required=True,
+        compute='_compute_uom_po_id', required=True, readonly=False, store=True, precompute=True,
         help="Default unit of measure used for purchase orders. It must be in the same category as the default unit of measure.")
     company_id = fields.Many2one(
         'res.company', 'Company', index=True)
@@ -159,6 +156,12 @@ class ProductTemplate(models.Model):
     )
     # Properties
     product_properties = fields.Properties('Properties', definition='categ_id.product_properties_definition', copy=True)
+
+    @api.depends('uom_id')
+    def _compute_uom_po_id(self):
+        for template in self:
+            if not template.uom_po_id or template.uom_id.category_id != template.uom_po_id.category_id:
+                template.uom_po_id = template.uom_id
 
     def _compute_item_count(self):
         for template in self:
@@ -451,11 +454,6 @@ class ProductTemplate(models.Model):
         if self.uom_id:
             self.uom_po_id = self.uom_id.id
 
-    @api.onchange('uom_po_id')
-    def _onchange_uom(self):
-        if self.uom_id and self.uom_po_id and self.uom_id.category_id != self.uom_po_id.category_id:
-            self.uom_po_id = self.uom_id
-
     @api.onchange('type')
     def _onchange_type(self):
         # Do nothing but needed for inheritance
@@ -501,11 +499,6 @@ class ProductTemplate(models.Model):
 
     def write(self, vals):
         self._sanitize_vals(vals)
-        if 'uom_id' in vals or 'uom_po_id' in vals:
-            uom_id = self.env['uom.uom'].browse(vals.get('uom_id')) or self.uom_id
-            uom_po_id = self.env['uom.uom'].browse(vals.get('uom_po_id')) or self.uom_po_id
-            if uom_id and uom_po_id and uom_id.category_id != uom_po_id.category_id:
-                vals['uom_po_id'] = uom_id.id
         res = super(ProductTemplate, self).write(vals)
         if self._context.get("create_product_product", True) and 'attribute_line_ids' in vals or (vals.get('active') and len(self.product_variant_ids) == 0):
             self._create_variant_ids()
