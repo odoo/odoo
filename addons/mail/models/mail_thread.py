@@ -2020,12 +2020,6 @@ class MailThread(models.AbstractModel):
         # return a search on partner to filter results current user should not see (multi company for example)
         return self.env['res.partner'].search([('id', 'in', partners.ids)])
 
-    def _mail_search_on_partner(self, normalized_emails, extra_domain=False):
-        domain = [('email_normalized', 'in', normalized_emails)]
-        if extra_domain:
-            domain = expression.AND([domain, extra_domain])
-        return self.env['res.partner'].search(domain)
-
     def _mail_find_user_for_gateway(self, email_value, alias=None):
         """ Utility method to find user from email address that can create documents
         in the target model. Purpose is to link document creation to users whenever
@@ -2096,54 +2090,27 @@ class MailThread(models.AbstractModel):
           matching partner is an empty record.
         """
         if records and isinstance(records, self.pool['mail.thread']):
-            followers = records.mapped('message_partner_ids')
+            results = records._partner_find_from_emails(
+                dict.fromkeys(records, emails), avoid_alias=True, force_create=force_create,
+            )
+            all_partners = self.env['res.partner'].browse(
+                {partner.id for partners in results.values() for partner in partners if partner.id}
+            )
         else:
-            followers = self.env['res.partner']
-
-        # first, build a normalized email list and remove those linked to aliases
-        # to avoid adding aliases as partners. In case of multi-email input, use
-        # the first found valid one to be tolerant against multi emails encoding
-        normalized_emails = [email_normalized
-                             for email_normalized in (email_normalize(contact, strict=False) for contact in emails)
-                             if email_normalized
-                            ]
-        matching_aliases = self.env['mail.alias'].sudo().search([('alias_full_name', 'in', normalized_emails)])
-        if matching_aliases:
-            normalized_emails = [email for email in normalized_emails if email not in matching_aliases.mapped('alias_full_name')]
-
-        done_partners = [follower for follower in followers if follower.email_normalized in normalized_emails]
-        remaining = [email for email in normalized_emails if email not in [partner.email_normalized for partner in done_partners]]
-
-        user_partners = self._mail_search_on_user(remaining, extra_domain=extra_domain)
-        done_partners += [user_partner for user_partner in user_partners]
-        remaining = [email for email in normalized_emails if email not in [partner.email_normalized for partner in done_partners]]
-
-        partners = self._mail_search_on_partner(remaining, extra_domain=extra_domain)
-        done_partners += [partner for partner in partners]
-
-        # prioritize current user if exists in list, and partners with matching company ids
-        if company_fname := records and records._mail_get_company_field():
-            def sort_key(p):
-                return (
-                    self.env.user.partner_id == p,           # prioritize user
-                    p.company_id in records[company_fname],  # then partner associated w/ records
-                    not p.company_id,                        # else pick partner w/out company_id
-                )
-        else:
-            def sort_key(p):
-                return (self.env.user.partner_id == p, not p.company_id)
-
-        done_partners.sort(key=sort_key, reverse=True)  # reverse because False < True
-
-        # iterate and keep ordering
-        partners = []
-        for contact in emails:
-            normalized_email = email_normalize(contact, strict=False)
-            partner = next((partner for partner in done_partners if partner.email_normalized == normalized_email), self.env['res.partner'])
-            if not partner and force_create and normalized_email in normalized_emails:
-                partner = self.env['res.partner'].browse(self.env['res.partner'].name_create(contact)[0])
-            partners.append(partner)
-        return partners
+            all_partners = self.env['mail.thread']._partner_find_from_emails_single(
+                emails, avoid_alias=True, force_create=force_create,
+            )
+        results = []
+        for email in emails:
+            email_key = email_normalize(email) or email
+            if not email_key:
+                results.append(self.env['res.partner'])
+            else:
+                results.append(next(
+                    (p for p in all_partners if p.email_normalized == email_key or p.email == email_key),
+                    self.env['res.partner']
+                ))
+        return results
 
     def _message_partner_info_from_emails(self, emails, link_mail=False):
         """ Convert a list of emails into a list partner_ids and a list
