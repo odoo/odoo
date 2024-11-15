@@ -56,6 +56,7 @@ export class SnippetsMenu extends Component {
         closeEditor: { type: Function },
         snippetsName: { type: String },
         toggleMobile: { type: Function },
+        overlayRef: { type: Function },
     };
 
     setup() {
