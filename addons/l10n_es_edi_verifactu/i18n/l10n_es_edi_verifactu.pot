@@ -1,0 +1,686 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_es_edi_verifactu
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-04-11 15:27+0000\n"
+"PO-Revision-Date: 2025-04-11 15:27+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,help:l10n_es_edi_verifactu.field_account_bank_statement_line__l10n_es_edi_verifactu_state
+#: model:ir.model.fields,help:l10n_es_edi_verifactu.field_account_move__l10n_es_edi_verifactu_state
+#: model:ir.model.fields,help:l10n_es_edi_verifactu.field_account_payment__l10n_es_edi_verifactu_state
+msgid ""
+"- Rejected: Successfully sent to the AEAT, but it was rejected during validation\n"
+"                - Registered with Errors: Registered at the AEAT, but the AEAT has some issues with the sent document\n"
+"                - Accepted: Registered by the AEAT without errors\n"
+"                - Cancelled: Registered by the AEAT as cancelled"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,help:l10n_es_edi_verifactu.field_account_bank_statement_line__l10n_es_edi_verifactu_error_level
+#: model:ir.model.fields,help:l10n_es_edi_verifactu.field_account_move__l10n_es_edi_verifactu_error_level
+#: model:ir.model.fields,help:l10n_es_edi_verifactu.field_account_payment__l10n_es_edi_verifactu_error_level
+#: model:ir.model.fields,help:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__state
+msgid ""
+"- Rejected: Successfully sent to the AEAT, but it was rejected during validation\n"
+"                - Registered with Errors: Registered at the AEAT, but the AEAT has some issues with the sent record\n"
+"                - Accepted: Registered by the AEAT without errors"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu.report_invoice_document
+msgid "<strong class=\"text-center\">QR tributario:</strong>"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu.report_invoice_document
+msgid "<strong class=\"text-center\">VERI*FACTU</strong>"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields.selection,name:l10n_es_edi_verifactu.selection__account_move__l10n_es_edi_verifactu_state__accepted
+#: model:ir.model.fields.selection,name:l10n_es_edi_verifactu.selection__l10n_es_edi_verifactu_document__state__accepted
+msgid "Accepted"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model,name:l10n_es_edi_verifactu.model_account_chart_template
+msgid "Account Chart Template"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model,name:l10n_es_edi_verifactu.model_account_move_send
+msgid "Account Move Send"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu.res_config_settings_view_form
+msgid "Automatically generate and send Veri*Factu records to the AEAT."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields.selection,name:l10n_es_edi_verifactu.selection__l10n_es_edi_verifactu_document__document_type__cancellation
+msgid "Cancellation"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields.selection,name:l10n_es_edi_verifactu.selection__account_move__l10n_es_edi_verifactu_state__cancelled
+msgid "Cancelled"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.ui.menu,name:l10n_es_edi_verifactu.menu_l10n_es_edi_verifactu_certificates
+msgid "Certificates"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.actions.act_window,name:l10n_es_edi_verifactu.l10n_es_edi_verifactu_certificate_action
+msgid "Certificates for Veri*Factu"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__chain_index
+msgid "Chain Index"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model,name:l10n_es_edi_verifactu.model_res_company
+msgid "Companies"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_certificate__company_id
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__company_id
+msgid "Company"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model,name:l10n_es_edi_verifactu.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,help:l10n_es_edi_verifactu.field_account_move_send__l10n_es_edi_verifactu_send_checkbox
+msgid ""
+"Create a Veri*Factu Document to register or update the record and send it to"
+" the AEAT."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model_terms:ir.actions.act_window,help:l10n_es_edi_verifactu.l10n_es_edi_verifactu_certificate_action
+msgid "Create the first certificate"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_certificate__create_uid
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_certificate__create_date
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_certificate__date_end
+msgid "Date End"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_certificate__date_start
+msgid "Date Start"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_certificate__display_name
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__document_type
+msgid "Document Type"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_res_company__l10n_es_edi_verifactu_required
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_res_config_settings__l10n_es_edi_verifactu_required
+msgid "Enable Veri*Factu"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/models/verifactu_document.py:0
+#: code:addons/l10n_es_edi_verifactu/tests/common.py:0
+#, python-format
+msgid "Error"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__errors
+msgid "Errors"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_certificate__content
+msgid "File"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_certificate__id
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__id
+msgid "ID"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,help:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__chain_index
+msgid ""
+"Index in the chain of Veri*Factu Documents. It is only set if the XML "
+"generation was succesful."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model,name:l10n_es_edi_verifactu.model_account_move
+msgid "Journal Entry"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_move_send__l10n_es_edi_verifactu_send_enable
+msgid "L10N Es Edi Verifactu Send Enable"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_move_send__l10n_es_edi_verifactu_send_readonly
+msgid "L10N Es Edi Verifactu Send Readonly"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_move_send__l10n_es_edi_verifactu_warnings
+msgid "L10N Es Edi Verifactu Warnings"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_bank_statement_line__l10n_es_edi_verifactu_last_erroneous_document_id
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_move__l10n_es_edi_verifactu_last_erroneous_document_id
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_payment__l10n_es_edi_verifactu_last_erroneous_document_id
+msgid "Last Erroneous Veri*Factu Document"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_certificate__write_uid
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_certificate__write_date
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu.res_config_settings_view_form
+msgid "Manage certificates"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__res_id
+msgid "Origin ID"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__res_model
+msgid "Origin Model"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,help:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_certificate__content
+msgid "PFX Certificate"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,help:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_certificate__password
+msgid "Passphrase for the PFX certificate"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_certificate__password
+msgid "Password"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model,name:l10n_es_edi_verifactu.model_l10n_es_edi_verifactu_certificate
+msgid "Personal Digital Certificate"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu.view_l10n_es_edi_verifactu_document_form
+msgid "Record Identifier"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields.selection,name:l10n_es_edi_verifactu.selection__account_move__l10n_es_edi_verifactu_state__registered_with_errors
+#: model:ir.model.fields.selection,name:l10n_es_edi_verifactu.selection__l10n_es_edi_verifactu_document__state__registered_with_errors
+msgid "Registered with Errors"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields.selection,name:l10n_es_edi_verifactu.selection__account_move__l10n_es_edi_verifactu_state__rejected
+#: model:ir.model.fields.selection,name:l10n_es_edi_verifactu.selection__l10n_es_edi_verifactu_document__state__rejected
+msgid "Rejected"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu.view_move_form_inherit_l10n_es_edi_verifactu
+msgid "Request Veri*Factu Cancellation"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__response_csv
+msgid "Response CSV"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/wizard/account_move_send.py:0
+#, python-format
+msgid "See the 'Veri*Factu' tab for more information."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/models/verifactu_document.py:0
+#, python-format
+msgid "Sending the document to the AEAT failed: %s"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_bank_statement_line__l10n_es_edi_verifactu_show_cancel_button
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_move__l10n_es_edi_verifactu_show_cancel_button
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_payment__l10n_es_edi_verifactu_show_cancel_button
+msgid "Show Veri*Factu Cancel Button"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__state
+msgid "Status"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields.selection,name:l10n_es_edi_verifactu.selection__l10n_es_edi_verifactu_document__document_type__submission
+msgid "Submission"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model,name:l10n_es_edi_verifactu.model_account_tax
+msgid "Tax"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,help:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__record_identifier
+msgid ""
+"Technical field containing the values used to identify records in the "
+"Veri*Factu system."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu.res_config_settings_view_form
+msgid "Test Environment"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,help:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__response_csv
+msgid ""
+"The CSV of the response from the tax agency. There may not be one in case "
+"all documents of the batch were rejected."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,help:l10n_es_edi_verifactu.field_res_company__l10n_es_edi_verifactu_next_batch_time
+msgid "The Datetime at which the next submission to the AEAT can be made."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/models/verifactu_document.py:0
+#, python-format
+msgid ""
+"The NIF '%(company_NIF)s' of the company is not exactly 9 characters long."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/models/verifactu_document.py:0
+#: code:addons/l10n_es_edi_verifactu/tests/common.py:0
+#, python-format
+msgid ""
+"The Veri*Factu document contains the following errors according to the AEAT"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/models/verifactu_document.py:0
+#: code:addons/l10n_es_edi_verifactu/tests/common.py:0
+#, python-format
+msgid "The Veri*Factu document could not be created"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/wizard/account_move_send.py:0
+#, python-format
+msgid "The Veri*Factu record XML could not be created for all invoices."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/models/verifactu_document.py:0
+#, python-format
+msgid "The batch document could not be created"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/models/verifactu_certificate.py:0
+#, python-format
+msgid "The certificate is expired since %s"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu.res_config_settings_view_form
+msgid "The data is sent to test servers and is not considered official."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu.res_config_settings_view_form
+msgid "The data is sent to the tax agency."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,help:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__response_time
+msgid "The date and time on which we received the response."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,help:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_certificate__date_end
+msgid "The date on which the certificate expires"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,help:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_certificate__date_start
+msgid "The date on which the certificate starts to be valid"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/models/verifactu_document.py:0
+#, python-format
+msgid "The document could not be sent; the access was denied."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/models/verifactu_document.py:0
+#, python-format
+msgid "The document could not be sent; the access was denied: %s"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/wizard/account_move_send.py:0
+#, python-format
+msgid ""
+"The following entries will be skipped. They are already waiting to send "
+"Veri*Factu records to the AEAT: %s"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/models/verifactu_document.py:0
+#, python-format
+msgid "The invoice date is missing."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/models/account_move.py:0
+#, python-format
+msgid "The journal entry has to be posted."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/models/verifactu_document.py:0
+#, python-format
+msgid ""
+"The name of the record is not between 1 and 60 characters long: %(name)s."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/models/verifactu_document.py:0
+#, python-format
+msgid "The record has to be an invoice or a credit note."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/models/verifactu_document.py:0
+#, python-format
+msgid ""
+"The response could not be parsed:\n"
+"%s"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/models/verifactu_certificate.py:0
+#, python-format
+msgid ""
+"There has been a problem with the certificate, some usual problems can be:\n"
+"- The password given or the certificate are not valid.\n"
+"- The certificate content is invalid."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/models/verifactu_document.py:0
+#: code:addons/l10n_es_edi_verifactu/models/verifactu_document.py:0
+#, python-format
+msgid "There is no certificate configured for Veri*Factu on the company."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/models/verifactu_document.py:0
+#, python-format
+msgid "There is no record identifier yet for the refunded record."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,help:l10n_es_edi_verifactu.field_account_bank_statement_line__l10n_es_edi_verifactu_last_erroneous_document_id
+#: model:ir.model.fields,help:l10n_es_edi_verifactu.field_account_bank_statement_line__l10n_es_edi_verifactu_qr_code
+#: model:ir.model.fields,help:l10n_es_edi_verifactu.field_account_move__l10n_es_edi_verifactu_last_erroneous_document_id
+#: model:ir.model.fields,help:l10n_es_edi_verifactu.field_account_move__l10n_es_edi_verifactu_qr_code
+#: model:ir.model.fields,help:l10n_es_edi_verifactu.field_account_payment__l10n_es_edi_verifactu_last_erroneous_document_id
+#: model:ir.model.fields,help:l10n_es_edi_verifactu.field_account_payment__l10n_es_edi_verifactu_qr_code
+msgid "This QR code is mandatory for Veri*Factu invoices."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__response_time
+msgid "Time of Response"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu.l10n_es_edi_verifactu_certificate_form
+msgid "Validity"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_move_send__l10n_es_edi_verifactu_send_checkbox
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu.view_move_form_inherit_l10n_es_edi_verifactu
+msgid "Veri*Factu"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.ui.menu,name:l10n_es_edi_verifactu.menu_l10n_es_edi_verifactu_root
+msgid "Veri*Factu (Spain)"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_res_company__l10n_es_edi_verifactu_certificate_ids
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_res_config_settings__l10n_es_edi_verifactu_certificate_ids
+msgid "Veri*Factu Certificates"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model,name:l10n_es_edi_verifactu.model_l10n_es_edi_verifactu_document
+msgid "Veri*Factu Document"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_res_company__l10n_es_edi_verifactu_chain_sequence_id
+msgid "Veri*Factu Document Chain Sequence"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/models/res_company.py:0
+#, python-format
+msgid "Veri*Factu Document Sequence for company %(name)s (%(id)s)"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_bank_statement_line__l10n_es_edi_verifactu_document_ids
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_move__l10n_es_edi_verifactu_document_ids
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_payment__l10n_es_edi_verifactu_document_ids
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu.view_move_form_inherit_l10n_es_edi_verifactu
+msgid "Veri*Factu Documents"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_bank_statement_line__l10n_es_edi_verifactu_error_level
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_move__l10n_es_edi_verifactu_error_level
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_payment__l10n_es_edi_verifactu_error_level
+msgid "Veri*Factu Error Level"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_bank_statement_line__l10n_es_edi_verifactu_errors
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_move__l10n_es_edi_verifactu_errors
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_payment__l10n_es_edi_verifactu_errors
+msgid "Veri*Factu Errors"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_res_company__l10n_es_edi_verifactu_next_batch_time
+msgid "Veri*Factu Next Batch Time"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_bank_statement_line__l10n_es_edi_verifactu_qr_code
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_move__l10n_es_edi_verifactu_qr_code
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_payment__l10n_es_edi_verifactu_qr_code
+msgid "Veri*Factu QR Code"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__record_identifier
+msgid "Veri*Factu Record Identifier"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_bank_statement_line__l10n_es_edi_verifactu_required
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_move__l10n_es_edi_verifactu_required
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_payment__l10n_es_edi_verifactu_required
+msgid "Veri*Factu Required"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu.view_account_invoice_filter
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu.view_account_move_filter
+msgid "Veri*Factu State"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_bank_statement_line__l10n_es_edi_verifactu_state
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_move__l10n_es_edi_verifactu_state
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_payment__l10n_es_edi_verifactu_state
+msgid "Veri*Factu Status"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_res_company__l10n_es_edi_verifactu_test_environment
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_res_config_settings__l10n_es_edi_verifactu_test_environment
+msgid "Veri*Factu Test Environment"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/models/verifactu_document.py:0
+#, python-format
+msgid "Verifactu Document %s"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/models/account_move.py:0
+#, python-format
+msgid "We are waiting to send a Veri*Factu record to the AEAT already."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/models/verifactu_document.py:0
+#, python-format
+msgid "We can not parse responses with that content type."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/models/verifactu_document.py:0
+#: code:addons/l10n_es_edi_verifactu/tests/test_document.py:0
+#, python-format
+msgid ""
+"We could not find any information about the record in the linked batch "
+"document."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__xml_attachment_id
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu.view_l10n_es_edi_verifactu_document_form
+msgid "XML Attachment"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__xml_attachment_base64
+msgid "XML Attachment (Base64)"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__xml_attachment_filename
+msgid "XML Filename"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/models/verifactu_document.py:0
+#, python-format
+msgid ""
+"You cannot delete Veri*Factu Documents that are part of the chain of all "
+"Veri*Factu Documents."
+msgstr ""

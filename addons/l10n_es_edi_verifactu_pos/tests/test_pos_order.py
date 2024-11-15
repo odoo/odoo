@@ -1,0 +1,242 @@
+from contextlib import contextmanager, nullcontext
+import datetime
+from freezegun import freeze_time
+from unittest import mock
+
+from odoo import Command
+
+from odoo.addons.l10n_es_edi_verifactu.tests.common import TestL10nEsEdiVerifactuCommon
+from odoo.addons.point_of_sale.models.pos_order import PosOrder
+from odoo.addons.point_of_sale.tests.common import TestPoSCommon
+from odoo.exceptions import UserError
+from odoo.tests import tagged
+from odoo.tools import mute_logger
+
+
+@tagged('post_install_l10n', 'post_install', '-at_install')
+class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuCommon, TestPoSCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # Ensure the date of all orders is in the past.
+        # Else the associated move does not get posted (since it will be in the future / on the order date).
+        cls.fakenow = datetime.datetime(2025, 1, 1)
+        cls.startClassPatcher(freeze_time(cls.fakenow))
+
+        cls.config = cls.basic_config
+
+        cls.product = cls.env['product.product'].create({
+            'name': 'verifactu_pos_product',
+            'default_code': "product_verifactu",
+            'lst_price': 100.0,
+            'property_account_income_id': cls.company_data['default_account_revenue'].id,
+            'property_account_expense_id': cls.company_data['default_account_expense'].id,
+            'taxes_id': [Command.set(cls.tax21_goods.ids)],
+            'company_id': cls.company.id,
+            'available_in_pos': True,
+        })
+
+        # Use the VAT / NIF that was used to generate the responses
+        # This is needed to have the correct record identifiers on the invoices
+        cls.company.vat = 'A39200019'
+
+    @contextmanager
+    def with_pos_session(self):
+        session = self.open_new_session(0.0)
+        yield session
+        session.post_closing_cash_details(0.0)
+        session.close_session_from_ui()
+
+    def _create_order(self, data):
+        date_order = data.pop('date_order', None)
+        name = data.pop('name', None)
+        account_move = data.pop('account_move', None)
+        is_l10n_es_simplified_invoice = data.pop('is_l10n_es_simplified_invoice', None)
+
+        order_data = self.create_ui_order_data(**data)
+        if is_l10n_es_simplified_invoice:
+            order_data['data']['is_l10n_es_simplified_invoice'] = is_l10n_es_simplified_invoice
+
+        # In case the Veri*Factu document is created for the pos order:
+        # We have to fix the record identifier related fields on the order
+        if date_order:
+            order_data['data']['date_order'] = date_order
+        name_patch = nullcontext()
+        if name:
+            name_function_path = 'odoo.addons.point_of_sale.models.pos_order.PosOrder._compute_order_name'
+            name_patch = mock.patch(name_function_path, return_value=name)
+
+        # In case the Veri*Factu document is created for the invoice of the pos order:
+        # We have to fix the record identifier related fields on created invoice
+        prepare_invoice_vals_patch = nullcontext()
+        if account_move:
+            prepare_invoice_vals_function_path = 'odoo.addons.point_of_sale.models.pos_order.PosOrder._prepare_invoice_vals'
+            original_prepare_invoice_vals = PosOrder._prepare_invoice_vals
+
+            def _patched_prepare_invoice_vals(self):
+                vals = original_prepare_invoice_vals(self)
+
+                name = account_move.get('name')
+                date = account_move.get('date')  # to match the 'name'
+                invoice_date = account_move.get('invoice_date')
+                if name:
+                    vals['name'] = name
+                if date:
+                    vals['date'] = date
+                if invoice_date:
+                    vals['invoice_date'] = invoice_date
+
+                return vals
+
+            prepare_invoice_vals_patch = mock.patch(prepare_invoice_vals_function_path, _patched_prepare_invoice_vals)
+
+        with name_patch, prepare_invoice_vals_patch:
+            results = self.env['pos.order'].create_from_ui([order_data])
+        return self.env['pos.order'].browse(results[0]['id'])
+
+    def test_record_identifier(self):
+        with self.with_pos_session():
+            response = self._mock_response(
+                200, 'l10n_es_edi_verifactu/tests/responses/certificate_issue.html', content_type='text/html'
+            )
+            with self._mock_request(response):
+                order = self._create_order({
+                    'pos_order_lines_ui_args': [
+                        (self.product, 1.0),
+                    ],
+                    'payments': [(self.bank_pm1, 121.0)],
+                    # Adjust the fields relevant for the record identifier to match the ones in the response
+                    'name': 'INV/2019/00004',
+                    'date_order': '2024-11-10 10:11:12',
+                })
+
+            # Check that `_create_order` sets the 'name' and 'date_order' correctly
+            self.assertRecordValues(order, [{
+                'name': 'INV/2019/00004',
+                'date_order': datetime.datetime(2024, 11, 10, 10, 11, 12),
+               }])
+
+            expected_record_identifier = {
+                'IDEmisorFactura': 'A39200019',
+                'NumSerieFactura': 'INV/2019/00004',
+                'FechaExpedicionFactura': '2024-11-10',
+               }
+            record_identifier = order.l10n_es_edi_verifactu_document_ids.record_identifier
+            self.assertDictEqual(record_identifier, expected_record_identifier | record_identifier)
+            record_identifier = order._l10n_es_edi_verifactu_record_identifier()
+            self.assertDictEqual(record_identifier, expected_record_identifier | record_identifier)
+
+    def test_error_above_simplified_limit(self):
+        with self.with_pos_session() as session:
+            self.assertEqual(session.config_id.l10n_es_simplified_invoice_limit, 400.0)
+
+            with self.assertRaisesRegex(UserError, 'Please create an invoice for an amount over 400.0'), \
+                 mute_logger('odoo.addons.point_of_sale.models.pos_order'):
+                self._create_order({
+                    'pos_order_lines_ui_args': [
+                        (self.product, 10.0),
+                    ],
+                    'payments': [(self.bank_pm1, 1210.0)],
+                })
+
+    def test_order_not_invoiced(self):
+        with self.with_pos_session():
+            response = self._mock_response(200, 'l10n_es_edi_verifactu/tests/responses/batch_single_accepted_registration.xml')
+            with self._mock_request(response):
+                order = self._create_order({
+                    'pos_order_lines_ui_args': [
+                        (self.product, 1.0),
+                    ],
+                    'payments': [(self.bank_pm1, 121.0)],
+                    # Adjust the fields relevant for the record identifier to match the ones in the response
+                    'name': 'INV/2019/00026',
+                    'date_order': '2024-12-30 00:00:00',
+                })
+
+        self.assertRecordValues(order.l10n_es_edi_verifactu_document_ids, [{
+            'res_id': order.id,
+            'res_model': order._name,
+            'document_type': 'submission',
+            'response_time': self.fakenow,
+            'response_csv': 'A-YDSW8NLFLANWPM',
+            'state': 'accepted',
+            'errors': False,
+        }])
+
+    def test_order_invoiced_simplified(self):
+        with self.with_pos_session() as session:
+            self.assertEqual(session.config_id.l10n_es_simplified_invoice_limit, 400.0)
+
+            response = self._mock_response(200, 'l10n_es_edi_verifactu/tests/responses/batch_single_accepted_registration.xml')
+            with self._mock_request(response):
+                order = self._create_order({
+                    # Note: The total is not above the simplified invoice limit
+                    'is_invoiced': True,
+                    'is_l10n_es_simplified_invoice': True,
+                    'pos_order_lines_ui_args': [
+                        (self.product, 1.0),
+                    ],
+                    'payments': [(self.bank_pm1, 121.0)],
+                    'account_move': {
+                        # Adjust the fields relevant for the record identifier to match the ones in the response
+                        'name': 'INV/2019/00026',
+                        'date': '2019-12-30',
+                        'invoice_date': '2024-12-30',
+                    }
+                })
+        # Check that we set the simplified partner on both the order and the invoice
+        # (even though we did not specify a customer).
+        invoice = order.account_move
+        self.assertTrue(invoice)
+        simplified_partner = order.config_id.simplified_partner_id
+        self.assertTrue(order.partner_id == simplified_partner)
+        self.assertTrue(invoice.partner_id == simplified_partner)
+
+        # The Veri*Factu document was created for the invoice and not the document
+        self.assertFalse(order.l10n_es_edi_verifactu_document_ids)
+        self.assertRecordValues(invoice.l10n_es_edi_verifactu_document_ids, [{
+            'res_id': invoice.id,
+            'res_model': invoice._name,
+            'document_type': 'submission',
+            'response_time': self.fakenow,
+            'response_csv': 'A-YDSW8NLFLANWPM',
+            'state': 'accepted',
+            'errors': False,
+        }])
+
+    def test_order_invoiced_not_simplified(self):
+        with self.with_pos_session() as session:
+            self.assertEqual(session.config_id.l10n_es_simplified_invoice_limit, 400.0)
+
+            response = self._mock_response(200, 'l10n_es_edi_verifactu/tests/responses/batch_single_accepted_registration.xml')
+            with self._mock_request(response):
+                order = self._create_order({
+                    # Note: The total is above the simplified invoice limit
+                    'is_invoiced': True,
+                    'is_l10n_es_simplified_invoice': False,
+                    'customer': self.partner_b,  # Spanish customer
+                    'pos_order_lines_ui_args': [
+                        (self.product, 10.0),
+                    ],
+                    'payments': [(self.bank_pm1, 1210.0)],
+                    'account_move': {
+                        # Adjust the fields relevant for the record identifier to match the ones in the response
+                        'name': 'INV/2019/00026',
+                        'date': '2019-12-30',
+                        'invoice_date': '2024-12-30',
+                    }
+                })
+
+        # The Veri*Factu document was created for the invoice and not the document
+        self.assertFalse(order.l10n_es_edi_verifactu_document_ids)
+        invoice = order.account_move
+        self.assertRecordValues(invoice.l10n_es_edi_verifactu_document_ids, [{
+            'res_id': invoice.id,
+            'res_model': invoice._name,
+            'document_type': 'submission',
+            'response_time': self.fakenow,
+            'response_csv': 'A-YDSW8NLFLANWPM',
+            'state': 'accepted',
+            'errors': False,
+        }])
