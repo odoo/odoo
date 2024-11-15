@@ -424,7 +424,7 @@ test("properties: access to parent", async () => {
     // Choosing a date in the date picker should not close the definition popover
     await click(".o_field_property_definition_value .o_datetime_input");
     await animationFrame();
-    await click(getPickerCell("3").at(0));
+    await click(getPickerCell("3"));
     await animationFrame();
     expect(".o_datetime_picker").toHaveCount(1);
 
@@ -1249,15 +1249,19 @@ test("properties: date(time) property manipulations", async () => {
     // edit date property
     await click(".o_property_field[property-name=property_1] input");
     await animationFrame();
-    await click(getPickerCell("31").at(0));
+    await click(".o_datetime_picker .o_previous");
+    await animationFrame();
+    await click(getPickerCell("31"));
     expect("[property-name=property_1] input").toHaveValue("12/31/2018");
 
     // edit date time property
     await click(".o_property_field[property-name=property_2] input");
     await animationFrame();
-    await click(getPickerCell("31").at(0));
+    await click(".o_datetime_picker .o_previous");
     await animationFrame();
-    const [hourSelect, minuteSelect] = getTimePickers().at(0);
+    await click(getPickerCell("31"));
+    await animationFrame();
+    const [[hourSelect, minuteSelect]] = getTimePickers();
     await select("12", { target: hourSelect });
     await animationFrame();
     await select("5", { target: minuteSelect });
@@ -1781,7 +1785,7 @@ test("properties: default value date", async () => {
     await click(".o_field_property_definition_value .o_datetime_input");
     await animationFrame();
     expect(".o_date_picker").toHaveCount(1);
-    await click(getPickerCell("3").at(0));
+    await click(getPickerCell("3"));
     await animationFrame();
     await closePopover();
     expect(".o_datetime_input").toHaveValue("01/03/2022", {

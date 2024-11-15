@@ -719,6 +719,27 @@ test(`width computation: button columns don't have a max width`, async () => {
     expect(columnWidths[1]).toBeGreaterThan(330);
 });
 
+test(`width computation: button with width in arch`, async () => {
+    Foo._records = [];
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <button string="choucroute"/>
+                <button icon="fa-heart" width="25px"/>
+                <button icon="fa-cog" width="59px"/>
+                <button icon="fa-list"/>
+                <button icon="fa-play"/>
+            </list>
+        `,
+    });
+
+    expect(getColumnWidths()).toEqual([40, 216, 216, 34, 68, 227]);
+});
+
 // freeze column widths
 test(`freeze widths: add first record`, async () => {
     Foo._records = []; // in this scenario, we start with no records

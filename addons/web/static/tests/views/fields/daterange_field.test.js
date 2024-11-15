@@ -149,8 +149,8 @@ test.tags("desktop")("Date field - interaction with the datepicker", async () =>
     expect(".o_select_end").toHaveText("8");
 
     // Change date
-    await contains(getPickerCell("12").at(1)).click(); // 02/08/2017
-    await contains(getPickerCell("16").at(0)).click(); // 02/09/2017
+    await contains(getPickerCell("16").at(0)).click(); // 2017-02-16
+    await contains(getPickerCell("12").at(1)).click(); // 2017-03-12
 
     // Close picker
     await contains(".o_form_view").click();
