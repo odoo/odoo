@@ -221,7 +221,7 @@ export function processButton(node) {
     for (const { name, value } of node.attributes) {
         if (BUTTON_CLICK_PARAMS.includes(name)) {
             clickParams[name] = withDefault[name] ? withDefault[name](value) : value;
-        } else if (name === "data-hotkey") {
+        } else {
             attrs[name] = value;
         }
     }
