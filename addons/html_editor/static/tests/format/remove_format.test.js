@@ -759,4 +759,14 @@ describe("Toolbar", () => {
             `<table class="table table-bordered o_table o_selected_table"><tbody><tr><td class="o_selected_td"><p>[abc</p></td><td class="o_selected_td"><p>\u200b</p></td></tr></tbody></table><p>]\u200b</p>`
         );
     });
+
+    test("Should remove background color of a table cell", async () => {
+        const { el } = await setupEditor(
+            `<table class="table table-bordered o_table o_selected_table"><tbody><tr><td style="background-color: rgb(255, 0, 0);" class="o_selected_td"><p>[<br></p></td><td style="background-color: rgb(255, 0, 0);" class="o_selected_td"><p>]<br></p></td></tr></tbody></table>`
+        );
+        await removeFormatClick();
+        expect(getContent(el)).toBe(
+            `<table class="table table-bordered o_table o_selected_table"><tbody><tr><td style="" class="o_selected_td"><p>[\u200b</p></td><td style="" class="o_selected_td"><p>]\u200b</p></td></tr></tbody></table>`
+        );
+    });
 });
