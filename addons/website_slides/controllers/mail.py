@@ -99,3 +99,9 @@ class SlidesPortalChatter(PortalChatter):
             'default_attachment_ids': message.attachment_ids.sudo().read(['id', 'name', 'mimetype', 'file_size', 'access_token']),
             'force_submit_url': '/slides/mail/update_comment',
         }
+
+    @http.route()
+    def portal_chatter_init(self, res_model, res_id, domain=False, limit=False, **kwargs):
+        result = super().portal_chatter_init(res_model, res_id, domain=domain, limit=limit, **kwargs)
+        result["options"].update({"is_user_manager": request.env.user.has_group('website_slides.group_website_slides_manager')})
+        return result
