@@ -153,7 +153,7 @@ class StockMoveLine(models.Model):
             sml_uom = record.product_uom_id
 
             move_demand = record.move_id.product_uom._compute_quantity(record.move_id.product_uom_qty, sml_uom, rounding_method='HALF-UP')
-            move_quantity = record.move_id.product_uom._compute_quantity(record.move_id.quantity, sml_uom, rounding_method='HALF-UP')
+            move_quantity = record.move_id.product_uom._compute_quantity(record.move_id._visible_quantity(), sml_uom, rounding_method='HALF-UP')
             quant_qty = product_uom._compute_quantity(record.quant_id.available_quantity, sml_uom, rounding_method='HALF-UP')
 
             if float_compare(move_demand, move_quantity, precision_rounding=sml_uom.rounding) > 0:
