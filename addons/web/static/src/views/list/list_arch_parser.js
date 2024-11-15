@@ -78,7 +78,8 @@ export class ListArchParser {
                     type: "button",
                     id: buttonId++,
                 };
-                if (buttonGroup) {
+                const width = button.attrs.width;
+                if (buttonGroup && !width) {
                     buttonGroup.buttons.push(button);
                     buttonGroup.column_invisible = combineModifiers(
                         buttonGroup.column_invisible,
@@ -94,6 +95,10 @@ export class ListArchParser {
                         column_invisible: node.getAttribute("column_invisible"),
                     };
                     columns.push(buttonGroup);
+                    if (width) {
+                        buttonGroup.attrs = { width };
+                        buttonGroup = undefined;
+                    }
                 }
             } else if (node.tagName === "field") {
                 const fieldInfo = this.parseFieldNode(node, models, modelName);

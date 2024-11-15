@@ -212,7 +212,7 @@ function getWidthSpecs(columns) {
     return columns.map((column) => {
         let minWidth;
         let maxWidth;
-        if (column.options && column.attrs.width) {
+        if (column.attrs && column.attrs.width) {
             minWidth = maxWidth = parseInt(column.attrs.width.split("px")[0]);
         } else {
             let width;
