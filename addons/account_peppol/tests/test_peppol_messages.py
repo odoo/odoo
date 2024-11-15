@@ -2,6 +2,7 @@ import json
 from base64 import b64encode
 from contextlib import contextmanager
 from requests import Session, PreparedRequest, Response
+from unittest.mock import patch
 
 from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
 from odoo.exceptions import UserError
@@ -204,22 +205,40 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
         wizard.action_send_and_print()
         self.assertEqual(self._get_mail_message(move).preview, 'The document has been sent to the Peppol Access Point for processing')
 
-    def test_send_peppol_alerts(self):
-        # a warning should appear before sending invoices to an invalid partner
+    def test_send_peppol_alerts_not_valid_partner(self):
         move = self.create_move(self.invalid_partner)
         move.action_post()
-
         wizard = self.create_send_and_print(move)
+
         self.assertEqual(wizard.invoice_edi_format, 'ubl_bis3')
-        self.assertTrue('peppol' in wizard.sending_methods)
+        self.assertEqual(self.invalid_partner.peppol_verification_state, 'not_valid')  # not on peppol at all
+        self.assertFalse(wizard.sending_methods and 'peppol' in wizard.sending_methods)  # peppol is not checked
+        self.assertTrue(wizard.sending_method_checkboxes['peppol']['readonly'])  # peppol is not possible to select
+        self.assertFalse(wizard.alerts)  # there is no alerts
+
+    @patch('odoo.addons.account_peppol.models.res_partner.ResPartner._check_document_type_support', return_value=False)
+    def test_send_peppol_alerts_not_valid_format_partner(self, mocked_check):
+        move = self.create_move(self.valid_partner)
+        move.action_post()
+        wizard = self.create_send_and_print(move)
+
+        self.assertEqual(wizard.invoice_edi_format, 'ubl_bis3')
+        self.assertTrue(wizard.sending_methods and 'peppol' in wizard.sending_methods)  # peppol is checked
+        self.assertEqual(self.valid_partner.peppol_verification_state, 'not_valid_format')  # on peppol but can't receive bis3
+
+        self.assertTrue(wizard.sending_methods and 'peppol' in wizard.sending_methods)
         self.assertTrue('account_peppol_warning_partner' in wizard.alerts)
         self.assertTrue('account_peppol_demo_test_mode' in wizard.alerts)
 
-        # however, if there's already account_edi_ubl_cii_configure_partner, the warning should not appear
+    def test_send_peppol_alerts_invalid_partner(self):
+        """If there's already account_edi_ubl_cii_configure_partner, the warning should not appear."""
+        move = self.create_move(self.invalid_partner)
+        move.action_post()
         self.invalid_partner.peppol_endpoint = False
         wizard = self.create_send_and_print(move)
-        self.assertEqual(wizard.invoice_edi_format, 'ubl_bis3')
-        self.assertTrue('peppol' in wizard.sending_methods)
+        self.assertFalse(wizard.sending_methods and 'peppol' in wizard.sending_methods)  # by default peppol is not selected for non-valid partners
+        wizard.sending_method_checkboxes = {**wizard.sending_method_checkboxes, 'peppol': {'checked': True}}
+        self.assertTrue(wizard.sending_methods and 'peppol' in wizard.sending_methods)
         self.assertTrue('account_edi_ubl_cii_configure_partner' in wizard.alerts)
         self.assertFalse('account_peppol_warning_partner' in wizard.alerts)
 
@@ -230,7 +249,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
 
         wizard = self.create_send_and_print(move)
         self.assertEqual(wizard.invoice_edi_format, 'ubl_bis3')
-        self.assertTrue('peppol' in wizard.sending_methods)
+        self.assertTrue(wizard.sending_methods and 'peppol' in wizard.sending_methods)
         with self._set_context({'error': True}):
             wizard.action_send_and_print()
 
@@ -245,7 +264,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
         move.invoice_pdf_report_id.unlink()
         wizard = self.create_send_and_print(move)
         self.assertEqual(wizard.invoice_edi_format, 'ubl_bis3')
-        self.assertTrue('peppol' in wizard.sending_methods)
+        self.assertTrue(wizard.sending_methods and 'peppol' in wizard.sending_methods)
 
         wizard.action_send_and_print()
 
@@ -261,7 +280,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
 
         wizard = self.create_send_and_print(move)
         self.assertEqual(wizard.invoice_edi_format, 'ubl_bis3')
-        self.assertTrue('peppol' in wizard.sending_methods)
+        self.assertTrue(wizard.sending_methods and 'peppol' in wizard.sending_methods)
 
         wizard.action_send_and_print()
 

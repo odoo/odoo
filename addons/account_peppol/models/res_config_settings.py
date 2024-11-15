@@ -43,12 +43,8 @@ class ResConfigSettings(models.TransientModel):
         registration_action = registration_wizard._action_open_peppol_form(reopen=False)
         return registration_action
 
-    @handle_demo
-    def button_update_peppol_user_data(self):
-        """
-        Action for the user to be able to update their contact details any time
-        Calls /update_user on the iap server
-        """
+    def button_peppol_update_user_data(self):
+        """Update contact details of the Peppol user."""
         self.ensure_one()
 
         if not self.account_peppol_contact_email or not self.account_peppol_phone_number:
@@ -67,15 +63,11 @@ class ResConfigSettings(models.TransientModel):
         )
         return True
 
-    @handle_demo
-    def button_peppol_smp_registration(self):
-        """
-        The second (optional) step in Peppol registration.
-        The user can choose to become a Receiver and officially register on the Peppol
-        network, i.e. receive documents from other Peppol participants.
-        """
+    def button_peppol_register_sender_as_receiver(self):
+        """Register the existing user as a receiver."""
         self.ensure_one()
         self.account_peppol_edi_user._peppol_register_sender_as_receiver()
+        self.account_peppol_edi_user._peppol_get_participant_status()
         if self.account_peppol_proxy_state == 'smp_registration':
             return {
                 'type': 'ir.actions.client',
@@ -89,27 +81,21 @@ class ResConfigSettings(models.TransientModel):
             }
         return True
 
-    @handle_demo
-    def button_migrate_peppol_registration(self):
-        """
+    def button_peppol_migrate_away(self):
+        """Migrates AWAY from Odoo's SMP.
         If the user is a receiver, they need to request a migration key, generated on the IAP server.
         The migration key is then displayed in Peppol settings.
         Currently, reopening after migrating away is not supported.
         """
         self.ensure_one()
-
         if self.account_peppol_proxy_state != 'receiver':
             raise UserError(_("Can't migrate unless registered to receive documents."))
 
-        response = self.account_peppol_edi_user._call_peppol_proxy(endpoint='/api/peppol/1/migrate_peppol_registration')
-        self.account_peppol_migration_key = response['migration_key']
+        self.account_peppol_edi_user._peppol_migrate_registration()
         return True
 
-    @handle_demo
-    def button_deregister_peppol_participant(self):
-        """
-        Deregister the edi user from Peppol network
-        """
+    def button_peppol_unregister(self):
+        """Unregister the user from Peppol network."""
         self.ensure_one()
 
         if self.account_peppol_edi_user:
