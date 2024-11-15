@@ -2,7 +2,6 @@ import requests
 
 from urllib3.util.ssl_ import create_urllib3_context
 from urllib3.contrib.pyopenssl import inject_into_urllib3
-from OpenSSL.crypto import load_certificate, load_privatekey, FILETYPE_PEM
 
 # Custom patches to perform the WSDL requests.
 # Avoid failure on servers where the DH key is too small
@@ -34,13 +33,10 @@ class PatchedHTTPAdapter(requests.adapters.HTTPAdapter):
         conn = super().get_connection(url, proxies=proxies)
         context = conn.conn_kw['ssl_context']
 
-        def patched_load_cert_chain(l10n_es_odoo_certificate, keyfile=None, password=None):
-            cert_file, key_file, _certificate = l10n_es_odoo_certificate.sudo()._decode_certificate()
-            cert_obj = load_certificate(FILETYPE_PEM, cert_file)
-            pkey_obj = load_privatekey(FILETYPE_PEM, key_file)
-
-            context._ctx.use_certificate(cert_obj)
-            context._ctx.use_privatekey(pkey_obj)
+        def patched_load_cert_chain(l10n_es_certificate, keyfile=None, password=None):
+            pkey, cert = l10n_es_certificate._decode_certificate_PEM()
+            context._ctx.use_certificate(cert)
+            context._ctx.use_privatekey(pkey)
 
         context.load_cert_chain = patched_load_cert_chain
 
