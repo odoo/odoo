@@ -1,7 +1,9 @@
 import { useNativeDraggable } from "@html_editor/utils/drag_and_drop";
 import { endPos } from "@html_editor/utils/position";
+import { xml } from "@odoo/owl";
 import { Plugin } from "../plugin";
 import { ancestors, closestElement } from "../utils/dom_traversal";
+import { _t } from "@web/core/l10n/translation";
 
 const WIDGET_CONTAINER_WIDTH = 25;
 const WIDGET_MOVE_SIZE = 20;
@@ -241,6 +243,14 @@ export class MoveNodePlugin extends Plugin {
         this.moveWidget.style.height = `${WIDGET_MOVE_SIZE}px`;
         this.moveWidget.style.top = `${anchorY - containerRect.y - moveWidgetOffsetTop}px`;
         this.moveWidget.style.left = `${anchorX - containerRect.x - WIDGET_CONTAINER_WIDTH}px`;
+
+        this.services.tooltip.add(this.moveWidget, {
+            template: xml`
+                <div class="o-tooltip tooltip-inner text-start px-3">
+                    ${_t("Drag")} <span class="text-light-emphasis">${_t("to move")}</span>
+                </div>`,
+            arrow: true,
+        });
 
         if (this.scrollableElement) {
             this.smoothScrollOnDrag && this.smoothScrollOnDrag.destroy();
