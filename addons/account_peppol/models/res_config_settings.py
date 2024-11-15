@@ -95,7 +95,6 @@ class ResConfigSettings(models.TransientModel):
             }
         return True
 
-    @handle_demo
     def button_migrate_peppol_registration(self):
         """
         If the user is a receiver, they need to request a migration key, generated on the IAP server.
@@ -103,12 +102,10 @@ class ResConfigSettings(models.TransientModel):
         Currently, reopening after migrating away is not supported.
         """
         self.ensure_one()
-
         if self.account_peppol_proxy_state != 'receiver':
             raise UserError(_("Can't migrate unless registered to receive documents."))
 
-        response = self.account_peppol_edi_user._call_peppol_proxy(endpoint='/api/peppol/1/migrate_peppol_registration')
-        self.account_peppol_migration_key = response['migration_key']
+        self.account_peppol_edi_user._peppol_migrate_registration()
         return True
 
     @handle_demo

@@ -9,6 +9,12 @@
     """,
     'category': 'Accounting/Accounting',
     'version': '1.0',
+    'countries': [
+        # !!! KEEP ALIGNED WITH ACCOUNT/MODELS/COMPANY.PEPPOL_DEFAULT_COUNTRIES
+        'at', 'be', 'ch', 'cy', 'cz', 'de', 'dk', 'ee', 'es', 'fi',
+        'fr', 'gr', 'ie', 'is', 'it', 'lt', 'lu', 'lv', 'mt', 'nl',
+        'no', 'pl', 'pt', 'ro', 'se', 'si',
+    ],
     'depends': [
         'account_edi_proxy_client',
         'account_edi_ubl_cii',
@@ -37,9 +43,11 @@
     'assets': {
         'web.assets_backend': [
             'account_peppol/static/src/components/**/*',
+            'account_peppol/static/src/scss/**/*',
         ],
         'web.assets_frontend': [
             'account_peppol/static/src/js/*',
         ],
-    }
+    },
+    'auto_install': ['account_edi_ubl_cii'],  # auto-install when account_edi_ubl_cii AND one company exists in countries above
 }
