@@ -4,6 +4,11 @@ import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog
 
 patch(ControlButtons.prototype, {
     onClickQuotation() {
+        const context = {};
+        if (this.partner) {
+            context["search_default_partner_id"] = this.partner.id;
+        }
+
         this.dialog.add(SelectCreateDialog, {
             resModel: "sale.order",
             noCreate: true,
@@ -13,6 +18,7 @@ patch(ControlButtons.prototype, {
                 ["invoice_status", "!=", "invoiced"],
                 ["currency_id", "=", this.pos.currency.id],
             ],
+            context: context,
             onSelected: async (resIds) => {
                 await this.pos.onClickSaleOrder(resIds[0]);
             },
