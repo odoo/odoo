@@ -139,19 +139,23 @@ export function makeActionManager(env, router = _router) {
     let id = 0;
     let controllerStack = [];
     let dialogCloseProm;
-    let actionCache = {};
     let dialog = null;
     let nextDialog = null;
 
     router.hideKeyFromUrl("globalState");
 
-    env.bus.addEventListener("CLEAR-CACHES", () => {
-        actionCache = {};
-    });
+    const diskCache = env.services.disk_cache;
+    diskCache.defineTable(
+        "actions",
+        session.cache_hashes.actions_cache,
+        (actionId, context) => rpc("/web/action/load", { action_id: actionId, context }),
+        (actionId, context) => `${JSON.stringify(actionId)},${JSON.stringify(context)}`
+    );
     rpcBus.addEventListener("RPC:RESPONSE", async (ev) => {
         const { model, method } = ev.detail.data.params;
         if (model === "ir.actions.act_window" && UPDATE_METHODS.includes(method)) {
-            actionCache = {};
+            diskCache.invalidate("actions");
+
             const virtualStack = await _controllersFromState();
             const nextStack = [...virtualStack, controllerStack[controllerStack.length - 1]];
             nextStack[nextStack.length - 1].config.breadcrumbs.splice(
@@ -352,19 +356,12 @@ export function makeActionManager(env, router = _router) {
             // actionRequest is an id or an xmlid
             const ctx = makeContext([user.context, context]);
             delete ctx.params;
-            const key = `${JSON.stringify(actionRequest)},${JSON.stringify(ctx)}`;
-            let action = await actionCache[key];
-            if (!action) {
-                actionCache[key] = rpc("/web/action/load", {
-                    action_id: actionRequest,
-                    context: ctx,
-                });
-                action = await actionCache[key];
-                if (action.help) {
-                    action.help = markup(action.help);
-                }
+            let action = await diskCache.read("actions", actionRequest, ctx);
+            action = Object.assign({}, action);
+            if (action.help) {
+                action.help = markup(action.help);
             }
-            return Object.assign({}, action);
+            return action;
         }
 
         // actionRequest is an object describing the action
@@ -1777,7 +1774,7 @@ export function makeActionManager(env, router = _router) {
 }
 
 export const actionService = {
-    dependencies: ["dialog", "effect", "localization", "notification", "title", "ui"],
+    dependencies: ["dialog", "disk_cache", "effect", "localization", "notification", "title", "ui"],
     start(env) {
         return makeActionManager(env);
     },
