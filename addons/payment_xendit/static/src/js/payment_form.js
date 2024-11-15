@@ -139,9 +139,16 @@ paymentForm.include({
     _xenditHandleResponse(err, token, processingValues) {
         if (err) {
             let errMessage = err.message;
+<<<<<<< 18.0
 
             if (err.error_code === 'API_VALIDATION_ERROR') {  // Invalid user input
                 errMessage = err.errors[0].message // Wrong field format
+||||||| d0b5cc5cfbc942334088312031045d60f128ffbb
+            this._displayErrorDialog(_t("Payment processing failed"), err.message);
+=======
+            if (err.errors) {
+                errMessage += _t(" Details:") + `\n${err.errors.map(el => el.message).join('\n')}`;
+>>>>>>> 2b0d388e7e220a06ba58f6b00583b15028e7884b
             }
             this._displayErrorDialog(_t("Payment processing failed"), errMessage);
             this._enableButton();
