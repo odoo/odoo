@@ -242,82 +242,82 @@ QUnit.module("MockServer", (hooks) => {
         assert.deepEqual(result, 2);
     });
 
-    QUnit.test("performRPC: read_group, no group", async function (assert) {
+    QUnit.test("performRPC: web_read_group, no group", async function (assert) {
         const server = new MockServer(data, {});
         const result = await server.performRPC("", {
             model: "bar",
-            method: "read_group",
+            method: "web_read_group",
             args: [[]],
             kwargs: {
-                fields: ["foo:count"],
                 domain: [["foo", "=", -10]],
                 groupby: [],
+                aggregates: ["__count"],
             },
         });
-        assert.deepEqual(result, [{ __count: 0, foo: false, __domain: [["foo", "=", -10]] }]);
+        assert.deepEqual(result.groups, [{ __count: 0, __domain_part: [] }]);
     });
 
-    QUnit.test("performRPC: read_group, group by char", async function (assert) {
+    QUnit.test("performRPC: web_read_group, group by char", async function (assert) {
         const server = new MockServer(data, {});
         const result = await server.performRPC("", {
             model: "bar",
-            method: "read_group",
+            method: "web_read_group",
             args: [[]],
             kwargs: {
-                fields: ["name"],
                 domain: [],
                 groupby: ["name"],
+                aggregates: ["__count"],
             },
         });
-        assert.deepEqual(result, [
-            { name: "aaa", __domain: [["name", "=", "aaa"]], name_count: 1 },
-            { name: "ddd", __domain: [["name", "=", "ddd"]], name_count: 1 },
-            { name: "mmm", __domain: [["name", "=", "mmm"]], name_count: 1 },
-            { name: "xxx", __domain: [["name", "=", "xxx"]], name_count: 1 },
-            { name: "zzz", __domain: [["name", "=", "zzz"]], name_count: 2 },
+        assert.deepEqual(result.groups, [
+            { name: "aaa", __domain_part: [["name", "=", "aaa"]], __count: 1 },
+            { name: "ddd", __domain_part: [["name", "=", "ddd"]], __count: 1 },
+            { name: "mmm", __domain_part: [["name", "=", "mmm"]], __count: 1 },
+            { name: "xxx", __domain_part: [["name", "=", "xxx"]], __count: 1 },
+            { name: "zzz", __domain_part: [["name", "=", "zzz"]], __count: 2 },
         ]);
     });
 
-    QUnit.test("performRPC: read_group, group by boolean", async function (assert) {
+    QUnit.test("performRPC: web_read_group, group by boolean", async function (assert) {
         const server = new MockServer(data, {});
         const result = await server.performRPC("", {
             model: "bar",
-            method: "read_group",
+            method: "web_read_group",
             args: [[]],
             kwargs: {
-                fields: ["bool"],
                 domain: [],
                 groupby: ["bool"],
+                aggregates: ["__count"],
             },
         });
-        assert.deepEqual(result, [
-            { bool: false, __domain: [["bool", "=", false]], bool_count: 2 },
-            { bool: true, __domain: [["bool", "=", true]], bool_count: 4 },
+        assert.deepEqual(result.groups, [
+            { bool: false, __domain_part: [["bool", "=", false]], __count: 2 },
+            { bool: true, __domain_part: [["bool", "=", true]], __count: 4 },
         ]);
     });
 
-    QUnit.test("performRPC: read_group, group by date", async function (assert) {
+    QUnit.test("performRPC: web_read_group, group by date", async function (assert) {
         const server = new MockServer(data, {});
-        let result = await server.performRPC("", {
+        let result = (await server.performRPC("", {
             model: "bar",
-            method: "read_group",
+            method: "web_read_group",
             args: [[]],
             kwargs: {
-                fields: ["foo"],
                 domain: [],
-                groupby: ["date"], //Month by default
+                groupby: ["date:month"],
+                aggregates: ["__count"],
             },
-        });
+        })).groups;
         assert.deepEqual(
-            result.map((x) => x.date),
+            result.map((x) => x['date:month'][1]),
             ["April 2016", "October 2016", "December 2016", "December 2019"]
         );
         assert.deepEqual(
-            result.map((x) => x.date_count),
+            result.map((x) => x.__count),
             [1, 1, 3, 1]
         );
         assert.deepEqual(
-            result.map((x) => x.__domain),
+            result.map((x) => x.__domain_part),
             [
                 [
                     ["date", ">=", "2016-04-01"],
@@ -337,36 +337,27 @@ QUnit.module("MockServer", (hooks) => {
                 ],
             ]
         );
-        assert.deepEqual(
-            result.map((x) => x.__range["date"]),
-            [
-                { from: "2016-04-01", to: "2016-05-01" },
-                { from: "2016-10-01", to: "2016-11-01" },
-                { from: "2016-12-01", to: "2017-01-01" },
-                { from: "2019-12-01", to: "2020-01-01" },
-            ]
-        );
 
-        result = await server.performRPC("", {
+        result = (await server.performRPC("", {
             model: "bar",
-            method: "read_group",
+            method: "web_read_group",
             args: [[]],
             kwargs: {
-                fields: ["foo"],
+                aggregates: ["__count"],
                 domain: [],
                 groupby: ["date:day"],
             },
-        });
+        })).groups;
         assert.deepEqual(
-            result.map((x) => x["date:day"]),
+            result.map((x) => x["date:day"][1]),
             ["2016-04-11", "2016-10-26", "2016-12-14", "2016-12-15", "2019-12-30"]
         );
         assert.deepEqual(
-            result.map((x) => x.date_count),
+            result.map((x) => x.__count),
             [1, 1, 1, 2, 1]
         );
         assert.deepEqual(
-            result.map((x) => x.__domain),
+            result.map((x) => x.__domain_part),
             [
                 [
                     ["date", ">=", "2016-04-11"],
@@ -390,37 +381,27 @@ QUnit.module("MockServer", (hooks) => {
                 ],
             ]
         );
-        assert.deepEqual(
-            result.map((x) => x.__range["date:day"]),
-            [
-                { from: "2016-04-11", to: "2016-04-12" },
-                { from: "2016-10-26", to: "2016-10-27" },
-                { from: "2016-12-14", to: "2016-12-15" },
-                { from: "2016-12-15", to: "2016-12-16" },
-                { from: "2019-12-30", to: "2019-12-31" },
-            ]
-        );
 
-        result = await server.performRPC("", {
+        result = (await server.performRPC("", {
             model: "bar",
-            method: "read_group",
+            method: "web_read_group",
             args: [[]],
             kwargs: {
-                fields: ["foo"],
                 domain: [],
+                aggregates: ["__count"],
                 groupby: ["date:week"],
             },
-        });
+        })).groups;
         assert.deepEqual(
-            result.map((x) => x["date:week"]),
+            result.map((x) => x["date:week"][1]),
             ["W15 2016", "W43 2016", "W50 2016", "W01 2020"]
         );
         assert.deepEqual(
-            result.map((x) => x.date_count),
+            result.map((x) => x.__count),
             [1, 1, 3, 1]
         );
         assert.deepEqual(
-            result.map((x) => x.__domain),
+            result.map((x) => x.__domain_part),
             [
                 [
                     ["date", ">=", "2016-04-11"],
@@ -440,36 +421,27 @@ QUnit.module("MockServer", (hooks) => {
                 ],
             ]
         );
-        assert.deepEqual(
-            result.map((x) => x.__range["date:week"]),
-            [
-                { from: "2016-04-11", to: "2016-04-18" },
-                { from: "2016-10-24", to: "2016-10-31" },
-                { from: "2016-12-12", to: "2016-12-19" },
-                { from: "2019-12-30", to: "2020-01-06" },
-            ]
-        );
 
-        result = await server.performRPC("", {
+        result = (await server.performRPC("", {
             model: "bar",
-            method: "read_group",
+            method: "web_read_group",
             args: [[]],
             kwargs: {
-                fields: ["foo"],
                 domain: [],
+                aggregates: ["__count"],
                 groupby: ["date:quarter"],
             },
-        });
+        })).groups;
         assert.deepEqual(
-            result.map((x) => x["date:quarter"]),
+            result.map((x) => x["date:quarter"][1]),
             ["Q2 2016", "Q4 2016", "Q4 2019"]
         );
         assert.deepEqual(
-            result.map((x) => x.date_count),
+            result.map((x) => x.__count),
             [1, 4, 1]
         );
         assert.deepEqual(
-            result.map((x) => x.__domain),
+            result.map((x) => x.__domain_part),
             [
                 [
                     ["date", ">=", "2016-04-01"],
@@ -485,35 +457,27 @@ QUnit.module("MockServer", (hooks) => {
                 ],
             ]
         );
-        assert.deepEqual(
-            result.map((x) => x.__range["date:quarter"]),
-            [
-                { from: "2016-04-01", to: "2016-07-01" },
-                { from: "2016-10-01", to: "2017-01-01" },
-                { from: "2019-10-01", to: "2020-01-01" },
-            ]
-        );
 
-        result = await server.performRPC("", {
+        result = (await server.performRPC("", {
             model: "bar",
-            method: "read_group",
+            method: "web_read_group",
             args: [[]],
             kwargs: {
-                fields: ["foo"],
                 domain: [],
                 groupby: ["date:year"],
+                aggregates: ["__count"],
             },
-        });
+        })).groups;
         assert.deepEqual(
-            result.map((x) => x["date:year"]),
+            result.map((x) => x["date:year"][1]),
             ["2016", "2019"]
         );
         assert.deepEqual(
-            result.map((x) => x.date_count),
+            result.map((x) => x.__count),
             [5, 1]
         );
         assert.deepEqual(
-            result.map((x) => x.__domain),
+            result.map((x) => x.__domain_part),
             [
                 [
                     ["date", ">=", "2016-01-01"],
@@ -525,17 +489,10 @@ QUnit.module("MockServer", (hooks) => {
                 ],
             ]
         );
-        assert.deepEqual(
-            result.map((x) => x.__range["date:year"]),
-            [
-                { from: "2016-01-01", to: "2017-01-01" },
-                { from: "2019-01-01", to: "2020-01-01" },
-            ]
-        );
     });
 
     QUnit.test(
-        "performRPC: read_group, group by date with number granularity",
+        "performRPC: web_read_group, group by date with number granularity",
         async function (assert) {
             const server = new MockServer(data, {});
             const allGranularity = [
@@ -577,55 +534,55 @@ QUnit.module("MockServer", (hooks) => {
             ];
 
             for (const { granularity, result, count } of allGranularity) {
-                const response = await server.performRPC("", {
+                const response = (await server.performRPC("", {
                     model: "bar",
-                    method: "read_group",
+                    method: "web_read_group",
                     args: [[]],
                     kwargs: {
-                        fields: ["foo"],
                         domain: [],
                         groupby: [`date:${granularity}`],
+                        aggregates: ["__count"],
                     },
-                });
+                })).groups;
 
                 assert.deepEqual(
                     response.map((x) => x[`date:${granularity}`]),
                     result
                 );
                 assert.deepEqual(
-                    response.map((x) => x.date_count),
+                    response.map((x) => x.__count),
                     count
                 );
                 assert.deepEqual(
-                    response.map((x) => x.__domain),
+                    response.map((x) => x.__domain_part),
                     result.map((r) => [[`date.${granularity}`, "=", r]])
                 );
             }
         }
     );
 
-    QUnit.test("performRPC: read_group, group by datetime", async function (assert) {
+    QUnit.test("performRPC: web_read_group, group by datetime", async function (assert) {
         const server = new MockServer(data, {});
-        let result = await server.performRPC("", {
+        let result = (await server.performRPC("", {
             model: "bar",
-            method: "read_group",
+            method: "web_read_group",
             args: [[]],
             kwargs: {
-                fields: ["foo"],
+                aggregates: ["__count"],
                 domain: [],
-                groupby: ["datetime"], //Month by default
+                groupby: ["datetime:month"],
             },
-        });
+        })).groups;
         assert.deepEqual(
-            result.map((x) => x.datetime),
+            result.map((x) => x["datetime:month"][1]),
             ["April 2016", "October 2016", "December 2016", "December 2019"]
         );
         assert.deepEqual(
-            result.map((x) => x.datetime_count),
+            result.map((x) => x.__count),
             [1, 1, 3, 1]
         );
         assert.deepEqual(
-            result.map((x) => x.__domain),
+            result.map((x) => x.__domain_part),
             [
                 [
                     ["datetime", ">=", "2016-03-31 23:00:00"],
@@ -645,36 +602,27 @@ QUnit.module("MockServer", (hooks) => {
                 ],
             ]
         );
-        assert.deepEqual(
-            result.map((x) => x.__range["datetime"]),
-            [
-                { from: "2016-03-31 23:00:00", to: "2016-04-30 23:00:00" },
-                { from: "2016-09-30 23:00:00", to: "2016-10-31 23:00:00" },
-                { from: "2016-11-30 23:00:00", to: "2016-12-31 23:00:00" },
-                { from: "2019-11-30 23:00:00", to: "2019-12-31 23:00:00" },
-            ]
-        );
 
-        result = await server.performRPC("", {
+        result = (await server.performRPC("", {
             model: "bar",
-            method: "read_group",
+            method: "web_read_group",
             args: [[]],
             kwargs: {
-                fields: ["foo"],
+                aggregates: ["__count"],
                 domain: [],
                 groupby: ["datetime:hour"],
             },
-        });
+        })).groups;
         assert.deepEqual(
-            result.map((x) => x["datetime:hour"]),
+            result.map((x) => x["datetime:hour"][1]),
             ["13:00 11 Apr", "13:00 26 Oct", "13:00 14 Dec", "13:00 15 Dec", "13:00 30 Dec"]
         );
         assert.deepEqual(
-            result.map((x) => x.datetime_count),
+            result.map((x) => x.__count),
             [1, 1, 1, 2, 1]
         );
         assert.deepEqual(
-            result.map((x) => x.__domain),
+            result.map((x) => x.__domain_part),
             [
                 [
                     ["datetime", ">=", "2016-04-11 12:00:00"],
@@ -698,37 +646,26 @@ QUnit.module("MockServer", (hooks) => {
                 ],
             ]
         );
-        assert.deepEqual(
-            result.map((x) => x.__range["datetime:hour"]),
-            [
-                { from: "2016-04-11 12:00:00", to: "2016-04-11 13:00:00" },
-                { from: "2016-10-26 12:00:00", to: "2016-10-26 13:00:00" },
-                { from: "2016-12-14 12:00:00", to: "2016-12-14 13:00:00" },
-                { from: "2016-12-15 12:00:00", to: "2016-12-15 13:00:00" },
-                { from: "2019-12-30 12:00:00", to: "2019-12-30 13:00:00" },
-            ]
-        );
-
-        result = await server.performRPC("", {
+        result = (await server.performRPC("", {
             model: "bar",
-            method: "read_group",
+            method: "web_read_group",
             args: [[]],
             kwargs: {
-                fields: ["foo"],
+                aggregates: ["__count"],
                 domain: [],
                 groupby: ["datetime:day"],
             },
-        });
+        })).groups;
         assert.deepEqual(
-            result.map((x) => x["datetime:day"]),
+            result.map((x) => x["datetime:day"][1]),
             ["2016-04-11", "2016-10-26", "2016-12-14", "2016-12-15", "2019-12-30"]
         );
         assert.deepEqual(
-            result.map((x) => x.datetime_count),
+            result.map((x) => x.__count),
             [1, 1, 1, 2, 1]
         );
         assert.deepEqual(
-            result.map((x) => x.__domain),
+            result.map((x) => x.__domain_part),
             [
                 [
                     ["datetime", ">=", "2016-04-10 23:00:00"],
@@ -752,37 +689,27 @@ QUnit.module("MockServer", (hooks) => {
                 ],
             ]
         );
-        assert.deepEqual(
-            result.map((x) => x.__range["datetime:day"]),
-            [
-                { from: "2016-04-10 23:00:00", to: "2016-04-11 23:00:00" },
-                { from: "2016-10-25 23:00:00", to: "2016-10-26 23:00:00" },
-                { from: "2016-12-13 23:00:00", to: "2016-12-14 23:00:00" },
-                { from: "2016-12-14 23:00:00", to: "2016-12-15 23:00:00" },
-                { from: "2019-12-29 23:00:00", to: "2019-12-30 23:00:00" },
-            ]
-        );
 
-        result = await server.performRPC("", {
+        result = (await server.performRPC("", {
             model: "bar",
-            method: "read_group",
+            method: "web_read_group",
             args: [[]],
             kwargs: {
-                fields: ["foo"],
+                aggregates: ["__count"],
                 domain: [],
                 groupby: ["datetime:week"],
             },
-        });
+        })).groups;
         assert.deepEqual(
-            result.map((x) => x["datetime:week"]),
+            result.map((x) => x["datetime:week"][1]),
             ["W15 2016", "W43 2016", "W50 2016", "W01 2020"]
         );
         assert.deepEqual(
-            result.map((x) => x.datetime_count),
+            result.map((x) => x.__count),
             [1, 1, 3, 1]
         );
         assert.deepEqual(
-            result.map((x) => x.__domain),
+            result.map((x) => x.__domain_part),
             [
                 [
                     ["datetime", ">=", "2016-04-10 23:00:00"],
@@ -802,36 +729,27 @@ QUnit.module("MockServer", (hooks) => {
                 ],
             ]
         );
-        assert.deepEqual(
-            result.map((x) => x.__range["datetime:week"]),
-            [
-                { from: "2016-04-10 23:00:00", to: "2016-04-17 23:00:00" },
-                { from: "2016-10-23 23:00:00", to: "2016-10-30 23:00:00" },
-                { from: "2016-12-11 23:00:00", to: "2016-12-18 23:00:00" },
-                { from: "2019-12-29 23:00:00", to: "2020-01-05 23:00:00" },
-            ]
-        );
 
-        result = await server.performRPC("", {
+        result = (await server.performRPC("", {
             model: "bar",
-            method: "read_group",
+            method: "web_read_group",
             args: [[]],
             kwargs: {
-                fields: ["foo"],
+                aggregates: ["__count"],
                 domain: [],
                 groupby: ["datetime:quarter"],
             },
-        });
+        })).groups;
         assert.deepEqual(
-            result.map((x) => x["datetime:quarter"]),
+            result.map((x) => x["datetime:quarter"][1]),
             ["Q2 2016", "Q4 2016", "Q4 2019"]
         );
         assert.deepEqual(
-            result.map((x) => x.datetime_count),
+            result.map((x) => x.__count),
             [1, 4, 1]
         );
         assert.deepEqual(
-            result.map((x) => x.__domain),
+            result.map((x) => x.__domain_part),
             [
                 [
                     ["datetime", ">=", "2016-03-31 23:00:00"],
@@ -847,35 +765,27 @@ QUnit.module("MockServer", (hooks) => {
                 ],
             ]
         );
-        assert.deepEqual(
-            result.map((x) => x.__range["datetime:quarter"]),
-            [
-                { from: "2016-03-31 23:00:00", to: "2016-06-30 23:00:00" },
-                { from: "2016-09-30 23:00:00", to: "2016-12-31 23:00:00" },
-                { from: "2019-09-30 23:00:00", to: "2019-12-31 23:00:00" },
-            ]
-        );
 
-        result = await server.performRPC("", {
+        result = (await server.performRPC("", {
             model: "bar",
-            method: "read_group",
+            method: "web_read_group",
             args: [[]],
             kwargs: {
-                fields: ["foo"],
+                aggregates: ["__count"],
                 domain: [],
                 groupby: ["datetime:year"],
             },
-        });
+        })).groups;
         assert.deepEqual(
-            result.map((x) => x["datetime:year"]),
+            result.map((x) => x["datetime:year"][1]),
             ["2016", "2019"]
         );
         assert.deepEqual(
-            result.map((x) => x.datetime_count),
+            result.map((x) => x.__count),
             [5, 1]
         );
         assert.deepEqual(
-            result.map((x) => x.__domain),
+            result.map((x) => x.__domain_part),
             [
                 [
                     ["datetime", ">=", "2015-12-31 23:00:00"],
@@ -887,17 +797,10 @@ QUnit.module("MockServer", (hooks) => {
                 ],
             ]
         );
-        assert.deepEqual(
-            result.map((x) => x.__range["datetime:year"]),
-            [
-                { from: "2015-12-31 23:00:00", to: "2016-12-31 23:00:00" },
-                { from: "2018-12-31 23:00:00", to: "2019-12-31 23:00:00" },
-            ]
-        );
     });
 
     QUnit.test(
-        "performRPC: read_group, group by datetime with number granularity",
+        "performRPC: web_read_group, group by datetime with number granularity",
         async function (assert) {
             const server = new MockServer(data, {});
             const allGranularity = [
@@ -954,203 +857,202 @@ QUnit.module("MockServer", (hooks) => {
             ];
 
             for (const { granularity, result, count } of allGranularity) {
-                const response = await server.performRPC("", {
+                const response = (await server.performRPC("", {
                     model: "bar",
-                    method: "read_group",
+                    method: "web_read_group",
                     args: [[]],
                     kwargs: {
-                        fields: ["foo"],
+                        aggregates: ["__count"],
                         domain: [],
                         groupby: [`datetime:${granularity}`],
                     },
-                });
+                })).groups;
 
                 assert.deepEqual(
                     response.map((x) => x[`datetime:${granularity}`]),
                     result
                 );
                 assert.deepEqual(
-                    response.map((x) => x.datetime_count),
+                    response.map((x) => x.__count),
                     count
                 );
                 assert.deepEqual(
-                    response.map((x) => x.__domain),
+                    response.map((x) => x.__domain_part),
                     result.map((r) => [[`datetime.${granularity}`, "=", r]])
                 );
             }
         }
     );
 
-    QUnit.test("performRPC: read_group, group by m2m", async function (assert) {
+    QUnit.test("performRPC: web_read_group, group by m2m", async function (assert) {
         const server = new MockServer(data, {});
-        const result = await server.performRPC("", {
+        const result = (await server.performRPC("", {
             model: "bar",
-            method: "read_group",
+            method: "web_read_group",
             args: [[]],
             kwargs: {
-                fields: ["partner_ids"],
+                aggregates: ["__count"],
                 domain: [],
                 groupby: ["partner_ids"],
             },
-        });
+        })).groups;
         assert.deepEqual(result, [
-            { partner_ids: false, __domain: [["partner_ids", "=", false]], partner_ids_count: 3 },
+            { partner_ids: false, __domain_part: [["partner_ids", "=", false]], __count: 3 },
             {
                 partner_ids: [1, "Jean-Michel"],
-                __domain: [["partner_ids", "=", 1]],
-                partner_ids_count: 2,
+                __domain_part: [["partner_ids", "=", 1]],
+                __count: 2,
             },
             {
                 partner_ids: [2, "Raoul"],
-                __domain: [["partner_ids", "=", 2]],
-                partner_ids_count: 2,
+                __domain_part: [["partner_ids", "=", 2]],
+                __count: 2,
             },
         ]);
     });
 
-    QUnit.test("performRPC: read_group, order by date with granularity", async function (assert) {
+    QUnit.test("performRPC: web_read_group, order by date with granularity", async function (assert) {
         const server = new MockServer(data, {});
-        let result = await server.performRPC("", {
+        let result = (await server.performRPC("", {
             model: "bar",
-            method: "read_group",
+            method: "web_read_group",
             args: [[]],
             kwargs: {
-                fields: ["foo"],
+                aggregates: [],
                 domain: [],
                 groupby: ["date:day"],
-                orderby: "date:day ASC",
+                order: "date:day ASC",
             },
-        });
+        })).groups;
         assert.deepEqual(
-            result.map((x) => x["date:day"]),
+            result.map((x) => x["date:day"][1]),
             ["2016-04-11", "2016-10-26", "2016-12-14", "2016-12-15", "2019-12-30"]
         );
 
-        result = await server.performRPC("", {
+        result = (await server.performRPC("", {
             model: "bar",
-            method: "read_group",
+            method: "web_read_group",
             args: [[]],
             kwargs: {
-                fields: ["foo"],
+                aggregates: [],
                 domain: [],
                 groupby: ["date:day"],
-                orderby: "date:day DESC",
+                order: "date:day DESC",
             },
-        });
+        })).groups;
         assert.deepEqual(
-            result.map((x) => x["date:day"]),
+            result.map((x) => x["date:day"][1]),
             ["2019-12-30", "2016-12-15", "2016-12-14", "2016-10-26", "2016-04-11"]
         );
     });
 
-    QUnit.test("performRPC: read_group, group by m2o", async function (assert) {
+    QUnit.test("performRPC: web_read_group, group by m2o", async function (assert) {
         data.models.partner.fields.sequence = { type: "integer" };
         data.models.partner.records[0].sequence = 1;
         data.models.partner.records[1].sequence = 0;
 
         const server = new MockServer(data, {});
-        const result = await server.performRPC("", {
+        const result = (await server.performRPC("", {
             model: "bar",
-            method: "read_group",
+            method: "web_read_group",
             args: [[]],
             kwargs: {
-                fields: ["partner_id"],
+                aggregates: ["__count"],
                 domain: [],
                 groupby: ["partner_id"],
             },
-        });
+        })).groups;
         assert.deepEqual(result, [
-            { partner_id: false, __domain: [["partner_id", "=", false]], partner_id_count: 3 },
-            { partner_id: [2, "Raoul"], __domain: [["partner_id", "=", 2]], partner_id_count: 1 },
+            { partner_id: false, __domain_part: [["partner_id", "=", false]], __count: 3 },
+            { partner_id: [2, "Raoul"], __domain_part: [["partner_id", "=", 2]], __count: 1 },
             {
                 partner_id: [1, "Jean-Michel"],
-                __domain: [["partner_id", "=", 1]],
-                partner_id_count: 2,
+                __domain_part: [["partner_id", "=", 1]],
+                __count: 2,
             },
         ]);
     });
 
-    QUnit.test("performRPC: read_group, group by integer", async function (assert) {
+    QUnit.test("performRPC: web_read_group, group by integer", async function (assert) {
         const server = new MockServer(data, {});
-        const result = await server.performRPC("", {
+        const result = (await server.performRPC("", {
             model: "bar",
-            method: "read_group",
+            method: "web_read_group",
             args: [[]],
             kwargs: {
-                fields: ["foo"],
+                aggregates: ["__count"],
                 domain: [],
                 groupby: ["foo"],
             },
-        });
+        })).groups;
         assert.deepEqual(result, [
             {
-                __domain: [["foo", "=", 0]],
+                __domain_part: [["foo", "=", 0]],
                 foo: 0,
-                foo_count: 1,
+                __count: 1,
             },
             {
-                __domain: [["foo", "=", 1]],
+                __domain_part: [["foo", "=", 1]],
                 foo: 1,
-                foo_count: 1,
+                __count: 1,
             },
             {
-                __domain: [["foo", "=", 2]],
+                __domain_part: [["foo", "=", 2]],
                 foo: 2,
-                foo_count: 1,
+                __count: 1,
             },
             {
-                __domain: [["foo", "=", 12]],
+                __domain_part: [["foo", "=", 12]],
                 foo: 12,
-                foo_count: 1,
+                __count: 1,
             },
             {
-                __domain: [["foo", "=", 17]],
+                __domain_part: [["foo", "=", 17]],
                 foo: 17,
-                foo_count: 1,
+                __count: 1,
             },
             {
-                __domain: [["foo", "=", 42]],
+                __domain_part: [["foo", "=", 42]],
                 foo: 42,
-                foo_count: 1,
+                __count: 1,
             },
         ]);
     });
 
-    QUnit.test("performRPC: read_group, group by selection", async function (assert) {
+    QUnit.test("performRPC: web_read_group, group by selection", async function (assert) {
         const server = new MockServer(data, {});
-        const result = await server.performRPC("", {
+        const result = (await server.performRPC("", {
             model: "bar",
-            method: "read_group",
+            method: "web_read_group",
             args: [[]],
             kwargs: {
-                fields: ["select"],
+                aggregates: ["__count"],
                 domain: [],
                 groupby: ["select"],
             },
-        });
+        })).groups;
         assert.deepEqual(result, [
-            { select: "new", __domain: [["select", "=", "new"]], select_count: 3 },
-            { select: "dev", __domain: [["select", "=", "dev"]], select_count: 1 },
-            { select: "done", __domain: [["select", "=", "done"]], select_count: 2 },
+            { select: "new", __domain_part: [["select", "=", "new"]], __count: 3 },
+            { select: "dev", __domain_part: [["select", "=", "dev"]], __count: 1 },
+            { select: "done", __domain_part: [["select", "=", "done"]], __count: 2 },
         ]);
     });
 
-    QUnit.test("performRPC: read_group, group by two levels", async function (assert) {
+    QUnit.test("performRPC: web_read_group, group by two levels", async function (assert) {
         const server = new MockServer(data, {});
-        const result = await server.performRPC("", {
+        const result = (await server.performRPC("", {
             model: "bar",
-            method: "read_group",
+            method: "web_read_group",
             args: [[]],
             kwargs: {
-                fields: ["bool", "partner_ids"],
+                aggregates: ["__count"],
                 domain: [],
                 groupby: ["bool", "partner_ids"],
-                lazy: false,
             },
-        });
+        })).groups;
         assert.deepEqual(result, [
             {
-                __domain: [
+                __domain_part: [
                     ["partner_ids", "=", false],
                     ["bool", "=", false],
                 ],
@@ -1159,7 +1061,7 @@ QUnit.module("MockServer", (hooks) => {
                 partner_ids: false,
             },
             {
-                __domain: [
+                __domain_part: [
                     ["partner_ids", "=", 2],
                     ["bool", "=", false],
                 ],
@@ -1168,7 +1070,7 @@ QUnit.module("MockServer", (hooks) => {
                 partner_ids: [2, "Raoul"],
             },
             {
-                __domain: [
+                __domain_part: [
                     ["partner_ids", "=", false],
                     ["bool", "=", true],
                 ],
@@ -1177,7 +1079,7 @@ QUnit.module("MockServer", (hooks) => {
                 partner_ids: false,
             },
             {
-                __domain: [
+                __domain_part: [
                     ["partner_ids", "=", 1],
                     ["bool", "=", true],
                 ],
@@ -1186,7 +1088,7 @@ QUnit.module("MockServer", (hooks) => {
                 partner_ids: [1, "Jean-Michel"],
             },
             {
-                __domain: [
+                __domain_part: [
                     ["partner_ids", "=", 2],
                     ["bool", "=", true],
                 ],
@@ -1198,230 +1100,155 @@ QUnit.module("MockServer", (hooks) => {
     });
 
     QUnit.test(
-        "performRPC: read_group with special measure specifications",
+        "performRPC: web_read_group with special measure specifications",
         async function (assert) {
             data.models.bar.fields.float = { string: "Float", type: "float" };
             data.models.bar.records[0].float = 2;
             const server = new MockServer(data, {});
-            const result = await server.performRPC("", {
+            const result = (await server.performRPC("", {
                 model: "bar",
-                method: "read_group",
+                method: "web_read_group",
                 args: [[]],
                 kwargs: {
-                    fields: ["float:sum", "foo_sum:sum(foo)"],
+                    aggregates: ["float:sum", "__count"],
                     domain: [],
                     groupby: ["bool"],
-                    lazy: false,
                 },
-            });
+            })).groups;
             assert.deepEqual(result, [
                 {
                     __count: 2,
-                    __domain: [["bool", "=", false]],
+                    __domain_part: [["bool", "=", false]],
                     bool: false,
-                    float: 0,
-                    foo_sum: 17,
+                    "float:sum": 0,
                 },
                 {
                     __count: 4,
-                    __domain: [["bool", "=", true]],
+                    __domain_part: [["bool", "=", true]],
                     bool: true,
-                    float: 2,
-                    foo_sum: 57,
+                    "float:sum": 2,
                 },
             ]);
         }
     );
 
-    QUnit.test("performRPC: read_group with array_agg", async function (assert) {
+    QUnit.test("performRPC: web_read_group with array_agg", async function (assert) {
         const server = new MockServer(data, {});
         const aggregateValue = [null, 2, null, 1, null, 1];
-        const result1 = await server.performRPC("", {
+        const result2 = (await server.performRPC("", {
             model: "bar",
-            method: "read_group",
+            method: "web_read_group",
             args: [[]],
             kwargs: {
-                fields: ["aggregateLabel:array_agg(partner_id)"],
+                aggregates: ["partner_id:array_agg", "__count"],
                 domain: [],
                 groupby: [],
             },
-        });
-        assert.deepEqual(result1, [
-            {
-                __count: 6,
-                __domain: [],
-                aggregateLabel: aggregateValue,
-            },
-        ]);
-        const result2 = await server.performRPC("", {
-            model: "bar",
-            method: "read_group",
-            args: [[]],
-            kwargs: {
-                fields: ["partner_id:array_agg"],
-                domain: [],
-                groupby: [],
-            },
-        });
+        })).groups;
         assert.deepEqual(result2, [
             {
                 __count: 6,
-                __domain: [],
-                partner_id: aggregateValue,
+                __domain_part: [],
+                "partner_id:array_agg": aggregateValue,
             },
         ]);
     });
 
-    QUnit.test("performRPC: read_group with array_agg on id", async function (assert) {
+    QUnit.test("performRPC: web_read_group with array_agg on id", async function (assert) {
         const server = new MockServer(data, {});
-        const result1 = await server.performRPC("", {
+        const result2 = (await server.performRPC("", {
             model: "bar",
-            method: "read_group",
+            method: "web_read_group",
             args: [[]],
             kwargs: {
-                fields: ["aggregateLabel:array_agg(id)"],
-                domain: [],
-                groupby: [],
-            },
-        });
-        assert.deepEqual(result1, [
-            {
-                __count: 6,
-                __domain: [],
-                aggregateLabel: [1, 2, 3, 4, 5, 6],
-            },
-        ]);
-        const result2 = await server.performRPC("", {
-            model: "bar",
-            method: "read_group",
-            args: [[]],
-            kwargs: {
-                fields: ["id:array_agg"],
+                aggregates: ["id:array_agg"],
                 domain: [["id", "in", [2, 3, 5]]],
                 groupby: [],
             },
-        });
+        })).groups;
         assert.deepEqual(result2, [
             {
-                __count: 3,
-                __domain: [["id", "in", [2, 3, 5]]],
-                id: [2, 3, 5],
+                __domain_part: [],
+                "id:array_agg": [2, 3, 5],
             },
         ]);
     });
 
     QUnit.test(
-        "performRPC: read_group with array_agg on an integer field",
+        "performRPC: web_read_group with array_agg on an integer field",
         async function (assert) {
             const server = new MockServer(data, {});
             const aggregateValue = [12, 1, 17, 2, 0, 42];
-            const result1 = await server.performRPC("", {
+            const result2 = (await server.performRPC("", {
                 model: "bar",
-                method: "read_group",
+                method: "web_read_group",
                 args: [[]],
                 kwargs: {
-                    fields: ["aggregateLabel:array_agg(foo)"],
+                    aggregates: ["foo:array_agg"],
                     domain: [],
                     groupby: [],
                 },
-            });
-            assert.deepEqual(result1, [
-                {
-                    __count: 6,
-                    __domain: [],
-                    aggregateLabel: aggregateValue,
-                },
-            ]);
-            const result2 = await server.performRPC("", {
-                model: "bar",
-                method: "read_group",
-                args: [[]],
-                kwargs: {
-                    fields: ["foo:array_agg"],
-                    domain: [],
-                    groupby: [],
-                },
-            });
+            })).groups;
             assert.deepEqual(result2, [
                 {
-                    __count: 6,
-                    __domain: [],
-                    foo: aggregateValue,
+                    __domain_part: [],
+                    "foo:array_agg": aggregateValue,
                 },
             ]);
         }
     );
 
-    QUnit.test("performRPC: read_group with count_distinct", async function (assert) {
+    QUnit.test("performRPC: web_read_group with count_distinct", async function (assert) {
         const server = new MockServer(data, {});
-        const result1 = await server.performRPC("", {
+        const result2 = (await server.performRPC("", {
             model: "bar",
-            method: "read_group",
+            method: "web_read_group",
             args: [[]],
             kwargs: {
-                fields: ["aggregateLabel:count_distinct(partner_id)"],
+                aggregates: ["partner_id:count_distinct", "__count"],
                 domain: [],
                 groupby: [],
             },
-        });
-        assert.deepEqual(result1, [
-            {
-                __count: 6,
-                __domain: [],
-                aggregateLabel: 2,
-            },
-        ]);
-        const result2 = await server.performRPC("", {
-            model: "bar",
-            method: "read_group",
-            args: [[]],
-            kwargs: {
-                fields: ["partner_id:count_distinct"],
-                domain: [],
-                groupby: [],
-            },
-        });
+        })).groups;
         assert.deepEqual(result2, [
             {
                 __count: 6,
-                __domain: [],
-                partner_id: 2,
+                __domain_part: [],
+                "partner_id:count_distinct": 2,
             },
         ]);
 
-        const result3 = await server.performRPC("", {
+        const result3 = (await server.performRPC("", {
             model: "bar",
-            method: "read_group",
+            method: "web_read_group",
             args: [[]],
             kwargs: {
-                fields: ["partner_id:count_distinct"],
+                aggregates: ["partner_id:count_distinct"],
                 domain: [[0, "=", 1]],
                 groupby: [],
             },
-        });
+        })).groups;
         assert.deepEqual(result3, [
             {
-                __count: 0,
-                __domain: [[0, "=", 1]],
-                partner_id: 0,
+                __domain_part: [],
+                "partner_id:count_distinct": 0,
             },
         ]);
 
-        const result4 = await server.performRPC("", {
+        const result4 = (await server.performRPC("", {
             model: "bar",
-            method: "read_group",
+            method: "web_read_group",
             args: [[]],
             kwargs: {
-                fields: ["partner_ref:count_distinct"],
+                aggregates: ["partner_ref:count_distinct"],
                 domain: [],
                 groupby: [],
             },
-        });
+        })).groups;
         assert.deepEqual(result4, [
             {
-                __count: 6,
-                __domain: [],
-                partner_ref: 2,
+                __domain_part: [],
+                "partner_ref:count_distinct": 2,
             },
         ]);
     });
@@ -1465,10 +1292,10 @@ QUnit.module("MockServer", (hooks) => {
         });
 
         assert.deepEqual(result, {
-            "W01 2020": { dev: 0, done: 0, new: 1 },
-            "W15 2016": { dev: 0, done: 0, new: 1 },
-            "W43 2016": { dev: 0, done: 0, new: 1 },
-            "W50 2016": { dev: 1, done: 2, new: 0 },
+            "2019-12-29 23:00:00": { dev: 0, done: 0, new: 1 },
+            "2016-04-10 23:00:00": { dev: 0, done: 0, new: 1 },
+            "2016-10-23 23:00:00": { dev: 0, done: 0, new: 1 },
+            "2016-12-11 23:00:00": { dev: 1, done: 2, new: 0 },
         });
     });
 

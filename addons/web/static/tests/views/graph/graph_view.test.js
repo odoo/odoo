@@ -1507,7 +1507,7 @@ test("reload graph with correct fields", async () => {
     expect.assertions(2);
 
     onRpc("web_read_group", ({ kwargs }) => {
-        expect(kwargs.fields).toEqual(["__count", "foo:sum"]);
+        expect(kwargs.aggregates).toEqual(["__count", "foo:sum"]);
     });
 
     await mountView({
@@ -2305,7 +2305,7 @@ test("fallback on initial groupby when the groupby from control panel has 0 leng
 
 test("change mode, stacked, or order via the graph buttons does not reload datapoints, change measure does", async () => {
     onRpc("web_read_group", ({ kwargs }) => {
-        expect.step(kwargs.fields);
+        expect.step(kwargs.aggregates);
     });
     const view = await mountView({
         type: "graph",

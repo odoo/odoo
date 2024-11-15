@@ -2360,8 +2360,8 @@ test("debugManager is active for views", async () => {
 
 test.tags("desktop");
 test("reload a view via the view switcher keep state", async () => {
-    onRpc("read_group", () => {
-        expect.step("read_group");
+    onRpc("web_read_group", () => {
+        expect.step("web_read_group");
     });
 
     await mountWithCleanup(WebClient);
@@ -2383,8 +2383,8 @@ test("reload a view via the view switcher keep state", async () => {
     await switchView("pivot");
     expect(".o_pivot_measure_row").toHaveClass("o_pivot_sort_order_asc");
     expect.verifySteps([
-        "read_group", // initial read_group
-        "read_group", // read_group at reload after switch view
+        "web_read_group", // initial web_read_group
+        "web_read_group", // web_read_group at reload after switch view
     ]);
 });
 

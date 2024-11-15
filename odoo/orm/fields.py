@@ -150,12 +150,11 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
     :param bool store: whether the field is stored in database
         (default:``True``, ``False`` for computed fields)
 
-    :param str aggregator: aggregate function used by :meth:`~odoo.models.Model.read_group`
-        when grouping on this field.
+    :param str aggregator: default aggregate function used by the webclient
+        on this field when using Group By feature.
 
         Supported aggregate functions are:
 
-        * ``array_agg`` : values, including nulls, concatenated into an array
         * ``count`` : number of rows
         * ``count_distinct`` : number of distinct rows
         * ``bool_and`` : true if all values are true, otherwise false
@@ -165,7 +164,7 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
         * ``avg`` : the average (arithmetic mean) of all values
         * ``sum`` : sum of all values
 
-    :param str group_expand: function used to expand read_group results when grouping on
+    :param str group_expand: function used to expand web_read_group results when grouping on
         the current field. For selection fields, ``group_expand=True`` automatically
         expands groups for all selection keys.
 
@@ -188,7 +187,7 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
     :param bool precompute: whether the field should be computed before record insertion
         in database.  Should be used to specify manually some fields as precompute=True
         when the field can be computed before record insertion.
-        (e.g. avoid statistics fields based on search/read_group), many2one
+        (e.g. avoid statistics fields based on search/_read_group), many2one
         linking to the previous record, ... (default: `False`)
 
         .. warning::
@@ -283,7 +282,7 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
 
     related_field = None                # corresponding related field
     aggregator = None                   # operator for aggregating values
-    group_expand = None                 # name of method to expand groups in read_group()
+    group_expand = None                 # name of method to expand groups in web_read_group()
     prefetch = True                     # the prefetch group (False means no group)
 
     default_export_compatible = False   # whether the field must be exported by default in an import-compatible export

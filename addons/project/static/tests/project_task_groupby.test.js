@@ -81,7 +81,7 @@ test("project.task (kanban): check group label for no deadline", async () => {
         resModel: "project.task",
         type: "kanban",
         arch: `
-            <kanban js_class="project_task_kanban" default_group_by="date_deadline">
+            <kanban js_class="project_task_kanban" default_group_by="date_deadline:month">
                 <templates>
                     <t t-name="card"/>
                 </templates>
