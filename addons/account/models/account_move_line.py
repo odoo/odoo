@@ -1800,7 +1800,7 @@ class AccountMoveLine(models.Model):
         other_aml = (other_aml_values or {}).get('aml')
         remaining_amount_curr = aml_values['amount_residual_currency']
         remaining_amount = aml_values['amount_residual']
-        company_currency = aml.company_currency_id
+        company_currency = aml.company_currency_id or self.env.company.currency_id
         currency = aml._get_reconciliation_aml_field_value('currency_id', shadowed_aml_values)
         account = aml._get_reconciliation_aml_field_value('account_id', shadowed_aml_values)
         has_zero_residual = company_currency.is_zero(remaining_amount)
@@ -2495,6 +2495,8 @@ class AccountMoveLine(models.Model):
                 amounts_list = []
                 exchange_max_date = date.min
                 for aml in involved_amls:
+                    if not aml.company_currency_id:
+                        continue
                     if not aml.company_currency_id.is_zero(aml.amount_residual):
                         exchange_lines_to_fix += aml
                         amounts_list.append({'amount_residual': aml.amount_residual})
