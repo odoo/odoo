@@ -150,3 +150,36 @@ wTourUtils.registerWebsitePreviewTour("website_media_dialog_image_shape", {
         run: () => {}, //it's a check
     },
 ]);
+
+wTourUtils.registerWebsitePreviewTour("website_media_dialog_insert_media", {
+    test: true,
+    url: "/",
+    edition: true,
+}, () => [
+    wTourUtils.dragNDrop({
+        id: "s_text_block",
+        name: "Text",
+    }),
+    {
+        content: "Click on the first paragraph",
+        trigger: "iframe .s_text_block p",
+    },
+    {
+        content: "Click on the toolbar's 'insert media' button",
+        trigger: ".oe-toolbar #media-insert",
+    },
+    {
+        content: "Search for an illustration/image",
+        trigger: ".o_select_media_dialog .o_we_search",
+        run: "text a",
+    },
+    {
+        content: "Click on the first illustration/image",
+        trigger: ".o_select_media_dialog img.o_we_attachment_highlight",
+    },
+    {
+        content: "Verify that the illustration/image was inserted",
+        trigger: "iframe .s_text_block p > img",
+        run: () => {}, //it's a check
+    },
+]);
