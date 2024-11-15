@@ -772,6 +772,29 @@ test(`list view with adjacent buttons with invisible modifier`, async () => {
     expect(`td button i.fa-exclamation`).toHaveCount(3);
 });
 
+test(`list view with adjacent buttons with width attribute`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <button icon="fa-play"/>
+                <button icon="fa-heart" width="25px"/>
+                <button icon="fa-cog"/>
+                <button icon="fa-list"/>
+            </list>
+        `,
+    });
+    expect(`th:not(.o_list_record_selector)`).toHaveCount(4, {
+        message: "adjacent buttons with no width in the arch must be grouped in a single column",
+    });
+    expect(".o_data_row td:not(.o_list_record_selector):nth-child(3) .fa-play").toHaveCount(4);
+    expect(".o_data_row td:not(.o_list_record_selector):nth-child(4) .fa-heart").toHaveCount(4);
+    expect(".o_data_row td:not(.o_list_record_selector):nth-child(5) .fa-cog").toHaveCount(4);
+    expect(".o_data_row td:not(.o_list_record_selector):nth-child(5) .fa-list").toHaveCount(4);
+});
+
 test(`list view with icon buttons`, async () => {
     Foo._records.splice(1);
 
