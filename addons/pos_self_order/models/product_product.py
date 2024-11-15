@@ -49,12 +49,6 @@ class ProductTemplate(models.Model):
                 product['_archived_combinations'].append(product_product.product_template_attribute_value_ids.ids)
 
     @api.model
-    def _load_pos_self_data_fields(self, config_id):
-        params = super()._load_pos_self_data_fields(config_id)
-        params += ['public_description']
-        return params
-
-    @api.model
     def _load_pos_data_fields(self, config_id):
         params = super()._load_pos_data_fields(config_id)
         params += ['self_order_available']
