@@ -2,6 +2,7 @@
 from . import account_move
 from . import account_tax
 from . import http_adapter
+from . import res_partner
 from . import template_es_assec
 from . import template_es_common
 from . import template_es_coop_full

@@ -5,6 +5,7 @@ from base64 import b64decode
 from pytz import timezone
 from datetime import datetime
 from cryptography.hazmat.primitives.serialization import Encoding, NoEncryption, PrivateFormat
+from OpenSSL.crypto import load_certificate, load_privatekey, FILETYPE_PEM
 
 
 from odoo import _, api, fields, models, tools
@@ -55,6 +56,17 @@ class Certificate(models.Model):
             encryption_algorithm=NoEncryption(),
         )
         return pem_certificate, pem_private_key, certificate
+
+    def _decode_certificate_PEM(self):
+        """
+        Return certificate data
+
+        :return tuple: private_key, certificate
+        """
+        cert_file, key_file, _certificate = self._decode_certificate()
+        cert = load_certificate(FILETYPE_PEM, cert_file)
+        pkey = load_privatekey(FILETYPE_PEM, key_file)
+        return pkey, cert
 
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
