@@ -443,7 +443,7 @@ class TestMailgateway(MailGatewayCommon):
         })
 
         record = self.format_and_process(MAIL_TEMPLATE, from_1.email_formatted, f'groups@{self.alias_domain}')
-        self.assertFalse(record.message_ids[0].author_id)
+        self.assertFalse(record.message_ids[0].author_id, f'Should not link a partner, especially not {from_1}')
         self.assertEqual(record.message_ids[0].email_from, from_1.email_formatted)
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_thread', 'odoo.models')
