@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <template id="verifactu_record_query">
+        <sfLRC:ConsultaFactuSistemaFacturacion
+            xmlns:sf="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd"
+            xmlns:sfLRC="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/ConsultaLR.xsd">
+            <sfLRC:Cabecera>
+                <sf:IDVersion t-out="_path_get(vals, 'Cabecera/IDVersion')"/>
+                <sf:ObligadoEmision t-if="_path_get(vals, 'Cabecera/ObligadoEmision')">
+                    <sf:NombreRazon t-out="_path_get(vals, 'Cabecera/ObligadoEmision/NombreRazon')"/>
+                    <sf:NIF t-out="_path_get(vals, 'Cabecera/ObligadoEmision/NIF')"/>
+                </sf:ObligadoEmision>
+            </sfLRC:Cabecera>
+            <sfLRC:FiltroConsulta>
+                <sfLRC:PeriodoImputacion>
+                    <sf:Ejercicio t-out="_path_get(vals, 'FiltroConsulta/PeriodoImputacion/Ejercicio')"/>
+                    <sf:Periodo t-out="_path_get(vals, 'FiltroConsulta/PeriodoImputacion/Periodo')"/>
+                </sfLRC:PeriodoImputacion>
+            </sfLRC:FiltroConsulta>
+        </sfLRC:ConsultaFactuSistemaFacturacion>
+    </template>
+
+    <template id="verifactu_record_registration">
+        <sum:RegFactuSistemaFacturacion
+            xmlns:sum="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroLR.xsd"
+            xmlns:sum1="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd">
+            <t t-call="l10n_es_edi_verifactu.verifactu_cabecera">
+                <t t-set="vals" t-value="vals['Cabecera']"/>
+            </t>
+        </sum:RegFactuSistemaFacturacion>
+    </template>
+
+    <template id="verifactu_cabecera">
+        <sum:Cabecera
+            xmlns:sum="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroLR.xsd"
+            xmlns:sum1="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd">
+            <sum1:ObligadoEmision>
+                <sum1:NombreRazon t-out="_path_get(vals, 'ObligadoEmision/NombreRazon')"/>
+                <sum1:NIF t-out="_path_get(vals, 'ObligadoEmision/NIF')"/>
+            </sum1:ObligadoEmision>
+            <sum1:RemisionVoluntaria t-if="_path_get(vals, 'RemisionVoluntaria')">
+                <sum1:Incidencia t-out="_path_get(vals, 'RemisionVoluntaria/Incidencia')"/>
+            </sum1:RemisionVoluntaria>
+        </sum:Cabecera>
+    </template>
+
+    <template id="verifactu_registro_factura">
+        <sum:RegistroFactura xmlns:sum="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroLR.xsd">
+            <t t-if="cancellation">
+                <t t-call="l10n_es_edi_verifactu.verifactu_registro_anulacion"/>
+            </t>
+            <t t-else="">
+                <t t-call="l10n_es_edi_verifactu.verifactu_registro_alta"/>
+            </t>
+        </sum:RegistroFactura>
+    </template>
+
+    <template id="verifactu_registro_alta">
+        <sum1:RegistroAlta
+            xmlns:sum="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroLR.xsd"
+            xmlns:sum1="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd">
+            <sum1:IDVersion t-out="_path_get(vals, 'RegistroAlta/IDVersion')"/>
+            <sum1:IDFactura>
+                <sum1:IDEmisorFactura t-out="_path_get(vals, 'RegistroAlta/IDFactura/IDEmisorFactura')"/>
+                <sum1:NumSerieFactura t-out="_path_get(vals, 'RegistroAlta/IDFactura/NumSerieFactura')"/>
+                <sum1:FechaExpedicionFactura t-out="_path_get(vals, 'RegistroAlta/IDFactura/FechaExpedicionFactura')"/>
+            </sum1:IDFactura>
+            <sum1:RefExterna t-out="_path_get(vals, 'RegistroAlta/RefExterna')"/>
+            <sum1:NombreRazonEmisor t-out="_path_get(vals, 'RegistroAlta/NombreRazonEmisor')"/>
+            <sum1:Subsanacion t-out="_path_get(vals, 'RegistroAlta/Subsanacion')"/>
+            <sum1:RechazoPrevio t-out="_path_get(vals, 'RegistroAlta/RechazoPrevio')"/>
+            <sum1:TipoFactura t-out="_path_get(vals, 'RegistroAlta/TipoFactura')"/>
+            <sum1:TipoRectificativa t-out="_path_get(vals, 'RegistroAlta/TipoRectificativa')"/>
+            <sum1:FacturasRectificadas t-if="_path_get(vals, 'RegistroAlta/FacturasRectificadas/IDFacturaRectificada')">
+                <sum1:IDFacturaRectificada>
+                    <sum1:IDEmisorFactura t-out="_path_get(vals, 'RegistroAlta/FacturasRectificadas/IDFacturaRectificada/IDEmisorFactura')"/>
+                    <sum1:NumSerieFactura t-out="_path_get(vals, 'RegistroAlta/FacturasRectificadas/IDFacturaRectificada/NumSerieFactura')"/>
+                    <sum1:FechaExpedicionFactura t-out="_path_get(vals, 'RegistroAlta/FacturasRectificadas/IDFacturaRectificada/FechaExpedicionFactura')"/>
+                </sum1:IDFacturaRectificada>
+            </sum1:FacturasRectificadas>
+            <sum1:FechaOperacion t-out="_path_get(vals, 'RegistroAlta/FechaOperacion')"/>
+            <sum1:DescripcionOperacion t-out="_path_get(vals, 'RegistroAlta/DescripcionOperacion')"/>
+            <sum1:FacturaSimplificadaArt7273 t-out="_path_get(vals, 'RegistroAlta/FacturaSimplificadaArt7273')"/>
+            <sum1:FacturaSinIdentifDestinatarioArt61d t-out="_path_get(vals, 'RegistroAlta/FacturaSinIdentifDestinatarioArt61d')"/>
+            <sum1:Macrodato t-out="_path_get(vals, 'RegistroAlta/Macrodato')"/>
+            <sum1:Destinatarios t-if="_path_get(vals, 'RegistroAlta/Destinatarios')">
+                <sum1:IDDestinatario>
+                    <sum1:NombreRazon t-out="_path_get(vals, 'RegistroAlta/Destinatarios/IDDestinatario/NombreRazon')"/>
+                    <!-- NIF or IDOtro -->
+                    <sum1:NIF t-out="_path_get(vals, 'RegistroAlta/Destinatarios/IDDestinatario/NIF')"/>
+                    <sum1:IDOtro t-if="_path_get(vals, 'RegistroAlta/Destinatarios/IDDestinatario/IDOtro')">
+                        <sum1:CodigoPais t-out="_path_get(vals, 'RegistroAlta/Destinatarios/IDDestinatario/IDOtro/CodigoPais')"/>
+                        <sum1:IDType t-out="_path_get(vals, 'RegistroAlta/Destinatarios/IDDestinatario/IDOtro/IDType')"/>
+                        <sum1:ID t-out="_path_get(vals, 'RegistroAlta/Destinatarios/IDDestinatario/IDOtro/ID')"/>
+                    </sum1:IDOtro>
+                </sum1:IDDestinatario>
+            </sum1:Destinatarios>
+            <sum1:Cupon t-out="_path_get(vals, 'RegistroAlta/Cupon')"/>
+            <sum1:Desglose>
+                <sum1:DetalleDesglose t-foreach="_path_get(vals, 'RegistroAlta/Desglose/DetalleDesglose')" t-as="detalle">
+                    <sum1:Impuesto t-out="detalle['Impuesto']"/>
+                    <sum1:ClaveRegimen t-out="detalle['ClaveRegimen']"/>
+                    <sum1:CalificacionOperacion t-out="detalle['CalificacionOperacion']"/>
+                    <sum1:OperacionExenta t-if="not detalle['CalificacionOperacion']" t-out="detalle['OperacionExenta']"/>
+                    <sum1:TipoImpositivo t-out="detalle['TipoImpositivo']"/>
+                    <sum1:BaseImponibleOimporteNoSujeto t-out="detalle['BaseImponibleOimporteNoSujeto']"/>
+                    <sum1:BaseImponibleACoste t-out="detalle['BaseImponibleACoste']"/>
+                    <sum1:CuotaRepercutida t-out="detalle['CuotaRepercutida']"/>
+                    <sum1:TipoRecargoEquivalencia t-out="detalle['TipoRecargoEquivalencia']"/>
+                    <sum1:CuotaRecargoEquivalencia t-out="detalle['CuotaRecargoEquivalencia']"/>
+                </sum1:DetalleDesglose>
+            </sum1:Desglose>
+            <sum1:CuotaTotal t-out="_path_get(vals, 'RegistroAlta/CuotaTotal')"/>
+            <sum1:ImporteTotal t-out="_path_get(vals, 'RegistroAlta/ImporteTotal')"/>
+            <t t-call="l10n_es_edi_verifactu.verifactu_encadenamiento">
+                <t t-set="vals" t-value="vals['RegistroAlta']"/>
+            </t>
+            <t t-call="l10n_es_edi_verifactu.verifactu_sistema_informatico">
+                <t t-set="vals" t-value="vals['RegistroAlta']"/>
+            </t>
+            <sum1:FechaHoraHusoGenRegistro t-out="_path_get(vals, 'RegistroAlta/FechaHoraHusoGenRegistro')"/>
+            <sum1:TipoHuella t-out="_path_get(vals, 'RegistroAlta/TipoHuella')"/>
+            <sum1:Huella t-out="_path_get(vals, 'RegistroAlta/Huella')"/>
+            <t t-call="l10n_es_edi_verifactu.verifactu_signature_xades">
+                <t t-set="vals" t-value="vals['RegistroAlta']['dsig']"/>
+            </t>
+        </sum1:RegistroAlta>
+    </template>
+
+    <template id="verifactu_registro_anulacion">
+        <sum1:RegistroAnulacion
+            xmlns:sum="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroLR.xsd"
+            xmlns:sum1="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd">
+            <sum1:IDVersion t-out="_path_get(vals, 'RegistroAnulacion/IDVersion')"/>
+            <sum1:IDFactura>
+                <sum1:IDEmisorFacturaAnulada t-out="_path_get(vals, 'RegistroAnulacion/IDFactura/IDEmisorFacturaAnulada')"/>
+                <sum1:NumSerieFacturaAnulada t-out="_path_get(vals, 'RegistroAnulacion/IDFactura/NumSerieFacturaAnulada')"/>
+                <sum1:FechaExpedicionFacturaAnulada t-out="_path_get(vals, 'RegistroAnulacion/IDFactura/FechaExpedicionFacturaAnulada')"/>
+            </sum1:IDFactura>
+            <sum1:RefExterna t-out="_path_get(vals, 'RegistroAlta/RefExterna')"/>
+            <sum1:SinRegistroPrevio t-out="_path_get(vals, 'RegistroAnulacion/SinRegistroPrevio')"/>
+            <sum1:RechazoPrevio t-out="_path_get(vals, 'RegistroAnulacion/RechazoPrevio')"/>
+            <sum1:GeneradoPor t-out="_path_get(vals, 'RegistroAnulacion/GeneradoPor')"/>
+            <sum1:Generador t-out="_path_get(vals, 'RegistroAnulacion/Generador')"/>
+            <t t-call="l10n_es_edi_verifactu.verifactu_encadenamiento">
+                <t t-set="vals" t-value="vals['RegistroAnulacion']"/>
+            </t>
+            <t t-call="l10n_es_edi_verifactu.verifactu_sistema_informatico">
+                <t t-set="vals" t-value="vals['RegistroAnulacion']"/>
+            </t>
+            <sum1:FechaHoraHusoGenRegistro t-out="_path_get(vals, 'RegistroAnulacion/FechaHoraHusoGenRegistro')"/>
+            <sum1:TipoHuella t-out="_path_get(vals, 'RegistroAnulacion/TipoHuella')"/>
+            <sum1:Huella t-out="_path_get(vals, 'RegistroAnulacion/Huella')"/>
+            <t t-call="l10n_es_edi_verifactu.verifactu_signature_xades">
+                <t t-set="vals" t-value="vals['RegistroAnulacion']['dsig']"/>
+            </t>
+        </sum1:RegistroAnulacion>
+    </template>
+
+    <template id="verifactu_encadenamiento">
+       <sum1:Encadenamiento xmlns:sum1="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd">
+           <!-- Only one of the PrimerRegistro and RegistroAnterior tags should be output -->
+           <sum1:PrimerRegistro t-out="_path_get(vals, 'Encadenamiento/PrimerRegistro')"/>
+           <sum1:RegistroAnterior t-if="_path_get(vals, 'Encadenamiento/RegistroAnterior/IDEmisorFactura')">
+               <sum1:IDEmisorFactura t-out="_path_get(vals, 'Encadenamiento/RegistroAnterior/IDEmisorFactura')"/>
+               <sum1:NumSerieFactura t-out="_path_get(vals, 'Encadenamiento/RegistroAnterior/NumSerieFactura')"/>
+               <sum1:FechaExpedicionFactura t-out="_path_get(vals, 'Encadenamiento/RegistroAnterior/FechaExpedicionFactura')"/>
+               <sum1:Huella t-out="_path_get(vals, 'Encadenamiento/RegistroAnterior/Huella')"/>
+           </sum1:RegistroAnterior>
+           <sum1:RegistroAnterior t-if="_path_get(vals, 'Encadenamiento/RegistroAnterior/IDEmisorFacturaAnulada')">
+               <sum1:IDEmisorFactura t-out="_path_get(vals, 'Encadenamiento/RegistroAnterior/IDEmisorFacturaAnulada')"/>
+               <sum1:NumSerieFactura t-out="_path_get(vals, 'Encadenamiento/RegistroAnterior/NumSerieFacturaAnulada')"/>
+               <sum1:FechaExpedicionFactura t-out="_path_get(vals, 'Encadenamiento/RegistroAnterior/FechaExpedicionFactura')"/>
+               <sum1:Huella t-out="_path_get(vals, 'Encadenamiento/RegistroAnterior/Huella')"/>
+           </sum1:RegistroAnterior>
+       </sum1:Encadenamiento>
+    </template>
+
+    <template id="verifactu_sistema_informatico">
+        <sum1:SistemaInformatico xmlns:sum1="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd">
+            <sum1:NombreRazon t-out="_path_get(vals, 'SistemaInformatico/NombreRazon')"/>
+            <sum1:NIF t-out="_path_get(vals, 'SistemaInformatico/NIF')"/>
+            <sum1:NombreSistemaInformatico t-out="_path_get(vals, 'SistemaInformatico/NombreSistemaInformatico')"/>
+            <sum1:IdSistemaInformatico t-out="_path_get(vals, 'SistemaInformatico/IdSistemaInformatico')"/>
+            <sum1:Version t-out="_path_get(vals, 'SistemaInformatico/Version')"/>
+            <sum1:NumeroInstalacion t-out="_path_get(vals, 'SistemaInformatico/NumeroInstalacion')"/>
+            <sum1:TipoUsoPosibleSoloVerifactu t-out="_path_get(vals, 'SistemaInformatico/TipoUsoPosibleSoloVerifactu')"/>
+            <sum1:TipoUsoPosibleMultiOT t-out="_path_get(vals, 'SistemaInformatico/TipoUsoPosibleMultiOT')"/>
+            <sum1:IndicadorMultiplesOT t-out="_path_get(vals, 'SistemaInformatico/IndicadorMultiplesOT')"/>
+        </sum1:SistemaInformatico>
+    </template>
+
+    <template id="verifactu_signature_xades">
+        <ds:Signature t-att-Id="vals['signature_id']" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+            <ds:SignedInfo>
+                <ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+                <ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+                <ds:Reference t-att-Id="vals['xmldsig_reference_id']" Type="http://www.w3.org/2000/09/xmldsig#Object" URI="">
+                    <ds:Transforms>
+                        <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                    </ds:Transforms>
+                    <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                    <ds:DigestValue></ds:DigestValue>
+                </ds:Reference>
+                <ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" t-attf-URI="##{vals['signed_properties_id']}">
+                    <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                    <ds:DigestValue></ds:DigestValue>
+                </ds:Reference>
+                <ds:Reference t-attf-URI="##{vals['key_info_id']}">
+                    <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                    <ds:DigestValue></ds:DigestValue>
+                </ds:Reference>
+            </ds:SignedInfo>
+            <ds:SignatureValue></ds:SignatureValue>
+            <ds:KeyInfo t-att-Id="vals['key_info_id']">
+                <ds:X509Data>
+                    <ds:X509Certificate t-out="vals['x509_certificate']"/>
+                </ds:X509Data>
+                <ds:KeyValue>
+                    <ds:RSAKeyValue>
+                        <ds:Modulus t-out="vals['rsa_key_modulus']"/>
+                        <ds:Exponent t-out="vals['rsa_key_exponent']"/>
+                    </ds:RSAKeyValue>
+                </ds:KeyValue>
+            </ds:KeyInfo>
+            <ds:Object>
+                <xades:QualifyingProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" t-attf-Target="##{vals['signature_id']}">
+                    <xades:SignedProperties t-att-Id="vals['signed_properties_id']">
+                        <xades:SignedSignatureProperties>
+                            <xades:SigningTime t-out="vals['signing_time']"/>
+                            <xades:SigningCertificateV2>
+                                <xades:Cert>
+                                    <xades:CertDigest>
+                                        <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                                        <ds:DigestValue t-out="vals['signing_certificate_digest']"/>
+                                    </xades:CertDigest>
+                                    <xades:IssuerSerial>
+                                        <ds:X509IssuerName t-out="vals['x509_issuer_name']"/>
+                                        <ds:X509SerialNumber t-out="vals['x509_serial_number']"/>
+                                    </xades:IssuerSerial>
+                                </xades:Cert>
+                            </xades:SigningCertificateV2>
+                            <xades:SignaturePolicyIdentifier>
+                                <xades:SignaturePolicyId>
+                                    <xades:SigPolicyId>
+                                        <xades:Identifier t-out="vals['sigpolicy_url']"/>
+                                    </xades:SigPolicyId>
+                                    <xades:SigPolicyHash>
+                                        <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                                        <ds:DigestValue t-out="vals['sigpolicy_digest']"/>
+                                    </xades:SigPolicyHash>
+                                </xades:SignaturePolicyId>
+                            </xades:SignaturePolicyIdentifier>
+                        </xades:SignedSignatureProperties>
+                    </xades:SignedProperties>
+                </xades:QualifyingProperties>
+            </ds:Object>
+        </ds:Signature>
+    </template>
+</odoo>
