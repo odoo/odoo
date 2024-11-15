@@ -389,7 +389,7 @@ class TestSMSComposerMass(SMSCommon):
             ).create({
                 'body': self._test_body,
                 'mass_keep_log': False,
-                'mass_use_blacklist': True,
+                'use_exclusion_list': True,
             })
 
             with self.mockSMSGateway():
@@ -421,7 +421,7 @@ class TestSMSComposerMass(SMSCommon):
             ).create({
                 'body': self._test_body,
                 'mass_keep_log': False,
-                'mass_use_blacklist': False,
+                'use_exclusion_list': False,
             })
 
             with self.mockSMSGateway():
@@ -452,7 +452,7 @@ class TestSMSComposerMass(SMSCommon):
             ).create({
                 'body': self._test_body,
                 'mass_keep_log': False,
-                'mass_use_blacklist': True,
+                'use_exclusion_list': True,
             })
 
             with self.mockSMSGateway():
