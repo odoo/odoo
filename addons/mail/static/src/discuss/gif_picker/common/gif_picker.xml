@@ -42,7 +42,7 @@
                         </t>
                     </t>
                     <t t-else="">
-                        <t t-foreach="state.categories" t-as="category" t-key="category.name">
+                        <t t-foreach="state.categories" t-as="category" t-key="category_index">
                             <div class="col">
                                 <div class="position-relative ratio ratio-16x9 cursor-pointer rounded overflow-hidden" t-on-click="() => this.onClickCategory(category)" aria-label="list-item">
                                     <img class="o-discuss-GifPickerCategory-img img-fluid" t-att-src="category.image" loading="lazy" alt="GIF Category"/>
