@@ -15,7 +15,7 @@ regex_private = re.compile(r'^(_.*|init)$')
 # types handled as collections
 COLLECTION_TYPES = (list, tuple, AbstractSet)
 
-# read_group stuff
+# _read_group stuff
 READ_GROUP_TIME_GRANULARITY = {
     'hour': dateutil.relativedelta.relativedelta(hours=1),
     'day': dateutil.relativedelta.relativedelta(days=1),

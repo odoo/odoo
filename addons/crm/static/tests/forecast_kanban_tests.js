@@ -334,7 +334,7 @@ QUnit.module('Crm Forecast main flow with progressBars', (hooks) => {
                 assert.step(args.method || route);
             },
         });
-
+        // TODO
         assert.deepEqual(getCounters(), ["27", "300"]);
         assert.deepEqual(getProgressBarsColors(), [["bg-warning", "bg-danger"], ["bg-success"]]);
 
