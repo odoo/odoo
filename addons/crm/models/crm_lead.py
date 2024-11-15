@@ -245,6 +245,8 @@ class CrmLead(models.Model):
         'check(probability >= 0 and probability <= 100)',
         'The probability of closing the deal should be between 0% and 100%!',
     )
+    _user_id_team_id_type_index = models.Index("(user_id, team_id, type)")
+    _create_date_team_id_idx = models.Index("(create_date, team_id)")
 
     @api.depends('company_id')
     def _compute_user_company_ids(self):
@@ -721,13 +723,6 @@ class CrmLead(models.Model):
     # ------------------------------------------------------------
     # ORM
     # ------------------------------------------------------------
-
-    def _auto_init(self):
-        super()._auto_init()
-        tools.create_index(self._cr, 'crm_lead_user_id_team_id_type_index',
-                           self._table, ['user_id', 'team_id', 'type'])
-        tools.create_index(self._cr, 'crm_lead_create_date_team_id_idx',
-                           self._table, ['create_date', 'team_id'])
 
     @api.model_create_multi
     def create(self, vals_list):

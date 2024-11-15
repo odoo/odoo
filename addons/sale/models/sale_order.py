@@ -13,7 +13,6 @@ from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import (
     SQL,
-    create_index,
     float_is_zero,
     format_amount,
     format_date,
@@ -312,8 +311,7 @@ class SaleOrder(models.Model):
     show_update_pricelist = fields.Boolean(
         string="Has Pricelist Changed", store=False)  # True if the pricelist was changed
 
-    def init(self):
-        create_index(self._cr, 'sale_order_date_order_id_idx', 'sale_order', ["date_order desc", "id desc"])
+    _date_order_id_idx = models.Index("(date_order desc, id desc)")
 
     #=== COMPUTE METHODS ===#
 
