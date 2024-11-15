@@ -72,25 +72,6 @@ function autocompleteWithPages(input, options= {}) {
 }
 
 /**
- * @param {jQuery} $element
- * @param {jQuery} [$excluded]
- */
-function onceAllImagesLoaded($element, $excluded) {
-    var defs = Array.from($element.find("img").addBack("img")).map((img) => {
-        if (img.complete || $excluded && ($excluded.is(img) || $excluded.has(img).length)) {
-            return; // Already loaded
-        }
-        var def = new Promise(function (resolve, reject) {
-            $(img).one('load', function () {
-                resolve();
-            });
-        });
-        return def;
-    });
-    return Promise.all(defs);
-}
-
-/**
  * @deprecated
  * @todo create Dialog.prompt instead of this
  */
@@ -497,7 +478,6 @@ export function checkAndNotifySEO(seo_data, OptimizeSEODialog, services) {
 export default {
     loadAnchors: loadAnchors,
     autocompleteWithPages: autocompleteWithPages,
-    onceAllImagesLoaded: onceAllImagesLoaded,
     prompt: prompt,
     sendRequest: sendRequest,
     websiteDomain: websiteDomain,
