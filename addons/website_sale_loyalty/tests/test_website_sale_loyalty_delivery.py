@@ -22,8 +22,7 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
         super().setUp()
 
         self.partner_admin = self.env.ref('base.partner_admin')
-        self.user_admin = self.partner_admin.user_id
-        self.user_admin.write({
+        self.partner_admin.write({
             'name': 'Mitchell Admin',
             'street': '215 Vine St',
             'phone': '+1 555-555-5555',
@@ -33,6 +32,8 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
             'state_id': self.env.ref('base.state_us_39').id,
         })
 
+        # Remove taxes completely during the following tests.
+        self.env.companies.account_sale_tax_id = False
         self.env['product.product'].create({
             'name': "Plumbus",
             'list_price': 100.0,
@@ -45,7 +46,6 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
             'type': 'service',
             'is_published': True,
             'sale_ok': True,
-            'taxes_id': False,
         })
 
         # Disable any other program
