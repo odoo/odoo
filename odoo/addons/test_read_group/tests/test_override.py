@@ -21,7 +21,7 @@ class TestReadGroupOverride(TransactionCase):
                 # change comodel_name of a many2one field as a hack for the test
                 many2one_field.comodel_name = Model._name
                 try:
-                    Order.read_group([], ['many2one_id'], ['many2one_id'])
+                    Order._read_group([], ['many2one_id'], order='many2one_id')
                 except GroupingError as e:
                     self.assertEqual(
                         e, None,

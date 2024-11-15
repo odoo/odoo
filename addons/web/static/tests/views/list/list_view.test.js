@@ -3292,8 +3292,8 @@ test(`list view not groupable`, async () => {
         `,
     };
 
-    onRpc("read_group", () => {
-        throw new Error("Should not do a read_group RPC");
+    onRpc("web_read_group", () => {
+        throw new Error("Should not do a web_read_group RPC");
     });
     await mountView({
         resModel: "foo",
@@ -3320,7 +3320,7 @@ test("group order by count", async () => {
             readGroupCount++;
         } else {
             expect(kwargs.groupby).toHaveLength(1);
-            expect.step(`read_group ${kwargs.groupby[0]} order by ${kwargs.orderby}`);
+            expect.step(`web_read_group ${kwargs.groupby[0]} order by ${kwargs.orderby}`);
             // The mock server cannot handle orderby count
             kwargs.orderby = "";
             return parent();
@@ -3339,18 +3339,18 @@ test("group order by count", async () => {
     await selectGroup("currency_id");
     expect("tr.o_group_header").toHaveCount(3, { message: "list should be grouped" });
     await contains(".o_searchview_facet_label").click();
-    expect.verifySteps(["read_group foo order by __count DESC"]);
+    expect.verifySteps(["web_read_group foo order by __count DESC"]);
     await contains("tr.o_group_header:eq(0)").click();
-    expect.verifySteps(["read_group currency_id order by __count DESC"]);
+    expect.verifySteps(["web_read_group currency_id order by __count DESC"]);
     await contains(".o_searchview_facet_label").click();
     expect.verifySteps([
-        "read_group foo order by __count ASC",
-        "read_group currency_id order by __count ASC",
+        "web_read_group foo order by __count ASC",
+        "web_read_group currency_id order by __count ASC",
     ]);
     await contains(".o_searchview_facet_label").click();
     expect.verifySteps([
-        "read_group foo order by __count DESC",
-        "read_group currency_id order by __count DESC",
+        "web_read_group foo order by __count DESC",
+        "web_read_group currency_id order by __count DESC",
     ]);
 });
 
@@ -3361,7 +3361,7 @@ test("order by count reset", async () => {
             readGroupCount++;
         } else {
             expect(kwargs.groupby).toHaveLength(1);
-            expect.step(`read_group ${kwargs.groupby[0]} order by ${kwargs.orderby}`);
+            expect.step(`web_read_group ${kwargs.groupby[0]} order by ${kwargs.orderby}`);
             // The mock server cannot handle orderby count
             kwargs.orderby = "";
             return parent();
@@ -3385,17 +3385,17 @@ test("order by count reset", async () => {
     await selectGroup("currency_id");
     await toggleMenuItem("My Filter");
     await contains(".o_searchview_facet_label").click();
-    expect.verifySteps(["read_group foo order by ", "read_group foo order by __count DESC"]);
+    expect.verifySteps(["web_read_group foo order by ", "web_read_group foo order by __count DESC"]);
     await toggleSearchBarMenu();
     await toggleMenuItem("My Filter");
-    expect.verifySteps(["read_group foo order by __count DESC"]);
+    expect.verifySteps(["web_read_group foo order by __count DESC"]);
     await toggleMenuItem("My Filter");
-    expect.verifySteps(["read_group foo order by __count DESC"]);
+    expect.verifySteps(["web_read_group foo order by __count DESC"]);
     await toggleMenuItem("Currency");
-    expect.verifySteps(["read_group foo order by __count DESC"]);
+    expect.verifySteps(["web_read_group foo order by __count DESC"]);
     await toggleMenuItem("Foo");
     await toggleMenuItem("Foo");
-    expect.verifySteps(["read_group foo order by "]);
+    expect.verifySteps(["web_read_group foo order by "]);
 });
 
 test.tags("desktop");
@@ -7872,10 +7872,10 @@ test(`list view with nested groups`, async () => {
 
     onRpc("web_read_group", ({ kwargs }) => {
         if (kwargs.groupby[0] === "foo") {
-            // nested read_group
+            // nested web_read_group
             // called twice (once when opening the group, once when sorting)
             expect(kwargs.domain).toEqual([["m2o", "=", 1]], {
-                message: "nested read_group should be called with correct domain",
+                message: "nested web_read_group should be called with correct domain",
             });
         }
         expect.step("web_read_group");
@@ -11711,7 +11711,7 @@ test(`grouped list view, indentation for empty group`, async () => {
     });
 
     onRpc("web_read_group", ({ kwargs }) => {
-        // Override of the read_group to display the row even if there is no record in it,
+        // Override of the web_read_group to display the row even if there is no record in it,
         // to mock the behavihour of some fields e.g stage_id on the sale order.
         if (kwargs.groupby[0] === "m2o") {
             return {
@@ -12151,9 +12151,9 @@ test(`grouped list with groups_limit attribute`, async () => {
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
-        "web_read_group", // read_group page 1
+        "web_read_group", // web_read_group page 1
         "has_group",
-        "web_read_group", // read_group page 2
+        "web_read_group", // web_read_group page 2
     ]);
 });
 
@@ -12358,8 +12358,8 @@ test(`grouped lists with expand attribute and a lot of groups`, async () => {
         "17 (1)",
     ]);
     expect.verifySteps([
-        "web_read_group", // read_group page 1
-        "web_read_group", // read_group page 2
+        "web_read_group", // web_read_group page 1
+        "web_read_group", // web_read_group page 2
     ]);
 });
 
