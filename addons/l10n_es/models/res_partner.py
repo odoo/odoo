@@ -10,6 +10,7 @@ class ResPartner(models.Model):
         return self.country_id.code not in ('ES', False) or (self.vat or '').startswith("ESN")
 
     def _l10n_es_edi_get_partner_info(self):
+        """ Used in SII and Veri*factu"""
         self.ensure_one()
         eu_country_codes = set(self.env.ref('base.europe').country_ids.mapped('code'))
 
