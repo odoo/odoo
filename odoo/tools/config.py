@@ -238,8 +238,11 @@ class configmanager:
                          help='specify the SMTP server for sending email')
         group.add_option('--smtp-port', dest='smtp_port', my_default=25,
                          help='specify the SMTP port', type="int")
-        group.add_option('--smtp-ssl', dest='smtp_ssl', action='store_true', my_default=False,
-                         help='if passed, SMTP connections will be encrypted with SSL (STARTTLS)')
+        group.add_option('--smtp-ssl', dest='smtp_ssl', action='callback',
+                         callback=self._smtp_ssl, my_default='none',
+                         help='if passed, SMTP connections will be encrypted with SSL (STARTTLS), '
+                              'also accept the following values: "none", "ssl", "ssl_strict", '
+                              '"starttls" and "starttls_strict"')
         group.add_option('--smtp-user', dest='smtp_user', my_default=False,
                          help='specify the SMTP username for sending email')
         group.add_option('--smtp-password', dest='smtp_password', my_default=False,
@@ -494,6 +497,11 @@ class configmanager:
         # and the server_wide_modules
         if self.options['server_wide_modules'] in ('', 'None', 'False'):
             self.options['server_wide_modules'] = 'base,web,rpc'
+        # smtp_ssl used to be a flag
+        if self.options['smtp_ssl'] is True:
+            self.options['smtp_ssl'] = 'starttls'
+        elif self.options['smtp_ssl'] is False:
+            self.options['smtp_ssl'] = 'none'
 
         keys = [
             option_name for option_name, option
@@ -661,6 +669,14 @@ class configmanager:
     def _test_enable_callback(self, option, opt, value, parser):
         if not parser.values.test_tags:
             parser.values.test_tags = "+standard"
+
+    def _smtp_ssl(self, option, opt, value, parser):
+        encryption_methods = ('none', 'ssl', 'ssl_strict', 'starttls', 'starttls_strict')
+        if parser.rargs and parser.rargs[0] in encryption_methods:
+            parser.values.smtp_ssl = parser.rargs.pop(0)
+        else:
+            # backward compatibility, option used to be a flag
+            parser.values.smtp_ssl = 'starttls'
 
     def load(self):
         outdated_options_map = {
