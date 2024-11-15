@@ -576,3 +576,19 @@ class TestLotValuation(TestStockValuationCommon):
         quant.action_apply_inventory()
         self.assertEqual(lot.standard_price, 9)
         self.assertEqual(lot.value_svl, 27)
+
+    def test_lot_valuation_after_tracking_update(self):
+        """
+        Test that 'lot_valuated' is set to False when the tracking is changed to 'none'.
+        """
+        # update the tracking from product.product
+        self.assertEqual(self.product1.tracking, 'lot')
+        self.product1.lot_valuated = True
+        self.assertTrue(self.product1.lot_valuated)
+        self.product1.tracking = 'none'
+        self.assertFalse(self.product1.lot_valuated)
+        # update the tracking from product.template
+        self.product1.tracking = 'lot'
+        self.product1.lot_valuated = True
+        self.product1.product_tmpl_id.tracking = 'none'
+        self.assertFalse(self.product1.product_tmpl_id.lot_valuated)
