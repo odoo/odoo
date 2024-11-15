@@ -29,6 +29,8 @@
                 <cbc:UUID t-out="billing_reference_vals.get('uuid')"/>
             </t>
         </xpath>
+        <!-- MyInvois does not support order references, having one will cause issues -->
+        <xpath expr="//*[local-name()='OrderReference']" position="replace"/>
     </template>
 
     <!-- They are not using the same template at all, so we make a new one. They basically want the same data as supplier/customer party -->
