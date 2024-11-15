@@ -33,11 +33,22 @@ class TestSaleMatrixUi(TestMatrixCommon):
         cls.env['res.currency'].search([('name', '!=', 'USD')]).with_context(force_deactivate=True).action_archive()
         cls.currency = cls.env['res.currency'].search([('name', '=', 'USD')])
         cls.currency.action_unarchive()
+        cls.env.company.currency_id = cls.currency
 
     def test_sale_matrix_ui(self):
         self.env.ref('base.group_user').implied_ids += (
             self.env.ref('sale_management.group_sale_order_template')
         )
+        # While we check the untaxed amounts, the view requires taxes to be present
+        # on the sale order to display the untaxed amount line.
+        self.env['account.tax'].search([]).write({'active': False})
+        tax = self.env['account.tax'].create({
+            'name': '15%',
+            'amount': 15,
+        })
+        self.matrix_template.taxes_id = tax
+        # Also disable all pricelists that could impact the price
+        self.env['product.pricelist'].search([]).write({'active': False})
 
         # Set the template as configurable by matrix.
         self.matrix_template.product_add_mode = "matrix"
