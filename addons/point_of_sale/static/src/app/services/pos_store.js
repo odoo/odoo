@@ -506,9 +506,15 @@ export class PosStore extends Reactive {
         };
     }
     getDefaultSearchDetails() {
+        let field = "RECEIPT_NUMBER";
+        let term = "";
+        if (this.get_order().get_partner()) {
+            field = "PARTNER";
+            term = this.get_order().get_partner().name;
+        }
         return {
-            fieldName: "RECEIPT_NUMBER",
-            searchTerm: "",
+            fieldName: field,
+            searchTerm: term,
         };
     }
     getDefaultPricelist() {
