@@ -33,6 +33,7 @@ class TestSaleMatrixUi(TestMatrixCommon):
         cls.env['res.currency'].search([('name', '!=', 'USD')]).with_context(force_deactivate=True).action_archive()
         cls.currency = cls.env['res.currency'].search([('name', '=', 'USD')])
         cls.currency.action_unarchive()
+        cls.env.company.currency_id = cls.currency
 
     def test_sale_matrix_ui(self):
         self.env.ref('base.group_user').implied_ids += (
