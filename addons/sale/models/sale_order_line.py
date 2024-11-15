@@ -543,7 +543,7 @@ class SaleOrderLine(models.Model):
 
         pricelist_price = self._get_pricelist_price()
 
-        if not self.pricelist_item_id or not self.pricelist_item_id._show_discount():
+        if not self.pricelist_item_id._show_discount():
             # No pricelist rule found => no discount from pricelist
             return pricelist_price
 
@@ -621,7 +621,7 @@ class SaleOrderLine(models.Model):
 
             line.discount = 0.0
 
-            if not (line.pricelist_item_id and line.pricelist_item_id._show_discount()):
+            if not line.pricelist_item_id._show_discount():
                 # No pricelist rule was found for the product
                 # therefore, the pricelist didn't apply any discount/change
                 # to the existing sales price.
