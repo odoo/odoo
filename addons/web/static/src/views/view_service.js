@@ -1,6 +1,7 @@
 import { rpcBus } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { UPDATE_METHODS } from "@web/core/orm_service";
+import { session } from "@web/session";
 
 /**
  * @typedef {Object} IrFilter
@@ -41,20 +42,46 @@ import { UPDATE_METHODS } from "@web/core/orm_service";
  */
 
 export const viewService = {
-    dependencies: ["orm"],
-    start(env, { orm }) {
-        let cache = {};
-
-        function clearCache() {
-            cache = {};
-        }
-
-        env.bus.addEventListener("CLEAR-CACHES", clearCache);
+    dependencies: ["disk_cache", "orm"],
+    async start(env, { disk_cache: diskCache, orm }) {
+        diskCache.defineTable(
+            "views",
+            session.cache_hashes.templates_cache,
+            (resModel, views, context, options) => {
+                return orm
+                    .call(resModel, "get_views", [], {
+                        context,
+                        views,
+                        options,
+                    })
+                    .then((result) => {
+                        const { models, views } = result;
+                        const viewDescriptions = {
+                            fields: models[resModel].fields,
+                            relatedModels: models,
+                            views: {},
+                        };
+                        for (const viewType in views) {
+                            const { arch, toolbar, id, filters, custom_view_id } = views[viewType];
+                            const viewDescription = { arch, id, custom_view_id };
+                            if (toolbar) {
+                                viewDescription.actionMenus = toolbar;
+                            }
+                            if (filters) {
+                                viewDescription.irFilters = filters;
+                            }
+                            viewDescriptions.views[viewType] = viewDescription;
+                        }
+                        return viewDescriptions;
+                    });
+            },
+            (...args) => JSON.stringify(args)
+        );
         rpcBus.addEventListener("RPC:RESPONSE", (ev) => {
             const { model, method } = ev.detail.data.params;
             if (["ir.ui.view", "ir.filters"].includes(model)) {
                 if (UPDATE_METHODS.includes(method)) {
-                    clearCache();
+                    diskCache.invalidate("views");
                 }
             }
         });
@@ -97,41 +124,7 @@ export const viewService = {
                     ([k, v]) => k == "lang" || k.endsWith("_view_ref")
                 )
             );
-
-            const key = JSON.stringify([resModel, views, filteredContext, loadViewsOptions]);
-            if (!cache[key]) {
-                cache[key] = orm
-                    .call(resModel, "get_views", [], {
-                        context: filteredContext,
-                        views,
-                        options: loadViewsOptions,
-                    })
-                    .then((result) => {
-                        const { models, views } = result;
-                        const viewDescriptions = {
-                            fields: models[resModel].fields,
-                            relatedModels: models,
-                            views: {},
-                        };
-                        for (const viewType in views) {
-                            const { arch, toolbar, id, filters, custom_view_id } = views[viewType];
-                            const viewDescription = { arch, id, custom_view_id };
-                            if (toolbar) {
-                                viewDescription.actionMenus = toolbar;
-                            }
-                            if (filters) {
-                                viewDescription.irFilters = filters;
-                            }
-                            viewDescriptions.views[viewType] = viewDescription;
-                        }
-                        return viewDescriptions;
-                    })
-                    .catch((error) => {
-                        delete cache[key];
-                        return Promise.reject(error);
-                    });
-            }
-            return cache[key];
+            return diskCache.read("views", resModel, views, filteredContext, loadViewsOptions);
         }
         return { loadViews };
     },
