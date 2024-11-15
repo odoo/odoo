@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class AccountTax(models.Model):
@@ -34,3 +34,11 @@ class AccountTax(models.Model):
         string="Tax Type (Spain)", default='sujeto'
     )
     l10n_es_bien_inversion = fields.Boolean('Bien de Inversion', default=False)
+
+    @api.model
+    def _l10n_es_get_sujeto_tax_types(self):
+        return ['sujeto', 'sujeto_isp', 'sujeto_agricultura']
+
+    @api.model
+    def _l10n_es_get_main_tax_types(self):
+        return {'exento', 'sujeto', 'sujeto_agricultura', 'sujeto_isp', 'no_sujeto', 'no_sujeto_loc', 'no_deducible'}
