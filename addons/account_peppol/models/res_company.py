@@ -63,7 +63,6 @@ class ResCompany(models.Model):
     account_peppol_proxy_state = fields.Selection(
         selection=[
             ('not_registered', 'Not registered'),
-            ('in_verification', 'In verification'),
             ('sender', 'Can send but not receive'),
             ('smp_registration', 'Can send, pending registration to receive'),
             ('receiver', 'Can send and receive'),
@@ -189,17 +188,6 @@ class ResCompany(models.Model):
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
     # -------------------------------------------------------------------------
-
-    @api.model
-    def _sanitize_peppol_endpoint(self, vals, eas=False, endpoint=False):
-        # TODO: remove in master
-        if not (peppol_eas := vals.get('peppol_eas', eas)) or not (peppol_endpoint := vals.get('peppol_endpoint', endpoint)):
-            return vals
-
-        if sanitizer := PEPPOL_ENDPOINT_SANITIZERS.get(peppol_eas):
-            vals['peppol_endpoint'] = sanitizer(peppol_endpoint)
-
-        return vals
 
     @api.model
     def _sanitize_peppol_endpoint_in_values(self, values):
