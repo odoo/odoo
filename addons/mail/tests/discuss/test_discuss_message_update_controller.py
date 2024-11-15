@@ -1,11 +1,10 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-import odoo
-from odoo.addons.mail.tests.test_message_update_controller import TestMessageUpdateControllerCommon
+from odoo.addons.mail.tests.common_controllers import MailControllerUpdateCommon
+from odoo.tests import tagged
 
 
-@odoo.tests.tagged("-at_install", "post_install")
-class TestDiscussMessageUpdateController(TestMessageUpdateControllerCommon):
+@tagged("-at_install", "post_install", "mail_controller")
+class TestDiscussMessageUpdateController(MailControllerUpdateCommon):
+
     def test_message_update_guest_as_owner(self):
         """Test only admin user and message author can update the message content in a channel."""
         channel = self.env["discuss.channel"].create(
