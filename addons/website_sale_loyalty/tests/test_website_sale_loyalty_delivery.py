@@ -21,6 +21,8 @@ class TestWebsiteSaleDelivery(HttpCase):
             'state_id': self.env.ref('base.state_us_39').id,
         })
 
+        # Remove taxes completely during the following tests.
+        self.env.companies.account_sale_tax_id = False
         self.env['product.product'].create({
             'name': "Plumbus",
             'list_price': 100.0,
@@ -33,7 +35,6 @@ class TestWebsiteSaleDelivery(HttpCase):
             'type': 'service',
             'is_published': True,
             'sale_ok': True,
-            'taxes_id': False,
         })
 
         # Disable any other program
