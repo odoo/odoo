@@ -10,7 +10,9 @@ export class PickerContent extends Component {
     static components = { EmojiPicker };
     static props = ["PICKERS", "close", "pickers", "state", "storeScroll"];
     static template = "mail.PickerContent";
-
+    setup() {
+        this.props.state.isOpen = true;
+    }
     onClick(ev) {
         markEventHandled(ev, "PickerContent.onClick");
     }

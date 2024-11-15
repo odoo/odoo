@@ -57,6 +57,7 @@ export class EmojiPlugin extends Plugin {
                     this.dependencies.dom.insert(str);
                     this.dependencies.history.addStep();
                 },
+                state: { isOpen: true },
             },
             target,
         });
