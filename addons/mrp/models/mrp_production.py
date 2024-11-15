@@ -1862,6 +1862,7 @@ class MrpProduction(models.Model):
         self.workorder_ids._action_confirm()
 
     def button_mark_done(self):
+        self = self.with_company(self.company_id)
         self._button_mark_done_sanity_checks()
 
         if not self.env.context.get('button_mark_done_production_ids'):
