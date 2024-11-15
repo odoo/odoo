@@ -547,6 +547,11 @@ class TestUi(TestPointOfSaleHttpCommon):
             'ship_later': True
         })
 
+        # Mark a product as favorite to check if it is displayed in first position
+        self.whiteboard_pen.write({
+            'is_favorite': True
+        })
+
         # open a session, the /pos/ui controller will redirect to it
         self.main_pos_config.with_user(self.pos_user).open_ui()
 

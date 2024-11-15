@@ -6,6 +6,15 @@ import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_in
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 
+export function firstProductIsFavorite(name) {
+    return [
+        {
+            content: `first product is '${name}'`,
+            trigger: `.product-list .product:first-of-type .product-name:contains("${name}")`,
+        },
+    ];
+}
+
 export function clickLine(productName, quantity = "1.0") {
     return [
         ...Order.hasLine({
