@@ -10,7 +10,7 @@ from pytz import timezone, UTC
 
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 
-from odoo import api, Command, fields, models, tools
+from odoo import api, Command, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.addons.resource.models.utils import float_to_time, HOURS_PER_DAY
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -231,12 +231,7 @@ class HrLeave(models.Model):
         'CHECK ( number_of_days >= 0 )',
         "If you want to change the number of days you should use the 'period' mode",
     )
-
-    def _auto_init(self):
-        res = super()._auto_init()
-        tools.create_index(self._cr, 'hr_leave_date_to_date_from_index',
-                           self._table, ['date_to', 'date_from'])
-        return res
+    _date_to_date_from_index = models.Index("(date_to, date_from)")
 
     @api.onchange('request_hour_from', 'request_hour_to')
     def _onchange_hours(self):
