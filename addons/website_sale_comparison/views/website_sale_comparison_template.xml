@@ -210,12 +210,12 @@
                                                 <span t-out="combination_info['price']"
                                                       t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                                                 <del t-if="combination_info['compare_list_price'] and (combination_info['compare_list_price'] &gt; combination_info['price'])"
-                                                     t-attf-class="text-danger mr8"
+                                                     t-attf-class="text-muted mr8"
                                                      style="white-space: nowrap;"
                                                      t-esc="combination_info['compare_list_price']"
                                                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
                                                 <del t-else=""
-                                                     t-attf-class="text-danger mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
+                                                     t-attf-class="text-muted mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
                                                      style="white-space: nowrap;"
                                                      t-out="combination_info['list_price']"
                                                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>

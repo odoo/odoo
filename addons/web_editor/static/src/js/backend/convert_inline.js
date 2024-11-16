@@ -1646,13 +1646,6 @@ function _getMatchedCSSRules(node, cssRules, checkBlacklisted = false) {
         delete processedStyle['border-top-left-radius'];
         delete processedStyle['border-top-right-radius'];
     }
-    if (processedStyle['border-left-width']) {
-        processedStyle['border-width'] = processedStyle['border-left-width'];
-        delete processedStyle['border-right-width'];
-        delete processedStyle['border-bottom-width'];
-        delete processedStyle['border-top-width'];
-        delete processedStyle['border-left-width'];
-    }
 
     // If the border styling is initial we remove it to simplify the css tags
     // for compatibility. Also, since we do not send a css style tag, the

@@ -20,7 +20,7 @@
                         t-att-value="getValue()"
                         t-on-input="(event) => this.setValue(event.target.value)" />
                     <t t-if="!props.iconOnLeftSide" t-call="point_of_sale.inputIcon" />
-                    <i t-if="getValue()" class="fa fa-times mx-2" t-on-click="() => this.setValue('')"/>
+                    <i t-att-class="{ 'invisible': !getValue() }" class="fa fa-times mx-2" t-on-click="() => this.setValue('')"/>
                 </div>
             </div>
         </div>

@@ -772,6 +772,29 @@ test(`list view with adjacent buttons with invisible modifier`, async () => {
     expect(`td button i.fa-exclamation`).toHaveCount(3);
 });
 
+test(`list view with adjacent buttons with width attribute`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <button icon="fa-play"/>
+                <button icon="fa-heart" width="25px"/>
+                <button icon="fa-cog"/>
+                <button icon="fa-list"/>
+            </list>
+        `,
+    });
+    expect(`th:not(.o_list_record_selector)`).toHaveCount(4, {
+        message: "adjacent buttons with no width in the arch must be grouped in a single column",
+    });
+    expect(".o_data_row td:not(.o_list_record_selector):nth-child(3) .fa-play").toHaveCount(4);
+    expect(".o_data_row td:not(.o_list_record_selector):nth-child(4) .fa-heart").toHaveCount(4);
+    expect(".o_data_row td:not(.o_list_record_selector):nth-child(5) .fa-cog").toHaveCount(4);
+    expect(".o_data_row td:not(.o_list_record_selector):nth-child(5) .fa-list").toHaveCount(4);
+});
+
 test(`list view with icon buttons`, async () => {
     Foo._records.splice(1);
 
@@ -9436,7 +9459,7 @@ test(`multi edit field with daterange widget (edition without using the picker)`
 
     onRpc("write", ({ args }) => {
         expect.step("write");
-        expect(args).toEqual([[1, 2], { date_start: "2021-04-01" }]);
+        expect(args).toEqual([[1, 2], { date_start: "2016-04-01" }]);
     });
 
     await mountView({
@@ -9456,7 +9479,7 @@ test(`multi edit field with daterange widget (edition without using the picker)`
     // Change the date in the first datetime
     await contains(
         `.o_data_row .o_data_cell .o_field_daterange[name='date_start'] input[data-field='date_start']`
-    ).edit("2021-04-01 11:00:00", { confirm: "enter" });
+    ).edit("2016-04-01 11:00:00", { confirm: "enter" });
     expect(`.modal`).toHaveCount(1, {
         message: "The confirm dialog should appear to confirm the multi edition.",
     });
@@ -9464,7 +9487,7 @@ test(`multi edit field with daterange widget (edition without using the picker)`
         "Field:",
         "Date start",
         "Update to:",
-        "04/01/2021\n01/26/2017",
+        "04/01/2016\n01/26/2017",
     ]);
 
     // Valid the confirm dialog

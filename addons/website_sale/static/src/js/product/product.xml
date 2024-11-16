@@ -42,7 +42,7 @@
     <t t-name="website_sale.not_for_sale">
         <div
             t-if="!this.props.can_be_sold"
-            class="text-danger fw-bold"
+            class="text-muted fst-italic"
         >
             <i class="fa fa-times me-1"/>
             Not available for sale
@@ -51,7 +51,7 @@
 
     <t t-name="website_sale.strikethrough_product_price">
         <h5
-            class="oe_striked_price text-danger small"
+            class="oe_striked_price text-muted small"
             t-if="this.props.strikethrough_price"
             t-out="formattedStrikethroughPrice"
         />

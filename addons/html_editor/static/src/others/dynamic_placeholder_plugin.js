@@ -3,41 +3,45 @@ import { _t } from "@web/core/l10n/translation";
 import { DynamicPlaceholderPopover } from "@web/views/fields/dynamic_placeholder_popover";
 import { withSequence } from "@html_editor/utils/resource";
 
+/**
+ * @typedef {Object} DynamicPlaceholderShared
+ * @property {DynamicPlaceholderPlugin['updateDphDefaultModel']} updateDphDefaultModel
+ */
+
 export class DynamicPlaceholderPlugin extends Plugin {
-    static name = "dynamic_placeholder";
-    static dependencies = ["overlay", "selection", "history", "dom", "qweb"];
+    static id = "dynamicPlaceholder";
+    static dependencies = ["overlay", "selection", "history", "dom"];
     static shared = ["updateDphDefaultModel"];
     resources = {
-        powerboxCategory: withSequence(60, { id: "marketing_tools", name: _t("Marketing Tools") }),
-        powerboxItems: {
-            id: "dynamic_placeholder",
-            name: _t("Dynamic Placeholder"),
-            description: _t("Insert a field"),
-            category: "marketing_tools",
-            fontawesome: "fa-hashtag",
-            action(dispatch) {
-                dispatch("OPEN_DYNAMIC_PLACEHOLDER");
+        user_commands: [
+            {
+                id: "openDynamicPlaceholder",
+                title: _t("Dynamic Placeholder"),
+                description: _t("Insert a field"),
+                icon: "fa-hashtag",
+                run: (params = {}) => {
+                    return this.open(params.resModel || this.defaultResModel);
+                },
             },
+        ],
+        powerbox_categories: withSequence(60, {
+            id: "marketing_tools",
+            name: _t("Marketing Tools"),
+        }),
+        powerbox_items: {
+            categoryId: "marketing_tools",
+            commandId: "openDynamicPlaceholder",
         },
-        powerButtons: ["dynamic_placeholder"],
+        power_buttons: { commandId: "openDynamicPlaceholder" },
     };
     setup() {
         this.defaultResModel = this.config.dynamicPlaceholderResModel;
 
         /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
-        this.overlay = this.shared.createOverlay(DynamicPlaceholderPopover, {
+        this.overlay = this.dependencies.overlay.createOverlay(DynamicPlaceholderPopover, {
             hasAutofocus: true,
             className: "popover",
         });
-    }
-
-    handleCommand(command, payload) {
-        switch (command) {
-            case "OPEN_DYNAMIC_PLACEHOLDER": {
-                this.open(payload.resModel || this.defaultResModel);
-                break;
-            }
-        }
     }
 
     /**
@@ -81,12 +85,12 @@ export class DynamicPlaceholderPlugin extends Plugin {
             t.innerText = defaultValue;
         }
 
-        this.shared.domInsert(t);
-        this.dispatch("ADD_STEP");
+        this.dependencies.dom.insert(t);
+        this.dependencies.history.addStep();
     }
 
     onClose() {
         this.overlay.close();
-        this.shared.focusEditable();
+        this.dependencies.selection.focusEditable();
     }
 }

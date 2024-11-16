@@ -8,63 +8,57 @@ import { LanguageSelector } from "./language_selector";
 import { withSequence } from "@html_editor/utils/resource";
 
 export class ChatGPTPlugin extends Plugin {
-    static name = "chatgpt";
+    static id = "chatgpt";
     static dependencies = ["selection", "history", "dom", "sanitize", "dialog"];
     resources = {
-        toolbarCategory: withSequence(50, {
+        user_commands: [
+            {
+                id: "openChatGPTDialog",
+                title: _t("ChatGPT"),
+                description: _t("Generate or transform content with AI."),
+                icon: "fa-magic",
+                run: this.openDialog.bind(this),
+            },
+        ],
+        toolbar_groups: withSequence(50, {
             id: "ai",
         }),
-        toolbarItems: [
+        toolbar_items: [
             {
                 id: "translate",
-                category: "ai",
+                groupId: "ai",
                 title: _t("Translate with AI"),
                 isAvailable: (selection) => {
                     return !selection.isCollapsed;
                 },
                 Component: LanguageSelector,
+                props: {
+                    onSelected: (language) => this.openDialog({ language }),
+                },
             },
             {
                 id: "chatgpt",
-                category: "ai",
-                title: _t("Generate or transform content with AI."),
-                action(dispatch) {
-                    dispatch("OPEN_CHATGPT_DIALOG");
-                },
-                icon: "fa-magic",
+                groupId: "ai",
+                commandId: "openChatGPTDialog",
                 text: "AI",
             },
         ],
 
-        powerboxCategory: withSequence(70, { id: "ai", name: _t("AI Tools") }),
-        powerboxItems: {
-            name: _t("ChatGPT"),
-            description: _t("Generate or transform content with AI."),
-            searchKeywords: [_t("AI")],
-            category: "ai",
-            fontawesome: "fa-magic",
-            action(dispatch) {
-                dispatch("OPEN_CHATGPT_DIALOG");
-            },
+        powerbox_categories: withSequence(70, { id: "ai", name: _t("AI Tools") }),
+        powerbox_items: {
+            keywords: [_t("AI")],
+            categoryId: "ai",
+            commandId: "openChatGPTDialog",
             // isAvailable: () => !this.odooEditor.isSelectionInBlockRoot(), // TODO!
         },
     };
 
-    handleCommand(command, payload) {
-        switch (command) {
-            case "OPEN_CHATGPT_DIALOG": {
-                this.openDialog(payload);
-                break;
-            }
-        }
-    }
-
     openDialog(params = {}) {
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         const dialogParams = {
             insert: (content) => {
-                const insertedNodes = this.shared.domInsert(content);
-                this.dispatch("ADD_STEP");
+                const insertedNodes = this.dependencies.dom.insert(content);
+                this.dependencies.history.addStep();
                 // Add a frame around the inserted content to highlight it for 2
                 // seconds.
                 const start = insertedNodes?.length && closestElement(insertedNodes[0]);
@@ -104,12 +98,12 @@ export class ChatGPTPlugin extends Plugin {
             ...params,
         };
         // collapse to end
-        const sanitize = this.shared.sanitize;
+        const sanitize = this.dependencies.sanitize.sanitize;
         if (selection.isCollapsed) {
-            this.shared.addDialog(ChatGPTPromptDialog, { ...dialogParams, sanitize });
+            this.dependencies.dialog.addDialog(ChatGPTPromptDialog, { ...dialogParams, sanitize });
         } else {
             const originalText = selection.textContent() || "";
-            this.shared.addDialog(
+            this.dependencies.dialog.addDialog(
                 params.language ? ChatGPTTranslateDialog : ChatGPTAlternativesDialog,
                 { ...dialogParams, originalText, sanitize }
             );

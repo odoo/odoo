@@ -13,6 +13,7 @@ export class FormViewDialog extends Component {
         resModel: String,
 
         context: { type: Object, optional: true },
+        nextRecordsContext: { type: Object, optional: true },
         mode: {
             optional: true,
             validate: (m) => ["edit", "readonly"].includes(m),
@@ -67,13 +68,8 @@ export class FormViewDialog extends Component {
                     this.currentResId = record.resId;
                     await this.props.onRecordSaved(record);
                     if (saveAndNew) {
-                        const context = Object.assign({}, this.props.context);
-                        Object.keys(context).forEach((k) => {
-                            if (k.startsWith("default_")) {
-                                delete context[k];
-                            }
-                        });
                         this.currentResId = false;
+                        const context = this.props.nextRecordsContext || this.props.context || {};
                         await record.model.load({ resId: false, context });
                     } else {
                         this.props.close();

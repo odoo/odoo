@@ -7,27 +7,33 @@ import { parseHTML } from "@html_editor/utils/html";
 import { _t } from "@web/core/l10n/translation";
 
 export class StarPlugin extends Plugin {
-    static name = "star";
-    static dependencies = ["dom"];
+    static id = "star";
+    static dependencies = ["dom", "history"];
     resources = {
-        powerboxItems: [
+        user_commands: [
             {
-                name: _t("3 Stars"),
+                id: "addStars",
+                title: _t("Stars"),
+                description: _t("Insert a rating"),
+                icon: "fa-star",
+                run: this.addStars.bind(this),
+            },
+        ],
+        powerbox_items: [
+            {
+                title: _t("3 Stars"),
                 description: _t("Insert a rating over 3 stars"),
-                category: "widget",
-                fontawesome: "fa-star-o",
-                action: () => {
-                    this.addStars(3);
-                },
+                categoryId: "widget",
+                icon: "fa-star-o",
+                commandId: "addStars",
+                commandParams: { length: 3 },
             },
             {
-                name: _t("5 Stars"),
+                title: _t("5 Stars"),
                 description: _t("Insert a rating over 5 stars"),
-                category: "widget",
-                fontawesome: "fa-star",
-                action: () => {
-                    this.addStars(5);
-                },
+                categoryId: "widget",
+                commandId: "addStars",
+                commandParams: { length: 5 },
             },
         ],
     };
@@ -60,17 +66,17 @@ export class StarPlugin extends Plugin {
                     star.classList.toggle("fa-star-o", true);
                     star.classList.toggle("fa-star", false);
                 }
-                this.dispatch("ADD_STEP");
+                this.dependencies.history.addStep();
             }
             ev.stopPropagation();
             ev.preventDefault();
         }
     }
 
-    addStars(length) {
+    addStars({ length }) {
         const stars = Array.from({ length }, () => '<i class="fa fa-star-o"></i>').join("");
         const html = `\u200B<span contenteditable="false" class="o_stars">${stars}</span>\u200B`;
-        this.shared.domInsert(parseHTML(this.document, html));
-        this.dispatch("ADD_STEP");
+        this.dependencies.dom.insert(parseHTML(this.document, html));
+        this.dependencies.history.addStep();
     }
 }

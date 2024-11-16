@@ -982,7 +982,7 @@ class AccountTax(models.Model):
         def add_tax_amount_to_results(tax, tax_amount):
             taxes_data[tax.id]['tax_amount'] = tax_amount
             if rounding_method == 'round_per_line':
-                taxes_data[tax.id]['tax_amount'] = float_round(taxes_data[tax.id]['tax_amount'], precision_rounding=precision_rounding)
+                taxes_data[tax.id]['tax_amount'] = float_round(taxes_data[tax.id]['tax_amount'], precision_rounding=precision_rounding or self.env.company.currency_id.rounding)
             if tax.has_negative_factor:
                 reverse_charge_taxes_data[tax.id]['tax_amount'] = -taxes_data[tax.id]['tax_amount']
             sorted_taxes._propagate_extra_taxes_base(tax, taxes_data, special_mode=special_mode)
@@ -1038,7 +1038,7 @@ class AccountTax(models.Model):
         }
         raw_base = self._eval_raw_base(quantity, price_unit, raw_base_evaluation_context)
         if rounding_method == 'round_per_line':
-            raw_base = float_round(raw_base, precision_rounding=precision_rounding)
+            raw_base = float_round(raw_base, precision_rounding=precision_rounding or self.env.company.currency_id.rounding)
 
         evaluation_context = {
             'product': sorted_taxes._eval_taxes_computation_turn_to_product_values(product=product),
@@ -1430,7 +1430,7 @@ class AccountTax(models.Model):
         })
 
         for base_line in base_lines:
-            currency = base_line['currency_id']
+            currency = base_line['currency_id'] or company.currency_id
             tax_details = base_line['tax_details']
             tax_details['delta_base_amount_currency'] = 0.0
             tax_details['delta_base_amount'] = 0.0
@@ -1598,7 +1598,7 @@ class AccountTax(models.Model):
         :param include_caba_tags:       Indicate if the cash basis tags need to be taken into account.
         """
         is_refund = base_line['is_refund']
-        currency = base_line['currency_id']
+        currency = base_line['currency_id'] or company.currency_id
         product = base_line['product_id']
         company_currency = company.currency_id
         if is_refund:
@@ -2170,7 +2170,7 @@ class AccountTax(models.Model):
             k: v
             for k, v in tax_lines_mapping.items()
             if (
-                not self.env['res.currency'].browse(k['currency_id']).is_zero(v['amount_currency'])
+                k.get('currency_id') and not self.env['res.currency'].browse(k['currency_id']).is_zero(v['amount_currency'])
                 or not company.currency_id.is_zero(v['balance'])
             )
         }

@@ -13,6 +13,7 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
 import { contains } from "@web/../tests/web_test_helpers";
+import { execCommand } from "./_helpers/userCommands";
 
 test("can set foreground color", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
@@ -26,6 +27,7 @@ test("can set foreground color", async () => {
 
     await click(".o_color_button[data-color='#6BADDE']");
     await animationFrame();
+    await waitFor(".o-we-toolbar");
     expect(".o-we-toolbar").toHaveCount(1); // toolbar still open
     expect(".o_font_color_selector").toHaveCount(0); // selector closed
     expect(getContent(el)).toBe(`<p><font style="color: rgb(107, 173, 222);">[test]</font></p>`);
@@ -43,6 +45,7 @@ test("can set background color", async () => {
 
     await click(".o_color_button[data-color='#6BADDE']");
     await animationFrame();
+    await waitFor(".o-we-toolbar");
     expect(".o-we-toolbar").toHaveCount(1); // toolbar still open
     expect(".o_font_color_selector").toHaveCount(0); // selector closed
     expect(getContent(el)).toBe(
@@ -193,7 +196,7 @@ test("Can reset a color", async () => {
     await animationFrame();
     expect("font[style='color: rgb(255, 0, 0);']").toHaveCount(0);
     expect(".tested").toHaveInnerHTML("test");
-    editor.dispatch("HISTORY_UNDO");
+    execCommand(editor, "historyUndo");
     expect("font[style='color: rgb(255, 0, 0);']").toHaveCount(1);
     expect(".tested").not.toHaveInnerHTML("test");
 });
@@ -365,6 +368,23 @@ test("clicking on the angle input does not close the dropdown", async () => {
     expect("input[name='angle'").toHaveCount(1);
 });
 
+test("should be able to select farthest-corner option in radial gradient", async () => {
+    await setupEditor(`<p>a[bcd]e</p>`);
+    await waitFor(".o-we-toolbar");
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    expect(".btn:contains('Gradient')").toHaveCount(1);
+    await click(".btn:contains('Gradient')");
+    await animationFrame();
+    expect("button:contains('Radial')").toHaveCount(1);
+    await click(".btn:contains('Radial')");
+    await animationFrame();
+    expect("button[title='Extend to the farthest corner']").toHaveCount(1);
+    await click("button[title='Extend to the farthest corner']");
+    await animationFrame();
+    expect("button[title='Extend to the farthest corner']").toHaveClass("active");
+});
+
 describe.tags("desktop")("color preview", () => {
     test("preview color should work and be reverted", async () => {
         await setupEditor("<p>[test]</p>");
@@ -418,9 +438,9 @@ describe.tags("desktop")("color preview", () => {
         expect("font").toHaveCount(1);
         expect("font").toHaveClass("text-o-color-2");
         await animationFrame();
-        editor.dispatch("HISTORY_UNDO");
+        execCommand(editor, "historyUndo");
         expect("font").toHaveCount(0);
-        editor.dispatch("HISTORY_REDO");
+        execCommand(editor, "historyRedo");
         expect("font").toHaveCount(1);
         expect("font").toHaveClass("text-o-color-2");
     });
@@ -443,7 +463,7 @@ describe.tags("desktop")("color preview", () => {
         await press("escape");
         await animationFrame();
         expect("font").toHaveCount(0);
-        editor.dispatch("HISTORY_UNDO");
+        execCommand(editor, "historyUndo");
         expect("font").toHaveCount(0);
     });
 });

@@ -4,6 +4,7 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
 import { insertText, redo, undo } from "./_helpers/user_actions";
+import { execCommand } from "./_helpers/userCommands";
 
 function columnsContainer(contents) {
     return `<div class="container o_text_columns"><div class="row">${contents}</div></div>`;
@@ -15,7 +16,7 @@ function column(size, contents) {
 
 function columnize(numberOfColumns) {
     return (editor) => {
-        editor.dispatch("COLUMNIZE", { numberOfColumns });
+        execCommand(editor, "columnize", { numberOfColumns });
     };
 }
 
