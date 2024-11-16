@@ -285,17 +285,15 @@ export class PosOrder extends Base {
      * @param  {Orderline[]} lines an srray of Orderlines
      * @return {Number} the base amount on which we will apply a percentile reduction
      */
-    calculate_base_amount(tax_ids_array, lines) {
-        // Consider price_include taxes use case
-        const has_taxes_included_in_price = tax_ids_array.filter(
-            (tax_id) => this.models["account.tax"].get(tax_id).price_include
-        ).length;
-
+    calculate_base_amount(lines) {
         const base_amount = lines.reduce(
             (sum, line) =>
                 sum +
-                line.get_price_without_tax() +
-                (has_taxes_included_in_price ? line.get_total_taxes_included_in_price() : 0),
+                line.get_all_prices().priceWithTax -
+                line
+                    .get_all_prices()
+                    .taxesData.filter((tax) => !tax.price_include)
+                    .reduce((sum, tax) => (sum += tax.tax_amount), 0),
             0
         );
         return base_amount;
