@@ -6,8 +6,8 @@
 # Friederike Fasterling-Nesselbosch, 2022
 # Martin Trigaux, 2023
 # Wil Odoo, 2024
-# Sergio Zanchetta <primes2h@gmail.com>, 2024
 # Marianna Ciofani, 2024
+# Sergio Zanchetta <primes2h@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Marianna Ciofani, 2024\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -68,7 +68,7 @@ msgstr " (Max %s)"
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "%g%% on "
-msgstr "%g%% su"
+msgstr "%g%% "
 
 #. module: loyalty
 #. odoo-python
@@ -82,7 +82,7 @@ msgstr "%s per ordine"
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "%s per order on "
-msgstr "%s per ordine su"
+msgstr "%s per ordine "
 
 #. module: loyalty
 #. odoo-python
@@ -96,7 +96,7 @@ msgstr "%s per punto"
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "%s per point on "
-msgstr "%s per punto su"
+msgstr "%s per punto "
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -122,7 +122,7 @@ msgstr "Buoni sconto 10%"
 #: model:loyalty.reward,description:loyalty.10_percent_coupon_reward
 #: model:loyalty.reward,description:loyalty.10_percent_with_code_reward
 msgid "10% on your order"
-msgstr "10% sul tuo ordine"
+msgstr "10% sull'ordine"
 
 #. module: loyalty
 #. odoo-python
@@ -865,7 +865,7 @@ msgstr "Descrizione"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "Description on order"
-msgstr "Descrizione sull'ordine"
+msgstr "Descrizione su ordine"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount
@@ -1121,12 +1121,12 @@ msgstr "Crea e condividi con i tuoi clienti buoni sconto unici."
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Generate eWallet"
-msgstr "Genera portafoglio elettronico"
+msgstr "Genera portafoglio digitale"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_gift_ewallet_view_form
 msgid "Gift &amp; Ewallet"
-msgstr "Regalo e portafoglio elettronico"
+msgstr "Regalo e portafoglio digitale"
 
 #. module: loyalty
 #. odoo-python
@@ -1179,7 +1179,7 @@ msgstr ""
 #. module: loyalty
 #: model:ir.actions.act_window,name:loyalty.loyalty_program_gift_ewallet_action
 msgid "Gift cards & eWallet"
-msgstr "Carte regalo e portafoglio elettronico"
+msgstr "Carte regalo e portafoglio digitale"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__points_granted
@@ -1439,7 +1439,7 @@ msgstr "Nessun buono sconto trovato."
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_gift_ewallet_action
 msgid "No loyalty program found."
-msgstr "Nessun programma di fedeltà trovato."
+msgstr "Nessun programma fedeltà trovato."
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_discount_loyalty_action
@@ -1956,7 +1956,7 @@ msgstr "Con un codice promozionale"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "You can not delete a program in an active state"
-msgstr "Non è possibile eliminare un programma in stato attivo."
+msgstr "Impossibile eliminare un programma con stato attivo"
 
 #. module: loyalty
 #. odoo-python
@@ -2021,24 +2021,24 @@ msgstr "es. 10% di sconto sui portatili"
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__ewallet
 #, python-format
 msgid "eWallet"
-msgstr "Portafoglio elettronico"
+msgstr "Portafoglio digitale"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "eWallet Products"
-msgstr "Prodotti portafoglio elettronico"
+msgstr "Prodotti portafoglio digitale"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
 msgid "eWallet value"
-msgstr "Valore portafoglio elettronico"
+msgstr "Valore portafoglio digitale"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "eWallets"
-msgstr "Portafogli elettronici"
+msgstr "Portafogli digitali"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -2117,7 +2117,7 @@ msgstr "spesi"
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "the cheapest product"
-msgstr "il prodotto più economico"
+msgstr "sul prodotto più economico"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -2134,4 +2134,4 @@ msgstr "utilizzi"
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "your order"
-msgstr "il tuo ordine"
+msgstr "sull'ordine"

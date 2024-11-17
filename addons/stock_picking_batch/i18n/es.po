@@ -8,6 +8,7 @@
 # Ana Sanjuán, 2023
 # Wil Odoo, 2024
 # Larissa Manderfeld, 2024
+# Sergio Del Castillo Baranda, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Sergio Del Castillo Baranda, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -73,7 +74,7 @@ msgid ""
 "A transfer will not be automatically added to batches that will exceed this number of lines if the transfer is added to it.\n"
 "Leave this value as '0' if no line limit."
 msgstr ""
-"Si el lote excede el número de líneas, no se agregará el traslado automáticamente\n"
+"Si el lote excede el número de líneas, no se agregará el albarán automáticamente\n"
 "Deje este valor como \"0\" si no hay límite de líneas."
 
 #. module: stock_picking_batch
@@ -82,8 +83,8 @@ msgid ""
 "A transfer will not be automatically added to batches that will exceed this number of transfers.\n"
 "Leave this value as '0' if no transfer limit."
 msgstr ""
-"Si el lote excede el número de traslados, no se hará el traslado automáticamente.\n"
-"Deje este valor como \"0\" si no hay un límite de peso."
+"Un albarán no se añadirá automáticamente a los lotes que superen el número de albaranes indicado.\n"
+"Deje este valor como '0' para que no haya límite de albaranes."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction
@@ -232,30 +233,30 @@ msgstr "Lote"
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_internal_search_inherit
 #, python-format
 msgid "Batch Transfer"
-msgstr "Traslado por lote"
+msgstr "Agrupación de albarán"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking_to_batch
 msgid "Batch Transfer Lines"
-msgstr "Líneas de traslado por lote"
+msgstr "Líneas de agrupación de albaranes"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_batch_action
 #: model:ir.ui.menu,name:stock_picking_batch.stock_picking_batch_menu
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
 msgid "Batch Transfers"
-msgstr "Traslados por lote"
+msgstr "Agrupación de albaranes"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Batch Transfers not finished"
-msgstr "Traslados por lote sin finalizar"
+msgstr "Agrupaciones de albaranes no finalizadas"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_move_line__batch_id
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking__batch_id
 msgid "Batch associated to this transfer"
-msgstr "Lote asociado a este traslado"
+msgstr "Agrupación asociada a este albarán"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
@@ -279,7 +280,7 @@ msgstr "Cancelado"
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "Cannot create wave transfers"
-msgstr "No se pueden crear traslados con recolección por olas"
+msgstr "No se pueden crear traslados con recolección por oleadas"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -336,12 +337,12 @@ msgstr "Número de pickings por olas"
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid "Create a new batch transfer"
-msgstr "Crear un nuevo traslado por lote"
+msgstr "Crear una nueva agrupación de albaranes"
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
 msgid "Create a new wave transfer"
-msgstr "Crear un nuevo traslado por ola"
+msgstr "Crear una nueva agrupación de albaranes"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__create_uid
@@ -510,7 +511,7 @@ msgstr "Línea"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__picking_ids
 msgid "List of transfers associated to this batch"
-msgstr "Lista de traslados asociados a este lote"
+msgstr "Lista de albaranes asociados a esta agrupación"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_main_attachment_id
@@ -525,7 +526,7 @@ msgstr "Líneas máximas por lote"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_max_pickings
 msgid "Maximum transfers per batch"
-msgstr "Traslados máximos por lote"
+msgstr "Albaranes máximos por agrupación de albarán"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_error
@@ -556,7 +557,7 @@ msgstr "Fecha límite de mi actividad"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "My Transfers"
-msgstr "Mis traslados"
+msgstr "Mis albaranes"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_calendar_event_id
@@ -690,15 +691,15 @@ msgid ""
 "              - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date\n"
 "                but this scheduled date will not be set for all transfers in batch."
 msgstr ""
-"Fecha programada en la que se procesarán los traslados.\n"
-"              - Si se configura manualmente, la fecha programada para todos los traslados en lote se actualizará automáticamente a esta fecha.\n"
-"              - Si no se configura manualmente, y se agregan, remueven o actualizan los traslados, entonces esta será la fecha programada más temprana\n"
-"                pero esta fecha programada no se establecerá en todos los traslados por lote."
+"Fecha programada para procesar las transferencias.\n"
+"              -Si se establece manualmente, la fecha programada para todas las agrupaciones de albaranes se actualizará automáticamente a esta fecha..\n"
+"              - Si no se modifica manualmente y se añaden/eliminan/actualizan transferencias, ésta será la fecha programada más temprana.\n"
+"                 pero esta fecha programada no se fijará para todas las agrupaciones de albaranes."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Search Batch Transfer"
-msgstr "Buscar traslado por lote"
+msgstr "Buscar agrupación de albaranes"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -781,7 +782,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_tree
 msgid "Stock Batch Transfer"
-msgstr "Traslado por lote de stock"
+msgstr "Agrupación de albaranes disponible"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_move
@@ -829,10 +830,10 @@ msgid ""
 "            It may also be useful to assign jobs (one person = one batch) or\n"
 "            help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
-"El objetivo del traslado por lote es agrupar operaciones que pueden (deben) "
-"hacerse juntas para aumentar su eficacia. También puede ser útil para "
-"asignar trabajos (una persona = un lote) o ayudar a la gestión temporal de "
-"las operaciones (tareas que deben hacerse a las 13h)."
+"El objetivo de las agrupaciones de albaranes es agrupar operaciones que "
+"pueden (deben) hacerse juntas para aumentar su eficacia. También puede ser "
+"útil para asignar trabajos (una persona = un lote) o ayudar a la gestión "
+"temporal de las operaciones (tareas que deben hacerse a las 13h)."
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
@@ -842,7 +843,7 @@ msgid ""
 "                    It may also be useful to assign jobs (one person = one batch) or\n"
 "                    help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
-"El objetivo del traslado por olas es agrupar operaciones de distintos traslados\n"
+"El objetivo del agrupaciones por oleada es agrupar operaciones de distintos albaranes\n"
 "                    para aumentar su eficiencia.\n"
 "                    También puede ser útil para asignar trabajos (una persona = un lote) o\n"
 "                    mejorar la gestión de tiempo de las operaciones (tareas que se deben realizar antes de las 13h)."
@@ -866,7 +867,7 @@ msgstr "Las selecciones escogidas deben pertenecer a una empresa única."
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "The selected transfers should belong to a unique company."
-msgstr "Los traslados seleccionados deben pertenecer a una empresa única."
+msgstr "Los albaranes seleccionados deben pertenecer a una empresa única."
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -874,7 +875,7 @@ msgstr "Los traslados seleccionados deben pertenecer a una empresa única."
 #, python-format
 msgid "The selected transfers should belong to the same operation type"
 msgstr ""
-"Los traslados seleccionados deben pertenecer al mismo tipo de operación"
+"Los albaranes seleccionados deben pertenecer al mismo tipo de operación"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__is_wave
@@ -895,20 +896,20 @@ msgstr "Actividades de hoy"
 #: model:ir.model,name:stock_picking_batch.model_stock_picking
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "Transfer"
-msgstr "Traslado"
+msgstr "Albarán"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "Transferred by"
-msgstr "Trasladado por"
+msgstr "Transferido por"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_ids
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Transfers"
-msgstr "Traslados"
+msgstr "Albaranes"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_type_code
@@ -933,18 +934,18 @@ msgstr "Almacén"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__wave_id
 msgid "Wave Transfer"
-msgstr "Traslado por olas"
+msgstr "Agrupación por oleadas"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_add_to_wave
 msgid "Wave Transfer Lines"
-msgstr "Líneas de traslados por olas"
+msgstr "Líneas de agrupaciones por oleadas"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.action_picking_tree_wave
 #: model:ir.ui.menu,name:stock_picking_batch.stock_picking_wave_menu
 msgid "Wave Transfers"
-msgstr "Traslados por ola"
+msgstr "Agrupaciones por oleadas"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
@@ -971,7 +972,7 @@ msgstr "Cuando se selecciona, crea el lote en estado de borrador"
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "You cannot delete Done batch transfers."
-msgstr "No puede eliminar traslados por lote terminados."
+msgstr "No puede eliminar agrupaciones de albaranes finalizadas."
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -983,19 +984,19 @@ msgstr "Tiene que establecer algunas pickings a los lotes."
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__new
 msgid "a new batch transfer"
-msgstr "un nuevo traslado por lotes"
+msgstr "una nueva agrupación de albaranes"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__new
 msgid "a new wave transfer"
-msgstr "un nuevo traslado por olas"
+msgstr "una nueva agrupación por oleadas"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__existing
 msgid "an existing batch transfer"
-msgstr "un traslado por lotes existente"
+msgstr "una agrupación de albaranes existente"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__existing
 msgid "an existing wave transfer"
-msgstr "un traslado por olas existente"
+msgstr "una agrupación por oleadas existente"

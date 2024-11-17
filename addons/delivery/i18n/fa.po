@@ -123,7 +123,7 @@ msgstr "<strong>توضیحات حمل و نقل:</strong>"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
 msgid "<strong>Shipping Weight: </strong>"
-msgstr ""
+msgstr "<strong>وزن ارسال: </strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
@@ -131,6 +131,8 @@ msgid ""
 "<strong>Shipping Weight:</strong>\n"
 "                    <br/>"
 msgstr ""
+"<strong>وزن حمل و نقل:</strong>\n"
+"                    <br/>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -149,7 +151,7 @@ msgstr "<strong>شماره پیگیری:</strong>"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
 msgid "<strong>Weight: </strong>"
-msgstr ""
+msgstr "<strong>وزن: </strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_shipping2
@@ -248,6 +250,8 @@ msgid ""
 "Cancelling a delivery may not be undoable. Are you sure you want to "
 "continue?"
 msgstr ""
+"آیا مطمئنید که می‌خواهید ادامه دهید؟ لغو یک تحویل ممکن است قابل بازگشت "
+"نباشد."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__carrier_id
@@ -264,7 +268,7 @@ msgstr "پیک"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_package_type__shipper_package_code
 msgid "Carrier Code"
-msgstr ""
+msgstr "کد حامل"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__carrier_description
@@ -279,7 +283,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.stock_move_line_view_search_delivery
 msgid "Carrier name"
-msgstr ""
+msgstr "نام حامل"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__company_id
@@ -389,7 +393,7 @@ msgstr "راهنمای انتخاب تحویل بسته"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__delivery_package_type_id
 msgid "Delivery Package Type"
-msgstr ""
+msgstr "نوع بسته‌بندی تحویل"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_price
@@ -453,7 +457,7 @@ msgstr "در دسترس بودن مقصد"
 #: model:ir.model.fields,field_description:delivery.field_stock_move_line__destination_country_code
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__destination_country_code
 msgid "Destination Country"
-msgstr ""
+msgstr "کشور مقصد"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__sequence
@@ -745,7 +749,7 @@ msgstr "سفارش"
 #: model:ir.model.fields,field_description:delivery.field_product_product__country_of_origin
 #: model:ir.model.fields,field_description:delivery.field_product_template__country_of_origin
 msgid "Origin of Goods"
-msgstr ""
+msgstr "منشاء کالا"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
@@ -885,6 +889,8 @@ msgid ""
 "Rules of origin determine where goods originate, i.e. not where they have been shipped from, but where they have been produced or manufactured.\n"
 "As such, the ‘origin’ is the 'economic nationality' of goods traded in commerce."
 msgstr ""
+"قواعد مبدا تعیین می‌کنند که کالاها از کجا منشأ می‌گیرند، یعنی نه اینکه از کجا ارسال شده‌اند، بلکه از کجا تولید یا ساخته شده‌اند.\n"
+"به این ترتیب، \"مبدا\" همان 'ملیت اقتصادی' کالاهای داد و ستد شده در بازرگانی است."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__list_base_price
@@ -978,7 +984,7 @@ msgstr "وزن ارسال"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
 msgid "Shipping Weight:"
-msgstr ""
+msgstr "وزن حمل و نقل:"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__shipping_insurance
@@ -1031,12 +1037,12 @@ msgstr "حمایت از بیمه حمل و نقل"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package__weight_uom_rounding
 msgid "Technical field indicating weight's number of decimal places"
-msgstr ""
+msgstr "فیلد فنی که تعداد مکان‌های اعشاری وزن را نشان می‌دهد"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package__weight_is_kg
 msgid "Technical field indicating whether weight uom is kg or not (i.e. lb)"
-msgstr ""
+msgstr "زمینه فنی که نشان می‌دهد آیا واحد وزن کیلوگرم است یا نه (مثلاً پوند)"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_move_line__destination_country_code
@@ -1062,7 +1068,7 @@ msgstr "پست"
 msgid ""
 "The package cannot be created because the total weight of the products in "
 "the picking is 0.0 %s"
-msgstr ""
+msgstr "بسته نمی‌تواند ایجاد شود زیرا مجموع وزن محصولات در انتخاب 0.0 %s است"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
@@ -1254,7 +1260,7 @@ msgstr "برچسب واحد اندازه گیری وزن"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
 msgid "Weight:"
-msgstr ""
+msgstr "وزن:"
 
 #. module: delivery
 #. odoo-python
@@ -1321,21 +1327,24 @@ msgstr "پیشوندهای کدپستی"
 #: model_terms:ir.ui.view,arch_db:delivery.label_package_template_view_delivery
 msgid "^A0N,44,33^FDShipping Weight:"
 msgstr ""
+"```\n"
+"^A0N,44,33^FDوزن حمل:\n"
+"```"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.label_package_template_view_delivery
 msgid "^A0N,44,33^FDWeight:"
-msgstr ""
+msgstr "^A0N,44,33^FDوزن:"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.label_package_template_view_delivery
 msgid "^FO310,200"
-msgstr ""
+msgstr "^FO310,200"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.label_package_template_view_delivery
 msgid "^FS"
-msgstr ""
+msgstr "متن اصلی:"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
