@@ -36,7 +36,7 @@ msgstr "ชั่วโมง"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid " to %(date_to_utc)s"
-msgstr ""
+msgstr "ถึง %(date_to_utc)s"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -110,13 +110,13 @@ msgstr "%(leave_type)s: %(duration)s (%(start)s)"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "%(name)s (%(duration)s day(s))"
-msgstr ""
+msgstr "%(name)s (%(duration)s วัน)"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "%(name)s (%(duration)s hour(s))"
-msgstr ""
+msgstr "%(name)s (%(duration)s ชั่วโมง)"
 
 #. module: hr_holidays
 #. odoo-python
@@ -532,6 +532,8 @@ msgid ""
 "<span class=\"ml8\" invisible=\"request_unit == 'hour'\">Days</span>\n"
 "                            <span class=\"ml8\" invisible=\"request_unit != 'hour'\">Hours</span>"
 msgstr ""
+"<span class=\"ml8\" invisible=\"request_unit == 'hour'\">วัน</span>\n"
+"                            <span class=\"ml8\" invisible=\"request_unit != 'hour'\">ชั่วโมง</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -610,6 +612,8 @@ msgid ""
 "<span>The employee has a different timezone than yours! Here dates and times are displayed in the employee's timezone</span>\n"
 "                    ("
 msgstr ""
+"<span>พนักงานมีเขตเวลาที่ต่างจากคุณ! ที่นี่วันที่และเวลาจะแสดงตามเขตเวลาของพนักงาน</span>\n"
+"                    ("
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -953,7 +957,7 @@ msgstr "คำร้องขอจัดสรร"
 #. module: hr_holidays
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_allocation_second_approval
 msgid "Allocation Second Approval"
-msgstr ""
+msgstr "การอนุมัติการจัดสรรครั้งที่ 2"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__allocation_type
@@ -969,12 +973,14 @@ msgid ""
 "Allocation must be \"To Approve\" or \"Second Approval\" in order to "
 "validate it."
 msgstr ""
+"การจัดสรรจะต้องอยู่ในสถานะ \"อนุมัติ\" หรือ \"อนุมัติครั้งที่สอง\" "
+"จึงจะตรวจสอบได้"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Allocation must be confirmed (\"To Approve\") in order to approve it."
-msgstr ""
+msgstr "การจัดสรรจะต้องได้รับการยืนยัน (\"อนุมัติ\") จึงจะอนุมัติได้"
 
 #. module: hr_holidays
 #. odoo-python
@@ -994,12 +1000,14 @@ msgid ""
 "Allocation request must be confirmed, second approval or validated in order "
 "to refuse it."
 msgstr ""
+"คำขอจัดสรรจะต้องได้รับการยืนยัน อนุมัติครั้งที่สอง "
+"หรือผ่านการตรวจสอบจึงจะปฏิเสธได้"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Allocation state must be \"Refused\" in order to be reset to \"To Approve\"."
-msgstr ""
+msgstr "สถานะการจัดสรรจะต้องเป็น \"ปฏิเสธ\" จึงจะรีเซ็ตเป็น \"อนุมัติ\" ได้"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
@@ -1204,6 +1212,8 @@ msgid ""
 "Automatic time off spliting during batch generation is not managed for ovelapping time off declared in hours. Conflicting time off:\n"
 "%s"
 msgstr ""
+"การแบ่งเวลาหยุดงานอัตโนมัติระหว่างการสร้างชุดไม่ได้รับการจัดการสำหรับเวลาหยุดงานที่ทับซ้อนกันซึ่งประกาศเป็นชั่วโมง เวลาหยุดงานที่ขัดแย้งกัน:\n"
+"%s"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1542,7 +1552,7 @@ msgstr "ภาพหน้าปก"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
 msgid "Create Allocations"
-msgstr ""
+msgstr "สร้างการจัดสรร"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_approve_department
@@ -2047,31 +2057,31 @@ msgstr "กิจกรรมในอนาคต"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_generate_multi_wizard_view_form
 msgid "Generate Time Off"
-msgstr ""
+msgstr "สร้างการลาหยุด"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_allocation_generate_multi_wizard
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
 msgid "Generate time off allocations for multiple employees"
-msgstr ""
+msgstr "สร้างการจัดสรรเวลาการลาหยุดให้กับพนักงานหลายคน"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_generate_multi_wizard
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_generate_multi_wizard_view_form
 msgid "Generate time off for multiple employees"
-msgstr ""
+msgstr "สร้างเวลาการลาหยุดให้กับพนักงานหลายคน"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_leave_allocation_generate_multi_wizard.py:0
 msgid "Generated Allocations"
-msgstr ""
+msgstr "การจัดสรรที่สร้างขึ้น"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_leave_generate_multi_wizard.py:0
 msgid "Generated Time Off"
-msgstr ""
+msgstr "สร้างการลาหยุด"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2287,7 +2297,7 @@ msgstr "เป็นผู้ติดตาม"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__is_name_custom
 msgid "Is Name Custom"
-msgstr ""
+msgstr "เป็นชื่อที่กำหนดเอง"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__is_officer
@@ -2481,7 +2491,7 @@ msgstr "ทำเครื่องหมายเป็นฉบับร่า
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid "Mark as ready to approve"
-msgstr ""
+msgstr "ทำเครื่องหมายว่าพร้อมที่จะอนุมัติ"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__max_leaves
@@ -2592,7 +2602,7 @@ msgstr "ช่วงเช้า"
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_leave_allocation_generate_multi_wizard
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_leave_generate_multi_wizard
 msgid "Multiple Requests"
-msgstr ""
+msgstr "คำขอหลายรายการ"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__my_activity_date_deadline
@@ -3038,7 +3048,7 @@ msgstr "พิมพ์"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
 msgid "Provide a reason to cancel an approved time off"
-msgstr ""
+msgstr "ระบุเหตุผลในการยกเลิกเวลาการลาหยุดที่ได้รับอนุมัติ"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_form_inherit
@@ -3048,7 +3058,7 @@ msgstr "สาธารณะ"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__include_public_holidays_in_duration
 msgid "Public Holiday Included"
-msgstr ""
+msgstr "รวมวันหยุดนักขัตฤกษ์"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3063,7 +3073,7 @@ msgstr "วันหยุดตามกฎหมาย"
 msgid ""
 "Public holidays should be counted in the leave duration when applying for "
 "leaves"
-msgstr ""
+msgstr "วันหยุดราชการให้นับรวมในระยะเวลาการลาเมื่อยื่นคำขอการลาหยุด"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__added_value
@@ -3308,7 +3318,7 @@ msgstr "แสดงวันที่เดือนที่สอง"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Second approval request for %(allocation_type)s"
-msgstr ""
+msgstr "คำขออนุมัติครั้งที่สองสำหรับ %(allocation_type)s"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3420,6 +3430,8 @@ msgid ""
 "Some of the accrual plans you're trying to delete are linked to an existing "
 "allocation. Delete or cancel them first."
 msgstr ""
+"แผนการรับเงินบางส่วนที่คุณพยายามลบเชื่อมโยงกับการจัดสรรที่มีอยู่ "
+"โปรดลบหรือยกเลิกแผนดังกล่าวก่อน"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__time_off_type_id
@@ -3755,6 +3767,8 @@ msgid ""
 "This area is automatically filled by the user who validates the allocation "
 "with second level (If time off type need second validation)"
 msgstr ""
+"พื้นที่นี้จะถูกกรอกโดยอัตโนมัติโดยผู้ใช้ที่ตรวจสอบการจัดสรรด้วยระดับที่สอง "
+"(หากประเภทเวลาการลาจำเป็นต้องมีการตรวจสอบครั้งที่สอง)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_type

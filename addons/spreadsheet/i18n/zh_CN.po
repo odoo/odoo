@@ -6,8 +6,9 @@
 # Martin Trigaux, 2024
 # Wil Odoo, 2024
 # Jeffery CHEN <jeffery9@gmail.com>, 2024
-# Chloe Wang, 2024
 # Odoo哥 <vnsoft.he@gmail.com>, 2024
+# Raymond Yu <cl_yu@hotmail.com>, 2024
+# Chloe Wang, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Odoo哥 <vnsoft.he@gmail.com>, 2024\n"
+"Last-Translator: Chloe Wang, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1796,6 +1797,14 @@ msgstr "确认"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"Consider using a dynamic pivot formula: %s. Or re-insert the static pivot "
+"from the Data menu."
+msgstr "考虑使用动态透视表公式：%s。或者从数据菜单中重新插入静态透视表。"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Contains"
 msgstr "包含"
 
@@ -3073,6 +3082,13 @@ msgstr "函数${name}的不可重复参数在可重复参数之后声明。所�
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"Function %s expects the parameter '%s' to be reference to a cell or range."
+msgstr "函数 %s 希望参数 '%s' 是对一个单元格或区域的引用。"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Function PIVOT takes an even number of arguments."
 msgstr "函数PIVOT接受偶数个参数。"
 
@@ -3116,14 +3132,6 @@ msgstr "函数 [[FUNCTION_NAME]] 希望 criteria_range 具有相同的维度"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."
 msgstr "函数 [[FUNCTION_NAME]] 期望值为 %s，但得到的是 %s。"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"Function [[FUNCTION_NAME]] expects the parameter '%s' to be reference to a "
-"cell or range."
-msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5010,6 +5018,14 @@ msgstr "数据透视表"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"Pivot updates only work with dynamic pivot tables. Use %s or re-insert the "
+"static pivot from the Data menu."
+msgstr "数据透视表更新仅适用于动态数据透视表。使用%s或从“数据” 菜单重新插入静态数据透视表。"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Plain text"
 msgstr "纯文本"
@@ -5233,8 +5249,14 @@ msgstr "范围"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "Re-insert pivot"
-msgstr "重新插入透视表"
+msgid "Re-insert dynamic pivot"
+msgstr "重新插入动态透视表"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Re-insert static pivot"
+msgstr "重新插入静态透视表"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6011,6 +6033,12 @@ msgstr "堆叠面积图"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Stacked bar chart"
 msgstr "堆叠柱状图"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Stacked column chart"
+msgstr "堆叠柱形图"
 
 #. module: spreadsheet
 #. odoo-javascript
