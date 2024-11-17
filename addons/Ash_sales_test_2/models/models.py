@@ -2,6 +2,8 @@ from odoo import models, fields, api
 import requests
 import logging
 
+# from shiperooConnect.interfaces.JB_files.JBxmlrpc_postReceiptstoodoo import picking_id
+
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -34,6 +36,16 @@ class SaleOrder(models.Model):
             logger.info(f"Processing order: {order.name}")
             all_products_available = True
             products_data = []
+
+            # Fetch picking records for the current order
+            picking_records = self.env['stock.picking'].search([
+                ('origin', '=', order.name),
+                ('state', '!=', 'cancel')  # Exclude canceled pickings
+            ])
+            # Filter only "pick" type pickings
+            pick_only_picking_records = picking_records.filtered(
+                lambda p: 'Pick' in p.picking_type_id.name  # Adjust logic based on your type naming convention
+            )
             for line in order.order_line:
                 product_qty = line.product_uom_qty  
                 product = line.product_id
@@ -61,6 +73,11 @@ class SaleOrder(models.Model):
                     all_products_available = False
                     break
 
+                # Collect pickings that include the product
+                product_pickings = pick_only_picking_records.filtered(
+                    lambda p: product.id in p.move_ids.mapped('product_id').ids
+                ).mapped('name')
+
                 # Collect data to be sent to the external system
                 products_data.append({
                     'default_code': product_default_code,
@@ -68,6 +85,8 @@ class SaleOrder(models.Model):
                     'quantity': product_qty,
                     'location': location_name,
                     'system': location_system,
+                    'product_class': product.automation_manual_product,
+                    'picklist': product_pickings,
                 })
 
             # Update order status
