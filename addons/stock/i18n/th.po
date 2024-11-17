@@ -508,10 +508,8 @@ msgstr ""
 #: code:addons/stock/models/stock_rule.py:0
 msgid ""
 "<br>If the products are not available in <b>%s</b>, a rule will be triggered"
-" to bring products in this location."
+" to bring the missing quantity in this location."
 msgstr ""
-"<br>หากสินค้าไม่พร้อมจำหน่ายใน<b>%s "
-"กฎจะถูกทริกเกอร์ให้นำสินค้ามาที่ตำแหน่งนี้"
 
 #. module: stock
 #. odoo-python
@@ -2724,7 +2722,7 @@ msgstr "ล่าช้า %s"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__ship_only
 msgid "Deliver (1 step)"
-msgstr ""
+msgstr "ส่งมอบ (1 ขั้นตอน)"
 
 #. module: stock
 #. odoo-python
@@ -6497,12 +6495,12 @@ msgstr "ชนิดการรับ"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__pick_ship
 msgid "Pick then Deliver (2 steps)"
-msgstr ""
+msgstr "รับแล้วส่ง (2 ขั้นตอน)"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__pick_pack_ship
 msgid "Pick, Pack, then Deliver (3 steps)"
-msgstr ""
+msgstr "รับ บรรจุ จากนั้นจัดส่ง (3 ขั้นตอน)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__picked
@@ -7422,7 +7420,7 @@ msgstr "รับจาก"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__one_step
 msgid "Receive and Store (1 step)"
-msgstr ""
+msgstr "รับและจัดเก็บ (1 ขั้นตอน)"
 
 #. module: stock
 #. odoo-python
@@ -7445,12 +7443,12 @@ msgstr "รับสินค้าใน 3 ขั้นตอน (นำเข�
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__two_steps
 msgid "Receive then Store (2 steps)"
-msgstr ""
+msgstr "รับแล้วจัดเก็บ (2 ขั้นตอน)"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__three_steps
 msgid "Receive, Quality Control, then Store (3 steps)"
-msgstr ""
+msgstr "รับ, ควบคุมคุณภาพ และจัดเก็บ (3 ขั้นตอน)"
 
 #. module: stock
 #. odoo-python
@@ -9407,6 +9405,8 @@ msgid ""
 "created. However, it is possible to change it afterwards or that the routes "
 "use another one by default."
 msgstr ""
+"นี่คือตำแหน่งปลายทางเริ่มต้นเมื่อดำเนินการนี้ด้วยตนเอง อย่างไรก็ตาม "
+"อาจมีการเปลี่ยนแปลงในภายหลังหรือเส้นทางจะใช้ตำแหน่งอื่นตามค่าเริ่มต้น"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_src_id
@@ -9415,6 +9415,8 @@ msgid ""
 " However, it is possible to change it afterwards or that the routes use "
 "another one by default."
 msgstr ""
+"นี่คือตำแหน่งแหล่งที่มาเริ่มต้นเมื่อดำเนินการนี้ด้วยตนเอง อย่างไรก็ตาม "
+"อาจมีการเปลี่ยนแปลงในภายหลังหรือเส้นทางจะใช้ตำแหน่งอื่นตามค่าเริ่มต้น"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__owner_id

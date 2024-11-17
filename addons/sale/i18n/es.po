@@ -1270,6 +1270,14 @@ msgid ""
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
 "Inside quote: The document will be included in the pdf of the quotation and sale order between the header pages and the quote table. "
 msgstr ""
+"Le permite compartir el documento con sus clientes dentro de una venta.\n"
+"Déjelo vacío si no desea compartir este documento con su cliente.\n"
+"En el presupuesto: los clientes recibirán el documento y podrán visualizarlo en cualquier momento.\n"
+"Esta opción puede ser útil, por ejemplo, para compartir archivos de descripción del producto.\n"
+"En la confirmación de la orden: los clientes recibirán el documento y podrán visualizarlo.\n"
+"Esta opción puede ser útil, por ejemplo, para compartir el manual de usuario o algún contenido digital que se haya adquirido mediante comercio electrónico. \n"
+"Dentro del presupuesto: el documento se incluirá en el PDF del presupuesto\n"
+"y del pedido de venta entre el encabezado y la tabla de presupuesto."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -1654,7 +1662,7 @@ msgstr "Opciones de combinaciones"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__combo_item_id
 msgid "Combo Item"
-msgstr ""
+msgstr "Elemento de la combinación"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_commission
@@ -2184,13 +2192,15 @@ msgstr "Descuento %"
 #. odoo-python
 #: code:addons/sale/wizard/sale_order_discount.py:0
 msgid "Discount %(percent)s%%"
-msgstr ""
+msgstr "Descuento: %(percent)s%%"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_order_discount.py:0
 msgid "Discount %(percent)s%%- On products with the following taxes %(taxes)s"
 msgstr ""
+"Descuento: %(percent)s%% - En los productos con los siguientes impuestos "
+"%(taxes)s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__discount
@@ -2351,7 +2361,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_category__property_account_downpayment_categ_id
 msgid "Downpayment Account"
-msgstr ""
+msgstr "Cuenta de anticipos"
 
 #. module: sale
 #. odoo-python
@@ -2368,7 +2378,7 @@ msgstr "Documentos duplicados"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__duplicated_order_ids
 msgid "Duplicated Order"
-msgstr ""
+msgstr "Pedido duplicado"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_easypost
@@ -2410,6 +2420,8 @@ msgstr "Escribir un valor personalizado"
 msgid ""
 "Error importing attachment '%(file_name)s' as order (decoder=%(decoder)s)"
 msgstr ""
+"Error al importar el archivo adjunto “%(file_name)s” como pedido "
+"(decoder=%(decoder)s)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
@@ -2559,7 +2571,7 @@ msgstr "Genere la factura automáticamente cuando se confirme el pago en línea"
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Generated Orders"
-msgstr ""
+msgstr "Pedidos generados"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2583,6 +2595,8 @@ msgid ""
 "Goods are tangible materials and merchandise you provide.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"Los bienes son productos materiales tangibles que usted proporciona.\n"
+"Los servicios son productos inmateriales que usted proporciona."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2708,7 +2722,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Immediate"
-msgstr ""
+msgstr "Inmediato"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2855,7 +2869,7 @@ msgstr "Cantidad Facturada"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_invoiced_posted
 msgid "Invoiced Quantity (posted)"
-msgstr ""
+msgstr "Cantidad facturada (publicada)"
 
 #. module: sale
 #. odoo-python
@@ -2973,7 +2987,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Issued Date"
-msgstr ""
+msgstr "Fecha de emisión"
 
 #. module: sale
 #. odoo-python
@@ -3108,7 +3122,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage Sales & teams targets and commissions"
-msgstr ""
+msgstr "Gestione los objetivos y comisiones de ventas y de sus equipos"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__manual
@@ -4056,7 +4070,7 @@ msgstr ""
 #: model:mail.message.subtype,name:sale.mt_order_viewed
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_viewed
 msgid "Quotation Viewed"
-msgstr ""
+msgstr "Presupuesto visualizado"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
@@ -4363,7 +4377,7 @@ msgstr "Análisis de ventas por cliente"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_products
 msgid "Sales Analysis By Products"
-msgstr ""
+msgstr "Análisis de ventas por productos"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_salesperson
@@ -4932,7 +4946,7 @@ msgstr "Impuestos"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_discount__tax_ids
 msgid "Taxes to add on the discount line."
-msgstr ""
+msgstr "Impuestos a agregar en la línea de descuento."
 
 #. module: sale
 #. odoo-python
@@ -5537,7 +5551,7 @@ msgstr "Total imponible"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_line_wizard_form
 msgid "Untaxed discount"
-msgstr ""
+msgstr "Descuento sin impuestos"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form

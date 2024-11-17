@@ -61,7 +61,7 @@ msgstr "%(event_name)s - Inscripción para %(attendee_name)s"
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "%(start_date)s to %(end_date)s"
-msgstr ""
+msgstr "del %(start_date)s al %(end_date)s"
 
 #. module: event
 #. odoo-python
@@ -85,7 +85,7 @@ msgstr "%s (copia)"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.js:0
 msgid "'%(name)s' badge sent to printer '%(printer)s'"
-msgstr ""
+msgstr "La identificación de %(name)s se envió a la impresora %(printer)s"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_attendee_list
@@ -180,12 +180,12 @@ msgstr "5-10"
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__96x134
 msgid "96x134mm (Badge Printer)"
-msgstr ""
+msgstr "96 x 134 mm (impresora de identificaciones)"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__96x82
 msgid "96x82mm (Badge Printer)"
-msgstr ""
+msgstr "96 x 82 mm (impresora de identificaciones)"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -356,7 +356,7 @@ msgstr "<i class=\"fa fa-ticket\" title=\"Ticket type\"/>"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"oi oi-arrow-right me-2\" title=\"End date\"/>"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right me-2\" title=\"Fecha de finalización\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -2077,7 +2077,7 @@ msgstr "Asistentes"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Auto-Print"
-msgstr ""
+msgstr "Imprimir automáticamente"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_available
@@ -2093,12 +2093,12 @@ msgstr "Pase"
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_badge_96x134
 msgid "Badge (96x134mm)"
-msgstr ""
+msgstr "Identificación (96 x 134 mm)"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_badge_96x82
 msgid "Badge (96x82mm)"
-msgstr ""
+msgstr "Identificación (96 x 82 mm)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_image
@@ -2373,7 +2373,7 @@ msgstr "Botón para confirmar asistencia"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Confirm attendance?"
-msgstr ""
+msgstr "¿Confirmar asistencia?"
 
 #. module: event
 #: model:ir.model,name:event.model_res_partner
@@ -3449,7 +3449,7 @@ msgstr "Últimos 30 días"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__last_registration_id
 msgid "Last Attendee"
-msgstr ""
+msgstr "Último asistente"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__write_uid
@@ -3852,6 +3852,8 @@ msgstr "En línea si no está establecido"
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "Open date range picker.<br/>Pick a Start and End date for your event."
 msgstr ""
+"Abra el selector de rango de fechas.<br/>Elija una fecha de inicio y de "
+"finalización para su evento. "
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -4233,7 +4235,7 @@ msgstr "Error de envío del SMS"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Scan or Tap"
-msgstr ""
+msgstr "Escanear o acercar"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -4267,7 +4269,7 @@ msgstr "Hora programada"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__mail_registration_ids
 msgid "Scheduler Emails"
-msgstr ""
+msgstr "Programador de correos"
 
 #. module: event
 #: model_terms:event.event,description:event.event_5
@@ -4289,7 +4291,7 @@ msgstr "Seleccionar asistente"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Select printer..."
-msgstr ""
+msgstr "Seleccione una impresora..."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_answer_view_tree

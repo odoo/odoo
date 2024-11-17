@@ -51,9 +51,9 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"        Selecteer 'Verkoop' voor klantfacturen journalen.\n"
-"        Selecteer 'Inkoop' voor facturenjournalen van leveranciers.\n"
-"        Selecteer 'Contant', 'Bank' of 'Creditcard' voor journaals die gebruikt worden voor betalingen aan klanten of leveranciers.\n"
+"        Selecteer 'Verkoop' voor boekingen van klantfacturen.\n"
+"        Selecteer 'Inkoop' voor boekingen van leveranciersfacturen.\n"
+"        Selecteer 'Contant', 'Bank' of 'Creditcard' voor boekingen die gebruikt worden voor betalingen aan klanten of leveranciers.\n"
 "        Selecteer 'Algemeen' voor diverse transacties.\n"
 "        "
 
@@ -835,7 +835,7 @@ msgid ""
 "                                    <span class=\"d-none d-md-inline\"> Reversed</span>"
 msgstr ""
 "<i class=\"fa fa-fw fa-check\" aria-label=\"Reversed\" title=\"Reversed\" role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> Omgekeerd</span>"
+"                                    <span class=\"d-none d-md-inline\"> Teruggeboekt</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -1617,12 +1617,12 @@ msgid ""
 "journal entry."
 msgstr ""
 "Een betaling met een openstaande rekening kan niet worden bevestigd zonder "
-"een journaalpost."
+"een boeking."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_reconcile_model_name_unique
 msgid "A reconciliation model already bears this name."
-msgstr "Een verzoeningsmodel draagt deze naam al."
+msgstr "Een aflettermodel draagt deze naam al."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_report_line_code_uniq
@@ -2034,7 +2034,7 @@ msgstr ""
 msgid ""
 "Account for the difference amount after the expense discount has been "
 "granted"
-msgstr "Verreken het verschilbedrag nadat de onkostenkorting is toegekend"
+msgstr "Verreken het verschilbedrag nadat de kostenkorting is toegekend"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
@@ -2280,8 +2280,8 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                    And"
 " its reverse entry: %(reverse_entry)s."
 msgstr ""
-"Toerekeningspost gemaakt op %(date)s: %(accrual_entry)s. En de omgekeerde "
-"invoer: %(reverse_entry)s."
+"Toerekeningsboeking gemaakt op %(date)s: %(accrual_entry)s. En de "
+"terugboeking: %(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -2658,7 +2658,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__unreconciled_bank_statement_line_ids
 msgid "All unreconciled bank statement lines before the selected date."
-msgstr "Alle niet-afgestemde bankafschriftregels voor de geselecteerde datum."
+msgstr ""
+"Alle niet-afgeletterde bankafschriftregels voor de geselecteerde datum."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -2925,7 +2926,7 @@ msgid ""
 "reconciled."
 msgstr ""
 "Er is een fout opgetreden bij het berekenen van de onveranderlijkheid. Alle "
-"boekingen moeten worden aangepast."
+"boekingen moeten worden afgeletterd."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -5480,7 +5481,7 @@ msgstr "Kort vreemd vermogen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__current_statement_balance
 msgid "Current Statement Balance"
-msgstr "Huidige balans"
+msgstr "Huidige bankafschriftsaldo"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity_unaffected
@@ -6591,7 +6592,7 @@ msgstr "Concept creditfactuur"
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 #: model:ir.model.fields,field_description:account.field_account_report__filter_show_draft
 msgid "Draft Entries"
-msgstr "Conceptinvoer"
+msgstr "Conceptboekingen"
 
 #. module: account
 #. odoo-python
@@ -6652,7 +6653,7 @@ msgstr "Drop en laat AI je facturen automatisch verwerken."
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Drop to create journal entries with attachments."
-msgstr "Drop om journaalposten met bijlagen te maken."
+msgstr "Drop om boekingen met bijlagen te maken."
 
 #. module: account
 #. odoo-python
@@ -7654,7 +7655,7 @@ msgstr "Van factuur"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Non Trade Receivable accounts"
-msgstr "Van niet-handelsvorderingen"
+msgstr "Van niet-handelsdebiteuren"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -8037,9 +8038,9 @@ msgid ""
 "date are secured. Only journal entries after the hard lock date are "
 "considered."
 msgstr ""
-"Hoogste Datum zodat alle geboekte journaalposten vóór (inclusief) de datum "
-"worden beveiligd. Alleen journaalposten na de harde vergrendelingsdatum "
-"worden in aanmerking genomen."
+"Hoogste Datum zodat alle geboekte boekingen vóór (inclusief) de datum worden"
+" beveiligd. Alleen boekingen na de harde vergrendelingsdatum worden in "
+"aanmerking genomen."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__highest_name
@@ -8237,7 +8238,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move_reversal__journal_id
 msgid "If empty, uses the journal of the journal entry to be reversed."
 msgstr ""
-"Indien leeg wordt het dagboek gebruikt van de boeking die moet omgekeerd "
+"Indien leeg wordt het dagboek gebruikt van de boeking die moet teruggeboekt "
 "worden."
 
 #. module: account
@@ -9577,14 +9578,13 @@ msgid ""
 "Journal items where the account allows reconciliation no matter the residual"
 " amount"
 msgstr ""
-"Journaalposten waarbij de rekening reconciliatie toestaat, ongeacht het "
-"restbedrag"
+"Boekingen waarbij de rekening afletteren toestaat, ongeacht het restbedrag"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 msgid "Journal should be the same type as the reversed entry."
-msgstr "Dagboek moet van het type omgekeerde boeking zijn."
+msgstr "Dagboek moet van hetzelfde type zijn als de tegenboeking."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__automatic_entry_default_journal_id
@@ -10040,7 +10040,7 @@ msgstr "Laad meer limiet"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Lock"
-msgstr "Vergrendelen"
+msgstr "Blokkeren"
 
 #. module: account
 #. odoo-python
@@ -10051,7 +10051,7 @@ msgstr "Datum blokkeren Uitzondering %s"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__lock_date_field
 msgid "Lock Date Field"
-msgstr "Datum veld vergrendelen"
+msgstr "Datum veld blokkeren"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__lock_date_message
@@ -10475,7 +10475,7 @@ msgstr "Diversen"
 #: code:addons/account/models/chart_template.py:0
 #: model:account.journal,name:account.1_general
 msgid "Miscellaneous Operations"
-msgstr "Diverse operaties"
+msgstr "Memoriaal"
 
 #. module: account
 #. odoo-python
@@ -10866,7 +10866,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "No payment journal entries"
-msgstr "Geen journaalposten voor betalingen"
+msgstr "Geen boekingen voor betalingen"
 
 #. module: account
 #. odoo-python
@@ -10881,7 +10881,7 @@ msgid ""
 "fiscal year locking for example."
 msgstr ""
 "Gebruikers kunnen geen accounts bewerken vóór en na deze datum. Gebruik het "
-"bijvoorbeeld voor het vergrendelen van het fiscale jaar."
+"bijvoorbeeld voor het blokkeren van het fiscale jaar."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__tax_lock_date
@@ -10900,12 +10900,12 @@ msgstr "Niet handel"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Non Trade Payable"
-msgstr "Niet in de handel te betalen"
+msgstr "Niet-handelscrediteuren"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Non Trade Receivable"
-msgstr "Niet-handelsvorderingen"
+msgstr "Niet-handelsdebiteuren"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__asset_non_current
@@ -12796,7 +12796,7 @@ msgstr "Reden"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
 msgid "Reason displayed on Credit Note"
-msgstr "Weergegeven reden op Creditfactuur"
+msgstr "Reden welke wordt weergegeven op creditfactuur"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_in_invoice_receipt_tree
@@ -12877,7 +12877,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "Reconcilable"
-msgstr "Verzoenbaar"
+msgstr "Afletterbaar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconciled
@@ -12903,7 +12903,7 @@ msgstr "Type afgeletterde facturen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
 msgid "Reconciled Statement Lines"
-msgstr "Afgestemde afschriftregels"
+msgstr "Afgeletterde afschriftregels"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconcile_model_id
@@ -13269,23 +13269,23 @@ msgstr "Omkering van: %s"
 #: model:ir.actions.act_window,name:account.action_view_account_move_reversal
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reverse"
-msgstr "Omkeren"
+msgstr "Terugboeken"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reverse Entry"
-msgstr "Boeking omkeren"
+msgstr "Boeking teruboeken"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reverse Journal Entry"
-msgstr "Omkering boeking"
+msgstr "Teruggeboekte boeking"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 msgid "Reverse Moves"
-msgstr "Boekingen omkeren"
+msgstr "Teruggeboekte boekingen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
@@ -13299,7 +13299,7 @@ msgstr "Terugboeken en factuur aanmaken"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reversed"
-msgstr "Omgekeerd"
+msgstr "Teruggeboekt"
 
 #. module: account
 #. odoo-python
@@ -13694,14 +13694,14 @@ msgstr "Secties"
 #: model:ir.ui.menu,name:account.menu_action_secure_entries
 #: model_terms:ir.ui.view,arch_db:account.view_account_secure_entries_wizard
 msgid "Secure Entries"
-msgstr "Beveiligde invoer"
+msgstr "Boekingen beveiligen"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_account_secure_entries_wizard
 #: model:ir.model,name:account.model_account_secure_entries_wizard
 #: model_terms:ir.ui.view,arch_db:account.view_account_secure_entries_wizard
 msgid "Secure Journal Entries"
-msgstr "Journaalposten beveiligen"
+msgstr "Boekingen beveiligen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -14466,7 +14466,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_statusbar_secured/account_move_statusbar_secured.js:0
 msgid "Status with secured indicator for Journal Entries"
-msgstr "Status met beveiligde indicator voor journaalposten"
+msgstr "Status met beveiligde indicator voor boekingen"
 
 #. module: account
 #: model:onboarding.onboarding.step,done_text:account.onboarding_onboarding_step_sales_tax
@@ -15321,7 +15321,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
 msgid "The bank statement used for bank reconciliation"
-msgstr "Het rekeningafschrift dat wordt gebruikt voor bank verrekening"
+msgstr "Het rekeningafschrift dat wordt gebruikt voor bankaflettering"
 
 #. module: account
 #. odoo-python
@@ -15460,8 +15460,8 @@ msgid ""
 "The date is being set prior to: %(lock_date_info)s. The Journal Entry will "
 "be accounted on %(invoice_date)s upon posting."
 msgstr ""
-"De datum wordt ingesteld vóór: %(lock_date_info)s. De journaalpost wordt "
-"geboekt op %(invoice_date)s bij het boeken."
+"De datum wordt ingesteld vóór: %(lock_date_info)s. De boeking wordt geboekt "
+"op %(invoice_date)s bij het boeken."
 
 #. module: account
 #. odoo-python
@@ -15773,8 +15773,8 @@ msgid ""
 "proceed: %(lock_date_info)s."
 msgstr ""
 "De bewerking wordt geweigerd omdat deze van invloed zou zijn op een al "
-"uitgegeven belastingoverzicht. Wijzig de datum van de journaalpost of de "
-"volgende vergrendelingsdatums om verder te gaan: %(lock_date_info)s."
+"uitgegeven belastingoverzicht. Wijzig de datum van de boeking of de volgende"
+" blokkeerdatums om verder te gaan: %(lock_date_info)s."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__foreign_currency_id
@@ -16266,9 +16266,9 @@ msgid ""
 "The entries from journal prefixes containing them will not be secured: "
 "%(prefix_info)s"
 msgstr ""
-"Er zijn nog niet-afgestemde bankafschriftregels voor de geselecteerde datum."
-" De boekingen van journaalprefixen die deze bevatten zullen niet worden "
-"beveiligd: %(prefix_info)s"
+"Er zijn nog niet-afgeletterde bankafschriftregels voor de geselecteerde "
+"datum. De boekingen van journaalprefixen die deze bevatten zullen niet "
+"worden beveiligd: %(prefix_info)s"
 
 #. module: account
 #. odoo-python
@@ -16277,8 +16277,8 @@ msgid ""
 "There are still unreconciled bank statement lines in the period you want to "
 "lock.You should either reconcile or delete them."
 msgstr ""
-"Er zijn nog steeds niet-afgestemde rekeningafschriftregels in de periode die"
-" je wilt vergrendelen. Je moet ze afletteren of verwijderen."
+"Er zijn nog steeds niet-afgeletterde rekeningafschriftregels in de periode "
+"die je wilt blokkeren. Je moet ze afletteren of verwijderen."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
@@ -16517,7 +16517,7 @@ msgstr "Deze boeking is gedupliceerd van %s"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This entry has been reversed from %s"
-msgstr "Deze boeking is omgekeerd van %s"
+msgstr "Deze boeking is teruggeboekt van %s"
 
 #. module: account
 #. odoo-python
@@ -16568,7 +16568,7 @@ msgstr "Dit is het volledige bedrag."
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "This is the next unreconciled installment."
-msgstr "Dit is de volgende niet-afgeronde aflevering."
+msgstr "Dit is de volgende niet-afgeletterd aflevering."
 
 #. module: account
 #. odoo-python
@@ -16580,7 +16580,7 @@ msgstr "Dit is het achterstallige bedrag."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This journal entry has been secured."
-msgstr "Deze journaalpost is beveiligd."
+msgstr "Deze boeking is beveiligd."
 
 #. module: account
 #. odoo-python
@@ -16875,7 +16875,7 @@ msgstr "Totaalbedrag"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Total Balance"
-msgstr "Totaal balans"
+msgstr "Totaal saldo"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tax_audit_tree
@@ -17284,18 +17284,18 @@ msgstr "Onafgeletterd"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__unreconciled_bank_statement_line_ids
 msgid "Unreconciled Bank Statement Line"
-msgstr "Niet-geconcilieerde bankafschriftregel"
+msgstr "Niet-afgeletterde bankafschriftregel"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_unreconciled
 msgid "Unreconciled Entries"
-msgstr "Niet-afgestemde invoer"
+msgstr "Niet-afgeletterde boekingen"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Unreconciled Transactions"
-msgstr "Niet-afgestemde transacties"
+msgstr "Niet-afgeletterde transacties"
 
 #. module: account
 #. odoo-javascript
@@ -17780,8 +17780,8 @@ msgid ""
 "Want to make your life even easier and automate bill validation from this "
 "vendor ?"
 msgstr ""
-"Wil je je leven nog eenvoudiger maken en de factuurvalidatie van deze "
-"leverancier automatiseren?"
+"Wil je je leven nog eenvoudiger maken en het bevestigen van facturen van "
+"deze leverancier automatiseren?"
 
 #. module: account
 #. odoo-javascript
@@ -18059,7 +18059,7 @@ msgid ""
 "You can not reorder sequence by date when the journal is locked with a hash."
 msgstr ""
 "Je kunt de volgorde niet opnieuw ordenen op datum wanneer het dagboek is "
-"vergrendeld met een hash."
+"geblokkeerd met een hash."
 
 #. module: account
 #. odoo-python
@@ -18122,7 +18122,7 @@ msgstr "Je kunt alleen items uit hetzelfde dagboek opnieuw ordenen"
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 msgid "You can only reverse posted moves."
-msgstr "Alleen geboekte boekingen kunnen worden omgekeerd."
+msgstr "Je kunt alleen geboekte boekingen terugboeken."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__invoice_reference_type
@@ -18301,7 +18301,7 @@ msgid ""
 " items linked to it."
 msgstr ""
 "Je kunt dit bedrijf niet loskoppelen van deze account omdat er een aantal "
-"journaalposten aan gekoppeld zijn."
+"boekingen aan gekoppeld zijn."
 
 #. module: account
 #. odoo-python
@@ -18391,8 +18391,7 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 msgid "You cannot delete journal items belonging to a locked journal entry."
 msgstr ""
-"Je kunt geen journaalposten verwijderen die horen bij een vergrendelde "
-"journaalpost."
+"Je kunt geen boekingen verwijderen die horen bij een geblokkeerde boeking."
 
 #. module: account
 #. odoo-python
@@ -18638,7 +18637,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot reset to draft a locked journal entry."
-msgstr "Je kunt een vergrendelde journaalpost niet opnieuw opstellen."
+msgstr "Je kunt een geblokkeerde boeking niet resetten."
 
 #. module: account
 #. odoo-python

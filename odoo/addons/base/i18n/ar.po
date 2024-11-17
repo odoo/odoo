@@ -4750,6 +4750,9 @@ msgid ""
 "EFT Batch Payment\n"
 "=================\n"
 msgstr ""
+"\n"
+"الدفع دفعة واحدة من خلال التحويل الإلكتروني \n"
+"=================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_escpos
@@ -5485,6 +5488,67 @@ msgid ""
 "* Unit of measures AFIP codes\n"
 "* Partners: Consumidor Final and AFIP\n"
 msgstr ""
+"\n"
+"Functional\n"
+"----------\n"
+"\n"
+"This module add accounting features for the Argentinean localization, which represent the minimal configuration needed for a company  to operate in Argentina and under the AFIP (Administración Federal de Ingresos Públicos) regulations and guidelines.\n"
+"\n"
+"Follow the next configuration steps for Production:\n"
+"\n"
+"1. Go to your company and configure your VAT number and AFIP Responsibility Type\n"
+"2. Go to Accounting / Settings and set the Chart of Account that you will like to use.\n"
+"3. Create your Sale journals taking into account AFIP POS info.\n"
+"\n"
+"Demo data for testing:\n"
+"\n"
+"* 3 companies were created, one for each AFIP responsibility type with the respective Chart of Account installed. Choose the company that fix you in order to make tests:\n"
+"\n"
+"  * (AR) Responsable Inscripto\n"
+"  * (AR) Exento\n"
+"  * (AR) Monotributo\n"
+"\n"
+"* Journal sales configured to Pre printed and Expo invoices in all companies\n"
+"* Invoices and other documents examples already validated in “(AR) Responsable Inscripto” company\n"
+"* Partners example for the different responsibility types:\n"
+"\n"
+"  * ADHOC (IVA Responsable Inscripto)\n"
+"  * Servicios Globales (IVA Sujeto Exento)\n"
+"  * Gritti (Monotributo)\n"
+"  * Montana Sur. IVA Liberado in Zona Franca\n"
+"  * Barcelona food (Cliente del Exterior)\n"
+"  * Odoo (Proveedor del Exterior)\n"
+"\n"
+"Highlights:\n"
+"\n"
+"* Chart of account will not be automatically installed, each CoA Template depends on the AFIP Responsibility of the company, you will need to install the CoA for your needs.\n"
+"* No sales journals will be generated when installing a CoA, you will need to configure your journals manually.\n"
+"* The Document type will be properly pre selected when creating an invoice depending on the fiscal responsibility of the issuer and receiver of the document and the related journal.\n"
+"* A CBU account type has been added and also CBU Validation\n"
+"\n"
+"\n"
+"Technical\n"
+"---------\n"
+"\n"
+"This module adds both models and fields that will be eventually used for the electronic invoice module. Here is a summary of the main features:\n"
+"\n"
+"Master Data:\n"
+"\n"
+"* Chart of Account: one for each AFIP responsibility that is related to a legal entity:\n"
+"\n"
+"  * Responsable Inscripto (RI)\n"
+"  * Exento (EX)\n"
+"  * Monotributo (Mono)\n"
+"\n"
+"* Argentinean Taxes and Account Tax Groups (VAT taxes with the existing aliquots and other types)\n"
+"* AFIP Responsibility Types\n"
+"* Fiscal Positions (in order to map taxes)\n"
+"* Legal Documents Types in Argentina\n"
+"* Identification Types valid in Argentina.\n"
+"* Country AFIP codes and Country VAT codes for legal entities, natural persons and others\n"
+"* Currency AFIP codes\n"
+"* Unit of measures AFIP codes\n"
+"* Partners: Consumidor Final and AFIP\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec
@@ -7061,6 +7125,8 @@ msgid ""
 "\n"
 "Modelo 303: Extra fields regarding Rectificación\n"
 msgstr ""
+"\n"
+"Modelo 303: Extra fields regarding Rectificación\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_recruitment_integration_skills_monster
@@ -8589,6 +8655,20 @@ msgid ""
 "\n"
 "5.3: Update taxes starting Q4 2024 according to BOE-A-2024-12944 (Royal Decree 4/2024) https://www.boe.es/buscar/act.php?id=BOE-A-2024-12944\n"
 msgstr ""
+"\n"
+"Spanish charts of accounts (PGCE 2008).\n"
+"========================================\n"
+"\n"
+"    * Defines the following chart of account templates:\n"
+"        * Spanish general chart of accounts 2008\n"
+"        * Spanish general chart of accounts 2008 for small and medium companies\n"
+"        * Spanish general chart of accounts 2008 for associations\n"
+"    * Defines templates for sale and purchase VAT\n"
+"    * Defines tax templates\n"
+"    * Defines fiscal positions for spanish fiscal legislation\n"
+"    * Defines tax reports mod 111, 115 and 303\n"
+"\n"
+"5.3: Update taxes starting Q4 2024 according to BOE-A-2024-12944 (Royal Decree 4/2024) https://www.boe.es/buscar/act.php?id=BOE-A-2024-12944\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_renting
@@ -8655,6 +8735,8 @@ msgid ""
 "\n"
 "Support for Indian TDS (Tax Deducted at Source) for Payment.\n"
 msgstr ""
+"\n"
+"Support for Indian TDS (Tax Deducted at Source) for Payment.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_withholding
@@ -9423,6 +9505,13 @@ msgid ""
 "- Chart of accounts\n"
 "- Taxes\n"
 msgstr ""
+"\n"
+"هذا هو التطبيق الأساسي لإدارة شجرة الحسابات للعراق في أودو.\n"
+"==============================================================================\n"
+"شجرة الحسابات الأساسية والأقلمة للمحاسبة العراقية.\n"
+"تؤدي إلى تنشيط كل من:\n"
+"- شجرة الحسابات\n"
+"- الضرائب\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jo
@@ -11359,6 +11448,8 @@ msgid ""
 "\n"
 "This module integrates with UrbanPiper to receive and manage orders from Swiggy.\n"
 msgstr ""
+"\n"
+"يتكامل هذا التطبيق مع UrbanPiper لتلقي وإدارة الطلبات من Swiggy.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_urban_piper_ubereats
@@ -11366,6 +11457,8 @@ msgid ""
 "\n"
 "This module integrates with UrbanPiper to receive and manage orders from Uber Eats.\n"
 msgstr ""
+"\n"
+"يتكامل هذا التطبيق مع UrbanPiper لتلقي وإدارة الطلبات من Uber Eats.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_urban_piper_zomato
@@ -11745,6 +11838,10 @@ msgid ""
 "It installs sale capabilities, front-end flow, eCommerce, questions and\n"
 "automatic lead generation, full Online support, sms and whatsapp support, ...\n"
 msgstr ""
+"\n"
+"سيختبر هذا التطبيق سير العمل الرئيسي للفعاليات في أودو في الواجهة الأمامية والخلفية.\n"
+"يقوم بتثبيت إمكانيات البيع، سير عمل الواجهة الأمامية، التجارة الإلكترونية، الأسئلة\n"
+"إنشاء العملاء المهتمين تلقائياً، والدعم الكامل عبر الإنترنت، والرسائل النصية القصيرة وwhatsapp، ...\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_main_flows
@@ -12502,6 +12599,8 @@ msgid ""
 "'%%(field)s'. Each property need at least 'name', 'type' and 'string' "
 "attribute."
 msgstr ""
+"لا تبدو '%(value)s' أنها قيمة خاصية صالحة للحقل '%%(field)s'. تحتاج كل خاصية"
+" إلى سمة 'اسم' و'نوع' و'سلسلة' على الأقل. "
 
 #. module: base
 #. odoo-python
@@ -12510,6 +12609,8 @@ msgid ""
 "'%(value)s' does not seem to be a valid Selection value for "
 "'%(label_property)s' (subfield of '%%(field)s' field)."
 msgstr ""
+"لا تبدو '%(value)s' كقيمة صحيحة لاختيارها لـ '%(label_property)s' (الحقل "
+"الفرعي لـ '%%(field)s'). "
 
 #. module: base
 #. odoo-python
@@ -12518,6 +12619,8 @@ msgid ""
 "'%(value)s' does not seem to be a valid Tag value for '%(label_property)s' "
 "(subfield of '%%(field)s' field)."
 msgstr ""
+"لا تبدو '%(value)s' كقيمة صحيحة للعلامة لـ '%(label_property)s' (الحقل "
+"الفرعي لـ '%%(field)s'). "
 
 #. module: base
 #. odoo-python
@@ -12534,6 +12637,8 @@ msgid ""
 "'%(value)s' does not seem to be an integer for field '%(label_property)s' "
 "property (subfield of '%%(field)s' field)."
 msgstr ""
+"لا يبدو '%(value)s' كعدد صحيح لحقل '%(label_property)s' الخاصية (الحقل "
+"الفرعي لـ '%%(field)s'). "
 
 #. module: base
 #. odoo-python
@@ -13271,6 +13376,7 @@ msgstr ""
 msgid ""
 "<strong>Please confirm your identity by entering your password</strong>"
 msgstr ""
+"<strong>يرجى تأكيد هويتك عن طريق إدخال كلمة المرور الخاصة بك</strong> "
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -17419,7 +17525,7 @@ msgstr "أستراليا "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_anz_ubl_pint
 msgid "Australia & New Zealand - UBL PINT"
-msgstr ""
+msgstr "Australia & New Zealand - UBL PINT"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_au
@@ -18606,7 +18712,7 @@ msgstr "وسيط بين المخزون والمحاسبة "
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_timesheet
 msgid "Bridge created to add computation of timesheet to subscription"
-msgstr ""
+msgstr "تطبيق وسيط تم إنشاؤه لإضافة عملية حساب الجدول الزمني إلى الاشتراك "
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_account_asset
@@ -23753,7 +23859,7 @@ msgstr "التواصل الاجتماعي للفعالية "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_event_full_enterprise
 msgid "Event Test (all modules)"
-msgstr ""
+msgstr "اختبار الفعالية (كافة التطبيقات) "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_exhibitor
@@ -27049,7 +27155,7 @@ msgstr "Indian - Stock Report(GST)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_withholding_payment
 msgid "Indian - TDS For Payment"
-msgstr ""
+msgstr "Indian - TDS For Payment"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_reports_tds_tcs
@@ -27828,7 +27934,7 @@ msgstr "العراق"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_iq
 msgid "Iraq - Accounting"
-msgstr ""
+msgstr "العراق - المحاسبة "
 
 #. module: base
 #: model:res.country,name:base.ie
@@ -34363,12 +34469,12 @@ msgstr "نقطة بيع Stripe "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_urban_piper_swiggy
 msgid "POS UrbanPiper - Swiggy"
-msgstr ""
+msgstr "نقطة بيع Swiggy - UrbanPiper "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_urban_piper_ubereats
 msgid "POS UrbanPiper - Uber Eats"
-msgstr ""
+msgstr "نقطة بيع Uber Eats - UrbanPiper "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_urban_piper_zomato
@@ -36044,7 +36150,7 @@ msgstr "اشتراك مبيعات المشروع "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_timesheet
 msgid "Project Sales Subscription Timesheet"
-msgstr ""
+msgstr "الجدول الزمني لاشتراكات مبيعات المشاريع "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_stock
@@ -38857,7 +38963,7 @@ msgstr "سنغافورة - التقارير المحاسبية"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sg_ubl_pint
 msgid "Singapore - UBL PINT"
-msgstr ""
+msgstr "Singapore - UBL PINT"
 
 #. module: base
 #: model:res.country,name:base.sx
@@ -39134,7 +39240,7 @@ msgstr "إسبانيا - التقارير المحاسبية (PGCE 2008)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_reports_2024
 msgid "Spain - Accounting Reports (2024 Update)"
-msgstr ""
+msgstr "Spain - Accounting Reports (2024 Update)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_sale_amazon
@@ -40476,7 +40582,7 @@ msgstr "يجب أن يكون لمفتاح الواجهة البرمجية تار
 msgid ""
 "The action \"%s\" cannot be set as the home action because it requires a "
 "record to be selected beforehand."
-msgstr ""
+msgstr "لا يمكن تعيين الإجراء ”%s“ كإجراء رئيسي لأنه يتطلب تحديد سجل مسبقاً. "
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_bank__country_code
@@ -42723,6 +42829,7 @@ msgid ""
 "Unable to import'%%(field)s' Properties field as a whole, target individual "
 "property instead."
 msgstr ""
+"تعذر استيراد حقل الخصائص '%%(field)s' ككل. استهدف خاصية فردية عوضاً عن ذلك. "
 
 #. module: base
 #. odoo-python
@@ -42971,6 +43078,8 @@ msgid ""
 "Unknown value '%(value)s' for boolean '%(label_property)s' property "
 "(subfield of '%%(field)s' field)."
 msgstr ""
+"قيمة غير معروفة '%(value)s' لخاصية المتغير '%(label_property)s' (حقل فرعي لـ"
+" '%%(field)s'). "
 
 #. module: base
 #. odoo-python

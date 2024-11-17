@@ -143,7 +143,7 @@ msgstr "%(name)s Volgorde verpakking"
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "%(name)s Sequence picking"
-msgstr ""
+msgstr "%(name)s Pickingnummer"
 
 #. module: stock
 #. odoo-python
@@ -498,7 +498,7 @@ msgid ""
 "                Want to speed up operations?"
 msgstr ""
 "<br/>\n"
-"                Wil je de operaties versnellen?"
+"                Wil je de bewerkingen versnellen?"
 
 #. module: stock
 #. odoo-python
@@ -515,10 +515,8 @@ msgstr ""
 #: code:addons/stock/models/stock_rule.py:0
 msgid ""
 "<br>If the products are not available in <b>%s</b>, a rule will be triggered"
-" to bring products in this location."
+" to bring the missing quantity in this location."
 msgstr ""
-"<br>Als de producten niet beschikbaar zijn in <b>%s</b>, zal een regel "
-"worden geactiveerd om producten naar deze locatie te brengen."
 
 #. module: stock
 #. odoo-python
@@ -691,7 +689,7 @@ msgstr "<span class=\"o_stat_text\">Boekingen</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "<span class=\"o_stat_text\">Next Transfer</span>"
-msgstr "<span class=\"o_stat_text\">Volgende Transfer</span>"
+msgstr "<span class=\"o_stat_text\">Volgende verplaatsing</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -1835,7 +1833,7 @@ msgstr "Controleer het bestaan van verpakkingbewerkingen op de picking"
 msgid ""
 "Check this box if you want to generate shipping label in this operation."
 msgstr ""
-"Vink dit vakje aan als je tijdens deze operatie een verzendlabel wilt "
+"Vink dit vakje aan als je tijdens deze bewerking een verzendlabel wilt "
 "genereren."
 
 #. module: stock
@@ -2466,7 +2464,7 @@ msgstr "Rapport klantpartij"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_lot_report
 msgid "Customer lots"
-msgstr "Kavels voor klanten"
+msgstr "Klantpartijen"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -6001,7 +5999,7 @@ msgstr "Openen"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__move_quantity__move
 msgid "Operation Quantities"
-msgstr "Operatiehoeveelheden"
+msgstr "Bewerkinghoeveelheden"
 
 #. module: stock
 #. odoo-python
@@ -6176,7 +6174,7 @@ msgstr "Originele verplaatsing"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__orderpoint_id
 msgid "Original Reordering Rule"
-msgstr "Originele aanvulopdrachtregel"
+msgstr "Originele aanvulregel"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -7622,7 +7620,7 @@ msgstr "Gekoppelde voorraadverplaatsingen"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "Relocate"
-msgstr "Verhuizen"
+msgstr "Verplaatsen"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
@@ -7676,7 +7674,7 @@ msgstr "Aanvullen min. hoeveelheid"
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Reordering Rule"
-msgstr "Aanvulopdrachtregel"
+msgstr "Aanvulregel"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_orderpoint
@@ -7685,12 +7683,12 @@ msgstr "Aanvulopdrachtregel"
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "Reordering Rules"
-msgstr "Aanvulopdrachtregels"
+msgstr "Aanvulregels"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Reordering Rules Search"
-msgstr "Aanvulopdrachtregels zoeken"
+msgstr "Aanvulregels zoeken"
 
 #. module: stock
 #. odoo-javascript
@@ -9293,14 +9291,14 @@ msgid ""
 "The operation brings the products to the intermediate location.But this "
 "operation is part of a chain of operations targeting the final location."
 msgstr ""
-"De operatie brengt de producten naar de tussenliggende locatie. Maar deze "
-"operatie maakt deel uit van een keten van operaties die gericht zijn op de "
-"eindlocatie."
+"De bewerking brengt de producten naar de tussenliggende locatie. Maar deze "
+"bewerking maakt deel uit van een keten van bewerkingen die gericht zijn op "
+"de eindlocatie."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_id
 msgid "The operation takes and suggests products from this location."
-msgstr "De operatie neemt en biedt producten aan vanuit deze locatie."
+msgstr "De bewerking neemt en biedt producten aan vanuit deze locatie."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -9311,14 +9309,14 @@ msgid ""
 "            if it should show the customer."
 msgstr ""
 "Met het systeem van het bewerkingssoort kun je elke voorraad toewijzen\n"
-"            operatie een specifiek type dat zijn standpunten dienovereenkomstig zal veranderen.\n"
-"            Op het type operatie kun je bijv specificeren of de verpakking standaard nodig is,\n"
+"            bewerking een specifiek type dat zijn standpunten dienovereenkomstig zal veranderen.\n"
+"            Op de bewerkingssoort kun je bijv. specificeren of de verpakking standaard nodig is,\n"
 "            als het de klant moet laten zien."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_dest_id
 msgid "The operations brings product to this location"
-msgstr "De operaties leveren producten aan deze locatie"
+msgstr "De bewerkingen leveren producten aan deze locatie"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__package_id
@@ -9539,6 +9537,9 @@ msgid ""
 "created. However, it is possible to change it afterwards or that the routes "
 "use another one by default."
 msgstr ""
+"Dit is de standaardbestemmingslocatie wanneer deze bewerking handmatig wordt"
+" gemaakt. Het is echter mogelijk om deze later te wijzigen of dat de routes "
+"standaard een andere gebruiken."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_src_id
@@ -9547,6 +9548,9 @@ msgid ""
 " However, it is possible to change it afterwards or that the routes use "
 "another one by default."
 msgstr ""
+"Dit is de standaardbronlocatie wanneer deze bewerking handmatig wordt "
+"gemaakt. Het is echter mogelijk om deze later te wijzigen of dat de routes "
+"standaard een andere locatie gebruiken."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__owner_id
@@ -11479,8 +11483,7 @@ msgid ""
 "You still have some active reordering rules on this product. Please archive "
 "or delete them first."
 msgstr ""
-"Je hebt nog aanvulopdrachtregels op dit product. Archiveer of verwijder deze"
-" eerst."
+"Je hebt nog aanvulregels op dit product. Archiveer of verwijder deze eerst."
 
 #. module: stock
 #. odoo-javascript
