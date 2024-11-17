@@ -69,7 +69,7 @@ msgstr ""
 "\n"
 "* Definieert het volgende grootboekschema:\n"
 "* Oostenrijks algemeen grootboekschema 2010\n"
-"* Definieert sjablonen voor BTW op verkopen en aankopen\n"
+"* Definieert sjablonen voor BTW op verkopen en inkopen\n"
 "* Definieert belastingsjablonen\n"
 "* Definieert fiscale posities voor de Oostenrijkse fiscale wetgeving\n"
 "* Definieert belastingrapportage U1 / U30\n"
@@ -687,7 +687,7 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"* Voeg BTW-boekrapport toe dat wettelijk verplicht is in Argentinië en dat de BTW-detailinformatie bevat van verkopen of aankopen die in een bepaalde periode zijn gedaan.\n"
+"* Voeg BTW-boekrapport toe dat wettelijk verplicht is in Argentinië en dat de BTW-detailinformatie bevat van verkopen of inkopen die in een bepaalde periode zijn gedaan.\n"
 "* Voeg een BTW-overzichtsrapport toe dat wordt gebruikt om facturering te analyseren\n"
 "* Voeg Digital VAT Book-functionaliteit toe waarmee we TXT-bestanden kunnen genereren om in AFIP te importeren. Degenen die we implementeren zijn:\n"
 "\n"
@@ -779,7 +779,7 @@ msgid ""
 "and encourage users to configure their 2FA using an authenticator app.\n"
 msgstr ""
 "\n"
-"2FA per post\n"
+"2FA per e-mail\n"
 "===============\n"
 "Twee-factorenauthenticatie door een code naar de e-mailinbox van de gebruiker te sturen\n"
 "wanneer de 2FA met behulp van een authenticator-app niet is geconfigureerd.\n"
@@ -1775,7 +1775,7 @@ msgstr ""
 "\n"
 "        Rapporteert momenteel geen specifieke waarden voor:\n"
 "        - Contante basis voor boekingen met voorbelasting (MK)\n"
-"        - Op marges gebaseerde operaties (MR_T/MR_UZ)\n"
+"        - Op marges gebaseerde bewerkingen (MR_T/MR_UZ)\n"
 "        - Rekeningen voor landbouwproducten (VAT_RR)\n"
 "        - Bewerkingen via elektronische interfaces (IED)\n"
 "        - Facturen gedaan met KSef\n"
@@ -2813,7 +2813,7 @@ msgstr ""
 "Vermogensbeheer\n"
 "=================\n"
 "Beheer activa die eigendom zijn van een bedrijf of een persoon.\n"
-"Houdt de afschrijvingen bij en maakt overeenkomstige journaalposten.\n"
+"Houdt de afschrijvingen bij en maakt overeenkomstige boekingen.\n"
 "\n"
 
 #. module: base
@@ -4392,7 +4392,7 @@ msgid ""
 "Disallowed Expenses Fleet Data for Belgium\n"
 msgstr ""
 "\n"
-"Verworpen uitgaven Vlootgegevens voor België\n"
+"Niet-aftrekbare kosten voor wagenpark voor België\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_fsm_report
@@ -4981,8 +4981,8 @@ msgid ""
 msgstr ""
 "\n"
 "Elektronische voorraadrapportages\n"
-"    - PLE 12.1: Permanente inventaris in fysieke eenheden\n"
-"    - PLE 13.1: Permanente inventaris in fysieke eenheden\n"
+"    - PLE 12.1: Permanente voorraad in fysieke eenheden\n"
+"    - PLE 13.1: Permanente voorraad in fysieke eenheden\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_l10n_be_hr_payroll
@@ -5109,7 +5109,7 @@ msgid ""
 "Expense documents will be automatically integrated to the Document app.\n"
 msgstr ""
 "\n"
-"Onkostendocumenten worden automatisch geïntegreerd in de Documenten-app.\n"
+"Decalratiedocumenten worden automatisch geïntegreerd in de Documenten-app.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ca_payment_cpa005
@@ -5206,7 +5206,7 @@ msgid ""
 "Filters the stock lines out of the reconciliation widget\n"
 msgstr ""
 "\n"
-"Filtert de voorraadregels uit de afstemmingswidget\n"
+"Filtert de voorraadregels uit de afletterwidget\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_hr_payroll
@@ -5893,7 +5893,7 @@ msgstr ""
 "\n"
 "        Verkrijg het magazijnadres als de factuur is aangemaakt op basis van de inkooporder\n"
 "\n"
-"        Deze module wordt gebruikt om het magazijnadres te bekomen als de factuur is aangemaakt vanuit de inkooporder\n"
+"        Deze module wordt gebruikt om het magazijnadres te verkrijgen als de factuur is aangemaakt vanuit de inkooporder\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_sale_stock
@@ -5908,7 +5908,7 @@ msgstr ""
 "        Verkrijg het magazijnadres als de factuur is aangemaakt op basis van de verkooporder\n"
 "        In Indiaanse EDI sturen we verzendadresgegevens indien beschikbaar\n"
 "\n"
-"        Deze module wordt gebruikt om het magazijnadres te bekomen als de factuur is aangemaakt vanuit de verkooporder\n"
+"        Deze module wordt gebruikt om het magazijnadres te verkrijgen als de factuur is aangemaakt vanuit de verkooporder\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_drivers
@@ -6587,7 +6587,7 @@ msgstr ""
 "\n"
 "Beheer van leningen\n"
 "=================\n"
-"Houdt leningen bij en maakt bijbehorende journaalposten.\n"
+"Houdt leningen bij en maakt bijbehorende boekingen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu_hr_payroll
@@ -6801,10 +6801,10 @@ msgid ""
 "This module also uses analytic accounting and is compatible with the invoice on timesheet module so that you are able to automatically re-invoice your customers' expenses if your work by project.\n"
 msgstr ""
 "\n"
-"Beheer onkosten door werknemers\n"
+"Beheer declaraties door werknemers\n"
 "============================\n"
 "\n"
-"Deze applicatie staat je toe om werknemers hun dagelijkse uitgaven te beheren. Het geeft je toegang tot je werknemers onkosten en geeft je het recht om deze aan te vullen en te bevestigen of de onkosten te weigeren. Na bevestiging wordt een factuur aangemaakt voor de werknemer.\n"
+"Deze applicatie staat je toe om werknemers hun dagelijkse uitgaven te beheren. Het geeft je toegang tot je werknemers declaraties en geeft je het recht om deze aan te vullen en te bevestigen of de declaraties te weigeren. Na bevestiging wordt een factuur aangemaakt voor de werknemer.\n"
 "De werknemer kan zijn eigen uitgaven coderen en de validatie flow boekt het automatisch in de boekhouding na bevestiging door de managers.\n"
 "\n"
 "\n"
@@ -7319,7 +7319,7 @@ msgstr ""
 "Module voor het importeren van SIE 5-standaardbestanden.\n"
 "\n"
 "Het huidige bereik van de module maakt de initialisatie van de boekhouding mogelijk door rekeningsaldi te importeren,\n"
-"relaties (Klanten & Leveranciers) en journaalposten (journaalgegevens moeten aanwezig zijn in het bestand).\n"
+"relaties (Klanten & Leveranciers) en boekingen (journaalgegevens moeten aanwezig zijn in het bestand).\n"
 "\n"
 "Het importeert geen analyse-, activa- en \"accountkoppelings\" -gegevens.\n"
 "\n"
@@ -7727,7 +7727,7 @@ msgid ""
 "Notify that a matching sale order exists in the reconciliation widget.\n"
 msgstr ""
 "\n"
-"Geef aan dat er een overeenkomende verkooporder bestaat in de afstemmingswidget.\n"
+"Geef aan dat er een overeenkomende verkooporder bestaat in de afletterwidget.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sa
@@ -7941,7 +7941,7 @@ msgstr ""
 "    * De cheque van de leverancier terugkrijgen (weigering of retour)\n"
 "    * De cheque overbrengen van het ene naar het andere chequeboekje (de ene winkel naar de andere)\n"
 "\n"
-"  * Deze operaties kunnen met meerdere cheques tegelijk worden uitgevoerd\n"
+"  * Deze bewerkingen kunnen met meerdere cheques tegelijk worden uitgevoerd\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_workorder_plm
@@ -12830,7 +12830,7 @@ msgstr "2FA Uitnodigingsmail"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_totp_mail_enforce
 msgid "2FA by mail"
-msgstr "2FA per post"
+msgstr "2FA per e-mail"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -13369,6 +13369,7 @@ msgstr ""
 msgid ""
 "<strong>Please confirm your identity by entering your password</strong>"
 msgstr ""
+"<strong>Bevestig je identiteit door je wachtwoord in te voeren</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -14082,7 +14083,7 @@ msgstr "Importeren bankrenkeningnummers"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_accountant_batch_payment
 msgid "Account Batch Payment Reconciliation"
-msgstr "Reconciliatie van rekeningbatchbetalingen"
+msgstr "Afletteren van batchbetalingen"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_account_charts
@@ -15478,14 +15479,13 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_account_accountant_batch_payment
 msgid "Allows using Reconciliation with the Batch Payment feature."
 msgstr ""
-"Maakt het gebruik van afstemming met de functie Batchbetaling mogelijk."
+"Maakt het gebruik van afletteren met de functie batchbetaling mogelijk."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_accountant_check_printing
 msgid "Allows using Reconciliation with the account check printing."
 msgstr ""
-"Maakt het gebruik van afstemming mogelijk met de functie accountcheck "
-"afdrukken."
+"Maakt het gebruik van afletteren mogelijk met de functie cheque afdrukken."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_delivery_sendcloud
@@ -18370,7 +18370,7 @@ msgstr "België - Boekhoudverslagen - SMS"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_disallowed_expenses
 msgid "Belgium - Disallowed Expenses Data"
-msgstr "België - Gegevens over verworpen uitgaven"
+msgstr "België - Gegevens over niet-aftrekbare kosten"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_account_disallowed_expenses_fleet
@@ -18746,8 +18746,8 @@ msgid ""
 "Bridge created to add the number of expenses linked to an AA to a project "
 "form"
 msgstr ""
-"Brug gemaakt om het aantal onkosten gekoppeld aan een AA toe te voegen aan "
-"een projectformulier"
+"Brug gemaakt om het aantal declaraties gekoppeld aan een AA toe te voegen "
+"aan een projectformulier"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_sale_subscription
@@ -22113,12 +22113,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_disallowed_expenses
 msgid "Disallowed Expenses"
-msgstr "Verworpen uitgaven"
+msgstr "Niet-aftrekbare kosten"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_disallowed_expenses_fleet
 msgid "Disallowed Expenses on Fleets"
-msgstr "Verworpen uitgaven wagenpark"
+msgstr "Niet-aftrekbare kosten wagenpark"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
@@ -22402,7 +22402,7 @@ msgstr "Documenten - contracten"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_hr_expense
 msgid "Documents - Expense"
-msgstr "Documenten - Onkosten"
+msgstr "Documenten - Declaraties"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_fsm
@@ -29862,12 +29862,12 @@ msgstr "Certificaat beheren"
 #: model:ir.module.module,description:base.module_account_disallowed_expenses
 #: model:ir.module.module,summary:base.module_account_disallowed_expenses
 msgid "Manage disallowed expenses"
-msgstr "Beheer verworpen uitgaven"
+msgstr "Beheer niet-aftrekbare kosten"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_disallowed_expenses_fleet
 msgid "Manage disallowed expenses with fleets"
-msgstr "Beheer verworpen uitgaven met wagenparken"
+msgstr "Beheer niet-aftrekbare kosten met wagenparken"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_plm
@@ -32409,7 +32409,7 @@ msgstr ""
 "Zorg voor een nauwkeurige planning van je productiemiddelen dankzij de volledige integratie\n"
 "met verkoop- en inkoop-apps. De boekhoudintegratie maakt realtime mogelijk\n"
 "boekhoudkundige waardering en diepere rapportage over kosten en opbrengsten op je\n"
-"productie operaties.\n"
+"productie bewerkingen.\n"
 "\n"
 
 #. module: base
@@ -39728,12 +39728,12 @@ msgstr "Provincie / Staat"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state__code
 msgid "State Code"
-msgstr "Code staat/provincie"
+msgstr "Code provincie/staat"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state__name
 msgid "State Name"
-msgstr "Naam staat/provincie"
+msgstr "Naam provincie/staat"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__state_required
@@ -39868,7 +39868,7 @@ msgstr "Bewaar verlofdocumenten van werknemers in de Document-app"
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_hr_expense
 msgid "Store expense documents in the Document app"
-msgstr "Sla onkosten-documenten op in de Documenten-app"
+msgstr "Sla declaratie-documenten op in de Documenten-app"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_l10n_ch_hr_payroll
@@ -44510,8 +44510,8 @@ msgid ""
 "When re-invoicing the expense on the SO, set the cost to the total untaxed "
 "amount of the expense."
 msgstr ""
-"Wanneer je de declaratie opnieuw factureert op de SO, stel je de kosten in "
-"op het totale onbelaste bedrag van de onkosten."
+"Wanneer je de declaratie opnieuw factureert op de verkooporder, stel je de "
+"kosten in op het totale onbelaste bedrag van de declaratie."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
@@ -44742,8 +44742,8 @@ msgid ""
 "XML Export of the Journal Entries for the Mexican Tax Authorities for a "
 "compulsory audit."
 msgstr ""
-"XML-export van de journaalposten voor de Mexicaanse belastingdienst voor een"
-" verplichte audit."
+"XML-export van de boekingen voor de Mexicaanse belastingdienst voor een "
+"verplichte audit."
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.VND
@@ -45118,7 +45118,7 @@ msgid ""
 msgstr ""
 "Je hebt onvoldoende rechten om toegang te krijgen tot de velden \"%(fields)s\" op %(document_kind)s (%(document_model)s). Neem contact op met je systeembeheerder.\n"
 "\n"
-"Operatie: %(operation)s"
+"Bewerking: %(operation)s"
 
 #. module: base
 #. odoo-python

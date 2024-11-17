@@ -140,7 +140,7 @@ msgstr "%(name)s Trình tự đóng gói"
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "%(name)s Sequence picking"
-msgstr ""
+msgstr "%(name)s Trình tự lấy hàng"
 
 #. module: stock
 #. odoo-python
@@ -509,10 +509,8 @@ msgstr ""
 #: code:addons/stock/models/stock_rule.py:0
 msgid ""
 "<br>If the products are not available in <b>%s</b>, a rule will be triggered"
-" to bring products in this location."
+" to bring the missing quantity in this location."
 msgstr ""
-"<br>Nếu sản phẩm không có sẵn trong <b>%s</b>, một quy tắc sẽ được kích hoạt"
-" để đưa sản phẩm vào địa điểm này."
 
 #. module: stock
 #. odoo-python
@@ -1348,7 +1346,7 @@ msgstr "Chỉ định tất cả"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__owner_id
 msgid "Assign Owner"
-msgstr "Chỉ định người phụ trách"
+msgstr "Chỉ định bên sở hữu"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -2463,7 +2461,7 @@ msgstr "Bàn điều chỉnh được"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 msgid "Cyclic Counting"
-msgstr "Đếm theo chu kỳ"
+msgstr "Kiểm kho theo chu kỳ"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
@@ -2918,7 +2916,7 @@ msgstr "Mô tả phiếu xuất kho"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Internal Transfers"
-msgstr "Mô tả phiếu lệnh chuyển hàng nội bộ"
+msgstr "Mô tả lệnh chuyển hàng nội bộ"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -4280,7 +4278,7 @@ msgstr "Ngày hàng về"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "Incoming Draft Transfer"
-msgstr "Lệnh chuyển hàng nhập hàng nháp"
+msgstr "Lệnh chuyển hàng vào nháp"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__incoming_move_line_ids
@@ -4499,7 +4497,7 @@ msgstr "Ngày kiểm kho"
 #: model:ir.model.fields,field_description:stock.field_stock_quant__cyclic_inventory_frequency
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 msgid "Inventory Frequency"
-msgstr "Tần suất tồn kho"
+msgstr "Tần suất kiểm kho"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__property_stock_inventory
@@ -4766,7 +4764,7 @@ msgstr "Nhập sau xuất trước (LIFO)"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__last_inventory_date
 msgid "Last Inventory"
-msgstr "Tồn kho cuối cùng"
+msgstr "Lần kiểm kho cuối cùng"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_lot_label_layout__write_uid
@@ -5632,7 +5630,7 @@ msgstr "Loại hoạt động tiếp theo"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__next_inventory_date
 msgid "Next Expected"
-msgstr "Dự kiến tiếp theo"
+msgstr "Dự kiến lần tiếp theo"
 
 #. module: stock
 #. odoo-python
@@ -5778,7 +5776,7 @@ msgstr "Không có tồn kho để hiển thị"
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
 msgid "No transfer found. Let's create one!"
 msgstr ""
-"Không tìm thấy lệnh chuyển hàng hàng nào. Hãy tạo một lệnh chuyển hàng mới!"
+"Không tìm thấy lệnh chuyển hàng nào. Hãy tạo một lệnh chuyển hàng mới!"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__0
@@ -6179,7 +6177,7 @@ msgstr "Xuất hàng"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "Outgoing Draft Transfer"
-msgstr "Lệnh chuyển hàng xuất hàng nháp"
+msgstr "Lệnh chuyển hàng ra nháp"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__outgoing_move_line_ids
@@ -7633,7 +7631,7 @@ msgstr "Số lượng tái đặt hàng tối thiểu"
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Reordering Rule"
-msgstr "Qui tắc tái đặt hàng"
+msgstr "Quy tắc tái đặt hàng"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_orderpoint
@@ -9476,6 +9474,9 @@ msgid ""
 "created. However, it is possible to change it afterwards or that the routes "
 "use another one by default."
 msgstr ""
+"Đây là địa điểm đích mặc định khi thao tác này được tạo thủ công. Tuy nhiên,"
+" địa điểm này có thể được thay đổi sau đó hoặc các tuyến sử dụng một địa "
+"điểm khác theo mặc định."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_src_id
@@ -9484,6 +9485,9 @@ msgid ""
 " However, it is possible to change it afterwards or that the routes use "
 "another one by default."
 msgstr ""
+"Đây là địa điểm nguồn mặc định khi thao tác này được tạo thủ công. Tuy "
+"nhiên, địa điểm này có thể được thay đổi sau đó hoặc các tuyến sử dụng một "
+"địa điểm khác theo mặc định."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__owner_id
@@ -10078,7 +10082,7 @@ msgstr "Kích hoạt bổ sung cho phế phẩm"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/stock_forecasted.js:0
 msgid "Try to add some incoming or outgoing transfers."
-msgstr "Cố gắng thêm một số lệnh chuyển hàng nhập hàng hoặc xuất hàng."
+msgstr "Cố gắng thêm một số lệnh chuyển hàng vào hoặc ra."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_barcode_rule__type
@@ -10827,16 +10831,14 @@ msgstr ""
 msgid ""
 "When validating the transfer, the products will be assigned to this owner."
 msgstr ""
-"Khi xác nhận lệnh chuyển hàng hàng, sản phẩm sẽ được giao cho người phụ "
-"trách này."
+"Khi xác nhận lệnh chuyển hàng, sản phẩm sẽ được giao cho bên sở hữu này."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__owner_id
 msgid ""
 "When validating the transfer, the products will be taken from this owner."
 msgstr ""
-"Khi xác nhận lệnh chuyển hàng hàng, sản phẩm sẽ được lấy từ người phụ trách "
-"này."
+"Khi xác nhận lệnh chuyển hàng, sản phẩm sẽ được lấy từ bên sở hữu này."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__additional
