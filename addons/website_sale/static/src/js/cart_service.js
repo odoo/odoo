@@ -171,6 +171,7 @@ export class CartService {
                 remainingData,
                 {
                     isBuyNow: isBuyNow,
+                    showQuantity: Boolean(document.querySelector('.css_quantity')),
                 },
                 rest
             );
@@ -205,6 +206,7 @@ export class CartService {
                 {
                     isBuyNow: isBuyNow,
                     isMainProductConfigurable: !isConfigured,
+                    showQuantity: Boolean(document.querySelector('.css_quantity')),
                 },
                 rest
             );
