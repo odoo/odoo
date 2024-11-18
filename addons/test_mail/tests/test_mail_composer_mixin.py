@@ -15,11 +15,6 @@ class TestMailComposerMixin(MailCommon, TestRecipients):
     def setUpClass(cls):
         super(TestMailComposerMixin, cls).setUpClass()
 
-        # ensure employee can create partners, necessary for templates
-        cls.user_employee.write({
-            'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)],
-        })
-
         cls.mail_template = cls.env['mail.template'].create({
             'body_html': '<p>EnglishBody for <t t-out="object.name"/></p>',
             'model_id': cls.env['ir.model']._get('mail.test.composer.source').id,
