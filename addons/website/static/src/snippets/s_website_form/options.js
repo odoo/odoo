@@ -1435,6 +1435,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
      * @override
      */
     _renderCustomXML: async function (uiFragment) {
+        debugger
         // Get the authorized existing fields for the form model
         // Do it on each render because of custom property fields which can
         // change depending on the project selected.
