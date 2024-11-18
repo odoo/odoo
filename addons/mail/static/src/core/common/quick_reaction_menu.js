@@ -31,7 +31,8 @@ export class QuickReactionMenu extends Component {
             position: "bottom-end",
             popoverClass: "o-mail-QuickReactionMenu-pickerPopover shadow-none",
             animation: false,
-            arrow: true,
+            onPositioned: (el, { direction, variant }) =>
+                el.classList.add(`o-popover--${direction[0]}${variant[0]}`),
         });
         this.dropdown = useState(useDropdownState());
         this.frequentEmojiService = useState(useService("web.frequent.emoji"));
