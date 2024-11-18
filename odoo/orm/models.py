@@ -6170,7 +6170,7 @@ class BaseModel(metaclass=MetaModel):
         self._ids = ids
         self._prefetch_ids = prefetch_ids
 
-    def browse(self, ids: int | typing.Iterable[IdType] = ()) -> Self:
+    def browse(self, ids: int | typing.Iterable[IdType] = (), prefetch_ids: Reversible[IdType] = ()) -> Self:
         """ browse([ids]) -> records
 
         Returns a recordset for the ids provided as parameter in the current
@@ -6191,7 +6191,7 @@ class BaseModel(metaclass=MetaModel):
             ids = (ids,)
         else:
             ids = tuple(ids)
-        return self.__class__(self.env, ids, ids)
+        return self.__class__(self.env, ids, prefetch_ids or ids)
 
     #
     # Internal properties, for manipulating the instance's implementation
