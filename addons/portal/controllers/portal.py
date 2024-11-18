@@ -381,10 +381,13 @@ class CustomerPortal(Controller):
         error = dict()
         error_message = []
 
+        request.update_context(portal_form_country_id=data['country_id'])
         # Validation
         for field_name in self._get_mandatory_fields():
             if not data.get(field_name):
                 error[field_name] = 'missing'
+                if field_name == 'zipcode':
+                    error['zip'] = 'missing'
 
         # email validation
         if data.get('email') and not tools.single_email_re.match(data.get('email')):
