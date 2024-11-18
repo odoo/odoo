@@ -75,10 +75,9 @@ for (let snippet of snippetsNames) {
     {
         content: `click on 'BLOCKS' tab (${snippet.name})`,
         trigger: ".o_we_add_snippet_btn",
-        run: function (actions) {
+        async run (actions) {
             document.body.removeAttribute("test-dd-snippet-removed");
-            // TODO: use actions.click(); instead
-            this.anchor.click();
+            await actions.click();
         },
     }];
 
