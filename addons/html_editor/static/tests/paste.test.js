@@ -2197,6 +2197,72 @@ describe("Special cases", () => {
     });
 });
 
+describe("pasting within blockquote", () => {
+    test("should paste paragraph related elements within blockquote", async () => {
+        await testEditor({
+            contentBefore: "<blockquote>[]<br></blockquote>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
+            },
+            contentAfter: "<blockquote><h1>abc</h1><h2>def</h2><h3>ghi[]</h3></blockquote>",
+        });
+        await testEditor({
+            contentBefore: "<blockquote>x[]</blockquote>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
+            },
+            contentAfter: "<blockquote>x<h1>abc</h1><h2>def</h2><h3>ghi[]</h3></blockquote>",
+        });
+        await testEditor({
+            contentBefore: "<blockquote>[]x</blockquote>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
+            },
+            contentAfter: "<blockquote><h1>abc</h1><h2>def</h2><h3>ghi[]</h3>x</blockquote>",
+        });
+        await testEditor({
+            contentBefore: "<blockquote>x[]y</blockquote>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
+            },
+            contentAfter: "<blockquote>x<h1>abc</h1><h2>def</h2><h3>ghi[]</h3>y</blockquote>",
+        });
+    });
+});
+
+describe("pasting within pre", () => {
+    test("should paste paragraph releted elements within pre", async () => {
+        await testEditor({
+            contentBefore: "<pre>[]<br></pre>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
+            },
+            contentAfter: "<pre><h1>abc</h1><h2>def</h2><h3>ghi[]</h3></pre>",
+        });
+        await testEditor({
+            contentBefore: "<pre>x[]</pre>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
+            },
+            contentAfter: "<pre>x<h1>abc</h1><h2>def</h2><h3>ghi[]</h3></pre>",
+        });
+        await testEditor({
+            contentBefore: "<pre>[]x</pre>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
+            },
+            contentAfter: "<pre><h1>abc</h1><h2>def</h2><h3>ghi[]</h3>x</pre>",
+        });
+        await testEditor({
+            contentBefore: "<pre>x[]y</pre>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
+            },
+            contentAfter: "<pre>x<h1>abc</h1><h2>def</h2><h3>ghi[]</h3>y</pre>",
+        });
+    });
+});
+
 const url = "https://www.odoo.com";
 const imgUrl = "https://download.odoocdn.com/icons/website/static/description/icon.png";
 const videoUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
