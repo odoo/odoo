@@ -6,6 +6,7 @@ import psycopg2
 
 from odoo import http
 from odoo.http import request
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -56,6 +57,11 @@ class PaymentPostProcessing(http.Controller):
             ):  # The database cursor could not be committed.
                 request.env.cr.rollback()  # Rollback and try later.
                 raise Exception('retry')
+            except UserError as exc:
+                request.env.cr.rollback()
+                monitored_tx._log_message_on_linked_documents(exc.args[0])
+                request.env.cr.commit()
+                raise
             except Exception as e:
                 request.env.cr.rollback()
                 _logger.exception(
