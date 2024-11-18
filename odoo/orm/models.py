@@ -6490,10 +6490,10 @@ class BaseModel(metaclass=MetaModel):
             return self
         if isinstance(func, str):
             if '.' in func:
-                return self.browse(rec.id for rec in self if any(rec.mapped(func)))
+                return self.browse((rec.id for rec in self if any(rec.mapped(func))), self._prefetch_ids)
             # avoid costly mapped
             func = self._fields[func].__get__
-        return self.browse(rec.id for rec in self if func(rec))
+        return self.browse((rec.id for rec in self if func(rec)), self._prefetch_ids)
 
     def grouped(self, key):
         """Eagerly groups the records of ``self`` by the ``key``, returning a
@@ -6676,7 +6676,7 @@ class BaseModel(metaclass=MetaModel):
             stack.append(stack.pop() & stack.pop())
 
         [result_ids] = stack
-        return self.browse(id_ for id_ in self._ids if id_ in result_ids)
+        return self.browse((id_ for id_ in self._ids if id_ in result_ids), self._prefetch_ids)
 
     def sorted(self, key=None, reverse=False) -> Self:
         """Return the recordset ``self`` ordered by ``key``.
@@ -7022,9 +7022,9 @@ class BaseModel(metaclass=MetaModel):
             # important: one must call the field's getter
             return self._fields[key].__get__(self)
         elif isinstance(key, slice):
-            return self.browse(self._ids[key])
+            return self.browse(self._ids[key], self._prefetch_ids)
         else:
-            return self.browse((self._ids[key],))
+            return self.browse((self._ids[key],), self._prefetch_ids)
 
     def __setitem__(self, key, value):
         """ Assign the field ``key`` to ``value`` in record ``self``. """
