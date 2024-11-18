@@ -1016,3 +1016,20 @@ test("useHotkey can display an overlay over a DOM element ", async () => {
     await press("a");
     expect.verifySteps(["hotkey alt+a has been triggered"]);
 });
+
+test("Support '<' and '>' in hotkeys", async () => {
+    class MyComponent extends Component {
+        static template = xml``;
+        static props = ["*"];
+        setup() {
+            useHotkey("<", () => expect.step("<"));
+            useHotkey(">", () => expect.step(">"));
+        }
+    }
+    await mountWithCleanup(MyComponent);
+    await press([">"]);
+    expect.verifySteps([">"]);
+
+    await press(["<"]);
+    expect.verifySteps(["<"]);
+});
