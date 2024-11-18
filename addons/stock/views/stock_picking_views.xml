@@ -358,10 +358,6 @@
                     <filter name="waiting" string="Waiting" domain="[('state', 'in', ('confirmed', 'waiting'))]" help="Waiting Moves"/>
                     <filter name="available" string="Ready" domain="[('state', '=', 'assigned')]" help="Assigned Moves"/>
                     <separator/>
-                    <filter name="reception" string="Receipts" domain="[('picking_type_code', '=', 'incoming')]"/>
-                    <filter name="delivery" string="Deliveries" domain="[('picking_type_code', '=', 'outgoing')]"/>
-                    <filter name="internal" string="Internal" domain="[('picking_type_code', '=', 'internal')]"/>
-                    <separator/>
                     <filter invisible="1" name="before" string="Before" domain="[('search_date_category', '=', 'before')]"/>
                     <filter name="yesterday" string="Yesterday" domain="[('search_date_category', '=', 'yesterday')]"/>
                     <filter name="today" string="Today" domain="[('search_date_category', '=', 'today')]"/>
