@@ -89,6 +89,9 @@ class StockMoveLine(models.Model):
     picking_location_id = fields.Many2one(related='picking_id.location_id')
     picking_location_dest_id = fields.Many2one(related='picking_id.location_dest_id')
 
+    _free_reservation_index = models.Index("""(id, company_id, product_id, lot_id, location_id, owner_id, package_id)
+        WHERE (state IS NULL OR state NOT IN ('cancel', 'done')) AND quantity_product_uom > 0 AND picked IS NOT TRUE""")
+
     @api.depends('product_uom_id.category_id', 'product_id.uom_id.category_id', 'move_id.product_uom', 'product_id.uom_id')
     def _compute_product_uom_id(self):
         for line in self:
@@ -294,15 +297,6 @@ class StockMoveLine(models.Model):
             qty = ml.product_uom_id._compute_quantity(ml.quantity, ml.product_id.uom_id)
             addtional_qty[ml.location_dest_id.id] = addtional_qty.get(ml.location_dest_id.id, 0) - qty
         return addtional_qty
-
-    def init(self):
-        if not tools.index_exists(self._cr, 'stock_move_line_free_reservation_index'):
-            self._cr.execute("""
-                CREATE INDEX stock_move_line_free_reservation_index
-                ON
-                    stock_move_line (id, company_id, product_id, lot_id, location_id, owner_id, package_id)
-                WHERE
-                    (state IS NULL OR state NOT IN ('cancel', 'done')) AND quantity_product_uom > 0 AND not picked""")
 
     @api.model_create_multi
     def create(self, vals_list):

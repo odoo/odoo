@@ -54,24 +54,13 @@ class MailNotification(models.Model):
         "CHECK(notification_type NOT IN ('email', 'inbox') OR res_partner_id IS NOT NULL)",
         'Customer is required for inbox / email notification',
     )
+    _res_partner_id_is_read_notification_status_mail_message_id = models.Index("(res_partner_id, is_read, notification_status, mail_message_id)")
+    _author_id_notification_status_failure = models.Index("(author_id, notification_status) WHERE notification_status IN ('bounce', 'exception')")
+    _unique_mail_message_id_res_partner_id_ = models.UniqueIndex("(mail_message_id, res_partner_id) WHERE res_partner_id IS NOT NULL")
 
     # ------------------------------------------------------------
     # CRUD
     # ------------------------------------------------------------
-
-    def init(self):
-        self._cr.execute("""
-            CREATE INDEX IF NOT EXISTS mail_notification_res_partner_id_is_read_notification_status_mail_message_id
-                                    ON mail_notification (res_partner_id, is_read, notification_status, mail_message_id);
-            CREATE INDEX IF NOT EXISTS mail_notification_author_id_notification_status_failure
-                                    ON mail_notification (author_id, notification_status)
-                                 WHERE notification_status IN ('bounce', 'exception');
-        """)
-        self.env.cr.execute(
-            """CREATE UNIQUE INDEX IF NOT EXISTS unique_mail_message_id_res_partner_id_if_set
-                                              ON %s (mail_message_id, res_partner_id)
-                                           WHERE res_partner_id IS NOT NULL""" % self._table
-        )
 
     @api.model_create_multi
     def create(self, vals_list):

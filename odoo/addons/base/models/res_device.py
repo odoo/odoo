@@ -34,13 +34,7 @@ class ResDeviceLog(models.Model):
     is_current = fields.Boolean("Current Device", compute="_compute_is_current")
     linked_ip_addresses = fields.Text("Linked IP address", compute="_compute_linked_ip_addresses")
 
-    def init(self):
-        self.env.cr.execute(SQL("""
-            CREATE INDEX IF NOT EXISTS res_device_log__composite_idx ON %s
-            (user_id, session_identifier, platform, browser, last_activity, id) WHERE revoked = False
-        """,
-            SQL.identifier(self._table)
-        ))
+    _composite_idx = models.Index("(user_id, session_identifier, platform, browser, last_activity, id) WHERE revoked IS NOT TRUE")
 
     def _compute_display_name(self):
         for device in self:

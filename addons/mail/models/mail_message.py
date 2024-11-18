@@ -189,6 +189,9 @@ class MailMessage(models.Model):
     # Besides for new messages, and messages never sending emails, there was no mail, and it was searching for nothing.
     mail_ids = fields.One2many('mail.mail', 'mail_message_id', string='Mails', groups="base.group_system")
 
+    _model_res_id_idx = models.Index("(model, res_id)")
+    _model_res_id_id_idx = models.Index("(model, res_id, id)")
+
     @api.depends('body')
     def _compute_preview(self):
         """ Returns an un-formatted version of the message body. Output is capped
@@ -256,12 +259,6 @@ class MailMessage(models.Model):
     # ------------------------------------------------------
     # CRUD / ORM
     # ------------------------------------------------------
-
-    def init(self):
-        self._cr.execute("""SELECT indexname FROM pg_indexes WHERE indexname = 'mail_message_model_res_id_idx'""")
-        if not self._cr.fetchone():
-            self._cr.execute("""CREATE INDEX mail_message_model_res_id_idx ON mail_message (model, res_id)""")
-        self._cr.execute("""CREATE INDEX IF NOT EXISTS mail_message_model_res_id_id_idx ON mail_message (model, res_id, id)""")
 
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None):

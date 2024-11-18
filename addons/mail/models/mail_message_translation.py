@@ -21,10 +21,7 @@ class MailMessageTranslation(models.Model):
     )
     create_date = fields.Datetime(index=True)
 
-    def init(self):
-        self.env.cr.execute(
-            f"CREATE UNIQUE INDEX IF NOT EXISTS mail_message_translation_unique ON {self._table} (message_id, target_lang)"
-        )
+    _unique = models.UniqueIndex("(message_id, target_lang)")
 
     @api.autovacuum
     def _gc_translations(self):

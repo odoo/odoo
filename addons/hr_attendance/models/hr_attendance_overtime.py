@@ -25,9 +25,5 @@ class HrAttendanceOvertime(models.Model):
         help="Extra-hours including the threshold duration")
     adjustment = fields.Boolean(default=False)
 
-    def init(self):
-        # Allows only 1 overtime record per employee per day unless it's an adjustment
-        self.env.cr.execute("""
-            CREATE UNIQUE INDEX IF NOT EXISTS hr_attendance_overtime_unique_employee_per_day
-            ON %s (employee_id, date)
-            WHERE adjustment is false""" % (self._table))
+    # Allows only 1 overtime record per employee per day unless it's an adjustment
+    _unique_employee_per_day = models.UniqueIndex("(employee_id, date) WHERE adjustment IS NOT TRUE")

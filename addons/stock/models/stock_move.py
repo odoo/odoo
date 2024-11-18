@@ -198,6 +198,8 @@ class StockMove(models.Model):
     show_lots_m2o = fields.Boolean("Show lot_id", compute="_compute_show_info")
     show_lots_text = fields.Boolean("Show lot_name", compute="_compute_show_info")
 
+    _product_location_index = models.Index("(product_id, location_id, location_dest_id, company_id, state)")
+
     @api.depends('product_id')
     def _compute_product_uom(self):
         for move in self:
@@ -636,11 +638,6 @@ Please change the quantity done or the rounding precision of your unit of measur
                 _('Blocking: %s', ' ,'.join(moves_error.mapped('name')))
             ]
             raise UserError('\n\n'.join(user_warnings))
-
-    def init(self):
-        self._cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('stock_move_product_location_index',))
-        if not self._cr.fetchone():
-            self._cr.execute('CREATE INDEX stock_move_product_location_index ON stock_move (product_id, location_id, location_dest_id, company_id, state)')
 
     @api.model
     def default_get(self, fields_list):

@@ -61,6 +61,8 @@ class LunchOrder(models.Model):
     display_reorder_button = fields.Boolean(compute='_compute_display_reorder_button')
     display_add_button = fields.Boolean(compute='_compute_display_add_button')
 
+    _user_product_date = models.Index("(user_id, product_id, date)")
+
     @api.depends('product_id')
     def _compute_product_images(self):
         for line in self:
@@ -112,10 +114,6 @@ class LunchOrder(models.Model):
                 order.order_deadline_passed = order.supplier_id.order_deadline_passed
             else:
                 order.order_deadline_passed = False
-
-    def init(self):
-        self._cr.execute("""CREATE INDEX IF NOT EXISTS lunch_order_user_product_date ON %s (user_id, product_id, date)"""
-            % self._table)
 
     def _get_topping_ids(self, field, values):
         return list(self._fields[field].convert_to_cache(values, self))
