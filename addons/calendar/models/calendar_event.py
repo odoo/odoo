@@ -435,15 +435,17 @@ class Meeting(models.Model):
         # Prevent sending update notification when _inverse_dates is called
         self = self.with_context(is_calendar_event_new=True)
 
-        vals_list = [  # Else bug with quick_create when we are filter on an other user
-            dict(vals, user_id=self.env.user.id) if not 'user_id' in vals else vals
-            for vals in vals_list
-        ]
+        updated_vals_list = []
+        for vals in vals_list:
+            # Ensure 'user_id' is added if missing (else bug with quick_create when we are filter on)
+            updated_vals = dict(vals, user_id=self.env.user.id) if 'user_id' not in vals else vals.copy()
+            # Remove res_id if it's falsy (forces to use default value, when res_id points to nothingness)
+            if not updated_vals.get('res_id'):
+                updated_vals.pop('res_id', None)
+            updated_vals_list.append(updated_vals)
+        vals_list = updated_vals_list
 
         defaults = self.default_get(['activity_ids', 'res_model_id', 'res_id', 'user_id', 'res_model', 'partner_ids'])
-        for vals in vals_list:
-            if defaults.get('res_id') and not vals.get('res_id'):
-                vals.update({'res_id': defaults['res_id']})
         meeting_activity_type = self.env['mail.activity.type'].search([('category', '=', 'meeting')], limit=1)
         # get list of models ids and filter out None values directly
         model_ids = list(filter(None, {values.get('res_model_id', defaults.get('res_model_id')) for values in vals_list}))

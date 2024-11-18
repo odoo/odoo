@@ -3118,21 +3118,7 @@ class Many2oneReference(Integer):
         # cache format: id or None
         if isinstance(value, BaseModel):
             value = value._ids[0] if value._ids else None
-        value = super().convert_to_cache(value, record, validate)
-        if value in [0, None]:
-            return None
-        else:
-            return value
-
-    def convert_to_column(self, value, record, values=None, validate=True):
-        return None if value in [0, None] else int(value)
-
-    def convert_to_record(self, value, record):
-        value = super().convert_to_cache(value, record)
-        if value in [0, None]:
-            return None
-        else:
-            return value
+        return super().convert_to_cache(value, record, validate)
 
     def _remove_inverses(self, records, value):
         # TODO: unused
