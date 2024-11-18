@@ -4,6 +4,9 @@ from odoo.fields import Domain
 from odoo.osv import expression
 from odoo.tools import SetDefinitions
 
+from collections.abc import Collection
+
+
 class ResGroups(models.Model):
     _name = 'res.groups'
     _description = "Access Groups"
@@ -213,10 +216,12 @@ class ResGroups(models.Model):
 
     def _search_all_implied_ids(self, operator, value):
         """ Compute the search on the reflexive transitive closure of implied_ids. """
-        if operator not in ('in', 'not in') or not isinstance(value, (int, list, tuple)):
-            raise NotImplementedError
         if isinstance(value, int):
             value = [value]
+        elif isinstance(value, str):
+            raise NotImplementedError
+        if operator not in ('in', 'not in') or not isinstance(value, Collection):
+            raise NotImplementedError(f"_search_all_implied_ids with {operator!r} {value!r}")
         group_definitions = self._get_group_definitions()
         ids = [*value, *group_definitions.get_subset_ids(value)]
         return [('id', operator, ids)]
