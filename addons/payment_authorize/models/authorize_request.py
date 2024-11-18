@@ -7,6 +7,7 @@ from uuid import uuid4
 
 import requests
 
+from odoo.addons.payment import const as payment_const
 from odoo.addons.payment import utils as payment_utils
 
 
@@ -51,7 +52,7 @@ class AuthorizeAPI:
         }
 
         _logger.info("sending request to %s:\n%s", self.url, pprint.pformat(request))
-        response = requests.post(self.url, json.dumps(request), timeout=60)
+        response = requests.post(self.url, json.dumps(request), timeout=payment_const.TIMEOUT)
         response.raise_for_status()
         response = json.loads(response.content)
         _logger.info("response received:\n%s", pprint.pformat(response))

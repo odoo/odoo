@@ -6,8 +6,8 @@ import pprint
 from werkzeug import urls
 
 from odoo import _, models
-from odoo.exceptions import UserError, ValidationError
 
+from odoo.addons.payment import const as payment_const
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_worldline import const
 from odoo.addons.payment_worldline.controllers.main import WorldlineController
@@ -33,6 +33,9 @@ class PaymentTransaction(models.Model):
             return res
 
         checkout_session_data = self._worldline_create_checkout_session()
+        if payment_utils.set_tx_error_from_response(self, checkout_session_data):
+            return checkout_session_data
+
         return {'api_url': checkout_session_data['redirectUrl']}
 
     def _worldline_create_checkout_session(self):
@@ -127,7 +130,6 @@ class PaymentTransaction(models.Model):
         Note: self.ensure_one()
 
         :return: None
-        :raise UserError: If the transaction is not linked to a token.
         """
         super()._send_payment_request()
         if self.provider_code != 'worldline':
@@ -135,7 +137,8 @@ class PaymentTransaction(models.Model):
 
         # Prepare the payment request to Worldline.
         if not self.token_id:
-            raise UserError("Worldline: " + _("The transaction is not linked to a token."))
+            self._set_error(payment_const.TX_NOT_LINKED_TO_TOKEN_ERROR)
+            return
 
         payload = {
             'cardPaymentMethodSpecificInput': {
@@ -157,6 +160,8 @@ class PaymentTransaction(models.Model):
 
         # Make the payment request to Worldline.
         response_content = self.provider_id._worldline_make_request('payments', payload=payload)
+        if payment_utils.set_tx_error_from_response(self, response_content):
+            return
 
         # Handle the payment request response.
         _logger.info(
@@ -172,8 +177,6 @@ class PaymentTransaction(models.Model):
         :param dict notification_data: The notification data sent by the provider.
         :return: The transaction if found.
         :rtype: payment.transaction
-        :raise ValidationError: If inconsistent data are received.
-        :raise ValidationError: If the data match no transaction.
         """
         tx = super()._get_tx_from_notification_data(provider_code, notification_data)
         if provider_code != 'worldline' or len(tx) == 1:
@@ -182,16 +185,12 @@ class PaymentTransaction(models.Model):
         payment_output = notification_data.get('payment', {}).get('paymentOutput', {})
         reference = payment_output.get('references', {}).get('merchantReference', '')
         if not reference:
-            raise ValidationError(
-                "Worldline: " + _("Received data with missing reference %(ref)s.", ref=reference)
-            )
+            _logger.warning(payment_const.MISSING_REFERENCE_ERROR)
+            return tx
 
         tx = self.search([('reference', '=', reference), ('provider_code', '=', 'worldline')])
         if not tx:
-            raise ValidationError(
-                "Worldline: " + _("No transaction found matching reference %s.", reference)
-            )
-
+            _logger.warning(payment_const.NO_TX_FOUND_EXCEPTION, reference)
         return tx
 
     def _process_notification_data(self, notification_data):
@@ -201,7 +200,6 @@ class PaymentTransaction(models.Model):
 
         :param dict notification_data: The notification data sent by the provider.
         :return: None
-        :raise ValidationError: If inconsistent data are received.
         """
         super()._process_notification_data(notification_data)
         if self.provider_code != 'worldline':
@@ -226,7 +224,7 @@ class PaymentTransaction(models.Model):
         # Update the payment state.
         status = payment_data.get('status')
         if not status:
-            raise ValidationError("Worldline: " + _("Received data with missing payment state."))
+            _logger.warning(payment_const.MISSING_PAYMENT_STATUS)
 
         if status in const.PAYMENT_STATUS_MAPPING['pending']:
             self._set_pending()
@@ -236,14 +234,8 @@ class PaymentTransaction(models.Model):
                 self._worldline_tokenize_from_notification_data(payment_method_data)
             self._set_done()
         else:  # Classify unsupported payment status as the `error` tx state.
-            _logger.info(
-                "Received data with invalid payment status (%(status)s) for transaction with"
-                " reference %(ref)s",
-                {'status': status, 'ref': self.reference},
-            )
-            self._set_error("Worldline: " + _(
-                "Received invalid transaction status %(status)s.", status=status
-            ))
+            _logger.info(payment_const.INVALID_PAYMENT_STATUS, status, self.reference)
+            self._set_error(_("Received invalid transaction status %(status)s.", status=status))
 
     def _worldline_tokenize_from_notification_data(self, pm_data):
         """ Create a new token based on the notification data.

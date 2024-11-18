@@ -28,6 +28,19 @@ class TestRefundFlows(StripeCommon, PaymentHttpCommon):
         )
         self.assertEqual(refund_tx.provider_reference, self.refund_object['id'])
 
+    @mute_logger('odoo.addons.payment_stripe.models.payment_transaction')
+    def test_tx_state_after_send_refund_request_when_request_error(self):
+        self.provider.capture_manually = True
+        source_tx = self._create_transaction(flow='direct', state='authorized')
+        with patch(
+            'odoo.addons.payment_stripe.models.payment_provider.PaymentProvider._stripe_make_request',
+            return_value=self.response_error,
+        ):
+            refund_tx = source_tx._send_refund_request()
+        self.assertEqual(
+            refund_tx.state, 'error', msg="When request failed tx state should be changed to error."
+        )
+
     @mute_logger(
         'odoo.addons.payment_stripe.controllers.main',
         'odoo.addons.payment_stripe.models.payment_transaction',

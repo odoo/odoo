@@ -4,8 +4,8 @@ import logging
 import pprint
 
 from odoo import _, models
-from odoo.exceptions import UserError, ValidationError
 
+from odoo.addons.payment import const as payment_const
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_authorize import const
 from odoo.addons.payment_authorize.models.authorize_request import AuthorizeAPI
@@ -58,14 +58,14 @@ class PaymentTransaction(models.Model):
         Note: self.ensure_one()
 
         :return: None
-        :raise: UserError if the transaction is not linked to a token
         """
         super()._send_payment_request()
         if self.provider_code != 'authorize':
             return
 
         if not self.token_id.authorize_profile:
-            raise UserError("Authorize.Net: " + _("The transaction is not linked to a token."))
+            self._set_error(payment_const.TX_NOT_LINKED_TO_TOKEN_ERROR)
+            return
 
         authorize_API = AuthorizeAPI(self.provider_id)
         if self.provider_id.capture_manually:
@@ -99,10 +99,12 @@ class PaymentTransaction(models.Model):
         authorize_api = AuthorizeAPI(self.provider_id)
         tx_details = authorize_api.get_transaction_details(self.provider_reference)
         if 'err_code' in tx_details:  # Could not retrieve the transaction details.
-            raise ValidationError("Authorize.Net: " + _(
-                "Could not retrieve the transaction details. (error code: %(error_code)s; error_details: %(error_message)s)",
+            self._set_error(_(
+                "Could not retrieve the transaction details."
+                " (error code: %(error_code)s; error_details: %(error_message)s)",
                 error_code=tx_details['err_code'], error_message=tx_details.get('err_msg'),
             ))
+            return
 
         refund_tx = self.env['payment.transaction']
         tx_status = tx_details.get('transaction', {}).get('transactionStatus')
@@ -138,7 +140,8 @@ class PaymentTransaction(models.Model):
             data = {'reference': tx_to_process.reference, 'response': res_content}
             tx_to_process._handle_notification_data('authorize', data)
         else:
-            raise ValidationError("Authorize.net: " + _(
+            self._set_error(
+                _(
                 "The transaction is not in a status to be refunded. (status: %(status)s, details: %(message)s)",
                 status=tx_status, message=tx_details.get('messages', {}).get('message'),
             ))
@@ -157,7 +160,7 @@ class PaymentTransaction(models.Model):
             "capture request response for transaction with reference %s:\n%s",
             self.reference, pprint.pformat(res_content)
         )
-        self._handle_notification_data('authorize', {'response': res_content})
+        child_capture_tx._handle_notification_data('authorize', {'response': res_content})
 
         return child_capture_tx
 
@@ -173,7 +176,7 @@ class PaymentTransaction(models.Model):
             "void request response for transaction with reference %s:\n%s",
             self.reference, pprint.pformat(res_content)
         )
-        self._handle_notification_data('authorize', {'response': res_content})
+        child_void_tx._handle_notification_data('authorize', {'response': res_content})
 
         return child_void_tx
 
@@ -192,9 +195,7 @@ class PaymentTransaction(models.Model):
         reference = notification_data.get('reference')
         tx = self.search([('reference', '=', reference), ('provider_code', '=', 'authorize')])
         if not tx:
-            raise ValidationError(
-                "Authorize.Net: " + _("No transaction found matching reference %s.", reference)
-            )
+            _logger.warning(payment_const.NO_TX_FOUND_EXCEPTION, reference)
         return tx
 
     def _process_notification_data(self, notification_data):

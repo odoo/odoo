@@ -59,3 +59,14 @@ class TestPaymentTransaction(FlutterwaveCommon):
         ) as tokenize_mock:
             tx._process_notification_data(self.redirect_notification_data)
         self.assertEqual(tokenize_mock.call_count, 1)
+
+    def test_x_state_after_processing_notification_data_when_request_error(self):
+        tx = self._create_transaction(flow='redirect', tokenize=True)
+        with patch(
+            'odoo.addons.payment_flutterwave.models.payment_provider.PaymentProvider'
+            '._flutterwave_make_request', return_value=self.response_error,
+        ):
+            tx._process_notification_data(self.redirect_notification_data)
+        self.assertEqual(
+            tx.state, 'error', msg="When request failed tx state should be changed to error."
+        )

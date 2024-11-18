@@ -1,13 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import pprint
 
 import requests
 
-from odoo import _, fields, models
-from odoo.exceptions import ValidationError
+from odoo import fields, models
 
+from odoo.addons.payment import const as payment_const
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_xendit import const
 
 
@@ -64,28 +64,24 @@ class PaymentProvider(models.Model):
         :param dict payload: The payload of the request.
         :return The JSON-formatted content of the response.
         :rtype: dict
-        :raise ValidationError: If an HTTP error occurs.
         """
         self.ensure_one()
 
         url = f'https://api.xendit.co/{endpoint}'
         auth = (self.xendit_secret_key, '')
         try:
-            response = requests.post(url, json=payload, auth=auth, timeout=10)
+            response = requests.post(
+                url, json=payload, auth=auth, timeout=payment_const.TIMEOUT
+            )
             response.raise_for_status()
         except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
-            _logger.exception("Unable to reach endpoint at %s", url)
-            raise ValidationError("Xendit: " + _("Could not establish the connection to the API."))
+            _logger.exception(payment_const.UNABLE_TO_REACH_ENDPOINT, url)
+            return payment_utils.format_error_response(payment_const.API_CONNECTION_ERROR)
         except requests.exceptions.HTTPError as err:
-            error_message = err.response.json().get('message')
-            _logger.exception(
-                "Invalid API request at %s with data:\n%s", url, pprint.pformat(payload)
-            )
-            raise ValidationError(
-                "Xendit: " + _(
-                    "The communication with the API failed. Xendit gave us the following"
-                    " information: '%s'", error_message
-                )
+            err_msg = err.response.json().get('message', '')
+            _logger.exception(payment_const.INVALID_API_REQUEST, url, payload, err.response.text)
+            return payment_utils.format_error_response(
+                payment_const.API_COMMUNICATION_ERROR + err_msg
             )
         return response.json()
 

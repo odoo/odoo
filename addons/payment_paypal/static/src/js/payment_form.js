@@ -1,7 +1,6 @@
 /* global paypal */
 
 import { loadJS } from '@web/core/assets';
-import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
 
 import paymentForm from '@payment/js/payment_form';
@@ -105,7 +104,7 @@ paymentForm.include({
      * Handle the click event of the component and initiate the payment.
      *
      * @private
-     * @return {void}
+     * @return {String}
      */
     async _paypalOnClick() {
         await this._submitForm(new Event("PayPalClickEvent"));
@@ -127,18 +126,22 @@ paymentForm.include({
      * @param {object} data - The data returned by PayPal on approving the order.
      * @return {void}
      */
-    _paypalOnApprove(data) {
+    async _paypalOnApprove(data) {
         const orderID = data.orderID;
-        const { provider_id } = this.inlineFormValues
+        const {provider_id} = this.inlineFormValues;
 
-        rpc('/payment/paypal/complete_order', {
+        const response = await rpc('/payment/paypal/complete_order', {
             'provider_id': provider_id,
             'order_id': orderID,
-        }).then(() => {
-            // Close the PayPal buttons that were rendered
-            this.paypalData[this.selectedOptionId]['paypalButton'].close();
-            window.location = '/payment/status';
         })
+        if (response.error) {
+            this._displayErrorDialog(this.errorMapping['paymentProcessingError'], response.error);
+            this._enableButton();
+            return;
+        }
+        // Close the PayPal buttons that were rendered
+        this.paypalData[this.selectedOptionId]['paypalButton'].close();
+        window.location = '/payment/status';
     },
 
     /**
@@ -162,7 +165,7 @@ paymentForm.include({
         // Paypal throws an error if the popup is closed before it can load;
         // this case should be treated as an onCancel event.
         if (message !== "Detected popup close") {
-            this._displayErrorDialog(_t("Payment processing failed"), error.message);
+            this._displayErrorDialog(this.errorMapping['paymentProcessingError'], error.message);
         }
     },
 });

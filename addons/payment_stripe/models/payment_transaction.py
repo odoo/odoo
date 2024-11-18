@@ -6,8 +6,8 @@ import pprint
 from werkzeug.urls import url_encode, url_join
 
 from odoo import _, fields, models
-from odoo.exceptions import UserError, ValidationError
 
+from odoo.addons.payment import const as payment_const
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_stripe import const
 from odoo.addons.payment_stripe import utils as stripe_utils
@@ -34,6 +34,8 @@ class PaymentTransaction(models.Model):
             return res
 
         intent = self._stripe_create_intent()
+        if not intent:
+            return {}
         base_url = self.provider_id.get_base_url()
         return {
             'client_secret': intent['client_secret'],
@@ -49,14 +51,14 @@ class PaymentTransaction(models.Model):
         Note: self.ensure_one()
 
         :return: None
-        :raise: UserError if the transaction is not linked to a token
         """
         super()._send_payment_request()
         if self.provider_code != 'stripe':
             return
 
         if not self.token_id:
-            raise UserError("Stripe: " + _("The transaction is not linked to a token."))
+            self._set_error(payment_const.TX_NOT_LINKED_TO_TOKEN_ERROR)
+            return
 
         # Make the payment request to Stripe
         payment_intent = self._stripe_create_intent()
@@ -82,38 +84,20 @@ class PaymentTransaction(models.Model):
         """
         if self.operation == 'validation':
             response = self.provider_id._stripe_make_request(
-                'setup_intents', payload=self._stripe_prepare_setup_intent_payload()
+                'setup_intents',
+                payload=self._stripe_prepare_setup_intent_payload(),
             )
         else:  # 'online_direct', 'online_token', 'offline'.
             response = self.provider_id._stripe_make_request(
                 'payment_intents',
                 payload=self._stripe_prepare_payment_intent_payload(),
-                offline=self.operation == 'offline',
-                # Prevent multiple offline payments by token (e.g., due to a cursor rollback).
                 idempotency_key=payment_utils.generate_idempotency_key(
                     self, scope='payment_intents_token'
-                ) if self.operation == 'offline' else None,
+                ),
             )
-
-        if 'error' not in response:
-            intent = response
-        else:  # A processing error was returned in place of the intent.
-            # The request failed and no error was raised because we are in an offline payment flow.
-            # Extract the error from the response, log it, and set the transaction in error to let
-            # the calling module handle the issue without rolling back the cursor.
-            error_msg = response['error'].get('message')
-            _logger.warning(
-                "The creation of the intent failed.\n"
-                "Stripe gave us the following info about the problem:\n'%s'", error_msg
-            )
-            self._set_error("Stripe: " + _(
-                "The communication with the API failed.\n"
-                "Stripe gave us the following info about the problem:\n'%s'", error_msg
-            ))  # Flag transaction as in error now, as the intent status might have a valid value.
-            intent = response['error'].get('payment_intent') \
-                     or response['error'].get('setup_intent')  # Get the intent from the error.
-
-        return intent
+        if payment_utils.set_tx_error_from_response(self, response):
+            return {}
+        return response
 
     def _stripe_prepare_setup_intent_payload(self):
         """ Prepare the payload for the creation of a SetupIntent object in Stripe format.
@@ -123,7 +107,8 @@ class PaymentTransaction(models.Model):
         :return: The Stripe-formatted payload for the SetupIntent request.
         :rtype: dict
         """
-        customer = self._stripe_create_customer()
+        if not (customer := self._stripe_create_customer()):
+            return {}
         setup_intent_payload = {
             'customer': customer['id'],
             'description': self.reference,
@@ -157,8 +142,12 @@ class PaymentTransaction(models.Model):
             **stripe_utils.include_shipping_address(self),
         }
         if self.operation in ['online_token', 'offline']:
-            if not self.token_id.stripe_payment_method:  # Pre-SCA token, migrate it.
-                self.token_id._stripe_sca_migrate_customer()
+            if (
+                not self.token_id.stripe_payment_method
+                and (err := self.token_id._stripe_sca_migrate_customer())
+            ):  # Pre-SCA token, migrate it.
+                self._set_error(err)
+                return {}
 
             payment_intent_payload.update({
                 'confirm': True,
@@ -169,6 +158,8 @@ class PaymentTransaction(models.Model):
             })
         else:
             customer = self._stripe_create_customer()
+            if payment_utils.set_tx_error_from_response(self, customer):
+                return {}
             payment_intent_payload['customer'] = customer['id']
             if self.tokenize:
                 payment_intent_payload['setup_future_usage'] = 'off_session'
@@ -195,6 +186,8 @@ class PaymentTransaction(models.Model):
                 'phone': self.partner_phone and self.partner_phone[:20] or None,
             }
         )
+        if payment_utils.set_tx_error_from_response(self, customer):
+            return {}
         return customer
 
     def _stripe_prepare_mandate_options(self):
@@ -258,6 +251,9 @@ class PaymentTransaction(models.Model):
                 ),
             }
         )
+        if payment_utils.set_tx_error_from_response(refund_tx, data):
+            return refund_tx
+
         _logger.info(
             "Refund request response for transaction wih reference %s:\n%s",
             self.reference, pprint.pformat(data)
@@ -279,6 +275,8 @@ class PaymentTransaction(models.Model):
         payment_intent = self.provider_id._stripe_make_request(
             f'payment_intents/{self.provider_reference}/capture'
         )
+        if payment_utils.set_tx_error_from_response(child_capture_tx, payment_intent):
+            return child_capture_tx
         _logger.info(
             "capture request response for transaction with reference %s:\n%s",
             self.reference, pprint.pformat(payment_intent)
@@ -289,7 +287,7 @@ class PaymentTransaction(models.Model):
         StripeController._include_payment_intent_in_notification_data(
             payment_intent, notification_data
         )
-        self._handle_notification_data('stripe', notification_data)
+        child_capture_tx._handle_notification_data('stripe', notification_data)
 
         return child_capture_tx
 
@@ -303,17 +301,19 @@ class PaymentTransaction(models.Model):
         payment_intent = self.provider_id._stripe_make_request(
             f'payment_intents/{self.provider_reference}/cancel'
         )
+        if payment_utils.set_tx_error_from_response(child_void_tx, payment_intent):
+            return child_void_tx
+
         _logger.info(
             "void request response for transaction with reference %s:\n%s",
             self.reference, pprint.pformat(payment_intent)
         )
-
         # Handle the void request response
         notification_data = {'reference': self.reference}
         StripeController._include_payment_intent_in_notification_data(
             payment_intent, notification_data
         )
-        self._handle_notification_data('stripe', notification_data)
+        child_void_tx._handle_notification_data('stripe', notification_data)
 
         return child_void_tx
 
@@ -324,8 +324,6 @@ class PaymentTransaction(models.Model):
         :param dict notification_data: The notification data sent by the provider
         :return: The transaction if found
         :rtype: recordset of `payment.transaction`
-        :raise: ValidationError if inconsistent data were received
-        :raise: ValidationError if the data match no transaction
         """
         tx = super()._get_tx_from_notification_data(provider_code, notification_data)
         if provider_code != 'stripe' or len(tx) == 1:
@@ -343,12 +341,10 @@ class PaymentTransaction(models.Model):
                 [('provider_reference', '=', refund_id), ('provider_code', '=', 'stripe')]
             )
         else:
-            raise ValidationError("Stripe: " + _("Received data with missing merchant reference"))
-
+            _logger.warning(payment_const.MISSING_REFERENCE_ERROR)
+            return tx
         if not tx:
-            raise ValidationError(
-                "Stripe: " + _("No transaction found matching reference %s.", reference)
-            )
+            _logger.warning(payment_const.NO_TX_FOUND_EXCEPTION, reference)
         return tx
 
     def _process_notification_data(self, notification_data):
@@ -362,7 +358,6 @@ class PaymentTransaction(models.Model):
                                        and 'payment_method' can be populated with their
                                        corresponding Stripe API objects.
         :return: None
-        :raise: ValidationError if inconsistent data were received
         """
         super()._process_notification_data(notification_data)
         if self.provider_code != 'stripe':
@@ -390,9 +385,8 @@ class PaymentTransaction(models.Model):
             self.provider_reference = notification_data['payment_intent']['id']
             status = notification_data['payment_intent']['status']
         if not status:
-            raise ValidationError(
-                "Stripe: " + _("Received data with missing intent status.")
-            )
+            self._set_error(_("Received data with missing intent status."))
+            return
         if status in const.STATUS_MAPPING['draft']:
             pass
         elif status in const.STATUS_MAPPING['pending']:
@@ -429,10 +423,7 @@ class PaymentTransaction(models.Model):
                     "more information on that matter, and address any accounting discrepancies."
                 ), extra_allowed_states=('done',))
         else:  # Classify unknown intent statuses as `error` tx state
-            _logger.warning(
-                "received invalid payment status (%s) for transaction with reference %s",
-                status, self.reference
-            )
+            _logger.warning(payment_const.INVALID_PAYMENT_STATUS, status, self.reference)
             self._set_error(_("Received data with invalid intent status: %s", status))
 
     def _stripe_tokenize_from_notification_data(self, notification_data):
@@ -464,6 +455,8 @@ class PaymentTransaction(models.Model):
             payment_methods = self.provider_id._stripe_make_request(
                 f'customers/{customer_id}/payment_methods', method='GET'
             )
+            if payment_utils.set_tx_error_from_response(self, payment_methods):
+                return
             _logger.info("Received payment_methods response:\n%s", pprint.pformat(payment_methods))
             payment_method = payment_methods['data'][0]
 
