@@ -1638,7 +1638,10 @@ class AccountMoveLine(models.Model):
                 line_to_write -= line
                 continue
 
-            if line.parent_state == 'posted' and any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in ('tax_ids', 'tax_line_id')):
+            if (
+                line.parent_state == 'posted' and not (self.env.context.get('analytic_epd') and line.display_type == 'epd')
+                and any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in ('tax_ids', 'tax_line_id'))
+            ):
                 raise UserError(_('You cannot modify the taxes related to a posted journal item, you should reset the journal entry to draft to do so.'))
 
             # Check the lock date.
@@ -1655,7 +1658,7 @@ class AccountMoveLine(models.Model):
 
         move_container = {'records': self.move_id}
         with self.move_id._check_balanced(move_container),\
-             self.move_id._sync_dynamic_lines(move_container),\
+             self.move_id.with_context(analytic_epd='analytic_distribution' in vals)._sync_dynamic_lines(move_container),\
              self._sync_invoice({'records': self, 'protected': {line: set(vals.keys()) for line in self}}):
             self = line_to_write
             if not self:
@@ -1708,7 +1711,10 @@ class AccountMoveLine(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_posted(self):
         # Prevent deleting lines on posted entries
-        if not self._context.get('force_delete') and any(m.state == 'posted' for m in self.move_id):
+        if (
+            not self._context.get('force_delete') and any(m.state == 'posted' for m in self.move_id)
+            and not (self._context.get('analytic_epd') and all(line.display_type == 'epd' for line in self))
+        ):
             raise UserError(_("You can't delete a posted journal item. Don’t play games with your accounting records; reset the journal entry to draft before deleting it."))
 
     @api.ondelete(at_uninstall=False)

@@ -1129,3 +1129,37 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             # Discounted amount:
             {'amount_currency': 762.2},
         ])
+
+    def test_mixed_epd_posted_lines_analytic_distribution(self):
+        self.early_pay_10_percents_10_days.early_pay_discount_computation = 'mixed'
+        analytic_plan = self.env['account.analytic.plan'].create({
+            'name': 'existential plan',
+        })
+        analytic_account = self.env['account.analytic.account'].create({
+            'name': 'positive_account',
+            'plan_id': analytic_plan.id,
+        })
+        
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-01-10',
+            'date': '2019-01-10',
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'line',
+                    'price_unit': 2000,
+                    'tax_ids': self.tax_sale_a,
+                }),
+                Command.create({
+                    'name': 'line',
+                    'price_unit': -1500,
+                    'tax_ids': self.tax_sale_a,
+                }),
+            ],
+            'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
+        })
+        invoice.action_post()
+        invoice_line = invoice.invoice_line_ids[0]
+        invoice_line.analytic_distribution = {str(analytic_account.id): 100}
+        invoice_line.analytic_distribution = {}
