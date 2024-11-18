@@ -47,7 +47,7 @@ const NAV_KEYS = [
     "space",
 ];
 const MODIFIERS = ["alt", "control", "shift"];
-const AUTHORIZED_KEYS = [...ALPHANUM_KEYS, ...NAV_KEYS, "escape"];
+const AUTHORIZED_KEYS = [...ALPHANUM_KEYS, ...NAV_KEYS, "escape", "<", ">"];
 
 /**
  * Get the actual hotkey being pressed.
