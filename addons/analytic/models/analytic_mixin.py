@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models, fields, api, _
+from odoo.fields import Domain
 from odoo.tools import SQL, Query, unique
 from odoo.tools.float_utils import float_round, float_compare
 from odoo.exceptions import UserError, ValidationError
@@ -141,16 +142,12 @@ class AnalyticMixin(models.AbstractModel):
             raise ValueError(f"{query.table} does not support analytic_distribution grouping.")
         return SQL(ids.get(query.table))
 
-    def mapped(self, func):
-        # Get the related analytic accounts as a recordset instead of the distribution
-        if func == 'analytic_distribution' and self.env.context.get('distribution_ids'):
-            return self.distribution_analytic_account_ids
-        return super().mapped(func)
-
     def filtered_domain(self, domain):
         # Filter based on the accounts used (i.e. allowing a name_search) instead of the distribution
         # A domain on a binary field doesn't make sense anymore outside of set or not; and it is still doable.
-        return super(AnalyticMixin, self.with_context(distribution_ids=True)).filtered_domain(domain)
+        # Hack to filter using another field.
+        domain = Domain(domain).map_conditions(lambda cond: Domain('distribution_analytic_account_ids', cond.operator, cond.value) if cond.field_expr == 'analytic_distribution' else cond)
+        return super().filtered_domain(domain)
 
     def write(self, vals):
         """ Format the analytic_distribution float value, so equality on analytic_distribution can be done """

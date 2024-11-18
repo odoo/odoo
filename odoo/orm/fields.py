@@ -7,8 +7,11 @@ import functools
 import collections
 import itertools
 import logging
+import operator as pyoperator
+import re
 import typing
 import warnings
+from collections.abc import Set as AbstractSet
 from operator import attrgetter
 
 from psycopg2.extras import Json as PsycopgJson
@@ -28,6 +31,7 @@ if typing.TYPE_CHECKING:
     from .identifiers import IdType
     from .registry import Registry
     from .types import BaseModel, DomainType, ModelType, Self, ValuesType
+    M = typing.TypeVar("M", bound=BaseModel)
 T = typing.TypeVar("T")
 
 IR_MODELS = (
@@ -38,6 +42,7 @@ IR_MODELS = (
 COMPANY_DEPENDENT_FIELDS = (
     'char', 'float', 'boolean', 'integer', 'text', 'many2one', 'date', 'datetime', 'selection', 'html'
 )
+PYTHON_INEQUALITY_OPERATOR = {'<': pyoperator.lt, '>': pyoperator.gt, '<=': pyoperator.le, '>=': pyoperator.ge}
 
 _logger = logging.getLogger('odoo.fields')
 
@@ -1400,6 +1405,89 @@ class Field(typing.Generic[T]):
         if field_expr == self.name:
             return self.__get__
         raise ValueError(f"Expression not supported on {self}: {field_expr!r}")
+
+    def filter_function(self, records: M, field_expr: str, operator: str, value) -> Callable[[M], M]:
+        assert operator not in NEGATIVE_CONDITION_OPERATORS, "only positive operators are implemented"
+        getter = self.expression_getter(field_expr)
+        # assert not isinstance(value, (SQL, Query))
+
+        # -------------------------------------------------
+        # operator: in (equality)
+        if operator == 'in':
+            assert isinstance(value, COLLECTION_TYPES) and value, \
+                f"filter_function() 'in' operator expects a collection, not a {type(value)}"
+            if not isinstance(value, AbstractSet):
+                value = set(value)
+            if False in value or self.falsy_value in value:
+                if len(value) == 1:
+                    return lambda rec: not getter(rec)
+                return lambda rec: (val := getter(rec)) in value or not val
+            return lambda rec: getter(rec) in value
+
+        # -------------------------------------------------
+        # operator: like
+        if operator.endswith('like'):
+            # we may get a value which is not a string
+            if operator.endswith('ilike'):
+                # ilike uses unaccent and lower-case comparison
+                unaccent_python = records.env.registry.unaccent_python
+
+                def unaccent(x):
+                    return unaccent_python(str(x).lower()) if x else ''
+            else:
+                def unaccent(x):
+                    return str(x) if x else ''
+
+            # build a regex that matches the SQL-like expression
+            # note that '\' is used for escaping in SQL
+            def build_like_regex(value: str, exact: bool):
+                yield '^' if exact else '.*'
+                escaped = False
+                for char in value:
+                    if escaped:
+                        escaped = False
+                        yield re.escape(char)
+                    elif char == '\\':
+                        escaped = True
+                    elif char == '%':
+                        yield '.*'
+                    elif char == '_':
+                        yield '.'
+                    else:
+                        yield re.escape(char)
+                if exact:
+                    yield '$'
+                # no need to match r'.*' in else because we only use .match()
+
+            like_regex = re.compile("".join(build_like_regex(unaccent(value), "=" in operator)))
+            return lambda rec: like_regex.match(unaccent(getter(rec)))
+
+        # -------------------------------------------------
+        # operator: inequality
+        if pyop := PYTHON_INEQUALITY_OPERATOR.get(operator):
+            can_be_null = False
+            if (null_value := self.falsy_value) is not None:
+                value = value or null_value
+                can_be_null = (
+                    null_value < value if operator == '<' else
+                    null_value > value if operator == '>' else
+                    null_value <= value if operator == '<=' else
+                    null_value >= value  # operator == '>='
+                )
+
+            def check_inequality(rec):
+                rec_value = getter(rec)
+                try:
+                    if rec_value is False or rec_value is None:
+                        return can_be_null
+                    return pyop(rec_value, value)
+                except (ValueError, TypeError):
+                    # ignoring error, type mismatch
+                    return False
+            return check_inequality
+
+        # -------------------------------------------------
+        raise NotImplementedError(f"Invalid simple operator {operator!r}")
 
     ############################################################################
     #

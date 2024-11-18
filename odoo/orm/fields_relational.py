@@ -165,6 +165,34 @@ class _Relational(Field[BaseModel]):
             domain = list(domain)
         return domain or []
 
+    def filter_function(self, records, field_expr, operator, value):
+        getter = self.expression_getter(field_expr)
+        corecords = getter(records)
+
+        if operator == 'any':
+            assert isinstance(value, Domain)
+            corecords = corecords.filtered_domain(value)
+        elif operator == 'in' and isinstance(value, COLLECTION_TYPES):
+            value = set(value)
+            if False in value:
+                if not corecords:
+                    # shortcut, we know none of records has a corecord
+                    return lambda _: True
+                if len(value) > 1:
+                    value.discard(False)
+                    filter_values = self.filter_function(records, field_expr, 'in', value)
+                    return lambda rec: not getter(rec) or filter_values(rec)
+                return lambda rec: not getter(rec)
+            corecords = corecords.filtered_domain(Domain('id', 'in', value))
+        else:
+            corecords = corecords.filtered_domain(Domain('id', operator, value))
+
+        if not corecords:
+            return lambda _: False
+
+        ids = set(corecords._ids)
+        return lambda rec: any(id_ in ids for val in getter(rec) for id_ in val._ids)
+
 
 class Many2one(_Relational):
     """ The value of such a field is a recordset of size 0 (no

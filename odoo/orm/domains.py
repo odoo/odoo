@@ -62,13 +62,16 @@ from datetime import date, datetime, time, timedelta, timezone
 
 from odoo.exceptions import UserError
 from odoo.tools import SQL, OrderedSet, Query, classproperty, partition, str2bool
+
 from .identifiers import NewId
-from .utils import COLLECTION_TYPES
+from .utils import COLLECTION_TYPES, parse_field_expr
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable, Collection, Iterable
     from odoo.fields import Field
     from odoo.models import BaseModel
+
+    M = typing.TypeVar('M', bound=BaseModel)
 
 
 _logger = logging.getLogger('odoo.domains')
@@ -364,6 +367,15 @@ class Domain:
         # just execute the optimization code that goes through all the fields
         self.optimize(model, full=True)
 
+    def _as_predicate(self, records: M) -> Callable[[M], bool]:
+        """Return a predicate function from the domain (bound to records).
+        The predicate function return whether its argument (a single record)
+        satisfies the domain.
+
+        This is used to implement ``Model.filtered_domain``.
+        """
+        raise NotImplementedError
+
     def optimize(self, model: BaseModel, *, full: bool = False) -> Domain:
         """Perform optimizations of the node given a model.
 
@@ -467,6 +479,9 @@ class DomainBool(Domain):
     def __iter__(self):
         yield _TRUE_LEAF if self.value else _FALSE_LEAF
 
+    def _as_predicate(self, records):
+        return lambda _: self.value
+
     def _to_sql(self, model: BaseModel, alias: str, query: Query) -> SQL:
         return SQL("TRUE") if self.value else SQL("FALSE")
 
@@ -511,6 +526,10 @@ class DomainNot(Domain):
 
     def __hash__(self):
         return ~hash(self.child)
+
+    def _as_predicate(self, records):
+        predicate = self.child._as_predicate(records)
+        return lambda rec: not predicate(rec)
 
     def _to_sql(self, model: BaseModel, alias: str, query: Query) -> SQL:
         condition = self.child._to_sql(model, alias, query)
@@ -631,6 +650,18 @@ class DomainAnd(DomainNary):
             return DomainAnd(self.children + other.children)
         return super().__and__(other)
 
+    def _as_predicate(self, records):
+        # For the sake of performance, the list of predicates is generated
+        # lazily with a generator, which is memoized with `itertools.tee`
+        all_predicates = (child._as_predicate(records) for child in self.children)
+
+        def and_predicate(record):
+            nonlocal all_predicates
+            all_predicates, predicates = itertools.tee(all_predicates)
+            return all(pred(record) for pred in predicates)
+
+        return and_predicate
+
 
 class DomainOr(DomainNary):
     """Domain: OR with multiple children"""
@@ -648,6 +679,18 @@ class DomainOr(DomainNary):
         if isinstance(other, DomainOr):
             return DomainOr(self.children + other.children)
         return super().__or__(other)
+
+    def _as_predicate(self, records):
+        # For the sake of performance, the list of predicates is generated
+        # lazily with a generator, which is memoized with `itertools.tee`
+        all_predicates = (child._as_predicate(records) for child in self.children)
+
+        def or_predicate(record):
+            nonlocal all_predicates
+            all_predicates, predicates = itertools.tee(all_predicates)
+            return any(pred(record) for pred in predicates)
+
+        return or_predicate
 
 
 class DomainCondition(Domain):
@@ -777,14 +820,14 @@ class DomainCondition(Domain):
 
     def __get_field(self, model: BaseModel) -> tuple[Field, str]:
         """Get the field or raise an exception"""
-        field_name, *props = self.field_expr.split('.', 1)
+        field_name, property_name = parse_field_expr(self.field_expr)
         try:
             field = model._fields[field_name]
         except KeyError:
             self._raise("Invalid field %s.%s", model._name, field_name)
         # cache field value, with this hack to bypass immutability
         object.__setattr__(self, '_field_instance', field)
-        return field, (props[0] if props else '')
+        return field, property_name or ''
 
     def _optimize(self, model: BaseModel, full: bool) -> Domain:
         """Optimization step.
@@ -896,6 +939,56 @@ class DomainCondition(Domain):
             field_label=self._field(model).get_description(model.env, ['string'])['string'],
             model_label=f"{model.env['ir.model']._get(model._name).name!r} ({model._name})",
         ))
+
+    def _as_predicate(self, records):
+        if not records:
+            return lambda _: False
+
+        if self._opt_level < OptimizationLevel.BASIC:
+            return self.optimize(records, full=False)._as_predicate(records)
+
+        operator = self.operator
+        if operator in ('child_of', 'parent_of'):
+            # TODO have a specific implementation for these
+            return self.optimize(records, full=True)._as_predicate(records)
+
+        assert operator in STANDARD_CONDITION_OPERATORS, "Expecting a sub-set of operators"
+        field_expr, value = self.field_expr, self.value
+        positive_operator = NEGATIVE_CONDITION_OPERATORS.get(operator, operator)
+
+        if isinstance(value, SQL):
+            # transform into an Query value
+            if positive_operator == operator:
+                condition = self
+                operator = 'any'
+            else:
+                condition = ~self
+                operator = 'not any'
+            positive_operator = 'any'
+            field_expr = 'id'
+            value = records.with_context(active_test=False)._search(DomainCondition('id', 'in', OrderedSet(records.ids)) & condition)
+            assert isinstance(value, Query)
+
+        if isinstance(value, Query):
+            # rebuild a domain with an 'in' values
+            if positive_operator not in ('in', 'any'):
+                self._raise("Cannot filter using Query without the 'any' or 'in' operator")
+            if positive_operator == 'any':
+                operator = 'in' if positive_operator == operator else 'not in'
+                positive_operator = 'in'
+            value = set(value.get_result_ids())
+            return DomainCondition(field_expr, operator, value)._as_predicate(records)
+
+        field = self._field(records)
+        if field_expr == 'display_name':
+            # when searching by name, ignore AccessError
+            field_expr = 'display_name.no_error'
+        elif field_expr == 'id':
+            # for new records, compare to their origin
+            field_expr = 'id.origin'
+
+        func = field.filter_function(records, field_expr, positive_operator, value)
+        return func if positive_operator == operator else lambda rec: not func(rec)
 
     def _to_sql(self, model: BaseModel, alias: str, query: Query) -> SQL:
         return model._condition_to_sql(alias, self.field_expr, self.operator, self.value, query)
@@ -1104,6 +1197,8 @@ def _optimize_in_required(condition, model):
         field.falsy_value is None
         and field.required
         and field in model.env.registry.not_null_fields
+        # only optimize if there are no NewId's
+        and all(model._ids)
     ):
         value = OrderedSet(v for v in value if v is not False)
     if len(value) == len(condition.value):
