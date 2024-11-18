@@ -10,6 +10,7 @@ import logging
 import sys
 import threading
 import time
+import traceback
 
 import odoo
 import odoo.modules.db
@@ -87,7 +88,7 @@ def load_demo(env, package, idref, mode):
             with env.cr.savepoint(flush=False):
                 load_data(env(su=True), idref, mode, kind='demo', package=package)
         return True
-    except Exception as e:
+    except Exception:  # noqa: BLE001
         # If we could not install demo data for this module
         _logger.warning(
             "Module %s demo data failed to install, installed without demo data",
@@ -97,7 +98,7 @@ def load_demo(env, package, idref, mode):
         Failure = env.get('ir.demo_failure')
         if todo and Failure is not None:
             todo.state = 'open'
-            Failure.create({'module_id': package.id, 'error': str(e)})
+            Failure.create({'module_id': package.id, 'error': traceback.format_exc()})
         return False
 
 
