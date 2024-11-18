@@ -33,7 +33,7 @@ export class Attachment extends FileModelMixin(Record) {
     message = Record.one("Message");
     /** @type {string} */
     create_date;
-    /** @type {string} */
+    /** @type {'binary'|'url'} */
     type;
     /** @type {string} */
     url;
