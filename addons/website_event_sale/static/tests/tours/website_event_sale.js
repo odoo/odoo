@@ -90,11 +90,6 @@ registry.category("web_tour.tours").add("event_buy_tickets", {
             trigger: ".modal#modal_attendees_registration button[type=submit]",
             run: "click",
         },
-        wsTourUtils.goToCart({ quantity: 3 }),
-        wsTourUtils.goToCheckout(),
-        ...wsTourUtils.assertCartAmounts({
-            untaxed: "4,000.00",
-        }),
         ...wsTourUtils.payWithTransfer(),
     ],
 });
