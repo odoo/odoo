@@ -1901,6 +1901,48 @@ class TestMailgateway(MailCommon):
         records = self.env['mail.test.gateway'].search([('name', 'ilike', 'Whitelist test alias loop %')])
         self.assertEqual(len(records), 10, msg='Email whitelisted should not have the restriction')
 
+    def test_loop_break_with_message_id(self):
+        """Test the loop detection with theader X-Odoo-Message-Id
+
+            Test Cases:
+            ==========
+            1) Process an email with a message_id
+            2) Process the same email with different message_id but X-Odoo-Message-Id = previous message_id
+            the email should be ignored
+        """
+
+        alias = self.env['mail.alias'].create({
+            'alias_domain_id': self.mail_alias_domain.id,
+            'alias_name': 'test',
+            'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
+            'alias_contact': 'everyone',
+        })
+
+        self.format_and_process(
+            MAIL_TEMPLATE,
+            self.email_from,
+            f'{self.alias.alias_name}@{self.alias_domain}',
+            subject='Test x odoo message id',
+            target_model=alias.alias_model_id.model,
+            return_path=self.email_from,
+        )
+
+        new_record = self.env['mail.test.gateway'].search([('name', '=', 'Test x odoo message id')])
+        self.assertTrue(new_record, 'The record should have been created')
+
+        self.format_and_process(
+            MAIL_TEMPLATE,
+            self.email_from,
+            f'{self.alias.alias_name}@{self.alias_domain}',
+            subject='Test x odoo message id',
+            msg_id=f'different-{new_record.message_ids[0].message_id}',
+            target_model=alias.alias_model_id.model,
+            return_path=self.email_from,
+            extra=f'X-Odoo-Message-Id: {new_record.message_ids[0].message_id}',
+        )
+
+        records = self.env['mail.test.gateway'].search([('name', '=', 'Test x odoo message id')])
+        self.assertEqual(len(records), 1, 'The email should have been ignored')
     # --------------------------------------------------
     # Corner cases / Bugs during message process
     # --------------------------------------------------

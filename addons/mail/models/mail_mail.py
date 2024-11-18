@@ -398,6 +398,10 @@ class MailMail(models.Model):
                 )
         headers.setdefault('Return-Path', self.record_alias_domain_id.bounce_email or self.env.company.bounce_email)
 
+        # some mail providers overwrite the Message-Id, so we add a custom header
+        # to be able to track the email
+        headers.setdefault('X-Odoo-Message-Id', self.message_id)
+
         # prepare recipients: use email_to if defined then check recipient_ids
         # that receive a specific email, notably due to link shortening / redirect
         # that is recipients-dependent. Keep original email/partner as this is
