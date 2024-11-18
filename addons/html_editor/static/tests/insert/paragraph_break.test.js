@@ -143,6 +143,58 @@ describe("Selection collapsed", () => {
                 contentAfter: "<pre><br></pre><p>[]<br></p>",
             });
         });
+        test("should insert a new line within the pre", async () => {
+            await testEditor({
+                contentBefore: "<pre><p>abc</p><p>def[]</p></pre>",
+                stepFunction: splitBlock,
+                contentAfter: "<pre><p>abc</p><p>def</p><p>[]<br></p></pre>",
+            });
+        });
+        test("should insert a new line after pre", async () => {
+            await testEditor({
+                contentBefore: "<pre><p>abc</p><p>def</p><p>[]<br></p></pre>",
+                stepFunction: splitBlock,
+                contentAfter: "<pre><p>abc</p><p>def</p></pre><p>[]<br></p>",
+            });
+        });
+    });
+
+    describe("Blockquote", () => {
+        test("should insert a new paragraph after the blockquote", async () => {
+            await testEditor({
+                contentBefore: "<blockquote>abc[]</blockquote>",
+                stepFunction: splitBlock,
+                contentAfter: "<blockquote>abc</blockquote><p>[]<br></p>",
+            });
+        });
+        test("should insert a new paragraph after the blockquote containing inline element", async () => {
+            await testEditor({
+                contentBefore: "<blockquote>ab<strong>c[]</strong></blockquote>",
+                stepFunction: splitBlock,
+                contentAfter: "<blockquote>ab<strong>c</strong></blockquote><p>[]<br></p>",
+            });
+        });
+        test("should be able to break out of an empty blockquote", async () => {
+            await testEditor({
+                contentBefore: "<blockquote>[]<br></blockquote>",
+                stepFunction: splitBlock,
+                contentAfter: "<blockquote><br></blockquote><p>[]<br></p>",
+            });
+        });
+        test("should insert a new line within the blockquote", async () => {
+            await testEditor({
+                contentBefore: "<blockquote><p>abc</p><p>def[]</p></blockquote>",
+                stepFunction: splitBlock,
+                contentAfter: "<blockquote><p>abc</p><p>def</p><p>[]<br></p></blockquote>",
+            });
+        });
+        test("should insert a new line after blockquote", async () => {
+            await testEditor({
+                contentBefore: "<blockquote><p>abc</p><p>def</p><p>[]<br></p></blockquote>",
+                stepFunction: splitBlock,
+                contentAfter: "<blockquote><p>abc</p><p>def</p></blockquote><p>[]<br></p>",
+            });
+        });
     });
 
     describe("Consecutive", () => {
