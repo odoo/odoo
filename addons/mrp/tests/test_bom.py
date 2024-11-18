@@ -2228,6 +2228,11 @@ class TestBoM(TestMrpCommon):
         This test checks the behaviour of updating the BoM associated with a routing workcenter,
         It verifies that the link between the BOM lines and the operation is correctly deleted.
         """
+        resource_calendar_std_id = self.env.ref('resource.resource_calendar_std').id
+        mrp_workcenter_1 = self.env['mrp.workcenter'].create({
+            'name': 'Drill Station 1',
+            'resource_calendar_id': resource_calendar_std_id,
+        })
         p1, c1, c2, byproduct = self.make_prods(4)
         bom = self.env['mrp.bom'].create({
             'product_tmpl_id': p1.product_tmpl_id.id,
@@ -2243,7 +2248,7 @@ class TestBoM(TestMrpCommon):
         })
         operation = self.env['mrp.routing.workcenter'].create({
             'name': 'Operation',
-            'workcenter_id': self.env.ref('mrp.mrp_workcenter_1').id,
+            'workcenter_id': mrp_workcenter_1.id,
             'bom_id': bom.id,
         })
         bom.bom_line_ids.operation_id = operation
@@ -2254,12 +2259,12 @@ class TestBoM(TestMrpCommon):
         operation_1, operation_2 = self.env['mrp.routing.workcenter'].create([
             {
                 'name': 'Operation 1',
-                'workcenter_id': self.env.ref('mrp.mrp_workcenter_1').id,
+                'workcenter_id': mrp_workcenter_1.id,
                 'bom_id': bom.id,
             },
             {
                 'name': 'Operation 2',
-                'workcenter_id': self.env.ref('mrp.mrp_workcenter_1').id,
+                'workcenter_id': mrp_workcenter_1.id,
                 'bom_id': bom.id,
             }
         ])

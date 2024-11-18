@@ -119,6 +119,7 @@ class HttpCaseWithUserDemo(HttpCase):
             cls.partner_demo = cls.env['res.partner'].create({
                 'name': 'Marc Demo',
                 'email': 'mark.brown23@example.com',
+                'tz': 'UTC'
             })
             cls.user_demo = cls.env['res.users'].create({
                 'login': 'demo',

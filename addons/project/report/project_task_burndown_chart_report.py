@@ -72,7 +72,7 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
         IrModelFieldsSudo = self.env['ir.model.fields'].sudo()
         field_id = IrModelFieldsSudo.search([('name', '=', 'stage_id'), ('model', '=', 'project.task')]).id
 
-        groupby = self.env.context['project_task_burndown_chart_report_groupby']
+        groupby = self.env.context.get('project_task_burndown_chart_report_groupby', ['date:month', 'stage_id'])
         date_groupby = [g for g in groupby if g.startswith('date')][0]
 
         # Computes the interval which needs to be used in the `SQL` depending on the date group by interval.

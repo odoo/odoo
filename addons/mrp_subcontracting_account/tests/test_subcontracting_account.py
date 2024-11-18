@@ -480,6 +480,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         product_category_all = self.env.ref('product.product_category_all')
         product_category_all.property_cost_method = 'fifo'
         product_category_all.property_valuation = 'real_time'
+        self._setup_category_stock_journals()
         # set the production account to False
         product_category_all.property_stock_account_production_cost_id = False
         product_category_all.invalidate_recordset()
