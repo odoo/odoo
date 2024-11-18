@@ -16,7 +16,6 @@ class TestPhoneBlacklist(SMSCommon, TestSMSRecipients):
         cls.test_record = cls.env['mail.test.sms.bl'].with_context(**cls._test_context).create({
             'name': 'Test',
             'customer_id': cls.partner_1.id,
-            'mobile_nbr': cls.test_numbers[0],
             'phone_nbr': cls.test_numbers[1],
         })
         cls.test_record = cls._reset_mail_context(cls.test_record)
@@ -102,10 +101,6 @@ class TestPhoneBlacklist(SMSCommon, TestSMSRecipients):
 
             test_record.write({'phone_nbr': 'incorrect'})
             self.assertEqual(test_record.phone_nbr, 'incorrect')
-            self.assertEqual(test_record.phone_sanitized, self.test_numbers_san[0])
-
-            test_record.write({'mobile_nbr': 'incorrect'})
-            self.assertEqual(test_record.mobile_nbr, 'incorrect')
             self.assertEqual(test_record.phone_sanitized, False)
 
             test_record.write({'phone_nbr': self.test_numbers[1]})

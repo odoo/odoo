@@ -23,7 +23,6 @@ class ResPartner(models.Model):
             if lead:
                 rec.update(
                     phone=lead.phone,
-                    mobile=lead.mobile,
                     function=lead.function,
                     title=lead.title.id,
                     website=lead.website,

@@ -12,7 +12,6 @@ class MailTestTicket(models.Model):
 
     name = fields.Char()
     email_from = fields.Char(tracking=True)
-    mobile_number = fields.Char()
     phone_number = fields.Char()
     count = fields.Integer(default=1)
     datetime = fields.Datetime(default=fields.Datetime.now)
@@ -92,8 +91,6 @@ class MailTestTicket(models.Model):
             if not email_from_normalized:  # do not fill Falsy with random data
                 continue
             values = email_normalized_to_values.setdefault(email_from_normalized, {})
-            if not values.get('mobile'):
-                values['mobile'] = record.mobile_number
             if not values.get('phone'):
                 values['phone'] = record.phone_number
         return email_normalized_to_values

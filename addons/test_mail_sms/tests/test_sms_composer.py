@@ -22,9 +22,9 @@ class TestSMSComposerComment(SMSCommon, TestSMSRecipients):
         cls.test_record = cls.env['mail.test.sms'].with_context(**cls._test_context).create({
             'name': 'Test',
             'customer_id': cls.partner_1.id,
-            'mobile_nbr': cls.test_numbers[0],
             'phone_nbr': cls.test_numbers[1],
         })
+        cls.test_record_phone_san = cls.test_numbers_san[1]
         cls.test_record = cls._reset_mail_context(cls.test_record)
 
         cls.sms_template = cls.env['sms.template'].create({
@@ -60,7 +60,7 @@ class TestSMSComposerComment(SMSCommon, TestSMSRecipients):
             with self.mockSMSGateway():
                 messages = composer._action_send_sms()
 
-        self.assertSMSNotification([{'partner': self.test_record.customer_id, 'number': self.test_numbers_san[1]}], self._test_body, messages)
+        self.assertSMSNotification([{'partner': self.test_record.customer_id, 'number': self.test_record_phone_san}], self._test_body, messages)
 
     def test_composer_comment_field_1(self):
         with self.with_user('employee'):
@@ -68,13 +68,13 @@ class TestSMSComposerComment(SMSCommon, TestSMSRecipients):
                 active_model='mail.test.sms', active_id=self.test_record.id,
             ).create({
                 'body': self._test_body,
-                'number_field_name': 'mobile_nbr',
+                'number_field_name': 'phone_nbr',
             })
 
             with self.mockSMSGateway():
                 messages = composer._action_send_sms()
 
-        self.assertSMSNotification([{'partner': self.test_record.customer_id, 'number': self.test_numbers_san[0]}], self._test_body, messages)
+        self.assertSMSNotification([{'partner': self.test_record.customer_id, 'number': self.test_record_phone_san}], self._test_body, messages)
 
     def test_composer_comment_field_2(self):
         with self.with_user('employee'):
@@ -88,13 +88,13 @@ class TestSMSComposerComment(SMSCommon, TestSMSRecipients):
             with self.mockSMSGateway():
                 messages = composer._action_send_sms()
 
-        self.assertSMSNotification([{'partner': self.test_record.customer_id, 'number': self.test_numbers_san[1]}], self._test_body, messages)
+        self.assertSMSNotification([{'partner': self.test_record.customer_id, 'number': self.test_record_phone_san}], self._test_body, messages)
 
     def test_composer_comment_field_w_numbers(self):
         with self.with_user('employee'):
             composer = self.env['sms.composer'].with_context(
                 active_model='mail.test.sms', active_id=self.test_record.id,
-                default_number_field_name='mobile_nbr',
+                default_number_field_name='phone_nbr',
             ).create({
                 'body': self._test_body,
                 'numbers': ','.join(self.random_numbers),
@@ -104,7 +104,7 @@ class TestSMSComposerComment(SMSCommon, TestSMSRecipients):
                 messages = composer._action_send_sms()
 
         self.assertSMSNotification([
-            {'partner': self.test_record.customer_id, 'number': self.test_record.mobile_nbr},
+            {'partner': self.test_record.customer_id, 'number': self.test_record_phone_san},
             {'number': self.random_numbers_san[0]}, {'number': self.random_numbers_san[1]}], self._test_body, messages)
 
     def test_composer_comment_field_w_template(self):
@@ -112,13 +112,13 @@ class TestSMSComposerComment(SMSCommon, TestSMSRecipients):
             composer = self.env['sms.composer'].with_context(
                 active_model='mail.test.sms', active_id=self.test_record.id,
                 default_template_id=self.sms_template.id,
-                default_number_field_name='mobile_nbr',
+                default_number_field_name='phone_nbr',
             ).create({})
 
             with self.mockSMSGateway():
                 messages = composer._action_send_sms()
 
-        self.assertSMSNotification([{'partner': self.test_record.customer_id, 'number': self.test_record.mobile_nbr}], 'Dear %s this is an SMS.' % self.test_record.display_name, messages)
+        self.assertSMSNotification([{'partner': self.test_record.customer_id, 'number': self.test_record_phone_san}], 'Dear %s this is an SMS.' % self.test_record.display_name, messages)
 
     def test_composer_comment_invalid_field(self):
         """ Test the Send Message in SMS Composer when a Model does not contain a number field name """
@@ -222,7 +222,6 @@ class TestSMSComposerComment(SMSCommon, TestSMSRecipients):
         self.test_record.write({
             'customer_id': False,
             'phone_nbr': False,
-            'mobile_nbr': False,
         })
         default_field_name = self.env['mail.test.sms']._phone_get_number_fields()[0]
 
@@ -428,7 +427,7 @@ class TestSMSComposerMass(SMSCommon):
             'active': True,
         } for p in self.partners[:5]])
         for p in self.partners[5:8]:
-            p.mobile = self.partners[5].mobile
+            p.phone = self.partners[5].phone
             self.assertEqual(p.phone_sanitized, self.partners[5].phone_sanitized)
 
         with self.with_user('employee'):
