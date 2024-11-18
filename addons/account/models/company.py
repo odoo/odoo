@@ -846,7 +846,7 @@ class ResCompany(models.Model):
             * date_to
         """
         self.ensure_one()
-        date_from, date_to = date_utils.get_fiscal_year(current_date, day=self.fiscalyear_last_day, month=self.fiscalyear_last_month)
+        date_from, date_to = date_utils.get_fiscal_year(current_date, day=self.fiscalyear_last_day, month=int(self.fiscalyear_last_month))
         return {'date_from': date_from, 'date_to': date_to}
 
     @api.depends('country_code')
