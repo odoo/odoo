@@ -20,6 +20,13 @@
     font-family: emojifont;
 }
 
+.o_field_widget:has(.o_field_input_buttons > .o_mail_emojis_buttons) {
+    position: relative;
+}
+.o_field_input_buttons:has(.o_mail_emojis_buttons):has([data-field-type="text"])  {
+    flex-direction: column;
+    justify-content: flex-end;
+}
 .o_modal_fullscreen {
     z-index: $o-mail-ChatWindow-zindex + 1;
 
