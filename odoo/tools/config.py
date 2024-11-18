@@ -37,7 +37,7 @@ class _OdooOption(optparse.Option):
     config = None  # must be overriden
 
     TYPES = ['int', 'float', 'string', 'choice', 'bool', 'path', 'comma',
-             'addons_path', 'upgrade_path']
+             'addons_path', 'upgrade_path', 'without_demo']
 
     @classproperty
     def TYPE_CHECKER(cls):
@@ -51,6 +51,7 @@ class _OdooOption(optparse.Option):
             'comma': cls.config._check_comma,
             'addons_path': cls.config._check_addons_path,
             'upgrade_path': cls.config._check_upgrade_path,
+            'without_demo': cls.config._check_without_demo,
         }
 
     @classproperty
@@ -65,6 +66,7 @@ class _OdooOption(optparse.Option):
             'comma': cls.config._format_list,
             'addons_path': cls.config._format_list,
             'upgrade_path': cls.config._format_list,
+            'without_demo': cls.config._format_without_demo,
         }
 
     def __init__(self, *opts, **attrs):
@@ -72,6 +74,10 @@ class _OdooOption(optparse.Option):
         self.cli_loadable = attrs.pop('cli_loadable', True)
         self.file_loadable = attrs.pop('file_loadable', True)
         self.file_exportable = attrs.pop('file_exportable', self.file_loadable)
+        self.nargs_ = attrs.get('nargs')
+        if self.nargs_ == '?':
+            const = attrs.pop('const', None)
+            attrs['nargs'] = 1
         super().__init__(*opts, **attrs)
         if 'default' in attrs:
             self.config._log(logging.WARNING, "please use my_default= instead of default= with option %s", self)
@@ -81,6 +87,10 @@ class _OdooOption(optparse.Option):
             raise ValueError(e)
         if self.dest and self.dest not in self.config.options_index:
             self.config.options_index[self.dest] = self
+        if self.nargs_ == '?':
+            self.const = const
+            for opt in self._short_opts + self._long_opts:
+                self.config.optional_options[opt] = self
 
     def __str__(self):
         out = []
@@ -133,6 +143,9 @@ class configmanager:
         # dictionary mapping option destination (keys in self.options) to OdooOptions.
         self.options_index = {}
 
+        # list of nargs='?' options, indexed by short/long option (-x, --xx)
+        self.optional_options = {}
+
         self.parser = self._build_cli()
         self._load_default_options()
         self._parse_config()
@@ -175,7 +188,7 @@ class configmanager:
                          help="install one or more modules (comma-separated list, use \"all\" for all modules), requires -d")
         group.add_option("-u", "--update", dest="update", type='comma', my_default=[], file_loadable=False,
                          help="update one or more modules (comma-separated list, use \"all\" for all modules). Requires -d.")
-        group.add_option("--without-demo", dest="without_demo", my_default=False, action='callback', callback=self._callback_without_demo,
+        group.add_option("--without-demo", dest="without_demo", my_default=False, type='without_demo', nargs='?', const=True,
                          help="use with -i/--init, skip installing fake demonstration data (e.g. Mitchel Admin/Azure Interior)")
         group.add_option("-P", "--import-partial", dest="import_partial", type='path', my_default='',
                          help="Use this for big data importation, if it crashes you will be able to continue at the current state. Provide a filename to store intermediate importation states.")
@@ -519,6 +532,13 @@ class configmanager:
         return opt
 
     def _parse_config(self, args=None):
+        # preprocess the args to add support for nargs='?'
+        for arg_no, arg in enumerate(args or ()):
+            if option := self.optional_options.get(arg):
+                if arg_no == len(args) - 1 or args[arg_no + 1].startswith('-'):
+                    args[arg_no] += '=' + self._format(option.dest, option.const)
+                    self._log(logging.DEBUG, "changed %s for %s", arg, args[arg_no])
+
         opt, unknown_args = self.parser.parse_args(args or [])
         if unknown_args:
             self.parser.error(f"unrecognized parameters: {' '.join(unknown_args)}")
@@ -699,10 +719,6 @@ class configmanager:
         )
 
     @classmethod
-    def _check_without_demo(cls, option, opt, value):
-        return value not in ('', 'False', 'false', 'None')
-
-    @classmethod
     def _check_bool(cls, option, opt, value):
         if value.lower() in ('1', 'yes', 'true', 'on'):
             return True
@@ -720,6 +736,14 @@ class configmanager:
     def _check_path(cls, option, opt, value):
         return cls._normalize(value)
 
+    @classmethod
+    def _check_without_demo(cls, option, opt, value):
+        try:
+            return cls._check_bool(option, opt, value)
+        except optparse.OptionValueError:
+            cls._log(logging.WARNING, "option %s: since 19.0, invalid boolean value: %r, assume %s", opt, value, value != 'None')
+            return value != 'None'
+
     def _parse(self, option_name, value):
         if not isinstance(value, str):
             e = f"can only cast strings: {value!r}"
@@ -729,8 +753,6 @@ class configmanager:
         option = self.options_index[option_name]
         if option.action in ('store_true', 'store_false'):
             check_func = self._check_bool
-        elif option_name == 'without_demo':  # callback
-            check_func = self._check_bool  # noqa: SIM114
         else:
             check_func = self.parser.option_class.TYPE_CHECKER[option.type]
         return check_func(option, option_name, value)
@@ -743,22 +765,17 @@ class configmanager:
     def _format_list(cls, value):
         return ','.join(filter(bool, (str(elem).strip() for elem in value)))
 
+    @classmethod
+    def _format_without_demo(cls, value):
+        return str(bool(value))
+
     def _format(self, option_name, value):
         option = self.options_index[option_name]
         if option.action in ('store_true', 'store_false'):
             format_func = self.parser.option_class.TYPE_FORMATTER['bool']
-        elif option_name == 'without_demo':  # callback
-            format_func = self._format_string
         else:
             format_func = self.parser.option_class.TYPE_FORMATTER[option.type]
         return format_func(value)
-
-    def _callback_without_demo(self, option, opt, value, parser):
-        if value is None and parser.rargs and not parser.rargs[0].startswith('-'):
-            value = parser.rargs.pop(0)
-        elif value.startswith('-'):
-            parser.rargs.insert(0, value)
-        parser.values.without_demo = value not in ('', 'false', 'False', 'none', 'None')
 
     def load(self):
         self._warn("Since 19.0, use config._load_file_options instead", DeprecationWarning, stacklevel=2)
@@ -781,7 +798,11 @@ class configmanager:
                     continue
                 if not option.file_loadable:
                     continue
-                if (value in ('False', 'false') and option.action not in ('store_true', 'store_false', 'callback')):
+                if (
+                    value in ('False', 'false')
+                    and option.action not in ('store_true', 'store_false', 'callback')
+                    and option.nargs_ != '?'
+                ):
                     # "False" used to be the my_default of many non-bool options
                     self._log(logging.WARNING, "option %s reads %r in the config file at %s but isn't a boolean option, skip", name, value, self['config'])
                     continue
