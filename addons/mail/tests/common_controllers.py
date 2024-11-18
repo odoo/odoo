@@ -5,7 +5,7 @@ from requests.exceptions import HTTPError
 
 from odoo import fields
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
-from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.http import Request
 from odoo.tests import JsonRpcException
 from odoo.tools import file_open, mute_logger
@@ -49,6 +49,17 @@ class MailControllerCommon(HttpCaseWithUserDemo, MailCommon):
         cls.guest = cls.env["mail.guest"].create({"name": "Guest"})
         last_message = cls.env["mail.message"].search([], order="id desc", limit=1)
         cls.fake_message = cls.env["mail.message"].browse(last_message.id + 1000000)
+        cls.user_employee_nopartner = mail_new_test_user(
+            cls.env,
+            company_id=cls.company_admin.id,
+            country_id=cls.env.ref('base.be').id,
+            groups='base.group_user,mail.group_mail_template_editor',
+            login='employee_nopartner',
+            name='Elodie EmployeeNoPartner',
+            notification_type='inbox',
+        )
+        # whatever default creation values, we need a "no partner manager" user
+        cls.user_employee_nopartner.write({'groups_id': [(3, cls.env.ref('base.group_partner_manager').id)]})
 
     def _authenticate_pseudo_user(self, pseudo_user):
         user = pseudo_user if pseudo_user._name == "res.users" else self.user_public

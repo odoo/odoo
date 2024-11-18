@@ -32,11 +32,6 @@ class TestMailComposer(MailCommon, TestRecipients):
         # force 'now' to ease test about schedulers
         cls.reference_now = FieldDatetime.from_string('2022-12-24 12:00:00')
 
-        # ensure employee can create partners, necessary for templates
-        cls.user_employee.write({
-            'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)],
-        })
-
         cls.user_employee_2 = mail_new_test_user(
             cls.env, login='employee2', groups='base.group_user',
             notification_type='email', email='eglantine@example.com',
@@ -2297,11 +2292,6 @@ class TestComposerResultsCommentStatus(TestMailComposer):
         """
         super(TestComposerResultsCommentStatus, cls).setUpClass()
 
-        # ensure employee can create partners, necessary for templates
-        cls.user_employee.write({
-            'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)],
-        })
-
         # add 2 new records with customers
         cls.test_records, cls.test_partners = cls._create_records_for_batch(
             'mail.test.ticket.el', 4,
@@ -2384,10 +2374,6 @@ class TestComposerResultsMass(TestMailComposer):
     @classmethod
     def setUpClass(cls):
         super(TestComposerResultsMass, cls).setUpClass()
-        # ensure employee can create partners, necessary for templates
-        cls.user_employee.write({
-            'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)],
-        })
         cls.template.write({
             "scheduled_date": False,
         })
@@ -3404,11 +3390,6 @@ class TestComposerResultsMassStatus(TestMailComposer):
         Record5 and Record6 have same email (notlinked to any customer)
         """
         super(TestComposerResultsMassStatus, cls).setUpClass()
-
-        # ensure employee can create partners, necessary for templates
-        cls.user_employee.write({
-            'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)],
-        })
 
         # add 2 new records with customers
         cls.test_records, cls.test_partners = cls._create_records_for_batch(

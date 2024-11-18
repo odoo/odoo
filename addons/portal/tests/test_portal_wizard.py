@@ -10,6 +10,8 @@ class TestPortalWizard(MailCommon):
     def setUp(self):
         super(TestPortalWizard, self).setUp()
 
+        # for those tests, consider user_employee cannot manager partners for acl testse
+        self.user_employee.write({'groups_id': [(3, self.env.ref('base.group_partner_manager').id)]})
         self.partner = self.env['res.partner'].create({
             'name': 'Testing Partner',
             'email': 'testing_partner@example.com',

@@ -18,8 +18,6 @@ class BaseMailPerformance(MailCommon, TransactionCaseWithUserDemo):
     def setUpClass(cls):
         super(BaseMailPerformance, cls).setUpClass()
 
-        # creating partners is required notably with template usage
-        cls.user_employee.write({'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)]})
         res_users = cls.env["res.users"].with_context(cls._test_context)
         cls.user_test = cls.user_test_inbox = res_users.create(
             {

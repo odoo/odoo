@@ -1350,7 +1350,7 @@ class MailCommon(common.TransactionCase, MailCase):
             cls.env,
             company_id=cls.company_admin.id,
             country_id=cls.env.ref('base.be').id,
-            groups='base.group_user,mail.group_mail_template_editor',
+            groups='base.group_user,mail.group_mail_template_editor,base.group_partner_manager',
             login='employee',
             name='Ernest Employee',
             notification_type='inbox',
@@ -1425,7 +1425,7 @@ class MailCommon(common.TransactionCase, MailCase):
         # employee specific to second company
         cls.user_employee_c2 = mail_new_test_user(
             cls.env, login='employee_c2',
-            groups='base.group_user',
+            groups='base.group_user,base.group_partner_manager',
             company_id=cls.company_2.id,
             company_ids=[(4, cls.company_2.id)],
             email='enguerrand@example.com',
@@ -1438,6 +1438,7 @@ class MailCommon(common.TransactionCase, MailCase):
             company_id=cls.company_3.id,
             company_ids=[(4, cls.company_3.id)],
             email='freudenbergerg@example.com',
+            groups='base.group_user,base.group_partner_manager',
             name='Freudenbergerg Employee C3',
             notification_type='inbox'
         )

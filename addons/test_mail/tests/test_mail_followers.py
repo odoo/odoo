@@ -25,9 +25,6 @@ class BaseFollowersTest(MailCommon):
         cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
         cls._create_portal_user()
 
-        # allow employee to update partners
-        cls.user_employee.write({'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)]})
-
         Subtype = cls.env['mail.message.subtype']
         # global
         cls.mt_al_def = Subtype.create({'name': 'mt_al_def', 'default': True, 'res_model': False})
