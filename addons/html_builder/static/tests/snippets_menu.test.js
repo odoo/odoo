@@ -75,28 +75,6 @@ test("undo and redo buttons", async () => {
     expect(editor.editable).toHaveInnerHTML("<p> Texta </p>");
 });
 
-test("drag and drop snippet inner content", async () => {
-    const { getEditor } = await setupWebsiteBuilder("<div><p>Text</p></div>");
-    await openSnippetsMenu();
-    const editor = getEditor();
-    expect(editor.editable).toHaveInnerHTML(`<div><p>Text</p></div>`);
-
-    const { moveTo, drop } = await contains(".o-website-snippetsmenu [name='Button']").drag();
-    expect(editor.editable).toHaveInnerHTML(
-        `<div><div class="oe_drop_zone oe_insert"></div><p>Text</p><div class="oe_drop_zone oe_insert"></div></div>`
-    );
-
-    await moveTo(editor.editable.querySelector(".oe_drop_zone"));
-    expect(editor.editable).toHaveInnerHTML(
-        `<div><div class="oe_drop_zone oe_insert o_dropzone_highlighted"></div><p>Text</p><div class="oe_drop_zone oe_insert"></div></div>`
-    );
-
-    await drop(editor.editable.querySelector(".oe_drop_zone"));
-    expect(editor.editable).toHaveInnerHTML(
-        `<div>\ufeff<a class="btn btn-primary o_snippet_drop_in_only" href="#" data-snippet="s_button">\ufeffButton\ufeff</a>\ufeff<p>Text</p></div>`
-    );
-});
-
 test("display group snippet", async () => {
     await setupWebsiteBuilder("<div><p>Text</p></div>", {
         snippets: {
@@ -195,4 +173,76 @@ test("open add snippet dialog + switch snippet category", async () => {
             (el) => el.innerHTML
         )
     ).toEqual(snippetsDescription.filter((s) => s.groupName === "b").map((s) => s.content));
+});
+
+test("drag & drop inner content block", async () => {
+    const { getEditor } = await setupWebsiteBuilder("<div><p>Text</p></div>", {
+        snippets: {
+            snippet_content: [
+                `<div name="Button A" data-oe-thumbnail="buttonA.svg" data-oe-snippet-id="123">
+                    <a class="btn btn-primary" href="#" data-snippet="s_button">Button A</a>
+                </div>`,
+                `<div name="Button B" data-oe-thumbnail="buttonB.svg" data-oe-snippet-id="123">
+                    <a class="btn btn-primary" href="#" data-snippet="s_button">Button B</a>
+                </div>`,
+            ],
+        },
+    });
+    await openSnippetsMenu();
+    const editor = getEditor();
+    expect(editor.editable).toHaveInnerHTML(`<div><p>Text</p></div>`);
+    expect(queryOne(".o-website-snippetsmenu .fa-undo").disabled).toBe(true);
+
+    const { moveTo, drop } = await contains(".o-website-snippetsmenu [name='Button A']").drag();
+    await animationFrame(); // TODO we should remove it maybe bug utils hoot
+    expect(editor.editable).toHaveInnerHTML(
+        `<div><div class="oe_drop_zone oe_insert"></div><p>Text</p><div class="oe_drop_zone oe_insert"></div></div>`
+    );
+    expect(queryOne(".o-website-snippetsmenu .fa-undo").disabled).toBe(true);
+
+    await moveTo(editor.editable.querySelector(".oe_drop_zone"));
+    expect(editor.editable).toHaveInnerHTML(
+        `<div><div class="oe_drop_zone oe_insert o_dropzone_highlighted"></div><p>Text</p><div class="oe_drop_zone oe_insert"></div></div>`
+    );
+    expect(queryOne(".o-website-snippetsmenu .fa-undo").disabled).toBe(true);
+
+    await drop(editor.editable.querySelector(".oe_drop_zone"));
+    expect(editor.editable).toHaveInnerHTML(
+        `<div>\ufeff<a class="btn btn-primary" href="#" data-snippet="s_button">\ufeffButton A\ufeff</a>\ufeff<p>Text</p></div>`
+    );
+    expect(queryOne(".o-website-snippetsmenu .fa-undo").disabled).toBe(false);
+});
+
+test("drag & drop inner content block + undo/redo", async () => {
+    const { getEditor } = await setupWebsiteBuilder("<div><p>Text</p></div>", {
+        snippets: {
+            snippet_content: [
+                `<div name="Button A" data-oe-thumbnail="buttonA.svg" data-oe-snippet-id="123">
+                    <a class="btn btn-primary" href="#" data-snippet="s_button">Button A</a>
+                </div>`,
+                `<div name="Button B" data-oe-thumbnail="buttonB.svg" data-oe-snippet-id="123">
+                    <a class="btn btn-primary" href="#" data-snippet="s_button">Button B</a>
+                </div>`,
+            ],
+        },
+    });
+    await openSnippetsMenu();
+    const editor = getEditor();
+    expect(editor.editable).toHaveInnerHTML(`<div><p>Text</p></div>`);
+    expect(queryOne(".o-website-snippetsmenu .fa-undo").disabled).toBe(true);
+    expect(queryOne(".o-website-snippetsmenu .fa-repeat").disabled).toBe(true);
+
+    const { drop } = await contains(".o-website-snippetsmenu [name='Button A']").drag();
+    await drop(editor.editable.querySelector(".oe_drop_zone"));
+    expect(editor.editable).toHaveInnerHTML(
+        `<div>\ufeff<a class="btn btn-primary" href="#" data-snippet="s_button">\ufeffButton A\ufeff</a>\ufeff<p>Text</p></div>`
+    );
+    expect(queryOne(".o-website-snippetsmenu .fa-undo").disabled).toBe(false);
+    expect(queryOne(".o-website-snippetsmenu .fa-repeat").disabled).toBe(true);
+
+    await click(".o-website-snippetsmenu .fa-undo");
+    await animationFrame();
+    expect(editor.editable).toHaveInnerHTML(`<div><p>Text</p></div>`);
+    expect(queryOne(".o-website-snippetsmenu .fa-undo").disabled).toBe(true);
+    expect(queryOne(".o-website-snippetsmenu .fa-repeat").disabled).toBe(false);
 });

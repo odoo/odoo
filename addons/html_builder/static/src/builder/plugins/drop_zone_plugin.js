@@ -1,4 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
+import { isBlock } from "@html_editor/utils/blocks";
 import { closest, touching } from "@web/core/utils/ui";
 
 export class DropZonePlugin extends Plugin {
@@ -12,9 +13,30 @@ export class DropZonePlugin extends Plugin {
         "addElementToCenter",
     ];
 
+    resources = {
+        savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
+    };
+
+    setup() {
+        this.dropZoneElements = [];
+    }
+
+    /**
+     * @param {MutationRecord} record
+     * @return {boolean}
+     */
+    isMutationRecordSavable(record) {
+        if (record.type === "childList") {
+            const node = record.addedNodes[0] || record.removedNodes[0];
+            if (isBlock(node) && node.classList.contains("oe_drop_zone")) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     displayDropZone(selector) {
         this.clearDropZone();
-        this.historySavePointRestore = this.dependencies.history.makeSavePoint();
         const targets = this.editable.querySelectorAll(selector);
 
         const createDropZone = () => {
@@ -33,17 +55,16 @@ export class DropZonePlugin extends Plugin {
                 target.before(createDropZone());
             }
         }
-
-        // TODO: hack: we need to add a step here to avoid floating content (remove history warning)
-        this.dependencies.history.addStep();
     }
 
     clearDropZone() {
-        this.dropZoneElements = [];
-        if (this.historySavePointRestore) {
-            this.historySavePointRestore();
-            this.historySavePointRestore = undefined;
+        if (this.dropZoneElements.length) {
+            for (const el of this.editable.querySelectorAll(".oe_drop_zone")) {
+                el.remove();
+            }
         }
+
+        this.dropZoneElements = [];
     }
 
     dragElement(element) {
