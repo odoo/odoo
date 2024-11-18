@@ -150,10 +150,11 @@ class TestMailTools(MailCommon):
         company_id. """
         Partner = self.env['res.partner']
         self.test_partner.company_id = self.company_2
+        self.test_partner.write({'name': 'Original - Company2'})
 
-        test_partner_no_company = self.test_partner.copy({'company_id': False})
+        test_partner_no_company = self.test_partner.copy({'name': 'NoCompany', 'company_id': False})
         test_partner_company_2 = self.test_partner
-        test_partner_company_3 = test_partner_no_company.copy({'company_id': self.company_3.id})
+        test_partner_company_3 = test_partner_no_company.copy({'name': 'Company3', 'company_id': self.company_3.id})
         records = [
             None,
             *Partner.create([
@@ -168,9 +169,10 @@ class TestMailTools(MailCommon):
             (test_partner_company_3, "Prefer same company as reference record."),
             (test_partner_no_company, "Prefer non-specific partner for non-specific records."),
         ]
-        for record, (expected_partner, msg) in zip(records, expected_partners):
-            found = Partner._mail_find_partner_from_emails([self._test_email], records=record)
-            self.assertEqual(found, [expected_partner], msg)
+        for record, (expected, msg) in zip(records, expected_partners):
+            with self.subTest(record=record.name if record else 'NoRecord'):
+                found = Partner._mail_find_partner_from_emails([self._test_email], records=record)
+                self.assertEqual(found, [expected], f'Found {found[0].name} instead of {expected[0].name}: {msg}')
 
 
 @tagged('mail_tools', 'mail_init')
