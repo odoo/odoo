@@ -58,6 +58,10 @@ export class OutOfFocusService {
             sound: message.thread?.model === "discuss.channel",
             title: notificationTitle,
             type: "info",
+            buttons: [{
+                name: "test",
+                "onClick": () => console.log("clicked notification")
+            }],
         });
     }
 
@@ -85,9 +89,9 @@ export class OutOfFocusService {
      * @param {string} [param0.type] The type to be passed to the no
      * service when native notifications can't be sent.
      */
-    sendNotification({ message, sound = true, title, type }) {
+    sendNotification({ message, sound = true, title, type, buttons }) {
         if (!this.canSendNativeNotification) {
-            this.sendOdooNotification(message, { sound, title, type });
+            this.sendOdooNotification(message, { sound, title, type, buttons });
             return;
         }
         if (!this.multiTab.isOnMainTab()) {
@@ -100,7 +104,7 @@ export class OutOfFocusService {
             // So we fallback to the notification service in this case
             // https://bugs.chromium.org/p/chromium/issues/detail?id=481856
             if (error.message.includes("ServiceWorkerRegistration")) {
-                this.sendOdooNotification(message, { sound, title, type });
+                this.sendOdooNotification(message, { sound, title, type, buttons });
             } else {
                 throw error;
             }
