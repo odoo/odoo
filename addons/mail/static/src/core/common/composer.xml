@@ -18,8 +18,7 @@
                     'o-hasSelfAvatar': showComposerAvatar,
                     'o-focused': props.composer.isFocused,
                     'o-editing': props.composer.message,
-                    'o-chatWindow': env.inChatWindow,
-                    'o-chatWindowBig': store.chatHub.isBig,
+                    'o-chatWindow mx-2 mb-3': env.inChatWindow,
                     'o-discussApp': env.inDiscussApp,
                     'm-1': !env.inDiscussApp,
                 }" t-attf-class="{{ props.className }}">
@@ -41,11 +40,9 @@
                 <i class="fa fa-lg fa-times-circle rounded-circle p-0 ms-1 cursor-pointer" title="Stop replying" t-on-click="() => props.messageToReplyTo.cancel()"/>
             </div>
             <div class="o-mail-Composer-coreMain d-flex flex-nowrap align-items-start flex-grow-1" t-att-class="{ 'flex-column' : extended or props.composer.message }">
-                <div class="o-mail-Composer-inputContainer o-mail-Composer-bg d-flex flex-grow-1 border shadow-sm border-secondary"
+                <div class="o-mail-Composer-inputContainer o-mail-Composer-bg d-flex flex-grow-1 border shadow-sm border-secondary rounded-3"
                     t-att-class="{
                         'o-iosPwa': isIosPwa,
-                        'rounded-3' : isMobileOS or !env.inChatWindow,
-                        'rounded': !isMobileOS and env.inChatWindow,
                         'align-self-stretch' : extended,
                         'w-100': props.composer.message,
                     }"

@@ -29,7 +29,7 @@ export class QuickReactionMenu extends Component {
         this.store = useState(useService("mail.store"));
         this.picker = usePopover(EmojiPicker, {
             position: "bottom-end",
-            popoverClass: "o-mail-QuickReactionMenu-pickerPopover shadow-none",
+            popoverClass: "o-mail-QuickReactionMenu-pickerPopover shadow-sm",
             animation: false,
             onPositioned: (el, { direction, variant }) =>
                 el.classList.add(`o-popover--${direction[0]}${variant[0]}`),
