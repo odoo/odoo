@@ -16,6 +16,16 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_ro_edi
+#: model:ir.model.fields,help:l10n_ro_edi.field_account_bank_statement_line__l10n_ro_edi_state
+#: model:ir.model.fields,help:l10n_ro_edi.field_account_move__l10n_ro_edi_state
+#: model:ir.model.fields,help:l10n_ro_edi.field_account_payment__l10n_ro_edi_state
+msgid ""
+"- Sent: Successfully sent to the SPV, waiting for validation\n"
+"                - Validated: Sent & validated by the SPV\n"
+"                - Error: Sending error or validation error from the SPV"
+msgstr ""
+
+#. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
 msgid ""
 ".\n"
@@ -183,12 +193,25 @@ msgid "E-Factura"
 msgstr ""
 
 #. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__key_loading
+msgid "E-Factura Index"
+msgstr ""
+
+#. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_account_bank_statement_line__l10n_ro_edi_state
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_account_move__l10n_ro_edi_state
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_account_payment__l10n_ro_edi_state
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__state
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.l10n_ro_edi_view_account_invoice_filter
 msgid "E-Factura Status"
+msgstr ""
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_move.py:0
+msgid ""
+"E-Factura has been sent and is now being validated by the SPV with index "
+"key: %s"
 msgstr ""
 
 #. module: l10n_ro_edi
@@ -207,14 +230,40 @@ msgid "Error E-Factura"
 msgstr ""
 
 #. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/controllers/main.py:0
+#: code:addons/l10n_ro_edi/models/res_company.py:0
+msgid "Error when converting response to json: %s"
+msgstr ""
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/controllers/main.py:0
+#: code:addons/l10n_ro_edi/models/res_company.py:0
+msgid "Error when decoding the access token payload: %s"
+msgstr ""
+
+#. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
 msgid "Error when generating token:"
 msgstr ""
 
 #. module: l10n_ro_edi
 #. odoo-python
+#: code:addons/l10n_ro_edi/controllers/main.py:0
+msgid "Error when processing the response: %s"
+msgstr ""
+
+#. module: l10n_ro_edi
+#. odoo-python
 #: code:addons/l10n_ro_edi/wizard/account_move_send.py:0
 msgid "Error when rebuilding the CIUS-RO E-Factura XML"
+msgstr ""
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/res_company.py:0
+msgid "Error when refreshing the access token: %s"
 msgstr ""
 
 #. module: l10n_ro_edi
@@ -306,7 +355,6 @@ msgid "Key Certificate"
 msgstr ""
 
 #. module: l10n_ro_edi
-#: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__key_loading
 msgid "Key Loading"
 msgstr ""
 
@@ -367,6 +415,12 @@ msgid "Message"
 msgstr ""
 
 #. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/controllers/main.py:0
+msgid "Received access key: %s"
+msgstr ""
+
+#. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_res_company__l10n_ro_edi_refresh_token
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_res_config_settings__l10n_ro_edi_refresh_token
 msgid "Refresh Token"
@@ -381,7 +435,21 @@ msgstr ""
 #. module: l10n_ro_edi
 #. odoo-python
 #: code:addons/l10n_ro_edi/models/res_company.py:0
+msgid "Refresh token failed [company=%(company_id)s]"
+msgstr ""
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/res_company.py:0
 msgid "Refresh token not found"
+msgstr ""
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/controllers/main.py:0
+msgid ""
+"Response (code=%(status_code)s) to %(url)s failed:\n"
+"%(text)s"
 msgstr ""
 
 #. module: l10n_ro_edi
@@ -407,8 +475,6 @@ msgid "Send the CIUS-RO XML to the Romanian Government via the ANAF platform"
 msgstr ""
 
 #. module: l10n_ro_edi
-#: model:ir.model.fields.selection,name:l10n_ro_edi.selection__account_move__l10n_ro_edi_state__invoice_sending
-#: model:ir.model.fields.selection,name:l10n_ro_edi.selection__l10n_ro_edi_document__state__invoice_sending
 msgid "Sending"
 msgstr ""
 
@@ -418,9 +484,17 @@ msgid "Sending E-Factura"
 msgstr ""
 
 #. module: l10n_ro_edi
-#: model:ir.model.fields.selection,name:l10n_ro_edi.selection__account_move__l10n_ro_edi_state__invoice_sent
-#: model:ir.model.fields.selection,name:l10n_ro_edi.selection__l10n_ro_edi_document__state__invoice_sent
+#: model:ir.model.fields.selection,name:l10n_ro_edi.selection__account_move__l10n_ro_edi_state__invoice_sending
+#: model:ir.model.fields.selection,name:l10n_ro_edi.selection__l10n_ro_edi_document__state__invoice_sending
 msgid "Sent"
+msgstr ""
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,help:l10n_ro_edi.field_l10n_ro_edi_document__state
+msgid ""
+"Sent -> Successfully sent to the SPV, waiting for validation.\n"
+"                Validated -> Sent & validated by the SPV.\n"
+"                Error -> Sending error or validation error from the SPV."
 msgstr ""
 
 #. module: l10n_ro_edi
@@ -480,6 +554,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_res_company__l10n_ro_edi_test_env
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_res_config_settings__l10n_ro_edi_test_env
 msgid "Use Test Environment"
+msgstr ""
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields.selection,name:l10n_ro_edi.selection__account_move__l10n_ro_edi_state__invoice_sent
+#: model:ir.model.fields.selection,name:l10n_ro_edi.selection__l10n_ro_edi_document__state__invoice_sent
+msgid "Validated"
 msgstr ""
 
 #. module: l10n_ro_edi
