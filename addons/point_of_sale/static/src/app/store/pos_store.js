@@ -1004,6 +1004,7 @@ export class PosStore extends Reactive {
 
             await this.preSyncAllOrders(orders);
             const context = this.getSyncAllOrdersContext(orders, options);
+            context["paid_orders_not_sent_uuid"] = paidOrdersNotSent.map((order) => order.uuid);
 
             if (this.pendingOrder.delete.size) {
                 await this.deleteOrders([], Array.from(this.pendingOrder.delete));
