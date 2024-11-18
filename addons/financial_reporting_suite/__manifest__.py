@@ -4,7 +4,7 @@
     'category': 'Invoicing Management',
     'description': 'Accounting Reports For Odoo 18, Accounting Financial Reports, '
                    'Odoo 18 Financial Reports',
-    'summary': 'Accounting Reports For Odoo 18',
+    'summary': 'Financial Reports For Odoo 18',
     'sequence': '1',
     'author': 'Maria Touilzak, Lmaia Hatem',
     'license': 'LGPL-3',
@@ -41,5 +41,5 @@
         'report/report_journal_entries.xml',
     ],
     'pre_init_hook': '_pre_init_clean_m2m_models',
-    'images': ['static/description/banner.gif'],
+    'images': ['static/description/icon.png'],
 }
