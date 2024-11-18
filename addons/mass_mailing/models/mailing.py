@@ -1466,10 +1466,6 @@ class MailingMailing(models.Model):
         mailing_domain = Domain.TRUE
         if hasattr(self.env[self.mailing_model_name], '_mailing_get_default_domain'):
             mailing_domain = Domain(self.env[self.mailing_model_name]._mailing_get_default_domain(self))
-
-        if self.mailing_type == 'mail' and 'is_blacklisted' in self.env[self.mailing_model_name]._fields:
-            mailing_domain = Domain('is_blacklisted', '=', False) & mailing_domain
-
         return mailing_domain
 
     def _get_image_by_url(self, url, session):

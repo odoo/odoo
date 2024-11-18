@@ -302,13 +302,6 @@ class MailingMailing(models.Model):
     # TOOLS
     # --------------------------------------------------
 
-    def _get_default_mailing_domain(self):
-        mailing_domain = super()._get_default_mailing_domain()
-        if self.mailing_type == 'sms' and 'phone_sanitized_blacklisted' in self.env[self.mailing_model_name]._fields:
-            mailing_domain &= Domain('phone_sanitized_blacklisted', '=', False)
-
-        return mailing_domain
-
     def convert_links(self):
         sms_mailings = self.filtered(lambda m: m.mailing_type == 'sms')
         res = {}
