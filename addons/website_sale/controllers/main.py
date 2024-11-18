@@ -634,7 +634,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             if product_image._name == 'product.image':
                 product_image.sequence = idx
 
-    @route(['/shop/product/is_add_to_cart_allowed'], type='jsonrpc', auth="public", website=True)
+    @route(['/shop/product/is_add_to_cart_allowed'], type='jsonrpc', auth="public", website=True, readonly=True)
     def is_add_to_cart_allowed(self, product_id, **kwargs):
         product = request.env['product.product'].browse(product_id)
         return product._is_add_to_cart_allowed()

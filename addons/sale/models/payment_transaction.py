@@ -221,6 +221,7 @@ class PaymentTransaction(models.Model):
                 return separator.join(orders.mapped('name'))
         return super()._compute_reference_prefix(provider_code, separator, **values)
 
+    @api.readonly
     def action_view_sales_orders(self):
         action = {
             'name': _('Sales Order(s)'),

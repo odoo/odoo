@@ -12,7 +12,7 @@ from odoo.http import Controller, request, route, content_disposition
 
 class ProductPricelistExportController(Controller):
 
-    @route('/product/export/pricelist/', type='http', auth='user')
+    @route('/product/export/pricelist/', type='http', auth='user', readonly=True)
     def export_pricelist(self, report_data, export_format):
         json_data = json.loads(report_data)
         report_data = request.env['report.product.report_pricelist']._get_report_data(json_data)
