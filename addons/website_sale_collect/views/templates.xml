@@ -5,7 +5,7 @@
         id="payment_confirmation_status"
         inherit_id="website_sale.payment_confirmation_status"
     >
-        <xpath expr="(//div[hasclass('card-body')])[1]" position="replace">
+        <xpath expr="(//div[hasclass('mt-2')])[1]" position="replace">
             <t t-if="tx_sudo.provider_id.custom_mode == 'on_site'">
                 <div class="card-body">
                     <div class="o_header_carrier_message">

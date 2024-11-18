@@ -7,14 +7,14 @@
         name="Newsletter"
         active="False"
     >
-        <div id="div_email_public" position="after">
-            <div class="form-check mt-2">
+        <div id="div_phone" position="after">
+            <div t-if="is_anonymous_cart" class="col-lg-12 col-form-label">
                 <label>
                     <input
                         type="checkbox"
                         name="newsletter"
                         class="form-check-input"
-                    /> Be the first to find out all the latest news, products and trends
+                    /> Subscribe to our newsletter
                 </label>
             </div>
         </div>

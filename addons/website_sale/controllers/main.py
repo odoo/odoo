@@ -532,6 +532,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 'product_template_image_ids': image_create_data
             })
 
+    @route('/shop/check_email_exists', type='jsonrpc', auth='public')
+    def email_exists(self, email):
+        Partner = request.env['res.partner'].sudo()
+        existing_partner = Partner.search([('email', '=', email), ('active', '=', True)], limit=1)
+        return bool(existing_partner)
+
     @route(['/shop/product/clear-images'], type='jsonrpc', auth='user', website=True)
     def clear_product_images(self, product_product_id, product_template_id):
         """
@@ -1103,18 +1109,29 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 order_sudo.partner_shipping_id == order_sudo.partner_invoice_id
             )
 
+        # Retrieve the event_attendee data from the session
+        event_attendee = request.session.get('event_attendee', [])
+
         # Render the address form.
         address_form_values = self._prepare_address_form_values(
             order_sudo,
             partner_sudo,
             address_type=address_type,
             use_delivery_as_billing=use_delivery_as_billing,
+            event_attendee=event_attendee,
             **query_params
         )
         return request.render('website_sale.address', address_form_values)
 
     def _prepare_address_form_values(
-        self, order_sudo, partner_sudo, address_type, use_delivery_as_billing, callback='', **kwargs
+        self,
+        order_sudo,
+        partner_sudo,
+        address_type,
+        use_delivery_as_billing,
+        callback='',
+        event_attendee=None,
+        **kwargs
     ):
         """ Prepare and return the values to use to render the address form.
 
@@ -1180,6 +1197,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 )
             ),
             'vat_label': request.env._("VAT"),
+            'event_attendee': event_attendee,
         }
 
     @route(
@@ -1229,6 +1247,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             address_type,
             use_delivery_as_billing,
             required_fields,
+            only_services=order_sudo.only_services,
             is_main_address=is_main_address,
             **extra_form_data,
         )
@@ -1371,6 +1390,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         address_type,
         use_delivery_as_billing,
         required_fields,
+        only_services,
         is_main_address,
         **_kwargs,
     ):
@@ -1468,9 +1488,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         # Complete the set of required fields based on the address type.
         country_id = address_values.get('country_id')
         country = request.env['res.country'].browse(country_id)
-        if address_type == 'delivery' or use_delivery_as_billing:
+        if (address_type == 'delivery' or use_delivery_as_billing) and not only_services:
             required_field_set |= self._get_mandatory_delivery_address_fields(country)
-        if address_type == 'billing' or use_delivery_as_billing:
+        if (address_type == 'billing' or use_delivery_as_billing) and not only_services:
             required_field_set |= self._get_mandatory_billing_address_fields(country)
             if not is_main_address:
                 commercial_fields = ResPartnerSudo._commercial_fields()
@@ -2015,7 +2035,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         # Check that the billing address is complete.
         invoice_partner_sudo = order_sudo.partner_invoice_id
         if (
-            not self._check_billing_address(invoice_partner_sudo)
+            not order_sudo.only_services
+            and not self._check_billing_address(invoice_partner_sudo)
             and invoice_partner_sudo._can_be_edited_by_current_customer(order_sudo, 'billing')
         ):
             return request.redirect(

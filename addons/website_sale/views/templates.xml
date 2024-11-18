@@ -2278,6 +2278,16 @@
                     <t t-set="selected_address" t-value="order.partner_invoice_id"/>
                 </t>
             </div>
+            <t t-set="step_specific_values" t-value="website._get_checkout_steps(xmlid)"/>
+            <a
+                role="button"
+                name="website_sale_main_button"
+                t-attf-class="btn btn-primary mt-4 d-none d-lg-inline-block
+                    #{not website_sale_order._is_cart_ready() and 'disabled'}"
+                t-att-href="step_specific_values['main_button_href']"
+            >
+                <t t-out="step_specific_values['main_button']"/>
+            </a>
         </div>
     </template>
 
@@ -2330,14 +2340,16 @@
                 <t t-esc="contact" t-options="dict(widget='contact', fields=['name', 'address'], no_marker=True)"/>
                 <t t-if="contact._can_be_edited_by_current_customer(website_sale_order, address_type)">
                     <t t-set="new_address_href" t-value="'/shop/address?address_type=' + address_type"/>
-                    <a
-                        t-att-href="new_address_href + '&amp;partner_id=' + str(contact.id)"
-                        class="js_edit_address btn btn-link p-0 mt-auto"
-                        role="button"
-                        title="Edit this address"
-                        aria-label="Edit this address">
-                        <i class="fa fa-pencil me-1"/>Edit
-                    </a>
+                    <div class="mt-auto w-100 align-content-end">
+                        <a
+                            t-att-href="new_address_href + '&amp;partner_id=' + str(contact.id)"
+                            class="js_edit_address btn btn-link p-0 fw-bold float-end"
+                            role="button"
+                            title="Edit this address"
+                            aria-label="Edit this address">
+                            <i class="fa fa-pencil me-1"/>Edit
+                        </a>
+                    </div>
                 </t>
             </div>
         </div>
@@ -2390,35 +2402,11 @@
                                     t-att-data-company-country-code="res_company.country_id.code"
                                 >
                                     <t t-if="is_anonymous_cart">
-                                        <div id="div_email_public" t-attf-class="col-lg-12">
-                                            <label class="col-form-label" for="o_email">Email</label>
-                                            <div
-                                                t-if="website.account_on_checkout != 'disabled'"
-                                                class="align-items-center float-end"
-                                                style="margin-top: -11px"
-                                            >
-                                                <span>Already have an account?</span>
-                                                <a
-                                                    role="button"
-                                                    href='/web/login?redirect=/shop/checkout'
-                                                    class="btn btn-primary"
-                                                >
-                                                    Sign in
-                                                </a>
-                                            </div>
-                                            <input
-                                                id="o_email"
-                                                type="email"
-                                                name="email"
-                                                class="form-control"
-                                                t-att-value="partner_sudo.email"
-                                            />
-                                        </div>
-                                        <h4 class="mb-1 mt-5">Fill in your address</h4>
+                                        <h4 class="mb-1 mt-5">Contact Details</h4>
                                     </t>
                                     <div class="row">
                                         <div id="div_name" class="col-lg-12 mb-2">
-                                            <label class="col-form-label" for="o_name">Full name</label>
+                                            <label class="col-form-label" for="o_name">Your name</label>
                                             <input
                                                 id="o_name"
                                                 type="text"
@@ -2429,11 +2417,32 @@
                                         </div>
                                         <div class="w-100"/>
                                         <div
-                                            t-if="not is_anonymous_cart"
                                             id="div_email"
                                             class="col-lg-6 mb-2"
                                         >
-                                            <label class="col-form-label" for="o_email">Email</label>
+                                            <div
+                                                class="d-flex justify-content-between
+                                                    align-items-center"
+                                            >
+                                                <label class="col-form-label" for="o_email">
+                                                    Email
+                                                </label>
+                                                <div
+                                                    t-if="website.account_on_checkout != 'disabled'
+                                                        and is_anonymous_cart"
+                                                    id="email-exists-message"
+                                                    class="col-form-label text-end d-none"
+                                                >
+                                                    <span>Already Exists. </span>
+                                                    <a
+                                                        role="button"
+                                                        href='/web/login?redirect=/shop/checkout'
+                                                        class="text-primary text-decoration-none"
+                                                    >
+                                                        Sign in?
+                                                    </a>
+                                                </div>
+                                            </div>
                                             <input
                                                 id="o_email"
                                                 type="email"
@@ -2452,11 +2461,32 @@
                                                 class="form-control"
                                             />
                                         </div>
+                                        <div
+                                            t-if="only_services and is_anonymous_cart"
+                                            id="want_invoice"
+                                            class="col-lg-12 mb-2 col-form-label"
+                                        >
+                                            <input
+                                                id="o_want_invoice"
+                                                name="want_invoice"
+                                                type="checkbox"
+                                                class="form-check-input"
+                                            />
+                                            <label for="o_want_invoice">
+                                                Want an invoice ?
+                                            </label>
+                                        </div>
                                         <t t-if="website._display_partner_b2b_fields()">
                                             <div class="w-100"/>
                                             <t t-if="show_vat">
                                                 <t t-set="vat_warning" t-value="partner_sudo.vat and not can_edit_vat"/>
-                                                <div id="company_name_div" class="col-lg-6 mb-2">
+                                                <div
+                                                    id="company_name_div"
+                                                    class="col-lg-6 mb-2"
+                                                    t-attf-style="
+                                                        display: #{'none' if only_services
+                                                            and is_anonymous_cart else 'block'};"
+                                                >
                                                     <label
                                                         class="col-form-label fw-normal label-optional"
                                                         for="o_company_name"
@@ -2469,13 +2499,20 @@
                                                         name="company_name"
                                                         t-att-value="partner_sudo.commercial_company_name"
                                                         t-att-readonly="'1' if vat_warning else None"
+                                                        t-att-disabled="only_services and is_anonymous_cart"
                                                         class="form-control"
                                                     />
                                                     <small t-if="vat_warning" class="form-text text-muted d-block d-lg-none">
                                                         Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.
                                                     </small>
                                                 </div>
-                                                <div id="div_vat" class="col-lg-6 mb-2">
+                                                <div
+                                                    id="div_vat"
+                                                    class="col-lg-6 mb-2"
+                                                    t-attf-style="
+                                                        display: #{'none' if only_services
+                                                            and is_anonymous_cart else 'block'};"
+                                                >
                                                     <label class="col-form-label fw-normal label-optional" for="o_vat">
                                                         <t t-out="vat_label"/>
                                                     </label>
@@ -2485,6 +2522,7 @@
                                                         name="vat"
                                                         t-att-value="partner_sudo.vat"
                                                         t-att-readonly="'1' if vat_warning else None"
+                                                        t-att-disabled="only_services and is_anonymous_cart"
                                                         class="form-control"
                                                     />
                                                     <small t-if="vat_warning" class="form-text text-muted d-block d-lg-none">
@@ -2498,35 +2536,111 @@
                                                 </div>
                                             </t>
                                         </t>
-                                        <div id="div_street" class="col-lg-12 mb-2">
+                                        <div
+                                            id="div_street"
+                                            class="col-lg-12 mb-2"
+                                            t-attf-style="
+                                                display: #{'none' if only_services
+                                                    and is_anonymous_cart else 'block'};"
+                                        >
                                             <label class="col-form-label" for="o_street">Street and Number</label>
-                                            <input id="o_street" type="text" name="street" class="form-control" t-att-value="partner_sudo.street"/>
+                                            <input
+                                                id="o_street"
+                                                type="text"
+                                                name="street"
+                                                class="form-control"
+                                                t-att-value="partner_sudo.street"
+                                                t-att-disabled="only_services and is_anonymous_cart"
+                                            />
                                         </div>
-                                        <div id="div_street2" class="col-lg-12 mb-2">
+                                        <div
+                                            id="div_street2"
+                                            class="col-lg-12 mb-2"
+                                            t-attf-style="
+                                                display: #{'none' if only_services
+                                                    and is_anonymous_cart else 'block'};"
+                                        >
                                             <label class="col-form-label label-optional" for="o_street2">Apartment, suite, etc.</label>
-                                            <input id="o_street2" type="text" name="street2" class="form-control" t-att-value="partner_sudo.street2" />
+                                            <input
+                                                id="o_street2"
+                                                type="text"
+                                                name="street2"
+                                                class="form-control"
+                                                t-att-value="partner_sudo.street2"
+                                                t-att-disabled="only_services and is_anonymous_cart"
+                                            />
                                         </div>
                                         <div class="w-100"/>
                                         <t t-if="zip_before_city">
-                                            <div id="div_zip" class="col-md-4 mb-2">
+                                            <div
+                                                id="div_zip"
+                                                class="col-md-4 mb-2"
+                                                t-attf-style="
+                                                    display: #{'none' if only_services
+                                                        and is_anonymous_cart else 'block'};"
+                                            >
                                                 <label class="col-form-label label-optional" for="o_zip">Zip Code</label>
-                                                <input id="o_zip" type="text" name="zip" class="form-control" t-att-value="partner_sudo.zip"/>
+                                                <input
+                                                    id="o_zip"
+                                                    type="text"
+                                                    name="zip"
+                                                    class="form-control"
+                                                    t-att-value="partner_sudo.zip"
+                                                    t-att-disabled="only_services and is_anonymous_cart"
+                                                />
                                             </div>
                                         </t>
-                                        <div id="div_city" class="col-md-8 mb-2">
+                                        <div
+                                            id="div_city"
+                                            class="col-md-8 mb-2"
+                                            t-attf-style="
+                                                display: #{'none' if only_services
+                                                    and is_anonymous_cart else 'block'};"
+                                            >
                                             <label class="col-form-label" for="o_city">City</label>
-                                            <input id="o_city" type="text" name="city" class="form-control" t-att-value="partner_sudo.city"/>
+                                            <input
+                                                id="o_city"
+                                                type="text"
+                                                name="city"
+                                                class="form-control"
+                                                t-att-value="partner_sudo.city"
+                                                t-att-disabled="only_services and is_anonymous_cart"
+                                            />
                                         </div>
                                         <t t-if="not zip_before_city">
-                                            <div id="div_zip" class="col-md-4 mb-2">
+                                            <div
+                                                id="div_zip"
+                                                class="col-md-4 mb-2"
+                                                t-attf-style="
+                                                    display: #{'none' if only_services
+                                                        and is_anonymous_cart else 'block'};"
+                                            >
                                                 <label class="col-form-label label-optional" for="o_zip">Zip Code</label>
-                                                <input id="o_zip" type="text" name="zip" class="form-control" t-att-value="partner_sudo.zip"/>
+                                                <input
+                                                    id="o_zip"
+                                                    type="text"
+                                                    name="zip"
+                                                    class="form-control"
+                                                    t-att-value="partner_sudo.zip"
+                                                    t-att-disabled="only_services and is_anonymous_cart"
+                                                />
                                             </div>
                                         </t>
                                         <div class="w-100"/>
-                                        <div id="div_country" class="col-lg-6 mb-2">
+                                        <div
+                                            id="div_country"
+                                            class="col-lg-6 mb-2"
+                                            t-attf-style="
+                                                display: #{'none' if only_services
+                                                    and is_anonymous_cart else 'block'};"
+                                        >
                                             <label class="col-form-label" for="o_country_id">Country</label>
-                                            <select id="o_country_id" name="country_id" class="form-select">
+                                            <select
+                                                id="o_country_id"
+                                                name="country_id"
+                                                class="form-select"
+                                                t-att-disabled="only_services and is_anonymous_cart"
+                                            >
                                                 <option value="">Country...</option>
                                                 <t t-foreach="countries" t-as="c">
                                                     <option t-att-value="c.id" t-att-selected="c.id == country.id" t-att-code="c.code">
@@ -2535,10 +2649,18 @@
                                                 </t>
                                             </select>
                                         </div>
-                                        <div id="div_state" class="col-lg-6 mb-2"
-                                             t-att-style="not country_states and 'display: none'">
+                                        <div
+                                            id="div_state"
+                                            class="col-lg-6 mb-2"
+                                            t-attf-style="display: #{'none' if only_services else 'block'};"
+                                        >
                                             <label class="col-form-label" for="o_state_id">State / Province</label>
-                                            <select id="o_state_id" name="state_id" class="form-select">
+                                            <select
+                                                id="o_state_id"
+                                                name="state_id"
+                                                class="form-select"
+                                                t-att-disabled="only_services and is_anonymous_cart"
+                                            >
                                                 <option value="">State / Province...</option>
                                                 <t t-foreach="country_states" t-as="s">
                                                     <option t-att-value="s.id" t-att-selected="s.id == state_id">
@@ -2563,9 +2685,33 @@
                                     </t>
 
                                     <!-- Example -->
-                                    <input type="hidden" name="required_fields" t-att-value="'name,country_id'"/>
+                                    <input
+                                        t-if="is_anonymous_cart and only_services"
+                                        type="hidden"
+                                        name="required_fields"
+                                        t-att-value="'name,email,phone'"
+                                    />
+                                    <input
+                                        t-else=""
+                                        type="hidden"
+                                        name="required_fields"
+                                        t-att-value="'name,country_id'"
+                                    />
+                                    <input
+                                        type="hidden"
+                                        name="only_services"
+                                        t-att-value="'true' if only_services else 'false'"
+                                    />
+                                    <input
+                                        type="hidden"
+                                        name="is_anonymous_cart"
+                                        t-att-value="'true' if is_anonymous_cart else 'false'"
+                                    />
 
-                                    <div class="d-flex flex-column flex-md-row align-items-center justify-content-between mt32 mb32">
+                                    <div
+                                        class="d-flex flex-column flex-md-row align-items-start
+                                            gap-md-2 mt32 mb32"
+                                    >
                                         <a role="button" t-att-href="discard_url" class="btn btn-outline-secondary w-100 w-md-auto order-md-1 order-3">
                                             <i class="fw-light fa fa-angle-left me-2"/>Discard
                                         </a>
@@ -2600,7 +2746,15 @@
     <template id="address_on_payment" name="Address on payment">
         <div class="card">
             <div class="card-body" id="delivery_and_billing">
-                <a class="float-end no-decoration" href="/shop/checkout"><i class="fa fa-pencil me-1"/>Edit</a>
+                <a class="float-end no-decoration" href="/shop/checkout">
+                    <i class="fa fa-pencil me-1"/>
+                    <t t-if="order.partner_shipping_id.contact_address_complete">
+                        Edit
+                    </t>
+                    <t t-else="">
+                        Want an invoice?
+                    </t>
+                </a>
                 <t
                     t-set="use_delivery_as_billing"
                     t-value="order.partner_invoice_id == order.partner_shipping_id and not order.pickup_location_data"
@@ -2610,18 +2764,42 @@
                         <b>Deliver to pickup point: </b>
                         <t t-out="order.pickup_location_data.get('name', '') + ', ' + order.pickup_location_data.get('street', '') + ' ' + order.pickup_location_data.get('zip_code', '') + ' ' + order.pickup_location_data.get('city','')"/>
                     </t>
-                    <t t-else="">
+                    <t t-else="" class="d-flex gap-1">
                         <b>Delivery: </b>
                         <span
+                            t-if="order.partner_shipping_id.contact_address_complete"
                             t-out="order.partner_shipping_id"
-                            t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')"
+                            t-options="dict(
+                                widget='contact',
+                                fields=['name','address'],
+                                no_marker=True,
+                                separator=', '
+                            )"
                             class="address-inline"
                         />
+                        <div t-else="">
+                            <t t-out="order.partner_shipping_id.name"/>
+                            <span class="text-muted"> - no address </span>
+                        </div>
                     </t>
                 </div>
-                <div>
+                <div class="d-flex gap-1">
                     <b><t t-if="use_delivery_as_billing and not only_services">Delivery &amp; </t>Billing: </b>
-                    <span t-esc="order.partner_invoice_id" t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/>
+                    <span
+                        t-if="order.partner_invoice_id.contact_address_complete"
+                        t-out="order.partner_invoice_id"
+                        t-options="dict(
+                            widget='contact',
+                            fields=['name','address'],
+                            no_marker=True,
+                            separator=', '
+                        )"
+                        class="address-inline"
+                    />
+                    <div t-else="">
+                        <t t-out="order.partner_invoice_id.name"/>
+                        <span class="text-muted"> - no address </span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -2729,7 +2907,7 @@
                             <div class="o_total_card sticky-lg-top">
                                 <div id="o_wsale_total_accordion_item" class="accordion-item p-lg-4 border-0">
                                     <div class="accordion-header d-block align-items-center mb-4">
-                                        <button class="accordion-button px-0 collapsed"
+                                        <button class="accordion-button pt-0 px-0 collapsed"
                                                 data-bs-toggle="collapse"
                                                 data-bs-target="#o_wsale_accordion_item"
                                                 aria-expanded="false"
@@ -2848,7 +3026,7 @@
             <t t-set="tx_sudo" t-value="order.get_portal_last_transaction()"/>
             <div t-if="tx_sudo.state in ['pending', 'done']" class="d-flex justify-content-between align-items-center">
                 <h3>Thank you for your order.</h3>
-                <a role="button" class="d-none d-md-inline-block btn btn-primary ms-auto" href="/shop/print" target="_blank" aria-label="Print" title="Print"><i class="fa fa-print me-2"></i>Print</a>
+                <a role="button" class="d-none d-md-inline-block btn btn-secondary ms-auto" href="/shop/print" target="_blank" aria-label="Print" title="Print"><i class="fa fa-print me-2"></i>Print</a>
             </div>
             <t t-if="tx_sudo.state == 'done'">
                 <div class="mb-4">
@@ -2856,13 +3034,11 @@
                         <em>
                             <span>Order</span>
                             <span t-field="order.name" />
-                            <t t-if="order.state == 'sale'">
-                                <i class="fa fa-check-circle ms-1"/>
-                            </t>
                         </em>
                     </h5>
                 </div>
             </t>
+            <div class="oe_structure mt-3" id="oe_structure_website_sale_confirmation_2"/>
             <t t-if="request.env['res.users']._get_signup_invitation_scope() == 'b2c' and request.website.is_public_user()">
                 <p class="alert alert-info mt-3" role="status">
                     <a role="button" t-att-href="order.partner_id.signup_prepare() and order.partner_id.with_context(relative_url=True)._get_signup_url()" class="btn btn-primary">Sign Up</a>
@@ -2870,31 +3046,54 @@
                 </p>
             </t>
             <div class="oe_structure clearfix mt-3" id="oe_structure_website_sale_confirmation_1"/>
-            <h4 class="text-start mt-3">Payment Information</h4>
-            <table class="table">
-                <tbody>
-                    <tr>
-                        <td colspan="2" class="ps-0">
-                            <t t-esc="tx_sudo.provider_id.name" />
-                        </td>
-                        <td class="text-end pe-0" width="100">
-                            <strong>Total:</strong>
-                        </td>
-                        <td class="text-end pe-0" width="100">
-                            <strong t-field="tx_sudo.amount" t-options="{'widget': 'monetary', 'display_currency': order.currency_id}" />
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
             <t t-call="website_sale.payment_confirmation_status"/>
             <div class="card mt-3">
                 <div class="card-body">
                     <t t-set="same_shipping" t-value="bool(order.partner_shipping_id == order.partner_invoice_id or only_services)" />
-                    <div><b>Billing <t t-if="same_shipping and not only_services"> &amp; Delivery</t>: </b><span t-esc='order.partner_invoice_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/></div>
-                    <div t-if="not same_shipping and not only_services" groups="account.group_delivery_invoice_address"><b>Delivery: </b><span t-esc='order.partner_shipping_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')"  class="address-inline"/></div>
+                    <div class="d-flex gap-1">
+                        <b>
+                            Billing <t t-if="same_shipping and not only_services"> &amp; Delivery</t>:
+                        </b>
+                        <span
+                            t-if="order.partner_invoice_id.contact_address_complete"
+                            t-esc='order.partner_invoice_id'
+                            t-options="dict(
+                                widget='contact',
+                                fields=['name','address'],
+                                no_marker=True,
+                                separator=','
+                            )"
+                            class="address-inline"
+                        />
+                        <div t-else="">
+                            <t t-out="order.partner_invoice_id.name"/>
+                            <span class="text-muted"> - no address </span>
+                        </div>
+                    </div>
+                    <div
+                        t-if="not same_shipping and not only_services"
+                        groups="account.group_delivery_invoice_address"
+                        class="d-flex gap-1"
+                    >
+                        <b>Delivery: </b>
+                        <span
+                            t-if="order.partner_shipping_id.contact_address_complete"
+                            t-esc='order.partner_shipping_id'
+                            t-options="dict(
+                                widget='contact',
+                                fields=['name','address'],
+                                no_marker=True,
+                                separator=', '
+                            )"
+                            class="address-inline"
+                        />
+                        <div t-else="">
+                            <t t-out="order.partner_shipping_id.name"/>
+                            <span class="text-muted"> - no address </span>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="oe_structure mt-3" id="oe_structure_website_sale_confirmation_2"/>
             <input t-if='website.plausible_shared_key' type='hidden' class='js_plausible_push' data-event-name='Shop' t-attf-data-event-params='{"CTA": "Order Confirmed", "amount": "#{"%3s-%3s" % (max(0, round(website_sale_order.amount_total/100)*100 - 50), round(website_sale_order.amount_total/100)*100 + 50)}"}' />
         </t>
     </template>
@@ -2982,26 +3181,36 @@
     <template id="payment_confirmation_status">
         <div class="oe_website_sale_tx_status mt-3" t-att-data-order-id="order.id" t-att-data-order-tracking-info="json.dumps(order_tracking_info)">
             <t t-set="tx_sudo" t-value="order.get_portal_last_transaction()"/>
-            <div t-attf-class="card #{
-                (tx_sudo.state == 'pending' and 'bg-info') or
-                (tx_sudo.state == 'done' and order.amount_total == tx_sudo.amount and 'alert-success') or
-                (tx_sudo.state == 'done' and order.amount_total != tx_sudo.amount and 'bg-warning') or
-                (tx_sudo.state == 'authorized' and 'alert-success') or
-                'bg-danger'}">
-                <div class="card-header">
-                    <a role="button" groups="base.group_system" class="btn btn-sm btn-link text-white float-end" target="_blank" aria-label="Edit" title="Edit"
-                            t-attf-href="/odoo/action-payment.action_payment_provider/{{tx_sudo.provider_id.id}}">
-                        <i class="fa fa-pencil"></i>
-                    </a>
+            <div
+                t-attf-class="alert p-2 #{
+                    (tx_sudo.state == 'pending' and 'alert-info') or
+                    (tx_sudo.state == 'done' and order.amount_total == tx_sudo.amount and 'alert-success') or
+                    (tx_sudo.state == 'done' and order.amount_total != tx_sudo.amount and 'alert-warning') or
+                    (tx_sudo.state == 'authorized' and 'alert-success') or
+                    'alert-danger'}"
+                role="alert"
+            >
+                <a
+                    role="button"
+                    groups="base.group_system"
+                    class="btn btn-sm btn-link text-dark float-end"
+                    target="_blank"
+                    aria-label="Edit"
+                    title="Edit"
+                    t-attf-href="/odoo/action-payment.action_payment_provider/{{tx_sudo.provider_id.id}}">
+                    <i class="fa fa-pencil"></i>
+                </a>
+                <div>
                     <t t-if="tx_sudo.state == 'pending'">
                         <t t-out="tx_sudo.provider_id.sudo().pending_msg"/>
                     </t>
                     <t t-if="tx_sudo.state == 'done'">
-                        <span t-if='tx_sudo.provider_id.sudo().done_msg' t-out="tx_sudo.provider_id.sudo().done_msg"/>
+                        <t t-out="tx_sudo.provider_id.sudo().done_msg"/>
                     </t>
                     <t t-if="tx_sudo.state == 'done' and order.amount_total != tx_sudo.amount">
-                        <span>Unfortunately your order can not be confirmed as the amount of your payment does not match the amount of your cart.
-                        Please contact the responsible of the shop for more information.</span>
+                        Unfortunately your order can not be confirmed as the amount of your payment
+                        does not match the amount of your cart. Please contact the responsible of
+                        the shop for more information.
                     </t>
                     <t t-if="tx_sudo.state == 'cancel'">
                         <t t-out="tx_sudo.provider_id.sudo().cancel_msg"/>
@@ -3011,16 +3220,16 @@
                         <span t-else="">Your payment has been authorized.</span>
                     </t>
                     <t t-if="tx_sudo.state == 'error'">
-                        <span t-esc="tx_sudo.state_message"/>
+                        <span t-out="tx_sudo.state_message"/>
                     </t>
                 </div>
                 <t t-if="tx_sudo.provider_code == 'custom'">
-                    <div t-if="order.reference" class="card-body">
+                    <div t-if="order.reference" class="mt-2">
                         <b>Communication: </b><span t-esc='order.reference'/>
                     </div>
                     <div t-if="tx_sudo.provider_id.sudo().qr_code">
                         <t t-set="qr_code" t-value="tx_sudo.company_id.partner_id.bank_ids[:1].build_qr_code_base64(order.amount_total,tx_sudo.reference, None, tx_sudo.currency_id, tx_sudo.partner_id)"/>
-                        <div class="card-body" t-if="qr_code">
+                        <div class="mt-2" t-if="qr_code">
                             <h3>Or scan me with your banking app.</h3>
                             <img class="border border-dark rounded" t-att-src="qr_code"/>
                         </div>

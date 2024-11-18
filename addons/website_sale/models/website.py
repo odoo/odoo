@@ -590,7 +590,7 @@ class Website(models.Model):
             'back_button':  _lt("Continue shopping"),
             'back_button_href': '/shop',
         }), (['website_sale.checkout', 'website_sale.address'], {
-            'name': _lt("Delivery"),
+            'name': _lt("Address"),
             'current_href': '/shop/checkout',
             'main_button': _lt("Confirm"),
             'main_button_href': f'{"/shop/extra_info" if is_extra_step_active else "/shop/confirm_order"}',

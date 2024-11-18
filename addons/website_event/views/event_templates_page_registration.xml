@@ -328,8 +328,7 @@
                 <div>
                     <t t-if="attendees" t-call="website_event.registration_ticket_access"/>
                     <div class="mt-4">
-                        <h5>Don't miss out!</h5>
-                        <small>Add this event to your calendar</small>
+                        <h5>Add to your calendar</h5>
                         <div id="add_to_calendar" class="o_event_add_to_calendar_btns d-flex flex-wrap gap-3 mt-2">
                             <a role="button" class="o_outlook_calendar btn btn-block bg-white" t-att-href="iCal_url">
                                 <img src="/event/static/src/img/outlook-calendar.svg" alt="Outlook" loading="lazy"/>
@@ -386,7 +385,7 @@
         <div class="col-12 mb-2 d-flex flex-column flex-md-row align-items-stretch align-items-md-baseline justify-content-md-start">
             <a class="btn btn-primary o_wevent_download_ticket_btn" title="Download All Tickets" target="_blank"
                 t-attf-href="/event/{{ event.id }}/my_tickets?registration_ids={{ attendees.ids }}&amp;tickets_hash={{ event._get_tickets_access_hash(attendees.ids) }}">
-                Download Tickets <i class="ms-1 fa fa-download"/>
+                Download Tickets
             </a>
         </div>
     </div>
