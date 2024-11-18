@@ -56,7 +56,6 @@ export class Discuss extends Component {
         this.contentRef = useRef("content");
         this.root = useRef("root");
         this.state = useState({ jumpThreadPresent: 0 });
-        this.orm = useService("orm");
         this.effect = useService("effect");
         this.ui = useState(useService("ui"));
         useChildSubEnv({

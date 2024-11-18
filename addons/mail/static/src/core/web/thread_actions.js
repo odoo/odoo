@@ -13,7 +13,7 @@ threadActionsRegistry
             return component.thread.isEmpty;
         },
         open(component) {
-            component.orm.silent.call("mail.message", "mark_all_as_read");
+            component.thread.markAllMessagesAsRead();
         },
         sequence: 1,
         text: _t("Mark all read"),
