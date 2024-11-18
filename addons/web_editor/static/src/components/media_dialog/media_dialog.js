@@ -184,7 +184,10 @@ export class MediaDialog extends Component {
                         if (this.props.media.dataset.shapeColors) {
                             element.dataset.shapeColors = this.props.media.dataset.shapeColors;
                         }
-                    } else if ([TABS.VIDEOS.id, TABS.DOCUMENTS.id].includes(this.state.activeTab)) {
+                    } else if (
+                        [TABS.VIDEOS.id, TABS.DOCUMENTS.id].includes(this.state.activeTab) &&
+                        this.props.media.parentElement
+                    ) {
                         const parentEl = this.props.media.parentElement;
                         if (
                             parentEl.tagName === "A" &&
