@@ -71,7 +71,7 @@ paymentForm.include({
     async _initiatePaymentFlow(providerCode, paymentOptionId, paymentMethodCode, flow) {
         if (providerCode !== 'xendit' || flow === 'token' || paymentMethodCode !== 'card') {
             // Tokens are handled by the generic flow and other payment methods have no inline form.
-            this._super(...arguments);
+            await this._super(...arguments);
             return;
         }
 

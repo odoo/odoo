@@ -25,7 +25,7 @@ paymentForm.include({
      */
     async _prepareInlineForm(providerId, providerCode, paymentOptionId, paymentMethodCode, flow) {
         if (providerCode !== 'authorize') {
-            this._super(...arguments);
+            await this._super(...arguments);
             return;
         }
 
@@ -35,7 +35,7 @@ paymentForm.include({
             return; // Don't show the form for tokens.
         } else if (this.authorizeData[paymentOptionId]) {
             this._setPaymentFlow('direct'); // Overwrite the flow even if no re-instantiation.
-            loadJS(this.authorizeData[paymentOptionId]['acceptJSUrl']); // Reload the SDK.
+            await loadJS(this.authorizeData[paymentOptionId]['acceptJSUrl']); // Reload the SDK.
             return; // Don't re-extract the data if already done for this payment method.
         }
 
@@ -57,7 +57,7 @@ paymentForm.include({
         this.authorizeData[paymentOptionId].acceptJSUrl = acceptJSUrl;
 
         // Load the SDK.
-        loadJS(acceptJSUrl);
+        await loadJS(acceptJSUrl);
     },
 
     // #=== PAYMENT FLOW ===#
@@ -75,7 +75,7 @@ paymentForm.include({
      */
     async _initiatePaymentFlow(providerCode, paymentOptionId, paymentMethodCode, flow) {
         if (providerCode !== 'authorize' || flow === 'token') {
-            this._super(...arguments); // Tokens are handled by the generic flow
+            await this._super(...arguments); // Tokens are handled by the generic flow
             return;
         }
 
