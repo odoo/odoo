@@ -446,7 +446,11 @@ class TestConfigManager(TransactionCase):
 
     def test_06_cli(self):
         with file_open('base/tests/config/cli') as file:
-            self.config._parse_config(file.read().split())
+            with self.assertLogs('odoo.tools.config', 'WARNING') as capture:
+                self.config._parse_config(file.read().split())
+        self.assertEqual(capture.output, [
+            "WARNING:odoo.tools.config:option --without-demo: since 19.0, invalid boolean value: 'rigolo', assume True",
+        ])
 
         self.assertConfigEqual({
             # options not exposed on the command line
@@ -610,3 +614,15 @@ class TestConfigManager(TransactionCase):
             with self.subTest(args=args):
                 _, options = self.parse_reset(args)
                 self.assertEqual(options['stop_after_init'], stop_after_init)
+
+    def test_12_without_demo_equal_1(self):
+        _, options = self.parse_reset(['-i', 'mail'])
+        self.assertEqual(options['demo'], {'mail': 1})
+        _, options = self.parse_reset(['-i', 'mail', '--without-demo'])
+        self.assertEqual(options['demo'], {})
+        _, options = self.parse_reset(['--without-demo', '-i', 'mail'])
+        self.assertEqual(options['demo'], {})
+        _, options = self.parse_reset(['-i', 'mail', '--without-demo', '1'])
+        self.assertEqual(options['demo'], {})
+        _, options = self.parse_reset(['-i', 'mail', '--without-demo=1'])
+        self.assertEqual(options['demo'], {})
