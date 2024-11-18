@@ -6,6 +6,7 @@ from threading import Thread
 import time
 
 from odoo.addons.hw_drivers.main import drivers, interfaces, iot_devices
+from odoo.addons.hw_drivers.iot_object_info import IoTObjectInfo
 
 _logger = logging.getLogger(__name__)
 
@@ -13,11 +14,12 @@ _logger = logging.getLogger(__name__)
 class InterfaceMetaClass(type):
     def __new__(cls, clsname, bases, attrs):
         new_interface = super(InterfaceMetaClass, cls).__new__(cls, clsname, bases, attrs)
-        interfaces[clsname] = new_interface
+        if clsname != 'Interface':  # Avoid registering the abstract Interface class itself
+            interfaces[clsname] = new_interface
         return new_interface
 
 
-class Interface(Thread, metaclass=InterfaceMetaClass):
+class Interface(Thread, IoTObjectInfo, metaclass=InterfaceMetaClass):
     _loop_delay = 3  # Delay (in seconds) between calls to get_devices or 0 if it should be called only once
     _detected_devices = {}
     connection_type = ''
@@ -68,3 +70,10 @@ class Interface(Thread, metaclass=InterfaceMetaClass):
 
     def get_devices(self):
         raise NotImplementedError()
+
+    def _set_iot_info(self) -> dict:
+        return {
+            'thread': self._get_thread_info(),
+            'detected_devices': self._detected_devices,
+            'drivers': self.drivers,
+        }
