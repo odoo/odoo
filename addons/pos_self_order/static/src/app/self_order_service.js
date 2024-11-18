@@ -757,7 +757,7 @@ export class SelfOrder extends Reactive {
     }
 
     formatMonetary(price) {
-        return webFormatCurrency(price, this.currency_id);
+        return webFormatCurrency(price, this.currency.id);
     }
 
     verifyCart() {
@@ -873,7 +873,7 @@ export class SelfOrder extends Reactive {
             OrderReceipt,
             {
                 data: this.orderExportForPrinting(order),
-                formatCurrency: this.formatMonetary,
+                formatCurrency: this.formatMonetary.bind(this),
             },
             {}
         );
