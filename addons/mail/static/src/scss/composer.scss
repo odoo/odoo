@@ -19,7 +19,13 @@
     font-size: 1.3rem;
     font-family: emojifont;
 }
-
+.o_field_widget:has(.o_field_input_buttons.emoji) {
+    position: relative;
+}
+.o_field_input_buttons.emoji{
+    flex-direction: column;
+    justify-content: flex-end;
+    }
 .o_modal_fullscreen {
     z-index: $o-mail-ChatWindow-zindex + 1;
 
