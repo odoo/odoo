@@ -44,7 +44,7 @@ class ThreadController(http.Controller):
     def mail_thread_partner_from_email(self, emails, additional_values=None):
         partners = [
             {"id": partner.id, "name": partner.name, "email": partner.email}
-            for partner in request.env["res.partner"]._find_or_create_from_emails(emails, additional_values)
+            for partner in request.env["res.partner"]._find_or_create_from_emails(emails, additional_values=additional_values)
         ]
         return partners
 
@@ -87,7 +87,8 @@ class ThreadController(http.Controller):
             partners |= request.env["res.partner"].browse(
                 partner.id
                 for partner in request.env["res.partner"]._find_or_create_from_emails(
-                    kwargs["partner_emails"], kwargs.get("partner_additional_values", {})
+                    kwargs["partner_emails"],
+                    additional_values=kwargs.get("partner_additional_values", {})
                 )
             )
         if not request.env.user._is_internal():
