@@ -44,7 +44,7 @@ class MailTestSmsBl(models.Model):
     @api.depends('customer_id')
     def _compute_mobile_nbr(self):
         for phone_record in self.filtered(lambda rec: not rec.mobile_nbr and rec.customer_id):
-            phone_record.mobile_nbr = phone_record.customer_id.mobile
+            phone_record.mobile_nbr = "dummy"
 
     @api.depends('customer_id')
     def _compute_phone_nbr(self):
