@@ -405,6 +405,7 @@ class HolidaysType(models.Model):
                         if interval_to != future_allocations_date_to
                         else {'days': float('inf'), 'hours': float('inf')}
                     )
+                    reached_remaining_days_limit = False
                     for allocation in interval_allocations:
                         if allocation.date_from > search_date:
                             continue
@@ -417,11 +418,12 @@ class HolidaysType(models.Model):
                             remaining_days_allocation = (allocation.number_of_hours_display - days_consumed['virtual_leaves_taken'])
                         if quantity_available <= remaining_days_allocation:
                             search_date = interval_to.date() + timedelta(days=1)
-                        days_consumed['virtual_remaining_leaves'] += min(quantity_available, remaining_days_allocation)
                         days_consumed['max_leaves'] = allocation.number_of_days if allocation.type_request_unit in ['day', 'half_day'] else allocation.number_of_hours_display
-                        days_consumed['remaining_leaves'] = days_consumed['max_leaves'] - days_consumed['leaves_taken']
+                        if not reached_remaining_days_limit:
+                            days_consumed['virtual_remaining_leaves'] += min(quantity_available, remaining_days_allocation)
+                            days_consumed['remaining_leaves'] = days_consumed['max_leaves'] - days_consumed['leaves_taken']
                         if remaining_days_allocation >= quantity_available:
-                            break
+                            reached_remaining_days_limit = True
                         # Check valid allocations with still availabe leaves on it
                         if days_consumed['virtual_remaining_leaves'] > 0 and allocation.date_to and allocation.date_to > date:
                             allocations_with_remaining_leaves |= allocation
