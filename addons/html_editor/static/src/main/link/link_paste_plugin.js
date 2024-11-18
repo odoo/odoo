@@ -26,7 +26,11 @@ export class LinkPastePlugin extends Plugin {
             // 2, 5, 8, ...).
             splitAroundUrl = splitAroundUrl.filter((_, index) => (index + 1) % 3);
         }
-        if (!splitAroundUrl || splitAroundUrl.length < 3) {
+        if (
+            !splitAroundUrl ||
+            splitAroundUrl.length < 3 ||
+            closestElement(selection.anchorNode, "pre")
+        ) {
             // Let the default paste handle the text.
             return false;
         }
