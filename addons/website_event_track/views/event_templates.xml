@@ -6,7 +6,6 @@
     <xpath expr="//div[hasclass('row')][last()]" position="after">
         <div t-if="event.website_track" class="row mt-5 mb256">
             <div class="col-12">
-                <h3>Book your seats to the best talks</h3>
                 <p>Get prepared and
                     <a t-att-href="'/event/%s/track' % (slug(event))">register to your favorites talks now.</a>
                 </p>
@@ -19,7 +18,6 @@
     <xpath expr="//div[hasclass('o_wevent_confirmation_end_page_hook')]" position="inside">
         <div t-if="event.website_track" class="row mt-5 mb-3">
             <div class="col-12">
-                <h3>Book your seats to the best talks</h3>
                 <p>Get prepared and
                     <a t-att-href="'/event/%s/track' % (slug(event))">register to your favorites talks now.</a>
                 </p>
