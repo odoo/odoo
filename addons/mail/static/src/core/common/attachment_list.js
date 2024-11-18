@@ -50,6 +50,9 @@ export class AttachmentList extends Component {
      * @param {import("models").Attachment} attachment
      */
     getImageUrl(attachment) {
+        if (attachment.type === "url") {
+            return attachment.url;
+        }
         if (attachment.uploading && attachment.tmpUrl) {
             return attachment.tmpUrl;
         }
