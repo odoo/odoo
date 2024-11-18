@@ -15,15 +15,12 @@ class ProjectTask(models.Model):
         string="Contact Number", readonly=False, store=True, copy=False)
     partner_company_name = fields.Char(string='Company Name', related="partner_id.company_name", store=True, readonly=False, tracking=False)
 
-    @api.depends('partner_id.phone', 'partner_id.mobile')
+    @api.depends('partner_id.phone')
     def _compute_partner_phone(self):
         for task in self:
-            task.partner_phone = task.partner_id.mobile or task.partner_id.phone or False
+            task.partner_phone = task.partner_id.phone or False
 
     def _inverse_partner_phone(self):
         for task in self:
             if task.partner_id:
-                if task.partner_id.mobile or not task.partner_id.phone:
-                    task.partner_id.mobile = task.partner_phone
-                else:
-                    task.partner_id.phone = task.partner_phone
+                task.partner_id.phone = task.partner_phone
