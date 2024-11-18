@@ -958,6 +958,7 @@ class SaleOrder(models.Model):
 
     #=== ACTION METHODS ===#
 
+    @api.readonly
     def action_open_discount_wizard(self):
         self.ensure_one()
         return {
@@ -1262,6 +1263,7 @@ class SaleOrder(models.Model):
             return False
         return any(so.state != 'draft' for so in self)
 
+    @api.readonly
     def action_preview_sale_order(self):
         self.ensure_one()
         return {
@@ -1323,6 +1325,7 @@ class SaleOrder(models.Model):
     def _get_product_catalog_domain(self):
         return expression.AND([super()._get_product_catalog_domain(), [('sale_ok', '=', True)]])
 
+    @api.readonly
     def action_open_business_doc(self):
         self.ensure_one()
         return {
@@ -1375,6 +1378,7 @@ class SaleOrder(models.Model):
             values['journal_id'] = self.journal_id.id
         return values
 
+    @api.readonly
     def action_view_invoice(self, invoices=False):
         if not invoices:
             invoices = self.mapped('invoice_ids')

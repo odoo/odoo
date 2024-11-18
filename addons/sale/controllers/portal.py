@@ -101,6 +101,8 @@ class CustomerPortal(payment_portal.PaymentPortal):
 
         return values
 
+    # Two following routes cannot be readonly because of the call to `_portal_ensure_token` on all
+    # displayed orders, to assign an access token (triggering a sql update on flush)
     @http.route(['/my/quotes', '/my/quotes/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_quotes(self, **kwargs):
         values = self._prepare_sale_portal_rendering_values(quotation_page=True, **kwargs)
@@ -342,7 +344,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
 
         return request.redirect(redirect_url)
 
-    @http.route('/my/orders/<int:order_id>/document/<int:document_id>', type='http', auth='public')
+    @http.route('/my/orders/<int:order_id>/document/<int:document_id>', type='http', auth='public', readonly=True)
     def portal_quote_document(self, order_id, document_id, access_token):
         try:
             order_sudo = self._document_check_access('sale.order', order_id, access_token=access_token)

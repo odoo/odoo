@@ -373,6 +373,7 @@ class ProductPricelist(models.Model):
                 other_pricelists='\n'.join(linked_items.pricelist_id.mapped('display_name')),
             ))
 
+    @api.readonly
     def action_open_pricelist_report(self):
         self.ensure_one()
         return {

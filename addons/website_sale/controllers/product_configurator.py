@@ -16,6 +16,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         type='jsonrpc',
         auth='public',
         website=True,
+        readonly=True,
     )
     def website_sale_should_show_product_configurator(
         self, product_template_id, ptav_ids, is_product_configured
@@ -49,6 +50,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         type='jsonrpc',
         auth='public',
         website=True,
+        readonly=True,
     )
     def website_sale_product_configurator_get_values(self, *args, **kwargs):
         self._populate_currency_and_pricelist(kwargs)
@@ -70,6 +72,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         auth='public',
         methods=['POST'],
         website=True,
+        readonly=True,
     )
     def website_sale_product_configurator_update_combination(self, *args, **kwargs):
         self._populate_currency_and_pricelist(kwargs)
@@ -80,6 +83,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         type='jsonrpc',
         auth='public',
         website=True,
+        readonly=True,
     )
     def website_sale_product_configurator_get_optional_products(self, *args, **kwargs):
         self._populate_currency_and_pricelist(kwargs)

@@ -146,6 +146,7 @@ class ResConfigSettings(models.TransientModel):
 
     #=== ACTION METHODS ===#
 
+    @api.readonly
     def action_open_abandoned_cart_mail_template(self):
         return {
             'name': _("Customize Email Templates"),
@@ -163,6 +164,7 @@ class ResConfigSettings(models.TransientModel):
         return self.env["website"].get_client_action(
             '/shop/extra_info?open_editor=true', mode_edit=True, website_id=self.website_id.id)
 
+    @api.readonly
     def action_open_sale_mail_templates(self):
         return {
             'name': _("Customize Email Templates"),
