@@ -140,6 +140,7 @@ class ProductAttributeValue(models.Model):
 
     # === ACTION METHODS === #
 
+    @api.readonly
     def action_add_to_products(self):
         return {
             'name': _("Add to all products"),
@@ -154,6 +155,7 @@ class ProductAttributeValue(models.Model):
             },
         }
 
+    @api.readonly
     def action_update_prices(self):
         return {
             'name': _("Update product extra prices"),

@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, models
+from odoo import _, api, models
 
 
 class ProductCatalogMixin(models.AbstractModel):
@@ -11,6 +11,7 @@ class ProductCatalogMixin(models.AbstractModel):
     """
     _description = 'Product Catalog Mixin'
 
+    @api.readonly
     def action_add_from_catalog(self):
         kanban_view_id = self.env.ref('product.product_view_kanban_catalog').id
         search_view_id = self.env.ref('product.product_view_search_catalog').id

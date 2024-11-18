@@ -619,6 +619,7 @@ class ProductTemplate(models.Model):
             },
         }
 
+    @api.readonly
     def action_open_documents(self):
         self.ensure_one()
         return {

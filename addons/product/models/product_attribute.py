@@ -142,6 +142,7 @@ class ProductAttribute(models.Model):
                 ))
         return super().action_archive()
 
+    @api.readonly
     def action_open_product_template_attribute_lines(self):
         self.ensure_one()
         return {

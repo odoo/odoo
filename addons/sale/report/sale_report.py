@@ -244,6 +244,7 @@ class SaleReport(models.Model):
     def _table_query(self):
         return self._query()
 
+    @api.readonly
     def action_open_order(self):
         self.ensure_one()
         return {

@@ -8,7 +8,7 @@ from odoo.tools import groupby
 
 class SaleComboConfiguratorController(Controller):
 
-    @route(route='/sale/combo_configurator/get_data', type='jsonrpc', auth='user')
+    @route(route='/sale/combo_configurator/get_data', type='jsonrpc', auth='user', readonly=True)
     def sale_combo_configurator_get_data(
         self,
         product_tmpl_id,
@@ -79,7 +79,7 @@ class SaleComboConfiguratorController(Controller):
             ),
         }
 
-    @route(route='/sale/combo_configurator/get_price', type='jsonrpc', auth='user')
+    @route(route='/sale/combo_configurator/get_price', type='jsonrpc', auth='user', readonly=True)
     def sale_combo_configurator_get_price(
         self,
         product_tmpl_id,

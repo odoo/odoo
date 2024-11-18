@@ -620,6 +620,7 @@ class ProductProduct(models.Model):
 
     #=== ACTION METHODS ===#
 
+    @api.readonly
     def action_open_label_layout(self):
         action = self.env['ir.actions.act_window']._for_xml_id('product.action_open_label_layout')
         action['context'] = {'default_product_ids': self.ids}
@@ -658,6 +659,7 @@ class ProductProduct(models.Model):
             'target': 'new'
         }
 
+    @api.readonly
     def action_open_documents(self):
         res = self.product_tmpl_id.action_open_documents()
         res['context'].update({

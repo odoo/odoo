@@ -73,6 +73,7 @@ class ProductProduct(models.Model):
         ]).product_id.ids
         return [('id', 'in', product_ids)]
 
+    @api.readonly
     def action_view_sales(self):
         action = self.env["ir.actions.actions"]._for_xml_id("sale.report_all_channels_sales_action")
         action['domain'] = [('product_id', 'in', self.ids)]
