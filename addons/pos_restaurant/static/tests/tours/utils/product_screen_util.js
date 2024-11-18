@@ -4,6 +4,14 @@ import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_scre
 export function clickOrderButton() {
     return [
         {
+            isActive: ["body:has(.modal:contains(printing failed))"],
+            trigger: ".modal button:contains(ok)",
+            run: "click",
+        },
+        {
+            trigger: "body:not(:has(.modal))",
+        },
+        {
             content: "click order button",
             trigger: ".actionpad .submit-order",
             run: "click",

@@ -58,6 +58,14 @@ export function clickDisplayedProduct(
 ) {
     const step = [
         {
+            isActive: ["body:has(.modal:contains(printing failed))"],
+            trigger: ".modal button:contains(ok)",
+            run: "click",
+        },
+        {
+            trigger: "body:not(:has(.modal))",
+        },
+        {
             content: `click product '${name}'`,
             trigger: `article.product .product-content .product-name:contains("${name}")`,
             run: "click",
