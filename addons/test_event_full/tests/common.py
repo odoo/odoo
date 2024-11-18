@@ -58,7 +58,6 @@ class TestEventFullCommon(EventCrmCase, TestSalesCommon, MockVisitor):
             'country_id': cls.env.ref('base.be').id,
             'email': 'customer.test@example.com',
             'name': 'Test Customer',
-            'mobile': '0456123456',
             'phone': '0456123456',
         })
         # make a SO for a customer, selling some tickets
@@ -280,7 +279,6 @@ class TestEventFullCommon(EventCrmCase, TestSalesCommon, MockVisitor):
         cls.partners = cls.env['res.partner'].create([
             {'email': f'partner.email.{idx:02d}@test.example.com',
              'name': f'PartnerCustomer {idx:02d}',
-             'mobile': f'04569999{idx:02d}',
              'phone': f'04560000{idx:02d}',
             } for idx in range(0, 10)
         ])
@@ -468,7 +466,6 @@ class TestWEventCommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal, MockVisitor
             'email': 'constantin@test.example.com',
             'country_id': self.env.ref('base.be').id,
             'phone': '0485112233',
-            'mobile': False,
         })
         self.event_speaker = self.env['res.partner'].create({
             'name': 'Brandon Freeman',

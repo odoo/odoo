@@ -381,7 +381,7 @@ class PosOrder(models.Model):
     def _compute_contact_details(self):
         for order in self:
             order.email = order.partner_id.email or ""
-            order.mobile = order._phone_format(number=order.partner_id.mobile or order.partner_id.phone or "",
+            order.mobile = order._phone_format(number=order.partner_id.phone or "",
                         country=order.partner_id.country_id)
 
     def _compute_total_cost_in_real_time(self):
