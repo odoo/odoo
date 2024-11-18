@@ -6,13 +6,47 @@ from unittest.mock import patch
 
 from odoo import SUPERUSER_ID
 from odoo.addons.base.models.res_users import is_selection_groups, get_selection_groups, name_selection_groups
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.http import _request_stack
 from odoo.tests import Form, TransactionCase, new_test_user, tagged, HttpCase, users
 from odoo.tools import mute_logger
 
 
-class TestUsers(TransactionCase):
+class UsersCommonCase(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        users = cls.env['res.users'].create([
+            {
+                'name': 'Internal',
+                'login': 'user_internal',
+                'password': 'password',
+                'groups_id': [cls.env.ref('base.group_user').id],
+            },
+            {
+                'name': 'Portal 1',
+                'login': 'portal_1',
+                'password': 'portal_1',
+                'groups_id': [cls.env.ref('base.group_portal').id],
+            },
+            {
+                'name': 'Portal 2',
+                'login': 'portal_2',
+                'password': 'portal_2',
+                'groups_id': [cls.env.ref('base.group_portal').id],
+            },
+        ])
+
+        cls.user_internal, cls.user_portal_1, cls.user_portal_2 = users
+
+        # Remove from the cache the values filled with admin rights for the users/partners that have just been created
+        # So unit tests reading/writing these partners/users
+        # as other low-privileged users do not have their cache polluted with values fetched with admin rights
+        users.partner_id.invalidate_recordset()
+        users.invalidate_recordset()
+
+
+class TestUsers(UsersCommonCase):
 
     def test_name_search(self):
         """ Check name_search on user. """
@@ -126,15 +160,8 @@ class TestUsers(TransactionCase):
     @mute_logger('odoo.sql_db')
     def test_deactivate_portal_users_access(self):
         """Test that only a portal users can deactivate his account."""
-        user_internal = self.env['res.users'].create({
-            'name': 'Internal',
-            'login': 'user_internal',
-            'password': 'password',
-            'groups_id': [self.env.ref('base.group_user').id],
-        })
-
         with self.assertRaises(UserError, msg='Internal users should not be able to deactivate their account'):
-            user_internal._deactivate_portal_user()
+            self.user_internal._deactivate_portal_user()
 
     @mute_logger('odoo.sql_db', 'odoo.addons.base.models.res_users_deletion')
     def test_deactivate_portal_users_archive_and_remove(self):
@@ -240,7 +267,7 @@ class TestUsers(TransactionCase):
         self.assertEqual(user.context_get()['lang'], 'en_US')
 
 @tagged('post_install', '-at_install')
-class TestUsers2(TransactionCase):
+class TestUsers2(UsersCommonCase):
 
     def test_change_user_login(self):
         """ Check that partner email is updated when changing user's login """
@@ -375,6 +402,47 @@ class TestUsers2(TransactionCase):
 
         user_form[group_field_name] = group_public.id
         self.assertTrue(user_form.share, 'The groups_id onchange should have been triggered')
+
+    @users('portal_1')
+    @mute_logger('odoo.addons.base.models.ir_model')
+    def test_self_writeable_fields(self):
+        """Check that a portal user:
+            - can write on fields in SELF_WRITEABLE_FIELDS on himself,
+            - cannot write on fields not in SELF_WRITEABLE_FIELDS on himself,
+            - and none of the above on another user than himself.
+        """
+        self.assertIn(
+            "post_install",
+            self.test_tags,
+            "This test **must** be `post_install` to ensure the expected behavior despite other modules",
+        )
+        self.assertIn(
+            "email",
+            self.env['res.users'].SELF_WRITEABLE_FIELDS,
+            "For this test to make sense, 'email' must be in the `SELF_WRITEABLE_FIELDS`",
+        )
+        self.assertNotIn(
+            "login",
+            self.env['res.users'].SELF_WRITEABLE_FIELDS,
+            "For this test to make sense, 'login' must not be in the `SELF_WRITEABLE_FIELDS`",
+        )
+
+        me = self.env["res.users"].browse(self.env.user.id)
+        other = self.env["res.users"].browse(self.user_portal_2.id)
+
+        # Allow to write a field in the SELF_WRITEABLE_FIELDS
+        me.email = "foo@bar.com"
+        self.assertEqual(me.email, "foo@bar.com")
+        # Disallow to write a field not in the SELF_WRITEABLE_FIELDS
+        with self.assertRaises(AccessError):
+            me.login = "foo"
+
+        # Disallow to write a field in the SELF_WRITEABLE_FIELDS on another user
+        with self.assertRaises(AccessError):
+            other.email = "foo@bar.com"
+        # Disallow to write a field not in the SELF_WRITEABLE_FIELDS on another user
+        with self.assertRaises(AccessError):
+            other.login = "foo"
 
 
 @tagged('post_install', '-at_install', 'res_groups')
