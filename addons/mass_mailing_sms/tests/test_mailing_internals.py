@@ -35,8 +35,7 @@ class TestMassMailValues(MassSMSCommon):
         self.assertEqual(mailing.medium_id, self.env.ref('mass_mailing_sms.utm_medium_sms'))
         self.assertEqual(mailing.mailing_model_name, 'res.partner')
         self.assertEqual(mailing.mailing_model_real, 'res.partner')
-        # default for partner: remove blacklisted
-        self.assertEqual(literal_eval(mailing.mailing_domain), [('phone_sanitized_blacklisted', '=', False)])
+        self.assertEqual(literal_eval(mailing.mailing_domain), [])
         # update template -> update body
         mailing.write({'sms_template_id': self.sms_template_partner.id})
         self.assertEqual(mailing.body_plaintext, self.sms_template_partner.body)
