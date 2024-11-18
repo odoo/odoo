@@ -45,7 +45,7 @@ class EventBooth(models.Model):
     def _compute_contact_phone(self):
         for booth in self:
             if not booth.contact_phone:
-                booth.contact_phone = booth.partner_id.phone or booth.partner_id.mobile or False
+                booth.contact_phone = booth.partner_id.phone or False
 
     @api.depends('state')
     def _compute_is_available(self):
