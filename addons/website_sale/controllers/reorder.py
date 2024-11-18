@@ -11,7 +11,13 @@ class CustomerPortal(sale_portal.CustomerPortal):
     def _sale_reorder_get_line_context(self):
         return {}
 
-    @route('/my/orders/reorder_modal_content', type='jsonrpc', auth='public', website=True)
+    @route(
+        '/my/orders/reorder_modal_content',
+        type='jsonrpc',
+        auth='public',
+        website=True,
+        readonly=True,
+    )
     def my_orders_reorder_modal_content(self, order_id, access_token):
         try:
             sale_order = self._document_check_access('sale.order', order_id, access_token=access_token)

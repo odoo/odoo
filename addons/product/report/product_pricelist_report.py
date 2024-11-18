@@ -10,6 +10,7 @@ class ReportProductReport_Pricelist(models.AbstractModel):
     def _get_report_values(self, docids, data):
         return self._get_report_data(data, 'pdf')
 
+    @api.readonly
     @api.model
     def get_html(self, data):
         render_values = self._get_report_data(data, 'html')
