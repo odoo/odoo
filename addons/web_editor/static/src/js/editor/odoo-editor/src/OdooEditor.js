@@ -4133,7 +4133,10 @@ export class OdooEditor extends EventTarget {
             this.execCommand('strikeThrough');
             this.historyResetLatestComputedSelection(true);
         } else if (IS_KEYBOARD_EVENT_LEFT_ARROW(ev) || IS_KEYBOARD_EVENT_RIGHT_ARROW(ev)) {
-            const side = ev.key === 'ArrowLeft' ? 'previous' : 'next';
+            const isRTL = this.options.direction === 'rtl';
+            const previousName = isRTL ? 'next' : 'previous';
+            const nextName = isRTL ? 'previous' : 'next';
+            const side = ev.key === 'ArrowLeft' ? previousName : nextName;
             const selection = this.document.getSelection();
             let { anchorNode, anchorOffset, focusNode, focusOffset } = selection || {};
             if (ev.shiftKey) {
