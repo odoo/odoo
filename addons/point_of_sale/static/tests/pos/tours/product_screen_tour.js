@@ -372,7 +372,6 @@ registry.category("web_tour.tours").add("PosCustomerAllFieldsDisplayed", {
                 "John Doe",
                 "1 street of astreet",
                 "1234567890",
-                "0987654321",
                 "john@doe.com"
             ),
             selectButton("Discard"),
@@ -388,7 +387,6 @@ registry.category("web_tour.tours").add("PosCustomerAllFieldsDisplayed", {
             ProductScreenPartnerList.searchCustomerValueAndClear("Acity"),
             ProductScreenPartnerList.searchCustomerValueAndClear("United States"),
             ProductScreenPartnerList.searchCustomerValueAndClear("1234567890"),
-            ProductScreenPartnerList.searchCustomerValueAndClear("0987654321"),
             ProductScreen.clickPartnerButton(),
             PartnerList.searchCustomerValue("john@doe.com"),
         ].flat(),

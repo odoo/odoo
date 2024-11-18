@@ -50,7 +50,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
     FIELDS_FIRST_SET = [
         'name', 'partner_id', 'campaign_id', 'company_id', 'country_id',
         'team_id', 'state_id', 'stage_id', 'medium_id', 'source_id', 'user_id',
-        'city', 'contact_name', 'mobile', 'partner_name',
+        'city', 'contact_name', 'partner_name',
         'phone', 'probability', 'expected_revenue', 'street', 'street2', 'zip',
         'create_date', 'date_automation_last', 'email_from', 'email_cc', 'website'
     ]
@@ -202,7 +202,6 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         cls.contact_1 = cls.env['res.partner'].create({
             'name': 'Philip J Fry',
             'email': cls.test_email_data[1],
-            'mobile': cls.test_phone_data[0],
             'function': 'Delivery Boy',
             'lang': cls.lang_en.code,
             'phone': False,
@@ -217,7 +216,6 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'name': 'Turanga Leela',
             'email': cls.test_email_data[2],
             'lang': cls.lang_en.code,
-            'mobile': cls.test_phone_data[1],
             'phone': cls.test_phone_data[2],
             'parent_id': False,
             'is_company': False,
@@ -234,7 +232,6 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'city': 'New new York',
             'country_id': base_us.id,
             'lang': cls.lang_en.code,
-            'mobile': '+1 202 555 0888',
             'zip': '87654',
         })
 

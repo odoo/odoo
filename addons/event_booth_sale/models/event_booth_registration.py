@@ -41,7 +41,7 @@ class EventBoothRegistration(models.Model):
     def _compute_contact_phone(self):
         for registration in self:
             if not registration.contact_phone:
-                registration.contact_phone = registration.partner_id.phone or registration.partner_id.mobile or False
+                registration.contact_phone = registration.partner_id.phone or False
 
     @api.model
     def _get_fields_for_booth_confirmation(self):

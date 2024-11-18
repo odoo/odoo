@@ -248,11 +248,6 @@ class EventRegistration(models.Model):
             'name': "%s - %s" % (self.event_id.name, valid_partner.name or sorted_self._find_first_notnull('name') or sorted_self._find_first_notnull('email')),
             'partner_id': valid_partner.id,
         })
-        # try to avoid copying registration_phone on both phone and mobile fields
-        # as would be noise; pay attention partner.hone is propagated through compute
-        mobile = valid_partner.mobile or registration_phone
-        if mobile != contact_vals.get('phone', valid_partner.phone):
-            contact_vals['mobile'] = valid_partner.mobile or registration_phone
 
         return contact_vals
 

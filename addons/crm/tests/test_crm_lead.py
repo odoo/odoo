@@ -186,7 +186,7 @@ class TestCRMLead(TestCrmCommon):
             'name': 'Empty partner',
             'is_company': True,
             'lang': 'en_US',
-            'mobile': '123456789',
+            'phone': '0485112233',
             'function': 'My function',
         })
         lead_data = {
@@ -196,7 +196,6 @@ class TestCRMLead(TestCrmCommon):
             'country_id': self.country_ref.id,
             'email_from': self.test_email,
             'phone': self.test_phone,
-            'mobile': '987654321',
             'website': 'http://mywebsite.org',
         }
         lead = self.env['crm.lead'].create(lead_data)
@@ -215,7 +214,6 @@ class TestCRMLead(TestCrmCommon):
         # PARTNER_FIELDS_TO_SYNC
         self.assertEqual(lead.lang_id, self.lang_en)
         self.assertEqual(lead.phone, lead_data['phone'], "Phone should keep its initial value")
-        self.assertEqual(lead.mobile, empty_partner.mobile, "Mobile from partner should be set on the lead")
         self.assertEqual(lead.function, empty_partner.function, "Function from partner should be set on the lead")
         self.assertEqual(lead.website, lead_data['website'], "Website should keep its initial value")
 
@@ -379,19 +377,14 @@ class TestCRMLead(TestCrmCommon):
             lead_form = Form(lead)
 
             # reset partner phone to a local number and prepare formatted / sanitized values
-            partner_phone, partner_mobile = self.test_phone_data[2], self.test_phone_data[1]
+            partner_phone = self.test_phone_data[2]
             partner_phone_formatted = phone_format(partner_phone, 'US', '1', force_format='INTERNATIONAL')
             partner_phone_sanitized = phone_format(partner_phone, 'US', '1', force_format='E164')
-            partner_mobile_formatted = phone_format(partner_mobile, 'US', '1', force_format='INTERNATIONAL')
-            partner_mobile_sanitized = phone_format(partner_mobile, 'US', '1', force_format='E164')
             partner_email, partner_email_normalized = self.test_email_data[2], self.test_email_data_normalized[2]
             self.assertEqual(partner_phone_formatted, '+1 202-555-0888')
             self.assertEqual(partner_phone_sanitized, self.test_phone_data_sanitized[2])
-            self.assertEqual(partner_mobile_formatted, '+1 202-555-0999')
-            self.assertEqual(partner_mobile_sanitized, self.test_phone_data_sanitized[1])
             # ensure initial data
             self.assertEqual(partner.phone, partner_phone)
-            self.assertEqual(partner.mobile, partner_mobile)
             self.assertEqual(partner.email, partner_email)
 
             # LEAD/PARTNER SYNC: email and phone are propagated to lead
@@ -399,8 +392,6 @@ class TestCRMLead(TestCrmCommon):
             lead_form.partner_id = partner
             self.assertEqual(lead_form.email_from, partner_email)
             self.assertEqual(lead_form.phone, partner_phone_formatted,
-                            'Lead: form automatically formats numbers')
-            self.assertEqual(lead_form.mobile, partner_mobile_formatted,
                             'Lead: form automatically formats numbers')
             self.assertFalse(lead_form.partner_email_update)
             self.assertFalse(lead_form.partner_phone_update)
@@ -414,9 +405,7 @@ class TestCRMLead(TestCrmCommon):
                             'Lead / Partner: equal emails should lead to equal normalized emails')
             self.assertEqual(lead.phone, partner_phone_formatted,
                             'Lead / Partner: partner values (formatted) sent to lead')
-            self.assertEqual(lead.mobile, partner_mobile_formatted,
-                            'Lead / Partner: partner values (formatted) sent to lead')
-            self.assertEqual(lead.phone_sanitized, partner_mobile_sanitized,
+            self.assertEqual(lead.phone_sanitized, partner_phone_sanitized,
                             'Lead: phone_sanitized computed field on mobile')
 
             # for email_from, if only formatting differs, warning should not appear and
@@ -440,6 +429,7 @@ class TestCRMLead(TestCrmCommon):
             self.assertTrue(lead_form.partner_email_update)
             new_phone = '+1 202 555 7799'
             new_phone_formatted = phone_format(new_phone, 'US', '1', force_format="INTERNATIONAL")
+            new_phone_sanitized = phone_format(new_phone, 'US', '1', force_format="E164")
             lead_form.phone = new_phone
             self.assertEqual(lead_form.phone, new_phone_formatted)
             self.assertTrue(lead_form.partner_email_update)
@@ -450,18 +440,10 @@ class TestCRMLead(TestCrmCommon):
             self.assertEqual(partner.email_normalized, new_email_normalized)
             self.assertEqual(partner.phone, new_phone_formatted)
 
-            # LEAD/PARTNER SYNC: mobile does not update partner
-            new_mobile = '+1 202 555 6543'
-            new_mobile_formatted = phone_format(new_mobile, 'US', '1', force_format="INTERNATIONAL")
-            lead_form.mobile = new_mobile
-            lead_form.save()
-            self.assertEqual(lead.mobile, new_mobile_formatted)
-            self.assertEqual(partner.mobile, partner_mobile)
-
             # LEAD/PARTNER SYNC: resetting lead values should not reset partner
             # # voiding lead info (because of some reasons) should not prevent
             # # from using the contact in other records
-            lead_form.email_from, lead_form.phone, lead.mobile = False, False, False
+            lead_form.email_from, lead_form.phone = False, False
             self.assertFalse(lead_form.partner_email_update)
             self.assertFalse(lead_form.partner_phone_update)
             lead_form.save()
@@ -469,12 +451,10 @@ class TestCRMLead(TestCrmCommon):
             self.assertEqual(partner.email_normalized, new_email_normalized)
             self.assertEqual(partner.phone, new_phone_formatted)
             self.assertFalse(lead.phone)
-            self.assertFalse(lead.mobile)
             self.assertFalse(lead.phone_sanitized)
-            self.assertEqual(partner.mobile, partner_mobile)
             # if SMS is uninstalled, phone_sanitized is not available on partner
             if 'phone_sanitized' in partner:
-                self.assertEqual(partner.phone_sanitized, partner_mobile_sanitized,
+                self.assertEqual(partner.phone_sanitized, new_phone_sanitized,
                                 'Partner sanitized should be computed on mobile')
 
     @users('user_sales_manager')
@@ -488,7 +468,6 @@ class TestCRMLead(TestCrmCommon):
             'name': 'NoContact Partner',
             'phone': '',
             'email': '',
-            'mobile': '',
         })
 
         # This is a type == 'lead', not a type == 'opportunity'
@@ -961,23 +940,19 @@ class TestCRMLead(TestCrmCommon):
             'phone': self.test_phone_data[0],
         })
         self.assertEqual(lead.phone, self.test_phone_data[0])
-        self.assertFalse(lead.mobile)
         self.assertEqual(lead.phone_sanitized, self.test_phone_data_sanitized[0])
 
-        lead.write({'phone': False, 'mobile': self.test_phone_data[1]})
+        lead.write({'phone': False})
         self.assertFalse(lead.phone)
-        self.assertEqual(lead.mobile, self.test_phone_data[1])
-        self.assertEqual(lead.phone_sanitized, self.test_phone_data_sanitized[1])
+        self.assertEqual(lead.phone_sanitized, False)
 
-        lead.write({'phone': self.test_phone_data[1], 'mobile': self.test_phone_data[2]})
+        lead.write({'phone': self.test_phone_data[1]})
         self.assertEqual(lead.phone, self.test_phone_data[1])
-        self.assertEqual(lead.mobile, self.test_phone_data[2])
-        self.assertEqual(lead.phone_sanitized, self.test_phone_data_sanitized[2])
+        self.assertEqual(lead.phone_sanitized, self.test_phone_data_sanitized[1])
 
         # updating country should trigger sanitize computation
         lead.write({'country_id': self.env.ref('base.be').id})
         self.assertEqual(lead.phone, self.test_phone_data[1])
-        self.assertEqual(lead.mobile, self.test_phone_data[2])
         self.assertFalse(lead.phone_sanitized)
 
 

@@ -50,7 +50,7 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
     def _get_partner_contact_vals(self, partner):
         return {
             'name': partner.name,
-            'telephone': partner.phone or partner.mobile,
+            'telephone': partner.phone,
             'electronic_mail': partner.email,
         }
 

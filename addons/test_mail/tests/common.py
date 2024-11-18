@@ -19,13 +19,11 @@ class TestRecipients(TransactionCase):
             'name': 'Valid Lelitre',
             'email': 'valid.lelitre@agrolait.com',
             'country_id': cls.env.ref('base.be').id,
-            'mobile': '0456001122',
-            'phone': False,
+            'phone': '0456001122',
         })
         cls.partner_2 = Partner.create({
             'name': 'Valid Poilvache',
             'email': 'valid.other@gmail.com',
             'country_id': cls.env.ref('base.be').id,
-            'mobile': '+32 456 22 11 00',
-            'phone': False,
+            'phone': '+32 456 22 11 00',
         })

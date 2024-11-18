@@ -59,7 +59,6 @@ class CandidateSendMail(models.TransientModel):
                         "name": candidate.partner_name,
                         "email": candidate.email_from,
                         "phone": candidate.partner_phone,
-                        "mobile": candidate.partner_phone,
                     }
                 )
 

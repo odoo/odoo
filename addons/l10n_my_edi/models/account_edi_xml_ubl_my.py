@@ -247,7 +247,7 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
 
         for partner_type in ('supplier', 'customer'):
             partner = vals[partner_type]
-            phone_number = partner.phone or partner.mobile
+            phone_number = partner.phone
             if phone_number:
                 phone = self._l10n_my_edi_get_formatted_phone_number(phone_number)
                 if E_164_REGEX.match(phone) is None:

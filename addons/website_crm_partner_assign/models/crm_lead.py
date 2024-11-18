@@ -252,7 +252,7 @@ class CrmLead(models.Model):
 
     def update_contact_details_from_portal(self, values):
         self.browse().check_access('write')
-        fields = ['partner_name', 'phone', 'mobile', 'email_from', 'street', 'street2',
+        fields = ['partner_name', 'phone', 'email_from', 'street', 'street2',
             'city', 'zip', 'state_id', 'country_id']
         if any([key not in fields for key in values]):
             raise UserError(_("Not allowed to update the following field(s): %s.", ", ".join([key for key in values if not key in fields])))

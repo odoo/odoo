@@ -62,7 +62,7 @@ class SlidesCase(MailCommon):
         cls.customer = cls.env['res.partner'].create({
             'country_id': cls.env.ref('base.be').id,
             'email': 'customer@customer.example.com',
-            'mobile': '0456001122',
+            'phone': '0456001122',
             'name': 'Caroline Customer',
         })
 

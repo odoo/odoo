@@ -318,7 +318,7 @@ class MailPluginController(http.Controller):
         except AccessError:
             return {'id': company.id, 'name': _('No Access')}
 
-        fields_list = ['id', 'name', 'phone', 'mobile', 'email', 'website']
+        fields_list = ['id', 'name', 'phone', 'email', 'website']
 
         company_values = dict((fname, company[fname]) for fname in fields_list)
         company_values['address'] = {'street': company.street,
@@ -387,7 +387,7 @@ class MailPluginController(http.Controller):
 
     def _get_partner_data(self, partner):
 
-        fields_list = ['id', 'name', 'email', 'phone', 'mobile', 'is_company']
+        fields_list = ['id', 'name', 'email', 'phone', 'is_company']
 
         partner_values = dict((fname, partner[fname]) for fname in fields_list)
         partner_values['image'] = partner.image_128

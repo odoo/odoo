@@ -1338,9 +1338,8 @@ class TestComposerInternals(TestMailComposer):
                 'email_from': f'newpartner{idx}@example.com',
                 'company_id': companies[idx].id,
                 'customer_id': False,
-                'mobile_number': f'+3319900{idx:02d}{idx:02d}',
+                'phone_number': f'+3319900{idx:02d}{idx:02d}',
                 'name': f'TestRecord{idx}',
-                'phone_number': False,
                 'user_id': False,
             } for idx in range(2)
         ])
@@ -1386,8 +1385,8 @@ class TestComposerInternals(TestMailComposer):
                         test_records.mapped('company_id')
                     )
                     self.assertEqual(
-                        new_partners.mapped('mobile'),
-                        test_records.mapped('mobile_number')
+                        new_partners.mapped('phone'),
+                        test_records.mapped('phone_number')
                     )
                 finally:
                     new_partners.unlink()

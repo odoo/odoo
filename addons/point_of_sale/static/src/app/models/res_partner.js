@@ -9,7 +9,6 @@ export class ResPartner extends Base {
             "name",
             "barcode",
             "phone",
-            "mobile",
             "email",
             "vat",
             "parent_name",
@@ -17,7 +16,7 @@ export class ResPartner extends Base {
         ];
         return fields
             .map((field) => {
-                if ((field === "phone" || field === "mobile") && this[field]) {
+                if (field === "phone" && this[field]) {
                     return this[field].split(" ").join("");
                 }
                 return this[field] || "";

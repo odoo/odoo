@@ -203,7 +203,7 @@ class MailingMailing(models.Model):
             join_add_query = ''
         else:
             # phone fields are checked on res.partner model
-            partner_phone_fields = ['mobile', 'phone']
+            partner_phone_fields = ['phone']
             select_query = 'target.id, ' + ', '.join('partner.%s' % fname for fname in partner_phone_fields)
             where_query = ' OR '.join('partner.%s IS NOT NULL' % fname for fname in partner_phone_fields)
             join_add_query = 'JOIN res_partner partner ON (target.%s = partner.id)' % partner_field

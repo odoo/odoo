@@ -43,9 +43,8 @@ class TestCRMLead(TestCrmCommon):
                 'country_id': country_us_id,
                 'email': 'dave@another.email.company.com',
                 'is_company': False,
-                'mobile': '+1 202 000 0123',
                 'name': 'Dave',
-                'phone': False,
+                'phone': '+1 202 000 0123',
                 'parent_id': cls.test_company.id,
                 'street': 'Pearl street',
                 'zip': '12345',
@@ -55,10 +54,9 @@ class TestCRMLead(TestCrmCommon):
                 'country_id': country_us_id,
                 'email': 'eve@another.email.company.com',
                 'is_company': False,
-                'mobile': '+1 202 000 3210',
                 'name': 'Eve',
                 'parent_id': cls.test_company.id,
-                'phone': False,
+                'phone': '+1 202 000 3210',
                 'street': 'Wall street',
                 'zip': '12345',
             }
@@ -69,7 +67,6 @@ class TestCRMLead(TestCrmCommon):
             'country_id': country_us_id,
             'email_from': 'FP@odoo.com',
             'name': 'Generic 1',
-            'mobile': False,
             'partner_id': cls.test_partners[0].id,
             'phone': '+1 202 555 0123',
             'type': 'lead',
@@ -77,10 +74,9 @@ class TestCRMLead(TestCrmCommon):
         cls.lead_company = cls.env['crm.lead'].create({
             'country_id': country_us_id,
             'email_from': 'floppy@MYCOMPANY.com',
-            'mobile': '+1 202 666 4567',
             'partner_id': False,
             'name': 'CompanyMail 1',
-            'phone': False,
+            'phone': '+1 202 666 4567',
             'type': 'lead',
         })
 
@@ -106,7 +102,7 @@ class TestCRMLead(TestCrmCommon):
             },
             {
                 'email_from': 'not.fp@not.odoo.com',
-                'mobile': '+1 202 555 0123',
+                'phone': '+1 202 555 0123',
                 'name': 'Dupe4 of fp@odoo.com (same phone sanitized)',
                 'type': 'lead',
             },
@@ -149,7 +145,7 @@ class TestCRMLead(TestCrmCommon):
             },
             {
                 'email_from': 'not.floppy@not.mycompany.com',
-                'mobile': '+1 202 666 4567',
+                'phone': '+1 202 666 4567',
                 'name': 'Dupe4 of fp@odoo.com (same phone sanitized)',
                 'type': 'lead',
             },

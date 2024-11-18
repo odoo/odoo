@@ -13,7 +13,6 @@ class TestResUsers(TestMailFullCommon):
         cls.portal_user = mail_new_test_user(
             cls.env,
             login='portal_user',
-            mobile='+32 494 12 34 56',
             phone='+32 494 12 34 89',
             password='password',
             name='Portal User',
@@ -24,11 +23,20 @@ class TestResUsers(TestMailFullCommon):
         cls.portal_user_2 = mail_new_test_user(
             cls.env,
             login='portal_user_2',
-            mobile='+32 494 12 34 22',
             phone='invalid phone',
             password='password',
             name='Portal User 2',
             email='portal_2@test.example.com',
+            groups='base.group_portal',
+        )
+
+        cls.portal_user_3 = mail_new_test_user(
+            cls.env,
+            login='portal_user_3',
+            phone='+32 494 12 34 22',
+            password='password',
+            name='Portal User 3',
+            email='portal_3@test.example.com',
             groups='base.group_portal',
         )
 
@@ -40,22 +48,24 @@ class TestResUsers(TestMailFullCommon):
         """Test that the email and the phone are blacklisted
         when a portal user deactivate his own account.
         """
-        (self.portal_user | self.portal_user_2)._deactivate_portal_user(request_blacklist=True)
+        (self.portal_user | self.portal_user_2 | self.portal_user_3)._deactivate_portal_user(request_blacklist=True)
 
         self.assertFalse(self.portal_user.active, 'Should have archived the user')
         self.assertFalse(self.portal_user.partner_id.active, 'Should have archived the partner')
         self.assertFalse(self.portal_user_2.active, 'Should have archived the user')
         self.assertFalse(self.portal_user_2.partner_id.active, 'Should have archived the partner')
+        self.assertFalse(self.portal_user_3.active, 'Should have archived the user')
+        self.assertFalse(self.portal_user_3.partner_id.active, 'Should have archived the partner')
 
         blacklist = self.env['mail.blacklist'].search([
-            ('email', 'in', ('portal@test.example.com', 'portal_2@test.example.com')),
+            ('email', 'in', ('portal@test.example.com', 'portal_2@test.example.com', 'portal_3@test.example.com')),
         ])
-        self.assertEqual(len(blacklist), 2, 'Should have blacklisted the users email')
+        self.assertEqual(len(blacklist), 3, 'Should have blacklisted the users email')
 
         blacklists = self.env['phone.blacklist'].search([
-            ('number', 'in', ('+32494123489', '+32494123456', '+32494123422')),
+            ('number', 'in', ('+32494123489', '+32494123422')),
         ])
-        self.assertEqual(len(blacklists), 3, 'Should have blacklisted the user phone and mobile')
+        self.assertEqual(len(blacklists), 2, 'Should have blacklisted the user phone')
 
         blacklist = self.env['phone.blacklist'].search([('number', '=', 'invalid phone')])
         self.assertFalse(blacklist, 'Should have skipped invalid phone')

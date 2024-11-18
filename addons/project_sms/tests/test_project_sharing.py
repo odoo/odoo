@@ -33,7 +33,7 @@ class TestProjectSharingWithSms(TestProjectSharingCommon, SMSCommon):
                 Command.create({'partner_id': cls.user_portal.partner_id.id}),
             ],
         })
-        cls.project_portal.partner_id.mobile = cls.random_numbers[0]
+        cls.project_portal.partner_id.phone = cls.random_numbers[0]
 
     def test_portal_user_can_change_stage_with_sms_template(self):
         """ Test user portal can change the stage of a task to a stage with a sms template
@@ -56,14 +56,14 @@ class TestProjectSharingWithSms(TestProjectSharingCommon, SMSCommon):
                 'stage_id': self.task_stage_with_sms.id,
             })
         self.assertEqual(self.task_portal.stage_id, self.task_stage_with_sms)
-        self.assertSMSIapSent([self.user_projectuser.partner_id.mobile])
+        self.assertSMSIapSent([self.user_projectuser.partner_id.phone])
 
         with self.mockSMSGateway():
             self.project_portal.write({
                 'stage_id': self.project_stage_with_sms.id,
             })
         self.assertEqual(self.project_portal.stage_id, self.project_stage_with_sms)
-        self.assertSMSIapSent([self.project_portal.partner_id.mobile])
+        self.assertSMSIapSent([self.project_portal.partner_id.phone])
 
 
 @tagged('post_install', '-at_install')
@@ -102,4 +102,4 @@ class TestPostInstallProjectSharingWithSms(TestProjectSharingWithSms):
                 'stage_id': self.task_stage_with_sms.id,
             })
         self.assertEqual(self.task_cow.stage_id, self.task_stage_with_sms)
-        self.assertSMSIapSent([self.user_portal.partner_id.mobile])
+        self.assertSMSIapSent([self.user_portal.partner_id.phone])

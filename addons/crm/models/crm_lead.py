@@ -54,7 +54,6 @@ CRM_LEAD_FIELDS_TO_MERGE = [
     'contact_name',
     'email_from',
     'function',
-    'mobile',
     'phone',
     'website',
 ]
@@ -62,7 +61,7 @@ CRM_LEAD_FIELDS_TO_MERGE = [
 # Subset of partner fields: sync any of those
 PARTNER_FIELDS_TO_SYNC = [
     'lang',
-    'mobile',
+    'phone',
     'function',
     'website',
 ]
@@ -187,7 +186,6 @@ class CrmLead(models.Model):
     phone = fields.Char(
         'Phone', tracking=50,
         compute='_compute_phone', inverse='_inverse_phone', readonly=False, store=True)
-    mobile = fields.Char('Mobile', compute='_compute_mobile', readonly=False, store=True)
     phone_sanitized = fields.Char(index='btree_not_null')  # inherited via mail.thread.phone
     phone_state = fields.Selection([
         ('correct', 'Correct'),
@@ -379,13 +377,6 @@ class CrmLead(models.Model):
         for lead in self:
             if not lead.function or lead.partner_id.function:
                 lead.function = lead.partner_id.function
-
-    @api.depends('partner_id')
-    def _compute_mobile(self):
-        """ compute the new values when partner_id has changed """
-        for lead in self:
-            if not lead.mobile or lead.partner_id.mobile:
-                lead.mobile = lead.partner_id.mobile
 
     @api.depends('partner_id')
     def _compute_website(self):
@@ -584,7 +575,7 @@ class CrmLead(models.Model):
                 ])
             # check the phone number duplicates, based on phone_sanitized. Only
             # exact matches are found, and the single one stored in phone_sanitized
-            # in case phone and mobile are both set.
+            # in case phone is set.
             if lead.phone_sanitized:
                 duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
                     ('phone_sanitized', '=', lead.phone_sanitized)
@@ -625,11 +616,6 @@ class CrmLead(models.Model):
     def _onchange_phone_validation(self):
         if self.phone:
             self.phone = self._phone_format(fname='phone', force_format='INTERNATIONAL') or self.phone
-
-    @api.onchange('mobile', 'country_id', 'company_id')
-    def _onchange_mobile_validation(self):
-        if self.mobile:
-            self.mobile = self._phone_format(fname='mobile', force_format='INTERNATIONAL') or self.mobile
 
     def _prepare_values_from_partner(self, partner):
         """ Get a dictionary with values coming from partner information to
@@ -1872,7 +1858,6 @@ class CrmLead(models.Model):
             'user_id': self.env.context.get('default_user_id') or self.user_id.id,
             'comment': self.description,
             'phone': self.phone,
-            'mobile': self.mobile,
             'email': email_parts[0] if email_parts else False,
             'function': self.function,
             # address
