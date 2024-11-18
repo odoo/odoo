@@ -51,6 +51,8 @@ class DiscussChannelMember(models.Model):
     rtc_session_ids = fields.One2many(string="RTC Sessions", comodel_name='discuss.channel.rtc.session', inverse_name='channel_member_id')
     rtc_inviting_session_id = fields.Many2one('discuss.channel.rtc.session', string='Ringing session')
 
+    _seen_message_id_idx = models.Index("(channel_id, partner_id, seen_message_id)")
+
     @api.autovacuum
     def _gc_unpin_outdated_sub_channels(self):
         outdated_dt = fields.Datetime.now() - timedelta(days=2)
@@ -167,10 +169,8 @@ class DiscussChannelMember(models.Model):
                 )
             )
 
-    def init(self):
-        self.env.cr.execute("CREATE UNIQUE INDEX IF NOT EXISTS discuss_channel_member_partner_unique ON %s (channel_id, partner_id) WHERE partner_id IS NOT NULL" % self._table)
-        self.env.cr.execute("CREATE UNIQUE INDEX IF NOT EXISTS discuss_channel_member_guest_unique ON %s (channel_id, guest_id) WHERE guest_id IS NOT NULL" % self._table)
-
+    _partner_unique = models.UniqueIndex("(channel_id, partner_id) WHERE partner_id IS NOT NULL")
+    _guest_unique = models.UniqueIndex("(channel_id, guest_id) WHERE guest_id IS NOT NULL")
     _partner_or_guest_exists = models.Constraint(
         'CHECK((partner_id IS NOT NULL AND guest_id IS NULL) OR (partner_id IS NULL AND guest_id IS NOT NULL))',
         'A channel member must be a partner or a guest.',

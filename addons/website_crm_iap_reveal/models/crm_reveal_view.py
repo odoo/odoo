@@ -19,14 +19,8 @@ class CrmRevealView(models.Model):
     reveal_state = fields.Selection([('to_process', 'To Process'), ('not_found', 'Not Found')], default='to_process', string="State", index=True)
     create_date = fields.Datetime(index=True)
 
-    def init(self):
-        self._cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('crm_reveal_view_ip_rule_id',))
-        if not self._cr.fetchone():
-            self._cr.execute('CREATE UNIQUE INDEX crm_reveal_view_ip_rule_id ON crm_reveal_view (reveal_rule_id,reveal_ip)')
-        self._cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('crm_reveal_view_state_create_date',))
-        if not self._cr.fetchone():
-            self._cr.execute('CREATE INDEX crm_reveal_view_state_create_date ON crm_reveal_view (reveal_state,create_date)')
-
+    _ip_rule_id = models.UniqueIndex("(reveal_rule_id,reveal_ip)")
+    _state_create_date = models.Index("(reveal_state,create_date)")
 
     @api.model
     def _clean_reveal_views(self):
