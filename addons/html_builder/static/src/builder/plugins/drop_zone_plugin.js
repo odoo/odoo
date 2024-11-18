@@ -5,13 +5,7 @@ import { closest, touching } from "@web/core/utils/ui";
 export class DropZonePlugin extends Plugin {
     static id = "dropzone";
     static dependencies = ["history"];
-    static shared = [
-        "displayDropZone",
-        "dropElement",
-        "dragElement",
-        "clearDropZone",
-        "addElementToCenter",
-    ];
+    static shared = ["displayDropZone", "dragElement", "clearDropZone", "getAddElement"];
 
     resources = {
         savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
@@ -80,13 +74,16 @@ export class DropZonePlugin extends Plugin {
         }
     }
 
-    dropElement(elementToAdd, position) {
-        const dropZone = closest(touching(this.dropZoneElements, position), position);
+    getAddElement(position) {
+        const dropZone = position
+            ? closest(touching(this.dropZoneElements, position), position)
+            : closest(this.dropZoneElements, {
+                  x: window.innerWidth / 2,
+                  y: window.innerHeight / 2,
+              });
         if (!dropZone) {
-            this.clearDropZone();
-            return;
+            return () => {};
         }
-
         let target = dropZone.previousSibling;
         let addAfter = true;
         if (!target) {
@@ -94,22 +91,9 @@ export class DropZonePlugin extends Plugin {
             target = dropZone.nextSibling;
         }
         this.clearDropZone();
-        addAfter ? target.after(elementToAdd) : target.before(elementToAdd);
-        this.dependencies.history.addStep();
-    }
-
-    addElementToCenter(elementToAdd) {
-        const position = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-        const dropZone = closest(this.dropZoneElements, position);
-
-        let target = dropZone.previousSibling;
-        let addAfter = true;
-        if (!target) {
-            addAfter = false;
-            target = dropZone.nextSibling;
-        }
-        this.clearDropZone();
-        addAfter ? target.after(elementToAdd) : target.before(elementToAdd);
-        this.dependencies.history.addStep();
+        return (elementToAdd) => {
+            addAfter ? target.after(elementToAdd) : target.before(elementToAdd);
+            this.dependencies.history.addStep();
+        };
     }
 }

@@ -21,10 +21,10 @@
             </div>
             <div class="pt-1">
                 <t t-if="state.activeTab === 'blocks'">
-                    <BlockTab editor="editor" snippetModel="snippetModel"/>
+                    <BlockTab snippetModel="snippetModel"/>
                 </t>
                 <t t-if="state.activeTab === 'customize'">
-                    <CustomizeTab editor="editor" selectedToolboxes="state.selectedToolboxes" />
+                    <CustomizeTab selectedToolboxes="state.selectedToolboxes" />
                 </t>
                 <t t-if="state.activeTab === 'theme'">
                     theme
