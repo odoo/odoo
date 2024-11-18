@@ -334,7 +334,10 @@ export class ClipboardPlugin extends Plugin {
                 // Break line by inserting new paragraph and
                 // remove current paragraph's bottom margin.
                 const p = closestElement(selection.anchorNode, "p");
-                if (this.dependencies.split.isUnsplittable(closestBlock(selection.anchorNode))) {
+                if (
+                    this.dependencies.split.isUnsplittable(closestBlock(selection.anchorNode)) ||
+                    closestElement(selection.anchorNode).tagName === "PRE"
+                ) {
                     this.dependencies.lineBreak.insertLineBreak();
                 } else {
                     const [pBefore] = this.dependencies.split.splitBlock();

@@ -247,6 +247,16 @@ describe("Simple text", () => {
                 contentAfter: '<div><span style="font-size: 9px;">ab<br>c<br>d[]</span></div>',
             });
         });
+
+        test("should paste text and understand \\n newlines within PRE element", async () => {
+            await testEditor({
+                contentBefore: "<pre>[]<br></pre>",
+                stepFunction: async (editor) => {
+                    pasteText(editor, "a\nb\nc");
+                },
+                contentAfter: "<pre>a<br>b<br>c[]</pre>",
+            });
+        });
     });
 
     describe("range not collapsed", () => {
