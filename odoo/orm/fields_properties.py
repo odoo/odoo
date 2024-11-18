@@ -634,6 +634,17 @@ class Properties(Field):
 
         return get_property
 
+    def filter_function(self, records, field_expr, operator, value):
+        getter = self.expression_getter(field_expr)
+        domain = None
+        if operator == 'any' or isinstance(value, Domain):
+            domain = Domain(value).optimize(records)
+        elif operator == 'in' and isinstance(value, COLLECTION_TYPES) and isinstance(getter(records.browse()), BaseModel):
+            domain = Domain('id', 'in', value).optimize(records)
+        if domain is not None:
+            return lambda rec: getter(rec).filtered_domain(domain)
+        return super().filter_function(records, field_expr, operator, value)
+
     def property_to_sql(self, field_sql: SQL, property_name: str, model: BaseModel, alias: str, query: Query) -> SQL:
         check_property_field_value_name(property_name)
         return SQL("(%s -> %s)", field_sql, property_name)

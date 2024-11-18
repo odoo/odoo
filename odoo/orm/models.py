@@ -30,7 +30,6 @@ import itertools
 import io
 import json
 import logging
-import operator
 import pytz
 import re
 import typing
@@ -5878,10 +5877,10 @@ class BaseModel(metaclass=MetaModel):
             return vals if isinstance(vals, BaseModel) else []
 
     @api.private
-    def filtered(self, func: str | Callable[[Self], bool]) -> Self:
+    def filtered(self, func: str | Callable[[Self], bool] | Domain) -> Self:
         """Return the records in ``self`` satisfying ``func``.
 
-        :param func: a function or a dot-separated sequence of field names
+        :param func: a function, Domain or a dot-separated sequence of field names
         :return: recordset of records satisfying func, may be empty.
 
         .. code-block:: python3
@@ -5895,12 +5894,19 @@ class BaseModel(metaclass=MetaModel):
         if not func:
             # align with mapped()
             return self
-        if isinstance(func, str):
+        if callable(func):
+            # normal function
+            pass
+        elif isinstance(func, str):
             if '.' in func:
-                return self.browse(rec.id for rec in self if any(rec.mapped(func)))
+                return self.browse(rec_id for rec_id, rec in zip(self._ids, self) if any(rec.mapped(func)))
             # avoid costly mapped
             func = self._fields[func].__get__
-        return self.browse(rec.id for rec in self if func(rec))
+        elif isinstance(func, Domain):
+            return self.filtered_domain(func)
+        else:
+            raise TypeError(f"Invalid function {func!r} to filter on {self._name}")
+        return self.browse(rec_id for rec_id, rec in zip(self._ids, self) if func(rec))
 
     @typing.overload
     def grouped(self, key: str) -> dict[typing.Any, Self]:
@@ -5942,184 +5948,10 @@ class BaseModel(metaclass=MetaModel):
 
         :param domain: :ref:`A search domain <reference/orm/domains>`.
         """
-        domain = list(domain)  # for now, we can pass a Domain object which becomes a list TODO
-        if not domain or not self:
+        if not self or not domain:
             return self
-
-        stack = []
-        for leaf in reversed(domain):
-            if leaf == '|':
-                stack.append(stack.pop() | stack.pop())
-            elif leaf == '!':
-                stack.append(set(self._ids) - stack.pop())
-            elif leaf == '&':
-                stack.append(stack.pop() & stack.pop())
-            elif leaf == domains._TRUE_LEAF:
-                stack.append(set(self._ids))
-            elif leaf == domains._FALSE_LEAF:
-                stack.append(set())
-            else:
-                (key, comparator, value) = leaf
-                if comparator in ('child_of', 'parent_of'):
-                    if key in ['company_id', 'company_ids']:  # avoid an explicit search
-                        value_companies = self.env['res.company'].browse(value)
-                        if comparator == 'child_of':
-                            stack.append({record.id for record in self if record[key].parent_ids & value_companies})
-                        else:
-                            stack.append({record.id for record in self if record[key] & value_companies.parent_ids})
-                    else:
-                        hierarchy_domain = [('id', 'in', self.ids), leaf]
-                        if self._active_name:
-                            hierarchy_domain.append((self._active_name, 'in', [True, False]))
-                        stack.append(set(self._search(hierarchy_domain)))
-                    continue
-
-                # determine the field with the final type for values
-                key = key.removesuffix('.id')
-                try:
-                    if '.' in key:
-                        fname, rest = key.split('.', 1)
-                        field = self._fields[fname]
-                        if field.relational:
-                            # for relational fields, evaluate as 'any'
-                            # so that negations are applied on the result of 'any' instead
-                            # of on the mapped value
-                            key, comparator, value = fname, 'any', [(rest, comparator, value)]
-                    else:
-                        field = self._fields[key]
-                        if key == 'id':
-                            key = ''
-                except KeyError as e:
-                    raise ValueError(f"Invalid field in filter of {self._name}: {domain!r}") from e
-
-                if comparator in ('any', 'not any'):
-                    if isinstance(value, Query):
-                        comparator = 'in' if comparator == 'any' else 'not in'
-                        value = set(value)
-                    else:
-                        # handle sub-domain in batch
-                        corecords = self.mapped(key)
-                        if not isinstance(corecords, BaseModel):
-                            raise ValueError(f"Invalid relational field {key} for {domain!r}")  # noqa: TRY004
-                        valid_ids = set(corecords.filtered_domain(value)._ids)
-                        is_any = comparator == 'any'
-                        stack.append({
-                            record.id
-                            for record in self
-                            if valid_ids.isdisjoint(record.mapped(key)._ids) != is_any
-                        })
-                        continue
-
-                if comparator.endswith('like'):
-                    if comparator.endswith('ilike'):
-                        # ilike uses unaccent and lower-case comparison
-                        # we may get something which is not a string
-                        def unaccent(x):
-                            return self.pool.unaccent_python(str(x).lower()) if x else ''
-                    else:
-                        def unaccent(x):
-                            return str(x) if x else ''
-
-                    # build a regex that matches the SQL-like expression
-                    # note that '\' is used for escaping in SQL
-                    def build_like_regex(value: str, exact: bool):
-                        yield '^' if exact else '.*'
-                        escaped = False
-                        for char in value:
-                            if escaped:
-                                escaped = False
-                                yield re.escape(char)
-                            elif char == '\\':
-                                escaped = True
-                            elif char == '%':
-                                yield '.*'
-                            elif char == '_':
-                                yield '.'
-                            else:
-                                yield re.escape(char)
-                        if exact:
-                            yield '$'
-                        # no need to match r'.*' in else because we only use .match()
-
-                    like_regex = re.compile("".join(build_like_regex(unaccent(value), '=' in comparator)))
-                falsy_value = field.falsy_value
-                if falsy_value is not None and comparator in ('=', '!=') and not value and falsy_value is not False:
-                    comparator = 'in' if comparator == '=' else 'not in'
-                    value = [falsy_value, False]
-                if comparator in ('in', 'not in'):
-                    if isinstance(value, COLLECTION_TYPES):
-                        value = set(value)
-                    else:
-                        value = {value}
-                    if field.type in ('date', 'datetime'):
-                        value = {Datetime.to_datetime(v) for v in value}
-                    elif field.type in ('char', 'text', 'html') and ({False, ""} & value):
-                        # compare string to both False and ""
-                        value |= {False, ""}
-                elif field.type in ('date', 'datetime'):
-                    value = Datetime.to_datetime(value)
-                match comparator:
-                    case '<':
-                        inequality = operator.lt
-                    case '>':
-                        inequality = operator.gt
-                    case '<=':
-                        inequality = operator.le
-                    case '>=':
-                        inequality = operator.ge
-                    case _:
-                        inequality = None
-
-                matching_ids = set()
-                for record in self:
-                    data = record.mapped(key)
-                    if isinstance(data, BaseModel) and comparator not in ('any', 'not any'):
-                        v = value
-                        if isinstance(value, COLLECTION_TYPES) and value:
-                            v = next(iter(value))
-                        if isinstance(v, str):
-                            try:
-                                data = data.mapped('display_name')
-                            except AccessError:
-                                # failed to access the record, return empty string for comparison
-                                data = ['']
-                        else:
-                            data = data and data.ids or [False]
-                    elif field.type in ('date', 'datetime'):
-                        data = [Datetime.to_datetime(d) for d in data]
-
-                    if comparator == '=':
-                        ok = value in data
-                    elif comparator == '!=':
-                        ok = value not in data
-                    elif comparator == '=?':
-                        ok = not value or (value in data)
-                    elif comparator == 'in':
-                        ok = value and any(x in value for x in data)
-                    elif comparator == 'not in':
-                        ok = not (value and any(x in value for x in data))
-                    elif inequality is not None:
-                        if falsy_value is None:
-                            ok = any(x is not False and x is not None and inequality(x, value) for x in data)
-                        else:
-                            ok = any(inequality(x or falsy_value, value) for x in data)
-                    elif comparator.endswith('like'):
-                        ok = any(like_regex.match(unaccent(x)) for x in data)
-                        if comparator.startswith('not'):
-                            ok = not ok
-                    else:
-                        raise ValueError(f"Invalid term domain '{leaf}', operator '{comparator}' doesn't exist.")
-
-                    if ok:
-                        matching_ids.add(record.id)
-
-                stack.append(matching_ids)
-
-        while len(stack) > 1:
-            stack.append(stack.pop() & stack.pop())
-
-        [result_ids] = stack
-        return self.browse(id_ for id_ in self._ids if id_ in result_ids)
+        predicate = Domain(domain)._as_predicate(self)
+        return self.browse(rec_id for rec_id, rec in zip(self._ids, self) if predicate(rec))
 
     @api.private
     def sorted(self, key: Callable[[Self], typing.Any] | str | None = None, reverse: bool = False) -> Self:
@@ -6870,7 +6702,7 @@ def itemgetter_tuple(items):
         return lambda a: ()
     if len(items) == 1:
         return lambda gettable: (gettable[items[0]],)
-    return operator.itemgetter(*items)
+    return itemgetter(*items)
 
 
 def get_columns_from_sql_diagnostics(cr, diagnostics, *, check_registry=False) -> list[str]:
