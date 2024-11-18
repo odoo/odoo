@@ -28,18 +28,15 @@
                 />
             </t>
         </td>
-        <td
-            t-if="env.showQuantityAndPrice"
-            class="o_sale_product_configurator_qty py-3 px-0 text-end"
-        >
-            <t t-if="!this.props.optional">
+        <td class="o_sale_product_configurator_qty py-3 px-0 text-end">
+            <t t-if="!this.props.optional &amp;&amp; env.showQuantity">
                 <QuantityButtons
                     quantity="this.props.quantity"
                     setQuantity="quantity => this.env.setQuantity(this.props.product_tmpl_id, quantity)"
                     isMinusButtonDisabled="this.props.quantity === 1 &amp;&amp; isMainProduct"
                 />
             </t>
-            <t t-else="">
+            <t t-elif="this.props.optional &amp;&amp; env.showPrice">
                 <t t-call="sale.product_price" name="sale_product_configurator_optional_price"/>
             </t>
             <a
@@ -51,14 +48,13 @@
             </a>
         </td>
         <td
-            t-if="env.showQuantityAndPrice"
             class="o_sale_product_configurator_price py-3 px-0 text-end"
             name="price"
         >
-            <t t-if="!this.props.optional">
+            <t t-if="!this.props.optional &amp;&amp; env.showPrice">
                 <t t-call="sale.product_price" name="sale_product_configurator_price"/>
             </t>
-            <t t-else="">
+            <t t-elif="this.props.optional">
                 <button
                     name="sale_product_configurator_add_button"
                     class="btn btn-secondary"

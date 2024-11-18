@@ -27,9 +27,21 @@ export class ComboConfiguratorDialog extends Component {
         date: String,
         price_info: { type: String, optional: true },
         edit: { type: Boolean, optional: true },
+        options: {
+            type: Object,
+            optional: true,
+            shape: {
+                showQuantity : { type: Boolean, optional: true },
+            },
+        },
         save: Function,
         discard: Function,
         close: Function,
+    };
+    static defaultProps = {
+        options: {
+            showQuantity: true,
+        },
     };
 
     setup() {
@@ -71,7 +83,7 @@ export class ComboConfiguratorDialog extends Component {
                 currencyId: this.props.currency_id,
                 soDate: this.props.date,
                 edit: true, // Hide the optional products, if any.
-                options: { canChangeVariant: false, showQuantityAndPrice: false },
+                options: { canChangeVariant: false, showQuantity: false, showPrice: false },
                 save: async configuredProduct => {
                     const selectedComboItem = comboItem.deepCopy();
                     selectedComboItem.product.ptals = configuredProduct.attribute_lines.map(
