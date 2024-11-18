@@ -14,7 +14,6 @@ class MailTestTicket(models.Model):
 
     name = fields.Char()
     email_from = fields.Char(tracking=True)
-    mobile_number = fields.Char()
     phone_number = fields.Char()
     count = fields.Integer(default=1)
     datetime = fields.Datetime(default=fields.Datetime.now)
@@ -94,8 +93,6 @@ class MailTestTicket(models.Model):
             if not email_key and len(self) > 1:
                 continue
             values = email_keys_to_values.setdefault(email_key, {})
-            if not values.get('mobile'):
-                values['mobile'] = ticket.mobile_number
             if not values.get('phone'):
                 values['phone'] = ticket.phone_number
         return email_keys_to_values

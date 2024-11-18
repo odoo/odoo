@@ -1690,7 +1690,7 @@ class MailCommon(common.TransactionCase, MailCase):
                 'name': f'Partner_{idx}',
                 'email': f'{prefix}test_partner_{idx}@example.com',
                 'country_id': country_id,
-                'mobile': '047500%02d%02d' % (idx, idx)
+                'phone': '047500%02d%02d' % (idx, idx)
             } for idx in range(count)])
             for values, partner in zip(base_values, partners):
                 values[partner_fname] = partner.id

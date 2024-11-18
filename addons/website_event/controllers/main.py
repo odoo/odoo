@@ -251,7 +251,7 @@ class WebsiteEventController(http.Controller):
             default_first_attendee = {
                 "name": request.env.user.name,
                 "email": request.env.user.email,
-                "phone": request.env.user.mobile or request.env.user.phone,
+                "phone": request.env.user.phone,
             }
         else:
             visitor = request.env['website.visitor']._get_visitor_from_request()

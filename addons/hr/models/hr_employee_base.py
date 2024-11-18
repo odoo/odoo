@@ -211,11 +211,11 @@ class HrEmployeeBase(models.AbstractModel):
             else:
                 employee.work_phone = False
 
-    @api.depends('work_contact_id', 'work_contact_id.mobile', 'work_contact_id.email')
+    @api.depends('work_contact_id', 'work_contact_id.phone', 'work_contact_id.email')
     def _compute_work_contact_details(self):
         for employee in self:
             if employee.work_contact_id:
-                employee.mobile_phone = employee.work_contact_id.mobile
+                employee.mobile_phone = employee.work_contact_id.phone
                 employee.work_email = employee.work_contact_id.email
 
     def _create_work_contacts(self):
@@ -223,7 +223,7 @@ class HrEmployeeBase(models.AbstractModel):
             raise UserError(_('Some employee already have a work contact'))
         work_contacts = self.env['res.partner'].create([{
             'email': employee.work_email,
-            'mobile': employee.mobile_phone,
+            'phone': employee.mobile_phone,
             'name': employee.name,
             'image_1920': employee.image_1920,
             'company_id': employee.company_id.id
@@ -239,7 +239,7 @@ class HrEmployeeBase(models.AbstractModel):
             else:
                 employee.work_contact_id.sudo().write({
                     'email': employee.work_email,
-                    'mobile': employee.mobile_phone,
+                    'phone': employee.mobile_phone,
                 })
         if employees_without_work_contact:
             employees_without_work_contact.sudo()._create_work_contacts()

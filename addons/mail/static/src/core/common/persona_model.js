@@ -43,8 +43,6 @@ export class Persona extends Record {
     is_company;
     /** @type {string} */
     landlineNumber;
-    /** @type {string} */
-    mobileNumber;
     debouncedSetImStatus;
     storeAsTrackedImStatus = Record.one("Store", {
         /** @this {import("models").Persona} */
@@ -104,7 +102,7 @@ export class Persona extends Record {
      * @returns {boolean}
      */
     get hasPhoneNumber() {
-        return Boolean(this.mobileNumber || this.landlineNumber);
+        return Boolean(this.landlineNumber);
     }
 
     get emailWithoutDomain() {

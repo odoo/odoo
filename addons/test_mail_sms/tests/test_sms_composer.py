@@ -184,8 +184,8 @@ class TestSMSComposerComment(SMSCommon, TestSMSRecipients):
                 })
         self.assertFalse(composer.number_field_name)
         self.assertTrue(composer.recipient_single_valid)
-        self.assertEqual(composer.recipient_single_number, self.partner_1.mobile)
-        self.assertEqual(composer.recipient_single_number_itf, self.partner_1.mobile)
+        self.assertEqual(composer.recipient_single_number, self.partner_1.phone)
+        self.assertEqual(composer.recipient_single_number_itf, self.partner_1.phone)
 
     def test_composer_internals(self):
         with self.with_user('employee'):
@@ -435,7 +435,7 @@ class TestSMSComposerMass(SMSCommon):
             'active': True,
         } for p in self.partners[:5]])
         for p in self.partners[5:8]:
-            p.mobile = self.partners[5].mobile
+            p.phone = self.partners[5].phone
             self.assertEqual(p.phone_sanitized, self.partners[5].phone_sanitized)
 
         with self.with_user('employee'):
