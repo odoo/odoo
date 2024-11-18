@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-inherit="sale.Product" t-inherit-mode="extension">
         <QuantityButtons position="attributes">
-            <attribute name="t-if">this.props.can_be_sold</attribute>
+            <attribute name="t-if" add="this.props.can_be_sold" separator=" &amp;&amp; "/>
         </QuantityButtons>
         <QuantityButtons position="after">
             <t t-call="website_sale.not_for_sale"/>
