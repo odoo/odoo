@@ -336,7 +336,7 @@ test("show date separator above mesages of similar date", async () => {
     await openDiscuss(channelId);
     await contains(".o-mail-Message", {
         count: 29,
-        after: [".o-mail-DateSection", { text: "April 20, 2019" }],
+        after: [".o-mail-DateSection", { text: "Apr 20, 2019" }],
     });
 });
 
