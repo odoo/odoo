@@ -398,6 +398,8 @@
                 <group expand="0" string="Group By">
                     <filter string="Responsible" name="responsible" domain="[]" context="{'group_by': 'user_id'}"/>
                 </group>
+                <filter string="Partners and Companies" name="invite_partner" domain="[('partner_ids', 'child_of', context.get('meetings_parent_partner'))]" context="{'active_test': False}" invisible="1"/>
+                <separator/>
             </search>
         </field>
     </record>
