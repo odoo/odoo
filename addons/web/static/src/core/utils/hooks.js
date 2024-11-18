@@ -35,8 +35,14 @@ import { status, useComponent, useEffect, useRef, onWillUnmount } from "@odoo/ow
  * @param {boolean} [params.mobile] if true, will force autofocus on touch devices.
  * @returns {Ref} the element reference
  */
-export function useAutofocus({ refName, selectAll, mobile } = {}) {
-    const ref = useRef(refName || "autofocus");
+export function useAutofocus({
+    refObj,
+    refName,
+    selectAll,
+    mobile,
+    computeAdditionalDependencies,
+} = {}) {
+    const ref = refObj || useRef(refName || "autofocus");
     const uiService = useService("ui");
 
     // Prevent autofocus on touch devices to avoid the virtual keyboard from popping up unexpectedly
@@ -48,18 +54,23 @@ export function useAutofocus({ refName, selectAll, mobile } = {}) {
         return ref;
     }
     // LEGACY
-    useEffect(
-        (el) => {
-            if (el && (!uiService.activeElement || uiService.activeElement.contains(el))) {
-                el.focus();
-                if (["INPUT", "TEXTAREA"].includes(el.tagName) && el.type !== "number") {
-                    el.selectionEnd = el.value.length;
-                    el.selectionStart = selectAll ? 0 : el.value.length;
-                }
+    let computeDependencies = () => [ref.el];
+    if (computeAdditionalDependencies) {
+        const _cpDep = computeDependencies;
+        computeDependencies = () => {
+            return _cpDep().concat(computeAdditionalDependencies());
+        };
+    }
+
+    useEffect((el) => {
+        if (el && (!uiService.activeElement || uiService.activeElement.contains(el))) {
+            el.focus();
+            if (["INPUT", "TEXTAREA"].includes(el.tagName) && el.type !== "number") {
+                el.selectionEnd = el.value.length;
+                el.selectionStart = selectAll ? 0 : el.value.length;
             }
-        },
-        () => [ref.el]
-    );
+        }
+    }, computeDependencies);
     return ref;
 }
 
