@@ -24,6 +24,7 @@
 # yael terner, 2024
 # Ha Ketem <haketem@gmail.com>, 2024
 # MichaelHadar, 2024
+# Uri Segman, 2024
 # hed shefer <hed@laylinetech.com>, 2024
 # 
 msgid ""
@@ -3502,7 +3503,7 @@ msgstr "חשבונית עסקה"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Pro-Forma Invoice #"
-msgstr ""
+msgstr "חשבונית עסקה #"
 
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
@@ -5502,8 +5503,8 @@ msgid ""
 " }})"
 msgstr ""
 "{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
-"== 'pending') and 'הזמנה ממתינה' or 'הזמנה' }} (מספר {{ object.name or 'לא "
-"קיים' } })"
+"== 'pending') and 'הזמנה ממתינה' or 'הזמנה' }} (מספר {{ object.name or 'n/a'"
+" }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale

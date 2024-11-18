@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Pak Wai Ho, 2024
-# Wil Odoo, 2024
 # Tony Ng, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-06 12:08+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Tony Ng, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5095,11 +5095,6 @@ msgid "DELIVERED DUTY PAID"
 msgstr "完稅後交貨"
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
-msgid "DOWN"
-msgstr "下"
-
-#. module: account
 #: model:ir.ui.menu,name:account.menu_board_journal_1
 msgid "Dashboard"
 msgstr "儀表板"
@@ -5821,6 +5816,11 @@ msgstr "域公式捷徑"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Domestic country of your accounting"
 msgstr "您的會計所在國家/地區"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
+msgid "Down"
+msgstr "向下"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__checkbox_download
@@ -7078,11 +7078,6 @@ msgstr "整合引擎不支援 分組依據 功能. 請刪除 '%s' 上的 分組�
 #: model:ir.model.fields,field_description:account.field_account_report__filter_growth_comparison
 msgid "Growth Comparison"
 msgstr "增長比較"
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
-msgid "HALF-UP"
-msgstr "一半"
 
 #. module: account
 #: model:ir.model,name:account.model_ir_http
@@ -9515,6 +9510,11 @@ msgstr "名稱可搜尋"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Navigate easily through reports and see what is behind the numbers"
 msgstr "輕鬆瀏覽報表，檢視數字背後的內容"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
+msgid "Nearest"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__need_cancel_request
@@ -12201,6 +12201,7 @@ msgstr "儲存這個頁面並返回來設定這個特性。"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
+#: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "Scan me with your banking app."
 msgstr "使用您的銀行App掃描."
@@ -15354,11 +15355,6 @@ msgid "Type of the exception activity on record."
 msgstr "記錄的異常活動的類型。"
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
-msgid "UP"
-msgstr "上"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
@@ -15533,6 +15529,11 @@ msgstr "不信任付款數目"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "UoM"
 msgstr "計量單位"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
+msgid "Up"
+msgstr "向上"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16281,6 +16282,13 @@ msgid ""
 "You can't create a new statement line without a suspense account set on the "
 "%s journal."
 msgstr "如果未在 %s 日記帳上設定暫記科目，則無法建立新的對帳單明細."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_payment_register.py:0
+#, python-format
+msgid "You can't create payments for entries belonging to different branches."
+msgstr "你不可為不同分支的記項建立付款。"
 
 #. module: account
 #. odoo-python
