@@ -117,7 +117,7 @@ class TestMassSMSCommon(TestMassMailCommon):
                 'name': 'Partner_%s' % (x),
                 'email': '_test_partner_%s@example.com' % (x),
                 'country_id': country_be_id,
-                'mobile': '045600%s%s99' % (x, x)
+                'phone': '045600%s%s99' % (x, x)
             })
             records += cls.env['mail.test.sms'].with_context(**cls._test_context).create({
                 'name': 'MassSMSTest_%s' % (x),
@@ -135,7 +135,7 @@ class TestMassSMSCommon(TestMassMailCommon):
         })
 
         cls.partner_numbers = [
-            phone_validation.phone_format(partner.mobile, partner.country_id.code, partner.country_id.phone_code, force_format='E164')
+            phone_validation.phone_format(partner.phone, partner.country_id.code, partner.country_id.phone_code, force_format='E164')
             for partner in partners
         ]
 
@@ -147,7 +147,7 @@ class TestMassSMSCommon(TestMassMailCommon):
             'name': f'Partner_{x}',
             'email': f'_test_partner_{x}@example.com',
             'country_id': country_be_id,
-            'mobile': mobile_numbers[x]
+            'phone': mobile_numbers[x]
         } for x, mobile_number in enumerate(mobile_numbers)])
         records = cls.env['mail.test.sms'].with_context(**cls._test_context).create([{
             'name': f'MassSMSTest_{x}',

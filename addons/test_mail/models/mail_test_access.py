@@ -85,6 +85,6 @@ class MailTestAccessPublic(models.Model):
             if not tools.email_normalize(record.email) and len(self) > 1:
                 continue
             values = email_key_to_values.setdefault(record.email, {})
-            if not values.get('mobile'):
-                values['mobile'] = record.mobile
+            if not values.get('phone'):
+                values['phone'] = record.mobile
         return email_key_to_values

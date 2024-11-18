@@ -28,7 +28,6 @@ class TestEventCrmFlow(TestEventCrmCommon, CronMixinCase):
 
         self.assertEqual(self.event_customer.country_id, self.env.ref('base.be'))
         self.assertEqual(self.event_customer.email_normalized, 'constantin@test.example.com')
-        self.assertFalse(self.event_customer.mobile)
         self.assertEqual(self.event_customer.phone, '0485112233')
 
     @users('user_eventmanager')

@@ -42,7 +42,6 @@ class TestPartnerVCard(HttpCase):
         self.partners = self.env['res.partner'].create([{
             'name': 'John Doe',
             'email': 'john.doe@test.example.com',
-            'mobile': '+1 202 555 0888',
             'phone': '+1 202 555 0122',
             'function': 'Painter',
             'street': 'Cookieville Minimum-Security Orphanarium',
@@ -53,7 +52,6 @@ class TestPartnerVCard(HttpCase):
         }, {
             'name': 'shut',
             'email': 'shut@test.example.com',
-            'mobile': '+1 202 555 0999',
             'phone': '+1 202 555 0123',
             'function': 'Developer',
             'street': 'Donutville Maximum-Security Orphanarium',
@@ -77,8 +75,6 @@ class TestPartnerVCard(HttpCase):
         self.assertEqual(vcard.contents["url"][0].value, partner.website, "Vcard should have the same website")
         self.assertEqual(vcard.contents["tel"][0].params['TYPE'], ["work"], "Vcard should have the same phone")
         self.assertEqual(vcard.contents["tel"][0].value, partner.phone, "Vcard should have the same phone")
-        self.assertEqual(vcard.contents["tel"][1].params['TYPE'], ["cell"], "Vcard should have the same mobile")
-        self.assertEqual(vcard.contents["tel"][1].value, partner.mobile, "Vcard should have the same mobile")
         self.assertEqual(vcard.contents["title"][0].value, partner.function, "Vcard should have the same function")
         self.assertEqual(len(vcard.contents['photo'][0].value), len(b64decode(partner.avatar_512)), "Vcard should have the same photo")
 

@@ -188,7 +188,6 @@ class TestPortalFlow(MailCommon, HttpCase):
             'country_id': cls.env.ref('base.fr').id,
             'email': 'mdelvaux34@example.com',
             'lang': 'en_US',
-            'mobile': '+33639982325',
             'name': 'Mathias Delvaux',
             'phone': '+33353011823',
         })

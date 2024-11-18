@@ -42,7 +42,6 @@ class ApplicantSendMail(models.TransientModel):
                     'name': applicant.partner_name,
                     'email': applicant.email_from,
                     'phone': applicant.partner_phone,
-                    'mobile': applicant.partner_phone,
                 })
 
             attachment_ids = []

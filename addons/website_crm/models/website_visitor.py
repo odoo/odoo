@@ -16,7 +16,7 @@ class WebsiteVisitor(models.Model):
         for visitor in self:
             visitor.lead_count = len(visitor.lead_ids)
 
-    @api.depends('partner_id.email_normalized', 'partner_id.mobile', 'lead_ids.email_normalized', 'lead_ids.mobile')
+    @api.depends('partner_id.email_normalized', 'partner_id.phone', 'lead_ids.email_normalized', 'lead_ids.phone')
     def _compute_email_phone(self):
         super(WebsiteVisitor, self)._compute_email_phone()
 
@@ -29,7 +29,7 @@ class WebsiteVisitor(models.Model):
             if not visitor.email:
                 visitor.email = next((lead.email_normalized for lead in visitor_leads if lead.email_normalized), False)
             if not visitor.mobile:
-                visitor.mobile = next((lead.mobile or lead.phone for lead in visitor_leads if lead.mobile or lead.phone), False)
+                visitor.mobile = next((lead.phone for lead in visitor_leads if lead.phone), False)
 
     def _check_for_message_composer(self):
         check = super(WebsiteVisitor, self)._check_for_message_composer()

@@ -99,7 +99,6 @@
                                         'default_country_id': country_id,
                                         'default_function': function,
                                         'default_phone': phone,
-                                        'default_mobile': mobile,
                                         'default_email': email_from,
                                         'default_user_id': user_id,
                                         'default_team_id': team_id,
@@ -140,7 +139,6 @@
                                         'default_country_id': country_id,
                                         'default_function': function,
                                         'default_phone': phone,
-                                        'default_mobile': mobile,
                                         'default_email': email_from,
                                         'default_user_id': user_id,
                                         'default_team_id': team_id,
@@ -152,7 +150,6 @@
                                 <field name="is_blacklisted" invisible="1"/>
                                 <field name="partner_is_blacklisted" invisible="1"/>
                                 <field name="phone_blacklisted" invisible="1"/>
-                                <field name="mobile_blacklisted" invisible="1"/>
                                 <field name="email_state" invisible="1"/>
                                 <field name="phone_state" invisible="1"/>
                                 <field name="partner_email_update" invisible="1"/>
@@ -217,14 +214,6 @@
                                     <span class="fa fa-exclamation-triangle text-warning oe_edit_only"
                                         title="By saving this change, the customer phone number will also be updated."
                                         invisible="not partner_phone_update"/>
-                                </div>
-                                <label for="mobile" class="oe_inline"/>
-                                <div class="o_row o_row_readonly">
-                                    <button name="phone_action_blacklist_remove" class="fa fa-ban text-danger"
-                                        title="This phone number is blacklisted for SMS Marketing. Click to unblacklist."
-                                        type="object" context="{'default_phone': mobile}" groups="base.group_user"
-                                        invisible="not mobile_blacklisted"/>
-                                    <field name="mobile" widget="phone" string="Mobile"/>
                                 </div>
                             </group>
                             <field name="type" invisible="1"/>
@@ -300,14 +289,6 @@
                                             <field name="contact_name" id="contact_name_page_lead"/>
                                         </div>
                                         <field name="function"/>
-                                        <label for="mobile_page_lead" class="oe_inline"/>
-                                        <div class="o_row o_row_readonly">
-                                            <button name="phone_action_blacklist_remove" class="fa fa-ban text-danger"
-                                                title="This phone number is blacklisted for SMS Marketing. Click to unblacklist."
-                                                type="object" context="{'default_phone': mobile}" groups="base.group_user"
-                                                invisible="not mobile_blacklisted"/>
-                                            <field name="mobile" id="mobile_page_lead" widget="phone"/>
-                                        </div>
                                     </group>
                                     <group string="Marketing">
                                         <field name="campaign_id" options="{'create_name_field': 'title'}"/>
@@ -471,7 +452,6 @@
                         <field name="street" invisible="1"/>
                         <field name="street2" invisible="1"/>
                         <field name="zip" invisible="1"/>
-                        <field name="mobile" invisible="1"/>
                         <field name="website" invisible="1"/>
                         <field name="function" invisible="1"/>
                         <field name="activity_ids" invisible="1"/>

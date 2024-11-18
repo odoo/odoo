@@ -20,7 +20,7 @@ export function checkDropDownItemText(text) {
     };
 }
 
-export function checkContactValues(name, address = "", phone = "", mobile = "", email = "") {
+export function checkContactValues(name, address = "", phone = "", email = "") {
     const steps = [
         {
             content: `Check partner "${name}" from partner list screen`,
@@ -36,13 +36,6 @@ export function checkContactValues(name, address = "", phone = "", mobile = "", 
         steps.push({
             content: `Check phone number "${phone}" for partner "${name}"`,
             trigger: `.partner-list .partner-info:contains("${name}") .partner-line-email:contains("${phone}")`,
-        });
-    }
-
-    if (mobile) {
-        steps.push({
-            content: `Check mobile number "${mobile}" for partner "${name}"`,
-            trigger: `.partner-list .partner-info:contains("${name}") .partner-line-email:contains("${mobile}")`,
         });
     }
 

@@ -132,9 +132,9 @@ class EventRegistration(models.Model):
             if not registration.phone and registration.partner_id:
                 partner_values = registration._synchronize_partner_values(
                     registration.partner_id,
-                    fnames={'phone', 'mobile'},
+                    fnames={'phone'},
                 )
-                registration.phone = partner_values.get('phone') or partner_values.get('mobile') or False
+                registration.phone = partner_values.get('phone') or False
 
     @api.depends('partner_id')
     def _compute_company_name(self):
@@ -166,7 +166,7 @@ class EventRegistration(models.Model):
 
     def _synchronize_partner_values(self, partner, fnames=None):
         if fnames is None:
-            fnames = {'name', 'email', 'phone', 'mobile'}
+            fnames = {'name', 'email', 'phone'}
         if partner:
             contact_id = partner.address_get().get('contact', False)
             if contact_id:

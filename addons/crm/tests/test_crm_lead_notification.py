@@ -178,7 +178,6 @@ class NewLeadNotification(TestCrmCommon):
             'state_id': self.env.ref('base.state_us_39').id,
             'website': 'https://www.arlington123.com/3f3c',
             'phone': '678-728-0949',
-            'mobile': '661-606-0781',
             'function': 'Delivery Boy',
             'user_id': self.user_sales_manager.id,
         }

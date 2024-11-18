@@ -25,7 +25,7 @@ class TestSMSPerformance(BaseMailPerformance, sms_common.SMSCase):
             {
                 'country_id': cls.env.ref('base.be').id,
                 'email': 'test%s@example.com' % x,
-                'mobile': '0456%s%s0000' % (x, x),
+                'phone': '0456%s%s0000' % (x, x),
                 'name': 'Test %s' % x,
             } for x in range(0, 10)
         ])
@@ -91,7 +91,7 @@ class TestSMSMassPerformance(BaseMailPerformance, sms_common.MockSMS):
                 'name': 'Partner_%s' % (x),
                 'email': '_test_partner_%s@example.com' % (x),
                 'country_id': be_country_id,
-                'mobile': '047500%02d%02d' % (x, x)
+                'phone': '047500%02d%02d' % (x, x)
             })
             records += cls.env['mail.test.sms'].with_context(**cls._test_context).create({
                 'name': 'Test_%s' % (x),

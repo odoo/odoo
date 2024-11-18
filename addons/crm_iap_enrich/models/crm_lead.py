@@ -139,8 +139,6 @@ class CrmLead(models.Model):
 
             if not lead.phone and iap_data.get('phone_numbers'):
                 values['phone'] = iap_data['phone_numbers'][0]
-            if not lead.mobile and iap_data.get('phone_numbers') and len(iap_data['phone_numbers']) > 1:
-                values['mobile'] = iap_data['phone_numbers'][1]
             if not lead.country_id and iap_data.get('country_code'):
                 country = self.env['res.country'].search([('code', '=', iap_data['country_code'].upper())])
                 values['country_id'] = country.id

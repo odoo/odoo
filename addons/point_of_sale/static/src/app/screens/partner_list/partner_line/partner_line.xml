@@ -27,9 +27,6 @@
                     <div class="mb-1" t-if="props.partner.phone">
                         <i class="fa fa-fw fa-phone me-2" /><t t-esc="props.partner.phone" />
                     </div>
-                    <div class="mb-1" t-if="props.partner.mobile">
-                        <i class="fa fa-fw fa-mobile me-2" /><t t-esc="props.partner.mobile" />
-                    </div>
                     <div t-if="props.partner.email" class="email-field mb-1">
                         <i class="fa fa-fw fa-paper-plane-o me-2" /><t t-esc="props.partner.email" />
                     </div>
@@ -55,9 +52,6 @@
                 <td class="partner-line-email ">
                     <div t-if="props.partner.phone">
                         <i class="fa fa-fw fa-phone me-2"/><t t-esc="props.partner.phone"/>
-                    </div>
-                    <div t-if="props.partner.mobile">
-                        <i class="fa fa-fw fa-mobile me-2"/><t t-esc="props.partner.mobile"/>
                     </div>
                     <div t-if="props.partner.email" class="email-field">
                         <i class="fa fa-fw fa-paper-plane-o me-2"/><t t-esc="props.partner.email" />

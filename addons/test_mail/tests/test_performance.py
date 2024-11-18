@@ -53,12 +53,12 @@ class BaseMailPerformance(MailCommon, TransactionCaseWithUserDemo):
                 'country_id': cls.env.ref('base.be').id,
                 'email': 'customer.test@example.com',
                 'name': 'Test Customer',
-                'mobile': '0456123456',
+                'phone': '0456123456',
             }, {
                 'country_id': cls.env.ref('base.be').id,
                 'email': 'customer.test.2@example.com',
                 'name': 'Test Customer 2',
-                'mobile': '0456654321',
+                'phone': '0456654321',
             }
         ])
         cls.customer = cls.customers[0]

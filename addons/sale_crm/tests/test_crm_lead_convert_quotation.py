@@ -73,7 +73,6 @@ class TestLeadConvertToTicket(crm_common.TestCrmCommon):
         self.assertEqual(lead.partner_id, self.contact_2)
         # TDE TODO: have a real sync assert for lead / contact
         self.assertEqual(lead.email_from, self.contact_2.email)
-        self.assertEqual(lead.mobile, self.contact_2.mobile)
         self.assertEqual(action['context']['default_partner_id'], self.contact_2.id)
 
     @users('user_sales_salesman')

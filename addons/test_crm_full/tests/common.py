@@ -33,7 +33,6 @@ class TestCrmFullCommon(TestCrmCommon, MockIAPReveal, MockVisitor):
              'email': 'partner.email.%02d@test.example.com' % idx,
              'function': 'Noisy Customer',
              'lang': 'fr_BE',
-             'mobile': '04569999%02d' % idx,
              'name': 'PartnerCustomer',
              'phone': '04560000%02d' % idx,
              'street': 'Super Street, %092d' % idx,
