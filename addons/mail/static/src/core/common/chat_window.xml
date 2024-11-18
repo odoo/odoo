@@ -12,7 +12,13 @@
         t-on-keydown="onKeydown"
         tabindex="1"
     >
+<<<<<<< master
         <div class="o-mail-ChatWindow-header d-flex align-items-center flex-shrink-0 bg-100 z-1 shadow-sm" t-on-click="onClickHeader" t-att-class="{ 'cursor-pointer': !ui.isSmall and !state.actionsDisabled }">
+||||||| 204fbd00019c655e4becbef66ab235229166a468
+        <div class="o-mail-ChatWindow-header d-flex align-items-center flex-shrink-0 bg-100 z-1" t-on-click="onClickHeader" t-att-class="{ 'cursor-pointer': !ui.isSmall and thread and !state.actionsDisabled, 'pt-2': !thread }">
+=======
+        <div class="o-mail-ChatWindow-header d-flex align-items-center flex-shrink-0 bg-100 z-1 shadow-sm" t-on-click="onClickHeader" t-att-class="{ 'cursor-pointer': !ui.isSmall and thread and !state.actionsDisabled, 'pt-2': !thread }">
+>>>>>>> acbc4fe71922a2bc2058a73e723007a6af39754a
             <t t-if="hasActionsMenu">
                 <div class="d-flex text-truncate">
                     <Dropdown position="'left-start'" onStateChanged="isOpen => this.onActionsMenuStateChanged(isOpen)" menuClass="'d-flex flex-column py-0'">

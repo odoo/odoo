@@ -64,6 +64,24 @@
     <button t-if="props.showJumpPresent and state.showJumpPresent" class="o-mail-Thread-jumpPresent position-fixed p-2 rounded-circle lh-1 m-n3 user-select-none btn btn-light shadow-sm border border-secondary" t-ref="jump-present" t-on-click="() => this.jumpToPresent()" title="Jump to Present"><i class="oi text-muted" t-att-class="{ 'oi-chevron-down': props.order === 'asc', 'oi-chevron-up': props.order !== 'asc' }"/></button>
 </t>
 
+<<<<<<< master
+||||||| 204fbd00019c655e4becbef66ab235229166a468
+<t t-name="mail.Thread.jumpUnread">
+    <span t-if="props.thread.showUnreadBanner" class="o-mail-Thread-banner d-flex cursor-pointer shadow-sm small fw-bold">
+        <t t-set="alertClass" t-value="'alert alert-info m-0 border-start-0 o-mail-Thread-bannerHover rounded-0 py-1'"/>
+        <span t-attf-class="{{ alertClass }} flex-grow-1" t-on-click="onClickUnreadMessagesBanner" t-esc="newMessageBannerText"/>
+        <span t-attf-class="{{ alertClass }}" t-on-click="() => props.thread.markAsRead({ sync: true })">Mark as Read<i class="ms-2 fa fa-check-square"/></span>
+    </span>
+</t>
+=======
+<t t-name="mail.Thread.jumpUnread">
+    <span t-if="props.thread.showUnreadBanner" class="o-mail-Thread-banner d-flex cursor-pointer border-bottom border-warning smaller fw-bolder">
+        <t t-set="alertClass" t-value="'alert alert-warning m-0 border-start-0 o-mail-Thread-bannerHover rounded-0 px-2 py-1 smaller'"/>
+        <span t-attf-class="{{ alertClass }} flex-grow-1" t-on-click="onClickUnreadMessagesBanner" t-esc="newMessageBannerText"/>
+        <span t-attf-class="{{ alertClass }}" t-on-click="() => props.thread.markAsRead({ sync: true })">Mark as Read<i class="ms-2 fa fa-check-square"/></span>
+    </span>
+</t>
+>>>>>>> acbc4fe71922a2bc2058a73e723007a6af39754a
 <t t-name="mail.Thread.loadOlder">
     <button class="btn btn-link" t-on-click="onClickLoadOlder" t-ref="load-older">Load More</button>
 </t>

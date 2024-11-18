@@ -173,7 +173,13 @@
 
 
 <t t-name="mail.Message.expandAction">
+<<<<<<< master
     <button class="btn border-0 rounded-0 o-mail-Message-expandBtn" t-att-title="expandText" t-on-click="openMobileActions" t-att-class="{
+||||||| 204fbd00019c655e4becbef66ab235229166a468
+    <button class="btn rounded-0" t-att-title="expandText" t-on-click="openMobileActions" t-att-class="{
+=======
+    <button class="btn border-0 rounded-0" t-att-title="expandText" t-on-click="openMobileActions" t-att-class="{
+>>>>>>> acbc4fe71922a2bc2058a73e723007a6af39754a
         'o-mail-Message-openActionMobile opacity-25 p-2 mt-n2 rounded-circle user-select-none': isMobileOS and !mobileExpanded,
         'me-n2': isMobileOS and !mobileExpanded and isAlignedRight,
         'ms-n2': isMobileOS and !mobileExpanded and !isAlignedRight,
