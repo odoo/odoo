@@ -83,10 +83,10 @@ class TestPortalThreadController(MailControllerThreadCommon):
         record = self.env["mail.test.portal.no.partner"].create({"name": "Test"})
         token, bad_token, sign, bad_sign, partner = self._get_sign_token_params(record)
         all_partners = (
-            self.user_portal + self.user_employee + self.user_demo + self.user_admin
+            self.user_portal + self.user_employee + self.user_admin
         ).partner_id
-        record.message_subscribe(partner_ids=self.user_demo.partner_id.ids)
-        followers = self.user_demo.partner_id
+        record.message_subscribe(partner_ids=self.user_employee.partner_id.ids)
+        followers = self.user_employee.partner_id
 
         def test_partners(user, allowed, exp_partners, route_kw=None, exp_author=None):
             return MessagePostSubTestData(

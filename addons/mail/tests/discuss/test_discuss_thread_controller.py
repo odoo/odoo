@@ -19,7 +19,6 @@ class TestDiscussThreadController(MailControllerThreadCommon):
                 test_access(self.guest, False),
                 test_access(self.user_portal, False),
                 test_access(self.user_employee, True),
-                test_access(self.user_demo, True),
                 test_access(self.user_admin, True),
             ),
         )
@@ -40,7 +39,6 @@ class TestDiscussThreadController(MailControllerThreadCommon):
                 test_access(self.guest, True),
                 test_access(self.user_portal, True),
                 test_access(self.user_employee, True),
-                test_access(self.user_demo, True),
                 test_access(self.user_admin, True),
             ),
         )
@@ -51,11 +49,11 @@ class TestDiscussThreadController(MailControllerThreadCommon):
         channel = self.env["discuss.channel"].create(
             {"name": "Public Channel", "group_public_id": None}
         )
-        channel.add_members(partner_ids=self.user_demo.partner_id.ids)
+        channel.add_members(partner_ids=self.user_employee_nopartner.partner_id.ids)
         partners = (
-            self.user_portal + self.user_employee + self.user_demo + self.user_admin
+            self.user_portal + self.user_employee + self.user_employee_nopartner + self.user_admin
         ).partner_id
-        members = self.user_demo.partner_id
+        members = self.user_employee_nopartner.partner_id
 
         def test_partners(user, allowed, exp_partners, exp_author=None):
             return MessagePostSubTestData(

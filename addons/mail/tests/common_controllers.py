@@ -4,7 +4,7 @@ from markupsafe import Markup
 from requests.exceptions import HTTPError
 
 from odoo import fields
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.addons.base.tests.common import HttpCase
 from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.http import Request
 from odoo.tests import JsonRpcException
@@ -35,7 +35,7 @@ class MessagePostSubTestData:
         self.exp_emails = exp_emails
 
 
-class MailControllerCommon(HttpCaseWithUserDemo, MailCommon):
+class MailControllerCommon(HttpCase, MailCommon):
     # Note that '_get_with_access' is going to call '_get_thread_with_access'
     # which relies on classic portal parameter given as kwargs on most routes
     # (aka hash, token, pid)
@@ -135,14 +135,6 @@ class MailControllerBinaryCommon(MailControllerCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.user_test = cls.env["res.users"].create(
-            {
-                "email": "testuser@testuser.com",
-                "name": "Test User",
-                "login": "test_user",
-                "password": "test_user",
-            }
-        )
         cls.guest_2 = cls.env["mail.guest"].create({"name": "Guest 2"})
 
     def _execute_subtests(self, record, subtests):
