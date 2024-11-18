@@ -68,7 +68,6 @@ class IrHttp(models.AbstractModel):
 
     def webclient_rendering_context(self):
         return {
-            'menu_data': request.env['ir.ui.menu'].load_menus(request.session.debug),
             'session_info': self.session_info(),
         }
 
