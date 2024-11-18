@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="report_payment_receipt_document">
+    <template id="report_payment_receipt_document_common">
         <t t-call="web.external_layout">
             <t t-set="o" t-value="o.with_context(lang=lang)"/>
-            <t t-set="values" t-value="o._get_payment_receipt_report_values()"/>
+            <t t-set="values" name="receipt_values"/>
             <div class="page">
-                <h3><strong><span t-field="o.payment_receipt_title">Payment Receipt</span>: <span t-field="o.name">INV0001</span></strong></h3>
+                <h3><strong><span name="receipt_title">Payment Receipt</span>: <span t-field="o.name">INV0001</span></strong></h3>
 
                 <div class="mb-4 mt-3">
                     <div name="date" class="row">
@@ -15,14 +15,7 @@
                     </div>
                     <div class="oe_structure"></div>
                     <div class="row">
-                        <div class="col-6" t-if="o.partner_type">
-                            <t t-if="o.partner_type == 'customer'">
-                                Customer:
-                            </t>
-                            <t t-else="o.partner_type == 'supplier'">
-                                Vendor:
-                            </t><span t-field="o.partner_id" data-oe-demo="Marc Demo"/>
-                        </div>
+                        <div class="col-6" name="partner_type"/>
                         <div name="payment_method"
                              t-if="values['display_payment_method'] and o.payment_method_id"
                              class="col-6">
@@ -30,21 +23,14 @@
                         </div>
                     </div>
                     <div class="oe_structure"></div>
-                    <div class="row">
-                        <div class="col-6" t-if="o.amount">
-                            Payment Amount: <span t-field="o.amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}">50 USD</span>
-                         </div>
-                        <div class="col-6" t-if="o.memo">
-                            Memo: <span t-field="o.memo">Sample Memo</span>
-                         </div>
-                    </div>
+                    <div class="row" name="payment_amount"/>
                 </div>
 
                 <div class="oe_structure"></div>
                 <table name="invoices"
                        t-if="values['display_invoices']"
                        class="table table-borderless">
-                    <t t-set="invoices" t-value="o.reconciled_invoice_ids or o.reconciled_bill_ids"/>
+                    <t t-set="invoices" name="set_invoices"/>
                     <!-- Check if invoices include different currencies -->
                     <t t-foreach="invoices" t-as="inv">
                         <t t-if="any(inv.currency_id != par[2].currency_id for par in inv._get_reconciled_invoices_partials()[0])" t-set="otherCurrency" t-value="True"/>
@@ -99,6 +85,42 @@
             </div>
             <div class="oe_structure"></div>
         </t>
+    </template>
+
+    <template id="report_payment_receipt_document" inherit_id="report_payment_receipt_document_common">
+        <xpath expr="//t[@name='receipt_values']" position="attributes">
+            <attribute name="t-value">o._get_payment_receipt_report_values()</attribute>
+        </xpath>
+
+        <xpath expr="//span[@name='receipt_title']" position="attributes">
+            <attribute name="t-field">o.payment_receipt_title</attribute>
+        </xpath>
+
+        <xpath expr="//div[@name='partner_type']" position="attributes">
+            <attribute name="t-if">o.partner_type</attribute>
+        </xpath>
+
+        <xpath expr="//div[@name='partner_type']" position="inside">
+            <t t-if="o.partner_type == 'customer'">
+                Customer:
+            </t>
+            <t t-else="o.partner_type == 'supplier'">
+                Vendor:
+            </t><span t-field="o.partner_id" data-oe-demo="Marc Demo"/>
+        </xpath>
+
+        <xpath expr="//div[@name='payment_amount']" position="inside">
+            <div class="col-6" t-if="o.amount">
+                Payment Amount: <span t-field="o.amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}">50 USD</span>
+             </div>
+            <div class="col-6" t-if="o.memo">
+                Memo: <span t-field="o.memo">Sample Memo</span>
+             </div>
+        </xpath>
+
+        <xpath expr="//t[@name='set_invoices']" position="attributes">
+            <attribute name="t-value">o.reconciled_invoice_ids or o.reconciled_bill_ids</attribute>
+        </xpath>
     </template>
 
     <template id="report_payment_receipt">
