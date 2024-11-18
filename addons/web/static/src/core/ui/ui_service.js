@@ -25,12 +25,12 @@ function getFirstAndLastTabableElements(el) {
  *
  * @param {string} refName
  */
-export function useActiveElement(refName) {
-    if (!refName) {
+export function useActiveElement(refName, refObj) {
+    if (!refName && !refObj) {
         throw new Error("refName not given to useActiveElement");
     }
     const uiService = useService("ui");
-    const ref = useRef(refName);
+    const ref = refObj || useRef(refName);
 
     function trapFocus(e) {
         const hotkey = getActiveHotkey(e);
