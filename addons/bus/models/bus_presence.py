@@ -26,8 +26,7 @@ class BusPresence(models.Model):
     last_presence = fields.Datetime('Last Presence', default=lambda self: fields.Datetime.now())
     status = fields.Selection([('online', 'Online'), ('away', 'Away'), ('offline', 'Offline')], 'IM Status', default='offline')
 
-    def init(self):
-        self.env.cr.execute("CREATE UNIQUE INDEX IF NOT EXISTS bus_presence_user_unique ON %s (user_id) WHERE user_id IS NOT NULL" % self._table)
+    _user_unique = models.UniqueIndex("(user_id) WHERE user_id IS NOT NULL")
 
     def create(self, values):
         presences = super().create(values)

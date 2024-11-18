@@ -113,13 +113,7 @@ class HrApplicant(models.Model):
     applicant_notes = fields.Html()
     refuse_date = fields.Datetime('Refuse Date')
 
-    def init(self):
-        super().init()
-        self.env.cr.execute("""
-            CREATE INDEX IF NOT EXISTS hr_applicant_job_id_stage_id_idx
-            ON hr_applicant(job_id, stage_id)
-            WHERE active IS TRUE
-        """)
+    _job_id_stage_id_idx = models.Index("(job_id, stage_id) WHERE active IS TRUE")
 
     @api.depends("candidate_id.partner_name")
     def _compute_partner_name(self):

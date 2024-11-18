@@ -104,6 +104,10 @@ class ProductProduct(models.Model):
     can_image_1024_be_zoomed = fields.Boolean("Can Image 1024 be zoomed", compute='_compute_can_image_1024_be_zoomed')
     write_date = fields.Datetime(compute='_compute_write_date', store=True)
 
+    # Ensure there is at most one active variant for each combination.
+    # There could be no variant for a combination if using dynamic attributes.
+    _combination_unique = models.UniqueIndex("(product_tmpl_id, combination_indices) WHERE active IS TRUE")
+
     @api.depends('image_variant_1920', 'image_variant_1024')
     def _compute_can_image_variant_1024_be_zoomed(self):
         for record in self:
@@ -190,14 +194,6 @@ class ProductProduct(models.Model):
         if field in image_fields:
             return 'product/static/img/placeholder_thumbnail.png'
         return super()._get_placeholder_filename(field)
-
-    def init(self):
-        """Ensure there is at most one active variant for each combination.
-
-        There could be no variant for a combination if using dynamic attributes.
-        """
-        self.env.cr.execute("CREATE UNIQUE INDEX IF NOT EXISTS product_product_combination_unique ON %s (product_tmpl_id, combination_indices) WHERE active is true"
-            % self._table)
 
     def _get_barcodes_by_company(self):
         return [
