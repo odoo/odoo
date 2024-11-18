@@ -182,7 +182,7 @@ class PosController(PortalAccount):
                 # Check that the billing information of the user are filled.
                 error, error_message = {}, []
                 partner = request.env.user.partner_id
-                for field in self.MANDATORY_BILLING_FIELDS:
+                for field in self._get_mandatory_fields():
                     if not partner[field]:
                         error[field] = 'error'
                         error_message.append(_('The %s must be filled in your details.', request.env['ir.model.fields']._get('res.partner', field).field_description))
@@ -235,8 +235,8 @@ class PosController(PortalAccount):
         # If the user is not connected, then we will simply create a new partner with the form values.
         # Matching with existing partner was tried, but we then can't update the values, and it would force the user to use the ones from the first invoicing.
         if request.env.user._is_public() and not pos_order.partner_id.id:
-            partner_values.update({key: kwargs[key] for key in self.MANDATORY_BILLING_FIELDS})
-            partner_values.update({key: kwargs[key] for key in self.OPTIONAL_BILLING_FIELDS if key in kwargs})
+            partner_values.update({key: kwargs[key] for key in self._get_mandatory_fields()})
+            partner_values.update({key: kwargs[key] for key in self._get_optional_fields() if key in kwargs})
             for field in {'country_id', 'state_id'} & set(partner_values.keys()):
                 try:
                     partner_values[field] = int(partner_values[field])
