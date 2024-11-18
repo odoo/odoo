@@ -2489,6 +2489,16 @@ describe("link", () => {
                 contentAfter: '<p><a href="#">a123[]b</a></p>',
             });
         });
+
+        test("should paste and not transform an URL in a pre tag", async () => {
+            await testEditor({
+                contentBefore: "<pre>[]<br></pre>",
+                stepFunction: async (editor) => {
+                    pasteText(editor, "http://www.xyz.com");
+                },
+                contentAfter: "<pre>http://www.xyz.com[]</pre>",
+            });
+        });
     });
 
     describe("range not collapsed", () => {
