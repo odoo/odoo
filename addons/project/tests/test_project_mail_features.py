@@ -6,7 +6,7 @@ from odoo.tools import formataddr, mute_logger
 from odoo.tools.mail import email_normalize
 
 
-@tagged('post_install', '-at_install', 'mail_flow')
+@tagged('post_install', '-at_install', 'mail_flow', 'mail_tools')
 class TestProjectMailFeatures(TestProjectCommon, MailCommon):
 
     @classmethod
@@ -292,7 +292,7 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
                 # check recipients, which creates them (simulating discuss in a quick way)
                 self.env["res.partner"]._find_or_create_from_emails(
                     [sug['email'] for sug in suggested_all],
-                    {email_normalize(sug['email']): sug.get('create_values') or {} for sug in suggested_all},
+                    additional_values={email_normalize(sug['email']): sug.get('create_values') or {} for sug in suggested_all},
                 )
                 new_partner_cc = self.env['res.partner'].search([('email_normalized', '=', 'new.cc@test.agrolait.com')])
                 self.assertEqual(new_partner_cc.email, 'new.cc@test.agrolait.com')

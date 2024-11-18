@@ -278,10 +278,10 @@ class TestPartner(MailCommon):
             partners = self.env['res.partner'].with_context(lang='en_US')._find_or_create_from_emails(
                 all_emails,
                 additional_values={
-                    tools.email_normalize(email): {
+                    tools.email_normalize(email) or email: {
                         'company_id': self.env.company.id,
                     }
-                    for email in all_emails
+                    for email in all_emails if email and email.strip()
                 },
             )
         self.assertEqual(len(partners), len(new_samples))
