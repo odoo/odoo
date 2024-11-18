@@ -72,7 +72,7 @@ export class ComboConfiguratorDialog extends Component {
                 currencyId: this.props.currency_id,
                 soDate: this.props.date,
                 edit: true, // TODO(loti): this "disables" optional products. Rename variable for clarity?
-                options: { canChangeVariant: false, showQuantityAndPrice: false },
+                options: { canChangeVariant: false, showQuantity: false, showPrice: false },
                 save: async configuredProduct => {
                     const selectedComboItem = comboItem.deepCopy();
                     selectedComboItem.product.ptals = configuredProduct.attribute_lines.map(
