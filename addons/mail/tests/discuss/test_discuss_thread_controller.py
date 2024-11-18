@@ -69,7 +69,7 @@ class TestDiscussThreadController(MailControllerThreadCommon):
                 test_partners(self.guest, True, members),
                 test_partners(self.user_portal, True, members),
                 test_partners(self.user_employee, True, partners),
-                test_partners(self.user_demo, True, partners),
+                test_partners(self.user_employee_nopartner, True, partners),
                 test_partners(self.user_admin, True, partners),
             ),
         )
@@ -81,7 +81,7 @@ class TestDiscussThreadController(MailControllerThreadCommon):
             {"name": "Public Channel", "group_public_id": None}
         )
         no_emails = []
-        partner_emails = [self.user_demo.email, "test@example.com"]
+        partner_emails = [self.user_employee.email, "test@example.com"]
 
         def test_emails(user, allowed, exp_emails, exp_author=None):
             return MessagePostSubTestData(
@@ -99,8 +99,8 @@ class TestDiscussThreadController(MailControllerThreadCommon):
                 test_emails(self.guest, True, no_emails),
                 test_emails(self.user_portal, True, no_emails),
                 # restricted because not base.group_partner_manager
-                test_emails(self.user_employee, True, no_emails),
-                test_emails(self.user_demo, True, partner_emails),
+                test_emails(self.user_employee_nopartner, True, no_emails),
+                test_emails(self.user_employee, True, partner_emails),
                 test_emails(self.user_admin, True, partner_emails),
             ),
         )

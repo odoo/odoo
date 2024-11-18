@@ -572,11 +572,6 @@ class TestMessageLog(TestMessagePostCommon):
     @classmethod
     def setUpClass(cls):
         super(TestMessageLog, cls).setUpClass()
-        # ensure employee can create partners, necessary for templates
-        cls.user_employee.write({
-            'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)],
-        })
-
         cls.test_records, cls.test_partners = cls._create_records_for_batch(
             'mail.test.ticket',
             10,
@@ -1448,15 +1443,6 @@ class TestMessagePostHelpers(TestMessagePostCommon):
     @classmethod
     def setUpClass(cls):
         super(TestMessagePostHelpers, cls).setUpClass()
-        # ensure employee can create partners, necessary for templates
-        cls.user_employee.write({
-            'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)],
-        })
-
-        cls.user_employee.write({
-            'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)],
-        })
-
         cls.test_records, cls.test_partners = cls._create_records_for_batch(
             'mail.test.ticket',
             10,
@@ -1799,9 +1785,6 @@ class TestMessagePostLang(MailCommon, TestRecipients):
             'partner_to': '{{ object.customer_id.id if object.customer_id else "" }}',
             'subject': 'EnglishSubject for {{ object.name }}',
             'use_default_to': False,
-        })
-        cls.user_employee.write({  # add group to create contacts, necessary for templates
-            'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)],
         })
 
         cls._activate_multi_lang(test_record=cls.test_records[0], test_template=cls.test_template)

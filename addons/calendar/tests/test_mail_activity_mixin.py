@@ -6,7 +6,6 @@ from dateutil.relativedelta import relativedelta
 
 import pytz
 
-from odoo import Command
 from odoo import tests
 from odoo.addons.mail.tests.common import MailCommon
 
@@ -48,10 +47,8 @@ class TestMailActivityMixin(MailCommon):
             meeting.calendar_event_id = calendar_event
             return meeting
 
-        group_partner_manager = self.env['ir.model.data']._xmlid_to_res_id('base.group_partner_manager')
         self.user_employee.write({
             'tz': self.user_admin.tz,
-            'groups_id': [Command.link(group_partner_manager)]
         })
         with self.with_user('employee'):
             test_record = self.env['res.partner'].browse(self.test_record.id)

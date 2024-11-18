@@ -13,8 +13,6 @@ class TestMessageController(MailControllerThreadCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        # be sure to be able to create partner records
-        cls.user_employee.write({'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)]})
         cls.test_public_record = cls.env["mail.test.access.public"].create({"name": "Public Channel"})
 
     @mute_logger("odoo.http")
