@@ -2691,3 +2691,35 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         move_form.save()
         self.invoice.action_post()
         self.assertEqual(payment_term_line.name, 'XYZ', 'Manual name of payment term line should be kept')
+
+    def test_duplicate_invoice_with_separate_discount_acccount(self):
+        """When a separate discount account, make sure that discount lines don't have a tax_id set
+        So, when creating a credit note from the invoice, data are coherent (=same amount)"""
+        sale_tax = self.company_data['default_tax_sale']
+        self.env.company.account_discount_expense_allocation_id = self.company_data['default_account_expense'].id
+        great_account = self.company_data['default_account_revenue'].copy()
+        great_account.tax_ids = [Command.set(sale_tax.ids)]
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'quantity': 1,
+                'price_unit': 100.00,
+                'tax_ids': sale_tax.ids,
+                'discount': 10,
+                'account_id': great_account.id,
+            })]
+        })
+        invoice.action_post()
+        self.assertFalse(invoice.line_ids.filtered(lambda l: l.display_type == 'discount').tax_ids)
+
+        credit_note_wizard = self.env['account.move.reversal'] \
+            .with_context({'active_ids': [invoice.id], 'active_id': invoice.id, 'active_model': 'account.move'}) \
+            .create({
+                'reason': 'reason test create',
+                'journal_id': invoice.journal_id.id,
+        })
+        action = credit_note_wizard.reverse_moves()
+        credit_note = self.env['account.move'].browse(action['res_id'])
+        self.assertEqual(credit_note.amount_total, invoice.amount_total)
