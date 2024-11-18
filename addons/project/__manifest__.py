@@ -97,7 +97,6 @@
         ],
         'web.qunit_suite_tests': [
             'project/static/src/project_sharing/components/portal_file_input/portal_file_input.js',
-            'project/static/tests/legacy/**/*.js',
             'project/static/tests/tours/**/*',
         ],
         'web.assets_tests': [
