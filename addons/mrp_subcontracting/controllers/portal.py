@@ -23,6 +23,8 @@ class CustomerPortal(portal.CustomerPortal):
 
     @http.route(['/my/productions', '/my/productions/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_productions(self, page=1, date_begin=None, date_end=None, sortby='date', filterby='all'):
+        if not self._check_page_visibility("mrp_subcontracting.portal_my_home_productions"):
+            return request.not_found()
         commercial_partner = request.env.user.partner_id.commercial_partner_id
         StockPicking = request.env['stock.picking']
         domain = [('partner_id.commercial_partner_id', '=', commercial_partner.id), ('move_ids.is_subcontract', '=', True)]
