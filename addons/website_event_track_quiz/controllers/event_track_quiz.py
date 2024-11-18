@@ -66,7 +66,7 @@ class WebsiteEventTrackQuiz(EventTrackController):
         questions_count = track.quiz_questions_count
         user_answers = request.env['event.quiz.answer'].sudo().search([('id', 'in', answer_ids)])
 
-        if len(user_answers.mapped('question_id')) != questions_count:
+        if len(user_answers.question_id) != questions_count:
             return {'error': 'quiz_incomplete'}
 
         return {

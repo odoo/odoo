@@ -32,7 +32,7 @@ class TestOwnChecks(L10nLatamCheckTest):
         payment = payment_form.save()
         payment.action_post()
         self.assertEqual(payment.amount, 50)
-        outstanding_line_ids = payment.l10n_latam_new_check_ids.mapped('outstanding_line_id')
+        outstanding_line_ids = payment.l10n_latam_new_check_ids.outstanding_line_id
         self.assertEqual(len(outstanding_line_ids), 2, "There should be a split line per check. (2)")
         all_handed = any(s == 'handed' for s in payment.l10n_latam_new_check_ids.mapped('issue_state'))
         self.assertTrue(all_handed, "All checks should be in handed status.")

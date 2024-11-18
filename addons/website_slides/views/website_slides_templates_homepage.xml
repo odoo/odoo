@@ -224,7 +224,7 @@
                         <span class="navbar-toggler-icon small"/>
                     </button>
                     <div class="collapse navbar-collapse" id="navbarTagGroups">
-                        <t t-set="search_tag_groups" t-value="search_tags.mapped('group_id')"/>
+                        <t t-set="search_tag_groups" t-value="search_tags.group_id"/>
                         <ul class="navbar-nav flex-grow-1">
                             <t t-foreach="tag_groups" t-as="tag_group">
                                 <t t-set="group_frontend_tags" t-value="tag_group.tag_ids.filtered(lambda tag: tag.color)"/>

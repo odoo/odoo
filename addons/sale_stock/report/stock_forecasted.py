@@ -40,7 +40,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
             quantities = so_lines.mapped(lambda line: line.product_uom_id._compute_quantity(line.product_uom_qty, product_uom))
             out_sum = sum(quantities)
         res['draft_sale_qty'] = out_sum
-        res['draft_sale_orders'] = so_lines.mapped("order_id").sorted(key=lambda so: so.name).read(fields=['id', 'name'])
+        res['draft_sale_orders'] = so_lines.order_id.sorted(key=lambda so: so.name).read(fields=['id', 'name'])
         res['draft_sale_orders_matched'] = self.env.context.get('sale_line_to_match_id') in so_lines.ids
         res['qty']['out'] += out_sum
         return res

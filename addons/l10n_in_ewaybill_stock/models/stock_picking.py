@@ -15,7 +15,7 @@ class StockPicking(models.Model):
     def action_l10n_in_ewaybill_create(self):
         self.ensure_one()
         if (
-            product_with_no_hsn := self.move_ids.mapped('product_id').filtered(
+            product_with_no_hsn := self.move_ids.product_id.filtered(
                 lambda product: not product.l10n_in_hsn_code
             )
         ):

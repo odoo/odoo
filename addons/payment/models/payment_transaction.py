@@ -148,7 +148,7 @@ class PaymentTransaction(models.Model):
         if illegal_authorize_state_txs:
             raise ValidationError(_(
                 "Transaction authorization is not supported by the following payment providers: %s",
-                ', '.join(set(illegal_authorize_state_txs.mapped('provider_id.name')))
+                ', '.join(set(illegal_authorize_state_txs.provider_id.mapped('name')))
             ))
 
     @api.constrains('token_id')

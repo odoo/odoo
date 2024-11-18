@@ -226,7 +226,7 @@ class StockLocation(models.Model):
                 if location.company_id.id != values['company_id']:
                     raise UserError(_("Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."))
         if 'usage' in values and values['usage'] == 'view':
-            if self.mapped('quant_ids'):
+            if self.quant_ids:
                 raise UserError(_("This location's usage cannot be changed to view as it contains products."))
         if 'usage' in values or 'scrap_location' in values:
             modified_locations = self.filtered(
@@ -257,7 +257,7 @@ class StockLocation(models.Model):
                 if children_quants and not values['active']:
                     raise UserError(_(
                         "You can't disable locations %s because they still contain products.",
-                        ', '.join(children_quants.mapped('location_id.display_name'))))
+                        ', '.join(children_quants.location_id.mapped('display_name'))))
                 else:
                     super(StockLocation, children_location - self).with_context(do_not_check_quant=True).write({
                         'active': values['active'],

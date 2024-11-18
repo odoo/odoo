@@ -2820,7 +2820,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         context = {
             'default_move_type': 'out_invoice',
             'active_model': 'account.move.line',
-            'active_ids': move.mapped('invoice_line_ids').ids
+            'active_ids': move.invoice_line_ids.ids
         }
         wizard = self.env['account.automatic.entry.wizard'] \
             .with_context(context) \
@@ -3461,7 +3461,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'payment_date': invoice.date,
         })._create_payments()
         # check caba move
-        partial_rec = invoice.mapped('line_ids.matched_credit_ids')
+        partial_rec = invoice.line_ids.matched_credit_ids
         caba_move = self.env['account.move'].search([('tax_cash_basis_rec_id', '=', partial_rec.id)])
         expected_values = [
             {
@@ -3595,7 +3595,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'payment_date': invoice.date,
         })._create_payments()
         # check caba move
-        partial_rec = invoice.mapped('line_ids.matched_credit_ids')
+        partial_rec = invoice.line_ids.matched_credit_ids
         caba_move = self.env['account.move'].search([('tax_cash_basis_rec_id', '=', partial_rec.id)])
         # all amls with tax_tag should all have tax_tag_invert at True since the caba move comes from an invoice
         expected_values = [

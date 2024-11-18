@@ -153,7 +153,7 @@ class TestSaleService(TestCommonSaleTimesheet):
         # make task non billable
         task_serv2.write({'sale_line_id': False})
         self.assertTrue(all([billing_type == 'billable_time' for billing_type in timesheets.mapped('timesheet_invoice_type')]), "billable type of timesheet should not change when tranfering task into another project")
-        self.assertEqual(task_serv2.timesheet_ids.mapped('so_line'), so_line_deliver_global_project, "Old invoiced timesheet are not modified when changing the task SO line")
+        self.assertEqual(task_serv2.timesheet_ids.so_line, so_line_deliver_global_project, "Old invoiced timesheet are not modified when changing the task SO line")
 
         # try to update timesheets, catch error 'You cannot modify invoiced timesheet'
         with self.assertRaises(UserError):
@@ -477,7 +477,7 @@ class TestSaleService(TestCommonSaleTimesheet):
         self.assertFalse(project_copy.sale_line_id, "Duplicating project should erase its Sale line")
         self.assertFalse(project_copy.sale_order_id, "Duplicating project should erase its Sale order")
         self.assertEqual(len(project.tasks), len(project_copy.tasks), "Copied project must have the same number of tasks")
-        self.assertFalse(project_copy.tasks.mapped('sale_line_id'), "The tasks of the duplicated project should not have a Sale Line set.")
+        self.assertFalse(project_copy.tasks.sale_line_id, "The tasks of the duplicated project should not have a Sale Line set.")
 
         # copy the task
         task_copy = task.copy()

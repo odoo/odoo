@@ -351,11 +351,11 @@ class TestCowViewSaving(TestViewSavingCommon):
         self.assertEqual(total_views + 4 - 2, View.search_count([]), "It should have duplicated the view tree with a website_id, taking only most specific (only specific `b` key), and removing website_specific from generic tree")
         self.assertEqual(len((v3 + v5).exists()), 0, "v3 and v5 should have been deleted as they were already specific and copied to the new specific base")
         # Check generic tree
-        self.assertEqual((v1 + v2 + v4).mapped('website_id').ids, [])
-        self.assertEqual((v2 + v4).mapped('inherit_id'), v1)
+        self.assertEqual((v1 + v2 + v4).website_id.ids, [])
+        self.assertEqual((v2 + v4).inherit_id, v1)
         # Check specific tree
-        self.assertEqual((v6 + v7 + v8 + v9).mapped('website_id').ids, [1])
-        self.assertEqual((v7 + v8 + v9).mapped('inherit_id'), v6)
+        self.assertEqual((v6 + v7 + v8 + v9).website_id.ids, [1])
+        self.assertEqual((v7 + v8 + v9).inherit_id, v6)
         # Check key
         self.assertEqual(v6.key == v1.key, True)
         self.assertEqual(v7.key == v2.key, True)

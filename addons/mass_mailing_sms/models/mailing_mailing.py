@@ -115,7 +115,7 @@ class MailingMailing(models.Model):
             ('mailing_id', 'in', self.ids),
             ('state', '=', 'error')
         ])
-        failed_sms.mapped('mailing_trace_ids').unlink()
+        failed_sms.mailing_trace_ids.unlink()
         failed_sms.unlink()
         self.action_put_in_queue()
 

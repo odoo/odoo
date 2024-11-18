@@ -22,7 +22,7 @@ class RegistrationEditor(models.TransientModel):
         sale_order = self.env['sale.order'].browse(res.get('sale_order_id'))
         registrations = self.env['event.registration'].search([
             ('sale_order_id', '=', sale_order.id),
-            ('event_ticket_id', 'in', sale_order.mapped('order_line.event_ticket_id').ids),
+            ('event_ticket_id', 'in', sale_order.order_line.event_ticket_id.ids),
             ('state', '!=', 'cancel')])
 
         so_lines = sale_order.order_line.filtered('event_ticket_id')

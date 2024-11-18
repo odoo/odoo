@@ -137,7 +137,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.assertEqual(refund.state, 'paid', "The refund is not marked as paid")
         self.assertTrue(refund.payment_ids.payment_method_id.is_cash_count, msg='There should only be one payment and paid in cash.')
 
-        total_cash_payment = sum(current_session.mapped('order_ids.payment_ids').filtered(lambda payment: payment.payment_method_id.type == 'cash').mapped('amount'))
+        total_cash_payment = sum(current_session.order_ids.payment_ids.filtered(lambda payment: payment.payment_method_id.type == 'cash').mapped('amount'))
         current_session.post_closing_cash_details(total_cash_payment)
         current_session.close_session_from_ui()
         self.assertEqual(current_session.state, 'closed', msg='State of current session should be closed.')
@@ -923,7 +923,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.assertEqual(num_starting_orders + 1, len(current_session.order_ids), "Submitted order not encoded")
 
         # I close the session
-        total_cash_payment = sum(current_session.mapped('order_ids.payment_ids').filtered(lambda payment: payment.payment_method_id.type == 'cash').mapped('amount'))
+        total_cash_payment = sum(current_session.order_ids.payment_ids.filtered(lambda payment: payment.payment_method_id.type == 'cash').mapped('amount'))
         current_session.post_closing_cash_details(total_cash_payment)
         current_session.close_session_from_ui()
         self.assertEqual(current_session.state, 'closed', "Session was not properly closed")
@@ -942,7 +942,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.assertEqual(len(rescue_session.order_ids), 2, "Rescue session does not contain both orders")
 
         # I close the rescue session
-        total_cash_payment = sum(rescue_session.mapped('order_ids.payment_ids').filtered(lambda payment: payment.payment_method_id.type == 'cash').mapped('amount'))
+        total_cash_payment = sum(rescue_session.order_ids.payment_ids.filtered(lambda payment: payment.payment_method_id.type == 'cash').mapped('amount'))
         rescue_session.post_closing_cash_details(total_cash_payment)
         rescue_session.close_session_from_ui()
         self.assertEqual(rescue_session.state, 'closed', "Rescue session was not properly closed")
@@ -1078,9 +1078,9 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.assertTrue(current_session.move_id, "Journal entry should have been attached to the session.")
 
         # Check the amounts
-        debit_lines = current_session.move_id.mapped('line_ids.debit')
-        credit_lines = current_session.move_id.mapped('line_ids.credit')
-        amount_currency_lines = current_session.move_id.mapped('line_ids.amount_currency')
+        debit_lines = current_session.move_id.line_ids.mapped('debit')
+        credit_lines = current_session.move_id.line_ids.mapped('credit')
+        amount_currency_lines = current_session.move_id.line_ids.mapped('amount_currency')
         for a, b in zip(sorted(debit_lines), [0.0, 0.0, 0.0, 0.0, 922.5]):
             self.assertAlmostEqual(a, b)
         for a, b in zip(sorted(credit_lines), [0.0, 22.5, 40.91, 409.09, 450]):
@@ -1205,7 +1205,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         # delete tax
         dummy_50_perc_tax.unlink()
 
-        total_cash_payment = sum(pos_session.mapped('order_ids.payment_ids').filtered(lambda payment: payment.payment_method_id.type == 'cash').mapped('amount'))
+        total_cash_payment = sum(pos_session.order_ids.payment_ids.filtered(lambda payment: payment.payment_method_id.type == 'cash').mapped('amount'))
         pos_session.post_closing_cash_details(total_cash_payment)
 
         # close session (should not fail here)

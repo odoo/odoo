@@ -1193,7 +1193,7 @@ class expression(object):
                 domain = field.get_domain_list(model)
                 inverse_field = comodel._fields[field.inverse_name]
                 inverse_is_int = inverse_field.type in ('integer', 'many2one_reference')
-                unwrap_inverse = (lambda ids: ids) if inverse_is_int else (lambda recs: recs.ids)
+                unwrap_inverse = (lambda ids: ids) if inverse_is_int else (lambda rec_list: [rec.id for recs in rec_list for rec in recs])
 
                 if right is not False:
                     # determine ids2 in comodel

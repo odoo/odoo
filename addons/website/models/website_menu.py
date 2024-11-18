@@ -113,7 +113,7 @@ class WebsiteMenu(models.Model):
             link_designer_group = Command.link(designer_group_id)
             for record in self:
                 # Simulate write.
-                ids = set(record.group_ids.mapped('id'))
+                ids = set(record.group_ids.ids)
                 for command, record_id in commands:
                     if command == Command.LINK:
                         ids.add(record_id)

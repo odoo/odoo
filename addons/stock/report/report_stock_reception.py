@@ -44,7 +44,7 @@ class ReportStockReport_Reception(models.AbstractModel):
 
         # to support batch pickings we need to track the total already assigned
         move_ids = self._get_moves(docs)
-        assigned_moves = move_ids.mapped('move_dest_ids')
+        assigned_moves = move_ids.move_dest_ids
         product_to_assigned_qty = defaultdict(float)
         for assigned in assigned_moves:
             product_to_assigned_qty[assigned.product_id] += assigned.product_qty

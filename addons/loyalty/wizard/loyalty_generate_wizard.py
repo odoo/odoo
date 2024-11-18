@@ -63,7 +63,7 @@ class LoyaltyGenerateWizard(models.TransientModel):
     @api.depends("mode", "program_id")
     def _compute_will_send_mail(self):
         for wizard in self:
-            wizard.will_send_mail = wizard.mode == 'selected' and 'create' in wizard.program_id.mapped('communication_plan_ids.trigger')
+            wizard.will_send_mail = wizard.mode == 'selected' and 'create' in wizard.program_id.communication_plan_ids.mapped('trigger')
 
     def _get_coupon_values(self, partner):
         self.ensure_one()

@@ -833,14 +833,14 @@ class UnfollowUnreadableRecordTest(MailCommon):
     def test_internal_user_can_unsubscribe_from_unreadable_record(self):
         self.test_record._message_subscribe(partner_ids=self.partner_employee.ids)
 
-        self.assertIn(self.partner_employee, self.test_record.message_follower_ids.mapped('partner_id'))
+        self.assertIn(self.partner_employee, self.test_record.message_follower_ids.partner_id)
         self._message_unsubscribe_unreadable_record(self.user_employee)
-        self.assertNotIn(self.partner_employee, self.test_record.message_follower_ids.mapped('partner_id'))
+        self.assertNotIn(self.partner_employee, self.test_record.message_follower_ids.partner_id)
 
     def test_portal_user_cannot_unsubscribe_from_unreadable_record(self):
         self.test_record._message_subscribe(partner_ids=self.partner_portal.ids)
 
-        self.assertIn(self.partner_portal, self.test_record.message_follower_ids.mapped('partner_id'))
+        self.assertIn(self.partner_portal, self.test_record.message_follower_ids.partner_id)
         with self.assertRaises(AccessError):
             self._message_unsubscribe_unreadable_record(self.user_portal)
 

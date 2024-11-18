@@ -147,7 +147,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
     def assertFullReconcile(self, full_reconcile, lines):
         exchange_difference_move = full_reconcile.exchange_move_id
-        partials = lines.mapped('matched_debit_ids') + lines.mapped('matched_credit_ids')
+        partials = lines.matched_debit_ids + lines.matched_credit_ids
 
         if full_reconcile.exchange_move_id:
             lines += exchange_difference_move.line_ids.filtered(lambda line: line.account_id == lines[0].account_id)
@@ -3309,7 +3309,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'payment_method_line_id': self.inbound_payment_method_line.id,
         })
         pmt_wizard._create_payments()
-        partial_rec = caba_inv.mapped('line_ids.matched_credit_ids')
+        partial_rec = caba_inv.line_ids.matched_credit_ids
         caba_move = self.env['account.move'].search([('tax_cash_basis_rec_id', 'in', partial_rec.ids)])
 
         self.assertRecordValues(caba_move.line_ids, [
@@ -4131,7 +4131,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         })
         pmt_wizard._create_payments()
 
-        partial_rec = caba_inv.mapped('line_ids.matched_debit_ids')
+        partial_rec = caba_inv.line_ids.matched_debit_ids
         caba_move = self.env['account.move'].search([('tax_cash_basis_rec_id', 'in', partial_rec.ids)])
 
         # Create a misc operation with a line on the tax account, for full reconcile of those tax lines
@@ -4154,7 +4154,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
         misc_move.action_post()
 
-        lines_to_reconcile = (misc_move + caba_move + non_caba_inv).mapped('line_ids').filtered(lambda x: x.account_id == self.tax_account_1)
+        lines_to_reconcile = (misc_move + caba_move + non_caba_inv).line_ids.filtered(lambda x: x.account_id == self.tax_account_1)
         lines_to_reconcile.reconcile()
 
         # Check full reconciliation
@@ -4175,7 +4175,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
         pmt_wizard._create_payments()
 
-        partial_rec = invoice.mapped('line_ids.matched_debit_ids')
+        partial_rec = invoice.line_ids.matched_debit_ids
         caba_move = self.env['account.move'].search([('tax_cash_basis_rec_id', 'in', partial_rec.ids)])
 
         self.assertRecordValues(caba_move.line_ids.sorted(lambda line: (-abs(line.balance), -line.debit, line.account_id)), [
@@ -4209,7 +4209,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         })
         pmt_wizard._create_payments()
 
-        partial_rec = caba_inv.mapped('line_ids.matched_debit_ids')
+        partial_rec = caba_inv.line_ids.matched_debit_ids
         caba_move = self.env['account.move'].search([('tax_cash_basis_rec_id', 'in', partial_rec.ids)])
 
         # Create a misc operation with a line on the tax account, for full reconcile with the tax line
@@ -4232,7 +4232,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
         misc_move.action_post()
 
-        lines_to_reconcile = (misc_move + caba_move).mapped('line_ids').filtered(lambda x: x.account_id == self.tax_account_1)
+        lines_to_reconcile = (misc_move + caba_move).line_ids.filtered(lambda x: x.account_id == self.tax_account_1)
         lines_to_reconcile.reconcile()
 
         # Check full reconciliation
@@ -4631,7 +4631,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         })._create_payments()
 
         # check caba move
-        partial_rec = invoice.mapped('line_ids.matched_debit_ids')
+        partial_rec = invoice.line_ids.matched_debit_ids
         caba_move = self.env['account.move'].search(
             [('tax_cash_basis_rec_id', '=', partial_rec.id)])
         expected_values = [

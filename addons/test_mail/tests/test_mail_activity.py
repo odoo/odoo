@@ -379,7 +379,7 @@ class TestActivityMixin(TestActivityCommon):
             # Setting activities as done should delete them and post messages
             self.assertEqual(self.test_record.activity_ids, act2)
             self.assertEqual(len(self.test_record.message_ids), 2)
-            self.assertEqual(self.test_record.message_ids.mapped('subtype_id'), self.env.ref('mail.mt_activities'))
+            self.assertEqual(self.test_record.message_ids.subtype_id, self.env.ref('mail.mt_activities'))
 
             # Perform meeting activities
             self.test_record.activity_unlink(['test_mail.mail_act_test_meeting'])
@@ -424,7 +424,7 @@ class TestActivityMixin(TestActivityCommon):
         # activities of active users shouldn't be touched, each has exactly 1 activity present
         activities = self.env['mail.activity'].search([('user_id', 'in', active_users.ids)])
         self.assertEqual(len(activities), 3, "We should have only 3 activities in total linked to our active users")
-        self.assertEqual(activities.mapped('user_id'), active_users,
+        self.assertEqual(activities.user_id, active_users,
                          "We should have 3 different users linked to the activities of the active users")
 
     @mute_logger('odoo.addons.mail.models.mail_mail')

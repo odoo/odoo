@@ -206,7 +206,7 @@ class MrpUnbuild(models.Model):
                 move.quantity = float_round(move.product_uom_qty, precision_rounding=move.product_uom.rounding)
                 continue
             needed_quantity = move.product_uom_qty
-            moves_lines = original_move.mapped('move_line_ids')
+            moves_lines = original_move.move_line_ids
             if move in produce_moves and self.lot_id:
                 moves_lines = moves_lines.filtered(lambda ml: self.lot_id in ml.produce_line_ids.lot_id)  # FIXME sle: double check with arm
             for move_line in moves_lines:
@@ -223,8 +223,8 @@ class MrpUnbuild(models.Model):
         finished_moves._action_done()
         consume_moves._action_done()
         produce_moves._action_done()
-        produced_move_line_ids = produce_moves.mapped('move_line_ids').filtered(lambda ml: ml.quantity > 0)
-        consume_moves.mapped('move_line_ids').write({'produce_line_ids': [(6, 0, produced_move_line_ids.ids)]})
+        produced_move_line_ids = produce_moves.move_line_ids.filtered(lambda ml: ml.quantity > 0)
+        consume_moves.move_line_ids.write({'produce_line_ids': [(6, 0, produced_move_line_ids.ids)]})
         if self.mo_id:
             unbuild_msg = _("%(qty)s %(measure)s unbuilt in %(order)s",
                 qty=self.product_qty,

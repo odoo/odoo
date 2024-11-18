@@ -31,7 +31,7 @@ class MailActivityPlan(models.Model):
         if failing_templates:
             raise UserError(
                 _('Plan activities %(template_names)s cannot use coach, manager or employee responsible as it is used only for employee plans.',
-                  template_names=', '.join(failing_templates.mapped('activity_type_id.name')))
+                  template_names=', '.join(failing_templates.activity_type_id.mapped('name')))
             )
 
     @api.depends('res_model')

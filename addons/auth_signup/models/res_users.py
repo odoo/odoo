@@ -189,7 +189,7 @@ class ResUsers(models.Model):
         # prepare reset password signup
         create_mode = bool(self.env.context.get('create_user'))
 
-        self.mapped('partner_id').signup_prepare(signup_type=signup_type)
+        self.partner_id.signup_prepare(signup_type=signup_type)
 
         # send email to users with their signup url
         account_created_template = None

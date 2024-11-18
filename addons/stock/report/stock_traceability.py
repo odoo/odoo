@@ -30,7 +30,7 @@ class StockTraceabilityReport(models.TransientModel):
             move_line = lines_todo.pop(0)
             # if MTO
             if move_line.move_id.move_orig_ids:
-                lines = move_line.move_id.move_orig_ids.mapped('move_line_ids').filtered(
+                lines = move_line.move_id.move_orig_ids.move_line_ids.filtered(
                     lambda m: m.lot_id == move_line.lot_id and m.state == 'done'
                 ) - lines_seen
             # if MTS
@@ -73,7 +73,7 @@ class StockTraceabilityReport(models.TransientModel):
             if model == 'stock.picking':
                 lines = record.move_ids.move_line_ids.filtered(lambda m: m.lot_id and m.state == 'done')
             else:
-                lines = record.move_finished_ids.mapped('move_line_ids').filtered(lambda m: m.state == 'done')
+                lines = record.move_finished_ids.move_line_ids.filtered(lambda m: m.state == 'done')
         move_line_vals = self._lines(line_id, model_id=rec_id, model=model, level=level, move_lines=lines)
         final_vals = sorted(move_line_vals, key=lambda v: v['date'], reverse=True)
         lines = self._final_vals_to_lines(final_vals, level)

@@ -76,7 +76,7 @@ class StockLot(models.Model):
             ('lot_id', 'in', alert_lots.ids),
             ('quantity', '>', 0),
             ('location_id.usage', '=', 'internal')])
-        alert_lots = lot_stock_quants.mapped('lot_id')
+        alert_lots = lot_stock_quants.lot_id
 
         for lot in alert_lots:
             lot.activity_schedule(

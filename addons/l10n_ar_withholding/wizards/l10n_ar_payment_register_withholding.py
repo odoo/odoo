@@ -104,4 +104,4 @@ class L10n_ArPaymentRegisterWithholding(models.TransientModel):
             if wth.tax_id.l10n_ar_tax_type == 'iibb_total':
                 wth.base_amount = wth.payment_register_id.amount
             else:
-                wth.base_amount = wth.payment_register_id.amount * sum(wth.payment_register_id.line_ids.mapped('move_id.amount_untaxed')) / sum(wth.payment_register_id.line_ids.mapped("move_id.amount_total"))
+                wth.base_amount = wth.payment_register_id.amount * sum(wth.payment_register_id.line_ids.move_id.mapped('amount_untaxed')) / sum(wth.payment_register_id.line_ids.move_id.mapped("amount_total"))

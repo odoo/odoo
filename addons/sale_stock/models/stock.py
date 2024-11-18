@@ -26,11 +26,9 @@ class StockMove(models.Model):
         """ Overridden from stock_account to return the customer invoices
         related to this stock move.
         """
-        rslt = super(StockMove, self)._get_related_invoices()
-        invoices = self.mapped('picking_id.sale_id.invoice_ids').filtered(lambda x: x.state == 'posted')
-        rslt += invoices
-        #rslt += invoices.mapped('reverse_entry_ids')
-        return rslt
+        result = super()._get_related_invoices()
+        invoices = self.picking_id.sale_id.invoice_ids.filtered(lambda x: x.state == 'posted')
+        return result | invoices
 
     def _get_source_document(self):
         res = super()._get_source_document()
@@ -44,8 +42,8 @@ class StockMove(models.Model):
     def _assign_picking_post_process(self, new=False):
         super(StockMove, self)._assign_picking_post_process(new=new)
         if new:
-            picking_id = self.mapped('picking_id')
-            sale_order_ids = self.mapped('sale_line_id.order_id')
+            picking_id = self.picking_id
+            sale_order_ids = self.sale_line_id.order_id
             for sale_order_id in sale_order_ids:
                 picking_id.message_post_with_source(
                     'mail.message_origin_link',
@@ -182,7 +180,7 @@ class StockPicking(models.Model):
             :rtype: str
             """
             origin_moves = self.env['stock.move'].browse([move.id for move_orig in moves_information.values() for move in move_orig[0]])
-            origin_picking = origin_moves.mapped('picking_id')
+            origin_picking = origin_moves.picking_id
             values = {
                 'origin_moves': origin_moves,
                 'origin_picking': origin_picking,
@@ -220,6 +218,6 @@ class StockLot(models.Model):
     def action_view_so(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("sale.action_orders")
-        action['domain'] = [('id', 'in', self.mapped('sale_order_ids.id'))]
+        action['domain'] = [('id', 'in', self.sale_order_ids.ids)]
         action['context'] = dict(self._context, create=False)
         return action

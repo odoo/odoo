@@ -58,7 +58,7 @@ class TaxReportTest(AccountTestInvoicingCommon):
         return cls.env['account.report.line'].create({
             'name': f"[{tag_name}] {line_name}",
             'report_id': report.id,
-            'sequence': max(report.mapped('line_ids.sequence') or [0]) + 1,
+            'sequence': max(report.line_ids.mapped('sequence') or [0]) + 1,
             'expression_ids': [
                 Command.create({
                     'label': 'balance',

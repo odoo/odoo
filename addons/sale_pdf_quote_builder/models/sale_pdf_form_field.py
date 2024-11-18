@@ -102,7 +102,7 @@ class SalePdfFormField(models.Model):
                         model_name=Model._name
                     ))
                 if i != len(path) - 1:
-                    Model = Model.mapped(field_name)
+                    Model = Model[field_name]
 
     @api.constrains('document_type', 'product_document_ids', 'quotation_document_ids')
     def _check_document_type_and_document_linked_compatibility(self):

@@ -128,7 +128,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
         with self.assertQueryCount(0):
             # already in cache
             records.mapped('name')
-            records.mapped('partner_id')
+            records.partner_id
 
         with self.assertQueryCount(1):
             # this one shouldn't have been fetched
@@ -622,7 +622,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
         all_records = self.env['test_performance.base'].search([])
         for record in all_records:
             groups[record.partner_id.id].append(record.value)
-        partners = self.env['res.partner'].search([('id', 'in', all_records.mapped('partner_id').ids)])
+        partners = self.env['res.partner'].search([('id', 'in', all_records.partner_id.ids)])
         return [{
             '__domain': [('partner_id', '=', partner.id)],
             'partner_id': (partner.id, partner.display_name),

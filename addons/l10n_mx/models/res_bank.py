@@ -8,7 +8,7 @@ class ResBank(models.Model):
     _inherit = "res.bank"
 
     def _get_fiscal_country_codes(self):
-        return ','.join(self.env.companies.mapped('account_fiscal_country_id.code'))
+        return ','.join(self.env.companies.account_fiscal_country_id.mapped('code'))
 
     l10n_mx_edi_code = fields.Char(
         "ABM Code",
@@ -21,7 +21,7 @@ class ResPartnerBank(models.Model):
     _inherit = "res.partner.bank"
 
     def _get_fiscal_country_codes(self):
-        return ','.join(self.env.companies.mapped('account_fiscal_country_id.code'))
+        return ','.join(self.env.companies.account_fiscal_country_id.mapped('code'))
 
     l10n_mx_edi_clabe = fields.Char(
         "CLABE", help="Standardized banking cipher for Mexico. More info "

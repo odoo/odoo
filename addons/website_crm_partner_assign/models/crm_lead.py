@@ -131,7 +131,7 @@ class CrmLead(models.Model):
                     ('partner_latitude', '>', latitude - 2), ('partner_latitude', '<', latitude + 2),
                     ('partner_longitude', '>', longitude - 1.5), ('partner_longitude', '<', longitude + 1.5),
                     ('country_id', '=', lead.country_id.id),
-                    ('id', 'not in', lead.partner_declined_ids.mapped('id')),
+                    ('id', 'not in', lead.partner_declined_ids.ids),
                 ])
 
                 # 2. second way: in the same country, big area
@@ -141,7 +141,7 @@ class CrmLead(models.Model):
                         ('partner_latitude', '>', latitude - 4), ('partner_latitude', '<', latitude + 4),
                         ('partner_longitude', '>', longitude - 3), ('partner_longitude', '<', longitude + 3),
                         ('country_id', '=', lead.country_id.id),
-                        ('id', 'not in', lead.partner_declined_ids.mapped('id')),
+                        ('id', 'not in', lead.partner_declined_ids.ids),
                     ])
 
                 # 3. third way: in the same country, extra large area
@@ -151,7 +151,7 @@ class CrmLead(models.Model):
                         ('partner_latitude', '>', latitude - 8), ('partner_latitude', '<', latitude + 8),
                         ('partner_longitude', '>', longitude - 8), ('partner_longitude', '<', longitude + 8),
                         ('country_id', '=', lead.country_id.id),
-                        ('id', 'not in', lead.partner_declined_ids.mapped('id')),
+                        ('id', 'not in', lead.partner_declined_ids.ids),
                     ])
 
                 # 5. fifth way: anywhere in same country
@@ -160,7 +160,7 @@ class CrmLead(models.Model):
                     partner_ids = Partner.search([
                         ('partner_weight', '>', 0),
                         ('country_id', '=', lead.country_id.id),
-                        ('id', 'not in', lead.partner_declined_ids.mapped('id')),
+                        ('id', 'not in', lead.partner_declined_ids.ids),
                     ])
 
                 # 6. sixth way: closest partner whatsoever, just to have at least one result

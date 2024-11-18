@@ -94,7 +94,7 @@
                     </table>
                     <table class="table table-borderless mt48" t-elif="o.move_line_ids and o.state=='done'" name="stock_move_line_table">
                         <t t-set="has_serial_number" t-value="False"/>
-                        <t t-set="has_serial_number" t-value="o.move_line_ids.mapped('lot_id')" groups="stock.group_lot_on_delivery_slip"/>
+                        <t t-set="has_serial_number" t-value="o.move_line_ids.lot_id" groups="stock.group_lot_on_delivery_slip"/>
                         <thead>
                             <tr>
                                 <th name="th_sml_product">Product</th>
@@ -110,7 +110,7 @@
                                 2. If any packages are assigned => split products up by package (or non-package) and then apply use case 1 -->
                             <!-- If has destination packages => create sections of corresponding products -->
                             <t t-if="o.has_packages" name="has_packages">
-                                <t t-set="packages" t-value="o.move_line_ids.mapped('result_package_id')"/>
+                                <t t-set="packages" t-value="o.move_line_ids.result_package_id"/>
                                 <t t-foreach="packages" t-as="package">
                                     <t t-call="stock.stock_report_delivery_package_section_line"/>
                                     <t t-set="package_move_lines" t-value="o.move_line_ids.filtered(lambda l: l.result_package_id == package)"/>
@@ -173,7 +173,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr t-foreach="backorders.mapped('move_ids').filtered(lambda x: x.product_uom_qty)" t-as="bo_line">
+                                <tr t-foreach="backorders.move_ids.filtered(lambda x: x.product_uom_qty)" t-as="bo_line">
                                     <td class="w-auto">
                                         <span t-field="bo_line.product_id">Office Chair</span>
                                         <p t-if="bo_line.description_picking and bo_line.description_picking != bo_line.product_id.name and bo_line.description_picking != bo_line.product_id.display_name">

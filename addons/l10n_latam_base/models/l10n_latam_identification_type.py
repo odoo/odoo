@@ -18,6 +18,6 @@ class L10n_LatamIdentificationType(models.Model):
 
     @api.depends('country_id')
     def _compute_display_name(self):
-        multi_localization = len(self.search([]).mapped('country_id')) > 1
+        multi_localization = len(self.search([]).country_id) > 1
         for rec in self:
             rec.display_name = '{}{}'.format(rec.name, multi_localization and rec.country_id and ' (%s)' % rec.country_id.code or '')

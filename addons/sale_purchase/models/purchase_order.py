@@ -62,7 +62,7 @@ class PurchaseOrder(models.Model):
                 user_id=sale_order.user_id.id or self.env.uid,
                 views_or_xmlid='sale_purchase.exception_sale_on_purchase_cancellation',
                 render_context={
-                    'purchase_orders': purchase_order_lines.mapped('order_id'),
+                    'purchase_orders': purchase_order_lines.order_id,
                     'purchase_order_lines': purchase_order_lines,
             })
 

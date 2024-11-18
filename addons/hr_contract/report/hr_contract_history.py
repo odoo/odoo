@@ -135,7 +135,7 @@ class HrContractHistory(models.Model):
 
     @api.depends('employee_id.contract_ids')
     def _compute_contract_ids(self):
-        sorted_contracts = self.mapped('employee_id.contract_ids').sorted('date_start', reverse=True)
+        sorted_contracts = self.employee_id.contract_ids.sorted('date_start', reverse=True)
 
         mapped_employee_contracts = defaultdict(lambda: self.env['hr.contract'])
         for contract in sorted_contracts:

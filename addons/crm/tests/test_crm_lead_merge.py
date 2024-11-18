@@ -310,7 +310,7 @@ class TestLeadMerge(TestLeadMergeCommon):
             'probability': 0,
         })
 
-        all_tags = self.leads.mapped('tag_ids')
+        all_tags = self.leads.tag_ids
 
         with self.assertLeadMerged(self.lead_1, leads,
                                    name='Nibbler Spacecraft Request',

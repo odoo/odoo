@@ -65,12 +65,12 @@ class TestPoSSetup(TestPoSCommon):
         tax7 = self.taxes['tax7']
         self.assertEqual(tax7.name, 'Tax 7%')
         self.assertAlmostEqual(tax7.amount, 7)
-        self.assertEqual(tax7.invoice_repartition_line_ids.mapped('account_id').id, self.tax_received_account.id)
+        self.assertEqual(tax7.invoice_repartition_line_ids.account_id.id, self.tax_received_account.id)
         tax10 = self.taxes['tax10']
         self.assertEqual(tax10.name, 'Tax 10%')
         self.assertAlmostEqual(tax10.amount, 10)
         self.assertEqual(tax10.price_include, True)
-        self.assertEqual(tax10.invoice_repartition_line_ids.mapped('account_id').id, self.tax_received_account.id)
+        self.assertEqual(tax10.invoice_repartition_line_ids.account_id.id, self.tax_received_account.id)
         tax_group_7_10 = self.taxes['tax_group_7_10']
         self.assertEqual(tax_group_7_10.name, 'Tax 7+10%')
         self.assertEqual(tax_group_7_10.amount_type, 'group')

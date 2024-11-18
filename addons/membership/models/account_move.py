@@ -15,7 +15,7 @@ class AccountMove(models.Model):
         for move in self:
             if move.move_type == 'out_invoice':
                 self.env['membership.membership_line'].search([
-                    ('account_invoice_line', 'in', move.mapped('invoice_line_ids').ids)
+                    ('account_invoice_line', 'in', move.invoice_line_ids.ids)
                 ]).write({'date_cancel': False})
         return res
 
@@ -25,7 +25,7 @@ class AccountMove(models.Model):
         for move in self:
             if move.move_type == 'out_invoice':
                 self.env['membership.membership_line'].search([
-                    ('account_invoice_line', 'in', move.mapped('invoice_line_ids').ids)
+                    ('account_invoice_line', 'in', move.invoice_line_ids.ids)
                 ]).write({'date_cancel': fields.Date.today()})
         return res
 
@@ -34,7 +34,7 @@ class AccountMove(models.Model):
         res = super(AccountMove, self).write(vals)
         if 'partner_id' in vals:
             self.env['membership.membership_line'].search([
-                ('account_invoice_line', 'in', self.mapped('invoice_line_ids').ids)
+                ('account_invoice_line', 'in', self.invoice_line_ids.ids)
             ]).write({'partner': vals['partner_id']})
         return res
 
@@ -54,7 +54,7 @@ class AccountMoveLine(models.Model):
 
         existing_memberships = self.env['membership.membership_line'].search([
             ('account_invoice_line', 'in', to_process.ids)])
-        to_process = to_process - existing_memberships.mapped('account_invoice_line')
+        to_process = to_process - existing_memberships.account_invoice_line
 
         # All memberships already exist, break.
         if not to_process:
@@ -90,7 +90,7 @@ class AccountMoveLine(models.Model):
 
         existing_memberships = self.env['membership.membership_line'].search([
             ('account_invoice_line', 'in', to_process.ids)])
-        to_process = to_process - existing_memberships.mapped('account_invoice_line')
+        to_process = to_process - existing_memberships.account_invoice_line
 
         # All memberships already exist, break.
         if not to_process:

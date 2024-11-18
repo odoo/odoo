@@ -30,7 +30,7 @@ def _create_warehouse_data(env):
 
 def uninstall_hook(env):
     warehouses = env["stock.warehouse"].search([])
-    pbm_routes = warehouses.mapped("pbm_route_id")
+    pbm_routes = warehouses.pbm_route_id
     warehouses.write({"pbm_route_id": False})
     # Fail unlink means that the route is used somewhere (e.g. route_id on stock.rule). In this case
     # we don't try to do anything.

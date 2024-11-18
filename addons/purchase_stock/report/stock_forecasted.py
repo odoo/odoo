@@ -18,7 +18,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
         po_lines = self.env['purchase.order.line'].search(domain)
         in_sum = sum(po_lines.mapped('product_uom_qty'))
         res['draft_purchase_qty'] = in_sum
-        res['draft_purchase_orders'] = po_lines.mapped("order_id").sorted(key=lambda po: po.name).read(fields=['id', 'name'])
+        res['draft_purchase_orders'] = po_lines.order_id.sorted(key=lambda po: po.name).read(fields=['id', 'name'])
         res['draft_purchase_orders_matched'] = self.env.context.get('purchase_line_to_match_id') in po_lines.ids
         res['qty']['in'] += in_sum
         return res

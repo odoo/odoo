@@ -140,8 +140,8 @@ class TestCertificationFlow(common.TestSurveyCommon, MockEmail, HttpCase):
         self.assertTrue(user_inputs.scoring_success)
 
         # Check answer correction is taken into account
-        self.assertNotIn("I think they're great!", user_inputs.mapped('user_input_line_ids.value_text_box'))
-        self.assertIn("Just kidding, I don't like it...", user_inputs.mapped('user_input_line_ids.value_text_box'))
+        self.assertNotIn("I think they're great!", user_inputs.user_input_line_ids.mapped('value_text_box'))
+        self.assertIn("Just kidding, I don't like it...", user_inputs.user_input_line_ids.mapped('value_text_box'))
 
         # Check certification email correctly sent and contains document
         self.assertMailMail(

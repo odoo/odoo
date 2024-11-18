@@ -108,7 +108,7 @@ class SmsResend(models.TransientModel):
         self._check_special_access()
 
         sudo_self = self.sudo()
-        sudo_self.mapped('recipient_ids.notification_id').write({'notification_status': 'canceled'})
+        sudo_self.recipient_ids.notification_id.write({'notification_status': 'canceled'})
         self.mail_message_id._notify_message_notification_update()
         return {'type': 'ir.actions.act_window_close'}
 

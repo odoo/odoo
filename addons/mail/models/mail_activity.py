@@ -549,7 +549,7 @@ class MailActivity(models.Model):
         if next_activities_values:
             next_activities = self.env['mail.activity'].create(next_activities_values)
 
-        activity_to_keep = self.filtered('activity_type_id.keep_done')
+        activity_to_keep = self.filtered(lambda rec: rec.activity_type_id.keep_done)
         activity_to_keep.action_archive()
         (self - activity_to_keep).unlink()  # will unlink activity, dont access `self` after that
 

@@ -31,8 +31,8 @@ class ResPartner(models.Model):
         for partner in self:
             if "out_of_office_date_end" in fields:
                 # in the rare case of multi-user partner, return the earliest possible return date
-                dates = partner.mapped("user_ids.leave_date_to")
-                states = partner.mapped("user_ids.current_leave_state")
+                dates = partner.user_ids.mapped("leave_date_to")
+                states = partner.user_ids.mapped("current_leave_state")
                 date = sorted(dates)[0] if dates and all(dates) else False
                 state = sorted(states)[0] if states and all(states) else False
                 store.add(

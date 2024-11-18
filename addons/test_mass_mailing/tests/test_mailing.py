@@ -517,7 +517,7 @@ class TestMassMailing(TestMassMailCommon):
 
         with self.mock_mail_gateway():
             for i in range(0, 20, BATCH_SIZE):
-                mailing.action_send_mail(records[i:i + BATCH_SIZE].mapped('id'))
+                mailing.action_send_mail(records[i:i + BATCH_SIZE]._ids)
             self.assertEqual(len(self._mails), BATCH_SIZE)
             self.assertEqual(mailing.canceled, 15)
             mails_sent = [email_normalize(mail['email_to'][0]) for mail in self._mails]

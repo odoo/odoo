@@ -16,7 +16,7 @@ class PosConfig(models.Model):
 
     def _get_special_products(self):
         res = super()._get_special_products()
-        return res | self.env['pos.config'].search([]).mapped('down_payment_product_id')
+        return res | self.env['pos.config'].search([]).down_payment_product_id
 
     @api.model
     def _ensure_downpayment_product(self):

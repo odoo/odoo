@@ -427,7 +427,7 @@ class TestAliasCompany(TestMailAliasCommon):
         all_mail_aliases.write({'alias_domain_id': False})
         self.env['mail.alias.domain'].search([]).unlink()
 
-        self.assertFalse(any(all_mail_aliases.mapped("alias_domain_id")),
+        self.assertFalse(any(all_mail_aliases.alias_domain_id),
                          'Mail aliases should have no linked alias domain at this stage')
 
         # since we nuked all alias domain records, creating a new alias domain

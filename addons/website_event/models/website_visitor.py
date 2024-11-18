@@ -55,7 +55,7 @@ class WebsiteVisitor(models.Model):
         # child one as child should not have registrations (moved to the parent)
         for visitor in self:
             all_registrations = visitor.event_registration_ids
-            visitor.event_registered_ids = all_registrations.mapped('event_id')
+            visitor.event_registered_ids = all_registrations.event_id
 
     def _search_event_registered_ids(self, operator, operand):
         """ Search visitors with terms on events within their event registrations. E.g. [('event_registered_ids',

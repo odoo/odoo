@@ -50,11 +50,13 @@ class SaleProductConfiguratorController(Controller):
             )
             # Set missing attributes (unsaved no_variant attributes, or new attribute on existing product)
             unconfigured_ptals = (
-                product_template.attribute_line_ids - combination.attribute_line_id).filtered(
-                lambda ptal: ptal.attribute_id.display_type != 'multi')
-            combination += unconfigured_ptals.mapped(
-                lambda ptal: ptal.product_template_value_ids._only_active()[:1]
+                product_template.attribute_line_ids - combination.attribute_line_id
+            ).filtered(
+                lambda ptal: ptal.attribute_id.display_type != 'multi'
             )
+            combination = combination.concat(*unconfigured_ptals.mapped(
+                lambda ptal: ptal.product_template_value_ids._only_active()[:1]
+            ))
         if not combination:
             combination = product_template._get_first_possible_combination()
         currency = request.env['res.currency'].browse(currency_id)

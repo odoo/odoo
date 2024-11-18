@@ -46,7 +46,7 @@ class TestReflection(common.TransactionCase):
                 self.assertEqual(ir_model.name, model._description or False)
                 self.assertEqual(ir_model.state, 'manual' if model._custom else 'base')
                 self.assertEqual(ir_model.transient, bool(model._transient))
-                self.assertItemsEqual(ir_model.mapped('field_id.name'), list(model._fields))
+                self.assertItemsEqual(ir_model.field_id.mapped('name'), list(model._fields))
                 for ir_field in ir_model.field_id:
                     with self.subTest(field=ir_field.name):
                         field = model._fields[ir_field.name]

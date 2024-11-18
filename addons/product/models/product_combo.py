@@ -69,5 +69,5 @@ class ProductCombo(models.Model):
     @api.constrains('combo_item_ids')
     def _check_combo_item_ids_no_duplicates(self):
         for combo in self:
-            if len(combo.combo_item_ids.mapped('product_id')) < len(combo.combo_item_ids):
+            if len(combo.combo_item_ids.product_id) < len(combo.combo_item_ids):
                 raise ValidationError(_("A combo choice can't contain duplicate products."))

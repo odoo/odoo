@@ -361,7 +361,7 @@ class WebsiteSlides(WebsiteProfile):
                 ('challenge_id', 'in', challenges.ids),
                 ('user_id', '=', request.env.user.id),
                 ('badge_id.is_published', '=', True)
-            ]).mapped('challenge_id'))
+            ]).challenge_id)
 
         users = tools.lazy(lambda: request.env['res.users'].sudo().search([
             ('karma', '>', 0),
@@ -1251,7 +1251,7 @@ class WebsiteSlides(WebsiteProfile):
         all_questions = request.env['slide.question'].sudo().search([('slide_id', '=', slide.id)])
 
         user_answers = request.env['slide.answer'].sudo().search([('id', 'in', answer_ids)])
-        if user_answers.mapped('question_id') != all_questions:
+        if user_answers.question_id != all_questions:
             return {'error': 'slide_quiz_incomplete'}
 
         user_bad_answers = user_answers.filtered(lambda answer: not answer.is_correct)

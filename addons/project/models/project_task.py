@@ -470,7 +470,7 @@ class ProjectTask(models.Model):
             project_followers = self.project_id.message_follower_ids.filtered(lambda f: f.partner_id.id in partner_ids)
             for project_follower in project_followers:
                 project_subtypes = project_follower.subtype_ids
-                task_subtypes = (project_subtypes.mapped('parent_id') | project_subtypes.filtered(lambda sub: sub.internal or sub.default)).ids if project_subtypes else None
+                task_subtypes = (project_subtypes.parent_id | project_subtypes.filtered(lambda sub: sub.internal or sub.default)).ids if project_subtypes else None
                 partner_ids.remove(project_follower.partner_id.id)
                 super().message_subscribe(project_follower.partner_id.ids, task_subtypes)
         return super().message_subscribe(partner_ids, subtype_ids)
@@ -569,7 +569,7 @@ class ProjectTask(models.Model):
     def _compute_attachment_ids(self):
         for task in self:
             attachment_ids = self.env['ir.attachment'].search(task._get_attachments_search_domain()).ids
-            message_attachment_ids = task.mapped('message_ids.attachment_ids').ids  # from mail_thread
+            message_attachment_ids = task.message_ids.attachment_ids.ids  # from mail_thread
             task.attachment_ids = [(6, 0, list(set(attachment_ids) - set(message_attachment_ids)))]
 
     @api.depends('create_date', 'date_end', 'date_assign')
@@ -901,7 +901,7 @@ class ProjectTask(models.Model):
         section_ids = []
         if section_id:
             section_ids.append(section_id)
-        section_ids.extend(self.mapped('project_id').ids)
+        section_ids.extend(self.project_id.ids)
         search_domain = []
         if section_ids:
             search_domain = [('|')] * (len(section_ids) - 1)
@@ -1612,7 +1612,7 @@ class ProjectTask(models.Model):
 
     def _notify_get_reply_to(self, default=None):
         """ Override to set alias of tasks to their project if any. """
-        aliases = self.sudo().mapped('project_id')._notify_get_reply_to(default=default)
+        aliases = self.sudo().project_id._notify_get_reply_to(default=default)
         res = {task.id: aliases.get(task.project_id.id) for task in self}
         leftover = self.filtered(lambda rec: not rec.project_id)
         if leftover:
@@ -1631,7 +1631,7 @@ class ProjectTask(models.Model):
     def task_email_split(self, msg):
         email_list = tools.email_split((msg.get('to') or '') + ',' + (msg.get('cc') or ''))
         # check left-part is not already an alias
-        aliases = self.mapped('project_id.alias_name')
+        aliases = self.project_id.mapped('alias_name')
         return [x for x in email_list if x.split('@')[0] not in aliases]
 
     @api.model
@@ -1964,7 +1964,7 @@ class ProjectTask(models.Model):
     # Privacy
     # ---------------------------------------------------
     def _unsubscribe_portal_users(self):
-        self.message_unsubscribe(partner_ids=self.message_partner_ids.filtered('user_ids.share').ids)
+        self.message_unsubscribe(partner_ids=self.message_partner_ids.filtered(lambda rec: rec.user_ids.share).ids)
 
     @api.model
     def get_unusual_days(self, date_from, date_to=None):

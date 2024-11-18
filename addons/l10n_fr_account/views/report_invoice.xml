@@ -30,7 +30,7 @@
 
         <xpath expr="//div[@id='informations']" position="inside">
             <t t-if="o.l10n_fr_is_company_french and o.move_type.startswith('out_')">
-                <t t-set="tax_scopes" t-value="o.invoice_line_ids.mapped('tax_ids.tax_scope')"/>
+                <t t-set="tax_scopes" t-value="o.invoice_line_ids.tax_ids.mapped('tax_scope')"/>
                 <t t-set="has_service" t-value="'service' in tax_scopes"/>
                 <t t-set="has_consu" t-value="'consu' in tax_scopes"/>
 
@@ -52,7 +52,7 @@
 
         <xpath expr="//div[@name='qr_code_placeholder']" position="before">
             <div class="mb-3">
-                <p t-if="o.l10n_fr_is_company_french and o.move_type.startswith('out_') and 'on_invoice' in o.invoice_line_ids.mapped('tax_ids.tax_exigibility')">
+                <p t-if="o.l10n_fr_is_company_french and o.move_type.startswith('out_') and 'on_invoice' in o.invoice_line_ids.tax_ids.mapped('tax_exigibility')">
                     Option to pay tax on debits
                 </p>
             </div>

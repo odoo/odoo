@@ -252,7 +252,7 @@ class SMSCase(MockSMS):
             base_domain += [('mail_message_id', 'in', messages.ids)]
         notifications = self.env['mail.notification'].search(base_domain)
 
-        self.assertEqual(notifications.mapped('res_partner_id'), partners)
+        self.assertEqual(notifications.res_partner_id, partners)
 
         for recipient_info in recipients_info:
             partner = recipient_info.get('partner', self.env['res.partner'])

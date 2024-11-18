@@ -238,7 +238,7 @@ class TestPosMrp(TestPointOfSaleCommon):
         accounts = self.kit.product_tmpl_id.get_product_accounts()
         debit_interim_account = accounts['stock_output']
         credit_expense_account = accounts['expense']
-        invoice_accounts = order.account_move.line_ids.mapped('account_id.id')
+        invoice_accounts = order.account_move.line_ids.account_id._ids
         self.assertTrue(debit_interim_account.id in invoice_accounts)
         self.assertTrue(credit_expense_account.id in invoice_accounts)
         expense_line = order.account_move.line_ids.filtered(lambda l: l.account_id.id == credit_expense_account.id)

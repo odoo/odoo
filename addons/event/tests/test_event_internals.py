@@ -83,13 +83,13 @@ class TestEventData(TestEventInternalsCommon):
                          .mapped('title'), ['Name', 'Email', 'Phone'])
         self.assertEqual(
             set(event.specific_question_ids.filtered(
-            lambda q: q.question_type in ['simple_choice', 'text_box']).mapped('answer_ids.name')),
+            lambda q: q.question_type in ['simple_choice', 'text_box']).answer_ids.mapped('name')),
             {'Q1-Answer1', 'Q1-Answer2'})
         self.assertEqual(len(event.general_question_ids), 2)
         self.assertEqual(event.general_question_ids[0].title, 'Question2')
         self.assertEqual(event.general_question_ids[1].title, 'Question3')
         self.assertEqual(
-            set(event.general_question_ids[0].mapped('answer_ids.name')),
+            set(event.general_question_ids[0].answer_ids.mapped('name')),
             {'Q2-Answer1', 'Q2-Answer2'})
         # verify translations
         event_question_nl = event.specific_question_ids.filtered_domain([
@@ -215,7 +215,7 @@ class TestEventData(TestEventInternalsCommon):
         self.assertEqual(registration.state, 'open')
         # verify that mail is linked to the registration
         self.assertEqual(
-            set(mail.mapped('mail_registration_ids.registration_id.id')),
+            set(mail.mail_registration_ids.registration_id._ids),
             set([registration.id])
         )
         # start test scenario

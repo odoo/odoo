@@ -96,11 +96,11 @@ class TestMrpProductionBackorder(TestMrpCommon):
 
         move_raw_ids = production.move_raw_ids
         self.assertEqual(len(move_raw_ids), 2)
-        self.assertEqual(set(move_raw_ids.mapped("product_id")), {product_to_use_1, product_to_use_2})
+        self.assertEqual(set(move_raw_ids.product_id), {product_to_use_1, product_to_use_2})
 
         pbm_move = move_raw_ids.move_orig_ids
         self.assertEqual(len(pbm_move), 2)
-        self.assertEqual(set(pbm_move.mapped("product_id")), {product_to_use_1, product_to_use_2})
+        self.assertEqual(set(pbm_move.product_id), {product_to_use_1, product_to_use_2})
         self.assertFalse(pbm_move.move_orig_ids)
 
         mo_form = Form(production)
@@ -140,11 +140,11 @@ class TestMrpProductionBackorder(TestMrpCommon):
 
         move_raw_ids = production.move_raw_ids
         self.assertEqual(len(move_raw_ids), 2)
-        self.assertEqual(set(move_raw_ids.mapped("product_id")), {product_to_use_1, product_to_use_2})
+        self.assertEqual(set(move_raw_ids.product_id), {product_to_use_1, product_to_use_2})
 
         pbm_move = move_raw_ids.move_orig_ids
         self.assertEqual(len(pbm_move), 2)
-        self.assertEqual(set(pbm_move.mapped("product_id")), {product_to_use_1, product_to_use_2})
+        self.assertEqual(set(pbm_move.product_id), {product_to_use_1, product_to_use_2})
         self.assertFalse(pbm_move.move_orig_ids)
         self.assertEqual(sum(pbm_move.filtered(lambda m: m.product_id.id == product_to_use_1.id).mapped("product_qty")), 16)
         self.assertEqual(sum(pbm_move.filtered(lambda m: m.product_id.id == product_to_use_2.id).mapped("product_qty")), 4)

@@ -137,7 +137,7 @@ class ResCompany(models.Model):
     def create_missing_inventory_loss_location(self):
         company_ids  = self.env['res.company'].search([])
         inventory_loss_product_template_field = self.env['ir.model.fields']._get('product.template', 'property_stock_inventory')
-        companies_having_property = self.env['ir.default'].sudo().search([('field_id', '=', inventory_loss_product_template_field.id)]).mapped('company_id')
+        companies_having_property = self.env['ir.default'].sudo().search([('field_id', '=', inventory_loss_product_template_field.id)]).company_id
         company_without_property = company_ids - companies_having_property
         company_without_property._create_inventory_loss_location()
 
@@ -145,21 +145,21 @@ class ResCompany(models.Model):
     def create_missing_production_location(self):
         company_ids  = self.env['res.company'].search([])
         production_product_template_field = self.env['ir.model.fields']._get('product.template', 'property_stock_production')
-        companies_having_property = self.env['ir.default'].sudo().search([('field_id', '=', production_product_template_field.id)]).mapped('company_id')
+        companies_having_property = self.env['ir.default'].sudo().search([('field_id', '=', production_product_template_field.id)]).company_id
         company_without_property = company_ids - companies_having_property
         company_without_property._create_production_location()
 
     @api.model
     def create_missing_scrap_location(self):
         company_ids  = self.env['res.company'].search([])
-        companies_having_scrap_loc = self.env['stock.location'].search([('scrap_location', '=', True)]).mapped('company_id')
+        companies_having_scrap_loc = self.env['stock.location'].search([('scrap_location', '=', True)]).company_id
         company_without_property = company_ids - companies_having_scrap_loc
         company_without_property._create_scrap_location()
 
     @api.model
     def create_missing_scrap_sequence(self):
         company_ids  = self.env['res.company'].search([])
-        company_has_scrap_seq = self.env['ir.sequence'].search([('code', '=', 'stock.scrap')]).mapped('company_id')
+        company_has_scrap_seq = self.env['ir.sequence'].search([('code', '=', 'stock.scrap')]).company_id
         company_todo_sequence = company_ids - company_has_scrap_seq
         company_todo_sequence._create_scrap_sequence()
 

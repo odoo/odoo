@@ -285,8 +285,8 @@ class TestStockValuation(ValuationReconciliationTestCommon):
         self.assertEqual(return_pick.move_ids._is_dropshipped_returned(), True)
 
         all_amls_return = self.vendor_bill1.line_ids + self.customer_invoice1.line_ids
-        if self.sale_order1.picking_ids.mapped('move_ids.account_move_ids'):
-            all_amls_return |= self.sale_order1.picking_ids.mapped('move_ids.account_move_ids.line_ids')
+        if self.sale_order1.picking_ids.move_ids.account_move_ids:
+            all_amls_return |= self.sale_order1.picking_ids.move_ids.account_move_ids.line_ids
 
         # Two extra AML should have been created for the return
         expected_aml = {

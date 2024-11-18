@@ -92,7 +92,7 @@ class ResourceMixin(models.AbstractModel):
             Returns a dict {'days': n, 'hours': h} containing the
             quantity of working time expressed as days and as hours.
         """
-        resources = self.mapped('resource_id')
+        resources = self.resource_id
         mapped_employees = {e.resource_id.id: e.id for e in self}
         result = {}
 
@@ -137,7 +137,7 @@ class ResourceMixin(models.AbstractModel):
             Returns a dict {'days': n, 'hours': h} containing the number of leaves
             expressed as days and as hours.
         """
-        resources = self.mapped('resource_id')
+        resources = self.resource_id
         mapped_employees = {e.resource_id.id: e.id for e in self}
         result = {}
 

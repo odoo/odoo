@@ -14,7 +14,7 @@ class AccountMoveLine(models.Model):
             # We give preference to the bom in the stock moves for the sale order lines
             # If there are changes in BOMs between the stock moves creation and the
             # invoice validation a wrong price will be taken
-            boms = so_line.move_ids.filtered(lambda m: m.state != 'cancel').mapped('bom_line_id.bom_id').filtered(lambda b: b.type == 'phantom')
+            boms = so_line.move_ids.filtered(lambda m: m.state != 'cancel').bom_line_id.bom_id.filtered(lambda b: b.type == 'phantom')
             if boms:
                 bom = boms.filtered(lambda b: b.product_id == so_line.product_id or b.product_tmpl_id == so_line.product_id.product_tmpl_id)
                 if not bom:

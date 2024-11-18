@@ -26,7 +26,7 @@ class ResCompany(models.Model):
     @api.model
     def create_missing_dropship_sequence(self):
         company_ids = self.env['res.company'].search([])
-        company_has_dropship_seq = self.env['ir.sequence'].search([('code', '=', 'stock.dropshipping')]).mapped('company_id')
+        company_has_dropship_seq = self.env['ir.sequence'].search([('code', '=', 'stock.dropshipping')]).company_id
         company_todo_sequence = company_ids - company_has_dropship_seq
         company_todo_sequence._create_dropship_sequence()
 
@@ -67,7 +67,7 @@ class ResCompany(models.Model):
                 ('default_location_src_id.usage', '=', 'supplier'),
                 ('default_location_dest_id.usage', '=', 'customer'),
             ])
-            .mapped('company_id')
+            .company_id
         )
         company_todo_picking_type = company_ids - company_has_dropship_picking_type
         company_todo_picking_type._create_dropship_picking_type()
@@ -111,7 +111,7 @@ class ResCompany(models.Model):
         dropship_route = self.env.ref('stock_dropshipping.route_drop_shipping')
 
         company_ids = self.env['res.company'].search([])
-        company_has_dropship_rule = self.env['stock.rule'].search([('route_id', '=', dropship_route.id)]).mapped('company_id')
+        company_has_dropship_rule = self.env['stock.rule'].search([('route_id', '=', dropship_route.id)]).company_id
         company_todo_rule = company_ids - company_has_dropship_rule
         company_todo_rule._create_dropship_rule()
 

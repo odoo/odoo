@@ -81,7 +81,7 @@ class ProductTemplate(models.Model):
 
     def _compute_mrp_product_qty(self):
         for template in self:
-            template.mrp_product_qty = float_round(sum(template.mapped('product_variant_ids').mapped('mrp_product_qty')), precision_rounding=template.uom_id.rounding)
+            template.mrp_product_qty = float_round(sum(template.product_variant_ids.mapped('mrp_product_qty')), precision_rounding=template.uom_id.rounding)
 
     def action_view_mos(self):
         action = self.env["ir.actions.actions"]._for_xml_id("mrp.mrp_production_action")
@@ -347,7 +347,7 @@ class ProductProduct(models.Model):
 
     def action_view_bom(self):
         action = self.env["ir.actions.actions"]._for_xml_id("mrp.product_open_bom")
-        template_ids = self.mapped('product_tmpl_id').ids
+        template_ids = self.product_tmpl_id.ids
         # bom specific to this variant or global to template or that contains the product as a byproduct
         action['context'] = {
             'default_product_tmpl_id': template_ids[0],

@@ -23,14 +23,14 @@ class SurveySurvey(models.Model):
     @api.depends('slide_ids.channel_id')
     def _compute_slide_channel_data(self):
         for survey in self:
-            survey.slide_channel_ids = survey.slide_ids.mapped('channel_id')
+            survey.slide_channel_ids = survey.slide_ids.channel_id
             survey.slide_channel_count = len(survey.slide_channel_ids)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_linked_to_course(self):
         # we consider it's ok to show certification names for people trying to delete courses
         # even if they don't have access to those surveys hence the sudo usage
-        certifications = self.sudo().slide_ids.filtered(lambda slide: slide.slide_type == "certification").mapped('survey_id').exists()
+        certifications = self.sudo().slide_ids.filtered(lambda slide: slide.slide_type == "certification").survey_id.exists()
         if certifications:
             certifications_course_mapping = [
                 _(

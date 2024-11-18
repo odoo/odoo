@@ -147,7 +147,7 @@ class HrJob(models.Model):
         unfavorited_jobs.write({'favorite_user_ids': [(3, self.env.uid)]})
 
     def _compute_document_ids(self):
-        applicants = self.mapped('application_ids').filtered(lambda self: not self.employee_id)
+        applicants = self.application_ids.filtered(lambda self: not self.employee_id)
         app_to_job = dict((applicant.id, applicant.job_id.id) for applicant in applicants)
         attachments = self.env['ir.attachment'].search([
             '|',

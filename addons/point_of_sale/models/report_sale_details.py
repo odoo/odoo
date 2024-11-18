@@ -72,9 +72,9 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
         orders = self.env['pos.order'].search(domain)
 
         if config_ids:
-            config_currencies = self.env['pos.config'].search([('id', 'in', config_ids)]).mapped('currency_id')
+            config_currencies = self.env['pos.config'].search([('id', 'in', config_ids)]).currency_id
         else:
-            config_currencies = self.env['pos.session'].search([('id', 'in', session_ids)]).mapped('config_id.currency_id')
+            config_currencies = self.env['pos.session'].search([('id', 'in', session_ids)]).config_id.currency_id
         # If all the pos.config have the same currency, we can use it, else we use the company currency
         if config_currencies and all(i == config_currencies.ids[0] for i in config_currencies.ids):
             user_currency = config_currencies[0]
@@ -161,7 +161,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
                                 move_name = 'Difference observed during the counting (Loss)'
                                 payment['cash_moves'] = [{'name': move_name, 'amount': payment['money_difference']}]
                             payment['count'] = True
-                        elif payment['id'] in account_payments.mapped('pos_payment_method_id.id'):
+                        elif payment['id'] in account_payments.pos_payment_method_id._ids:
                             account_payment = account_payments.filtered(lambda p: p.pos_payment_method_id.id == payment['id'])
                             payment['final_count'] = payment['total']
                             payment['money_counted'] = sum(account_payment.mapped('amount'))

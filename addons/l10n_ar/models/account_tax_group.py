@@ -36,7 +36,7 @@ class AccountTaxGroup(models.Model):
         """
         Make sure we don't uninstall a required tax group
         """
-        ar_companies = self.filtered(lambda g: g.company_id.chart_template.startswith('ar_')).mapped('company_id')
+        ar_companies = self.filtered(lambda g: g.company_id.chart_template.startswith('ar_')).company_id
         profits_tax_group_ids = self.env['ir.model.data'].search([
             ('name', 'in', [f'{company.id}_tax_group_percepcion_ganancias' for company in ar_companies]),
             ('module', '=', 'account'),

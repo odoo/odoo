@@ -118,7 +118,7 @@ class TestCrmMailActivity(TestCrmCommon):
         self.lead_1.message_subscribe(partner_ids=[self.contact_1.id])
 
         # Check the client is not follower of any internal subtype
-        internal_subtypes = self.lead_1.message_follower_ids.filtered(lambda fol: fol.partner_id == self.contact_1).mapped('subtype_ids').filtered(lambda subtype: subtype.internal)
+        internal_subtypes = self.lead_1.message_follower_ids.filtered(lambda fol: fol.partner_id == self.contact_1).subtype_ids.filtered(lambda subtype: subtype.internal)
         self.assertFalse(internal_subtypes)
 
         # Add sale manager as follower of default subtypes

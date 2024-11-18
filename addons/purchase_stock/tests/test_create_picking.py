@@ -69,7 +69,7 @@ class TestCreatePicking(common.TestProductCommon):
                 'price_unit': 250.0,
                 })]})
         self.assertEqual(self.po.incoming_picking_count, 2, 'New picking should be created')
-        moves = self.po.order_line.mapped('move_ids').filtered(lambda x: x.state not in ('done', 'cancel'))
+        moves = self.po.order_line.move_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
         self.assertEqual(len(moves), 1, 'One moves should have been created')
 
     def test_01_check_double_validation(self):
