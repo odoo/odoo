@@ -199,7 +199,7 @@ class TestMailFlow(MailCommon, TestRecipients):
         # check recipients, which creates them (simulating discuss in a quick way)
         self.env["res.partner"]._find_or_create_from_emails(
             [sug['email'] for sug in suggested_all],
-            {email_normalize(sug['email']): sug.get('create_values') or {} for sug in suggested_all},
+            additional_values={email_normalize(sug['email']): sug.get('create_values') or {} for sug in suggested_all},
         )
         partner_sylvie = self.env['res.partner'].search(
             [('email_normalized', '=', 'sylvie.lelitre@zboing.com')]
