@@ -86,7 +86,8 @@ class MrpRoutingWorkcenter(models.Model):
             for item in data:
                 total_duration += item['duration']
                 capacity = item['workcenter_id']._get_capacity(item.product_id)
-                cycle_number += tools.float_round((item['qty_produced'] / capacity or 1.0), precision_digits=0, rounding_method='UP')
+                qty_produced = item.product_uom_id._compute_quantity(item['qty_produced'], item.product_id.uom_id)
+                cycle_number += tools.float_round((qty_produced / capacity or 1.0), precision_digits=0, rounding_method='UP')
             if cycle_number:
                 operation.time_cycle = total_duration / cycle_number
             else:
