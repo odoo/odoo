@@ -7,7 +7,14 @@ from odoo.http import Controller, request, route
 
 class WebsiteSaleVariantController(Controller):
 
-    @route('/website_sale/get_combination_info', type='jsonrpc', auth='public', methods=['POST'], website=True)
+    @route(
+        '/website_sale/get_combination_info',
+        type='jsonrpc',
+        auth='public',
+        methods=['POST'],
+        website=True,
+        readonly=True,
+    )
     def get_combination_info_website(
         self, product_template_id, product_id, combination, add_qty, **kwargs
     ):

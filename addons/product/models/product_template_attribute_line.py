@@ -258,6 +258,7 @@ class ProductTemplateAttributeLine(models.Model):
     def _without_no_variant_attributes(self):
         return self.filtered(lambda ptal: ptal.attribute_id.create_variant != 'no_variant')
 
+    @api.readonly
     def action_open_attribute_values(self):
         return {
             'type': 'ir.actions.act_window',

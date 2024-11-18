@@ -5,7 +5,7 @@ from odoo.http import request, route, Controller
 
 class ProductCatalogController(Controller):
 
-    @route('/product/catalog/order_lines_info', auth='user', type='jsonrpc')
+    @route('/product/catalog/order_lines_info', auth='user', type='jsonrpc', readonly=True)
     def product_catalog_get_order_lines_info(self, res_model, order_id, product_ids, **kwargs):
         """ Returns products information to be shown in the catalog.
 
