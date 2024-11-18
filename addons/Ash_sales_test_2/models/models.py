@@ -2,7 +2,6 @@ from odoo import models, fields, api
 import requests
 import logging
 
-# from shiperooConnect.interfaces.JB_files.JBxmlrpc_postReceiptstoodoo import picking_id
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -78,6 +77,14 @@ class SaleOrder(models.Model):
                     lambda p: product.id in p.move_ids.mapped('product_id').ids
                 ).mapped('name')
 
+                if not product_pickings:
+                    logger.warning(f"No picklist found for product {product.name} in order {order.name}.")
+                    product_pickings = ["No picklist"]  # Fallback value
+                elif len(product_pickings) > 1:
+                    logger.warning(
+                        f"Multiple picklists found for product {product.name} in order {order.name}. Using the first one.")
+                    product_pickings = product_pickings[:1]  # Take only the first picklist
+
                 # Collect data to be sent to the external system
                 products_data.append({
                     'default_code': product_default_code,
@@ -86,9 +93,9 @@ class SaleOrder(models.Model):
                     'location': location_name,
                     'system': location_system,
                     'product_class': product.automation_manual_product,
-                    'picklist': product_pickings,
+                    'picklist': product_pickings[0] if product_pickings else "No picklist",
                 })
-
+                logger.debug(f"Product data for {product.name}: {products_data[-1]}")
             # Update order status
             logger.info("Proceeding without authentication...")
 
@@ -100,6 +107,7 @@ class SaleOrder(models.Model):
                     'order_number': order.name,
                     'products': products_data,
                 }
+                logger.debug(f"Data to be sent for order {order.name}: {data_to_send}")
                 # Send data to external API
                 release_url = "https://shiperooconnect.automation.shiperoo.com/api/odoo_release"
 
