@@ -55,6 +55,7 @@ class PosPayment(models.Model):
 
     def _create_payment_moves(self, is_reverse=False):
         result = self.env['account.move']
+        credit_line_ids = []
         for payment in self:
             order = payment.pos_order_id
             payment_method = payment.payment_method_id
@@ -89,6 +90,10 @@ class PosPayment(models.Model):
                 'move_id': payment_move.id,
                 'partner_id': accounting_partner.id if is_split_transaction and is_reverse else False,
             }, amounts['amount'], amounts['amount_converted'])
-            self.env['account.move.line'].create([credit_line_vals, debit_line_vals])
+            lines = self.env['account.move.line'].create([credit_line_vals, debit_line_vals])
+            if amounts['amount_converted'] < 0:
+                credit_line_ids += lines.filtered(lambda l: l.debit).ids
+            else:
+                credit_line_ids += lines.filtered(lambda l: l.credit).ids
             payment_move._post()
-        return result
+        return result.with_context(credit_line_ids=credit_line_ids)
