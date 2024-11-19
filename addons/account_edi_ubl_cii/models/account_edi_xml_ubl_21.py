@@ -40,7 +40,6 @@ class AccountEdiXmlUBL21(models.AbstractModel):
 
         return vals
 
-    @api.model
     def _get_customization_ids(self):
         return {
             'ubl_bis3': 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0',
