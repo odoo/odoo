@@ -462,7 +462,8 @@ test("clicking on a cell triggers a doAction", async () => {
     await contains(".o_pivot_cell_value:eq(1)").click(); // should trigger a do_action
 });
 
-test.tags("desktop")("row and column are highlighted when hovering a cell", async () => {
+test.tags("desktop");
+test("row and column are highlighted when hovering a cell", async () => {
     expect.assertions(11);
 
     await mountView({
@@ -498,7 +499,8 @@ test.tags("desktop")("row and column are highlighted when hovering a cell", asyn
     expect(".o_cell_hover").toHaveCount(0);
 });
 
-test.tags("desktop")("columns are highlighted when hovering a measure", async () => {
+test.tags("desktop");
+test("columns are highlighted when hovering a measure", async () => {
     expect.assertions(15);
 
     mockDate("2016-12-20T1:00:00");
@@ -769,7 +771,8 @@ test("pivot view can be reloaded", async () => {
     expect(readGroupCount).toBe(2);
 });
 
-test.tags("desktop")("basic folding/unfolding", async () => {
+test.tags("desktop");
+test("basic folding/unfolding", async () => {
     let rpcCount = 0;
     onRpc("read_group", () => {
         rpcCount++;
@@ -810,7 +813,8 @@ test.tags("desktop")("basic folding/unfolding", async () => {
     expect(rpcCount).toBe(3);
 });
 
-test.tags("desktop")("more folding/unfolding", async () => {
+test.tags("desktop");
+test("more folding/unfolding", async () => {
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -1169,7 +1173,8 @@ test("no content helper when no data, part 2", async () => {
     expect(".o_view_nocontent").toHaveCount(1);
 });
 
-test.tags("desktop")("no content helper when no data, part 3", async () => {
+test.tags("desktop");
+test("no content helper when no data, part 3", async () => {
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -1500,7 +1505,8 @@ test("correctly save measures and groupbys to favorite", async () => {
     await saveFavorite();
 });
 
-test.tags("desktop")("correctly remove pivot_ keys from the context", async () => {
+test.tags("desktop");
+test("correctly remove pivot_ keys from the context", async () => {
     expect.assertions(5);
 
     // in this test, we use "foo" as a measure
@@ -2034,7 +2040,8 @@ test("correctly uses pivot_ keys from the context", async () => {
     expect("tbody tr td:eq(2)").toHaveText("32");
 });
 
-test.tags("desktop")("clear table cells data after closeGroup", async () => {
+test.tags("desktop");
+test("clear table cells data after closeGroup", async () => {
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -2311,7 +2318,8 @@ test("pivot view with reference field as a measure", async () => {
     expect(queryAllTexts("table tbody tr")).toEqual(["Total \n1\n \n1\n \n2\n \n4"]);
 });
 
-test.tags("desktop")("m2o as measure, drilling down into data", async () => {
+test.tags("desktop");
+test("m2o as measure, drilling down into data", async () => {
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -3029,7 +3037,8 @@ test("Click on the measure list but not on a menu item", async () => {
     expect(".o-dropdown--menu").toHaveCount(1);
 });
 
-test.tags("desktop")("Navigation list view for a group and back with breadcrumbs", async () => {
+test.tags("desktop");
+test("Navigation list view for a group and back with breadcrumbs", async () => {
     expect.assertions(9);
 
     Partner._views["pivot,false"] = `<pivot>
@@ -3462,7 +3471,8 @@ test("pivot rendering with boolean field", async () => {
     expect('tbody tr:contains("2019-05-14") [type="checkbox"]').not.toBeChecked();
 });
 
-test.tags("desktop")("empty pivot view with action helper", async () => {
+test.tags("desktop");
+test("empty pivot view with action helper", async () => {
     Partner._views["pivot,false"] = `<pivot>
 		<field name="product_id" type="measure"/>
 		<field name="date" interval="month" type="col"/>
@@ -3488,7 +3498,8 @@ test.tags("desktop")("empty pivot view with action helper", async () => {
     expect("table").toHaveCount(1);
 });
 
-test.tags("desktop")("empty pivot view with sample data", async () => {
+test.tags("desktop");
+test("empty pivot view with sample data", async () => {
     Partner._views["pivot,false"] = `<pivot sample="1">
 		<field name="product_id" type="measure"/>
 		<field name="date" interval="month" type="col"/>
@@ -3543,7 +3554,8 @@ test("non empty pivot view with sample data", async () => {
     expect("table").toHaveCount(0);
 });
 
-test.tags("desktop")("pivot is reloaded when leaving and coming back", async () => {
+test.tags("desktop");
+test("pivot is reloaded when leaving and coming back", async () => {
     Partner._views["pivot,false"] = `<pivot>
 		<field name="customer" type="row"/>
 	</pivot>`;
@@ -3587,7 +3599,8 @@ test.tags("desktop")("pivot is reloaded when leaving and coming back", async () 
     expect.verifySteps(["read_group", "read_group"]);
 });
 
-test.tags("desktop")("expanded groups are kept when leaving and coming back", async () => {
+test.tags("desktop");
+test("expanded groups are kept when leaving and coming back", async () => {
     Partner._views["pivot,false"] = `<pivot>
 		<field name="customer" type="row"/>
 	</pivot>`;
@@ -3625,7 +3638,8 @@ test.tags("desktop")("expanded groups are kept when leaving and coming back", as
     expect(getCurrentValues()).toBe(["4", "2", "1", "1", "2"].join(","));
 });
 
-test.tags("desktop")("sorted rows are kept when leaving and coming back", async () => {
+test.tags("desktop");
+test("sorted rows are kept when leaving and coming back", async () => {
     Partner._views["pivot,false"] = `<pivot>
 		<field name="foo" type="measure"/>
 		<field name="product_id" type="row"/>
@@ -3664,7 +3678,8 @@ test.tags("desktop")("sorted rows are kept when leaving and coming back", async 
     expect(getCurrentValues()).toBe(["32", "20", "12"].join(","));
 });
 
-test.tags("desktop")("correctly handle concurrent reloads", async () => {
+test.tags("desktop");
+test("correctly handle concurrent reloads", async () => {
     Partner._views["pivot,false"] = `<pivot>
 		<field name="foo" type="measure"/>
 		<field name="product_id" type="row"/>
@@ -4247,7 +4262,8 @@ test("favorite pivot_measures should be used even if found also in global contex
     expect(queryAllTexts("th").slice(1, 3)).toEqual(["Total", "Computed and not stored"]);
 });
 
-test.tags("desktop")("filter -> sort -> unfilter should not crash", async () => {
+test.tags("desktop");
+test("filter -> sort -> unfilter should not crash", async () => {
     await mountView({
         type: "pivot",
         resModel: "partner",
