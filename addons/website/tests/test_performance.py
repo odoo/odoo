@@ -126,12 +126,13 @@ class TestStandardPerformance(UtilPerf):
         url = '/web/image/res.users/2/image_256'
         select_tables_perf = {
             'base_registry_signaling': 1,
+            'res_company': 2,
             'res_users': 2,
             'res_partner': 1,
             'ir_attachment': 2,
         }
-        self._check_url_hot_query(url, 6, select_tables_perf)
-        self.assertEqual(self._get_url_hot_query(url, cache=False), 6)
+        self._check_url_hot_query(url, 8, select_tables_perf)
+        self.assertEqual(self._get_url_hot_query(url, cache=False), 8)
 
     @mute_logger('odoo.http')
     def test_20_perf_sql_img_controller_bis(self):

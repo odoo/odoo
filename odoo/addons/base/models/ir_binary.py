@@ -4,7 +4,7 @@ from datetime import datetime
 from mimetypes import guess_extension
 
 from odoo import models
-from odoo.exceptions import MissingError, UserError
+from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.http import Stream, request
 from odoo.tools import file_open, replace_exceptions
 from odoo.tools.image import image_process, image_guess_size_from_field_name
@@ -45,14 +45,16 @@ class IrBinary(models.AbstractModel):
             record = self.env[res_model].browse(res_id).exists()
         if not record:
             raise MissingError(f"No record found for xmlid={xmlid}, res_model={res_model}, id={res_id}")
-
-        record = self._find_record_check_access(record, access_token, field)
+        if record._name == 'ir.attachment':
+            return record.validate_access(access_token)
+        try:
+            record.check_access('read')
+        except AccessError:
+            record = self._find_record_check_access(record, access_token, field)
+            record.check_access('read')
         return record
 
     def _find_record_check_access(self, record, access_token, field):
-        if record._name == 'ir.attachment':
-            return record.validate_access(access_token)
-
         record.check_access('read')
         return record
 
