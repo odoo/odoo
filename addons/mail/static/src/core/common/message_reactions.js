@@ -24,6 +24,9 @@ export class MessageReactions extends Component {
                     this.props.message.react(emoji);
                 }
             },
+            state: {
+                isOpen: true,
+            },
         });
     }
 }

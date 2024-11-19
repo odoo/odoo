@@ -40,6 +40,7 @@ QUnit.module("mail", {}, () => {
 
             click(document, ".o_field_char_emojis button");
             await nextTick();
+            await nextTick();
             click(document, '.o-Emoji[data-codepoints="😀"]');
             assert.strictEqual(inputName.value, "Hello😀");
         });
@@ -54,6 +55,7 @@ QUnit.module("mail", {}, () => {
             assert.strictEqual(inputName.value, "Hello ");
 
             click(document, ".o_field_char_emojis button");
+            await nextTick();
             await nextTick();
             click(document, '.o-Emoji[data-codepoints="😀"]');
             assert.strictEqual(inputName.value, "Hello 😀");

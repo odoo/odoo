@@ -248,9 +248,6 @@ export class EmojiPicker extends Component {
                 return;
             }
             this.highlightActiveCategory();
-            if (this.props.storeScroll && this.gridRef.el) {
-                this.gridRef.el.scrollTop = this.props.storeScroll.get();
-            }
         });
         onPatched(() => {
             if (this.emojis.length === 0) {
@@ -273,7 +270,9 @@ export class EmojiPicker extends Component {
         useEffect(
             () => {
                 if (this.searchTerm) {
-                    this.gridRef.el.scrollTop = 0;
+                    if (this.gridRef.el) {
+                        this.gridRef.el.scrollTop = 0;
+                    }
                     this.state.categoryId = null;
                 } else {
                     if (this.lastSearchTerm) {
@@ -285,6 +284,18 @@ export class EmojiPicker extends Component {
             },
             () => [this.searchTerm]
         );
+        useEffect(() => {
+            if (this.ui.isSmall) {
+                if (
+                    this.emojiPickerRef?.el?.offsetTop >= this.props.emojiButtonRef?.el?.offsetTop
+                ) {
+                    this.props.emojiButtonRef.el.scrollIntoView({ behaviour: "smooth" });
+                }
+            }
+            if (this.props.storeScroll && this.gridRef.el) {
+                this.gridRef.el.scrollTop = this.props.storeScroll.get();
+            }
+        });
         useEffect(
             () => {
                 this.state.isOpen = this.props.state?.isOpen;
