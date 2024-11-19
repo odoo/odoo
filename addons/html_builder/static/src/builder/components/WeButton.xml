@@ -3,6 +3,8 @@
 
 <t t-name="html_builder.WeButton">
     <button type="button" class="btn btn-primary"
+        t-att-data-action-id="this.props.action"
+        t-att-data-class-action="this.props.classAction"
         t-att-class="{'active': this.state.isActive}"
         t-att-title="props.title"
         t-on-click="() => this.onClick()"
@@ -10,7 +12,7 @@
         t-on-mouseleave="() => this.onMouseleave?.(props.id)">
         <img t-if="props.iconImg" t-att-src="props.iconImg" t-att-alt="props.iconImgAlt"/>
         <t t-if="props.label"  t-out="props.label"/>
-        <t t-slot="content"/>
+        <t t-slot="default"/>
     </button>
 </t>
 

@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.WeNumberInput">
-    <div class="d-flex flex-row flex-nowrap align-items-center" style="width: 60px">
-        <input type="text" autocomplete="chrome-off" class="text-end" t-on-change="this.onChange" t-on-input="this.onInput" t-att-value="this.state.value" />
+    <div class="d-flex flex-row flex-nowrap align-items-center" t-att-data-action-id="props.action" style="width: 60px">
+        <input type="text" autocomplete="chrome-off" class="text-end" t-on-change="this.onChange" t-on-blur="this.onChange" t-on-input="this.onInput" t-att-value="this.state.value" />
         <span t-out="props.unit" />
     </div>
 </t>
