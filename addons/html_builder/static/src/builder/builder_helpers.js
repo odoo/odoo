@@ -69,7 +69,7 @@ export function useClickableWeWidget() {
     if (comp.env.actionBus) {
         useBus(comp.env.actionBus, "BEFORE_CALL_ACTIONS", () => {
             for (const [actionId, actionParam, actionValue] of actions) {
-                actionsRegistry.get(actionId).clean({
+                actionsRegistry.get(actionId).clean?.({
                     editingElement: comp.env.editingElement,
                     param: actionParam,
                     value: actionValue,
@@ -119,7 +119,7 @@ export function useClickableWeWidget() {
     }
     function isActive() {
         return actions.every(([actionId, actionParam, actionValue]) => {
-            return actionsRegistry.get(actionId).isActive({
+            return actionsRegistry.get(actionId).isActive?.({
                 editingElement: comp.env.editingElement,
                 param: actionParam,
                 value: actionValue,
@@ -150,10 +150,14 @@ export const basicContainerWeWidgetProps = {
 export const clickableWeWidgetProps = {
     ...basicContainerWeWidgetProps,
 
-    actionValue: { optional: true },
+    actionValue: {
+        type: [Boolean, String, Number, { type: Array, element: [Boolean, String, Number] }],
+        optional: true,
+    },
 
-    classActionValue: { optional: true },
-    attributeActionValue: { optional: true },
-    dataAttributeActionValue: { optional: true },
-    styleActionValue: { optional: true },
+    // Shorthand actions values.
+    classActionValue: { type: [String, Array], optional: true },
+    attributeActionValue: { type: [String, Array], optional: true },
+    dataAttributeActionValue: { type: [String, Array], optional: true },
+    styleActionValue: { type: [String, Array], optional: true },
 };

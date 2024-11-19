@@ -53,7 +53,12 @@ export class WeNumberInput extends Component {
         return actions;
     }
     onChange(e) {
-        this.applyValue.commit(e.target.value);
+        const value = e.target.value;
+        if (value === this.lastCommitedValue) {
+            return;
+        }
+        this.lastCommitedValue = value;
+        this.applyValue.commit(value);
     }
     onInput(e) {
         this.applyValue.preview(e.target.value);
