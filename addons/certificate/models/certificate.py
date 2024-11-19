@@ -7,6 +7,7 @@ from cryptography.hazmat.primitives import constant_time, serialization
 from cryptography.hazmat.primitives.serialization import Encoding, pkcs12
 
 from odoo import _, api, fields, models
+from odoo.fields import Domain
 from .key import STR_TO_HASH, _get_formatted_value
 from odoo.exceptions import UserError
 from odoo.osv import expression
@@ -215,25 +216,15 @@ class CertificateCertificate(models.Model):
                 certificate.is_valid = date_start <= utc_now <= date_end
 
     def _search_is_valid(self, operator, value):
-        if operator not in ['=', '!='] or not isinstance(value, bool):
-            raise NotImplementedError("Operation not supported, only '=' and '!=' are allowed.")
+        if operator != 'in':
+            return NotImplemented
         utc_now = datetime.datetime.now(datetime.timezone.utc)
-        if (operator == '=' and value) or (operator == '!=' and not value):
-            return [
-                ('pem_certificate', '!=', False),
-                ('date_start', '<=', utc_now),
-                ('date_end', '>=', utc_now),
-                ('loading_error', '=', '')
-            ]
-        else:
-            return expression.OR([
-                [('pem_certificate', '=', False)],
-                [('date_start', '=', False)],
-                [('date_end', '=', False)],
-                [('date_start', '>', utc_now)],
-                [('date_end', '<', utc_now)],
-                [('loading_error', '!=', '')],
-            ])
+        return [
+            ('pem_certificate', '!=', False),
+            ('date_start', '<=', utc_now),
+            ('date_end', '>=', utc_now),
+            ('loading_error', '=', '')
+        ]
 
     @api.constrains('pem_certificate', 'private_key_id', 'public_key_id')
     def _constrains_certificate_key_compatibility(self):

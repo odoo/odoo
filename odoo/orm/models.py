@@ -1455,13 +1455,23 @@ class BaseModel(metaclass=MetaModel):
             for fname in field_name.split('.'):
                 field = model._fields[fname]
                 model = self.env.get(field.comodel_name)
+            # depending on the operator, we may need to cast the value to the type of the field
+            # ignore if we cannot convert
             if field.relational:
-                # relational fields will trigger a _name_search on their comodel
+                # relational fields will search on the display_name
+                domains.append([(field_name + '.display_name', operator, value)])
+            elif operator.endswith('like'):
                 domains.append([(field_name, operator, value)])
-                continue
-            with contextlib.suppress(ValueError):
-                # ignore that case if the value doesn't match the field type
-                domains.append([(field_name, operator, field.convert_to_write(value, self))])
+            elif isinstance(value, COLLECTION_TYPES):
+                typed_value = []
+                for v in value:
+                    with contextlib.suppress(ValueError):
+                        typed_value.append(field.convert_to_write(v, self))
+                domains.append([(field_name, operator, typed_value)])
+            else:
+                with contextlib.suppress(ValueError):
+                    typed_value = field.convert_to_write(value, self)
+                    domains.append([(field_name, operator, typed_value)])
         return aggregator(domains)
 
     @api.model

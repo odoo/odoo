@@ -97,8 +97,8 @@ class ProductProduct(models.Model):
             product.is_in_purchase_order = bool(data.get(product.id, 0))
 
     def _search_is_in_purchase_order(self, operator, value):
-        if operator not in ['=', '!='] or not isinstance(value, bool):
-            raise UserError(_("Operation not supported"))
+        if operator != 'in':
+            return NotImplemented
         product_ids = self.env['purchase.order.line'].search([
             ('order_id', 'in', [self.env.context.get('order_id', '')]),
         ]).product_id.ids

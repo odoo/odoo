@@ -20,18 +20,16 @@ class SaleOrder(models.Model):
     def _search_display_name(self, operator, value):
         """ For expense, we want to show all sales order but only their display_name (no ir.rule applied), this is the only way to do it. """
         if (
-            self._context.get('sale_expense_all_order')
+            self.env.context.get('sale_expense_all_order')
             and self.env.user.has_group('sales_team.group_sale_salesman')
             and not self.env.user.has_group('sales_team.group_sale_salesman_all_leads')
         ):
             if operator in expression.NEGATIVE_TERM_OPERATORS:
-                positive_operator = expression.TERM_OPERATORS_NEGATION[operator]
-            else:
-                positive_operator = operator
-            domain = super()._search_display_name(positive_operator, value)
+                return NotImplemented
+            domain = super()._search_display_name(operator, value)
             company_domain = ['&', ('state', '=', 'sale'), ('company_id', 'in', self.env.companies.ids)]
             query = self.sudo()._search(expression.AND([domain, company_domain]))
-            return [('id', 'in' if operator == positive_operator else 'not in', query)]
+            return [('id', 'in', query)]
         return super()._search_display_name(operator, value)
 
     @api.depends('expense_ids')

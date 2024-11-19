@@ -114,12 +114,9 @@ class PaymentMethod(models.Model):
             payment_method.is_primary = not payment_method.primary_payment_method_id
 
     def _search_is_primary(self, operator, value):
-        if operator == '=' and value is True:
-            return [('primary_payment_method_id', '=', False)]
-        elif operator == '=' and value is False:
-            return [('primary_payment_method_id', '!=', False)]
-        else:
-            raise NotImplementedError(_("Operation not supported."))
+        if operator not in ('in', 'not in'):
+            return NotImplemented
+        return [('primary_payment_method_id', operator, [False])]
 
     #=== ONCHANGE METHODS ===#
 

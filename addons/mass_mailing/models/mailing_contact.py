@@ -60,18 +60,14 @@ class MailingContact(models.Model):
 
     @api.model
     def _search_opt_out(self, operator, value):
-        # Assumes operator is '=' or '!=' and value is True or False
-        if operator != '=':
-            if operator == '!=' and isinstance(value, bool):
-                value = not value
-            else:
-                raise NotImplementedError()
+        if operator != 'in':
+            return NotImplemented
 
         if 'default_list_ids' in self._context and isinstance(self._context['default_list_ids'], (list, tuple)) and len(self._context['default_list_ids']) == 1:
             [active_list_id] = self._context['default_list_ids']
             contacts = self.env['mailing.subscription'].search([('list_id', '=', active_list_id)])
-            return [('id', 'in', [record.contact_id.id for record in contacts if record.opt_out == value])]
-        return expression.FALSE_DOMAIN if value else expression.TRUE_DOMAIN
+            return [('id', 'in', [record.contact_id.id for record in contacts if record.opt_out])]
+        return expression.FALSE_DOMAIN
 
     @api.depends('first_name', 'last_name')
     def _compute_name(self):

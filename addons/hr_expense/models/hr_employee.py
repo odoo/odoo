@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
+from odoo.fields import Domain
 
 
 class HrEmployeeBase(models.AbstractModel):
@@ -9,25 +10,24 @@ class HrEmployeeBase(models.AbstractModel):
     filter_for_expense = fields.Boolean(store=False, search='_search_filter_for_expense', groups="hr.group_hr_user")
 
     def _search_filter_for_expense(self, operator, value):
-        assert operator == '=' and value, "Operation not supported"
+        if operator != 'in':
+            return NotImplemented
 
-        res = [('id', '=', 0)]  # Nothing accepted by domain, by default
+        domain = Domain.FALSE  # Nothing accepted by domain, by default
         user = self.env.user
         employee = user.employee_id
         if user.has_groups('hr_expense.group_hr_expense_user') or user.has_groups('account.group_account_user'):
-            res = ['|', ('company_id', '=', False), ('company_id', 'child_of', self.env.company.root_id.id)]  # Then, domain accepts everything
+            domain = Domain('company_id', '=', False) | Domain('company_id', 'child_of', self.env.company.root_id.id)  # Then, domain accepts everything
         elif user.has_groups('hr_expense.group_hr_expense_team_approver') and user.employee_ids:
-            res = [
-                '|', '|', '|',
-                ('department_id.manager_id', '=', employee.id),
-                ('parent_id', '=', employee.id),
-                ('id', '=', employee.id),
-                ('expense_manager_id', '=', user.id),
-                '|', ('company_id', '=', False), ('company_id', '=', employee.company_id.id),
-            ]
+            domain = (
+                Domain('department_id.manager_id', '=', employee.id)
+                | Domain('parent_id', '=', employee.id)
+                | Domain('id', '=', employee.id)
+                | Domain('expense_manager_id', '=', user.id)
+            ) & Domain('company_id', 'in', [False, employee.company_id.id])
         elif user.employee_id:
-            res = [('id', '=', employee.id), '|', ('company_id', '=', False), ('company_id', '=', employee.company_id.id)]
-        return res
+            domain = Domain('id', '=', employee.id) & Domain('company_id', 'in', [False, employee.company_id.id])
+        return domain
 
 
 class HrEmployee(models.Model):

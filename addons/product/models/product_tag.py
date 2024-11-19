@@ -53,5 +53,5 @@ class ProductTag(models.Model):
 
     def _search_product_ids(self, operator, operand):
         if operator in expression.NEGATIVE_TERM_OPERATORS:
-            return [('product_template_ids.product_variant_ids', operator, operand), ('product_product_ids', operator, operand)]
+            return NotImplemented
         return ['|', ('product_template_ids.product_variant_ids', operator, operand), ('product_product_ids', operator, operand)]

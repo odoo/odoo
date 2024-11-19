@@ -1,6 +1,5 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-from odoo.osv.expression import FALSE_DOMAIN
 
 
 def selection_fn(self):
@@ -38,6 +37,27 @@ MODELS = [
     ('reference', fields.Reference([('export.integer', 'integer')], 'export.reference')),
 ]
 
+
+def generic_compute_display_name(self):
+    for record in self:
+        record.display_name = f"{self._name}:{record.value}"
+
+
+def generic_search_display_name(self, operator, value):
+    if operator != 'in':
+        return NotImplemented
+    ids = [
+        int(id_str)
+        for v in value
+        if isinstance(v, str)
+        and (parts := v.split(':'))
+        and len(parts) == 2
+        and parts[0] == self._name
+        and (id_str := parts[1]).isdigit()
+    ]
+    return [('value', 'in', ids)]
+
+
 for name, field in MODELS:
 
     class NewModel(models.Model):
@@ -47,15 +67,8 @@ for name, field in MODELS:
         const = fields.Integer(default=4)
         value = field
 
-        def _compute_display_name(self):
-            for record in self:
-                record.display_name = f"{self._name}:{record.value}"
-
-        @api.model
-        def _search_display_name(self, operator, value):
-            if isinstance(value, str) and value.split(':')[0] == self._name:
-                return [('value', operator, int(value.split(':')[1]))]
-            return FALSE_DOMAIN
+        _compute_display_name = generic_compute_display_name
+        _search_display_name = generic_search_display_name
 
 
 class ExportOne2manyChild(models.Model):
@@ -69,15 +82,8 @@ class ExportOne2manyChild(models.Model):
     m2o = fields.Many2one('export.integer')
     value = fields.Integer()
 
-    def _compute_display_name(self):
-        for record in self:
-            record.display_name = f"{self._name}:{record.value}"
-
-    @api.model
-    def _search_display_name(self, operator, value):
-        if isinstance(value, str) and value.split(':')[0] == self._name:
-            return [('value', operator, int(value.split(':')[1]))]
-        return FALSE_DOMAIN
+    _compute_display_name = generic_compute_display_name
+    _search_display_name = generic_search_display_name
 
 
 class ExportOne2manyMultiple(models.Model):
@@ -127,15 +133,8 @@ class ExportMany2manyOther(models.Model):
     str = fields.Char()
     value = fields.Integer()
 
-    def _compute_display_name(self):
-        for record in self:
-            record.display_name = f"{self._name}:{record.value}"
-
-    @api.model
-    def _search_display_name(self, operator, value):
-        if isinstance(value, str) and value.split(':')[0] == self._name:
-            return [('value', operator, int(value.split(':')[1]))]
-        return FALSE_DOMAIN
+    _compute_display_name = generic_compute_display_name
+    _search_display_name = generic_search_display_name
 
 
 class ExportSelectionWithdefault(models.Model):

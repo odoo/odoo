@@ -56,20 +56,14 @@ class ProjectProject(models.Model):
 
     @api.model
     def _search_is_internal_project(self, operator, value):
-        if not isinstance(value, bool):
-            raise ValueError(_('Invalid value: %s', value))
-        if operator not in ['=', '!=']:
-            raise ValueError(_('Invalid operator: %s', operator))
+        if operator not in ('in', 'not in'):
+            return NotImplemented
 
         Company = self.env['res.company']
         sql = Company._where_calc(
             [('internal_project_id', '!=', False)], active_test=False
         ).subselect("internal_project_id")
-        if (operator == '=' and value is True) or (operator == '!=' and value is False):
-            operator_new = 'in'
-        else:
-            operator_new = 'not in'
-        return [('id', operator_new, sql)]
+        return [('id', operator, sql)]
 
     @api.depends('allow_timesheets', 'timesheet_ids.unit_amount', 'allocated_hours')
     def _compute_remaining_hours(self):
@@ -86,10 +80,8 @@ class ProjectProject(models.Model):
 
     @api.model
     def _search_is_project_overtime(self, operator, value):
-        if not isinstance(value, bool):
-            raise ValueError(_('Invalid value: %s', value))
-        if operator not in ['=', '!=']:
-            raise ValueError(_('Invalid operator: %s', operator))
+        if operator not in ('in', 'not in'):
+            return NotImplemented
 
         sql = SQL("""(
             SELECT Project.id
@@ -103,11 +95,7 @@ class ProjectProject(models.Model):
           GROUP BY Project.id
             HAVING Project.allocated_hours - SUM(Task.effective_hours) < 0
         )""")
-        if (operator == '=' and value is True) or (operator == '!=' and value is False):
-            operator_new = 'in'
-        else:
-            operator_new = 'not in'
-        return [('id', operator_new, sql)]
+        return [('id', operator, sql)]
 
     @api.constrains('allow_timesheets', 'account_id')
     def _check_allow_timesheet(self):

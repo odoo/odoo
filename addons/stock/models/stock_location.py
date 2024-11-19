@@ -206,19 +206,17 @@ class StockLocation(models.Model):
             raise ValidationError(_('The %s location is required by the Inventory app and cannot be deleted, but you can archive it.', inter_company_location.name))
 
     def _search_is_empty(self, operator, value):
-        if operator not in ('=', '!=') or not isinstance(value, bool):
-            raise NotImplementedError(_(
-                "The search does not support the %(operator)s operator or %(value)s value.",
-                operator=operator,
-                value=value,
-            ))
-        groups = self.env['stock.quant']._read_group([
-            ('location_id.usage', 'in', ['internal', 'transit'])],
-            ['location_id'], ['quantity:sum'])
-        location_ids = {loc.id for loc, quantity in groups if quantity >= 0}
-        if value and operator == '=' or not value and operator == '!=':
-            return [('id', 'not in', list(location_ids))]
-        return [('id', 'in', list(location_ids))]
+        if operator != 'in':
+            return NotImplemented
+        location_ids = [
+            location.id
+            for location, in self.env['stock.quant']._read_group(
+                [('location_id.usage', 'in', ['internal', 'transit'])],
+                ['location_id'],
+                having=[('quantity:sum', '>', 0)]
+            )
+        ]
+        return [('id', 'not in', location_ids)]
 
     def write(self, values):
         if 'company_id' in values:

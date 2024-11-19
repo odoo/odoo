@@ -268,11 +268,8 @@ class ForumPost(models.Model):
             post.can_use_full_editor = is_admin or user.karma >= post.forum_id.karma_editor
 
     def _search_can_view(self, operator, value):
-        if operator not in ('=', '!=', '<>'):
-            raise ValueError('Invalid operator: %s' % (operator,))
-
-        if not value:
-            operator = '!=' if operator == '=' else '='
+        if operator != 'in':
+            return NotImplemented
 
         user = self.env.user
         # Won't impact sitemap, search() in converter is forced as public user
@@ -292,8 +289,7 @@ class ForumPost(models.Model):
                     and (p.active or p.create_uid = %(user_id)s)
                 )
         )""", user_id=user.id, karma=user.karma)
-        op = 'in' if operator == '=' else "not in"
-        return [('id', op, sql)]
+        return [('id', 'in', sql)]
 
     # EXTENDS WEBSITE.SEO.METADATA
 

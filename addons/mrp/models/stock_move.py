@@ -2,9 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from dateutil.relativedelta import relativedelta
 from odoo import _, api, Command, fields, models
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools import float_compare, float_round, float_is_zero, OrderedSet
 from odoo.exceptions import ValidationError
 
@@ -27,17 +26,10 @@ class StockMoveLine(models.Model):
         return super(StockMoveLine, self - line_to_remove)._compute_picking_type_id()
 
     def _search_picking_type_id(self, operator, value):
-        res = super()._search_picking_type_id(operator=operator, value=value)
-        if operator in ['not in', '!=', 'not ilike']:
-            if value is False:
-                return expression.OR([[('production_id.picking_type_id', operator, value)], res])
-            else:
-                return expression.AND([[('production_id.picking_type_id', operator, value)], res])
-        else:
-            if value is False:
-                return expression.AND([[('production_id.picking_type_id', operator, value)], res])
-            else:
-                return expression.OR([[('production_id.picking_type_id', operator, value)], res])
+        if Domain.is_negative_operator(operator):
+            return NotImplemented
+        domain = super()._search_picking_type_id(operator, value)
+        return (Domain('production_id', '=', False) & domain) | Domain('production_id.picking_type_id', operator, value)
 
     @api.model_create_multi
     def create(self, vals_list):

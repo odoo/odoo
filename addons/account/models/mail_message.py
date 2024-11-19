@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo.osv.expression import OR
+from odoo.fields import Domain
 
 bypass_token = object()
 DOMAINS = {
@@ -119,12 +119,12 @@ class MailMessage(models.Model):
             )
 
     def _search_account_audit_log_activated(self, operator, value):
-        if operator not in ['=', '!='] or not isinstance(value, bool):
-            raise UserError(self.env._('Operation not supported'))
-        return [('message_type', '=', 'notification')] + OR([
-            [('model', '=', model), ('res_id', 'in', self.env[model]._search(DOMAINS[model](operator, value)))]
-            for model in DOMAINS
-        ])
+        if operator not in ('in', 'not in'):
+            return NotImplemented
+        return Domain('message_type', '=', 'notification') & Domain.OR(
+            [('model', '=', model), ('res_id', 'in', self.env[model]._search(domain_factory(operator, value)))]
+            for model, domain_factory in DOMAINS.items()
+        )
 
     def _compute_audit_log_related_record_id(self, model, fname):
         messages_of_related = self.filtered(lambda m: m.model == model and m.res_id)
@@ -137,12 +137,22 @@ class MailMessage(models.Model):
                 message[fname] = recs_by_id.get(message.res_id, False)
 
     def _search_audit_log_related_record_id(self, model, operator, value):
-        if operator in ['=', 'like', 'ilike', '!=', 'not ilike', 'not like'] and isinstance(value, str):
+        if (
+            operator in ('like', 'ilike', 'not ilike', 'not like') and isinstance(value, str)
+        ) or (
+            operator in ('in', 'not in') and any(isinstance(v, str) for v in value)
+        ):
             res_id_domain = [('res_id', 'in', self.env[model]._search([('display_name', operator, value)]))]
-        elif operator in ['=', 'in', '!=', 'not in']:
+        elif operator in ('any', 'not any'):
+            if isinstance(value, Domain):
+                query = self.env[model]._search(value)
+            else:
+                query = value
+            res_id_domain = [('res_id', 'in' if operator == 'any' else 'not in', query)]
+        elif operator in ('in', 'not in'):
             res_id_domain = [('res_id', operator, value)]
         else:
-            raise UserError(self.env._('Operation not supported'))
+            return NotImplemented
         return [('model', '=', model)] + res_id_domain
 
     @api.ondelete(at_uninstall=True)

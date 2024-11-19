@@ -278,15 +278,10 @@ class PurchaseOrder(models.Model):
             self.order_line.filtered(lambda line: not line.display_type).date_planned = self.date_planned
 
     def _search_is_late(self, operator, value):
-        if operator not in ["=", "!="]:
-            raise ValidationError(_("Unsupported operator"))
-        purchase_ids = self._search([('state', '=', 'purchase'), ('date_planned', '<=', fields.Datetime.now())])
-        if operator == "=" and value or operator == "!=" and not value:
-            purchase_lines_late = self.env['purchase.order.line'].search([('order_id', 'in', purchase_ids), ('qty_received', '<', SQL('product_qty'))])
-            return [('id', 'in', purchase_lines_late.order_id.ids)]
-        else:
-            purchase_lines_on_time = self.env['purchase.order.line']._search([('order_id', 'in', purchase_ids), ('qty_received', '>=', SQL('product_qty'))])
-            return [('id', 'in', purchase_lines_on_time.order_id.ids)]
+        if operator != 'in':
+            return NotImplemented
+        purchase_domain = [('state', '=', 'purchase'), ('date_planned', '<=', fields.Datetime.now())]
+        return [('order_line', 'any', [('order_id', 'any', purchase_domain), ('qty_received', '<', SQL('product_qty'))])]
 
     @api.model_create_multi
     def create(self, vals_list):

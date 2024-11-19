@@ -6,6 +6,7 @@ import re
 from werkzeug.urls import url_join
 
 from odoo import api, fields, models, _
+from odoo.fields import Domain
 from odoo.addons.website.tools import text_from_html
 from odoo.http import request
 from odoo.osv import expression
@@ -296,18 +297,15 @@ class WebsitePublishedMultiMixin(WebsitePublishedMixin):
             record.is_published = record.website_published
 
     def _search_website_published(self, operator, value):
-        if not isinstance(value, bool) or operator not in ('=', '!='):
-            logger.warning('unsupported search on website_published: %s, %s', operator, value)
-            return [(0, '=', 1)]
-
-        if operator in expression.NEGATIVE_TERM_OPERATORS:
-            value = not value
+        if operator != 'in':
+            return NotImplemented
+        assert list(value) == [True]
 
         current_website_id = self._context.get('website_id')
-        is_published = [('is_published', '=', value)]
+        is_published = Domain('is_published', '=', True)
         if current_website_id:
             on_current_website = self.env['website'].website_domain(current_website_id)
-            return (['!'] if value is False else []) + expression.AND([is_published, on_current_website])
+            return is_published & Domain(on_current_website)
         else:  # should be in the backend, return things that are published anywhere
             return is_published
 

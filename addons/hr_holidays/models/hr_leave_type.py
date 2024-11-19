@@ -3,6 +3,7 @@
 # Copyright (c) 2005-2006 Axelor SARL. (http://www.axelor.com)
 
 import logging
+import operator as py_operator
 import pytz
 
 from collections import defaultdict
@@ -16,6 +17,16 @@ from odoo.tools.translate import _
 from odoo.tools.float_utils import float_round
 
 _logger = logging.getLogger(__name__)
+
+PY_OPERATORS = {
+    '>': py_operator.gt,
+    '<': py_operator.lt,
+    '>=': py_operator.ge,
+    '<=': py_operator.le,
+    '=': py_operator.eq,
+    '!=': py_operator.ne,
+    'in': lambda elem, container: elem in container,
+}
 
 
 class HrLeaveType(models.Model):
@@ -124,6 +135,8 @@ class HrLeaveType(models.Model):
             or that don't need an allocation
             return [('id', domain_operator, [x['id'] for x in res])]
         """
+        if operator not in ('in', 'not in'):
+            return NotImplemented
 
         if {'default_date_from', 'default_date_to', 'tz'} <= set(self._context):
             default_date_from_dt = fields.Datetime.to_datetime(self._context.get('default_date_from'))
@@ -139,17 +152,6 @@ class HrLeaveType(models.Model):
 
         employee_id = self._context.get('default_employee_id', self._context.get('employee_id')) or self.env.user.employee_id.id
 
-        if not isinstance(value, bool):
-            raise ValueError('Invalid value: %s' % (value))
-        if operator not in ['=', '!=']:
-            raise ValueError('Invalid operator: %s' % (operator))
-        # '!=' True or '=' False
-        if (operator == '=') ^ value:
-            new_operator = 'not in'
-        # '=' True or '!=' False
-        else:
-            new_operator = 'in'
-
         leave_types = self.env['hr.leave.allocation'].search([
             ('employee_id', '=', employee_id),
             ('state', '=', 'validate'),
@@ -159,7 +161,7 @@ class HrLeaveType(models.Model):
             ('date_to', '=', False),
         ]).holiday_status_id
 
-        return [('id', new_operator, leave_types.ids)]
+        return [('id', operator, leave_types.ids)]
 
     @api.constrains('include_public_holidays_in_duration')
     def _check_overlapping_public_holidays(self):
@@ -235,7 +237,11 @@ class HrLeaveType(models.Model):
                 holiday_type.country_id = holiday_type.company_id.country_id
 
     def _search_max_leaves(self, operator, value):
-        value = float(value)
+        op = PY_OPERATORS.get(operator)
+        if not op:
+            return NotImplemented
+        if operator != 'in':
+            value = float(value)
         employee = self.env['hr.employee']._get_contextual_employee()
         leaves = defaultdict(int)
 
@@ -246,46 +252,21 @@ class HrLeaveType(models.Model):
             ])
             for allocation in allocations:
                 leaves[allocation.holiday_status_id.id] += allocation.number_of_days
-        valid_leave = []
-        for leave in leaves:
-            if operator == '>':
-                if leaves[leave] > value:
-                    valid_leave.append(leave)
-            elif operator == '<':
-                if leaves[leave] < value:
-                    valid_leave.append(leave)
-            elif operator == '=':
-                if leaves[leave] == value:
-                    valid_leave.append(leave)
-            elif operator == '!=':
-                if leaves[leave] != value:
-                    valid_leave.append(leave)
-
-        return [('id', 'in', valid_leave)]
+        valid_leaves = [leaf for leaf, number in leaves.items() if op(number, value)]
+        return [('id', 'in', valid_leaves)]
 
     def _search_virtual_remaining_leaves(self, operator, value):
-        value = float(value)
+        op = PY_OPERATORS.get(operator)
+        if not op:
+            return NotImplemented
+        if operator != 'in':
+            value = float(value)
         leave_types = self.env['hr.leave.type'].search([])
-        valid_leave_types = self.env['hr.leave.type']
 
-        for leave_type in leave_types:
-            if leave_type.requires_allocation == "yes":
-                if operator == '>' and leave_type.virtual_remaining_leaves > value:
-                    valid_leave_types |= leave_type
-                elif operator == '<' and leave_type.virtual_remaining_leaves < value:
-                    valid_leave_types |= leave_type
-                elif operator == '>=' and leave_type.virtual_remaining_leaves >= value:
-                    valid_leave_types |= leave_type
-                elif operator == '<=' and leave_type.virtual_remaining_leaves <= value:
-                    valid_leave_types |= leave_type
-                elif operator == '=' and leave_type.virtual_remaining_leaves == value:
-                    valid_leave_types |= leave_type
-                elif operator == '!=' and leave_type.virtual_remaining_leaves != value:
-                    valid_leave_types |= leave_type
-            else:
-                valid_leave_types |= leave_type
+        def is_valid(leave_type):
+            return leave_type.requires_allocation != "yes" or op(leave_type.virtual_remaining_leaves)
 
-        return [('id', 'in', valid_leave_types.ids)]
+        return [('id', 'in', leave_types.filtered(is_valid).ids)]
 
     @api.depends_context('employee_id', 'default_employee_id', 'leave_date_from', 'default_date_from')
     def _compute_leaves(self):

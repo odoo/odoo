@@ -336,12 +336,9 @@ class RepairOrder(models.Model):
             )
 
     def _search_date_category(self, operator, value):
-        if operator != '=':
-            raise NotImplementedError(_('Operation not supported'))
-        search_domain = self.env['stock.picking'].date_category_to_domain(value)
-        return expression.AND([
-            [('schedule_date', operator, value)] for operator, value in search_domain
-        ])
+        if operator != 'in':
+            return NotImplemented
+        return self.env['stock.picking'].date_category_to_domain('scheduled_date', value)
 
     @api.onchange('product_uom')
     def onchange_product_uom(self):

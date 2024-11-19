@@ -2,20 +2,22 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import operator as py_operator
-from operator import attrgetter
+from collections.abc import Iterable
 from re import findall as regex_findall, split as regex_split
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 
-OPERATORS = {
+PY_OPERATORS = {
     '<': py_operator.lt,
     '>': py_operator.gt,
     '<=': py_operator.le,
     '>=': py_operator.ge,
     '=': py_operator.eq,
-    '!=': py_operator.ne
+    '!=': py_operator.ne,
+    'in': lambda elem, container: elem in container,
+    'not in': lambda elem, container: elem not in container,
 }
 
 
@@ -209,10 +211,13 @@ class StockLot(models.Model):
             lot.product_qty = sum(quants.mapped('quantity'))
 
     def _search_product_qty(self, operator, value):
-        if operator not in OPERATORS:
-            raise UserError(_("Invalid domain operator %s", operator))
-        if not isinstance(value, (float, int)):
-            raise UserError(_("Invalid domain right operand '%s'. It must be of type Integer/Float", value))
+        op = PY_OPERATORS.get(operator)
+        if not op:
+            return NotImplemented
+        if isinstance(value, Iterable) and not isinstance(value, str):
+            value = {float(v) for v in value}
+        else:
+            value = float(value)
         domain = [
             ('lot_id', '!=', False),
             '|', ('location_id.usage', '=', 'internal'),
@@ -224,18 +229,11 @@ class StockLot(models.Model):
         for lot, quantity_sum in lots_w_qty:
             lot_id = lot.id
             lot_ids_w_qty.append(lot_id)
-            if OPERATORS[operator](quantity_sum, value):
+            if op(quantity_sum, value):
                 ids.append(lot_id)
-        if value == 0.0 and operator == '=':
-            return [('id', 'not in', lot_ids_w_qty)]
-        if value == 0.0 and operator == '!=':
-            return [('id', 'in', lot_ids_w_qty)]
+
         # check if we need include zero values in result
-        include_zero = (
-            value < 0.0 and operator in ('>', '>=') or
-            value > 0.0 and operator in ('<', '<=') or
-            value == 0.0 and operator in ('>=', '<=')
-        )
+        include_zero = op(0.0, value)
         if include_zero:
             return ['|', ('id', 'in', ids), ('id', 'not in', lot_ids_w_qty)]
         return [('id', 'in', ids)]

@@ -58,15 +58,16 @@ class RatingMixin(models.AbstractModel):
             record.rating_avg = mapping.get(record.id, {}).get('rating_avg', 0)
 
     def _search_rating_avg(self, operator, value):
-        if operator not in rating_data.OPERATOR_MAPPING:
-            raise NotImplementedError('This operator %s is not supported in this search method.' % operator)
+        op = rating_data.OPERATOR_MAPPING.get(operator)
+        if not op:
+            return NotImplemented
         rating_read_group = self.env['rating.rating'].sudo()._read_group(
             [('res_model', '=', self._name), ('consumed', '=', True), ('rating', '>=', rating_data.RATING_LIMIT_MIN)],
             ['res_id'], ['rating:avg'])
         res_ids = [
             res_id
             for res_id, rating_avg in rating_read_group
-            if rating_data.OPERATOR_MAPPING[operator](float_compare(rating_avg, value, 2), 0)
+            if op(float_compare(rating_avg, value, 2), 0)
         ]
         return [('id', 'in', res_ids)]
 

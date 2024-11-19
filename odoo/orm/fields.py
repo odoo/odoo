@@ -204,7 +204,14 @@ class Field(typing.Generic[T]):
 
     :param str inverse: name of a method that inverses the field (optional)
 
-    :param str search: name of a method that implement search on the field (optional)
+    :param str search: name of a method that implement search on the field (optional).
+            The method accepts an operator and value. Basic optimizations are
+            ran before calling this function, and for boolean fields, we ensure
+            that operator is 'in'/'not in' and value is ``[True]``. The method
+            should `return NotImplemented` if it does not support the operator.
+            In that case, the ORM can try to call it with other, semantically
+            equivalent, operators (ex: try positive operator if negative is not
+            implemented).
 
     :param str related: sequence of field names
 
@@ -702,6 +709,10 @@ class Field(typing.Generic[T]):
         can_be_null = (  # (..., '=', False) or (..., 'not in', [truthy vals])
             (operator not in NEGATIVE_CONDITION_OPERATORS) == value_is_null
         )
+        if operator in NEGATIVE_CONDITION_OPERATORS and not value_is_null:
+            # we have a condition like 'not in' ['a']
+            # let's call back with a positive operator
+            return NotImplemented
 
         # build the domain
         # Note that the access of many2one fields in the path is done using sudo
@@ -1626,7 +1637,7 @@ class Field(typing.Generic[T]):
         """ Given the value of ``self`` on ``records``, inverse the computation. """
         determine(self.inverse, records)
 
-    def determine_domain(self, records, operator, value):
+    def determine_domain(self, records: BaseModel, operator: str, value) -> typing.Any:
         """ Return a domain representing a condition on ``self``. """
         return determine(self.search, records, operator, value)
 

@@ -204,6 +204,8 @@ class StockQuant(models.Model):
                 quant.is_outdated = True
 
     def _search_is_outdated(self, operator, value):
+        if operator != 'in':
+            return NotImplemented
         quant_ids = self.search([('inventory_quantity_set', '=', True)])
         quant_ids = quant_ids.filtered(lambda quant: float_compare(quant.inventory_quantity - quant.inventory_diff_quantity, quant.quantity, precision_rounding=quant.product_uom_id.rounding)).ids
         return [('id', 'in', quant_ids)]
@@ -238,15 +240,9 @@ class StockQuant(models.Model):
 
     def _search_on_hand(self, operator, value):
         """Handle the "on_hand" filter, indirectly calling `_get_domain_locations`."""
-        if operator not in ['=', '!='] or not isinstance(value, bool):
-            raise UserError(_('Operation not supported'))
-        domain_loc = self.env['product.product']._get_domain_locations()[0]
-        quant_query = self.env['stock.quant']._search(domain_loc)
-        if (operator == '!=' and value is True) or (operator == '=' and value is False):
-            domain_operator = 'not in'
-        else:
-            domain_operator = 'in'
-        return [('id', domain_operator, quant_query)]
+        if operator != 'in':
+            return NotImplemented
+        return self.env['product.product']._get_domain_locations()[0]
 
     def copy(self, default=None):
         raise UserError(_('You cannot duplicate stock quants.'))
@@ -1588,14 +1584,9 @@ class StockQuantPackage(models.Model):
                 package.valid_sscc = check_barcode_encoding(package.name, 'sscc')
 
     def _search_owner(self, operator, value):
-        if value:
-            packs = self.search([('quant_ids.owner_id', operator, value)])
-        else:
-            packs = self.search([('quant_ids', operator, value)])
-        if packs:
-            return [('id', 'in', packs.ids)]
-        else:
-            return [('id', '=', False)]
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            return NotImplemented
+        return [('quant_ids.owner_id', operator, value)]
 
     def write(self, vals):
         if 'location_id' in vals:

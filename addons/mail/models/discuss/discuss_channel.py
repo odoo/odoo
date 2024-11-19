@@ -219,7 +219,8 @@ class DiscussChannel(models.Model):
             channel.is_member = bool(channel.self_member_id)
 
     def _search_is_member(self, operator, operand):
-        is_in = (operator == '=' and operand) or (operator == '!=' and not operand)
+        if operator != 'in':
+            return NotImplemented
         # Separate query to fetch candidate channels because the sub-select that _search would
         # generate leads psql query plan to take bad decisions. When candidate ids are explicitly
         # given it doesn't need to make (incorrect) guess, at the cost of one extra but fast query.
@@ -234,7 +235,7 @@ class DiscussChannel(models.Model):
             channels = current_partner.sudo().channel_ids
         else:
             channels = self.env["discuss.channel"]
-        return [('id', "in" if is_in else "not in", channels.ids)]
+        return [('id', 'in', channels.ids)]
 
     @api.depends_context("uid", "guest")
     @api.depends("channel_member_ids")

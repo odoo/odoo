@@ -60,6 +60,7 @@ import typing
 import warnings
 from datetime import date, datetime, time, timedelta
 
+from odoo.exceptions import UserError
 from odoo.tools import SQL, OrderedSet, Query, classproperty, partition, str2bool
 from .identifiers import NewId
 from .utils import COLLECTION_TYPES
@@ -215,6 +216,8 @@ class Domain:
             return _TRUE_DOMAIN
         if arg is False:
             return _FALSE_DOMAIN
+        if arg is NotImplemented:
+            raise NotImplementedError
 
         # parse as a list
         # perf: do this inside __new__ to avoid calling function that return
@@ -250,6 +253,10 @@ class Domain:
     @classproperty
     def FALSE(cls) -> Domain:
         return _FALSE_DOMAIN
+
+    @staticmethod
+    def is_negative_operator(operator: str) -> bool:
+        return operator in NEGATIVE_CONDITION_OPERATORS
 
     @staticmethod
     def AND(items: Iterable) -> Domain:
@@ -821,17 +828,7 @@ class DomainCondition(Domain):
             if not field.search:
                 _logger.error("Non-stored field %s cannot be searched.", field, stack_info=_logger.isEnabledFor(logging.DEBUG))
                 return _TRUE_DOMAIN
-            # XXX temporary fix until next commit that fixes search for '=' operators
-            operator = self.operator
-            value = self.value
-            if operator in ('in', 'not in'):
-                if len(value) == 1:
-                    operator = '=' if operator == 'in' else '!='
-                    value = next(iter(value))
-                elif not isinstance(value, list):
-                    value = list(value)
-            computed_domain = Domain(field.determine_domain(model, operator, value))
-            return computed_domain.optimize(model, full=True)
+            return self._optimize_field_search_method(model)
 
         # optimizations based on operator
         for opt in _OPTIMIZATIONS_BY_OPERATOR[self.operator]:
@@ -852,6 +849,46 @@ class DomainCondition(Domain):
             self._raise("Not standard operator left")
 
         return self
+
+    def _optimize_field_search_method(self, model: BaseModel) -> Domain:
+        field = self._field(model)
+        operator, value = self.operator, self.value
+        # use the `Field.search` function
+        original_exception = None
+        try:
+            computed_domain = field.determine_domain(model, operator, value)
+        except (NotImplementedError, UserError) as e:
+            computed_domain = NotImplemented
+            original_exception = e
+        else:
+            if computed_domain is not NotImplemented:
+                return Domain(computed_domain)
+        # try with the positive operator
+        if (
+            original_exception is None
+            and (inversed_opeator := _INVERSE_OPERATOR.get(operator))
+        ):
+            computed_domain = field.determine_domain(model, inversed_opeator, value)
+            if computed_domain is not NotImplemented:
+                return ~Domain(computed_domain)
+        # backward compatibility to implement only '=' or '!='
+        try:
+            if operator == 'in':
+                return Domain.OR(field.determine_domain(model, '=', v) for v in value)
+            elif operator == 'not in':
+                return Domain.AND(field.determine_domain(model, '!=', v) for v in value)
+        except (NotImplementedError, UserError) as e:
+            if original_exception is None:
+                original_exception = e
+        # raise the error
+        if original_exception:
+            raise original_exception
+        raise UserError(model.env._(
+            "Unsupported operator on %(field_label)s %(model_label)s in %(domain)s",
+            domain=repr(self),
+            field_label=self._field(model).get_description(model.env, ['string'])['string'],
+            model_name=f"{model.env['ir.model']._get(model._name).name!r} ({model._name})",
+        ))
 
     def _to_sql(self, model: BaseModel, alias: str, query: Query) -> SQL:
         return model._condition_to_sql(alias, self.field_expr, self.operator, self.value, query)
@@ -1211,7 +1248,7 @@ def _optimize_boolean_in(condition, model):
     value = condition.value
     operator = condition.operator
     if operator not in ('in', 'not in') or not isinstance(value, COLLECTION_TYPES):
-        return condition
+        condition._raise("Cannot compare %r to %s which is not a collection of length 1", condition.field_expr, type(value))
     if not all(isinstance(v, bool) for v in value):
         # parse the values
         if any(isinstance(v, str) for v in value):
@@ -1221,6 +1258,11 @@ def _optimize_boolean_in(condition, model):
             str2bool(v.lower(), False) if isinstance(v, str) else bool(v)
             for v in value
         }
+    if len(value) == 1 and not any(value):
+        # when comparing boolean values, always compare to [True] if possible
+        # it eases the implementation of search methods
+        operator = _INVERSE_OPERATOR[operator]
+        value = [True]
     return DomainCondition(condition.field_expr, operator, value)
 
 

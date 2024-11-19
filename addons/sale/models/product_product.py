@@ -66,11 +66,11 @@ class ProductProduct(models.Model):
             product.product_catalog_product_is_in_sale_order = bool(data.get(product.id, 0))
 
     def _search_product_is_in_sale_order(self, operator, value):
-        if operator not in ['=', '!='] or not isinstance(value, bool):
-            raise UserError(_("Operation not supported"))
-        product_ids = self.env['sale.order.line'].search([
+        if operator != 'in':
+            return NotImplemented
+        product_ids = self.env['sale.order.line'].search_fetch([
             ('order_id', 'in', [self.env.context.get('order_id', '')]),
-        ]).product_id.ids
+        ], ['product_id']).product_id.ids
         return [('id', 'in', product_ids)]
 
     @api.readonly

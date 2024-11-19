@@ -54,14 +54,10 @@ class HrEmployeeBase(models.AbstractModel):
                 employee.is_subordinate = employee in subordinates
 
     def _search_is_subordinate(self, operator, value):
-        if operator not in ('=', '!=') or not isinstance(value, bool):
-            raise UserError(_('Operation not supported'))
-        # Double negation
-        if not value:
-            operator = '!=' if operator == '=' else '='
-        if not self.env.user.employee_id.subordinate_ids:
-            return [('id', operator, self.env.user.employee_id.id)]
-        return (['!'] if operator == '!=' else []) + [('id', 'in', self.env.user.employee_id.subordinate_ids.ids)]
+        if operator != 'in':
+            return NotImplemented
+        subordinates = self.env.user.employee_id.subordinate_ids
+        return [('id', 'in', subordinates.ids)]
 
     def _compute_child_count(self):
         employee_read_group = self._read_group(

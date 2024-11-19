@@ -470,22 +470,12 @@ class SlideChannel(models.Model):
 
     @api.model
     def _search_is_visible(self, operator, value):
-        if operator not in ("=", "!=") or not isinstance(value, (bool, int)):
-            raise NotImplementedError('Operation not supported')
-        check_is_visible = value if operator == '=' else not value
-        if check_is_visible:
-            domain = ['|', ('is_member', '=', True)] + (
-                [('visibility', '=', 'public')]
-                if self.env.user._is_public()
-                else [('visibility', 'in', ['public', 'connected'])]
-            )
-        else:
-            domain = [('is_member', '=', False)] + (
-                [('visibility', '!=', 'public')]
-                if self.env.user._is_public()
-                else [('visibility', 'not in', ['public', 'connected'])]
-            )
-        return domain
+        if operator != 'in':
+            return NotImplemented
+        return [
+            '|', ('is_member', '=', True),
+            ('visibility', 'in', ['public'] if self.env.user._is_public() else ['public', 'connected']),
+        ]
 
     @api.depends('channel_partner_all_ids', 'channel_partner_all_ids.member_status', 'channel_partner_all_ids.active')
     def _compute_partners(self):
@@ -501,8 +491,6 @@ class SlideChannel(models.Model):
             slide_channel.partner_ids = data.get(slide_channel, [])
 
     def _search_partner_ids(self, operator, value):
-        if isinstance(value, int) and operator == 'in':
-            value = [value]
         return [(
             'channel_partner_ids', 'in', self.env['slide.channel.partner'].sudo()._search(
                 [('partner_id', operator, value),
@@ -563,16 +551,14 @@ class SlideChannel(models.Model):
             channel.is_member_invited = channel.id in invitation_pending_channels_ids
 
     def _search_is_member(self, operator, value):
-        if operator not in ['=', '!='] or not isinstance(value, bool):
-            raise NotImplementedError(_('Operation not supported'))
-        check_has_access = operator == '=' and value or operator == '!=' and not value
-        return [('id', 'in' if check_has_access else 'not in', self._search_is_member_channel_ids())]
+        if operator != 'in':
+            return NotImplemented
+        return [('id', 'in', self._search_is_member_channel_ids())]
 
     def _search_is_member_invited(self, operator, value):
-        if operator not in ['=', '!='] or not isinstance(value, bool):
-            raise NotImplementedError(_('Operation not supported'))
-        check_has_access = operator == '=' and value or operator == '!=' and not value
-        return [('id', 'in' if check_has_access else 'not in', self._search_is_member_channel_ids(invited=True))]
+        if operator != 'in':
+            return NotImplemented
+        return [('id', 'in', self._search_is_member_channel_ids(invited=True))]
 
     def _search_is_member_channel_ids(self, invited=False):
         return self.env['slide.channel.partner'].sudo()._read_group(

@@ -176,6 +176,8 @@ class ResPartnerCategory(models.Model):
     def _search_display_name(self, operator, value):
         domain = super()._search_display_name(operator, value)
         if operator.endswith('like'):
+            if operator.startswith('not'):
+                return NotImplemented
             return [('id', 'child_of', tuple(self._search(domain)))]
         return domain
 

@@ -51,17 +51,13 @@ class MailThreadBlacklist(models.AbstractModel):
 
     @api.model
     def _search_is_blacklisted(self, operator, value):
-        # Assumes operator is '=' or '!=' and value is True or False
+        if operator not in ('in', 'not in'):
+            return NotImplemented
         self.flush_model(['email_normalized'])
         self.env['mail.blacklist'].flush_model(['email', 'active'])
         self._assert_primary_email()
-        if operator != '=':
-            if operator == '!=' and isinstance(value, bool):
-                value = not value
-            else:
-                raise NotImplementedError()
 
-        if value:
+        if operator == 'in':
             sql = SQL("""
                 SELECT m.id
                     FROM mail_blacklist bl

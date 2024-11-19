@@ -84,17 +84,8 @@ class LunchProduct(models.Model):
             product.is_available_at = False
 
     def _search_is_available_at(self, operator, value):
-        supported_operators = ['in', 'not in', '=', '!=']
-
-        if not operator in supported_operators:
-            return expression.TRUE_DOMAIN
-
-        if isinstance(value, int):
-            value = [value]
-
-        if operator in expression.NEGATIVE_TERM_OPERATORS:
-            return expression.AND([[('supplier_id.available_location_ids', 'not in', value)], [('supplier_id.available_location_ids', '!=', False)]])
-
+        if operator != 'in':
+            return NotImplemented
         return expression.OR([[('supplier_id.available_location_ids', 'in', value)], [('supplier_id.available_location_ids', '=', False)]])
 
     def _sync_active_from_related(self):

@@ -218,12 +218,8 @@ class ResGroups(models.Model):
 
     def _search_all_implied_ids(self, operator, value):
         """ Compute the search on the reflexive transitive closure of implied_ids. """
-        if isinstance(value, int):
-            value = [value]
-        elif isinstance(value, str):
-            raise NotImplementedError
-        if operator not in ('in', 'not in') or not isinstance(value, Collection):
-            raise NotImplementedError(f"_search_all_implied_ids with {operator!r} {value!r}")
+        if operator not in ('in', 'not in'):
+            return NotImplemented
         group_definitions = self._get_group_definitions()
         ids = [*value, *group_definitions.get_subset_ids(value)]
         return [('id', operator, ids)]
@@ -237,10 +233,8 @@ class ResGroups(models.Model):
 
     def _search_all_implied_by_ids(self, operator, value):
         """ Compute the search on the reflexive transitive closure of implied_by_ids. """
-        assert isinstance(value, (int, list, tuple))
-
-        if isinstance(value, int):
-            value = [value]
+        if operator not in ('in', 'not in'):
+            return NotImplemented
         group_definitions = self._get_group_definitions()
         ids = [*value, *group_definitions.get_superset_ids(value)]
 

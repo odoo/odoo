@@ -102,6 +102,8 @@ class HrLeaveReportCalendar(models.Model):
             leave.name += f": {leave.sudo().leave_id.duration_display}"
 
     def _search_name(self, operator, value):
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            return NotImplemented
         query = self.env['hr.leave.report.calendar'].sudo()._search([('leave_id.duration_display', operator, value)])
         domain = ['|', ('employee_id.name', operator, value), ('id', 'in', query)]
         if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):

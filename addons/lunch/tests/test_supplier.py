@@ -55,7 +55,8 @@ env['lunch.supplier'].browse([{self.supplier_kothai.id}])._send_auto_email()""")
     @common.users('cle-lunch-manager')
     def test_search_available_today(self):
         '''
-            This test checks that _search_available_today returns a valid domain
+            This test checks that _search_available_today returns a valid domain.
+            The field is of type boolean, so it accepts only the '=' operator.
         '''
         self.env.user.tz = 'Europe/Brussels'
         Supplier = self.env['lunch.supplier']
@@ -65,19 +66,17 @@ env['lunch.supplier'].browse([{self.supplier_kothai.id}])._send_auto_email()""")
                  (self.saturday_3am, 3.0, 'sat'), (self.saturday_10am, 10.0, 'sat'),
                  (self.saturday_1pm, 13.0, 'sat'), (self.saturday_8pm, 20.0, 'sat')]
 
-        # It should return an empty domain if we compare to values other than datetime
-        assert Supplier._search_available_today('>', 7) == []
-        assert Supplier._search_available_today('>', True) == []
-
         for value, rvalue, dayname in tests:
-            with patch.object(fields.Datetime, 'now', return_value=value) as _:
-                assert Supplier._search_available_today('=', True) == ['&', '|', ('recurrency_end_date', '=', False),
+            with self.subTest(value=value), patch.object(fields.Datetime, 'now', return_value=value):
+                self.assertEqual(
+                    Supplier._search_available_today('in', [True]),
+                    ['&', '|', ('recurrency_end_date', '=', False),
                         ('recurrency_end_date', '>', value.replace(tzinfo=pytz.UTC).astimezone(pytz.timezone(self.env.user.tz))),
-                        (dayname, '=', True)],\
-                        'Wrong domain generated for values (%s, %s)' % (value, rvalue)
+                        (dayname, 'in', [True])],
+                )
 
-        with patch.object(fields.Datetime, 'now', return_value=self.monday_10am) as _:
-            assert self.supplier_pizza_inn in Supplier.search([('available_today', '=', True)])
+        with patch.object(fields.Datetime, 'now', return_value=self.monday_10am):
+            self.assertIn(self.supplier_pizza_inn, Supplier.search([('available_today', '=', True)]))
 
     @common.users('cle-lunch-manager')
     def test_auto_email_send(self):
