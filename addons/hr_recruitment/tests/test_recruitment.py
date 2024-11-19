@@ -1,10 +1,30 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
+
 from odoo.tests import tagged, TransactionCase
 
 @tagged('recruitment')
 class TestRecruitment(TransactionCase):
+
+    def setUp(self):
+        self.TEXT = base64.b64encode(bytes("hr_recruitment", 'utf-8'))
+        self.Attachment = self.env['ir.attachment']
+        self.Candidate = self.env['hr.candidate']
+        self.candidate_0 = self.Candidate.create({
+            'partner_name': 'Test Candidate',
+            'email_from': 'testcandidate@example.com'
+        })
+        self.candidate_1 = self.Candidate.create({
+            'partner_name': 'Test Candidate 1',
+            'email_from': 'testcandidate1@example.com'
+        })
+        self.applicant_1 = self.env['hr.applicant'].create({
+            'partner_name': 'Applicant 1',
+            'candidate_id': self.candidate_1.id,
+        })
+        return super().setUp()
 
     def test_infer_applicant_lang_from_context(self):
         # Prerequisites
@@ -176,3 +196,37 @@ class TestRecruitment(TransactionCase):
             self.env['hr.applicant'].search([('email_from', 'ilike', 'mitchell_admin@example.com')]),
             no_dup
         )
+
+    def test_copy_attachments_while_creating_employee(self):
+        """
+        Test that attachments are copied when creating an employee from a candidate or applicant
+        """
+        applicant_attachment = self.Attachment.create({
+            'datas': self.TEXT,
+            'name': 'textFile.txt',
+            'mimetype': 'text/plain',
+            'res_model': self.applicant_1._name,
+            'res_id': self.applicant_1.id
+        })
+        candidate_attachment = self.Attachment.create({
+            'datas': self.TEXT,
+            'name': 'textFile.txt',
+            'mimetype': 'text/plain',
+            'res_model': self.candidate_0._name,
+            'res_id': self.candidate_0.id
+        })
+        employee_candidate = self.candidate_0.create_employee_from_candidate()
+        self.assertTrue(employee_candidate['res_id'])
+        attachment_employee_candidate = self.Attachment.search([
+            ('res_model', '=', employee_candidate['res_model']),
+            ('res_id', '=', employee_candidate['res_id']),
+        ])
+        self.assertEqual(candidate_attachment['datas'], attachment_employee_candidate['datas'])
+
+        employee_applicant = self.applicant_1.create_employee_from_applicant()
+        self.assertTrue(employee_applicant['res_id'])
+        attachment_employee_applicant = self.Attachment.search([
+            ('res_model', '=', employee_applicant['res_model']),
+            ('res_id', '=', employee_applicant['res_id']),
+        ])
+        self.assertEqual(applicant_attachment['datas'], attachment_employee_applicant['datas'])
