@@ -94,14 +94,14 @@ test("Message post in chat window of chatter should log a note", async () => {
     await contains(".o-mail-ChatWindow");
     await contains(".o-mail-Message", {
         text: "A needaction message to have it in messaging menu",
-        contains: [".o-mail-Message-bubble.border"], // bordered bubble = "Send message" mode
+        contains: [".o-mail-Message-bubble.o-blue"], // colored bubble = "Send message" mode
     });
     await contains(".o-mail-Composer [placeholder='Log an internal note…']");
     await insertText(".o-mail-ChatWindow .o-mail-Composer-input", "Test");
     triggerHotkey("control+Enter");
     await contains(".o-mail-Message", {
         text: "Test",
-        contains: [".o-mail-Message-bubble:not(.border)"], // non-bordered bubble = "Log note" mode
+        contains: [".o-mail-Message-bubble:not(.o-blue)"], // non-colored bubble = "Log note" mode
     });
 });
 
