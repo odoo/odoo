@@ -3,8 +3,8 @@
 import re
 
 from odoo import Command
-from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.product.tests.common import TestProductCommon
+from odoo.tests import new_test_user
 
 
 class TestStockCommon(TestProductCommon):
@@ -12,7 +12,6 @@ class TestStockCommon(TestProductCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.setup_by_admin()
-        cls.setup_logistics_user()
         cls.setup_by_user()
 
     def _create_move(self, product, src_location, dst_location, **values):
@@ -28,9 +27,7 @@ class TestStockCommon(TestProductCommon):
     @classmethod
     def _enable_adv_location(cls):
         """ Required for `manufacture_steps` to be visible in the view """
-        cls.env.ref('base.group_user').sudo().write({'implied_ids': [
-            (4, cls.env.ref('stock.group_adv_location').id),
-        ]})
+        cls.user.groups_id += cls.env.ref('stock.group_adv_location')
 
     @classmethod
     def setup_by_admin(cls):
@@ -40,36 +37,29 @@ class TestStockCommon(TestProductCommon):
             'email': 'julia@agrolait.example.com',
         })
 
-        cls.company = cls.env['res.company'].create({
-            'name': 'Test Logistics Company A',
-        })
-
-        cls.env.ref('base.group_user').write({'implied_ids': [
-            (4, cls.env.ref('base.group_multi_company').id),
-            (4, cls.env.ref('stock.group_production_lot').id),
-        ]})
+        cls.user.groups_id += \
+            cls.env.ref('base.group_multi_company') + \
+            cls.env.ref('stock.group_production_lot')
         #######################################################################
         # TODO: refactor these changes from common2.py
         #######################################################################
         # User Data: stock user and stock manager
-        cls.user_stock_user = mail_new_test_user(
-            cls.env,
-            name='Pauline Poivraisselle',
-            login='pauline',
-            email='p.p@example.com',
-            notification_type='inbox',
-            groups='stock.group_stock_user',
-        )
-        cls.user_stock_manager = mail_new_test_user(
-            cls.env,
-            name='Julie Tablier',
-            login='julie',
-            email='j.j@example.com',
-            notification_type='inbox',
-            groups='stock.group_stock_manager',
-        )
-        cls.assign_company_to_user(cls.user_stock_manager, cls.company)
-        cls.assign_company_to_user(cls.user_stock_user, cls.company)
+        cls.user_stock_user = cls.env['res.users'].sudo().create({
+            'name': 'Pauline Poivraisselle',
+            'login': 'pauline',
+            'email': 'p.p@example.com',
+            'notification_type': 'inbox',
+            'groups_id': [cls.env.ref('stock.group_stock_user').id],
+            'company_id': cls.env.company.id,
+        })
+        cls.user_stock_manager = cls.env['res.users'].sudo().create({
+            'name': 'Julie Tablier',
+            'login': 'julie',
+            'email': 'j.j@example.com',
+            'notification_type': 'inbox',
+            'groups_id': [cls.env.ref('stock.group_stock_manager').id],
+            'company_id': cls.env.company.id,
+        })
 
     @classmethod
     def setup_by_user(cls):
@@ -228,21 +218,21 @@ class TestStockCommon(TestProductCommon):
         return rec_id, model_name
 
     @classmethod
-    def setup_logistics_user(cls):
-        cls.user = cls.env['res.users'].create({
-            'name': 'Test Stock User',
-            'login': 'stock',
-            'password': 'stockpass',
-            'groups_id': [
-                Command.link(cls.env.ref('stock.group_stock_manager').id),
-            ],
+    def setup_independent_user(cls):
+        return new_test_user(
+            cls.env,
+            name='Test Stock User',
+            login='stock',
+            password='stockpass',
+            email='stock@test.com',
+            groups_id=[cls.env.ref('stock.group_stock_manager').id],
+        )
+
+    @classmethod
+    def setup_independent_company(cls, **kwargs):
+        return cls.env['res.company'].sudo().create({
+            'name': 'Test Logistics Company A',
         })
-        cls.user.email = 'stock@test.com'
-        # Shadow the current environment/cursor with one having the report user.
-        # This is mandatory to test access rights.
-        cls.env = cls.env(user=cls.user)
-        cls.cr = cls.env.cr
-        cls.assign_company_to_user(cls.user, cls.company)
 
     @staticmethod
     def assign_company_to_user(user, company):

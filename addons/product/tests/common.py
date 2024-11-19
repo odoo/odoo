@@ -37,9 +37,7 @@ class ProductCommon(UomCommon):
     @classmethod
     def _enable_product_variant(cls):
         """ Required for `product_id` to be visible in the view """
-        cls.env.ref('base.group_user').sudo().write({'implied_ids': [
-            (4, cls.env.ref('product.group_product_variant').id),
-        ]})
+        cls.user.groups_id += cls.env.ref('product.group_product_variant')
 
     @classmethod
     def get_default_groups(cls):
@@ -49,6 +47,12 @@ class ProductCommon(UomCommon):
     @classmethod
     def _enable_pricelists(cls):
         cls.env.user.groups_id += cls.group_product_pricelist
+
+    @classmethod
+    def _archive_other_pricelists(cls):
+        cls.env['product.pricelist'].search([
+            ('id', '!=', cls.pricelist.id),
+        ]).sudo().action_archive()
 
     @classmethod
     def _create_pricelist(cls, **create_vals):

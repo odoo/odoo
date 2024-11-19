@@ -16,8 +16,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
             and company's Purchase Lead Time."""
 
         # Update company with Purchase Lead Time
-        with self.with_user('admin'):
-            self.company.write({'po_lead': 3.00})
+        self.company.sudo().write({'po_lead': 3.00})
 
         # Make procurement request from product_1's form view, create procurement and check it's state
         date_planned = fields.Datetime.now() + timedelta(days=10)
@@ -47,8 +46,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
             we create two procurements for the two different product with same vendor
             and different Delivery Lead Time."""
 
-        with self.with_user('admin'):
-            self.company.write({'po_lead': 0.00})
+        self.company.sudo().write({'po_lead': 0.00})
 
         # Make procurement request from product_1's form view, create procurement and check it's state
         date_planned1 = fields.Datetime.now() + timedelta(days=10)
@@ -141,8 +139,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
 
     def test_merge_po_line_3(self):
         """Change merging po line if same procurement is done depending on custom values."""
-        with self.with_user('admin'):
-            self.company.write({'po_lead': 0.00})
+        self.company.sudo().write({'po_lead': 0.00})
 
         # The seller has a specific product name and code which must be kept in the PO line
         self.t_shirt.seller_ids.write({
@@ -202,8 +199,8 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         self.assertEqual(purchase_order.picking_ids[0].move_ids_without_package.filtered(lambda x: x.product_uom_qty == 10).description_picking, t_shirt.display_name + "\n" + order_line_description + "Color (Green)", 'wrong description in picking')
 
     def test_reordering_days_to_purchase(self):
+        self.company.sudo().write({'po_lead': 0.00})
         with self.with_user('admin'):
-            self.company.write({'po_lead': 0.00})
             company2 = self.env['res.company'].create({
                 'name': 'Second Company',
             })
@@ -217,8 +214,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
             'name': 'Delhaize'
         })
 
-        with self.with_user('admin'):
-            self.company.days_to_purchase = 2.0
+        self.company.sudo().days_to_purchase = 2.0
 
         # Test if the orderpoint is created when opening the replenishment view
         prod = self.env['product.product'].create({

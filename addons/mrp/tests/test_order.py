@@ -804,7 +804,6 @@ class TestMrpOrder(TestMrpCommon):
         """ Plan 2 finished products, reserve and produce 3. Post the current production.
         Simulate an unlock and edit and, on the opened moves, set the consumed quantity
         to 5, and to 4. Check the component quantity removed from inventory is correct."""
-        self.stock_location = self.env.ref('stock.stock_location_stock')
         mo, _, _, p1, p2 = self.generate_mo(qty_final=1)
         self.assertEqual(len(mo), 1, 'MO should have been created')
 
@@ -2275,7 +2274,7 @@ class TestMrpOrder(TestMrpCommon):
         # Workcenter is based in Bangkok
         # Possible working hours are Monday to Friday, from 8:00 to 12:00 and from 13:00 to 17:00 (UTC+7)
         workcenter = self.workcenter_1
-        self.calendar.tz = 'Asia/Bangkok'
+        self.calendar.sudo().tz = 'Asia/Bangkok'
         # The test will try to plan some WO on next Monday. We need to unlink all
         # useless times off to ensure that nothing will disturb the slot reservation
         (workcenter.resource_calendar_id.global_leave_ids | workcenter.resource_calendar_id.leave_ids).unlink()
@@ -3318,7 +3317,7 @@ class TestMrpOrder(TestMrpCommon):
     def test_planning_cancelled_workorder(self):
         """Test when plan start time for workorders, cancelled workorders won't be taken into account.
         """
-        self.calendar.tz = 'Europe/Brussels'
+        self.calendar.sudo().tz = 'Europe/Brussels'
         workcenter_1 = self.env['mrp.workcenter'].create({
             'name': 'wc1',
             'default_capacity': 1,
@@ -4273,7 +4272,7 @@ class TestMrpOrder(TestMrpCommon):
         will be set too. As if the finish date is not set the planned workorder will not
         be shown in planning gantt view
         """
-        self.calendar.tz = 'Europe/Brussels'
+        self.calendar.sudo().tz = 'Europe/Brussels'
         mo = self.env['mrp.production'].create({
             'product_id': self.product.id,
             'product_uom_id': self.bom_1.product_uom_id.id,
@@ -4386,9 +4385,8 @@ class TestMrpOrder(TestMrpCommon):
         bom.operation_ids.time_cycle_manual = 60.0
         product = bom.product_id
         component_1, component_2 = bom.bom_line_ids.mapped('product_id')
-        stock_location = self.env.ref('stock.stock_location_stock')
-        self.env['stock.quant']._update_available_quantity(component_1, stock_location, 50.0)
-        self.env['stock.quant']._update_available_quantity(component_2, stock_location, 50.0)
+        self.env['stock.quant']._update_available_quantity(component_1, self.stock_location, 50.0)
+        self.env['stock.quant']._update_available_quantity(component_2, self.stock_location, 50.0)
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = product
         mo_form.bom_id = bom
@@ -4539,10 +4537,11 @@ class TestMrpOrder(TestMrpCommon):
         self.assertTrue(all(sml.lot_id == producing_lot for sml in mo.move_finished_ids.move_line_ids))
         self.assertEqual(sum(sml.quantity for sml in mo.move_finished_ids.move_line_ids), 10.0)
 
-        stock_location = self.env.ref('stock.stock_location_stock')
-        self.env['stock.quant']._update_available_quantity(tracked_product, stock_location, -3, lot_id=producing_lot)
+        self.env['stock.quant']._update_available_quantity(
+            tracked_product, self.stock_location, -3, lot_id=producing_lot
+        )
         mo.qty_producing = 15.0
-        quants = tracked_product.stock_quant_ids.filtered(lambda q: q.location_id == stock_location)
+        quants = tracked_product.stock_quant_ids.filtered(lambda q: q.location_id == self.stock_location)
         self.assertRecordValues(quants, [
             {'quantity': 12.0, 'lot_id': producing_lot.id},
         ])
@@ -4775,7 +4774,7 @@ class TestMrpOrder(TestMrpCommon):
     def test_workorder_planning_validity_with_workcenters(self):
         # Create a workcenter with no pauses
         week_days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-        resource_calendar = self.env['resource.calendar'].create({
+        resource_calendar = self.env['resource.calendar'].sudo().create({
             'name': 'Default Calendar',
             'company_id': False,
             'hours_per_day': 24,
