@@ -43,6 +43,7 @@ options.registry.NavTabs = options.registry.MultipleItems.extend({
     _findLinksAndPanes: function () {
         this.$navLinks = this.$target.find('.nav:first .nav-link');
         this.$tabPanes = this.$target.find(".tab-content:first > .tab-pane");
+        // this.$tabPanes = this.$target[0].closest('.tab-content').querySelectorAll('.tab-pane');
     },
     /**
      * @private
