@@ -185,9 +185,78 @@ registry.category("web_tour.tours").add("test_add_new_line_in_detailled_op", {
             isCheck: true,
         },
         {
+            trigger: ".o_field_x2many_list_row_add > a",
+            run: "click",
+        },
+        {
+            content: "Pick LOT001 to create a move line with a quantity of 0.00",
+            trigger: ".o_data_row .o_data_cell[name=lot_id]:contains(LOT001)",
+            run: "click",
+        },
+        {
+            content: "check that the move contains three lines",
+            trigger: ".modal-content:has(.modal-header .modal-title:contains(Open: Stock move)) .o_data_row:nth-child(3)",
+            isCheck: true,
+        },
+        {
+            trigger: ".modal-header .modal-title:contains(Open: Stock move)",
+            run: "click",
+        },
+        {
+            content: "Check that the first line is associated with LOT001 for a quantity of 0.00",
+            trigger:
+                ".modal-content .o_data_row:nth-child(1):has(.o_data_cell[name=quant_id]:contains(WH/Stock - LOT001)):has(.o_data_cell[name=quantity]:contains(0.00))",
+            isCheck: true,
+        },
+        {
+            trigger: ".o_field_x2many_list_row_add > a",
+            run: "click",
+        },
+        {
+            content: "LOT001 should not appear as it is not available",
+            trigger: ".modal-header .modal-title:contains(Add line: Product Lot)",
+            run: () => {
+                const lines = document.querySelectorAll(".o_data_row .o_data_cell[name=lot_id]");
+                if (lines.length !== 2) {
+                    throw new TourError(
+                        "Wrong number of available quants: " + lines.length + " instead of 2."
+                    );
+                }
+                const lineLOT001 = Array.from(lines).filter((line) =>
+                    line.textContent.includes("LOT001")
+                );
+                if (lineLOT001.length) {
+                    throw new TourError("LOT001 shoudld not be displayed as unavailable.");
+                }
+            },
+        },
+        {
+            content: "Cancel the move line creation",
+            trigger: ".modal-header:has(.modal-title:contains(Add line: Product Lot)) .btn-close",
+            run: "click",
+        },
+        {
+            content: "Remove the newly created line",
+            trigger:
+                ".modal-content .o_data_row:nth-child(1):has(.o_data_cell[name=quant_id]:contains(WH/Stock - LOT001)):has(.o_data_cell[name=quantity]:contains(0.00)) .o_list_record_remove",
+            run: "click",
+        },
+        {
+            content: "check that the move contains two lines",
+            trigger:
+                ".modal-content:has(.modal-header .modal-title:contains(Open: Stock move)):not(:has(.o_data_row:nth-child(3)))",
+            isCheck: true,
+        },
+        {
             content: "Check that the first line is associated with LOT001",
             trigger:
                 ".modal-content .o_data_row:nth-child(1) .o_data_cell[name=quant_id]:contains(WH/Stock - LOT001)",
+            isCheck: true,
+        },
+        {
+            content: "Check that the second line is associated with LOT002",
+            trigger:
+                ".modal-content .o_data_row:nth-child(2) .o_data_cell[name=quant_id]:contains(WH/Stock - LOT002)",
             isCheck: true,
         },
         {
