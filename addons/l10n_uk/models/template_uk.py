@@ -30,6 +30,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'PT_20_G',
                 'expense_account_id': '5000',
                 'income_account_id': '4000',
+                'deferred_expense_account_id': '1103',
+                'deferred_revenue_account_id': '2109',
             },
         }
 
