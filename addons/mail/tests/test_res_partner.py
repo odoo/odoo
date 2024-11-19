@@ -241,10 +241,6 @@ class TestPartner(MailCommon):
     def test_find_or_create_from_emails(self):
         """ Test for '_find_or_create_from_emails' allowing to find or create
         partner based on emails in a batch-enabled and optimized fashion. """
-        self.user_employee_c2.write({
-            'groups_id': [(4, self.env.ref('base.group_partner_manager').id)],
-        })
-
         with self.mockPartnerCalls():
             partners = self.env['res.partner'].with_context(lang='en_US')._find_or_create_from_emails(
                 [item[0] for item in self.samples],
@@ -311,10 +307,6 @@ class TestPartner(MailCommon):
     def test_res_partner_find_or_create_from_emails_dupes_email_field(self):
         """ Specific test for duplicates management: based on email to avoid
         creating similar partners. """
-        self.user_employee_c2.write({
-            'groups_id': [(4, self.env.ref('base.group_partner_manager').id)],
-        })
-
         # all same partner, same email 'test.customer@test.dupe.example.com'
         email_dupes_samples = [
             '"Formatted Customer" <test.customer@TEST.DUPE.EXAMPLE.COM>',

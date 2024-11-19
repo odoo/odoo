@@ -4,8 +4,8 @@ from markupsafe import Markup
 from requests.exceptions import HTTPError
 
 from odoo import fields
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo
-from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.base.tests.common import HttpCase
+from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.http import Request
 from odoo.tests import JsonRpcException
 from odoo.tools import file_open, mute_logger
@@ -35,7 +35,7 @@ class MessagePostSubTestData:
         self.exp_emails = exp_emails
 
 
-class MailControllerCommon(HttpCaseWithUserDemo, MailCommon):
+class MailControllerCommon(HttpCase, MailCommon):
     # Note that '_get_with_access' is going to call '_get_thread_with_access'
     # which relies on classic portal parameter given as kwargs on most routes
     # (aka hash, token, pid)
@@ -49,6 +49,17 @@ class MailControllerCommon(HttpCaseWithUserDemo, MailCommon):
         cls.guest = cls.env["mail.guest"].create({"name": "Guest"})
         last_message = cls.env["mail.message"].search([], order="id desc", limit=1)
         cls.fake_message = cls.env["mail.message"].browse(last_message.id + 1000000)
+        cls.user_employee_nopartner = mail_new_test_user(
+            cls.env,
+            company_id=cls.company_admin.id,
+            country_id=cls.env.ref('base.be').id,
+            groups='base.group_user,mail.group_mail_template_editor',
+            login='employee_nopartner',
+            name='Elodie EmployeeNoPartner',
+            notification_type='inbox',
+        )
+        # whatever default creation values, we need a "no partner manager" user
+        cls.user_employee_nopartner.write({'groups_id': [(3, cls.env.ref('base.group_partner_manager').id)]})
 
     def _authenticate_pseudo_user(self, pseudo_user):
         user = pseudo_user if pseudo_user._name == "res.users" else self.user_public
@@ -124,14 +135,6 @@ class MailControllerBinaryCommon(MailControllerCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.user_test = cls.env["res.users"].create(
-            {
-                "email": "testuser@testuser.com",
-                "name": "Test User",
-                "login": "test_user",
-                "password": "test_user",
-            }
-        )
         cls.guest_2 = cls.env["mail.guest"].create({"name": "Guest 2"})
 
     def _execute_subtests(self, record, subtests):

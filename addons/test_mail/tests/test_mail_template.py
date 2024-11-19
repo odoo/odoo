@@ -23,10 +23,6 @@ class TestMailTemplateCommon(MailCommon, TestRecipients):
             'name': 'Test',
         })
 
-        cls.user_employee.write({
-            'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)],
-        })
-
         cls._attachments = [{
             'name': 'first.txt',
             'datas': base64.b64encode(b'My first attachment'),

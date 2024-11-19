@@ -48,7 +48,6 @@ class TestMailComposerForm(TestMailComposer):
         super(TestMailComposerForm, cls).setUpClass()
         cls.other_company = cls.env['res.company'].create({'name': 'Other Company'})
         cls.user_employee.write({
-            'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)],
             'company_ids': [(4, cls.other_company.id)]
         })
         cls.partner_private, cls.partner_private_2, cls.partner_classic = cls.env['res.partner'].create([
@@ -271,9 +270,6 @@ class TestMailComposerUI(MailCommon, HttpCase):
             'model_id': self.env['ir.model']._get_id('res.partner'),
             'name': 'Test template',
             'partner_to': '{{ object.id }}',
-        })
-        self.user_employee.write({
-            'groups_id': [(4, self.env.ref('base.group_partner_manager').id)],
         })
         partner = self.env["res.partner"].create({"name": "Jane", "email": "jane@example.com"})
         user = self.env["res.users"].create({"name": "Not A Demo User", "login": "nadu"})
