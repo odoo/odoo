@@ -2047,6 +2047,55 @@ class TestMailGatewayLoops(MailGatewayCommon):
         records = self.env['mail.test.ticket'].search([('name', 'ilike', 'Whitelist test alias loop %')])
         self.assertEqual(len(records), 10, msg='Email whitelisted should not have the restriction')
 
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_routing_loop_follower_alias(self):
+        """ Use case: managing follower that are aliases. """
+        with self.mock_mail_gateway():
+            record = self.format_and_process(
+                MAIL_TEMPLATE,
+                f'"Annoying Customer" <{self.customer_email}>',
+                f'"Super Help" <{self.alias_ticket.alias_name}@{self.alias_ticket.alias_domain}>',
+                cc=f'{self.alias_partner.email_normalized}, {self.other_partner.email_normalized}',
+                subject='Inquiry',
+                return_path=self.customer_email,
+                target_model='mail.test.ticket',
+            )
+        self.assertEqual(record.name, 'Inquiry')
+        self.assertFalse(record.message_partner_ids, 'Inquiry')
+        self.assertNotSentEmail()
+        self.assertEqual(record.message_ids.partner_ids, self.other_partner,
+                         'MailGateway: recipients = alias should not be linked to message')
+
+        # for some stupid reason, people add an alias as follower
+        with self.mock_mail_gateway():
+            _message = record.with_user(self.user_employee).message_post(
+                body='Answer',
+                partner_ids=self.alias_partner.ids,
+            )
+        last_mail = self._mails  # save to reuse
+        self.assertSentEmail(self.user_employee.email_formatted, [self.alias_partner.email_formatted])
+
+        # simulate this email coming back to the same Odoo server -> msg_id is
+        # a duplicate, hence rejected
+        with RecordCapturer(self.env['mail.test.ticket'], []) as capture_ticket, \
+             RecordCapturer(self.env['mail.test.gateway'], []) as capture_gateway:
+            self._reinject()
+        self.assertFalse(capture_ticket.records)
+        self.assertFalse(capture_gateway.records)
+        self.assertNotSentEmail()
+        self.assertFalse(bool(self._new_msgs))
+
+        # simulate stupid email providers that rewrites msg_id -> thanks to
+        # a custom header, it is rejected as already managed by mailgateway
+        self._mails = last_mail
+        with RecordCapturer(self.env['mail.test.ticket'], []) as capture_ticket, \
+             RecordCapturer(self.env['mail.test.gateway'], []) as capture_gateway:
+            self._reinject(force_msg_id='123donotnamemailjet456')
+        self.assertFalse(capture_ticket.records)
+        self.assertFalse(capture_gateway.records)
+        self.assertFalse(bool(self._new_msgs))
+        self.assertNotSentEmail()
+
 
 @tagged('mail_gateway', 'mail_thread')
 class TestMailThreadCC(MailCommon):
