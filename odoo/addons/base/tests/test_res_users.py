@@ -4,11 +4,11 @@
 from types import SimpleNamespace
 from unittest.mock import patch
 
-from odoo import SUPERUSER_ID
+from odoo import Command, SUPERUSER_ID
 from odoo.addons.base.models.res_users import is_selection_groups, get_selection_groups, name_selection_groups
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.http import _request_stack
-from odoo.tests import Form, TransactionCase, new_test_user, tagged, HttpCase, users
+from odoo.tests import Form, TransactionCase, new_test_user, tagged, HttpCase, users, warmup
 from odoo.tools import mute_logger
 
 
@@ -443,6 +443,17 @@ class TestUsers2(UsersCommonCase):
         # Disallow to write a field not in the SELF_WRITEABLE_FIELDS on another user
         with self.assertRaises(AccessError):
             other.login = "foo"
+
+    @warmup
+    def test_write_groups_id_performance(self):
+        contact_creation_group = self.env.ref("base.group_partner_manager")
+        self.assertNotIn(contact_creation_group, self.user_internal.groups_id)
+
+        # all modules: 28, base: 16
+        with self.assertQueryCount(28):
+            self.user_internal.write({
+                "groups_id": [Command.link(contact_creation_group.id)],
+            })
 
 
 @tagged('post_install', '-at_install', 'res_groups')
