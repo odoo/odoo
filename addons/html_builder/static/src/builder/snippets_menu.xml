@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.SnippetsMenu">
-    <div class="h-100 o-snippets-menu">
+    <div class="h-100 o-snippets-menu" t-ref="snippetsMenu">
         <div class="o-snippets-top-actions d-flex justify-content-between">
             <div class="d-flex">
                 <button type="button" t-on-click="() => this.undo()" class="btn btn-secondary fa fa-undo" t-att-disabled="!state.canUndo"/>
