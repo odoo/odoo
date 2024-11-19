@@ -7,8 +7,8 @@ class AnalyticCommon(BaseCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.analytic_plan_offset = len(cls.env['account.analytic.plan'].get_relevant_plans())
-        cls.analytic_plan_1, cls.analytic_plan_2 = cls.env['account.analytic.plan'].create([
+        cls.analytic_plan_offset = len(cls.env['account.analytic.plan'].sudo().get_relevant_plans())
+        cls.analytic_plan_1, cls.analytic_plan_2 = cls.env['account.analytic.plan'].sudo().create([
             {
                 'name': 'Plan 1',
                 'default_applicability': 'unavailable',
@@ -17,12 +17,12 @@ class AnalyticCommon(BaseCommon):
                 'name': 'Plan 2',
             }
         ])
-        cls.analytic_plan_child = cls.env['account.analytic.plan'].create({
+        cls.analytic_plan_child = cls.env['account.analytic.plan'].sudo().create({
             'name': 'Plan Child',
             'parent_id': cls.analytic_plan_1.id,
         })
 
-        cls.analytic_account_1, cls.analytic_account_2, cls.analytic_account_3, cls.analytic_account_4 = cls.env['account.analytic.account'].create([
+        cls.analytic_account_1, cls.analytic_account_2, cls.analytic_account_3, cls.analytic_account_4 = cls.env['account.analytic.account'].sudo().create([
             {'name': 'Account 1', 'plan_id': cls.analytic_plan_1.id, 'company_id': False},
             {'name': 'Account 2', 'plan_id': cls.analytic_plan_child.id, 'company_id': False},
             {'name': 'Account 3', 'plan_id': cls.analytic_plan_2.id, 'company_id': False},
@@ -44,6 +44,4 @@ class AnalyticCommon(BaseCommon):
 
     @classmethod
     def _enable_analytic_accounting(cls):
-        cls.env.ref('base.group_user').sudo().write({'implied_ids': [
-            (4, cls.env.ref('analytic.group_analytic_accounting').id),
-        ]})
+        cls.user.groups_id += cls.env.ref('analytic.group_analytic_accounting')

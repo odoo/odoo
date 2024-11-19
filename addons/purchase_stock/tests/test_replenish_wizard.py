@@ -363,8 +363,7 @@ class TestReplenishWizard(TestStockCommon):
             'delay' : 0
         })
         self.env['ir.config_parameter'].sudo().set_param('purchase.use_po_lead', True)
-        with self.with_user('admin'):
-            self.company.days_to_purchase = 0
+        self.company.sudo().days_to_purchase = 0
 
         with freeze_time("2023-01-01"):
             wizard = self.env['product.replenish'].create({
@@ -377,8 +376,7 @@ class TestReplenishWizard(TestStockCommon):
             })
             wizard.supplier_id = supplier1
             self.assertEqual(fields.Datetime.from_string('2023-01-01 00:00:00'), wizard.date_planned)
-            with self.with_user('admin'):
-                self.company.days_to_purchase = 5
+            self.company.sudo().days_to_purchase = 5
             # change the supplier to trigger the date computation
             wizard.supplier_id = supplier2
             self.assertEqual(fields.Datetime.from_string('2023-01-06 00:00:00'), wizard.date_planned)
@@ -398,8 +396,7 @@ class TestReplenishWizard(TestStockCommon):
             'delay': 2
         })
         self.env['ir.config_parameter'].sudo().set_param('purchase.use_po_lead', True)
-        with self.with_user('admin'):
-            self.company.days_to_purchase = 5
+        self.company.sudo().days_to_purchase = 5
 
         with freeze_time("2023-01-01"):
             wizard = self.env['product.replenish'].create({

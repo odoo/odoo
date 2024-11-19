@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from odoo.tests import Form
-from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.stock.tests.common import TestStockCommon
 
 
@@ -57,25 +56,32 @@ class TestMrpCommon(TestStockCommon):
     def setup_by_admin(cls):
         super().setup_by_admin()
         # User Data: mrp user and mrp manager
-        cls.user_mrp_user = mail_new_test_user(
-            cls.env,
-            name='Hilda Ferachwal',
-            login='hilda',
-            email='h.h@example.com',
-            notification_type='inbox',
-            groups='mrp.group_mrp_user, stock.group_stock_user, mrp.group_mrp_byproducts, uom.group_uom',
-        )
-        cls.user_mrp_manager = mail_new_test_user(
-            cls.env,
-            name='Gary Youngwomen',
-            login='gary',
-            email='g.g@example.com',
-            notification_type='inbox',
-            groups='mrp.group_mrp_manager, stock.group_stock_user, mrp.group_mrp_byproducts, uom.group_uom',
-        )
-
-        cls.assign_company_to_user(cls.user_mrp_user, cls.company)
-        cls.assign_company_to_user(cls.user_mrp_manager, cls.company)
+        cls.user_mrp_user = cls.env['res.users'].sudo().create({
+            'name': 'Hilda Ferachwal',
+            'login': 'hilda',
+            'email': 'h.h@example.com',
+            'notification_type': 'inbox',
+            'groups_id': [
+                cls.env.ref('mrp.group_mrp_user').id,
+                # cls.env.ref('mrp.group_stock_user').id,
+                cls.env.ref('mrp.group_mrp_byproducts').id,
+                cls.env.ref('uom.group_uom').id,
+            ],
+            'company_id': cls.env.company.id,
+        })
+        cls.user_mrp_manager = cls.env['res.users'].sudo().create({
+            'name': 'Gary Youngwomen',
+            'login': 'gary',
+            'email': 'g.g@example.com',
+            'notification_type': 'inbox',
+            'groups_id': [
+                cls.env.ref('mrp.group_mrp_manager').id,
+                # cls.env.ref('mrp.group_stock_user').id,
+                cls.env.ref('mrp.group_mrp_byproducts').id,
+                cls.env.ref('uom.group_uom').id,
+            ],
+            'company_id': cls.env.company.id,
+        })
 
     @classmethod
     def setUpClass(cls):
@@ -108,11 +114,10 @@ class TestMrpCommon(TestStockCommon):
         # `workorder_ids` to be visible in the view of `mrp.production`. The
         # field `product_uom_id` must be set by many tests, and subviews of
         # `workorder_ids` must be present in many tests to create records.
-        cls.env.ref('base.group_user').sudo().write({'implied_ids': [
-            (4, cls.env.ref('uom.group_uom').id),
-            (4, cls.env.ref('mrp.group_mrp_manager').id),
-            (4, cls.env.ref('mrp.group_mrp_routings').id),
-        ]})
+        cls.user.groups_id += \
+            cls.env.ref('uom.group_uom') + \
+            cls.env.ref('mrp.group_mrp_manager') + \
+            cls.env.ref('mrp.group_mrp_routings')
 
         cls.workcenter_1 = cls.env['mrp.workcenter'].create({
             'name': 'Nuclear Workcenter',
@@ -279,6 +284,4 @@ class TestMrpCommon(TestStockCommon):
 
     @classmethod
     def _enable_mrp_byproducts(cls):
-        cls.env.ref('base.group_user').sudo().write({'implied_ids': [
-            (4, cls.env.ref('mrp.group_mrp_byproducts').id),
-        ]})
+        cls.user.groups_id += cls.env.ref('mrp.group_mrp_byproducts')
