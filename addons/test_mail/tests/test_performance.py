@@ -1449,7 +1449,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "name": "OdooBot",
                                     "userId": self.env.user.id,
                                     "write_date": fields.Datetime.to_string(
-                                        self.env.user.write_date
+                                        self.env.user.partner_id.write_date
                                     ),
                                 },
                             ),
@@ -1552,7 +1552,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "name": "OdooBot",
                                     "userId": self.env.user.id,
                                     "write_date": fields.Datetime.to_string(
-                                        self.env.user.write_date
+                                        self.env.user.partner_id.write_date
                                     ),
                                 },
                             ),
