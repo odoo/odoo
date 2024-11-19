@@ -5,8 +5,7 @@
             expr="//t[@t-if='props.showRemainingButtons']/div/button[hasclass('o_pricelist_button')]"
             position="before">
             <t t-if="pos.config.module_pos_restaurant">
-                <!-- All buttons always displayed -->
-                <button t-att-class="buttonClass"
+                <button t-if="pos.config.iface_printbill" t-att-class="buttonClass"
                     t-att-disabled="!pos.getOrder()?.getOrderlines()?.length"
                     t-on-click="clickPrintBill">
                     <i class="fa fa-print me-1"></i>Bill
