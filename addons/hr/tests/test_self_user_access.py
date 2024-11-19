@@ -19,6 +19,7 @@ class TestSelfAccessProfile(TestHrCommon):
         self.env['hr.employee'].create({
             'name': 'James',
             'user_id': james.id,
+            'bank_account_id': self.env['res.partner.bank'].create({'acc_number': 'BE1234567890', 'partner_id': james.partner_id.id}).id
         })
         view = self.env.ref('hr.res_users_view_form_profile')
         view_infos = james.get_view(view.id)
