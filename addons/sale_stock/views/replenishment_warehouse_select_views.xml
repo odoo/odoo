@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<odoo>
+
+<record id="view_replenishment_warehouse_select" model="ir.ui.view">
+    <field name="name">Replenishment Warehouse Select</field>
+    <field name="model">sale_stock.replenishment.warehouse.select</field>
+    <field name="arch" type="xml">
+        <form>
+            <field name="sale_order_line_id" invisible="1"/>
+            <field name="qty_to_order" invisible="1"/>
+            <!-- <div class="oe_edit_only alert alert-info" role="alert" invisible="route_ids">
+                There is no warehouse available for replenishment.
+            </div> -->
+            <notebook>
+                <field name="route_ids" invisible="1"/>
+                <page string="Warehouses" name="page_warehouses">
+                    <field name="wh_replenishment_option_ids"/>
+                </page>
+            </notebook>
+            <footer>
+                <button string="Close" class="btn-secondary" special="cancel" data-hotkey="x"/>
+            </footer>
+        </form>
+    </field>
+</record>
+
+<!--
+TODO: Only have one XML defined action? But when doing so, since no python is
+involved to call .create() on the transient model / wizard, the wizard record is
+an empty record set, which doesn't work has then I don't have any field set on
+it.
+-->
+<record id="action_order_line_warehouse_select" model="ir.actions.act_window">
+    <field name="name">Replenishment Warehouse Select</field>
+    <field name="res_model">sale_stock.replenishment.warehouse.select</field>
+    <field name="view_mode">form</field>
+    <field name="view_id" ref="view_replenishment_warehouse_select"/>
+    <field name="target">new</field>
+    <field name="context">{'default_sale_order_line_id': active_id}</field>
+</record>
+
+<record id="action_server_order_line_warehouse_select" model="ir.actions.server">
+    <field name="name">Replenishment Warehouse Select</field>
+    <field name="model_id" ref="sale.model_sale_order_line"/>
+    <field name="binding_model_id" ref="sale.model_sale_order_line"/>
+    <field name="state">code</field>
+    <field name="code">
+        action = model.order_line_warehouse_select_action()
+    </field>
+</record>
+
+</odoo>

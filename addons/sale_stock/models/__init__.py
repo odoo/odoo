@@ -3,6 +3,7 @@
 
 from . import account_move
 from . import product_template
+from . import replenishment_warhouse_select
 from . import res_company
 from . import res_config_settings
 from . import res_users
