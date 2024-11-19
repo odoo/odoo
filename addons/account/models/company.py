@@ -720,9 +720,10 @@ class ResCompany(models.Model):
         """ Returns the unaffected earnings account for this company, creating one
         if none has yet been defined.
         """
+        AA = self.env['account.account'].with_company(self)
         unaffected_earnings_type = "equity_unaffected"
-        account = self.env['account.account'].with_company(self).search([
-            *self.env['account.account']._check_company_domain(self),
+        account = AA.search([
+            *AA._check_company_domain(self),
             ('account_type', '=', unaffected_earnings_type),
         ], limit=1)
         if account:
@@ -730,12 +731,12 @@ class ResCompany(models.Model):
         # Do not assume '999999' doesn't exist since the user might have created such an account
         # manually.
         code = 999999
-        while self.env['account.account'].with_company(self).search_count([
-            *self.env['account.account']._check_company_domain(self),
+        while AA.search_count([
+            *AA._check_company_domain(self),
             ('code', '=', str(code)),
         ], limit=1):
             code -= 1
-        return self.env['account.account']._load_records([
+        return AA._load_records([
             {
                 'xml_id': f"account.{str(self.id)}_unaffected_earnings_account",
                 'values': {
