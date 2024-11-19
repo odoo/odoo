@@ -581,7 +581,10 @@ export class LinkPlugin extends Plugin {
                 continue;
             }
             const classes = [...link.classList].filter((c) => !this.ignoredClasses.has(c));
-            if (!classes.length) {
+            const attributes = [...link.attributes].filter(
+                (a) => !["style", "href", "class"].includes(a.name)
+            );
+            if (!classes.length && !attributes.length) {
                 link.remove();
             }
         }
