@@ -290,14 +290,15 @@ class StockMoveLine(models.Model):
             addtional_qty[ml.location_dest_id.id] = addtional_qty.get(ml.location_dest_id.id, 0) - qty
         return addtional_qty
 
-    def get_move_line_quant_match(self, move_id, quant_ids):
+    def get_move_line_quant_match(self, move_id, dirty_move_line_ids, dirty_quant_ids):
         # Since the quant_id field is neither stored nor computed, this method is used to compute the match if it exists
         move = self.env['stock.move'].browse(move_id)
-        deleted_move_line_ids = move.move_line_ids - self
+        deleted_move_lines = move.move_line_ids - self
+        dirty_move_lines = self.env['stock.move.line'].browse(dirty_move_line_ids)
         quants_data = []
         move_lines_data = []
-        domain = [("id", "in", quant_ids)]
-        for move_line in self | deleted_move_line_ids:
+        domain = [("id", "in", dirty_quant_ids)]
+        for move_line in dirty_move_lines | deleted_move_lines:
             move_line_domain = [
                 ("product_id", "=", move_line.product_id.id),
                 ("lot_id", "=", move_line.lot_id.id),
@@ -309,20 +310,20 @@ class StockMoveLine(models.Model):
         if domain:
             quants = self.env['stock.quant'].search(domain)
             for quant in quants:
-                move_lines = self.filtered(lambda ml: ml.product_id == quant.product_id
+                dirty_lines = dirty_move_lines.filtered(lambda ml: ml.product_id == quant.product_id
                     and ml.lot_id == quant.lot_id
                     and ml.location_id == quant.location_id
                     and ml.package_id == quant.package_id
                     and ml.owner_id == quant.owner_id
                 )
-                deleted_move_lines = deleted_move_line_ids.filtered(lambda ml: ml.product_id == quant.product_id
+                deleted_lines = deleted_move_lines.filtered(lambda ml: ml.product_id == quant.product_id
                     and ml.lot_id == quant.lot_id
                     and ml.location_id == quant.location_id
                     and ml.package_id == quant.package_id
                     and ml.owner_id == quant.owner_id
                 )
-                quants_data.append((quant.id, {"available_quantity": quant.available_quantity + sum(ml.quantity_product_uom for ml in deleted_move_lines), "move_line_ids": move_lines.ids}))
-                move_lines_data += [(ml.id, {"quantity": ml.quantity, "quant_id": quant.id}) for ml in move_lines]
+                quants_data.append((quant.id, {"available_quantity": quant.available_quantity + sum(ml.quantity_product_uom for ml in deleted_lines), "move_line_ids": dirty_lines.ids}))
+                move_lines_data += [(ml.id, {"quantity": ml.quantity, "quant_id": quant.id}) for ml in dirty_lines]
         return [quants_data, move_lines_data]
 
 
