@@ -330,3 +330,33 @@ registry.category("web_tour.tours").add("CrmTeamTour", {
             Chrome.clickPlanButton(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("OnlinePaymentWithMultiTables", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("4"),
+            ProductScreen.orderBtnIsPresent(),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.clickOrderButton(),
+            {
+                ...Dialog.confirm(),
+                content:
+                    "acknowledge printing error ( because we don't have printer in the test. )",
+            },
+            ProductScreen.orderlinesHaveNoChange(),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.totalIs("2.20"),
+            PaymentScreen.clickPaymentMethod("Online payment"),
+            PaymentScreen.selectedPaymentlineHas("Online payment", "2.20"),
+            Chrome.createFloatingOrder(),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.totalIs("2.20"),
+            PaymentScreen.clickPaymentMethod("Online payment"),
+            PaymentScreen.selectedPaymentlineHas("Online payment", "2.20"),
+            PaymentScreen.validateButtonIsHighlighted(true),
+            PaymentScreen.clickValidate(),
+        ].flat(),
+});
