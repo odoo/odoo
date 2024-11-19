@@ -18,45 +18,41 @@ class DeliveryReceiptWizard(models.TransientModel):
                                           ('automation_bulk', 'Automation Bulk'),
                                           ('manual', 'Manual'),
                                           ('xdock','XDOCK')], string='Automation Manual')
-    available_location_ids = fields.Many2many(
-        'stock.location', compute='_compute_available_locations', store=False
-    )
+    # available_location_ids = fields.Many2many(
+    #     'stock.location', compute='_compute_available_locations', store=True
+    # )
 
     # Define location_dest_id with domain linked to available_location_ids
     location_dest_id = fields.Many2one(
         'stock.location',
         string='Destination Location',
-        domain="[('id', 'in', available_location_ids)]"
+        # domain="[('id', 'in', available_location_ids)]"
     )
 
-    @api.depends('automation_manual', 'picking_id')
+    @api.onchange('automation_manual', 'picking_id')
     def _compute_available_locations(self):
         """
         Computes available locations for location_dest_id based on the automation_manual selection.
         """
         for record in self:
-            location_ids = []
 
             if record.automation_manual == 'automation' and record.picking_id:
-                # If automation is selected, use locations from the picking's move records
-                location_ids = record.picking_id.move_ids_without_package.mapped('location_dest_id.id')
+                # Automation: Use the destination location from picking's move records
+                record.location_dest_id = record.picking_id.location_dest_id
             elif record.automation_manual == 'manual':
-                # Filter locations by system_type 'manual' and storage category 'Manual Bulk'
-                locations = self.env['stock.location'].search([
+                # Manual: Use a specific location or search by system_type 'manual' and storage category 'Manual Bulk'
+                manual_location = self.env['stock.location'].search([
                     ('system_type', '=', 'manual'),
-                    # ('storage_category_id.name', '=', 'Manual Bulk')
-                ])
-                location_ids = locations.ids
+                    ('name', '=', 'Putaway/Manual')  # Adjust based on your naming convention
+                ], limit=1)
+                record.location_dest_id = manual_location
             elif record.automation_manual == 'automation_bulk':
-                # Filter locations by system_type 'geek' and storage category 'geek'
-                locations = self.env['stock.location'].search([
+                # Automation Bulk: Use a specific location or search by system_type 'geek' and category 'Automation Bulk Putaway'
+                automation_bulk_location = self.env['stock.location'].search([
                     ('system_type', '=', 'geek'),
-                    # ('storage_category_id.name', '=', 'geek')
-                ])
-                location_ids = locations.ids
-
-            # Assign the filtered location IDs to available_location_ids
-            record.available_location_ids = [(6, 0, location_ids)]
+                    ('name', '=', 'Automation Bulk Putaway')  # Adjust based on your naming convention
+                ], limit=1)
+                record.location_dest_id = automation_bulk_location
 
     @api.onchange('license_plate_barcode')
     def _onchange_license_plate_barcode(self):
@@ -107,7 +103,6 @@ class DeliveryReceiptWizard(models.TransientModel):
 
         active_id = self.env.context.get('active_id')
         delivery_order = self.env['delivery.receipt.orders'].browse(active_id)
-
         # Prepare data for License Plate Order
         license_plate_order_lines = []
 
@@ -173,14 +168,24 @@ class DeliveryReceiptWizard(models.TransientModel):
             license_plate_order_lines.append([0, 0, product_data])
 
         # Create License Plate Record with all the lines
-        self.env['license.plate.orders'].create({
+        vals = {
             'name': self.license_plate_barcode,
             'state': 'closed',
             'automation_manual': self.automation_manual,
             'delivery_receipt_order_id': delivery_order.id,
             'picking_id': self.picking_id.id,
+            'location_dest_id': self.location_dest_id.id,
             'license_plate_order_line_ids': license_plate_order_lines,  # Pass the list of lines
-        })
+        }
+        license_plate_order = self.env['license.plate.orders'].create(vals)
+        # Update stock quantities to `location_dest_id`
+        stock_quant_obj = self.env['stock.quant']
+        for line in self.line_ids:
+            stock_quant_obj._update_available_quantity(
+                product_id=line.product_id,
+                location_id=self.location_dest_id,
+                quantity=line.quantity,
+            )
 
         return {'type': 'ir.actions.act_window_close'}
 
@@ -258,6 +263,11 @@ class DeliveryReceiptWizardLine(models.TransientModel):
                         'message': _("The selected product is not available in the selected picking."),
                     }
                 }
+            if self.product_id and self.product_id.automation_manual_product != self.wizard_id.automation_manual:
+                raise ValidationError(
+                    "The selected product's automation/manual type does not match the wizard's automation/manual selection. "
+                    "Please select a product that corresponds to the chosen automation/manual type."
+                )
 
             return {
                 'domain': {
