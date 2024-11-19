@@ -190,3 +190,39 @@ export function useModelWithSampleData(ModelClass, params, options = {}) {
 
     return model;
 }
+
+export function _makeFieldFromPropertyDefinition(name, definition, relatedPropertyField) {
+    return {
+        ...definition,
+        name,
+        propertyName: definition.name,
+        relation: definition.comodel,
+        relatedPropertyField,
+    };
+}
+
+export async function addPropertyFieldDefs(orm, resModel, context, fields, groupBy) {
+    const proms = [];
+    for (const gb of groupBy) {
+        if (gb in fields) {
+            continue;
+        }
+        const [fieldName] = gb.split(".");
+        const field = fields[fieldName];
+        if (field?.type === "properties") {
+            proms.push(
+                orm
+                    .call(resModel, "get_property_definition", [gb], {
+                        context,
+                    })
+                    .then((definition) => {
+                        fields[gb] = _makeFieldFromPropertyDefinition(gb, definition, field);
+                    })
+                    .catch(() => {
+                        fields[gb] = _makeFieldFromPropertyDefinition(gb, {}, field);
+                    })
+            );
+        }
+    }
+    return Promise.all(proms);
+}
