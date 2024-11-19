@@ -105,7 +105,7 @@ class WebsiteSnippetFilter(models.Model):
                     order=','.join(literal_eval(filter_sudo.sort)) or None,
                     limit=limit
                 )
-                return self._filter_records_to_values(records)
+                return self._filter_records_to_values(records.sudo())
             except MissingError:
                 _logger.warning("The provided domain %s in 'ir.filters' generated a MissingError in '%s'", domain, self._name)
                 return []
