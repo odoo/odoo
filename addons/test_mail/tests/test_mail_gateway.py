@@ -159,22 +159,21 @@ class TestEmailParsing(MailCommon):
 
 
 @tagged('mail_gateway')
-class TestMailgateway(MailCommon):
+class MailGatewayCommon(MailCommon):
 
     @classmethod
     def setUpClass(cls):
-        super(TestMailgateway, cls).setUpClass()
-
+        super().setUpClass()
         cls.mail_test_gateway_model = cls.env['ir.model']._get('mail.test.gateway')
         cls.mail_test_gateway_company_model = cls.env['ir.model']._get('mail.test.gateway.company')
         cls.email_from = '"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>'
 
-        cls.test_record = cls.env['mail.test.gateway'].with_context(cls._test_context).create({
+        cls.test_record = cls.env['mail.test.gateway'].with_context(mail_create_nolog=True).create({
             'name': 'Test',
             'email_from': 'ignasse@example.com',
-        }).with_context({})
+        })
 
-        cls.partner_1 = cls.env['res.partner'].with_context(cls._test_context).create({
+        cls.partner_1 = cls.env['res.partner'].create({
             'name': 'Valid Lelitre',
             'email': 'valid.lelitre@agrolait.com',
         })
@@ -214,6 +213,14 @@ class TestMailgateway(MailCommon):
         }
         msg_values.update(**values)
         return cls.env['mail.message'].create(msg_values)
+
+
+@tagged('mail_gateway')
+class TestMailgateway(MailGatewayCommon):
+
+    def test_assert_initial_values(self):
+        """ Just some basics checks to ensure tests coherency """
+        self.assertEqual(len(self.test_record.message_ids), 1)
 
     # --------------------------------------------------
     # Base low-level tests
@@ -792,7 +799,7 @@ class TestMailgateway(MailCommon):
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models.unlink')
     def test_message_process_create_uid_email_follower(self):
         self.alias.write({
-            'alias_parent_model_id': self.mail_test_gateway_model.id,
+            'alias_parent_model_id': self.env['ir.model']._get_id(self.test_record._name),
             'alias_parent_thread_id': self.test_record.id,
         })
         follower_user = mail_new_test_user(self.env, login='better', groups='base.group_user', name='Ernest Follower', email=self.user_employee.email)
@@ -1805,106 +1812,6 @@ class TestMailgateway(MailCommon):
         self.assertEqual(str(capture.records.message_ids.body), '<pre>ร่างกาย</pre>\n')
 
     # --------------------------------------------------
-    # Emails loop detection
-    # --------------------------------------------------
-
-    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.addons.mail.models.mail_mail')
-    @patch.object(Cursor, 'now', lambda *args, **kwargs: datetime(2022, 1, 1, 10, 0, 0))
-    def test_routing_loop_alias(self):
-        """Test the limit on the number of record we can create by alias."""
-        self.env['ir.config_parameter'].sudo().set_param('mail.gateway.loop.minutes', 30)
-        self.env['ir.config_parameter'].sudo().set_param('mail.gateway.loop.threshold', 5)
-
-        self.env['mail.gateway.allowed'].create([
-            {'email': 'Bob@EXAMPLE.com'},
-            {'email': '"Alice From Example" <alice@EXAMPLE.com>'},
-            {'email': '"Eve From Example" <eve@EXAMPLE.com>'},
-        ])
-
-        alias = self.env['mail.alias'].create({
-            'alias_domain_id': self.mail_alias_domain.id,
-            'alias_name': 'test',
-            'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
-            'alias_contact': 'everyone',
-        })
-
-        # Send an email 2 hours ago, should not have an impact on more recent emails
-        with patch.object(Cursor, 'now', lambda *args, **kwargs: datetime(2022, 1, 1, 8, 0, 0)):
-            self.format_and_process(
-                MAIL_TEMPLATE,
-                self.email_from,
-                f'{self.alias.alias_name}@{self.alias_domain}',
-                subject='Test alias loop old',
-                target_model=alias.alias_model_id.model,
-            )
-
-        for i in range(5):
-            self.format_and_process(
-                MAIL_TEMPLATE,
-                self.email_from,
-                f'{self.alias.alias_name}@{self.alias_domain}',
-                subject=f'Test alias loop {i}',
-                target_model=alias.alias_model_id.model,
-            )
-
-        records = self.env['mail.test.gateway'].search([('name', 'ilike', 'Test alias loop %')])
-        self.assertEqual(len(records), 6, 'Should have created 6 <mail.test.gateway>')
-        self.assertEqual(set(records.mapped('email_from')), set([self.email_from]),
-            msg='Should have automatically filled the email field')
-
-        self.assertEqual(set(records.mapped('email_from')), {self.email_from})
-
-        for email_from, exp_to in [
-            (self.email_from, formataddr(("Sylvie Lelitre", "test.sylvie.lelitre@agrolait.com"))),
-            (self.email_from.upper(), formataddr(("SYLVIE LELITRE", "test.sylvie.lelitre@agrolait.com"))),
-        ]:
-            with self.mock_mail_gateway():
-                self.format_and_process(
-                    MAIL_TEMPLATE,
-                    email_from,
-                    f'{self.alias.alias_name}@{self.alias_domain}',
-                    subject='Test alias loop X',
-                    target_model=alias.alias_model_id.model,
-                    return_path=email_from,
-                )
-
-            new_record = self.env['mail.test.gateway'].search([('name', '=', 'Test alias loop X')])
-            self.assertFalse(
-                new_record,
-                msg='The loop should have been detected and the record should not have been created')
-
-            self.assertSentEmail(f'"MAILER-DAEMON" <{self.alias_bounce}@{self.alias_domain}>', [exp_to])
-            self.assertIn('-loop-detection-bounce-email@', self._mails[0]['references'],
-                msg='The "bounce email" tag must be in the reference')
-
-        # The reply to the bounce email must be ignored
-        with self.mock_mail_gateway():
-            self.format_and_process(
-                MAIL_TEMPLATE,
-                self.email_from,
-                f'{self.alias.alias_name}@{self.alias_domain}',
-                subject='Test alias loop X',
-                target_model=alias.alias_model_id.model,
-                return_path=self.email_from,
-                extra='References: <test-1337-loop-detection-bounce-email@odoo.com>',
-            )
-
-        self.assertNotSentEmail()
-
-        # Email address in the whitelist should not have the restriction
-        for i in range(10):
-            self.format_and_process(
-                MAIL_TEMPLATE,
-                'alice@example.com',
-                f'{self.alias.alias_name}@{self.alias_domain}',
-                subject=f'Whitelist test alias loop {i}',
-                target_model=alias.alias_model_id.model,
-            )
-
-        records = self.env['mail.test.gateway'].search([('name', 'ilike', 'Whitelist test alias loop %')])
-        self.assertEqual(len(records), 10, msg='Email whitelisted should not have the restriction')
-
-    # --------------------------------------------------
     # Corner cases / Bugs during message process
     # --------------------------------------------------
 
@@ -1991,6 +1898,109 @@ class TestMailgateway(MailCommon):
         self.assertEqual(record._name, 'mail.test.gateway')
         self.assertEqual(record.message_ids.subject, message.message_id)
         self.assertFalse(record.message_ids.parent_id)
+
+
+@tagged('mail_gateway', 'mail_loop')
+class TestMailGatewayLoops(MailGatewayCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env['ir.config_parameter'].sudo().set_param('mail.gateway.loop.minutes', 30)
+        cls.env['ir.config_parameter'].sudo().set_param('mail.gateway.loop.threshold', 5)
+
+        cls.env['mail.gateway.allowed'].create([
+            {'email': 'Bob@EXAMPLE.com'},
+            {'email': '"Alice From Example" <alice@EXAMPLE.com>'},
+            {'email': '"Eve From Example" <eve@EXAMPLE.com>'},
+        ])
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.addons.mail.models.mail_mail')
+    @patch.object(Cursor, 'now', lambda *args, **kwargs: datetime(2022, 1, 1, 10, 0, 0))
+    def test_routing_loop_alias_create(self):
+        """Test the limit on the number of record we can create by alias."""
+        alias = self.env['mail.alias'].create({
+            'alias_domain_id': self.mail_alias_domain.id,
+            'alias_name': 'test',
+            'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
+            'alias_contact': 'everyone',
+        })
+
+        # Send an email 2 hours ago, should not have an impact on more recent emails
+        with patch.object(Cursor, 'now', lambda *args, **kwargs: datetime(2022, 1, 1, 8, 0, 0)):
+            self.format_and_process(
+                MAIL_TEMPLATE,
+                self.email_from,
+                f'{self.alias.alias_name}@{self.alias_domain}',
+                subject='Test alias loop old',
+                target_model=alias.alias_model_id.model,
+            )
+
+        for i in range(5):
+            self.format_and_process(
+                MAIL_TEMPLATE,
+                self.email_from,
+                f'{self.alias.alias_name}@{self.alias_domain}',
+                subject=f'Test alias loop {i}',
+                target_model=alias.alias_model_id.model,
+            )
+
+        records = self.env['mail.test.gateway'].search([('name', 'ilike', 'Test alias loop %')])
+        self.assertEqual(len(records), 6, 'Should have created 6 <mail.test.gateway>')
+        self.assertEqual(set(records.mapped('email_from')), set([self.email_from]),
+            msg='Should have automatically filled the email field')
+
+        self.assertEqual(set(records.mapped('email_from')), {self.email_from})
+
+        for email_from, exp_to in [
+            (self.email_from, formataddr(("Sylvie Lelitre", "test.sylvie.lelitre@agrolait.com"))),
+            (self.email_from.upper(), formataddr(("SYLVIE LELITRE", "test.sylvie.lelitre@agrolait.com"))),
+        ]:
+            with self.mock_mail_gateway():
+                self.format_and_process(
+                    MAIL_TEMPLATE,
+                    email_from,
+                    f'{self.alias.alias_name}@{self.alias_domain}',
+                    subject='Test alias loop X',
+                    target_model=alias.alias_model_id.model,
+                    return_path=email_from,
+                )
+
+            new_record = self.env['mail.test.gateway'].search([('name', '=', 'Test alias loop X')])
+            self.assertFalse(
+                new_record,
+                msg='The loop should have been detected and the record should not have been created')
+
+            self.assertSentEmail(f'"MAILER-DAEMON" <{self.alias_bounce}@{self.alias_domain}>', [exp_to])
+            self.assertIn('-loop-detection-bounce-email@', self._mails[0]['references'],
+                msg='The "bounce email" tag must be in the reference')
+
+        # The reply to the bounce email must be ignored
+        with self.mock_mail_gateway():
+            self.format_and_process(
+                MAIL_TEMPLATE,
+                self.email_from,
+                f'{self.alias.alias_name}@{self.alias_domain}',
+                subject='Test alias loop X',
+                target_model=alias.alias_model_id.model,
+                return_path=self.email_from,
+                extra='References: <test-1337-loop-detection-bounce-email@odoo.com>',
+            )
+
+        self.assertNotSentEmail()
+
+        # Email address in the whitelist should not have the restriction
+        for i in range(10):
+            self.format_and_process(
+                MAIL_TEMPLATE,
+                'alice@example.com',
+                f'{self.alias.alias_name}@{self.alias_domain}',
+                subject=f'Whitelist test alias loop {i}',
+                target_model=alias.alias_model_id.model,
+            )
+
+        records = self.env['mail.test.gateway'].search([('name', 'ilike', 'Whitelist test alias loop %')])
+        self.assertEqual(len(records), 10, msg='Email whitelisted should not have the restriction')
 
 
 @tagged('mail_gateway', 'mail_thread')
