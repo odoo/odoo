@@ -11,10 +11,17 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
-import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { describe, expect, test } from "@odoo/hoot";
+import {
+    asyncStep,
+    getService,
+    onRpc,
+    patchWithCleanup,
+    waitForSteps,
+} from "@web/../tests/web_test_helpers";
 
 import { GifPicker } from "@mail/discuss/gif_picker/common/gif_picker";
+import { animationFrame } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -99,6 +106,34 @@ test("Composer GIF button should open the GIF picker", async () => {
     await openDiscuss(channelId);
     await click("button[title='Add GIFs']");
     await contains(".o-discuss-GifPicker");
+});
+
+test("Not loading of GIF categories when feature is not available", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
+    let isFeatureEnabled = true;
+    onRpc("/discuss/gif/categories", () => {
+        asyncStep("/discuss/gif/categories");
+        if (isFeatureEnabled) {
+            return rpc.categories;
+        }
+    });
+    await start();
+    await openDiscuss(channelId);
+    const store = getService("mail.store");
+    store.hasGifPickerFeature = false;
+    isFeatureEnabled = false;
+    await click("button[title='Add GIFs']");
+    await contains(".o-discuss-GifPicker");
+    await animationFrame();
+    expect.verifySteps([]); // no "/discuss/gif/categories"
+    await click("button[title='Add GIFs']");
+    await contains(".o-discuss-GifPicker", { count: 0 });
+    store.hasGifPickerFeature = true;
+    isFeatureEnabled = true;
+    await click("button[title='Add GIFs']");
+    await contains(".o-discuss-GifPicker");
+    await waitForSteps(["/discuss/gif/categories"]);
 });
 
 test("Searching for a GIF", async () => {
