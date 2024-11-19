@@ -639,7 +639,6 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             with invoice.invoice_line_ids.new() as line_form:
                 line_form.product_id = self.product_a
                 line_form.price_unit = 121
-                line_form.quantity = 1
                 line_form.tax_ids.clear()
                 line_form.tax_ids.add(tax)
             self._assert_tax_totals_summary(invoice.tax_totals, {
