@@ -654,6 +654,11 @@ class HrApplicant(models.Model):
         self.ensure_one()
         action = self.candidate_id.create_employee_from_candidate()
         employee = self.env['hr.employee'].browse(action['res_id'])
+        employee_attachments = self.env['ir.attachment'].search([('res_model', '=','hr.employee'), ('res_id', '=', employee.id)])
+        unique_attachments = self.attachment_ids.filtered(
+            lambda attachment: attachment.datas not in employee_attachments.mapped('datas')
+        )
+        unique_attachments.copy({'res_model': 'hr.employee', 'res_id': employee.id})
         employee.write({
             'job_id': self.job_id.id,
             'job_title': self.job_id.name,
