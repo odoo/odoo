@@ -18,7 +18,6 @@ class TestDiscussAttachmentController(MailControllerAttachmentCommon):
             (
                 (self.guest, False),
                 (self.user_admin, True),
-                (self.user_demo, True),
                 (self.user_employee, True),
                 (self.user_portal, False),
                 (self.user_public, False),
@@ -38,7 +37,6 @@ class TestDiscussAttachmentController(MailControllerAttachmentCommon):
             (
                 (self.guest, True),
                 (self.user_admin, True),
-                (self.user_demo, True),
                 (self.user_employee, True),
                 (self.user_portal, True),
                 (self.user_public, True),

@@ -21,7 +21,6 @@ class TestDiscussMessageUpdateController(MailControllerUpdateCommon):
             (
                 (self.guest, True),
                 (self.user_admin, True),
-                (self.user_demo, False),
                 (self.user_employee, False),
                 (self.user_portal, False),
                 (self.user_public, False),
@@ -42,7 +41,6 @@ class TestDiscussMessageUpdateController(MailControllerUpdateCommon):
             (
                 (self.guest, False),
                 (self.user_admin, True),
-                (self.user_demo, False),
                 (self.user_employee, False),
                 (self.user_portal, False),
                 (self.user_public, False),

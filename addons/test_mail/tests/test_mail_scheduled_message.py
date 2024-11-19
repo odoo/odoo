@@ -25,11 +25,15 @@ class TestScheduledMessage(MailCommon, TestRecipients):
                 'customer_id': cls.partner_1.id,
                 'user_id': cls.user_employee.id,
             }])
+            cls.private_record = cls.env['mail.test.access'].create({
+                'access': 'admin',
+                'name': 'Private Record',
+            })
             cls.hidden_scheduled_message, cls.visible_scheduled_message = cls.env['mail.scheduled.message'].create([
                 {
                     'author_id': cls.partner_admin.id,
-                    'model': cls.partner_employee._name,
-                    'res_id': cls.partner_employee.id,
+                    'model': cls.private_record._name,
+                    'res_id': cls.private_record.id,
                     'body': 'Hidden Scheduled Message',
                     'scheduled_date': '2022-12-24 15:00:00',
                 },
@@ -60,7 +64,7 @@ class TestScheduledMessageAccess(TestScheduledMessage):
     def test_scheduled_message_model_without_post_right(self):
         # creation on a record that the user cannot post to
         with self.assertRaises(AccessError):
-            self.schedule_message(self.partner_employee)
+            self.schedule_message(self.private_record)
         # read a message scheduled on a record the user can't post to
         with self.assertRaises(AccessError):
             self.hidden_scheduled_message.read()
