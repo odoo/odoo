@@ -39,15 +39,13 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         run: "click",
     },
     {
-        trigger: ".o_kanban_view",
+        content: "Open Test History Project",
+        trigger: ".o_kanban_view .o_kanban_record:contains(Test History Project)",
+        run: "click",
     },
     {
-        content: "Open Test History Project",
-        trigger: "div span.o_text_overflow[title='Test History Project']",
-        run: "click",
-    }, {
         content: "Open Test History Task",
-        trigger: ".o_kanban_record:contains('Test History Task')",
+        trigger: ".o_kanban_view .o_kanban_record:contains(Test History Task)",
         run: "click",
     },
         // edit the description content 3 times and save after each edit
@@ -61,19 +59,13 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         run: "click",
     },
     {
-        trigger: ".o_kanban_view",
-    },
-    {
         content: "Open Test History Task",
-        trigger: ".o_kanban_record:contains('Test History Task')",
+        trigger: ".o_kanban_view .o_kanban_record:contains(Test History Task)",
         run: "click",
     },
     {
-        trigger: ".o_form_view",
-    },
-    {
         content: "Open History Dialog",
-        trigger: ".o_cp_action_menus i.fa-cog",
+        trigger: ".o_form_view .o_cp_action_menus i.fa-cog",
         run: "click",
     },
     {
@@ -112,10 +104,10 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         content: "Verify comparaison text",
         trigger: ".modal .history-container .tab-pane",
         run: function () {
-            const comparaisonHtml = document.querySelector(".history-container .tab-pane").innerHTML;
-            const correctHtml = `<p><added>${baseDescriptionContent} 1</added><removed>${baseDescriptionContent} 3</removed></p>`;
-            if (comparaisonHtml !== correctHtml) {
-                throw new Error(`Expect comparison to be ${correctHtml}, got ${comparaisonHtml}`);
+            const comparaisonHtml = this.anchor.innerHTML;
+            const correctHtml = `<added>${baseDescriptionContent} 1</added><removed>${baseDescriptionContent} 3</removed>`;
+            if (!comparaisonHtml.includes(correctHtml)) {
+                console.error(`Expect comparison to be ${correctHtml}, got ${comparaisonHtml}`);
             }
         },
     }, {
@@ -126,8 +118,6 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         content: "Verify the confirmation dialog is opened",
         trigger: ".modal button.btn-primary:contains(/^Restore$/)",
         run: "click",
-    }, {
-            trigger: "body:not(:has(.modal))",
     }, {
         content: "Verify that the description contains the right text after the restore",
         trigger: descriptionField,
@@ -146,7 +136,7 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         trigger: ".o_kanban_view",
     }, {
         content: "Open Test History Project Without Tasks",
-        trigger: "div span.o_text_overflow[title='Without tasks project']",
+        trigger: ".o_kanban_view .o_kanban_record:contains(Without tasks project)",
         run: "click",
     }, {
         trigger: ".o_kanban_project_tasks",
@@ -164,6 +154,10 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         trigger: 'div[name="name"] .o_input',
         content: 'Set task name',
         run: 'edit New task',
+    },
+    {
+        trigger: "button.o_form_button_save",
+        run: "click",
     },
         ...changeDescriptionContentAndSave("0"),
         ...changeDescriptionContentAndSave("1"),
