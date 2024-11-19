@@ -1,4 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import json
+
 from collections import abc
 from typing import Iterator, Mapping
 
@@ -46,7 +48,9 @@ class MicrosoftEvent(abc.Set):
         except ValueError:
             raise ValueError("Expected singleton: %s" % self)
         event_id = list(self._events.keys())[0]
-        return self._events[event_id].get(name)
+        value = self._events[event_id].get(name)
+        json.dumps(value)
+        return value
 
     def __repr__(self):
         return '%s%s' % (self.__class__.__name__, self.ids)
