@@ -538,6 +538,22 @@ class TestSalePrices(SaleCommon):
             "Price should remain 100.0 after changing the quantity"
         )
 
+        zero_price_product = self._create_product(list_price=0.0)
+        self.assertEqual(zero_price_product.list_price, 0.0)
+        so_line = self.env['sale.order.line'].create({
+            'product_id': zero_price_product.id,
+            'order_id': self.sale_order.id,
+        })
+        self.assertEqual(so_line.price_unit, 0.0)
+        self.assertEqual(so_line.technical_price_unit, 0.0)
+
+        with Form(so_line) as so_line:
+            so_line.price_unit = 10.0
+            so_line.product_uom_qty = 2.0
+            so_line.save()
+
+        self.assertEqual(so_line.price_unit, 10.0)
+
     # Taxes tests:
     # We do not rely on accounting common on purpose to avoid
     # all the useless setup not needed here.

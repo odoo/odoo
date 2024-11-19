@@ -544,13 +544,14 @@ class SaleOrderLine(models.Model):
             # check if the price has been manually set or there is already invoiced amount.
             # if so, the price shouldn't change as it might have been manually edited.
             if (
-                line.technical_price_unit not in (0.0, line.price_unit)
+                (line.technical_price_unit != line.price_unit and not line.env.context.get('force_price_recomputation'))
                 or line.qty_invoiced > 0
                 or (line.product_id.expense_policy == 'cost' and line.is_expense)
             ):
                 continue
             if not line.product_uom_id or not line.product_id:
                 line.price_unit = 0.0
+                line.technical_price_unit = 0.0
             else:
                 line = line.with_company(line.company_id)
                 price = line._get_display_price()
