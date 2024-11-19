@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { getVisibleElements } from "@web/core/utils/ui";
-import { MacroEngine } from "@web/core/macro";
+import { Macro } from "@web/core/macro";
 
 function clickOnButton(selector) {
     const button = document.body.querySelector(selector);
@@ -25,8 +25,8 @@ function updatePager(position) {
     if (current === next) {
         return;
     }
-    const engine = new MacroEngine({ defaultCheckDelay: 16 });
-    engine.activate({
+    new Macro({
+        checkDelay: 16,
         name: "updating pager",
         timeout: 1000,
         steps: [
@@ -40,7 +40,7 @@ function updatePager(position) {
                 value: next
             }
         ]
-    });
+    }).start();
 }
 
 export const COMMANDS = {
