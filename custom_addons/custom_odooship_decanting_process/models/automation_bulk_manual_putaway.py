@@ -26,6 +26,14 @@ class AutomationBulkManual(models.Model):
     delivery_receipt_order_id = fields.Many2one('delivery.receipt.orders', string='Delivery Receipt Order')
     automation_bulk_manual_putaway_line_ids = fields.One2many('automation.bulk.manual.putaway.line', 'automation_bulk_manual_id', string="Product Lines")
 
+    @api.onchange('location_dest_id')
+    def _onchange_location_dest_id(self):
+        """
+            Check empty location
+        """
+        if self.location_dest_id.filled == True:
+            raise ValidationError(
+                "The selected location is already in use and cannot be assigned. Please choose a different available location.")
     @api.onchange('parent_location_id')
     def _onchange_parent_location_id(self):
         """

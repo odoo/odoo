@@ -10,6 +10,7 @@
                 <!-- Add the fields in the appropriate position -->
                 <xpath expr="//form/sheet/group/group" position="inside">
                     <field name="site_code_id" string="Site Code"/>
+                    <field name="filled" invisible="system_type not in ('manual')"/>
                 </xpath>
             </field>
         </record>
