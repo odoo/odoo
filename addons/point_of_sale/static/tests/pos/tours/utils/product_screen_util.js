@@ -387,6 +387,17 @@ export function enterLotNumber(number) {
     ];
 }
 
+export function enterLastLotNumber(number) {
+    return [
+        {
+            content: "enter lot number",
+            trigger: ".edit-list-inputs .input-group:last-child input",
+            run: "edit " + number,
+        },
+        Dialog.confirm(),
+    ];
+}
+
 export function isShown() {
     return [
         {
