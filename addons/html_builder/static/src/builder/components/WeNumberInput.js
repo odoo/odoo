@@ -4,8 +4,8 @@ import { basicContainerWeWidgetProps, useWeComponent } from "../builder_helpers"
 
 const actionsRegistry = registry.category("website-builder-actions");
 
-export class NumberInput extends Component {
-    static template = "html_builder.NumberInput";
+export class WeNumberInput extends Component {
+    static template = "html_builder.WeNumberInput";
     static props = {
         ...basicContainerWeWidgetProps,
         unit: { type: String, optional: true },

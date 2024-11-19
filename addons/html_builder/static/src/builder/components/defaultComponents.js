@@ -4,7 +4,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { ToolboxRow } from "./ToolboxRow";
 import { WeButton } from "./WeButton";
 import { Button } from "./Button";
-import { NumberInput } from "./NumberInput";
+import { WeNumberInput } from "./WeNumberInput";
 import { WeSelect } from "./WeSelect";
 import { WeSelectItem } from "./WeSelectItem";
 
@@ -15,7 +15,7 @@ export const defaultOptionComponents = {
     WeButtonGroup,
     WeButton,
     Button,
-    NumberInput,
+    WeNumberInput,
     WeSelect,
     WeSelectItem,
 };
