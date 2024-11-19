@@ -20,6 +20,8 @@ class HrEmployeePublic(models.Model):
         return super()._get_manager_only_fields() + ['first_contract_date']
 
     def _search_first_contract_date(self, operator, value):
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            return NotImplemented
         employees = self.env['hr.employee'].sudo().search([('id', 'child_of', self.env.user.employee_id.ids), ('first_contract_date', operator, value)])
         return [('id', 'in', employees.ids)]
 

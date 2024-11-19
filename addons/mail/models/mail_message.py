@@ -229,7 +229,9 @@ class MailMessage(models.Model):
 
     @api.model
     def _search_needaction(self, operator, operand):
-        is_read = False if operator == '=' and operand else True
+        if operator not in ('in', 'not in'):
+            return NotImplemented
+        is_read = operator == 'not in'
         notification_ids = self.env['mail.notification']._search([('res_partner_id', '=', self.env.user.partner_id.id), ('is_read', '=', is_read)])
         return [('notification_ids', 'in', notification_ids)]
 
@@ -241,9 +243,9 @@ class MailMessage(models.Model):
             message.has_error = message in error_from_notification
 
     def _search_has_error(self, operator, operand):
-        if operator == '=' and operand:
-            return [('notification_ids.notification_status', 'in', ('bounce', 'exception'))]
-        return ['!', ('notification_ids.notification_status', 'in', ('bounce', 'exception'))]  # this wont work and will be equivalent to "not in" beacause of orm restrictions. Dont use "has_error = False"
+        if operator != 'in':
+            return NotImplemented
+        return [('notification_ids.notification_status', 'in', ('bounce', 'exception'))]
 
     @api.depends('starred_partner_ids')
     @api.depends_context('uid')
@@ -256,9 +258,9 @@ class MailMessage(models.Model):
 
     @api.model
     def _search_starred(self, operator, operand):
-        if operator == '=' and operand:
-            return [('starred_partner_ids', 'in', [self.env.user.partner_id.id])]
-        return [('starred_partner_ids', 'not in', [self.env.user.partner_id.id])]
+        if operator != 'in':
+            return NotImplemented
+        return [('starred_partner_ids', 'in', self.env.user.partner_id.ids)]
 
     # ------------------------------------------------------
     # CRUD / ORM

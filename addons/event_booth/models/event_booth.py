@@ -52,11 +52,10 @@ class EventBooth(models.Model):
         for booth in self:
             booth.is_available = booth.state == 'available'
 
-    def _search_is_available(self, operator, operand):
-        negative = operator in expression.NEGATIVE_TERM_OPERATORS
-        if (negative and operand) or not operand:
-            return [('state', '=', 'unavailable')]
-        return [('state', '=', 'available')]
+    def _search_is_available(self, operator, value):
+        if operator not in ('in', 'not in'):
+            return NotImplemented
+        return [('state', '=', 'available' if operator == 'in' else 'unavailable')]
 
     @api.model_create_multi
     def create(self, vals_list):

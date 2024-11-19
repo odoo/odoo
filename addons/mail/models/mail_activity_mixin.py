@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
@@ -7,8 +6,8 @@ import logging
 import pytz
 
 from odoo import api, fields, models
-from odoo.osv import expression
-from odoo.tools import SQL
+from odoo.fields import Domain
+from odoo.tools import partition, SQL
 
 _logger = logging.getLogger(__name__)
 
@@ -117,6 +116,8 @@ class MailActivityMixin(models.AbstractModel):
             record.activity_user_id = record.activity_ids[0].user_id if record.activity_ids else False
 
     def _search_activity_exception_decoration(self, operator, operand):
+        if Domain.is_negative_operator(operator):
+            return NotImplemented
         return [('activity_ids.activity_type_id.decoration_type', operator, operand)]
 
     @api.depends('activity_ids.state')
@@ -134,14 +135,12 @@ class MailActivityMixin(models.AbstractModel):
 
     def _search_activity_state(self, operator, value):
         all_states = {'overdue', 'today', 'planned', False}
-        if operator == '=':
-            search_states = {value}
-        elif operator == '!=':
-            search_states = all_states - {value}
-        elif operator == 'in':
+        if operator == 'in':
             search_states = set(value)
         elif operator == 'not in':
             search_states = all_states - set(value)
+        else:
+            return NotImplemented
 
         reverse_search = False
         if False in search_states:
@@ -198,22 +197,41 @@ class MailActivityMixin(models.AbstractModel):
             record.activity_date_deadline = next(iter(activities), activities).date_deadline
 
     def _search_activity_date_deadline(self, operator, operand):
-        if operator == '=' and not operand:
-            return [('activity_ids', '=', False)]
-        return [('activity_ids.date_deadline', operator, operand)]
+        if operator == 'in' and False in operand:
+            return Domain('activity_ids', '=', False) | Domain(self._search_activity_date_deadline('in', operand - {False}))
+        if Domain.is_negative_operator(operator):
+            return NotImplemented
+        return Domain('activity_ids.date_deadline', operator, operand)
 
     @api.model
     def _search_activity_user_id(self, operator, operand):
-        if isinstance(operand, bool) and ((operator == '=' and not operand) or (operator == '!=' and operand)):
-            return [('activity_ids', '=', False)]
-        return [('activity_ids', 'any', [('active', 'in', [True, False]), ('user_id', operator, operand)])]
+        # field supports comparison with any boolean
+        domain = Domain.FALSE
+        if Domain.is_negative_operator(operator):
+            return NotImplemented
+        if operator == 'in':
+            bools, values = partition(lambda v: isinstance(v, bool), operand)
+            if bools:
+                if True in bools:
+                    domain |= Domain('activity_ids', '!=', False)
+                if False in bools:
+                    domain |= Domain('activity_ids', '=', False)
+                if not values:
+                    return domain
+                operand = values
+        # basic case
+        return domain | Domain('activity_ids', 'any', [('active', 'in', [True, False]), ('user_id', operator, operand)])
 
     @api.model
     def _search_activity_type_id(self, operator, operand):
+        if Domain.is_negative_operator(operator):
+            return NotImplemented
         return [('activity_ids.activity_type_id', operator, operand)]
 
     @api.model
     def _search_activity_summary(self, operator, operand):
+        if Domain.is_negative_operator(operator):
+            return NotImplemented
         return [('activity_ids.summary', operator, operand)]
 
     @api.depends('activity_ids.date_deadline', 'activity_ids.user_id')
@@ -227,12 +245,13 @@ class MailActivityMixin(models.AbstractModel):
             ), False)
 
     def _search_my_activity_date_deadline(self, operator, operand):
-        activity_ids = self.env['mail.activity']._search([
+        if Domain.is_negative_operator(operator):
+            return NotImplemented
+        return [('activity_ids', 'any', [
             ('date_deadline', operator, operand),
             ('res_model', '=', self._name),
             ('user_id', '=', self.env.user.id)
-        ])
-        return [('activity_ids', 'in', activity_ids)]
+        ])]
 
     def write(self, vals):
         # Delete activities of archived record.
@@ -329,18 +348,18 @@ class MailActivityMixin(models.AbstractModel):
         if not any(activity_types_ids):
             return self.env['mail.activity']
 
-        domain = [
+        domain = Domain([
             ('res_model', '=', self._name),
             ('res_id', 'in', self.ids),
             ('activity_type_id', 'in', activity_types_ids)
-        ]
+        ])
 
         if only_automated:
-            domain = expression.AND([domain, [('automated', '=', True)]])
+            domain &= Domain('automated', '=', True)
         if user_id:
-            domain = expression.AND([domain, [('user_id', '=', user_id)]])
+            domain &= Domain('user_id', '=', user_id)
         if additional_domain:
-            domain = expression.AND([domain, additional_domain])
+            domain &= Domain(additional_domain)
 
         return self.env['mail.activity'].search(domain)
 

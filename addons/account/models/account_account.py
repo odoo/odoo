@@ -1,5 +1,6 @@
 from bisect import bisect_left
 from collections import defaultdict
+from collections.abc import Iterable
 import contextlib
 import itertools
 import re
@@ -414,7 +415,7 @@ class AccountAccount(models.Model):
 
     def _search_placeholder_code(self, operator, value):
         if operator != '=ilike':
-            raise NotImplementedError
+            return NotImplemented
         query = Query(self.env, 'account_account')
         placeholder_code_sql = self.env['account.account']._field_to_sql('account_account', 'placeholder_code', query)
         query.add_where(SQL("%s ILIKE %s", placeholder_code_sql, value))
@@ -427,10 +428,13 @@ class AccountAccount(models.Model):
             record.root_id = self.env['account.root']._from_account_code(record.placeholder_code)
 
     def _search_account_root(self, operator, value):
-        if operator in ['=', 'child_of']:
-            root = self.env['account.root'].browse(value)
-            return [('placeholder_code', '=ilike', root.name + ('' if operator == '=' and not root.parent_id else '%'))]
-        raise NotImplementedError
+        if operator not in ('in', 'child_of'):
+            return NotImplemented
+        roots = self.env['account.root'].browse(value)
+        return Domain.OR(
+            Domain('placeholder_code', '=like', root.name + ('' if operator == 'in' and not root.parent_id else '%'))
+            for root in roots
+        )
 
     def _search_panel_domain_image(self, field_name, domain, set_count=False, limit=False):
         if field_name != 'root_id' or set_count:
@@ -481,19 +485,20 @@ class AccountAccount(models.Model):
         for account in accounts_with_code:
             account.group_id = group_by_code[account.code]
 
-    def _search_used(self, operator, value):
-        if operator not in ['=', '!='] or not isinstance(value, bool):
-            raise UserError(_('Operation not supported'))
-        if operator != '=':
-            value = not value
-        self._cr.execute("""
+    def _get_used_account_ids(self):
+        rows = self.env.execute_query(SQL("""
             SELECT id FROM account_account account
             WHERE EXISTS (SELECT 1 FROM account_move_line aml WHERE aml.account_id = account.id LIMIT 1)
-        """)
-        return [('id', 'in' if value else 'not in', [r[0] for r in self._cr.fetchall()])]
+        """))
+        return [r[0] for r in rows]
+
+    def _search_used(self, operator, value):
+        if operator not in ('in', 'not in'):
+            return NotImplemented
+        return [('id', operator, self._get_used_account_ids())]
 
     def _compute_used(self):
-        ids = set(self._search_used('=', True)[0][2])
+        ids = set(self._get_used_account_ids())
         for record in self:
             record.used = record.id in ids
 
@@ -666,11 +671,9 @@ class AccountAccount(models.Model):
             account.include_initial_balance = account.internal_group not in ['income', 'expense']
 
     def _search_include_initial_balance(self, operator, value):
-        if operator not in ['=', '!='] or not isinstance(value, bool):
-            raise UserError(_('Operation not supported'))
-        if operator != '=':
-            value = not value
-        return [('internal_group', 'not in' if value else 'in', ['income', 'expense'])]
+        if operator != 'in':
+            return NotImplemented
+        return [('internal_group', 'not in', ['income', 'expense'])]
 
     def _get_internal_group(self, account_type):
         return account_type.split('_', maxsplit=1)[0]
@@ -681,15 +684,12 @@ class AccountAccount(models.Model):
             account.internal_group = account.account_type and account._get_internal_group(account.account_type)
 
     def _search_internal_group(self, operator, value):
-        if operator not in ['=', 'in', '!=', 'not in']:
-            raise UserError(_('Operation not supported'))
-        domain = expression.OR([[('account_type', '=like', group)] for group in {
-            self._get_internal_group(v) + '%'
-            for v in (value if operator in ('in', 'not in') else [value])
-        }])
-        if operator in ('!=', 'not in'):
-            return ['!'] + expression.normalize_domain(domain)
-        return domain
+        if operator != 'in':
+            return NotImplemented
+        return expression.OR([
+            [('account_type', '=like', self._get_internal_group(v) + '%')]
+            for v in value
+        ])
 
     @api.depends('account_type')
     def _compute_reconcile(self):
@@ -826,14 +826,19 @@ class AccountAccount(models.Model):
 
     @api.model
     def _search_display_name(self, operator, value):
-        name = value or ''
-        if operator in ('=', '!='):
-            domain = ['|', ('code', '=', name.split(' ')[0]), ('name', operator, name)]
-        else:
-            domain = ['|', ('code', '=like', name.split(' ')[0] + '%'), ('name', operator, name)]
         if operator in expression.NEGATIVE_TERM_OPERATORS:
-            domain = ['&', '!'] + domain[1:]
-        return domain
+            return NotImplemented
+        if operator == 'in':
+            names = value
+            return [
+                '|',
+                ('code', 'in', [(name or '').split(' ')[0] for name in value]),
+                ('name', 'in', names),
+            ]
+        if isinstance(value, str):
+            name = value or ''
+            return ['|', ('code', '=like', name.split(' ')[0] + '%'), ('name', operator, name)]
+        return NotImplemented
 
     @api.onchange('account_type')
     def _onchange_account_type(self):
@@ -1485,12 +1490,17 @@ class AccountGroup(models.Model):
 
     @api.model
     def _search_display_name(self, operator, value):
-        domain = []
-        if operator != 'ilike' or (value or '').strip():
-            criteria_operator = ['|'] if operator not in expression.NEGATIVE_TERM_OPERATORS else ['&', '!']
-            name_domain = criteria_operator + [('code_prefix_start', '=ilike', value + '%'), ('name', operator, value)]
-            domain = expression.AND([name_domain, domain])
-        return domain
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            return NotImplemented
+        if operator == 'in':
+            return [
+                '|',
+                ('code', 'in', [(name or '').split(' ')[0] for name in value]),
+                ('name', 'in', value),
+            ]
+        if operator == 'ilike' and isinstance(value, str):
+            return ['|', ('code_prefix_start', '=ilike', value + '%'), ('name', operator, value)]
+        return [('name', operator, value)]
 
     @api.constrains('code_prefix_start', 'code_prefix_end')
     def _constraint_prefix_overlap(self):

@@ -212,16 +212,15 @@ class ProjectTask(models.Model):
 
     @api.model
     def _search_task_to_invoice(self, operator, value):
+        if operator != 'in':
+            return NotImplemented
         sql = SQL("""(
             SELECT so.id
             FROM sale_order so
             WHERE so.invoice_status != 'invoiced'
                 AND so.invoice_status != 'no'
         )""")
-        operator_new = 'in'
-        if (bool(operator == '=') ^ bool(value)):
-            operator_new = 'not in'
-        return [('sale_order_id', operator_new, sql)]
+        return [('sale_order_id', 'in', sql)]
 
     @api.onchange('sale_line_id')
     def _onchange_partner_id(self):

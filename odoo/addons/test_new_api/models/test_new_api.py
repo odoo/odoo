@@ -430,7 +430,8 @@ class Test_New_ApiBar(models.Model):
             bar.foo = self.env['test_new_api.foo'].search([('name', '=', bar.name)], limit=1)
 
     def _search_foo(self, operator, value):
-        assert operator in ('=', 'in')
+        if operator not in ('in', 'any'):
+            return NotImplemented
         records = self.env['test_new_api.foo'].browse(value)
         return [('name', 'in', records.mapped('name'))]
 

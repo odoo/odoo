@@ -40,7 +40,9 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def _search_message_has_sms_error(self, operator, operand):
-        return ['&', ('message_ids.has_sms_error', operator, operand), ('message_ids.author_id', '=', self.env.user.partner_id.id)]
+        if operator != 'in':
+            return NotImplemented
+        return ['&', ('message_ids.has_sms_error', '=', True), ('message_ids.author_id', '=', self.env.user.partner_id.id)]
 
     def message_post(self, *args, body='', message_type='notification', **kwargs):
         # When posting an 'SMS' `message_type`, make sure that the body is used as-is in the sms,

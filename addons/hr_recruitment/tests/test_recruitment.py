@@ -244,10 +244,9 @@ class TestRecruitment(TransactionCase):
         # Note: For some reason testing the search does not work if the compute
         #       is not tested first which is why these two tests are in one test.
         applicant = self.env["hr.applicant"]
-        in_pool_domain = applicant._search_is_applicant_in_pool("=", True)
-        out_of_pool_domain = applicant._search_is_applicant_in_pool(operator="=", value=False)
+        in_pool_domain = applicant._search_is_applicant_in_pool("in", [True])
         in_pool_applicants = applicant.search(Domain(in_pool_domain))
-        out_of_pool_applicants = applicant.search(Domain(out_of_pool_domain))
+        out_of_pool_applicants = applicant.search(~Domain(in_pool_domain))
         self.assertCountEqual(in_pool_applicants, A | B | C | D | E | G | H)
         self.assertCountEqual(out_of_pool_applicants, demo_applicants | F)
 

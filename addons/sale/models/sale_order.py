@@ -547,7 +547,25 @@ class SaleOrder(models.Model):
             order.invoice_count = len(invoices)
 
     def _search_invoice_ids(self, operator, value):
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            return NotImplemented
         if operator == 'in' and value:
+            falsy_domain = []
+            if False in value:
+                # special case for [('invoice_ids', '=', False)], i.e. "Invoices is not set"
+                #
+                # We cannot just search [('order_line.invoice_lines', '=', False)]
+                # because it returns orders with uninvoiced lines, which is not
+                # same "Invoices is not set" (some lines may have invoices and some
+                # don't)
+                #
+                # A solution is using the 'not any' operators with inverted search first
+                # ("orders with invoiced lines").
+                falsy_domain = [('order_line', 'not any', [
+                    ('invoice_lines.move_id.move_type', 'in', ('out_invoice', 'out_refund'))
+                ])]
+                if len(value) == 1:
+                    return falsy_domain
             self.env.cr.execute("""
                 SELECT array_agg(so.id)
                     FROM sale_order so
@@ -560,27 +578,11 @@ class SaleOrder(models.Model):
                     am.id = ANY(%s)
             """, (list(value),))
             so_ids = self.env.cr.fetchone()[0] or []
-            return [('id', 'in', so_ids)]
-        elif operator == '=' and not value:
-            # special case for [('invoice_ids', '=', False)], i.e. "Invoices is not set"
-            #
-            # We cannot just search [('order_line.invoice_lines', '=', False)]
-            # because it returns orders with uninvoiced lines, which is not
-            # same "Invoices is not set" (some lines may have invoices and some
-            # doesn't)
-            #
-            # A solution is making inverted search first ("orders with invoiced
-            # lines") and then invert results ("get all other orders")
-            #
-            # Domain below returns subset of ('order_line.invoice_lines', '!=', False)
-            order_ids = self._search([
-                ('order_line.invoice_lines.move_id.move_type', 'in', ('out_invoice', 'out_refund'))
-            ])
-            return [('id', 'not in', order_ids)]
-        return [
-            ('order_line.invoice_lines.move_id.move_type', 'in', ('out_invoice', 'out_refund')),
-            ('order_line.invoice_lines.move_id', operator, value),
-        ]
+            return [('id', 'in', so_ids)] + falsy_domain
+        return [('order_line.invoice_lines', 'any', [
+            ('move_id.move_type', 'in', ('out_invoice', 'out_refund')),
+            ('move_id', operator, value),
+        ])]
 
     @api.depends('state', 'order_line.invoice_status')
     def _compute_invoice_status(self):

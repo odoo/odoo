@@ -381,21 +381,13 @@ class ProjectTask(models.Model):
             task.is_closed = task.state in CLOSED_STATES
 
     def _search_is_closed(self, operator, value):
-        if operator not in ('=', '!=') or not isinstance(value, bool):
-            raise NotImplementedError(_(
-                "The search does not support operator %(operator)s or value %(value)s.",
-                operator=operator,
-                value=value,
-            ))
-        if (operator == '!=' and value) or (operator == '=' and not value):
+        if operator == 'in':
+            searched_states = list(CLOSED_STATES.keys())
+        elif operator == 'not in':
             searched_states = self.OPEN_STATES
         else:
-            searched_states = list(CLOSED_STATES.keys())
-        domain = [
-            ('state', 'in', searched_states)
-        ]
-        return domain
-
+            return NotImplemented
+        return [('state', 'in', searched_states)]
 
     @property
     def OPEN_STATES(self):
@@ -692,8 +684,8 @@ class ProjectTask(models.Model):
             task.portal_user_names = format_list(self.env, task.user_ids.mapped('name'))
 
     def _search_portal_user_names(self, operator, value):
-        if operator != 'ilike' and not isinstance(value, str):
-            raise ValidationError(_('Not Implemented.'))
+        if operator != 'ilike' or not isinstance(value, str):
+            return NotImplemented
 
         sql = SQL("""(
             SELECT task_user.task_id
@@ -1448,22 +1440,15 @@ class ProjectTask(models.Model):
             task.has_late_and_unreached_milestone = task.allow_milestones and task.milestone_id.id in late_milestones
 
     def _search_has_late_and_unreached_milestone(self, operator, value):
-        if operator not in ('=', '!=') or not isinstance(value, bool):
-            raise NotImplementedError(_(
-                "The search does not support operator %(operator)s or value %(value)s.",
-                operator=operator,
-                value=value,
-            ))
-        domain = [
+        if operator != 'in':
+            return NotImplemented
+        return [
             ('allow_milestones', '=', True),
-            ('milestone_id', '!=', False),
-            ('milestone_id.is_reached', '=', False),
-            ('milestone_id.deadline', '!=', False), ('milestone_id.deadline', '<', fields.Date.today())
+            ('milestone_id', 'any', [
+                ('is_reached', '=', False),
+                ('deadline', '<', fields.Date.today()),
+            ]),
         ]
-        if (operator == '!=' and value) or (operator == '=' and not value):
-            domain.insert(0, expression.NOT_OPERATOR)
-            domain = expression.distribute_not(domain)
-        return domain
 
     # ---------------------------------------------------
     # Mail gateway

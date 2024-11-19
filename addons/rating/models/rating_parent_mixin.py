@@ -56,8 +56,9 @@ class RatingParentMixin(models.AbstractModel):
             record.rating_avg_percentage = record.rating_avg / 5
 
     def _search_rating_avg(self, operator, value):
-        if operator not in rating_data.OPERATOR_MAPPING:
-            raise NotImplementedError('This operator %s is not supported in this search method.' % operator)
+        op = rating_data.OPERATOR_MAPPING.get(operator)
+        if not op:
+            return NotImplemented
         domain = [('parent_res_model', '=', self._name), ('consumed', '=', True), ('rating', '>=', rating_data.RATING_LIMIT_MIN)]
         if self._rating_satisfaction_days:
             min_date = fields.Datetime.now() - timedelta(days=self._rating_satisfaction_days)
@@ -66,6 +67,6 @@ class RatingParentMixin(models.AbstractModel):
         parent_res_ids = [
             parent_res_id
             for parent_res_id, rating_avg in rating_read_group
-            if rating_data.OPERATOR_MAPPING[operator](float_compare(rating_avg, value, 2), 0)
+            if op(float_compare(rating_avg, value, 2), 0)
         ]
         return [('id', 'in', parent_res_ids)]

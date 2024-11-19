@@ -114,23 +114,20 @@ class SaleOrder(models.Model):
                 ], limit=1)
 
     def _search_abandoned_cart(self, operator, value):
+        if operator != 'in':
+            return NotImplemented
         website_ids = self.env['website'].search_read(fields=['id', 'cart_abandoned_delay', 'partner_id'])
         deadlines = [[
             '&', '&',
             ('website_id', '=', website_id['id']),
-            ('date_order', '<=', fields.Datetime.to_string(datetime.utcnow() - relativedelta(hours=website_id['cart_abandoned_delay'] or 1.0))),
+            ('date_order', '<=', fields.Datetime.to_string(fields.Datetime.now() - relativedelta(hours=website_id['cart_abandoned_delay'] or 1.0))),
             ('partner_id', '!=', website_id['partner_id'][0])
         ] for website_id in website_ids]
-        abandoned_domain = [
+        return [
             ('state', '=', 'draft'),
-            ('order_line', '!=', False)
+            ('order_line', '!=', False),
+            *expression.OR(deadlines),
         ]
-        abandoned_domain.extend(expression.OR(deadlines))
-        abandoned_domain = expression.normalize_domain(abandoned_domain)
-        # is_abandoned domain possibilities
-        if (operator not in expression.NEGATIVE_TERM_OPERATORS and value) or (operator in expression.NEGATIVE_TERM_OPERATORS and not value):
-            return abandoned_domain
-        return expression.distribute_not(['!'] + abandoned_domain)  # negative domain
 
     def _compute_user_id(self):
         """Do not assign self.env.user as salesman for e-commerce orders.

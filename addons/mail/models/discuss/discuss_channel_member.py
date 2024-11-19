@@ -100,33 +100,23 @@ class DiscussChannelMember(models.Model):
                 member.is_self = True
 
     def _search_is_self(self, operator, operand):
-        is_in = (operator == "=" and operand) or (operator == "!=" and not operand)
+        if operator != 'in':
+            return NotImplemented
         current_partner, current_guest = self.env["res.partner"]._get_current_persona()
-        if is_in:
-            return [
-                '|',
-                ("partner_id", "=", current_partner.id) if current_partner else expression.FALSE_LEAF,
-                ("guest_id", "=", current_guest.id) if current_guest else expression.FALSE_LEAF,
-            ]
-        else:
-            return [
-                ("partner_id", "!=", current_partner.id) if current_partner else expression.TRUE_LEAF,
-                ("guest_id", "!=", current_guest.id) if current_guest else expression.TRUE_LEAF,
-            ]
+        return [
+            '|',
+            ("partner_id", "=", current_partner.id) if current_partner else expression.FALSE_LEAF,
+            ("guest_id", "=", current_guest.id) if current_guest else expression.FALSE_LEAF,
+        ]
 
     def _search_is_pinned(self, operator, operand):
-        if (operator == "=" and operand) or (operator == "!=" and not operand):
-            return expression.OR([
-                [("unpin_dt", "=", False)],
-                [("last_interest_dt", ">=", self._field_to_sql(self._table, "unpin_dt"))],
-                [("channel_id.last_interest_dt", ">=", self._field_to_sql(self._table, "unpin_dt"))],
-            ])
-        else:
-            return [
-                ("unpin_dt", "!=", False),
-                ("last_interest_dt", "<", self._field_to_sql(self._table, "unpin_dt")),
-                ("channel_id.last_interest_dt", "<", self._field_to_sql(self._table, "unpin_dt")),
-            ]
+        if operator != 'in':
+            return NotImplemented
+        return expression.OR([
+            [("unpin_dt", "=", False)],
+            [("last_interest_dt", ">=", self._field_to_sql(self._table, "unpin_dt"))],
+            [("channel_id.last_interest_dt", ">=", self._field_to_sql(self._table, "unpin_dt"))],
+        ])
 
     @api.depends("channel_id.message_ids", "new_message_separator")
     def _compute_message_unread(self):

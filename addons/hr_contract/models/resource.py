@@ -53,18 +53,9 @@ class ResourceCalendar(models.Model):
 
     @api.model
     def _search_running_contracts_count(self, operator, value):
-        if operator not in ['=', '!=', '<', '>'] or not isinstance(value, int):
-            raise NotImplementedError(_('Operation not supported.'))
-        calendar_ids = self.env['resource.calendar'].search([])
-        if operator == '=':
-            calender = calendar_ids.filtered(lambda m: m.running_contracts_count == value)
-        elif operator == '!=':
-            calender = calendar_ids.filtered(lambda m: m.running_contracts_count != value)
-        elif operator == '<':
-            calender = calendar_ids.filtered(lambda m: m.running_contracts_count < value)
-        elif operator == '>':
-            calender = calendar_ids.filtered(lambda m: m.running_contracts_count > value)
-        return [('id', 'in', calender.ids)]
+        calendars = self.env['resource.calendar'].search_fetch([], ['running_contracts_count'])
+        calendars = calendars.filtered_domain([('running_contracts_count', operator, value)])
+        return [('id', 'in', calendars.ids)]
 
     def action_open_contracts(self):
         self.ensure_one()

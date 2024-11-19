@@ -138,11 +138,8 @@ class MailTemplate(models.Model):
 
     @api.model
     def _search_template_category(self, operator, value):
-        if operator not in ['in', 'not in', '=', '!=']:
-            raise NotImplementedError(_('Operation not supported'))
-
-        value = [value] if isinstance(value, str) else value
-        operator = 'in' if operator in ("in", "=") else 'not in'
+        if operator != 'in':
+            return NotImplemented
 
         templates_with_xmlid = self.env['ir.model.data']._search([
             ('model', '=', 'mail.template'),
@@ -159,16 +156,7 @@ class MailTemplate(models.Model):
         if 'custom_template' in value:
             domain.append([('template_category', 'not in', ['base_template', 'hidden_template'])])
 
-        if operator == 'not in':
-            for dom in domain:
-                dom.insert(0, "!")
-
-        if len(domain) > 1:
-            domain = (expression.OR if operator == 'in' else expression.AND)(domain)
-        else:
-            domain = domain[0]
-
-        return domain
+        return expression.OR(domain)
 
     @api.onchange("model")
     def _onchange_model(self):

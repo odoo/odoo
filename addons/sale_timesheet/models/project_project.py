@@ -93,45 +93,23 @@ class ProjectProject(models.Model):
     def _search_pricing_type(self, operator, value):
         """ Search method for pricing_type field.
 
-            This method returns a domain based on the operator and the value given in parameter:
-            - operator = '=':
-                - value = 'task_rate': [('sale_line_employee_ids', '=', False), ('sale_line_id', '=', False), ('allow_billable', '=', True)]
-                - value = 'fixed_rate': [('sale_line_employee_ids', '=', False), ('sale_line_id', '!=', False), ('allow_billable', '=', True)]
-                - value = 'employee_rate': [('sale_line_employee_ids', '!=', False), ('allow_billable', '=', True)]
-                - value is False: [('allow_billable', '=', False)]
-            - operator = '!=':
-                - value = 'task_rate': ['|', '|', ('sale_line_employee_ids', '!=', False), ('sale_line_id', '!=', False), ('allow_billable', '=', False)]
-                - value = 'fixed_rate': ['|', '|', ('sale_line_employee_ids', '!=', False), ('sale_line_id', '=', False), ('allow_billable', '=', False)]
-                - value = 'employee_rate': ['|', ('sale_line_employee_ids', '=', False), ('allow_billable', '=', False)]
-                - value is False: [('allow_billable', '!=', False)]
-
             :param operator: the supported operator is either '=' or '!='.
             :param value: the value than the field should be is among these values into the following tuple: (False, 'task_rate', 'fixed_rate', 'employee_rate').
 
             :returns: the domain to find the expected projects.
         """
-        if operator not in ('=', '!='):
-            raise UserError(_('Operation not supported'))
-        if not ((isinstance(value, bool) and value is False) or (isinstance(value, str) and value in ('task_rate', 'fixed_rate', 'employee_rate'))):
-            raise UserError(_('Value does not exist in the pricing type'))
-        if value is False:
-            return [('allow_billable', operator, value)]
-
-        sol_cond = ('sale_line_id', '!=', False)
-        mapping_cond = ('sale_line_employee_ids', '!=', False)
-        if value == 'task_rate':
-            domain = [expression.NOT_OPERATOR, sol_cond, expression.NOT_OPERATOR, mapping_cond]
-        elif value == 'fixed_rate':
-            domain = [sol_cond, expression.NOT_OPERATOR, mapping_cond]
-        else:  # value == 'employee_rate'
-            domain = [mapping_cond]
-
-        domain = expression.AND([domain, [('allow_billable', '=', True)]])
-        domain = expression.normalize_domain(domain)
-        if operator != '=':
-            domain.insert(0, expression.NOT_OPERATOR)
-        domain = expression.distribute_not(domain)
-        return domain
+        if operator != 'in':
+            return NotImplemented
+        domains = []
+        if 'task_rate' in value:
+            domains.append([('sale_line_employee_ids', '=', False), ('sale_line_id', '=', False), ('allow_billable', '=', True)])
+        if 'fixed_rate' in value:
+            domains.append([('sale_line_employee_ids', '=', False), ('sale_line_id', '!=', False), ('allow_billable', '=', True)])
+        if 'employee_rate' in value:
+            domains.append([('sale_line_employee_ids', '!=', False), ('allow_billable', '=', True)])
+        if False in value:
+            domains.append([('allow_billable', '=', False)])
+        return expression.OR(domains)
 
     @api.depends('allow_timesheets', 'allow_billable')
     def _compute_timesheet_product_id(self):

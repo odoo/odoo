@@ -12,6 +12,7 @@ from urllib.parse import urlparse
 from odoo import _, api, Command, fields, models, tools
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError, ValidationError
+from odoo.fields import Domain
 from odoo.osv import expression
 from odoo.tools import format_date, format_datetime, format_time, frozendict
 from odoo.tools.mail import is_html_empty, html_to_inner_content
@@ -346,16 +347,10 @@ class EventEvent(models.Model):
             event.is_ongoing = event.date_begin <= now < event.date_end
 
     def _search_is_ongoing(self, operator, value):
-        if operator not in ['=', '!=']:
-            raise UserError(_('This operator is not supported'))
-        if not isinstance(value, bool):
-            raise UserError(_('Value should be True or False (not %s)', value))
+        if operator != 'in':
+            return NotImplemented
         now = fields.Datetime.now()
-        if (operator == '=' and value) or (operator == '!=' and not value):
-            domain = [('date_begin', '<=', now), ('date_end', '>', now)]
-        else:
-            domain = ['|', ('date_begin', '>', now), ('date_end', '<=', now)]
-        return domain
+        return [('date_begin', '<=', now), ('date_end', '>', now)]
 
     @api.depends('date_begin', 'date_end', 'date_tz')
     def _compute_field_is_one_day(self):
@@ -379,16 +374,9 @@ class EventEvent(models.Model):
             event.is_finished = datetime_end <= current_datetime
 
     def _search_is_finished(self, operator, value):
-        if operator not in ['=', '!=']:
-            raise ValueError(_('This operator is not supported'))
-        if not isinstance(value, bool):
-            raise ValueError(_('Value should be True or False (not %s)'), value)
-        now = fields.Datetime.now()
-        if (operator == '=' and value) or (operator == '!=' and not value):
-            domain = [('date_end', '<=', now)]
-        else:
-            domain = [('date_end', '>', now)]
-        return domain
+        if operator != 'in':
+            return NotImplemented
+        return [('date_end', '<=', fields.Datetime.now())]
 
     @api.depends('event_type_id')
     def _compute_date_tz(self):
@@ -404,19 +392,17 @@ class EventEvent(models.Model):
             event.address_search = event.address_id
 
     def _search_address_search(self, operator, value):
-        if operator != 'ilike' or not isinstance(value, str):
-            raise NotImplementedError(_('Operation not supported.'))
-
-        return expression.OR([
-            [('address_id.name', 'ilike', value)],
-            [('address_id.street', 'ilike', value)],
-            [('address_id.street2', 'ilike', value)],
-            [('address_id.city', 'ilike', value)],
-            [('address_id.zip', 'ilike', value)],
-            [('address_id.state_id', 'ilike', value)],
-            [('address_id.country_id', 'ilike', value)],
-        ])
-
+        def make_codomain(value):
+            return Domain.OR(
+                Domain(field, 'ilike', value)
+                for field in ('name', 'street', 'street2', 'city', 'zip', 'state_id', 'country_id')
+            )
+        if isinstance(value, Domain):
+            domain = value.map_conditions(lambda cond: cond if cond.field_expr != 'display_name' else make_codomain(cond.value))
+            return Domain('address_id', operator, domain)
+        if operator == 'ilike' and isinstance(value, str):
+            return Domain('address_id', 'any', make_codomain(value))
+        return NotImplemented
 
     # seats
 

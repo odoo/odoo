@@ -71,10 +71,9 @@ class LunchAlert(models.Model):
             alert.available_today = alert.until > today if alert.until else True and alert[fieldname]
 
     def _search_available_today(self, operator, value):
-        if (not operator in ['=', '!=']) or (not value in [True, False]):
-            return []
+        if operator not in ('in', 'not in'):
+            return NotImplemented
 
-        searching_for_true = (operator == '=' and value) or (operator == '!=' and not value)
         today = fields.Date.context_today(self)
         fieldname = WEEKDAY_TO_NAME[today.weekday()]
 
@@ -82,7 +81,7 @@ class LunchAlert(models.Model):
             [(fieldname, operator, value)],
             expression.OR([
                 [('until', '=', False)],
-                [('until', '>' if searching_for_true else '<', today)],
+                [('until', '>' if operator == 'in' else '<', today)],
             ])
         ])
 

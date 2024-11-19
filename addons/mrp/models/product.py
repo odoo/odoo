@@ -9,13 +9,15 @@ from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_round, float_is_zero
 
 
-OPERATORS = {
+PY_OPERATORS = {
     '<': py_operator.lt,
     '>': py_operator.gt,
     '<=': py_operator.le,
     '>=': py_operator.ge,
     '=': py_operator.eq,
-    '!=': py_operator.ne
+    '!=': py_operator.ne,
+    'in': lambda elem, container: elem in container,
+    'not in': lambda elem, container: elem not in container,
 }
 
 
@@ -47,14 +49,12 @@ class ProductTemplate(models.Model):
             template.is_kits = (template.id in kits_ids)
 
     def _search_is_kits(self, operator, value):
-        assert operator in ('=', '!='), 'Unsupported operator'
+        if operator != 'in':
+            return NotImplemented
         bom_tmpl_query = self.env['mrp.bom'].sudo()._search(
             [('company_id', 'in', [False] + self.env.companies.ids),
              ('type', '=', 'phantom'), ('active', '=', True)])
-        neg = ''
-        if (operator == '=' and not value) or (operator == '!=' and value):
-            neg = 'not '
-        return [('id', neg + 'in', bom_tmpl_query.subselect('product_tmpl_id'))]
+        return [('id', 'in', bom_tmpl_query.subselect('product_tmpl_id'))]
 
     def _compute_show_qty_status_button(self):
         super()._compute_show_qty_status_button()
@@ -165,7 +165,8 @@ class ProductProduct(models.Model):
             product.is_kits = (product.id in kits_product_ids or product.product_tmpl_id.id in kits_template_ids)
 
     def _search_is_kits(self, operator, value):
-        assert operator in ('=', '!='), 'Unsupported operator'
+        if operator != 'in':
+            return NotImplemented
         bom_tmpl_query = self.env['mrp.bom'].sudo()._search(
             [('company_id', 'in', [False] + self.env.companies.ids),
              ('active', '=', True),
@@ -173,13 +174,10 @@ class ProductProduct(models.Model):
         bom_product_query = self.env['mrp.bom'].sudo()._search(
             [('company_id', 'in', [False] + self.env.companies.ids),
              ('type', '=', 'phantom'), ('product_id', '!=', False)])
-        neg = ''
-        op = '|'
-        if (operator == '=' and not value) or (operator == '!=' and value):
-            neg = 'not '
-            op = '&'
-        return [op, ('product_tmpl_id', neg + 'in', bom_tmpl_query.subselect('product_tmpl_id')),
-                ('id', neg + 'in', bom_product_query.subselect('product_id'))]
+        return [
+            '|', ('product_tmpl_id', 'in', bom_tmpl_query.subselect('product_tmpl_id')),
+            ('id', 'in', bom_product_query.subselect('product_id'))
+        ]
 
     def _compute_show_qty_status_button(self):
         super()._compute_show_qty_status_button()
@@ -200,28 +198,20 @@ class ProductProduct(models.Model):
         self.product_catalog_product_is_in_mo = False
 
     def _search_product_is_in_bom(self, operator, value):
-        if operator not in ['=', '!='] or not isinstance(value, bool):
-            raise UserError(_("Operation not supported"))
+        if operator != 'in':
+            return NotImplemented
         product_ids = self.env['mrp.bom.line'].search([
             ('bom_id', '=', self.env.context.get('order_id', '')),
         ]).product_id.ids
-        if (operator == '!=' and value is True) or (operator == '=' and value is False):
-            domain_operator = 'not in'
-        else:
-            domain_operator = 'in'
-        return [('id', domain_operator, product_ids)]
+        return [('id', operator, product_ids)]
 
     def _search_product_is_in_mo(self, operator, value):
-        if operator not in ['=', '!='] or not isinstance(value, bool):
-            raise UserError(_("Operation not supported"))
+        if operator != 'in':
+            return NotImplemented
         product_ids = self.env['mrp.production'].search([
             ('id', 'in', [self.env.context.get('order_id', '')]),
         ]).move_raw_ids.product_id.ids
-        if (operator == '!=' and value is True) or (operator == '=' and value is False):
-            domain_operator = 'not in'
-        else:
-            domain_operator = 'in'
-        return [('id', domain_operator, product_ids)]
+        return [('id', operator, product_ids)]
 
     def write(self, values):
         if 'active' in values:
@@ -403,6 +393,9 @@ class ProductProduct(models.Model):
 
     def _search_qty_available_new(self, operator, value, lot_id=False, owner_id=False, package_id=False):
         '''extending the method in stock.product to take into account kits'''
+        op = PY_OPERATORS.get(operator)
+        if not op:
+            return NotImplemented
         product_ids = super(ProductProduct, self)._search_qty_available_new(operator, value, lot_id, owner_id, package_id)
         kit_boms = self.env['mrp.bom'].search([('type', "=", 'phantom')])
         kit_products = self.env['product.product']
@@ -412,7 +405,7 @@ class ProductProduct(models.Model):
             else:
                 kit_products |= kit.product_tmpl_id.product_variant_ids
         for product in kit_products:
-            if OPERATORS[operator](product.qty_available, value):
+            if op(product.qty_available, value):
                 product_ids.append(product.id)
         return list(set(product_ids))
 
