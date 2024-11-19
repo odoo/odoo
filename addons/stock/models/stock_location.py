@@ -521,7 +521,9 @@ class StockRoute(models.Model):
     name = fields.Char('Route', required=True, translate=True)
     active = fields.Boolean('Active', default=True, help="If the active field is set to False, it will allow you to hide the route without removing it.")
     sequence = fields.Integer('Sequence', default=0)
-    rule_ids = fields.One2many('stock.rule', 'route_id', 'Rules', copy=True)
+    rule_ids = fields.One2many(
+        'stock.rule', 'route_id', 'Rules', copy=True, depends_context=['company', 'uid']
+    )
     product_selectable = fields.Boolean('Applicable on Product', default=True, help="When checked, the route will be selectable in the Inventory tab of the Product form.")
     product_categ_selectable = fields.Boolean('Applicable on Product Category', help="When checked, the route will be selectable on the Product Category.")
     warehouse_selectable = fields.Boolean('Applicable on Warehouse', help="When a warehouse is selected for this route, this route should be seen as the default route when products pass through this warehouse.")
