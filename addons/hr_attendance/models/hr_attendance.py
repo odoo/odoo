@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, exceptions, _
-from odoo.tools import format_datetime
+from odoo.tools import format_datetime, config
 
 
 class HrAttendance(models.Model):
@@ -98,6 +98,40 @@ class HrAttendance(models.Model):
                         'empl_name': attendance.employee_id.name,
                         'datetime': format_datetime(self.env, last_attendance_before_check_out.check_in, dt_format=False),
                     })
+
+    def _is_allowed_to_update_check_date(self, check_date):
+        self.ensure_one()
+        attendance_group_xml_id = 'hr_attendance.group_hr_attendance_user'
+        seconds_tolerance = 1
+        now = fields.Datetime.now()
+        if config["test_enable"] and self.env.context.get("test_datetime_now", False):
+            now = self.env.context.get("test_datetime_now", False)
+        return bool(
+            hasattr(self, check_date)
+            and getattr(self, check_date)
+            and abs((getattr(self, check_date) - now).total_seconds()) > seconds_tolerance
+            and not self.env.user.has_group(attendance_group_xml_id)
+        )
+
+    @api.model
+    def _get_error_message_for_check_date(self, check_date):
+        self.ensure_one()
+        check_date_str = check_date == "check_in" and "Check In" or "Check Out"
+        return 'You are not allowed to modify the %s of an attendance after it has finished.' % check_date_str
+
+    @api.constrains('check_in')
+    def _check_updated_check_in_without_permissions(self):
+        for attendance in self:
+            if attendance._is_allowed_to_update_check_date(check_date="check_in"):
+                msg = attendance._get_error_message_for_check_date(check_date="check_in")
+                raise exceptions.ValidationError(_(msg))
+
+    @api.constrains('check_out')
+    def _check_updated_check_out_without_permissions(self):
+        for attendance in self:
+            if attendance._is_allowed_to_update_check_date(check_date="check_out"):
+                msg = attendance._get_error_message_for_check_date(check_date="check_out")
+                raise exceptions.ValidationError(_(msg))
 
     @api.returns('self', lambda value: value.id)
     def copy(self):
