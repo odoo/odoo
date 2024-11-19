@@ -4535,6 +4535,28 @@ class TestMrpOrder(TestMrpCommon):
         production = production_form.save()
         self.assertEqual(production.workorder_ids[0].duration_expected, 15)
 
+    def test_mo_without_resource_calendar(self):
+        self.workcenter_1.resource_calendar_id = False
+
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product_1.id,
+            'workorder_ids': [Command.create({
+                'name': 'Test Workorder',
+                'product_uom_id': self.product_1.uom_id.id,
+                'workcenter_id': self.workcenter_1.id,
+            })],
+        })
+
+        dt_start = datetime(2024, 12, 12, 8, 30)
+        dt_finished = datetime(2024, 12, 13, 8, 30)
+
+        mo.workorder_ids[0].date_start = dt_start
+        mo.workorder_ids[0].date_finished = dt_finished
+        mo.action_confirm()
+        mo.button_mark_done()
+
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(mo.workorder_ids[0].duration_expected, 1440.0)
 
 @tagged('-at_install', 'post_install')
 class TestTourMrpOrder(HttpCase):
