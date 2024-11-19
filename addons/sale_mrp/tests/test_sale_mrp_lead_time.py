@@ -64,11 +64,10 @@ class TestSaleMrpLeadTime(TestMrpCommon, TestSaleCommonBase):
             and Sales Safety Days."""
 
         # Update company with Manufacturing Lead Time and Sales Safety Days
-        with self.with_user('admin'):
-            self.company.write({
-                'manufacturing_lead': 3.0,
-                'security_lead': 3.0
-            })
+        self.company.sudo().write({
+            'manufacturing_lead': 3.0,
+            'security_lead': 3.0
+        })
 
         # Create sale order of product_1
         order_form = Form(self.env['sale.order'])

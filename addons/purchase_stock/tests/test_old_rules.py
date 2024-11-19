@@ -236,8 +236,7 @@ class TestPurchaseOldRules(PurchaseTestCommon):
         """ In order to check dates, set product's Delivery Lead Time
             and warehouse route's delay."""
 
-        with self.with_user('admin'):
-            self.company.write({'po_lead': 1.00})
+        self.company.sudo().write({'po_lead': 1.00})
 
         warehouse = self.warehouse_3_steps
         # Set delay on push rule
