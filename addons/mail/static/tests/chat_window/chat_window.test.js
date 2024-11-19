@@ -22,7 +22,14 @@ import {
 import { describe, expect, test } from "@odoo/hoot";
 import { queryFirst } from "@odoo/hoot-dom";
 import { mockDate, tick } from "@odoo/hoot-mock";
-import { Command, getService, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { EventBus } from "@odoo/owl";
+import {
+    Command,
+    getService,
+    patchWithCleanup,
+    serverState,
+    withUser,
+} from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 
 import { rpc } from "@web/core/network/rpc";
@@ -1075,4 +1082,29 @@ test("Bigger chat windows is locally persistent (saved in local storage)", async
     await click("button:contains(Large windows)");
     await contains(".o-mail-ChatWindow.o-large");
     expect(browser.localStorage.getItem("mail.user_setting.chat_window_big")).toBe(null);
+});
+
+test("open channel in chat window from push notification", async () => {
+    patchWithCleanup(window.navigator, {
+        serviceWorker: Object.assign(new EventBus(), { register: () => Promise.resolve() }),
+    });
+    const pyEnv = await startServer();
+    const [channelId] = pyEnv["discuss.channel"].create([
+        { name: "General" },
+        {
+            name: "Sales",
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId, fold_state: "open" }),
+            ],
+        },
+    ]);
+    await start();
+    await contains(".o-mail-ChatWindow", { text: "Sales" });
+    await contains(".o-mail-ChatWindow", { text: "General", count: 0 });
+    browser.navigator.serviceWorker.dispatchEvent(
+        new MessageEvent("message", {
+            data: { action: "OPEN_CHANNEL", data: { id: channelId } },
+        })
+    );
+    await contains(".o-mail-ChatWindow", { text: "General" });
 });
