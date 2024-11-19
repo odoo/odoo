@@ -22,7 +22,7 @@ class TestDiscussBinaryControllerCommon(TestBinaryControllerCommon):
 
 @odoo.tests.tagged("-at_install", "post_install")
 class TestDiscussBinaryController(TestDiscussBinaryControllerCommon):
-    def test_open_guest_avatar(self):
+    def test_00_open_guest_avatar(self):
         """Test access to open the avatar of a guest.
         There is no common channel or any interaction from the guest."""
         self._execute_subtests(
@@ -37,7 +37,7 @@ class TestDiscussBinaryController(TestDiscussBinaryControllerCommon):
             ),
         )
 
-    def test_01_guest_avatar_private_channel(self):
+    def test_10_guest_avatar_private_channel(self):
         """Test access to open the avatar:
         - target type: guest
         - channel type: group
@@ -57,7 +57,7 @@ class TestDiscussBinaryController(TestDiscussBinaryControllerCommon):
             ),
         )
 
-    def test_01_partner_avatar_private_channel(self):
+    def test_11_partner_avatar_private_channel(self):
         """Test access to open the avatar:
         - target type: partner
         - channel type: group
@@ -79,7 +79,7 @@ class TestDiscussBinaryController(TestDiscussBinaryControllerCommon):
             ),
         )
 
-    def test_02_guest_avatar_private_channel(self):
+    def test_12_guest_avatar_private_channel(self):
         """Test access to open the avatar:
         - target type: guest
         - channel type: group
@@ -100,7 +100,7 @@ class TestDiscussBinaryController(TestDiscussBinaryControllerCommon):
             ),
         )
 
-    def test_02_partner_avatar_private_channel(self):
+    def test_13_partner_avatar_private_channel(self):
         """Test access to open the avatar:
         - target type: partner
         - channel type: group
@@ -123,7 +123,7 @@ class TestDiscussBinaryController(TestDiscussBinaryControllerCommon):
             ),
         )
 
-    def test_03_guest_avatar_private_channel(self):
+    def test_14_guest_avatar_private_channel(self):
         """Test access to open the avatar:
         - target type: guest
         - channel type: group
@@ -147,7 +147,7 @@ class TestDiscussBinaryController(TestDiscussBinaryControllerCommon):
             ),
         )
 
-    def test_03_partner_avatar_private_channel(self):
+    def test_15_partner_avatar_private_channel(self):
         """Test access to open the avatar:
         - target type: partner
         - channel type: group
@@ -176,7 +176,7 @@ class TestDiscussBinaryController(TestDiscussBinaryControllerCommon):
             ),
         )
 
-    def test_04_guest_avatar_private_channel(self):
+    def test_16_guest_avatar_private_channel(self):
         """Test access to open the avatar:
         - target type: guest
         - channel type: group
@@ -193,15 +193,15 @@ class TestDiscussBinaryController(TestDiscussBinaryControllerCommon):
             self.guest_2,
             (
                 (self.user_public, False),
-                (self.guest, True),
-                (self.user_portal, True),
+                (self.guest, False),
+                (self.user_portal, False),
                 (self.user_employee, True),
                 (self.user_demo, True),
                 (self.user_admin, True),
             ),
         )
 
-    def test_04_partner_avatar_private_channel(self):
+    def test_17_partner_avatar_private_channel(self):
         """Test access to open the avatar:
         - target type: partner
         - channel type: group
@@ -223,15 +223,15 @@ class TestDiscussBinaryController(TestDiscussBinaryControllerCommon):
             self.user_test,
             (
                 (self.user_public, False),
-                (self.guest, True),
-                (self.user_portal, True),
+                (self.guest, False),
+                (self.user_portal, False),
                 (self.user_employee, True),
                 (self.user_demo, True),
                 (self.user_admin, True),
             ),
         )
 
-    def test_05_guest_avatar_private_channel(self):
+    def test_18_guest_avatar_private_channel(self):
         """Test access to open the avatar:
         - target type: guest
         - channel type: group
@@ -253,7 +253,7 @@ class TestDiscussBinaryController(TestDiscussBinaryControllerCommon):
             ),
         )
 
-    def test_05_partner_avatar_private_channel(self):
+    def test_19_partner_avatar_private_channel(self):
         """Test access to open the avatar:
         - target type: partner
         - channel type: group
@@ -278,7 +278,7 @@ class TestDiscussBinaryController(TestDiscussBinaryControllerCommon):
             ),
         )
 
-    def test_01_guest_avatar_public_channel(self):
+    def test_20_guest_avatar_public_channel(self):
         """Test access to open the avatar:
         - target type: guest
         - channel type: public
@@ -291,16 +291,16 @@ class TestDiscussBinaryController(TestDiscussBinaryControllerCommon):
         self._execute_subtests(
             self.guest_2,
             (
-                (self.user_public, True),
-                (self.guest, True),
-                (self.user_portal, True),
+                (self.user_public, False),
+                (self.guest, False),
+                (self.user_portal, False),
                 (self.user_employee, True),
                 (self.user_demo, True),
                 (self.user_admin, True),
             ),
         )
 
-    def test_01_partner_avatar_public_channel(self):
+    def test_21_partner_avatar_public_channel(self):
         """Test access to open the avatar:
         - target type: guest
         - channel type: public
@@ -311,16 +311,16 @@ class TestDiscussBinaryController(TestDiscussBinaryControllerCommon):
         self._execute_subtests(
             self.user_test,
             (
-                (self.user_public, True),
-                (self.guest, True),
-                (self.user_portal, True),
+                (self.user_public, False),
+                (self.guest, False),
+                (self.user_portal, False),
                 (self.user_employee, True),
                 (self.user_demo, True),
                 (self.user_admin, True),
             ),
         )
 
-    def test_02_guest_avatar_public_channel(self):
+    def test_22_guest_avatar_public_channel(self):
         """Test access to open the avatar:
         - target type: guest
         - channel type: public
@@ -342,7 +342,7 @@ class TestDiscussBinaryController(TestDiscussBinaryControllerCommon):
             ),
         )
 
-    def test_02_partner_avatar_public_channel(self):
+    def test_23_partner_avatar_public_channel(self):
         """Test access to open the avatar:
         - target type: partner
         - channel type: public
@@ -364,7 +364,7 @@ class TestDiscussBinaryController(TestDiscussBinaryControllerCommon):
             ),
         )
 
-    def test_03_guest_avatar_public_channel(self):
+    def test_24_guest_avatar_public_channel(self):
         """Test access to open the avatar:
         - target type: guest
         - channel type: public
@@ -378,16 +378,16 @@ class TestDiscussBinaryController(TestDiscussBinaryControllerCommon):
         self._execute_subtests(
             self.guest_2,
             (
-                (self.user_public, True),
-                (self.guest, True),
-                (self.user_portal, True),
+                (self.user_public, False),
+                (self.guest, False),
+                (self.user_portal, False),
                 (self.user_employee, True),
                 (self.user_demo, True),
                 (self.user_admin, True),
             ),
         )
 
-    def test_03_partner_avatar_public_channel(self):
+    def test_25_partner_avatar_public_channel(self):
         """Test access to open the avatar:
         - target type: partner
         - channel type: public
@@ -401,9 +401,9 @@ class TestDiscussBinaryController(TestDiscussBinaryControllerCommon):
         self._execute_subtests(
             self.user_test,
             (
-                (self.user_public, True),
-                (self.guest, True),
-                (self.user_portal, True),
+                (self.user_public, False),
+                (self.guest, False),
+                (self.user_portal, False),
                 (self.user_employee, True),
                 (self.user_demo, True),
                 (self.user_admin, True),
