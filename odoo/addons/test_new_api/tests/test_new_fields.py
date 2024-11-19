@@ -5,6 +5,7 @@
 # test cases for new-style fields
 #
 import base64
+import json
 from collections import OrderedDict
 from datetime import date, datetime, time
 import io
@@ -1615,6 +1616,37 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertFalse(company_record.env.user.has_group('base.group_system'))
         company_records = self.env['test_new_api.company'].search([('foo', '=', 'DEF')])
         self.assertEqual(len(company_records), 1)
+
+    def test_27_company_dependent_bool_integer_float(self):
+        company0 = self.env.ref('base.main_company')
+        company1 = self.env['res.company'].create({'name': 'A'})
+        Model = self.env['test_new_api.company']
+        record = Model.create({})
+        record.invalidate_recordset()
+        cr = self.env.cr
+        cr.execute("SELECT truth, count, phi FROM test_new_api_company WHERE id = %s", (record.id,))
+        self.assertEqual(cr.fetchone(), (None, None, None))
+        for company in [company0, company1]:
+            record_company = record.with_company(company)
+            self.assertEqual(record_company.truth, False)
+            self.assertEqual(record_company.count, 0)
+            self.assertEqual(record_company.phi, 0.0)
+        record.write({'truth': False, 'count': 0, 'phi': 0})  # write fallback equivalent
+        record.invalidate_recordset()
+        cr.execute("SELECT truth, count, phi FROM test_new_api_company WHERE id = %s", (record.id,))
+        self.assertEqual(cr.fetchone(), (None, None, None))
+        # NULL doesn't block read
+        cr.execute("UPDATE test_new_api_company SET truth = %s, count = %s, phi = %s WHERE id = %s", (
+            json.dumps({str(company0.id): None}),
+            json.dumps({str(company0.id): None}),
+            json.dumps({str(company0.id): None}),
+            record.id,
+        ))
+        for company in [company0, company1]:
+            record_company = record.with_company(company)
+            self.assertEqual(record_company.truth, False)
+            self.assertEqual(record_company.count, 0)
+            self.assertEqual(record_company.phi, 0.0)
 
     def test_28_company_dependent_search(self):
         """ Test the search on company-dependent fields in all corner cases.
