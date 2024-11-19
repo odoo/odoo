@@ -5852,4 +5852,93 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o-overlay-container .dropdown-menu");
         assert.deepEqual(pivot.model.getTable().headers[1].map((h) => h.title), ["2016"]);
     });
+
+    QUnit.test("missing property field definition is fetched", async function (assert) {
+        await makeView({
+            type: "pivot",
+            resModel: "partner",
+            serverData,
+            arch: `<pivot/>`,
+            irFilters: [
+                {
+                    user_id: [2, "Mitchell Admin"],
+                    name: "My Filter",
+                    id: 5,
+                    context: `{"group_by": ['properties.my_char']}`,
+                    sort: "[]",
+                    domain: "[]",
+                    is_default: true,
+                    model_id: "partner",
+                    action_id: false,
+                },
+            ],
+            mockRPC(_, { method, kwargs }) {
+                if (method === "read_group" && kwargs.groupby?.includes("properties.my_char")) {
+                    assert.step(JSON.stringify(kwargs.groupby));
+                    return [
+                        {
+                            "properties.my_char": false,
+                            __domain: [["properties.my_char", "=", false]],
+                            __count: 2,
+                        },
+                        {
+                            "properties.my_char": "aaa",
+                            __domain: [["properties.my_char", "=", "aaa"]],
+                            __count: 1,
+                        },
+                    ];
+                } else if (method === "get_property_definition") {
+                    return {
+                        name: "my_char",
+                        type: "char",
+                    };
+                }
+            },
+        });
+        assert.verifySteps([`["properties.my_char"]`]);
+        assert.strictEqual(getCurrentValues(target), "4,2,1");
+    });
+
+    QUnit.test("missing deleted property field definition is created", async function (assert) {
+        await makeView({
+            type: "pivot",
+            resModel: "partner",
+            serverData,
+            arch: `<pivot/>`,
+            irFilters: [
+                {
+                    user_id: [2, "Mitchell Admin"],
+                    name: "My Filter",
+                    id: 5,
+                    context: `{"group_by": ['properties.my_char']}`,
+                    sort: "[]",
+                    domain: "[]",
+                    is_default: true,
+                    model_id: "partner",
+                    action_id: false,
+                },
+            ],
+            mockRPC(_, { method, kwargs }) {
+                if (method === "read_group" && kwargs.groupby?.includes("properties.my_char")) {
+                    assert.step(JSON.stringify(kwargs.groupby));
+                    return [
+                        {
+                            "properties.my_char": false,
+                            __domain: [["properties.my_char", "=", false]],
+                            __count: 2,
+                        },
+                        {
+                            "properties.my_char": "aaa",
+                            __domain: [["properties.my_char", "=", "aaa"]],
+                            __count: 1,
+                        },
+                    ];
+                } else if (method === "get_property_definition") {
+                    return {};
+                }
+            },
+        });
+        assert.verifySteps([`["properties.my_char"]`]);
+        assert.strictEqual(getCurrentValues(target), "4,2,1");
+    });
 });
