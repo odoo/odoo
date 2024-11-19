@@ -3,9 +3,20 @@
 from odoo import Command
 from odoo.tests import HttpCase, tagged
 
+from odoo.addons.website.tools import MockRequest
+from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
+from odoo.addons.website_sale_loyalty.controllers.delivery import (
+    WebsiteSaleLoyaltyDelivery,
+)
+
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleDelivery(HttpCase):
+class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.Controller = WebsiteSaleLoyaltyDelivery()
 
     def setUp(self):
         super().setUp()
@@ -144,3 +155,35 @@ class TestWebsiteSaleDelivery(HttpCase):
             })],
         })
         self.start_tour("/", 'check_shipping_discount', login="admin")
+
+    def test_express_checkout_shipping_discount(self):
+        """
+        Check display of shipping discount promotion in express checkout form by ensuring is present
+        in the values returned to the form.
+        """
+        # Create a discount code
+        program = self.env['loyalty.program'].sudo().create({
+            'name': 'Free Shipping',
+            'program_type': 'promo_code',
+            'rule_ids': [
+                Command.create({
+                    'code': "FREE",
+                    'minimum_amount': 0,
+                })
+            ],
+            'reward_ids': [
+                Command.create({
+                    'reward_type': 'shipping',
+                    'discount_max_amount': 6.0,
+                })
+            ]
+            }
+        )
+
+        # Apply discount
+        self.cart._try_apply_code("FREE")
+        self.cart._apply_program_reward(program.reward_ids, program.coupon_ids)
+
+        with MockRequest(self.env, sale_order_id=self.cart.id, website=self.website):
+            result = self.Controller.shop_set_delivery_method(self.normal_delivery2.id)
+        self.assertEqual(result['delivery_discount_minor_amount'], -600)

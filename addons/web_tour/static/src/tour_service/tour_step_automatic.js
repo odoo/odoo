@@ -43,7 +43,7 @@ export class TourStepAutomatic extends TourStep {
     }
 
     /**
-     * When return true, macroEngine stops.
+     * When return true, macro stops.
      * @returns {Boolean}
      */
     async doAction() {

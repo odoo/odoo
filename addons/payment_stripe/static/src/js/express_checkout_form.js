@@ -205,7 +205,7 @@ paymentExpressCheckoutForm.include({
                     status: 'success',
                     ...this._getOrderDetails(
                         ev.shippingOption.amount,
-                        result.delivery_discount_minor_amount || 0,
+                        parseInt(result.delivery_discount_minor_amount) || 0,
                     ),
                 });
             });
