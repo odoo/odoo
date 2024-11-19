@@ -66,7 +66,7 @@ class ResConfigSettings(models.TransientModel):
     module_delivery_fedex = fields.Boolean("FedEx Connector")
     module_delivery_sendcloud = fields.Boolean("Sendcloud Connector")
     module_delivery_shiprocket = fields.Boolean("Shiprocket Connector")
-    module_delivery_ups = fields.Boolean("UPS Connector")
+    module_delivery_ups_rest = fields.Boolean("UPS Connector")
     module_delivery_usps = fields.Boolean("USPS Connector")
     module_delivery_starshipit = fields.Boolean("Starshipit Connector")
 
