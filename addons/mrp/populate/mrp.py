@@ -267,7 +267,7 @@ class MrpProduction(models.Model):
             # Confirm X % of prototype MO
             random = populate.Random('confirm_bom_mo')
             mo_ids = productions.filtered('bom_id').ids
-            mo_to_confirm = self.env['mrp.production'].browse(random.sample(mo_ids, int(len(mo_ids) * 0.8)))
+            mo_to_confirm = self.env['mrp.production'].browse(random.sample(mo_ids, int(len(mo_ids) * sample_ratio)))
             _logger.info("Confirm %d MO with BoM" % len(mo_to_confirm))
             mo_to_confirm.action_confirm()
 
@@ -364,7 +364,7 @@ class StockMove(models.Model):
             # Confirm X % of prototype MO
             random = populate.Random('confirm_prototype_mo')
             mo_ids = moves.raw_material_production_id.ids
-            mo_to_confirm = self.env['mrp.production'].browse(random.sample(mo_ids, int(len(mo_ids) * 0.8)))
+            mo_to_confirm = self.env['mrp.production'].browse(random.sample(mo_ids, int(len(mo_ids) * sample_ratio)))
             _logger.info("Confirm %d of prototype MO" % len(mo_to_confirm))
             mo_to_confirm.action_confirm()
 
