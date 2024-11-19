@@ -2206,3 +2206,60 @@ test("shorten descriptions of long lists", async (assert) => {
         `Id\nis in\n(\n${values.slice(0, 20).join("\n,\n")}\n,\n...\n)`
     );
 });
+
+test("many2one: no domain in autocompletion", async () => {
+    Partner._fields.product_id.domain = `[("display_name", "ilike", "xpa")]`;
+    await makeDomainSelector({
+        domain: `[("product_id", "=", False)]`,
+        update(domain) {
+            expect.step(domain);
+        },
+    });
+    expect(getCurrentOperator()).toBe("=");
+    expect(getCurrentValue()).toBe("");
+    expect.verifySteps([]);
+    expect(".dropdown-menu").toHaveCount(0);
+
+    await editValue("x", { confirm: false });
+    await runAllTimers();
+
+    expect(".dropdown-menu").toHaveCount(1);
+    expect(queryAllTexts(".dropdown-menu li")).toEqual(["xphone", "xpad"]);
+    expect(getCurrentOperator()).toBe("=");
+    expect(getCurrentValue()).toBe("x");
+
+    await contains(".dropdown-menu li").click();
+    expect(getCurrentOperator()).toBe("=");
+    expect(getCurrentValue()).toBe("xphone");
+    expect.verifySteps([`[("product_id", "=", 37)]`]);
+    expect(".dropdown-menu").toHaveCount(0);
+});
+
+test("many2many: domain in autocompletion", async () => {
+    addProductIds();
+    Partner._fields.product_ids.domain = `[("display_name", "ilike", "xpa")]`;
+    await makeDomainSelector({
+        domain: `[("product_ids", "=", [])]`,
+        update(domain) {
+            expect.step(domain);
+        },
+    });
+    expect(getCurrentOperator()).toBe("=");
+    expect(getCurrentValue()).toBe("");
+    expect.verifySteps([]);
+    expect(".dropdown-menu").toHaveCount(0);
+
+    await editValue("x", { confirm: false });
+    await runAllTimers();
+
+    expect(".dropdown-menu").toHaveCount(1);
+    expect(queryAllTexts(".dropdown-menu li")).toEqual(["xpad"]);
+    expect(getCurrentOperator()).toBe("=");
+    expect(getCurrentValue()).toBe("x");
+
+    await contains(".dropdown-menu li").click();
+    expect(getCurrentOperator()).toBe("=");
+    expect(getCurrentValue()).toBe("xpad");
+    expect.verifySteps([`[("product_ids", "=", [41])]`]);
+    expect(".dropdown-menu").toHaveCount(0);
+});
