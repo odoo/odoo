@@ -86,8 +86,8 @@ class StockMoveLine(models.Model):
     description_picking = fields.Text(string="Description picking")
     quant_id = fields.Many2one('stock.quant', "Pick From", store=False)  # Dummy field for the detailed operation view
     product_packaging_qty = fields.Float(string="Reserved Packaging Quantity", compute='_compute_product_packaging_qty')
-    picking_location_id = fields.Many2one(related='picking_id.location_id')
-    picking_location_dest_id = fields.Many2one(related='picking_id.location_dest_id')
+    picking_location_id = fields.Many2one(related='picking_id.location_id', string="Picking Location From")
+    picking_location_dest_id = fields.Many2one(related='picking_id.location_dest_id', string="Picking Location To")
 
     @api.depends('product_uom_id.category_id', 'product_id.uom_id.category_id', 'move_id.product_uom', 'product_id.uom_id')
     def _compute_product_uom_id(self):
