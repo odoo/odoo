@@ -97,7 +97,7 @@ test("can render and apply gradient color", async () => {
     });
 });
 
-test("custom colors used in the editor are shown in the colorpicker", async () => {
+test("custom text-colors used in the editor are shown in the colorpicker", async () => {
     await setupEditor(
         `<p>
             <font style="color: rgb(255, 0, 0);">test</font>
@@ -107,6 +107,31 @@ test("custom colors used in the editor are shown in the colorpicker", async () =
     await waitFor(".o-we-toolbar");
     expect(".o_font_color_selector").toHaveCount(0);
     await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    await click(".btn:contains('Custom')");
+    await animationFrame();
+    expect(".o_hex_input").toHaveValue("#00FF00");
+    expect(queryAllValues(".o_rgba_div input")).toEqual(["0", "255", "0", "100"]);
+    expect("button[data-color='rgb(255, 0, 0)']").toHaveCount(1);
+    expect(queryOne("button[data-color='rgb(255, 0, 0)']").style.backgroundColor).toBe(
+        "rgb(255, 0, 0)"
+    );
+    expect("button[data-color='rgb(0, 255, 0)']").toHaveCount(1);
+    expect(queryOne("button[data-color='rgb(0, 255, 0)']").style.backgroundColor).toBe(
+        "rgb(0, 255, 0)"
+    );
+});
+
+test("custom background colors used in the editor are shown in the colorpicker", async () => {
+    await setupEditor(
+        `<p>
+            <font style="background-color: rgb(255, 0, 0);">test</font>
+            <font style="background-color: rgb(0, 255, 0);">[test]</font>
+        </p>`
+    );
+    await waitFor(".o-we-toolbar");
+    expect(".o_font_color_selector").toHaveCount(0);
+    await click(".o-we-toolbar .o-select-color-background");
     await animationFrame();
     await click(".btn:contains('Custom')");
     await animationFrame();
