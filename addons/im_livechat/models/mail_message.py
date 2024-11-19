@@ -15,7 +15,7 @@ class MailMessage(models.Model):
         for vals in vals_list:
             message_sudo = self.browse(vals['id']).sudo().with_prefetch(self.ids)
             if message_sudo.model == 'mail.channel' and self.env['mail.channel'].browse(message_sudo.res_id).channel_type == 'livechat':
-                vals.pop('email_from')
+                vals.pop('email_from', None)
                 if message_sudo.author_id.user_livechat_username:
                     vals['author_id'] = (message_sudo.author_id.id, message_sudo.author_id.user_livechat_username, message_sudo.author_id.user_livechat_username)
         return vals_list
