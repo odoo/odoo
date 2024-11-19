@@ -198,7 +198,11 @@ class Field(typing.Generic[T]):
 
     :param str inverse: name of a method that inverses the field (optional)
 
-    :param str search: name of a method that implement search on the field (optional)
+    :param str search: name of a method that implement search on the field (optional).
+            The method accepts an operator and value. Basic optimizations are
+            ran before calling this function and for boolean fields, we ensure
+            that operator is '=' and value is a boolean. The method should
+            raise a `NotImplementedError` if it does not support the operator.
 
     :param str related: sequence of field names
 
@@ -697,6 +701,10 @@ class Field(typing.Generic[T]):
         can_be_null = (  # (..., '=', False) or (..., 'not in', [truthy vals])
             (operator not in NEGATIVE_CONDITION_OPERATORS) == value_is_null
         )
+        if operator in NEGATIVE_CONDITION_OPERATORS and not value_is_null:
+            # we have a condition like 'not in' ['a']
+            # let's call back with a positive operator
+            raise NotImplementedError
 
         # build the domain
         # Note that the access of many2one fields in the path is done using sudo
