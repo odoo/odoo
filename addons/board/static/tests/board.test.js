@@ -659,6 +659,52 @@ describe.tags("desktop")("board_desktop", () => {
         expect(".o-dashboard-action .o_graph_renderer").toHaveCount(1);
         expect(queryOne(".o-dashboard-action .o_graph_renderer canvas").offsetHeight).toBe(300);
     });
+
+    test("pivot view with property in pivot_column_groupby", async function () {
+        Partner._views["pivot,false"] = `<pivot/>`;
+        Partner._fields.properties_definition = fields.PropertiesDefinition();
+        Partner._fields.properties_definition = fields.PropertiesDefinition();
+        Partner._fields.parent_id = fields.Many2one({ relation: "partner" });
+        Partner._fields.properties = fields.Properties({
+            definition_record: "parent_id",
+            definition_record_field: "properties_definition",
+        });
+        onRpc("/web/action/load", () => ({
+            res_model: "partner",
+            views: [[false, "pivot"]],
+        }));
+        onRpc(({ method, kwargs }) => {
+            if (method === "get_property_definition") {
+                return {};
+            } else if (method === "read_group" && kwargs.groupby?.includes("properties.my_char")) {
+                return [
+                    {
+                        "properties.my_char": false,
+                        __domain: [["properties.my_char", "=", false]],
+                        __count: 2,
+                    },
+                    {
+                        "properties.my_char": "aaa",
+                        __domain: [["properties.my_char", "=", "aaa"]],
+                        __count: 1,
+                    },
+                ];
+            }
+        });
+        await mountView({
+            type: "form",
+            resModel: "board",
+            arch: `
+                <form js_class="board">
+                    <board style="2-1">
+                        <column>
+                            <action context="{'pivot_column_groupby':['properties.my_char']}"/>
+                        </column>
+                    </board>
+                </form>`,
+        });
+        expect(queryAllTexts(".o_pivot_cell_value div")).toEqual(["2", "1", "3"]);
+    });
 });
 
 describe.tags("mobile")("board_mobile", () => {
