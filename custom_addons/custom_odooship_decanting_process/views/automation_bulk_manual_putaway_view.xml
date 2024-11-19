@@ -9,7 +9,8 @@
                 <sheet>
                     <header>
                         <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
-                        <button name="send_message_to_automation" type="object" string="Send to Automation" class="btn-primary" />
+                        <button name="send_message_to_automation" type="object" string="Send to Automation" class="btn-primary" invisible="automation_manual not in ('automation') or state in ('done') " />
+                        <button name="update_manual_bulk_location" type="object" string="Manual Location Update" class="btn-primary" invisible="state in ('done') or automation_manual not in ('manual')" />
                     </header>
                     <group>
                         <group>
@@ -30,9 +31,9 @@
                         </group>
                         <group>
                             <field name="site_code_id"/>
+                            <field name="parent_location_id"/>
                             <field name="location_dest_id"/>
                             <field name="source_document"/>
-
                         </group>
                     </group>
 

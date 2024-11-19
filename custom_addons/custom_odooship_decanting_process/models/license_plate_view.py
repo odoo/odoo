@@ -41,7 +41,7 @@ class LicensePlateOrders(models.Model):
     )
     site_code_id = fields.Many2one(related='picking_id.site_code_id', string='Site Code',
                                    store=True)
-    location_dest_id = fields.Many2one(related='picking_id.location_dest_id', string='Destination location')
+    location_dest_id = fields.Many2one('stock.location',string='Destination location', store=True)
 
 
     def action_open(self):

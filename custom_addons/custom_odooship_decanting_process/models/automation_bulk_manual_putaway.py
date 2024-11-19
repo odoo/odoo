@@ -13,18 +13,36 @@ class AutomationBulkManual(models.Model):
 
     name = fields.Char(string='Reference', required=True, default=lambda self: _('New'))
     license_plate_ids = fields.Many2many('license.plate.orders', string='License Plate Barcodes', track_visibility="always")
-    picking_id = fields.Many2one(comodel_name='stock.picking', string='Receipt Order')
+    picking_id = fields.Many2one(comodel_name='stock.picking', string='Receipt Order', store=True)
     partner_id = fields.Many2one(related='picking_id.partner_id', string='Customer', store=True)
     tenant_code_id = fields.Many2one('tenant.code.configuration', string='Tenant Code', related='partner_id.tenant_code_id', store=True)
     site_code_id = fields.Many2one('site.code.configuration', related='picking_id.site_code_id', string='Site Code', store=True)
-    location_dest_id = fields.Many2one(related='picking_id.location_dest_id', string='Destination location')
-    source_document = fields.Char(related='picking_id.origin', store=True)
+    parent_location_id = fields.Many2one('stock.location',string='Source location')
+    location_dest_id = fields.Many2one('stock.location',string='Destination location',domain="[('location_id', '=', parent_location_id)]")
+    source_document = fields.Char(store=True)
     box_pallet = fields.Selection([('box', 'Box'), ('pallet', 'Pallet')], string="Box/Pallet")
     state = fields.Selection([('draft', 'Draft'), ('done', 'Done')], default='draft', string="State")
     automation_manual = fields.Selection([('automation', 'Automation'), ('automation_bulk', 'Automation Bulk'), ('manual', 'Manual')], string='Automation Manual')
     delivery_receipt_order_id = fields.Many2one('delivery.receipt.orders', string='Delivery Receipt Order')
     automation_bulk_manual_putaway_line_ids = fields.One2many('automation.bulk.manual.putaway.line', 'automation_bulk_manual_id', string="Product Lines")
 
+    @api.onchange('parent_location_id')
+    def _onchange_parent_location_id(self):
+        """
+        Dynamically filter location_dest_id based on parent_location_id.
+        """
+        if self.parent_location_id:
+            return {
+                'domain': {
+                    'location_dest_id': [('location_id', '=', self.parent_location_id.id),
+                                         ('filled', '=',False)]
+                }
+            }
+        return {
+            'domain': {
+                'location_dest_id': []
+            }
+        }
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -39,11 +57,198 @@ class AutomationBulkManual(models.Model):
                     vals['name'] = self.env['ir.sequence'].next_by_code('manual.putaway') or _('New')
         return super(AutomationBulkManual, self).create(vals_list)
 
+    def _get_next_available_location(self):
+        """
+        Finds the next available manual location under the parent location.
+        Filters locations where location_id matches the parent_location_id.
+        """
+        if not self.parent_location_id:
+            raise ValidationError(
+                _("The source location (parent location) is not defined. Please set the source location for this operation.")
+            )
+
+        parent_location = self.parent_location_id
+
+        # Fetch child locations under the parent location
+        free_locations = self.env['stock.location'].search([
+            ('location_id', '=', parent_location.id),  # Filter locations with location_id matching parent_location_id
+            ('filled', '=', False)  # Ensure the location is not filled
+        ], order='name')
+
+        if not free_locations:
+            raise ValidationError(_("No available manual locations under '%s'." % parent_location.name))
+
+        # Return the first available location
+        return free_locations[0]
+
+    @api.onchange('license_plate_ids')
+    def _onchange_license_plate_ids(self):
+        """
+        Ensure all selected license plates belong to the same picking_id and DRD.
+        Assign the next free location for each product if manual is selected.
+        """
+        if self.license_plate_ids:
+            # Clear automation_bulk_manual_putaway_line_ids to prevent duplication
+            self.automation_bulk_manual_putaway_line_ids = [(5, 0, 0)]
+
+            first_picking_id = self.license_plate_ids[0].picking_id
+            first_drd = self.license_plate_ids[0].delivery_receipt_order_id
+            first_selection_type = self.license_plate_ids[0].automation_manual
+            first_location_dest_id = self.license_plate_ids[0].location_dest_id
+            first_source_document = self.picking_id.origin
+
+            # Validation for license plates
+            for license_plate in self.license_plate_ids:
+                if license_plate.picking_id != first_picking_id or license_plate.delivery_receipt_order_id != first_drd:
+                    self.license_plate_ids = [(5,0,0)]
+                    self.picking_id = False
+                    self.delivery_receipt_order_id = False
+                    self.parent_location_id = False
+                    self.location_dest_id = False
+                    self.automation_bulk_manual_putaway_line_ids = [(5, 0, 0)]
+                    print("\n\n\n Licenplate ids======0", self.license_plate_ids)
+                    return {
+                        'warning': {
+                            'title': _("Invalid Operation"),
+                            'message': _("All selected License Plates must belong to the same Picking Order and DRD. "
+                              "License Plate '%s' does not match." % license_plate.name),
+                        }
+                    }
+
+                if license_plate.automation_manual != first_selection_type:
+                    self.license_plate_ids = [(5, 0, 0)]
+                    self.picking_id = False
+                    self.delivery_receipt_order_id = False
+                    self.parent_location_id = False
+                    self.location_dest_id = False
+                    self.automation_bulk_manual_putaway_line_ids = [(5, 0, 0)]
+                    return {
+                        'warning': {
+                            'title': _("Invalid Operation"),
+                            'message': _("All selected License Plates must be of the same type (Automation Bulk or Manual Bulk). "
+                  "License Plate '%s' has a different type." % license_plate.name),
+                        }
+                    }
+                if license_plate.automation_manual not in  ['automation_bulk', 'manual']:
+                    self.license_plate_ids = [(5, 0, 0)]
+                    self.picking_id = False
+                    self.delivery_receipt_order_id = False
+                    self.parent_location_id = False
+                    self.location_dest_id = False
+                    self.automation_bulk_manual_putaway_line_ids = [(5, 0, 0)]
+                    return {
+                        'warning': {
+                            'title': _("Invalid Selection"),
+                            'message': _(
+                                "Invalid selection: The automation_manual type must be either 'Manual' or 'Automation Bulk', not 'Automation'."),
+                            'sticky':False,
+                        }
+                    }
+            # Set fields based on the first license plate
+            self.picking_id = first_picking_id
+            self.delivery_receipt_order_id = first_drd
+            self.automation_manual = first_selection_type
+            self.parent_location_id = first_location_dest_id
+            self.source_document = first_source_document
+
+            product_lines = []
+            for license_plate in self.license_plate_ids:
+                for line in license_plate.license_plate_order_line_ids:
+                    location_dest_id = False
+                    if self.automation_manual == 'manual':
+                        # Find the next available manual location
+                        current_location = self.parent_location_id
+                        # location_dest = self._get_next_available_location(current_location)
+                        # self.location_dest_id = location_dest_id.id
+
+                        # Mark the location as filled
+                        self.location_dest_id.filled = True
+
+                    product_lines.append((0, 0, {
+                        'product_id': line.product_id.id,
+                        'quantity': line.quantity,
+                        'location_dest_id': location_dest_id,
+                    }))
+            self.automation_bulk_manual_putaway_line_ids = product_lines
+        else:
+            self.picking_id = False
+            self.delivery_receipt_order_id = False
+            self.parent_location_id= False
+            self.location_dest_id = False
+            self.automation_bulk_manual_putaway_line_ids = False
+
+    def update_manual_bulk_location(self):
+        """
+        Updates the location of manual products to location_dest_id by creating and validating
+        a new internal transfer.
+        """
+        stock_picking_obj = self.env['stock.picking']
+
+        if not self.automation_bulk_manual_putaway_line_ids:
+            raise ValidationError(_("No product lines found to update inventory."))
+
+        if self.automation_manual != 'manual':
+            raise ValidationError(_("This operation is only allowed for manual putaways."))
+
+        # Create an internal transfer (Picking Type: Internal Transfer)
+        internal_transfer_vals = {
+            'picking_type_id': self.env.ref('stock.picking_type_internal').id,  # Internal Transfer Type
+            'location_id': self.parent_location_id.id,
+            'location_dest_id': self.location_dest_id.id,
+            'origin': self.name,
+            'move_ids_without_package': [],
+        }
+
+        # Prepare move lines
+        move_lines = []
+        for line in self.automation_bulk_manual_putaway_line_ids:
+            move_vals = {
+                'product_id': line.product_id.id,
+                'name': line.product_id.display_name,
+                'product_uom_qty': line.quantity,
+                'product_uom': line.product_id.uom_id.id,
+                'location_id': self.parent_location_id.id,
+                'location_dest_id': self.location_dest_id.id,
+            }
+            move_lines.append((0, 0, move_vals))
+
+        internal_transfer_vals['move_ids_without_package'] = move_lines
+
+        # Create the internal transfer
+        internal_transfer = stock_picking_obj.create(internal_transfer_vals)
+
+        # Confirm and reserve quantities
+        internal_transfer.action_confirm()
+        for move in internal_transfer.move_ids_without_package:
+            move._action_assign()  # Ensure quantities are reserved
+            for move_line in move.move_line_ids:
+                move_line.quantity = line.quantity  # Set the quantities as done
+
+        # Validate the transfer
+        # try:
+        #     internal_transfer.button_validate()
+        # except ValidationError as e:
+        #     raise ValidationError(_("Transfer validation failed: %s. Please ensure quantities are reserved." % str(e)))
+
+        # Update the state to 'done'
+        self.state = 'done'
+        self.location_dest_id.filled = True
+        _logger.info(f"Internal transfer {internal_transfer.name} created and validated for putaway process.")
+
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'stock.picking',
+            'view_mode': 'form',
+            'res_id': internal_transfer.id,
+            'target': 'new',
+        }
+
     def send_message_to_automation(self):
         """Send data to external system with exact payload structure."""
         receipt_list = []
         sku_list = []
         stock_quant_obj = self.env['stock.quant']
+        self.location_dest_id.filled=True
         for line in self.automation_bulk_manual_putaway_line_ids:
             sku_list.append({
                 "sku_code": line.product_id.default_code,  # Assuming SKU is stored in `default_code`
@@ -76,8 +281,7 @@ class AutomationBulkManual(models.Model):
                 "warehouse_code": self.site_code_id.name  # Site Code
             }
         }
-
-        # Define URL based on environment settings
+        #Define URL based on environment settings
         is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
         url_automation_putaway = (
             "https://shiperooconnect-prod.automation.shiperoo.com/api/interface/automationputaway"
@@ -110,60 +314,7 @@ class AutomationBulkManual(models.Model):
     #     if free_location:
     #         self.location_id = free_location
 
-    @api.onchange('license_plate_ids')
-    def _onchange_license_plate_ids(self):
-        """
-        Ensure all selected license plates belong to the same picking_id and DRD.
-        Set picking_id and other fields based on the first license plate scanned.
-        Validate if subsequent plates match the picking_id, DRD, and selection type.
-        """
-        if self.license_plate_ids:
-            # Clear automation_bulk_manual_putaway_line_ids to prevent duplication
-            self.automation_bulk_manual_putaway_line_ids = [(5, 0, 0)]
 
-            # Get picking_id and DRD from the first license plate
-            first_picking_id = self.license_plate_ids[0].picking_id
-            first_drd = self.license_plate_ids[0].delivery_receipt_order_id  # Assuming DRD is stored in this field
-            first_selection_type = self.license_plate_ids[0].automation_manual
-
-            # Check each license plate for matching picking_id, DRD, and selection type
-            for license_plate in self.license_plate_ids:
-                if license_plate.picking_id != first_picking_id or license_plate.delivery_receipt_order_id != first_drd:
-                    # Clear license_plate_ids field and raise validation error if picking or DRD mismatches
-                    self.license_plate_ids = False
-                    raise ValidationError(
-                        _("All selected License Plates must belong to the same Picking Order and DRD. "
-                          "License Plate '%s' does not match." % license_plate.name)
-                    )
-
-                if license_plate.automation_manual != first_selection_type:
-                    # Clear license_plate_ids field and raise a warning if selection types mismatch
-                    self.license_plate_ids = False
-                    raise ValidationError(
-                        _("All selected License Plates must be of the same type (Automation Bulk or Manual Bulk). "
-                          "License Plate '%s' has a different type." % license_plate.name)
-                    )
-
-            # Set fields based on the first license plate’s picking_id and DRD
-            self.picking_id = first_picking_id
-            self.delivery_receipt_order_id = first_drd  # Set DRD to the matched DRD
-            self.automation_manual = first_selection_type
-
-            # Populate product lines based on selected license plates
-            product_lines = []
-            for license_plate in self.license_plate_ids:
-                for line in license_plate.license_plate_order_line_ids:
-                    product_lines.append((0, 0, {
-                        'product_id': line.product_id.id,
-                        'quantity': line.quantity,
-                        # Additional fields can be set here if needed
-                    }))
-            self.automation_bulk_manual_putaway_line_ids = product_lines
-        else:
-            # Clear fields if no license plates are selected
-            self.picking_id = False
-            self.delivery_receipt_order_id = False
-            self.automation_bulk_manual_putaway_line_ids = False
 
 
 class AutomationBulkManualPutawayLine(models.Model):
