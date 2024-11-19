@@ -110,7 +110,9 @@ class ProjectTask(models.Model):
 
     def _search_remaining_hours_percentage(self, operator, value):
         if operator not in OPERATOR_MAPPING:
-            raise NotImplementedError(_('This operator %s is not supported in this search method.', operator))
+            return NotImplemented
+        if operator in ('in', 'not in'):
+            value = tuple(value)
         sql = SQL("""(
             SELECT id
               FROM %s

@@ -345,28 +345,13 @@ class MrpProduction(models.Model):
 
     @api.model
     def _search_components_availability_state(self, operator, value):
-        if operator not in ('=', '!=', 'in', 'not in'):
-            raise UserError(_('Operation not supported'))
-
-        states = ['available', 'expected', 'late', 'unavailable']
-        if operator in ('=', '!='):
-            value = [value]
-        if operator in ('not in', '!='):
-            value = filter(lambda state: state not in value, states)
-        if not all(state in states for state in value):
-            raise UserError(_('Selection not supported.'))
+        if operator != 'in':
+            return NotImplemented
 
         current_productions = self.search([('state', 'in', ('confirmed', 'progress', 'to_close'))])
+        matching_productions = current_productions.filtered(lambda production: production.components_availability_state in value)
 
-        productions_by_availability = dict.fromkeys(states, self.env['mrp.production'])
-        for production in current_productions:
-            productions_by_availability[production.components_availability_state] |= production
-
-        matching_production_ids = []
-        for state in value:
-            matching_production_ids.extend(productions_by_availability[state].ids)
-
-        return [('id', 'in', matching_production_ids)]
+        return [('id', 'in', matching_productions.ids)]
 
     @api.depends('state', 'reservation_state', 'date_start', 'move_raw_ids', 'move_raw_ids.forecast_availability', 'move_raw_ids.forecast_expected_date')
     def _compute_components_availability(self):
@@ -733,6 +718,8 @@ class MrpProduction(models.Model):
 
     @api.model
     def _search_delay_alert_date(self, operator, value):
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            return NotImplemented
         late_stock_moves = self.env['stock.move'].search([('delay_alert_date', operator, value)])
         return ['|', ('move_raw_ids', 'in', late_stock_moves.ids), ('move_finished_ids', 'in', late_stock_moves.ids)]
 
@@ -807,10 +794,8 @@ class MrpProduction(models.Model):
             production.show_produce = state_ok and not qty_none_or_all
 
     def _search_is_delayed(self, operator, value):
-        if operator not in ['=', '!='] or not isinstance(value, bool):
-            raise UserError(_('Operation not supported'))
-        if operator != '=':
-            value = not value
+        if operator not in ('in', 'not in'):
+            return NotImplemented
         sub_query = self._search([
             ('state', 'in', ['confirmed', 'progress', 'to_close']),
             ('date_deadline', '!=', False),
@@ -818,7 +803,7 @@ class MrpProduction(models.Model):
                 ('date_deadline', '<', self._field_to_sql('mrp_production', 'date_finished')),
                 ('date_deadline', '<', fields.Datetime.now())
         ])
-        return [('id', 'in' if value else 'not in', sub_query)]
+        return [('id', operator, sub_query)]
 
     @api.depends('delay_alert_date', 'state', 'date_deadline', 'date_finished')
     def _compute_is_delayed(self):
@@ -829,12 +814,13 @@ class MrpProduction(models.Model):
             )
 
     def _search_date_category(self, operator, value):
-        if operator != '=':
-            raise NotImplementedError(_('Operation not supported'))
-        search_domain = self.env['stock.picking'].date_category_to_domain(value)
-        return expression.AND([
-            [('date_start', operator, value)] for operator, value in search_domain
-        ])
+        if operator != 'in':
+            return NotImplemented
+        dates = value
+        return expression.OR(
+            self.env['stock.picking'].date_category_to_domain('date_start', date)
+            for date in dates
+        )
 
     @api.onchange('qty_producing', 'lot_producing_id')
     def _onchange_producing(self):

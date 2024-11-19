@@ -55,13 +55,8 @@ class FleetVehicleModel(models.Model):
     @api.model
     def _search_display_name(self, operator, value):
         if operator in expression.NEGATIVE_TERM_OPERATORS:
-            positive_operator = expression.TERM_OPERATORS_NEGATION[operator]
-        else:
-            positive_operator = operator
-        domain = expression.OR([[('name', positive_operator, value)], [('brand_id.name', positive_operator, value)]])
-        if positive_operator != operator:
-            domain = ['!', *domain]
-        return domain
+            return NotImplemented
+        return ['|', ('name', operator, value), ('brand_id.name', operator, value)]
 
     @api.depends('brand_id')
     def _compute_display_name(self):
@@ -81,17 +76,8 @@ class FleetVehicleModel(models.Model):
 
     @api.model
     def _search_vehicle_count(self, operator, value):
-        if operator not in ['=', '!=', '<', '>'] or not isinstance(value, int):
-            raise NotImplementedError(_('Operation not supported.'))
-        fleet_models = self.env['fleet.vehicle.model'].search([])
-        if operator == '=':
-            fleet_models = fleet_models.filtered(lambda m: m.vehicle_count == value)
-        elif operator == '!=':
-            fleet_models = fleet_models.filtered(lambda m: m.vehicle_count != value)
-        elif operator == '<':
-            fleet_models = fleet_models.filtered(lambda m: m.vehicle_count < value)
-        elif operator == '>':
-            fleet_models = fleet_models.filtered(lambda m: m.vehicle_count > value)
+        fleet_models = self.env['fleet.vehicle.model'].search_fetch([], ['vehicle_count'])
+        fleet_models = fleet_models.filtered_domain([('vehicle_count', operator, value)])
         return [('id', 'in', fleet_models.ids)]
 
     def action_model_vehicle(self):

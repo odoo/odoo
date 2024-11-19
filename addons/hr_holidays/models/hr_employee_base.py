@@ -197,21 +197,19 @@ class HrEmployeeBase(models.AbstractModel):
                 employee.show_leaves = False
 
     def _search_absent_employee(self, operator, value):
-        if operator not in ('=', '!=') or not isinstance(value, bool):
-            raise UserError(_('Operation not supported'))
+        if operator != 'in':
+            return NotImplemented
         # This search is only used for the 'Absent Today' filter however
         # this only returns employees that are absent right now.
-        today_date = datetime.now(timezone.utc).date()
-        today_start = fields.Datetime.to_string(today_date)
-        today_end = fields.Datetime.to_string(today_date + relativedelta(hours=23, minutes=59, seconds=59))
+        today_start = date.today()
+        today_end = today_start + timedelta(1)
         holidays = self.env['hr.leave'].sudo().search([
             ('employee_id', '!=', False),
             ('state', '=', 'validate'),
-            ('date_from', '<=', today_end),
+            ('date_from', '<', today_end),
             ('date_to', '>=', today_start),
         ])
-        operator = ['in', 'not in'][(operator == '=') != value]
-        return [('id', operator, holidays.mapped('employee_id').ids)]
+        return [('id', 'in', holidays.employee_id.ids)]
 
     @api.model_create_multi
     def create(self, vals_list):

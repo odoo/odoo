@@ -43,11 +43,8 @@ class HrDepartment(models.Model):
             record.display_name = record.name
 
     def _search_has_read_access(self, operator, value):
-        supported_operators = ["="]
-        if operator not in supported_operators or not isinstance(value, bool):
-            raise NotImplementedError()
-        if not value:
-            return [(1, "=", 0)]
+        if operator != 'in':
+            return NotImplemented
         if self.env['hr.employee'].has_access('read'):
             return [(1, "=", 1)]
         departments_ids = self.env['hr.department'].sudo().search([('manager_id', 'in', self.env.user.employee_ids.ids)]).ids

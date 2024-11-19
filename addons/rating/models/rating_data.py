@@ -20,8 +20,8 @@ RATING_TEXT = [
 ]
 
 OPERATOR_MAPPING = {
-    '=': operator.eq,
-    '!=': operator.ne,
+    'in': lambda elem, container: elem in container,
+    'not in': lambda elem, container: elem not in container,
     '<': operator.lt,
     '<=': operator.le,
     '>': operator.gt,

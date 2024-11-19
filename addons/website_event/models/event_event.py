@@ -110,13 +110,9 @@ class EventEvent(models.Model):
 
     @api.model
     def _search_is_participating(self, operator, value):
-        if operator not in ['=', '!=']:
-            raise NotImplementedError(_('This operator is not supported'))
-        if not isinstance(value, bool):
-            raise UserError(_('Value should be True or False (not %)', value))
-        check_is_participating = operator == '=' and value or operator == '!=' and not value
-
-        return [('id', 'in' if check_is_participating else 'not in', self._fetch_is_participating_events().ids)]
+        if operator != 'in':
+            return NotImplemented
+        return [('id', 'in', self._fetch_is_participating_events().ids)]
 
     @api.model
     def _fetch_is_participating_events(self):
@@ -170,21 +166,13 @@ class EventEvent(models.Model):
 
     @api.model
     def _search_is_visible_on_website(self, operator, value):
-        if operator not in ['=', '!=']:
-            raise NotImplementedError(_('This operator is not supported'))
-        if not isinstance(value, bool):
-            raise UserError(_('Value should be True or False (not %)', value))
-        check_is_visible_on_website = operator == '=' and value or operator == '!=' and not value
+        if operator != 'in':
+            return NotImplemented
         user = self.env.user
-        domain = [('is_participating', '=', True)]
-
+        visibility = ['public']
         if not user._is_public():
-            domain = expression.OR([domain, [('website_visibility', 'in', ['public', 'logged_users'])]])
-        else:
-            domain = expression.OR([domain, [('website_visibility', '=', 'public')]])
-
-        event_ids = self.env['event.event']._search(domain)
-        return [('id', 'in' if check_is_visible_on_website else 'not in', event_ids)]
+            visibility.append('logged_users')
+        return ['|', ('is_participating', '=', True), ('website_visibility', 'in', visibility)]
 
     @api.depends('website_url')
     def _compute_event_register_url(self):

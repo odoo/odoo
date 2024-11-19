@@ -24,6 +24,7 @@ from reportlab.pdfbase.pdfmetrics import getFont, TypeFace
 
 from odoo import api, fields, models, modules, tools, _
 from odoo.exceptions import UserError, AccessError, RedirectWarning
+from odoo.fields import Domain
 from odoo.service import security
 from odoo.http import request, root
 from odoo.osv.expression import NEGATIVE_TERM_OPERATORS, FALSE_DOMAIN
@@ -177,28 +178,22 @@ class IrActionsReport(models.Model):
             action.model_id = self.env['ir.model']._get(action.model).id
 
     def _search_model_id(self, operator, value):
-        ir_model_ids = None
+        if Domain.is_negative_operator(operator):
+            return NotImplemented
+        models = self.env['ir.model']
         if isinstance(value, str):
-            names = self.env['ir.model'].name_search(value, operator=operator)
-            ir_model_ids = [n[0] for n in names]
-
-        elif operator in ('any', 'not any'):
-            ir_model_ids = self.env['ir.model']._search(value)
-
-        elif isinstance(value, Iterable):
-            ir_model_ids = value
-
-        elif isinstance(value, int) and not isinstance(value, bool):
-            ir_model_ids = [value]
-
-        if ir_model_ids:
-            operator = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
-            ir_model = self.env['ir.model'].browse(ir_model_ids)
-            return [('model', operator, ir_model.mapped('model'))]
-        elif isinstance(value, bool) or value is None:
-            return [('model', operator, value)]
-        else:
-            return FALSE_DOMAIN
+            models = models.search(Domain('display_name', operator, value))
+        elif isinstance(value, Domain):
+            models = models.search(value)
+        elif operator == 'any' or isinstance(value, int):
+            models = models.search(Domain('id', operator, value))
+        elif operator == 'in':
+            models = models.search(Domain.OR(
+                Domain('id' if isinstance(v, int) else 'display_name', operator, v)
+                for v in value
+                if v
+            ))
+        return Domain('model', 'in', models.mapped('model'))
 
     def _get_readable_fields(self):
         return super()._get_readable_fields() | {

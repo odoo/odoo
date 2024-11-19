@@ -131,9 +131,9 @@ class SaleOrderOption(models.Model):
             option.is_present = bool(option.order_id.order_line.filtered(lambda l: l.product_id == option.product_id))
 
     def _search_is_present(self, operator, value):
-        if (operator, value) in [('=', True), ('!=', False)]:
-            return [('line_id', '=', False)]
-        return [('line_id', '!=', False)]
+        if operator not in ('in', 'not in'):
+            return NotImplemented
+        return [('line_id', operator, [False])]
 
     @api.model
     def _product_id_domain(self):

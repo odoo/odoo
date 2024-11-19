@@ -171,16 +171,14 @@ class MailThread(models.AbstractModel):
     @api.model
     def _search_message_partner_ids(self, operator, operand):
         """Search function for message_follower_ids"""
-        neg = ''
         if operator in expression.NEGATIVE_TERM_OPERATORS:
-            neg = 'not '
-            operator = expression.TERM_OPERATORS_NEGATION[operator]
+            return NotImplemented
         followers = self.env['mail.followers'].sudo()._search([
             ('res_model', '=', self._name),
             ('partner_id', operator, operand),
         ])
         # use `in` query to avoid reading thousands of potentially followed objects
-        return [('id', neg + 'in', followers.subselect('res_id'))]
+        return [('id', 'in', followers.subselect('res_id'))]
 
     @api.depends('message_follower_ids')
     def _compute_message_is_follower(self):
@@ -194,15 +192,14 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def _search_message_is_follower(self, operator, operand):
-        followers = self.env['mail.followers'].sudo().search_fetch(
-            [('res_model', '=', self._name), ('partner_id', '=', self.env.user.partner_id.id)],
-            ['res_id'],
-        )
-        # Cases ('message_is_follower', '=', True) or  ('message_is_follower', '!=', False)
-        if (operator == '=' and operand) or (operator == '!=' and not operand):
-            return [('id', 'in', followers.mapped('res_id'))]
-        else:
-            return [('id', 'not in', followers.mapped('res_id'))]
+        if operator != 'in':
+            return NotImplemented
+        followers = self.env['mail.followers'].sudo()._search([
+            ('res_model', '=', self._name),
+            ('partner_id', operator, self.env.user.partner_id.ids),
+        ])
+        # use `in` query to avoid reading thousands of potentially followed objects
+        return [('id', 'in', followers.subselect('res_id'))]
 
     def _compute_has_message(self):
         self.env['mail.message'].flush_model()
@@ -217,11 +214,9 @@ class MailThread(models.AbstractModel):
             record.has_message = record.id in channel_ids
 
     def _search_has_message(self, operator, value):
-        if (operator == '=' and value is True) or (operator == '!=' and value is False):
-            operator_new = 'in'
-        else:
-            operator_new = 'not in'
-        return [('id', operator_new, SQL("(SELECT res_id FROM mail_message WHERE model = %s)", self._name))]
+        if operator != 'in':
+            return NotImplemented
+        return [('id', 'in', SQL("(SELECT res_id FROM mail_message WHERE model = %s)", self._name))]
 
     def _compute_message_needaction(self):
         res = dict.fromkeys(self.ids, 0)
@@ -266,8 +261,10 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def _search_message_has_error(self, operator, operand):
-        message_ids = self.env['mail.message']._search([('has_error', operator, operand), ('author_id', '=', self.env.user.partner_id.id)])
-        return [('message_ids', 'in', message_ids)]
+        if operator != 'in':
+            return NotImplemented
+        message_domain = [('has_error', '=', True), ('author_id', '=', self.env.user.partner_id.id)]
+        return [('message_ids', 'any', message_domain)]
 
     def _compute_message_attachment_count(self):
         read_group_var = self.env['ir.attachment']._read_group([('res_id', 'in', self.ids), ('res_model', '=', self._name)],

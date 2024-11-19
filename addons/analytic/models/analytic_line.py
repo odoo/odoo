@@ -5,7 +5,7 @@ from lxml.builder import E
 from odoo import api, fields, models, _
 from odoo.tools import date_utils
 from odoo.exceptions import ValidationError
-from odoo.osv.expression import OR
+from odoo.fields import Domain
 
 
 class AnalyticPlanFieldsMixin(models.AbstractModel):
@@ -42,8 +42,10 @@ class AnalyticPlanFieldsMixin(models.AbstractModel):
             line[line.auto_account_id.plan_id._column_name()] = line.auto_account_id
 
     def _search_auto_account(self, operator, value):
+        if Domain.is_negative_operator(operator):
+            return NotImplemented
         project_plan, other_plans = self.env['account.analytic.plan']._get_all_plans()
-        return OR([
+        return Domain.OR([
             [(plan._column_name(), operator, value)]
             for plan in project_plan + other_plans
         ])

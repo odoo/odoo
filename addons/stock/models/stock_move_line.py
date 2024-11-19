@@ -3,10 +3,10 @@
 
 from collections import Counter, defaultdict
 
-from odoo import _, api, fields, tools, models, Command
+from odoo import _, api, fields, models
 from odoo.addons.web.controllers.utils import clean_action
 from odoo.exceptions import UserError, ValidationError
-from odoo.osv import expression
+from odoo.fields import Command, Domain
 from odoo.tools import OrderedSet, groupby
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 
@@ -138,7 +138,9 @@ class StockMoveLine(models.Model):
                 line.location_dest_id = line.move_id.location_dest_id or line.picking_id.location_dest_id
 
     def _search_picking_type_id(self, operator, value):
-        return [('picking_id.picking_type_id', operator, value)]
+        if Domain.is_negative_operator(operator):
+            return NotImplemented
+        return Domain('picking_id.picking_type_id', operator, value)
 
     @api.depends('quant_id')
     def _compute_quantity(self):
@@ -304,17 +306,17 @@ class StockMoveLine(models.Model):
         dirty_move_lines = self.env['stock.move.line'].browse(dirty_move_line_ids)
         quants_data = []
         move_lines_data = []
-        domain = [("id", "in", dirty_quant_ids)]
-        for move_line in dirty_move_lines | deleted_move_lines:
-            move_line_domain = [
+        domain = Domain("id", "in", dirty_quant_ids) | Domain.OR(
+            Domain([
                 ("product_id", "=", move_line.product_id.id),
                 ("lot_id", "=", move_line.lot_id.id),
                 ("location_id", "=", move_line.location_id.id),
                 ("package_id", "=", move_line.package_id.id),
                 ("owner_id", "=", move_line.owner_id.id),
-            ]
-            domain = expression.OR([domain, move_line_domain])
-        if domain:
+            ])
+            for move_line in dirty_move_lines | deleted_move_lines
+        )
+        if not domain.is_false():
             quants = self.env['stock.quant'].search(domain)
             for quant in quants:
                 dirty_lines = dirty_move_lines.filtered(lambda ml: ml.product_id == quant.product_id

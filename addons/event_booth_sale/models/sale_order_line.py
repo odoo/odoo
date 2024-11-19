@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.fields import Domain
 
 
 class SaleOrderLine(models.Model):
@@ -42,6 +43,8 @@ class SaleOrderLine(models.Model):
             } for booth in selected_booths - existing_booths])
 
     def _search_event_booth_pending_ids(self, operator, value):
+        if Domain.is_negative_operator(operator):
+            return NotImplemented
         return [('event_booth_registration_ids.event_booth_id', operator, value)]
 
     @api.constrains('event_booth_registration_ids')

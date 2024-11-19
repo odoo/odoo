@@ -18,11 +18,9 @@ class DeliveryCarrier(models.Model):
             c.is_mondialrelay = c.product_id.default_code == "MR"
 
     def _search_is_mondialrelay(self, operator, value):
-        if operator not in ('=', '!=') or not isinstance(value, bool):
-            raise UserError(_("Operation not supported"))
-        if not value:
-            operator = '!=' if operator == '=' else '='
-        return [('product_id.default_code', operator, 'MR')]
+        if operator != 'in':
+            return NotImplemented
+        return [('product_id.default_code', '=', 'MR')]
 
     def fixed_get_tracking_link(self, picking):
         if self.is_mondialrelay:

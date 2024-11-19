@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.fields import Domain
 from odoo.addons.mail.tools.discuss import Store
 
 
@@ -26,11 +27,13 @@ class MailMessage(models.Model):
             message.rating_value = message.rating_id.rating if message.rating_id else 0.0
 
     def _search_rating_value(self, operator, operand):
-        ratings = self.env['rating.rating'].sudo().search([
+        if Domain.is_negative_operator(operator):
+            return NotImplemented
+        ratings = self.env['rating.rating'].sudo().search_fetch([
             ('rating', operator, operand),
             ('message_id', '!=', False),
             ("consumed", "=", True),
-        ])
+        ], ['message_id'])
         return [('id', 'in', ratings.mapped('message_id').ids)]
 
     def _to_store_defaults(self):
