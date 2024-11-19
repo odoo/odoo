@@ -2240,14 +2240,19 @@ Please change the quantity done or the rounding precision of your unit of measur
 
         for move in self:
             product_id = move.product_id
-            domain = [
-                ('location_src_id', '=', move.location_id.id),
-                ('location_dest_id', '=', move.location_dest_id.id),
-                ('action', '!=', 'push')
-            ]
-            if picking_type_code:
-                domain.append(('picking_type_id.code', '=', picking_type_code))
-            rule = self.env['procurement.group']._search_rule(False, move.product_packaging_id, product_id, move.warehouse_id, domain)
+            location = move.location_id
+            while location:
+                domain = [
+                    ('location_src_id', '=', location.id),
+                    ('location_dest_id', '=', move.location_dest_id.id),
+                    ('action', '!=', 'push')
+                ]
+                if picking_type_code:
+                    domain.append(('picking_type_id.code', '=', picking_type_code))
+                rule = self.env['procurement.group']._search_rule(False, move.product_packaging_id, product_id, move.warehouse_id, domain)
+                if rule:
+                    break
+                location = location.location_id
             if not rule:
                 move.procure_method = 'make_to_stock'
                 continue
