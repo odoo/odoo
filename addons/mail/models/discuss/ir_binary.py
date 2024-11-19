@@ -8,6 +8,8 @@ class IrBinary(models.AbstractModel):
 
     def _find_record_check_access(self, record, access_token, field):
         if record._name in ["res.partner", "mail.guest"] and field == "avatar_128":
+            if record == self.env.ref("base.partner_root"):
+                return record.sudo()  # avatar of OdooBot is always accessible
             current_partner, current_guest = self.env["res.partner"]._get_current_persona()
             if current_partner or current_guest:
                 domain = []
