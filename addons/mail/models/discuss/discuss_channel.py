@@ -1348,3 +1348,50 @@ class Channel(models.Model):
             msg = _("Users in this channel: %(members)s %(dots)s and you.", members=", ".join(members), dots=dots)
 
         self._send_transient_message(self.env.user.partner_id, msg)
+<<<<<<< saas-17.2
+||||||| df9198dd39ef8230f4ca58ef5aa89264eb13b612
+
+    def _notify_by_web_push_prepare_payload(self, message, msg_vals=False):
+        payload = super()._notify_by_web_push_prepare_payload(message, msg_vals=msg_vals)
+        payload['options']['data']['action'] = 'mail.action_discuss'
+        record_name = msg_vals.get('record_name') if msg_vals and 'record_name' in msg_vals else message.record_name
+        author_id = [msg_vals.get('author_id')] if 'author_id' in msg_vals else message.author_id.ids
+        if self.channel_type == 'chat':
+            payload['title'] = self.env['res.partner'].browse(author_id).name
+            payload['options']['icon'] = '/discuss/channel/%d/partner/%d/avatar_128' % (message.res_id, author_id[0])
+        elif self.channel_type == 'channel':
+            author_name = self.env['res.partner'].browse(author_id).name
+            payload['title'] = "#%s - %s" % (record_name, author_name)
+        elif self.channel_type == 'group':
+            if not record_name:
+                member_names = self.channel_member_ids.mapped("partner_id.name")
+                record_name = f"{', '.join(member_names[:-1])} and {member_names[-1]}" if len(member_names) > 1 else member_names[0] if member_names else ""
+            author_name = self.env['res.partner'].browse(author_id).name
+            payload['title'] = "%s - %s" % (record_name, author_name)
+        else:
+            payload['title'] = "#%s" % (record_name)
+        return payload
+=======
+
+    def _notify_by_web_push_prepare_payload(self, message, msg_vals=False):
+        payload = super()._notify_by_web_push_prepare_payload(message, msg_vals=msg_vals)
+        payload['options']['data']['action'] = 'mail.action_discuss'
+        record_name = msg_vals.get('record_name') if msg_vals and 'record_name' in msg_vals else message.record_name
+        author_id = [msg_vals["author_id"]] if msg_vals.get("author_id") else message.author_id.ids
+        author = self.env["res.partner"].browse(author_id) or self.env["mail.guest"].browse(
+            msg_vals.get("author_guest_id", message.author_guest_id.id)
+        )
+        if self.channel_type == 'chat':
+            payload['title'] = author.name
+            payload['options']['icon'] = '/discuss/channel/%d/partner/%d/avatar_128' % (message.res_id, author_id[0])
+        elif self.channel_type == 'channel':
+            payload['title'] = "#%s - %s" % (record_name, author.name)
+        elif self.channel_type == 'group':
+            if not record_name:
+                member_names = self.channel_member_ids.mapped(lambda m: m.partner_id.name if m.partner_id else m.guest_id.name)
+                record_name = f"{', '.join(member_names[:-1])} and {member_names[-1]}" if len(member_names) > 1 else member_names[0] if member_names else ""
+            payload['title'] = "%s - %s" % (record_name, author.name)
+        else:
+            payload['title'] = "#%s" % (record_name)
+        return payload
+>>>>>>> 509af474ba6adeff5aa7c55c1846be3f173a549d
