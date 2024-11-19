@@ -70,10 +70,9 @@
                                         <t t-else="">
                                             <div class="position-relative overflow-x-auto overflow-y-hidden d-inline-block" t-att-class="{ 'w-100': state.isEditing }">
                                                 <div class="o-mail-Message-bubble rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100" t-att-class="{
-                                                    'border': state.isEditing and !message.is_note,
-                                                    'o-blue border border-info': message.bubbleColor === 'blue',
-                                                    'o-green border border-success': message.bubbleColor === 'green',
-                                                    'o-orange border border-warning': message.bubbleColor === 'orange',
+                                                    'o-blue': message.bubbleColor === 'blue',
+                                                    'o-green': message.bubbleColor === 'green',
+                                                    'o-orange': message.bubbleColor === 'orange',
                                                     }" t-attf-class="{{ isAlignedRight ? 'rounded-start-3' : 'rounded-end-3' }}"/>
                                                 <MessageInReply t-if="message.parentMessage" message="message" onClick="props.onParentMessageClick"/>
                                                 <div class="position-relative text-break o-mail-Message-body" t-att-class="{
