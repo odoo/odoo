@@ -22,7 +22,11 @@ export class Notification extends Record {
 
     /** @type {number} */
     id;
-    message = Record.one("mail.message");
+    message = Record.one("mail.message", {
+        onDelete() {
+            this.delete();
+        },
+    });
     /** @type {string} */
     notification_status;
     /** @type {string} */
