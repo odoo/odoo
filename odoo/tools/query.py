@@ -202,7 +202,7 @@ class Query:
                 # in case we have nothing, we want to use a sub_query with no records
                 # because an empty tuple leads to a syntax error
                 # and a tuple containing just None creates issues for `NOT IN`
-                return SQL("(SELECT 1 WHERE FALSE)")
+                return SQL("(SELECT 1 AS id WHERE FALSE)")
             return SQL("%s", self._ids)
 
         if self.limit or self.offset:

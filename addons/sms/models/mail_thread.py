@@ -40,7 +40,9 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def _search_message_has_sms_error(self, operator, operand):
-        return ['&', ('message_ids.has_sms_error', operator, operand), ('message_ids.author_id', '=', self.env.user.partner_id.id)]
+        if operator != 'in':
+            raise NotImplementedError
+        return ['&', ('message_ids.has_sms_error', '=', True), ('message_ids.author_id', '=', self.env.user.partner_id.id)]
 
     def _sms_get_recipients_info(self, force_field=False, partner_fallback=True):
         """" Get SMS recipient information on current record set. This method

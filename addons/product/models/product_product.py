@@ -336,7 +336,7 @@ class ProductProduct(models.Model):
 
     def _search_all_product_tag_ids(self, operator, operand):
         if operator in expression.NEGATIVE_TERM_OPERATORS:
-            return [('product_tag_ids', operator, operand), ('additional_product_tag_ids', operator, operand)]
+            raise NotImplementedError
         return ['|', ('product_tag_ids', operator, operand), ('additional_product_tag_ids', operator, operand)]
 
     @api.onchange('default_code')
@@ -574,11 +574,16 @@ class ProductProduct(models.Model):
             [('name', operator, value)],
             [('default_code', operator, value)],
         ]
-        if operator in ('=', 'in') or (operator.endswith('like') and is_positive):
-            barcode_values = [value] if operator != 'in' else value
-            domains.append([('barcode', 'in', barcode_values)])
-        if operator == '=' and isinstance(value, str) and (m := re.search(r'(\[(.*?)\])', value)):
-            domains.append([('default_code', '=', m.group(2))])
+        if operator == 'in':
+            domains.append([('barcode', 'in', value)])
+            domains.extend(
+                [('default_code', '=', m.group(2))]
+                for v in value
+                if isinstance(v, str)
+                if (m := re.search(r'(\[(.*?)\])', v))
+            )
+        elif operator.endswith('like') and is_positive:
+            domains.append([('barcode', 'in', [value])])
         if partner_id := self.env.context.get('partner_id'):
             supplier_domain = [
                 ('partner_id', '=', partner_id),

@@ -240,14 +240,10 @@ class FleetVehicle(models.Model):
         return self.license_plate or _('No plate')
 
     def _search_contract_renewal_due_soon(self, operator, value):
+        if operator not in ('in', 'not in'):
+            raise NotImplementedError
         params = self.env['ir.config_parameter'].sudo()
         delay_alert_contract = int(params.get_param('hr_fleet.delay_alert_contract', default=30))
-        res = []
-        assert operator in ('=', '!=', '<>') and value in (True, False), 'Operation not supported'
-        if (operator == '=' and value is True) or (operator in ('<>', '!=') and value is False):
-            search_operator = 'in'
-        else:
-            search_operator = 'not in'
         today = fields.Date.context_today(self)
         datetime_today = fields.Datetime.from_string(today)
         limit_date = fields.Datetime.to_string(datetime_today + relativedelta(days=+delay_alert_contract))
@@ -255,17 +251,12 @@ class FleetVehicle(models.Model):
             ('expiration_date', '>', today),
             ('expiration_date', '<', limit_date),
             ('state', 'in', ['open', 'expired'])
-        ]).mapped('vehicle_id').ids
-        res.append(('id', search_operator, res_ids))
-        return res
+        ]).vehicle_id.ids
+        return [('id', operator, res_ids)]
 
     def _search_get_overdue_contract_reminder(self, operator, value):
-        res = []
-        assert operator in ('=', '!=', '<>') and value in (True, False), 'Operation not supported'
-        if (operator == '=' and value is True) or (operator in ('<>', '!=') and value is False):
-            search_operator = 'in'
-        else:
-            search_operator = 'not in'
+        if operator not in ('in', 'not in'):
+            raise NotImplementedError
         today = fields.Date.context_today(self)
         # get the id of vehicles that have overdue contracts
         # but exclude those for which a new contract has already been created for them
@@ -282,8 +273,7 @@ class FleetVehicle(models.Model):
                     ('state', 'in', ['open', 'futur'])
                 ]),
         ])
-        res.append(('id', search_operator, vehicle_ids))
-        return res
+        return [('id', operator, vehicle_ids)]
 
     def _clean_vals_internal_user(self, vals):
         # Fleet administrator may not have rights to write on partner

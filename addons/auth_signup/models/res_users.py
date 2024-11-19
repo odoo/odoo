@@ -9,7 +9,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.osv import expression
+from odoo.fields import Domain
 
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.auth_signup.models.res_partner import SignupError
@@ -24,29 +24,12 @@ class ResUsers(models.Model):
                  selection=[('new', 'Never Connected'), ('active', 'Confirmed')])
 
     def _search_state(self, operator, value):
-        negative = operator in expression.NEGATIVE_TERM_OPERATORS
-
-        # In case we have no value
-        if not value:
-            return expression.TRUE_DOMAIN if negative else expression.FALSE_DOMAIN
-
-        if operator in ['in', 'not in']:
-            if len(value) > 1:
-                return expression.FALSE_DOMAIN if negative else expression.TRUE_DOMAIN
-            if value[0] == 'new':
-                comp = '!=' if negative else '='
-            if value[0] == 'active':
-                comp = '=' if negative else '!='
-            return [('log_ids', comp, False)]
-
-        if operator in ['=', '!=']:
-            # In case we search against anything else than new, we have to invert the operator
-            if value != 'new':
-                operator = expression.TERM_OPERATORS_NEGATION[operator]
-
-            return [('log_ids', operator, False)]
-
-        return expression.TRUE_DOMAIN
+        if operator != 'in':
+            raise NotImplementedError
+        in_log = 'active' in value
+        if in_log and 'new' in value:
+            return Domain.TRUE
+        return Domain('log_ids', '!=' if in_log else '=', False)
 
     def _compute_state(self):
         for user in self:
