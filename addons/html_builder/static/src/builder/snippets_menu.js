@@ -6,6 +6,7 @@ import {
     onWillDestroy,
     onWillStart,
     useExternalListener,
+    useRef,
     useState,
     useSubEnv,
 } from "@odoo/owl";
@@ -21,7 +22,9 @@ import { SnippetModel } from "./snippet_model";
 import { BlockTab, blockTab } from "./snippets_menu_tabs/block_tab";
 import { CustomizeTab, customizeTab } from "./snippets_menu_tabs/customize_tab";
 import { useService } from "@web/core/utils/hooks";
-import { browser } from "@web/core/browser/browser";
+import { _t } from "@web/core/l10n/translation";
+import { addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 const BUILDER_PLUGIN = [
     ElementToolboxPlugin,
@@ -37,7 +40,7 @@ function onIframeLoaded(iframe, callback) {
     if (doc.readyState === "complete") {
         callback();
     } else {
-        iframe.contentWindow.addEventListener("load", callback, { once: true });
+        iframe.addEventListener("load", callback, { once: true });
     }
 }
 
@@ -54,6 +57,7 @@ export class SnippetsMenu extends Component {
     setup() {
         // const actionService = useService("action");
         this.pages = [blockTab, customizeTab];
+        this.snippetsMenu = useRef("snippetsMenu");
         this.state = useState({
             canUndo: false,
             canRedo: false,
@@ -65,6 +69,8 @@ export class SnippetsMenu extends Component {
         useHotkey("control+shift+z", () => this.redo());
         this.websiteService = useService("website");
         this.orm = useService("orm");
+        this.dialog = useService("dialog");
+        this.ui = useService("ui");
 
         useExternalListener(window, "beforeunload", this.onBeforeUnload);
 
@@ -121,13 +127,30 @@ export class SnippetsMenu extends Component {
     }
 
     discard() {
-        // TODO: adapt
-        this.editor.getContent();
-        this.props.closeEditor();
+        if (this.editor.shared.dirty.isEditableDirty()) {
+            this.dialog.add(ConfirmationDialog, {
+                body: _t(
+                    "If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."
+                ),
+                confirm: () => this.reloadIframeAndCloseEditor(),
+                cancel: () => {},
+            });
+        } else {
+            this.reloadIframeAndCloseEditor();
+        }
     }
 
     async save() {
         this.isSaving = true;
+        // TODO: handle the urgent save and the fail of the save operation
+        const snippetMenuEl = this.snippetsMenu.el;
+        // Add a loading effect on the save button and disable the other actions
+        addButtonLoadingEffect(snippetMenuEl.querySelector("[data-action='save']"));
+        const actionButtonEls = snippetMenuEl.querySelectorAll("[data-action]");
+        for (const actionButtonEl of actionButtonEls) {
+            actionButtonEl.disabled = true;
+        }
+        // Save the pending images and the dirty elements
         const saveProms = [...this.editor.editable.querySelectorAll(".o_dirty")].map(
             async (dirtyEl) => {
                 await this.editor.shared.media.savePendingImages(dirtyEl);
@@ -136,7 +159,17 @@ export class SnippetsMenu extends Component {
             }
         );
         await Promise.all(saveProms);
-        browser.location.reload();
+        await this.reloadIframeAndCloseEditor();
+    }
+
+    async reloadIframeAndCloseEditor() {
+        this.ui.block();
+        this.props.iframe.contentWindow.location.reload();
+        await new Promise((resolve) => {
+            onIframeLoaded(this.props.iframe, resolve);
+        });
+        this.ui.unblock();
+        this.props.closeEditor();
     }
 
     setTab(tab) {

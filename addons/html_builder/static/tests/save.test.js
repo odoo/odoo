@@ -2,51 +2,97 @@ import { expect, test } from "@odoo/hoot";
 import { defineWebsiteModels, openSnippetsMenu, setupWebsiteBuilder, getEditable } from "./helpers";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { setContent } from "@html_editor/../tests/_helpers/selection";
-import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
+import { onRpc, patchWithCleanup, contains } from "@web/../tests/web_test_helpers";
 import { click, animationFrame } from "@odoo/hoot-dom";
+import { SnippetsMenu } from "@html_builder/builder/snippets_menu";
 
 defineWebsiteModels();
 
+const websiteContent = '<h1 class="title">Hello</h1>';
+
+const emptyWrap = `<div id="wrap" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">${websiteContent}</div>`;
+
 test("basic save", async () => {
-    const viewResult = await setupBuilderAndModifyText();
-    await click(".o-snippets-top-actions button:contains(Save)");
-    expect(viewResult.length).toBe(1);
-    expect(viewResult[0]).toBe(
+    const resultSave = setupSaveAndReloadIframe();
+    const { getEditor } = await setupWebsiteBuilder(getEditable(websiteContent));
+    await openSnippetsMenu();
+    expect(":iframe #wrap").not.toHaveClass("o_dirty");
+    await modifyText(getEditor());
+
+    await contains(".o-snippets-top-actions button:contains(Save)").click();
+    expect(resultSave.length).toBe(1);
+    expect(resultSave[0]).toBe(
         '<div id="wrap" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch"><h1 class="title">Hello1</h1></div>'
     );
-    await animationFrame();
-    expect.verifySteps(["window_reload"]);
+    expect(":iframe #wrap").not.toHaveClass("o_dirty");
+    expect(":iframe #wrap").not.toHaveClass("o_editable");
+    expect(":iframe #wrap .title:contains('Hello1')").toHaveCount(1);
 });
 
 test("nothing to save", async () => {
-    const viewResult = await setupBuilderAndModifyText();
+    const resultSave = setupSaveAndReloadIframe();
+    const { getEditor } = await setupWebsiteBuilder(getEditable(websiteContent));
+    await openSnippetsMenu();
+    await modifyText(getEditor());
     await animationFrame();
-    await click(".o-snippets-menu button.fa-undo");
-    await click(".o-snippets-top-actions button:contains(Save)");
-    expect(viewResult.length).toBe(0);
-    await animationFrame();
-    expect.verifySteps(["window_reload"]);
+    await contains(".o-snippets-menu button.fa-undo").click();
+    await contains(".o-snippets-top-actions button:contains(Save)").click();
+    expect(resultSave.length).toBe(0);
+    expect(":iframe #wrap").not.toHaveClass("o_dirty");
+    expect(":iframe #wrap").not.toHaveClass("o_editable");
+    expect(":iframe #wrap .title:contains('Hello')").toHaveCount(1);
 });
 
-async function setupBuilderAndModifyText() {
-    const result = [];
-    onRpc("ir.ui.view", "save", ({ args }) => {
-        result.push(args[1]);
-        return true;
-    });
-    patchWithCleanup(browser.location, {
-        reload: function () {
-            expect.step("window_reload");
+test("discard modified elements", async () => {
+    setupSaveAndReloadIframe();
+    const { getEditor } = await setupWebsiteBuilder(getEditable(websiteContent));
+    await openSnippetsMenu();
+    await modifyText(getEditor());
+    await contains(".o-snippets-top-actions button[data-action='cancel']").click();
+    await contains(".modal-content button.btn-primary").click();
+    expect(":iframe #wrap").not.toHaveClass("o_dirty");
+    expect(":iframe #wrap").not.toHaveClass("o_editable");
+    expect(":iframe #wrap .title:contains('Hello')").toHaveCount(1);
+});
+
+test("discard without any modifications", async () => {
+    patchWithCleanup(SnippetsMenu.prototype, {
+        async reloadIframeAndCloseEditor() {
+            this.props.iframe.contentDocument.body.innerHTML = emptyWrap;
+            this.props.closeEditor();
         },
     });
-    const { getEditor } = await setupWebsiteBuilder(getEditable('<h1 class="title">Hello</h1>'));
+    await setupWebsiteBuilder(getEditable(websiteContent));
     await openSnippetsMenu();
-    expect(":iframe #wrap").toHaveClass("o_editable");
+    await contains(".o-snippets-top-actions button[data-action='cancel']").click();
     expect(":iframe #wrap").not.toHaveClass("o_dirty");
-    const editor = getEditor();
+    expect(":iframe #wrap").not.toHaveClass("o_editable");
+    expect(":iframe #wrap .title:contains('Hello')").toHaveCount(1);
+});
+
+test("disable discard button when clicking on save", async () => {
+    await setupWebsiteBuilder();
+    await openSnippetsMenu();
+    await click(".o-snippets-top-actions button[data-action='save']");
+    expect(".o-snippets-top-actions button[data-action='cancel']").toHaveAttribute("disabled", "");
+});
+
+function setupSaveAndReloadIframe() {
+    const resultSave = [];
+    onRpc("ir.ui.view", "save", ({ args }) => {
+        resultSave.push(args[1]);
+        return true;
+    });
+    patchWithCleanup(SnippetsMenu.prototype, {
+        async reloadIframeAndCloseEditor() {
+            this.props.iframe.contentDocument.body.innerHTML = resultSave.at(-1) || emptyWrap;
+            this.props.closeEditor();
+        },
+    });
+    return resultSave;
+}
+
+async function modifyText(editor) {
     setContent(editor.editable, getEditable('<h1 class="title">Hello[]</h1>'));
     await insertText(editor, "1");
-    expect(":iframe #wrap").toHaveClass("o_dirty");
-    return result;
 }
