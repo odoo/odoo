@@ -694,7 +694,7 @@
                         <!-- Preview (only customer invoices) -->
                         <button name="preview_invoice" type="object" string="Preview" data-hotkey="o"
                                 title="Preview invoice"
-                                invisible="move_type not in ('out_invoice', 'out_refund')"/>
+                                invisible="move_type not in ('out_invoice', 'out_refund') or state == 'cancel'"/>
                         <!-- Reverse -->
                         <button name="%(action_view_account_move_reversal)d" string="Reverse Entry"
                                 type="action" groups="account.group_account_invoice" data-hotkey="z"
