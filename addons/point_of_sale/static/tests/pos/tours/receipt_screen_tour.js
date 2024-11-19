@@ -8,6 +8,7 @@ import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import { registry } from "@web/core/registry";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
+import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
 
 registry.category("web_tour.tours").add("ReceiptScreenTour", {
     checkDelay: 50,
@@ -15,6 +16,7 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
         [
             // press close button in receipt screen
             Chrome.startPoS(),
+            OfflineUtil.setOfflineMode(),
             ProductScreen.addOrderline("Letter Tray", "10", "5"),
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("Addison Olson"),
@@ -25,6 +27,7 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
             PaymentScreen.shippingLaterHighlighted(),
             PaymentScreen.clickValidate(),
             ReceiptScreen.receiptIsThere(),
+            Dialog.confirm("Continue with limited functionality"),
             //receipt had expected delivery printed
             ReceiptScreen.shippingDateExists(),
             ReceiptScreen.shippingDateIsToday(),
@@ -42,12 +45,14 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
             PaymentScreen.clickNumpad("0"),
             PaymentScreen.fillPaymentLineAmountMobile("Cash", "700"),
             PaymentScreen.changeIs("628.0"),
+            OfflineUtil.setOnlineMode(),
             PaymentScreen.clickValidate(),
             ReceiptScreen.receiptIsThere(),
             ReceiptScreen.totalAmountContains("72.0"),
             ReceiptScreen.setEmail("test@receiptscreen.com"),
             ReceiptScreen.clickSend(),
             ReceiptScreen.emailIsSuccessful(),
+            OfflineUtil.setOfflineMode(),
             ReceiptScreen.clickNextOrder(),
 
             // order with tip
@@ -98,6 +103,7 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
             Order.hasLine({ productName: "Desk Pad", priceNoDiscount: "20" }),
             ReceiptScreen.totalAmountContains("19.00"),
             ReceiptScreen.clickNextOrder(),
+            OfflineUtil.setOnlineMode(),
         ].flat(),
 });
 

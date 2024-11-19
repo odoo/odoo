@@ -5,12 +5,14 @@ import { inLeftSide, waitForLoading } from "@point_of_sale/../tests/pos/tours/ut
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
+import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
 
 registry.category("web_tour.tours").add("pos_basic_order_01_multi_payment_and_change", {
     steps: () =>
         [
             waitForLoading(),
             Chrome.startPoS(),
+            OfflineUtil.setOfflineMode(),
             ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1.0", "5.10"),
             ProductScreen.clickDisplayedProduct("Desk Organizer", true, "2.0", "10.20"),
             ProductScreen.clickPayButton(),
@@ -24,6 +26,7 @@ registry.category("web_tour.tours").add("pos_basic_order_01_multi_payment_and_ch
                 amount: "6.0",
                 change: "0.80",
             }),
+            OfflineUtil.setOnlineMode(),
             ProductScreen.finishOrder(),
         ].flat(),
 });
