@@ -224,33 +224,28 @@ class ResGroups(models.Model):
             else:
                 group.full_name = group1.name
 
-    def _search_full_name(self, operator, operand):
-        lst = True
-        if isinstance(operand, bool):
-            return [('name', operator, operand)]
-        if isinstance(operand, str):
-            lst = False
-            operand = [operand]
-        where_domains = []
-        for group in operand:
-            values = [v for v in group.split('/') if v]
-            group_name = values.pop().strip()
-            category_name = values and '/'.join(values).strip() or group_name
-            group_domain = [('name', operator, lst and [group_name] or group_name)]
+    def _search_full_name(self, operator, value):
+        if Domain.is_negative_operator(operator):
+            raise NotImplementedError
+        if operator == 'in':
+            return Domain.OR(self._search_full_name('=', v) for v in value)
+        if not value:
+            return [('name', operator, False)]
+        if not isinstance(value, str):
+            raise NotImplementedError("Invalid type for full_name search")
+        path = value.split('/')
+        group_name = path.pop().strip()
+        category_name = '/'.join(path).strip() or group_name
+        group_domain = Domain('name', operator, group_name)
+        if category_name:
             category_ids = self.env['ir.module.category'].sudo()._search(
-                [('name', operator, [category_name] if lst else category_name)])
-            category_domain = [('category_id', 'in', category_ids)]
-            if operator in expression.NEGATIVE_TERM_OPERATORS and not values:
-                category_domain = expression.OR([category_domain, [('category_id', '=', False)]])
-            if (operator in expression.NEGATIVE_TERM_OPERATORS) == (not values):
-                where = expression.AND([group_domain, category_domain])
+                [('name', operator, category_name)])
+            category_domain = Domain('category_id', 'in', category_ids)
+            if group_name:
+                group_domain |= category_domain
             else:
-                where = expression.OR([group_domain, category_domain])
-            where_domains.append(where)
-        if operator in expression.NEGATIVE_TERM_OPERATORS:
-            return expression.AND(where_domains)
-        else:
-            return expression.OR(where_domains)
+                group_domain &= category_domain
+        return group_domain
 
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None):
@@ -836,8 +831,10 @@ class ResUsers(models.Model):
     @api.model
     def _search_display_name(self, operator, value):
         domain = super()._search_display_name(operator, value)
-        if operator in ('=', 'ilike') and value:
-            name_domain = [('login', '=', value)]
+        if operator in ('=', 'in', 'ilike') and value:
+            name_domain = [('login', 'in', [value] if isinstance(value, str) else value)]
+            # avoid searching both by login and name because they reside in two different tables
+            # doing so prevents from using indexes and introduces a performance issue
             if users := self.search(name_domain):
                 domain = [('id', 'in', users.ids)]
         return domain

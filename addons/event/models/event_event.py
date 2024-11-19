@@ -419,16 +419,10 @@ class EventEvent(models.Model):
             event.is_ongoing = event.date_begin <= now < event.date_end
 
     def _search_is_ongoing(self, operator, value):
-        if operator not in ['=', '!=']:
-            raise UserError(_('This operator is not supported'))
-        if not isinstance(value, bool):
-            raise UserError(_('Value should be True or False (not %s)', value))
+        if operator != 'in':
+            raise NotImplementedError
         now = fields.Datetime.now()
-        if (operator == '=' and value) or (operator == '!=' and not value):
-            domain = [('date_begin', '<=', now), ('date_end', '>', now)]
-        else:
-            domain = ['|', ('date_begin', '>', now), ('date_end', '<=', now)]
-        return domain
+        return ['&', ('date_begin', '<=', now), ('date_end', '>', now)]
 
     @api.depends('date_begin', 'date_end', 'date_tz')
     def _compute_field_is_one_day(self):
@@ -452,16 +446,9 @@ class EventEvent(models.Model):
             event.is_finished = datetime_end <= current_datetime
 
     def _search_is_finished(self, operator, value):
-        if operator not in ['=', '!=']:
-            raise ValueError(_('This operator is not supported'))
-        if not isinstance(value, bool):
-            raise ValueError(_('Value should be True or False (not %s)'), value)
-        now = fields.Datetime.now()
-        if (operator == '=' and value) or (operator == '!=' and not value):
-            domain = [('date_end', '<=', now)]
-        else:
-            domain = [('date_end', '>', now)]
-        return domain
+        if operator != 'in':
+            raise NotImplementedError
+        return [('date_end', '<=', fields.Datetime.now())]
 
     @api.depends('event_type_id')
     def _compute_date_tz(self):
@@ -478,7 +465,7 @@ class EventEvent(models.Model):
 
     def _search_address_search(self, operator, value):
         if operator != 'ilike' or not isinstance(value, str):
-            raise NotImplementedError(_('Operation not supported.'))
+            raise NotImplementedError
 
         return expression.OR([
             [('address_id.name', 'ilike', value)],

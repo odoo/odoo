@@ -17,6 +17,7 @@ from markupsafe import Markup
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError, AccessError, UserError
+from odoo.fields import Domain
 from odoo.http import request
 from odoo.modules.module import get_resource_from_path
 from odoo.service.model import get_public_method
@@ -300,10 +301,12 @@ actual arch.
             view.model_data_id = data['id']
 
     def _search_model_data_id(self, operator, value):
+        if Domain.is_negative_operator(operator):
+            raise NotImplementedError
         name = 'name' if isinstance(value, str) else 'id'
         domain = [('model', '=', 'ir.ui.view'), (name, operator, value)]
-        data = self.env['ir.model.data'].sudo().search(domain)
-        return [('id', 'in', data.mapped('res_id'))]
+        query = self.env['ir.model.data'].sudo()._search(domain)
+        return [('id', 'in', query.subselect('res_id'))]
 
     @api.depends('model')
     def _compute_model_id(self):

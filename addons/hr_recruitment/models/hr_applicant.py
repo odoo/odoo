@@ -208,35 +208,21 @@ class HrApplicant(models.Model):
                 applicant.application_status = 'ongoing'
 
     def _search_application_status(self, operator, value):
-        supported_operators = ['=', '!=', 'in', 'not in']
-        if operator not in supported_operators:
-            raise UserError(_('Operation not supported'))
+        if operator != 'in':
+            raise NotImplementedError
 
-        # Normalize value to be a list to simplify processing
-        if isinstance(value, (str, bool)):
-            value = [value]
-
-        # Ensure all values are either correct strings or False
-        valid_statuses = ['ongoing', 'hired', 'refused', 'archived']
-        if not all(v in valid_statuses or v is False for v in value):
-            raise UserError(_('Some values do not exist in the application status'))
-
+        domains = []
         # Map statuses to domain filters
-        for status in value:
-            if status == 'refused':
-                domain = [('refuse_reason_id', '!=', None)]
-            elif status == 'hired':
-                domain = [('date_closed', '!=', False)]
-            elif status == 'archived' or status is False:
-                domain = [('active', '=', False)]
-            elif status == 'ongoing':
-                domain = ['&', ('active', '=', True), ('date_closed', '=', False)]
+        if 'refused' in value:
+            domains.append([('refuse_reason_id', '!=', None)])
+        if 'hired' in value:
+            domains.append([('date_closed', '!=', False)])
+        if 'archived' in value or False in value:
+            domains.append([('active', '=', False)])
+        if 'ongoing' in value:
+            domains.append(['&', ('active', '=', True), ('date_closed', '=', False)])
 
-        # Invert the domain for '!=' and 'not in' operators
-        if operator in expression.NEGATIVE_TERM_OPERATORS:
-            domain.insert(0, expression.NOT_OPERATOR)
-            domain = expression.distribute_not(domain)
-        return domain
+        return expression.OR(domains)
 
     def _get_attachment_number(self):
         read_group_res = self.env['ir.attachment']._read_group(
