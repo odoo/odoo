@@ -5,6 +5,7 @@ import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_uti
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as Pricelist from "@point_of_sale/../tests/pos/tours/utils/pricelist_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
+import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
 
 registry.category("web_tour.tours").add("pos_pricelist", {
     steps: () =>
@@ -13,6 +14,7 @@ registry.category("web_tour.tours").add("pos_pricelist", {
             Pricelist.setUp(),
             Pricelist.waitForUnitTest(),
             Dialog.confirm("Open Register"),
+            OfflineUtil.setOfflineMode(),
             ProductScreen.clickPriceList("Fixed", true, "Public Pricelist"),
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("Deco Addict"),
@@ -41,6 +43,7 @@ registry.category("web_tour.tours").add("pos_pricelist", {
             ProductScreen.clickPriceList("Public Pricelist"),
             ...Order.hasTotal(`$ 8.96`),
             ProductScreen.clickPriceList("min_quantity ordering"),
+            OfflineUtil.setOnlineMode(),
             ProductScreen.closePos(),
         ].flat(),
 });

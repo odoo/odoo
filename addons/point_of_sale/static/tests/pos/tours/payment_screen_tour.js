@@ -4,11 +4,13 @@ import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
 import { registry } from "@web/core/registry";
+import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
 
 registry.category("web_tour.tours").add("PaymentScreenTour", {
     steps: () =>
         [
             Chrome.startPoS(),
+            OfflineUtil.setOfflineMode(),
             ProductScreen.addOrderline("Letter Tray", "10"),
             ProductScreen.clickPayButton(),
             PaymentScreen.emptyPaymentlines("52.8"),
@@ -57,6 +59,7 @@ registry.category("web_tour.tours").add("PaymentScreenTour", {
             PaymentScreen.validateButtonIsHighlighted(false),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.0" }),
             PaymentScreen.validateButtonIsHighlighted(true),
+            OfflineUtil.setOnlineMode(),
         ].flat(),
 });
 
