@@ -3,7 +3,7 @@ import { OrderSummary } from "@point_of_sale/app/screens/product_screen/order_su
 import { patch } from "@web/core/utils/patch";
 import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { useService } from "@web/core/utils/hooks";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ConfirmationDialog, AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { ManageGiftCardPopup } from "@pos_loyalty/app/components/popups/manage_giftcard_popup/manage_giftcard_popup";
 
 patch(OrderSummary.prototype, {
@@ -24,30 +24,67 @@ patch(OrderSummary.prototype, {
                 return;
             }
         }
-        if (
-            selectedLine &&
-            selectedLine.is_reward_line &&
-            !selectedLine.manual_reward &&
-            (key === "Backspace" || key === "Delete")
-        ) {
+        if (selectedLine && selectedLine.is_reward_line) {
             const reward = selectedLine.reward_id;
-            const confirmed = await ask(this.dialog, {
-                title: _t("Deactivating reward"),
-                body: _t(
-                    "Are you sure you want to remove %s from this order?\n You will still be able to claim it through the reward button.",
-                    reward.description
-                ),
-                cancelLabel: _t("No"),
-                confirmLabel: _t("Yes"),
-            });
-            if (confirmed) {
-                buffer = null;
-            } else {
-                // Cancel backspace
+            if (
+                (key === "Backspace" &&
+                    (reward.reward_type !== "product" || selectedLine.getQuantity() === 0)) ||
+                key === "Delete"
+            ) {
+                const confirmed = await ask(this.dialog, {
+                    title: _t("Deactivating reward"),
+                    body: _t(
+                        "Are you sure you want to remove %s from this order?\n You will still be able to claim it through the reward button.",
+                        reward.description
+                    ),
+                    cancelLabel: _t("No"),
+                    confirmLabel: _t("Yes"),
+                });
+                if (confirmed) {
+                    buffer = null;
+                    super.updateSelectedOrderline({ buffer, key });
+                }
                 return;
             }
+            if (reward.reward_type !== "product") {
+                this.dialog.add(AlertDialog, {
+                    body: _t("You can not configure the the quantity of a discount line!"),
+                });
+                return;
+            } else {
+                const parsedInput = (buffer && parseFloat(buffer)) || 0;
+                const coupon = selectedLine.coupon_id;
+                const points =
+                    this.currentOrder._getRealCouponPoints(coupon) + selectedLine.points_cost;
+                const remainingPoints =
+                    selectedLine.points_cost +
+                    this.currentOrder
+                        .getLoyaltyPoints()
+                        .filter((item) => item.couponId == coupon.id)
+                        .map((item) => item.points.won)[0];
+                const maxRewardQuantity =
+                    reward.program_id.program_type == "buy_x_get_y"
+                        ? Math.floor((points / reward.required_points) * reward.reward_product_qty)
+                        : Math.floor(remainingPoints / reward.required_points) *
+                          reward.reward_product_qty;
+                if (parsedInput > maxRewardQuantity) {
+                    this.notification.add(
+                        _t(
+                            "Excess quantity has been added as a normal line. Reward quantity is limited to %s.",
+                            maxRewardQuantity
+                        ),
+                        { type: "info" }
+                    );
+                } else {
+                    selectedLine.setQuantity(parsedInput);
+                    if (reward.program_id.program_type != "buy_x_get_y") {
+                        selectedLine.points_cost = parsedInput * reward.required_points;
+                    }
+                }
+            }
+        } else {
+            return super.updateSelectedOrderline({ buffer, key });
         }
-        return super.updateSelectedOrderline({ buffer, key });
     },
     /**
      * 1/ Perform the usual set value operation (super._setValue(val)) if the line being modified

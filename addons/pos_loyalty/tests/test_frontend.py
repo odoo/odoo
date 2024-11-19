@@ -402,7 +402,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         aaa_loyalty_card = loyalty_program.coupon_ids.filtered(lambda coupon: coupon.partner_id.id == partner_aaa.id)
 
         self.assertEqual(loyalty_program.pos_order_count, 1)
-        self.assertAlmostEqual(aaa_loyalty_card.points, 5.2)
+        self.assertAlmostEqual(aaa_loyalty_card.points, 0.2)
 
     def test_pos_loyalty_tour_max_amount(self):
         """Test the loyalty program with a maximum amount and product with different taxe."""
@@ -2139,8 +2139,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.env['loyalty.program'].search([]).write({'active': False})
 
         free_product_tag = self.env['product.tag'].create({'name': 'Free Product Tag'})
-        self.product_a.write({'product_tag_ids': [(4, free_product_tag.id)], 'lst_price': 2, 'taxes_id': None, 'name': 'Product A'})
-        self.product_b.write({'product_tag_ids': [(4, free_product_tag.id)], 'lst_price': 5, 'taxes_id': None, 'name': 'Product B'})
+        self.product_a.write({'available_in_pos': True, 'product_tag_ids': [(4, free_product_tag.id)], 'list_price': 2, 'taxes_id': None, 'name': 'Product A'})
+        self.product_b.write({'available_in_pos': True, 'product_tag_ids': [(4, free_product_tag.id)], 'list_price': 5, 'taxes_id': None, 'name': 'Product B'})
 
         self.env['loyalty.program'].create({
             'name': 'Buy 2 Take 1 Free Product',
