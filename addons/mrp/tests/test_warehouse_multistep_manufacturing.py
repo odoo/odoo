@@ -91,6 +91,47 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         self.assertEqual(len(self.warehouse.pbm_route_id.rule_ids), 3)
         self.assertEqual(self.warehouse.manufacture_pull_id.location_dest_id.id, self.warehouse.lot_stock_id.id)
 
+    def test_manufacturing_2_steps_sublocation(self):
+        """Check having a production order taking stock in a child location of pre prod
+        create correctly a 2 steps manufacturing even with only one mto rule from pre-pro to
+        production. """
+        self.warehouse.manufacture_steps = 'pbm'
+        pre_1, pre_2 = self.env['stock.location'].create([{
+            'name': name,
+            'location_id': self.warehouse.pbm_loc_id.id,
+            'usage': 'internal'
+        } for name in ('Pre 1', 'Pre 2')])
+
+        # create 2 picking type having 2 different pre-prod location
+        pick_1 = self.warehouse.manu_type_id.copy({
+            'sequence_code': 'PRE1',
+            'default_location_src_id': pre_1.id,
+        })
+        pick_2 = self.warehouse.manu_type_id.copy({
+            'sequence_code': 'PRE2',
+            'default_location_src_id': pre_2.id,
+        })
+
+        production_form = Form(self.env['mrp.production'])
+        production_form.picking_type_id = pick_1
+        production_form.product_id = self.finished_product
+        production = production_form.save()
+        production.action_confirm()
+        # check that picking is created
+        pick = production.picking_ids
+        self.assertEqual(pick.location_id, self.warehouse.lot_stock_id)
+        self.assertEqual(pick.location_dest_id, pre_1)
+
+        production_form = Form(self.env['mrp.production'])
+        production_form.picking_type_id = pick_2
+        production_form.product_id = self.finished_product
+        production = production_form.save()
+        production.action_confirm()
+        # check that picking is created
+        pick = production.picking_ids
+        self.assertEqual(pick.location_id, self.warehouse.lot_stock_id)
+        self.assertEqual(pick.location_dest_id, pre_2)
+
     def test_manufacturing_3_steps(self):
         """ Test MO/picking before manufacturing/picking after manufacturing
         components and move_orig/move_dest. Ensure that everything is created
