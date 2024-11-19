@@ -459,7 +459,8 @@ test("ESC cancels thread rename", async () => {
     await contains(".o-mail-ChatWindow-command", { text: "General" });
 });
 
-test.tags("focus required")("open 2 different chat windows: enough screen width", async () => {
+test.tags("focus required");
+test("open 2 different chat windows: enough screen width", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([{ name: "Channel_1" }, { name: "Channel_2" }]);
     patchUiSize({ width: 1920 });
@@ -529,7 +530,8 @@ test("focus next visible chat window when closing current chat window with ESCAP
     });
 });
 
-test.tags("focus required")("chat window: switch on TAB", async () => {
+test.tags("focus required");
+test("chat window: switch on TAB", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([{ name: "channel1" }, { name: "channel2" }]);
     patchUiSize({ width: 1920 });
@@ -566,7 +568,8 @@ test.tags("focus required")("chat window: switch on TAB", async () => {
     });
 });
 
-test.tags("focus required")("chat window: TAB cycle with 3 open chat windows", async () => {
+test.tags("focus required");
+test("chat window: TAB cycle with 3 open chat windows", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([
         {

@@ -439,11 +439,11 @@ test("can update a list", async () => {
             ) {
                 expect.step("data-fetched");
                 if (isInitialUpdate) {
-                    expect(args.kwargs.order).toEqual("name DESC");
+                    expect(args.kwargs.order).toBe("name DESC");
                     expect(args.kwargs.domain).toEqual([["name", "in", ["hola"]]]);
                 }
                 if (isUndoUpdate) {
-                    expect(args.kwargs.order).toEqual("");
+                    expect(args.kwargs.order).toBe("");
                     expect(args.kwargs.domain).toEqual([]);
                 }
             }
