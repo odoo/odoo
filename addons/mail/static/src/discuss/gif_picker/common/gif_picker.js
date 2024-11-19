@@ -146,6 +146,9 @@ export class GifPicker extends Component {
     }
 
     async loadCategories() {
+        if (!this.store.hasGifPickerFeature) {
+            return;
+        }
         try {
             let { language, region } = new Intl.Locale(user.lang);
             if (!region && language === "sr") {
@@ -270,6 +273,9 @@ export class GifPicker extends Component {
     }
 
     async loadFavorites() {
+        if (!this.store.hasGifPickerFeature) {
+            return;
+        }
         this.state.loadingGif = true;
         try {
             const [results] = await rpc(
