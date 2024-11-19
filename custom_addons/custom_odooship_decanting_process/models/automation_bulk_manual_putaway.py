@@ -106,7 +106,6 @@ class AutomationBulkManual(models.Model):
                     self.parent_location_id = False
                     self.location_dest_id = False
                     self.automation_bulk_manual_putaway_line_ids = [(5, 0, 0)]
-                    print("\n\n\n Licenplate ids======0", self.license_plate_ids)
                     return {
                         'warning': {
                             'title': _("Invalid Operation"),
@@ -163,6 +162,8 @@ class AutomationBulkManual(models.Model):
 
                         # Mark the location as filled
                         self.location_dest_id.filled = True
+                    if self.automation_manual == 'automation_bulk':
+                        self.location_dest_id = self.parent_location_id
 
                     product_lines.append((0, 0, {
                         'product_id': line.product_id.id,
@@ -248,7 +249,7 @@ class AutomationBulkManual(models.Model):
         receipt_list = []
         sku_list = []
         stock_quant_obj = self.env['stock.quant']
-        self.location_dest_id.filled=True
+        # self.location_dest_id.filled=True
         for line in self.automation_bulk_manual_putaway_line_ids:
             sku_list.append({
                 "sku_code": line.product_id.default_code,  # Assuming SKU is stored in `default_code`

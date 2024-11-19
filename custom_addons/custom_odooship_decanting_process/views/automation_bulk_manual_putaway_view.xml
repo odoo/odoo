@@ -9,7 +9,7 @@
                 <sheet>
                     <header>
                         <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
-                        <button name="send_message_to_automation" type="object" string="Send to Automation" class="btn-primary" invisible="automation_manual not in ('automation') or state in ('done') " />
+                        <button name="send_message_to_automation" type="object" string="Send to Automation" class="btn-primary" invisible="automation_manual not in ('automation_bulk') or state in ('done') " />
                         <button name="update_manual_bulk_location" type="object" string="Manual Location Update" class="btn-primary" invisible="state in ('done') or automation_manual not in ('manual')" />
                     </header>
                     <group>
