@@ -181,6 +181,27 @@ test("always show the current custom color", async () => {
     );
 });
 
+test("show applied text color selected in solid color tab", async () => {
+    setupEditor(`<p><font style="color: rgb(255, 0, 0);">[test]</font></p>`);
+    await waitFor(".o-we-toolbar");
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    expect(".o_color_section .o_color_button.selected").toHaveCount(1);
+    expect(queryOne(".o_color_section .o_color_button.selected").style.backgroundColor).toBe(
+        "rgb(255, 0, 0)"
+    );
+    await contains("button[data-color='#0000FF']").click();
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(0);
+    await click(".o-we-toolbar .o-select-color-foreground"); // Open color selector again
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(1);
+    expect(".o_color_section .o_color_button.selected").toHaveCount(1);
+    expect(queryOne(".o_color_section .o_color_button.selected").style.backgroundColor).toBe(
+        "rgb(0, 0, 255)"
+    );
+});
+
 test("Can reset a color", async () => {
     const { editor } = await setupEditor(
         `<p class="tested">
