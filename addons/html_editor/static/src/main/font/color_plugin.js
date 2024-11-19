@@ -74,7 +74,7 @@ export class ColorPlugin extends Plugin {
      * @param {'foreground'|'background'} type
      */
     getPropsForColorSelector(type) {
-        const mode = type === "foreground" ? "color" : "background";
+        const mode = type === "foreground" ? "color" : "backgroundColor";
         return {
             type,
             getUsedCustomColors: () => this.getUsedCustomColors(mode),
