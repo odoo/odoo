@@ -14,7 +14,7 @@ except ImportError:
     _logger.warning("num2words is not available, Arabic number to words conversion will not work")
     num2words = None
 
-from werkzeug.datastructures import FileStorage
+from werkzeug.datastructures import FileStorage, MultiDict
 from werkzeug.routing import Rule
 from werkzeug.wrappers import Request, Response
 
@@ -45,6 +45,14 @@ else:
     xlsx.Element_has_iter = True
 
 FileStorage.save = lambda self, dst, buffer_size=1<<20: copyfileobj(self.stream, dst, buffer_size)
+
+
+def _multidict_deepcopy(self, memo=None):
+    return orig_deepcopy(self)
+
+
+orig_deepcopy = MultiDict.deepcopy
+MultiDict.deepcopy = _multidict_deepcopy
 
 Request.json_module = Response.json_module = scriptsafe
 
