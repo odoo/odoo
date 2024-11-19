@@ -56,7 +56,7 @@ class SmsApi:
         We prefer a dict instead of a message-per-error-state based method so that we only call
         config parameters getters once and avoid extra RPC calls."""
         buy_credits_url = self.env['iap.account'].sudo().get_credits_url(service_name='sms')
-        buy_credits = f'<a href="{buy_credits_url}" target="_blank">%s</a>' % _('Buy credits.')
+        buy_credits = '<a href="{}" target="_blank">{}</a>'.format(buy_credits_url, _("Buy credits."))
 
         sms_endpoint = self.env['ir.config_parameter'].sudo().get_param('sms.endpoint', self.DEFAULT_ENDPOINT)
         sms_account_token = self.env['iap.account'].sudo().get('sms').account_token
