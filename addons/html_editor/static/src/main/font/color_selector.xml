@@ -50,7 +50,7 @@
                                 <t t-foreach="DEFAULT_COLORS" t-as="line" t-key="line_index">
                                     <div class="o_color_section d-flex">
                                         <t t-foreach="line" t-as="color" t-key="color_index">
-                                            <button class="o_color_button btn" t-att-data-color="color" t-attf-style="background-color: {{color}}"/>
+                                            <button class="o_color_button btn" t-att-class="{'selected': color === this.currentCustomColor.color.toUpperCase()}" t-att-data-color="color" t-attf-style="background-color: {{color}}"/>
                                         </t>
                                     </div>
                                 </t>
