@@ -48,8 +48,8 @@ class StockMoveLine(models.Model):
         domain="[('product_id', '=', product_id)]", check_company=True)
     lot_name = fields.Char('Lot/Serial Number Name')
     result_package_id = fields.Many2one(
-        'stock.quant.package', 'Destination Package',
-        ondelete='restrict', required=False, check_company=True,
+        'stock.quant.package', 'Destination Package', compute='_compute_result_package_id', store=True,
+        ondelete='restrict', required=False, check_company=True, readonly=False,
         domain="['|', '|', ('location_id', '=', False), ('location_id', '=', location_dest_id), ('id', '=', package_id)]",
         help="If set, the operations are packed into this package")
     date = fields.Datetime(
@@ -88,6 +88,20 @@ class StockMoveLine(models.Model):
     product_packaging_qty = fields.Float(string="Reserved Packaging Quantity", compute='_compute_product_packaging_qty')
     picking_location_id = fields.Many2one(related='picking_id.location_id')
     picking_location_dest_id = fields.Many2one(related='picking_id.location_dest_id')
+
+    @api.depends('picked')
+    def _compute_result_package_id(self):
+        grouped_move_line_ids = dict(self._read_group([
+            ('id', 'in', self.ids), ('result_package_id', '!=', False), ('picking_id', '!=', False), ('picking_code', '!=', 'incoming'), ('picked', '=', True)
+        ], groupby=['result_package_id'], aggregates=['id:recordset']))
+        if grouped_move_line_ids:
+            for package, move_lines in grouped_move_line_ids.items():
+                check_entire_pack = package._check_move_lines_map_quant(move_lines) if package.quant_ids else True
+                if not check_entire_pack:
+                    move_lines.result_package_id = False
+
+        for ml in self:
+            ml.result_package_id = False if not ml.result_package_id else ml.result_package_id
 
     @api.depends('product_uom_id.category_id', 'product_id.uom_id.category_id', 'move_id.product_uom', 'product_id.uom_id')
     def _compute_product_uom_id(self):

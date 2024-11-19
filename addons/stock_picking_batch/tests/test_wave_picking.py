@@ -551,7 +551,7 @@ class TestBatchPicking(TransactionCase):
         self.assertEqual(wave.state, 'done')
         self.assertEqual(wave.picking_ids, picking_1)
         self.assertEqual([picking_1.state, picking_1.move_ids.quantity, picking_1.move_ids.picked], ['done', 2.0, True])
-        self.assertEqual([picking_2.state, picking_2.move_ids.quantity, picking_2.move_ids.picked], ['assigned', 0.0, False])
+        self.assertEqual([picking_2.state, picking_2.move_ids.quantity, picking_2.move_ids.picked], ['assigned', 3.0, False])
 
     def test_add_partially_assigned_move_to_batch(self):
         """
@@ -643,5 +643,5 @@ class TestBatchPicking(TransactionCase):
         picking_1.move_ids.quantity = 0.0
         wave.action_done()
         self.assertEqual(wave.state, 'done')
-        self.assertRecordValues(picking_1.move_ids, [{'state': 'confirmed', 'quantity': 0.0, 'picked': False}])
+        self.assertRecordValues(picking_1.move_ids, [{'state': 'assigned', 'quantity': 2.0, 'picked': False}])
         self.assertRecordValues(picking_2.move_ids, [{'state': 'done', 'quantity': 3.0, 'picked': True}])
