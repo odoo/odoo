@@ -184,6 +184,14 @@ class Intervals(object):
 
         return result
 
+    def remove(self, interval):
+        """ Remove an interval from the set. """
+        self._items.remove(interval)
+
+    def items(self):
+        """ Return the intervals. """
+        return self._items
+
 def sum_intervals(intervals):
     """ Sum the intervals duration (unit : hour)"""
     return sum(
