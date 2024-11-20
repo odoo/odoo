@@ -58,7 +58,7 @@
 @include media-breakpoint-up(lg) {
     .o_grid_mode {
         display: grid !important;
-        grid-auto-rows: 50px;
+        grid-auto-rows: minmax(50px,auto);
         grid-template-columns: repeat(12, 1fr);
         row-gap: 0px;
         column-gap: 0px;
