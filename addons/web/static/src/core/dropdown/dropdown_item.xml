@@ -3,7 +3,7 @@
 
   <t t-name="web.DropdownItem">
     <t
-      t-tag="props.attrs and props.attrs.href ? 'a' : 'span'"
+      t-tag="props.tag ?? (props.attrs and props.attrs.href ? 'a' : 'span')"
       class="o-dropdown-item dropdown-item o-navigable"
       t-att-class="props.class"
       t-on-click.stop="onClick"
