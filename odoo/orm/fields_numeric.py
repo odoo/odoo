@@ -23,6 +23,11 @@ class Integer(Field[int]):
 
     def convert_to_column(self, value, record, values=None, validate=True):
         return int(value or 0)
+    
+    def convert_to_column_update(self, value, record):
+         if self.company_dependent:
+             value = {k: int(v or 0) for k, v in value.items()}
+         return super().convert_to_column_update(value, record)
 
     def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, dict):
@@ -129,6 +134,11 @@ class Float(Field[float]):
         if self.company_dependent:
             return value_float
         return value
+    
+    def convert_to_column_update(self, value, record):
+         if self.company_dependent:
+             value = {k: float(v or 0.0) for k, v in value.items()}
+         return super().convert_to_column_update(value, record)
 
     def convert_to_cache(self, value, record, validate=True):
         # apply rounding here, otherwise value in cache may be wrong!

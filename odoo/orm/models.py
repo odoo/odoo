@@ -2873,7 +2873,7 @@ class BaseModel(metaclass=MetaModel):
                     fallback=fallback,
                     column_type=SQL(field._column_type[1]),
                 )
-            if field.type in ('boolean', 'integer', 'float', 'monetary'):
+            if field.type in ('boolean', 'integer', 'float'):
                 return SQL('(%s)::%s', sql_field, SQL(field._column_type[1]))
             # here the specified value for a company might be NULL e.g. '{"1": null}'::jsonb
             # the result of current sql_field might be 'null'::jsonb
