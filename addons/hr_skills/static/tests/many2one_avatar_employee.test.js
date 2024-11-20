@@ -1,5 +1,5 @@
 import { click, contains, start, startServer } from "@mail/../tests/mail_test_helpers";
-import { mountView } from "@web/../tests/web_test_helpers";
+import { mountView, onRpc } from "@web/../tests/web_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { queryAttribute } from "@odoo/hoot-dom";
 import { defineHrSkillModels } from "@hr_skills/../tests/hr_skills_test_helpers";
@@ -27,6 +27,21 @@ test("many2one_avatar_employee widget in kanban view with skills on avatar card"
     });
     pyEnv["m2o.avatar.employee"].create([{ employee_id: pierreEid }]);
     await start();
+
+    onRpc("resource.resource", "get_avatar_card_data", (params) => {
+        const resourceIdArray = params.args[0];
+        const resourceId = resourceIdArray[0];
+        const resources = pyEnv['hr.employee.public'].read([resourceId]);
+        const result = resources.map(resource => ({
+            name: resource.name,
+            role_ids: resource.role_ids,
+            email:resource.email,
+            phone: resource.phone,
+            user_id: resource.user_id,
+            employee_skill_ids: resource.employee_skill_ids
+        }));
+        return result;
+    });
     await mountView({
         type: "kanban",
         resModel: "m2o.avatar.employee",
