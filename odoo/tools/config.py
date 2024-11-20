@@ -78,6 +78,7 @@ class _OdooOption(optparse.Option):
         if self.nargs_ == '?':
             const = attrs.pop('const', None)
             attrs['nargs'] = 1
+        attrs.setdefault('metavar', attrs.get('type', 'string').upper())
         super().__init__(*opts, **attrs)
         if 'default' in attrs:
             self.config._log(logging.WARNING, "please use my_default= instead of default= with option %s", self)
@@ -184,21 +185,21 @@ class configmanager:
                          help="specify alternate config file")
         group.add_option("-s", "--save", action="store_true", dest="save", my_default=False, file_loadable=False,
                          help="save configuration to ~/.odoorc (or to ~/.openerp_serverrc if it exists)")
-        group.add_option("-i", "--init", dest="init", type='comma', my_default=[], file_loadable=False,
+        group.add_option("-i", "--init", dest="init", type='comma', metavar="MODULE,...", my_default=[], file_loadable=False,
                          help="install one or more modules (comma-separated list, use \"all\" for all modules), requires -d")
-        group.add_option("-u", "--update", dest="update", type='comma', my_default=[], file_loadable=False,
+        group.add_option("-u", "--update", dest="update", type='comma',  metavar="MODULE,...", my_default=[], file_loadable=False,
                          help="update one or more modules (comma-separated list, use \"all\" for all modules). Requires -d.")
-        group.add_option("--without-demo", dest="without_demo", my_default=False, type='without_demo', nargs='?', const=True,
+        group.add_option("--without-demo", dest="without_demo", my_default=False, type='without_demo', metavar='BOOL', nargs='?', const=True,
                          help="use with -i/--init, skip installing fake demonstration data (e.g. Mitchel Admin/Azure Interior)")
         group.add_option("-P", "--import-partial", dest="import_partial", type='path', my_default='',
                          help="Use this for big data importation, if it crashes you will be able to continue at the current state. Provide a filename to store intermediate importation states.")
         group.add_option("--pidfile", dest="pidfile", type='path', my_default='',
                          help="file where the server pid will be stored")
-        group.add_option("--addons-path", dest="addons_path", type='addons_path', my_default=[],
+        group.add_option("--addons-path", dest="addons_path", type='addons_path', metavar='PATH,...', my_default=[],
                          help="specify additional addons paths (separated by commas).")
-        group.add_option("--upgrade-path", dest="upgrade_path", type='upgrade_path', my_default=[],
+        group.add_option("--upgrade-path", dest="upgrade_path", type='upgrade_path', metavar='PATH,...', my_default=[],
                          help="specify an additional upgrade path.")
-        group.add_option("--load", dest="server_wide_modules", type='comma', my_default=DEFAULT_SERVER_WIDE_MODULES,
+        group.add_option("--load", dest="server_wide_modules", type='comma', metavar='MODULE,...', my_default=DEFAULT_SERVER_WIDE_MODULES,
                          help="Comma-separated list of server-wide modules.")
         group.add_option("-D", "--data-dir", dest="data_dir", type='path',  # sensitive default set in _load_default_options
                          help="Directory where to store Odoo data")
@@ -316,7 +317,7 @@ class configmanager:
 
         # Database Group
         group = optparse.OptionGroup(parser, "Database related options")
-        group.add_option("-d", "--database", dest="db_name", type='comma', my_default=[],
+        group.add_option("-d", "--database", dest="db_name", type='comma', metavar="DATABASE,...", my_default=[],
                          help="database(s) used when installing or updating modules.")
         group.add_option("-r", "--db_user", dest="db_user", my_default='',
                          help="specify the database user name")
@@ -359,7 +360,7 @@ class configmanager:
                          help="import a CSV or a PO file with translations and exit. The '-l' option is required.")
         group.add_option("--i18n-overwrite", dest="overwrite_existing_translations", action="store_true", my_default=False, file_exportable=False,
                          help="overwrites existing translation terms on updating a module or importing a CSV or a PO file.")
-        group.add_option("--modules", dest="translate_modules", type='comma', my_default=['all'], file_loadable=False,
+        group.add_option("--modules", dest="translate_modules", type='comma', metavar="MODULE,...", my_default=['all'], file_loadable=False,
                          help="specify modules to export. Use in combination with --i18n-export")
         parser.add_option_group(group)
 
@@ -373,7 +374,7 @@ class configmanager:
 
         # Advanced options
         group = optparse.OptionGroup(parser, "Advanced options")
-        group.add_option('--dev', dest='dev_mode', type='comma', my_default=[], file_exportable=False,
+        group.add_option('--dev', dest='dev_mode', type='comma', metavar="FEATURE,...", my_default=[], file_exportable=False,
                          # optparse uses a fixed 55 chars to print the help no matter the
                          # terminal size, abuse that to align the features
                          help="Enable developer features (comma-separated list, use   "
