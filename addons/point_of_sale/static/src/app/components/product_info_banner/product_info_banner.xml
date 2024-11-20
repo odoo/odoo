@@ -4,7 +4,7 @@
         <div t-attf-class="{{ bannerClass }}"
             class="section-product-info-title d-flex text-info bg-opacity-25 mx-n3 mt-n3 px-3 pb-2 pt-3 mb-3">
             <div class="d-flex flex-column">
-                <span class="h4" t-esc="props.product.name"/>
+                <span class="h4" t-esc="props.product.productDisplayName"/>
                 <span t-if="this.props.product.is_storable" class="h4">
                     <span>On hand: </span>
                     <span class="section-product-info-title-quantity" t-if="this.fetchStock.status === 'success' || this.props.info"><t t-esc="this.state.available_quantity"/> Units</span>

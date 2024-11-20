@@ -122,6 +122,9 @@
 
     <t t-name="point_of_sale.ProductConfiguratorPopup">
         <Dialog title="'Attribute selection'">
+            <div class="section-product-info-title d-flex text-info bg-opacity-25 mx-n3 mt-n3 px-3 pb-2 pt-3 mb-3 bg-info">
+                <span class="h4" t-esc="this.state.product.productDisplayName"/>
+            </div>
             <div t-ref="input-area">
                 <div t-if="isArchivedCombination()" class="alert alert-warning mt-3">
                     <span>This combination does not exist.</span>
