@@ -22,10 +22,14 @@
         <field name="name">crm.team.form</field>
         <field name="model">crm.team</field>
         <field name="arch" type="xml">
-            <form string="Sales Team" class="o_crm_team_form_view">
-                <div class="alert alert-info text-center" role="alert"
+            <form string="Sales Team" js_class="crm_team_form" class="o_crm_team_form_view">
+                <div class="alert alert-info text-center d-flex flex-wrap justify-content-center gap-1" role="alert"
                     invisible="is_membership_multi or not member_warning">
-                    <field name="member_warning"/>
+                    <field name="member_warning" class="w-auto"/>
+                    Working in multiple teams?
+                    <button name="crm_team_activate_multi_membership" type="button" class="btn btn-link p-0 lh-1">
+                        Activate "Multi-team"
+                    </button>
                 </div>
                 <sheet>
                     <div class="oe_button_box" name="button_box"/>

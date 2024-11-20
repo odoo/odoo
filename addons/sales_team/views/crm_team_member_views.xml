@@ -86,7 +86,7 @@
         <field name="name">crm.team.member.view.form</field>
         <field name="model">crm.team.member</field>
         <field name="arch" type="xml">
-            <form string="Sales Men">
+            <form string="Sales Men" js_class="crm_team_form">
                 <field name="active" invisible="1"/>
                 <field name="company_id" invisible="1"/>
                 <field name="is_membership_multi" invisible="1"/>
@@ -94,9 +94,13 @@
                 <field name="user_in_teams_ids" invisible="1"/>
                 <field name="user_company_ids" invisible="1"/>
                 <sheet>
-                    <div class="alert alert-info text-center" role="alert"
+                    <div class="alert alert-info text-center d-flex flex-wrap justify-content-center gap-1" role="alert"
                         invisible="not member_warning">
-                        <field name="member_warning"/>
+                        <field name="member_warning" class="w-auto"/>
+                        Working in multiple teams?
+                        <button name="crm_team_activate_multi_membership" type="button" class="btn btn-link p-0 lh-1">
+                            Activate "Multi-team"
+                        </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <field name="image_1920" widget='image' class="oe_avatar"
