@@ -801,6 +801,10 @@ class MailThread(models.AbstractModel):
                     followers
                 'partners': check that author_id id set
 
+        Note that this method also updates 'author_id' of message_dict as route
+        links an incoming message to a record and linking email to partner is
+        better done in a record's context.
+
         :param message: an email.message instance
         :param message_dict: dictionary of values that will be given to
                              mail_message.create()
@@ -967,32 +971,55 @@ class MailThread(models.AbstractModel):
         LOOP_THRESHOLD = int(get_param('mail.gateway.loop.threshold', 20))
 
         create_date_limit = self.env.cr.now() - datetime.timedelta(minutes=LOOP_MINUTES)
+        author_id = message_dict.get('author_id')
 
         # Search only once per model
-        models = {
-            self.env[model]
-            for model, thread_id, *__ in routes or []
-            if not thread_id  # Reply to an existing thread
-        }
+        model_res_ids = dict()
+        for model, thread_id, *__ in routes or []:
+            model_res_ids.setdefault(model, list()).append(thread_id)
 
-        for model in models:
+        for model_name, thread_ids in model_res_ids.items():
+            model = self.env[model_name]
             if not hasattr(model, '_detect_loop_sender_domain'):
                 continue
 
-            domain = model._detect_loop_sender_domain(email_from_normalized)
-            if not domain:
-                continue
+            loop_new, loop_update = False, False
+            search_new = 0 in thread_ids  # route creating new records = thread_id = 0
+            doc_ids = list(filter(None, thread_ids))  # route updating records = thread_id set
 
-            mail_incoming_messages_count = model.sudo().search_count(
-                expression.AND([
-                    [('create_date', '>', create_date_limit)],
-                    domain,
-                ]),
-            )
+            # search records created by email -> alias creating new records
+            if search_new:
+                base_domain = model._detect_loop_sender_domain(email_from_normalized)
+                if base_domain:
+                    mail_new_count = model.sudo().search_count(
+                        expression.AND([
+                            [('create_date', '>=', create_date_limit)],
+                            base_domain,
+                        ]),
+                    )
+                    loop_new = mail_new_count >= LOOP_THRESHOLD
 
-            if mail_incoming_messages_count >= LOOP_THRESHOLD:
-                _logger.info('--> ignored mail from %s to %s with Message-Id %s: created too many <%s>',
-                             message_dict.get('email_from'), message_dict.get('to'), message_dict.get('message_id'), model)
+            # search messages linked to email -> alias updating records
+            if doc_ids and not loop_new:
+                base_msg_domain = [('model', '=', model._name), ('res_id', 'in', doc_ids), ('create_date', '>=', create_date_limit)]
+                if author_id:
+                    msg_domain = expression.AND([[('author_id', '=', author_id)], base_msg_domain])
+                else:
+                    msg_domain = expression.AND([[('email_from', 'in', [email_from, email_from_normalized])], base_msg_domain])
+                mail_update_groups = self.env['mail.message'].sudo()._read_group(msg_domain, ['res_id'], ['__count'])
+                if mail_update_groups:
+                    loop_update = any(
+                        group[1] >= LOOP_THRESHOLD
+                        for group in mail_update_groups
+                    )
+
+            if loop_new or loop_update:
+                if loop_new:
+                    _logger.info('--> ignored mail from %s to %s with Message-Id %s: created too many <%s>',
+                                message_dict.get('email_from'), message_dict.get('to'), message_dict.get('message_id'), model)
+                if loop_update:
+                    _logger.info('--> ignored mail from %s to %s with Message-Id %s: too much replies on same <%s>',
+                                message_dict.get('email_from'), message_dict.get('to'), message_dict.get('message_id'), model)
                 body = self.env['ir.qweb']._render(
                     'mail.message_notification_limit_email',
                     {'email': message_dict.get('to')},
@@ -1384,7 +1411,8 @@ class MailThread(models.AbstractModel):
                              msg_dict.get('email_from'), msg_dict.get('to'), msg_dict.get('message_id'))
             return
 
-        # find possible routes for the message
+        # find possible routes for the message; note this also updates notably
+        # 'author_id' of msg_dict
         routes = self.message_route(message, msg_dict, model, thread_id, custom_values)
         if self._detect_loop_sender(message, msg_dict, routes):
             return
