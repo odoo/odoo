@@ -22,4 +22,7 @@ chown pi:pi /var/run/odoo
 
 /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/wireless_ap.sh &
 
+printf "Updating Odoo service...\n"
+/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/posbox_update &
+
 exit 0
