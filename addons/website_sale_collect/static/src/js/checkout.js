@@ -4,6 +4,7 @@ import publicWidget from '@web/legacy/js/public/public_widget';
 publicWidget.registry.WebsiteSaleCheckout.include({
     events: Object.assign({}, publicWidget.registry.WebsiteSaleCheckout.prototype.events, {
         'click .js_wsc_delete_product': '_onClickDeleteProduct',
+        'click [name="edit_pickup_address"]': '_selectPickupLocation',
     }),
 
     // #=== EVENT HANDLERS ===#
@@ -32,12 +33,33 @@ publicWidget.registry.WebsiteSaleCheckout.include({
      */
     _updatePickupLocation(button, location, jsonLocation) {
         this._super.apply(this, arguments);
-        const dmContainer = this._getDeliveryMethodContainer(button);
-        const radio = dmContainer.querySelector('[name="o_delivery_radio"]');
-        if (radio.dataset.deliveryType === 'in_store') {
+        const checkedRadio = document.querySelector('input[name="o_delivery_radio"]:checked');
+        if(checkedRadio.dataset.deliveryType == 'in_store'){
+            const dmContainer = this._getDeliveryMethodContainer(checkedRadio);
             dmContainer.querySelector('[name="unavailable_products_warning"]')?.remove();
+            const pickupLocationContainer = this._getPickupLocationContainer(checkedRadio);
+            const pickupLocationButton = pickupLocationContainer.querySelector('span[name="o_pickup_location_selector"]');
+            pickupLocationButton.dataset.locationId = location.id;
+            pickupLocationButton.dataset.zipCode = location.zip_code;
+            pickupLocationButton.dataset.pickupLocationData = jsonLocation;
+            pickupLocationButton.classList.remove('border-0');
+            pickupLocationButton.classList.add('bg-primary', 'border', 'border-primary', 'js_change_address');
+            pickupLocationButton.querySelector('[name="edit_pickup_address"]').classList.remove('d-none');
+            pickupLocationContainer.querySelector('a[name="o_pickup_location_selector"]')?.remove();
+            pickupLocationContainer.querySelector('span[name="o_pickup_location_selector"]')?.classList.remove('d-none');
+
         }
     },
+
+    _updatePickupLocationAddress(container, location){
+        container.innerHTML = "";
+        container.appendChild(document.createTextNode(location.street));
+        container.appendChild(document.createElement('br'));
+        container.appendChild(document.createTextNode(location.city + ' ' + location.zip_code));
+        container.appendChild(document.createElement('br'));
+        container.appendChild(document.createTextNode(location.country));
+    },
+
 
     /**
      * Return false if there is a warning message, otherwise return the result of the parent method
@@ -82,13 +104,34 @@ publicWidget.registry.WebsiteSaleCheckout.include({
      * @override method from `@website_sale/js/checkout`
      */
     async _showPickupLocation(radio) {
-        this._super.apply(this, arguments);
+        const addressRow = document.querySelector("div[name='address_row']");
         if (radio.dataset.deliveryType === 'in_store') {
+            addressRow.classList.add('d-none');
             const dmContainer = this._getDeliveryMethodContainer(radio);
             const warning = dmContainer.querySelector('[name="unavailable_products_warning"]');
             if (warning) {
                 warning.classList.remove('d-none');
-            }
+        }
+        }else{
+            addressRow.classList.remove('d-none');
+        }
+        await this._super.apply(this, arguments);
+    },
+
+    async _prepareDeliveryMethods() {
+        await this._super.apply(this, arguments);
+        const checkedRadio = document.querySelector('input[name="o_delivery_radio"]:checked');
+        if(checkedRadio && checkedRadio.dataset.deliveryType === 'in_store'){
+            document.querySelector('div[name="address_row"]').classList.add('d-none');
+            this._getPickupLocationContainer(checkedRadio).classList.remove('d-none');
+        }
+    },
+
+    _getPickupLocationContainer(radio){
+        if (radio.dataset.deliveryType === 'in_store'){
+            return document.querySelector('#delivery_address_row [name="o_pickup_location"]');
+        }else{
+            this._super.apply(this, arguments);
         }
     },
 
