@@ -10,17 +10,13 @@ export class ElementToolboxPlugin extends Plugin {
 
     setup() {
         // todo: use resources instead of registry
-        this.toolboxes = this.getToolboxDefinitions();
+        this.toolboxes = registry.category("sidebar-element-toolbox").getAll();
         this.addDomListener(this.editable, "pointerup", (e) => {
             if (!this.dependencies.selection.getEditableSelection().isCollapsed) {
                 return;
             }
             this.changeSidebarTarget(e.target);
         });
-    }
-
-    getToolboxDefinitions() {
-        return registry.category("sidebar-element-toolbox").getAll();
     }
 
     onSelectionChange(selection) {
