@@ -129,20 +129,22 @@
             <field name="arch" type="xml">
                 <form string="Purchase Order" class="o_purchase_order">
                 <header>
+                    <field name="locked" invisible="1"/>
+                    <field name="lock_confirmed_po" invisible="1"/>
                     <button name="action_rfq_send" invisible="state != 'draft'" string="Send RFQ" type="object" context="{'send_rfq':True}" class="oe_highlight" data-hotkey="g"/>
                     <button name="button_confirm" type="object" invisible="state != 'sent'" string="Confirm Order" context="{'validate_analytic': True}" class="oe_highlight" id="bid_confirm" data-hotkey="q"/>
                     <button name="button_approve" type="object" invisible="state != 'to approve'" string="Approve Order" class="oe_highlight" groups="purchase.group_purchase_manager" data-hotkey="z"/>
-                    <button name="action_create_invoice" string="Create Bill" type="object" class="oe_highlight" context="{'create_bill':True}" invisible="state not in ('purchase', 'done') or invoice_status in ('no', 'invoiced')" data-hotkey="w"/>
+                    <button name="action_create_invoice" string="Create Bill" type="object" class="oe_highlight" context="{'create_bill':True}" invisible="state != 'purchase' or invoice_status in ('no', 'invoiced')" data-hotkey="w"/>
                     <button name="action_rfq_send" invisible="state != 'sent'" string="Send RFQ" type="object" context="{'send_rfq':True}" data-hotkey="g"/>
                     <button name="button_confirm" type="object" invisible="state != 'draft'" context="{'validate_analytic': True}" string="Confirm Order" id="draft_confirm" data-hotkey="q"/>
                     <button name="action_rfq_send" invisible="state != 'purchase'" string="Send PO" type="object" context="{'send_rfq':False}" data-hotkey="g"/>
-                    <button name="action_create_invoice" string="Create Bill" type="object" context="{'create_bill':True}" invisible="state not in ('purchase', 'done') or invoice_status not in ('no', 'invoiced') or not order_line" data-hotkey="w"/>
+                    <button name="action_create_invoice" string="Create Bill" type="object" context="{'create_bill':True}" invisible="state != 'purchase' or invoice_status not in ('no', 'invoiced') or not order_line" data-hotkey="w"/>
                     <button name="action_acknowledge" string="Acknowledge" type="object" invisible="acknowledged or state != 'purchase'"/>
                     <button name="button_draft" invisible="state != 'cancel'" string="Set to Draft" type="object" data-hotkey="o"/>
                     <button name="print_quotation" string="Print" type="object" groups="base.group_user" data-hotkey="k"/>
                     <button name="button_cancel" invisible="state not in ('draft', 'to approve', 'sent', 'purchase')" string="Cancel" type="object" data-hotkey="x" />
-                    <button name="button_done" type="object" string="Lock" invisible="state != 'purchase'" data-hotkey="l"/>
-                    <button name="button_unlock" type="object" string="Unlock" invisible="state != 'done'" groups="purchase.group_purchase_manager" data-hotkey="l"/>
+                    <button name="button_lock" type="object" string="Lock" invisible="locked or state != 'purchase' or not lock_confirmed_po == 'lock'" data-hotkey="l"/>
+                    <button name="button_unlock" type="object" string="Unlock" invisible="not locked" groups="purchase.group_purchase_manager" data-hotkey="l"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,sent,purchase" readonly="1"/>
                 </header>
                 <sheet>
@@ -152,7 +154,7 @@
                                 type="object"
                                 groups="account.group_account_invoice"
                                 icon="fa-bullseye"
-                                invisible="not partner_id or state not in ('purchase', 'done') or not partner_bill_count or invoice_status == 'invoiced'">
+                                invisible="not partner_id or state != 'purchase' or not partner_bill_count or invoice_status == 'invoiced'">
                             <div class="o_field_statinfo">
                                 <span class="o_stat_text">Bill Matching</span>
                             </div>
@@ -172,6 +174,11 @@
                             <field name="show_comparison" invisible="1"/>
                         </button>
                     </div>
+                    <div class="badge rounded-pill text-bg-secondary float-end fs-6 border-0"
+                        invisible="not locked">
+                        <i class="fa fa-lock"/>
+                        Locked
+                    </div>
                     <div class="oe_title">
                         <span class="o_form_label" invisible="state not in ('draft', 'sent')">Request for Quotation </span>
                         <span class="o_form_label" invisible="state in ('draft', 'sent')">Purchase Order </span>
@@ -184,18 +191,18 @@
                         <group>
                             <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'supplier', 'show_vat': True}"
                                 placeholder="Name, TIN, Email, or Reference"
-                             readonly="state in ['cancel', 'done', 'purchase']"/>
+                             readonly="state in ['cancel', 'purchase']"/>
                             <field name="partner_ref"/>
-                            <field name="currency_id" groups="base.group_multi_currency" force_save="1" readonly="state in ['cancel', 'done', 'purchase']"/>
+                            <field name="currency_id" groups="base.group_multi_currency" force_save="1" readonly="state in ['cancel', 'purchase']"/>
                             <field name="id" invisible="1"/>
-                            <field name="company_id" invisible="1" readonly="state in ['cancel', 'done', 'purchase']"/>
-                            <field name="currency_id" invisible="1" readonly="state in ['cancel', 'done', 'purchase']" groups="!base.group_multi_currency"/>
+                            <field name="company_id" invisible="1" readonly="state in ['cancel', 'purchase']"/>
+                            <field name="currency_id" invisible="1" readonly="state in ['cancel', 'purchase']" groups="!base.group_multi_currency"/>
                             <field name="tax_calculation_rounding_method" invisible="1"/>
                         </group>
                         <group>
-                            <field name="date_order" invisible="state in ('purchase', 'done')" readonly="state in ['cancel', 'done', 'purchase']"/>
-                            <label for="date_approve" invisible="state not in ('purchase', 'done')"/>
-                            <div name="date_approve" invisible="state not in ('purchase', 'done')" class="o_row">
+                            <field name="date_order" invisible="state  == 'purchase'" readonly="state in ['cancel', 'purchase']"/>
+                            <label for="date_approve" invisible="state != 'purchase'"/>
+                            <div name="date_approve" invisible="state != 'purchase'" class="o_row">
                                 <field name="date_approve"/>
                             </div>
                             <label for="date_planned"/>
@@ -221,7 +228,7 @@
                                 widget="product_label_section_and_note_field_o2m"
                                 mode="list,kanban"
                                 context="{'default_state': 'draft'}"
-                                readonly="state in ('done', 'cancel')">
+                                readonly="state == 'cancel' or locked">
                                 <list string="Purchase Order Lines" editable="bottom" limit="200">
                                     <control>
                                         <create name="add_product_control" string="Add a product"/>
@@ -241,7 +248,7 @@
                                     <field
                                         name="product_id"
                                         widget="product_label_section_and_note_field"
-                                        readonly="state in ('purchase', 'to approve', 'done', 'cancel') or is_downpayment"
+                                        readonly="state in ('purchase', 'to approve', 'cancel') or is_downpayment"
                                         required="not display_type and not is_downpayment"
                                         context="{'partner_id':parent.partner_id, 'quantity':product_qty, 'company_id': parent.company_id}"
                                         force_save="1" domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', 'parent_of', parent.company_id)]"/>
@@ -254,10 +261,10 @@
                                     <field name="product_qty" readonly="is_downpayment"/>
                                     <field name="qty_received_manual" column_invisible="True"/>
                                     <field name="qty_received_method" column_invisible="True"/>
-                                    <field name="qty_received" string="Received" column_invisible="parent.state not in ('purchase', 'done')" readonly="qty_received_method != 'manual' or is_downpayment" optional="show"/>
-                                    <field name="qty_invoiced" string="Billed" column_invisible="parent.state not in ('purchase', 'done')" optional="show"/>
+                                    <field name="qty_received" string="Received" column_invisible="parent.state != 'purchase'" readonly="qty_received_method != 'manual' or is_downpayment" optional="show"/>
+                                    <field name="qty_invoiced" string="Billed" column_invisible="parent.state != 'purchase'" optional="show"/>
                                     <field name="product_uom_id" groups="uom.group_uom"
-                                        readonly="state in ('purchase', 'done', 'cancel') or is_downpayment"
+                                        readonly="state in ('purchase', 'cancel') or is_downpayment"
                                         required="not display_type and not is_downpayment"
                                         options="{'no_open': True, 'quantity_field': 'product_qty'}"
                                         widget="many2one_uom"
@@ -278,7 +285,7 @@
                                                        context="{'partner_id': parent.partner_id}"
                                                        widget="many2one_barcode"
                                                        domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
-                                                       readonly="state in ('purchase', 'to approve', 'done', 'cancel')"
+                                                       readonly="state in ('purchase', 'to approve', 'cancel')"
                                                 />
                                                 <label for="product_qty"/>
                                                 <div class="o_row">
@@ -286,8 +293,8 @@
                                                     <field name="product_uom_id" groups="uom.group_uom" required="not display_type and not is_downpayment" widget="many2one_uom"/>
                                                 </div>
                                                 <field name="qty_received_method" invisible="1"/>
-                                                <field name="qty_received" string="Received Quantity" invisible="parent.state not in ('purchase', 'done')" readonly="qty_received_method != 'manual'"/>
-                                                <field name="qty_invoiced" string="Billed Quantity" invisible="parent.state not in ('purchase', 'done')"/>
+                                                <field name="qty_received" string="Received Quantity" invisible="parent.state != 'purchase'" readonly="qty_received_method != 'manual'"/>
+                                                <field name="qty_invoiced" string="Billed Quantity" invisible="parent.state != 'purchase'"/>
                                                 <field name="price_unit"/>
                                                 <field name="discount"/>
                                                 <field name="tax_ids" widget="many2many_tax_tags" domain="[('type_tax_use', '=', 'purchase'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]" options="{'no_create': True}"/>
@@ -366,13 +373,13 @@
                             <group>
                                 <group name="other_info">
                                     <field name="user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
-                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" readonly="state in ['cancel', 'done', 'purchase']"/>
+                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" readonly="state in ['cancel', 'purchase']"/>
                                     <field name="origin"/>
                                 </group>
                                 <group name="invoice_info">
                                     <field name="invoice_status" invisible="state in ('draft', 'sent', 'to approve', 'cancel')"/>
-                                    <field name="payment_term_id" readonly="invoice_status == 'invoiced' or state == 'done'" options="{'no_create': True}"/>
-                                    <field name="fiscal_position_id" options="{'no_create': True}" readonly="invoice_status == 'invoiced' or state == 'done'"/>
+                                    <field name="payment_term_id" readonly="invoice_status == 'invoiced' or locked" options="{'no_create': True}"/>
+                                    <field name="fiscal_position_id" options="{'no_create': True}" readonly="invoice_status == 'invoiced' or locked"/>
                                 </group>
                             </group>
                         </page>
@@ -399,7 +406,7 @@
                     <separator/>
                     <filter name="draft" string="RFQs" domain="[('state', 'in', ('draft', 'sent', 'to approve'))]"/>
                     <separator/>
-                    <filter name="approved" string="Purchase Orders" domain="[('state', 'in', ('purchase', 'done'))]"/>
+                    <filter name="approved" string="Purchase Orders" domain="[('state', '=', 'purchase')]"/>
                     <filter name="to_approve" string="To Approve" domain="[('state', '=', 'to approve')]" invisible="1"/>
                     <separator/>
                     <filter name="order_date" string="Order Date" date="date_order"/>
@@ -488,7 +495,7 @@
                                     <field name="date_order" options="{'show_time': false}"/>
                                     <field name="activity_ids" widget="kanban_activity"/>
                                 </div>
-                                <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'cancel': 'default', 'done': 'success', 'approved': 'warning'}}" class="ms-auto"/>
+                                <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'cancel': 'default', 'approved': 'warning'}}" class="ms-auto"/>
                             </footer>
                         </t>
                     </templates>
@@ -519,7 +526,7 @@
                     <field name="priority" optional="show" widget="priority" nolabel="1"/>
                     <field name="partner_ref" optional="hide"/>
                     <field name="name" string="Reference" readonly="1" decoration-info="state in ('draft','sent')"/>
-                    <field name="date_order" column_invisible="not context.get('quotation_only', False)" readonly="state in ['cancel', 'done', 'purchase']" optional="show"/>
+                    <field name="date_order" column_invisible="not context.get('quotation_only', False)" readonly="state in ['cancel', 'purchase']" optional="show"/>
                     <field name="date_approve" column_invisible="context.get('quotation_only', False)" optional="show"/>
                     <field name="partner_id" readonly="1"/>
                     <field name="company_id" readonly="1" options="{'no_create': True}"
@@ -528,7 +535,7 @@
                     <field name="origin" optional="hide"/>
                     <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed" widget="monetary" optional="hide"/>
                     <field name="amount_total" sum="Total amount" widget="monetary" optional="show"/>
-                    <field name="currency_id" column_invisible="True" readonly="state in ['cancel', 'done', 'purchase']"/>
+                    <field name="currency_id" column_invisible="True" readonly="state in ['cancel', 'purchase']"/>
                     <field name="state" optional="show"/>
                     <field name="date_planned" column_invisible="context.get('quotation_only', False)" optional="show"/>
                     <field name="invoice_status" column_invisible="context.get('quotation_only', False)" optional="hide"/>
@@ -560,21 +567,21 @@
                     <field name="partner_id" readonly="1"/>
                     <field name="company_id" readonly="1" options="{'no_create': True}"
                         groups="base.group_multi_company" optional="show"/>
-                    <field name="company_id" groups="!base.group_multi_company" column_invisible="True" readonly="state in ['cancel', 'done', 'purchase']"/>
+                    <field name="company_id" groups="!base.group_multi_company" column_invisible="True" readonly="state in ['cancel', 'purchase']"/>
                     <field name="date_planned" column_invisible="context.get('quotation_only', False)" optional="show"/>
                     <field name="user_id" optional="show" widget="many2one_avatar_user"/>
                     <field name="date_order"
-                        invisible="state == 'purchase' or state == 'done' or state == 'cancel'"
+                        invisible="state == 'purchase' or state == 'cancel'"
                         column_invisible="not context.get('quotation_only', False)"
-                        readonly="state in ['cancel', 'done', 'purchase']" widget="remaining_days" optional="show"/>
+                        readonly="state in ['cancel', 'purchase']" widget="remaining_days" optional="show"/>
                     <field name="activity_ids" widget="list_activity" optional="show"/>
                     <field name="origin" optional="hide"/>
                     <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed" widget="monetary" optional="hide"/>
-                    <field name="amount_total" sum="Total amount" widget="monetary" optional="show" decoration-bf="state in ['purchase', 'done']"/>
-                    <field name="currency_id" column_invisible="True" readonly="state in ['cancel', 'done', 'purchase']"/>
+                    <field name="amount_total" sum="Total amount" widget="monetary" optional="show" decoration-bf="state == 'purchase'"/>
+                    <field name="currency_id" column_invisible="True" readonly="state in ['cancel', 'purchase']"/>
                     <field name="amount_total_cc" sum="Total amount" widget="monetary" optional="hide"/>
                     <field name="company_currency_id" column_invisible="True"/>
-                    <field name="state" optional="show" widget="badge" decoration-success="state == 'purchase' or state == 'done'"
+                    <field name="state" optional="show" widget="badge" decoration-success="state == 'purchase'"
                         decoration-warning="state == 'to approve'" decoration-info="state == 'draft' or state == 'sent'"/>
                     <field name="invoice_status" optional="hide"/>
                 </list>
@@ -600,16 +607,16 @@
                     <field name="partner_ref" optional="hide"/>
                     <field name="name" string="Reference" readonly="1" decoration-bf="1" decoration-info="state in ('draft','sent')"/>
                     <field name="date_approve" column_invisible="context.get('quotation_only', False)" optional="show"/>
-                    <field name="partner_id" readonly="state in ['cancel', 'done', 'purchase']"/>
-                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show" readonly="state in ['cancel', 'done', 'purchase']"/>
-                    <field name="company_id" groups="!base.group_multi_company" column_invisible="True" readonly="state in ['cancel', 'done', 'purchase']"/>
+                    <field name="partner_id" readonly="state in ['cancel', 'purchase']"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show" readonly="state in ['cancel', 'purchase']"/>
+                    <field name="company_id" groups="!base.group_multi_company" column_invisible="True" readonly="state in ['cancel', 'purchase']"/>
                     <field name="user_id" widget="many2one_avatar_user" optional="show"/>
-                    <field name="date_order" column_invisible="not context.get('quotation_only', False)" readonly="state in ['cancel', 'done', 'purchase']" optional="show"/>
+                    <field name="date_order" column_invisible="not context.get('quotation_only', False)" readonly="state in ['cancel', 'purchase']" optional="show"/>
                     <field name="activity_ids" widget="list_activity" optional="show"/>
                     <field name="origin" optional="show"/>
                     <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed" widget="monetary" optional="hide"/>
                     <field name="amount_total" sum="Total amount" widget="monetary" optional="show" decoration-bf="1"/>
-                    <field name="currency_id" column_invisible="True" readonly="state in ['cancel', 'done', 'purchase']"/>
+                    <field name="currency_id" column_invisible="True" readonly="state in ['cancel', 'purchase']"/>
                     <field name="state" column_invisible="True"/>
                     <field name="amount_total_cc" sum="Total amount" widget="monetary" optional="hide"/>
                     <field name="company_currency_id" column_invisible="True"/>
@@ -636,7 +643,7 @@
                                 <field name="partner_id" muted="1" display="full" class="o_text_block"/>
                                 <div class="m-1"/>
                                 <field name="state" widget="badge"
-                                   decoration-success="state == 'purchase' or state == 'done'"
+                                   decoration-success="state == 'purchase'"
                                    decoration-warning="state == 'to approve'"
                                    decoration-info="state == 'draft' or state == 'sent'"/>
                             </div>
@@ -677,7 +684,7 @@
                 (0, 0, {'view_mode': 'list', 'view_id': ref('purchase.purchase_order_view_tree')}),
                 (0, 0, {'view_mode': 'kanban', 'view_id': ref('purchase.purchase_order_view_kanban_without_dashboard')}),
             ]"/>
-            <field name="domain">[('state','in',('purchase', 'done'))]</field>
+            <field name="domain">[('state','=', 'purchase')]</field>
             <field name="search_view_id" ref="purchase_order_view_search"/>
             <field name="context">{}</field>
             <field name="help" type="html">
