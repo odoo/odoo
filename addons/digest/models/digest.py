@@ -35,7 +35,7 @@ class Digest(models.Model):
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company.id)
     available_fields = fields.Char(compute='_compute_available_fields')
     is_subscribed = fields.Boolean('Is user subscribed', compute='_compute_is_subscribed')
-    state = fields.Selection([('activated', 'Activated'), ('deactivated', 'Deactivated')], string='Status', readonly=True, default='activated')
+    state = fields.Selection([('activated', 'Activated'), ('deactivated', 'Deactivated')], string='Status', readonly=True, default='deactivated')
     # First base-related KPIs
     kpi_res_users_connected = fields.Boolean('Connected Users')
     kpi_res_users_connected_value = fields.Integer(compute='_compute_kpi_res_users_connected_value')

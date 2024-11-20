@@ -5,7 +5,7 @@
         <record id="set_password_email" model="mail.template">
             <field name="name">Settings: New Portal Signup</field>
             <field name="model_id" ref="base.model_res_users"/>
-            <field name="subject">{{ object.create_uid.name }} from {{ object.company_id.name }} invites you to connect to Odoo</field>
+            <field name="subject">{{ object.create_uid.name }} from {{ object.company_id.name }} invites you to connect to Infinite Laundry CRM</field>
             <field name="email_from">{{ (object.company_id.email_formatted or user.email_formatted) }}</field>
             <field name="email_to">{{ object.email_formatted }}</field>
             <field name="description">Sent to new user after you invited them</field>
@@ -18,7 +18,7 @@
         <td align="center" style="min-width: 590px;">
             <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
                 <tr><td valign="middle">
-                    <span style="font-size: 10px;">Welcome to Odoo</span><br/>
+                    <span style="font-size: 10px;">Welcome to Infinite Laundry CRM</span><br/>
                     <span style="font-size: 20px; font-weight: bold;">
                         <t t-out="object.name or ''">Marc Demo</t>
                     </span>
@@ -46,7 +46,7 @@
                             </a>
                         </div>
                         <t t-set="website_url" t-value="object.get_base_url()"></t>
-                        Your domain is: <b><a t-att-href='website_url' t-out="website_url or ''">http://yourcompany.odoo.com</a></b><br />
+                        Your domain is: <b><a t-att-href='website_url' t-out="website_url or ''">http://yourcompany.com</a></b><br />
                         Your sign in email is: <b><a t-attf-href="/web/login?login={{ object.email }}" target="_blank" t-out="object.email or ''">mark.brown23@example.com</a></b><br /><br />
                         It’s an all-in-one business software loved by 7+ million users. It will considerably improve your experience at work and increase your productivity.
                         <br /><br />

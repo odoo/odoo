@@ -69,6 +69,7 @@
     ],
     'installable': True,
     'application': True,
+    'auto_install': True,
     'assets': {
         'web.assets_backend': [
             'crm/static/src/**/*',

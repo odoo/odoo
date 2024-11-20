@@ -58,6 +58,6 @@
     'images': ['static/description/banner.jpg'],
     'license': 'AGPL-3',
     'installable': True,
-    'auto_install': False,
+    'auto_install': True,
     'application': True,
 }
