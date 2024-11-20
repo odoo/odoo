@@ -23,6 +23,17 @@ test("can be rendered as <span/>", async () => {
     expect(".dropdown-item").toHaveAttribute("role", "menuitem");
 });
 
+test("can be rendered using the tag prop", async () => {
+    class Parent extends Component {
+        static components = { DropdownItem };
+        static props = [];
+        static template = xml`<DropdownItem tag="'button'">coucou</DropdownItem>`;
+    }
+    await mountWithCleanup(Parent);
+
+    expect("button.dropdown-item").toHaveCount(1);
+});
+
 test("(with href prop) can be rendered as <a/>", async () => {
     class Parent extends Component {
         static components = { DropdownItem };

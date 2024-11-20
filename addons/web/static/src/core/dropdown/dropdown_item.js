@@ -10,6 +10,10 @@ const ClosingMode = {
 export class DropdownItem extends Component {
     static template = "web.DropdownItem";
     static props = {
+        tag: {
+            type: String,
+            optional: true,
+        },
         class: {
             type: [String, Object],
             optional: true,
