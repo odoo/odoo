@@ -22,4 +22,8 @@ export class RecruitmentActionHelper extends Component {
     loadRecruitmentScenario() {
         this.actionService.doAction("hr_recruitment.action_load_demo_data");
     }
+
+    actionCreateJobPosition() {
+        this.actionService.doAction("hr.action_create_job_position")
+    }
 }
