@@ -58,7 +58,7 @@ class IrProfile(models.Model):
             if execution.traces_sync:
                 sp.add('settrace', json.loads(execution.traces_sync))
 
-            result = json.dumps(sp.add_default().make())
+            result = json.dumps(sp.add_default(**request.session.get("profile_params",{})).make())
             execution.speedscope = base64.b64encode(result.encode('utf-8'))
 
     def _compute_speedscope_url(self):

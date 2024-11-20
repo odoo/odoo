@@ -18,6 +18,14 @@
                                 t-att-checked="profiling.isCollectorEnabled('sql')"/>
                             <label class="form-check-label" for="profile_sql">Record sql</label>
                         </span>
+                        <div t-if="profiling.isCollectorEnabled('sql')" class="input-group input-group-sm mt-2" t-on-click.stop.prevent="">
+                            <div class="input-group-text">Constant Time</div>
+                            <select class="profile_param form-select" t-on-change="(ev) => this.changeParam('constant_time', ev)">
+                                <t t-set="constant_time" t-value="profiling.state.params.constant_time"/>
+                                <option value="False" t-att-selected="constant_time === 'True'" >False</option>
+                                <option value="True" t-att-selected="constant_time === 'True'">True</option>
+                            </select>
+                        </div>
                         <span class="o_profiling_switch form-check form-switch mt-2" t-on-click.stop.prevent="() => this.profiling.toggleCollector('traces_async')">
                             <input type="checkbox" class="form-check-input" id="profile_traces_async"
                                 t-att-checked="profiling.isCollectorEnabled('traces_async')"/>
