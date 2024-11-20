@@ -23,11 +23,21 @@ export class AccountMoveController extends FormController {
 };
 
 export class AccountMoveFormNotebook extends Notebook {
+<<<<<<< saas-17.2
     static template = "account.AccountMoveFormNotebook";
     static props = {
         ...Notebook.props,
         onBeforeTabSwitch: { type: Function, optional: true },
     };
+||||||| 041005e66ad8b1d9147b0e6da247de272fe526ad
+=======
+    onAnchorClicked(ev) {
+        if (ev.detail.detail.id === "#outstanding") {
+            ev.preventDefault();
+            ev.detail.detail.originalEv.preventDefault();
+        }
+    }
+>>>>>>> 4935ffb3b54ae27cc617b8fe925e818936b573ae
 
     async changeTabTo(page_id) {
         if (this.props.onBeforeTabSwitch) {
