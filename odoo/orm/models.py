@@ -1715,7 +1715,24 @@ class BaseModel(metaclass=MetaModel):
             # return all when operator is positive
             return expression.FALSE_DOMAIN if operator in expression.NEGATIVE_TERM_OPERATORS else expression.TRUE_DOMAIN
         aggregator = expression.AND if operator in expression.NEGATIVE_TERM_OPERATORS else expression.OR
-        return aggregator([[(field_name, operator, value)] for field_name in search_fnames])
+        domains = []
+        for field_name in search_fnames:
+            # field_name may be a sequence of field names (partner_id.name)
+            # retrieve the last field in the sequence
+            model = self
+            for fname in field_name.split('.'):
+                field = model._fields[fname]
+                model = self.env.get(field.comodel_name)
+            if field.relational:
+                # relational fields will trigger a _name_search on their comodel
+                domains.append([(field_name, operator, value)])
+                continue
+            try:
+                domains.append([(field_name, operator, field.convert_to_write(value, self))])
+            except ValueError:
+                pass  # ignore that case if the value doesn't match the field type
+
+        return aggregator(domains)
 
     @api.model
     def name_create(self, name) -> tuple[int, str] | typing.Literal[False]:
