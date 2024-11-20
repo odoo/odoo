@@ -7,6 +7,7 @@ export class AvatarCardEmployeePopover extends AvatarCardResourcePopover {
         ...AvatarCardResourcePopover.defaultProps,
         recordModel: "hr.employee",
     };
+
     async onWillStart() {
         await super.onWillStart();
         this.record.employee_id = [this.props.id];
