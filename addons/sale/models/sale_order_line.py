@@ -431,7 +431,7 @@ class SaleOrderLine(models.Model):
                     date=line.order_id.date_order,
                 )
 
-    @api.depends('product_id', 'product_uom', 'product_uom_qty')
+    @api.depends('product_id', 'product_uom')
     def _compute_price_unit(self):
         for line in self:
             # check if there is already invoiced amount. if so, the price shouldn't change as it might have been
