@@ -4,10 +4,9 @@
 import odoo
 from odoo import api, fields, models, tools, _, Command
 from odoo.exceptions import MissingError, ValidationError, AccessError, UserError
-from odoo.tools import frozendict
+from odoo.tools import SQL, frozendict
 from odoo.tools.safe_eval import safe_eval, test_python_expr
 from odoo.tools.float_utils import float_compare
-from odoo.http import request
 import base64
 from collections import defaultdict
 from functools import partial, reduce
@@ -108,13 +107,13 @@ class IrActionsActions(models.Model):
     def create(self, vals_list):
         res = super().create(vals_list)
         # self.get_bindings() depends on action records
-        self.env.registry.clear_cache()
+        self.env.registry.clear_cache('actions')
         return res
 
     def write(self, vals):
         res = super().write(vals)
         # self.get_bindings() depends on action records
-        self.env.registry.clear_cache()
+        self.env.registry.clear_cache('actions')
         return res
 
     def unlink(self):
@@ -126,7 +125,7 @@ class IrActionsActions(models.Model):
         filters.unlink()
         res = super().unlink()
         # self.get_bindings() depends on action records
-        self.env.registry.clear_cache()
+        self.env.registry.clear_cache('actions')
         return res
 
     @api.ondelete(at_uninstall=True)
@@ -179,7 +178,7 @@ class IrActionsActions(models.Model):
                 result[action_type] = actions
         return result
 
-    @tools.ormcache('model_name', 'self.env.lang')
+    @tools.ormcache('model_name', 'self.env.lang', cache='actions')
     def _get_bindings(self, model_name):
         cr = self.env.cr
 
@@ -196,6 +195,7 @@ class IrActionsActions(models.Model):
         """, [model_name])
         for action_id, action_model, binding_type in cr.fetchall():
             try:
+                # TODO: improvement can be done here
                 action = self.env[action_model].sudo().browse(action_id)
                 fields = ['name', 'binding_view_types']
                 for field in ('groups_id', 'res_model', 'sequence', 'domain'):
@@ -364,15 +364,15 @@ class IrActionsAct_Window(models.Model):
 
     def exists(self):
         ids = self._existing()
-        existing = self.filtered(lambda rec: rec.id in ids)
-        return existing
+        return self.filtered(lambda rec: rec.id in ids)
 
     @api.model
-    @tools.ormcache()
+    @tools.ormcache(cache='actions')
     def _existing(self):
-        self._cr.execute("SELECT id FROM %s" % self._table)
-        return set(row[0] for row in self._cr.fetchall())
-
+        return {
+            id_
+            for [id_] in self.env.execute_query(SQL("SELECT id FROM %s", SQL.identifier(self._table)))
+        }
 
     def _get_readable_fields(self):
         return super()._get_readable_fields() | {
