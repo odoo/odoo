@@ -16,7 +16,7 @@ class DeliveryCarrier(models.Model):
     )
     warehouse_ids = fields.Many2many(string="Stores", comodel_name='stock.warehouse')
 
-    @api.constrains('is_published', 'warehouse_ids')
+    @api.constrains('delivery_type', 'is_published', 'warehouse_ids')
     def _check_in_store_dm_has_warehouses_when_published(self):
         if any(self.filtered(
             lambda dm: dm.delivery_type == 'in_store'
@@ -27,7 +27,7 @@ class DeliveryCarrier(models.Model):
                 _("The delivery method must have at least one warehouse to be published.")
             )
 
-    @api.constrains('company_id', 'warehouse_ids')
+    @api.constrains('delivery_type', 'company_id', 'warehouse_ids')
     def _check_warehouses_have_same_company(self):
         for dm in self:
             if dm.delivery_type == 'in_store' and dm.company_id and any(
