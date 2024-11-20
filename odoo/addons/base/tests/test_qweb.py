@@ -14,7 +14,7 @@ from textwrap import dedent
 
 from odoo.tests.common import TransactionCase
 from odoo.addons.base.models.ir_qweb import QWebException, render
-from odoo.tools import misc, mute_logger
+from odoo.tools import file_open, misc, mute_logger
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.exceptions import UserError, ValidationError, MissingError
 
@@ -1704,6 +1704,42 @@ class TestQWebBasic(TransactionCase):
             """
         })
         self.env['ir.qweb'].with_context(lang='pt_BR')._render(view1.id, {})  # should not crash
+
+    def test_render_template_from_file(self):
+        expected_result = etree.fromstring(file_open('base/tests/file_template/file_expected_render.xml').read())
+        rendered_result = self.env['ir.qweb']._render('base/tests/file_template/templates/file_template.xml', values={
+            'document_name': 'Test Document',
+            'partner': {
+                'name': 'Jerry',
+                'forename': 'Khan',
+            },
+        })
+        self.assertEqual(etree.fromstring(rendered_result), expected_result)
+
+    def test_render_template_from_file_special_cases(self):
+        self.env['ir.qweb']._render('base/tests/file_template/templates/../templates/file_template.xml', values={
+            'document_name': 'Test Document',
+            'partner': {
+                'name': 'Jerry',
+                'forename': 'Khan',
+            },
+        })
+
+        self.env['ir.qweb']._render('./base/tests//file_template/templates/file_template.xml', values={
+            'document_name': 'Test Document',
+            'partner': {
+                'name': 'Jerry',
+                'forename': 'Khan',
+            },
+        })
+
+        # Check that we cannot bypass the templates subfolder. We should only be able to read file under this specific subfolder
+        with self.assertRaises(ValueError):
+            self.env['ir.qweb']._render('base/tests/file_template/templates/../unreadable_file_template.xml', values={})
+
+        # Check that as above, if we do not have a parent called templates, the file become unreadable for security reasons.
+        with self.assertRaises(ValueError):
+            self.env['ir.qweb']._render('base/tests/file_template/unreadable_file_template.xml', values={})
 
     def test_void_element(self):
         view = self.env['ir.ui.view'].create({
