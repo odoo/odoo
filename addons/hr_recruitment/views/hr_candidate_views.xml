@@ -149,28 +149,6 @@
         </field>
     </record>
 
-    <record id="hr_candidate_view_calendar" model="ir.ui.view">
-        <field name="name">hr.candidate.view.calendar</field>
-        <field name="model">hr.candidate</field>
-        <field name="arch" type="xml">
-            <calendar 
-                string="Candidates"
-                mode="month"
-                date_start="activity_date_deadline"
-                color="user_id"
-                event_limit="5"
-                hide_time="true"
-                quick_create="0"
-            >
-                <field name="partner_name"/>
-                <field name="priority" widget="priority"/>
-                <field name="activity_summary"/>
-                <field name="user_id" filters="1" invisible="1"/>
-                <field name="candidate_properties"/>
-            </calendar>
-        </field>
-    </record>
-
     <record id="hr_candidate_view_search" model="ir.ui.view">
         <field name="name">hr.candidate.view.search</field>
         <field name="model">hr.candidate</field>
@@ -230,7 +208,7 @@
         <field name="name">Candidates</field>
         <field name="path">recruitment-candidates</field>
         <field name="res_model">hr.candidate</field>
-        <field name="view_mode">kanban,list,form,calendar,activity</field>
+        <field name="view_mode">kanban,list,form,activity</field>
         <field name="context">{}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
