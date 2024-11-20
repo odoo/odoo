@@ -95,3 +95,11 @@ class WorkIntervals(object):
                 enabled = not enabled
 
         return result
+    
+    def remove(self, interval):
+        """ Remove an interval from the set. """
+        self._items.remove(interval)
+
+    def items(self):
+        """ Return the intervals. """
+        return self._items
