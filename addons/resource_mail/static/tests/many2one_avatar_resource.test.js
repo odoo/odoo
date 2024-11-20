@@ -9,6 +9,7 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
+import { onRpc } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 const data = {};
@@ -80,6 +81,20 @@ beforeEach(async () => {
             resource_type: "user",
         },
     ]);
+    onRpc("resource.resource", "get_avatar_card_data", (params) => {
+        const resourceIdArray = params.args[0];
+        const resourceId = resourceIdArray[0];
+        const resources = pyEnv['resource.resource'].read([resourceId]);
+        const result = resources.map(resource => ({
+            name: resource.name,
+            role_ids: resource.role_ids,
+            email:resource.email,
+            phone: resource.phone,
+            user_id: resource.user_id,
+        }));
+        return result;
+    });
+
 });
 
 test("many2one_avatar_resource widget in form view", async () => {
