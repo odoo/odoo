@@ -45,6 +45,10 @@ export class Many2ManyBinaryField extends Component {
         return file.name.replace(/^.*\./, "");
     }
 
+    isImage(file) {
+        return file.mimetype.startsWith("image/");
+    }
+
     async onFileUploaded(files) {
         for (const file of files) {
             if (file.error) {
