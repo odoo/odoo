@@ -448,3 +448,40 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
         with freeze_time('2023-11-15 16:00:00'):
             self.assertEqual(len(search_event()), 3)
         events.unlink()
+
+    def test_recurring_meeting_reminder_notification(self):
+        alarm = self.env['calendar.alarm'].create({
+            'name': 'Alarm',
+            'alarm_type': 'notification',
+            'interval': 'minutes',
+            'duration': 30,
+        })
+
+        self.event._apply_recurrence_values({
+            'interval': 2,
+            'rrule_type': 'weekly',
+            'tue': True,
+            'count': 2,
+        })
+
+        now = fields.Datetime.now()
+        with patch.object(fields.Datetime, 'now', lambda: now):
+            with self.assertBus([(self.env.cr.dbname, 'res.partner', self.partner.id)], [
+                {
+                    "type": "calendar.alarm",
+                    "payload": [{
+                        "alarm_id": alarm.id,
+                        "event_id": self.event.id,
+                        "title": "Doom's day",
+                        "message": self.event.display_time,
+                        "timer": 20 * 60,
+                        "notify_at": fields.Datetime.to_string(now + relativedelta(minutes=20)),
+                    }],
+                },
+            ]):
+                self.event.with_context(no_mail_to_attendees=True).write({
+                    'start': now + relativedelta(minutes=50),
+                    'stop': now + relativedelta(minutes=55),
+                    'partner_ids': [(4, self.partner.id)],
+                    'alarm_ids': [(4, alarm.id)]
+                })

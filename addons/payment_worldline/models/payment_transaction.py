@@ -253,16 +253,21 @@ class PaymentTransaction(models.Model):
 
         # Update the payment state.
         status = payment_data.get('status')
+        has_token_data = 'token' in payment_method_data
         if not status:
             raise ValidationError("Worldline: " + _("Received data with missing payment state."))
 
         if status in const.PAYMENT_STATUS_MAPPING['pending']:
             if status == 'AUTHORIZATION_REQUESTED':
                 self._set_error("Worldline: " + status)
+            elif self.operation == 'validation' \
+                 and status in {'PENDING_CAPTURE', 'CAPTURE_REQUESTED'} \
+                 and has_token_data:
+                    self._worldline_tokenize_from_notification_data(payment_method_data)
+                    self._set_done()
             else:
                 self._set_pending()
         elif status in const.PAYMENT_STATUS_MAPPING['done']:
-            has_token_data = 'token' in payment_method_data
             if self.tokenize and has_token_data:
                 self._worldline_tokenize_from_notification_data(payment_method_data)
             self._set_done()
