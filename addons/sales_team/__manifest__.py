@@ -27,7 +27,10 @@ Using this application you can manage Sales Teams with CRM and/or Sales
     'installable': True,
     'assets': {
         'web.assets_backend': [
-            'sales_team/static/**/*',
+            'sales_team/static/src/**/*',
+        ],
+        'web.assets_unit_tests': [
+            'sales_team/static/tests/**/*',
         ],
     },
     'license': 'LGPL-3',

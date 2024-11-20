@@ -136,10 +136,10 @@
             <field name="inherit_id" ref="sales_team.crm_team_view_form"/>
             <field name="priority">12</field>
             <field name="arch" type="xml">
-                <xpath expr="//sheet" position="before">
+                <xpath expr="//form/*[1]" position="before">
                     <field name="use_leads" invisible="1"/>
                     <field name="use_opportunities" invisible="1"/>
-                    <header>
+                    <header invisible="not use_leads and not use_opportunities or not assignment_enabled">
                         <button name="action_assign_leads" type="object"
                             string="Assign Leads"
                             class="oe_highlight"
