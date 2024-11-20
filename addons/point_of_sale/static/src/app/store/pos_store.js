@@ -1745,6 +1745,14 @@ export class PosStore extends Reactive {
         const { start_category, iface_start_categ_id } = this.config;
         this.setSelectedCategory((start_category && iface_start_categ_id?.[0]) || 0);
     }
+
+    isProductVariant(product) {
+        return (
+            this.models["product.product"].filter(
+                (p) => p.raw.product_tmpl_id === product.raw.product_tmpl_id
+            ).length > 1
+        );
+    }
 }
 
 PosStore.prototype.electronic_payment_interfaces = {};

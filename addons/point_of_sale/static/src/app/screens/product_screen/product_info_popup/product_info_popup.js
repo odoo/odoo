@@ -26,10 +26,6 @@ export class ProductInfoPopup extends Component {
         this.props.close();
     }
     get isVariant() {
-        return (
-            this.pos.models["product.product"].filter(
-                (p) => p.raw.product_tmpl_id === this.props.product.raw.product_tmpl_id
-            ).length > 1
-        );
+        return this.pos.isProductVariant(this.props.product);
     }
 }
