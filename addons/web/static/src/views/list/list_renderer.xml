@@ -126,7 +126,7 @@
                             href="#"
                             role="button"
                             t-att-class="create_index !== 0 ? 'ml16' : ''"
-                            t-att-tabindex="props.list.editedRecord ? '-1' : '0'"
+                            t-att-tabindex="editedRecord ? '-1' : '0'"
                             t-on-click.stop.prevent="() => this.add({ context: create.context })"
                         >
                             <t t-esc="create.string"/>
@@ -139,7 +139,7 @@
                             record="props.list"
                             string="create.string"
                             title="create.title"
-                            tabindex="props.list.editedRecord ? '-1' : '0'"
+                            tabindex="editedRecord ? '-1' : '0'"
                         />
                     </t>
                 </td>
@@ -269,7 +269,7 @@
                                     record="record"
                                     string="button.string"
                                     title="button.title"
-                                    tabindex="props.list.editedRecord ? '-1' : '0'"
+                                    tabindex="editedRecord ? '-1' : '0'"
                                     onClick="isX2Many and record.isNew ? displaySaveNotification.bind(this) : ''"
                                 />
                             </t>
