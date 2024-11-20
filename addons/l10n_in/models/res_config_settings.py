@@ -29,7 +29,7 @@ class ResConfigSettings(models.TransientModel):
     l10n_in_gstin = fields.Char(string="GST Number", related='company_id.vat', readonly=False)
 
     def l10n_in_edi_buy_iap(self):
-        if not self.l10n_in_edi_production_env or not (self.module_l10n_in_edi or self.module_l10n_in_gstin_status or self.module_l10n_in_reports_gstr):
+        if not self.l10n_in_edi_production_env or not (self.module_l10n_in_edi or self.module_l10n_in_ewaybill or self.module_l10n_in_gstin_status or self.module_l10n_in_reports_gstr):
             raise ValidationError(_(
                 "Please ensure that at least one Indian service and production environment is enabled,"
                 " and save the configuration to proceed with purchasing credits."

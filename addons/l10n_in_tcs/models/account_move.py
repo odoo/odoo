@@ -30,7 +30,7 @@ class AccountMove(models.Model):
                         'action': lines._get_records_action(
                             name=_("Journal Items(s)"),
                             target='current',
-                            views=[(self.env.ref("l10n_in_tcs.view_move_line_tree_l10n_in_tcs").id, "list")],
+                            views=[(self.env.ref("l10n_in_tcs.view_move_line_tree_l10n_in").id, "list")],
                             domain=[('id', 'in', lines.ids)]
                         )
                     }

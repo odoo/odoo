@@ -2,11 +2,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 import re
+import markupsafe
+
+from markupsafe import Markup
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, RedirectWarning, UserError
 from odoo.tools.float_utils import json_float_round
 from odoo.tools.image import image_data_uri
+from odoo.addons.l10n_in.models.iap_account import IAP_SERVICE_NAME
 
 
 class AccountMove(models.Model):
@@ -299,3 +303,12 @@ class AccountMove(models.Model):
             l10n_in_tax_details["%s_amount" % (tax_detail["line_code"])] += tax_detail["tax_amount"]
             l10n_in_tax_details["%s_amount_currency" % (tax_detail["line_code"])] += tax_detail["tax_amount_currency"]
         return l10n_in_tax_details
+
+    def _l10n_in_get_iap_buy_credits_message(self):
+        url = self.env["iap.account"].get_credits_url(service_name=IAP_SERVICE_NAME)
+        return markupsafe.Markup("""<p><b>%s</b></p><p>%s <a href="%s">%s</a></p>""") % (
+            _("You have insufficient credits to send this document!"),
+            _("Please buy more credits and retry: "),
+            url,
+            _("Buy Credits")
+        )

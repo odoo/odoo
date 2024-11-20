@@ -99,15 +99,6 @@ class AccountEdiFormat(models.Model):
                     """Set an appropriate GST tax on line "%s" (if it's zero rated or nil rated then select it also)""", line.product_id.name))
         return error_message
 
-    def _l10n_in_edi_get_iap_buy_credits_message(self):
-        url = self.env["iap.account"].get_credits_url(service_name="l10n_in_edi")
-        return markupsafe.Markup("""<p><b>%s</b></p><p>%s <a href="%s">%s</a></p>""") % (
-            _("You have insufficient credits to send this document!"),
-            _("Please buy more credits and retry: "),
-            url,
-            _("Buy Credits")
-        )
-
     def _l10n_in_edi_post_invoice(self, invoice):
         generate_json = self._l10n_in_edi_generate_invoice_json(invoice)
         response = self._l10n_in_edi_generate(invoice.company_id, generate_json)
@@ -144,7 +135,7 @@ class AccountEdiFormat(models.Model):
             if "no-credit" in error_codes:
                 return {invoice: {
                     "success": False,
-                    "error": self._l10n_in_edi_get_iap_buy_credits_message(),
+                    "error": self.env["account.move"]._l10n_in_get_iap_buy_credits_message(),
                     "blocking_level": "error",
                 }}
             elif error:
@@ -200,7 +191,7 @@ class AccountEdiFormat(models.Model):
             if "no-credit" in error_codes:
                 return {invoice: {
                     "success": False,
-                    "error": self._l10n_in_edi_get_iap_buy_credits_message(),
+                    "error": self.env["account.move"]._l10n_in_get_iap_buy_credits_message(),
                     "blocking_level": "error",
                 }}
             if error:

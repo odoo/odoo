@@ -53,7 +53,7 @@
                                     help="Activate this to start using Indian services in the production environment.">
                                 <field name="l10n_in_edi_production_env"/>
                                 <div class='mt8'
-                                    invisible="not l10n_in_edi_production_env or (not module_l10n_in_edi and not module_l10n_in_gstin_status and not module_l10n_in_edi_ewaybill and not module_l10n_in_reports_gstr)">
+                                    invisible="not l10n_in_edi_production_env or (not module_l10n_in_edi and not module_l10n_in_gstin_status and not module_l10n_in_ewaybill and not module_l10n_in_reports_gstr)">
                                     <button name="l10n_in_edi_buy_iap"
                                             title="Costs 1 credit per transaction. Free 200 credits will be available for the first time."
                                             icon="fa-arrow-right"
@@ -79,8 +79,8 @@
                                     company_dependent="1"
                                     string="E-Waybill"
                                     documentation="/applications/finance/fiscal_localizations/india.html#india-e-waybill">
-                                <field name="module_l10n_in_edi_ewaybill" class="oe_inline"/>
-                                <div class="content-group" invisible="not module_l10n_in_edi_ewaybill">
+                                <field name="module_l10n_in_ewaybill" class="oe_inline"/>
+                                <div class="content-group" invisible="not module_l10n_in_ewaybill">
                                     <div class="text-warning mt16 mb4">
                                         Save this page and come back here to set up the feature.
                                     </div>
