@@ -39,4 +39,48 @@
         </xpath>
     </template>
 
+    <template id="delivery_location_selector" inherit_id="website_sale.delivery_address_row">
+        <div id="delivery_address_row" position="inside">
+            <div name="o_pickup_location" class="d-none">
+                <div name="find_store_btn" class="row row-cols-3 g-1">
+                    <t t-set="pickup_location_data" t-value="order.pickup_location_data or {}"/>
+                    <t t-set="button_class" t-value="'o_wsale_find_store d-flex align-items-center justify-content-center h-100 px-4 rounded no-decoration'"/>
+                    <button
+                        t-if="not pickup_location_data"
+                        name="o_pickup_location_selector"
+                        role="button"
+                        t-attf-class="{{button_class}} border"
+                    >
+                        <div>
+                            <span class="d-md-inline">
+                                <i class="fa fa-search"/>
+                            </span>
+                            <span>
+                                Find a store
+                            </span>
+                        </div>
+                    </button>
+                    <span
+                        name="o_pickup_location_selector"
+                        role="button"
+                        t-attf-class="{{button_class.replace('d-flex', '')}} {{'border' if pickup_location_data else ''}}"
+                        t-att-data-location-id="pickup_location_data.get('id')"
+                        t-att-data-zip-code="pickup_location_data.get('zip_code')"
+                        t-att-data-pickup-location-data="json_pickup_location_data"
+                    >
+                        <b name="o_pickup_location_name" class="d-block" t-out="pickup_location_data.get('name', '')" />
+                        <span name="o_pickup_location_address">
+                            <t
+                                t-out="pickup_location_data.get('street', '') + ' '
+                                    + pickup_location_data.get('zip_code', '') + ' '
+                                    + pickup_location_data.get('city', '')"
+                            />
+                        </span>
+                        <span name="o_pickup_location_details"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </template>
+
 </odoo>

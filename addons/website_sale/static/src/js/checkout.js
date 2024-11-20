@@ -149,7 +149,8 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
      */
     async _selectPickupLocation(ev) {
         const { zipCode, locationId } = ev.currentTarget.dataset;
-        const deliveryMethodContainer = this._getDeliveryMethodContainer(ev.currentTarget);
+        const checkedRadio = document.querySelector('input[name="o_delivery_radio"]:checked');
+        const deliveryMethodContainer = this._getDeliveryMethodContainer(checkedRadio);
         this.call('dialog', 'add', LocationSelectorDialog, {
             zipCode: zipCode,
             selectedLocationId: locationId,
@@ -179,7 +180,8 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
      * @return {void}
      */
     _updatePickupLocation(deliveryMethodContainer, location, jsonLocation) {
-        const pickupLocation = deliveryMethodContainer.querySelector('[name="o_pickup_location"]');
+        const checkedRadio = document.querySelector('input[name="o_delivery_radio"]:checked');
+        const pickupLocation = this._getPickupLocationContainer(checkedRadio);
         pickupLocation.querySelector('[name="o_pickup_location_name"]').innerText = location.name;
         pickupLocation.querySelector(
             '[name="o_pickup_location_address"]'
@@ -479,9 +481,8 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
         if (!radio.dataset.isPickupLocationRequired || radio.disabled) {
             return;  // Fetching the delivery rate failed.
         }
-        const deliveryMethodContainer = this._getDeliveryMethodContainer(radio);
-        const pickupLocation = deliveryMethodContainer.querySelector('[name="o_pickup_location"]');
-
+        // const deliveryMethodContainer = this._getDeliveryMethodContainer(radio);
+        const pickupLocation = this._getPickupLocationContainer(radio);
         const editPickupLocationButton = pickupLocation.querySelector(
             'span[name="o_pickup_location_selector"]'
         );
@@ -562,6 +563,10 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
      */
     _getDeliveryMethodContainer(el) {
         return el.closest('[name="o_delivery_method"]');
+    },
+
+    _getPickupLocationContainer(radio){
+        return radio.closest('[name="o_pickup_location"]')
     },
 
     /**
