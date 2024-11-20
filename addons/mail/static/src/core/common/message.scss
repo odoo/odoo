@@ -126,9 +126,17 @@
 
 .o-mail-Message-actions {
     z-index: $o-mail-NavigableList-zIndex - 3;
+    box-shadow: $box-shadow-sm;
+    border: $border-width solid var(--o-mail-Message-action-border-color, transparent);
+    transition: .4s box-shadow;
 
     &.o-expanded {
         z-index: $o-mail-NavigableList-zIndex - 2;
+    }
+
+    &:hover, &:has(.show) {
+        box-shadow: $box-shadow;
+        --o-mail-Message-action-border-color: #{$border-color};
     }
 
     button:hover, .focus {
