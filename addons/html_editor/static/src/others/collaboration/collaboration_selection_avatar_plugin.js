@@ -69,8 +69,11 @@ export class CollaborationSelectionAvatarPlugin extends Plugin {
      */
     drawPeerAvatar(selectionInfo) {
         const { selection, peerId } = selectionInfo;
-        const { avatarUrl, peerName = _t("Anonymous") } =
-            this.dependencies.collaborationOdoo.getPeerMetadata(peerId);
+        const peerMetadata = this.dependencies.collaborationOdoo.getPeerMetadata(peerId);
+        if (!peerMetadata) {
+            return;
+        }
+        const { avatarUrl, peerName = _t("Anonymous") } = peerMetadata;
         const anchorNode = this.dependencies.history.getNodeById(selection.anchorNodeId);
         const focusNode = this.dependencies.history.getNodeById(selection.focusNodeId);
         if (!anchorNode || !focusNode) {
