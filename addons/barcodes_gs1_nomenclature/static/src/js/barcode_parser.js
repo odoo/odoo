@@ -100,6 +100,7 @@ BarcodeParser.include({
         const rules = this.nomenclature.rules.filter(rule => rule.encoding === 'gs1-128');
         const separatorReg = FNC1_CHAR + "?";
         barcode = this._convertGS1Separators(barcode);
+        barcode = this.cleanBarcode(barcode);
 
         while (barcode.length > 0) {
             const barcodeLength = barcode.length;
@@ -157,6 +158,19 @@ BarcodeParser.include({
         const fieldNames = this._super(...arguments);
         fieldNames.push('gs1_content_type', 'gs1_decimal_usage', 'associated_uom_id');
         return fieldNames;
+    },
+
+    /**
+     * Makes all needed operations to clean and prepare the barcode.
+     * @param {string} barcode
+     * @returns {string}
+     */
+    cleanBarcode(barcode) {
+        if (barcode[0] === FNC1_CHAR) {
+            // If first character is the separator, remove it to be able to parse the barcode.
+            barcode = barcode.slice(1);
+        }
+        return barcode;
     },
 
     /**
