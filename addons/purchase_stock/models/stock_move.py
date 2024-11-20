@@ -225,10 +225,10 @@ class StockMove(models.Model):
         self.write({'created_purchase_line_ids': [Command.clear()]})
 
     def _get_upstream_documents_and_responsibles(self, visited):
-        created_pl = self.created_purchase_line_ids.filtered(lambda cpl: cpl.state not in ('done', 'cancel') and (cpl.state != 'draft' or self._context.get('include_draft_documents')))
+        created_pl = self.created_purchase_line_ids.filtered(lambda cpl: cpl.state != 'cancel' and (cpl.state != 'draft' or self._context.get('include_draft_documents')))
         if created_pl:
             return [(pl.order_id, pl.order_id.user_id, visited) for pl in created_pl]
-        elif self.purchase_line_id and self.purchase_line_id.state not in ('done', 'cancel'):
+        elif self.purchase_line_id and self.purchase_line_id.state != 'cancel':
             return[(self.purchase_line_id.order_id, self.purchase_line_id.order_id.user_id, visited)]
         else:
             return super(StockMove, self)._get_upstream_documents_and_responsibles(visited)

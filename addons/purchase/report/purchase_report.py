@@ -22,7 +22,6 @@ class PurchaseReport(models.Model):
         ('sent', 'RFQ Sent'),
         ('to approve', 'To Approve'),
         ('purchase', 'Purchase Order'),
-        ('done', 'Done'),
         ('cancel', 'Cancelled')
     ], 'Status', readonly=True)
     product_id = fields.Many2one('product.product', 'Product', readonly=True)

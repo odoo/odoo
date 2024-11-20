@@ -137,7 +137,7 @@ class PurchaseOrderLine(models.Model):
             line.qty_invoiced = qty
 
             # compute qty_to_invoice
-            if line.order_id.state in ['purchase', 'done']:
+            if line.order_id.state == 'purchase':
                 if line.product_id.purchase_method == 'purchase':
                     line.qty_to_invoice = line.product_qty - line.qty_invoiced
                 else:
@@ -220,9 +220,9 @@ class PurchaseOrderLine(models.Model):
         return super(PurchaseOrderLine, self).write(values)
 
     @api.ondelete(at_uninstall=False)
-    def _unlink_except_purchase_or_done(self):
+    def _unlink_except_purchase(self):
         for line in self:
-            if line.order_id.state in ['purchase', 'done']:
+            if line.order_id.state == 'purchase':
                 state_description = {state_desc[0]: state_desc[1] for state_desc in self._fields['state']._description_selection(self.env)}
                 raise UserError(_('Cannot delete a purchase order line which is in state “%s”.', state_description.get(line.state)))
 

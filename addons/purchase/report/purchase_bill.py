@@ -38,7 +38,7 @@ class PurchaseBillUnion(models.Model):
                     NULL as vendor_bill_id, id as purchase_order_id
                 FROM purchase_order
                 WHERE
-                    state in ('purchase', 'done') AND
+                    state = 'purchase' AND
                     invoice_status in ('to invoice', 'no')
             )""")
 

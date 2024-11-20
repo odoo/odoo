@@ -45,7 +45,7 @@ class PurchaseOrder(models.Model):
     def _get_invoiced(self):
         precision = self.env['decimal.precision'].precision_get('Product Unit')
         for order in self:
-            if order.state not in ('purchase', 'done'):
+            if order.state != 'purchase':
                 order.invoice_status = 'no'
                 continue
 
@@ -97,9 +97,14 @@ class PurchaseOrder(models.Model):
         ('sent', 'RFQ Sent'),
         ('to approve', 'To Approve'),
         ('purchase', 'Purchase Order'),
-        ('done', 'Locked'),
         ('cancel', 'Cancelled')
     ], string='Status', readonly=True, index=True, copy=False, default='draft', tracking=True)
+    locked = fields.Boolean(
+        help="Locked Purchase Orders cannot be modified.",
+        default=False,
+        copy=False,
+        tracking=True)
+    lock_confirmed_po = fields.Selection(related="company_id.po_lock")
     order_line = fields.One2many('purchase.order.line', 'order_id', string='Order Lines', copy=True)
     acknowledged = fields.Boolean(
         'Acknowledged', copy=False, tracking=True,
@@ -185,7 +190,7 @@ class PurchaseOrder(models.Model):
     @api.depends('state', 'date_order', 'date_approve')
     def _compute_date_calendar_start(self):
         for order in self:
-            order.date_calendar_start = order.date_approve if (order.state in ['purchase', 'done']) else order.date_order
+            order.date_calendar_start = order.date_approve if (order.state == 'purchase') else order.date_order
 
     @api.depends('currency_id', 'date_order', 'company_id')
     def _compute_currency_rate(self):
@@ -446,8 +451,6 @@ class PurchaseOrder(models.Model):
             return self.env.ref('purchase.mt_rfq_confirmed')
         elif 'state' in init_values and self.state == 'to approve':
             return self.env.ref('purchase.mt_rfq_confirmed')
-        elif 'state' in init_values and self.state == 'done':
-            return self.env.ref('purchase.mt_rfq_done')
         elif 'state' in init_values and self.state == 'sent':
             return self.env.ref('purchase.mt_rfq_sent')
         return super(PurchaseOrder, self)._track_subtype(init_values)
@@ -529,7 +532,7 @@ class PurchaseOrder(models.Model):
     def button_approve(self, force=False):
         self = self.filtered(lambda order: order._approval_allowed())
         self.write({'state': 'purchase', 'date_approve': fields.Datetime.now()})
-        self.filtered(lambda p: p.company_id.po_lock == 'lock').write({'state': 'done'})
+        self.filtered(lambda p: p.lock_confirmed_po == 'lock').write({'locked': True})
         return {}
 
     def button_draft(self):
@@ -557,11 +560,13 @@ class PurchaseOrder(models.Model):
             raise UserError(_("Unable to cancel purchase order(s): %s. You must first cancel their related vendor bills.", format_list(self.env, purchase_orders_with_invoices.mapped('display_name'))))
         self.write({'state': 'cancel'})
 
-    def button_unlock(self):
-        self.write({'state': 'purchase'})
+    def button_lock(self):
+        self.locked = True
 
-    def button_done(self):
-        self.write({'state': 'done', 'priority': '0'})
+    def button_unlock(self):
+        if self.lock_confirmed_po == 'lock':
+            raise UserError(_("Unlocking the order is not allowed as 'Lock Confirmed Orders' is enabled."))
+        self.locked = False
 
     def _prepare_supplier_info(self, partner, line, price, currency):
         # Prepare supplierinfo data when adding a product
@@ -925,7 +930,7 @@ class PurchaseOrder(models.Model):
         three_months_ago = fields.Datetime.to_string(fields.Datetime.now() - relativedelta(months=3))
 
         purchases = self.env['purchase.order'].search_fetch(
-            [('state', 'in', ['purchase', 'done']), ('create_date', '>=', three_months_ago), ('date_approve', '!=', False)],
+            [('state', '=', 'purchase'), ('create_date', '>=', three_months_ago), ('date_approve', '!=', False)],
             ['create_date', 'date_approve', 'user_id'])
 
         global_deliveries_seconds = 0
@@ -1021,7 +1026,7 @@ class PurchaseOrder(models.Model):
         order and not all products are service."""
         return self.search([
             ('partner_id', '!=', False),
-            ('state', 'in', ['purchase', 'done']),
+            ('state', '=', 'purchase'),
             ('acknowledged', '=', False),
             ('receipt_reminder_email', '=', True)
         ]).filtered(lambda p: p.mapped('order_line.product_id.product_tmpl_id.type') != ['service'])

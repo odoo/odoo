@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <field name="partner_id" position="replace">
                 <field name="requisition_type" invisible="1"/>
-                <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'supplier', 'show_vat': True}" readonly="requisition_type == 'blanket_order' or state in ['purchase', 'done', 'cancel']" placeholder="Name, TIN, Email, or Reference" force_save="1"/>
+                <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'supplier', 'show_vat': True}" readonly="requisition_type == 'blanket_order' or state in ['purchase', 'cancel']" placeholder="Name, TIN, Email, or Reference" force_save="1"/>
             </field>
             <field name="partner_ref" position="after">
                 <field name="requisition_id" domain="[('state', '=', 'confirmed'), ('vendor_id', 'in', (partner_id, False)), ('company_id', '=', company_id)]"
@@ -30,12 +30,12 @@
                         </group>
                     </group>
                     <field name="alternative_po_ids" readonly="not id" widget="many2many_alt_pos" context="{'quotation_only': True}">
-                        <list string="Alternative Purchase Order" decoration-muted="state in ['cancel', 'purchase', 'done']" decoration-bf="id == parent.id">
+                        <list string="Alternative Purchase Order" decoration-muted="state in ['cancel', 'purchase']" decoration-bf="id == parent.id">
                             <control>
                                 <create string="Link to Existing RfQ"/>
                             </control>
                             <field name="currency_id" column_invisible="1"/>
-                            <field name="partner_id" readonly="state in ['cancel', 'done', 'purchase']"/>
+                            <field name="partner_id" readonly="state in ['cancel', 'purchase']"/>
                             <field name="name" string="Reference"/>
                             <field name="date_planned"/>
                             <field name="amount_total" widget="monetary"/>
@@ -81,7 +81,7 @@
         <field name="priority">1000</field>
         <field name="arch" type="xml">
             <list string="Purchase Order Lines"
-            decoration-muted="state in ['cancel', 'purchase', 'done']"
+            decoration-muted="state in ['cancel', 'purchase']"
                 create="0" delete="0" edit="0" expand="1"
                 js_class="purchase_order_line_compare">
                 <header>
@@ -103,7 +103,7 @@
                 <button name="action_choose" string="Choose" type="object" class="o_clear_qty_buttons" icon="fa-bullseye"
                     invisible="product_qty &lt;= 0.0"/>
                 <button name="action_clear_quantities" string="Clear" type="object" class="o_clear_qty_buttons" icon="fa-times"
-                    invisible="product_qty &lt;= 0.0 or state in ['cancel', 'purchase', 'done']"/>
+                    invisible="product_qty &lt;= 0.0 or state in ['cancel', 'purchase']"/>
             </list>
         </field>
     </record>

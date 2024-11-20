@@ -49,7 +49,7 @@ class ProductTemplate(models.Model):
 
     def action_view_po(self):
         action = self.env["ir.actions.actions"]._for_xml_id("purchase.action_purchase_history")
-        action['domain'] = ['&', ('state', 'in', ['purchase', 'done']), ('product_id', 'in', self.product_variant_ids.ids)]
+        action['domain'] = ['&', ('state', '=', 'purchase'), ('product_id', 'in', self.product_variant_ids.ids)]
         action['display_name'] = _("Purchase History for %s", self.display_name)
         return action
 
@@ -68,7 +68,7 @@ class ProductProduct(models.Model):
     def _compute_purchased_product_qty(self):
         date_from = fields.Datetime.to_string(fields.Date.context_today(self) - relativedelta(years=1))
         domain = [
-            ('order_id.state', 'in', ['purchase', 'done']),
+            ('order_id.state', '=', 'purchase'),
             ('product_id', 'in', self.ids),
             ('order_id.date_approve', '>=', date_from)
         ]
@@ -106,7 +106,7 @@ class ProductProduct(models.Model):
 
     def action_view_po(self):
         action = self.env["ir.actions.actions"]._for_xml_id("purchase.action_purchase_history")
-        action['domain'] = ['&', ('state', 'in', ['purchase', 'done']), ('product_id', 'in', self.ids)]
+        action['domain'] = ['&', ('state', '=', 'purchase'), ('product_id', 'in', self.ids)]
         action['display_name'] = _("Purchase History for %s", self.display_name)
         return action
 

@@ -12,7 +12,7 @@
             <xpath expr="//list/field[@name='product_id']" position="after">
                 <field name="product_template_id"
                     string="Product"
-                    readonly="state in ('purchase', 'to approve', 'done', 'cancel')"
+                    readonly="state in ('purchase', 'to approve', 'cancel')"
                     required="not display_type"
                     context="{'partner_id': parent.partner_id}"
                     widget="pol_product_many2one"/>
