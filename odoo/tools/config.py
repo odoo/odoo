@@ -266,6 +266,7 @@ class configmanager:
         parser.add_option_group(group)
 
         # Logging Group
+        group = optparse.OptionGroup(parser, "Logging Configuration")
         group.add_option("--logfile", dest="logfile", type='path', my_default='',
                          help="file where the server log will be stored")
         group.add_option("--syslog", action="store_true", dest="syslog", my_default=False,
