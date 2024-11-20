@@ -5590,7 +5590,7 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      */
     _computeWidgetState(methodName, params) {
         const parentEl = this.$target[0].parentElement;
-        const linkEl = parentEl.tagName === 'A' ? parentEl : null;
+        const linkEl = parentEl && parentEl.tagName === 'A' ? parentEl : null;
         switch (methodName) {
             case 'setLink': {
                 return linkEl ? 'true' : '';
