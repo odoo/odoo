@@ -63,8 +63,9 @@ class StockValuationLayer(models.Model):
         for product, svls in products_svl:
             svls = self.browse(svl.id for svl in svls)
             moves = svls.stock_move_id
-            if svls.company_id.anglo_saxon_accounting:
-                moves._get_related_invoices()._stock_account_anglo_saxon_reconcile_valuation(product=product)
+            anglo_saxon_svls = svls.filtered('company_id.anglo_saxon_accounting')
+            if anglo_saxon_svls:
+                anglo_saxon_svls.stock_move_id._get_related_invoices()._stock_account_anglo_saxon_reconcile_valuation(product=product)
             moves = (moves | moves.origin_returned_move_id).with_prefetch(chain(moves._prefetch_ids, moves.origin_returned_move_id._prefetch_ids))
             for aml in moves._get_all_related_aml():
                 if aml.reconciled or aml.move_id.state != "posted" or not aml.account_id.reconcile:
