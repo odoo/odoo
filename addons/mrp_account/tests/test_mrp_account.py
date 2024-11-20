@@ -482,6 +482,9 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
         decremented by 0.01.
         """
         # Setup
+        self.env.ref('base.group_user').implied_ids += (
+            self.env.ref('mrp.group_mrp_routings')
+        )
         self.workcenter.write({'costs_hour': 10})
         self.bom.write({
             'operation_ids': [
@@ -523,6 +526,9 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
         we have it at 0.01, and it is the cost_share that bring it back to 0.005 before rounding it back up to 0.01.
         """
         # Setup
+        self.env.ref('base.group_user').implied_ids += (
+            self.env.ref('mrp.group_mrp_routings')
+        )
         self.workcenter.write({'costs_hour': 20})
         self.bom.write({
             'operation_ids': [
