@@ -389,13 +389,14 @@ from dateutil.relativedelta import relativedelta
 from psycopg2.extensions import TransactionRollbackError
 
 from odoo import api, models, tools
+from odoo.modules import get_module_path
 from odoo.modules.registry import _REGISTRY_CACHES
 from odoo.tools import config, safe_eval, pycompat
 from odoo.tools.constants import SUPPORTED_DEBUGGER, EXTERNAL_ASSET
 from odoo.tools.safe_eval import assert_valid_codeobj, _BUILTINS, to_opcodes, _EXPR_OPCODES, _BLACKLIST
 from odoo.tools.json import scriptsafe
 from odoo.tools.lru import LRU
-from odoo.tools.misc import str2bool
+from odoo.tools.misc import str2bool, file_open
 from odoo.tools.image import image_data_uri, FILETYPE_BASE64_MAGICWORD
 from odoo.http import request
 from odoo.tools.profiler import QwebTracker
@@ -599,6 +600,24 @@ class IrQweb(models.AbstractModel):
         result = ''.join(rendering)
 
         return Markup(result)
+
+    @api.model
+    def _render_document(self, template_name, values):
+        """
+        Render a template using Qweb. This function has the advantage to not use Database.
+        Each templates using this will be treated as files format: ``module_name.inner_module_path_to_file``
+
+        :param str template_name: As explained above : ``module_name.path_to_file``
+        :param dict values: template values to be used for rendering.
+        """
+        def get_xml_tree_from_file(template_name):
+            module, inner_path = template_name.split('.', 1)
+            module_path = get_module_path(module)
+            xml_file_path = f'{module_path}/{inner_path}'
+            xml_file_data = file_open(xml_file_path, 'rb').read()
+            return etree.fromstring(xml_file_data), template_name
+
+        return render(template_name, values, get_xml_tree_from_file)
 
     # assume cache will be invalidated by third party on write to ir.ui.view
     def _get_template_cache_keys(self):
