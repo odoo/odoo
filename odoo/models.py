@@ -1757,12 +1757,31 @@ class BaseModel(metaclass=MetaModel):
         """
         domain = list(domain or ())
         search_fnames = self._rec_names_search or ([self._rec_name] if self._rec_name else [])
+
         if not search_fnames:
             _logger.warning("Cannot execute name_search, no _rec_name or _rec_names_search defined on %s", self._name)
+
         # optimize out the default criterion of ``like ''`` that matches everything
         elif not (name == '' and operator in ('like', 'ilike')):
             aggregator = expression.AND if operator in expression.NEGATIVE_TERM_OPERATORS else expression.OR
-            domain += aggregator([[(field_name, operator, name)] for field_name in search_fnames])
+            domains = []
+            for field_name in search_fnames:
+                # field_name may be a sequence of field names (partner_id.name)
+                # retrieve the last field in the sequence
+                model = self
+                for fname in field_name.split('.'):
+                    field = model._fields[fname]
+                    model = self.env.get(field.comodel_name)
+                if field.relational:
+                    # relational fields will trigger a _name_search on their comodel
+                    domains.append([(field_name, operator, name)])
+                    continue
+                try:
+                    domains.append([(field_name, operator, field.convert_to_write(name, self))])
+                except ValueError:
+                    pass  # ignore that case if the value doesn't match the field type
+            domain += aggregator(domains)
+
         return self._search(domain, limit=limit, order=order)
 
     @api.model
