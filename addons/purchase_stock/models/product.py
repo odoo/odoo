@@ -99,7 +99,7 @@ class ProductSupplierinfo(models.Model):
     def _compute_last_purchase_date(self):
         self.last_purchase_date = False
         purchases = self.env['purchase.order'].search([
-            ('state', 'in', ('purchase', 'done')),
+            ('state', '=', 'purchase'),
             ('order_line.product_id', 'in',
              self.product_tmpl_id.product_variant_ids.ids),
             ('partner_id', 'in', self.partner_id.ids),

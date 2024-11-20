@@ -186,7 +186,7 @@ class PurchaseOrder(models.Model):
         three_months_ago = fields.Datetime.to_string(fields.Datetime.now() - relativedelta(months=3))
 
         purchases = self.env['purchase.order'].search_fetch(
-            [('state', 'in', ['purchase', 'done']), ('date_planned', '>=', three_months_ago)],
+            [('state', '=', 'purchase'), ('date_planned', '>=', three_months_ago)],
             ['date_planned', 'effective_date', 'user_id'])
 
         otd_purchase_count = 0
@@ -309,7 +309,7 @@ class PurchaseOrder(models.Model):
 
     def _create_picking(self):
         StockPicking = self.env['stock.picking']
-        for order in self.filtered(lambda po: po.state in ('purchase', 'done')):
+        for order in self.filtered(lambda po: po.state == 'purchase'):
             if any(product.type == 'consu' for product in order.order_line.product_id):
                 order = order.with_company(order.company_id)
                 pickings = order.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel'))

@@ -25,7 +25,7 @@ class CustomerPortal(portal.CustomerPortal):
             ]) if PurchaseOrder.has_access('read') else 0
         if 'purchase_count' in counters:
             values['purchase_count'] = PurchaseOrder.search_count([
-                ('state', 'in', ['purchase', 'done', 'cancel'])
+                ('state', 'in', ['purchase', 'cancel'])
             ]) if PurchaseOrder.has_access('read') else 0
         return values
 
@@ -130,10 +130,9 @@ class CustomerPortal(portal.CustomerPortal):
             page, date_begin, date_end, sortby, filterby,
             [],
             {
-                'all': {'label': _('All'), 'domain': [('state', 'in', ['purchase', 'done', 'cancel'])]},
+                'all': {'label': _('All'), 'domain': [('state', 'in', ['purchase', 'cancel'])]},
                 'purchase': {'label': _('Purchase Order'), 'domain': [('state', '=', 'purchase')]},
                 'cancel': {'label': _('Cancelled'), 'domain': [('state', '=', 'cancel')]},
-                'done': {'label': _('Locked'), 'domain': [('state', '=', 'done')]},
             },
             'all',
             "/my/purchase",
