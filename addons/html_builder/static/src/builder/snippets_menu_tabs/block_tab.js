@@ -49,8 +49,8 @@ export class BlockTab extends Component {
         useDraggable({
             ref: this.env.builderRef,
             elements: ".o-website-snippetsmenu .o_draggable",
-            enable: () => this.props.editor?.isReady,
-            iframeWindow: this.props.editor?.editable.ownerDocument.defaultView,
+            enable: () => this.env.editor?.isReady,
+            iframeWindow: this.env.editor?.editable.ownerDocument.defaultView,
             onWillStartDrag: ({ element }) => {
                 copyOnDrag.clone(element);
             },
@@ -64,7 +64,8 @@ export class BlockTab extends Component {
                 this.dropzonePlugin.dragElement(element);
             },
             onDrop: ({ element }) => {
-                const position = element.getClientRects()[0];
+                const { x, y, height, width } = element.getClientRects()[0];
+                const position = { x, y, height, width };
                 const { category, id } = element.dataset;
                 const snippet = this.props.snippetModel.getSnippet(category, id);
                 if (category === "snippet_groups") {
