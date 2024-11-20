@@ -14,7 +14,11 @@ export class BaseProductAttribute extends Component {
             attribute_value_ids: parseFloat(this.values[0].id),
             custom_value: "",
         });
+<<<<<<< master:addons/point_of_sale/static/src/app/components/popups/product_configurator_popup/product_configurator_popup.js
 
+||||||| 204fbd00019c655e4becbef66ab235229166a468:addons/point_of_sale/static/src/app/store/product_configurator_popup/product_configurator_popup.js
+=======
+>>>>>>> a592f2433588a00c3d06ecdcd0749933df8b4db7:addons/point_of_sale/static/src/app/store/product_configurator_popup/product_configurator_popup.js
         onMounted(() => {
             this.env.attribute_components.push(this);
             this.env.computeProductProduct();
@@ -129,7 +133,13 @@ export class ProductConfiguratorPopup extends Component {
             product: null,
             payload: this.env.attribute_components,
         });
+<<<<<<< master:addons/point_of_sale/static/src/app/components/popups/product_configurator_popup/product_configurator_popup.js
 
+||||||| 204fbd00019c655e4becbef66ab235229166a468:addons/point_of_sale/static/src/app/store/product_configurator_popup/product_configurator_popup.js
+
+        this.computeProductProduct();
+=======
+>>>>>>> a592f2433588a00c3d06ecdcd0749933df8b4db7:addons/point_of_sale/static/src/app/store/product_configurator_popup/product_configurator_popup.js
         useRefListener(this.inputArea, "touchend", this.computeProductProduct.bind(this));
         useRefListener(this.inputArea, "click", this.computeProductProduct.bind(this));
     }

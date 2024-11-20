@@ -25,6 +25,20 @@ export class ProductInfoPopup extends Component {
         this.pos.editProduct(this.props.product);
         this.props.close();
     }
+<<<<<<< master:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js
+||||||| 204fbd00019c655e4becbef66ab235229166a468:addons/point_of_sale/static/src/app/screens/product_screen/product_info_popup/product_info_popup.js
+    get isVariant() {
+        return (
+            this.pos.models["product.product"].filter(
+                (p) => p.raw.product_tmpl_id === this.props.product.raw.product_tmpl_id
+            ).length > 1
+        );
+    }
+=======
+    get isVariant() {
+        return this.pos.isProductVariant(this.props.product);
+    }
+>>>>>>> a592f2433588a00c3d06ecdcd0749933df8b4db7:addons/point_of_sale/static/src/app/screens/product_screen/product_info_popup/product_info_popup.js
     get allowProductEdition() {
         return true; // Overrided in pos_hr
     }

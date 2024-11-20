@@ -5,8 +5,16 @@
             class="section-product-info-title d-flex flex-column text-info bg-opacity-25 mx-n3 mt-n3 mb-3 px-3 py-3">
             <div class="d-flex" t-att-class="{ 'justify-content-between': !this.ui.isSmall }">
                 <div>
+<<<<<<< master
                     <div class="h4" t-esc="props.product?.display_name || props.productTemplate.display_name"/>
                     <div t-if="this.props.productTemplate.is_storable" class="h4">
+||||||| 204fbd00019c655e4becbef66ab235229166a468
+                    <div class="h4" t-esc="props.product.name"/>
+                    <div t-if="this.props.product.is_storable" class="h4">
+=======
+                    <div class="h4" t-esc="props.product.productDisplayName"/>
+                    <div t-if="this.props.product.is_storable" class="h4">
+>>>>>>> a592f2433588a00c3d06ecdcd0749933df8b4db7
                         <span>On hand: </span>
                         <span t-if="this.fetchStock.status === 'success' || this.props.info"><t t-esc="this.state.available_quantity"/> Units</span>
                         <span t-elif="this.fetchStock.status === 'error'">N/A</span>
