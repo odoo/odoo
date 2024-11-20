@@ -2,8 +2,15 @@ import { setContent } from "@html_editor/../tests/_helpers/selection";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, click, queryAllTexts, queryOne } from "@odoo/hoot-dom";
+import { xml } from "@odoo/owl";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, openSnippetsMenu, setupWebsiteBuilder, getEditable } from "./helpers";
+import {
+    defineWebsiteModels,
+    openSnippetsMenu,
+    patchToolboxesWithCleanup,
+    setupWebsiteBuilder,
+    getEditable,
+} from "./helpers";
 
 defineWebsiteModels();
 
@@ -66,4 +73,19 @@ test("undo and redo buttons", async () => {
     expect(editor.editable).toHaveInnerHTML(
         '<div id="wrap" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch"> <div id="wrap" class="o_editable o_dirty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch"> <p> Texta </p> </div> </div>'
     );
+});
+
+test("Open toolbox", async () => {
+    patchToolboxesWithCleanup({
+        selector: ".test-toolbox-target",
+        template: xml`
+            <ElementToolboxContainer title="'TestToolbox'">
+                Test toolbox
+            </ElementToolboxContainer>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-toolbox-target">b</div>`);
+    await openSnippetsMenu();
+    await click(":iframe .test-toolbox-target");
+    await animationFrame();
+    expect(".element-toolbox").toBeDisplayed();
 });
