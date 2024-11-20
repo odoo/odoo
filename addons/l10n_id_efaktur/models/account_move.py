@@ -28,7 +28,7 @@ class AccountMove(models.Model):
         compute="_compute_kode_transaksi", store=True)
     l10n_id_efaktur_range = fields.Many2one("l10n_id_efaktur.efaktur.range", string="E-faktur Range", copy=False, domain="[('company_id', '=', company_id), ('available', '>', 0)]")
     l10n_id_need_kode_transaksi = fields.Boolean(compute='_compute_need_kode_transaksi')
-    l10n_id_available_range_count = fields.Integer(compute="_compute_available_range_count")
+    l10n_id_available_range_count = fields.Integer(compute="_compute_available_range_count", compute_sudo=True)
 
     @api.depends('company_id')
     def _compute_available_range_count(self):
