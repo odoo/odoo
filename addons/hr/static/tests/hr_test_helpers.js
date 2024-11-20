@@ -8,6 +8,7 @@ import { FakeUser } from "@hr/../tests/mock_server/mock_models/fake_user";
 import { HrVersion } from "./mock_server/mock_models/hr_version";
 import { HrJob } from "./mock_server/mock_models/hr_job";
 import { HrWorkLocation } from "./mock_server/mock_models/hr_work_location";
+import { ResourceResource } from "@resource/../tests/mock_server/mock_models/resource_resource";
 
 export function defineHrModels() {
     return defineModels(hrModels);
@@ -23,4 +24,5 @@ export const hrModels = {
     FakeUser,
     HrJob,
     HrWorkLocation,
+    ResourceResource,
 };

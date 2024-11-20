@@ -1345,6 +1345,9 @@ class HrEmployee(models.Model):
             '|', ('contract_date_end', '>=', date_from), ('contract_date_end', '=', False),
         ])
 
+    def get_avatar_card_data(self, fields):
+        return self.read(fields)
+
     # ---------------------------------------------------------
     # Messaging
     # ---------------------------------------------------------
