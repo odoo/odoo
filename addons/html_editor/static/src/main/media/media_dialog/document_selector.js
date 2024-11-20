@@ -1,5 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { Attachment, FileSelector, IMAGE_MIMETYPES } from "./file_selector";
+import { renderToElement } from "@web/core/utils/render";
 
 export class DocumentAttachment extends Attachment {
     static template = "html_editor.DocumentAttachment";
@@ -62,8 +63,7 @@ export class DocumentSelector extends FileSelector {
     static async createElements(selectedMedia, { orm }) {
         return Promise.all(
             selectedMedia.map(async (attachment) => {
-                const linkEl = document.createElement("a");
-                let href = `/web/content/${encodeURIComponent(
+                let url = `/web/content/${encodeURIComponent(
                     attachment.id
                 )}?unique=${encodeURIComponent(attachment.checksum)}&download=true`;
                 if (!attachment.public) {
@@ -73,13 +73,25 @@ export class DocumentSelector extends FileSelector {
                             attachment.id,
                         ]);
                     }
-                    href += `&access_token=${encodeURIComponent(accessToken)}`;
+                    url += `&access_token=${encodeURIComponent(accessToken)}`;
                 }
-                linkEl.href = href;
-                linkEl.title = attachment.name;
-                linkEl.dataset.mimetype = attachment.mimetype;
-                return linkEl;
+                return this.renderFileElement(attachment, url);
             })
         );
     }
+
+    static renderFileElement(attachment, downloadUrl) {
+        return renderStaticFileBox(attachment.name, attachment.mimetype, downloadUrl);
+    }
+}
+
+export function renderStaticFileBox(filename, mimetype, downloadUrl) {
+    const rootSpan = document.createElement("span");
+    rootSpan.classList.add("o_file_box");
+    rootSpan.contentEditable = false;
+    const bannerElement = renderToElement("html_editor.StaticFileBox", {
+        fileModel: { filename, mimetype, downloadUrl },
+    });
+    rootSpan.append(bannerElement);
+    return rootSpan;
 }
