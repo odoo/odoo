@@ -113,7 +113,6 @@
             "web/static/src/libs/fontawesome/css/font-awesome.css",
             "web/static/src/views/fields/formatters.js",
             "web/static/lib/odoo_ui_icons/*",
-            'web/static/src/legacy/scss/ui.scss',
             "point_of_sale/static/src/utils.js",
             'bus/static/src/services/bus_service.js',
             'bus/static/src/bus_parameters_service.js',
