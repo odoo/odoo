@@ -146,7 +146,7 @@ class AccountMove(models.Model):
         if self.l10n_es_tbai_state in ('sent', 'cancelled'):
             return _("This entry has already been posted.")
         if self.company_id.l10n_es_tbai_tax_agency == 'bizkaia' and self.is_purchase_document() and not self.ref:
-            return _("You need to fill in the Reference field as the invoice number from your vendor. ")
+            return _("You need to fill in the Reference field as the invoice number from your vendor.")
 
 
     def _l10n_es_tbai_get_attachment_name(self, cancel=False):

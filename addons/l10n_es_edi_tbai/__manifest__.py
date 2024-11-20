@@ -27,6 +27,7 @@ You need to configure your certificate and the tax agency.
     'data': [
         'data/template_invoice.xml',
         'data/template_LROE_bizkaia.xml',
+        'data/ir_config_parameter.xml',
 
         'security/ir.model.access.csv',
         'security/l10n_es_edi_tbai_security.xml',
