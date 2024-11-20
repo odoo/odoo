@@ -11,11 +11,12 @@ from unittest.mock import DEFAULT
 from unittest.mock import patch
 
 from odoo import exceptions
+from odoo.addons.mail.models.mail_message import Message
 from odoo.addons.mail.models.mail_thread import MailThread
 from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.test_mail.data import test_mail_data
 from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE, THAI_EMAIL_WINDOWS_874
-from odoo.addons.test_mail.models.test_mail_models import MailTestGateway
+from odoo.addons.test_mail.models.test_mail_models import MailTestGateway, MailTestGatewayGroups, MailTestTicket
 from odoo.sql_db import Cursor
 from odoo.tests import tagged, RecordCapturer
 from odoo.tools import email_split_and_format, formataddr, mute_logger
@@ -2047,6 +2048,116 @@ class TestMailGatewayLoops(MailGatewayCommon):
             )
         records = self.env['mail.test.ticket'].search([('name', 'ilike', 'Whitelist test alias loop %')])
         self.assertEqual(len(records), 10, msg='Email whitelisted should not have the restriction')
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_routing_loop_alias_mix(self):
+        """ Test loop detection in case of multiples routes, just be sure all
+        routes are checked and models checked once. """
+        # create 2 update-records aliases and 1 new-record alias on same model
+        test_updates = self.env['mail.test.gateway.groups'].create([
+            {
+                'alias_name': 'test.update1',
+                'name': 'Update1',
+            }, {
+                'alias_name': 'test.update2',
+                'name': 'Update2',
+            },
+        ])
+        alias_gateway_group, alias_ticket_other = self.env['mail.alias'].create([
+            {
+                'alias_contact': 'everyone',
+                'alias_model_id': self.env['ir.model']._get_id('mail.test.gateway.groups'),
+                'alias_name': 'test.new',
+            }, {
+                'alias_contact': 'everyone',
+                'alias_model_id': self.env['ir.model']._get_id('mail.test.ticket'),
+                'alias_name': 'test.ticket.other',
+            }
+        ])
+
+        _original_ticket_sc = MailTestTicket.search_count
+        _original_groups_sc = MailTestGatewayGroups.search_count
+        _original_rgr = Message._read_group
+        with self.mock_mail_gateway(), \
+             patch.object(MailTestTicket, 'search_count', autospec=True, side_effect=_original_ticket_sc) as mock_ticket_sc, \
+             patch.object(MailTestGatewayGroups, 'search_count', autospec=True, side_effect=_original_groups_sc) as mock_groups_sc, \
+             patch.object(Message, '_read_group', autospec=True, side_effect=_original_rgr) as mock_msg_rgr:
+            self.format_and_process(
+                MAIL_TEMPLATE,
+                self.other_partner.email_formatted,
+                f'"Super Help" <{self.alias_ticket.alias_name}@{self.alias_ticket.alias_domain}>,'
+                f'{test_updates[0].alias_id.display_name}, {test_updates[1].alias_id.display_name}, '
+                f'{alias_gateway_group.display_name}, {alias_ticket_other.display_name}',
+                subject='Valid Inquiry',
+                return_path=self.other_partner.email_formatted,
+                target_model='mail.test.ticket',
+            )
+        self.assertEqual(mock_ticket_sc.call_count, 1, 'Two alias creating tickets but one check anyway')
+        self.assertEqual(mock_groups_sc.call_count, 1, 'One alias creating groups')
+        self.assertEqual(mock_msg_rgr.call_count, 1, 'Only one model updating records, one call even if two aliases')
+        self.assertEqual(
+            len(self.env['mail.test.ticket'].search([('name', '=', 'Valid Inquiry')])),
+            2, 'One by creating alias, as no loop was detected'
+        )
+
+        # create 'looping' history by pre-creating messages on a thread -> should block future incoming emails
+        self.env['mail.message'].create([
+            {
+                'author_id': self.other_partner.id,
+                'model': test_updates[0]._name,
+                'res_id': test_updates[0].id,
+            } for x in range(4)  # 4 + 1 posted before = 5 aka threshold
+        ])
+        with self.mock_mail_gateway():
+            self.format_and_process(
+                MAIL_TEMPLATE,
+                self.other_partner.email_formatted,
+                f'"Super Help" <{self.alias_ticket.alias_name}@{self.alias_ticket.alias_domain}>,'
+                f'{test_updates[0].alias_id.display_name}, {test_updates[1].alias_id.display_name}, '
+                f'{alias_gateway_group.display_name}, {alias_ticket_other.display_name}',
+                subject='Looping Inquiry',
+                return_path=self.other_partner.email_formatted,
+                target_model='mail.test.ticket',
+            )
+        self.assertFalse(
+            self.env['mail.test.ticket'].search([('name', '=', 'Looping Inquiry')]),
+            'Even if other routes are ok, one looping route is sufficient to block the incoming email'
+        )
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_routing_loop_auto_notif(self):
+        """ Test Odoo servers talking to each other """
+        with self.mock_mail_gateway():
+            record = self.format_and_process(
+                MAIL_TEMPLATE,
+                self.other_partner.email_formatted,
+                f'"Super Help" <{self.alias_ticket.alias_name}@{self.alias_ticket.alias_domain}>',
+                subject='Inquiry',
+                return_path=self.other_partner.email_formatted,
+                target_model='mail.test.ticket',
+            )
+        self.assertTrue(record)
+        self.assertEqual(record.message_partner_ids, self.other_partner)
+
+        for incoming_count in range(6):  # threshold + 1
+            with self.mock_mail_gateway():
+                record.with_user(self.user_employee).message_post(
+                    body='Automatic answer',
+                    message_type='auto_comment',
+                    subtype_xmlid='mail.mt_comment',
+                )
+            capture_messages = self.gateway_mail_reply_last_email(MAIL_TEMPLATE)
+            msg = capture_messages.records
+            self.assertTrue(msg)
+            # first messages are accepted -> post a message on record
+            if incoming_count < 4:  # which makes 5 accepted messages
+                self.assertIn(msg, record.message_ids)
+            # other attempts triggers only a bounce
+            else:
+                self.assertFalse(msg.model)
+                self.assertFalse(msg.res_id)
+                self.assertIn('loop-detection-bounce-email', msg.mail_ids.references,
+                              'Should be a msg linked to a bounce email with right header')
 
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_routing_loop_follower_alias(self):
