@@ -8,6 +8,7 @@ import {
     waitUntil,
     edit,
     queryAllValues,
+    queryAll,
 } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor } from "./_helpers/editor";
@@ -112,14 +113,10 @@ test("custom text-colors used in the editor are shown in the colorpicker", async
     await animationFrame();
     expect(".o_hex_input").toHaveValue("#00FF00");
     expect(queryAllValues(".o_rgba_div input")).toEqual(["0", "255", "0", "100"]);
-    expect("button[data-color='rgb(255, 0, 0)']").toHaveCount(1);
-    expect(queryOne("button[data-color='rgb(255, 0, 0)']").style.backgroundColor).toBe(
-        "rgb(255, 0, 0)"
-    );
-    expect("button[data-color='rgb(0, 255, 0)']").toHaveCount(1);
-    expect(queryOne("button[data-color='rgb(0, 255, 0)']").style.backgroundColor).toBe(
-        "rgb(0, 255, 0)"
-    );
+    expect(queryAll("button[data-color='#ff0000']")).toHaveCount(1);
+    expect(queryOne("button[data-color='#ff0000']").style.backgroundColor).toBe("rgb(255, 0, 0)");
+    expect(queryAll("button[data-color='#00ff00']")).toHaveCount(1);
+    expect(queryOne("button[data-color='#00ff00']").style.backgroundColor).toBe("rgb(0, 255, 0)");
 });
 
 test("custom background colors used in the editor are shown in the colorpicker", async () => {
@@ -137,14 +134,10 @@ test("custom background colors used in the editor are shown in the colorpicker",
     await animationFrame();
     expect(".o_hex_input").toHaveValue("#00FF00");
     expect(queryAllValues(".o_rgba_div input")).toEqual(["0", "255", "0", "100"]);
-    expect("button[data-color='rgb(255, 0, 0)']").toHaveCount(1);
-    expect(queryOne("button[data-color='rgb(255, 0, 0)']").style.backgroundColor).toBe(
-        "rgb(255, 0, 0)"
-    );
-    expect("button[data-color='rgb(0, 255, 0)']").toHaveCount(1);
-    expect(queryOne("button[data-color='rgb(0, 255, 0)']").style.backgroundColor).toBe(
-        "rgb(0, 255, 0)"
-    );
+    expect(queryAll("button[data-color='#ff0000']")).toHaveCount(1);
+    expect(queryOne("button[data-color='#ff0000']").style.backgroundColor).toBe("rgb(255, 0, 0)");
+    expect(queryAll("button[data-color='#00ff00']")).toHaveCount(1);
+    expect(queryOne("button[data-color='#00ff00']").style.backgroundColor).toBe("rgb(0, 255, 0)");
 });
 
 test("select hex color and apply it", async () => {
