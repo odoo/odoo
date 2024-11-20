@@ -46,9 +46,7 @@ export function useWeComponent() {
     if (Object.keys(weContext).length) {
         newEnv.weContext = { ...comp.env.weContext, ...weContext };
     }
-    if (Object.keys(newEnv).length) {
-        useSubEnv(newEnv);
-    }
+    useSubEnv(newEnv);
 }
 
 const actionsRegistry = registry.category("website-builder-actions");
@@ -58,17 +56,13 @@ export function useClickableWeWidget() {
     const comp = useComponent();
     const call = comp.env.editor.shared.history.makePreviewableOperation(callActions);
 
-    let actions;
-    getActions();
-    onWillUpdateProps(getActions);
-
     const state = useDomState(() => ({
         isActive: isActive(),
     }));
 
     if (comp.env.actionBus) {
         useBus(comp.env.actionBus, "BEFORE_CALL_ACTIONS", () => {
-            for (const [actionId, actionParam, actionValue] of actions) {
+            for (const [actionId, actionParam, actionValue] of getActions()) {
                 actionsRegistry.get(actionId).clean?.({
                     editingElement: comp.env.editingElement,
                     param: actionParam,
@@ -80,7 +74,7 @@ export function useClickableWeWidget() {
 
     function callActions() {
         comp.env.actionBus?.trigger("BEFORE_CALL_ACTIONS");
-        for (const [actionId, actionParam, actionValue] of actions) {
+        for (const [actionId, actionParam, actionValue] of getActions()) {
             actionsRegistry.get(actionId).apply({
                 editingElement: comp.env.editingElement,
                 param: actionParam,
@@ -89,36 +83,30 @@ export function useClickableWeWidget() {
         }
     }
     function getActions() {
-        actions = [];
-        const classAction = comp.env.weContext.classAction || comp.props.classAction;
-        if (classAction) {
-            actions.push(["classAction", classAction, comp.props.classActionValue]);
+        const actions = [];
+
+        const shorthands = [
+            ["classAction", "classActionValue"],
+            ["attributeAction", "attributeActionValue"],
+            ["dataAttributeAction", "dataAttributeActionValue"],
+            ["styleAction", "styleActionValue"],
+        ];
+        for (const [actionName, actionValue] of shorthands) {
+            const value = comp.env.weContext[actionName] || comp.props[actionName];
+            if (value) {
+                actions.push([actionName, value, comp.props[actionValue]]);
+            }
         }
-        const attributeAction = comp.env.weContext.attributeAction || comp.props.attributeAction;
-        if (attributeAction) {
-            actions.push(["attributeAction", attributeAction, comp.props.attributeActionValue]);
-        }
-        const dataAttributeAction =
-            comp.env.weContext.dataAttributeAction || comp.props.dataAttributeAction;
-        if (dataAttributeAction) {
-            actions.push([
-                "dataAttributeAction",
-                dataAttributeAction,
-                comp.props.dataAttributeActionValue,
-            ]);
-        }
-        const styleAction = comp.env.weContext.styleAction || comp.props.styleAction;
-        if (styleAction) {
-            actions.push(["styleAction", styleAction, comp.props.styleActionValue]);
-        }
+
         const action = comp.env.weContext.action || comp.props.action;
         const actionParam = comp.env.weContext.actionParam || comp.props.actionParam;
         if (action) {
             actions.push([action, actionParam, comp.props.actionValue]);
         }
+        return actions;
     }
     function isActive() {
-        return actions.every(([actionId, actionParam, actionValue]) => {
+        return getActions().every(([actionId, actionParam, actionValue]) => {
             return actionsRegistry.get(actionId).isActive?.({
                 editingElement: comp.env.editingElement,
                 param: actionParam,

@@ -69,8 +69,6 @@ export class SnippetsMenu extends Component {
         useExternalListener(window, "beforeunload", this.onBeforeUnload);
 
         const editorBus = new EventBus();
-        // todo: Why is it the "SnippetsMenu" that is supposed to create the
-        // editor? Shouldn't it be the parent component (WebsiteBuilderAction)?
         this.editor = new Editor(
             {
                 disableFloatingToolbar: true,

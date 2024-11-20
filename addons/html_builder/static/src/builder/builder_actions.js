@@ -57,7 +57,6 @@ registry.category("website-builder-actions").add("attributeAction", {
         }
     },
     clean: ({ editingElement, param: attributeName }) => {
-        console.warn("attributeAction clean");
         editingElement.removeAttribute(attributeName);
     },
 });

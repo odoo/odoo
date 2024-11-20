@@ -84,7 +84,7 @@ export function getEditable(inWrap) {
 
 const actionsRegistry = registry.category("website-builder-actions");
 
-export function patchToolboxesWithCleanup({ selector, template, actions = {} }) {
+export function addToolbox({ selector, template, actions = {} }) {
     class TestToolbox extends Component {
         static template = template;
         static props = {};
@@ -93,15 +93,9 @@ export function patchToolboxesWithCleanup({ selector, template, actions = {} }) 
             ...defaultOptionComponents,
         };
     }
-    patchWithCleanup(ElementToolboxPlugin.prototype, {
-        getToolboxDefinitions() {
-            return super.getToolboxDefinitions().concat([
-                {
-                    ToolboxComponent: TestToolbox,
-                    selector,
-                },
-            ]);
-        },
+    registry.category("sidebar-element-toolbox").add("test-toolbox", {
+        ToolboxComponent: TestToolbox,
+        selector,
     });
     for (const [name, action] of Object.entries(actions)) {
         actionsRegistry.add(name, action);
