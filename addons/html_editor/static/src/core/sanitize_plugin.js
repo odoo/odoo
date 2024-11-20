@@ -1,3 +1,4 @@
+import { selectElements } from "@html_editor/utils/dom_traversal";
 import { Plugin } from "../plugin";
 
 /**
@@ -7,7 +8,7 @@ import { Plugin } from "../plugin";
 
 export class SanitizePlugin extends Plugin {
     static id = "sanitize";
-    static shared = ["sanitize"];
+    static shared = ["sanitize", "restoreSanitizedContentEditable"];
     setup() {
         if (!window.DOMPurify) {
             throw new Error("DOMPurify is not available");
@@ -27,5 +28,11 @@ export class SanitizePlugin extends Plugin {
             ADD_TAGS: ["#document-fragment", "fake-el"],
             ADD_ATTR: ["contenteditable"],
         });
+    }
+
+    restoreSanitizedContentEditable(root) {
+        for (const node of selectElements(root, ".o_not_editable, .o_editable")) {
+            node.contentEditable = node.matches(".o_editable");
+        }
     }
 }
