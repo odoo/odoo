@@ -773,7 +773,6 @@ class SurveySurvey(models.Model):
             return Question
 
         # Conditional Questions Management
-        triggering_answers_by_question, _, selected_answers = user_input._get_conditional_values()
         inactive_questions = user_input._get_inactive_conditional_questions()
         if survey.questions_layout == 'page_per_question':
             question_candidates = pages_or_questions[0:current_page_index] if go_back \
@@ -786,8 +785,7 @@ class SurveySurvey(models.Model):
                     if contains_active_question or is_description_section:
                         return question
                 else:
-                    triggering_answers = triggering_answers_by_question.get(question)
-                    if not triggering_answers or triggering_answers & selected_answers:
+                    if question not in inactive_questions:
                         # question is visible because not conditioned or conditioned by a selected answer
                         return question
         elif survey.questions_layout == 'page_per_section':
