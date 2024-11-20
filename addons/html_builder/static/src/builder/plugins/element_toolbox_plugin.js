@@ -2,7 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
 export class ElementToolboxPlugin extends Plugin {
-    static id = "element_toolbox";
+    static id = "element-toolbox";
     static dependencies = ["selection", "overlay"];
     static resources = (p) => ({
         onSelectionChange: p.onSelectionChange.bind(p),
@@ -10,13 +10,17 @@ export class ElementToolboxPlugin extends Plugin {
 
     setup() {
         // todo: use resources instead of registry
-        this.toolboxes = registry.category("sidebar-element-toolbox").getAll();
+        this.toolboxes = this.getToolboxDefinitions();
         this.addDomListener(this.editable, "pointerup", (e) => {
             if (!this.dependencies.selection.getEditableSelection().isCollapsed) {
                 return;
             }
             this.changeSidebarTarget(e.target);
         });
+    }
+
+    getToolboxDefinitions() {
+        return registry.category("sidebar-element-toolbox").getAll();
     }
 
     onSelectionChange(selection) {

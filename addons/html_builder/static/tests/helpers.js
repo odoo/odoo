@@ -11,6 +11,10 @@ import { getWebsiteSnippets } from "./snippets_getter.hoot";
 import { SnippetsMenu } from "@html_builder/builder/snippets_menu";
 import { WebClient } from "@web/webclient/webclient";
 import { loadBundle } from "@web/core/assets";
+import { Component } from "@odoo/owl";
+import { ElementToolboxContainer } from "../src/builder/components/ElementToolboxContainer";
+import { defaultOptionComponents } from "../src/builder/components/defaultComponents";
+import { ElementToolboxPlugin } from "../src/builder/plugins/element_toolbox_plugin";
 
 class Website extends models.Model {
     _name = "website";
@@ -74,6 +78,26 @@ export async function openSnippetsMenu() {
 
 export function getEditable(inWrap) {
     return `<div id="wrap" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">${inWrap}</div>`;
+}
+
+export function patchToolboxesWithCleanup({ selector, template }) {
+    class TestToolbox extends Component {
+        static template = template;
+        static components = {
+            ElementToolboxContainer,
+            ...defaultOptionComponents,
+        };
+    }
+    patchWithCleanup(ElementToolboxPlugin.prototype, {
+        getToolboxDefinitions() {
+            return super.getToolboxDefinitions().concat([
+                {
+                    ToolboxComponent: TestToolbox,
+                    selector,
+                },
+            ]);
+        },
+    });
 }
 
 function getSnippetView(snippets) {
