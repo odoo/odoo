@@ -1317,6 +1317,25 @@ export class Wysiwyg extends Component {
                     for (const node of fieldNodeClone.querySelectorAll(renderingClassesSelector)) {
                         node.classList.remove(...this.odooEditor.options.renderingClasses);
                     }
+                    // `fillEmpty` adds zws and data-oe-zws-empty-inline
+                    // attribute in empty inline fields for cursor placement.
+                    // Ensure value of data-oe-zws-empty-inline is set to false
+                    // if field have content other than zws
+                    if ($node[0].hasAttribute("data-oe-zws-empty-inline")) {
+                        const content = $node[0].textContent || "";
+                        if (content === "\u200B") {
+                            // only content is zws
+                            $node[0].setAttribute("data-oe-zws-empty-inline", "true");
+                        } else if (content !== "" && content.includes("\u200B")) {
+                            // have other content along with zws
+                            $node[0].setAttribute("data-oe-zws-empty-inline", "false");
+                        } else if (content === "" && !content.includes("\u200B")) {
+                            // does not have zws or other content
+                            $node[0].removeAttribute("data-oe-zws-empty-inline");
+                            $node[0].innerHTML = "";
+                            fillEmpty($node[0]);
+                        }
+                    }
                     const html = $(fieldNodeClone).html();
                     this.odooEditor.withoutRollback(() => {
                         for (const node of $nodes) {
