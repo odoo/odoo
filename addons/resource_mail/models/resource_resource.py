@@ -13,3 +13,8 @@ class ResourceResource(models.Model):
 
     color = fields.Integer(default=_default_color)
     im_status = fields.Char(related='user_id.im_status')
+
+    def get_avatar_card_data(self, fields):
+        return self.env['resource.resource'].search_read(
+            domain=[('id', 'in', self.ids)],
+        )
