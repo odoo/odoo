@@ -11,6 +11,8 @@ export class BannerPlugin extends Plugin {
     static id = "banner";
     static dependencies = ["history", "dom", "emoji", "selection"];
     resources = {
+        clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
+        normalize_handlers: this.normalize.bind(this),
         user_commands: [
             {
                 id: "banner_info",
@@ -87,9 +89,9 @@ export class BannerPlugin extends Plugin {
     insertBanner(title, emoji, alertClass) {
         const bannerElement = parseHTML(
             this.document,
-            `<div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-${alertClass} pb-0 pt-3" role="status" contenteditable="false">
+            `<div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-${alertClass} pb-0 pt-3" role="status" contenteditable="false" data-oe-banner-editable="false">
                 <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="${title}">${emoji}</i>
-                <div class="w-100 px-3" contenteditable="true">
+                <div class="w-100 px-3" contenteditable="true" data-oe-banner-editable="true">
                     <p><br></p>
                 </div>
             </div`
@@ -115,6 +117,36 @@ export class BannerPlugin extends Plugin {
                 iconElement.textContent = emoji;
                 this.dependencies.history.addStep();
             },
+        });
+    }
+
+    normalize(elem) {
+        this.forEachProtectingElem(elem, this.setProtectingNode.bind(this));
+    }
+
+    forEachProtectingElem(elem, callback) {
+        const selector = `[data-oe-banner-editable]`;
+        const datOeBanner = [...elem.querySelectorAll(selector)].reverse();
+        if (elem.matches(selector)) {
+            datOeBanner.push(elem);
+        }
+        for (const protectingNode of datOeBanner) {
+            callback(protectingNode, protectingNode.dataset.oeBannerEditable);
+        }
+    }
+
+    setProtectingNode(elem, protecting) {
+        elem.dataset.oeBannerEditable = protecting;
+        if (protecting === "true") {
+            elem.setAttribute("contenteditable", "true");
+        } else {
+            elem.setAttribute("contenteditable", "false");
+        }
+    }
+
+    cleanForSave(clone) {
+        this.forEachProtectingElem(clone, (protectingNode) => {
+            protectingNode.removeAttribute("contenteditable");
         });
     }
 }
