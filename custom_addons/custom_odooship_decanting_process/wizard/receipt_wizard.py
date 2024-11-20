@@ -211,6 +211,8 @@ class DeliveryReceiptWizardLine(models.TransientModel):
     def _compute_available_products(self):
         for line in self:
             if line.wizard_id and line.wizard_id.picking_id:
+                product_ids = line.wizard_id.picking_id.move_ids_without_package.filtered(
+                lambda m: m.product_id.automation_manual_product == line.wizard_id.automation_manual).mapped('product_id.id')
                 product_ids = line.wizard_id.picking_id.move_ids_without_package.mapped('product_id.id')
                 line.available_product_ids = [(6, 0, product_ids)]
             else:
