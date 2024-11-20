@@ -86,6 +86,17 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    _getCaptchaData: async () => {
+        const tokenObj = await this._recaptcha.getToken('website_mass_mailing_subscribe');
+        const {token, error} = tokenObj;
+        return {
+            error,
+            field: {
+                "recaptcha_token_response": token,
+            }
+        }
+    },
+
     /**
      * @private
      */
@@ -98,9 +109,9 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
             return false;
         }
         this.$el.removeClass('o_has_error').find('.form-control').removeClass('is-invalid');
-        const tokenObj = await this._recaptcha.getToken('website_mass_mailing_subscribe');
-        if (tokenObj.error) {
-            self.notification.add(tokenObj.error, {
+        const recaptcha = await this._getCaptchaData();
+        if (recaptcha.error) {
+            self.notification.add(recaptcha.error, {
                 type: 'danger',
                 title: _t("Error"),
                 sticky: true,
@@ -111,7 +122,7 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
             'list_id': this._getListId(),
             'value': $input.length ? $input.val() : false,
             'subscription_type': inputName,
-            recaptcha_token_response: tokenObj.token,
+            ...recaptcha.field,
         }).then(function (result) {
             let toastType = result.toast_type;
             if (toastType === 'success') {
