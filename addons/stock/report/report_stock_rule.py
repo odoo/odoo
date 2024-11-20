@@ -69,6 +69,7 @@ class ReportStockRule(models.AbstractModel):
             'locations': locations,
             'header_lines': header_lines,
             'route_lines': route_lines,
+            'is_rtl': self.env['res.lang']._lang_get(self.env.user.lang).direction == 'rtl',
         }
 
     @api.model
