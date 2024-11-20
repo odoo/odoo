@@ -101,3 +101,20 @@ class TestResCurrency(TransactionCase):
                 company=self.env.company,
                 date='2011-11-11',
             ), 200)
+
+    def test_res_currency_name_search(self):
+        currency_A, currency_B = self.env["res.currency"].create([
+            {"name": "cuA", "symbol": "A"},
+            {"name": "cuB", "symbol": "B"},
+        ])
+        self.env["res.currency.rate"].create([
+            {"name": "1971-01-01", "rate": 2.0, "currency_id": currency_A.id},
+            {"name": "1971-01-01", "rate": 1.5, "currency_id": currency_B.id},
+            {"name": "1972-01-01", "rate": 0.69, "currency_id": currency_B.id},
+        ])
+        # should not try to match field 'rate' (float field)
+        self.assertEqual(self.env["res.currency"].search_count([["rate_ids", "=", "1971-01-01"]]), 2)
+        # should not try to match field 'name' (date field)
+        self.assertEqual(self.env["res.currency"].search_count([["rate_ids", "=", "0.69"]]), 1)
+        # should not try to match any of 'name' and 'rate'
+        self.assertEqual(self.env["res.currency"].search_count([["rate_ids", "=", "irrelevant"]]), 0)
