@@ -39,6 +39,7 @@ from . import ir_attachment
 from . import ir_actions_report
 from . import ir_module
 from . import ir_ui_menu
+from . import ir_qweb
 from . import mail_message
 from . import mail_template
 from . import mail_tracking_value
