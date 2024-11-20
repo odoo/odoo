@@ -77,7 +77,7 @@ class TestAddToCartSnippet(HttpCase):
             'street2': "",
             'city': "Ramillies",
             'zip': 1367,
-            'country_id': self.env.ref('base.be')
+            'country_id': self.env.ref('base.be').id
         })
         self.env.ref('base.user_admin').country_id = self.env.ref('base.be')
         self.start_tour("/", 'add_to_cart_snippet_tour', login="admin")
