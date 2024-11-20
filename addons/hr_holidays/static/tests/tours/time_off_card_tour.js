@@ -12,12 +12,12 @@ registry.category("web_tour.tours").add("time_off_card_tour", {
         },
         {
             content: "Click on the Time Off name",
-            trigger: '.o_timeoff_name',
+            trigger: '.o_timeoff_name:not(:contains("Pending Requests"))',
             run: "click",
         },
         {
             content: "Ensure the list view for Time Off requests is displayed",
-            trigger: '.o_list_view',
+            trigger: ".o_list_view",
         },
         {
             content: "Navigate back to the previous view",
@@ -40,7 +40,7 @@ registry.category("web_tour.tours").add("time_off_card_tour", {
         },
         {
             content: "Ensure the list view for Time Off requests is displayed",
-            trigger: '.o_list_view',
+            trigger: ".o_list_view",
         },
         {
             content: "Navigate back to the previous view",
@@ -59,7 +59,7 @@ registry.category("web_tour.tours").add("time_off_card_tour", {
         },
         {
             content: "Ensure the list view for Time Off requests is displayed",
-            trigger: '.o_list_view',
+            trigger: ".o_list_view",
         },
         {
             content: "Navigate back to the previous view",
@@ -78,7 +78,7 @@ registry.category("web_tour.tours").add("time_off_card_tour", {
         },
         {
             content: "Ensure the list view for Time Off requests is displayed",
-            trigger: '.o_list_view',
+            trigger: ".o_list_view",
         },
     ],
 });
