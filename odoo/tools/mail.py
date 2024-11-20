@@ -785,7 +785,6 @@ def formataddr(pair, charset='utf-8'):
             return f'"{name}" <{local}@{domain}>'
     return f"{local}@{domain}"
 
-
 def encapsulate_email(old_email, new_email):
     """Change the FROM of the message and use the old one as name.
 
@@ -839,3 +838,14 @@ def parse_contact_from_email(text):
         name, email_normalized = text, ''
 
     return name, email_normalized
+
+def unfold_references(msg_references):
+    """ As it declared in [RFC2822] long header bodies can be "folded" using
+    CRLF+WSP. Some mail clients split References header body which contains
+    Message Ids by "\n ".
+
+    RFC2882: https://tools.ietf.org/html/rfc2822#section-2.2.3 """
+    return [
+        re.sub(r'[\r\n\t ]+', r'', ref)  # "Unfold" buggy references
+        for ref in mail_header_msgid_re.findall(msg_references)
+    ]
