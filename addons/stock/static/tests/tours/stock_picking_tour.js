@@ -462,12 +462,12 @@ registry.category("web_tour.tours").add("test_edit_existing_line", {
 
 registry.category("web_tour.tours").add('test_edit_existing_lines_2', {
     steps: () => [
-        { trigger: ".o_data_row:has(.o_data_cell[data-tooltip='Product a']) .fa-list", run: 'click'},
+        { trigger: ".o_data_row:has(.o_data_cell:contains('Product a')) .fa-list", run: 'click'},
         { trigger: ".o_data_cell[name=lot_name]", run: 'click' },
         { trigger: ".o_data_cell[name=lot_name] input", run: 'edit SNa001'},
         { trigger: ".o_form_view.modal-content .o_form_button_save", run: 'click'},
         { trigger: "body:not(:has(div .modal-content))"},
-        { trigger: ".o_data_row:has(.o_data_cell[data-tooltip='Product b']) .fa-list", run: 'click' },
+        { trigger: ".o_data_row:has(.o_data_cell:contains('Product b')) .fa-list", run: 'click' },
         { trigger: ".o_data_cell[name=lot_name]", run: 'click' },
         { trigger: ".o_data_cell[name=lot_name] input", run: 'edit SNb001'},
         { trigger: ".o_form_view.modal-content .o_form_button_save", run: 'click'},
