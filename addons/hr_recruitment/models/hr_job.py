@@ -406,3 +406,16 @@ class HrJob(models.Model):
             "type": "ir.actions.client",
             "tag": "reload",
         }
+
+    def action_job_board_modules(self):
+        return {
+            'name': _('New Job Board'),
+            'view_mode': 'kanban,form',
+            'res_model': 'ir.module.module',
+            'domain': [
+                ('name', '=like', 'hr_recruitment_integration_%'),
+                ('auto_install', '=', False),
+                ('name', '!=', 'hr_recruitment_integration_base'),
+            ],
+            'type': 'ir.actions.act_window',
+        }
