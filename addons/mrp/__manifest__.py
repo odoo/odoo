@@ -34,6 +34,7 @@
         'views/stock_orderpoint_views.xml',
         'views/stock_warehouse_views.xml',
         'views/stock_picking_views.xml',
+        'views/stock_rule_views.xml',
         'views/mrp_unbuild_views.xml',
         'views/ir_attachment_view.xml',
         'views/res_config_settings_views.xml',
