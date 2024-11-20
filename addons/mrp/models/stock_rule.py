@@ -18,14 +18,15 @@ class StockRule(models.Model):
 
     def _get_message_dict(self):
         message_dict = super(StockRule, self)._get_message_dict()
-        source, destination, __, __ = self._get_message_values()
+        source, destination, direct_destination, operation = self._get_message_values()
         manufacture_message = _('When products are needed in <b>%s</b>, <br/> a manufacturing order is created to fulfill the need.', destination)
         if self.location_src_id:
             manufacture_message += _(' <br/><br/> The components will be taken from <b>%s</b>.', source)
+        if direct_destination and not self.location_dest_from_rule:
+            manufacture_message += _(' <br/><br/> The manufactured products will be moved towards <b>%(destination)s</b>, <br/> as specified from <b>%(operation)s</b> destination.', destination=direct_destination, operation=operation)
         message_dict['manufacture'] = manufacture_message
         return message_dict
 
-    @api.depends('action')
     def _compute_picking_type_code_domain(self):
         remaining = self.browse()
         for rule in self:
@@ -178,6 +179,8 @@ class StockRule(models.Model):
                 'procurement_group_id': values['group_id'].id,
                 'origin': origin,
             })
+        if self.location_dest_from_rule:
+            mo_values['location_dest_id'] = self.location_dest_id.id
         return mo_values
 
     def _get_date_planned(self, bom_id, values):
