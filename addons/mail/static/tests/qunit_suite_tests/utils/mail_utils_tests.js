@@ -8,7 +8,7 @@ QUnit.module('mail', {}, function () {
 QUnit.module('Mail utils');
 
 QUnit.test('add_link utility function', function (assert) {
-    assert.expect(27);
+    assert.expect(29);
 
     var testInputs = {
         'http://admin:password@example.com:8/%2020': true,
@@ -30,6 +30,7 @@ QUnit.test('add_link utility function', function (assert) {
         'https://www.veryveryveryveryverylongdomainname.com/example': true,
         // Subdomain with numbers
         'https://www.45017478-master-all.runbot134.odoo.com/web': true,
+        "https://x.com": true,
     };
 
     _.each(testInputs, function (willLinkify, content) {
