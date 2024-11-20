@@ -89,4 +89,20 @@
             </xpath>
         </field>
     </record>
+
+    <template id="s_crashing_snippet" name="Crashing Snippet">
+        <section class="s_crashing_snippet">
+            <a href="#">Button</a>
+        </section>
+    </template>
+    
+    <template id="s_crashing_snippet_options" inherit_id="website.snippet_options">
+        <xpath expr="." position="inside">
+            <div  data-js="CrashSnippet" data-selector=".s_crashing_snippet">
+                <we-button-group string="Crashing option">
+                    <we-button title="Crash" data-crash-snippet="">Crash</we-button>
+                </we-button-group>
+            </div>
+        </xpath>
+    </template>
 </odoo>
