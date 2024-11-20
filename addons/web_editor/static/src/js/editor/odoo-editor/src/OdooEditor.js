@@ -3676,6 +3676,12 @@ export class OdooEditor extends EventTarget {
                 return;
             }
         }
+        // Ensure zws and data-oe-zws-empty-inline flag is removed if content 
+        // other than zwsp is present.
+        if (ev.target.hasAttribute("data-oe-zws-empty-inline")) {
+            delete ev.target.dataset.oeZwsEmptyInline;
+            cleanZWS(ev.target);
+        }
     }
 
     /**
