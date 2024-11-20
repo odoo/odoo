@@ -55,7 +55,7 @@ export class DiscussChannelRtcSession extends models.ServerModel {
         const DiscussChannelMember = this.env["discuss.channel.member"];
 
         for (const rtcSession of this.browse(ids)) {
-            const [data] = this._read_format(rtcSession.id, [], makeKwArgs({ load: false }));
+            const [data] = this._read_format(rtcSession.id, [], false);
             data.channelMember = mailDataHelpers.Store.one(
                 DiscussChannelMember.browse(rtcSession.channel_member_id),
                 makeKwArgs({ fields: { channel: [], persona: ["name", "im_status"] } })
