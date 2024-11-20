@@ -37,6 +37,7 @@ class PosPrinterService extends PrinterService {
         try {
             return await super.printHtml(...arguments);
         } catch (error) {
+<<<<<<< saas-18.1:addons/point_of_sale/static/src/app/services/pos_printer_service.js
             this.dialog.add(ConfirmationDialog, {
                 title: error.title || _t("Printing error"),
                 body: error.body + _t("Do you want to print using the web printer? "),
@@ -47,6 +48,35 @@ class PosPrinterService extends PrinterService {
                     this.printWeb(...arguments);
                 },
             });
+||||||| 288d3926c5d011590aa25e9886cfa36377974dd6:addons/point_of_sale/static/src/app/printer/pos_printer_service.js
+            return this.printHtmlAlternative(error);
+        }
+    }
+    async printHtmlAlternative(error) {
+        const confirmed = await ask(this.dialog, {
+            title: error.title || _t("Printing error"),
+            body: error.body + _t("Do you want to print using the web printer? "),
+        });
+        if (confirmed) {
+            // We want to call the _printWeb when the dialog is fully gone
+            // from the screen which happens after the next animation frame.
+            await new Promise(requestAnimationFrame);
+            this.printWeb(...arguments);
+=======
+            return this.printHtmlAlternative(error, ...arguments);
+        }
+    }
+    async printHtmlAlternative(error, ...printArguments) {
+        const confirmed = await ask(this.dialog, {
+            title: error.title || _t("Printing error"),
+            body: error.body + _t("Do you want to print using the web printer? "),
+        });
+        if (confirmed) {
+            // We want to call the _printWeb when the dialog is fully gone
+            // from the screen which happens after the next animation frame.
+            await new Promise(requestAnimationFrame);
+            this.printWeb(...printArguments);
+>>>>>>> 6ceb7e0cd48cce132ae30af426464a6911de148f:addons/point_of_sale/static/src/app/printer/pos_printer_service.js
         }
     }
 }
