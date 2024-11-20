@@ -96,7 +96,9 @@ export class DeletePlugin extends Plugin {
         unremovable_node_predicates: [
             (node) => node.classList?.contains("oe_unremovable"),
             // Website stuff?
-            (node) => node.classList?.contains("o_editable"),
+            (node) =>
+                node.classList?.contains("o_editable") &&
+                !this.getResource("banner_container_predicates").some((p) => p(node)),
             // Monetary field
             (node) => node.matches?.("[data-oe-type='monetary'] > span"),
         ],
