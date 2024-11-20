@@ -40,7 +40,8 @@ from odoo.tools import (
 from odoo.tools.mail import (
     append_content_to_html, decode_message_header, email_normalize, email_split,
     email_split_and_format, formataddr, html_sanitize,
-    generate_tracking_message_id, mail_header_msgid_re,
+    generate_tracking_message_id,
+    unfold_references,
 )
 
 MAX_DIRECT_PUSH = 5
@@ -995,21 +996,18 @@ class MailThread(models.AbstractModel):
             )
 
             if mail_incoming_messages_count >= LOOP_THRESHOLD:
-                _logger.info('Email address %s created too many <%s>.', email_from, model)
-
+                _logger.info('--> ignored mail from %s to %s with Message-Id %s: created too many <%s>',
+                             message_dict.get('email_from'), message_dict.get('to'), message_dict.get('message_id'), model)
                 body = self.env['ir.qweb']._render(
                     'mail.message_notification_limit_email',
                     {'email': message_dict.get('to')},
                     minimal_qcontext=True,
                     raise_if_not_found=False,
                 )
-
-                # Add a reference with a tag, to be able to ignore response to this email
-                references = (
-                    message_dict.get('message_id', '') + ' '
-                    + generate_tracking_message_id('loop-detection-bounce-email')
-                )
-                self._routing_create_bounce_email(email_from, body, message, references=references)
+                self._routing_create_bounce_email(
+                    email_from, body, message,
+                    # add a reference with a tag, to be able to ignore response to this email
+                    references=f'{message_dict["message_id"]} {generate_tracking_message_id("loop-detection-bounce-email")}')
                 return True
 
         return False
@@ -1017,8 +1015,8 @@ class MailThread(models.AbstractModel):
     @api.model
     def _detect_loop_headers(self, msg_dict):
         """Return True if the email must be ignored based on its headers."""
-        if ('-loop-detection-bounce-email@' in msg_dict.get('references', '')
-           or '-loop-detection-bounce-email@' in msg_dict.get('in_reply_to', '')):
+        references = unfold_references(msg_dict['references']) + [msg_dict['in_reply_to']]
+        if references and any('-loop-detection-bounce-email@' in ref for ref in references):
             _logger.info('Email is a reply to the bounce notification, ignoring it.')
             return True
 
@@ -1108,18 +1106,12 @@ class MailThread(models.AbstractModel):
 
         # compute references to find if message is a reply to an existing thread
         thread_references = message_dict['references'] or message_dict['in_reply_to']
-        msg_references = [
-            re.sub(r'[\r\n\t ]+', r'', ref)  # "Unfold" buggy references
-            for ref in mail_header_msgid_re.findall(thread_references)
-            if 'reply_to' not in ref
-        ]
-
+        msg_references = [r.strip() for r in unfold_references(thread_references) if 'reply_to' not in r]
         # avoid creating a gigantic query by limiting the number of references taken into account.
         # newer msg_ids are *appended* to References as per RFC5322 §3.6.4, so we should generally
         # find a match just with the last entry (equal to `In-Reply-To`). 32 refs seems large enough,
         # we've seen performance degrade with 100+ refs.
         msg_references = msg_references[-32:]
-
         replying_to_msg = self.env['mail.message'].sudo().search(
             [('message_id', 'in', msg_references)], limit=1, order='id desc'
         ) if msg_references else self.env['mail.message']
@@ -1197,7 +1189,11 @@ class MailThread(models.AbstractModel):
                 body = self.env['ir.qweb']._render('mail.mail_bounce_catchall', {
                     'message': message,
                 })
-                self._routing_create_bounce_email(email_from, body, message, references=message_id, reply_to=self.env.company.email)
+                self._routing_create_bounce_email(
+                    email_from, body, message,
+                    # add a reference with a tag, to be able to ignore response to this email
+                    references=f'{message_id} {tools.generate_tracking_message_id("loop-detection-bounce-email")}',
+                    reply_to=self.env.company.email)
                 return []
 
             dest_aliases = self.env['mail.alias'].search([
@@ -1243,7 +1239,11 @@ class MailThread(models.AbstractModel):
             body = self.env['ir.qweb']._render('mail.mail_bounce_catchall', {
                 'message': message,
             })
-            self._routing_create_bounce_email(email_from, body, message, references=message_id, reply_to=self.env.company.email)
+            self._routing_create_bounce_email(
+                email_from, body, message,
+                # add a reference with a tag, to be able to ignore response to this email
+                references=f'{message_id} {tools.generate_tracking_message_id("loop-detection-bounce-email")}',
+                reply_to=self.env.company.email)
             return []
 
         # ValueError if no routes found and if no bounce occurred
@@ -1388,6 +1388,8 @@ class MailThread(models.AbstractModel):
             return False
 
         if self._detect_loop_headers(msg_dict):
+            _logger.info('Ignored mail from %s to %s with Message-Id %s: reply to a bounce notification detected by headers',
+                             msg_dict.get('email_from'), msg_dict.get('to'), msg_dict.get('message_id'))
             return
 
         # find possible routes for the message
@@ -1794,10 +1796,10 @@ class MailThread(models.AbstractModel):
             - The list of references ids used to find the bounced mail message
         """
         reference_ids = []
-        headers = ('Message-Id', 'X-Microsoft-Original-Message-ID')
+        headers = ('Message-Id', 'X-Odoo-Message-Id', 'X-Microsoft-Original-Message-ID')
         for header in headers:
             value = decode_message_header(message, header)
-            references = mail_header_msgid_re.findall(value)
+            references = unfold_references(value)
             reference_ids.extend([reference.strip() for reference in references])
 
         if reference_ids:
@@ -1808,8 +1810,8 @@ class MailThread(models.AbstractModel):
             if bounced_message:
                 return bounced_message, reference_ids
 
-        reference_ids.extend(mail_header_msgid_re.findall(message_dict['in_reply_to']))
-        reference_ids.extend(mail_header_msgid_re.findall(message_dict['references']))
+        reference_ids.extend(unfold_references(message_dict['in_reply_to']))
+        reference_ids.extend(unfold_references(message_dict['references']))
 
         if message_dict.get('parent_id'):
             # Parent based on References, In-Reply-To, etc
@@ -1833,10 +1835,10 @@ class MailThread(models.AbstractModel):
             if parent:
                 return parent
 
-        reference_ids = mail_header_msgid_re.findall(msg_dict.get('references') or '')
-        if reference_ids:
+        msg_references = [r.strip() for r in unfold_references(msg_dict.get('references') or '')]
+        if msg_references:
             parent = self.env['mail.message'].search(
-                [('message_id', 'in', [x.strip() for x in reference_ids])],
+                [('message_id', 'in', msg_references)],
                 order='create_date DESC, id DESC', limit=1)
             if parent:
                 return parent
