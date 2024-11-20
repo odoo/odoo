@@ -83,6 +83,66 @@ class TestWarehouseMrp(common.TestMrpCommon):
         self.assertTrue(self.warehouse_1.manu_type_id.active)
         self.assertIn(manu_route, warehouse_1_stock_manager._get_all_routes())
 
+    def test_manufacturing_rule_other_dest(self):
+        """ Ensures that a manufacturing rule can define a destination the rule itself and have it
+            applied instead of the one from the operation type if location_dest_from_rule is set.
+        """
+        freezer_loc = self.env['stock.location'].create({
+            'name': 'Freezer',
+            'location_id': self.warehouse_1.view_location_id.id,
+        })
+        route = self.env['stock.route'].create({
+            'name': 'Manufacture then freeze',
+            'rule_ids': [
+                Command.create({
+                    'name': 'Freezer -> Stock',
+                    'action': 'pull',
+                    'procure_method': 'make_to_order',
+                    'picking_type_id': self.warehouse_1.int_type_id.id,
+                    'location_src_id': freezer_loc.id,
+                    'location_dest_id': self.warehouse_1.lot_stock_id.id,
+                    'location_dest_from_rule': True,
+                }),
+                Command.create({
+                    'name': 'Manufacture',
+                    'action': 'manufacture',
+                    'picking_type_id': self.warehouse_1.manu_type_id.id,
+                    'location_src_id': self.warehouse_1.lot_stock_id.id,
+                    'location_dest_id': freezer_loc.id,
+                    'location_dest_from_rule': True,
+                }),
+            ],
+        })
+        # Remove the classic Manufacture route if it exists and replace it by the new one
+        self.product_4.route_ids = [
+            Command.link(route.id),
+            Command.unlink(self.warehouse_1.manufacture_pull_id.id),
+        ]
+
+        # Create a procurement to resupply the Stock, taking from the Freezer.
+        pgroup = self.env['procurement.group'].create({'name': 'test-manu-to-freeze'})
+        self.env['procurement.group'].run([
+            pgroup.Procurement(
+                self.product_4,
+                5.0,
+                self.product_4.uom_id,
+                self.warehouse_1.lot_stock_id,
+                'test_other_dest',
+                'test_other_dest',
+                self.warehouse_1.company_id,
+                {
+                    'warehouse_id': self.warehouse_1,
+                    'group_id': pgroup,
+                }
+            )
+        ])
+
+        # Make sure the production is delivering the goods in the location set on the rule.
+        production = self.env['mrp.production'].search([('product_id', '=', self.product_4.id)])
+        self.assertEqual(len(production), 1)
+        self.assertEqual(production.picking_type_id.default_location_dest_id, self.warehouse_1.lot_stock_id)
+        self.assertEqual(production.location_dest_id, freezer_loc)
+
     def test_multi_warehouse_resupply(self):
         """ test a multi warehouse flow give a correct date delay
             product_6 is sold from warehouse_1, its component (product_4) is
