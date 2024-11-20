@@ -8,6 +8,7 @@ import { Component, useState, useSubEnv } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -213,6 +214,7 @@ export class DiscussSidebarCategories extends Component {
         useSubEnv({
             filteredThreads: (threads) => this.filteredThreads(threads),
         });
+        useHotkey("control+F", this.onClickFindOrStartConversation.bind(this));
     }
 
     filteredThreads(threads) {
