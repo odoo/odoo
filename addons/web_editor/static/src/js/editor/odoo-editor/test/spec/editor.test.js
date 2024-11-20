@@ -1811,7 +1811,7 @@ X[]
                             await deleteBackward(editor);
                             await insertText(editor, 'x');
                         },
-                        contentAfterEdit: '<div><p>cd</p><br><span class="a" data-oe-zws-empty-inline="">x[]\u200B</span></div>',
+                        contentAfterEdit: '<div><p>cd</p><br><span class="a">x[]</span></div>',
                         contentAfter: '<div><p>cd</p><br><span class="a">x[]</span></div>',
                     });
                 });
@@ -1833,7 +1833,7 @@ X[]
                             await deleteBackward(editor);
                             await insertText(editor, 'i');
                         },
-                        contentAfterEdit: '<p>uv<i style="color:red" data-oe-zws-empty-inline="">i[]\u200B</i>xy</p>',
+                        contentAfterEdit: '<p>uv<i style="color:red">i[]</i>xy</p>',
                         contentAfter: '<p>uv<i style="color:red">i[]</i>xy</p>',
                     });
                     await testEditor(BasicEditor, {
@@ -1852,7 +1852,7 @@ X[]
                             await deleteBackward(editor);
                             await insertText(editor, 'x');
                         },
-                        contentAfterEdit: '<p>ab<span class="style" data-oe-zws-empty-inline="">x[]\u200B</span>ef</p>',
+                        contentAfterEdit: '<p>ab<span class="style">x[]</span>ef</p>',
                         contentAfter: '<p>ab<span class="style">x[]</span>ef</p>',
                     });
                 });
@@ -2962,7 +2962,7 @@ X[]
                         await deleteBackward(editor);
                         await insertText(editor, 'x');
                     },
-                    contentAfterEdit: '<div><p>ab <span class="style" data-oe-zws-empty-inline="">x[]\u200B</span> d</p></div>',
+                    contentAfterEdit: '<div><p>ab <span class="style">x[]</span> d</p></div>',
                     contentAfter: '<div><p>ab <span class="style">x[]</span> d</p></div>',
                 });
                 await testEditor(BasicEditor, {
@@ -2971,7 +2971,7 @@ X[]
                         await deleteBackward(editor);
                         await insertText(editor, 'x');
                     },
-                    contentAfterEdit: '<div><p>ab<span class="style" data-oe-zws-empty-inline="">x[]\u200B</span>d</p></div>',
+                    contentAfterEdit: '<div><p>ab<span class="style">x[]</span>d</p></div>',
                     contentAfter: '<div><p>ab<span class="style">x[]</span>d</p></div>',
                 });
                 await testEditor(BasicEditor, {
@@ -2980,7 +2980,7 @@ X[]
                         await deleteBackward(editor);
                         await insertText(editor, 'x');
                     },
-                    contentAfterEdit: '<div><p>ab <span class="style" data-oe-zws-empty-inline="">x[]\u200B</span> f</p></div>',
+                    contentAfterEdit: '<div><p>ab <span class="style">x[]</span> f</p></div>',
                     contentAfter: '<div><p>ab <span class="style">x[]</span> f</p></div>',
                 });
             });

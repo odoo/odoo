@@ -78,10 +78,14 @@ $-editor-messages-margin-x: 2%;
         cursor: text!important;
     }
     /* Summernote not Support for placeholder text https://github.com/summernote/summernote/issues/581 */
-    &[placeholder]:empty:not(:focus):before {
-        content: attr(placeholder);
-        opacity: 0.3;
-        pointer-events: none;
+    &[placeholder]:not(:focus) {
+        &:empty:before,
+        &:has(br:only-child):before,
+        &[data-oe-zws-empty-inline]:before {
+            content: attr(placeholder);
+            opacity: 0.3;
+            pointer-events: none;
+        }
     }
 
     // This style block is about the "editor message" which highlights the areas
