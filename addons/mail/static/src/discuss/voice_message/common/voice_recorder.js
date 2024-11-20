@@ -1,4 +1,4 @@
-import { useState, onWillUnmount, useComponent } from "@odoo/owl";
+import { useState, onWillUnmount, status, useComponent } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
@@ -72,6 +72,10 @@ export function useVoiceRecorder() {
                 microphone = await browser.navigator.mediaDevices.getUserMedia({
                     audio: store.settings.audioConstraints,
                 });
+                if (status(component) === "destroyed") {
+                    cleanUp();
+                    return;
+                }
             } catch {
                 notification.add(
                     _t('"%(hostname)s" needs to access your microphone', {
