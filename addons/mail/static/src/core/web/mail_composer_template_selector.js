@@ -2,6 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { sprintf } from "@web/core/utils/strings";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 
 import { Component, useState, onWillStart } from "@odoo/owl";
@@ -28,9 +29,18 @@ export class MailComposerTemplateSelector extends Component {
     }
 
     async fetchTemplates() {
-        const domain = [["model", "=", this.props.record.data.render_model]];
         const fields = ["display_name"];
-        this.state.templates = await this.orm.searchRead("mail.template", domain, fields, { limit: this.limit });
+        const templates = await this.orm.searchRead("mail.template", [
+            ["model", "=", this.props.record.data.render_model],
+            ["user_id", "=", user.userId]
+        ], fields, { limit: this.limit });
+        if (templates.length < this.limit) {
+            templates.push(...await this.orm.searchRead("mail.template", [
+                ["model", "=", this.props.record.data.render_model],
+                ["user_id", "!=", user.userId]
+            ], fields, { limit: this.limit - templates.length }));
+        }
+        this.state.templates = templates;
     }
 
     /**
