@@ -4,6 +4,14 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 import { nextLeaf } from "@html_editor/utils/dom_info";
 import { isBlock } from "@html_editor/utils/blocks";
 import { renderFileCard } from "./utils";
+import { FileDocumentsSelector } from "./file_documents_selector";
+
+const fileMediaDialogTab = {
+    id: "FILES",
+    title: _t("Documents"),
+    Component: FileDocumentsSelector,
+    sequence: 15,
+};
 
 export class FilePlugin extends Plugin {
     static id = "file";
@@ -27,6 +35,7 @@ export class FilePlugin extends Plugin {
             keywords: ["file"],
         },
         mount_component_handlers: this.setupNewFile.bind(this),
+        media_dialog_tabs_providers: () => (this.config.disableFile ? [] : [fileMediaDialogTab]),
     };
 
     get recordInfo() {
