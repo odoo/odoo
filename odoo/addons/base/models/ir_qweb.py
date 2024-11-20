@@ -444,6 +444,7 @@ _SAFE_QWEB_OPCODES = _EXPR_OPCODES.union(to_opcodes([
     'POP_JUMP_IF_NOT_NONE', 'POP_JUMP_IF_NONE',
     'RERAISE',
     'CALL_INTRINSIC_1',
+    'STORE_SLICE',
 ])) - _BLACKLIST
 
 
