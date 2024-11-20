@@ -626,6 +626,12 @@ class StockMove(models.Model):
             return True
         return False
 
+    def _prepare_move_line_vals(self, quantity=None, reserved_quant=None):
+        vals = super()._prepare_move_line_vals(quantity, reserved_quant)
+        if self.production_id.product_tracking == 'lot' and self.product_id == self.production_id.product_id:
+            vals['lot_id'] = self.production_id.lot_producing_id.id
+        return vals
+
     def _key_assign_picking(self):
         keys = super(StockMove, self)._key_assign_picking()
         return keys + (self.created_production_id,)
