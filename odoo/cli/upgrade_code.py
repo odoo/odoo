@@ -41,8 +41,10 @@ from typing import Iterator
 ROOT = Path(__file__).parent.parent
 
 try:
+    import odoo.addons
     from . import Command
     from odoo import release
+    from odoo.modules import initialize_sys_path
     from odoo.tools import config, parse_version
 except ImportError:
     # Assume the script is directy executed (by opposition to be
@@ -55,6 +57,7 @@ except ImportError:
     class Command:
         pass
     config = None
+    initialize_sys_path = None
 
 
 UPGRADE = ROOT / 'upgrade_code'
@@ -112,7 +115,7 @@ class FileManager:
 
     if sys.stdout.isatty():
         def print_progress(self, current, total=None):
-            total = total or len(self)
+            total = total or len(self) or 1
             print(f'{current / total:>4.0%}', end='\r', file=sys.stderr)  # noqa: T201
     else:
         def print_progress(self, current, total=None):
@@ -170,7 +173,11 @@ class UpgradeCode(Command):
 
     def __init__(self):
         self.parser = argparse.ArgumentParser(
-            prog=f"{self.prog_name} [--addons-path=PATH,...] {self.name}",
+            prog=(
+                f"{self.prog_name} [--addons-path=PATH,...] {self.name}"
+                if config else
+                self.prog_name
+            ),
             description=__doc__.replace('/odoo/upgrade_code', str(UPGRADE)),
             formatter_class=argparse.RawDescriptionHelpFormatter,
         )
@@ -209,12 +216,20 @@ class UpgradeCode(Command):
                 functools.partial(str.split, sep=',')
             ),
             default=config['addons_path'] if config else [],
-            metavar='PATHS',
+            metavar='PATH,...',
             help="specify additional addons paths (separated by commas)",
         )
 
     def run(self, cmdargs):
         options = self.parser.parse_args(cmdargs)
+        if initialize_sys_path:
+            config['addons_path'] = options.addons_path
+            initialize_sys_path()
+            options.addons_path = odoo.addons.__path__
+        else:
+            options.addons_path = [p for p in options.addons_path.split(',') if p]
+        if not options.addons_path:
+            self.parser.error("--addons-path is required when used standalone")
         is_dirty = migrate(**vars(options))
         sys.exit(int(is_dirty))
 
