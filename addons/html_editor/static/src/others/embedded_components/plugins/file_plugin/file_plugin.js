@@ -1,9 +1,9 @@
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
-import { FileMediaDialog } from "@html_editor/main/media/media_dialog/file_media_dialog";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { nextLeaf } from "@html_editor/utils/dom_info";
 import { isBlock } from "@html_editor/utils/blocks";
+import { renderFileCard } from "./utils";
 
 export class FilePlugin extends Plugin {
     static id = "file";
@@ -11,32 +11,21 @@ export class FilePlugin extends Plugin {
     resources = {
         user_commands: [
             {
-                id: "openMediaDialog",
-                title: _t("File"),
-                description: _t("Upload a file"),
-                icon: "fa-file",
-                isAvailable: (selection) => {
-                    return (
-                        !this.config.disableFile &&
-                        !closestElement(selection.anchorNode, "[data-embedded='clipboard']")
-                    );
-                },
-                run: () => {
-                    this.openMediaDialog({
-                        noVideos: true,
-                        noImages: true,
-                        noIcons: true,
-                        noDocuments: true,
-                    });
-                },
+                id: "uploadFile",
+                title: _t("Upload a file"),
+                description: _t("Add a download box"),
+                icon: "fa-upload",
+                run: this.uploadAndInsertFiles.bind(this),
+                isAvailable: ({ anchorNode }) =>
+                    !this.config.disableFile &&
+                    !closestElement(anchorNode, "[data-embedded='clipboard']"),
             },
         ],
-        powerbox_items: [
-            {
-                categoryId: "media",
-                commandId: "openMediaDialog",
-            },
-        ],
+        powerbox_items: {
+            categoryId: "media",
+            commandId: "uploadFile",
+            keywords: ["file"],
+        },
         mount_component_handlers: this.setupNewFile.bind(this),
     };
 
@@ -44,34 +33,24 @@ export class FilePlugin extends Plugin {
         return this.config.getRecordInfo ? this.config.getRecordInfo() : {};
     }
 
-    openMediaDialog(params = {}) {
-        const selection = this.dependencies.selection.getEditableSelection();
-        const restoreSelection = () => {
-            this.dependencies.selection.setSelection(selection);
-        };
-        const { resModel, resId, field, type } = this.recordInfo;
-        this.services.dialog.add(FileMediaDialog, {
-            resModel,
-            resId,
-            useMediaLibrary: !!(
-                field &&
-                ((resModel === "ir.ui.view" && field === "arch") || type === "html")
-            ), // @todo @phoenix: should be removed and moved to config.mediaModalParams
-            save: (element) => {
-                this.onSaveMediaDialog(element, { restoreSelection });
-            },
-            close: restoreSelection,
-            onAttachmentChange: this.config.onAttachmentChange || (() => {}),
-            noVideos: !!this.config.disableVideo,
-            noImages: !!this.config.disableImage,
-            ...this.config.mediaModalParams,
-            ...params,
+    async uploadAndInsertFiles() {
+        // Upload
+        const attachments = await this.services.uploadLocalFiles.upload(this.recordInfo, {
+            multiple: true,
+            accessToken: true,
         });
-    }
-
-    onSaveMediaDialog(element, { restoreSelection }) {
-        restoreSelection();
-        this.dependencies.dom.insert(element);
+        if (!attachments.length) {
+            // No files selected or error during upload
+            this.editable.focus();
+            return;
+        }
+        if (this.config.onAttachmentChange) {
+            attachments.forEach(this.config.onAttachmentChange);
+        }
+        // Render
+        const fileCards = attachments.map(renderFileCard);
+        // Insert
+        fileCards.forEach(this.dependencies.dom.insert);
         this.dependencies.history.addStep();
     }
 
