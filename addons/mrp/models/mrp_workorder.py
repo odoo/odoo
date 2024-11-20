@@ -424,8 +424,17 @@ class MrpWorkorder(models.Model):
         if self.date_start and self.workcenter_id:
             self.date_finished = self._calculate_date_finished()
 
+<<<<<<< master
     def _calculate_date_finished(self, date_start=False, new_workcenter=False):
         workcenter = new_workcenter or self.workcenter_id
+||||||| 14ddd49c52f0030f7dbad7d4889f4edf1b74ae39
+    def _calculate_date_finished(self, date_finished=False):
+        return self.workcenter_id.resource_calendar_id.plan_hours(
+            self.duration_expected / 60.0, date_finished or self.date_start,
+=======
+    def _calculate_date_finished(self, date_start=False):
+        workcenter = self.env.context.get('new_workcenter_id') or self.workcenter_id
+>>>>>>> 8d77b9e8a2a2dbee8ce9acb894e395527823e248
         return workcenter.resource_calendar_id.plan_hours(
             self.duration_expected / 60.0, date_start or self.date_start,
             compute_leaves=True, domain=[('time_type', 'in', ['leave', 'other'])]
@@ -455,6 +464,7 @@ class MrpWorkorder(models.Model):
 
     def write(self, values):
         new_workcenter = False
+<<<<<<< master
         if 'qty_produced' in values:
             if any(w.state in ['done', 'cancel'] for w in self):
                 raise UserError(_('You cannot change the quantity produced of a work order that is in done or cancel state.'))
@@ -463,6 +473,9 @@ class MrpWorkorder(models.Model):
             elif values['qty_produced'] not in (0, 1) and any(wo.product_tracking == 'serial' for wo in self):
                 raise UserError(_('You cannot produce more than 1 unit of a serial product at a time.'))
 
+||||||| 14ddd49c52f0030f7dbad7d4889f4edf1b74ae39
+=======
+>>>>>>> 8d77b9e8a2a2dbee8ce9acb894e395527823e248
         if 'production_id' in values and any(values['production_id'] != w.production_id.id for w in self):
             raise UserError(_('You cannot link this work order to another manufacturing order.'))
         if 'workcenter_id' in values:
@@ -474,7 +487,13 @@ class MrpWorkorder(models.Model):
                     workorder.leave_id.resource_id = new_workcenter.resource_id
                     workorder.duration_expected = workorder._get_duration_expected()
                     if workorder.date_start:
+<<<<<<< master
                         workorder.date_finished = workorder._calculate_date_finished(new_workcenter=new_workcenter)
+||||||| 14ddd49c52f0030f7dbad7d4889f4edf1b74ae39
+                        workorder.date_finished = workorder._calculate_date_finished()
+=======
+                        workorder.date_finished = workorder.with_context(new_workcenter_id=new_workcenter)._calculate_date_finished()
+>>>>>>> 8d77b9e8a2a2dbee8ce9acb894e395527823e248
         if 'date_start' in values or 'date_finished' in values:
             for workorder in self:
                 date_start = fields.Datetime.to_datetime(values.get('date_start', workorder.date_start))
@@ -483,7 +502,13 @@ class MrpWorkorder(models.Model):
                     raise UserError(_('The planned end date of the work order cannot be prior to the planned start date, please correct this to save the work order.'))
                 if 'duration_expected' not in values and not self.env.context.get('bypass_duration_calculation'):
                     if values.get('date_start') and values.get('date_finished'):
+<<<<<<< master
                         computed_finished_time = workorder._calculate_date_finished(date_start=date_start, new_workcenter=new_workcenter)
+||||||| 14ddd49c52f0030f7dbad7d4889f4edf1b74ae39
+                        computed_finished_time = workorder._calculate_date_finished(date_start)
+=======
+                        computed_finished_time = workorder.with_context(new_workcenter_id=new_workcenter)._calculate_date_finished(date_start=date_start)
+>>>>>>> 8d77b9e8a2a2dbee8ce9acb894e395527823e248
                         values['date_finished'] = computed_finished_time
                     elif date_start and date_finished:
                         computed_duration = workorder._calculate_duration_expected(date_start=date_start, date_finished=date_finished)
