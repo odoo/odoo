@@ -83,6 +83,7 @@ class TestDeliveryCarrier(ClickAndCollectCommon, WebsiteSaleStockCommon):
                     'name': wh_address_partner['name'].title(),
                     'street': wh_address_partner['street'].title(),
                     'city': wh_address_partner.city.title(),
+                    'country': wh_address_partner.country_id.name,
                     'zip_code': wh_address_partner.zip,
                     'state': wh_address_partner.state_id.code,
                     'country_code': wh_address_partner.country_code,

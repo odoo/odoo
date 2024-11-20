@@ -69,7 +69,10 @@
                 />
             </t>
         </t>
-        <div name="o_pickup_location" position="after">
+        <div name="o_pickup_location" position="attributes">
+            <attribute name="t-attf-class" add="d-none" separator=" "/>
+        </div>
+        <div name="delivery_method" position="after">
             <t t-if="dm.delivery_type=='in_store' and pickup_location_data">
                 <t
                     t-if="unavailable_order_lines"
