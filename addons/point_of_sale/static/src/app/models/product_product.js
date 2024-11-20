@@ -242,5 +242,9 @@ export class ProductProduct extends Base {
         });
         return isCombinationArchived;
     }
+
+    get productDisplayName() {
+        return this.default_code ? `[${this.default_code}] ${this.name}` : this.name;
+    }
 }
 registry.category("pos_available_models").add(ProductProduct.pythonModel, ProductProduct);
