@@ -45,6 +45,9 @@ export class DiscussClientAction extends Component {
      * @param {string} rawActiveId
      */
     parseActiveId(rawActiveId) {
+        if (!rawActiveId) {
+            return [];
+        }
         const [model, id] = rawActiveId.split("_");
         if (model === "mail.box") {
             return ["mail.box", id];

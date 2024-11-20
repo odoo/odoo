@@ -49,6 +49,10 @@ class PublicPageController(http.Controller):
         store = Store({"isChannelTokenSecret": True})
         return self._response_discuss_channel_invitation(store, channel)
 
+    @http.route("/discuss/public", methods=["GET"], type="http", auth="user")
+    def discuss_public(self):
+        return self._response_discuss_public_template(Store())
+
     @http.route("/discuss/channel/<int:channel_id>", methods=["GET"], type="http", auth="public")
     @add_guest_to_context
     def discuss_channel(self, channel_id):
@@ -102,18 +106,19 @@ class PublicPageController(http.Controller):
             channel = channel.with_context(guest=guest)
         return self._response_discuss_public_template(store, channel)
 
-    def _response_discuss_public_template(self, store, channel):
+    def _response_discuss_public_template(self, store, channel=None):
         store.add(
             {
                 "companyName": request.env.company.name,
                 "inPublicPage": True,
-                "discuss_public_thread": Store.one(channel),
             }
         )
+        if channel:
+            store.add({"discuss_public_thread": Store.one(channel)})
         return request.render(
             "mail.discuss_public_channel_template",
             {
                 "data": store.get_result(),
-                "session_info": channel.env["ir.http"].session_info(),
+                "session_info": self.env["ir.http"].session_info(),
             },
         )
