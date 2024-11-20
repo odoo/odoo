@@ -2077,6 +2077,14 @@ export class PosStore extends Reactive {
     getDisplayDeviceIP() {
         return this.config.proxy_ip;
     }
+
+    isProductVariant(product) {
+        return (
+            this.models["product.product"].filter(
+                (p) => p.raw.product_tmpl_id === product.raw.product_tmpl_id
+            ).length > 1
+        );
+    }
 }
 
 PosStore.prototype.electronic_payment_interfaces = {};
