@@ -33,6 +33,7 @@ test("add_link utility function", () => {
         "https://github.com/odoo/enterprise/compare/16.0...chỗgiặt-voip-fix_demo_data-tsm?expand=1": true,
         "https://github.com/odoo/enterprise/compare/chỗgiặt...chỗgiặt-voip-fix_demo_data-tsm?expand=1": true,
         "https://github.com/odoo/enterprise/compare/@...}-voip-fix_demo_data-tsm?expand=1": true,
+        "https://x.com": true,
     };
 
     for (const [content, willLinkify] of Object.entries(testInputs)) {
