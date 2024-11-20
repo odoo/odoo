@@ -5,6 +5,7 @@ import { M2xAvatarEmployee } from "@hr/../tests/mock_server/mock_models/m2x_avat
 import { mailModels } from "@mail/../tests/mail_test_helpers";
 import { defineModels } from "@web/../tests/web_test_helpers";
 import { FakeUser } from "@hr/../tests/mock_server/mock_models/fake_user";
+import { ResourceResource } from "@resource/../tests/mock_server/mock_models/resource_resource";
 
 export function defineHrModels() {
     return defineModels(hrModels);
@@ -17,4 +18,5 @@ export const hrModels = {
     HrEmployee,
     HrEmployeePublic,
     FakeUser,
+    ResourceResource,
 };
