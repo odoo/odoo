@@ -12,7 +12,7 @@ import { Component, xml } from "@odoo/owl";
 const isSmall = utils.isSmall;
 
 const viewRegistry = registry.category("views");
-const fieldRegistry = registry.category("fields");
+const fieldRegistry = registry.category("fields_new");
 
 const supportedInfoValidation = {
     type: Array,
@@ -70,11 +70,7 @@ fieldRegistry.addValidation({
     listViewWidth: {
         type: [
             Number,
-            {
-                type: Array,
-                element: Number,
-                validate: (array) => array.length === 1 || array.length === 2,
-            },
+            { type: Array, element: Number, validate: (array) => array.length === 2 },
             Function,
         ],
         optional: true,
@@ -86,7 +82,11 @@ class DefaultField extends Component {
     static props = ["*"];
 }
 
-export function getFieldFromRegistry(fieldType, widget, viewType, jsClass) {
+class DefaultFieldDescription {
+    Component = DefaultField;
+}
+
+function getFieldDescription(fieldType, widget, viewType, jsClass) {
     const prefixes = jsClass ? [jsClass, viewType, ""] : [viewType, ""];
     const findInRegistry = (key) => {
         for (const prefix of prefixes) {
@@ -106,7 +106,8 @@ export function getFieldFromRegistry(fieldType, widget, viewType, jsClass) {
         }
         console.warn(`Missing widget: ${widget} for field of type ${fieldType}`);
     }
-    return findInRegistry(fieldType) || { component: DefaultField };
+    const FieldDescription = findInRegistry(fieldType) || DefaultFieldDescription;
+    return new FieldDescription();
 }
 
 export function fieldVisualFeedback(field, record, fieldName, fieldInfo) {
@@ -174,7 +175,7 @@ export function getPropertyFieldInfo(propertyField) {
         fieldInfo.selection = propertyField.selection;
     }
 
-    fieldInfo.field = getFieldFromRegistry(propertyField.type, fieldInfo.widget);
+    fieldInfo.field = getFieldDescription(propertyField.type, fieldInfo.widget);
     let { relatedFields } = fieldInfo.field;
     if (relatedFields) {
         if (relatedFields instanceof Function) {
@@ -195,7 +196,7 @@ export class Field extends Component {
         if (!fields[name]) {
             throw new Error(`"${modelName}"."${name}" field is undefined.`);
         }
-        const field = getFieldFromRegistry(fields[name].type, widget, viewType, jsClass);
+        const field = getFieldDescription(fields[name].type, widget, viewType, jsClass);
         const fieldInfo = {
             name,
             type: fields[name].type,
@@ -326,7 +327,7 @@ export class Field extends Component {
             this.field = this.props.fieldInfo.field;
         } else {
             const fieldType = this.props.record.fields[this.props.name].type;
-            this.field = getFieldFromRegistry(fieldType, this.props.type);
+            this.field = getFieldDescription(fieldType, this.props.type);
         }
     }
 
