@@ -91,6 +91,7 @@ class DeliveryCarrier(models.Model):
                     'street': wh_location['street'].title(),
                     'city': wh_location.city.title(),
                     'zip_code': wh_location.zip,
+                    'country': wh_location.country_id.name,
                     'country_code': wh_location.country_code,
                     'latitude': wh_location.partner_latitude,
                     'longitude': wh_location.partner_longitude,

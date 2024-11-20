@@ -39,4 +39,58 @@
         </xpath>
     </template>
 
+    <template id="delivery_location_selector" inherit_id="website_sale.delivery_address_row">
+        <div id="delivery_address_row" position="inside">
+            <div name="o_pickup_location" class="d-none one_kanban col-md">
+                <div name="find_store_btn" class="row row-cols-3 g-1">
+                    <t t-set="pickup_location_data" t-value="order.pickup_location_data or {}"/>
+                    <a
+                        t-if="not pickup_location_data"
+                        name="o_pickup_location_selector"
+                        role="button"
+                        class="o_wsale_find_store d-flex align-items-center justify-content-center h-100 rounded no-decoration border"
+                    >
+                        <div>
+                            <span class="d-md-inline">
+                                <i class="fa fa-search"/>
+                            </span>
+                            <span>
+                                Find a store
+                            </span>
+                        </div>
+                    </a>
+                    <span
+                        name="o_pickup_location_selector"
+                        t-attf-class="card position-relative h-100 p-0 {{'bg-primary border border-primary js_change_address' if pickup_location_data else 'border border-0'}}"
+                        t-att-data-location-id="pickup_location_data.get('id')"
+                        t-att-data-zip-code="pickup_location_data.get('zip_code')"
+                        t-att-data-pickup-location-data="json_pickup_location_data"
+                    >
+                        <div t-attf-class="card-body d-flex flex-column align-items-start">
+                            <span name="o_pickup_location_name" class="d-block" t-out="pickup_location_data.get('name', '')" />
+                            <span name="o_pickup_location_address" class="lh-sm">
+                                <t t-out="pickup_location_data.get('street', '')"/>
+                                <br/>
+                                <t t-out="pickup_location_data.get('city', '') + ' ' + pickup_location_data.get('zip_code', '')"/>
+                                <br/>
+                                <t t-out="pickup_location_data.get('country', '')"/>
+                            </span>
+                            <span name="o_pickup_location_details"></span>
+                            <a
+                                name="edit_pickup_address"
+                                t-attf-class="js_edit_address btn btn-link p-0 mt-auto {{'d-none' if not pickup_location_data else ''}}"
+                                role="button"
+                            >
+                                <i class="fa fa-search me-1"/>Change Store
+                            </a>
+                        </div>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div id="delivery_address_row" position="attributes">
+            <attribute name="class" separator=" ">delivery_address_row</attribute>
+        </div>
+    </template>
+
 </odoo>
