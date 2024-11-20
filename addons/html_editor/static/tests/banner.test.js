@@ -19,7 +19,7 @@ test("should insert a banner with focus inside followed by a paragraph", async (
         unformat(
             `<p><br></p><div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
                     <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
-                    <div class="w-100 px-3" contenteditable="true">
+                    <div class="w-100 px-3 o_editable" contenteditable="true">
                         <p>Test[]</p>
                     </div>
                 </div><p><br></p>`
@@ -54,7 +54,7 @@ test("press 'ctrl+a' inside a banner should select all the banner content", asyn
         unformat(
             `<p><br></p><div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
                     <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
-                    <div class="w-100 px-3" contenteditable="true">[
+                    <div class="w-100 px-3 o_editable" contenteditable="true">[
                         <p>Test</p><p>Test1</p><p>Test2<br></p>
                     ]</div>
                 </div><p><br></p>`
@@ -79,7 +79,7 @@ test("remove all content should preserve the first paragraph tag inside the bann
         unformat(
             `<p><br></p><div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
                     <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
-                    <div class="w-100 px-3" contenteditable="true">[
+                    <div class="w-100 px-3 o_editable" contenteditable="true">[
                         <p>Test</p><p>Test1</p><p>Test2<br></p>
                     ]</div>
                 </div><p><br></p>`
@@ -91,7 +91,7 @@ test("remove all content should preserve the first paragraph tag inside the bann
         unformat(
             `<p><br></p><div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
                     <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
-                    <div class="w-100 px-3" contenteditable="true"><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p></div>
+                    <div class="w-100 px-3 o_editable" contenteditable="true"><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p></div>
                 </div><p><br></p>`
         )
     );
@@ -106,7 +106,7 @@ test("Inserting a banner at the top of the editable also inserts a paragraph abo
             `<p><br></p>
             <div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
                 <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
-                <div class="w-100 px-3" contenteditable="true">
+                <div class="w-100 px-3 o_editable" contenteditable="true">
                     <p>test[]</p>
                 </div>
             </div>
@@ -119,7 +119,7 @@ test("Everything gets selected with ctrl+a, including a contenteditable=false as
     const { el } = await setupEditor(
         `<div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
                 <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
-                <div class="w-100 px-3" contenteditable="true">
+                <div class="w-100 px-3 o_editable" contenteditable="true">
                     <p><br></p>
                 </div>
             </div><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
@@ -129,7 +129,7 @@ test("Everything gets selected with ctrl+a, including a contenteditable=false as
     expect(getContent(el)).toBe(
         `[<div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
                 <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
-                <div class="w-100 px-3" contenteditable="true">
+                <div class="w-100 px-3 o_editable" contenteditable="true">
                     <p><br></p>
                 </div>
             </div><p placeholder='Type "/" for commands' class="o-we-hint"><br></p>]`
@@ -151,13 +151,12 @@ test("Everything gets selected with ctrl+a, including a banner", async () => {
     expect(getContent(el)).toBe(
         `[<p><br></p><div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
                 <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
-                <div class="w-100 px-3" contenteditable="true">
+                <div class="w-100 px-3 o_editable" contenteditable="true">
                     <p>test</p>
                 </div>
             </div><p>Test1</p><p>Test2<br></p>]`,
         { message: "should select everything" }
     );
-
     await press("Backspace");
     expect(getContent(el)).toBe(
         `<p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
@@ -205,7 +204,7 @@ test("add banner inside empty list", async () => {
         unformat(
             `<ul><li><br><div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
                     <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
-                    <div class="w-100 px-3" contenteditable="true">
+                    <div class="w-100 px-3 o_editable" contenteditable="true">
                         <p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>
                     </div>
                 </div><br></li></ul>`
@@ -222,7 +221,7 @@ test("add banner inside non-empty list", async () => {
         unformat(
             `<ul><li><br><div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
                     <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
-                    <div class="w-100 px-3" contenteditable="true">
+                    <div class="w-100 px-3 o_editable" contenteditable="true">
                         <p>Test[]</p>
                     </div>
                 </div><br></li></ul>`
@@ -240,7 +239,7 @@ test("should move heading element inside the banner, with paragraph element afte
     expect(getContent(el)).toBe(
         `<p><br></p><div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
                 <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
-                <div class="w-100 px-3" contenteditable="true">
+                <div class="w-100 px-3 o_editable" contenteditable="true">
                     <h1>Test[]</h1>
                 </div>
             </div><div class="o-paragraph"><br></div>`
