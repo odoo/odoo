@@ -1,6 +1,6 @@
 import { OdooViewsDataSource } from "@spreadsheet/data_sources/odoo_views_data_source";
 import { _t } from "@web/core/l10n/translation";
-import { GraphModel as ChartModel } from "@web/views/graph/graph_model";
+import { SpreadsheetGraphModel } from "./graph_model";
 
 export class ChartDataSource extends OdooViewsDataSource {
     /**
@@ -20,7 +20,7 @@ export class ChartDataSource extends OdooViewsDataSource {
             fieldAttrs: {},
             ...this._metaData,
         };
-        this._model = new ChartModel(
+        this._model = new SpreadsheetGraphModel(
             {
                 _t,
             },
@@ -29,7 +29,9 @@ export class ChartDataSource extends OdooViewsDataSource {
                 orm: this._orm,
             }
         );
-        await this._model.load(this._searchParams);
+        // force an empty searchParams.groupBy to always use metaData.groupBy.
+        // Some existing charts have searchParams.groupBy
+        await this._model.load({ ...this._searchParams, groupBy: [] });
     }
 
     getData() {
