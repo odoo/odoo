@@ -156,7 +156,7 @@ describe("popover should edit,copy,remove the link", () => {
         await waitFor(".o_notification_bar.bg-success");
         const notifications = queryAllTexts(".o_notification_body");
         expect(notifications).toInclude("Link copied to clipboard.");
-        await animationFrame();
+        await waitUntil(() => !queryFirst(".o-we-linkpopover"));
         expect(".o-we-linkpopover").toHaveCount(0);
         await expect(navigator.clipboard.readText()).resolves.toBe("http://test.com/");
     });
@@ -818,7 +818,7 @@ describe("links with inline image", () => {
         await waitFor(".o-we-toolbar");
         expect("button[name='unlink']").toHaveCount(1);
         await click("button[name='unlink']");
-        await animationFrame();
+        await waitUntil(() => !queryFirst(".o-we-linkpopover"));
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             `<p>ab<a href="#">cd[</a><img src="${base64Img}"><a href="#">]ef</a>g</p>`
         );
