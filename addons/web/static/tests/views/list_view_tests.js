@@ -12046,7 +12046,7 @@ QUnit.module("Views", (hooks) => {
             "o_readonly_modifier"
         );
 
-        await click(target.querySelector(".o_selected_row .o_field_many2one"));
+        await click(target.querySelector(".o_selected_row .o_field_many2one input"));
         assert.strictEqual(
             document.activeElement,
             target.querySelector(".o_selected_row .o_field_many2one input")
