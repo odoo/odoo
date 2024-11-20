@@ -183,7 +183,7 @@
                 </div>
             </t>
             <t t-if="thread.selfMember?.message_unread_counter > 0 and !thread.isMuted and thread.importantCounter === 0" t-call="mail.DiscussSidebar.unreadIndicator"/>
-            <span t-if="thread.importantCounter > 0" t-attf-class="o-mail-DiscussSidebarChannel-badge o-mail-DiscussSidebar-badge badge rounded-pill o-discuss-badge fw-bold {{thread.isMuted ? 'o-muted' : ''}}" t-att-class="{ 'mx-1': !store.discuss.isSidebarCompact, 'position-absolute top-0 o-compact': store.discuss.isSidebarCompact }" t-esc="thread.importantCounter"/>
+            <span t-if="thread.importantCounter > 0" t-attf-class="o-mail-DiscussSidebarChannel-badge o-mail-DiscussSidebar-badge badge rounded-pill o-discuss-badge flex-shrink-0 fw-bold {{thread.isMuted ? 'o-muted' : ''}}" t-att-class="{ 'mx-1': !store.discuss.isSidebarCompact, 'position-absolute top-0 o-compact': store.discuss.isSidebarCompact }" t-esc="thread.importantCounter"/>
         </button>
     </t>
 
