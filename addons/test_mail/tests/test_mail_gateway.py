@@ -2023,6 +2023,7 @@ class TestMailGatewayLoops(MailGatewayCommon):
                 extra=f'References: {bounce_references}',
             )
         self.assertNotSentEmail()
+
         with self.mock_mail_gateway():
             self.format_and_process(
                 MAIL_TEMPLATE,
@@ -2095,6 +2096,42 @@ class TestMailGatewayLoops(MailGatewayCommon):
         self.assertFalse(capture_gateway.records)
         self.assertFalse(bool(self._new_msgs))
         self.assertNotSentEmail()
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_routing_loop_forward_catchall(self):
+        """ Use case: broad email forward to catchall. Example: customer sends an
+        email to catchall. It bounces: to=customer, return-path=bounce. Autoreply
+        replies to bounce: to=bounce. It is forwarded to catchall. It bounces,
+        and hop we have a loop. """
+        customer_email = "customer@test.example.com"
+
+        with self.mock_mail_gateway():
+            self.format_and_process(
+                MAIL_TEMPLATE,
+                f'"Annoying Customer" <{customer_email}>',
+                f'"No Reply" <{self.alias_catchall}@{self.alias_domain}>, Unroutable <unroutable@{self.alias_domain}>',
+                subject='Should Bounce (initial)',
+                return_path=customer_email,
+            )
+        self.assertSentEmail(
+            f'"MAILER-DAEMON" <{self.alias_bounce}@{self.alias_domain}>',
+            [customer_email],
+            subject='Re: Should Bounce (initial)')
+        original_mail = self._mails
+
+        # auto-reply: write to bounce = no more bounce
+        self.gateway_mail_reply_last_email(MAIL_TEMPLATE, force_to=f'{self.alias_bounce}@{self.alias_domain}')
+        self.assertNotSentEmail()
+
+        # auto-reply but forwarded to catchall -> should not bounce again
+        self._mails = original_mail  # just to revert state prior to auto reply
+        self.gateway_mail_reply_last_email(MAIL_TEMPLATE, force_to=f'{self.alias_catchall}@{self.alias_domain}')
+        # TDE FIXME: this should not bounce again
+        # self.assertNotSentEmail()
+        self.assertSentEmail(
+            f'"MAILER-DAEMON" <{self.alias_bounce}@{self.alias_domain}>',
+            [customer_email],
+            subject=f'Re: Re: Re: Should Bounce (initial)')
 
 
 @tagged('mail_gateway', 'mail_thread')
