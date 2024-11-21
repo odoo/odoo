@@ -35,6 +35,12 @@ const threadPatch = {
                 return this.otherTypingMembers.length > 0;
             },
         });
+        this.hasSeenFeature = Record.attr(false, {
+            /** @this {import("models").Thread} */
+            compute() {
+                return this.store.channel_types_with_seen_infos.includes(this.channel_type);
+            },
+        });
         this.invitedMembers = Record.many("discuss.channel.member");
         this.member_count = undefined;
         this.onlineMembers = Record.many("discuss.channel.member", {

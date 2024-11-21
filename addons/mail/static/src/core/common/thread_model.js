@@ -451,13 +451,6 @@ export class Thread extends Record {
 
     onPinStateUpdated() {}
 
-    hasSeenFeature = Record.attr(false, {
-        /** @this {import("models").Thread} */
-        compute() {
-            return this.store.channel_types_with_seen_infos.includes(this.channel_type);
-        },
-    });
-
     get invitationLink() {
         if (!this.uuid || this.channel_type === "chat") {
             return undefined;

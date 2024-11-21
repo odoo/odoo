@@ -25,6 +25,7 @@ declare module "models" {
         fetchChannelMembers(): Promise<void>,
         hasOtherMembersTyping: boolean,
         readonly hasMemberList: boolean,
+        readonly hasSeenFeature: boolean,
         readonly hasSelfAsMember: boolean,
         invitedMembers: ChannelMember[],
         member_count: number | undefined,
