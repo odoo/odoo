@@ -2,7 +2,7 @@
 
 import { setSelection } from '../../src/OdooEditor.js';
 import { Powerbox } from '../../src/powerbox/Powerbox.js';
-import { BasicEditor, _isMobile, insertText, testEditor, triggerEvent } from '../utils.js';
+import { BasicEditor, _isMobile, insertText, nextTick, testEditor, triggerEvent } from '../utils.js';
 
 const getCurrentCommandNames = powerbox => {
     return [...powerbox.el.querySelectorAll('.oe-powerbox-commandName')].map(c => c.innerText);
@@ -64,6 +64,22 @@ describe('Powerbox', () => {
                     await triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
                 },
                 contentAfter: '<h1>ab[]</h1>',
+            });
+        });
+        it('should not reinsert the selected text after command validation', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>[]<br></p>',
+                stepFunction: async editor => {
+                    await insertText(editor, 'abc');
+                    const p = editor.editable.querySelector('p');
+                    setSelection(p.firstChild, 0, p.lastChild, 1);
+                    await nextTick();
+                    await insertText(editor, '/');
+                    window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                    await insertText(editor, 'h1');
+                    await triggerEvent(editor.editable, "keydown", { key: "Enter" });
+                },
+                contentAfter: '<h1>[]<br></h1>',
             });
         });
         it('should close the powerbox if keyup event is called on other block', async () => {

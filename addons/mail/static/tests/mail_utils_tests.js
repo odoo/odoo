@@ -22,6 +22,7 @@ QUnit.test("add_link utility function", function (assert) {
         "https://www.transifex.com/odoo/odoo-11/translate/#fr/$/119303430?q=text%3ATartiflette": true,
         "https://tenor.com/view/chỗgiặt-dog-smile-gif-13860250": true,
         "http://www.boîtenoire.be": true,
+        "https://x.com": true,
     };
 
     for (const [content, willLinkify] of Object.entries(testInputs)) {
