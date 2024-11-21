@@ -53,32 +53,32 @@ class StockPicking(models.Model):
 
                 # Determine environment-specific URL
                 is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
-                # url_manual_packing = (
-                #     "https://shiperooconnect-prod.automation.shiperoo.com/release_container"
-                #     if is_production == 'True'
-                #     else "https://shiperooconnect.automation.shiperoo.com/release_container"
-                # )
+                url_manual_packing = (
+                    "https://shiperooconnect-prod.automation.shiperoo.com/release_container"
+                    if is_production == 'True'
+                    else "https://shiperooconnect.automation.shiperoo.com/release_container"
+                )
                 line.released_manual = True
                 # Headers for the request
-                # headers = {
-                #     'Content-Type': 'application/json'
-                # }
-                #
-                # try:
-                #     # Send POST request to Flask API
-                #     response = requests.post(url_manual_packing, data=json_data, headers=headers)
-                #     if response.status_code == 200:
-                #         api_response = response.json()
-                #         if api_response.get('success'):
-                #             line.released_manual = True  # Update state after successful release
-                #             self.env.cr.commit()  # Commit changes immediately to avoid conflicts
-                #         else:
-                #             raise UserError(
-                #                 f"Failed to Send to Pack App {picking.name}: {api_response.get('message')}")
-                #     else:
-                #         raise UserError(f"Flask API error ({response.status_code}): {response.text}")
-                # except requests.RequestException as e:
-                #     raise UserError(f"Error communicating with Flask API: {str(e)}")
+                headers = {
+                    'Content-Type': 'application/json'
+                }
+
+                try:
+                    # Send POST request to Flask API
+                    response = requests.post(url_manual_packing, data=json_data, headers=headers)
+                    if response.status_code == 200:
+                        api_response = response.json()
+                        if api_response.get('success'):
+                            line.released_manual = True  # Update state after successful release
+                            self.env.cr.commit()  # Commit changes immediately to avoid conflicts
+                        else:
+                            raise UserError(
+                                f"Failed to Send to Pack App {picking.name}: {api_response.get('message')}")
+                    else:
+                        raise UserError(f"Flask API error ({response.status_code}): {response.text}")
+                except requests.RequestException as e:
+                    raise UserError(f"Error communicating with Flask API: {str(e)}")
 
         return True
 
