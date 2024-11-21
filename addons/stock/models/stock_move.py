@@ -1125,13 +1125,14 @@ Please change the quantity done or the rounding precision of your unit of measur
         :return: Recordset of moves passed to this method. If some of the passed moves were merged
         into another existing one, return this one and not the (now unlinked) original.
         """
-        distinct_fields = self._prepare_merge_moves_distinct_fields()
 
         candidate_moves_set = set()
         if not merge_into:
             self._update_candidate_moves_list(candidate_moves_set)
         else:
             candidate_moves_set.add(merge_into | self)
+
+        distinct_fields = (self | self.env['stock.move'].concat(*candidate_moves_set))._prepare_merge_moves_distinct_fields()
 
         # Move removed after merge
         moves_to_unlink = self.env['stock.move']
