@@ -6,17 +6,18 @@ import odoo.tests
 from odoo import Command
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.point_of_sale.tests.common import archive_products
+from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 
 
 @odoo.tests.tagged("post_install", "-at_install")
-class SelfOrderCommonTest(odoo.tests.HttpCase):
+class SelfOrderCommonTest(ValuationReconciliationTestCommon, odoo.tests.HttpCase):
     browser_size = "375x667"
     touch_enabled = True
     allow_inherited_tests_method = True
 
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
         archive_products(cls.env)
         cls.pos_user = mail_new_test_user(
             cls.env,
