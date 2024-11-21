@@ -25,6 +25,7 @@ import {
     useChildSubEnv,
     xml,
     reactive,
+    status,
 } from "@odoo/owl";
 import { downloadReport, getReportUrl } from "./reports/utils";
 import { omit, pick, shallowEqual } from "@web/core/utils/objects";
@@ -907,6 +908,19 @@ export function makeActionManager(env, router = _router) {
                 if (this.isMounted) {
                     // the error occurred on the controller which is
                     // already in the DOM, so simply show the error
+                    Promise.reject(error);
+                    return;
+                }
+                if (!this.isMounted && status(this) === "mounted") {
+                    // The error occured during an onMounted hook of one of the components.
+                    env.bus.trigger("ACTION_MANAGER:UPDATE", {
+                        id: ++id,
+                        Component: BlankComponent,
+                        componentProps: {
+                            onMounted: () => {},
+                            withControlPanel: action.type === "ir.actions.act_window",
+                        },
+                    });
                     Promise.reject(error);
                     return;
                 }
