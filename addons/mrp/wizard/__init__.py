@@ -9,3 +9,4 @@ from . import product_replenish
 from . import mrp_batch_produce
 from . import mrp_production_split
 from . import stock_label_type
+from . import mass_cancel_orders

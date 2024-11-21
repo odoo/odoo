@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="mass_cancel_orders_view_form" model="ir.ui.view">
+        <field name="name">mrp.mass.cancel.orders.form</field>
+        <field name="model">mrp.mass.cancel.orders</field>
+        <field name="arch" type="xml">
+            <form string="Cancel Manufacturing Orders">
+                <field name="mrp_production_count" invisible="1"/>
+                <span invisible="mrp_production_count != 1">Are you sure you want to cancel this manufacturing order?</span>
+                <span invisible="mrp_production_count == 1">Are you sure you want to cancel these manufacturing orders?</span>
+                <footer>
+                    <button class="btn-primary"
+                            name="mass_cancel"
+                            type="object"
+                            string="Confirm"/>
+                    <button string="Discard" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_mass_cancel_orders" model="ir.actions.act_window">
+        <field name="name">Confirmation</field>
+        <field name="res_model">mrp.mass.cancel.orders</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="mass_cancel_orders_view_form"/>
+        <field name="target">new</field>
+    </record>
+
+</odoo>
