@@ -30,34 +30,46 @@ class StockPicking(models.Model):
         """
 
         for picking in self:
-            packed_lines = picking.move_ids_without_package.filtered(lambda line: line.packed)
+            packed_lines = picking.move_ids_without_package.filtered(lambda line: line.packed and not line.released_manual)
             if not packed_lines:
                 raise UserError("No packed items found in this picking.")
 
             sku_list = []
+            total_sku_amount = 0  # To calculate the total quantity
+            sku_type_amount = 0  # To count unique SKUs
 
             # Loop through each packed line to build the SKU list
             for line in packed_lines:
+                total_sku_amount += line.quantity  # Accumulate total quantity
                 sku_list.append({
                     "sku_code": line.product_id.default_code,  # Product code (SKU)
                     "sku_amount": line.quantity,  # Quantity
                     "amount": line.quantity,  # Quantity
-                    "sku_type_amount":1,
                     "out_batch_code": "ECOM",  # Batch code
                     "owner_code": picking.tenant_code_id.name,  # Tenant code
+                    "out_order_code": picking.name,  # Picking name as the order code
                 })
+
+            sku_type_amount = len(sku_list)  # Count unique SKUs
 
             # Prepare payload with consolidated SKU list
             data = {
-                "body": {
-                    "warehouse_code": picking.site_code_id.name,  # Site Code
-                    "receipt_code": picking.name,  # Picking name as receipt code
-                    "sku_list": sku_list
-                },
                 "header": {
-                    "user_id": "system",
-                    "user_key": "system",
-                    "warehouse_code": picking.site_code_id.name  # Site Code
+                    "user_id": "admin",  # Replace as needed
+                    "user_key": "admin",
+                    "warehouse_code": picking.site_code_id.name,  # Site Code
+                    # "interface_code": "feedback_outbound_container"  # Interface Code
+                },
+                "body": {
+                    "container_list": [
+                        {
+                            "container_code": picking.name,  # Receipt number
+                            "sku_type_amount": sku_type_amount,  # Unique SKU count
+                            "sku_amount": total_sku_amount,  # Total quantities of all SKUs
+                            "sku_list": sku_list,  # Consolidated SKU list
+                        }
+                    ],
+                    "warehouse_code": picking.site_code_id.name,  # Warehouse code
                 }
             }
 
