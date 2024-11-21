@@ -1095,6 +1095,30 @@ class AccountMoveLine(models.Model):
             'type': 'ir.actions.act_window',
         }
 
+    def _validate_tax_alignment_with_fpos(self):
+        """
+        Method to validate whether the tax_ids on the move_line are aligned with the fiscal position of the move.
+
+        Returns:
+            bool: `True` if the taxes on the move_line align with the fiscal position, otherwise `False`.
+        """
+
+        for line in self:
+            if not line.product_id or not line.tax_ids:
+                continue
+            company_id = self.move_id.company_id
+            mapped_tax_ids = self.env["account.fiscal.position.tax"].with_company(company_id).search([
+                '|',
+                ('tax_src_id', 'in', line.tax_ids.ids),
+                ('tax_dest_id', 'in', line.tax_ids.ids),
+            ])
+            if mapped_tax_ids:
+                unmapped_tax_ids = line.tax_ids - (mapped_tax_ids.tax_src_id | mapped_tax_ids.tax_dest_id)
+                mapped_taxes = line.move_id.fiscal_position_id.map_tax(mapped_tax_ids.tax_src_id)
+                if sorted((line.tax_ids - unmapped_tax_ids).ids) != sorted(mapped_taxes.ids):
+                    return False
+        return True
+
     # -------------------------------------------------------------------------
     # SEARCH METHODS
     # -------------------------------------------------------------------------
