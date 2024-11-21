@@ -480,9 +480,6 @@ registry.category("web_tour.tours").add("test_form_view_resequence_actions", {
         {
             trigger: "body:not(:has(.modal-content))",
         },
-        {
-            trigger: ".o_form_button_cancel",
-        },
     ],
 });
 
