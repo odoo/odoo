@@ -20,7 +20,8 @@ import { getOrderChanges } from "@point_of_sale/app/models/utils/order_change";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
-import { FloorEditingPopup } from "../../components/popups/floor_editing_popup/floor_editing_popup";
+import { FloorEditingPopup } from "@pos_restaurant/app/components/popups/floor_editing_popup/floor_editing_popup";
+import { NumpadDropdown } from "@pos_restaurant/app/components/numpad_dropdown/numpad_dropdown";
 
 function constrain(num, min, max) {
     return Math.min(Math.max(num, min), max);
@@ -69,9 +70,9 @@ const useDraggable = makeDraggableHook({
 const GRID_SIZE = 10;
 
 export class FloorScreen extends Component {
-    static components = { Dropdown, DropdownItem };
+    static components = { Dropdown, DropdownItem, NumpadDropdown };
     static template = "pos_restaurant.FloorScreen";
-    static props = { floor: { type: true, optional: true } };
+    static props = {};
     static storeOnOrder = false;
 
     setup() {
@@ -86,7 +87,6 @@ export class FloorScreen extends Component {
             selectedTableIds: [],
             potentialLink: null,
         });
-
         this.doCreateTable = useTrackedAsync(async () => {
             await this.createTable();
         });
@@ -201,10 +201,15 @@ export class FloorScreen extends Component {
                 this.alert.dismiss();
                 const table = this.getPosTable(element);
                 if (this.pos.isEditMode) {
-                    this.pos.data.write("restaurant.table", [table.id], {
-                        position_h: table.position_h,
-                        position_v: table.position_v,
-                    });
+                    if (this.pos.floorPlanStyle !== "kanban") {
+                        this.pos.data.write("restaurant.table", [table.id], {
+                            position_h: table.position_h,
+                            position_v: table.position_v,
+                        });
+                    } else {
+                        table.position_h = table.uiState.initialPosition.position_h;
+                        table.position_v = table.uiState.initialPosition.position_v;
+                    }
                     return;
                 }
                 table.position_h = table.uiState.initialPosition.position_h;
@@ -352,7 +357,9 @@ export class FloorScreen extends Component {
             await this.pos.unsetTable();
         }
         // Set order to null when reaching the floor screen.
-        this.pos.setOrder(null);
+        if (!(this.pos.getOrder()?.isFilledDirectSale && !this.pos.getOrder().finalized)) {
+            this.pos.setOrder(null);
+        }
     }
     get floorBackround() {
         return this.activeFloor.floor_background_image
@@ -1014,6 +1021,10 @@ export class FloorScreen extends Component {
         } else {
             return this.deleteFloor();
         }
+    }
+    clickNewOrder() {
+        this.pos.addNewOrder();
+        this.pos.showScreen("ProductScreen");
     }
 }
 

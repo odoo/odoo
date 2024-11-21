@@ -153,6 +153,7 @@
             'web/static/src/scss/bootstrap_overridden.scss',
             'web/static/src/scss/fontawesome_overridden.scss',
             'web/static/fonts/fonts.scss',
+            "web/static/src/scss/ui.scss",
 
             ('remove', 'web/static/src/core/errors/error_handlers.js'), # error handling in PoS is different from the webclient
             ('remove', '/web/static/src/core/dialog/dialog.scss'),

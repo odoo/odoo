@@ -42,7 +42,7 @@ export function isSyncStatusConnected() {
 export function clickPlanButton() {
     return {
         content: "go back to the floor screen",
-        trigger: ".pos-leftheader .back-button:not(:has(.btn-primary))",
+        trigger: ".pos-leftheader .table-button",
         run: "click",
     };
 }
@@ -107,4 +107,10 @@ export function hasFloatingOrder(name) {
 
 export function noFloatingOrder(name) {
     return _hasFloatingOrder(name, false);
+}
+export function clickOrders() {
+    return { trigger: ".pos-leftheader .orders-button", run: "click" };
+}
+export function clickRegister() {
+    return { trigger: ".pos-leftheader .register-label", run: "click" };
 }

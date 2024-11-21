@@ -26,7 +26,8 @@ export const DECIMAL = {
 };
 export const BACKSPACE = { value: "Backspace", text: "⌫" };
 export const ZERO = { value: "0" };
-export const DEFAULT_LAST_ROW = [{ value: "-", text: "+/-" }, ZERO, DECIMAL];
+export const SWITCHSIGN = { value: "-", text: "+/-" };
+export const DEFAULT_LAST_ROW = [SWITCHSIGN, ZERO, DECIMAL];
 export const EMPTY = { value: "" };
 
 export function getButtons(lastRow, rightColumn) {

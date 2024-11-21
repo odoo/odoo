@@ -58,7 +58,7 @@ export class ReceiptScreen extends Component {
         return `${orderAmountStr} + ${tipAmountStr} tip`;
     }
     get nextScreen() {
-        return { name: "ProductScreen" };
+        return this.pos.defaultScreen;
     }
     get ticketScreen() {
         return { name: "TicketScreen" };
@@ -79,8 +79,7 @@ export class ReceiptScreen extends Component {
             this.pos.addNewOrder();
         }
         this.pos.searchProductWord = "";
-        const { name, props } = this.nextScreen;
-        this.pos.showScreen(name, props);
+        this.pos.showScreen(this.nextScreen);
     }
 
     generateTicketImage = async (isBasicReceipt = false) =>

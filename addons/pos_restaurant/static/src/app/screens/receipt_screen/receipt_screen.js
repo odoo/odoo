@@ -39,13 +39,4 @@ patch(ReceiptScreen.prototype, {
             return false;
         }
     },
-    //@override
-    get nextScreen() {
-        if (this.pos.config.module_pos_restaurant) {
-            const table = this.pos.selectedTable;
-            return { name: "FloorScreen", props: { floor: table ? table.floor_id : null } };
-        } else {
-            return super.nextScreen;
-        }
-    },
 });

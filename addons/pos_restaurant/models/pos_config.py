@@ -13,6 +13,7 @@ class PosConfig(models.Model):
     floor_ids = fields.Many2many('restaurant.floor', string='Restaurant Floors', help='The restaurant floors served by this point of sale.')
     set_tip_after_payment = fields.Boolean('Set Tip After Payment', help="Adjust the amount authorized by payment terminals to add a tip after the customers left or at the end of the day.")
     module_pos_restaurant_appointment = fields.Boolean("Table Booking")
+    default_screen = fields.Selection([('tables', 'Tables'), ('register', 'Register')], string='Default Screen', default='tables')
 
     def _get_forbidden_change_fields(self):
         forbidden_keys = super(PosConfig, self)._get_forbidden_change_fields()
@@ -23,8 +24,13 @@ class PosConfig(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             is_restaurant = 'module_pos_restaurant' in vals and vals['module_pos_restaurant']
-            if is_restaurant and 'iface_splitbill' not in vals:
-                vals['iface_splitbill'] = True
+            if is_restaurant:
+                if 'iface_printbill' not in vals:
+                    vals['iface_printbill'] = True
+                if 'show_product_images' not in vals:
+                    vals['show_product_images'] = False
+                if 'show_category_images' not in vals:
+                    vals['show_category_images'] = False
             if not is_restaurant or not vals.get('iface_tipproduct', False):
                 vals['set_tip_after_payment'] = False
         pos_configs = super().create(vals_list)

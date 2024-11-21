@@ -6,6 +6,7 @@ export class TextInputPopup extends Component {
     static components = { Dialog };
     static props = {
         title: String,
+        size: { type: String, optional: true },
         buttons: { type: Array, optional: true },
         startingValue: { type: String, optional: true },
         placeholder: { type: String, optional: true },
@@ -16,6 +17,7 @@ export class TextInputPopup extends Component {
     static defaultProps = {
         startingValue: "",
         placeholder: "",
+        size: "lg",
         rows: 1,
         buttons: [],
     };

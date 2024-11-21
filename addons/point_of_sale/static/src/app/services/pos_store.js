@@ -163,7 +163,11 @@ export class PosStore extends WithLazyGetterTrap {
             }
         }
 
-        return !this.cashier ? "LoginScreen" : "ProductScreen";
+        return !this.cashier ? "LoginScreen" : this.defaultScreen;
+    }
+
+    get defaultScreen() {
+        return "ProductScreen";
     }
 
     async reloadData(fullReload = false) {
@@ -372,7 +376,7 @@ export class PosStore extends WithLazyGetterTrap {
         return orderIsDeleted;
     }
     async afterOrderDeletion() {
-        this.setOrder(this.getOpenOrders().at(-1) || this.createNewOrder());
+        this.setOrder(this.getOpenOrders().at(-1) || this.addNewOrder());
     }
 
     async deleteOrders(orders, serverIds = []) {
@@ -986,10 +990,14 @@ export class PosStore extends WithLazyGetterTrap {
         if (this.getOrder()) {
             this.getOrder().updateSavedQuantity();
         }
-        const order = this.createNewOrder(data);
+        const order = this.createOrderIfNeeded(data);
         this.selectedOrderUuid = order.uuid;
         this.searchProductWord = "";
+        this.mobile_pane = "right";
         return order;
+    }
+    createOrderIfNeeded(data) {
+        return this.createNewOrder(data);
     }
     async getNextOrderRefs(order) {
         try {
@@ -1437,7 +1445,7 @@ export class PosStore extends WithLazyGetterTrap {
             true
         );
     }
-    showScreen(name, props) {
+    showScreen(name, props = {}, newOrder = false) {
         if (name === "ProductScreen") {
             this.getOrder()?.deselectOrderline();
         }
@@ -1447,6 +1455,9 @@ export class PosStore extends WithLazyGetterTrap {
         // Save the screen to the order so that it is shown again when the order is selected.
         if (component.storeOnOrder ?? true) {
             this.getOrder()?.setScreenData({ name, props });
+        }
+        if (newOrder) {
+            this.addNewOrder();
         }
     }
     orderExportForPrinting(order) {
@@ -1520,7 +1531,16 @@ export class PosStore extends WithLazyGetterTrap {
         }
     }
     closeScreen() {
-        this.addOrderIfEmpty();
+        this.showOrderScreen(false);
+    }
+
+    showOrderScreen(forceEmpty = false) {
+        this.addOrderIfEmpty(forceEmpty);
+        if (this.mainScreen.component === PaymentScreen) {
+            this.getOrder().setScreenData({ name: "PaymentScreen", props: {} });
+            this.showScreen("ProductScreen");
+            return;
+        }
         const { name: screenName } = this.getOrder().getScreenData();
         const props = {};
         if (screenName === "PaymentScreen") {
@@ -1529,7 +1549,7 @@ export class PosStore extends WithLazyGetterTrap {
         this.showScreen(screenName, props);
     }
 
-    addOrderIfEmpty() {
+    addOrderIfEmpty(forceEmpty) {
         if (!this.getOrder()) {
             return this.addNewOrder();
         }
@@ -1833,8 +1853,9 @@ export class PosStore extends WithLazyGetterTrap {
 
     showBackButton() {
         return (
-            (this.ui.isSmall && this.mainScreen.component !== ProductScreen) ||
-            (this.mobile_pane === "left" && this.mainScreen.component === ProductScreen)
+            this.ui.isSmall &&
+            this.numpadMode !== "table" &&
+            (this.mainScreen.component !== ProductScreen || this.mobile_pane === "left")
         );
     }
     async onClickBackButton() {
