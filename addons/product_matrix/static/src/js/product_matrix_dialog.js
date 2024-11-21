@@ -35,9 +35,16 @@ export class ProductMatrixDialog extends Component {
         onMounted(() => {
             if(this.props.editedCellAttributes.length) {
                 const inputs = document.getElementsByClassName('o_matrix_input');
-                Array.from(inputs).filter((matrixInput) =>
+                const relevantInput = Array.from(inputs).filter((matrixInput) =>
                     matrixInput.attributes.ptav_ids.nodeValue === this.props.editedCellAttributes
-                )[0].select();
+                )[0];
+                if (relevantInput) {
+                    relevantInput.select();
+                } else {
+                    // Based on the record creation, it may ignore the 'no_variant' attributes
+                    // (e.g. from a stock.move), thus finding no match in the matrix.
+                    inputs[0].select();
+                }
             } else {
                 document.getElementsByClassName('o_matrix_input')[0].select();
             }
