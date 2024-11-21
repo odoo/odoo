@@ -64,7 +64,7 @@ test("avatar card preview with hr", async () => {
     expect.verifySteps(["user read"]);
     expect(".o_avatar_card").toHaveCount(1);
     expect(".o_avatar_card span[data-tooltip='Work Location'] .fa-building-o").toHaveCount(1);
-    expect(queryAllTexts(".o_card_user_infos > *")).toEqual([
+    expect(queryAllTexts(".o_card_user_infos > *:not(.o_avatar_card_buttons)")).toEqual([
         "Mario",
         "sub manager",
         "Management",
