@@ -1,15 +1,20 @@
 import { defineCalendarModels } from "@calendar/../tests/calendar_test_helpers";
-import { click, contains, start, startServer } from "@mail/../tests/mail_test_helpers";
-import { test } from "@odoo/hoot";
 import {
     asyncStep,
+    click,
+    contains,
     mockService,
     onRpc,
     serverState,
+    start,
+    startServer,
     waitForSteps,
-} from "@web/../tests/web_test_helpers";
+} from "@mail/../tests/mail_test_helpers";
+import { test } from "@odoo/hoot";
+import { preloadBundle } from "@web/../tests/web_test_helpers";
 
 defineCalendarModels();
+preloadBundle("web.fullcalendar_lib");
 
 test("can listen on bus and display notifications in DOM and click OK", async () => {
     const pyEnv = await startServer();

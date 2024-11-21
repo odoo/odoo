@@ -17,6 +17,7 @@ import {
     getService,
     onRpc,
     patchWithCleanup,
+    preloadBundle,
     waitForSteps,
 } from "@web/../tests/web_test_helpers";
 
@@ -25,6 +26,7 @@ import { animationFrame } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineMailModels();
+preloadBundle("web.assets_emoji");
 
 let gifId = 0;
 const gifFactory = (count = 1, options = {}) => {

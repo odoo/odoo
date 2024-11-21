@@ -1604,11 +1604,11 @@ describe("sandbox", () => {
         ];
 
         patchWithCleanup(assets, {
-            getBundle: (name) => {
+            async getBundle(name) {
                 expect.step(name);
                 return {
-                    jsLibs: [],
                     cssLibs: ["testCSS"],
+                    jsLibs: [],
                 };
             },
         });

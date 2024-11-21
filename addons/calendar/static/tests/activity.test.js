@@ -8,8 +8,10 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { test } from "@odoo/hoot";
+import { preloadBundle } from "@web/../tests/web_test_helpers";
 
 defineCalendarModels();
+preloadBundle("web.fullcalendar_lib");
 
 test("activity click on Reschedule", async () => {
     registerArchs({ "calendar.event,false,calendar": `<calendar date_start="start"/>` });

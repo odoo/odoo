@@ -1,6 +1,6 @@
-import { afterEach, expect, test } from "@odoo/hoot";
+import { expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, mockDate, runAllTimers } from "@odoo/hoot-mock";
+import { Deferred, animationFrame, mockDate } from "@odoo/hoot-mock";
 import { onRendered } from "@odoo/owl";
 import {
     contains,
@@ -28,9 +28,9 @@ import {
     checkDatasets,
     checkLabels,
     checkLegend,
-    checkYTicks,
     checkModeIs,
     checkTooltip,
+    checkYTicks,
     clickOnDataset,
     clickOnLegend,
     clickSort,
@@ -42,6 +42,7 @@ import {
     getScaleY,
     getYAxisLabel,
     selectMode,
+    setupChartJsForTests,
 } from "./graph_test_helpers";
 
 import { DEFAULT_BG, getBorderWhite, getColors, lightenColor } from "@web/core/colors/colors";
@@ -174,7 +175,7 @@ class Foo extends models.Model {
 
 defineModels([Foo, Color, Product]);
 
-afterEach(runAllTimers);
+setupChartJsForTests();
 
 test("simple bar chart rendering", async () => {
     const view = await mountView({ type: "graph", resModel: "foo" });

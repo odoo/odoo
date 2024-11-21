@@ -1,7 +1,7 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { queryAllTexts, queryFirst, queryRect } from "@odoo/hoot-dom";
 import { runAllTimers } from "@odoo/hoot-mock";
-import { mockService, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { mockService, mountWithCleanup, preloadBundle } from "@web/../tests/web_test_helpers";
 import {
     DEFAULT_DATE,
     FAKE_MODEL,
@@ -27,6 +27,7 @@ async function start(props = {}, target) {
     });
 }
 
+preloadBundle("web.fullcalendar_lib");
 beforeEach(() => {
     luxon.Settings.defaultZone = "UTC+1";
 });
