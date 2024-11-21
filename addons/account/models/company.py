@@ -67,26 +67,29 @@ class ResCompany(models.Model):
     fiscalyear_lock_date = fields.Date(
         string="Global Lock Date",
         tracking=True,
-        help="No users can edit accounts prior to and inclusive of this date."
-             " Use it for fiscal year locking for example.")
+        help="Any entry up to and including that date will be postponed to a later time, in accordance with its journal's sequence.",
+    )
     tax_lock_date = fields.Date(
         string="Tax Return Lock Date",
         tracking=True,
-        help="No users can edit journal entries related to a tax prior and inclusive of this date.")
+        help="Any entry with taxes up to and including that date will be postponed to a later time, in accordance with its journal's sequence. "
+             "The tax lock date is automatically set when the tax closing entry is posted.",
+    )
     sale_lock_date = fields.Date(
         string='Sales Lock Date',
         tracking=True,
-        help='Prevents creation and modification of entries in sales journals up to the defined date inclusive.'
+        help="Any sales entry prior to and including this date will be postponed to a later date, in accordance with its journal's sequence.",
     )
     purchase_lock_date = fields.Date(
         string='Purchase Lock date',
         tracking=True,
-        help='Prevents creation and modification of entries in purchase journals up to the defined date inclusive.'
+        help="Any purchase entry prior to and including this date will be postponed to a later date, in accordance with its journal's sequence.",
     )
     hard_lock_date = fields.Date(
         string='Hard Lock Date',
         tracking=True,
-        help='Like the "Global Lock Date", but no exceptions are possible.'
+        help="Any entry up to and including that date will be postponed to a later time, in accordance with its journal sequence. "
+             "This lock date is irreversible and does not allow any exception.",
     )
     # The user lock date fields are explicitly invalidated when
     #   * writing the corresponding lock date field on any company
