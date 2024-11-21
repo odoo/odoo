@@ -44,6 +44,7 @@ export class HtmlField extends Component {
     static props = {
         ...standardFieldProps,
         isCollaborative: { type: Boolean, optional: true },
+        collaborativeTrigger: { type: String, optional: true },
         dynamicPlaceholder: { type: Boolean, optional: true, default: false },
         dynamicPlaceholderModelReferenceField: { type: String, optional: true },
         cssReadonlyAssetId: { type: String, optional: true },
@@ -214,6 +215,7 @@ export class HtmlField extends Component {
             collaboration: this.props.isCollaborative && {
                 busService: this.busService,
                 ormService: this.ormService,
+                collaborativeTrigger: this.props.collaborativeTrigger,
                 collaborationChannel: {
                     collaborationModelName: this.props.record.resModel,
                     collaborationFieldName: this.props.name,
@@ -315,6 +317,7 @@ export const htmlField = {
         return {
             editorConfig,
             isCollaborative: options.collaborative,
+            collaborativeTrigger: options.collaborative_trigger,
             dynamicPlaceholder: options.dynamic_placeholder,
             dynamicPlaceholderModelReferenceField:
                 options.dynamic_placeholder_model_reference_field,
