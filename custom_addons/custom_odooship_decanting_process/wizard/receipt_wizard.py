@@ -265,11 +265,12 @@ class DeliveryReceiptWizardLine(models.TransientModel):
                         'message': _("The selected product is not available in the selected picking."),
                     }
                 }
-            if self.product_id and self.product_id.automation_manual_product != self.wizard_id.automation_manual:
-                raise ValidationError(
-                    "The selected product's automation/manual type does not match the wizard's automation/manual selection. "
-                    "Please select a product that corresponds to the chosen automation/manual type."
-                )
+            # Commented below code to remove validation while selecting product if it doesn't matches with the selected automation_manual selection
+            # if self.product_id and self.product_id.automation_manual_product != self.wizard_id.automation_manual:
+            #     raise ValidationError(
+            #         "The selected product's automation/manual type does not match the wizard's automation/manual selection. "
+            #         "Please select a product that corresponds to the chosen automation/manual type."
+            #     )
 
             return {
                 'domain': {
