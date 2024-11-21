@@ -27,7 +27,7 @@ class TestMenusAdmin(odoo.tests.HttpCase):
 class TestMenusDemo(HttpCaseWithUserDemo):
     allow_end_on_form = True
     def test_01_click_everywhere_as_demo(self):
-        user_demo = self.env.ref("base.user_demo")
+        user_demo = self.user_demo
         menus = self.env['ir.ui.menu'].with_user(user_demo.id).load_menus(False)
         for app_id in menus['root']['children']:
             with self.subTest(app=menus[app_id]['name']):
@@ -49,6 +49,9 @@ class TestMenusAdminLight(odoo.tests.HttpCase):
         return super()._request_handler(s, r, **kw)
 
     def test_01_click_apps_menus_as_admin(self):
+        # Disable onboarding tours to remove warnings
+        if 'tour_enabled' in self.env['res.users']._fields:
+            self.env.ref('base.user_admin').tour_enabled = False
         # Due to action_pos_preparation_display_kitchen_display, cliking on the "Kitchen Display"
         # menuitem could open the UI display, which will break the crawler tests as there is no
         # way for the tour to be executed, leading to a timeout
@@ -76,6 +79,9 @@ class TestMenusDemoLight(HttpCaseWithUserDemo):
     allow_end_on_form = True
 
     def test_01_click_apps_menus_as_demo(self):
+        # Disable onboarding tours to remove warnings
+        if 'tour_enabled' in self.env['res.users']._fields:
+            self.user_demo.tour_enabled = False
         # If not enabled (like in demo data), landing on website dashboard will redirect to /
         # and make the test crash
         group_website_designer = self.env.ref('website.group_website_designer', raise_if_not_found=False)
