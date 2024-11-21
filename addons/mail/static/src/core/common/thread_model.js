@@ -482,28 +482,6 @@ export class Thread extends Record {
         return {};
     }
 
-    lastSelfMessageSeenByEveryone = Record.one("mail.message", {
-        compute() {
-            if (!this.lastMessageSeenByAllId) {
-                return false;
-            }
-            let res;
-            // starts from most recent persistent messages to find early
-            for (let i = this.persistentMessages.length - 1; i >= 0; i--) {
-                const message = this.persistentMessages[i];
-                if (!message.isSelfAuthored) {
-                    continue;
-                }
-                if (message.id > this.lastMessageSeenByAllId) {
-                    continue;
-                }
-                res = message;
-                break;
-            }
-            return res;
-        },
-    });
-
     executeCommand(command, body = "") {
         return this.store.env.services.orm.call(
             "discuss.channel",
