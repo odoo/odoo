@@ -13,6 +13,7 @@ export class Orderline extends Component {
                 qty: String,
                 unit: { type: String, optional: true },
                 unitPrice: String,
+                priceChanged: { type: Boolean, optional: true },
                 discount: { type: String, optional: true },
                 comboParent: { type: String, optional: true },
                 oldUnitPrice: { type: String, optional: true },

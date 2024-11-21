@@ -5,9 +5,15 @@
             <t t-set="editButtonClass" t-value="'btn btn-lg'" />
             <t t-set="hasSelectedTable" t-value="selectedTables.length > 0" />
             <t t-set="firstSelectedTable" t-value="selectedTables.length ? selectedTables[0] : null" />
-            <div class="d-flex flex-row flex-wrap justify-content-between border-bottom bg-light">
+            <div class="d-flex flex-row flex-wrap justify-content-between border-bottom bg-light" t-att-class="{'navbar-height': !this.ui.isSmall}">
                 <!-- Left Side Div -->
-                <div class="floor-selector d-flex gap-2 p-2 align-items-center overflow-auto">
+                <div class="left-buttons d-flex align-items-center gap-2 p-2">
+                    <button class="new-order btn btn-secondary lh-lg" t-on-click="() => this.clickNewOrder()" >
+                        <span>New Order</span>
+                    </button>
+                </div>
+                <!-- Center Side Div -->
+                <div class="floor-selector d-flex gap-2 px-2 align-items-center overflow-auto">
                     <t t-foreach="pos.models['restaurant.floor'].getAll()" t-as="floor" t-key="floor.id">
                         <button class="button button-floor btn btn-outline-secondary btn-lg px-3 lh-lg text-nowrap" t-attf-class="{{ floor.id === state.selectedFloorId ? 'active' : '' }}" t-on-click="() => this.selectFloor(floor)">
                             <t t-esc="floor.name" />
@@ -86,6 +92,9 @@
                         <t t-if="!ui.isSmall">Save</t>
                         <i t-else="" class="fa fa-floppy-o" role="img" aria-label="Save" title="Save"/>
                     </button>
+                </div>
+                <div t-else="" class="right-buttons d-flex align-items-center gap-2 px-2">
+                    <NumpadDropdown/>
                 </div>
             </div>
             <t t-set="isKanban" t-value="pos.floorPlanStyle == 'kanban'"/>

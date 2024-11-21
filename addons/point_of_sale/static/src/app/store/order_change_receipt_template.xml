@@ -3,15 +3,8 @@
 
     <t t-name="point_of_sale.OrderChangeReceipt">
         <div class="pos-receipt">
-            <div class="pos-receipt-order-data"><t t-esc="changes.name" /></div>
-            <t t-if="changes.floor_name || changes.table_name">
-                <br />
-                <div class="pos-receipt-title">
-                    <t t-esc="changes.floor_name" /> / <t t-esc="changes.table_name"/>
-                </div>
-            </t>
             <div class="pos-receipt-title">
-                <t t-esc="changes.tracking_number"/>
+                <t t-esc="changes.order_name"/>
             </div>
             <br />
             <br />

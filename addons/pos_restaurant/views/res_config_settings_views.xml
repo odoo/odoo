@@ -39,6 +39,11 @@
                     <label class="fw-normal" for="pos_set_tip_after_payment" string="Add tip after payment"/>
                 </div>
             </div>
+            <block id="pos_interface_section" position="inside">
+                <setting invisible="not pos_module_pos_restaurant or is_kiosk_mode" help="Select the table first or after registering the order">
+                    <field name="pos_default_screen" widget="radio"/>
+                </setting>
+            </block>
         </field>
     </record>
 </odoo>

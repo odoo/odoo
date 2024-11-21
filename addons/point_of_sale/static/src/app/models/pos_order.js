@@ -335,14 +335,13 @@ export class PosOrder extends Base {
                 const printingChanges = {
                     new: changes["new"],
                     cancelled: changes["cancelled"],
-                    table_name: this.table_id?.name,
+                    table_name: this.table_id?.table_number,
                     floor_name: this.table_id?.floor_id?.name,
-                    name: this.pos_reference || "unknown order",
                     time: {
                         hours,
                         minutes,
                     },
-                    tracking_number: this.tracking_number,
+                    order_name: this.getName(),
                 };
                 const receipt = renderToElement("point_of_sale.OrderChangeReceipt", {
                     changes: printingChanges,
