@@ -114,7 +114,7 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "click",
     },
     {
-        trigger: "button[name=action_invoice_sent]:contains(print & send)",
+        trigger: "button[name=action_invoice_sent]:contains(send)",
         content: _t("Send the invoice to the customer and check what he'll receive."),
         tooltipPosition: "bottom",
         run: "click",
@@ -146,10 +146,10 @@ registry.category("web_tour.tours").add('account_tour', {
     },
     {
         isActive: ["auto"],
-        trigger: "button[name=action_invoice_sent]:contains(print & send)",
+        trigger: "button[name=action_invoice_sent]:contains(send)",
         content: _t("Send the invoice and check what the customer will receive."),
         run: "click",
-    },    
+    },
     {
         trigger: ".modal button[name=action_send_and_print]",
         content: _t("Let's send the invoice."),

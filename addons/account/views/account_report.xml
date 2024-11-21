@@ -7,13 +7,14 @@
             <field name="model">account.move</field>
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">account.report_invoice_with_payments</field>
+            <field name="domain">[]</field>
             <field name="report_file">account.report_invoice_with_payments</field>
             <field name="is_invoice_report">True</field>
             <field name="print_report_name">(object._get_report_base_filename())</field>
             <field name="attachment"/>
-            <field name="binding_model_id" eval="False"/>  <!-- removes the action from the Print menu (forced False value for update) -->
-            <field name="groups_id" eval="[(4, ref('account.group_account_invoice')),
- (4, ref('account.group_account_readonly'))]"/>
+            <field name="binding_model_id" ref="model_account_move"/>
+            <field name="binding_type">report</field>
+            <field name="groups_id" eval="[(4, ref('account.group_account_invoice')), (4, ref('account.group_account_readonly'))]"/>
         </record>
 
         <record id="action_account_original_vendor_bill" model="ir.actions.report">

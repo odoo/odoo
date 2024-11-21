@@ -589,9 +589,9 @@
             <field name="inherit_id" ref="account.view_invoice_tree"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
-                <xpath expr="//list/header" position="inside">
-                    <button name="action_send_and_print" type="object" string="Print &amp; Send"/>
-                </xpath>
+                <button name="action_force_register_payment" position="before">
+                    <button name="action_send_and_print" type="object" string="Send"/>
+                </button>
                 <field name="currency_id" position="attributes">
                     <attribute name="string">Invoice Currency</attribute>
                 </field>
@@ -604,9 +604,9 @@
             <field name="inherit_id" ref="account.view_invoice_tree"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
-                <xpath expr="//list/header" position="inside">
-                    <button name="action_send_and_print" type="object" string="Print &amp; Send"/>
-                </xpath>
+                <button name="action_force_register_payment" position="before">
+                    <button name="action_send_and_print" type="object" string="Send"/>
+                </button>
                 <field name="currency_id" position="attributes">
                     <attribute name="string">Credit Note Currency</attribute>
                 </field>
@@ -707,13 +707,13 @@
                         <!-- Send (only invoices) -->
                         <button name="action_invoice_sent"
                                 type="object"
-                                string="Print &amp; Send"
+                                string="Send"
                                 invisible="state != 'posted' or is_being_sent or invoice_pdf_report_id or move_type not in ('out_invoice', 'out_refund')"
                                 class="oe_highlight"
                                 data-hotkey="y"/>
                         <button name="action_invoice_sent"
                                 type="object"
-                                string="Print &amp; Send"
+                                string="Send"
                                 invisible="state != 'posted' or not is_being_sent and not invoice_pdf_report_id or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')"
                                 data-hotkey="y"/>
                         <!-- Register Payment (only invoices / receipts) -->
