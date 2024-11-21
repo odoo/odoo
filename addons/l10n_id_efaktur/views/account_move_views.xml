@@ -8,14 +8,14 @@
             <field name="arch" type="xml">
                 <field name="partner_shipping_id" position="before">
                     <field name="l10n_id_need_kode_transaksi" invisible="1"/>
-                    <field name="l10n_id_kode_transaksi" invisible="country_code != 'ID' or not l10n_id_need_kode_transaksi" readonly="state in ['cancel', 'posted']" required="l10n_id_need_kode_transaksi"/>
-                    <field name="l10n_id_efaktur_range" invisible="country_code != 'ID' or state != 'draft' or l10n_id_available_range_count &lt; 2 or not l10n_id_need_kode_transaksi" options="{'no_create': True}"/>
                 </field>
                 <button name="button_draft" position="after">
                     <button name="reset_efaktur" string="Reset E-Faktur" type="object" invisible="country_code != 'ID' or not l10n_id_tax_number or state != 'cancel' or l10n_id_efaktur_document"/>
                 </button>
                 <xpath expr=".//group[@id='other_tab_group']" position="inside">
                     <group string="Electronic Tax" invisible="country_code != 'ID'">
+                        <field name="l10n_id_kode_transaksi" invisible="not l10n_id_show_kode_transaksi" readonly="l10n_id_tax_number" required="l10n_id_need_kode_transaksi"/>
+                        <field name="l10n_id_efaktur_range" invisible="state != 'draft' or l10n_id_available_range_count &lt; 2 or not l10n_id_show_kode_transaksi" readonly="l10n_id_tax_number" options="{'no_create': True}"/>
                         <field name="l10n_id_tax_number" invisible="move_type == 'entry'" readonly="move_type in ('out_invoice', 'out_refund', 'out_receipt')"/>
                         <field name="l10n_id_efaktur_document"/>
                         <field name="l10n_id_replace_invoice_id" readonly="state != 'draft'" options="{'m2o_dialog': False, 'no_create': True}"/>
