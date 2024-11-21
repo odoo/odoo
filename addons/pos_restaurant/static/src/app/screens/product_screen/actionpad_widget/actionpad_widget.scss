@@ -1,0 +1,27 @@
+.o_catch_attention_vibrate {
+    position: relative;
+    z-index: 1;
+    animation: catchAttentionVibrate 400ms ease 0s infinite normal;
+}
+
+// bounce effect
+@keyframes catchAttentionVibrate {
+    0% {
+        transform: rotate(0deg);
+    }
+    20% {
+        transform: rotate(-10deg);
+    }
+    40% {
+        transform: rotate(10deg);
+    }
+    60% {
+        transform: rotate(-10deg);
+    }
+    80% {
+        transform: rotate(10deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
+}

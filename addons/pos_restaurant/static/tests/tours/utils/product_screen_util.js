@@ -1,5 +1,7 @@
 import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
+import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_input_popup_util";
+import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 
 export function clickOrderButton() {
     return [
@@ -34,14 +36,6 @@ export function guestNumberIs(num) {
         },
     ];
 }
-export function orderBtnIsPresent() {
-    return [
-        {
-            content: "Order button is here",
-            trigger: ".actionpad .button.submit-order",
-        },
-    ];
-}
 export function OrderButtonNotContain(data) {
     const steps = [
         {
@@ -52,4 +46,15 @@ export function OrderButtonNotContain(data) {
         },
     ];
     return steps;
+}
+export function setTab(name) {
+    return [
+        {
+            content: `set tab to ${name}`,
+            trigger: `.product-screen .new-tab`,
+            run: "click",
+        },
+        TextInputPopup.inputText(name),
+        Dialog.confirm(),
+    ];
 }
