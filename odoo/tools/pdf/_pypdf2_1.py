@@ -1,4 +1,4 @@
-from PyPDF2 import filters, generic, utils as errors, PdfFileReader, PdfFileWriter
+from PyPDF2 import filters, generic, utils as errors, PdfFileReader as PdfReader, PdfFileWriter
 from PyPDF2.generic import createStringObject as create_string_object
 
 __all__ = [
@@ -9,8 +9,6 @@ __all__ = [
     "filters",
     "generic",
 ]
-
-PdfReader = PdfFileReader
 
 
 class PdfWriter(PdfFileWriter):
