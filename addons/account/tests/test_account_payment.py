@@ -593,3 +593,23 @@ class TestAccountPayment(AccountTestInvoicingCommon):
         invoice_2.action_post()
         register_payment_and_assert_state(invoice_2, 100.0, is_community=False)
         self.assertFalse(invoice_2.matched_payment_ids.move_id)
+
+    def test_account_payment_without_method_line_id_name(self):
+        """
+        Test the account payment with payment method line having no name
+        """
+        journal = self.company_data['default_journal_bank']
+        # Make the first payment method line id name as false
+        journal.outbound_payment_method_line_ids[0].name = False
+        # Create a new payment with payment type as outbound
+        payment = self.env['account.payment'].create({
+            'amount': 50.0,
+            'payment_type': 'outbound',
+            'partner_type': 'customer',
+            'partner_id': self.partner_a.id,
+            'journal_id': journal.id,
+        })
+        # Confirm the payment
+        payment.action_post()
+        # Validate line_ids name. As it shuld be an empty string if there is no name in payment_method_line_id
+        self.assertEqual(payment.move_id.line_ids[0].name, '')
