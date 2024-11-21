@@ -1,5 +1,4 @@
 import { _t } from "@web/core/l10n/translation";
-import { parseFloat } from "@web/views/fields/parsers";
 import { useErrorHandlers, useAsyncLockedMethod } from "@point_of_sale/app/hooks/hooks";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -42,8 +41,8 @@ export class PaymentScreen extends Component {
         this.payment_methods_from_config = this.pos.config.payment_method_ids
             .slice()
             .sort((a, b) => a.sequence - b.sequence);
-        this.numberBuffer = useService("number_buffer");
-        this.numberBuffer.use(this._getNumberBufferConfig);
+        this.buffer = useService("buffer_service");
+        this.buffer.use({ callback: this.updateSelectedPaymentline.bind(this) });
         useErrorHandlers();
         this.payment_interface = null;
         this.error = false;
@@ -73,6 +72,10 @@ export class PaymentScreen extends Component {
         ) {
             this.currentOrder.setToInvoice(true);
         }
+
+        if (this.selectedPaymentLine) {
+            this.buffer.set({ symbolStart: this.selectedPaymentLine.amount });
+        }
     }
 
     getNumpadButtons() {
@@ -98,16 +101,6 @@ export class PaymentScreen extends Component {
                 "The amount cannot be higher than the due amount if you don't have a cash payment method configured."
             ),
         });
-    }
-    get _getNumberBufferConfig() {
-        const config = {
-            // When the buffer is updated, trigger this event.
-            // Note that the component listens to it.
-            triggerAtInput: () => this.updateSelectedPaymentline(),
-            useWithBarcode: true,
-        };
-
-        return config;
     }
     get currentOrder() {
         return this.pos.models["pos.order"].getBy("uuid", this.props.orderUuid);
@@ -146,7 +139,7 @@ export class PaymentScreen extends Component {
             this._displayPopupErrorPaymentlinesRounding();
         }
         if (result) {
-            this.numberBuffer.reset();
+            this.buffer.set({ symbolStart: this.selectedPaymentLine.amount });
             if (paymentMethod.use_payment_terminal) {
                 const newPaymentLine = this.paymentLines.at(-1);
                 this.sendPaymentRequest(newPaymentLine);
@@ -166,15 +159,6 @@ export class PaymentScreen extends Component {
         }
         if (!this.selectedPaymentLine) {
             return;
-        } // do nothing if no selected payment line
-        if (amount === false) {
-            if (this.numberBuffer.get() === null) {
-                amount = null;
-            } else if (this.numberBuffer.get() === "") {
-                amount = 0;
-            } else {
-                amount = this.numberBuffer.getFloat();
-            }
         }
         // disable changing amount on paymentlines with running or done payments on a payment terminal
         const payment_terminal = this.selectedPaymentLine.payment_method_id.payment_terminal;
@@ -186,7 +170,7 @@ export class PaymentScreen extends Component {
             amount > this.currentOrder.getDue() + this.selectedPaymentLine.amount
         ) {
             this.selectedPaymentLine.setAmount(0);
-            this.numberBuffer.set(this.currentOrder.getDue().toString());
+            this.buffer.set({ value: this.currentOrder.getDue() });
             amount = this.currentOrder.getDue();
             this.showMaxValueError();
         }
@@ -196,7 +180,7 @@ export class PaymentScreen extends Component {
         ) {
             return;
         }
-        if (amount === null) {
+        if (amount === 0 && this.selectedPaymentLine.amount === 0) {
             this.deletePaymentLine(this.selectedPaymentLine.uuid);
         } else {
             this.selectedPaymentLine.setAmount(amount);
@@ -219,7 +203,7 @@ export class PaymentScreen extends Component {
             startingValue: this.env.utils.formatCurrency(value, false),
             formatDisplayedValue: (x) => `${this.pos.currency.symbol} ${x}`,
             getPayload: async (num) => {
-                await this.pos.setTip(parseFloat(num ?? ""));
+                await this.pos.setTip(num ?? 0);
             },
         });
     }
@@ -239,7 +223,7 @@ export class PaymentScreen extends Component {
         const line = this.paymentLines.find((line) => line.uuid === uuid);
         if (line.payment_method_id.payment_method_type === "qr_code") {
             this.currentOrder.removePaymentline(line);
-            this.numberBuffer.reset();
+            this.buffer.reset();
             return;
         }
         // If a paymentline with a payment terminal linked to
@@ -251,20 +235,20 @@ export class PaymentScreen extends Component {
                 .sendPaymentCancel(this.currentOrder, uuid)
                 .then(() => {
                     this.currentOrder.removePaymentline(line);
-                    this.numberBuffer.reset();
+                    this.buffer.reset();
                 });
         } else if (line.getPaymentStatus() !== "waitingCancel") {
             this.currentOrder.removePaymentline(line);
-            this.numberBuffer.reset();
+            this.buffer.reset();
         }
     }
     selectPaymentLine(uuid) {
         const line = this.paymentLines.find((line) => line.uuid === uuid);
         this.currentOrder.selectPaymentline(line);
-        this.numberBuffer.reset();
+        this.buffer.reset();
     }
     async validateOrder(isForceValidate) {
-        this.numberBuffer.capture();
+        this.buffer.reset();
         if (this.pos.config.cash_rounding) {
             if (!this.currentOrder.checkPaymentlinesRounding()) {
                 this._displayPopupErrorPaymentlinesRounding();
@@ -544,7 +528,6 @@ export class PaymentScreen extends Component {
     async sendPaymentRequest(line) {
         // Other payment lines can not be reversed anymore
         this.pos.paymentTerminalInProgress = true;
-        this.numberBuffer.capture();
         this.paymentLines.forEach(function (line) {
             line.can_be_reversed = false;
         });

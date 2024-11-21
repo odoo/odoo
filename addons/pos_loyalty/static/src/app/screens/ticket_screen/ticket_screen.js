@@ -14,13 +14,13 @@ patch(TicketScreen.prototype, {
     _onUpdateSelectedOrderline() {
         const order = this.getSelectedOrder();
         if (!order) {
-            return this.numberBuffer.reset();
+            return this.buffer.reset();
         }
         const selectedOrderlineId = this.getSelectedOrderlineId();
         const orderline = order.lines.find((line) => line.id == selectedOrderlineId);
         if (orderline && this._isEWalletGiftCard(orderline)) {
             this._showNotAllowedRefundNotification();
-            return this.numberBuffer.reset();
+            return this.buffer.reset();
         }
         return super._onUpdateSelectedOrderline(...arguments);
     },

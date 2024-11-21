@@ -41,7 +41,7 @@ export class PosStore extends Reactive {
 
     static serviceDependencies = [
         "bus_service",
-        "number_buffer",
+        "buffer_service",
         "barcode_reader",
         "hardware_proxy",
         "ui",
@@ -61,7 +61,7 @@ export class PosStore extends Reactive {
     async setup(
         env,
         {
-            number_buffer,
+            buffer_service,
             hardware_proxy,
             barcode_reader,
             ui,
@@ -75,7 +75,7 @@ export class PosStore extends Reactive {
         }
     ) {
         this.env = env;
-        this.numberBuffer = number_buffer;
+        this.buffer = buffer_service;
         this.barcodeReader = barcode_reader;
         this.ui = ui;
         this.dialog = dialog;
@@ -829,7 +829,7 @@ export class PosStore extends Reactive {
         const line = this.data.models["pos.order.line"].create({ ...values, order_id: order });
         line.setOptions(options);
         this.selectOrderLine(order, line);
-        this.numberBuffer.reset();
+        this.buffer.reset();
 
         const selectedOrderline = order.getSelectedOrderline();
         if (options.draftPackLotLines && configure) {
@@ -856,12 +856,12 @@ export class PosStore extends Reactive {
             this.selectOrderLine(order, order.getLastOrderline());
         }
 
-        this.numberBuffer.reset();
+        this.buffer.reset();
 
         // FIXME: Put this in an effect so that we don't have to call it manually.
         order.recomputeOrderData();
 
-        this.numberBuffer.reset();
+        this.buffer.reset();
 
         this.hasJustAddedProduct = true;
         clearTimeout(this.productReminderTimeout);

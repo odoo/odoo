@@ -1,6 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
-import { parseFloat } from "@web/views/fields/parsers";
 import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_popup/selection_popup";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
@@ -177,15 +176,14 @@ patch(PosStore.prototype, {
             feedback: (buffer) =>
                 isPercentage
                     ? `(${this.env.utils.formatCurrency(
-                          (sale_order.amount_unpaid * parseFloat(buffer)) / 100
+                          (sale_order.amount_unpaid * buffer) / 100
                       )})`
                     : "",
         });
         if (!payload) {
             return;
         }
-        const userValue = parseFloat(payload);
-        let proposed_down_payment = userValue;
+        let proposed_down_payment = payload;
         if (isPercentage) {
             const down_payment_tax = this.models["account.tax"].get(
                 this.config.down_payment_product_id.taxes_id
@@ -194,7 +192,7 @@ patch(PosStore.prototype, {
                 !down_payment_tax || down_payment_tax.price_include
                     ? sale_order.amount_unpaid
                     : sale_order.amount_untaxed;
-            proposed_down_payment = (percentageBase * userValue) / 100;
+            proposed_down_payment = (percentageBase * payload) / 100;
         }
         if (proposed_down_payment > sale_order.amount_unpaid) {
             this.dialog.add(AlertDialog, {

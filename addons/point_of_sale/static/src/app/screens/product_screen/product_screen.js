@@ -48,7 +48,7 @@ export class ProductScreen extends Component {
         this.ui = useState(useService("ui"));
         this.dialog = useService("dialog");
         this.notification = useService("notification");
-        this.numberBuffer = useService("number_buffer");
+        this.buffer = useService("buffer_service");
         this.state = useState({
             previousSearchWord: "",
             currentOffset: 0,
@@ -56,10 +56,7 @@ export class ProductScreen extends Component {
         onMounted(() => {
             this.pos.openOpeningControl();
             this.pos.addPendingOrder([this.currentOrder.id]);
-            // Call `reset` when the `onMounted` callback in `numberBuffer.use` is done.
-            // We don't do this in the `mounted` lifecycle method because it is called before
-            // the callbacks in `onMounted` hook.
-            this.numberBuffer.reset();
+            this.buffer.reset();
         });
 
         onWillRender(() => {
@@ -81,8 +78,8 @@ export class ProductScreen extends Component {
             gs1: this._barcodeGS1Action,
         });
 
-        this.numberBuffer.use({
-            useWithBarcode: true,
+        this.buffer.use({
+            useBarcode: true,
         });
     }
 
@@ -117,14 +114,13 @@ export class ProductScreen extends Component {
             `,
         }));
     }
-    onNumpadClick(buttonValue) {
-        if (["quantity", "discount", "price"].includes(buttonValue)) {
-            this.numberBuffer.capture();
-            this.numberBuffer.reset();
-            this.pos.numpadMode = buttonValue;
+    onNumpadClick(button) {
+        if (["quantity", "discount", "price"].includes(button.value)) {
+            this.buffer.reset();
+            this.pos.numpadMode = button.value;
             return;
         }
-        this.numberBuffer.sendKey(buttonValue);
+        this.buffer.handleMethodInput(button);
     }
     get currentOrder() {
         return this.pos.getOrder();
@@ -178,7 +174,7 @@ export class ProductScreen extends Component {
             { code },
             product.needToConfigure()
         );
-        this.numberBuffer.reset();
+        this.buffer.reset();
     }
     async _getPartnerByBarcode(code) {
         let partner = this.pos.models["res.partner"].getBy("barcode", code.code);
@@ -225,7 +221,7 @@ export class ProductScreen extends Component {
             { product_id: product, product_tmpl_id: product.product_tmpl_id },
             { code: lotBarcode }
         );
-        this.numberBuffer.reset();
+        this.buffer.reset();
     }
     displayAllControlPopup() {
         this.dialog.add(ControlButtonsPopup);

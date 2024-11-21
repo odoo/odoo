@@ -39,13 +39,10 @@ export class DebugWidget extends Component {
         this.barcodeReader = useService("barcode_reader");
         this.hardwareProxy = useService("hardware_proxy");
         this.notification = useService("notification");
-        const numberBuffer = useService("number_buffer");
         this.dialog = useService("dialog");
-        useBus(numberBuffer, "buffer-update", this._onBufferUpdate);
         this.state = useState({
             barcodeInput: "",
             weightInput: "",
-            buffer: numberBuffer.get(),
         });
         this.root = useRef("root");
         this.position = useState({ left: null, top: null });
@@ -83,11 +80,19 @@ export class DebugWidget extends Component {
         this.state.weightInput = "";
         this.hardwareProxy.resetDebugWeight();
     }
+    dispatchKeyboardEvent(key) {
+        window.dispatchEvent(new KeyboardEvent("keyup", { key }));
+    }
     async barcodeScan() {
         if (!this.barcodeReader) {
             return;
         }
-        await this.barcodeReader.scan(this.state.barcodeInput);
+
+        for (const key of this.state.barcodeInput.split("")) {
+            this.dispatchKeyboardEvent(key);
+        }
+
+        this.dispatchKeyboardEvent("Enter");
     }
     async barcodeScanEAN() {
         if (!this.barcodeReader) {
@@ -95,7 +100,7 @@ export class DebugWidget extends Component {
         }
         const ean = this.barcodeReader.parser.sanitize_ean(this.state.barcodeInput || "0");
         this.state.barcodeInput = ean;
-        await this.barcodeReader.scan(ean);
+        this.barcodeScan();
     }
     _createBlob(contents) {
         if (typeof contents !== "string") {

@@ -315,7 +315,7 @@ registry.category("web_tour.tours").add("OrderChange", {
             PaymentScreen.clickNumpad("+10"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.isShown(),
-            TicketScreen.receiptChangeIs("7.80"),
+            TicketScreen.receiptChangeIs("10"),
         ].flat(),
 });
 

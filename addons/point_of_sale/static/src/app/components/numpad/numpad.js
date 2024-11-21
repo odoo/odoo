@@ -9,7 +9,9 @@ export const buttonsType = {
             type: Object,
             shape: {
                 value: String,
+                key: { type: String, optional: true },
                 text: { type: String, optional: true },
+                symbol: { type: String, optional: true },
                 class: { type: String, optional: true },
                 disabled: { type: Boolean, optional: true },
             },
@@ -20,13 +22,17 @@ export const buttonsType = {
 };
 
 export const DECIMAL = {
+    get key() {
+        return localization.decimalPoint;
+    },
     get value() {
         return localization.decimalPoint;
     },
 };
-export const BACKSPACE = { value: "Backspace", text: "⌫" };
+
+export const BACKSPACE = { value: "Backspace", key: "Backspace", text: "⌫" };
 export const ZERO = { value: "0" };
-export const DEFAULT_LAST_ROW = [{ value: "-", text: "+/-" }, ZERO, DECIMAL];
+export const DEFAULT_LAST_ROW = [{ value: "-", key: "-", text: "+/-" }, ZERO, DECIMAL];
 export const EMPTY = { value: "" };
 
 export function getButtons(lastRow, rightColumn) {
@@ -50,9 +56,9 @@ export function getButtons(lastRow, rightColumn) {
 
 export function enhancedButtons() {
     return getButtons(DEFAULT_LAST_ROW, [
-        { value: "+10" },
-        { value: "+20" },
-        { value: "+50" },
+        { value: "10", text: "+10", symbol: "+" },
+        { value: "20", text: "+20", symbol: "+" },
+        { value: "50", text: "+50", symbol: "+" },
         BACKSPACE,
     ]);
 }
@@ -72,8 +78,8 @@ export class Numpad extends Component {
     }
     setup() {
         if (!this.props.onClick) {
-            this.numberBuffer = useService("number_buffer");
-            this.onClick = (buttonValue) => this.numberBuffer.sendKey(buttonValue);
+            this.buffer = useService("buffer_service");
+            this.onClick = (button) => this.buffer.handleMethodInput(button);
         } else {
             this.onClick = this.props.onClick;
         }

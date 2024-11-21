@@ -36,18 +36,18 @@ export function useCashierSelector({ exclusive, onScan } = { onScan: () => {}, e
         let inputPin = pin;
         if (!pin) {
             inputPin = await makeAwaitable(dialog, NumberPopup, {
-                formatDisplayedValue: (x) => x.replace(/./g, "•"),
+                formatDisplayedValue: (x) => x.toString().replace(/./g, "•"),
                 title: _t("Password?"),
             });
         } else {
-            if (employee._pin !== Sha1.hash(inputPin)) {
+            if (employee._pin !== Sha1.hash(inputPin.toString())) {
                 inputPin = await makeAwaitable(dialog, NumberPopup, {
-                    formatDisplayedValue: (x) => x.replace(/./g, "•"),
+                    formatDisplayedValue: (x) => x.toString().replace(/./g, "•"),
                     title: _t("Password?"),
                 });
             }
         }
-        if (!inputPin || employee._pin !== Sha1.hash(inputPin)) {
+        if (!inputPin || employee._pin !== Sha1.hash(inputPin.toString())) {
             notification.add(_t("PIN not found"), {
                 type: "warning",
                 title: _t(`Wrong PIN`),

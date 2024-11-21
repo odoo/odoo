@@ -40,7 +40,6 @@ registry.category("web_tour.tours").add("pos_basic_order_02_decimal_order_quanti
             inLeftSide([
                 { ...ProductScreen.clickLine("Desk Organizer")[0], isActive: ["mobile"] },
                 Numpad.click("."),
-                ...ProductScreen.selectedOrderlineHasDirect("Desk Organizer", "0.0"),
                 Numpad.click("9"),
                 ...ProductScreen.selectedOrderlineHasDirect("Desk Organizer", "0.9"),
                 Numpad.click("9"),

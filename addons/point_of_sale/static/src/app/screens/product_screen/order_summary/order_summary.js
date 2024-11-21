@@ -19,13 +19,13 @@ export class OrderSummary extends Component {
 
     setup() {
         super.setup();
-        this.numberBuffer = useService("number_buffer");
+        this.buffer = useService("buffer_service");
         this.dialog = useService("dialog");
         this.pos = usePos();
 
-        this.numberBuffer.use({
-            triggerAtInput: (...args) => this.updateSelectedOrderline(...args),
-            useWithBarcode: true,
+        this.buffer.use({
+            callback: this.updateSelectedOrderline.bind(this),
+            useBarcode: true,
         });
     }
 
@@ -48,7 +48,7 @@ export class OrderSummary extends Component {
             clearTimeout(this.singleClick);
             return;
         }
-        this.numberBuffer.reset();
+        this.buffer.reset();
         if (!orderline.isSelected()) {
             this.pos.selectOrderLine(this.currentOrder, orderline);
         } else {
@@ -58,18 +58,21 @@ export class OrderSummary extends Component {
         }
     }
 
-    async updateSelectedOrderline({ buffer, key }) {
+    async updateSelectedOrderline(number) {
         const order = this.pos.getOrder();
         const selectedLine = order.getSelectedOrderline();
+        if (!selectedLine) {
+            return;
+        }
         // This validation must not be affected by `disallowLineQuantityChange`
-        if (selectedLine && selectedLine.isTipLine() && this.pos.numpadMode !== "price") {
+        if (selectedLine.isTipLine() && this.pos.numpadMode !== "price") {
             /**
              * You can actually type numbers from your keyboard, while a popup is shown, causing
              * the number buffer storage to be filled up with the data typed. So we force the
              * clean-up of that buffer whenever we detect this illegal action.
              */
-            this.numberBuffer.reset();
-            if (key === "Backspace") {
+            this.buffer.reset();
+            if (number === 0 && selectedLine.getQuantity() === 0) {
                 this._setValue("remove");
             } else {
                 this.dialog.add(AlertDialog, {
@@ -79,11 +82,7 @@ export class OrderSummary extends Component {
             }
             return;
         }
-        if (
-            selectedLine &&
-            this.pos.numpadMode === "quantity" &&
-            this.pos.disallowLineQuantityChange()
-        ) {
+        if (this.pos.numpadMode === "quantity" && this.pos.disallowLineQuantityChange()) {
             const orderlines = order.lines;
             const lastId = orderlines.length !== 0 && orderlines.at(orderlines.length - 1).uuid;
             const currentQuantity = this.pos.getOrder().getSelectedOrderline().getQuantity();
@@ -95,20 +94,20 @@ export class OrderSummary extends Component {
                 });
                 return;
             }
-            const parsedInput = (buffer && parseFloat(buffer)) || 0;
             if (lastId != selectedLine.uuid) {
                 this._showDecreaseQuantityPopup();
-            } else if (currentQuantity < parsedInput) {
-                this._setValue(buffer);
-            } else if (parsedInput < currentQuantity) {
+            } else if (currentQuantity < number) {
+                this._setValue(number);
+            } else if (number < currentQuantity) {
                 this._showDecreaseQuantityPopup();
             }
             return;
         }
-        const val = buffer === null ? "remove" : buffer;
+
+        const val = number === 0 && selectedLine.getQuantity() === 0 ? "remove" : number;
         this._setValue(val);
         if (val == "remove") {
-            this.numberBuffer.reset();
+            this.buffer.reset();
             this.pos.numpadMode = "quantity";
         }
     }
@@ -133,7 +132,7 @@ export class OrderSummary extends Component {
                     }
                     if (result !== true) {
                         this.dialog.add(AlertDialog, result);
-                        this.numberBuffer.reset();
+                        this.buffer.reset();
                     }
                 }
             } else if (numpadMode === "discount" && val !== "remove") {
@@ -150,7 +149,7 @@ export class OrderSummary extends Component {
     }
 
     async _showDecreaseQuantityPopup() {
-        this.numberBuffer.reset();
+        this.buffer.reset();
         const inputNumber = await makeAwaitable(this.dialog, NumberPopup, {
             title: _t("Set the new quantity"),
         });

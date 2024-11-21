@@ -1,7 +1,6 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { formatDateTime, parseDateTime } from "@web/core/l10n/dates";
-import { parseFloat } from "@web/views/fields/parsers";
 import { _t } from "@web/core/l10n/translation";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
@@ -58,12 +57,12 @@ export class TicketScreen extends Component {
         this.pos = usePos();
         this.ui = useState(useService("ui"));
         this.dialog = useService("dialog");
-        this.numberBuffer = useService("number_buffer");
+        this.buffer = useService("buffer_service");
         this.doPrint = useTrackedAsync((_selectedSyncedOrder) =>
             this.pos.printReceipt({ order: _selectedSyncedOrder })
         );
-        this.numberBuffer.use({
-            triggerAtInput: (event) => this._onUpdateSelectedOrderline(event),
+        this.buffer.use({
+            callback: (number) => this._onUpdateSelectedOrderline(number),
         });
 
         this.state = useState({
@@ -108,7 +107,7 @@ export class TicketScreen extends Component {
     }
     onClickOrder(clickedOrder) {
         this.state.selectedOrder = clickedOrder;
-        this.numberBuffer.reset();
+        this.buffer.reset();
         if ((!clickedOrder || clickedOrder.uiState.locked) && !this.getSelectedOrderlineId()) {
             // Automatically select the first orderline of the selected order.
             const firstLine = this.state.selectedOrder.getOrderlines()[0];
@@ -137,7 +136,7 @@ export class TicketScreen extends Component {
         if (this.state.selectedOrder.uiState.locked) {
             const order = this.getSelectedOrder();
             this.state.selectedOrderlineIds[order.id] = orderline.id;
-            this.numberBuffer.reset();
+            this.buffer.reset();
         }
     }
     onClickRefundOrderUid(orderUuid) {
@@ -147,16 +146,16 @@ export class TicketScreen extends Component {
             this._setOrder(refundOrder);
         }
     }
-    _onUpdateSelectedOrderline({ key, buffer }) {
+    _onUpdateSelectedOrderline(number) {
         const order = this.getSelectedOrder();
         if (!order) {
-            return this.numberBuffer.reset();
+            return this.buffer.reset();
         }
 
         const selectedOrderlineId = this.getSelectedOrderlineId();
         const orderline = order.lines.find((line) => line.id == selectedOrderlineId);
         if (!orderline) {
-            return this.numberBuffer.reset();
+            return this.buffer.reset();
         }
 
         const toRefundDetails = orderline
@@ -165,33 +164,29 @@ export class TicketScreen extends Component {
         for (const toRefundDetail of toRefundDetails) {
             // When already linked to an order, do not modify the to refund quantity.
             if (toRefundDetail.destionation_order_id) {
-                return this.numberBuffer.reset();
+                return this.buffer.reset();
             }
 
             const refundableQty = toRefundDetail.line.qty - toRefundDetail.line.refunded_qty;
             if (refundableQty <= 0) {
-                return this.numberBuffer.reset();
+                return this.buffer.reset();
             }
 
-            if (buffer == null || buffer == "") {
-                toRefundDetail.qty = 0;
-            } else {
-                const quantity = Math.abs(parseFloat(buffer));
-                if (quantity > refundableQty) {
-                    this.numberBuffer.reset();
-                    if (!toRefundDetail.line.combo_parent_id) {
-                        this.dialog.add(AlertDialog, {
-                            title: _t("Maximum Exceeded"),
-                            body: _t(
-                                "The requested quantity to be refunded is higher than the ordered quantity. %s is requested while only %s can be refunded.",
-                                quantity,
-                                refundableQty
-                            ),
-                        });
-                    }
-                } else {
-                    toRefundDetail.qty = quantity;
+            const quantity = number;
+            if (quantity > refundableQty) {
+                this.buffer.reset();
+                if (!toRefundDetail.line.combo_parent_id) {
+                    this.dialog.add(AlertDialog, {
+                        title: _t("Maximum Exceeded"),
+                        body: _t(
+                            "The requested quantity to be refunded is higher than the ordered quantity. %s is requested while only %s can be refunded.",
+                            quantity,
+                            refundableQty
+                        ),
+                    });
                 }
+            } else {
+                toRefundDetail.qty = quantity;
             }
         }
     }

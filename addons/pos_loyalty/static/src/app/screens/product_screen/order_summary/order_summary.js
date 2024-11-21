@@ -11,9 +11,14 @@ patch(OrderSummary.prototype, {
         super.setup(...arguments);
         this.notification = useService("notification");
     },
-    async updateSelectedOrderline({ buffer, key }) {
+    async updateSelectedOrderline(number) {
         const selectedLine = this.currentOrder.getSelectedOrderline();
-        if (key === "-") {
+
+        if (!selectedLine) {
+            return super.updateSelectedOrderline(number);
+        }
+
+        if (number === 0 && selectedLine.getQuantity() === 0) {
             if (selectedLine && selectedLine._e_wallet_program_id) {
                 // Do not allow negative quantity or price in a gift card or ewallet orderline.
                 // Refunding gift card or ewallet is not supported.
@@ -28,7 +33,7 @@ patch(OrderSummary.prototype, {
             selectedLine &&
             selectedLine.is_reward_line &&
             !selectedLine.manual_reward &&
-            (key === "Backspace" || key === "Delete")
+            number === 0
         ) {
             const reward = selectedLine.reward_id;
             const confirmed = await ask(this.dialog, {
@@ -40,14 +45,13 @@ patch(OrderSummary.prototype, {
                 cancelLabel: _t("No"),
                 confirmLabel: _t("Yes"),
             });
-            if (confirmed) {
-                buffer = null;
-            } else {
-                // Cancel backspace
+            if (!confirmed) {
                 return;
             }
+            selectedLine.setQuantity(0);
+            number = 0;
         }
-        return super.updateSelectedOrderline({ buffer, key });
+        return super.updateSelectedOrderline(number);
     },
     /**
      * 1/ Perform the usual set value operation (super._setValue(val)) if the line being modified

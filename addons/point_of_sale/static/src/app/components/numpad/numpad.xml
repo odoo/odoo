@@ -8,7 +8,7 @@
           t-else=""
           t-attf-class="numpad-button btn btn-light btn-lg fs-3 lh-lg m-1 {{ button.class  or '' }}"
           t-att-value="button.text or button.value"
-          t-on-click="() => this.onClick(button.value)"
+          t-on-click="() => this.onClick(button)"
           t-att-disabled="button.disabled"
           t-esc="button.text or button.value" />
       </t>
