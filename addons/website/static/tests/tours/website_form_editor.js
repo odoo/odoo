@@ -992,6 +992,30 @@ function editContactUs(steps) {
         ...wTourUtils.clickOnSave(),
     ]);
 
+    wTourUtils.registerWebsitePreviewTour("website_form_nested_forms", {
+        test: true,
+        url: "/my/account",
+        edition: true,
+    },
+    () => [
+        {
+            trigger: ".o_website_preview.editor_enable.editor_has_snippets",
+            noPrepend: true,
+        },
+        {
+            trigger: `#oe_snippets .oe_snippet[name="Form"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_already_dragging)`,
+            content: "Try to drag the form into another form",
+            position: "bottom",
+            run: "drag_and_drop :iframe #wrap .o_portal_details a",
+        },
+        {
+            content: "Check the form was not dropped into another form",
+            trigger:
+                ":iframe form[action='/my/account']:not(:has([data-snippet='s_website_form']))",
+            run: () => null,
+        },
+    ]);
+
     wTourUtils.registerWebsitePreviewTour("website_form_special_characters", {
         test: true,
         url: "/",
