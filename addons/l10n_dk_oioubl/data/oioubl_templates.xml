@@ -12,4 +12,10 @@
             </t>
         </xpath>
     </template>
+
+    <template id="oioubl_PaymentMeansType" inherit_id="account_edi_ubl_cii.ubl_20_PaymentMeansType" primary="True">
+        <xpath expr="//*[local-name()='PayeeFinancialAccount']//*[local-name()='FinancialInstitution']//*[local-name()='Address']" position="attributes">
+            <attribute name="t-if">not invoice.partner_bank_id in supplier.bank_ids</attribute>
+        </xpath>
+    </template>
 </odoo>
