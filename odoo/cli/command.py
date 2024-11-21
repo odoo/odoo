@@ -1,7 +1,8 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+import argparse
 import contextlib
 import logging
 import sys
+from inspect import cleandoc
 from pathlib import Path
 
 import odoo.cli
@@ -14,10 +15,24 @@ commands = {}
 class Command:
     name = None
     prog_name = Path(sys.argv[0]).name
+    description = None
+    epilog = None
+    _parser = None
 
     def __init_subclass__(cls):
         cls.name = cls.name or cls.__name__.lower()
         commands[cls.name] = cls
+
+    @property
+    def parser(self):
+        if not self._parser:
+            self._parser = argparse.ArgumentParser(
+                formatter_class=argparse.RawDescriptionHelpFormatter,
+                prog=self.prog_name,
+                description=cleandoc(self.description or self.__doc__ or ""),
+                epilog=cleandoc(self.epilog or ""),
+            )
+        return self._parser
 
 
 def load_internal_commands():

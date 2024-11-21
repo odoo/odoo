@@ -33,3 +33,5 @@ def patch_all():
     patch_zeep()
     from .win32 import patch_win32
     patch_win32()
+    from .csv import patch_csv
+    patch_csv()

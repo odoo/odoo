@@ -1,9 +1,7 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import optparse
 import sys
 import time
-from pathlib import Path
 
 from . import Command
 import odoo
@@ -23,7 +21,7 @@ class Populate(Command):
 
     def run(self, cmdargs):
         parser = odoo.tools.config.parser
-        parser.prog = f'{Path(sys.argv[0]).name} {self.name}'
+        parser.prog = self.prog_name
         group = optparse.OptionGroup(parser, "Populate Configuration")
         group.add_option("--factors", dest="factors",
                          help="Comma separated list of factors for each model, or just a single factor."
