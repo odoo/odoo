@@ -14,6 +14,7 @@ import {
     mountView,
     onRpc,
     pagerNext,
+    preloadBundle,
     preventResizeObserverError,
 } from "@web/../tests/web_test_helpers";
 
@@ -31,6 +32,7 @@ class Partner extends models.Model {
 
 defineModels([Partner]);
 
+preloadBundle("web.ace_lib");
 preventResizeObserverError();
 
 test("AceEditorField on text fields works", async () => {
