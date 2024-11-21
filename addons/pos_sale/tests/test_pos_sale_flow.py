@@ -822,6 +822,8 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         """This test create an order and settle it in the PoS. It also uses multistep delivery
             and we need to make sure that all the picking are cancelled if the order is fully delivered.
         """
+        if not self.env["ir.module.module"].search([("name", "=", "purchase"), ("state", "=", "installed")]):
+            self.skipTest("purchase module is required for this test")
 
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         warehouse.delivery_steps = 'pick_pack_ship'
