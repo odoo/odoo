@@ -63,12 +63,6 @@ export class Message extends Record {
             );
         },
     });
-    hasEveryoneSeen = Record.attr(false, {
-        /** @this {import("models").Message} */
-        compute() {
-            return this.thread?.membersThatCanSeen.every((m) => m.hasSeen(this));
-        },
-    });
     isReadBySelf = Record.attr(false, {
         compute() {
             return (

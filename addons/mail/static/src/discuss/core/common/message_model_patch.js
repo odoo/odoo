@@ -7,6 +7,12 @@ import { patch } from "@web/core/utils/patch";
 const messagePatch = {
     setup() {
         super.setup();
+        this.hasEveryoneSeen = Record.attr(false, {
+            /** @this {import("models").Message} */
+            compute() {
+                return this.thread?.membersThatCanSeen.every((m) => m.hasSeen(this));
+            },
+        });
         this.isMessagePreviousToLastSelfMessageSeenByEveryone = Record.attr(false, {
             /** @this {import("models").Message} */
             compute() {
