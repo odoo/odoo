@@ -71,7 +71,6 @@ export class SnippetsMenu extends Component {
         const editorBus = new EventBus();
         this.editor = new Editor(
             {
-                disableFloatingToolbar: true,
                 Plugins: [...MAIN_PLUGINS, ...BUILDER_PLUGIN],
                 onChange: () => {
                     this.state.canUndo = this.editor.shared.history.canUndo();
