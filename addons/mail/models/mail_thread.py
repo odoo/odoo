@@ -2010,63 +2010,75 @@ class MailThread(models.AbstractModel):
                 found_results[res_id] |= partner
         return found_results
 
-    def _message_add_suggested_recipient(self, result, partner=None, email=None, lang=None, reason=''):
+    def _message_add_suggested_recipient(self, recipients, partner=None, email=None, reason=''):
         """ Called by _message_get_suggested_recipients, to add a suggested
-            recipient as a dictionary in the result list """
+        recipient as a dictionary in the result list """
         self.ensure_one()
-        partner_info = {}
-        recipient_data = {'lang': lang, 'reason': reason}
+        recipient_data = {'create_values': {}, 'partner_id': False, 'reason': reason}
         if email and not partner:
-            # get partner info from email
-            partner_info = self._message_partner_info_from_emails([email])[0]
-            if partner_info.get('partner_id'):
-                partner = self.env['res.partner'].sudo().browse([partner_info['partner_id']])[0]
-        if email and email in [val['email'] for val in result if val.get('email')]:  # already existing email -> skip
-            return result
+            partner = self._partner_find_from_emails_single([email], no_create=True)
+            if partner:
+                recipient_data['name'] = partner.name
+
+        # check if already suggested
+        parse_name, email_normalized = parse_contact_from_email(email)
+        if email_normalized and email_normalized in {val['email'] for val in recipients}:  # already existing email -> skip
+            return recipients
         if partner and partner in self.message_partner_ids:  # recipient already in the followers -> skip
-            return result
-        if partner and partner.id in [val.get('partner_id', False) for val in result]:  # already existing partner ID -> skip
-            return result
-        if partner and partner.email:  # complete profile: id, name <email>
-            email_normalized = ','.join(email_normalize_all(partner.email))
-            recipient_data.update({'partner_id': partner.id, 'name': partner.name or '', 'email': email_normalized})
-        elif partner:  # incomplete profile: id, name
-            recipient_data.update({'partner_id': partner.id, 'name': partner.name})
+            return recipients
+        if partner and partner.id in {val['partner_id'] for val in recipients}:  # already existing partner ID -> skip
+            return recipients
+
+        if partner:
+            recipient_data.update({
+                'partner_id': partner.id, 'name': partner.name,
+                'email': ','.join(email_normalize_all(partner.email)) or partner.email,
+            })
         else:  # unknown partner, we are probably managing an email address
-            _, parsed_email_normalized = parse_contact_from_email(email)
-            partner_create_values = self._get_customer_information().get(parsed_email_normalized, {})
-            name = partner_create_values.get('name') or partner_info.get('full_name') or email
+            customer_values = self._get_customer_information().get(email_normalized) or {}
+            name = recipient_data.get('name') or customer_values.pop('name', False) or parse_name
             recipient_data.update({
                 'name': name,
-                'email': partner_info.get('full_name') or email,
-                'create_values': partner_create_values,
+                'email': email_normalized,
+                'create_values': customer_values,
             })
-        result.append(recipient_data)
-        return result
+        recipients.append(recipient_data)
+        return recipients
 
     def _message_get_suggested_recipients(self):
         """ Get suggested recipients to be managed by Chatter
 
         :returns: list of dictionaries (per suggested recipient) containing:
-            * partner_id:       int: recipient partner id
-            * name:             str: name of the recipient
-            * email:            str: email of recipient
-            * lang:             str: language code
-            * reason:           str
-            * create_values:    dict: data for unknown partner
+            * partner_id:            int: recipient partner id
+            * name:                  str: name of the recipient
+            * email:                 str: email of recipient
+            * reason:                str
+            * new_partner_values:   dict: data for unknown partner
         """
         self.ensure_one()
-        result = []
+        recipients = []
+
+        # add responsible
         user_field = self._fields.get('user_id')
         if user_field and user_field.type == 'many2one' and user_field.comodel_name == 'res.users':
             thread = self.sudo()  # SUPERUSER because of a read on res.users that would crash otherwise
             if thread.user_id and thread.user_id.partner_id:
                 thread._message_add_suggested_recipient(
-                    result,
-                    partner=thread.user_id.partner_id,
-                    reason=self._fields['user_id'].string,
+                    recipients, partner=thread.user_id.partner_id, reason=self._fields['user_id'].string,
                 )
-        return result
+
+        # add customers
+        customers = self._mail_get_partners()[self.id]
+        for customer in customers.filtered(lambda p: not p.is_public):
+            self._message_add_suggested_recipient(recipients, partner=customer, reason=_('Customer'))
+
+        # add email
+        email_fname = self._mail_get_primary_email_field()
+        email_normalized = email_fname and email_normalize(self[email_fname], strict=False)
+        if email_normalized and email_normalized not in customers.mapped('email_normalized'):
+            self._message_add_suggested_recipient(recipients, email=self[email_fname], reason=_('Customer Email'))
+
+        return recipients
 
     def _mail_find_user_for_gateway(self, email_value, alias=None):
         """ Utility method to find user from email address that can create documents
@@ -2148,28 +2160,6 @@ class MailThread(models.AbstractModel):
                     self.env['res.partner']
                 ))
         return results
-
-    def _message_partner_info_from_emails(self, emails, link_mail=False):
-        """ Convert a list of emails into a list partner_ids and a list
-            new_partner_ids. The return value is non conventional because
-            it is meant to be used by the mail widget.
-
-            :return dict: partner_ids and new_partner_ids """
-        self.ensure_one()
-        MailMessage = self.env['mail.message'].sudo()
-        partners = self._mail_find_partner_from_emails(emails, records=self)
-        result = list()
-        for idx, contact in enumerate(emails):
-            partner = partners[idx]
-            partner_info = {'full_name': partner.email_formatted if partner else contact, 'partner_id': partner.id}
-            result.append(partner_info)
-            # link mail with this from mail to the new partner id
-            if link_mail and partner:
-                MailMessage.search([
-                    ('email_from', '=ilike', partner.email_normalized),
-                    ('author_id', '=', False)
-                ]).write({'author_id': partner.id})
-        return result
 
     def _get_customer_information(self):
         """ Get customer information that can be extracted from the records by

@@ -1686,13 +1686,6 @@ class ProjectTask(models.Model):
         self.message_subscribe(partner_ids)
         return super().message_update(msg, update_vals=update_vals)
 
-    def _message_get_suggested_recipients(self):
-        recipients = super()._message_get_suggested_recipients()
-        if self.partner_id:
-            reason = _('Customer Email') if self.partner_id.email else _('Customer')
-            self._message_add_suggested_recipient(recipients, partner=self.partner_id, reason=reason)
-        return recipients
-
     def _notify_by_email_get_headers(self, headers=None):
         headers = super()._notify_by_email_get_headers(headers=headers)
         if self.project_id:

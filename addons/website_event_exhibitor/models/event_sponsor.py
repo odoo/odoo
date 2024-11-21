@@ -246,22 +246,9 @@ class EventSponsor(models.Model):
         return self.env.ref('event.event_main_menu').id
 
     # ------------------------------------------------------------
-    # MESSAGING
-    # ------------------------------------------------------------
-
-    def _message_get_suggested_recipients(self):
-        recipients = super()._message_get_suggested_recipients()
-        if self.partner_id:
-            self._message_add_suggested_recipient(
-                recipients,
-                partner=self.partner_id,
-                reason=_('Sponsor')
-            )
-        return recipients
-
-    # ------------------------------------------------------------
     # Misc
     # ------------------------------------------------------------
+
     def get_base_url(self):
         """As website_id is not defined on this record, we rely on event website_id for base URL."""
         return self.event_id.get_base_url()

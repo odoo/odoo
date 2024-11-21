@@ -360,22 +360,6 @@ class EventRegistration(models.Model):
             registration_id=self.id,
         )
 
-    def _message_get_suggested_recipients(self):
-        recipients = super()._message_get_suggested_recipients()
-        public_users = self.env['res.users'].sudo()
-        public_groups = self.env.ref("base.group_public", raise_if_not_found=False)
-        if public_groups:
-            public_users = public_groups.sudo().with_context(active_test=False).mapped("users")
-        try:
-            is_public = self.sudo().with_context(active_test=False).partner_id.user_ids in public_users if public_users else False
-            if self.partner_id and not is_public:
-                self._message_add_suggested_recipient(recipients, partner=self.partner_id, reason=_('Customer'))
-            elif self.email:
-                self._message_add_suggested_recipient(recipients, email=self.email, reason=_('Customer Email'))
-        except AccessError:     # no read access rights -> ignore suggested recipients
-            pass
-        return recipients
-
     def _message_get_default_recipients(self):
         # Prioritize registration email over partner_id, which may be shared when a single
         # partner booked multiple seats

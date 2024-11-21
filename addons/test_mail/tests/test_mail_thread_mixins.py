@@ -79,7 +79,7 @@ class TestMailThread(MailCommon, TestRecipients):
                 bl_record.unlink()
 
 
-@tagged('mail_thread', 'mail_thread_cc')
+@tagged('mail_thread', 'mail_thread_cc', 'mail_tools')
 class TestMailThreadCC(MailCommon):
 
     @users("employee")
@@ -91,28 +91,17 @@ class TestMailThreadCC(MailCommon):
             'email_cc': 'cc1@example.com, cc2@example.com, cc3 <cc3@example.com>',
         })
         suggestions = record._message_get_suggested_recipients()
-        self.assertItemsEqual(
-            suggestions,
-            [
-                {
-                    'lang': None,
-                    'reason': 'CC Email',
-                    'name': 'cc1@example.com',
-                    'email': 'cc1@example.com',
-                    'create_values': {},
-                }, {
-                    'lang': None,
-                    'reason': 'CC Email',
-                    'name': 'cc2@example.com',
-                    'email': 'cc2@example.com',
-                    'create_values': {},
-                }, {
-                    'lang': None,
-                    'reason': 'CC Email',
-                    'name': '"cc3" <cc3@example.com>',
-                    'email': '"cc3" <cc3@example.com>',
-                    'create_values': {},
-                },
-            ],
-            'cc should be in suggestions',
-        )
+        expected_list = [
+            {
+                'name': '', 'email': 'cc1@example.com',
+                'reason': 'CC Email', 'partner_id': False, 'create_values': {},
+            }, {
+                'name': '', 'email': 'cc2@example.com',
+                'reason': 'CC Email', 'partner_id': False, 'create_values': {},
+            }, {
+                'name': 'cc3', 'email': 'cc3@example.com',
+                'reason': 'CC Email', 'partner_id': False, 'create_values': {},
+            }]
+        self.assertEqual(len(suggestions), len(expected_list))
+        for suggestion, expected in zip(suggestions, expected_list):
+            self.assertDictEqual(suggestion, expected)

@@ -670,16 +670,6 @@ class SurveyUser_Input(models.Model):
     # MESSAGING
     # ------------------------------------------------------------
 
-    def _message_get_suggested_recipients(self):
-        recipients = super()._message_get_suggested_recipients()
-        if self.partner_id:
-            self._message_add_suggested_recipient(
-                recipients,
-                partner=self.partner_id,
-                reason=_('Survey Participant')
-            )
-        return recipients
-
     def _notify_new_participation_subscribers(self):
         subtype_id = self.env.ref('survey.mt_survey_survey_user_input_completed', raise_if_not_found=False)
         if not self.ids or not subtype_id:
