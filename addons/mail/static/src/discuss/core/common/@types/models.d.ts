@@ -28,6 +28,7 @@ declare module "models" {
         readonly hasSeenFeature: boolean,
         readonly hasSelfAsMember: boolean,
         invitedMembers: ChannelMember[],
+        readonly lastMessageSeenByAllId: number,
         member_count: number | undefined,
         readonly membersThatCanSeen: ChannelMember[],
         onlineMembers: ChannelMember[],

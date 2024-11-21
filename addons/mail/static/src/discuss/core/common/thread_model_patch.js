@@ -42,6 +42,21 @@ const threadPatch = {
             },
         });
         this.invitedMembers = Record.many("discuss.channel.member");
+        this.lastMessageSeenByAllId = Record.attr(undefined, {
+            /** @this {import("models").Thread} */
+            compute() {
+                if (!this.hasSeenFeature) {
+                    return;
+                }
+                return this.channel_member_ids.reduce((lastMessageSeenByAllId, member) => {
+                    if (member.persona.notEq(this.store.self) && member.seen_message_id) {
+                        return lastMessageSeenByAllId
+                            ? Math.min(lastMessageSeenByAllId, member.seen_message_id.id)
+                            : member.seen_message_id.id;
+                    }
+                }, undefined);
+            },
+        });
         this.member_count = undefined;
         this.onlineMembers = Record.many("discuss.channel.member", {
             /** @this {import("models").Thread} */

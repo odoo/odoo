@@ -482,28 +482,6 @@ export class Thread extends Record {
         return {};
     }
 
-    /** @type {undefined|number[]} */
-    lastMessageSeenByAllId = Record.attr(undefined, {
-        compute() {
-            if (!this.hasSeenFeature) {
-                return;
-            }
-            const otherMembers = this.channel_member_ids.filter((member) =>
-                member.persona.notEq(this.store.self)
-            );
-            if (otherMembers.length === 0) {
-                return;
-            }
-            const otherLastSeenMessageIds = otherMembers
-                .filter((member) => member.seen_message_id)
-                .map((member) => member.seen_message_id.id);
-            if (otherLastSeenMessageIds.length === 0) {
-                return;
-            }
-            return Math.min(...otherLastSeenMessageIds);
-        },
-    });
-
     lastSelfMessageSeenByEveryone = Record.one("mail.message", {
         compute() {
             if (!this.lastMessageSeenByAllId) {
