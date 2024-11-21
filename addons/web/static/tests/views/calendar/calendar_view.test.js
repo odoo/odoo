@@ -37,6 +37,7 @@ import {
     mountWithCleanup,
     onRpc,
     patchWithCleanup,
+    preloadBundle,
     serverState,
 } from "@web/../tests/web_test_helpers";
 import {
@@ -260,7 +261,7 @@ class FilterPartner extends models.Model {
 }
 
 defineModels([Event, EventType, CalendarUsers, CalendarPartner, FilterPartner]);
-
+preloadBundle("web.fullcalendar_lib");
 beforeEach(() => {
     mockDate("2016-12-12T08:00:00", 1);
     const patchFullCalendarOptions = () => ({

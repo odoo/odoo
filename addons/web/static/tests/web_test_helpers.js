@@ -1,3 +1,6 @@
+import { before } from "@odoo/hoot";
+import { mockFetch } from "@odoo/hoot-mock";
+import { loadBundle } from "@web/core/assets";
 import * as _fields from "./_framework/mock_server/mock_fields";
 import * as _models from "./_framework/mock_server/mock_model";
 import { IrAttachment } from "./_framework/mock_server/mock_models/ir_attachment";
@@ -13,6 +16,7 @@ import { ResGroups } from "./_framework/mock_server/mock_models/res_groups";
 import { ResPartner } from "./_framework/mock_server/mock_models/res_partner";
 import { ResUsers } from "./_framework/mock_server/mock_models/res_users";
 import { defineModels } from "./_framework/mock_server/mock_server";
+import { globalCachedFetch } from "./_framework/module_set.hoot";
 
 /**
  * @typedef {import("./_framework/mock_server/mock_fields").FieldType} FieldType
@@ -149,6 +153,18 @@ export { mountWebClient, useTestClientAction } from "./_framework/webclient_test
 export function defineWebModels() {
     return defineModels(webModels);
 }
+
+/**
+ * @param {string} bundleName
+ */
+export function preloadBundle(bundleName) {
+    before(async function preloadBundle() {
+        mockFetch(globalCachedFetch);
+        await loadBundle(bundleName);
+        mockFetch(null);
+    });
+}
+
 export const fields = _fields;
 export const models = _models;
 
