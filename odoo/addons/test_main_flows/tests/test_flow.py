@@ -12,6 +12,8 @@ _logger = logging.getLogger(__name__)
 class BaseTestUi(AccountTestMockOnlineSyncCommon):
 
     def main_flow_tour(self):
+        # Disable all onboarding tours
+        self.env.ref('base.user_admin').tour_enabled = False
         # Enable Make to Order
         self.env.ref('stock.route_warehouse0_mto').active = True
 
