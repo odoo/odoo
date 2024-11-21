@@ -1,10 +1,13 @@
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 from odoo.tools.misc import get_lang
+from odoo.addons.mail.tools.parser import parse_res_ids
+from odoo.addons.mail.wizard.mail_compose_message import _reopen
 
 
 class AccountMoveSendWizard(models.TransientModel):
     """Wizard that handles the sending a single invoice."""
-    _inherit = ['account.move.send']
+    _inherit = ['account.move.send', 'mail.composer.mixin']
     _description = "Account Move Send Wizard"
 
     move_id = fields.Many2one(comodel_name='account.move', required=True)
@@ -36,42 +39,34 @@ class AccountMoveSendWizard(models.TransientModel):
     )
     pdf_report_id = fields.Many2one(
         comodel_name='ir.actions.report',
-        string="Invoice template",
-        domain="[('is_invoice_report', '=', True)]",
+        string="Invoice report",
+        domain="[('id', 'in', available_pdf_report_ids)]",
         compute='_compute_pdf_report_id',
         readonly=False,
         store=True,
     )
+    available_pdf_report_ids = fields.One2many(
+        comodel_name='ir.actions.report',
+        compute="_compute_available_pdf_report_ids",
+    )
+
     display_pdf_report_id = fields.Boolean(compute='_compute_display_pdf_report_id')
-    is_download_only = fields.Boolean(compute='_compute_is_download_only')
 
     # MAIL
-    mail_template_id = fields.Many2one(
-        comodel_name='mail.template',
-        string="Email template",
+    # Template: override mail.composer.mixin field
+    template_id = fields.Many2one(
         domain="[('model', '=', 'account.move')]",
-        compute='_compute_mail_template_id',
+        compute='_compute_template_id',
+        compute_sudo=True,
         readonly=False,
         store=True,
     )
-    mail_lang = fields.Char(compute='_compute_mail_lang')
+    # Language: override mail.composer.mixin field
+    lang = fields.Char(compute='_compute_lang', precompute=False, compute_sudo=True)
     mail_partner_ids = fields.Many2many(
         comodel_name='res.partner',
-        string="Recipients",
-        compute='_compute_mail_subject_body_partners',
-        store=True,
-        readonly=False,
-    )
-    mail_subject = fields.Char(
-        string="Subject",
-        compute='_compute_mail_subject_body_partners',
-        store=True,
-        readonly=False,
-    )
-    mail_body = fields.Html(
-        string="Contents",
-        sanitize_style=True,
-        compute='_compute_mail_subject_body_partners',
+        string="To",
+        compute='_compute_mail_partners',
         store=True,
         readonly=False,
     )
@@ -80,6 +75,10 @@ class AccountMoveSendWizard(models.TransientModel):
         store=True,
         readonly=False,
     )
+
+    model = fields.Char('Related Document Model', compute='_compute_model', readonly=False, store=True)
+    res_ids = fields.Text('Related Document IDs', compute='_compute_res_ids', readonly=False, store=True)
+    template_name = fields.Char('Template Name')  # used when saving a new mail template
 
     # -------------------------------------------------------------------------
     # DEFAULTS
@@ -124,19 +123,22 @@ class AccountMoveSendWizard(models.TransientModel):
         """ Select one applicable sending method given the following priority
         1. preferred method set on partner,
         2. email,
-        3. manual.
         """
         methods = self.env['ir.model.fields'].get_field_selection('res.partner', 'invoice_sending_method')
+
+        # We never want to display the manual method.
+        methods = [method for method in methods if method != ('manual', 'Manual')]
+
         for wizard in self:
-            preferred_method = self._get_default_sending_method(wizard.move_id)
-            need_fallback = not self._is_applicable_to_move(preferred_method, wizard.move_id)
-            fallback_method = need_fallback and ('email' if self._is_applicable_to_move('email', wizard.move_id) else 'manual')
+            preferred_methods = self._get_default_sending_methods(wizard.move_id)
+
             wizard.sending_method_checkboxes = {
                 method_key: {
-                    'checked': method_key == preferred_method if not need_fallback else method_key == fallback_method,
+                    'checked': method_key in preferred_methods and self._is_applicable_to_move(method_key, wizard.move_id),
                     'label': method_label,
                 }
-                for method_key, method_label in methods if self._is_applicable_to_company(method_key, wizard.company_id)
+                for method_key, method_label in methods
+                if self._is_applicable_to_company(method_key, wizard.company_id)
             }
 
     @api.depends('extra_edi_checkboxes')
@@ -167,50 +169,136 @@ class AccountMoveSendWizard(models.TransientModel):
             wizard.pdf_report_id = self._get_default_pdf_report_id(wizard.move_id)
 
     @api.depends('move_id')
-    def _compute_display_pdf_report_id(self):
-        # show pdf template menu if there are more than 1 template available and there is at least one move that needs a pdf
-        available_templates_count = self.env['ir.actions.report'].search_count([('is_invoice_report', '=', True)], limit=2)
-        for wizard in self:
-            wizard.display_pdf_report_id = available_templates_count > 1 and not wizard.move_id.invoice_pdf_report_id
+    def _compute_available_pdf_report_ids(self):
+        available_reports = self.move_id._get_available_action_reports()
 
-    @api.depends('sending_methods')
-    def _compute_is_download_only(self):
         for wizard in self:
-            wizard.is_download_only = wizard.sending_methods == ['manual']
+            wizard.available_pdf_report_ids = available_reports
 
     @api.depends('move_id')
-    def _compute_mail_template_id(self):
+    def _compute_display_pdf_report_id(self):
+        """ Show PDF template selection if there are more than 1 template available for invoices. """
         for wizard in self:
-            wizard.mail_template_id = self._get_default_mail_template_id(wizard.move_id)
+            wizard.display_pdf_report_id = len(wizard.available_pdf_report_ids) > 1 and not wizard.move_id.invoice_pdf_report_id
 
-    @api.depends('mail_template_id')
-    def _compute_mail_lang(self):
+    @api.depends('move_id')
+    def _compute_template_id(self):
         for wizard in self:
-            wizard.mail_lang = self._get_default_mail_lang(wizard.move_id, wizard.mail_template_id) if wizard.mail_template_id else get_lang(self.env).code
+            wizard.template_id = self._get_default_mail_template_id(wizard.move_id)
 
-    @api.depends('mail_template_id', 'mail_lang')
-    def _compute_mail_subject_body_partners(self):
+    @api.depends('template_id')
+    def _compute_lang(self):
+        # OVERRIDE 'mail.composer.mixin'
         for wizard in self:
-            if wizard.mail_template_id:
-                wizard.mail_subject = self._get_default_mail_subject(wizard.move_id, wizard.mail_template_id, wizard.mail_lang)
-                wizard.mail_body = self._get_default_mail_body(wizard.move_id, wizard.mail_template_id, wizard.mail_lang)
-                wizard.mail_partner_ids = self._get_default_mail_partner_ids(wizard.move_id, wizard.mail_template_id, wizard.mail_lang)
-            else:
-                wizard.mail_subject = wizard.mail_body = wizard.mail_partner_ids = None
+            wizard.lang = self._get_default_mail_lang(wizard.move_id, wizard.template_id) if wizard.template_id else get_lang(self.env).code
 
-    @api.depends('mail_template_id', 'sending_methods', 'extra_edis')
+    @api.depends('template_id', 'lang')
+    def _compute_mail_partners(self):
+        for wizard in self:
+            wizard.mail_partner_ids = None
+
+            if wizard.template_id:
+                wizard.mail_partner_ids = self._get_default_mail_partner_ids(wizard.move_id, wizard.template_id, wizard.lang)
+
+    @api.depends('template_id', 'lang')
+    def _compute_subject(self):
+        # OVERRIDE 'mail.composer.mixin'
+        for wizard in self:
+            wizard.subject = None
+
+            if wizard.template_id:
+                wizard.subject = self._get_default_mail_subject(wizard.move_id, wizard.template_id, wizard.lang)
+
+    @api.depends('template_id', 'lang')
+    def _compute_body(self):
+        # OVERRIDE 'mail.composer.mixin'
+        for wizard in self:
+            wizard.body = None
+
+            if wizard.template_id:
+                wizard.body = self._get_default_mail_body(wizard.move_id, wizard.template_id, wizard.lang)
+
+    @api.depends('template_id', 'sending_methods', 'extra_edis')
     def _compute_mail_attachments_widget(self):
         for wizard in self:
             manual_attachments_data = [x for x in wizard.mail_attachments_widget or [] if x.get('manual')]
             wizard.mail_attachments_widget = (
                 self._get_default_mail_attachments_widget(
                     wizard.move_id,
-                    wizard.mail_template_id,
+                    wizard.template_id,
                     extra_edis=wizard.extra_edis or {},
                     pdf_report=wizard.pdf_report_id,
                 )
                 + manual_attachments_data
             )
+
+    # Similar of mail.compose.message
+    @api.depends('template_id')
+    def _compute_res_ids(self):
+        for wizard in self:
+            wizard.res_ids = wizard.move_id.ids
+
+    # Similar of mail.compose.message
+    @api.depends('template_id')
+    def _compute_model(self):
+        for wizard in self:
+            wizard.model = self.env.context.get('active_model')
+
+    # Similar of mail.compose.message
+    @api.depends('sending_methods')
+    def _compute_can_edit_body(self):
+        for record in self:
+            record.can_edit_body = record.sending_methods and 'email' in record.sending_methods
+
+    @api.depends('model')  # Fake trigger otherwise not computed in new mode
+    def _compute_render_model(self):
+        # OVERRIDE 'mail.composer.mixin'
+        self.render_model = 'account.move'
+
+    # Similar of mail.compose.message
+    def open_template_creation_wizard(self):
+        """ Hit save as template button: opens a wizard that prompts for the template's subject.
+            `create_mail_template` is called when saving the new wizard. """
+
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'view_id': self.env.ref('mail.mail_compose_message_view_form_template_save').id,
+            'name': _('Create a Mail Template'),
+            'res_model': 'account.move.send.wizard',
+            'context': {'dialog_size': 'medium'},
+            'target': 'new',
+            'res_id': self.id,
+        }
+
+    # Similar of mail.compose.message
+    def create_mail_template(self):
+        """ Creates a mail template with the current mail composer's fields. """
+        self.ensure_one()
+        if not self.model or not self.model in self.env:
+            raise UserError(_('Template creation from composer requires a valid model.'))
+        model_id = self.env['ir.model']._get_id(self.model)
+        values = {
+            'name': self.template_name or self.subject,
+            'subject': self.subject,
+            'body_html': self.body,
+            'model_id': model_id,
+            'use_default_to': True,
+            'user_id': self.env.uid,
+        }
+        template = self.env['mail.template'].create(values)
+
+        # generate the saved template
+        self.write({'template_id': template.id})
+        return _reopen(self, self.id, self.model, context={**self.env.context, 'dialog_size': 'large'})
+
+    # Similar of mail.compose.message
+    def cancel_save_template(self):
+        """ Restore old subject when canceling the 'save as template' action
+            as it was erased to let user give a more custom input. """
+        self.ensure_one()
+        return _reopen(self, self.id, self.model, context={**self.env.context, 'dialog_size': 'large'})
 
     # -------------------------------------------------------------------------
     # CONSTRAINS
@@ -247,10 +335,10 @@ class AccountMoveSendWizard(models.TransientModel):
         }
         if self.sending_methods and 'email' in self.sending_methods:
             send_settings.update({
-                'mail_template': self.mail_template_id,
-                'mail_lang': self.mail_lang,
-                'mail_body': self.mail_body,
-                'mail_subject': self.mail_subject,
+                'mail_template': self.template_id,
+                'mail_lang': self.lang,
+                'mail_body': self.body,
+                'mail_subject': self.subject,
                 'mail_partner_ids': self.mail_partner_ids.ids,
                 'mail_attachments_widget': self.mail_attachments_widget,
             })

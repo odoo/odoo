@@ -227,7 +227,7 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
 
         composer = self.env['account.move.send.wizard'].with_context(active_model='account.move', active_ids=test_move.ids).create({
             'sending_methods': ['email'],
-            'mail_template_id': move_template.id,
+            'template_id': move_template.id,
         })
 
         with self.mock_mail_gateway(mail_unlink_sent=False), \
@@ -294,11 +294,11 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
         )
 
         # composer configuration
-        self.assertIn(f'TemplateBody for {test_move.name}', composer.mail_body)
+        self.assertIn(f'TemplateBody for {test_move.name}', composer.body)
         self.assertEqual(composer.move_id, test_move)
         self.assertTrue('email' in composer.sending_methods)
-        self.assertEqual(composer.mail_subject, f'{self.env.user.company_id.name} Invoice (Ref {test_move.name})')
-        self.assertEqual(composer.mail_template_id, move_template)
+        self.assertEqual(composer.subject, f'{self.env.user.company_id.name} Invoice (Ref {test_move.name})')
+        self.assertEqual(composer.template_id, move_template)
 
         # invoice update
         self.assertTrue(test_move.is_move_sent)
@@ -314,7 +314,7 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
 
         composer = self.env['account.move.send.wizard'].with_context(active_model='account.move', active_ids=test_move.ids).create({
             'sending_methods': ['email'],
-            'mail_template_id': move_template.id,
+            'template_id': move_template.id,
         })
 
         with self.mock_mail_gateway(mail_unlink_sent=False), \
@@ -381,13 +381,13 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
         )
 
         # composer configuration
-        self.assertIn(f'SpanishBody for {test_move.name}', composer.mail_body,
+        self.assertIn(f'SpanishBody for {test_move.name}', composer.body,
                       'Should be translated, based on template')
         self.assertEqual(composer.move_id, test_move)
         self.assertTrue('email' in composer.sending_methods)
-        self.assertEqual(composer.mail_subject, f'SpanishSubject for {test_move.name}',
+        self.assertEqual(composer.subject, f'SpanishSubject for {test_move.name}',
                          'Should be translated, based on template')
-        self.assertEqual(composer.mail_template_id, move_template)
+        self.assertEqual(composer.template_id, move_template)
 
         # invoice update
         self.assertTrue(test_move.is_move_sent)
@@ -411,7 +411,7 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
 
         composer = self.env['account.move.send.wizard'].with_context(active_model='account.move', active_ids=test_move.ids).create({
             'sending_methods': ['email'],
-            'mail_template_id': move_template.id,
+            'template_id': move_template.id,
         })
 
         with self.mock_mail_gateway(mail_unlink_sent=False), \
@@ -468,7 +468,7 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
 
         composer = self.env['account.move.send.wizard'].with_context(active_model='account.move', active_ids=test_move.ids).create({
             'sending_methods': ['email'],
-            'mail_template_id': move_template.id,
+            'template_id': move_template.id,
             'mail_partner_ids': additional_partner.ids,
         })
 
@@ -528,7 +528,11 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.company_data_2 = cls.setup_other_company()
-        (cls.partner_a + cls.partner_b).write({
+        (cls.partner_a.with_company(cls.company_data['company'].id) + cls.partner_b.with_company(cls.company_data['company'].id)).write({
+            'invoice_sending_method': 'email',
+            'email': "turlututu@tsointsoin",
+        })
+        (cls.partner_a.with_company(cls.company_data_2['company'].id) + cls.partner_b.with_company(cls.company_data_2['company'].id)).write({
             'invoice_sending_method': 'email',
             'email': "turlututu@tsointsoin",
         })
@@ -543,13 +547,13 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             'extra_edi_checkboxes': False,
             'pdf_report_id': wizard._get_default_pdf_report_id(invoice).id,
             'display_pdf_report_id': False,
-            'mail_template_id': wizard._get_default_mail_template_id(invoice).id,
-            'mail_lang': 'en_US',
+            'template_id': wizard._get_default_mail_template_id(invoice).id,
+            'lang': 'en_US',
             'mail_partner_ids': wizard.move_id.partner_id.ids,
         }])
         self.assertFalse(wizard.alerts)
-        self.assertTrue(wizard.mail_subject)
-        self.assertTrue(wizard.mail_body)
+        self.assertTrue(wizard.subject)
+        self.assertTrue(wizard.body)
         self._assert_mail_attachments_widget(wizard, [{
             'mimetype': 'application/pdf',
             'name': invoice._get_invoice_report_filename(),
@@ -601,7 +605,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.partner_a.invoice_sending_method = 'email'
         self.partner_a.email = None
         wizard = self.create_send_and_print(invoice)
-        self.assertFalse('email' in wizard.sending_methods)  # preferred method is overriden since it makes no sense
+        self.assertFalse(wizard.sending_methods)  # preferred method is overriden since it makes no sense
         wizard.sending_methods = ['email']  # user selects email anyway
         self.assertTrue('account_missing_email' in wizard.alerts and wizard.alerts['account_missing_email']['level'] == 'danger')
         with self.assertRaisesRegex(UserError, "email"):
@@ -625,7 +629,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertEqual(wizard.move_ids, invoice1 + invoice2)
         self.assertFalse(wizard.alerts)
         self.assertEqual(wizard.summary_data, {
-            'manual': {'count': 1, 'label': 'Download'},
+            'manual': {'count': 1, 'label': 'Manual'},
             'email': {'count': 1, 'label': 'by Email'},
         })
 
@@ -666,7 +670,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertEqual(wizard.move_ids, invoice1 + invoice2 + invoice3)
         self.assertTrue(wizard.alerts and 'account_pdf_exist' in wizard.alerts)
         self.assertEqual(wizard.summary_data, {
-            'manual': {'count': 2, 'label': 'Download'},
+            'manual': {'count': 2, 'label': 'Manual'},
             'email': {'count': 1, 'label': 'by Email'},
         })
         wizard.action_send_and_print()
@@ -734,7 +738,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             self.assertEqual(wizard.summary_data, {
                 'edi1': {'count': 2, 'label': 'by EDI 1'},
                 'edi2': {'count': 1, 'label': 'by EDI 2'},
-                'manual': {'count': 1, 'label': 'Download'},
+                'manual': {'count': 1, 'label': 'Manual'},
                 'email': {'count': 1, 'label': 'by Email'},
             })
 
@@ -749,7 +753,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         wizard = self.create_send_and_print(
             invoice,
             sending_methods=['email'],
-            mail_template_id=template.id
+            template_id=template.id
         )
         pdf_report_values = {
             'mimetype': 'application/pdf',
@@ -760,7 +764,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             'mimetype': 'application/octet-stream',
             'name': extra_attachment.name,
             'placeholder': False,
-            'mail_template_id': template.id,
+            'template_id': template.id,
         }
         self._assert_mail_attachments_widget(wizard, [pdf_report_values, extra_attachment_values])
 
@@ -776,17 +780,17 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         wizard.mail_attachments_widget = wizard.mail_attachments_widget + [manual_attachment_values]
 
         # Add an attachment to a new mail_template and change it.
-        new_mail_template = wizard.mail_template_id.copy()
+        new_mail_template = wizard.template_id.copy()
         extra_attachment2 = self.env['ir.attachment'].create({'name': "extra_attachment2", 'raw': b'bar'})
         new_mail_template.attachment_ids = [Command.set(extra_attachment2.ids)]
         extra_attachment2_values = {
             'mimetype': 'application/octet-stream',
             'name': extra_attachment2.name,
             'placeholder': False,
-            'mail_template_id': new_mail_template.id,
+            'template_id': new_mail_template.id,
         }
 
-        wizard.mail_template_id = new_mail_template
+        wizard.template_id = new_mail_template
         self._assert_mail_attachments_widget(wizard, [
             pdf_report_values,
             extra_attachment2_values,
@@ -820,7 +824,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         ])
 
         # Switch the template.
-        wizard.mail_template_id = new_mail_template
+        wizard.template_id = new_mail_template
         self._assert_mail_attachments_widget(wizard, [
             pdf_report_values,
             extra_attachment2_values,
@@ -928,7 +932,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
 
         custom_subject = "turlututu"
-        wizard = self.create_send_and_print(invoice, mail_template_id=None, mail_subject=custom_subject)
+        wizard = self.create_send_and_print(invoice, template_id=None, subject=custom_subject)
 
         wizard.action_send_and_print(allow_fallback_pdf=True)
         message = self._get_mail_message(invoice)

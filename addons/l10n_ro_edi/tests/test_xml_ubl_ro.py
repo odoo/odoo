@@ -122,7 +122,7 @@ class TestUBLRO(TestUBLCommon):
         self.partner_a.write({'vat': False, 'company_registry': False})
         invoice = self.create_move("out_invoice", send=False)
         with self.assertRaisesRegex(UserError, "doesn't have a VAT nor Company ID"):
-            invoice._generate_and_send(allow_fallback_pdf=False, mail_template_id=self.move_template.id)
+            invoice._generate_and_send(allow_fallback_pdf=False, template_id=self.move_template.id)
 
     def test_export_constraints(self):
         self.company_data['company'].company_registry = False
@@ -131,10 +131,10 @@ class TestUBLRO(TestUBLCommon):
             self.company_data["company"][required_field] = False
             invoice = self.create_move("out_invoice", send=False)
             with self.assertRaisesRegex(UserError, "required"):
-                invoice._generate_and_send(allow_fallback_pdf=False, mail_template_id=self.move_template.id)
+                invoice._generate_and_send(allow_fallback_pdf=False, template_id=self.move_template.id)
             self.company_data["company"][required_field] = prev_val
 
         self.company_data["company"].city = "Bucharest"
         invoice = self.create_move("out_invoice", send=False)
         with self.assertRaisesRegex(UserError, "city name must be 'SECTORX'"):
-            invoice._generate_and_send(allow_fallback_pdf=False, mail_template_id=self.move_template.id)
+            invoice._generate_and_send(allow_fallback_pdf=False, template_id=self.move_template.id)

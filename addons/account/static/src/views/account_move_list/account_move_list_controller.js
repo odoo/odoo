@@ -20,7 +20,7 @@ export class AccountMoveListController extends FileUploadListController {
     get actionMenuProps() {
         return {
             ...super.actionMenuProps,
-            printDropdownTitle: _t("Download"),
+            printDropdownTitle: _t("Print"),
             loadExtraPrintItems: this.loadExtraPrintItems.bind(this),
         };
     }

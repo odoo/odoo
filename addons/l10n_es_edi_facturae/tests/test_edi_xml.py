@@ -312,7 +312,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
             wizard = self.create_send_and_print(invoice)
             result = wizard.action_send_and_print()
 
-            self.assertEqual(result['type'], 'ir.actions.act_url')
+            self.assertEqual(result['type'], 'ir.actions.act_window_close')
             self.assertEqual(invoice.invoice_line_ids[0].price_subtotal, 0.0)
 
     def test_import_multiple_invoices(self):
