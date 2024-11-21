@@ -59,7 +59,7 @@ class SnailmailLetter(models.Model):
              "If the letter is correctly sent, the status goes in 'Sent',\n"
              "If not, it will got in state 'Error' and the error message will be displayed in the field 'Error Message'.")
     error_code = fields.Selection([(err_code, err_code) for err_code in ERROR_CODES], string="Error")
-    info_msg = fields.Char('Information')
+    info_msg = fields.Html('Information')
 
     reference = fields.Char(string='Related Record', compute='_compute_reference', readonly=True, store=False)
 
