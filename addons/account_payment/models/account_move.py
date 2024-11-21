@@ -102,12 +102,14 @@ class AccountMove(models.Model):
 
     def _get_default_payment_link_values(self):
         next_payment_values = self._get_invoice_next_payment_values()
-        amount_max = next_payment_values['amount_due']
+        amount_max = next_payment_values.get('amount_due')
         additional_info = {}
         open_installments = []
-        if next_payment_values['installment_state'] in ('next', 'overdue'):
+        installment_state = next_payment_values.get('installment_state')
+        next_amount_to_pay = next_payment_values.get('next_amount_to_pay')
+        if installment_state in ('next', 'overdue'):
             open_installments = []
-            for installment in next_payment_values['not_reconciled_installments']:
+            for installment in next_payment_values.get('not_reconciled_installments'):
                 data = {
                     'type': installment['type'],
                     'number': installment['number'],
@@ -116,19 +118,19 @@ class AccountMove(models.Model):
                 }
                 open_installments.append(data)
 
-        elif next_payment_values['installment_state'] == 'epd':
-            amount_max = next_payment_values['next_amount_to_pay']  # with epd, next_amount_to_pay is the invoice amount residual
+        elif installment_state == 'epd':
+            amount_max = next_amount_to_pay  # with epd, next_amount_to_pay is the invoice amount residual
             additional_info.update({
                 'has_eligible_epd': True,
-                'discount_date': next_payment_values['discount_date']
+                'discount_date': next_payment_values.get('discount_date')
             })
 
         return {
             'currency_id': self.currency_id.id,
             'partner_id': self.partner_id.id,
             'open_installments': open_installments,
-            'installment_state': next_payment_values['installment_state'],
-            'amount': next_payment_values['next_amount_to_pay'],
+            'installment_state': installment_state,
+            'amount': next_amount_to_pay,
             'amount_max': amount_max,
             **additional_info
         }
