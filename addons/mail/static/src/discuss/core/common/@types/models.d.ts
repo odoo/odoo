@@ -9,6 +9,7 @@ declare module "models" {
 
     export interface Store {
         "discuss.channel.member": typeof ChannelMemberClass,
+        getRecentChatPartnerIds(): number[],
         readonly onlineMemberStatuses: String[],
         sortMembers(m1: ChannelMember, m2: ChannelMember)
     }

@@ -1,4 +1,6 @@
 import { Store } from "@mail/core/common/store_service";
+import { compareDatetime } from "@mail/utils/common/misc";
+
 import { patch } from "@web/core/utils/patch";
 
 /** @type {import("models").Store} */
@@ -16,6 +18,18 @@ const storeServicePatch = {
         const [channel] = Thread;
         channel.open();
         return channel;
+    },
+    /**
+     * List of known partner ids with a direct chat, ordered
+     * by most recent interest (1st item being the most recent)
+     *
+     * @returns {number[]}
+     */
+    getRecentChatPartnerIds() {
+        return Object.values(this.Thread.records)
+            .filter((thread) => thread.channel_type === "chat" && thread.correspondent)
+            .sort((a, b) => compareDatetime(b.lastInterestDt, a.lastInterestDt) || b.id - a.id)
+            .map((thread) => thread.correspondent.persona.id);
     },
     onLinkFollowed(fromThread) {
         super.onLinkFollowed(...arguments);

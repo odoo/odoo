@@ -6,7 +6,8 @@ import { patch } from "@web/core/utils/patch";
 
 const commandRegistry = registry.category("discuss.channel_commands");
 
-patch(SuggestionService.prototype, {
+/** @type {SuggestionService} */
+const suggestionServicePatch = {
     getSupportedDelimiters(thread) {
         const res = super.getSupportedDelimiters(thread);
         return thread?.model === "discuss.channel" ? [...res, ["/", 0]] : res;
@@ -78,4 +79,11 @@ patch(SuggestionService.prototype, {
             suggestions: sort ? commands.sort(sortFunc) : commands,
         };
     },
-});
+    /** @override */
+    sortPartnerSuggestionsContext() {
+        return Object.assign(super.sortPartnerSuggestionsContext(), {
+            recentChatPartnerIds: this.store.getRecentChatPartnerIds(),
+        });
+    },
+};
+patch(SuggestionService.prototype, suggestionServicePatch);

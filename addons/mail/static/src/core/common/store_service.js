@@ -1,4 +1,3 @@
-import { compareDatetime } from "@mail/utils/common/misc";
 import { rpc } from "@web/core/network/rpc";
 import { Store as BaseStore, makeStore, Record } from "@mail/core/common/record";
 import { reactive } from "@odoo/owl";
@@ -604,19 +603,6 @@ export class Store extends BaseStore {
             }
             return partner;
         }
-    }
-
-    /**
-     * List of known partner ids with a direct chat, ordered
-     * by most recent interest (1st item being the most recent)
-     *
-     * @returns {[integer]}
-     */
-    getRecentChatPartnerIds() {
-        return Object.values(this.Thread.records)
-            .filter((thread) => thread.channel_type === "chat" && thread.correspondent)
-            .sort((a, b) => compareDatetime(b.lastInterestDt, a.lastInterestDt) || b.id - a.id)
-            .map((thread) => thread.correspondent.persona.id);
     }
 
     async joinChat(id, forceOpen = false) {
