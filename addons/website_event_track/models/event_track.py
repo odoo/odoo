@@ -482,10 +482,7 @@ class EventTrack(models.Model):
 
     def _message_get_suggested_recipients(self):
         recipients = super()._message_get_suggested_recipients()
-        if self.partner_id:
-            if self.partner_id not in recipients:
-                self._message_add_suggested_recipient(recipients, partner=self.partner_id, reason=_('Contact'))
-        else:
+        if not self.partner_id:
             #  Priority: contact information then speaker information
             if self.contact_email and self.contact_email != self.partner_id.email:
                 self._message_add_suggested_recipient(recipients, email=self.contact_email, reason=_('Contact Email'))

@@ -100,25 +100,6 @@ class MailTestTicket(models.Model):
                 values['phone'] = ticket.phone_number
         return email_keys_to_values
 
-    def _message_get_suggested_recipients(self):
-        recipients = super()._message_get_suggested_recipients()
-        if self.customer_id:
-            self._message_add_suggested_recipient(
-                recipients,
-                partner=self.customer_id,
-                lang=None,
-                reason=_('Customer'),
-            )
-        elif self.email_from:
-            self._message_add_suggested_recipient(
-                recipients,
-                partner=None,
-                email=self.email_from,
-                lang=None,
-                reason=_('Customer Email'),
-            )
-        return recipients
-
 
 class MailTestTicketEl(models.Model):
     """ Just mail.test.ticket, but exclusion-list enabled. Kept as different
