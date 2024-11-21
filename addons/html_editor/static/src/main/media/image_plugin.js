@@ -183,6 +183,11 @@ export class ImagePlugin extends Plugin {
     };
 
     setup() {
+        this.addDomListener(this.editable, "dblclick", (e) => {
+            if (e.target.tagName === "IMG") {
+                this.previewImage();
+            }
+        });
         this.addDomListener(this.editable, "pointerup", (e) => {
             if (e.target.tagName === "IMG") {
                 const [anchorNode, anchorOffset, focusNode, focusOffset] = boundariesOut(e.target);
