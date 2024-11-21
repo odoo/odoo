@@ -4,6 +4,7 @@ declare module "models" {
     export interface ChannelMember extends ChannelMemberClass {}
 
     export interface Message {
+        isMessagePreviousToLastSelfMessageSeenByEveryone: boolean,
         mentionedChannelPromises: Promise<Thread>[],
     }
 

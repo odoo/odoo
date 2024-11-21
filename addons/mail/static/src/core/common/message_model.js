@@ -69,15 +69,6 @@ export class Message extends Record {
             return this.thread?.membersThatCanSeen.every((m) => m.hasSeen(this));
         },
     });
-    isMessagePreviousToLastSelfMessageSeenByEveryone = Record.attr(false, {
-        /** @this {import("models").Message} */
-        compute() {
-            if (!this.thread?.lastSelfMessageSeenByEveryone) {
-                return false;
-            }
-            return this.id < this.thread.lastSelfMessageSeenByEveryone.id;
-        },
-    });
     isReadBySelf = Record.attr(false, {
         compute() {
             return (

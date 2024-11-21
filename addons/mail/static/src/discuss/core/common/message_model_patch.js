@@ -1,10 +1,21 @@
 import { Message } from "@mail/core/common/message_model";
+import { Record } from "@mail/core/common/record";
+
 import { patch } from "@web/core/utils/patch";
 
 /** @type {import("models").Message} */
 const messagePatch = {
     setup() {
         super.setup();
+        this.isMessagePreviousToLastSelfMessageSeenByEveryone = Record.attr(false, {
+            /** @this {import("models").Message} */
+            compute() {
+                if (!this.thread?.lastSelfMessageSeenByEveryone) {
+                    return false;
+                }
+                return this.id < this.thread.lastSelfMessageSeenByEveryone.id;
+            },
+        });
         this.mentionedChannelPromises = [];
     },
     /**
