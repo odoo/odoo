@@ -4257,6 +4257,9 @@ export class OdooEditor extends EventTarget {
                     ev.stopPropagation();
                 }
             }
+        } else if (ev.key === "Enter") {
+            ev.preventDefault();
+            this._applyCommand("oEnter");
         }
     }
     /**
