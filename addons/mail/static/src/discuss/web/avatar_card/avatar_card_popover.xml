@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.AvatarCardPopover">
-        <div class="o_avatar_card rounded bg-inherit">
-            <div class="card-body rounded bg-inherit">
+        <div class="o_avatar_card card border-0 rounded bg-inherit">
+            <div class="card-body bg-inherit">
                 <div class="d-flex align-items-start gap-2 bg-inherit">
                     <span class="o_avatar pt-1 position-relative o_card_avatar bg-inherit">
                         <img t-if="props.id"
@@ -26,17 +26,14 @@
                         <a t-if="phone" class="o-mail-avatar-card-tel text-truncate" t-att-title="phone" t-att-href="'tel:'+phone">
                             <i class="fa fa-fw fa-phone me-1"/><t t-esc="phone"/>
                         </a>
-                    </div>
-                </div>
-                <div class="flex-wrap gap-2 mt-2">
-                    <div class="justify-content-end d-flex align-items-baseline">
-                        <div class="d-flex gap-2 o_avatar_card_buttons">
+                        <div class="o_avatar_card_buttons d-flex gap-2 mt-2">
                             <button t-if="!user.share" class="btn btn-secondary btn-sm" t-on-click.stop="onSendClick">Send message</button>
                             <button t-if="showViewProfileBtn" class="btn btn-secondary btn-sm" t-custom-click.stop="(ev, isMiddleClick) => this.onClickViewProfile(isMiddleClick)" t-ref="viewProfileBtn">View Profile</button>
                         </div>
                     </div>
                 </div>
             </div>
+            <div t-if="hasFooter" class="o_avatar_card_details card-footer d-flex flex-column gap-3 rounded-bottom bg-100"/>
         </div>
     </t>
 </templates>
