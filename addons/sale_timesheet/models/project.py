@@ -569,6 +569,12 @@ class ProjectTask(models.Model):
             if task.allow_billable and not task.sale_line_id:
                 task.sale_line_id = task._get_last_sol_of_customer()
 
+    @api.onchange("partner_id")
+    def _on_change_partner_id(self):
+        super()._on_change_partner_id()
+        if self.allow_billable and not self.sale_line_id:
+            self.sale_line_id = self._get_last_sol_of_customer()
+
     @api.depends('project_id.sale_line_employee_ids')
     def _compute_is_project_map_empty(self):
         for task in self:
