@@ -28,16 +28,11 @@ patch(TicketScreen.prototype, {
     },
     //@override
     _getSearchFields() {
-        if (!this.pos.config.module_pos_restaurant) {
-            return super._getSearchFields(...arguments);
+        const res = super._getSearchFields(...arguments);
+        if (this.pos.config.module_pos_restaurant) {
+            res.REFERENCE.modelFields.push("table_id.table_number");
         }
-        return Object.assign({}, super._getSearchFields(...arguments), {
-            TABLE: {
-                repr: (order) => order.table_id?.getName() || "",
-                displayName: _t("Table"),
-                modelField: "table_id.table_number",
-            },
-        });
+        return res;
     },
     async _setOrder(order) {
         const shouldBeOverridden = this.pos.config.module_pos_restaurant && order.table_id;

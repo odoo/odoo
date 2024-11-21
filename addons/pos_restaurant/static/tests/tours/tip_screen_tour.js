@@ -36,7 +36,7 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             ProductScreen.addOrderline("Coca-Cola", "2", "2"),
             ProductScreen.totalAmountIs("4.0"),
             Chrome.clickPlanButton(),
-            Chrome.clickMenuOption("Orders"),
+            Chrome.clickOrders(),
             {
                 trigger: `.ticket-screen .orders > .order-row:contains(Tipping):contains($ 2.00)`,
             },
@@ -52,7 +52,7 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             PaymentScreen.clickValidate(),
             TipScreen.isShown(),
             Chrome.clickPlanButton(),
-            Chrome.createFloatingOrder(),
+            FloorScreen.clickNewOrder(),
             // order 4
             ProductScreen.addOrderline("Coca-Cola", "4", "2"),
             ProductScreen.totalAmountIs("8.0"),
@@ -62,8 +62,8 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             Dialog.confirm(),
             ProductScreen.guestNumberIs("2"),
             ProductScreen.clickCloseButton(),
-            Chrome.clickPlanButton(),
-            Chrome.clickMenuOption("Orders"),
+            ProductScreen.setTab("Test"),
+            Chrome.clickOrders(),
             {
                 trigger: `.ticket-screen .orders > .order-row:contains(Tipping):contains($ 6.00)`,
             },
@@ -79,7 +79,7 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             TipScreen.inputAmountIs("0.40"),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
-            Chrome.clickMenuOption("Orders"),
+            Chrome.clickOrders(),
 
             // Tip 25% on order3
             TicketScreen.selectOrderByPrice("6.0"),
@@ -93,7 +93,7 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             TipScreen.inputAmountIs("1.50"),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
-            Chrome.clickMenuOption("Orders"),
+            Chrome.clickOrders(),
 
             // finalize order 4 then tip custom amount
             TicketScreen.selectOrderByPrice("8.0"),
@@ -116,7 +116,7 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             FloorScreen.isShown(),
 
             // settle tips here
-            Chrome.clickMenuOption("Orders"),
+            Chrome.clickOrders(),
             TicketScreen.selectFilter("Tipping"),
             TicketScreen.tipContains("1.00"),
             TicketScreen.settleTips(),

@@ -1300,7 +1300,7 @@ class PosOrderLine(models.Model):
     refunded_qty = fields.Float('Refunded Quantity', compute='_compute_refund_qty', help='Number of items refunded in this orderline.')
     uuid = fields.Char(string='Uuid', readonly=True, default=lambda self: str(uuid4()), copy=False)
     note = fields.Char('Product Note')
-    origin_order_id = fields.Many2one('pos.order', string='Origin Order', help='Tracks the original order from which this orderline was created.', readonly=True)
+    origin_order_id = fields.Many2one('pos.order', string='Origin Order', help='Tracks the original order from which this orderline was created.', readonly=True, ondelete="set null")
 
     combo_parent_id = fields.Many2one('pos.order.line', string='Combo Parent') # FIXME rename to parent_line_id
     combo_line_ids = fields.One2many('pos.order.line', 'combo_parent_id', string='Combo Lines') # FIXME rename to child_line_ids

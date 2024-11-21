@@ -6,7 +6,7 @@
                 class="leftpane d-flex flex-column p-2">
                 <OrderSummary />
                 <div class="pads">
-                    <div t-attf-class="control-buttons d-flex justify-content-between gap-2 w-100 py-2">
+                    <div class="control-buttons d-flex justify-content-between gap-2 w-100 py-2">
                         <ControlButtons t-if="!ui.isSmall" onClickMore.bind="displayAllControlPopup"/>
                     </div>
                     <div class="subpads d-flex flex-column gap-2">
@@ -55,15 +55,15 @@
                 </div>
                 <t t-if="ui.isSmall">
                     <div class="switchpane d-flex gap-2 p-2 border-top bg-view">
-                        <button t-if="!pos.scanning" class="btn-switchpane pay-button btn btn-lg w-50" t-attf-class="{{ currentOrder.isEmpty() ? 'btn-secondary' : 'btn-primary' }}" t-on-click="() => this.pos.pay()">
+                        <button t-if="!pos.scanning" class="btn-switchpane pay-button btn btn-lg flex-grow-1" t-attf-class="{{ currentOrder.isEmpty() ? 'btn-secondary' : 'btn-primary' }}" t-on-click="() => this.pos.pay()">
                             <span class="d-block">Pay</span>
                             <span t-esc="total" />
                         </button>
-                        <button class="btn-switchpane btn btn-secondary review-button w-50" t-on-click="switchPane">
+                        <button class="btn-switchpane btn btn-secondary review-button flex-grow-1" t-on-click="switchPane">
                             <span class="d-block">Cart</span>
                             <small><t t-esc="items"/> items</small>
                         </button>
-                        <button t-if="pos.scanning" class="btn-switchpane btn btn-secondary btn-lg w-50" t-on-click="() => this.pos.scanning = false">
+                        <button t-if="pos.scanning" class="btn-switchpane btn btn-secondary btn-lg flex-grow-1" t-on-click="() => this.pos.scanning = false">
                             <span class="d-block">Products</span>
                         </button>
                     </div>

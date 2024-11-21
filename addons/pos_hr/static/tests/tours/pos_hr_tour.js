@@ -51,7 +51,7 @@ registry.category("web_tour.tours").add("PosHrTour", {
             // order for employee 2
             ProductScreen.addOrderline("Desk Pad", "1"),
             ProductScreen.totalAmountIs("1.98"),
-            Chrome.clickMenuOption("Orders"),
+            Chrome.clickOrders(),
             TicketScreen.nthRowContains(2, "Pos Employee2", false),
 
             // order for employee 1
@@ -61,7 +61,7 @@ registry.category("web_tour.tours").add("PosHrTour", {
             Chrome.createFloatingOrder(),
             ProductScreen.addOrderline("Desk Pad", "1"),
             ProductScreen.totalAmountIs("1.98"),
-            Chrome.clickMenuOption("Orders"),
+            Chrome.clickOrders(),
             TicketScreen.nthRowContains(2, "Pos Employee2", false),
             TicketScreen.nthRowContains(3, "Pos Employee1", false),
 
@@ -76,7 +76,7 @@ registry.category("web_tour.tours").add("PosHrTour", {
             Chrome.createFloatingOrder(),
             ProductScreen.addOrderline("Desk Pad", "1", "8"),
             ProductScreen.totalAmountIs("8.0"),
-            Chrome.clickMenuOption("Orders"),
+            Chrome.clickOrders(),
             TicketScreen.nthRowContains(4, "Mitchell Admin", false),
 
             // Close register should be accessible by the admin user.

@@ -73,6 +73,7 @@ export class ProductScreen extends Component {
         onWillUnmount(async () => {
             if (
                 this.pos.config.use_presets &&
+                this.currentOrder &&
                 this.currentOrder.preset_id &&
                 this.currentOrder.preset_time
             ) {
@@ -120,6 +121,9 @@ export class ProductScreen extends Component {
             "-": "o_colorlist_item_color_transparent_3",
         };
 
+        const defaultLastRowValues =
+            DEFAULT_LAST_ROW.map((button) => button.value) + [BACKSPACE.value];
+
         return getButtons(DEFAULT_LAST_ROW, [
             { value: "quantity", text: _t("Qty") },
             { value: "discount", text: _t("%"), disabled: !this.pos.config.manual_discount },
@@ -132,6 +136,7 @@ export class ProductScreen extends Component {
         ]).map((button) => ({
             ...button,
             class: `
+                ${defaultLastRowValues.includes(button.value) ? "border-0" : ""}
                 ${colorClassMap[button.value] || ""}
                 ${this.pos.numpadMode === button.value ? "active" : ""}
                 ${button.value === "quantity" ? "numpad-qty rounded-0 rounded-top mb-0" : ""}

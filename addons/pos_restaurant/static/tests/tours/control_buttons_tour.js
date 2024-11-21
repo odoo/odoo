@@ -18,11 +18,9 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             FloorScreen.clickTable("102"),
-            Chrome.activeTableOrOrderIs("2"),
             ProductScreen.addOrderline("Water", "5", "2", "10.0"),
             Chrome.clickPlanButton(),
             FloorScreen.clickTable("104"),
-            Chrome.activeTableOrOrderIs("4"),
             ProductScreen.addOrderline("Minute Maid", "3", "2", "6.0"),
             // Extra line is added to test merging table.
             // Merging this order to another should also include this extra line.
@@ -31,7 +29,6 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
 
             ProductScreen.clickControlButton("Transfer"),
             FloorScreen.clickTable("102"),
-            Chrome.activeTableOrOrderIs("2"),
             Order.hasLine({ productName: "Water", quantity: "5" }),
             Order.hasLine({ productName: "Minute Maid", quantity: "3" }),
             Order.hasLine({ productName: "Coca-Cola", quantity: "1" }),

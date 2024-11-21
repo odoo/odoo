@@ -1,5 +1,6 @@
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
 import { patch } from "@web/core/utils/patch";
+import { _t } from "@web/core/l10n/translation";
 
 patch(PosOrder.prototype, {
     setup(_defaultObj, options) {
@@ -34,23 +35,46 @@ patch(PosOrder.prototype, {
             },
         };
     },
+    get isBooked() {
+        const res = super.isBooked;
+        if (this.config.module_pos_restaurant) {
+            return super.isBooked || !this.isDirectSale;
+        }
+        return res;
+    },
     setBooked(booked) {
         this.uiState.booked = booked;
     },
     getName() {
-        if (this.config.module_pos_restaurant && this.getTable()) {
-            const table = this.getTable();
-            const child_tables = this.models["restaurant.table"].filter((t) => {
-                if (t.floor_id.id === table.floor_id.id) {
-                    return table.isParent(t);
-                }
-            });
-            let name = table.table_number.toString();
-            for (const child_table of child_tables) {
-                name += ` & ${child_table.table_number}`;
+        if (this.config.module_pos_restaurant) {
+            if (this.isDirectSale) {
+                return _t("Direct Sale");
             }
-            return name;
+            if (this.getTable()) {
+                const table = this.getTable();
+                const child_tables = this.models["restaurant.table"].filter((t) => {
+                    if (t.floor_id.id === table.floor_id.id) {
+                        return table.isParent(t);
+                    }
+                });
+                let name = "T " + table.table_number.toString();
+                for (const child_table of child_tables) {
+                    name += ` & ${child_table.table_number}`;
+                }
+                return name;
+            }
         }
         return super.getName(...arguments);
+    },
+    get isDirectSale() {
+        return Boolean(
+            this.config.module_pos_restaurant &&
+                !this.table_id &&
+                !this.floating_order_name &&
+                this.state == "draft"
+        );
+    },
+    get isFilledDirectSale() {
+        return this.isDirectSale && !this.isEmpty();
     },
 });

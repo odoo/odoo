@@ -4,18 +4,27 @@
         <!-- add a showOrderButton here (using the computeOrderChange method) -->
         <xpath expr="//button[hasclass('pay-button')]" position="replace">
             <t t-if="!pos.scanning">
-                <button
-                    t-if="this.swapButton"
-                    class="btn-switchpane pay-button btn btn-lg w-50 position-relative lh-sm overflow-hidden"
-                    t-on-click="submitOrder"
-                    t-attf-class="{{ primaryOrderButton ? 'btn-primary' : 'btn-light' }}">
-                    <!-- Replace the payment button by the order button -->
-                    <span class="d-block">Order</span>
-                    <small><t t-esc="nbrOfChanges"/> changes</small>
-                </button>
+                <t t-if="this.swapButton">
+                    <button
+                        t-if="!this.currentOrder.isDirectSale and nbrOfChanges"
+                        class="btn-switchpane pay-button btn btn-lg flex-grow-1 position-relative lh-sm overflow-hidden"
+                        t-on-click="submitOrder"
+                        t-attf-class="{{ primaryOrderButton ? 'btn-primary' : 'btn-light' }}">
+                        <!-- Replace the payment button by the order button -->
+                        <span class="d-block">Order</span>
+                        <small><t t-esc="nbrOfChanges"/> changes</small>
+                    </button>
+                    <button
+                        class="btn-switchpane new-button btn btn-lg flex-grow-1 lh-sm btn-secondary"
+                        t-on-click="() => this.pos.showDefault()"
+                        t-elif="!this.currentOrder.isDirectSale and !nbrOfChanges and !this.currentOrder.isEmpty()"
+                    >
+                        <span>New</span>
+                    </button>
+                </t>
                 <t t-else="">
                     <button
-                        class="btn-switchpane pay-button btn btn-lg w-50 lh-sm"
+                        class="btn-switchpane pay-button btn btn-lg flex-grow-1 lh-sm"
                         t-attf-class="{{ currentOrder.isEmpty() ? 'btn-light disabled' : 'btn-primary' }}"
                         t-on-click="() => this.pos.pay()">
                         <span class="d-block">Pay</span>
@@ -25,11 +34,29 @@
             </t>
         </xpath>
         <xpath expr="//button[hasclass('review-button')]" position="replace">
-            <button class="btn-switchpane btn btn-lg w-50 review-button lh-sm" t-attf-class="{{ primaryReviewButton ? 'btn-primary' : 'btn-secondary' }}" t-on-click="switchPane">
+            <button class="btn-switchpane btn btn-lg flex-grow-1 review-button lh-sm" t-attf-class="{{ primaryReviewButton ? 'btn-primary' : 'btn-secondary' }}" t-on-click="switchPane">
                 <span class="d-block">Cart</span>
                 <small t-if="this.swapButton"><t t-esc="total" /></small>
                 <small t-else=""><t t-esc="items"/> items</small>
             </button>
+        </xpath>
+        <xpath expr="//ActionpadWidget" position="attributes">
+            <attribute name="setTable">() => this.setTable()</attribute>
+            <attribute name="assignOrder">() => this.assignOrder()</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('control-buttons')]" position="attributes">
+            <attribute name="t-if">this.pos.numpadMode != 'table'</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('control-buttons')]" position="after">
+            <div t-if="this.pos.numpadMode == 'table'" class="input">
+                <div class="d-flex justify-content-center p-3">
+                    <span t-if="this.state.tableBuffer" t-esc="this.state.tableBuffer" class="input-value fs-2 fw-bolder" t-att-class="{'text-danger opacity-75': !this.state.isValidBuffer}"/>
+                    <span t-else="" class="text-muted fs-2">Enter a table number</span>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//Numpad" position="attributes">
+            <attribute name="t-if" add="this.pos.numpadMode=='table'" separator=" or "></attribute>
         </xpath>
     </t>
 </templates>

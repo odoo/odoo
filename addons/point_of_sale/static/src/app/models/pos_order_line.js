@@ -623,15 +623,22 @@ export class PosOrderline extends Base {
     }
 
     getDisplayData() {
+        const oldUnitPrice = this.getOldUnitDisplayPrice()
+            ? formatCurrency(this.getOldUnitDisplayPrice(), this.currency)
+            : "";
+        const price = this.getPriceString();
         return {
             productName: this.getFullProductName(),
-            price: this.getPriceString(),
+            price: price,
             qty: this.getQuantityStr(),
             unit: this.product_id.uom_id ? this.product_id.uom_id.name : "",
             unitPrice: formatCurrency(this.unitDisplayPrice, this.currency),
-            oldUnitPrice: this.getOldUnitDisplayPrice()
-                ? formatCurrency(this.getOldUnitDisplayPrice(), this.currency)
-                : "",
+            priceChanged: Boolean(
+                this.price_type !== "original" ||
+                    this.getDiscount() != 0 ||
+                    (oldUnitPrice && oldUnitPrice !== price)
+            ),
+            oldUnitPrice: oldUnitPrice,
             discount: this.getDiscountStr(),
             customerNote: this.getCustomerNote() || "",
             internalNote: this.getNote(),
