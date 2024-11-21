@@ -1040,6 +1040,22 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
 
         self.assertEqual(len(invoices), 2, "The number of invoices created should be equal to the number of sales orders.")
 
+    def test_onchange_partner_id(self):
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner_b.id,
+            'order_line': [Command.create({'product_id': self.product_order_timesheet1.id})],
+        })
+        sale_order.action_confirm()
+        new_task = self.env["project.task"].create({
+            "name": "New Task",
+            "project_id": self.project_global.id,
+        })
+        with Form(new_task) as task_form:
+            self.assertFalse(task_form.partner_id, "Task must have no partner set.")
+            # Changing partner to trigger onchange method
+            task_form.partner_id = self.partner_b
+            self.assertEqual(task_form.sale_line_id, sale_order.order_line, "Task must have same partner as Sale order.")
+            self.assertEqual(task_form.sale_order_id, sale_order, "Task must have Sale Line from Sale order lines.")
 
 class TestSaleTimesheetView(TestCommonTimesheet):
     def test_get_view_timesheet_encode_uom(self):
