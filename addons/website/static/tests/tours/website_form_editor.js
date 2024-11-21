@@ -899,6 +899,23 @@
         ...wTourUtils.clickOnSave(),
     ]);
 
+    wTourUtils.registerWebsitePreviewTour("website_form_nested_forms", {
+        test: true,
+        url: "/my/account",
+        edition: true,
+    },
+    () => [
+        {
+            ...wTourUtils.dragNDrop({ id: "s_website_form", name: "Form" }),
+            run: "drag_and_drop_native iframe #wrap .o_portal_details",
+        },
+        {
+            content: "Check the form was not dropped into another form",
+            trigger: "iframe form:not(:has([data-snippet='s_website_form']))",
+            isCheck: true,
+        },
+    ]);
+
     wTourUtils.registerWebsitePreviewTour("website_form_special_characters", {
         test: true,
         url: "/",
