@@ -236,3 +236,17 @@ class TestAccountPayment(AccountPaymentCommon):
             copy_provider_pml = get_payment_method_line(copy_provider)
             with self.assertRaises(ValidationError):
                 journal.inbound_payment_method_line_ids = [Command.update(copy_provider_pml.id, {'payment_provider_id': provider.id})]
+
+    def test_generate_payment_link_with_no_invoice_line(self):
+        invoice = self.invoice
+        invoice.line_ids.unlink()
+        payment_values = invoice._get_default_payment_link_values()
+
+        self.assertDictEqual(payment_values, {
+            'currency_id': invoice.currency_id.id,
+            'partner_id': invoice.partner_id.id,
+            'open_installments': [],
+            'installment_state': None,
+            'amount': None,
+            'amount_max': None,
+        })
