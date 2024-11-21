@@ -12,10 +12,11 @@
         'l10n_sa',
         'base_vat'
     ],
-    'author': 'Odoo',
-    'summary': "E-Invoicing, Universal Business Language",
+    'summary': """
+        E-Invoicing, Universal Business Language
+    """,
     'description': """
-E-invoice implementation for the Kingdom of Saudi Arabia
+E-invoice implementation for Saudi Arabia; Integration with ZATCA
     """,
     'category': 'Accounting/Localizations/EDI',
     'license': 'LGPL-3',
