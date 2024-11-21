@@ -20,6 +20,12 @@ class ProductTemplate(models.Model):
         help="If checked, the valuation will be specific by Lot/Serial number.",
     )
 
+    @api.onchange('tracking')
+    def _onchange_tracking(self):
+        if self.tracking == "none" and self.lot_valuated:
+            self.lot_valuated = False
+        super()._onchange_tracking()
+
     @api.onchange('standard_price')
     def _onchange_standard_price(self):
         if self.lot_valuated and any(p.quantity_svl for p in self.product_variant_ids):
