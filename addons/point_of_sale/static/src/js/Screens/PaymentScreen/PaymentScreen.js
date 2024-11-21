@@ -131,8 +131,10 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             }
         }
         _updateSelectedPaymentline() {
+            let justAdded = false;
             if (this.paymentLines.every((line) => line.paid)) {
                 this.currentOrder.add_paymentline(this.payment_methods_from_config[0]);
+                justAdded = true;
             }
             if (!this.selectedPaymentLine) return; // do nothing if no selected payment line
             // disable changing amount on paymentlines with running or done payments on a payment terminal
@@ -141,6 +143,21 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                 payment_terminal &&
                 !['pending', 'retry'].includes(this.selectedPaymentLine.get_payment_status())
             ) {
+                return;
+            }
+            if (
+                NumberBuffer.eventsBuffer[0] &&
+                NumberBuffer.eventsBuffer[0].detail &&
+                ["+10", "+20", "+50"].includes(NumberBuffer.eventsBuffer[0].detail.key)
+            ) {
+                // Do not use NumberBuffer value since it can be higher than the key value
+                const number = NumberBuffer.eventsBuffer[0].detail.key.slice(1);
+                // If clicking on + button without payment line, above code will add a new payment line
+                // with the first payment method and the total amount of the order. We only want to add
+                // the amount of the button clicked.
+                const currAmount = justAdded ? 0 : this.selectedPaymentLine.get_amount();
+                this.selectedPaymentLine.set_amount(currAmount + parseInt(number));
+                NumberBuffer.reset();
                 return;
             }
             if (NumberBuffer.get() === null) {
