@@ -5,9 +5,11 @@ import subprocess as sp
 import unittest
 from pathlib import Path
 
+import odoo.addons
 from odoo.cli.command import commands, load_addons_commands, load_internal_commands
 from odoo.tools import config, file_path
 from odoo.tests import BaseCase, Like
+
 
 class TestCommand(BaseCase):
 
@@ -46,8 +48,14 @@ class TestCommand(BaseCase):
                 msg=f"Command {name}'s docstring format is invalid for 'odoo-bin help'")
 
     def test_unknown_command(self):
-        command_output = self.run_command('bonbon', check=False).stderr.strip()
-        self.assertEqual(command_output, "Unknown command 'bonbon'")
+        for name in ('bonbon', 'café'):
+            with self.subTest(name):
+                command_output = self.run_command(name, check=False).stderr.strip()
+                self.assertEqual(
+                    command_output, 
+                    f"Unknown command '{name}'.\n"
+                    "Use 'odoo-bin --help' to see the list of available commands."
+                )
 
     def test_help(self):
         expected = {
