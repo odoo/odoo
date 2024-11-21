@@ -629,7 +629,7 @@ class ProductProduct(models.Model):
                     svl_vals = product._prepare_in_svl_vals(quantity_svl, product.standard_price)
                 else:
                     svl_vals = product._prepare_out_svl_vals(abs(quantity_svl), self.env.company)
-                svl_vals['description'] = description
+                svl_vals['description'] = description + svl_vals.pop('rounding_adjustment', '')
                 svl_vals['company_id'] = self.env.company.id
                 refill_stock_svl_list.append(svl_vals)
         return refill_stock_svl_list
