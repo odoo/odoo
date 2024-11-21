@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from psycopg2 import IntegrityError
-from psycopg2.errors import NotNullViolation
+from psycopg2 import IntegrityError, Error as Psycopg2Error
 
 from odoo.exceptions import ValidationError
 from odoo.tests.common import Form, TransactionCase, HttpCase, tagged
@@ -378,10 +377,13 @@ class TestIrModel(TransactionCase):
 
     @mute_logger('odoo.sql_db')
     def test_ir_model_fields_name_create(self):
+        NotNullViolationPgCode = '23502'
         # Quick create an ir_model_field should not be possible
         # It should be raise a ValidationError
-        with self.assertRaises(NotNullViolation):
+        with self.assertRaises(Psycopg2Error) as error:
             self.env['ir.model.fields'].name_create("field_name")
+
+        self.assertEqual(error.exception.pgcode, NotNullViolationPgCode)
 
         # But with default_ we should be able to name_create
         self.env['ir.model.fields'].with_context(
