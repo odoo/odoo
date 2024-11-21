@@ -6,11 +6,14 @@
         class="d-flex flex-column cursor-pointer"
         t-att-class="{'active': this.state.isActive}"
         t-att-data-action-id="props.action"
+        t-att-data-attribute-action-id="props.attributeAction || this.env.weContext.attributeAction"
+        t-att-data-attribute-action-value-id="props.attributeActionValue"
         t-att-title="props.title"
         t-on-click="() => this.onClick()"
         t-on-mouseenter="() => this.onMouseenter(props.id)"
-        t-on-mouseleave="() => this.onMouseleave(props.id)">
-        <t t-slot="default"/>
+        t-on-mouseleave="() => this.onMouseleave(props.id)"
+        t-ref="item">
+        <t t-slot="default" />
     </div>
 </t>
 

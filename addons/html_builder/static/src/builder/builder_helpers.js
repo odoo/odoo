@@ -1,4 +1,4 @@
-import { Component, onWillUpdateProps, useComponent, useState, useSubEnv, xml } from "@odoo/owl";
+import { Component, useComponent, useState, useSubEnv, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useBus } from "@web/core/utils/hooks";
 
@@ -118,6 +118,7 @@ export function useClickableWeWidget() {
     return {
         state,
         call,
+        isActive,
     };
 }
 
@@ -135,6 +136,7 @@ export const basicContainerWeWidgetProps = {
     dataAttributeAction: { type: String, optional: true },
     styleAction: { type: String, optional: true },
 };
+const validateIsNull = { validate: (value) => value === null };
 export const clickableWeWidgetProps = {
     ...basicContainerWeWidgetProps,
 
@@ -144,8 +146,8 @@ export const clickableWeWidgetProps = {
     },
 
     // Shorthand actions values.
-    classActionValue: { type: [String, Array], optional: true },
-    attributeActionValue: { type: [String, Array], optional: true },
-    dataAttributeActionValue: { type: [String, Array], optional: true },
-    styleActionValue: { type: [String, Array], optional: true },
+    classActionValue: { type: [String, Array, validateIsNull], optional: true },
+    attributeActionValue: { type: [String, Array, validateIsNull], optional: true },
+    dataAttributeActionValue: { type: [String, Array, validateIsNull], optional: true },
+    styleActionValue: { type: [String, Array, validateIsNull], optional: true },
 };
