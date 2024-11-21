@@ -24,6 +24,7 @@ class ResPartner(models.Model):
         string='Invoice Transaction Code',
         help='Dua digit pertama nomor pajak',
         default='01',
+        tracking=True,
     )
 
     @api.depends('vat', 'country_code')
