@@ -3,9 +3,10 @@
 {
     'name': 'Saudi Arabia - Point of Sale',
     'category': 'Accounting/Localizations/Point of Sale',
+    'countries': ['sa'],
     'description': """
-K.S.A. POS Localization
-=======================================================
+Saudi Arabia POS Localization
+===========================================================
     """,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
