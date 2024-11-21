@@ -1,9 +1,17 @@
 import { patch } from "@web/core/utils/patch";
 import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
+
 /**
  * @props partner
  */
+patch(ActionpadWidget, {
+    props: {
+        ...ActionpadWidget.props,
+        setTable: { type: Function, optional: true },
+        assignOrder: { type: Function, optional: true },
+    },
+});
 
 patch(ActionpadWidget.prototype, {
     setup() {
@@ -25,15 +33,9 @@ patch(ActionpadWidget.prototype, {
                 : hasChange.count || hasChange.generalCustomerNote;
         return hasChange;
     },
-    get swapButtonClasses() {
-        return {
-            "highlight btn-primary justify-content-between": this.displayCategoryCount.length,
-            "btn-light pe-none disabled justify-content-center": !this.displayCategoryCount.length,
-            altlight: !this.hasChangesToPrint && this.currentOrder?.hasSkippedChanges(),
-        };
-    },
-    submitOrder() {
-        this.pos.sendOrderInPreparationUpdateLastChange(this.currentOrder);
+    async submitOrder() {
+        await this.pos.sendOrderInPreparationUpdateLastChange(this.currentOrder);
+        this.pos.showDefault();
     },
     hasQuantity(order) {
         if (!order) {

@@ -57,8 +57,7 @@ export class Navbar extends Component {
     handleKeydown(event) {
         if (
             !this.ui.isSmall &&
-            this.inputRef &&
-            this.inputRef.el &&
+            this.inputRef?.el &&
             document.activeElement !== this.inputRef.el &&
             !this.pos.getOrder()?.getSelectedOrderline() &&
             this.noOpenDialogs() &&
@@ -88,10 +87,6 @@ export class Navbar extends Component {
     }
     getOrderTabs() {
         return this.pos.getOpenOrders().filter((order) => !order.table_id);
-    }
-
-    get orderCount() {
-        return this.pos.getOpenOrders().length;
     }
 
     get appUrl() {
@@ -181,5 +176,10 @@ export class Navbar extends Component {
                 await this.pos.syncAllOrders();
             }
         }
+    }
+
+    get mainButton() {
+        const screens = ["ProductScreen", "PaymentScreen", "ReceiptScreen", "TipScreen"];
+        return screens.includes(this.pos.mainScreen.component.name) ? "register" : "order";
     }
 }

@@ -1,0 +1,18 @@
+.table-selector {
+    width: clamp(150px, 35vw, 300px);
+    height: clamp(200px, 50vh, 500px);
+
+    position: absolute;
+    right: 5px;
+    top: $navbar-height;
+}
+
+.table-selector-small, .table-selector {
+    .input {
+        flex: 0 0 10%;
+    }
+
+    .jump-button {
+        flex: 0 0 15%;
+    }
+}

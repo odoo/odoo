@@ -543,7 +543,7 @@ registry.category("web_tour.tours").add("RefundRulesProduct", {
             ProductScreen.isShown(),
             ...ProductScreen.clickRefund(),
             TicketScreen.filterIs("Paid"),
-            TicketScreen.selectOrder("-00001"),
+            TicketScreen.selectOrder("001"),
             ProductScreen.clickNumpad("1"),
             TicketScreen.confirmRefund(),
             ProductScreen.isShown(),

@@ -3,7 +3,22 @@
 
     <t t-name="point_of_sale.Navbar">
         <div class="pos-topheader navbar-height d-flex align-items-center justify-content-between px-2 py-1 m-0 bg-white border-bottom">
-            <div class="pos-leftheader d-flex align-items-center overflow-hidden">
+            <div class="pos-leftheader d-flex align-items-center overflow-hidden" t-att-class="{ 'flex-grow-1': ui.isSmall }">
+                <div class="d-flex flex-shrink-0 gap-1 position-relative">
+                    <div class="navbar-menu d-flex d-lg-grid overflow-hidden position-relative">
+                        <button class="register-label btn btn-lg lh-lg" t-att-class="{'fw-bolder text-primary': mainButton === 'register' and !this.ui.isSmall, 'btn-primary text-white': mainButton === 'register' and this.ui.isSmall}" t-on-click="() => this.pos.showOrderScreen(true)">
+                            <span t-if="!ui.isSmall">Register</span>
+                            <i t-else="" class="fa fa-pencil"/>
+                        </button>
+                        <button class="orders-button btn btn-lg lh-lg" t-att-class="{'fw-bolder text-primary': mainButton === 'order' and !this.ui.isSmall, 'btn-primary text-white': mainButton === 'order' and this.ui.isSmall}" t-on-click="() => this.pos.onTicketButtonClick()">
+                            <t t-if="!ui.isSmall">
+                                <span>Orders</span>
+                            </t>
+                            <i t-else="" class="fa fa-book"/>
+                        </button>
+                    </div>
+                    <div t-if="!ui.isSmall" class="navbar-separator ms-1 me-2 my-2 border-start border"/>
+                </div>
                 <OrderTabs orders="getOrderTabs()"/>
                 <button class="btn btn-light d-flex align-items-center gap-2 h-100 fs-3" t-on-click="openPresetTiming" t-if="shouldDisplayPresetTime">
                     <i class="fa fa-clock-o" aria-hidden="true"></i>
@@ -14,7 +29,7 @@
                 <img class="pos-logo pos-logo mw-100" height="42" t-on-click="() => debug.toggleWidget()" src="/web/static/img/logo.png" alt="Logo" />
             </div>
             <div class="pos-rightheader d-flex justify-content-end overflow-hidden"
-                t-att-class="{ 'ms-auto': !ui.isSmall, 'me-1 position-absolute end-0 width-100 pos-nav-small': ui.isSmall }"
+                t-att-class="{ 'ms-auto': !ui.isSmall, 'me-1 end-0 width-100 pos-nav-small': ui.isSmall }"
             >
                 <div class="status-buttons d-flex flex-grow-1 align-items-center justify-content-end gap-1">
                     <Input tModel="[pos, 'searchProductWord']"
@@ -25,7 +40,7 @@
                     debounceMillis="500"
                     getRef="(ref) => this.inputRef = ref"
                     t-if="pos.showSearchButton()" />
-                    <button class="btn btn-light btn-lg lh-lg" t-if="isBarcodeScannerSupported() and pos.mainScreen.component.name == 'ProductScreen'" t-on-click="onClickScan">
+                    <button class="btn btn-light btn-lg lh-lg" t-if="isBarcodeScannerSupported() and pos.mainScreen.component.name == 'ProductScreen' and !ui.isSmall" t-on-click="onClickScan">
                         <i class="fa fa-fw fa-lg fa-barcode" /><span t-if="this.pos.scanning" class="ms-1">Stop</span>
                     </button>
                     <div t-if="this.pos.data.network.offline or this.pos.data.network.loading" class="oe_status btn btn-light btn-lg lh-lg h-100 pe-none">
@@ -50,9 +65,6 @@
                                 <DropdownItem t-if="!isDisplayStandalone" onSelected="() => window.open(this.appUrl)">
                                     Install App
                                 </DropdownItem>
-                                <DropdownItem onSelected="() => this.pos.onTicketButtonClick()">
-                                    Orders <span t-if="orderCount gt 0" class="badge text-bg-info rounded-pill py-1 ms-2 float-end" t-esc="orderCount"/>
-                                </DropdownItem>
                                 <DropdownItem t-if="showCashMoveButton" onSelected="() => this.pos.cashMove()">
                                     Cash In/Out
                                 </DropdownItem>
@@ -61,6 +73,10 @@
                                 </DropdownItem>
                                 <DropdownItem t-if="showCreateProductButton" onSelected="() => this.pos.editProduct()">
                                     Create Product
+                                </DropdownItem>
+                                <DropdownItem t-if="isBarcodeScannerSupported() and pos.mainScreen.component.name == 'ProductScreen' and ui.isSmall" onSelected="() => this.onClickScan()">
+                                    <span t-if="this.pos.scanning">Stop Barcode Scanner</span>
+                                    <span t-else="">Open Barcode Scanner</span>
                                 </DropdownItem>
                                 <DropdownItem t-if="hardwareProxy.printer" onSelected="() => this.showSaleDetails()">
                                     Print Report

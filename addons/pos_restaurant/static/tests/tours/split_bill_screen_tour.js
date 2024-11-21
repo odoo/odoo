@@ -43,13 +43,12 @@ registry.category("web_tour.tours").add("SplitBillScreenTour", {
 
             // click pay to split, go back to check the lines
             SplitBillScreen.clickPay(),
-            Chrome.activeTableOrOrderIs("2B"),
             ProductScreen.clickOrderline("Water", "3.0"),
             ProductScreen.clickOrderline("Coca-Cola", "1.0"),
 
             // go back to the original order and see if the order is changed
-            Chrome.clickMenuOption("Orders"),
-            TicketScreen.selectOrder("-00001"),
+            Chrome.clickOrders(),
+            TicketScreen.selectOrder("001"),
             TicketScreen.loadSelectedOrder(),
             ProductScreen.isShown(),
             ProductScreen.clickOrderline("Water", "2.0"),
@@ -68,11 +67,10 @@ registry.category("web_tour.tours").add("SplitBillScreenTour", {
             SplitBillScreen.subtotalIs("4.0"),
 
             SplitBillScreen.clickPay(),
-            Chrome.activeTableOrOrderIs("2C"),
 
             // go back to the original order and see if the order is changed
-            Chrome.clickMenuOption("Orders"),
-            TicketScreen.selectOrder("-00001"),
+            Chrome.clickOrders(),
+            TicketScreen.selectOrder("001"),
             TicketScreen.loadSelectedOrder(),
             ProductScreen.isShown(),
             ProductScreen.clickOrderline("Water", "1.0"),
@@ -98,15 +96,14 @@ registry.category("web_tour.tours").add("SplitBillScreenTour2", {
             SplitBillScreen.clickOrderline("Coca-Cola"),
             SplitBillScreen.orderlineHas("Coca-Cola", "1", "1"),
             SplitBillScreen.clickPay(),
-            PaymentScreen.clickBack(),
-            Chrome.clickMenuOption("Orders"),
-            TicketScreen.selectOrder("-00002"),
+            Chrome.clickOrders(),
+            TicketScreen.selectOrder("002"),
             TicketScreen.loadSelectedOrder(),
             Order.hasLine({ productName: "Coca-Cola", quantity: "1.0" }),
             Order.hasLine({ productName: "Water", quantity: "1.0" }),
             ProductScreen.totalAmountIs("4.00"),
-            Chrome.clickMenuOption("Orders"),
-            TicketScreen.selectOrder("-00001"),
+            Chrome.clickOrders(),
+            TicketScreen.selectOrder("001"),
             TicketScreen.loadSelectedOrder(),
             Order.hasLine({ productName: "Minute Maid", quantity: "1.0" }),
             ProductScreen.totalAmountIs("2.00"),
