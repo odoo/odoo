@@ -32,6 +32,11 @@ const messagePatch = {
         });
         this.mentionedChannelPromises = [];
     },
+    get channelMemberHaveSeen() {
+        return this.thread.membersThatCanSeen.filter(
+            (m) => m.hasSeen(this) && m.persona.notEq(this.author)
+        );
+    },
     /**
      * @override
      */

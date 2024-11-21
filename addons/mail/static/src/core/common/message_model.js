@@ -463,12 +463,6 @@ export class Message extends Record {
         );
     }
 
-    get channelMemberHaveSeen() {
-        return this.thread.membersThatCanSeen.filter(
-            (m) => m.hasSeen(this) && m.persona.notEq(this.author)
-        );
-    }
-
     /** @param {import("models").Thread} thread the thread where the message is shown */
     onClickMarkAsUnread(thr) {
         const message = toRaw(this);

@@ -4,6 +4,7 @@ declare module "models" {
     export interface ChannelMember extends ChannelMemberClass {}
 
     export interface Message {
+        readonly channelMemberHaveSeen: ChannelMember[],
         hasEveryoneSeen: boolean,
         hasSomeoneSeen: boolean,
         isMessagePreviousToLastSelfMessageSeenByEveryone: boolean,
