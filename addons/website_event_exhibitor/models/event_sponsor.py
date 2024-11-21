@@ -247,17 +247,3 @@ class EventSponsor(models.Model):
         if self.event_id.website_id:
             return super().open_website_url()
         return self.env['website'].get_client_action(f'/event/{self.env["ir.http"]._slug(self.event_id)}/exhibitor/{self.env["ir.http"]._slug(self)}')
-
-    # ------------------------------------------------------------
-    # MESSAGING
-    # ------------------------------------------------------------
-
-    def _message_get_suggested_recipients(self):
-        recipients = super()._message_get_suggested_recipients()
-        if self.partner_id:
-            self._message_add_suggested_recipient(
-                recipients,
-                partner=self.partner_id,
-                reason=_('Sponsor')
-            )
-        return recipients
