@@ -3,6 +3,10 @@ declare module "models" {
 
     export interface ChannelMember extends ChannelMemberClass {}
 
+    export interface Message {
+        mentionedChannelPromises: Promise<Thread>[],
+    }
+
     export interface Persona {
         channelMembers: ChannelMember[],
     }

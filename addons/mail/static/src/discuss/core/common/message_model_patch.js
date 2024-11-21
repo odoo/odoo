@@ -1,9 +1,12 @@
 import { Message } from "@mail/core/common/message_model";
 import { patch } from "@web/core/utils/patch";
 
-patch(Message.prototype, {
-    /** @type {Promise[]} */
-    mentionedChannelPromises: [],
+/** @type {import("models").Message} */
+const messagePatch = {
+    setup() {
+        super.setup();
+        this.mentionedChannelPromises = [];
+    },
     /**
      * @override
      */
@@ -17,4 +20,5 @@ patch(Message.prototype, {
             mentionedPartners,
         });
     },
-});
+};
+patch(Message.prototype, messagePatch);
