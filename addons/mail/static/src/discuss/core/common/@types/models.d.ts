@@ -5,6 +5,7 @@ declare module "models" {
 
     export interface Message {
         hasEveryoneSeen: boolean,
+        hasSomeoneSeen: boolean,
         isMessagePreviousToLastSelfMessageSeenByEveryone: boolean,
         mentionedChannelPromises: Promise<Thread>[],
     }

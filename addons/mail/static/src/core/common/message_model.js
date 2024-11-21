@@ -71,14 +71,6 @@ export class Message extends Record {
             );
         },
     });
-    hasSomeoneSeen = Record.attr(false, {
-        /** @this {import("models").Message} */
-        compute() {
-            return this.thread?.membersThatCanSeen
-                .filter(({ persona }) => !persona.eq(this.author))
-                .some((m) => m.hasSeen(this));
-        },
-    });
     hasSomeoneFetched = Record.attr(false, {
         /** @this {import("models").Message} */
         compute() {

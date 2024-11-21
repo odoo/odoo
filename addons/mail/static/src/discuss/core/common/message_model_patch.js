@@ -13,6 +13,14 @@ const messagePatch = {
                 return this.thread?.membersThatCanSeen.every((m) => m.hasSeen(this));
             },
         });
+        this.hasSomeoneSeen = Record.attr(false, {
+            /** @this {import("models").Message} */
+            compute() {
+                return this.thread?.membersThatCanSeen
+                    .filter(({ persona }) => !persona.eq(this.author))
+                    .some((m) => m.hasSeen(this));
+            },
+        });
         this.isMessagePreviousToLastSelfMessageSeenByEveryone = Record.attr(false, {
             /** @this {import("models").Message} */
             compute() {
