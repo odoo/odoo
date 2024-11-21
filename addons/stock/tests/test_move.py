@@ -6286,6 +6286,34 @@ class StockMove(TransactionCase):
         self.assertTrue(warning, 'Reuse of existing serial number (record) not detected')
         self.assertEqual(list(warning.keys())[0], 'warning', 'Warning message was not returned')
 
+    def test_move_sn_redirect(self):
+        lot1 = self.env['stock.lot'].create({
+            'name': 'serial1',
+            'product_id': self.product_serial.id,
+            'company_id': self.env.company.id,
+        })
+        shelf = self.env['stock.location'].create({
+            'name': 'shelf',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+        })
+        self.env['stock.quant']._update_available_quantity(self.product_serial, shelf, 1, lot_id=lot1)
+
+        move = self.env['stock.move'].create({
+            'name': 'test sn',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product_serial.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 0.0,
+        })
+        move.lot_ids = lot1
+        warning = move._onchange_lot_ids()
+
+        self.assertFalse(warning, 'Warning should not trigger for sublocation')
+        self.assertTrue(move.move_line_ids, 'A stock.move.line should be created for the SN')
+        self.assertEqual(move.move_line_ids.location_id, shelf, 'The stock.move.line should be prefilled with the lot location')
+
     def test_forecast_availability(self):
         """ Make an outgoing picking in dozens for a product stored in units.
         Check that reserved_availabity is expressed in move uom and forecast_availability is in product base uom
