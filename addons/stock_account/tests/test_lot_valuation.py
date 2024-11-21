@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
 from odoo.addons.stock_account.tests.test_stockvaluationlayer import TestStockValuationCommon
 from odoo.exceptions import UserError
 from odoo.tests import Form
@@ -83,6 +84,13 @@ class TestLotValuation(TestStockValuationCommon):
 
     def test_real_time_valuation(self):
         """ Test account move lines contains lot """
+        self.stock_input_account, self.stock_output_account, self.stock_valuation_account, self.expense_account, self.stock_journal = _create_accounting_data(self.env)
+        self.product1.categ_id.write({
+            'property_stock_account_input_categ_id': self.stock_input_account.id,
+            'property_stock_account_output_categ_id': self.stock_output_account.id,
+            'property_stock_valuation_account_id': self.stock_valuation_account.id,
+            'property_stock_journal': self.stock_journal.id,
+        })
         self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
         self._make_in_move(self.product1, 10, 5, lot_ids=[self.lot1, self.lot2])
         self._make_in_move(self.product1, 10, 7, lot_ids=[self.lot3])
@@ -340,7 +348,9 @@ class TestLotValuation(TestStockValuationCommon):
     def test_value_multicompanies(self):
         """ Test having multiple layers on different companies give a correct value"""
         c1 = self.env.company
-        c2 = self.env.companies - c1
+        c2 = self.env['res.company'].create({
+            'name': 'Test Company',
+        })
         self.product1.product_tmpl_id.with_company(c2).categ_id.property_cost_method = 'average'
         # c1 moves
         self._make_in_move(self.product1, 10, 5, lot_ids=[self.lot1, self.lot2])
