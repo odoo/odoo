@@ -122,6 +122,10 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         // grid padding option so it is not applied on inner rows.
         const $gridPaddingOptions = $html.find('[data-css-property="--grid-item-padding-y"], [data-css-property="--grid-item-padding-x"]');
         $gridPaddingOptions.attr("data-apply-to", ".row.o_grid_mode");
+        // Prevents preview because changing the mode remove custo (e.g. columns
+        // size, inner content, etc.)
+        // TODO: Remove in master, add "data-no-preview" in the XML.
+        $html.find('[data-mode="grid"]')[0].closest("we-select").dataset.noPreview = true;
     },
     /**
      * Depending of the demand, reconfigure they gmap key or configure it
