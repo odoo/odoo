@@ -3,7 +3,6 @@ from odoo.addons.project.tests.test_project_base import TestProjectCommon
 from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE
 from odoo.tests import tagged, users
 from odoo.tools import formataddr, mute_logger
-from odoo.tools.mail import email_normalize
 
 
 @tagged('post_install', '-at_install', 'mail_flow', 'mail_tools')
@@ -280,9 +279,9 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
                 expected_all = [
                     {  # mail.thread.cc: email_cc field
                         'create_values': {},
-                        'email': '"New Cc" <new.cc@test.agrolait.com>',
-                        'lang': None,
-                        'name': '"New Cc" <new.cc@test.agrolait.com>',
+                        'email': 'new.cc@test.agrolait.com',
+                        'name': 'New Cc',
+                        'partner_id': False,
                         'reason': 'CC Email',
                     },
                     # other CC (partner_2) and customer (partner_id) already follower
@@ -290,7 +289,8 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
                 for suggested, expected in zip(suggested_all, expected_all):
                     self.assertDictEqual(suggested, expected)
                 # check recipients, which creates them (simulating discuss in a quick way)
-                task.with_user(self.user_projectuser)._partner_find_from_emails_single([sug['email'] for sug in suggested_all])
+                task.with_user(self.user_projectuser)._partner_find_from_emails_single(
+                    [formataddr((sug['name'], sug['email'])) for sug in suggested_all])
                 new_partner_cc = self.env['res.partner'].search([('email_normalized', '=', 'new.cc@test.agrolait.com')])
                 self.assertEqual(new_partner_cc.email, 'new.cc@test.agrolait.com')
                 self.assertEqual(new_partner_cc.name, 'New Cc')
