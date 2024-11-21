@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { click, press, queryOne, waitFor, waitUntil } from "@odoo/hoot-dom";
+import { click, press, queryOne, waitFor, waitUntil, dblclick } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor } from "./_helpers/editor";
 import { contains } from "@web/../tests/web_test_helpers";
@@ -431,4 +431,13 @@ test("can undo link removing of an image", async () => {
     undo(editor);
     await animationFrame();
     expect(img.parentElement.tagName).toBe("A");
+});
+
+test.tags("desktop")("Preview an image on dblclick", async () => {
+    await setupEditor(`
+        <img class="img-fluid test-image" src="${base64Img}">
+    `);
+    await dblclick("img.test-image");
+    await animationFrame();
+    expect(".o-FileViewer").toHaveCount(1);
 });
