@@ -97,7 +97,7 @@
 
     <xpath expr="//div" position="after">
         <!-- Form -->
-        <div data-js="WebsiteFormEditor" data-selector=".s_website_form" data-target="form">
+        <div data-js="WebsiteFormEditor" data-selector=".s_website_form" data-target="form" data-drop-exclude-ancestor="form">
             <we-select string="Marked Fields" data-name="field_mark_select">
                 <we-button data-select-class="">None</we-button>
                 <we-button data-select-class="o_mark_required" data-name="form_required_opt">Required</we-button>
