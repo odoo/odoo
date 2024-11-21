@@ -709,6 +709,9 @@ class AccountMove(models.Model):
 
     show_update_fpos = fields.Boolean(string="Has Fiscal Position Changed", store=False)  # True if the fiscal position was changed
 
+    # Used to displays a warning when the taxes on a move line do not align with the fiscal position.
+    unaligned_taxes_fp_warning = fields.Char(compute='_compute_unaligned_taxes_fp_warning')
+
     # used to display the various dates and amount dues on the invoice's PDF
     payment_term_details = fields.Binary(compute="_compute_payment_term_details", exportable=False)
     show_payment_term_details = fields.Boolean(compute="_compute_show_payment_term_details")
@@ -2052,6 +2055,26 @@ class AccountMove(models.Model):
     def _compute_next_payment_date(self):
         for move in self:
             move.next_payment_date = min([line.payment_date for line in move.line_ids.filtered(lambda l: l.payment_date and not l.reconciled)], default=False)
+
+    @api.depends('fiscal_position_id')
+    def _compute_unaligned_taxes_fp_warning(self):
+        """
+        Method to compute whether the applied taxes align with the fiscal position of the move.
+        """
+
+        for move in self:
+            if move.state == 'draft' and move.is_invoice(include_receipts=True) and move.fiscal_position_id:
+                # Avoid iterating over all records by stopping at the first mismatch.
+                has_unaligned_tax = any(
+                    any(tax not in line.tax_ids for tax in line._get_computed_taxes())
+                    for line in move.invoice_line_ids
+                )
+                move.unaligned_taxes_fp_warning = has_unaligned_tax and _(
+                    "Taxes are not aligned with Fiscal Position (%s) set in other info tab.",
+                    move.fiscal_position_id.name
+                )
+            else:
+                move.unaligned_taxes_fp_warning = False
 
     def _search_next_payment_date(self, operator, value):
         if operator not in ('=', '<', '<='):
@@ -5081,6 +5104,14 @@ class AccountMove(models.Model):
     def action_update_fpos_values(self):
         self.invoice_line_ids._compute_tax_ids()
         self.line_ids._compute_account_id()
+
+    def action_update_tax_values(self):
+        """
+        Update the tax values applied to the `invoice_line_ids`
+        to ensure accurate tax calculations and compliance with fiscal regulations.
+        """
+
+        self.invoice_line_ids._compute_tax_ids()
 
     def open_created_caba_entries(self):
         self.ensure_one()

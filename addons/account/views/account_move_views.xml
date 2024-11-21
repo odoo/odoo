@@ -840,6 +840,11 @@
                          invisible="not abnormal_date_warning">
                         <field name="abnormal_date_warning"/>
                     </div>
+                    <div class='alert alert-warning' role='alert'
+                         invisible='not unaligned_taxes_fp_warning'>
+                        <field name='unaligned_taxes_fp_warning'/>
+                        <button string="Update Taxes" class='oe_link' type='object' name='action_update_tax_values'/>
+                    </div>
                     <sheet>
                         <div name="button_box" class="oe_button_box">
                             <button name="action_open_business_doc"
