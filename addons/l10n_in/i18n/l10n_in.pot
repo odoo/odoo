@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.2alpha1\n"
+"Project-Id-Version: Odoo Server saas~17.2+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-26 09:14+0000\n"
-"PO-Revision-Date: 2024-02-26 09:14+0000\n"
+"POT-Creation-Date: 2024-11-22 13:14+0000\n"
+"PO-Revision-Date: 2024-11-22 13:14+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,13 +21,31 @@ msgid "4 Digits"
 msgstr ""
 
 #. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/account_invoice.py:0
+msgid "4 digits, 6 digits or 8 digits"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model.fields.selection,name:l10n_in.selection__res_company__l10n_in_hsn_code_digit__6
 msgid "6 Digits"
 msgstr ""
 
 #. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/account_invoice.py:0
+msgid "6 digits or 8 digits"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model.fields.selection,name:l10n_in.selection__res_company__l10n_in_hsn_code_digit__8
 msgid "8 Digits"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/account_invoice.py:0
+msgid "8 digits"
 msgstr ""
 
 #. module: l10n_in
@@ -41,17 +59,15 @@ msgid "Account Chart Template"
 msgstr ""
 
 #. module: l10n_in
-#: model_terms:res.company,invoice_terms_html:l10n_in.demo_company_in
-msgid ""
-"All our contractual relations will be governed exclusively by India law."
+#. odoo-python
+#: code:addons/l10n_in/models/res_partner.py:0
+msgid "As per GSTN the country should be other than India, so it's recommended to"
 msgstr ""
 
 #. module: l10n_in
 #. odoo-python
-#: code:addons/l10n_in/models/product_template.py:0
-msgid ""
-"As per your HSN/SAC code validation, minimum %s digits HSN/SAC code is "
-"required."
+#: code:addons/l10n_in/models/res_partner.py:0
+msgid "As per GSTN the state should be %s, so it's recommended to"
 msgstr ""
 
 #. module: l10n_in
@@ -106,13 +122,6 @@ msgid "Balance"
 msgstr ""
 
 #. module: l10n_in
-#: model_terms:res.company,invoice_terms_html:l10n_in.demo_company_in
-msgid ""
-"Below text serves as a suggestion and doesn’t engage Odoo S.A. "
-"responsibility."
-msgstr ""
-
-#. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.invoice_form_inherit_l10n_in
 msgid "Bill of Entry Date"
 msgstr ""
@@ -125,6 +134,7 @@ msgstr ""
 #. module: l10n_in
 #: model:account.account.tag,name:l10n_in.cess_tag_account
 #: model:account.account.tag,name:l10n_in.tax_tag_cess
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
 msgid "CESS"
 msgstr ""
 
@@ -136,6 +146,7 @@ msgstr ""
 #. module: l10n_in
 #: model:account.account.tag,name:l10n_in.cgst_tag_account
 #: model:account.account.tag,name:l10n_in.tax_tag_cgst
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
 msgid "CGST"
 msgstr ""
 
@@ -155,15 +166,9 @@ msgid "Cancelled Credit Note"
 msgstr ""
 
 #. module: l10n_in
-#: model_terms:res.company,invoice_terms_html:l10n_in.demo_company_in
-msgid ""
-"Certain countries apply withholding at source on the amount of invoices, in "
-"accordance with their internal legislation. Any withholding at source will "
-"be paid by the client to the tax authorities. Under no circumstances can IN "
-"Company become involved in costs related to a country's legislation. The "
-"amount of the invoice will therefore be due to IN Company in its entirety "
-"and does not include any costs relating to the legislation of the country in"
-" which the client is located."
+#. odoo-python
+#: code:addons/l10n_in/models/account_invoice.py:0
+msgid "Check %s"
 msgstr ""
 
 #. module: l10n_in
@@ -237,6 +242,12 @@ msgid "Display Name"
 msgstr ""
 
 #. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_res_partner__display_pan_warning
+#: model:ir.model.fields,field_description:l10n_in.field_res_users__display_pan_warning
+msgid "Display pan warning"
+msgstr ""
+
+#. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
 msgid "Draft"
 msgstr ""
@@ -277,8 +288,20 @@ msgid "Enable HSN/SAC Validation"
 msgstr ""
 
 #. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/account_invoice.py:0
+msgid "Ensure that the HSN/SAC Code consists either %s in invoice lines"
+msgstr ""
+
+#. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.invoice_form_inherit_l10n_in
 msgid "Export India"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/template_in.py:0
+msgid "Export/SEZ"
 msgstr ""
 
 #. module: l10n_in
@@ -314,9 +337,20 @@ msgid "Group By"
 msgstr ""
 
 #. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_product_product__l10n_in_hsn_warning
+#: model:ir.model.fields,field_description:l10n_in.field_product_template__l10n_in_hsn_warning
+msgid "HSC/SAC warning"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_res_company__l10n_in_hsn_code_digit
 #: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__l10n_in_hsn_code_digit
 msgid "HSN Code Digit"
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
+msgid "HSN Summary"
 msgstr ""
 
 #. module: l10n_in
@@ -375,6 +409,7 @@ msgstr ""
 #. module: l10n_in
 #: model:account.account.tag,name:l10n_in.igst_tag_account
 #: model:account.account.tag,name:l10n_in.tax_tag_igst
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
 msgid "IGST"
 msgstr ""
 
@@ -384,35 +419,8 @@ msgid "IGST (RC)"
 msgstr ""
 
 #. module: l10n_in
-#: model_terms:res.company,invoice_terms_html:l10n_in.demo_company_in
-msgid ""
-"IN Company undertakes to do its best to supply performant services in due "
-"time in accordance with the agreed timeframes. However, none of its "
-"obligations can be considered as being an obligation to achieve results. IN "
-"Company cannot under any circumstances, be required by the client to appear "
-"as a third party in the context of any claim for damages filed against the "
-"client by an end consumer."
-msgstr ""
-
-#. module: l10n_in
-#: model_terms:res.company,invoice_terms_html:l10n_in.demo_company_in
-msgid ""
-"If a payment is still outstanding more than sixty (60) days after the due "
-"payment date, IN Company reserves the right to call on the services of a "
-"debt recovery company. All legal expenses will be payable by the client."
-msgstr ""
-
-#. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.invoice_form_inherit_l10n_in
 msgid "Import India"
-msgstr ""
-
-#. module: l10n_in
-#: model_terms:res.company,invoice_terms_html:l10n_in.demo_company_in
-msgid ""
-"In order for it to be admissible, IN Company must be notified of any claim "
-"by means of a letter sent by recorded delivery to its registered office "
-"within 8 days of the delivery of the goods or the provision of the services."
 msgstr ""
 
 #. module: l10n_in
@@ -454,6 +462,18 @@ msgstr ""
 
 #. module: l10n_in
 #. odoo-python
+#: code:addons/l10n_in/models/template_in.py:0
+msgid "Inter State"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/template_in.py:0
+msgid "Intra State"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
 #: code:addons/l10n_in/models/account_invoice.py:0
 msgid "Invalid sequence as per GST rule 46(b)"
 msgstr ""
@@ -469,10 +489,36 @@ msgid "Journal Item"
 msgstr ""
 
 #. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/account_invoice.py:0
+msgid "Journal Items(s)"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_journal_type
 #: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_journal_type
 #: model:ir.model.fields,field_description:l10n_in.field_account_payment__l10n_in_journal_type
 msgid "Journal Type"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_res_company__l10n_in_gst_state_warning
+#: model:ir.model.fields,field_description:l10n_in.field_res_partner__l10n_in_gst_state_warning
+#: model:ir.model.fields,field_description:l10n_in.field_res_users__l10n_in_gst_state_warning
+msgid "L10N In Gst State Warning"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_hsn_code_warning
+#: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_hsn_code_warning
+#: model:ir.model.fields,field_description:l10n_in.field_account_payment__l10n_in_hsn_code_warning
+msgid "L10N In Hsn Code Warning"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/template_in.py:0
+msgid "LUT - Export/SEZ"
 msgstr ""
 
 #. module: l10n_in
@@ -630,17 +676,6 @@ msgid "Other NON ITC SGST (RC)"
 msgstr ""
 
 #. module: l10n_in
-#: model_terms:res.company,invoice_terms_html:l10n_in.demo_company_in
-msgid ""
-"Our invoices are payable within 21 working days, unless another payment "
-"timeframe is indicated on either the invoice or the order. In the event of "
-"non-payment by the due date, IN Company reserves the right to request a "
-"fixed interest payment amounting to 10% of the sum remaining due. IN Company"
-" will be authorized to suspend any provision of services without prior "
-"warning in the event of late payment."
-msgstr ""
-
-#. module: l10n_in
 #: model:ir.model.fields.selection,name:l10n_in.selection__account_move__l10n_in_gst_treatment__overseas
 #: model:ir.model.fields.selection,name:l10n_in.selection__res_partner__l10n_in_gst_treatment__overseas
 msgid "Overseas"
@@ -662,6 +697,12 @@ msgid ""
 msgstr ""
 
 #. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_view_partner_form
+msgid ""
+"PAN number is not same as the 3rd to 12th characters of the GST number."
+msgstr ""
+
+#. module: l10n_in
 #. odoo-python
 #: code:addons/l10n_in/models/account_invoice.py:0
 msgid ""
@@ -677,7 +718,7 @@ msgid "Place of supply"
 msgstr ""
 
 #. module: l10n_in
-#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
+#: model_terms:ir.ui.view,arch_db:l10n_in.place_of_supply
 msgid "Place of supply:"
 msgstr ""
 
@@ -717,6 +758,21 @@ msgid "Product Unit of Measure"
 msgstr ""
 
 #. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.view_move_line_tree_hsn_l10n_in
+msgid "Products"
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
+msgid "Quantity"
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
+msgid "Rate %"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model.fields.selection,name:l10n_in.selection__account_move__l10n_in_gst_treatment__composition
 #: model:ir.model.fields.selection,name:l10n_in.selection__res_partner__l10n_in_gst_treatment__composition
 msgid "Registered Business - Composition"
@@ -743,17 +799,13 @@ msgstr ""
 #. module: l10n_in
 #: model:account.account.tag,name:l10n_in.sgst_tag_account
 #: model:account.account.tag,name:l10n_in.tax_tag_sgst
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
 msgid "SGST"
 msgstr ""
 
 #. module: l10n_in
 #: model:account.account.tag,name:l10n_in.tax_tag_sgst_rc
 msgid "SGST (RC)"
-msgstr ""
-
-#. module: l10n_in
-#: model_terms:res.company,invoice_terms_html:l10n_in.demo_company_in
-msgid "STANDARD TERMS AND CONDITIONS OF SALE"
 msgstr ""
 
 #. module: l10n_in
@@ -1091,17 +1143,13 @@ msgid "Tax"
 msgstr ""
 
 #. module: l10n_in
-#: model:ir.model.constraint,message:l10n_in.constraint_l10n_in_port_code_code_uniq
-msgid "The Port Code must be unique!"
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
+msgid "Taxable Value"
 msgstr ""
 
 #. module: l10n_in
-#: model_terms:res.company,invoice_terms_html:l10n_in.demo_company_in
-msgid ""
-"The client explicitly waives its own standard terms and conditions, even if "
-"these were drawn up after these standard terms and conditions of sale. In "
-"order to be valid, any derogation must be expressly agreed to in advance in "
-"writing."
+#: model:ir.model.constraint,message:l10n_in.constraint_l10n_in_port_code_code_uniq
+msgid "The Port Code must be unique!"
 msgstr ""
 
 #. module: l10n_in
@@ -1160,8 +1208,15 @@ msgid "Vendor Credit Note"
 msgstr ""
 
 #. module: l10n_in
-#: model_terms:res.company,invoice_terms_html:l10n_in.demo_company_in
-msgid "You should update this document to reflect your T&amp;C."
+#. odoo-python
+#: code:addons/l10n_in/models/account_invoice.py:0
+msgid "View %s"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/template_in.py:0
+msgid "Within %s"
 msgstr ""
 
 #. module: l10n_in
@@ -1183,7 +1238,25 @@ msgid "e.g. ABCTY1234D"
 msgstr ""
 
 #. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/product_template.py:0
+msgid "either 4, 6 or 8"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/product_template.py:0
+msgid "either 6 or 8"
+msgstr ""
+
+#. module: l10n_in
 #. odoo-javascript
 #: code:addons/l10n_in/static/src/components/hsn_autocomplete/hsn_autocomplete.js:0
 msgid "hsn description field"
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_view_partner_form
+#: model_terms:ir.ui.view,arch_db:l10n_in.view_company_form
+msgid "update it"
 msgstr ""
