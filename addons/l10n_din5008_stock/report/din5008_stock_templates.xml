@@ -8,7 +8,7 @@
                         <span class="fw-bold" t-if="o.picking_type_id.code == 'incoming'">Vendor Address:</span>
                         <span class="fw-bold" t-if="o.picking_type_id.code == 'internal'">Warehouse Address:</span>
                         <span class="fw-bold" t-if="o.picking_type_id.code == 'outgoing' and o.move_ids_without_package and o.move_ids_without_package[0].partner_id and o.move_ids_without_package[0].partner_id.id != o.partner_id.id">Customer Address:</span>
-                        <address t-esc="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
+                        <address t-esc="o.partner_id.commercial_partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
                     </td>
                 </tr>
             </t>
