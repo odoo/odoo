@@ -42,7 +42,7 @@
                     Speaking With
                     <div name="livechat_operator_id"
                         class="fw-bold float-end d-inline-block">
-                        <field name="livechat_operator_id" widget="image" options="{'preview_image': 'avatar_128'}" class="rounded-circle" width="19" height="19" alt="Operator Avatar"/>
+                        <field name="livechat_operator_id" widget="image" options="{'preview_image': 'avatar_128', 'size': [19, 19]}" class="rounded-circle" alt="Operator Avatar"/>
                         <field name="livechat_operator_name"/>
                     </div>
                 </div>
@@ -58,7 +58,7 @@
                     <div t-att-class="record.session_count.raw_value ? '' : 'text-muted'">Chats</div>
                 </div>
                 <div t-if="record.livechat_operator_id.raw_value" class="col-lg col-sm-4 col-6 py-0 my-2">
-                    <field name="livechat_operator_id" widget="image" options="{'preview_image': 'avatar_128'}" class="rounded-circle" width="19" height="19" alt="Operator Avatar"/>
+                    <field name="livechat_operator_id" widget="image" options="{'preview_image': 'avatar_128', 'size': [19, 19]}" class="rounded-circle" alt="Operator Avatar"/>
                     <field name="livechat_operator_name" class="fw-bold"/>
                     <div>Speaking With</div>
                 </div>
