@@ -5,6 +5,17 @@ import { patch } from "@web/core/utils/patch";
 
 /** @type {import("models").Store} */
 const storeServicePatch = {
+    /** @override */
+    setup() {
+        super.setup();
+        /**
+         * Defines channel types that have the message seen indicator/info feature.
+         * @see `discuss.channel`._types_allowing_seen_infos()
+         *
+         * @type {string[]}
+         */
+        this.channel_types_with_seen_infos = [];
+    },
     get onlineMemberStatuses() {
         return ["away", "bot", "online"];
     },

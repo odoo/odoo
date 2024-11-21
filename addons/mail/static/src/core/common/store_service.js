@@ -73,13 +73,6 @@ export class Store extends BaseStore {
     /** @type {typeof import("@mail/core/common/volume_model").Volume} */
     Volume;
 
-    /**
-     * Defines channel types that have the message seen indicator/info feature.
-     * @see `discuss.channel`._types_allowing_seen_infos()
-     *
-     * @type {string[]}
-     */
-    channel_types_with_seen_infos = [];
     /** This is the current logged partner / guest */
     self = Record.one("Persona");
     /**

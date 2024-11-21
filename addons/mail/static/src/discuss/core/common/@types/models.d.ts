@@ -17,6 +17,7 @@ declare module "models" {
     }
 
     export interface Store {
+        channel_types_with_seen_infos: string[],
         "discuss.channel.member": typeof ChannelMemberClass,
         getRecentChatPartnerIds(): number[],
         readonly onlineMemberStatuses: String[],
