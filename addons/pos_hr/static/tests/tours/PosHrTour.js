@@ -8,6 +8,7 @@ import * as NumberPopup from "@point_of_sale/../tests/tours/helpers/NumberPopupT
 import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 import * as SelectionPopup from "@point_of_sale/../tests/tours/helpers/SelectionPopupTourMethods";
 import { registry } from "@web/core/registry";
+import { negate } from "../../../../point_of_sale/static/tests/tours/helpers/utils";
 
 registry.category("web_tour.tours").add("PosHrTour", {
     test: true,
@@ -119,5 +120,21 @@ registry.category("web_tour.tours").add("CashierCanSeeProductInfo", {
             ProductScreen.clickInfoProduct("product_a"),
             Dialog.confirm("Ok"),
             Dialog.isNot(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("CashierCannotClose", {
+    test: true,
+    steps: () =>
+        [
+            PosHr.loginScreenIsShown(),
+            PosHr.clickLoginButton(),
+            SelectionPopup.has("Test Employee 3", { run: "click" }),
+            Dialog.confirm("Open Session"),
+            Chrome.clickMenuButton(),
+            {
+                trigger: negate(".close-button"),
+            },
+            PosHr.cashierNameIs("Test Employee 3"),
         ].flat(),
 });
