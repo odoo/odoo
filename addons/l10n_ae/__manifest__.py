@@ -2,11 +2,20 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'United Arab Emirates - Accounting',
-    'author': 'Tech Receptives',
+    'author': 'Odoo S.A.',
     'category': 'Accounting/Localizations/Account Charts',
+    'website': 'https://www.odoo.com/documentation/16.0/applications/finance/fiscal_localizations/united_arab_emirates.html',
     'description': """
-United Arab Emirates accounting chart and localization.
+United Arab Emirates Accounting Module
 =======================================================
+United Arab Emirates accounting basic charts and localization.
+
+Activates:
+
+- Chart of Accounts
+- Taxes
+- Tax Report
+- Fiscal Positions
     """,
     'depends': ['base', 'account'],
     'data': [
