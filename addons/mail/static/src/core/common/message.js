@@ -6,7 +6,6 @@ import { MessageInReply } from "@mail/core/common/message_in_reply";
 import { MessageNotificationPopover } from "@mail/core/common/message_notification_popover";
 import { MessageReactionMenu } from "@mail/core/common/message_reaction_menu";
 import { MessageReactions } from "@mail/core/common/message_reactions";
-import { MessageSeenIndicator } from "@mail/core/common/message_seen_indicator";
 import { RelativeTime } from "@mail/core/common/relative_time";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
@@ -69,7 +68,6 @@ export class Message extends Component {
         LinkPreviewList,
         MessageInReply,
         MessageReactions,
-        MessageSeenIndicator,
         ImStatus,
         Popover: MessageNotificationPopover,
         RelativeTime,
