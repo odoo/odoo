@@ -882,3 +882,10 @@ class TestAccountAccount(TestAccountMergeCommon):
         self.assertEqual(group_10.parent_id, group_1)
         self.assertEqual(group_100.parent_id, group_10)
         self.assertEqual(group_101.parent_id, group_10)
+
+        # The root becomes a child and vice versa
+        group_3 = create_account_group('group_3', 3, self.env.company)
+        group_31 = create_account_group('group_31', 31, self.env.company)
+        group_3.code_prefix_start = 312
+        self.assertEqual(len(group_31.parent_id), 0)
+        self.assertEqual(group_3.parent_id, group_31)
