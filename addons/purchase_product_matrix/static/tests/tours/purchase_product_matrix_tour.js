@@ -38,9 +38,10 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
 }, {
     trigger: '.o_matrix_input_table',
     run: function () {
+        const inputs = [...document.querySelectorAll(".o_matrix_input")];
         // left first cell at 0 to ensure the variant is not created
-        $('.o_matrix_input')[0].value = 0;
-        $('.o_matrix_input')[8].value = 0;
+        inputs[0].value = 0;
+        inputs[8].value = 0;
     }
 }, {
     trigger: ".modal button:contains(Confirm)",
