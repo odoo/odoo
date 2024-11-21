@@ -15,19 +15,6 @@
                         </setting>
                     </block>
                 </xpath>
-                 <xpath expr="//div[@id='product_get_pic_setting']" position="replace">
-                    <setting id="product_get_pic_setting" string="Google Images" help="Get product pictures using Barcode" documentation="/applications/sales/sales/products_prices/products/product_images.html">
-                        <field name="module_product_images"/>
-                        <div class="content-group mt16"
-                            invisible="not module_product_images"
-                            id="msg_module_product_images">
-                            <div class="mt16 text-warning">
-                                <strong>Save</strong> this page and come back
-                                here to set up the feature.
-                            </div>
-                        </div>
-                    </setting>
-                 </xpath>
             </field>
         </record>
 </odoo>
