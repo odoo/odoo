@@ -2,9 +2,16 @@ import { defineCalendarModels } from "@calendar/../tests/calendar_test_helpers";
 import { click, contains, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
-import { asyncStep, mockService, serverState, waitForSteps } from "@web/../tests/web_test_helpers";
+import {
+    asyncStep,
+    mockService,
+    preloadBundle,
+    serverState,
+    waitForSteps,
+} from "@web/../tests/web_test_helpers";
 
 defineCalendarModels();
+preloadBundle("web.fullcalendar_lib");
 
 test("activity menu widget:today meetings", async () => {
     mockDate(2018, 3, 20, 6, 0, 0);

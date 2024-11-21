@@ -24,6 +24,7 @@ import {
     Command,
     getService,
     patchWithCleanup,
+    preloadBundle,
     serverState,
     waitForSteps,
     withUser,
@@ -34,6 +35,7 @@ import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();
+preloadBundle("web.assets_emoji");
 
 test("Mobile: chat window shouldn't open automatically after receiving a new message", async () => {
     const pyEnv = await startServer();

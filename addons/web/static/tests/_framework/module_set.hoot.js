@@ -36,17 +36,6 @@ const { define, loader } = odoo;
  * @param {Set<string>} additionalAddons
  */
 const defineModuleSet = async (entryPoints, additionalAddons) => {
-    for (const name of entryPoints) {
-        if (additionalAddons.has("*")) {
-            break;
-        }
-        if (moduleSetParams[name]?.addons) {
-            for (const additionalAddon of moduleSetParams[name].addons) {
-                additionalAddons.add(additionalAddon);
-            }
-        }
-    }
-
     /** @type {ModuleSet} */
     const moduleSet = {};
     if (additionalAddons.has("*")) {
@@ -97,11 +86,9 @@ const describeDrySuite = async (entryPoints) => {
     for (const entryPoint of entryPoints) {
         // Run test factory
         describe(getSuitePath(entryPoint), () => {
-            currentModule = entryPoint;
             // Load entry point module
             const fullModuleName = entryPoint + TEST_SUFFIX;
             const module = moduleSetLoader.startModule(fullModuleName);
-            currentModule = null;
 
             // Check exports (shouldn't have any)
             const exports = Object.keys(module || {});
@@ -460,8 +447,8 @@ class ModuleSetLoader extends loader.constructor {
 
     setup() {
         this.cleanups.push(
-            watchKeys(window.odoo, WHITE_LISTED_KEYS),
-            watchKeys(window, WHITE_LISTED_KEYS),
+            watchKeys(window.odoo),
+            watchKeys(window, ALLOWED_GLOBAL_KEYS),
             watchListeners()
         );
 
@@ -495,6 +482,16 @@ class ModuleSetLoader extends loader.constructor {
     }
 }
 
+const ALLOWED_GLOBAL_KEYS = [
+    "ace", // Ace editor
+    "Chart", // Chart.js
+    "FullCalendar", // Full Calendar
+    "L", // Leaflet
+    "lamejs", // LameJS
+    "luxon", // Luxon
+    "odoo",
+    "owl",
+];
 const CSRF_TOKEN = odoo.csrf_token;
 const DEFAULT_ADDONS = ["base", "web"];
 const MODULE_MOCKS_BY_NAME = new Map([
@@ -514,30 +511,22 @@ const MODULE_MOCKS_BY_REGEX = new Map([
 const R_DEFAULT_MODULE = /^@odoo\/(owl|hoot)/;
 const R_PATH_ADDON = /^[@/]?(\w+)/;
 const TEMPLATE_MODULE_NAME = "@web/core/templates";
-const WHITE_LISTED_KEYS = [
-    "ace", // Ace editor
-    "Chart", // Chart.js
-    "L", // Leaflet
-    "lamejs", // LameJS
-];
 
 /** @type {Record<string, string[]} */
 const dependencies = {};
 /** @type {Record<string, Deferred} */
 const dependencyCache = {};
+/** @type {Record<string, Promise<Response>} */
+const globalFetchCache = Object.create(null);
 /** @type {Set<string>} */
 const modelsToFetch = new Set();
 /** @type {Map<string, string[]>} */
 const moduleNamesCache = new Map();
-/** @type {Record<string, ModuleSetParams>} */
-const moduleSetParams = {};
 /** @type {Map<string, Record<string, any>>} */
 const serverModelCache = new Map();
 /** @type {string[]} */
 const sortedModuleNames = [];
 
-/** @type {string | null} */
-let currentModule = null;
 /** @type {string[]} */
 let dependencyBatch = [];
 /** @type {Promise<Record<string, string[]>> | null} */
@@ -550,17 +539,6 @@ microTick().then(runTests);
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
-
-/**
- * @param {ModuleSetParams} params
- */
-export function configureModuleSet(params) {
-    if (!currentModule) {
-        return;
-    }
-    moduleSetParams[currentModule] ||= {};
-    Object.assign(moduleSetParams[currentModule], params);
-}
 
 export function clearServerModelCache() {
     serverModelCache.clear();
@@ -598,6 +576,24 @@ export async function fetchModelDefinitions(modelNames) {
     }
 
     return [...modelNames].map((modelName) => [modelName, serverModelCache.get(modelName)]);
+}
+
+/**
+ * @param {string | URL} input
+ * @param {RequestInit} [init]
+ */
+export function globalCachedFetch(input, init) {
+    if (init?.method && init.method.toLowerCase() !== "get") {
+        throw new Error(`cannot use a global cached fetch with HTTP method "${init.method}"`);
+    }
+    const key = String(input);
+    if (!(key in globalFetchCache)) {
+        globalFetchCache[key] = realFetch(input, init).catch((reason) => {
+            delete globalFetchCache[key];
+            throw reason;
+        });
+    }
+    return globalFetchCache[key];
 }
 
 /**
