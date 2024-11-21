@@ -97,16 +97,29 @@
 }
 
 .o-mail-Message-bubble {
-    --border-opacity: .075;
-
     &.o-blue {
         background-color: mix($o-view-background-color, $info, 87.5%) !important;
+        border-color: darken(mix($o-view-background-color, $info, 87.5%), 10%) !important;
+
+        &.o-muted {
+            background-color: mix($white, mix($o-view-background-color, $info, 87.5%)) !important;
+        }
     }
     &.o-green {
         background-color: mix($o-view-background-color, $success, 87.5%) !important;
+        border-color: darken(mix($o-view-background-color, $success, 87.5%), 10%) !important;
+
+        &.o-muted {
+            background-color: mix($white, mix($o-view-background-color, $success, 87.5%)) !important;
+        }
     }
     &.o-orange {
         background-color: mix($o-view-background-color, $warning, 75%) !important;
+        border-color: darken(mix($o-view-background-color, $warning, 75%), 10%) !important;
+
+        &.o-muted {
+            background-color: mix($white, mix($o-view-background-color, $warning, 75%), 85%) !important;
+        }
     }
 }
 
