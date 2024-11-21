@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.tests import BaseCase, TransactionCase, tagged
+from odoo.tests import BaseCase, TransactionCase, tagged, BaseCase
 from odoo.tests.common import _logger as test_logger
 
 import logging
@@ -27,7 +27,7 @@ class TestRetryCommon(BaseCase):
         cls.startClassPatcher(patcher)
 
     def get_tests_run_count(self):
-        return int(os.environ.get('ODOO_TEST_FAILURE_RETRIES', 0)) + 1
+        return BaseCase._tests_run_count
 
     def update_count(self):
         self.count = getattr(self, 'count', 0) + 1
