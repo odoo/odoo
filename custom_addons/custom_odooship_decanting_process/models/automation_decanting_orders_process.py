@@ -217,14 +217,15 @@ class AutomationDecantingOrdersProcess(models.Model):
                 "batch_property07": self.source_document,  # Assuming Color is stored here
                 "batch_property08": 'zzz',
             })
-            stock_quant_obj._update_available_quantity(
-                product_id=line.product_id,
-                location_id=line.location_dest_id,
-                quantity=line.quantity,
-                # lot_id=line.lot_id,
-                # package_id=line.package_id,
-                # owner_id=line.owner_id
-            )
+            # Comment out this code because stock is updating through Receipt Wizard
+            # stock_quant_obj._update_available_quantity(
+            #     product_id=line.product_id,
+            #     location_id=line.location_dest_id,
+            #     quantity=line.quantity,
+            #     # lot_id=line.lot_id,
+            #     # package_id=line.package_id,
+            #     # owner_id=line.owner_id
+            # )
         # Add the receipt entry (for external systems or integration purposes)
         receipt_list.append({
             "warehouse_code": self.site_code_id.name,  # Site Code
