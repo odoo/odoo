@@ -93,6 +93,8 @@ async function executeImport(data, shouldWait = false) {
     }
     if (data[3].skip + 1 < (data[3].has_headers ? totalRows - 1 : totalRows)) {
         res.nextrow = data[3].skip + data[3].limit;
+    } else {
+        res.nextrow = 0;
     }
     if (shouldWait) {
         // make sure the progress bar is shown
