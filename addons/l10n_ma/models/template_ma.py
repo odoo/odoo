@@ -35,5 +35,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'vat_in_20_146',
                 'income_account_id': 'pcg_7111',
                 'expense_account_id': 'pcg_6111',
+                'tax_exigibility': 'True',
             },
         }
