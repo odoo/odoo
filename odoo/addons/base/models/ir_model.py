@@ -231,6 +231,7 @@ class IrModel(models.Model):
     view_ids = fields.One2many('ir.ui.view', compute='_view_ids', string='Views')
     count = fields.Integer(compute='_compute_count', string="Count (Incl. Archived)",
                            help="Total number of records in this model")
+    fold_name = fields.Char(string="Fold Variable Name")
 
     @api.depends()
     def _inherited_models(self):
@@ -416,6 +417,7 @@ class IrModel(models.Model):
             'state': 'manual' if model._custom else 'base',
             'abstract': model._abstract,
             'transient': model._transient,
+            'fold_name': model._fold_name,
         }
 
     def _reflect_models(self, model_names):
@@ -470,6 +472,7 @@ class IrModel(models.Model):
             _abstract = bool(model_data['abstract'])
             _transient = bool(model_data['transient'])
             _order = model_data['order']
+            _fold_name = model_data['fold_name']
             __doc__ = model_data['info']
 
         return CustomModel

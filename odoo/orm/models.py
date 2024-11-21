@@ -2261,11 +2261,13 @@ class BaseModel(metaclass=MetaModel):
             result[key] = line
 
         # add folding information if present
-        if field.relational and groups._fold_name in groups._fields:
-            fold = {group.id: group[groups._fold_name]
-                    for group in groups.browse([key for key in result if key])}
-            for key, line in result.items():
-                line['__fold'] = fold.get(key, False)
+        if field.relational:
+            fold_name = self.env["ir.model"]._get(groups._name).fold_name
+            if fold_name and fold_name in groups._fields:
+                fold = {group.id: group[fold_name]
+                        for group in groups.browse([key for key in result if key])}
+                for key, line in result.items():
+                    line['__fold'] = fold.get(key, False)
 
         return list(result.values())
 
