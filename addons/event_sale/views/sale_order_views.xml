@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_order_view_form" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.event.sale</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/div[hasclass('oe_button_box')]" position="inside">
+                <button name="action_view_attendee_list" type="object"
+                    class="oe_stat_button" icon="fa-users" invisible="attendee_count == 0">
+                    <field name="attendee_count" widget="statinfo" string="Attendees"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='order_line']//form//field[@name='product_id']" position="after">
+                <field
+                    name="event_id"
+                    domain="[
+                        ('event_ticket_ids.product_id','=', product_id),
+                        ('date_end','&gt;=',time.strftime('%Y-%m-%d 00:00:00')),
+                        '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)
+                    ]"
+                    invisible="service_tracking != 'event'"
+                    required="service_tracking == 'event'"
+                    options="{'no_open': True, 'no_create': True}"/>
+                <field
+                    name="event_ticket_id"
+                    domain="[
+                        ('event_id', '=', event_id), ('product_id','=',product_id),
+                         '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)
+                    ]"
+                    invisible="service_tracking != 'event' or not event_id"
+                    required="service_tracking == 'event' and event_id"
+                    options="{'no_open': True, 'no_create': True}"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']//list//field[@name='product_template_id']" position="after">
+                <field name="event_id"
+                    column_invisible="True"
+                    domain="[
+                        ('event_ticket_ids.product_id','=', product_id),
+                        ('date_end','&gt;=',time.strftime('%Y-%m-%d 00:00:00')),
+                        '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)
+                    ]"
+                    required="service_tracking == 'event'"
+                    options="{'no_open': True, 'no_create': True}"/>
+                <field name="event_ticket_id"
+                    column_invisible="True"
+                    domain="[
+                        ('event_id', '=', event_id), ('product_id','=',product_id),
+                         '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)
+                    ]"
+                    required="service_tracking == 'event' and event_id"
+                    options="{'no_open': True, 'no_create': True}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

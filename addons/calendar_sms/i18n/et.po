@@ -1,0 +1,108 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* calendar_sms
+# 
+# Translators:
+# Stevin Lilla, 2024
+# Siim Raasuke, 2024
+# Anna, 2024
+# Tairi Tiimann, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-26 12:52+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Tairi Tiimann, 2024\n"
+"Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: et\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: calendar_sms
+#: model:ir.model,name:calendar_sms.model_calendar_event
+msgid "Calendar Event"
+msgstr "Kohtumine"
+
+#. module: calendar_sms
+#: model:sms.template,name:calendar_sms.sms_template_data_calendar_reminder
+msgid "Calendar Event: Reminder"
+msgstr "Kalendri sündmus: Meeldetuletus"
+
+#. module: calendar_sms
+#: model:ir.model,name:calendar_sms.model_calendar_alarm
+msgid "Event Alarm"
+msgstr "Sündmuse teade"
+
+#. module: calendar_sms
+#: model:ir.model,name:calendar_sms.model_calendar_alarm_manager
+msgid "Event Alarm Manager"
+msgstr "Ürituste juht"
+
+#. module: calendar_sms
+#. odoo-python
+#: code:addons/calendar_sms/models/calendar_event.py:0
+msgid "Event reminder: %(name)s, %(time)s."
+msgstr "Sündmuse meeldetuletus: %(name)s, %(time)s."
+
+#. module: calendar_sms
+#: model:sms.template,body:calendar_sms.sms_template_data_calendar_reminder
+msgid ""
+"Event reminder: {{ object.name }}, {{ "
+"object.get_display_time_tz(object.partner_id.tz) }}"
+msgstr ""
+"Sündmuse meeldetuletus: {{ object.name }}, {{ "
+"object.get_display_time_tz(object.partner_id.tz) }}"
+
+#. module: calendar_sms
+#. odoo-python
+#: code:addons/calendar_sms/models/calendar_alarm.py:0
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__sms_notify_responsible
+msgid "Notify Responsible"
+msgstr "Teavita vastutajat"
+
+#. module: calendar_sms
+#: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited
+msgid "SMS"
+msgstr "SMS"
+
+#. module: calendar_sms
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__sms_template_id
+msgid "SMS Template"
+msgstr "SMS mall"
+
+#. module: calendar_sms
+#: model:ir.model.fields.selection,name:calendar_sms.selection__calendar_alarm__alarm_type__sms
+msgid "SMS Text Message"
+msgstr "SMS tekstisõnum"
+
+#. module: calendar_sms
+#. odoo-python
+#: code:addons/calendar_sms/models/calendar_event.py:0
+#: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_tree_inherited
+msgid "Send SMS"
+msgstr "Saada SMS"
+
+#. module: calendar_sms
+#: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited
+msgid "Send SMS to attendees"
+msgstr "Saada SMS osalejatele"
+
+#. module: calendar_sms
+#: model:ir.model.fields,help:calendar_sms.field_calendar_alarm__sms_template_id
+msgid "Template used to render SMS reminder content."
+msgstr "SMS-meeldetuletuse sisu koostamiseks kasutatav mall."
+
+#. module: calendar_sms
+#. odoo-python
+#: code:addons/calendar_sms/models/calendar_event.py:0
+msgid "There are no attendees on these events"
+msgstr "Nendel üritustel pole ühtegi osalejat"
+
+#. module: calendar_sms
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__alarm_type
+msgid "Type"
+msgstr "Tüüp"

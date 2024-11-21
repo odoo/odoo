@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.ProductInfoBanner" t-inherit="point_of_sale.ProductInfoBanner" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('section-product-info-title')]" position="after">
+            <div class="section-self-order-availability mt-3 mb-4 pb-4 border-bottom text-start d-flex align-items-center">
+                <h3 class="section-title">Self-ordering:</h3>
+                <div class="section-self-order-availability-body d-flex ms-auto">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" t-att-checked="props.product.self_order_available" t-on-click="() => this.switchSelfAvailability()" />
+                    </div>
+                    <span>
+                        <t t-if="props.product.self_order_available">Available</t>
+                        <t t-else="">Not available</t>
+                    </span>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

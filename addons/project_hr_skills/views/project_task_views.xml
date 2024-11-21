@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_task_search_form_project_fsm_base_inherit" model="ir.ui.view">
+        <field name="name">search.view.inherit.project.hr.skills</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_search_form_project_fsm_base"/>
+        <field name="arch" type="xml">
+            <field name='partner_id' position="after">
+                <field name="user_skill_ids" string="Skills" filter_domain="['|', ('user_ids', '=', False), ('user_skill_ids', 'ilike', self)]"/>
+            </field>
+        </field>
+    </record>
+</odoo>

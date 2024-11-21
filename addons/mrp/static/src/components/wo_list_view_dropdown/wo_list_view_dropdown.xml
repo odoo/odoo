@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mrp.MOViewListDropdown" style="btn">
+        <Dropdown>
+            <button t-attf-class="btn btn-link d-flex p-0 {{!this.props.record.resId ? 'invisible': ''}}">
+                <div class="d-flex align-items-center">
+                    <span t-attf-class="o_status {{statusColor}}"/>
+                </div>
+            </button>
+            <t t-set-slot="content">
+                <DropdownItem
+                    class="`d-flex align-items-center`"
+                    onSelected="() => this.markAsDone()">
+                        <span t-attf-class="fa fa-lg fa-check-circle text-success me-2"/>
+                        <span>Done</span>
+                </DropdownItem>
+                <DropdownItem
+                    class="`d-flex align-items-center`"
+                    onSelected="() => this.block()">
+                        <span t-attf-class="fa fa-lg fa-times-circle text-danger me-2"/>
+                        <span>Block WC</span>
+                </DropdownItem>
+                <div role="separator" class="dropdown-divider"/>
+                <DropdownItem
+                    class="`d-flex align-items-center`"
+                    onSelected="() => this.printWO()">
+                        <span t-attf-class="fa fa-print me-2"/>
+                        <span>Print Work Order</span>
+                </DropdownItem>
+            </t>
+        </Dropdown>
+    </t>
+
+</templates>

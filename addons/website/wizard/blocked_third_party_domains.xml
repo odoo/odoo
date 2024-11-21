@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<record id="view_edit_third_party_domains" model="ir.ui.view">
+    <field name="name">Block 3rd-party service domains</field>
+    <field name="model">website.custom_blocked_third_party_domains</field>
+    <field name="arch" type="xml">
+        <form>
+            <p>Add 3rd-party service domains <em>("www.example.com" or "example.com")</em>, one per line.</p>
+            <p>Those services will be blocked on your website for users until they accept optional cookies.</p>
+            <field name="content" placeholder="Add other domains here"/>
+            <p class="small text-muted mt-3">
+                By default, the domains of the following services are already blocked:
+                <ul>
+                    <li><strong>Social platforms:</strong> Facebook, Instagram, Twitter, TikTok</li>
+                    <li><strong>Video hosting platforms:</strong> YouTube, Vimeo, Dailymotion, Youku</li>
+                    <li><strong>Google services:</strong> Google Maps, Google Analytics, Google Tag Manager, etc.</li>
+                </ul>
+            </p>
+            <footer>
+                <button string="Save" name="action_save" type="object" class="oe_highlight" data-hotkey="q"/>
+                <button string="Cancel" class="btn btn-default" special="cancel" data-hotkey="x"/>
+            </footer>
+        </form>
+    </field>
+</record>
+
+</odoo>

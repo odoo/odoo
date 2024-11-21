@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="microsoft_calendar.MicrosoftCalendarController" t-inherit="calendar.AttendeeCalendarController" t-inherit-mode="extension">
+        <xpath expr="//div[@id='header_synchronization_settings']//h5[@id='synchronize_with']" position="after">
+            <div id="microsoft_calendar_sync" class="mx-1 d-inline-flex" t-if="model.microsoftCredentialsSet and !model.microsoftIsSync and !model.microsoftIsPaused">
+                <button type="button" id="microsoft_sync_pending" class="btn btn-primary text-nowrap" t-on-click="onMicrosoftSyncCalendar">
+                    <b>Outlook</b>
+                </button>
+            </div>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="800" height="600">
+    <defs>
+        <clipPath id="clip-path" clipPathUnits="objectBoundingBox">
+            <use xlink:href="#filterPath" fill="none"/>
+        </clipPath>
+        <path id="filterPath" d="M1 .8282.03.97.0677 0l.8513.069L1 .8282z">
+            <animate dur="12s" repeatCount="indefinite" attributeName="d" attributeType="XML"
+            values="
+            M1 .8282.03.97.0677 0l.8513.069L1 .8282z;
+            M1 .97.0645.9083.03 0l.8313.0356L1 .97z;
+            M1 .97.03.9299.0528 0l.8445.0801L1 .97z;
+            M.9436.97.0703.9122.03 0l.97.1032L.9436.97z;
+            M1 .8282.03.97.0677 0l.8513.069L1 .8282z"
+            calcMode="spline"
+            keySplines=".45 .05 .55 .95;.45 .05 .55 .95;.45 .05 .55 .95;.45 .05 .55 .95"/>
+        </path>
+    </defs>
+    <svg viewBox="0 0 1 1" id="preview" preserveAspectRatio="none">
+        <use xlink:href="#filterPath" fill="darkgrey"/>
+    </svg>
+    <image xlink:href="" clip-path="url(#clip-path)"/>
+</svg>

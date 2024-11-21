@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_lock_exception_form" model="ir.ui.view">
+            <field name="name">account.lock_exception.form</field>
+            <field name="model">account.lock_exception</field>
+            <field name="arch" type="xml">
+                <form string="Account Lock Exception">
+                    <header>
+                        <field name="active" invisible="True"/>
+                        <field name="state" widget="statusbar" statusbar_visible="active,expired" invisible="not active"/>
+                        <button string="Revoke" invisible="state != 'active'" class="btn-secondary"
+                                type="object" name="action_revoke"/>
+                    </header>
+                    <sheet>
+                        <widget name="web_ribbon" title="Revoked" bg_color="bg-danger" invisible="active"/>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" name="action_show_audit_trail_during_exception"
+                                    type="object" icon="fa-bars">
+                                <div class="o_stat_info">
+                                    <span class="o_stat_text">
+                                        Audit
+                                    </span>
+                                </div>
+                            </button>
+                        </div>
+                        <div>
+                            <div class="oe_title">
+                                <h2><field name="display_name" decoration-bf="1"/></h2>
+                            </div>
+                            <group>
+                                <group>
+                                    <field name="create_uid" readonly="True"/>
+                                    <label for="user_id" string="Valid for"/>
+                                    <field name="user_id" readonly="True" invisible="not user_id" nolabel="1"/>
+                                    <span invisible="user_id">everyone</span>
+                                    <field name="reason" readonly="True" invisible="not reason"/>
+                                    <field name="create_date" readonly="True"/>
+                                    <field name="end_datetime" readonly="True"/>
+                                </group>
+                                <group>
+                                    <div colspan="2" class="o_wrap_label">
+                                        <span class="o_form_label">Changed Lock Date:</span>
+                                    </div>
+
+                                    <div class="o_wrap_label">
+                                        <field name="lock_date_field" class="o_form_label o_form_label_readonly" nolabel="1" readonly="True"/>
+                                    </div>
+                                    <div>
+                                        <field name="lock_date" nolabel="1" class="oe_inline" readonly="True"/>
+                                        <i class="text-muted">
+                                        (from <field name="company_lock_date" class="oe_inline" readonly="True"/>)
+                                        </i>
+                                    </div>
+                                </group>
+                            </group>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

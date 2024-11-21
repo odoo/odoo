@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="mass_cancel_orders_view_form" model="ir.ui.view">
+        <field name="name">sale.mass.cancel.orders.form</field>
+        <field name="model">sale.mass.cancel.orders</field>
+        <field name="arch" type="xml">
+            <form string="Cancel quotations">
+                <field name="sale_order_ids" invisible="1"/>
+                <field name="sale_orders_count" invisible="1"/>
+                <field name="has_confirmed_order" invisible="1"/>
+                <div invisible="not has_confirmed_order">
+                    <p class="alert alert-warning fw-bold" role="alert">
+                        Some confirmed orders are selected. Their related documents might be
+                        affected by the cancellation.
+                    </p>
+                </div>
+                <div invisible="sale_orders_count &gt; 1">
+                    Are you sure you want to cancel the selected item?
+                </div>
+                <div invisible="sale_orders_count == 1">
+                    Are you sure you want to cancel the <field name="sale_orders_count"/> selected
+                    items?
+                </div>
+                <footer>
+                    <button class="btn-primary"
+                            name="action_mass_cancel"
+                            type="object"
+                            string="Cancel"/>
+                    <button string="Discard" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_mass_cancel_orders" model="ir.actions.act_window">
+        <field name="name">Cancel</field>
+        <field name="res_model">sale.mass.cancel.orders</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="mass_cancel_orders_view_form"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_sale_order"/>
+        <field name="binding_view_types">list</field>
+    </record>
+
+</odoo>

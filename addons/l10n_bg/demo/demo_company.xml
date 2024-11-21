@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="base.partner_demo_company_bg" model="res.partner" forcecreate="1">
+        <field name="name">BG Company</field>
+        <field name="street">3233 Green Acres Road</field>
+        <field name="street2">Unit 07</field>
+        <field name="city">Sofia</field>
+        <field name="zip">1000</field>
+        <field name="country_id" ref="base.bg"/>
+        <field name="phone">+852 5123 4567</field>
+        <field name="email">info@company.bgexample.com</field>
+        <field name="website">www.bgexample.com</field>
+        <field name="vat">123123123</field>
+    </record>
+
+    <record id="base.demo_company_bg" model="res.company" forcecreate="1">
+        <field name="name">BG Company</field>
+        <field name="partner_id" ref="base.partner_demo_company_bg"/>
+    </record>
+
+    <record id="base.demo_bank_bg" model="res.partner.bank" forcecreate="1">
+        <field name="acc_number">BG24IORT80949894218256</field>
+        <field name="partner_id" ref="base.partner_demo_company_bg"/>
+        <field name="company_id" ref="base.demo_company_bg"/>
+    </record>
+
+    <function model="res.company" name="_onchange_country_id">
+        <value eval="[ref('base.demo_company_bg')]"/>
+    </function>
+
+    <function model="res.users" name="write">
+        <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
+        <value eval="{'company_ids': [(4, ref('base.demo_company_bg'))]}"/>
+    </function>
+
+    <function model="account.chart.template" name="try_loading">
+        <value eval="[]"/>
+        <value>bg</value>
+        <value model="res.company" eval="obj().env.ref('base.demo_company_bg')"/>
+        <value name="install_demo" eval="True"/>
+    </function>
+</odoo>

@@ -1,0 +1,64 @@
+iframe.wysiwyg_iframe.o_fullscreen {
+    left: 0 !important;
+    right: 0 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    min-height: 100% !important;
+    z-index: 1001 !important;
+    border: 0;
+}
+
+.o_wysiwyg_no_transform {
+    transform: none !important;
+}
+
+body.o_in_iframe {
+    background-color: $o-view-background-color;
+
+    .o_editable {
+        position: relative;
+    }
+
+    .note-editable {
+        border: none;
+        padding: 0;
+        border-radius: 0;
+    }
+
+    .iframe-editor-wrapper {
+        flex: 1 1 auto;
+        overflow: auto;
+    }
+    &.oe_dropzone_active .note-editable {
+        overflow: hidden;
+    }
+
+    textarea.o_codeview {
+        position: absolute;
+        font-family: 'Courier New', Courier, monospace;
+        width: 100%;
+        outline: none;
+        resize: none;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: auto;
+        height: 100%;
+        border: none;
+    }
+
+    .o_height_400 {
+        &, div.container, div.row {
+            min-height: 400px;
+        }
+    }
+    .o_height_800{
+        &, div.container, div.row {
+            min-height: 800px;
+        }
+    }
+    .btn {
+        user-select: auto;
+    }
+}

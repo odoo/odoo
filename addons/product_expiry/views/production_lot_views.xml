@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<odoo>
+    <record id="view_move_form_expiry" model="ir.ui.view">
+        <field name="name">stock.production.lot.inherit.form</field>
+        <field name="model">stock.lot</field>
+        <field name="inherit_id" ref="stock.view_production_lot_form" />
+        <field name="arch" type="xml">
+        <xpath expr="//page[@name='description']" position="before">
+            <page string="Dates" name="expiration_dates" invisible="not use_expiration_date">
+                <field name="use_expiration_date" invisible="1"/>
+                <group>
+                    <group>
+                        <field name="expiration_date" />
+                        <field name="removal_date" />
+                    </group>
+                    <group>
+                        <field name="use_date" />
+                        <field name="alert_date" />
+                    </group>
+                </group>
+            </page>
+        </xpath>
+        <xpath expr="//div[hasclass('oe_title')]" position="inside">
+            <field name="product_expiry_alert" invisible="1"/>
+            <span class="badge text-bg-danger" invisible="not product_expiry_alert">Expiration Alert</span>
+        </xpath>
+        </field>
+    </record>
+
+    <record id="search_product_lot_filter_inherit_product_expiry" model="ir.ui.view">
+        <field name="name">stock.production.lot.search.inherit</field>
+        <field name="model">stock.lot</field>
+        <field name="inherit_id" ref="stock.search_product_lot_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+                <filter string="Expiration Alerts" name="expiration_alerts" domain="[('alert_date', '&lt;=', time.strftime('%Y-%m-%d %H:%M:%S'))]"/>
+            </xpath>
+        </field>
+     </record>
+
+    <record id="view_production_lot_view_tree" model="ir.ui.view">
+        <field name="name">stock.production.lot.list.inherit.product.expiry</field>
+        <field name="model">stock.lot</field>
+        <field name="inherit_id" ref="stock.view_production_lot_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='create_date']" position="after">
+                <field name="product_qty" column_invisible="True"/>
+                <field name="alert_date" optional="hide" widget='remaining_days' invisible="product_qty &lt;= 0"/>
+                <field name="use_date" optional="hide"/>
+                <field name="removal_date" optional="hide"/>
+                <field name="expiration_date" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_production_lot_view_kanban" model="ir.ui.view">
+        <field name="name">stock.production.lot.kanban.inherit.product.expiry</field>
+        <field name="model">stock.lot</field>
+        <field name="inherit_id" ref="stock.view_production_lot_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//templates" position="before">
+                <field name="product_qty"/>
+                <field name="product_expiry_alert"/>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <span title="Alert" class="fa fa-exclamation-triangle text-danger ms-2" invisible="product_qty &lt;= 0 or not product_expiry_alert or not expiration_date"/>
+                <field name="alert_date" widget='remaining_days' class="ms-2"/>
+            </xpath>
+            <xpath expr="//field[@name='product_id']" position="after">
+                <div invisible="not expiration_date">
+                    <div>
+                        <label for="expiration_date">Expiration: </label>
+                        <field class="ms-2" name="expiration_date"/>
+                    </div>
+                    <div>
+                        <label for="removal_date">Removal: </label>
+                        <field class="ms-2" name="removal_date"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

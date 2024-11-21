@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="act_product_location_open" model="ir.actions.act_window">
+        <field name="name">Products</field>
+        <field name="res_model">product.product</field>
+        <field name="context">{'location': active_id, 'search_default_real_stock_available': 1, 'search_default_virtual_stock_available': 1,
+                    'search_default_virtual_stock_negative': 1, 'search_default_real_stock_negative': 1, 'create': False}</field>
+        <field name="search_view_id" ref="stock.stock_product_search_form_view"/>
+    </record>
+
+    <record id="view_location_form" model="ir.ui.view">
+        <field name="name">stock.location.form</field>
+        <field name="model">stock.location</field>
+        <field name="arch" type="xml">
+            <form string="Stock Location">
+                <field name="company_id" invisible="1"/>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button string="Putaway Rules"
+                                class="oe_stat_button"
+                                icon="fa-random" name="%(location_open_putaway)d" type="action"
+                                groups="stock.group_stock_multi_locations" context="{'default_company_id': company_id}"/>
+                        <button string="Products"
+                                class="oe_stat_button" icon="fa-th-list"
+                                type="action" name="stock.act_product_location_open"/>
+                        <button string="Current Stock"
+                                class="oe_stat_button"
+                                icon="fa-cubes" name="%(location_open_quants)d" type="action"/>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <label for="name"/>
+                    <h1><field name="name" placeholder="e.g. Spare Stock"/></h1>
+                    <label for="location_id"/>
+                    <h2><field name="location_id" placeholder="e.g. Physical Locations" options="{'no_create': True}"/></h2>
+
+                    <group>
+                        <group string="Additional Information" name="additional_info">
+                            <field name="active" invisible="1"/>
+                            <field name="usage"/>
+                            <field name="storage_category_id" invisible="usage != 'internal'" groups="stock.group_stock_multi_locations"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                            <field name="scrap_location" invisible="usage not in ('inventory', 'internal')"/>
+                            <field name="replenish_location" invisible="usage != 'internal'"/>
+                        </group>
+                        <group string="Cyclic Counting" invisible="usage not in ('internal', 'transit') or not company_id">
+                            <label for="cyclic_inventory_frequency" string="Inventory Frequency"/>
+                            <div class="o_row">
+                                <field name="cyclic_inventory_frequency" nolabel="1" class="oe_inline"/>
+                                <span>days</span>
+                            </div>
+                            <field name="last_inventory_date"/>
+                            <field name="next_inventory_date" invisible="not active"/>
+                        </group>
+                        <group string="Logistics" groups="stock.group_adv_location">
+                            <field name="removal_strategy_id" widget="radio" options="{'no_create': True}" invisible="usage in ('supplier', 'customer', 'inventory', 'production') or scrap_location or usage == 'transit' and not company_id"/>
+                        </group>
+                    </group>
+                    <field name="comment" placeholder="External note..."/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="stock_location_view_form_editable" model="ir.ui.view">
+        <field name="name">stock.location.form.editable</field>
+        <field name="model">stock.location</field>
+        <field name="inherit_id" ref="stock.view_location_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="create">false</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_location_search" model="ir.ui.view">
+        <field name="name">stock.location.search</field>
+        <field name="model">stock.location</field>
+        <field name="arch" type="xml">
+            <search string="Stock Locations">
+                <field name="complete_name" string="Stock Locations"/>
+                <filter name="in_location" string="Internal" domain="[('usage', '=', 'internal')]" help="Internal Locations"/>
+                <filter name="customer" string="Customer" domain="[('usage', '=', 'customer')]" help="Customer Locations"/>
+                <filter name="prod_inv_location" string="Production" domain="[('usage', 'in', ['inventory', 'production'])]" help="Production Locations"/>
+                <filter name="supplier" string="Vendor" domain="[('usage', '=', 'supplier')]" help="Vendor Locations"/>
+                <separator/>
+                <filter name="empty_location" string="Empty Locations" domain="[('is_empty', '=', True)]"/>
+                <field name="location_id" string="Parent Location"/>
+                <field name="usage" string="Location Type"/>
+                <field name="warehouse_id" string="Warehouse"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Warehouse" name="warehouse" domain="[]" context="{'group_by': 'warehouse_id'}"/>
+                    <filter string="Location Type" name="usage" domain="[]" context="{'group_by': 'usage'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_location_tree2" model="ir.ui.view">
+        <field name="name">stock.location.list</field>
+        <field name="model">stock.location</field>
+        <field name="priority" eval="2"/>
+        <field name="arch" type="xml">
+            <list string="Stock Location" decoration-info="usage=='view'" multi_edit="1">
+                <field name="company_id" column_invisible="True"/>
+                <field name="active" column_invisible="True"/>
+                <field name="complete_name" string="Location"/>
+                <field name="usage"/>
+                <field name="is_empty" invisible="usage not in ['internal', 'transit']"/>
+                <field name="storage_category_id" readonly="usage != 'internal'" groups="stock.group_stock_multi_locations"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="stock_location_view_tree2_editable" model="ir.ui.view">
+        <field name="name">stock.location.list2.editable</field>
+        <field name="model">stock.location</field>
+        <field name="inherit_id" ref="stock.view_location_tree2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="create">false</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_storage_category_locations">
+        <field name="name">Locations</field>
+        <field name="res_model">stock.location</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('storage_category_id', '=', active_id)]</field>
+    </record>
+
+    <record id="action_location_form" model="ir.actions.act_window">
+        <field name="name">Locations</field>
+        <field name="res_model">stock.location</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_location_tree2"/>
+        <field name="search_view_id" ref="view_location_search"/>
+        <field name="context">{'search_default_in_location':1}</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Add a new location
+          </p><p>
+            Define your locations to reflect your warehouse structure and
+            organization. Odoo is able to manage physical locations
+            (warehouses, shelves, bin, etc), partner locations (customers,
+            vendors) and virtual locations which are the counterpart of
+            the stock operations like the manufacturing orders
+            consumptions, inventories, etc.
+          </p><p>
+            Every stock operation in Odoo moves the products from one
+            location to another one.  For instance, if you receive products
+            from a vendor, Odoo will move products from the Vendor
+            location to the Stock location. Each report can be performed on
+            physical, partner or virtual locations.
+          </p>
+        </field>
+    </record>
+    <record id="action_prod_inv_location_form" model="ir.actions.act_window">
+        <field name="name">Locations</field>
+        <field name="res_model">stock.location</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_location_tree2"/>
+        <field name="search_view_id" ref="view_location_search"/>
+        <field name="context">{'search_default_prod_inv_location': 1}</field>
+    </record>
+
+    <menuitem action="action_location_form" id="menu_action_location_form"
+        parent="menu_warehouse_config" sequence="3" groups="stock.group_stock_multi_locations"/>
+
+        <!--Routes-->
+        <record id="stock_location_route_tree" model="ir.ui.view">
+            <field name="name">stock.location.route.list</field>
+            <field name="model">stock.route</field>
+            <field name="arch" type="xml">
+                <list string="Routes">
+                    <field name="sequence" widget="handle" />
+                    <field name="name"/>
+                    <field name="active" column_invisible="True"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="stock_location_route_form_view" model="ir.ui.view">
+            <field name="name">stock.location.route.form</field>
+            <field name="model">stock.route</field>
+            <field eval="7" name="priority" />
+            <field name="arch" type="xml">
+                <form string="Route">
+                    <field name="company_id" invisible="1"/>
+                    <sheet>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1><field name="name" placeholder="e.g. Two-steps reception"/></h1>
+                        </div>
+                    <group>
+                        <group>
+                            <field name="sequence" string="Sequence" groups="base.group_no_one"/>
+                            <field name="supplied_wh_id" groups="base.group_no_one"/>
+                            <field name="active" invisible="1"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                    <group string="Applicable On" name="route_selector">
+                        <p colspan="2" class="oe_grey">Select the places where this route can be selected</p>
+                        <group>
+                            <field name="product_categ_selectable" string="Product Categories"/>
+                            <field name="product_selectable" string="Products"/>
+                            <field name="packaging_selectable" string="Packagings" groups="product.group_stock_packaging"/>
+                        </group>
+                        <group>
+                            <label for="warehouse_selectable" string="Warehouses"/>
+                            <div class="o_row">
+                                <field name="warehouse_selectable" class="oe_inline" nolabel="1"/>
+                                <field name="warehouse_domain_ids" invisible="1"/>
+                                <field name="warehouse_ids" widget="many2many_tags" class="o_field_highlighted" placeholder="e.g. Central Warehouse" nolabel="1" invisible="not warehouse_selectable"/>
+                            </div>
+                        </group>
+                    </group>
+                    <group string="Rules" >
+                        <field name="rule_ids" nolabel="1" context="{'default_company_id': company_id, 'form_view_ref':'stock.view_route_rule_form'}">
+                            <list>
+                                <field name="sequence" widget="handle"/>
+                                <field name="action"/>
+                                <field name="location_src_id" options="{'no_create': True}"/>
+                                <field name="location_dest_id" options="{'no_create': True}"/>
+                            </list>
+                        </field>
+                    </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="stock_location_route_view_search" model="ir.ui.view">
+            <field name="name">stock.location.route.search</field>
+            <field name="model">stock.route</field>
+            <field name="arch" type="xml">
+                <search string="Route">
+                    <field name="name"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_routes_form" model="ir.actions.act_window">
+            <field name="name">Routes</field>
+            <field name="res_model">stock.route</field>
+            <field name="view_mode">list,form</field>
+            <field name="view_id" ref="stock_location_route_tree" />
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Add a new route
+              </p><p>
+                You can define here the main routes that run through
+                your warehouses and that define the flows of your products. These
+                routes can be assigned to a product, a product category or be fixed
+                on procurement or sales order.
+              </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_routes_config" action="action_routes_form" name="Routes" parent="menu_warehouse_config" sequence="4" groups="stock.group_adv_location"/>
+
+</odoo>

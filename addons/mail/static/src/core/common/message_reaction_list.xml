@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<template xml:space="preserve">
+    <t t-name="mail.MessageReactionList">
+        <Dropdown state="preview" position="'top-middle'" menuClass="'bg-view border-0 p-0 mt-1 overflow-visible shadow-sm'" manual="true">
+            <t t-call="mail.MessageReactionList.button" />
+            <t t-set-slot="content">
+                <t t-call="mail.MessageReactionList.preview"/>
+            </t>
+        </Dropdown>
+    </t>
+    
+    <t t-name="mail.MessageReactionList.button">
+        <button class="position-relative o-mail-MessageReaction btn d-flex p-0 border rounded-2 mb-1 fs-4 px-1 gap-1 align-items-center" t-on-click="() => this.onClickReaction(props.reaction)" t-on-contextmenu="onContextMenu" t-on-mouseenter="loadEmoji" t-ref="reactionButton" t-att-class="{
+            'o-selfReacted border-primary text-primary fw-bold': hasSelfReacted(props.reaction),
+            'bg-view': !hasSelfReacted(props.reaction),
+            'ms-1': env.inChatWindow and env.alignedRight,
+            'me-1': !(env.inChatWindow and env.alignedRight),
+        }">
+            <span t-esc="props.reaction.content"/>
+            <span class="small" t-esc="props.reaction.count"/>
+        </button>
+    </t>
+    
+    <t t-name="mail.MessageReactionList.preview">
+        <div class="o-mail-MessageReactionList-preview px-0 py-1 border cursor-pointer d-flex" t-on-click="(ev) => this.props.openReactionMenu(props.reaction)" t-ref="reactionList">
+            <div class="d-flex align-items-center mx-2 gap-2">
+                <span class="fs-1" t-esc="props.reaction.content"/>
+                <span class="o-mail-MessageReactionList-previewText small me-1" t-esc="previewText(props.reaction)"/>
+            </div>
+        </div>
+    </t>
+    
+</template>

@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_line_tree" model="ir.ui.view">
+        <field name="name">stock.move.line.list</field>
+        <field name="model">stock.move.line</field>
+        <field name="arch" type="xml">
+            <list string="Move Lines" create="0" default_order="id desc" action="action_open_reference" type="object" duplicate="0" >
+                <field name="location_usage" column_invisible="True"/>
+                <field name="location_dest_usage" column_invisible="True"/>
+                <field name="date"/>
+                <field name="reference" string="Reference"
+                       column_invisible="context.get('no_reference', False)"/>
+                <field name="product_id"/>
+                <field name="lot_id" optional="show" groups="stock.group_production_lot"/>
+                <field name="package_id" optional="hide" groups="stock.group_tracking_lot"/>
+                <field name="result_package_id" optional="hide" groups="stock.group_tracking_lot"/>
+                <field name="location_id"/>
+                <field name="location_dest_id"/>
+                <field name="picking_partner_id" optional="hide"/>
+                <field name="company_id" optional="hide" groups="base.group_multi_company" force_save="1"/>
+                <field name="quantity" string="Quantity"
+                    decoration-danger="(location_usage in ('internal','transit')) and (location_dest_usage not in ('internal','transit'))"
+                    decoration-success="(location_usage not in ('internal','transit')) and (location_dest_usage in ('internal','transit'))"/>
+                <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" string="Unit" groups="uom.group_uom"/>
+                <field name="state" widget='badge' optional="show"
+                       decoration-danger="state=='cancel'"
+                       decoration-info="state== 'assigned'"
+                       decoration-muted="state == 'draft'"
+                       decoration-success="state == 'done'"
+                       decoration-warning="state not in ('draft','cancel','done','assigned')"/>
+                <field name="create_uid" string="Done By" widget="many2one_avatar_user" optional="hide"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_move_line_tree_detailed" model="ir.ui.view">
+        <field name="name">stock.move.line.list.detailed</field>
+        <field name="model">stock.move.line</field>
+        <field name="priority">25</field>
+        <field name="arch" type="xml">
+            <list string="Move Lines" create="0" default_order="date" action="action_open_reference" type="object">
+                <field name="scheduled_date" optional="hide"/>
+                <field name="picking_id"/>
+                <field name="picking_partner_id"/>
+                <field name="product_id"/>
+                <field name="lot_id" groups="stock.group_production_lot" optional="hide"/>
+                <field name="location_id" groups="stock.group_stock_multi_locations" />
+                <field name="location_dest_id" groups="stock.group_stock_multi_locations" />
+                <field name="package_id" groups="stock.group_tracking_lot"/>
+                <field name="quantity" string="Quantity" optional="show"/>
+                <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" optional="show" string="Unit of Measure" groups="uom.group_uom"/>
+                <field name="company_id" groups="base.group_multi_company" force_save="1" optional="hide"/>
+                <field name="state" widget='badge' optional="show"
+                       decoration-danger="state=='cancel'"
+                       decoration-info="state== 'assigned'"
+                       decoration-muted="state == 'draft'"
+                       decoration-success="state == 'done'"
+                       decoration-warning="state not in ('draft','cancel','done','assigned')"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_move_line_form" model="ir.ui.view">
+        <field name="name">stock.move.line.form</field>
+        <field name="model">stock.move.line</field>
+        <field name="arch" type="xml">
+            <form string="Move Lines" create="0" edit="0">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,partially_available,assigned,done"/>
+                </header>
+                <sheet>
+                    <field name="company_id" invisible="1"/>
+                    <field name="picking_id" invisible="1"/>
+                    <field name="location_id" invisible="1"/>
+                    <field name="location_dest_id" invisible="1"/>
+                    <field name="package_id" invisible="1"/>
+                    <field name="product_uom_category_id" invisible="1"/>
+                    <field name="tracking" invisible="1"/>
+                    <group>
+                        <group>
+                            <field name="date" readonly="state != 'done'"/>
+                            <field name="reference" string="Reference"/>
+                            <field name="origin"/>
+                            <field name="product_id" readonly="context.get('default_product_id')"/>
+                            <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
+                            <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
+                        </group>
+                        <group>
+                            <label for="quantity" string="Quantity"/>
+                            <div class="o_row">
+                                <field name="quantity"/>
+                                <field name="product_uom_id" options="{'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
+                            </div>
+                            <field name="lot_id" groups="stock.group_production_lot" context="{'default_product_id': product_id, 'active_picking_id': picking_id}"
+                                   invisible="tracking == 'none' or not lot_id and lot_name"/>
+                            <field name="lot_name" groups="stock.group_production_lot"
+                                   invisible="tracking == 'none' or lot_id or not lot_name"/>
+                            <field name="package_id" string="Source Package" groups="stock.group_tracking_lot"/>
+                            <field name="result_package_id" string="Destination Package" groups="stock.group_tracking_lot"/>
+                            <field name="owner_id" string="Owner" groups="stock.group_tracking_owner"/>
+                            <field name="create_uid" string="Done By" widget="many2one_avatar_user" optional="hide"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_move_line_mobile_form" model="ir.ui.view">
+        <field name="name">stock.move.line.mobile.form</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_move_line_form"/>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="edit">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="stock_move_line_view_search" model="ir.ui.view">
+        <field name="name">stock.move.line.search</field>
+        <field name="model">stock.move.line</field>
+        <field name="arch" type="xml">
+            <search string="Stock Moves">
+                <field name="location_id" string="Location" filter_domain="['|',('location_id', 'ilike', self),('location_dest_id', 'ilike', self)]" groups="stock.group_stock_multi_locations"/>
+                <field name="product_id"/>
+                <field name="picking_id" string="Transfer"/>
+                <field name="reference" string="Reference"/>
+                <field name="product_category_name" string="Category"/>
+                <field name="lot_id" string="Lot/Serial Number" groups="stock.group_production_lot"/>
+                <field name="package_id" string="Source Package" groups="stock.group_tracking_lot"/>
+                <field name="result_package_id" string="Destination Package" groups="stock.group_tracking_lot"/>
+                <field name="owner_id" string="Owner" groups="stock.group_tracking_owner"/>
+                <separator/>
+                <filter string="To Do" name="todo" domain="[('state', 'not in', ['done', 'draft', 'cancel'])]"/>
+                <filter string="Done" name="done" domain="[('state', '=', 'done')]"/>
+                <separator/>
+                <filter string="Incoming" name="incoming" domain="[('picking_id.picking_type_id.code', '=', 'incoming')]"/>
+                <filter string="Outgoing" name="outgoing" domain="[('picking_id.picking_type_id.code', '=', 'outgoing')]"/>
+                <filter string="Internal" name="internal" domain="[('picking_id.picking_type_id.code', '=', 'internal')]"/>
+                <filter string="Manufacturing" name="manufacturing" domain="[('picking_id.picking_type_id.code', '=', 'mrp_operation')]" invisible="1"/>
+                <separator/>
+                <filter name="date" date="date" default_period="month"/>
+                <filter string="Last 30 Days" name="filter_last_30_days" domain="[('date','&gt;=', (context_today() - relativedelta(days=30)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Last 3 Months" name="filter_last_3_months" domain="[('date','&gt;=', (context_today() - relativedelta(months=3)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Last 12 Months" name="filter_last_12_months" domain="[('date','&gt;=', (context_today() - relativedelta(years=1)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter string="Inventory" name="inventory" domain="[('is_inventory', '=', True)]"/>
+                <separator/>
+                <group expand="0" string="Group By" name="groupby">
+                    <filter string="Product" name="groupby_product_id" domain="[]" context="{'group_by': 'product_id'}"/>
+                    <filter string="Status" name="by_state" domain="[]"  context="{'group_by': 'state'}"/>
+                    <filter string="Date" name="by_date" domain="[]" context="{'group_by': 'date'}"/>
+                    <filter string="Transfers" name="by_picking" domain="[]" context="{'group_by': 'picking_id'}"/>
+                    <filter string="Location" name="by_location" domain="[]" context="{'group_by': 'location_id'}"/>
+                    <filter string="Category" name="by_category" domain="[]" context="{'group_by': 'product_category_name'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_stock_move_line_kanban" model="ir.ui.view">
+        <field name="name">stock.move.line.kanban</field>
+        <field name="model">stock.move.line</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <templates>
+                    <t t-name="card">
+                        <div class="row">
+                            <field name="reference" class="col-6"/>
+                            <field name="date" class="col-6 text-end"/>
+                        </div>
+                        <field name="product_id" class="fw-bolder"/>
+                        <div groups="stock.group_stock_multi_locations">
+                            <field name="location_id"/>
+                            →
+                            <field name="location_dest_id"/>
+                        </div>
+                        <div groups="stock.group_production_lot" invisible="not lot_id and not lot_name">
+                            Lot/SN:
+                            <field name="lot_id" invisible="not lot_id and lot_name"/>
+                            <field name="lot_name" invisible="lot_id or not lot_name"/>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <field name="quantity" string="Quantity"/>
+                                <field name="product_uom_id" string="Unit of Measure" groups="uom.group_uom"/>
+                            </div>
+                            <field class="col-6 text-end" name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'cancel': 'danger', 'waiting': 'warning', 'confirmed': 'warning', 'done': 'success'}}"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_stock_move_line_pivot" model="ir.ui.view">
+        <field name="name">stock.move.line.pivot</field>
+        <field name="model">stock.move.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Moves History">
+                <field name="product_category_name" type="col"/>
+                <field name="date" interval="month" type="row"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_revert_inventory_adjustment" model="ir.actions.server">
+        <field name="name">Revert Inventory Adjustment</field>
+        <field name="model_id" ref="stock.model_stock_move_line"/>
+        <field name="binding_model_id" ref="stock.model_stock_move_line"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.action_revert_inventory()
+        </field>
+    </record>
+
+    <record id="stock_move_line_action" model="ir.actions.act_window">
+            <field name="name">Moves History</field>
+            <field name="res_model">stock.move.line</field>
+            <field name="view_mode">list,kanban,pivot,form</field>
+            <field name="view_id" ref="view_move_line_tree"/>
+            <field name="context">{'search_default_done': 1, 'create': 0, 'pivot_measures': ['quantity_product_uom', '__count__']}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_empty_folder">
+                    There's no product move yet
+                </p><p>
+                    This menu gives you the full traceability of inventory operations on a specific product.
+                    You can filter on the product to see all the past movements for the product.
+                </p>
+            </field>
+    </record>
+
+    <menuitem
+        action="stock_move_line_action"
+        id="stock_move_line_menu"
+        parent="stock.menu_warehouse_report" sequence="200"/>
+</odoo>

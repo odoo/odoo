@@ -1,0 +1,16 @@
+<templates>
+    <t t-inherit="loyalty.portal_loyalty_card_dialog" t-inherit-mode="extension">
+        <div name="history_lines" position="before">
+            <div
+                t-if="props.program.program_type == 'loyalty'"
+                class="d-flex align-items-center flex-column"
+            >
+                <img
+                    t-att-src="`/report/barcode/Code128/${props.card.code}?&amp;width=350&amp;height=100`"
+                    style="width:400px;height:100px"
+                />
+                <span t-out="props.card.code" class="fs-5"/>
+            </div>
+        </div>
+    </t>
+</templates>

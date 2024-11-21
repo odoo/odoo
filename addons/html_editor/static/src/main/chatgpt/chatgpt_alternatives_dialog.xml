@@ -1,0 +1,56 @@
+<templates id="template" xml:space="preserve">
+
+<t t-name="html_editor.ChatGPTAlternativesDialog">
+    <Dialog size="'lg'" title.translate="AI Copywriter">
+        <div class="md-8">
+            <div class="mb-3">
+                <t t-foreach="Object.entries(props.alternativesModes)"
+                    t-as="alternative" t-key="alternative_index">
+                    <button type="button" class="btn me-2 btn-sm btn-info"
+                        t-att-class="state.alternativesMode == alternative[0] and state.messagesInProgress ? 'btn-success' : 'btn-info'"
+                        t-on-click="switchAlternativesMode" t-att-data-mode="alternative[0]">
+                        <t t-out="alternative[1]"/>
+                    </button>
+                </t>
+            </div>
+            <div class="list-group">
+                <div t-if="state.messagesInProgress" class="d-flex align" t-att-class="{ 'mb-3': state.messages.length }">
+                    <img src="/web/static/img/spin.svg" alt="Loading..." class="me-2"
+                        style="filter:invert(1); opacity: 0.5; width: 30px; height: 30px;"/>
+                    <p class="m-0 text-muted align-self-center">
+                        <em t-if="state.messagesInProgress == 1">Generating an alternative...</em>
+                        <em t-else="">Generating <t t-out="state.messagesInProgress"/> alternatives...</em>
+                    </p>
+                </div>
+                <t t-foreach="[...state.messages].reverse()" t-as="message" t-key="message.id">
+                    <t t-if="message.isError">
+                        <div class="list-group-item o-chatgpt-alternative border-danger bg-danger o-message-error"
+                            t-att-class="{ 'text-muted': state.currentBatchId != message.batchId }">
+                            <t t-out="message.text"/>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <button type="button" class="list-group-item list-group-item-action o-chatgpt-alternative"
+                            t-on-click="selectMessage"
+                            t-att-data-message-id="message.id"
+                            t-att-class="{
+                                active: state.selectedMessageId == message.id,
+                                'text-muted': state.selectedMessageId != message.id and state.currentBatchId != message.batchId,
+                            }">
+                            <span t-if="message.mode" class="badge bg-secondary float-end"><t t-out="props.alternativesModes[message.mode]"/></span>
+                            <t t-out="formatContent(message.text)"/>
+                        </button>
+                    </t>
+                </t>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <t t-set-slot="footer">
+            <button class="btn btn-primary" t-on-click="_confirm"
+                t-att-disabled="typeof state.selectedMessageId !== 'number'">Insert</button>
+            <button class="btn btn-secondary" t-on-click="_cancel">Cancel</button>
+        </t>
+    </Dialog>
+</t>
+</templates>

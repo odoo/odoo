@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="website_sale_collect.ClickAndCollectAvailability">
+        <div
+            t-on-click="openLocationSelector"
+            class="o_click_and_collect_availability btn d-flex align-items-center gap-3 border border-1 mb-3 text-start"
+        >
+            <div>
+                <strong>
+                    <i class="fa fa-map-marker me-2 text-muted"/>
+                    <t
+                        t-if="this.state.selectedWhLocation.id"
+                        t-out="this.state.selectedWhLocation.name"
+                    />
+                    <t t-else="">Pick up in store</t>
+                </strong>
+                <div t-if="!this.state.selectedWhLocation.id" class="text-muted">
+                    Check availability
+                </div>
+                <t t-elif="!!this.state.inStoreStock.in_stock">
+                    <div t-if="!!this.state.inStoreStock.show_quantity" class="text-warning">
+                        <i class="fa fa-circle"/>
+                        Only <t t-out="this.state.inStoreStock.quantity"/> available
+                    </div>
+                    <div t-else="" class="text-success">
+                        <i class="fa fa-circle"/> Available
+                    </div>
+                </t>
+                <div t-else="" class="text-danger">
+                    <i class="fa fa-times"/> Not available
+                </div>
+            </div>
+            <i class="oi oi-chevron-right"/>
+        </div>
+    </t>
+
+</templates>

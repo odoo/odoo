@@ -1,0 +1,255 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_adyen
+#
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-08 06:52+0000\n"
+"PO-Revision-Date: 2024-01-30 15:14+0400\n"
+"Last-Translator: \n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: payment_adyen
+#: model_terms:ir.ui.view,arch_db:payment_adyen.payment_provider_form
+msgid ""
+"<strong>Warning:</strong> To capture the amount manually, you also need to set\n"
+"                    the Capture Delay to manual on your Adyen account settings."
+msgstr ""
+"<strong>Внимание:</strong> Чтобы зафиксировать сумму вручную, вам также необходимо установить\n"
+"                    задержку захвата вручную в настройках аккаунта Adyen."
+
+#. module: payment_adyen
+#. odoo-python
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+msgid "A request was sent to void the transaction with reference %s (%s)."
+msgstr "Был отправлен запрос на аннулирование транзакции со ссылкой %s (%s)."
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_api_key
+msgid "API Key"
+msgstr "Ключ API"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_api_url_prefix
+msgid "API URL Prefix"
+msgstr "Префикс URL-адреса API"
+
+#. module: payment_adyen
+#: model:ir.model.fields.selection,name:payment_adyen.selection__payment_provider__code__adyen
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_adyen
+#. odoo-python
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+msgid "An error occurred during the processing of your payment. Please try again."
+msgstr "Во время обработки вашего платежа произошла ошибка. Пожалуйста, попробуйте еще раз."
+
+#. module: payment_adyen
+#. odoo-javascript
+#: code:addons/payment_adyen/static/src/js/payment_form.js:0
+msgid "Cannot display the payment form"
+msgstr "Невозможно отобразить форму оплаты"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_client_key
+msgid "Client Key"
+msgstr "Ключ Клиента"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__code
+msgid "Code"
+msgstr "Код"
+
+#. module: payment_adyen
+#. odoo-python
+#: code:addons/payment_adyen/models/payment_provider.py:0
+msgid "Could not establish the connection to the API."
+msgstr "Не удалось установить соединение с API."
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_hmac_key
+msgid "HMAC Key"
+msgstr "Ключ HMAC"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_capture_wizard__has_adyen_tx
+msgid "Has Adyen Tx"
+msgstr "Has Adyen Tx"
+
+#. module: payment_adyen
+#. odoo-javascript
+#: code:addons/payment_adyen/static/src/js/payment_form.js:0
+msgid "Incorrect payment details"
+msgstr "Неверные платежные реквизиты"
+
+#. module: payment_adyen
+#: model_terms:ir.ui.view,arch_db:payment_adyen.payment_provider_form
+msgid "Learn More"
+msgstr "Узнать больше"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_merchant_account
+msgid "Merchant Account"
+msgstr "Мерчант аккаунт"
+
+#. module: payment_adyen
+#. odoo-python
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+msgid "No transaction found matching reference %s."
+msgstr "Не найдено ни одной транзакции, соответствующей ссылке %s."
+
+#. module: payment_adyen
+#: model:ir.model,name:payment_adyen.model_payment_capture_wizard
+msgid "Payment Capture Wizard"
+msgstr "Мастер захвата платежей"
+
+#. module: payment_adyen
+#: model:ir.model,name:payment_adyen.model_payment_provider
+msgid "Payment Provider"
+msgstr "Поставщик платежей"
+
+#. module: payment_adyen
+#: model:ir.model,name:payment_adyen.model_payment_token
+msgid "Payment Token"
+msgstr "Платежный токен"
+
+#. module: payment_adyen
+#: model:ir.model,name:payment_adyen.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "платеж"
+
+#. module: payment_adyen
+#. odoo-javascript
+#: code:addons/payment_adyen/static/src/js/payment_form.js:0
+msgid "Payment processing failed"
+msgstr "Обработка платежа не удалась"
+
+#. module: payment_adyen
+#. odoo-python
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+msgid "Received data for child transaction with missing transaction values"
+msgstr "Полученные данные для дочерней транзакции с отсутствующими значениями транзакций"
+
+#. module: payment_adyen
+#. odoo-python
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+msgid "Received data with invalid payment state: %s"
+msgstr "Получены данные с недопустимым состоянием платежа: %s"
+
+#. module: payment_adyen
+#. odoo-python
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+msgid "Received data with missing merchant reference"
+msgstr "Полученные данные с отсутствующей ссылкой на продавца"
+
+#. module: payment_adyen
+#. odoo-python
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+msgid "Received data with missing payment state."
+msgstr "Получены данные с отсутствующим состоянием платежа."
+
+#. module: payment_adyen
+#. odoo-python
+#: code:addons/payment_adyen/controllers/main.py:0
+msgid "Received tampered payment request data."
+msgstr "Получение поддельных данных запроса на оплату."
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_token__adyen_shopper_reference
+msgid "Shopper Reference"
+msgstr "Ссылка на покупателя"
+
+#. module: payment_adyen
+#: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_api_key
+msgid "The API key of the webservice user"
+msgstr "API-ключ пользователя веб-сервиса"
+
+#. module: payment_adyen
+#: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_hmac_key
+msgid "The HMAC key of the webhook"
+msgstr "Ключ HMAC веб-крючка"
+
+#. module: payment_adyen
+#. odoo-python
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+msgid "The amount processed by Adyen for the transaction %s is different than the one requested. Another transaction is created with the correct amount."
+msgstr "Сумма, обработанная Adyen для транзакции %s, отличается от запрашиваемой. Создается другая транзакция с правильной суммой."
+
+#. module: payment_adyen
+#: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_api_url_prefix
+msgid "The base URL for the API endpoints"
+msgstr "Базовый URL для конечных точек API"
+
+#. module: payment_adyen
+#. odoo-python
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+msgid "The capture of the transaction with reference %s failed."
+msgstr "Захват транзакции со ссылкой %s не удался."
+
+#. module: payment_adyen
+#: model_terms:ir.ui.view,arch_db:payment_adyen.payment_capture_wizard_view_form
+msgid ""
+"The capture or void of the transaction might take a few minutes to be\n"
+"                    processed by Adyen and reflected in Odoo."
+msgstr ""
+"Захват или отмена транзакции может занять несколько минут, чтобы быть\n"
+"                    обработки в Adyen и отражения в Odoo."
+
+#. module: payment_adyen
+#. odoo-python
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+msgid "The capture request of %(amount)s for the transaction with reference %(ref)s has been requested (%(provider_name)s)."
+msgstr "Запрос на захват %(amount)s для транзакции с ссылкой %(ref)s был запрошен (%(provider_name)s)."
+
+#. module: payment_adyen
+#: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_client_key
+msgid "The client key of the webservice user"
+msgstr "Клиентский ключ пользователя веб-сервиса"
+
+#. module: payment_adyen
+#: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_merchant_account
+msgid "The code of the merchant account to use with this provider"
+msgstr "Код торгового счета для использования с данным провайдером"
+
+#. module: payment_adyen
+#. odoo-python
+#: code:addons/payment_adyen/models/payment_provider.py:0
+msgid "The communication with the API failed. Details: %s"
+msgstr "Не удалось установить связь с API. Подробности: %s"
+
+#. module: payment_adyen
+#: model:ir.model.fields,help:payment_adyen.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "Технический код данного провайдера платежей."
+
+#. module: payment_adyen
+#. odoo-python
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+msgid "The transaction is not linked to a token."
+msgstr "Транзакция не привязана к токену."
+
+#. module: payment_adyen
+#: model:ir.model.fields,help:payment_adyen.field_payment_token__adyen_shopper_reference
+msgid "The unique reference of the partner owning this token"
+msgstr "Уникальная ссылка на партнера, владеющего этим токеном"
+
+#. module: payment_adyen
+#. odoo-python
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+msgid "The void of the transaction with reference %s failed."
+msgstr "Не удалось выполнить транзакцию со ссылкой %s."
+
+#. module: payment_adyen
+#. odoo-python
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+msgid "Your payment was refused. Please try again."
+msgstr "Ваш платеж был отклонен. Пожалуйста, попробуйте еще раз."

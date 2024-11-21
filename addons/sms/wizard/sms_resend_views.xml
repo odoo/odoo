@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+    <record id="mail_resend_message_view_form" model="ir.ui.view">
+        <field name="name">sms.resend.form</field>
+        <field name="model">sms.resend</field>
+        <field name="groups_id" eval="[(4,ref('base.group_user'))]"/>
+        <field name="arch" type="xml">
+            <form string="Edit Partners">
+                <field name="mail_message_id" invisible="1"/>
+                <field name="can_resend" invisible="1"/>
+                <field name="has_insufficient_credit" invisible="1"/>
+                <field name="has_unregistered_account" invisible="1"/>
+                <field name="recipient_ids">
+                    <list string="Recipient" editable="top" create="0" delete="0">
+                        <field name="partner_name"/>
+                        <field name="sms_number"/>
+                        <field name="failure_type" string="Reason" class="text-wrap"/>
+                        <field name="resend" widget="boolean_toggle"/>
+                        <field name="notification_id" column_invisible="True"/>
+                    </list>
+                </field>
+                <footer>
+                    <button string="Buy credits" name="action_buy_credits" type="object" class="btn-primary o_mail_send"
+                            invisible="not has_insufficient_credit" data-hotkey="q"/>
+                    <button string="Set up an account" name="action_buy_credits" type="object" class="btn-primary o_mail_send"
+                            invisible="not has_unregistered_account" data-hotkey="q"/>
+                    <button string="Send &amp; Close" name="action_resend" type="object" class="btn-primary o_mail_send"
+                            invisible="not has_unregistered_account or not can_resend" data-hotkey="w"/>
+                    <button string="Ignore all" name="action_cancel" type="object" class="btn-primary"
+                            invisible="has_insufficient_credit or has_unregistered_account or has_unregistered_account and can_resend" data-hotkey="z"/>
+                    <button string="Ignore all" name="action_cancel" type="object" class="btn-secondary"
+                            invisible="not has_insufficient_credit and not has_unregistered_account and (not has_unregistered_account or not can_resend)" data-hotkey="z"/>
+                    <button string="Close" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="sms_resend_action" model="ir.actions.act_window">
+        <field name="name">Sending Failures</field>
+        <field name="res_model">sms.resend</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</data></odoo>

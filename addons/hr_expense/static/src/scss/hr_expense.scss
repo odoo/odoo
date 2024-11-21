@@ -1,0 +1,133 @@
+.hr_expense {
+    @include media-breakpoint-up(md) {
+        &.o_list_view, &.o_kanban_view .o_kanban_renderer {
+            min-height: 100% !important;
+        }
+    }
+
+    .o_view_nocontent {
+        z-index: 3;
+
+        .o_view_nocontent_expense_receipt_image {
+            @extend %o-nocontent-init-image;
+            width: 300px;
+            height: 230px;
+            background: transparent url(/hr_expense/static/img/nocontent.png) no-repeat center;
+            background-size: 300px 230px;
+            margin: 0.65rem auto;
+        }
+
+        @include media-breakpoint-down(md) {
+            position: fixed;
+        }
+    }
+
+    .o_view_pink_overlay {
+        border: $border-width * 2 dashed $border-color;
+        border-radius: $border-radius-lg;
+        background-color: $o-view-background-color;
+        width: 600px;
+        height: 300px;
+
+        @include media-breakpoint-down(md) {
+            width: 100%;
+        }
+    }
+
+    .o_view_pink_overlay:hover {
+        border-color: $primary;
+        background-color: mix($primary, $o-view-background-color, 10%);
+        cursor: pointer;
+    }
+
+    .o_view_sample_data .o_kanban_renderer {
+        @include media-breakpoint-down(md) {
+            // kanban renderer of sample data should not be scrollable on mobile
+            position: fixed !important;
+        }
+    }
+}
+
+.o_graph_view, .o_pivot_view {
+    .o_view_nocontent {
+        h2:first-of-type {
+            visibility: hidden;
+            &::after {
+                content: "No expense found. Let's create one!";
+                visibility: visible;
+                display: block;
+            }
+        }
+    }
+}
+
+.o_center_attachment .o-mail-Attachment-imgContainer {
+    --o-Mail-Attachment-img-margin: #{map-get($spacers, 1)} auto auto auto;
+
+    display: flex;
+    justify-content: center;
+    z-index: -1;
+    padding: 0 map-get($spacers, 3);
+
+    img {
+        max-height: 100%;
+    }
+}
+
+.o_expense_container {
+    @include media-breakpoint-down(sm) {
+        overflow: auto visible;
+    }
+}
+
+.o_dropzone {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-color: #AAAA;
+    z-index: 2;
+    left: 0;
+    top: 0;
+    i {
+      justify-content: center;
+      display: flex;
+      align-items: center;
+      height: 100%;
+    }
+}
+
+.o_expense_categories td[name="description"] p:last-child {
+    margin-bottom: 0;
+}
+
+/**************
+    PDF EXPORT
+***************/
+.o_content_pdf {
+    .o_header {
+        vertical-align: middle;
+        .col-6 {
+            .row:first-child{
+                padding-top: 15px;
+            }
+
+            .row:last-child{
+                padding-bottom: 15px;
+            }
+        }
+    }
+}
+
+.o_end_page {
+    page-break-after: always;
+}
+
+.o_attachment_pdf {
+    max-height: 700px;
+    max-width: 700px;
+}
+
+.o_overflow {
+    white-space: normal !important;
+    overflow-wrap: break-word;
+}

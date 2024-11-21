@@ -1,0 +1,489 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* certificate
+# 
+# Translators:
+# Wil Odoo, 2024
+# Junko Augias, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-09-29 00:00+0000\n"
+"Last-Translator: Junko Augias, 2024\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid "A private key is required to decrypt data."
+msgstr "データを復号するには秘密鍵が必要です。"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__active
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__active
+msgid "Active"
+msgstr "有効化"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
+msgid "Add, edit and delete certificates."
+msgstr "証明書を追加、編集、削除します。"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
+msgid "Add, edit and delete keys."
+msgstr "キーを追加、編集、削除します。"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_search
+msgid "Archived"
+msgstr "アーカイブ済"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+msgid "Archived certificates"
+msgstr "アーカイブ済証明書"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_search
+msgid "Archived keys"
+msgstr "アーカイブ済キー"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__date_start
+msgid "Available date"
+msgstr "利用可能日付"
+
+#. module: certificate
+#: model:ir.model,name:certificate.model_certificate_certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__content
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_list
+msgid "Certificate"
+msgstr "証明書"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__pkcs12_password
+msgid "Certificate Password"
+msgstr "証明書パスワード"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__pem_certificate
+msgid "Certificate in PEM format"
+msgstr "PEMフォーマットの証明書"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__scope
+msgid "Certificate scope"
+msgstr "証明書スコープ"
+
+#. module: certificate
+#: model:ir.actions.act_window,name:certificate.certificate_certificate_action_view_list
+#: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
+msgid "Certificates"
+msgstr "証明書"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
+msgid "Certificates and Keys"
+msgstr "証明書とキー"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__company_id
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__company_id
+msgid "Company"
+msgstr "会社"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__country_code
+msgid "Country Code"
+msgstr "国コード"
+
+#. module: certificate
+#: model_terms:ir.actions.act_window,help:certificate.certificate_certificate_action_view_list
+msgid "Create a first certificate"
+msgstr "初めての証明書を作成する"
+
+#. module: certificate
+#: model_terms:ir.actions.act_window,help:certificate.certificate_key_action_view_list
+msgid "Create a first key"
+msgstr "初めてのキーを作成する"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__create_uid
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__create_uid
+msgid "Created by"
+msgstr "作成者"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__create_date
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__create_date
+msgid "Created on"
+msgstr "作成日"
+
+#. module: certificate
+#: model:ir.model,name:certificate.model_certificate_key
+msgid "Cryptographic Keys"
+msgstr "暗号化キー"
+
+#. module: certificate
+#: model:ir.model.fields.selection,name:certificate.selection__certificate_certificate__content_format__der
+msgid "DER"
+msgstr "DER"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__display_name
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__display_name
+msgid "Display Name"
+msgstr "表示名"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__date_end
+msgid "Expiration date"
+msgstr "有効期限日"
+
+#. module: certificate
+#: model:ir.model.fields.selection,name:certificate.selection__certificate_certificate__scope__general
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+msgid "General"
+msgstr "一般"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+msgid "General certificates"
+msgstr "一般証明書"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__id
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__id
+msgid "ID"
+msgstr "ID"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_search
+msgid "Invalid"
+msgstr "無効"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_list
+msgid "Key"
+msgstr "キー"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__pem_key
+msgid "Key bytes in PEM format"
+msgstr "PEMフォーマットでのキーバイト"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__content
+msgid "Key file"
+msgstr "キーファイル"
+
+#. module: certificate
+#: model:ir.actions.act_window,name:certificate.certificate_key_action_view_list
+#: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
+msgid "Keys"
+msgstr "キー"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__write_uid
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__write_uid
+msgid "Last Updated by"
+msgstr "最終更新者"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__write_date
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__write_date
+msgid "Last Updated on"
+msgstr "最終更新日"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__loading_error
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__loading_error
+msgid "Loading error"
+msgstr "ランディングエラー"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid "Make sure to use a private key to sign documents."
+msgstr "ドキュメントに署名する際は、必ず秘密鍵を使用して下さい。"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
+msgid "Manage your certificates"
+msgstr "証明書を管理する"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
+msgid "Manage your keys"
+msgstr "キーを管理する"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__name
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__name
+msgid "Name"
+msgstr "名称"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/certificate.py:0
+msgid ""
+"No private key linked to the certificate, it is required to sign documents."
+msgstr "証明書にリンクされた秘密鍵はなく、ドキュメントに署名する必要があります。"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+msgid "Not valid certificates"
+msgstr "無効な証明書"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__content_format
+msgid "Original certificate format"
+msgstr "元の証明書フォーマット"
+
+#. module: certificate
+#: model:ir.model.fields.selection,name:certificate.selection__certificate_certificate__content_format__pem
+msgid "PEM"
+msgstr "PEM"
+
+#. module: certificate
+#: model:ir.model.fields.selection,name:certificate.selection__certificate_certificate__content_format__pkcs12
+msgid "PKCS12"
+msgstr "PKCS12"
+
+#. module: certificate
+#: model:ir.model.fields,help:certificate.field_certificate_certificate__pkcs12_password
+msgid "Password to decrypt the PKS file."
+msgstr "PKS ファイルを復号化するためのパスワード。"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_search
+msgid "Private"
+msgstr "非公開"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__private_key_id
+msgid "Private Key"
+msgstr "プライベートキー"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__password
+msgid "Private key password"
+msgstr "秘密鍵パスワード"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_search
+msgid "Public"
+msgstr "パブリック"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__public_key_id
+msgid "Public Key"
+msgstr "公開キー"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__public
+msgid "Public/Private key"
+msgstr "公開/秘密鍵"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__serial_number
+msgid "Serial number"
+msgstr "シリアル番号"
+
+#. module: certificate
+#: model:ir.model.fields,help:certificate.field_certificate_certificate__active
+msgid "Set active to false to archive the certificate"
+msgstr "証明書をアーカイブするには、有効化をfalseに設定します。"
+
+#. module: certificate
+#: model:ir.model.fields,help:certificate.field_certificate_key__active
+msgid "Set active to false to archive the key."
+msgstr "鍵をアーカイブするには、有効化をfalseに設定します。"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__subject_common_name
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_list
+msgid "Subject Name"
+msgstr "サブジェクト名"
+
+#. module: certificate
+#: model:ir.model.fields,help:certificate.field_certificate_certificate__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"ISOの国別コードは2文字です。\n"
+"これを使ってクイックサーチできます。"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/certificate.py:0
+msgid "The certificate and private key are not compatible."
+msgstr "証明書と秘密鍵が互換性がありません。"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/certificate.py:0
+msgid "The certificate and public key are not compatible."
+msgstr "証明書と公開鍵が互換性がありません。"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/certificate.py:0
+msgid ""
+"The certificate subject field contains invalid characters. Make sure all "
+"characters are unicode valid."
+msgstr "証明書のサブジェクトフィールドに無効な文字が含まれています。全ての文字がユニコードで有効であることを確認して下さい。"
+
+#. module: certificate
+#: model:ir.model.fields,help:certificate.field_certificate_certificate__date_end
+msgid "The date on which the certificate expires (UTC)"
+msgstr "証明書の有効期限日 (UTC)"
+
+#. module: certificate
+#: model:ir.model.fields,help:certificate.field_certificate_certificate__date_start
+msgid "The date on which the certificate starts to be valid (UTC)"
+msgstr "証明書の有効開始日 (UTC)"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid "The private key could not be loaded."
+msgstr "秘密鍵がロードできませんでした。"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid "The public key could not be loaded."
+msgstr "公開鍵がロードできませんでした。"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/certificate.py:0
+msgid "The public key from the certificate could not be loaded."
+msgstr "証明書からの公開鍵がロードできませんでした。"
+
+#. module: certificate
+#: model:ir.model.fields,help:certificate.field_certificate_certificate__serial_number
+msgid "The serial number to add to electronic documents"
+msgstr "電子ドキュメントに追加するシリアル番号"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/certificate.py:0
+msgid ""
+"This certificate could not be loaded. Either the content or the password is "
+"erroneous."
+msgstr "この証明書を読み込むことができませんでした。コンテンツまたはパスワードが誤っています。"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/certificate.py:0
+msgid "This certificate is not valid, its validity has expired."
+msgstr "この証明書は無効です。有効期限が切れています。"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid ""
+"This key could not be loaded. Either its content or its password is "
+"erroneous."
+msgstr "この鍵を読み込むことができませんでした。鍵の内容またはパスワードが誤っています。"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid ""
+"Unsupported asymmetric cryptography algorithm '%s'. Currently supported for "
+"decryption: RSA."
+msgstr " サポートされていない非対称暗号化アルゴリズム '%s'。現在復号化にサポートされているのはRSAです。"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid ""
+"Unsupported asymmetric cryptography algorithm '%s'. Currently supported for "
+"signature: EC and RSA."
+msgstr "サポートされていない非対称暗号化アルゴリズム '%s'。現在サポートされている署名はECとRSAです。"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid ""
+"Unsupported asymmetric cryptography algorithm '%s'. Currently supported: EC,"
+" RSA."
+msgstr "サポートされていない非対称暗号化アルゴリズム '%s'。現在サポートされているのは、EC、RSAです。"
+
+#. module: certificate
+#: model:ir.model.fields,help:certificate.field_certificate_certificate__public_key_id
+msgid ""
+"Used to set a public key in case the one self-contained in the certificate is erroneus.\n"
+"                When a public key is set this way, it will be used instead of the one in the certificate.\n"
+"             "
+msgstr ""
+"証明書に含まれる公開鍵が誤っている場合に、公開鍵を設定するために使用されます。\n"
+"                公開鍵がこのように設定されると、証明書内の公開鍵の代わりに使用されます。\n"
+"             "
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__is_valid
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+msgid "Valid"
+msgstr "有効"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+msgid "Valid certificates"
+msgstr "有効な証明書"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_form
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_list
+msgid "Validity"
+msgstr "有効期間"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_form
+msgid "certificate form"
+msgstr "証明書フォーム"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_list
+msgid "certificate list"
+msgstr "証明書リスト"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+msgid "certificate search"
+msgstr "証明書検索"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_form
+msgid "e.g. New Certificate"
+msgstr "例: 新規証明書"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_form
+msgid "key form"
+msgstr "鍵フォーム"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_list
+msgid "key list"
+msgstr "鍵リスト"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_search
+msgid "key search"
+msgstr "鍵検索"

@@ -1,0 +1,47 @@
+@include media-breakpoint-down(md) {
+    .o_calendar_header {
+        .o_calendar_button_today {
+            line-height: 1.9em;
+            > span {
+                font-size: .65rem
+            }
+        }
+    }
+
+    .o_calendar_container {
+        .o_other_calendar_panel {
+            grid-area: 2 / 1 / 2 / 4;
+            padding: 0 map-get($spacers, 2);
+            .fa-filter {
+                min-height: 1.59rem;
+                line-height: 1.59rem;
+            }
+
+            > .o_filter {
+                padding: map-get($spacers, 2) 0;
+
+                > span > span {
+                    font-size: x-small;
+                    &:nth-child(1) {
+                        font-size: xx-small;
+                    }
+                }
+                @for $i from 1 through length($o-colors-complete) {
+                    $color: nth($o-colors-complete, $i);
+
+                    .o_color_#{$i - 1} {
+                        color: $color;
+                    }
+                }
+            }
+        }
+
+        .o_calendar_sidebar_container {
+            height: 100%;
+
+            > .o_calendar_sidebar {
+                width: auto;
+            }
+        }
+    }
+}

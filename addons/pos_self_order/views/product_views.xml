@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_search_view_pos" model="ir.ui.view">
+        <field name="name">product.template.search.pos.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="point_of_sale.product_template_search_view_pos"/>
+        <field name="arch" type="xml">
+            <filter name="filter_to_availabe_pos" position="after">
+                <filter name="filter_to_self_order" string="Available in Self" domain="[('self_order_available', '=', True)]"
+                    invisible="not context.get('_pos_self_order')"/>
+            </filter>
+            <filter name="filter_to_self_order" position="after">
+                <filter name="filter_to_not_available_pos" string="Not available in Self" domain="[('self_order_available', '=', False)]"
+                    invisible="not context.get('_pos_self_order')"/>
+             </filter>
+        </field>
+    </record>
+
+    <record id="product_template_form_view" model="ir.ui.view">
+        <field name="name">product.template.form.inherit</field>
+        <field name="model">product.template</field>
+        <field name="priority">48</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <group name="pos" position="inside">
+                <field name="self_order_available"/>
+            </group>
+            <xpath expr="//group[@name='public_description']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_template_tree_view" model="ir.ui.view">
+        <field name="name">product.template.product.list.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="point_of_sale.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="available_in_pos" position="after">
+                <field name="self_order_available" groups="point_of_sale.group_pos_user" optional="hide"/>
+            </field>
+        </field>
+    </record>
+</odoo>

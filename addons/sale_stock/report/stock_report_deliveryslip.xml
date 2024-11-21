@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_delivery_document_inherit_sale_stock" inherit_id="stock.report_delivery_document">
+        <xpath expr="//div[@name='div_sched_date']" position="after">
+            <div class="col col-3 mw-100 mb-2" t-if="o.sudo().sale_id.client_order_ref">
+                <strong>Customer Reference</strong>
+                <div t-field="o.sudo().sale_id.client_order_ref" class="m-0">Customer reference</div>
+            </div>
+            <div class="col" t-if="o.sudo().sale_id.incoterm">
+                <strong>Incoterm</strong>
+                <div t-if="o.sudo().sale_id.incoterm_location" t-out="'%s %s' % (o.sudo().sale_id.incoterm.code, o.sudo().sale_id.incoterm_location)">Incoterm details</div>
+                <div t-else="" t-field="o.sudo().sale_id.incoterm.display_name">Incoterm details</div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

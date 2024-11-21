@@ -1,0 +1,108 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_product_matrix
+# 
+# Translators:
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_product_product__product_add_mode
+#: model:ir.model.fields,field_description:sale_product_matrix.field_product_template__product_add_mode
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order_line__product_add_mode
+msgid "Add product mode"
+msgstr "Product modus toevoegen"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,help:sale_product_matrix.field_product_product__product_add_mode
+#: model:ir.model.fields,help:sale_product_matrix.field_product_template__product_add_mode
+#: model:ir.model.fields,help:sale_product_matrix.field_sale_order_line__product_add_mode
+msgid ""
+"Configurator: choose attribute values to add the matching product variant to the order.\n"
+"Grid: add several variants at once from the grid of attribute values"
+msgstr ""
+"Configurator: kies kenmerkwaarden om de bijhorend productvariant aan de order toe te voegen.\n"
+"Matrix: voeg meerdere varianten tegelijk toe uit de matrix van kenmerkwaarden"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid_product_tmpl_id
+msgid "Grid Product Tmpl"
+msgstr "Matrix productsjabloon"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid_update
+msgid "Grid Update"
+msgstr "Matrix update"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid
+msgid "Matrix local storage"
+msgstr "Matrix lokale opslag"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__matrix
+msgid "Order Grid Entry"
+msgstr "Ordermatrix ingave"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__report_grids
+msgid "Print Variant Grids"
+msgstr "Variantenmatrix afdrukken"
+
+#. module: sale_product_matrix
+#: model:ir.model,name:sale_product_matrix.model_product_template
+msgid "Product"
+msgstr "Product"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__configurator
+msgid "Product Configurator"
+msgstr "Productconfigurator"
+
+#. module: sale_product_matrix
+#: model:ir.model,name:sale_product_matrix.model_sale_order
+msgid "Sales Order"
+msgstr "Verkooporder"
+
+#. module: sale_product_matrix
+#: model:ir.model,name:sale_product_matrix.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Verkooporderregel"
+
+#. module: sale_product_matrix
+#: model_terms:ir.ui.view,arch_db:sale_product_matrix.product_template_grid_view_form
+msgid "Sales Variant Selection"
+msgstr "Verkoop variant selectie"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid
+msgid ""
+"Technical local storage of grid. \n"
+"If grid_update, will be loaded on the SO.\n"
+"If not, represents the matrix to open."
+msgstr ""
+"Technische opslag van matrix. \n"
+"Indien grid_update, wordt dit geladen op de verkooporder.\n"
+"Indien niet grid_update, stelt het de matrix voor om te openen."
+
+#. module: sale_product_matrix
+#. odoo-python
+#: code:addons/sale_product_matrix/models/sale_order.py:0
+msgid ""
+"You cannot change the quantity of a product present in multiple sale lines."
+msgstr ""
+"Je kunt de hoeveelheid van een aanwezig product niet veranderen in meerdere "
+"verkooporderregels."

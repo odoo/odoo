@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="delivery.locationSelector.mapContainer">
+        <div class="d-flex flex-column h-100 w-100">
+            <Map
+                t-if="this.state.shouldLoadMap"
+                locations="this.props.locations"
+                selectedLocationId="this.props.selectedLocationId"
+                setSelectedLocation="this.props.setSelectedLocation"
+            />
+            <div
+                t-else=""
+                class="d-flex justify-content-center align-items-center flex-grow-1 w-100 bg-200"
+            >
+                <span>There was an error loading the map</span>
+            </div>
+
+            <!-- Desktop infos -->
+            <div t-if="selectedLocation" class="d-none d-md-flex justify-content-between flex-column flex-lg-row gap-3 gap-lg-0 p-4">
+                <div class="col-lg-5 d-flex flex-column justify-content-between">
+                    <div class="d-flex gap-2">
+                        <strong
+                            class="o_location_selector_number flex-shrink-0 h5 fw-bold text-center"
+                            t-out="this.props.locations.indexOf(selectedLocation) + 1"
+                        />
+                        <div class="d-flex flex-column flex-grow-1">
+                            <strong class="h5 fw-bold" t-out="selectedLocation.name"/>
+                            <small t-out="selectedLocation.street"/>
+                            <small t-out="this.getCityAndZipCode(selectedLocation)"/>
+                        </div>
+                    </div>
+                    <!-- large screen and + -->
+                    <button
+                        type="button"
+                        id="submit_location_large"
+                        class="btn btn-primary d-none d-lg-block mt-3"
+                        t-att-disabled="!this.props.selectedLocationId"
+                        t-on-click="this.props.validateSelection">
+                            Choose this location
+                    </button>
+                </div>
+
+                <!-- Schedule -->
+                <LocationSchedule
+                    openingHours="selectedLocation.opening_hours"
+                    wrapClass="'col-lg-7 flex-grow-1 flex-lg-grow-0 ps-lg-4'"
+                />
+
+                <!-- medium size screen like Tablets, etc. -->
+                <button
+                    type="button"
+                    id="submit_location_medium"
+                    class="btn btn-primary d-block d-lg-none align-self-stretch ms-lg-4"
+                    t-att-disabled="!this.props.selectedLocationId"
+                    t-on-click="this.props.validateSelection">
+                        Choose this location
+                </button>
+            </div>
+
+            <!-- Mobile infos -->
+            <button
+                t-if="selectedLocation"
+                class="btn collapsed d-flex d-md-none gap-2 gap-lg-3 w-100 border-0 p-3 bg-transparent text-start"
+                type="button"
+                data-bs-target="#map_collapseHours"
+                aria-expanded="false"
+                aria-controls="map_collapseHours"
+                data-bs-toggle="collapse"
+            >
+                <strong
+                    t-out="this.props.locations.indexOf(selectedLocation) + 1"
+                    class="o_location_selector_number fw-bold text-center"
+                />
+                <span class="d-flex flex-column gap-1 w-100">
+                    <span class="d-flex flex-column">
+                        <strong class="fw-bold" t-out="selectedLocation.name"/>
+                        <small class="text-muted">
+                            <span t-out="selectedLocation.street"/>
+                            <span class="d-block" t-out="this.getCityAndZipCode(selectedLocation)"/>
+                        </small>
+                    </span>
+                    <span class="d-flex align-items-center gap-1 small fw-bold">
+                        <i class="fa fa-clock-o" role="img"/>
+                        Opening hours
+                        <i class="o_location_selector_hours_caret fa fa-caret-up ms-auto transition-base"/>
+                    </span>
+
+                    <!-- Schedule -->
+                    <span class="collapse" id="map_collapseHours">
+                        <LocationSchedule openingHours="selectedLocation.opening_hours"/>
+                    </span>
+                </span>
+            </button>
+        </div>
+    </t>
+</templates>

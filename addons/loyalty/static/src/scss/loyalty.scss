@@ -1,0 +1,72 @@
+.o_loyalty_kanban_inline {
+
+    width: 100% !important;
+
+    .o_kanban_renderer {
+        padding: 0px !important;
+
+        .o_kanban_record {
+            margin-right: 0px;
+            margin-left: 0px;
+            width: 100%;
+
+            .o_field_many2many_tags .o_tag span {
+                // Remove the small ball before the tags
+                width: auto !important;
+                height: auto !important;
+                background-color: none !important;
+            }
+        }
+    }
+
+    .o_loyalty_kanban_card_right {
+        text-align: center;
+    }
+}
+
+.loyalty-templates-container {
+    pointer-events: auto;
+
+    .loyalty-template {
+        &, * {
+            transition: all .15s;
+        }
+
+        cursor: pointer !important;
+
+        img {
+            filter: invert(.5);
+        }
+
+        &:hover {
+            * {
+                color: #7C6576 !important;
+            }
+
+            background-color: var(--o-color-4);
+            box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.1), 0 2px 2px 0 rgba(0, 0, 0, 0.05);
+            border-color: #7C6576 !important;
+
+            img {
+                filter: invert(0);
+            }
+
+            .card-body {
+                background-color: var(--o-color-4) !important;
+            }
+        }
+    }
+}
+
+.loyalty-rule-form {
+    // The base width for this field is 100px which is problematic for us.
+    .o_field_widget.o_field_monetary.o_input > input {
+        width: 100%;
+    }
+}
+
+.o_loyalty_program_list_view_view .o_list_renderer .o_view_nocontent{
+    @include media-breakpoint-down(lg){
+        height: fit-content;
+    }
+}

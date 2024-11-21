@@ -1,0 +1,377 @@
+///
+/// This file regroups the odoo mixins. They are available in every asset bundle.
+///
+
+// ------------------------------------------------------------------
+// Caret
+// ------------------------------------------------------------------
+@mixin utils-caret-boilerplate {
+    content: "";
+    display: inline-block;
+    width: 0;
+    height: 0;
+    vertical-align: middle;
+    -moz-transform: scale(0.9999); // Smooth the caret on firefox
+}
+
+// ------------------------------------------------------------------
+// Position absolute
+// ------------------------------------------------------------------
+@mixin o-position-absolute($top: auto, $right: auto, $bottom: auto, $left: auto) {
+    position: absolute;
+    top: $top;
+    left: $left;
+    bottom: $bottom;
+    right: $right;
+}
+
+// ------------------------------------------------------------------
+// Position sticky
+// ------------------------------------------------------------------
+@mixin o-position-sticky($top: auto, $right: auto, $bottom: auto, $left: auto) {
+    position: -webkit-sticky;
+    position: sticky;
+    top: $top;
+    left: $left;
+    bottom: $bottom;
+    right: $right;
+}
+
+// ------------------------------------------------------------------
+// Text overflow
+// ------------------------------------------------------------------
+@mixin o-text-overflow($display: inline-block, $max-width: 100%) {
+    display: $display;
+    max-width: $max-width;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top; // To update display context changed by overflow:hidden
+}
+
+// ------------------------------------------------------------------
+// Hovering effects
+// ------------------------------------------------------------------
+@mixin o-hover-opacity($default-opacity: 0.5, $hover-opacity: 1) {
+    opacity: $default-opacity;
+
+    &:hover, &:focus, &.focus {
+        opacity: $hover-opacity;
+    }
+}
+
+//------------------------------------------------------------------------------
+// Colors
+//------------------------------------------------------------------------------
+
+@function luma($color) {
+    @return ((red($color) * .299) + (green($color) * .587) + (blue($color) * .114)) / 255 * 100%;
+}
+
+// Extend placeholder which adds a chess-like background below the color and
+// image of an element to preview the transparency of that color and image.
+// This is done thanks to both ::before and ::after elements so they must both
+// be available.
+%o-preview-alpha-background {
+    position: relative;
+    z-index: 0;
+
+    &::before {
+        content: "";
+        @include o-position-absolute(0, 0, 0, 0);
+        z-index: -1;
+        background-image: url('/web/static/img/transparent.png');
+        background-size: 10px auto;
+        border-radius: inherit;
+    }
+    &::after {
+        content: "";
+        @include o-position-absolute(0, 0, 0, 0);
+        z-index: -1;
+        background: inherit; // Inherit all background properties
+        border-radius: inherit;
+    }
+}
+
+// This function checks if the color ($color) has enough contrast to be visible
+// on a background with the color ($background-color). If not, it is replaced
+// with $light (if too dark) or $dark (if too light).
+@function adjust-color-to-background($color, $background-color, $light: $color-contrast-light, $dark: $color-contrast-dark) {
+    @return if(
+        color-contrast($color) == $color-contrast-dark,
+        color-contrast($background-color, $color, $dark),
+        color-contrast($background-color, $light, $color)
+    );
+}
+
+// ------------------------------------------------------------------
+// Padding
+// ------------------------------------------------------------------
+@mixin o-webclient-padding($top: 0px, $right: $o-horizontal-padding, $bottom: 0px, $left: $o-horizontal-padding) {
+    padding-top: $top;
+    padding-right: $right;
+    padding-bottom: $bottom;
+    padding-left: $left;
+}
+
+// ------------------------------------------------------------------
+// Caret
+// ------------------------------------------------------------------
+@mixin o-caret-down($caret-width: $caret-width, $caret-color: var(--o-caret-color, currentColor)) {
+    @include utils-caret-boilerplate;
+    border-bottom: 0;
+    border-left: $caret-width solid transparent;
+    border-right: $caret-width solid transparent;
+    border-top: $caret-width solid $caret-color;
+}
+@mixin o-caret-up($caret-width: $caret-width, $caret-color: var(--o-input-border-color, currentColor)) {
+    @include utils-caret-boilerplate;
+    border-bottom: $caret-width solid $caret-color;
+    border-left: $caret-width solid transparent;
+    border-right: $caret-width solid transparent;
+    border-top: 0;
+}
+@mixin o-caret-left($caret-width: $caret-width, $caret-color: var(--o-input-border-color, currentColor)) {
+    @include utils-caret-boilerplate;
+    border-bottom: $caret-width solid transparent;
+    border-left: 0;
+    border-right: $caret-width solid $caret-color;
+    border-top: $caret-width solid transparent;
+}
+@mixin o-caret-right($caret-width: $caret-width, $caret-color: var(--o-input-border-color, currentColor)) {
+    @include utils-caret-boilerplate;
+    border-bottom: $caret-width solid transparent;
+    border-left: $caret-width solid $caret-color;
+    border-right: 0;
+    border-top: $caret-width solid transparent;
+}
+
+//-------------------------------------------------------------------
+// Cursor
+//-------------------------------------------------------------------
+
+@mixin o-grab-cursor() {
+    // Use a custom cursor for the open hand icon as "grab" is not properly
+    // working on Chrome Linux (at least)
+    cursor: url(/web/static/img/openhand.cur), grab;
+}
+
+@mixin o-field-pointer() {
+    // Force `pointer`cursor on  inputs and labels
+    .form-check-input:not(:disabled), .form-check-input:not(:disabled) + label {
+        cursor: pointer;
+    }
+
+    &:hover, &:hover .form-check-input:not(:disabled) {
+        border-color: $form-check-input-checked-border-color;
+    }
+}
+
+// ------------------------------------------------------------------
+// Hovering effects
+// ------------------------------------------------------------------
+@mixin o-hover-text-color($default-color: $body-color, $hover-color: $link-color) {
+    color: $default-color;
+
+    &:hover, &:focus, &.focus {
+        color: $hover-color;
+    }
+}
+
+// ------------------------------------------------------------------
+// Mixin to define variations for btn-links and muted btn-links
+// ------------------------------------------------------------------
+@mixin o-btn-link-variant($color, $color-active) {
+    text-transform: none;
+    @include o-hover-text-color($default-color: $color, $hover-color: $color-active);
+
+    &, &:hover, &:focus, &:active, &.active {
+        border-color: transparent !important;
+        background-color: transparent !important;
+    }
+
+    &:hover:active:focus {
+        box-shadow: none;
+        outline: none;
+    }
+
+    &.text-muted, .text-muted {
+        @include o-hover-text-color($default-color: $text-muted, $hover-color: $color-active);
+    }
+}
+
+// Odoo defines a limited Noto font-family for a small variety of unicode
+// characters that are not necessary defined in the user system or even defined
+// but not properly readable. This function allows to add this font family in a
+// given font list.
+//
+// @param {list} $font - a list of font names ending with the generic one.
+// @param {integer} [$index] - the position where to add the support font, if
+//        not given, it will be placed before the generic one.
+@function o-add-unicode-support-font($font, $index: false) {
+    $-with-support-font: ();
+    @for $i from 1 through length($font) {
+        $-part: nth($font, $i);
+        @if $i == $index or $-part == serif or $-part == sans-serif {
+            $-with-support-font: append($-with-support-font, 'Odoo Unicode Support Noto', $separator: comma);
+        }
+        $-with-support-font: append($-with-support-font, $-part, $separator: comma);
+    }
+
+    @return $-with-support-font;
+}
+
+// Function to remove all null values of a map.
+@function o-map-omit($map) {
+    $-map: ();
+    @each $key, $value in $map {
+        @if $value != null {
+            $-map: map-merge($-map, (
+                $key: $value,
+            ));
+        }
+    }
+    @return $-map;
+}
+
+// Function to get an element of a list with a default value in case the index
+// is out-of-bounds; also return that value if the retrieved value is null.
+@function o-safe-nth($list, $index, $default: null) {
+    $value: if($index > 0 and $index <= length($list), nth($list, $index), null);
+    @return if($value != null, $value, $default);
+}
+
+// Function to get an element of a map with a default value in case the key
+// does not exist; also return that value if the retrieved value is null.
+@function o-safe-get($map, $key, $default: null) {
+    $value: map-get($map, $key);
+    @return if($value != null, $value, $default);
+}
+
+// ------- Kanban grouped mixins -------
+@mixin o-kanban-record-color {
+    @for $size from 2 through length($o-colors) {
+        // Note: the first color is not defined as it is the 'no color' for kanban
+        .oe_kanban_color_#{$size - 1} {
+            border-left-color: nth($o-colors, $size);
+            &:after {
+                background-color: nth($o-colors, $size);
+            }
+        }
+    }
+}
+
+// ------- Kanban records mixins -------
+@mixin o-kanban-record-title($font-size: $h5-font-size) {
+    color: $headings-color;
+    font-size: $font-size;
+    font-weight: 500;
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+// Emulate dropdown links
+@mixin o-kanban-dashboard-dropdown-link($link-padding-gap: $o-dropdown-hpadding) {
+    padding: 0;
+
+    > a {
+        margin: auto auto auto (-$link-padding-gap);
+        padding: 3px $link-padding-gap;
+        color: $dropdown-link-color;
+        display: block;
+
+        &:hover {
+            background-color: $dropdown-link-hover-bg;
+            color: $dropdown-link-hover-color;
+        }
+    }
+
+    &:last-child {
+        margin-bottom: 5px;
+    }
+}
+
+// No content helper
+@mixin o-nocontent-empty {
+    pointer-events: auto;
+    max-width: 650px;
+    margin: auto;
+    padding: 15px;
+    z-index: 1000;
+    text-align: center;
+    color: $body-color;
+    font-size: 115%;
+
+    > p:first-of-type {
+        margin-top: 0;
+        color: $headings-color;
+        font-weight: bold;
+        font-size: 125%;
+    }
+
+    a {
+        cursor: pointer;
+    }
+}
+
+%o-nocontent-init-image {
+    content: "";
+    display: block;
+    margin: auto;
+    background-size: cover;
+}
+
+%o-nocontent-empty-document {
+    @extend %o-nocontent-init-image;
+    width: 120px;
+    height: 80px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    background: transparent url(/web/static/img/empty_folder.svg) no-repeat center;
+}
+
+// Sample data
+@mixin o-sample-data-disabled {
+    opacity: 0.06;
+    pointer-events: none;
+    user-select: none;
+}
+
+// ----------------------------------------------------------------------------
+// CSS Variables
+// ----------------------------------------------------------------------------
+
+// Print a document property the right way (depending on the type of the
+// printed variable).
+@mixin print-variable($key, $value) {
+    @if $value != null {
+        $-type: type-of($value);
+        @if $-type == 'string' and str-index($value, 'var(') != 1 {
+            --#{$key}: '#{$value}';
+        } @else if $-type == 'list' {
+            --#{$key}: #{inspect($value)};
+        } @else {
+            --#{$key}: #{$value};
+        }
+    }
+}
+
+
+// ----------------------------------------------------------------------------
+// Media Type
+// ----------------------------------------------------------------------------
+
+// Conditionally includes SCSS  based on the current media context.
+// It serves two main purposes:
+// 1. Keep the base code clean by avoiding redundant `@media only screen {}`.
+// 2. Reduces CSS footprint by only compiling styles that match the current `$o-webclient-media`.
+
+@mixin media-only($-media) {
+    @if ($-media != null and type-of($-media) == 'string') {
+        @if $-media == $o-webclient-media {
+            @content;
+        }
+    } @else {
+        @warn "'media-only()' - missing argument"
+    }
+}

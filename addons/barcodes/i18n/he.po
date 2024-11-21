@@ -1,0 +1,353 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* barcodes
+# 
+# Translators:
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2024
+# Roy Sayag, 2024
+# Martin Trigaux, 2024
+# דודי מלכה <Dudimalka6@gmail.com>, 2024
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2024
+# Yihya Hugirat <hugirat@gmail.com>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-25 08:40+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Yihya Hugirat <hugirat@gmail.com>, 2024\n"
+"Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: he\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
+
+#. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_rule.py:0
+msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*'?"
+msgstr ""
+
+#. module: barcodes
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+msgid ""
+"<i>Barcodes Nomenclatures</i> define how barcodes are recognized and categorized.\n"
+"                                When a barcode is scanned it is associated to the <i>first</i> rule with a matching\n"
+"                                pattern. The pattern syntax is that of regular expression, and a barcode is matched\n"
+"                                if the regular expression matches a prefix of the barcode."
+msgstr ""
+"<i>מונחי ברקוד</i> מגדירים כיצד ברקודים מזוהים ומסווגים.\n"
+"                                כאשר ברקוד נסרק הוא משויך ל <i>כלל ראשון</i> עם תבנית התאמה\n"
+"                                . תחביר התבנית הוא של ביטוי רגיל ומתאים לברקוד\n"
+"                                אם הביטוי הרגיל תואם לקידומת של הברקוד."
+
+#. module: barcodes
+#: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
+msgid ""
+"A barcode nomenclature defines how the point of sale identify and interprets"
+" barcodes"
+msgstr "מונחי ברקוד מגדירים כיצד נקודת המכירה מזהה ומפרשת ברקודים"
+
+#. module: barcodes
+#: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
+msgid "Add a new barcode nomenclature"
+msgstr "הוסף קידומת ברקוד חדשה"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__alias
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__type__alias
+msgid "Alias"
+msgstr "כינוי"
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__always
+msgid "Always"
+msgstr "תמיד"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule__name
+msgid "An internal identification for this barcode nomenclature rule"
+msgstr "מזהה פנימי עבור כלל מונח ברקוד זה "
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__name
+msgid "An internal identification of the barcode nomenclature"
+msgstr "מזהה פנימי של מונחי הברקוד"
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__any
+msgid "Any"
+msgstr "כל"
+
+#. module: barcodes
+#. odoo-javascript
+#: code:addons/barcodes/static/src/components/barcode_scanner.xml:0
+msgid "Barcode"
+msgstr "ברקוד"
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
+msgid "Barcode Event Mixin"
+msgstr "ערבוב אירועי ברקוד"
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_barcode_nomenclature
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__name
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__barcode_nomenclature_id
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+msgid "Barcode Nomenclature"
+msgstr "מונחי ברקוד"
+
+#. module: barcodes
+#: model:ir.actions.act_window,name:barcodes.action_barcode_nomenclature_form
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_tree
+msgid "Barcode Nomenclatures"
+msgstr "מונחי ברקוד"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__pattern
+msgid "Barcode Pattern"
+msgstr "תבנית ברקוד"
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_barcode_rule
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_rule_form
+msgid "Barcode Rule"
+msgstr "כלל ברקוד"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
+msgid "Barcode Scanned"
+msgstr "ברקוד נסרק"
+
+#. module: barcodes
+#. odoo-javascript
+#: code:addons/barcodes/static/src/barcode_handlers.js:0
+msgid "Barcode: %(barcode)s"
+msgstr ""
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_res_company
+msgid "Companies"
+msgstr "חברות"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__create_uid
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__create_uid
+msgid "Created by"
+msgstr "נוצר על-ידי"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__create_date
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__create_date
+msgid "Created on"
+msgstr "נוצר ב-"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__display_name
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__display_name
+msgid "Display Name"
+msgstr "שם לתצוגה"
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__ean13
+msgid "EAN-13"
+msgstr "EAN-13"
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__ean2upc
+msgid "EAN-13 to UPC-A"
+msgstr "EAN-13 ל- UPC-A"
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__ean8
+msgid "EAN-8"
+msgstr "EAN-8"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__encoding
+msgid "Encoding"
+msgstr "קידוד"
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_ir_http
+msgid "HTTP Routing"
+msgstr "ניתוב HTTP"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__id
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__id
+msgid "ID"
+msgstr "מזהה"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_uid
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__write_uid
+msgid "Last Updated by"
+msgstr "עודכן לאחרונה על-ידי"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_date
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__write_date
+msgid "Last Updated on"
+msgstr "עדכון אחרון ב"
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__none
+msgid "Never"
+msgstr "אף פעם"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_res_company__nomenclature_id
+msgid "Nomenclature"
+msgstr "מונחים"
+
+#. module: barcodes
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+msgid ""
+"Patterns can also define how numerical values, such as weight or price, can be\n"
+"                                encoded into the barcode. They are indicated by <code>{NNN}</code> where the N's\n"
+"                                define where the number's digits are encoded. Floats are also supported with the\n"
+"                                decimals indicated with D's, such as <code>{NNNDD}</code>. In these cases,\n"
+"                                the barcode field on the associated records <i>must</i> show these digits as\n"
+"                                zeroes."
+msgstr ""
+
+#. module: barcodes
+#. odoo-javascript
+#: code:addons/barcodes/static/src/components/barcode_scanner.js:0
+msgid "Please, Scan again!"
+msgstr ""
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__name
+msgid "Rule Name"
+msgstr "שם כלל"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__rule_ids
+msgid "Rules"
+msgstr "כללים"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__sequence
+msgid "Sequence"
+msgstr "רצף"
+
+#. module: barcodes
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+msgid "Tables"
+msgstr "שולחנות"
+
+#. module: barcodes
+#. odoo-javascript
+#: code:addons/barcodes/static/src/components/barcode_scanner.xml:0
+msgid "Tap to scan"
+msgstr "לחץ כדי לסרוק"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule__pattern
+msgid "The barcode matching pattern"
+msgstr "תבנית התאמת ברקוד"
+
+#. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_rule.py:0
+msgid ""
+"The barcode pattern %(pattern)s does not lead to a valid regular expression."
+msgstr ""
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids
+msgid "The list of barcode rules"
+msgstr "רשימת כללי ברקוד"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule__alias
+msgid "The matched pattern will alias to this barcode"
+msgstr "התבנית המותאמת תהיה כינוי לברקוד זה"
+
+#. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_rule.py:0
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
+"contain one pair of braces."
+msgstr ""
+
+#. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_rule.py:0
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: braces can only "
+"contain N's followed by D's."
+msgstr ""
+
+#. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_rule.py:0
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: empty braces."
+msgstr ""
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding
+msgid ""
+"This rule will apply only if the barcode is encoded with the specified "
+"encoding"
+msgstr "כלל זה יחול רק אם הברקוד מקודד בקידוד שצוין"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__type
+msgid "Type"
+msgstr "סוג"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__upc_ean_conv
+msgid ""
+"UPC Codes can be converted to EAN by prefixing them with a zero. This "
+"setting determines if a UPC/EAN barcode should be automatically converted in"
+" one way or another when trying to match a rule with the other encoding."
+msgstr ""
+"קודי UPC ניתן להמיר ל EAN על ידי הצבת אפסים לפני הברקוד. הגדרה זו קובעת אם "
+"יש להמיר באופן אוטומטי ברקוד UPC / EAN בדרך זו או אחרת בעת ניסיון להתאים כלל"
+" לקידוד האחר."
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__upca
+msgid "UPC-A"
+msgstr "UPC-A"
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__upc2ean
+msgid "UPC-A to EAN-13"
+msgstr "UPC-A ל- EAN-13"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__upc_ean_conv
+msgid "UPC/EAN Conversion"
+msgstr "המרה UPC/EAN "
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__type__product
+msgid "Unit Product"
+msgstr "יחידת מוצר "
+
+#. module: barcodes
+#. odoo-javascript
+#: code:addons/barcodes/static/src/barcode_handlers.js:0
+msgid "Unknown barcode command"
+msgstr ""
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule__sequence
+msgid ""
+"Used to order rules such that rules with a smaller sequence match first"
+msgstr "משמש לסידור חוקים כך שחוקים עם רצף קטן יותר יתאימו קודם"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
+msgid "Value of the last barcode scanned."
+msgstr "הערך של הברקוד האחרון שנסרק."

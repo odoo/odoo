@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="email_template_form">
+            <field name="name">email.template.form</field>
+            <field name="model">mail.template</field>
+            <field name="arch" type="xml">
+                <form string="Templates">
+                    <header>
+                        <field name="ref_ir_act_window" invisible="1"/>
+                        <field name="template_fs" invisible="1"/>
+                        <field name="is_template_editor" invisible="1"/>
+                        <button string="Preview"
+                                name="%(mail_template_preview_action)d" type="action"
+                                class="btn-primary" target="new"/>
+                        <button string="Reset Template"
+                                name="%(mail_template_reset_action)d" type="action"
+                                groups="mail.group_mail_template_editor"
+                                invisible="not template_fs"/>
+                        <button string="Delete"
+                                name="open_delete_confirmation_modal" type="object"
+                                class="btn btn-secondary"
+                                invisible="(user_id != uid and not is_template_editor) or template_fs"
+                                help="Permanently delete this template"/>
+                        <button string="Add Context Action"
+                                class="btn btn-secondary"
+                                name="create_action" type="object"
+                                groups="base.group_system"
+                                invisible="ref_ir_act_window"
+                                help="Display an option on related documents to open a composition wizard with this template"/>
+                        <button string="Remove Context Action"
+                                class="btn btn-secondary"
+                                name="unlink_action" type="object"
+                                groups="base.group_no_one"
+                                invisible="not ref_ir_act_window"
+                                help="Remove the contextual action to use this template on related documents"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1><field name="name" class="w-100"
+                                required="1" placeholder='e.g. "Welcome email"'/></h1>
+                            <group>
+                                <field name="model_id" placeholder="e.g. Contact" required="1" options="{'no_create': True}"/>
+                                <field name="subject" options="{'dynamic_placeholder': true}"
+                                       placeholder='e.g. "Welcome to MyCompany" or "Nice to meet you, {{ object.name }}"'/>
+                                <field name="model" invisible="1"/>
+                            </group>
+                        </div>
+                        <notebook>
+                            <page string="Content" name="content">
+                                <field name="can_write" invisible="1"/>
+                                <field name="body_html" widget="html_mail" class="oe-bordered-editor"
+                                    options="{'codeview': true, 'dynamic_placeholder': true}"
+                                    readonly="not can_write and id"/>
+                                <field name="attachment_ids" widget="many2many_binary"/>
+                            </page>
+                            <page string="Email Configuration" name="email_configuration">
+                                <group>
+                                    <field name="email_from"
+                                            placeholder="Override author's email"/>
+                                    <field name="use_default_to"/>
+                                    <field name="email_to" invisible="use_default_to"
+                                            placeholder="Comma-separated recipient addresses"/>
+                                    <field name="partner_to" invisible="use_default_to"
+                                            placeholder="Comma-separated ids of recipient partners"/>
+                                    <field name="email_cc" invisible="use_default_to"
+                                            placeholder="Comma-separated carbon copy recipients addresses"/>
+                                    <field name="reply_to"
+                                            placeholder="Email address to which replies will be redirected when sending emails in mass"/>
+                                    <field name="scheduled_date" string="Scheduled Send Date"/>
+                                </group>
+                            </page>
+                            <page string="Settings" name="email_settings">
+                                <group col="2">
+                                    <group>
+                                        <field name="lang" placeholder="{{ object.partner_id.lang }}"/>
+                                        <field name="mail_server_id"/>
+                                        <field name="auto_delete"/>
+                                        <field name="report_template_ids" domain="[('model','=',model)]"
+                                            widget="many2many_tags"
+                                            options="{'no_create': True}"/>
+                                    </group>
+                                    <group>
+                                        <field name="user_id" widget="many2one_avatar_user"
+                                            readonly="not is_template_editor"
+                                            invisible="not is_template_editor"
+                                            placeholder="Shared with all users."
+                                            help="If set, will restrict the template to this specific user.
+                                                  If not set, shared with all users."/>
+                                        <field name="description"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                       </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="mail_template_view_form_confirm_delete" model="ir.ui.view">
+            <field name="name">mail.template.view.form.confirm.delete</field>
+            <field name="model">mail.template</field>
+            <field name="arch" type="xml">
+                <form string="Confirmation">
+                    <p>Are you sure you want to delete this Mail Template?</p>
+                    <footer>
+                        <button name="unlink" type="object" string="Delete" class="btn btn-primary"/>
+                        <button name="cancel_unlink" type="object" string="Cancel" class="btn btn-secondary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="email_template_tree">
+            <field name="name">email.template.list</field>
+            <field name="model">mail.template</field>
+            <field name="arch" type="xml">
+                <list string="Templates">
+                    <field name="mail_server_id" column_invisible="True"/>
+                    <field name="name"/>
+                    <field name="model_id" groups="base.group_no_one"/>
+                    <field name="user_id" optional="show" widget="many2one_avatar_user"/>
+                    <field name="description"/>
+                    <field name="subject" optional="hidden"/>
+                    <field name="email_from" optional="hidden"/>
+                    <field name="email_to" optional="hidden"/>
+                    <field name="partner_to" optional="hidden"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_email_template_search" model="ir.ui.view">
+            <field name="name">email.template.search</field>
+            <field name="model">mail.template</field>
+            <field name="arch" type="xml">
+                <search string="Templates">
+                    <field name="name" filter_domain="['|', '|', ('name','ilike',self), ('subject','ilike',self), ('email_to','ilike',self)]" string="Templates"/>
+                    <field name="lang"/>
+                    <field name="model_id"/>
+                    <filter name="my_templates" string="My Templates" domain="[('user_id', '=', uid)]"/>
+                    <filter name="base_templates" string="Base Templates" domain="[('template_category', '=', 'base_template')]"/>
+                    <filter name="custom_templates" string="Custom Templates" domain="[('template_category', '=', 'custom_template')]"/>
+                    <group expand="0" string="Group by...">
+                        <filter string="SMTP Server" name="smtpserver" domain="[]" context="{'group_by':'mail_server_id'}"/>
+                        <filter string="Model" name="model" domain="[]" context="{'group_by':'model_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_email_template_tree_all">
+            <field name="name">Email Templates</field>
+            <field name="res_model">mail.template</field>
+            <field name="path">email-templates</field>
+            <field name="view_mode">form,list</field>
+            <field name="view_id" ref="email_template_tree" />
+            <field name="search_view_id" ref="view_email_template_search"/>
+            <field name="context">{'search_default_base_templates': 1}</field>
+        </record>
+
+    </data>
+</odoo>

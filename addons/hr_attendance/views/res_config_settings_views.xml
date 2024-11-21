@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.hr.attendance</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="80"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Attendances" string="Attendances" name="hr_attendance" groups="hr_attendance.group_hr_attendance_manager">
+                    <block title="Modes" name="kiosk_mode_setting_container">
+                        <setting string="Kiosk Mode" company_dependent="1" help="Define the way the user will be identified by the application.">
+                            <field name="attendance_kiosk_mode" required="1" class="w-75"/>
+                            <div>
+                                <a href="https://www.odoo.com/documentation/master/applications/hr/attendances/hardware.html"
+                                    target="_blank"><i class="fa fa-fw fa-arrow-right"/>Installation Manual</a>
+                            </div>
+                        </setting>
+                        <setting string="Attendances from Backend" company_dependent="1" help="Allow Users to Check in/out from Odoo.">
+                            <field name="attendance_from_systray" required="1"/>
+                        </setting>
+                        <setting string="Automatic Check-Out" company_dependent="1" help="Automatically Check-Out Employees based on their working schedule with an additional tolerance.">
+                            <field name="auto_check_out"/>
+                            <div invisible="not auto_check_out">
+                                <span class="me-2">Tolerance</span><field name="auto_check_out_tolerance" class="text-center" style="width: 5ch;"/><span class="ms-2">Hours</span>
+                            </div>
+                        </setting>
+                        <setting string="Absence Management" company_dependent="1" help="If checked, days not covered by an attendance will be visible in the Report.">
+                            <field name="absence_management"/>
+                        </setting>
+                    </block>
+                    <block title="Kiosk Settings">
+                        <setting invisible="attendance_kiosk_mode == 'manual'" company_dependent="1" help="Define the camera used for the barcode scan.">
+                            <field name="attendance_barcode_source" required="1"/>
+                        </setting>
+                        <setting string="Display Time" company_dependent="1" help="Choose how long the greeting message will be displayed.">
+                            <field name="attendance_kiosk_delay" required="1" class="text-center" style="width: 10%; min-width: 4rem;"/><span> seconds</span>
+                        </setting>
+                        <setting title="Set PIN codes in the employee detail form (in HR Settings tab)." invisible="attendance_kiosk_mode == 'barcode'" help="Use PIN codes (defined on the Employee's profile) to check-in.">
+                            <field name="attendance_kiosk_use_pin"/>
+                        </setting>
+                        <setting title="Kiosk Mode Adress" help="Use this url to access your kiosk mode from any device.">
+                            <field name="attendance_kiosk_url" class="o_hr_kiosk_url_media w-100" style="width:100% !important;" widget="CopyClipboardURL"/>
+                            <button name="regenerate_kiosk_key" type="object" string="Generate new URL" class="btn-link" icon="fa-refresh"/>
+                        </setting>
+                    </block>
+                    <block title="Extra Hours" name="overtime_settings">
+                        <setting company_dependent="1">
+                            <div class="mt16">
+                                <label for="overtime_company_threshold" class="o_form_label">
+                                    Tolerance Time In Favor Of Company
+                                </label>
+                                <div class="text-muted">
+                                    Allow a period of time (around working hours) where extra time will not be counted, in benefit of the company
+                                </div>
+                                <span class="me-2">Time Period</span><field name="overtime_company_threshold" class="text-center" style="width: 5ch;"/><span class="ms-2">Minutes</span>
+                                <br/>
+                                <br/>
+                                <label for="overtime_employee_threshold" class="o_form_label">
+                                    Tolerance Time In Favor Of Employee
+                                </label>
+                                <div class="text-muted">
+                                    Allow a period of time (around working hours) where extra time will not be deducted, in benefit of the employee
+                                </div>
+                                <span class="me-2">Time Period </span><field name="overtime_employee_threshold" class="text-center" style="width: 5ch;"/><span> Minutes</span>
+                            </div>
+                        </setting>
+                        <setting title="Display Extra Hours." string="Display Extra Hours" company_dependent="1" help="Display Extra Hours in Kiosk mode and on User profile.">
+                            <field name="hr_attendance_display_overtime"/>
+                        </setting>
+                        <setting title="Extra Hours Validation" string="Extra Hours Validation" company_dependent="1" help="Can be converted as Time Off (cfr Time Off configuration).">
+                            <field name="attendance_overtime_validation" widget="radio"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_hr_attendance_settings" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module' : 'hr_attendance', 'bin_size': False}</field>
+    </record>
+
+    <menuitem id="hr_attendance.menu_hr_attendance_settings" name="Configuration" parent="menu_hr_attendance_root"
+        sequence="99" action="action_hr_attendance_settings" groups="hr_attendance.group_hr_attendance_manager"/>
+</odoo>

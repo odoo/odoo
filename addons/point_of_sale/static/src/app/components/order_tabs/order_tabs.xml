@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.OrderTabs">
+        <ListContainer items="orders"
+            onClickPlus="() => this.newFloatingOrder()"
+            t-slot-scope="scope"
+            class="props.class"
+            forceSmall="ui.isSmall and !env.inDialog"
+        >
+            <t t-set="order" t-value="scope.item" />
+            <button t-esc="order.getName()"
+                t-attf-class="{{pos.get_order()?.id === order.id ? 'btn-secondary active' : ''}}"
+                class="btn btn-lg btn-secondary text-truncate mx-1"
+                style="min-width: 4rem;"
+                t-on-click="() => this.selectFloatingOrder(order)"
+            />
+        </ListContainer>
+    </t>
+</templates>

@@ -1,0 +1,35 @@
+.s_carousel_intro_wrapper {
+    .s_carousel_intro {
+        @extend %s_carousel_variants;
+
+        .s_carousel_intro_controllers {
+            height: $-o-carousel-controllers-size;
+
+            .s_carousel_intro_controllers_row {
+                padding-right: calc(var(--#{$prefix}gutter-x) * .5);
+                padding-left: calc(var(--#{$prefix}gutter-x) * .5);
+            }
+
+            .o_arrows_wrapper {
+                display: flex;
+            }
+        }
+
+        &.s_carousel_arrows_hidden .o_arrows_wrapper {
+            display: none;
+        }
+
+        @include media-breakpoint-up(md) {
+            .carousel-indicators {
+                position: relative;
+                min-width: 0;
+                margin: 0;
+            }
+
+            .carousel-control-prev, .carousel-control-next {
+                position: relative;
+                width: auto;
+            }
+        }
+    }
+}

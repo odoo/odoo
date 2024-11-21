@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.DiscussSidebarCallIndicator">
+        <div t-if="props.thread.rtcSessions.length > 0" class="fa fa-volume-up" title="Ongoing call" t-att-class="{ 'text-danger': props.thread.eq(rtc.state.channel), 'mx-1': !store.discuss.isSidebarCompact }"/>
+    </t>
+</templates>

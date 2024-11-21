@@ -1,0 +1,20 @@
+// Use enterprise or theme primary color in order to have more visual similarity between
+// chatter (from backend) and frontend appearance
+$o-brand-odoo: $o-enterprise-color;
+$o-brand-primary: map-get($o-theme-color-palette, 'primary') or $o-brand-odoo;
+$o-btns-bs-override: () ;
+$o-btns-bs-override: map-merge((
+    "primary": (
+        background: $o-brand-primary,
+        border: $o-brand-primary,
+        color: $o-white,
+
+        hover-background: darken($o-brand-primary, 5%),
+        hover-border: darken($o-brand-primary, 10%),
+        hover-color: $o-white,
+
+        active-background: mix($o-brand-primary, $o-white, 10%),
+        active-border:  $o-brand-primary,
+        active-color:$o-brand-primary,
+    ),
+), $o-btns-bs-override);

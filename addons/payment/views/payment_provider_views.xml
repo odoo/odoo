@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_provider_form" model="ir.ui.view">
+        <field name="name">payment.provider.form</field>
+        <field name="model">payment.provider</field>
+        <field name="arch" type="xml">
+            <form string="Payment provider">
+                <!-- Prevent considering the field readonly and thus allow writing on it. -->
+                <field name="is_published" invisible="1"/>
+                <sheet>
+                    <!-- === Stat Buttons === -->
+                    <div class="oe_button_box" name="button_box"
+                         invisible="module_state != 'installed'">
+                        <button name="action_toggle_is_published"
+                                invisible="not is_published"
+                                class="oe_stat_button"
+                                type="object"
+                                icon="fa-globe">
+                            <div class="o_stat_info o_field_widget">
+                                <span class="o_stat_text text-success">Published</span>
+                            </div>
+                        </button>
+                        <button name="action_toggle_is_published"
+                                invisible="is_published"
+                                class="oe_stat_button"
+                                type="object"
+                                icon="fa-eye-slash">
+                            <div class="o_stat_info o_field_widget">
+                                <span class="o_stat_text text-danger">Unpublished</span>
+                            </div>
+                        </button>
+                    </div>
+                    <field name="image_128" widget="image" class="oe_avatar"
+                           readonly="module_state != 'installed'"/>
+                    <widget name="web_ribbon" title="Disabled" bg_color="text-bg-danger" invisible="module_state != 'installed' or state != 'disabled'"/>
+                    <widget name="web_ribbon" title="Test Mode" bg_color="text-bg-warning" invisible="module_state != 'installed' or state != 'test'"/>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Name"/></h1>
+                        <div invisible="module_state == 'installed' or not module_id">
+                            <a invisible="not module_to_buy" href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module" target="_blank" class="btn btn-info" role="button">Upgrade</a>
+                            <button invisible="module_to_buy" type="object" class="btn btn-primary" name="button_immediate_install" string="Install"/>
+                        </div>
+                    </div>
+                    <div id="provider_creation_warning" invisible="id" class="alert alert-warning" role="alert">
+                        <strong>Warning</strong> Creating a payment provider from the <em>CREATE</em> button is not supported.
+                        Please use the <em>Duplicate</em> action instead.
+                    </div>
+                    <group>
+                        <group name="payment_state" invisible="module_state not in ('installed', False)">
+                            <field name="code" groups="base.group_no_one" readonly="id"/>
+                            <field name="state" widget="radio"/>
+                            <field name="company_id" groups="base.group_multi_company" options='{"no_open":True}'/>
+                        </group>
+                    </group>
+                    <notebook invisible="module_id and module_state != 'installed'">
+                        <page string="Credentials" name="credentials" invisible="code == 'none'">
+                            <group name="provider_credentials"/>
+                        </page>
+                        <page string="Configuration" name="configuration">
+                            <group name="provider_config">
+                                <group string="Payment Form" name="payment_form">
+                                    <field name="payment_method_ids"
+                                           string="Payment Methods"
+                                           domain="[('is_primary', '=', True)]"
+                                           readonly="True"
+                                           invisible="state == 'disabled'"
+                                           widget="many2many_tags"
+                                    />
+                                    <div colspan="2">
+                                        <a type="object"
+                                           name="action_view_payment_methods"
+                                           class="btn btn-link"
+                                           role="button"
+                                           invisible="state == 'disabled'"
+                                        >
+                                            <i class="oi oi-fw o_button_icon oi-arrow-right"/>
+                                            Enable Payment Methods
+                                        </a>
+                                    </div>
+                                    <field name="allow_tokenization" invisible="not support_tokenization"/>
+                                    <field name="capture_manually" invisible="not support_manual_capture"/>
+                                    <field name="allow_express_checkout" invisible="not support_express_checkout"/>
+                                </group>
+                                <group string="Availability" name="availability">
+                                    <field name="maximum_amount"/>
+                                    <label for="available_currency_ids"/>
+                                    <!-- Use `o_row` to allow placing a button next to the field in overrides. -->
+                                    <div name="available_currencies" class="o_row">
+                                        <field name="available_currency_ids"
+                                               widget="many2many_tags"
+                                               placeholder="Select currencies. Leave empty not to restrict any."
+                                               options="{'no_create': True}"/>
+                                    </div>
+                                    <field name="available_country_ids"
+                                           widget="many2many_tags"
+                                           placeholder="Select countries. Leave empty to make available everywhere."
+                                           options="{'no_create': True}"/>
+                                </group>
+                                <group string="Payment Followup" name="payment_followup" invisible="1"/>
+                            </group>
+                        </page>
+                        <page string="Messages"
+                            name="messages"
+                            invisible="module_id and module_state != 'installed'">
+                            <group>
+                                <field name="pre_msg"/>
+                                <field name="pending_msg"/>
+                                <field name="auth_msg" invisible="not support_manual_capture"/>
+                                <field name="done_msg"/>
+                                <field name="cancel_msg"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="payment_provider_list" model="ir.ui.view">
+        <field name="name">payment.provider.list</field>
+        <field name="model">payment.provider</field>
+        <field name="arch" type="xml">
+            <list string="Payment Providers" create="false">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code" groups="base.group_no_one"/>
+                <field name="state"/>
+                <field name="available_country_ids" widget="many2many_tags" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="payment_provider_kanban" model="ir.ui.view">
+        <field name="name">payment.provider.kanban</field>
+        <field name="model">payment.provider</field>
+        <field name="arch" type="xml">
+            <kanban create="false" quick_create="false">
+                <field name="is_published"/>
+                <field name="module_id"/>
+                <field name="module_state"/>
+                <field name="module_to_buy"/>
+                <templates>
+                    <t t-name="card" class="flex-row">
+                        <t t-set="installed" t-value="!record.module_id.value || (record.module_id.value &amp;&amp; record.module_state.raw_value === 'installed')"/>
+                        <t t-set="to_buy" t-value="record.module_to_buy.raw_value === true"/>
+                        <t t-set="is_disabled" t-value="record.state.raw_value=='disabled'"/>
+                        <t t-set="is_published" t-value="record.is_published.raw_value === true"/>
+                        <t t-set="to_upgrade" t-value="!installed and to_buy"/>
+                        <aside>
+                            <field type="open"
+                                 name="image_128" widget="image"
+                                 class="mb-0 o_image_64_max"
+                                 alt="provider"/>
+                        </aside>
+                        <main class="ms-2">
+                            <field name="name" class="mb-0 fw-bold fs-4"/>
+                            <div class="d-flex">
+                                <t t-if="installed">
+                                    <field name="state"
+                                        widget="label_selection"
+                                        options="{'classes': {'enabled': 'success', 'test': 'warning', 'disabled' : 'light'}}"/>
+                                    <t t-if="!is_disabled">
+                                        <div>
+                                            <span t-if="is_published"
+                                                class="badge text-bg-success ms-1">
+                                                Published
+                                            </span>
+                                            <span t-else=""
+                                                class="badge text-bg-info ms-1">
+                                                Unpublished
+                                            </span>
+                                        </div>
+                                    </t>
+                                </t>
+                                <span t-if="to_upgrade" class="badge text-bg-primary">Enterprise</span>
+                            </div>
+                            <footer>
+                                <button t-if="!installed and !selection_mode and !to_buy" type="object" class="btn btn-sm btn-primary ms-auto" name="button_immediate_install">Install</button>
+                                <button t-if="installed and is_disabled and !selection_mode" type="edit" class="btn btn-sm btn-secondary ms-auto">Activate</button>
+                                <button t-if="!installed and to_buy" href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module" target="_blank" class="btn btn-sm btn-primary ms-auto">Upgrade</button>
+                            </footer>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="payment_provider_search" model="ir.ui.view">
+        <field name="name">payment.provider.search</field>
+        <field name="model">payment.provider</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="provider" filter_domain="[('name', 'ilike', self)]"/>
+                <field name="payment_method_ids"
+                       string="payment method"
+                       context="{'active_test': False}"
+                       filter_domain="[
+                            '|',
+                            ('payment_method_ids.name', 'ilike', self),
+                            ('payment_method_ids.code', 'ilike', self),
+                       ]"
+                />
+                <filter name="provider_installed" string="Installed" domain="[('module_state', '=', 'installed')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Provider" name="code" context="{'group_by': 'code'}"/>
+                    <filter string="State" name="state" context="{'group_by': 'state'}"/>
+                    <filter string="Company" name="company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_payment_provider" model="ir.actions.act_window">
+        <field name="name">Payment Providers</field>
+        <field name="res_model">payment.provider</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new payment provider
+            </p>
+        </field>
+    </record>
+
+</odoo>

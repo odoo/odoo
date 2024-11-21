@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mailing_mailing_view_form_inherit_marketing_card" model="ir.ui.view">
+        <field name="name">mailing.mailing.view.form.inherit.marketing.card</field>
+        <field name="model">mailing.mailing</field>
+        <field name="inherit_id" ref="mass_mailing.view_mail_mass_mailing_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="attributes">
+                <attribute name="invisible" separator=" or " add="card_requires_sync_count"/>
+            </xpath>
+            <xpath expr="//header" position="after">
+                <header invisible="not card_requires_sync_count">
+                    <button type="object" name="action_update_cards" class="btn-primary"
+                    confirm="Are you sure you want to update all cards of the campaign?"
+                    confirm-title="Confirm Cards Update" confirm-label="Update Cards">Update <field name="card_requires_sync_count"/> Cards</button>
+                </header>
+            </xpath>
+            <xpath expr="//field[@name='mailing_model_id']" position="attributes">
+                <attribute name="readonly" separator=" or " add="card_campaign_id"/>
+            </xpath>
+            <xpath expr="//label[@for='mailing_model_id']" position="before">
+                <field name="card_campaign_id" invisible="not card_campaign_id" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

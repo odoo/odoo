@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.ScaleScreen">
+        <Dialog size="'md'" title="props.product?.display_name || 'Unnamed Product'">
+            <t t-set-slot="header">
+                <t t-if="this.env.isSmall">
+                    <button class="btn oi oi-arrow-left" data-bs-dismiss="modal" aria-label="Close" t-on-click="props.close" />
+                </t>
+                <h4 class="modal-title text-break text-center w-100" t-att-class="{ 'me-auto': this.env.isSmall }">
+                    <t t-esc="props.productName || 'Unnamed Product'"/>
+                </h4>
+                <t t-if="!this.env.isSmall">
+                    <button type="button" class="btn-close" aria-label="Close" tabindex="-1" t-on-click="props.close"></button>
+                </t>
+            </t>
+            <div class="d-flex flex-column">
+                <div class="d-flex gap-2 align-items-center mb-2">
+                    <div class="w-60 fs-3 me-2">Gross Weight:</div>
+                    <div class="weight fs-3 px-5 js-weight text-end form-control-plaintext" t-esc="productWeightString"></div>
+                </div>
+                <div class="d-flex gap-5 align-items-center mb-2">
+                <div class="w-50">
+                    <button class="btn w-50 fs-3" t-att-class="this.state.tareLoading ? 'btn-secondary' : 'btn-primary'" t-on-click="handleTareButtonClick">
+                        <t t-if="!this.state.tareLoading">Tare</t>
+                        <t t-if="this.state.tareLoading">
+                            <i class="fa fa-spinner fa-spin"></i>
+                        </t>
+                    </button>
+                    </div>
+                    <div class="d-flex flex-row justify-content-end w-50 align-items-center px-5">
+                        <input type="number" class="form-control me-2" t-model="this.state.tare" t-on-input="handleInputChange"/>
+ 
+                        <span class="text-end fs-3" t-esc="props.uomName"/>
+                    </div>
+                </div>
+                <div class="d-flex gap-2 align-items-center mb-2">
+                    <div class="w-60 fs-3 me-2">Net Weight:</div>
+                    <div class="text-end fs-3 px-5 form-control-plaintext" t-esc="netWeight.toFixed(3) + ' ' + props.uomName"></div>
+                </div>
+                <div class="d-flex px-5 flex-row gap-2 m-2 align-items-center">
+                    <div class="product-price w-50 fs-2 text-center"
+                        t-esc="props.productPrice + '/' + props.uomName" />
+                    <div class="computed-price fd-flex flex-grow-1 p-3 rounded text-center text-bg-info bg-opacity-25 text-info fs-2 fw-bold" t-esc="computedPriceString" />
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <div class="buy-product btn btn-lg btn-primary d-flex align-items-center justify-content-center mx-2 mb-2 cursor-pointer w-100" t-on-click="confirm">
+                    Order
+                    <i class="fa fa-angle-double-right ms-2"></i>
+                </div>
+            </t>
+        </Dialog>
+    </t>
+</templates>

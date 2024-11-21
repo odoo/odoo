@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.ProductInfoBanner">
+        <div t-attf-class="{{ bannerClass }}"
+            class="section-product-info-title d-flex flex-column text-info bg-opacity-25 mx-n3 mt-n3 mb-3 px-3 py-3">
+            <div class="d-flex" t-att-class="{ 'justify-content-between': !this.ui.isSmall }">
+                <div>
+                    <div class="h4" t-esc="props.product.name"/>
+                    <div t-if="this.props.product.is_storable" class="h4">
+                        <span>On hand: </span>
+                        <span t-if="this.fetchStock.status === 'success' || this.props.info"><t t-esc="this.state.available_quantity"/> Units</span>
+                        <span t-elif="this.fetchStock.status === 'error'">N/A</span>
+                        <i t-else="" class="fa fa-fw fa-spin fa-circle-o-notch" aria-hidden="true" />
+                    </div>
+                </div>
+                <div t-att-class="{ 'text-end': !this.ui.isSmall }">
+                    <div class="h4"><t t-esc="this.env.utils.formatCurrency(state.price_with_tax)"/></div>
+                    <div class="h4">VAT: <t t-esc="state.tax_name || 0" /> (= <t t-esc="this.env.utils.formatCurrency(state.tax_amount)" />)</div>
+                </div>
+            </div>
+            <AccordionItem t-if="state.other_warehouses.length > 0">
+                <t t-set-slot="header">
+                    Inventory
+                </t>
+                <t t-set-slot="content">
+                    <div class="border-start border-info text-muted small text-muted d-flex flex-column ps-2 ms-1">
+                        <t t-foreach="state.other_warehouses" t-as="warehouse" t-key="warehouse.id">
+                            <div class="d-flex gap-2">
+                                <div>
+                                    <t t-esc="warehouse.name"/>
+                                    :
+                                </div>
+                                <div>
+                                    <span class="me-1 fw-bolder"><t t-esc="warehouse.available_quantity"/></span>
+                                    <t t-esc="warehouse.uom"/> available,
+                                </div>
+                                <div>
+                                    <span class="me-1 fw-bolder"><t t-esc="warehouse.forecasted_quantity"/></span>
+                                    forecasted
+                                </div>
+                            </div>
+                        </t>
+                    </div>             
+                </t>
+            </AccordionItem>
+        </div>
+    </t>
+</templates>

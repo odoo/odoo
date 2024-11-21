@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+
+    <t t-name="account.ProductLabelSectionAndNoteField">
+        <div class="o_field_product_label_section_and_note_cell">
+            <t t-if="props.readonly">
+                <t t-if="!isSectionOrNote">
+                    <t t-if="!isProductClickable">
+                        <span t-if="productName" t-ref="productNodeRef" class="d-flex align-items-center justify-content-between w-100">
+                            <span class="text-truncate">
+                                <t t-out="productName"/>
+                            </span>
+                        </span>
+                        <span t-if="!productName and (columnIsProductAndLabel.value and !label)" t-ref="productNodeRef" class="d-flex align-items-center justify-content-between text-muted">
+                            <span class="text-truncate">Search a product</span>
+                        </span>
+                        <t t-if="columnIsProductAndLabel.value and label">
+                            <textarea
+                                class="o_input d-print-none border-0 fst-italic"
+                                rows="1"
+                                type="text"
+                                t-att-class="sectionAndNoteClasses"
+                                t-att-value="label"
+                                t-on-change="(ev) => this.updateLabel(ev.target.value)"
+                                t-ref="labelNodeRef"
+                            />
+                        </t>
+                    </t>
+                    <t t-else="">
+                        <a t-if="(columnIsProductAndLabel.value and value) or (!columnIsProductAndLabel.value and (productName or (!productName and !label)))"
+                            class="d-flex align-items-center justify-content-between"
+                            t-attf-class="o_form_uri #{classFromDecoration}"
+                            t-att-href="value ? `#id=${value[0]}&amp;model=${relation}` : '#'"
+                            t-on-click.prevent="onClick"
+                        >
+                            <span t-ref="productNodeRef" class="w-100">
+                                <span t-esc="productName" class="text-truncate"/>
+                            </span>
+                        </a>
+                        <textarea t-if="(columnIsProductAndLabel.value and label) or (!columnIsProductAndLabel.value and !productName and label)"
+                            class="o_input d-print-none border-0 fst-italic"
+                            placeholder="Enter a description"
+                            readonly="1"
+                            rows="1"
+                            type="text"
+                            t-att-class="sectionAndNoteClasses"
+                            t-att-value="label"
+                            t-on-change="(ev) => this.updateLabel(ev.target.value)"
+                            t-ref="labelNodeRef"
+                        />
+                    </t>
+                </t>
+                <t t-else="">
+                    <t t-if="props.isSection">
+                        <input
+                            class="o_input text-wrap border-0 fst-italic"
+                            placeholder="Enter a description"
+                            type="text"
+                            t-att-class="sectionAndNoteClasses"
+                            t-att-value="label"
+                            t-on-change="(ev) => this.updateLabel(ev.target.value)"
+                            t-ref="labelNodeRef"
+                        />
+                    </t>
+                    <t t-else="">
+                        <textarea
+                            class="o_input d-print-none border-0 fst-italic"
+                            placeholder="Enter a description"
+                            rows="1"
+                            type="text"
+                            t-att-class="sectionAndNoteClasses"
+                            t-att-value="label"
+                            t-on-change="(ev) => this.updateLabel(ev.target.value)"
+                            t-ref="labelNodeRef"
+                        />
+                    </t>
+                </t>
+            </t>
+            <t t-else="">
+                <t t-if="!isSectionOrNote">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <Many2XAutocomplete t-props="Many2XAutocompleteProps"/>
+                        <button t-if="hasExternalButton"
+                                aria-label="Internal link"
+                                class="btn btn-link text-action oi o_external_button px-2"
+                                data-tooltip="Internal link"
+                                draggable="false"
+                                tabindex="-1"
+                                type="button"
+                                t-att-class="env.inDialog ? 'oi-launch' : 'oi-arrow-right'"
+                                t-on-click="onExternalBtnClick"
+                        />
+                        <button t-if="hasBarcodeButton"
+                                aria-label="Scan barcode"
+                                class="btn ms-3 o_barcode o_external_button px-2"
+                                data-tooltip="Scan barcode"
+                                draggable="false"
+                                tabindex="-1"
+                                title="Scan barcode"
+                                type="button"
+                                t-on-click="onBarcodeBtnClick"
+                        />
+                        <button t-if="columnIsProductAndLabel.value and !label"
+                                class="btn fa fa-bars text-start o_external_button px-1"
+                                data-tooltip="Click or press enter to add a description"
+                                id="labelVisibilityButtonId"
+                                type="button"
+                                t-on-click="switchLabelVisibility"
+                        />
+                    </div>
+                    <t t-if="columnIsProductAndLabel.value and (label or labelVisibility.value)">
+                        <textarea
+                            class="o_input d-print-none border-0 fst-italic"
+                            placeholder="Enter a description"
+                            rows="1"
+                            type="text"
+                            t-att-class="sectionAndNoteClasses"
+                            t-att-value="label"
+                            t-on-change="(ev) => this.updateLabel(ev.target.value)"
+                            t-ref="labelNodeRef"
+                        />
+                    </t>
+                </t>
+                <t t-else="">
+                    <t t-if="props.isSection">
+                        <input
+                            class="o_input text-wrap border-0 fst-italic"
+                            type="text"
+                            t-att-class="sectionAndNoteClasses"
+                            t-att-value="label"
+                            t-on-change="(ev) => this.updateLabel(ev.target.value)"
+                            t-ref="labelNodeRef"
+                        />
+                    </t>
+                    <t t-else="">
+                        <textarea
+                            class="o_input d-print-none border-0 fst-italic"
+                            rows="1"
+                            type="text"
+                            t-att-class="sectionAndNoteClasses"
+                            t-att-value="label"
+                            t-on-change="(ev) => this.updateLabel(ev.target.value)"
+                            t-ref="labelNodeRef"
+                        />
+                    </t>
+                </t>
+            </t>
+            <t t-if="isPrintMode.value">
+                <div class="d-none d-print-block text-wrap" t-out="label"/>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="account.ProductLabelSectionAndNoteFieldAutocomplete" t-inherit="web.Many2XAutocomplete">
+        <xpath expr="//AutoComplete[@t-else='']" position="replace">
+            <t t-else="">
+                <t t-if="!isSectionOrNote">
+                    <AutoComplete
+                        autofocus="props.autofocus"
+                        autoSelect="props.autoSelect"
+                        dropdown="props.dropdown"
+                        id="props.id"
+                        onChange.bind="onChange"
+                        onInput.bind="onInput"
+                        onSelect.bind="onSelect"
+                        placeholder="props.placeholder"
+                        resetOnSelect="props.value === ''"
+                        sources="sources"
+                        value="props.value"
+                    />
+                </t>
+                <t t-else="">
+                    <input
+                        class="o_input"
+                        type="text"
+                        t-att-id="props.id"
+                        t-att-value="props.value"
+                        t-on-keydown="onKeyDown"
+                        t-ref="section_and_note_input"
+                    />
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//span[@class='o_dropdown_button']" position="attributes">
+            <attribute name="t-if">!isSectionOrNote</attribute>
+        </xpath>
+    </t>
+
+</templates>

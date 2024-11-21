@@ -1,0 +1,1096 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_contract
+# 
+# Translators:
+# Wil Odoo, 2024
+# Larissa Manderfeld, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
+"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_count
+msgid "# Contracts"
+msgstr "# Verträge"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_resource_calendar__contracts_count
+msgid "# Contracts using it"
+msgstr "# der verwendenden Verträge"
+
+#. module: hr_contract
+#. odoo-python
+#: code:addons/hr_contract/report/hr_contract_history.py:0
+msgid "%s's Contracts History"
+msgstr "Vertragshistorie von %s"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "/ month"
+msgstr "/ Monat"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form3
+msgid ""
+"<span class=\"o_stat_text text-danger\" invisible=\"not contract_warning\" title=\"In Contract Since\">\n"
+"                                    In Contract Since\n"
+"                                </span>"
+msgstr ""
+"<span class=\"o_stat_text text-danger\" invisible=\"not contract_warning\" title=\"In Contract Since\">\n"
+"                                    Unter Vertrag seit\n"
+"                                </span>"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form3
+msgid ""
+"<span class=\"o_stat_text text-success\" invisible=\"contract_warning\" "
+"title=\"In Contract Since\"> In Contract Since</span>"
+msgstr ""
+"<span class=\"o_stat_text text-success\" invisible=\"contract_warning\" "
+"title=\"In Contract Since\"> Unter Vertrag seit</span>"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form3
+msgid ""
+"<span invisible=\"contracts_count != 1\" class=\"o_stat_text text-danger\">\n"
+"                                    Contract\n"
+"                                </span>\n"
+"                                <span invisible=\"contracts_count == 1\" class=\"o_stat_text text-danger\">\n"
+"                                    Contracts\n"
+"                                </span>"
+msgstr ""
+"<span invisible=\"contracts_count != 1\" class=\"o_stat_text text-danger\">\n"
+"                                    Vertrag\n"
+"                                </span>\n"
+"                                <span invisible=\"contracts_count == 1\" class=\"o_stat_text text-danger\">\n"
+"                                    Verträge\n"
+"                                </span>"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid ""
+"<span invisible=\"contracts_count == 1\" class=\"o_stat_text\">\n"
+"                                        Contracts\n"
+"                                    </span>\n"
+"                                    <span invisible=\"contracts_count &gt; 1\" class=\"o_stat_text\">\n"
+"                                        Contract\n"
+"                                    </span>"
+msgstr ""
+"<span invisible=\"contracts_count == 1\" class=\"o_stat_text\">\n"
+"                                        Verträge\n"
+"                                    </span>\n"
+"                                    <span invisible=\"contracts_count &gt; 1\" class=\"o_stat_text\">\n"
+"                                        Vertrag\n"
+"                                    </span>"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
+msgid "<span>Days</span>"
+msgstr "<span>Tage</span>"
+
+#. module: hr_contract
+#. odoo-python
+#: code:addons/hr_contract/models/hr_contract.py:0
+msgid ""
+"According to Employee's Working Permit Expiration Date, this contract has "
+"been put in red on the %s. Please advise and correct."
+msgstr ""
+"Laut dem Ablaufdatum der Arbeitserlaubnis des Mitarbeiters wurde dieser "
+"Vertrag auf %s rot markiert. Bitte prüfen und korrigieren Sie es."
+
+#. module: hr_contract
+#. odoo-python
+#: code:addons/hr_contract/models/hr_contract.py:0
+msgid ""
+"According to the contract's end date, this contract has been put in red on "
+"the %s. Please advise and correct."
+msgstr ""
+"Laut dem Enddatum des Vertrags wurde dieser Vertrag auf der Seite %s rot "
+"markiert. Bitte informieren Sie uns und korrigieren Sie es."
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_needaction
+msgid "Action Needed"
+msgstr "Aktion notwendig"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__active
+msgid "Active"
+msgstr "Aktiv"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__active_employee
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__active_employee
+msgid "Active Employee"
+msgstr "Aktive Mitarbeiter"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+msgid "Active Employees"
+msgstr "Aktive Mitarbeiter"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_ids
+msgid "Activities"
+msgstr "Aktivitäten"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Aktivitätsausnahme-Dekoration"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_state
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__activity_state
+msgid "Activity State"
+msgstr "Status der Aktivität"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Symbol des Aktivitätstyps"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_mail_activity_schedule
+msgid "Activity schedule plan Wizard"
+msgstr "Assistent zur Aktivitätsplanung"
+
+#. module: hr_contract
+#: model:res.groups,name:hr_contract.group_hr_contract_manager
+msgid "Administrator"
+msgstr "Administrator"
+
+#. module: hr_contract
+#. odoo-python
+#: code:addons/hr_contract/models/hr_contract.py:0
+msgid ""
+"An employee can only have one contract at the same time. (Excluding Draft and Cancelled contracts).\n"
+"\n"
+"Employee: %(employee_name)s"
+msgstr ""
+"Ein Mitarbeiter kann nur einen Vertrag zur gleichen Zeit haben. (Ausgenommen sind Vertragsentwürfe und abgebrochene Verträge).\n"
+"\n"
+"Mitarbeiter: %(employee_name)s"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Archived"
+msgstr "Archiviert"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_attachment_count
+msgid "Attachment Count"
+msgstr "Anzahl Anhänge"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_res_users__bank_account_id
+msgid "Bank Account"
+msgstr "Bankkonto"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_hr_employee_base
+msgid "Basic Employee"
+msgstr "Basismitarbeiter"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__calendar_mismatch
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__calendar_mismatch
+msgid "Calendar Mismatch"
+msgstr "Kalenderabweichung"
+
+#. module: hr_contract
+#. odoo-javascript
+#: code:addons/hr_contract/static/src/widgets/tooltip_warning_widget.js:0
+msgid ""
+"Calendar Mismatch: The employee's calendar does not match this contract's "
+"calendar. This could lead to unexpected behaviors."
+msgstr ""
+"Kalenderabweichung: Der Kalender des Mitarbeiters stimmt nicht mit dem "
+"Kalender dieses Vertrags überein. Dies kann zu unerwarteten Verhaltensweisen"
+" führen."
+
+#. module: hr_contract
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__state__cancel
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__state__cancel
+msgid "Cancelled"
+msgstr "Abgebrochen"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_res_company
+msgid "Companies"
+msgstr "Unternehmen"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__company_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__company_id
+msgid "Company"
+msgstr "Unternehmen"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__vehicle
+#: model:ir.model.fields,field_description:hr_contract.field_res_users__vehicle
+msgid "Company Vehicle"
+msgstr "Firmenwagen"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__company_country_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__company_country_id
+msgid "Company country"
+msgstr "Land des Unternehmens"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigurationseinstellungen"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_id
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_departure_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
+msgid "Contract"
+msgstr "Vertrag"
+
+#. module: hr_contract
+#. odoo-python
+#: code:addons/hr_contract/models/hr_contract.py:0
+msgid ""
+"Contract %(contract)s: start date (%(start)s) must be earlier than contract "
+"end date (%(end)s)."
+msgstr ""
+"Vertrag %(contract)s: Startdatum (%(start)s) muss vor Enddatum (%(end)s) "
+"liegen."
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__contracts_count
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contracts_count
+msgid "Contract Count"
+msgstr "Anzahl Verträge"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_departure_wizard_view_form
+msgid "Contract End Date"
+msgstr "Enddatum des Vertrags"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
+msgid "Contract Expiration Notice Period"
+msgstr "Benachrichtigungsfrist bei Vertragsende"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_res_company__contract_expiration_notice_period
+#: model:ir.model.fields,field_description:hr_contract.field_res_config_settings__contract_expiration_notice_period
+msgid "Contract Expiry Notice Period"
+msgstr "Kündigungsfrist bei Vertragsende"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
+msgid "Contract History"
+msgstr "Vertragshistorie"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__name
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
+msgid "Contract Name"
+msgstr "Vertragsbezeichnung"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__name
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "Contract Reference"
+msgstr "Vertragsreferenz"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "Contract Start Date"
+msgstr "Startdatum des Vertrags"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__contract_type_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_type_id
+msgid "Contract Type"
+msgstr "Vertragsart"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__contract_wage
+msgid "Contract Wage"
+msgstr "Vertragslohn"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contract_warning
+msgid "Contract Warning"
+msgstr "Vertragswarnung"
+
+#. module: hr_contract
+#: model:mail.message.subtype,description:hr_contract.mt_contract_pending
+#: model:mail.message.subtype,description:hr_contract.mt_department_contract_pending
+msgid "Contract about to expire"
+msgstr "Auslaufende Verträge"
+
+#. module: hr_contract
+#: model:mail.message.subtype,description:hr_contract.mt_contract_close
+msgid "Contract expired"
+msgstr "Vertrag abgelaufen"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_hr_contract_history
+msgid "Contract history"
+msgstr "Vertragshistorie"
+
+#. module: hr_contract
+#: model:mail.message.subtype,name:hr_contract.mt_department_contract_pending
+msgid "Contract to Renew"
+msgstr "Zu erneuernde Verträge"
+
+#. module: hr_contract
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract
+#: model:ir.actions.act_window,name:hr_contract.hr_contract_history_view_form_action
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_ids
+#: model:ir.ui.menu,name:hr_contract.hr_menu_contract
+#: model:ir.ui.menu,name:hr_contract.menu_hr_employee_contracts
+#: model:ir.ui.menu,name:hr_contract.menu_human_resources_configuration_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_list
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_activity
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_tree
+#: model_terms:ir.ui.view,arch_db:hr_contract.resource_calendar_view_form
+msgid "Contracts"
+msgstr "Verträge"
+
+#. module: hr_contract
+#: model:ir.actions.act_window,name:hr_contract.hr_contract_history_to_review_view_list_action
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+msgid "Contracts to Review"
+msgstr "Zu prüfende Verträge"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Contracts to review"
+msgstr "Zu prüfende Verträge"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__under_contract_state
+msgid "Contractual Status"
+msgstr "Vertraglicher Status"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__country_id
+msgid "Country"
+msgstr "Land"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__country_code
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__country_code
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__country_code
+msgid "Country Code"
+msgstr "Ländercode"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
+msgid "Create"
+msgstr "Erstellen"
+
+#. module: hr_contract
+#: model_terms:ir.actions.act_window,help:hr_contract.action_hr_contract
+msgid "Create a new contract"
+msgstr "Einen neuen Vertrag erstellen"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__create_uid
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__create_uid
+msgid "Created by"
+msgstr "Erstellt von"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__create_date
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__create_date
+msgid "Created on"
+msgstr "Erstellt am"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__currency_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__currency_id
+msgid "Currency"
+msgstr "Währung"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contract_id
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "Current Contract"
+msgstr "Aktueller Vertrag"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
+msgid "Current Contracts"
+msgstr "Aktuelle Verträge"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_employee__contract_id
+msgid "Current contract of the employee"
+msgstr "Aktueller Vertrag des Mitarbeiters"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+msgid "Currently Under Contract"
+msgstr "Derzeit unter Vertrag"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__default_resource_calendar_id
+msgid "Default Working Hours"
+msgstr "Standardarbeitszeiten"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
+msgid "Delete"
+msgstr "Löschen"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__department_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__department_id
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Department"
+msgstr "Abteilung"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_hr_departure_wizard
+msgid "Departure Wizard"
+msgstr "Austrittassistent"
+
+#. module: hr_contract
+#. odoo-python
+#: code:addons/hr_contract/wizard/hr_departure_wizard.py:0
+msgid ""
+"Departure date can't be earlier than the start date of current contract."
+msgstr ""
+"Austrittsdatum kann nicht vor dem Startdatun des aktuellen Vertrags liegen."
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "Details"
+msgstr "Details"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__display_name
+msgid "Display Name"
+msgstr "Anzeigename"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
+msgid "Edit Contract"
+msgstr "Vertrag bearbeiten"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_hr_employee
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__employee_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__employee_id
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Employee"
+msgstr "Mitarbeiter"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_hr_contract
+msgid "Employee Contract"
+msgstr "Arbeitsvertrag"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contract_ids
+msgid "Employee Contracts"
+msgstr "Arbeitsverträge"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
+msgid "Employee Information"
+msgstr "Mitarbeiterinformation"
+
+#. module: hr_contract
+#: model:res.groups,name:hr_contract.group_hr_contract_employee_manager
+msgid "Employee Manager"
+msgstr "Mitarbeitermanager"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_res_users__bank_account_id
+msgid "Employee bank account to pay salaries"
+msgstr "Bankkonto für Mitarbeiter zur Auszahlung der Gehälter"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__wage
+#: model:ir.model.fields,help:hr_contract.field_hr_contract_history__wage
+msgid "Employee's monthly gross wage."
+msgstr "Monatsbruttolohn des Mitarbeiters"
+
+#. module: hr_contract
+#: model:ir.actions.act_window,name:hr_contract.hr_contract_history_view_list_action
+msgid "Employees"
+msgstr "Mitarbeiter"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__date_end
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__date_end
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "End Date"
+msgstr "Enddatum"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__date_end
+msgid "End date of the contract (if it's a fixed-term contract)."
+msgstr "Enddatum des Vertrags (falls befristeter Vertrag)."
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__trial_date_end
+msgid "End date of the trial period (if there is one)."
+msgstr "Enddatum der Probezeit (falls vorhanden)."
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__trial_date_end
+msgid "End of Trial Period"
+msgstr "Ende der Probezeit"
+
+#. module: hr_contract
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__state__close
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__state__close
+#: model:mail.message.subtype,name:hr_contract.mt_contract_close
+msgid "Expired"
+msgstr "Abgelaufen"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__first_contract_date
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__first_contract_date
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_public__first_contract_date
+msgid "First Contract Date"
+msgstr "Eintrittsdatum"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_follower_ids
+msgid "Followers"
+msgstr "Follower"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Follower (Partner)"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "FontAwesome-Icon, z. B. fa-tasks"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
+msgid "From"
+msgstr "Von"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
+msgid "Fully Flexible"
+msgstr "Völlig flexibel"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Future Activities"
+msgstr "Anstehende Aktivitäten"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Group By"
+msgstr "Gruppieren nach"
+
+#. module: hr_contract
+#: model:ir.actions.server,name:hr_contract.ir_cron_data_contract_update_state_ir_actions_server
+msgid "HR Contract: update state"
+msgstr "HR-Vertrag: Status aktualisieren"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__hr_responsible_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__hr_responsible_id
+msgid "HR Responsible"
+msgstr "Personalverantwortlicher"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__has_message
+msgid "Has Message"
+msgstr "Hat eine Nachricht"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__date_hired
+msgid "Hire Date"
+msgstr "Einstellungsdatum"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_exception_icon
+msgid "Icon"
+msgstr "Icon"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Icon, um eine Ausnahmeaktivität anzuzeigen."
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Falls markiert, erfordern neue Nachrichten Ihre Aufmerksamkeit."
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+"Falls markiert, weisen einige Nachrichten einen Zustellungsfehler auf."
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__active_employee
+msgid ""
+"If the active field is set to False, it will allow you to hide the resource "
+"record without removing it."
+msgstr ""
+"Wenn das aktive Feld auf Falsch gesetzt ist, können Sie den "
+"Ressourcendatensatz ausblenden, ohne ihn zu entfernen."
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__is_under_contract
+msgid "Is Currently Under Contract"
+msgstr "Steht derzeit unter Vertrag"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_is_follower
+msgid "Is Follower"
+msgstr "Ist Follower"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__job_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__job_id
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Job Position"
+msgstr "Stelle"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__kanban_state
+msgid "Kanban State"
+msgstr "Kanban-Status"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__write_uid
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__write_uid
+msgid "Last Updated by"
+msgstr "Zuletzt aktualisiert von"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__write_date
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__write_date
+msgid "Last Updated on"
+msgstr "Zuletzt aktualisiert am"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Late Activities"
+msgstr "Verspätete Aktivitäten"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__legal_name
+msgid "Legal Name"
+msgstr "Rechtlicher Name"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_ir_ui_menu
+msgid "Menu"
+msgstr "Menü"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_error
+msgid "Message Delivery error"
+msgstr "Nachricht mit Zustellungsfehler"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_ids
+msgid "Messages"
+msgstr "Nachrichten"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
+msgid "Monthly Wage"
+msgstr "Monatsgehalt"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Frist für meine Aktivitäten"
+
+#. module: hr_contract
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__state__draft
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__state__draft
+msgid "New"
+msgstr "Neu"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Nächstes Aktivitätskalenderereignis"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Nächste Aktivitätsfrist"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_summary
+msgid "Next Activity Summary"
+msgstr "Zusammenfassung der nächsten Aktivität"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_type_id
+msgid "Next Activity Type"
+msgstr "Nächster Aktivitätstyp"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+msgid "No Contracts"
+msgstr "Keine Verträge"
+
+#. module: hr_contract
+#: model_terms:ir.actions.act_window,help:hr_contract.hr_contract_history_view_list_action
+msgid "No data to display"
+msgstr "Keine Daten zum Anzeigen"
+
+#. module: hr_contract
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__under_contract_state__blocked
+msgid "Not Under Contract"
+msgstr "Nicht unter Vertrag"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__notes
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "Notes"
+msgstr "Notizen"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Anzahl der Aktionen"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
+msgid ""
+"Number of days prior to the contract end date that a contract expiration "
+"warning is triggered."
+msgstr ""
+"Anzahl der Tage vor dem Enddatum des Vertrags, wann eine Warnung über das "
+"Vertragsende ausgelöst wird."
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
+msgid ""
+"Number of days prior to the work permit expiration date that a warning is "
+"triggered."
+msgstr ""
+"Anzahl der Tage vor dem Ablaufdatum der Arbeitserlaubnis, wann eine Warnung "
+"ausgelöst wird."
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_error_counter
+msgid "Number of errors"
+msgstr "Anzahl der Fehler"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Anzahl der Nachrichten mit Zustellungsfehler."
+
+#. module: hr_contract
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__kanban_state__normal
+msgid "Ongoing"
+msgstr "Laufend"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
+msgid "Open Contract"
+msgstr "Vertrag öffnen"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__hr_responsible_id
+msgid "Person responsible for validating the employee's contracts."
+msgstr ""
+"Person, die für die Validierung der Verträge des Mitarbeiters verantwortlich"
+" ist."
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_hr_employee_public
+msgid "Public Employee"
+msgstr "Öffentlicher Mitarbeiter"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__rating_ids
+msgid "Ratings"
+msgstr "Bewertungen"
+
+#. module: hr_contract
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__kanban_state__done
+msgid "Ready"
+msgstr "Bereit"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_list
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+msgid "Reference Working Time"
+msgstr "Referenz Arbeitszeit"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_resource_calendar_leaves
+msgid "Resource Time Off Detail"
+msgstr "Abwesenheitsdetails der Ressource"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_resource_calendar
+msgid "Resource Working Time"
+msgstr "Arbeitszeit der Ressource"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_resource_resource
+msgid "Resources"
+msgstr "Ressourcen"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_user_id
+msgid "Responsible User"
+msgstr "Verantwortlicher Benutzer"
+
+#. module: hr_contract
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__state__open
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__state__open
+msgid "Running"
+msgstr "Laufend"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Running Contracts"
+msgstr "Laufende Verträge"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS-Zustellungsfehler"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "Salary Information"
+msgstr "Gehaltsinformationen"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_hr_payroll_structure_type
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__structure_type_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__structure_type_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__name
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Salary Structure Type"
+msgstr "Gehaltsstrukturtyp"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Search Contract"
+msgstr "Vertrag suchen"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+msgid "Search Reference Contracts"
+msgstr "Referenzverträge suchen"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_departure_wizard__set_date_end
+msgid "Set Contract End Date"
+msgstr "Vertragsenddatum festlegen"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_departure_wizard__set_date_end
+msgid "Set the end date on the current contract."
+msgstr "Enddatum des aktuellen Vertrags festlegen."
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Show all records which have a next action date before today"
+msgstr ""
+"Alle Datensätze anzeigen, die ein Datum für die nächste Aktion vor dem "
+"heutigen Tag haben"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__date_start
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__date_start
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Start Date"
+msgstr "Startdatum"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__state
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__state
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Status"
+msgstr "Status"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_state
+#: model:ir.model.fields,help:hr_contract.field_hr_contract_history__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Status basierend auf Aktivitäten\n"
+"Überfällig: Fälligkeitsdatum bereits überschritten\n"
+"Heute: Aktivitätsdatum ist heute\n"
+"Geplant: anstehende Aktivitäten."
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__state
+msgid "Status of the contract"
+msgstr "Vertragsstatus"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__country_code
+#: model:ir.model.fields,help:hr_contract.field_hr_contract_history__country_code
+#: model:ir.model.fields,help:hr_contract.field_hr_payroll_structure_type__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"ISO-Ländercode in zwei Zeichen. \n"
+"Sie können dieses Feld auch für eine Schnellsuche einsetzen."
+
+#. module: hr_contract
+#. odoo-python
+#: code:addons/hr_contract/models/hr_contract.py:0
+msgid "The contract of %s is about to expire."
+msgstr "Der Vertrag von %s läuft in Kürze aus."
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
+msgid "The default working hours are set in configuration."
+msgstr "Die Standardarbeitszeiten werden in der Konfiguration festgelegt."
+
+#. module: hr_contract
+#. odoo-python
+#: code:addons/hr_contract/models/hr_contract.py:0
+msgid "The work permit of %s is about to expire."
+msgstr "Die Arbeitserlaubnis von %s läuft in Kürze ab."
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
+msgid "To"
+msgstr "An"
+
+#. module: hr_contract
+#: model:mail.message.subtype,name:hr_contract.mt_contract_pending
+msgid "To Renew"
+msgstr "Zu erneuern"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Today Activities"
+msgstr "Heutige Aktivitäten"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "Type in notes about this contract..."
+msgstr "Geben Sie Anmerkungen zu diesem Vertrag ein ..."
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Typ der Ausnahmeaktivität im Datensatz."
+
+#. module: hr_contract
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__under_contract_state__done
+msgid "Under Contract"
+msgstr "Unter Vertrag"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_res_users
+msgid "User"
+msgstr "Benutzer"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__visa_no
+msgid "Visa No"
+msgstr "Visum-Nr."
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__wage
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__wage
+msgid "Wage"
+msgstr "Lohn"
+
+#. module: hr_contract
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__kanban_state__blocked
+msgid "Warning"
+msgstr "Warnung"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__website_message_ids
+msgid "Website Messages"
+msgstr "Website-Nachrichten"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__website_message_ids
+msgid "Website communication history"
+msgstr "Website-Kommunikationsverlauf"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
+msgid "Work Permit Expiration Notice Period"
+msgstr "Benachrichtigungsfrist bei Ablauf der Arbeitserlaubnis"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_res_company__work_permit_expiration_notice_period
+#: model:ir.model.fields,field_description:hr_contract.field_res_config_settings__work_permit_expiration_notice_period
+msgid "Work Permit Expiry Notice Period"
+msgstr "Kündigungsfrist bei Ablauf der Arbeitserlaubnis"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__permit_no
+msgid "Work Permit No"
+msgstr "Arbeitserlaubnisnr."
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__resource_calendar_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__resource_calendar_id
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Working Schedule"
+msgstr "Arbeitsplan"
+
+#. module: hr_contract
+#. odoo-python
+#: code:addons/hr_contract/models/hr_employee.py:0
+msgid "You cannot delete an employee with a running contract."
+msgstr ""
+"Sie können einen Mitarbeiter mit einem laufenden Vertrag nicht löschen."

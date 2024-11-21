@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.ReceiptHeader">
+        <img t-attf-src="/web/image?model=res.company&amp;id={{props.data.company.id}}&amp;field=logo" alt="Logo" class="pos-receipt-logo"/>
+        <br/>
+        <h1 class="tracking-number text-center" style="font-size: 100px" t-if="props.data.trackingNumber and props.data.bigTrackingNumber" t-esc="props.data.trackingNumber" />
+        <div class="d-flex flex-column align-items-center">
+            <div class="pos-receipt-contact">
+                <!-- contact address -->
+                <div t-if="props.data.company.partner_id?.[1]" t-esc="props.data.company.partner_id[1]" />
+                <t t-if="props.data.company.phone">
+                    <div>Tel:<t t-esc="props.data.company.phone" /></div>
+                </t>
+                <t t-if="props.data.company.vat">
+                    <div><t t-esc="props.data.company.country_id?.vat_label || 'Tax ID'"/>: <t t-esc="props.data.company.vat" /></div>
+                </t>
+                <div t-if="props.data.company.email" t-esc="props.data.company.email" />
+                <div t-if="props.data.company.website" t-esc="props.data.company.website" />
+                <div t-if="props.data.header" style="white-space:pre-line" t-esc="props.data.header" />
+                <div t-if="props.data.cashier" class="cashier">
+                    <div>--------------------------------</div>
+                    <div t-esc="props.data.cashier" />
+                </div>
+                <div t-if="props.data.trackingNumber and !props.data.bigTrackingNumber">
+                    <span class="tracking-number fs-1" t-esc="props.data.trackingNumber" />
+                </div>
+            </div>
+        </div>
+        <br />
+    </t>
+</templates>

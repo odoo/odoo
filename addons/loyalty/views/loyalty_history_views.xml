@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="loyalty_history_form" model="ir.ui.view">
+        <field name="name">loyalty.history.view.form</field>
+        <field name="model">loyalty.history</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="card_id"/>
+                            <field name="description"/>
+                            <field name="order_id" invisible="not order_id"/>
+                            <field name="order_model" invisible="True"/>
+                        </group>
+                        <group>
+                            <field name="issued"/>
+                            <field name="used"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

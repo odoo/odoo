@@ -1,0 +1,265 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_adyen
+# 
+# Translators:
+# Wil Odoo, 2024
+# Daye Jeong, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Daye Jeong, 2024\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: payment_adyen
+#: model_terms:ir.ui.view,arch_db:payment_adyen.payment_provider_form
+msgid ""
+"<strong>Warning:</strong> To capture the amount manually, you also need to set\n"
+"                    the Capture Delay to manual on your Adyen account settings."
+msgstr ""
+"<strong>경고:</strong> 금액을 수기로 매입하려면, Adyen 계정 설정에서\n"
+"                    매입 지연을 수동으로 설정해야 합니다."
+
+#. module: payment_adyen
+#. odoo-python
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+msgid ""
+"A request was sent to void the transaction with reference %(reference)s "
+"(%(provider)s)."
+msgstr "%(reference)s 거래를 취소하려는 요청이 전송되었습니다. (%(provider)s)"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_api_key
+msgid "API Key"
+msgstr "API 키"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_api_url_prefix
+msgid "API URL Prefix"
+msgstr "API URL 접두사"
+
+#. module: payment_adyen
+#: model:ir.model.fields.selection,name:payment_adyen.selection__payment_provider__code__adyen
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_adyen
+#. odoo-python
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+msgid ""
+"An error occurred during the processing of your payment. Please try again."
+msgstr "결제를 처리하는 동안 오류가 발생했습니다. 다시 시도해 주세요."
+
+#. module: payment_adyen
+#. odoo-javascript
+#: code:addons/payment_adyen/static/src/js/payment_form.js:0
+msgid "Cannot display the payment form"
+msgstr "결제 양식을 표시할 수 없습니다."
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_client_key
+msgid "Client Key"
+msgstr "클라이언트 키"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__code
+msgid "Code"
+msgstr "코드"
+
+#. module: payment_adyen
+#. odoo-python
+#: code:addons/payment_adyen/models/payment_provider.py:0
+msgid "Could not establish the connection to the API."
+msgstr "API 연결을 설정할 수 없습니다."
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_hmac_key
+msgid "HMAC Key"
+msgstr "HMAC 키"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_capture_wizard__has_adyen_tx
+msgid "Has Adyen Tx"
+msgstr "Adyen Tx 있음"
+
+#. module: payment_adyen
+#. odoo-javascript
+#: code:addons/payment_adyen/static/src/js/payment_form.js:0
+msgid "Incorrect payment details"
+msgstr "결제 정보가 잘못되었습니다."
+
+#. module: payment_adyen
+#: model_terms:ir.ui.view,arch_db:payment_adyen.payment_provider_form
+msgid "Learn More"
+msgstr "추가 정보"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_merchant_account
+msgid "Merchant Account"
+msgstr "상인 계정"
+
+#. module: payment_adyen
+#. odoo-python
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+msgid "No transaction found matching reference %s."
+msgstr "%s 참조와 일치하는 거래 항목이 없습니다."
+
+#. module: payment_adyen
+#: model:ir.model,name:payment_adyen.model_payment_capture_wizard
+msgid "Payment Capture Wizard"
+msgstr "결제 매입 마법사"
+
+#. module: payment_adyen
+#: model:ir.model,name:payment_adyen.model_payment_provider
+msgid "Payment Provider"
+msgstr "결제대행업체"
+
+#. module: payment_adyen
+#: model:ir.model,name:payment_adyen.model_payment_token
+msgid "Payment Token"
+msgstr "결제 토큰"
+
+#. module: payment_adyen
+#: model:ir.model,name:payment_adyen.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "지불 거래"
+
+#. module: payment_adyen
+#. odoo-javascript
+#: code:addons/payment_adyen/static/src/js/payment_form.js:0
+msgid "Payment processing failed"
+msgstr "결제 프로세스 실패"
+
+#. module: payment_adyen
+#. odoo-python
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+msgid "Received data for child transaction with missing transaction values"
+msgstr "거래 값이 누락된 하위 거래에 대한 수신 데이터"
+
+#. module: payment_adyen
+#. odoo-python
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+msgid "Received data with invalid payment state: %s"
+msgstr "잘못된 결제 상태의 데이터가 수신되었습니다: %s"
+
+#. module: payment_adyen
+#. odoo-python
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+msgid "Received data with missing merchant reference"
+msgstr "판매자 참조가 누락된 데이터가 수신되었습니다"
+
+#. module: payment_adyen
+#. odoo-python
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+msgid "Received data with missing payment state."
+msgstr "결제 상태가 누락된 데이터가 수신되었습니다. "
+
+#. module: payment_adyen
+#. odoo-python
+#: code:addons/payment_adyen/controllers/main.py:0
+msgid "Received tampered payment request data."
+msgstr "변조된 결제 요청 데이터가 수신되었습니다."
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_token__adyen_shopper_reference
+msgid "Shopper Reference"
+msgstr "구매자 참조"
+
+#. module: payment_adyen
+#: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_api_key
+msgid "The API key of the webservice user"
+msgstr "웹서비스 사용자의 API 키"
+
+#. module: payment_adyen
+#: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_hmac_key
+msgid "The HMAC key of the webhook"
+msgstr "webhook의 HMAC 키"
+
+#. module: payment_adyen
+#. odoo-python
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+msgid ""
+"The amount processed by Adyen for the transaction %s is different than the "
+"one requested. Another transaction is created with the correct amount."
+msgstr "거래 %s에 대해 Adyen에서 처리한 금액이 요청된 금액과 일치하지 않습니다. 올바른 금액으로 다른 거래가 생성됩니다."
+
+#. module: payment_adyen
+#: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_api_url_prefix
+msgid "The base URL for the API endpoints"
+msgstr "API 엔드포인트의 기본 URL"
+
+#. module: payment_adyen
+#. odoo-python
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+msgid "The capture of the transaction with reference %s failed."
+msgstr "참조 %s가 포함된 거래를 캡처하지 못했습니다."
+
+#. module: payment_adyen
+#: model_terms:ir.ui.view,arch_db:payment_adyen.payment_capture_wizard_view_form
+msgid ""
+"The capture or void of the transaction might take a few minutes to be\n"
+"                    processed by Adyen and reflected in Odoo."
+msgstr ""
+"거래의 매입 또는 무효화는 Adyen에서 처리되며, Odoo에 반영되기 까지\n"
+"                    몇 분 이상 소요될 수 있습니다."
+
+#. module: payment_adyen
+#. odoo-python
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+msgid ""
+"The capture request of %(amount)s for the transaction with reference %(ref)s"
+" has been requested (%(provider_name)s)."
+msgstr "%(amount)s 금액의 매입이 요청되었습니다. (참조 %(ref)s, %(provider_name)s)."
+
+#. module: payment_adyen
+#: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_client_key
+msgid "The client key of the webservice user"
+msgstr "웹서비스 사용자의 클라이언트 키"
+
+#. module: payment_adyen
+#: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_merchant_account
+msgid "The code of the merchant account to use with this provider"
+msgstr "이 공급업체에서 사용할 판매자 계정 코드입니다."
+
+#. module: payment_adyen
+#. odoo-python
+#: code:addons/payment_adyen/models/payment_provider.py:0
+msgid "The communication with the API failed. Details: %s"
+msgstr "API와의 통신에 실패했습니다. 세부 정보: %s"
+
+#. module: payment_adyen
+#: model:ir.model.fields,help:payment_adyen.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "이 결제대행업체의 기술 코드입니다."
+
+#. module: payment_adyen
+#. odoo-python
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+msgid "The transaction is not linked to a token."
+msgstr "거래가 토큰에 연결되어 있지 않습니다."
+
+#. module: payment_adyen
+#: model:ir.model.fields,help:payment_adyen.field_payment_token__adyen_shopper_reference
+msgid "The unique reference of the partner owning this token"
+msgstr "이 토큰을 소유하고 있는 협력사의 고유 참조"
+
+#. module: payment_adyen
+#. odoo-python
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+msgid "The void of the transaction with reference %s failed."
+msgstr "참조 %s가 포함된 거래를 무효화하지 못했습니다."
+
+#. module: payment_adyen
+#. odoo-python
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+msgid "Your payment was refused. Please try again."
+msgstr "결제가 승인되지 않았습니다. 다시 시도해 주세요."

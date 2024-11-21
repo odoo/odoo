@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.FollowerList">
+    <t t-if="props.thread.hasWriteAccess">
+        <DropdownItem onSelected="() => this.onClickAddFollowers()" attrs="{ href: '#' }">
+            Add Followers
+        </DropdownItem>
+        <div t-if="props.thread.followers.length > 0" role="separator" class="dropdown-divider"/>
+    </t>
+    <t t-if="props.thread.selfFollower">
+        <t t-call="mail.Follower">
+            <t t-set="follower" t-value="props.thread.selfFollower"/>
+        </t>
+        <div t-if="props.thread.followers.length > 0" role="separator" class="dropdown-divider"/>
+    </t>
+    <t t-if="props.thread.followers.length > 0">
+        <t t-foreach="props.thread.followers" t-as="follower" t-key="follower.id">
+            <t t-call="mail.Follower">
+                <t t-set="follower" t-value="follower"/>
+            </t>
+        </t>
+        <span t-if="!props.thread.followersFullyLoaded" class="btn btn-link" t-on-click="props.thread.loadMoreFollowers" t-ref="load-more">Load more</span>
+    </t>
+    <div t-elif="!props.thread.hasWriteAccess" class="dropdown-item disabled">
+        No Followers
+    </div>
+</t>
+
+<t t-name="mail.Follower">
+    <div class="dropdown-item o-mail-Follower d-flex justify-content-between p-0">
+        <a class="o-mail-Follower-details d-flex align-items-center flex-grow-1 px-3 o-min-width-0" t-att-class="{ 'o-inactive fst-italic opacity-25': !follower.is_active }" href="#" role="menuitem" t-on-click.prevent="(ev) => this.onClickDetails(ev, follower)">
+            <img class="o-mail-Follower-avatar me-2 rounded o_object_fit_cover" t-att-src="follower.partner.avatarUrl" alt=""/>
+            <span class="flex-shrink text-truncate" t-esc="follower.partner.name"/>
+        </a>
+        <t t-if="follower.isEditable">
+            <button class="o-mail-Follower-action btn btn-icon rounded-0" title="Edit subscription" aria-label="Edit subscription" t-on-click="(ev) => this.onClickEdit(ev, follower)">
+                <i class="fa fa-pencil"/>
+            </button>
+            <button class="o-mail-Follower-action btn btn-icon rounded-0" title="Remove this follower" aria-label="Remove this follower" t-on-click="(ev) => this.onClickRemove(ev, follower)">
+                <i class="fa fa-remove"/>
+            </button>
+        </t>
+    </div>
+</t>
+
+</templates>

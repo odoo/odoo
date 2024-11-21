@@ -1,0 +1,43 @@
+<templates xml:space="preserve">
+    <t t-name="html_editor.ImageCrop">
+        <div t-name="html_editor.ImageCrop"
+             class="o_we_crop_widget"
+             contenteditable="false"
+             t-ref="el"
+             t-on-zoom="this.onCropZoom"
+        >
+            <div class="o_we_cropper_wrapper" t-ref="cropperWrapper">
+                <img class="o_we_cropper_img" t-ref="imageRef"/>
+                <div class="o_we_crop_buttons text-center mt16 position-fixed o_we_no_overlay" contenteditable="false">
+                    <div class="btn-group btn-group-toggle" title="Aspect Ratio" data-bs-toggle="buttons">
+                        <t t-foreach="this.aspectRatios" t-as="ratio" t-key="ratio">
+                            <t t-set="is_active" t-value="ratio === this.aspectRatio"/>
+                            <label t-attf-class="btn #{is_active and 'active' or ''}" t-on-click="() => this.setAspectRatio(ratio)">
+                                <input type="radio" /><t t-esc="ratio_value.label"/>
+                            </label>
+                        </t>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <button type="button" title="Zoom In" t-on-click="() => this.onZoom(0.1)"><i class="fa fa-fw fa-search-plus"/></button>
+                        <button type="button" title="Zoom Out" t-on-click="() => this.onZoom(-0.1)"><i class="fa fa-fw fa-search-minus"/></button>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <button type="button" title="Rotate Left" t-on-click="() => this.onRotate(-90)"><i class="fa fa-fw fa-rotate-left"/></button>
+                        <button type="button" title="Rotate Right" t-on-click="() => this.onRotate(90)"><i class="fa fa-fw fa-rotate-right"/></button>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <button type="button" title="Flip Horizontal" t-on-click="() => this.onFlip('scaleX')"><i class="oi oi-fw oi-arrows-h"/></button>
+                        <button type="button" title="Flip Vertical" t-on-click="() => this.onFlip('scaleY')"><i class="oi oi-fw oi-arrows-v"/></button>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <button type="button" title="Reset Image" t-on-click="this.onReset"><i class="fa fa-refresh"/> Reset Image</button>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <button type="button" title="Apply" t-on-click="this.save" class="btn btn-primary"><i class="fa fa-check"/> Apply</button>
+                        <button type="button" title="Discard" t-on-click="this.closeCropper" class="btn btn-danger"><i class="fa fa-times"/> Discard</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

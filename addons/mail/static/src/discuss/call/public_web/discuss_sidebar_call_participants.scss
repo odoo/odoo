@@ -1,0 +1,32 @@
+.o-mail-DiscussSidebarCallParticipants-avatar.o-isTalking {
+    outline: 3px solid var(--discuss-talkingColor, $o-discuss-talkingColor);
+    outline-offset: -3px;
+}
+
+.o-mail-DiscussSidebarCallParticipants-name {
+    color: $black;
+
+    &:not(.o-isTalking) {
+        color: $text-muted;
+        opacity: 75%;
+    }
+}
+
+.o-mail-DiscussSidebarCallParticipants-status {
+    &.o-compact {
+        top: -3px;
+
+        span {
+            padding: map-get($spacers, 1) / 2;
+        }
+
+        .o-live {
+            font-size: 0.5rem;
+        }
+    }
+
+    .o-live {
+        font-size: 0.6rem;
+        padding: map-get($spacers, 1) / 2;
+    }
+}

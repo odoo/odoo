@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="address" inherit_id="website_sale.address">
+        <div id="div_vat" position="before">
+            <t t-if="res_company.country_id.code == 'EC'">
+                <!-- Break the line to put Identification Type and Number (vat) on the same line -->
+                <div class="clearfix"/>
+
+                <div class="col-xl-6 mb-3">
+                    <label class="col-form-label" for="l10n_latam_identification_type_id">Identification Type</label>
+                    <t t-if="can_edit_vat">
+                        <select name="l10n_latam_identification_type_id" class="form-select">
+                            <option value="">Identification Type...</option>
+                            <t t-foreach="identification_types" t-as="id_type">
+                                <option t-att-value="id_type.id"
+                                    t-att-selected="id_type.id == partner_sudo.l10n_latam_identification_type_id.id">
+                                    <t t-out="id_type.name"/>
+                                </option>
+                            </t>
+                        </select>
+                    </t>
+                    <t t-else="">
+                        <p class="form-control"
+                            t-out="partner_sudo.l10n_latam_identification_type_id.name"
+                            readonly="1"
+                            title="Changing Identification type is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."/>
+                        <input name="l10n_latam_identification_type_id"
+                            class="form-control"
+                            t-att-value="partner_sudo.l10n_latam_identification_type_id.id"
+                            type="hidden"/>
+                    </t>
+                </div>
+            </t>
+        </div>
+    </template>
+
+</odoo>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="mail.MailComposerTemplateSelector">
+        <Dropdown t-if="props.record.data.can_edit_body" menuClass="'mail-composer-template-dropdown'">
+            <button class="btn btn-light w-auto mail-composer-template-dropdown-btn" data-hotkey="t">
+                <i class="fa fa-fw fa-ellipsis-v"/>
+            </button>
+            <t t-set-slot="content">
+                <div class="px-3 pb-1 text-muted">Insert Template</div>
+                <t t-foreach="state.templates" t-as="template" t-key="template_index">
+                    <DropdownItem onSelected="() => this.onLoadTemplate(template)">
+                        <t t-if="template.display_name" t-out="template.display_name"/>
+                        <span t-else="" class="fst-italic">Untitled</span>
+                    </DropdownItem>
+                </t>
+                <div t-if="state.templates.length === 0" class="fst-italic px-3">
+                    No saved templates
+                </div>
+                <DropdownItem t-if="state.templates.length >= this.limit" onSelected="() => this.onSelectTemplateSearchMoreBtnClick()">
+                    <a href="#">Search More...</a>
+                </DropdownItem>
+                <div class="dropdown-divider"/>
+                <Dropdown>
+                    <div>Save as Template</div>
+                    <t t-set-slot="content">
+                        <div class="px-3 pb-1 text-muted">Overwrite Template</div>
+                        <t t-foreach="state.templates" t-as="template" t-key="template_index">
+                            <DropdownItem onSelected="() => this.onOverwriteTemplate(template)">
+                                <t t-if="template.display_name" t-out="template.display_name"/>
+                                <span t-else="" class="fst-italic">Untitled</span>
+                            </DropdownItem>
+                        </t>
+                        <div t-if="state.templates.length === 0" class="fst-italic px-3">
+                            No saved templates
+                        </div>
+                        <DropdownItem t-if="state.templates.length >= this.limit" onSelected="() => this.onOverwriteTemplateSearchMoreBtnClick()">
+                            <a href="#">Search More...</a>
+                        </DropdownItem>
+                        <div class="dropdown-divider"/>
+                        <DropdownItem onSelected="() => this.onSaveTemplate()">
+                            Save as Template
+                        </DropdownItem>
+                    </t>
+                </Dropdown>
+                <div class="dropdown-divider"/>
+                <Dropdown>
+                    <div>Delete Template</div>
+                    <t t-set-slot="content">
+                        <div class="px-3 pb-1 text-muted">Delete Template</div>
+                        <t t-foreach="state.templates" t-as="template" t-key="template_index">
+                            <DropdownItem onSelected="() => this.onDeleteTemplate(template)">
+                                <t t-if="template.display_name" t-out="template.display_name"/>
+                                <span t-else="" class="fst-italic">Untitled</span>
+                            </DropdownItem>
+                        </t>
+                        <div t-if="state.templates.length === 0" class="fst-italic px-3">
+                            No saved templates
+                        </div>
+                        <DropdownItem t-if="state.templates.length >= this.limit" onSelected="() => this.onDeleteTemplateSearchMoreBtnClick()">
+                            <a href="#">Search More...</a>
+                        </DropdownItem>
+                    </t>
+                </Dropdown>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

@@ -1,0 +1,2884 @@
+///
+/// This file regroups the website design rules.
+///
+
+$-seen-urls: ();
+@each $alias, $key in $o-font-aliases-to-keys {
+    $-url: o-get-font-info($alias, 'url');
+    @if $-url and index($-seen-urls, $-url) == null {
+        $-seen-urls: append($-seen-urls, $-url);
+        @import url("https://fonts.googleapis.com/css?family=#{unquote($-url)}&display=swap");
+    } @else {
+        $-name: o-get-font-info($alias, 'name');
+        $-attachment: o-get-font-info($alias, 'attachment');
+        @if $-attachment {
+            @import url("/web/content/#{$-attachment}/google-font-#{unquote($-name)}");
+        }
+    }
+}
+
+:root {
+    // Border color
+    // Let borders color adapt according to body and CCs. Also, set a fallback
+    // value for browsers that don't support the color-mix function (used by
+    // 'fade-currentColor').
+    --o-border-color: #{o-color('300')};
+    --o-border-color: #{fade-currentColor()};
+
+    // The theme customize modal JS will need to know the value of some scss
+    // variables used to render the user website, and those may have been
+    // customized by themes, the user or anything else (so there is no file to
+    // parse to get them). Those will be printed here as CSS variables.
+
+    @include print-variable('support-13-0-color-system', $o-support-13-0-color-system);
+    @include print-variable('has-customized-13-0-color-system', $o-has-customized-13-0-color-system);
+
+    // 1) Handle default values
+    @include print-variable('header-font-size', $font-size-base);
+
+    $-font-website-value: o-website-value('font');
+    @include print-variable('headings-font', $-font-website-value);
+    @include print-variable('navbar-font', $-font-website-value);
+    @include print-variable('buttons-font', $-font-website-value);
+
+    // 2) The values in the $theme-colors map are already printed by Bootstrap.
+
+    // 3) The values in the $colors map are also printed by Bootstrap. However,
+    // we have color variables which can contain a reference to a color
+    // combination and that is the info we want in that case.
+    @each $key in ('menu', 'header-sales_one', 'header-sales_two', 'header-sales_three', 'header-sales_four', 'footer', 'copyright') {
+        $-value: map-get($o-color-palette, $key);
+        @if type-of($-value) == 'number' {
+            @include print-variable($key, $-value);
+        }
+    }
+
+    // 4) The Odoo values map, $o-website-values, must be printed.
+    @each $key, $value in $o-website-values {
+        @include print-variable($key, $value);
+    }
+
+    // 5) Use final value used by the theme
+    @include print-variable('logo-height', $o-theme-navbar-logo-height);
+    @include print-variable('fixed-logo-height', $o-theme-navbar-fixed-logo-height);
+
+    $-font-names: map-keys($o-theme-font-configs);
+    @include print-variable('number-of-fonts', length($-font-names));
+    $i: 1;
+    @each $font-name in $-font-names {
+        @include print-variable('font-number-#{$i}', $font-name);
+        $i: $i + 1;
+    }
+
+    // Note: font-size are not needed as already added by web_editor for the
+    // font-size dropdown
+    @include print-variable('paragraph-margin-top', $paragraph-margin-top);
+    @include print-variable('paragraph-margin-bottom', $paragraph-margin-bottom);
+    @include print-variable('h2-line-height', $h2-line-height);
+    @include print-variable('h3-line-height', $h3-line-height);
+    @include print-variable('h4-line-height', $h4-line-height);
+    @include print-variable('h5-line-height', $h5-line-height);
+    @include print-variable('h6-line-height', $h6-line-height);
+    @include print-variable('display-1-line-height', $display-1-line-height);
+    @include print-variable('display-2-line-height', $display-2-line-height);
+    @include print-variable('display-3-line-height', $display-3-line-height);
+    @include print-variable('display-4-line-height', $display-4-line-height);
+    // We cannot rely on $o-theme-hx-font because they contain the list of
+    // fallback fonts (unicode...).
+    $-headings-or-main-font: o-website-value('headings-font') or o-website-value('font');
+    @include print-variable('h2-font', o-website-value('h2-font') or $-headings-or-main-font);
+    @include print-variable('h3-font', o-website-value('h3-font') or $-headings-or-main-font);
+    @include print-variable('h4-font', o-website-value('h4-font') or $-headings-or-main-font);
+    @include print-variable('h5-font', o-website-value('h5-font') or $-headings-or-main-font);
+    @include print-variable('h6-font', o-website-value('h6-font') or $-headings-or-main-font);
+    @include print-variable('display-1-font', o-website-value('display-1-font') or $-headings-or-main-font);
+    @include print-variable('display-2-font', o-website-value('display-2-font') or $-headings-or-main-font);
+    @include print-variable('display-3-font', o-website-value('display-3-font') or $-headings-or-main-font);
+    @include print-variable('display-4-font', o-website-value('display-4-font') or $-headings-or-main-font);
+    @include print-variable('set-headings-font', o-get-font-info('headings'));
+    @include print-variable('set-h2-font', o-get-font-info('h2'));
+    @include print-variable('set-h3-font', o-get-font-info('h3'));
+    @include print-variable('set-h4-font', o-get-font-info('h4'));
+    @include print-variable('set-h5-font', o-get-font-info('h5'));
+    @include print-variable('set-h6-font', o-get-font-info('h6'));
+    @include print-variable('set-display-1-font', o-get-font-info('display-1'));
+    @include print-variable('set-display-2-font', o-get-font-info('display-2'));
+    @include print-variable('set-display-3-font', o-get-font-info('display-3'));
+    @include print-variable('set-display-4-font', o-get-font-info('display-4'));
+    @include print-variable('headings-line-height', $headings-line-height);
+    @include print-variable('headings-margin-top', $headings-margin-top);
+    @include print-variable('headings-margin-bottom', $headings-margin-bottom);
+    @include print-variable('h2-margin-top', $h2-margin-top);
+    @include print-variable('h3-margin-top', $h3-margin-top);
+    @include print-variable('h4-margin-top', $h4-margin-top);
+    @include print-variable('h5-margin-top', $h5-margin-top);
+    @include print-variable('h6-margin-top', $h6-margin-top);
+    @include print-variable('display-1-margin-top', $display-1-margin-top);
+    @include print-variable('display-2-margin-top', $display-2-margin-top);
+    @include print-variable('display-3-margin-top', $display-3-margin-top);
+    @include print-variable('display-4-margin-top', $display-4-margin-top);
+    @include print-variable('h2-margin-bottom', $h2-margin-bottom);
+    @include print-variable('h3-margin-bottom', $h3-margin-bottom);
+    @include print-variable('h4-margin-bottom', $h4-margin-bottom);
+    @include print-variable('h5-margin-bottom', $h5-margin-bottom);
+    @include print-variable('h6-margin-bottom', $h6-margin-bottom);
+    @include print-variable('display-1-margin-bottom', $display-1-margin-bottom);
+    @include print-variable('display-2-margin-bottom', $display-2-margin-bottom);
+    @include print-variable('display-3-margin-bottom', $display-3-margin-bottom);
+    @include print-variable('display-4-margin-bottom', $display-4-margin-bottom);
+
+    @include print-variable('set-buttons-font', o-get-font-info('buttons'));
+    @include print-variable('btn-padding-y', $btn-padding-y);
+    @include print-variable('btn-padding-x', $btn-padding-x);
+    @include print-variable('btn-font-size', $btn-font-size);
+    @include print-variable('btn-padding-y-sm', $btn-padding-y-sm);
+    @include print-variable('btn-padding-x-sm', $btn-padding-x-sm);
+    @include print-variable('btn-font-size-sm', $btn-font-size-sm);
+    @include print-variable('btn-padding-y-lg', $btn-padding-y-lg);
+    @include print-variable('btn-padding-x-lg', $btn-padding-x-lg);
+    @include print-variable('btn-font-size-lg', $btn-font-size-lg);
+    @include print-variable('btn-border-width', $btn-border-width);
+    @include print-variable('btn-border-radius', $btn-border-radius);
+    @include print-variable('btn-border-radius-sm', $btn-border-radius-sm);
+    @include print-variable('btn-border-radius-lg', $btn-border-radius-lg);
+
+    @include print-variable('input-padding-y', $input-padding-y);
+    @include print-variable('input-padding-x', $input-padding-x);
+    @include print-variable('input-font-size', $input-font-size);
+    @include print-variable('input-padding-y-sm', $input-padding-y-sm);
+    @include print-variable('input-padding-x-sm', $input-padding-x-sm);
+    @include print-variable('input-font-size-sm', $input-font-size-sm);
+    @include print-variable('input-padding-y-lg', $input-padding-y-lg);
+    @include print-variable('input-padding-x-lg', $input-padding-x-lg);
+    @include print-variable('input-font-size-lg', $input-font-size-lg);
+    @include print-variable('input-border-width', $input-border-width);
+    @include print-variable('input-border-radius', $input-border-radius);
+    @include print-variable('input-border-radius-sm', $input-border-radius-sm);
+    @include print-variable('input-border-radius-lg', $input-border-radius-lg);
+
+    @include print-variable('color-palettes-name', $o-original-color-palette-name);
+
+    @include print-variable('has-customized-colors', $o-has-customized-colors);
+
+    // 6) Get list of colorpalette custom colors
+    $custom-colors: ();
+    @each $key, $value in $o-color-palette {
+        $custom-colors: append($custom-colors, $key);
+    }
+    @include print-variable('custom-colors', $custom-colors);
+}
+
+@mixin body-image-bg-style() {
+    background-image: url("/#{str-slice(o-website-value('body-image'), 2)}");
+    background-position: center;
+    background-attachment: fixed;
+    @if o-website-value('body-image-type') == 'pattern' {
+        background-size: auto;
+        background-repeat: repeat;
+    } @else {
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+};
+
+body {
+    // The color behind the boxed layout is forced by Odoo. The box background
+    // color uses the `$body-bg` variable.
+    // grep: BOXED_BODY_BG_ODOO
+    @if o-website-value('layout') != 'full' {
+        background-color: o-color('body');
+    }
+}
+
+#wrapwrap {
+    @if o-website-value('body-image') {
+        @include body-image-bg-style();
+    }
+
+    @if o-website-value('layout') != 'full' {
+        > main {
+            // The color behind the boxed layout is forced by Odoo. The box
+            // background color uses the `$body-bg` variable.
+            // grep: BOXED_BODY_BG_ODOO
+            background-color: $body-bg;
+        }
+
+        @include media-breakpoint-up(sm) {
+            padding-right: $grid-gutter-width * 2;
+            padding-left: $grid-gutter-width * 2;
+
+            > * {
+                // When the website is visually acting like a container (eg.
+                // boxed layout), increase its maximum size to handle bigger
+                // horizontal paddings.
+                $-max-widths: ();
+                @each $key, $value in $container-max-widths {
+                    $-max-widths: map-merge($-max-widths, (
+                        #{$key}: $value + $grid-gutter-width * 2,
+                    ));
+                }
+                @include make-container(0);
+                @include make-container-max-widths($-max-widths);
+            }
+
+            > header .container {
+                max-width: 100% !important;
+            }
+
+            // Vertical alignment when top-menu has visually "no background"
+            $-menu-color: o-color('menu-custom') or o-color('menu');
+            @if (not $-menu-color or $-menu-color == o-color('body')) {
+                > header {
+                    .navbar, .container {
+                        padding-left: 0;
+                        padding-right: 0;
+                    }
+                }
+            }
+        }
+
+        @if o-website-value('layout') == 'framed' {
+            @include media-breakpoint-up(md) {
+                padding-top: $grid-gutter-width;
+                padding-bottom: $grid-gutter-width * 1.5;
+            }
+        } @else if o-website-value('layout') == 'postcard' {
+            @include media-breakpoint-up(md) {
+                $-border-radius: $border-radius-lg;
+                // Don't know why (browser rounding mistake?) but the inner
+                // border radius must be 1px lower for this to be visually ok
+                // (despite the fact there is no border or any space)
+                $-inner-border-radius: $-border-radius - 0.0625rem;
+                > * {
+                    margin-bottom: $spacer * 2;
+                }
+                > header {
+                    &, &.o_header_affix {
+                        .navbar {
+                            @include border-bottom-radius($-border-radius);
+                        }
+                    }
+                }
+                > main, > footer {
+                    @include border-radius($-border-radius);
+
+                    .oe_structure > :first-child {
+                        @include border-top-radius($-inner-border-radius);
+                    }
+                }
+                > main .oe_structure > :last-child,
+                .o_footer_copyright {
+                    @include border-bottom-radius($-inner-border-radius);
+                }
+            }
+        }
+    }
+}
+
+// We don't want the area to be visible in edit mode when we edit the popup that
+// is shared on all pages, otherwise the .o_editable area has a minimum height
+// when it is focused.
+#o_shared_blocks {
+    min-height: 0px;
+    height: 0px;
+
+    &:empty {
+        display: none;
+    }
+}
+
+.navbar {
+
+    .navbar-collapse {
+        min-width: 0; // Allows it to shrink during loading
+    }
+    .btn {
+        // This was a default bootstrap style before but it was removed from
+        // the library at some point. It seems important in the header so that
+        // the header does not flicker during loading.
+        white-space: nowrap;
+    }
+    .o_menu_image_placeholder {
+        width: 80px !important;
+    }
+    .top_menu {
+        flex-wrap: nowrap !important;
+        &.o_menu_loading {
+            overflow: hidden !important;
+            opacity: 0 !important;
+        }
+    }
+}
+.navbar-brand, .navbar-text, .navbar .nav-link, .navbar a.js_change_lang span,
+.navbar a.o_add_language {
+    @if $o-theme-navbar-font != $o-theme-font {
+        font-family: $o-theme-navbar-font;
+    }
+}
+
+.navbar-light {
+    // Style only navbar-light which Odoo is only supposed to use in standard
+    // anyway. Automatically mimic navbar-dark if the user's menu color is dark.
+    // Note: this only works because navbar-light is defined before navbar-dark,
+    // we may want to use a safest way when possible.
+    @include o-apply-colors('menu');
+    @include o-apply-colors('menu-custom');
+    $-menu-color: o-color('menu-custom') or o-color('menu');
+    @if ($-menu-color and color-contrast($-menu-color) != $color-contrast-dark) {
+        --NavLinkWithBackground-bg-color: #{rgba($navbar-dark-active-color, .1)};
+        --NavLinkWithBackground-bg-color--hover: #{rgba($navbar-dark-active-color, .2)};
+        --NavStretch-placeholder-color: #{rgba($navbar-dark-active-color, .3)};
+        --HeaderSeparator-bg-color: #{rgba($navbar-dark-active-color, .15)};
+
+        @extend .navbar-dark;
+
+        .btn-close {
+            filter: $btn-close-white-filter;
+        }
+    }
+    @include o-add-gradient('menu-gradient');
+
+    a.nav-link {
+        color: var(--#{$variable-prefix}nav-link-color);
+        &:hover {
+            color: var(--#{$variable-prefix}nav-link-hover-color);
+        }
+    }
+}
+
+// TODO this should be reviewed. While it allowed to choose a color for the
+// navbar text, there is no :hover effect, the active item is not visible and
+// the selector is probably too specific and should rather be about extending
+// bootstrap if possible.
+#wrapwrap:not(.o_header_overlay) header, header.o_header_is_scrolled {
+    .nav-item > .nav-link > *, .nav-item > .nav-link::after, .js_language_selector span, .badge {
+        $header-text-color: o-website-value('header-text-color');
+        // Check if the value is wrapped in quotes (initially it wasn't, and it
+        // didn't work) because we don't want the text color of the navbar to
+        // change once the fix is applied for users who tried the option when it
+        // wasn't working.
+        color: if(str-index(inspect($header-text-color), '"') == 1 or str-index(inspect($header-text-color), "'") == 1,
+            o-color($header-text-color),
+            $header-text-color) !important;
+    }
+}
+
+.o_navlink_background {
+    background: var(--NavLinkWithBackground-bg-color, rgba(var(--#{$variable-prefix}emphasis-color-rgb), .05));
+
+    &:hover {
+        background: var(--NavLinkWithBackground-bg-color--hover, rgba(var(--#{$variable-prefix}emphasis-color-rgb), .1));
+    }
+}
+
+.o_navlink_background_hover:hover {
+    background: var(--NavLinkWithBackground-bg-color, rgba(var(--#{$variable-prefix}emphasis-color-rgb), .05));
+}
+
+// Apply background color to the offcanvas menu
+.o_navbar_mobile {
+    height: 100dvh;
+    background-color: o-color('menu-custom') or o-color('menu');
+}
+
+$-header-nav-link-height: $nav-link-height;
+@if o-website-value('header-font-size') {
+    $-header-nav-link-height: o-website-value('header-font-size') * $line-height-base + $nav-link-padding-y * 2;
+    header {
+        font-size: o-website-value('header-font-size');
+
+        .dropdown-menu, .btn {
+            font-size: inherit !important;
+        }
+    }
+}
+@if $o-theme-navbar-logo-height {
+    // With default values, this makes it slightly bigger than standard
+    // navbar-brand, which is what we want
+    header .navbar-brand {
+        font-size: $o-theme-navbar-logo-height / $line-height-base;
+
+        $-logo-padding-y: max(0, $-header-nav-link-height - $o-theme-navbar-logo-height) / 2;
+        &, &.logo {
+            padding-top: $-logo-padding-y;
+            padding-bottom: $-logo-padding-y;
+        }
+    }
+}
+
+.o_footer {
+    @include o-apply-colors('footer');
+    @include o-apply-colors('footer-custom');
+    @include o-add-gradient('footer-gradient');
+
+    .o_footer_copyright {
+        $-footer-color: o-color('footer-custom') or o-color('footer');
+        @include o-apply-colors('copyright', $background: $-footer-color);
+        @include o-apply-colors('copyright-custom', $background: $-footer-color);
+        @include o-add-gradient('copyright-gradient');
+    }
+}
+
+@for $index from 1 through 5 {
+    .o_cc#{$index} {
+        @include o-add-gradient('o-cc#{$index}-bg-gradient')
+    }
+}
+
+h2 {
+    color: map-get($colors, 'o-cc1-h2');
+}
+h3 {
+    color: map-get($colors, 'o-cc1-h3');
+}
+h4 {
+    color: map-get($colors, 'o-cc1-h4');
+}
+h5 {
+    color: map-get($colors, 'o-cc1-h5');
+}
+h6 {
+    color: map-get($colors, 'o-cc1-h6');
+}
+
+$heading-font-families: () !default;
+$heading-font-families: map-merge((
+    "h2": $h2-font-family,
+    "h3": $h3-font-family,
+    "h4": $h4-font-family,
+    "h5": $h5-font-family,
+    "h6": $h6-font-family,
+    "display-1": $display-1-font-family,
+    "display-2": $display-2-font-family,
+    "display-3": $display-3-font-family,
+    "display-4": $display-4-font-family,
+), $heading-font-families);
+$heading-line-heights: () !default;
+$heading-line-heights: map-merge((
+    "h2": $h2-line-height,
+    "h3": $h3-line-height,
+    "h4": $h4-line-height,
+    "h5": $h5-line-height,
+    "h6": $h6-line-height,
+    "display-1": $display-1-line-height,
+    "display-2": $display-2-line-height,
+    "display-3": $display-3-line-height,
+    "display-4": $display-4-line-height,
+), $heading-line-heights);
+$heading-margin-tops: () !default;
+$heading-margin-tops: map-merge((
+    "h2": $h2-margin-top,
+    "h3": $h3-margin-top,
+    "h4": $h4-margin-top,
+    "h5": $h5-margin-top,
+    "h6": $h6-margin-top,
+    "display-1": $display-1-margin-top,
+    "display-2": $display-2-margin-top,
+    "display-3": $display-3-margin-top,
+    "display-4": $display-4-margin-top,
+), $heading-margin-tops);
+$heading-margin-bottoms: () !default;
+$heading-margin-bottoms: map-merge((
+    "h2": $h2-margin-bottom,
+    "h3": $h3-margin-bottom,
+    "h4": $h4-margin-bottom,
+    "h5": $h5-margin-bottom,
+    "h6": $h6-margin-bottom,
+    "display-1": $display-1-margin-bottom,
+    "display-2": $display-2-margin-bottom,
+    "display-3": $display-3-margin-bottom,
+    "display-4": $display-4-margin-bottom,
+), $heading-margin-bottoms);
+
+h1, h2, h3, h4, h5, h6 {
+    line-height: $headings-line-height;
+    margin-top: $headings-margin-top;
+    margin-bottom: $headings-margin-bottom;
+}
+@each $selector, $map-key in
+("h2" "h2", "h3" "h3", "h4" "h4", "h5" "h5", "h6" "h6", ".display-1" "display-1",
+".display-2" "display-2", ".display-3" "display-3", ".display-4" "display-4") {
+    #{$selector} {
+        @if ($headings-font-family != map-get($heading-font-families, $map-key)) {
+            font-family: map-get($heading-font-families, $map-key);
+        }
+        @if ($headings-line-height != map-get($heading-line-heights, $map-key)) {
+            line-height: map-get($heading-line-heights, $map-key);
+        }
+        @if ($headings-margin-top != map-get($heading-margin-tops, $map-key)) {
+            margin-top: map-get($heading-margin-tops, $map-key);
+        }
+        @if ($headings-margin-bottom != map-get($heading-margin-bottoms, $map-key)) {
+            margin-bottom: map-get($heading-margin-bottoms, $map-key);
+        }
+    }
+}
+
+.btn {
+    @if ($o-theme-buttons-font != $o-theme-font) {
+        font-family: $o-theme-buttons-font;
+    }
+}
+
+// Texts
+p {
+    margin-top: $paragraph-margin-top;
+}
+
+font[style*='background']:not(.text-gradient),
+font[class*='bg-'] {
+    // Not adding any horizontal padding is important as it ensures that several
+    // features work:
+    // - Highlighting part of a word -> you don't want the word to be split
+    // - Coloring a word inside a highlighted sentence -> in this case, the DOM
+    //   is a succession of 3 <font> elements, the word one with both the
+    //   background-color and the color.
+    // - Even in the good cases, you might just not want the padding, to align
+    //   the highlighted element with the general layout.
+    // => The user can still add surrounding spaces if needed anyway which is
+    //    actually both technically and functionally intuitive.
+    $-base-padding: 0.05em;
+    $-bottom-factor: 2;
+    padding: MAX($-base-padding, 1px) 0 MAX(($-bottom-factor * $-base-padding), ($-bottom-factor * 1px));
+}
+
+// Icons
+.fa {
+    $-size: map-get($spacers, 5);
+
+    font-family: "FontAwesome" !important;
+
+    &.rounded-circle,
+    &.rounded,
+    &.rounded-0,
+    &.rounded-leaf,
+    &.img-thumbnail,
+    &.shadow {
+        display: inline-block;
+        vertical-align: middle;
+        text-align: center;
+        // fa-1x is not ouput
+        width: $-size;
+        height: $-size;
+        line-height: $-size;
+        @for $i from 2 through 5 {
+            &.fa-#{$i}x {
+                width: $-size + $i;
+                height: $-size + $i;
+                line-height: $-size + $i;
+            }
+        }
+        // Default, if no background-color already selected
+        background-color: $gray-100;
+    }
+    &.img-thumbnail {
+        padding: 0;
+    }
+    &.rounded-leaf {
+        border-top-left-radius: $-size;
+        border-bottom-right-radius: $-size;
+    }
+    &.rounded-empty-circle {
+        @extend .rounded-circle;
+        border-width: ceil(1.4 * $border-width);
+        border-style: solid;
+        background: transparent;
+    }
+    &.border {
+        box-sizing: content-box;
+    }
+}
+// Smaller container
+.o_container_small {
+    @extend .container;
+    @include media-breakpoint-up(lg) {
+        max-width: map-get($container-max-widths, md);
+    }
+}
+
+// Buttons
+.btn {
+    &.flat {
+        border: 0;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        @include button-size(0.75rem, 1.5rem, ($font-size-base * .75), 0);
+        &.btn-lg { @include button-size(1rem, 2rem, ($font-size-lg * .75), 0); }
+        &.btn-sm { @include button-size(.5rem, 1rem, ($font-size-sm * .75), 0); }
+        &.btn-xs { @include button-size(.25rem, .5rem, ($font-size-base * .5), 0); }
+    }
+    &.rounded-circle {
+        border-radius: 100px !important;
+        @include button-size(0.45rem, 1.35rem, $font-size-base, 30px);
+        &.btn-lg { @include button-size(.6rem, 1.8rem, $font-size-lg, 30px); }
+        &.btn-sm { @include button-size(.3rem, .9rem, $font-size-sm, 30px); }
+        &.btn-xs { @include button-size(.15rem, .45rem, ($font-size-base * .75), 30px); }
+    }
+}
+
+// Badges
+.badge, .o_filter_tag {
+    background: var(--background-color, var(--bg-light)) !important;
+    color: var(--color, var(--color-light)) !important;
+    border: $border-width solid var(--bg-solid) !important;
+
+    // Similarly to list-group-item-x and alert-* classes, override text-bg-*
+    // classes behavior when used on badges.
+    @each $-color, $-value in $theme-colors {
+        &.text-bg-#{$-color} {
+            --bg-light: #{tint-color($-value, 90%)};
+            --color-light: #{increase-contrast($-value, tint-color($-value, 90%))};
+            --bg-solid: #{$-value};
+            --bg-solid-contrast: #{color-contrast($-value, $min-contrast-ratio: 3)};
+        }
+
+        // Restore old badge design (needed as an exit door for some contexts)
+        //(e.g cart_quantity, dropdown toggle.badge)
+        &.bg-#{$-color} {
+            --bg-light: #{$-value};
+            --color-light: #{color-contrast($-value, $min-contrast-ratio: 3)};
+            --bg-solid: var(--bg-light);
+            --bg-solid-contrast: var(--color-light);
+        }
+    }
+
+    @at-root a.badge:hover, a:not(.dropdown-item):hover > .badge, .o_badge_clickable.badge:hover {
+        --background-color: var(--bg-solid);
+        --color: var(--bg-solid-contrast);
+
+        text-decoration: none;
+    }
+
+    .btn {
+        --btn-color: var(--color, var(--color-light));
+    }
+}
+
+@for $-size from 1 through length($o-colors) {
+    .o_color_#{$-size - 1} {
+       // Compute background-color and text-color values for different uses,
+       // allowing to apply the value from colorfield on desired UI elements.
+       // this set of variables covers all the possible scenarios.
+
+        $-color: nth($o-colors, $-size);
+
+        $-is-website-palette-dark: color-contrast($body-color) == $color-contrast-dark;
+        $-bg-lightness-adjusted: if($-is-website-palette-dark, -40%, 0%);
+
+        $-bg-solid: $-color;
+        $-bg-solid-contrast: color-contrast($-bg-solid, $min-contrast-ratio: 3);
+
+        $-bg-light: if($-is-website-palette-dark, adjust-color($-color, $lightness: $-bg-lightness-adjusted, $saturation: 5%), tint-color($-bg-solid, 90%));
+        $-color-light: increase-contrast($-bg-solid, $-bg-light);
+
+        $-bg-light-contrast: color-contrast($-bg-light, $min-contrast-ratio: 3);
+
+        // Print CSS variables.
+        --bg-solid: #{$-bg-solid};
+        --bg-solid-contrast: #{$-bg-solid-contrast};
+
+        --bg-light: #{$-bg-light};
+        --color-light: #{$-color-light};
+
+        --bg-light-contrast: #{$-bg-light-contrast};
+    }
+}
+
+// Background Images
+.oe_img_bg {
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    &.o_bg_img_opt_repeat {
+        background-size: auto;
+        background-repeat: repeat;
+    }
+    &.o_bg_img_center {
+        background-position: center;
+    }
+
+    // Compatibility <= 13.0, TODO remove?
+    // -----------------------------------
+    &.o_bg_img_opt_contain {
+        background-size: contain;
+        background-position: center center;
+    }
+    &.o_bg_img_opt_custom {
+        background-size: auto;
+    }
+    &.o_bg_img_opt_repeat_x {
+        background-repeat: repeat-x;
+    }
+    &.o_bg_img_opt_repeat_y {
+        background-repeat: repeat-y;
+    }
+}
+
+// Background videos
+.o_bg_video_container {
+    @extend %o-we-background-layer;
+}
+.o_bg_video_iframe {
+    position: relative;
+    pointer-events: none !important;
+}
+.o_bg_video_loading {
+    @include o-position-absolute(0, 0 ,0 ,0);
+}
+.o_background_video, .parallax {
+    @extend %o-we-background-layer-parent;
+}
+
+// Probably outdated
+// Disable fixed height
+@include media-breakpoint-down(md) {
+    section,
+    .parallax,
+    .row,
+    .hr,
+    .blockquote {
+        height: auto !important;
+    }
+}
+
+// Probably outdated
+// Table
+.table_desc {
+    margin: 0 0 20px 0;
+    width: 100%;
+    word-break: break-all;
+    border: 1px solid #dddddd;
+}
+.table_heading {
+    background-color: #f5f5f5;
+    border: 1px solid #dddddd;
+    color: #666666;
+    @include font-size(14px);
+    padding: 4px;
+}
+table.table_desc tr td {
+    text-align: left;
+    padding: 5px;
+    @include font-size(13px);
+    &:first-child {
+        width: 25%;
+        font-weight: bold;
+        border-bottom: 1px solid #c9c9c9;
+        border-right: 1px solid #c9c9c9;
+        border-left: none;
+    }
+    &:last-child {
+        border-bottom: 1px solid #c9c9c9;
+    }
+}
+
+// Jumbotron
+.jumbotron {
+    border-radius: 0;
+}
+
+.o_full_screen_height {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    min-height: 100vh !important;
+}
+.o_half_screen_height {
+    @extend .o_full_screen_height;
+    min-height: 55vh !important;
+}
+
+// TODO remove cover_full and cover_mid classes (kept for compatibility for now)
+.cover_full {
+    @extend .o_full_screen_height;
+}
+.cover_mid {
+    @extend .o_half_screen_height;
+}
+
+// Allows custom border radius without contents overflowing.
+.card {
+    overflow: hidden;
+}
+
+// "Dots" elements: normally used as "entries indicators", see timeline snippets.
+.o_dot {
+    width: var(--o-timeline-dot-size, 24px);
+    height: var(--o-timeline-dot-size, 24px);
+    left: var(--o-dot-left);
+
+    &:before, &:after {
+        position: absolute;
+        border-radius: $border-radius-pill;
+        background-color: currentColor;
+        content: '';
+    }
+
+    &:before {
+        inset: 0;
+        opacity: .1;
+    }
+
+    &:after {
+        inset: 8px;
+    }
+}
+
+.o_dot_line {
+    margin-top: calc(var(--o-timeline-dot-size, 24px) + #{map-get($spacers, 1)});
+    left: var(--o-dot-line-left);
+}
+
+//
+// Snippets
+//
+
+// Variables shared between carousel snippets and s_image_gallery
+$-o-carousel-indicators-dots-size: .75rem;
+$-o-carousel-controllers-size: map-get($spacers, 5);
+
+// This style is shared by old versions of carousels
+// 000 for s_carousel & 000 and 001 for s_quotes_carousel
+%old_s_carousel_variants {
+
+    // Controls
+    .carousel-control-prev,
+    .carousel-control-next {
+        position: absolute;
+        cursor: pointer;
+        width: 8%;
+        opacity: 1;
+    }
+    @include media-breakpoint-down(md) {
+        .carousel-control-prev,
+        .carousel-control-next {
+            display: none; // remove arrows on mobile
+        }
+    }
+    .carousel-control-prev { justify-content: flex-start; }
+    .carousel-control-next { justify-content: flex-end; }
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        width: auto;
+        height: auto;
+        background-image: none;
+        color: $body-color;
+        &:before {
+            font-family: "FontAwesome";
+            display: inline-block;
+            background-color: #fff;
+        }
+    }
+    // Content
+    .carousel-inner {
+        // Create a new stacking context to ensure that elements like indicators
+        // and arrows will always appear on top of the carousel content.
+        isolation: isolate;
+        overflow: hidden;
+        height: 100%;
+        .carousel-item {
+            height: 100%;
+        }
+    }
+    // Indicators
+    .carousel-indicators {
+        position: absolute;
+
+        li:hover:not(.active) {
+            background-color: rgba(255,255,255,.8);
+        }
+    }
+
+    // Default
+    &.s_carousel_default {
+        // Controls - chevron
+        .carousel-control-prev-icon:before { content: "\f053" #{"/*rtl:'\f054'*/"}; margin-left: 1.5rem; }
+        .carousel-control-next-icon:before { content: "\f054" #{"/*rtl:'\f053'*/"}; margin-right: 1.5rem; }
+        .carousel-control-prev-icon:before,
+        .carousel-control-next-icon:before {
+            background-color: rgba(0,0,0,0);
+            @include font-size(2rem);
+            color: #fff;
+            text-shadow: $box-shadow-sm;
+        }
+        // Indicators
+        .carousel-indicators li {
+            height: .6rem;
+            margin-bottom: .5rem;
+            border: 0;
+            border-radius: $border-radius-sm;
+            box-shadow: $box-shadow-sm;
+        }
+    }
+
+    // Border
+    &.s_carousel_bordered {
+        border: 2rem solid rgba(0,0,0,0);
+        @include media-breakpoint-down(md) {
+            border: 0.5rem solid rgba(0,0,0,0);
+        }
+        // Controls - caret
+        .carousel-control-prev-icon:before { content: "\f0d9"; }
+        .carousel-control-next-icon:before { content: "\f0da"; }
+        .carousel-control-prev-icon:before,
+        .carousel-control-next-icon:before {
+            width: 2rem;
+            height: 6rem;
+            line-height: 6rem;
+            @include font-size(1.5rem);
+        }
+        // Indicators
+        .carousel-indicators li {
+            width: 3rem;
+            height: 1rem;
+        }
+    }
+
+    // Circle
+    &.s_carousel_rounded {
+        // Container
+        // .carousel-inner {
+            // border-top-left-radius: 10rem;
+            // border-bottom-right-radius: 10rem;
+        // }
+        // Controls - arrow
+        .carousel-control-prev { margin-left: 1.5rem; }
+        .carousel-control-next { margin-right: 1.5rem; }
+        .carousel-control-prev-icon:before { content: "\f060"; }
+        .carousel-control-next-icon:before { content: "\f061"; }
+        .carousel-control-prev-icon:before,
+        .carousel-control-next-icon:before {
+            width: 4rem;
+            height: 4rem;
+            line-height: 4rem;
+            border-radius: 50%;
+            @include font-size(1.25rem);
+        }
+        // Indicators
+        .carousel-indicators li {
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+        }
+    }
+
+    // Boxed
+    &.s_carousel_boxed {
+        @include make-container();
+        @include make-container-max-widths();
+        .carousel-item {
+            padding: 0 1rem;
+        }
+        // Controls - angle
+        .carousel-control-prev,
+        .carousel-control-next {
+            align-items: flex-end;
+            margin-bottom: 1.25rem;
+        }
+        .carousel-control-prev { margin-left: 3rem; }
+        .carousel-control-next { margin-right: 3rem; }
+        .carousel-control-prev-icon:before { content: "\f104"; }
+        .carousel-control-next-icon:before { content: "\f105"; }
+        .carousel-control-prev-icon:before,
+        .carousel-control-next-icon:before {
+            width: 2rem;
+            height: 2rem;
+            line-height: 2rem;
+            @include font-size(1.25rem);
+        }
+        // Indicators
+        .carousel-indicators li {
+            width: 1rem;
+            height: 1rem;
+            &:hover:not(.active) {
+                background-color: rgba(255,255,255,.8);
+            }
+        }
+    }
+}
+
+// This style is shared by the new versions of carousels
+// 001 for s_carousel & 002 for s_quotes_carousel
+%s_carousel_variants {
+    // Controllers in Mobile
+    @include media-breakpoint-down(md) {
+        .carousel-control-prev,
+        .carousel-control-next {
+            top: auto;
+            bottom: map-get($spacers, 3);
+            height: $-o-carousel-controllers-size;
+            width: auto;
+            margin: 0 map-get($spacers, 3);
+        }
+
+        &:not(.s_carousel_arrows_hidden) .carousel-indicators {
+            $-margin-x: map-get($spacers, 3) * 2 + $-o-carousel-controllers-size;
+
+            min-height: $-o-carousel-controllers-size;
+            margin: 0 $-margin-x map-get($spacers, 3);
+        }
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next,
+    .carousel-indicators {
+        position: absolute;
+    }
+
+    .carousel-control-prev-icon, .carousel-control-next-icon {
+        width: $-o-carousel-controllers-size;
+        height: $-o-carousel-controllers-size;
+        background-size: 50%;
+    }
+
+    &.s_carousel_default {
+        .carousel-control-prev, .carousel-control-next {
+            &:hover {
+                background: rgba($carousel-dark-indicator-active-bg, .2);
+            }
+        }
+
+        &.carousel-dark {
+            .carousel-control-prev, .carousel-control-next {
+                &:hover {
+                    background: rgba($carousel-indicator-active-bg, .2);
+                }
+            }
+        }
+    }
+
+    &.s_carousel_boxed, &.s_carousel_rounded {
+        .carousel-control-prev-icon, .carousel-control-next-icon {
+            border-radius: $border-radius;
+            border: $border-width solid $border-color;
+            background-color: $carousel-dark-indicator-active-bg;
+            filter: $carousel-dark-control-icon-filter;
+        }
+
+        &.carousel-dark {
+            .carousel-control-prev-icon, .carousel-control-next-icon {
+                filter: none;
+            }
+        }
+    }
+
+    &.s_carousel_rounded {
+        .carousel-control-prev-icon, .carousel-control-next-icon {
+            border-radius: $border-radius-pill;
+        }
+    }
+
+    &.s_carousel_arrows_hidden {
+        .carousel-control-prev, .carousel-control-next {
+            display: none;
+        }
+    }
+
+    // Content
+    .carousel-inner {
+        // Create a new stacking context to ensure that elements like indicators
+        // and arrows will always appear on top of the carousel content.
+        isolation: isolate;
+        overflow: hidden;
+        height: 100%;
+
+        .carousel-item {
+            height: 100%;
+            padding: 0 map-get($spacers, 3);
+
+            @include media-breakpoint-up(md) {
+                padding: 0 $carousel-control-width;
+            }
+        }
+    }
+
+    // Indicators
+    .carousel-indicators {
+        align-items: center;
+        height: $-o-carousel-controllers-size;
+
+        &.s_carousel_indicators_dots > button {
+            width: $-o-carousel-indicators-dots-size;
+            height: $-o-carousel-indicators-dots-size;
+            border: 0;
+            border-radius: $border-radius-pill;
+            transform: scale(.5);
+            transition: opacity .6s ease, transform .6s ease; // Mirror '$carousel-indicator-transition' duration
+
+            // Increases the click area for easier navigation.
+            &:before {
+                position: absolute;
+                inset: $carousel-indicator-spacer * -4;
+                display: block;
+                content: '';
+            }
+
+            &:hover {
+                opacity: 1;
+            }
+
+            &.active {
+                inset: $carousel-indicator-spacer * -1;
+                transform: scale(1);
+            }
+        }
+
+        &.s_carousel_indicators_numbers {
+            flex-wrap: wrap;
+            height: auto;
+            counter-reset: numberList;
+
+            button {
+                display: flex;
+                align-items: center;
+                gap: map-get($spacers, 1);
+                width: auto;
+                height: auto;
+                margin: 0;
+                padding: 0 map-get($spacers, 2) 0;
+                background: none;
+                color: $carousel-indicator-active-bg;
+                text-indent: 0;
+
+                &:hover {
+                    opacity: 1;
+                }
+
+                &:before {
+                    content: counter(numberList);
+                    counter-increment: numberList;
+                }
+
+                @include media-breakpoint-up(md) {
+                    &:after {
+                        display: block;
+                        width: 0;
+                        border-top: $border-width * 2 solid $carousel-indicator-active-bg;
+                        transition: width .2s ease-in-out; // $transition-base duration & bezier
+                        content: '';
+                    }
+
+                    &.active:after {
+                        width: map-get($spacers, 4);
+                    }
+                }
+            }
+        }
+
+        &.s_carousel_indicators_hidden {
+            display: none;
+        }
+    }
+
+    &.carousel-dark .s_carousel_indicators_numbers {
+        button {
+            color: $carousel-dark-indicator-active-bg;
+
+            &:after {
+                border-color: $carousel-dark-indicator-active-bg;
+            }
+        }
+    }
+
+    // Style - Indicators outside
+    &.s_carousel_controllers_indicators_outside {
+        .carousel-control-prev, .carousel-control-next {
+            margin-bottom: $-o-carousel-controllers-size;
+        }
+
+        .carousel-indicators {
+            position: relative;
+            margin-bottom: 0;
+
+            button {
+                background-color: currentColor;
+                color: inherit;
+            }
+        }
+    }
+}
+
+
+.carousel .container {
+    .carousel-img img {
+        max-height: 95%;
+        padding: 10px;
+    }
+    > .carousel-caption {
+        @include o-position-absolute($right: 50%, $left: 50%);
+        bottom: 20px;
+        > div {
+            position: absolute;
+            text-align: left;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.4);
+            bottom: 20px;
+        }
+    }
+    > .carousel-image {
+        @include o-position-absolute($top: 5%, $bottom: 5%);
+        max-height: 90%;
+        margin: 0 auto;
+    }
+    .carousel-item.text_image .container {
+        > .carousel-caption {
+            left: 10%;
+            > div {
+                right: 50%;
+                margin-right: -20%;
+                max-width: 550px;
+            }
+        }
+        > .carousel-image {
+            right: 10%;
+            left: 50%;
+        }
+    }
+    .carousel-item.image_text .container {
+        > .carousel-caption {
+            right: 10%;
+            > div {
+                left: 50%;
+                margin-left: -20%;
+                max-width: 550px;
+            }
+        }
+        > .carousel-image {
+            right: 50%;
+            left: 10%;
+        }
+    }
+    .carousel-item.text_only .container {
+        > .carousel-caption {
+            left: 10%;
+            right: 10%;
+            top: 10%;
+            bottom: auto;
+            > div {
+                text-align: center;
+                background: transparent;
+                bottom: auto;
+                width: 100%;
+            }
+        }
+        > .carousel-image {
+            display: none !important;
+        }
+    }
+}
+
+// Parallax
+.parallax {
+    // TODO this introduces a limitation: no dropdown will be able to
+    // overflow. Maybe there is a better way to find.
+    &:not(.s_parallax_no_overflow_hidden) {
+        overflow: hidden;
+    }
+
+    > .s_parallax_bg {
+        @extend %o-we-background-layer;
+    }
+    @include media-breakpoint-up(xl) {
+        // Fixed backgrounds are disabled when using a mobile/tablet device,
+        // which is not a big deal but, on some of them (iOS...), defining the
+        // background as fixed breaks the background-size/position props.
+        // So we enable this only for >= XL devices.
+        &.s_parallax_is_fixed > .s_parallax_bg {
+            background-attachment: fixed;
+        }
+    }
+}
+// Keeps parallax snippet element selectable when Height = auto.
+.s_parallax {
+    min-height: 10px;
+}
+
+//
+// Layout
+//
+
+$-transition-duration: 200ms;
+
+// Affixed Header
+.o_header_affixed {
+    display: block;
+    @include o-position-absolute(0, 0, auto, 0);
+    position: fixed;
+
+    &:not(.o_header_no_transition) {
+        transition: transform $-transition-duration;
+    }
+
+    &.o_header_is_scrolled {
+        .navbar-brand {
+            @include font-size($o-theme-navbar-fixed-logo-height / $line-height-base);
+
+            img {
+                height: $o-theme-navbar-fixed-logo-height;
+            }
+        }
+    }
+    &.o_header_standard.o_header_is_scrolled {
+        @if index(('menu_logo_below', 'logo_menu_below'), o-website-value('header-template')) != null {
+            .navbar-brand {
+                &, img {
+                    transition: none;
+                }
+            }
+        }
+    }
+
+    .o_header_hide_on_scroll.hidden {
+        max-height: 0;
+        padding-block: 0 !important;
+        overflow: hidden;
+    }
+}
+
+// Navbar
+.navbar .o_extra_menu_items > .show {
+    > li {
+        + li {
+            border-top: 1px solid map-get($grays, '200');
+        }
+        > a.dropdown-toggle {
+            background-color: map-get($grays, '200');
+            color: inherit; // Useful when the toggle is active
+            pointer-events: none; // hack to prevent clicking on it because dropdown always opened
+        }
+        > ul, > .o_mega_menu { // remove dropdown-menu default style as it is nested in another one
+            position: static;
+            float: none;
+            display: block;
+            max-height: none;
+            margin-top: 0;
+            padding: 0;
+            border: none;
+            box-shadow: none;
+        }
+        > .o_mega_menu .row > div { // remove mega menu col-lg-* style
+            width: 100%;
+            flex: auto;
+        }
+        > .o_mega_menu_container_size {
+            transform: unset;
+        }
+    }
+}
+
+$zindex-website-header: $zindex-fixed !default;
+
+header {
+    &#top {
+        // We need this z-index for the shadow option of the header but also
+        // to create a stacking context so that header dropdowns appear below
+        // and above the same elements as the header.
+        z-index: $zindex-website-header;
+    }
+    &:not(.o_header_no_transition) {
+        .o_main_nav {
+            transition: all $-transition-duration, color 0ms;
+        }
+        .navbar-brand {
+            transition: margin $-transition-duration, font-size $-transition-duration, opacity $-transition-duration ease-out;
+
+            img {
+                transition: height $-transition-duration;
+            }
+        }
+    }
+
+    // Dropdown menus
+
+    // In mobile there is no need to limit the height...
+    @include media-breakpoint-up(lg) {
+        .navbar .dropdown-menu {
+            max-height: 60vh;
+            overflow-y: auto;
+            overflow-x: hidden; // Needed because of container in container having 0px padding... TODO improve
+        }
+    }
+    // ... but we limit the navbar-collapse height
+    .navbar-collapse.show {
+        max-height: 80vh;
+        overflow-y: auto;
+        overflow-x: hidden; // Needed because of container in container having 0px padding... TODO improve
+
+        @include media-breakpoint-down(lg) {
+            .nav-link, .dropdown-item {
+                white-space: normal;
+            }
+        }
+    }
+
+    &:not(.o_header_is_scrolled) {
+        $-is-hamburger: o-website-value('header-template') == 'hamburger';
+        @include media-breakpoint-up(md) {
+            @if $-is-hamburger {
+                .o_main_nav {
+                    padding-top: $spacer * 0.5;
+                    padding-bottom: $spacer * 0.5;
+                }
+            }
+        }
+    }
+
+    .o_main_nav {
+        flex-direction: inherit;
+    }
+
+    nav.navbar {
+        @if o-website-value('menu-border-width') {
+            border: o-website-value('menu-border-style') o-color('menu-border-color') !important;
+            border-width: 0 0 o-website-value('menu-border-width') 0 !important;
+
+            &.o_border_right_only {
+                border-width: 0 o-website-value('menu-border-width') 0 0 !important;
+            }
+            &.o_full_border {
+                border-width: o-website-value('menu-border-width') !important;
+            }
+        }
+        border-radius: o-website-value('menu-border-radius') !important;
+        box-shadow: o-website-value('menu-box-shadow') !important;
+
+        &.o_header_force_no_radius {
+            border-radius: 0 !important;
+        }
+    }
+    // Prevent the color of the header to impact the color of the nav.
+    &.o_header_is_scrolled, &.o_transitioning.o_header_affixed {
+        background-color: transparent !important;
+    }
+}
+
+@if o-website-value('header-template') == 'sidebar' {
+    @include media-breakpoint-up(lg) {
+        #wrapwrap {
+            // Two different website options might add padding:
+            // - The sidebar header template
+            // - The website layout template when different than 'full'
+            // We need to combine both using `calc`. The `border` solution does
+            // not work on Safari.
+            $padding-size: o-website-value('sidebar-width');
+            @if o-website-value('layout') != 'full' {
+                $padding-size: calc(#{$grid-gutter-width} * 2 + #{$padding-size});
+            }
+            padding-left: $padding-size;
+
+            > header {
+                inset: 0 auto 0 0;
+                position: fixed;
+                z-index: $zindex-fixed;
+                display: flex;
+                width: o-website-value('sidebar-width');
+                transform: none !important;
+
+                .navbar {
+                    width: 100%;
+                    align-items: start;
+                    padding: $spacer;
+
+                    .navbar-brand {
+                        max-width: 100%;
+                        padding: 0 0 $spacer 0;
+                    }
+                    .o_main_nav {
+                        flex-direction: column;
+                        align-items: start;
+                        padding: 0;
+                    }
+                    .navbar-nav {
+                        flex-direction: column;
+                    }
+                    .nav-link,
+                    .dropdown-item {
+                        white-space: initial;
+                    }
+                    .dropdown-menu {
+                        position: static;
+                    }
+                }
+            }
+        }
+    }
+} @else if o-website-value('header-template') == 'stretch' {
+    #wrapwrap > header input::placeholder {
+        color: #{var(--NavStretch-placeholder-color, $input-placeholder-color)};
+    }
+    #wrapwrap > header .o_extra_menu_items {
+        height: 100%;
+        border-left: $border-width solid var(--NavLinkWithBackground-bg-color--hover, rgba(var(--#{$variable-prefix}emphasis-color-rgb), .1));
+
+        > .nav-link {
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+    }
+} @else if o-website-value('header-template') == 'sales_one' {
+    #wrapwrap .o_header_sales_one_bot {
+        @include o-apply-colors('header-sales_one');
+        @include o-apply-colors('header-sales_one-custom');
+        @include o-add-gradient('menu-secondary-gradient');
+    }
+} @else if o-website-value('header-template') == 'sales_two' {
+    #wrapwrap .o_header_sales_two_top {
+        @include o-apply-colors('header-sales_two');
+        @include o-apply-colors('header-sales_two-custom');
+        @include o-add-gradient('menu-secondary-gradient');
+    }
+} @else if o-website-value('header-template') == 'sales_three' {
+    #wrapwrap .o_header_sales_three_top {
+        @include o-apply-colors('header-sales_three');
+        @include o-apply-colors('header-sales_three-custom');
+        @include o-add-gradient('menu-secondary-gradient');
+    }
+    #wrapwrap header .o_header_sales_three_small_links {
+        // Force small links to be proportional to header font size
+        --nav-link-font-size: MAX(12px, .75em);
+    }
+} @else if o-website-value('header-template') == 'sales_four' {
+    #wrapwrap .o_header_sales_four_bot {
+        @include o-apply-colors('header-sales_four');
+        @include o-apply-colors('header-sales_four-custom');
+        @include o-add-gradient('menu-secondary-gradient');
+    }
+}
+
+.o_grid_header_3_cols {
+    grid-template-columns: 1fr auto 1fr;
+}
+
+.o_grid_header_3_cols_fixed {
+    grid-template-columns: 1fr 33% 1fr;
+}
+
+.o_header_separator > :not(:last-child)::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 0 100%;
+    width: $border-width * 2;
+    height: 50%;
+    margin: auto (map-get($spacers, 2) * -1) auto auto;
+    background: var(--HeaderSeparator-bg-color, rgba(var(--#{$variable-prefix}emphasis-color-rgb), .1));
+}
+
+// Default border color didn't match with background custom colors.
+// This allows to use the same contrast system than the text but for borders.
+.o_border_contrast {
+    border-color: var(--NavLinkWithBackground-bg-color--hover, rgba(var(--#{$variable-prefix}emphasis-color-rgb), .1)) !important;
+}
+
+// Mega menu
+.o_mega_menu {
+    width: 100%;
+    padding: 0;
+    margin-top: 0 !important;
+    border-radius: 0;
+    background-clip: unset; // Remove the 1px gap introduced by BS4
+    background-color: transparent; // In order to allow the mega menu to be transparent
+    border: 1px solid $gray-200; // Prevent to see the color of the block behind.
+
+    .container, .container-fluid {
+        // Need to reforce those because they are removed since its a container
+        // inside another container (the one in the navbar)
+        padding-left: $grid-gutter-width / 2;
+        padding-right: $grid-gutter-width / 2;
+    }
+}
+
+.dropdown-menu.o_mega_menu_container_size {
+    $-header-template: o-website-value('header-template');
+    @if not index(('sidebar', 'hamburger'), $-header-template) {
+        $bp: if($-header-template == 'minimalist', md, lg);
+        @include media-breakpoint-up($bp) {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    }
+
+    $-mm-max-widths: ();
+    @each $k, $v in $container-max-widths {
+        $-mm-max-widths: map-merge($-mm-max-widths, (
+            #{$k}: $v - $grid-gutter-width,
+        ));
+    }
+    @include make-container-max-widths($-mm-max-widths);
+}
+
+// The design of some of the new mega menu templates required a column with
+// an overlay that would overflow until the end of the container. For
+// technical reasons, this overlay has to be hardcoded here.
+%s_mega_menu_gray_area {
+    z-index: 1;
+
+    &:before {
+        content: '';
+        display: block;
+        width: 100vw;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: -1;
+        pointer-events: none;
+        background: rgba(0, 0, 0, .05);
+    }
+}
+
+#wrapwrap.o_header_overlay {
+    > header:not(.o_header_affixed):not(.o_header_sidebar) {
+        @include o-position-absolute(0, 0, auto, 0);
+        z-index: 1000;
+
+        > .navbar {
+            // Prevent the nav color/gradient to impact the header color.
+            background-color: transparent !important;
+            background-image: none !important;
+            border-color: transparent;
+            color: inherit !important;
+        }
+
+        &:not(.o_top_menu_collapse_shown) > .navbar {
+            @include o-apply-colors(1); // Reset to default colored components
+
+            .nav-item {
+                > .nav-link {
+                    &, &:hover {
+                        background-color: transparent;
+                        color: inherit;
+                    }
+
+                    &.active {
+                        font-weight: bolder;
+                    }
+                }
+            }
+            .o_header_mobile_buttons_wrap, .btn[data-bs-toggle="offcanvas"] {
+                color: inherit;
+            }
+            .navbar-toggler-icon {
+                background-color: currentColor;
+                background-image: none;
+                mask: $navbar-light-toggler-icon-bg;
+                -webkit-mask: $navbar-light-toggler-icon-bg;
+            }
+        }
+    }
+}
+
+// Navbar Links Styles
+@if index(('block', 'border-bottom'), o-website-value('header-links-style')) {
+    @include media-breakpoint-up(md) {
+        .navbar,
+        .navbar-nav {
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+    }
+}
+.navbar-nav {
+    .nav-link:not(.o_nav-link_secondary) {
+        @if o-website-value('header-links-style') == 'outline' {
+            // Need to force the padding in this case so that it stays in mobile
+            padding-right: $navbar-nav-link-padding-x;
+            padding-left: $navbar-nav-link-padding-x;
+            border: $border-width solid transparent;
+            @include border-radius($nav-pills-border-radius);
+        } @else if o-website-value('header-links-style') == 'block' {
+            // There is no way to control navbar links vertical padding in BS4
+            // independently from nav ones, just double them here instead
+            padding-top: $nav-link-padding-y * 2;
+            padding-bottom: $nav-link-padding-y * 2;
+            @include border-radius(0);
+        } @else if o-website-value('header-links-style') == 'border-bottom' {
+            // There is no way to control navbar links vertical padding in BS4
+            // independently from nav ones, just double them here instead
+            padding-top: ($nav-link-padding-y * 2);
+            padding-bottom: ($nav-link-padding-y * 2);
+            border-bottom: $nav-link-padding-y solid transparent;
+
+            // Replace horizontal paddings by margins (do this with an extra
+            // class to override .navbar-expand-* paddings priority).
+            .navbar & {
+                padding-left: 0;
+                padding-right: 0;
+                margin: 0 $navbar-nav-link-padding-x;
+            }
+        }
+    }
+
+    @if index(('outline', 'border-bottom'), o-website-value('header-links-style')) {
+        .nav-link.active,
+        .show > .nav-link {
+            border-color: currentColor;
+        }
+    }
+}
+
+@if index(('slideout_slide_hover', 'slideout_shadow'), o-website-value('footer-effect')) {
+    @include media-breakpoint-up(lg) {
+        #wrapwrap.o_footer_effect_enable {
+            > main {
+                @if o-website-value('layout') == 'full' {
+                    // Ensure a transparent snippet at the end of the content
+                    // still appears with the same background when hovering the
+                    // footer during the scroll effect.
+                    @if o-website-value('body-image') {
+                        @include body-image-bg-style();
+                    } @else {
+                        background-color: $body-bg;
+                    }
+                }
+                @if o-website-value('footer-effect') == 'slideout_shadow' {
+                    box-shadow: $box-shadow;
+                }
+            }
+            > footer {
+                @include o-position-sticky(auto, 0, 0, 0);
+                z-index: -1;
+            }
+        }
+    }
+}
+
+// Step wizard used in /shop, /event, appointment
+.o_wizard {
+    $o_wizard_circle_progress_size: 64px;
+
+    .o_wizard_step_active {
+        @include media-breakpoint-up(md) {
+            color: $body-color;
+        }
+    }
+
+    .o_wizard_circle_progress {
+        &, &:before {
+            width: $o_wizard_circle_progress_size;
+            height: $o_wizard_circle_progress_size;
+            line-height: $o_wizard_circle_progress_size;
+        }
+
+        &:before {
+            position: absolute;
+            border-radius: 50%;
+            box-shadow: inset 0 0 0 map-get($border-widths, 5) currentColor;
+            opacity: .2;
+            content: "";
+        }
+    }
+
+    .o_wizard_circle_progress_left .progress-bar {
+        border-radius: 0 ($o_wizard_circle_progress_size * .5) ($o_wizard_circle_progress_size * .5) 0;
+        transform-origin: center left;
+        transform: rotate(var(--leftProgress));
+    }
+
+    .o_wizard_circle_progress_right .progress-bar {
+        border-radius: ($o_wizard_circle_progress_size * .5) 0 0 ($o_wizard_circle_progress_size * .5);
+        transform-origin: center right;
+        transform: rotate(var(--rightProgress));
+    }
+}
+
+// Language selector
+.js_language_selector {
+    .dropdown-menu {
+        min-width: 0;
+    }
+    a.list-inline-item {
+        padding: 3px 0;
+    }
+}
+.o_lang_flag {
+    width: 1em;
+    height: 1em;
+    margin-right: 0.2em;
+    border-radius: $border-radius-pill;
+    object-fit: cover;
+    box-shadow: rgba(0, 0, 0, 0.429) 1px 1px 1px;
+}
+span.list-inline-item.o_add_language:last-child {
+    display: none !important; // Hide the separator if it is the last list item
+}
+
+// Footer scrolltop button
+@if o-website-value('footer-scrolltop') {
+    #o_footer_scrolltop_wrapper {
+        position: relative;
+        z-index: 1;
+
+        &:last-child {
+            height: 3rem !important;
+            margin-top: -3rem;
+            margin-bottom: 1rem;
+        }
+    }
+    #o_footer_scrolltop {
+        $-footer-color: o-color('footer-custom') or o-color('footer') or rgba(0, 0, 0, 0);
+        $-footer-color: mix(rgba($-footer-color, 1.0), $body-bg, percentage(alpha($-footer-color)));
+        $-copyright-color: o-color('copyright-custom') or o-color('copyright') or rgba(0, 0, 0, 0);
+        $-copyright-color: mix(rgba($-copyright-color, 1.0), $-footer-color, percentage(alpha($-copyright-color)));
+
+        box-sizing: content-box;
+        width: 3rem;
+        height: 3rem;
+        border: 0;
+        padding: 0;
+        @include o-apply-colors($-footer-color, $with-extras: false, $background: $-footer-color);
+        text-decoration: none;
+
+        @if $-footer-color == $-copyright-color {
+            color: rgba(color-contrast($-footer-color), 0.5);
+        }
+
+        &:hover, &:focus {
+            @include o-apply-colors($-copyright-color, $with-extras: false, $background: $-footer-color);
+            text-decoration: none;
+        }
+    }
+}
+
+// Figure with special style
+.o_figure_relative_layout {
+    position: relative;
+
+    .figure-img {
+        margin-bottom: 0;
+    }
+    .figure-caption {
+        @include o-position-absolute(auto, 0, 0, 0);
+        @include o-bg-color(rgba(map-get($theme-colors, 'dark'), $o-theme-figcaption-opacity));
+        padding: $tooltip-padding-y $tooltip-padding-x;
+        font-weight: $font-weight-bold;
+        a {
+            color: inherit;
+        }
+    }
+}
+
+@each $color, $value in $theme-colors {
+    .bg-#{$color}-light {
+        background-color: rgba($value, 0.1);
+    }
+}
+
+@each $media, $color in $o-social-colors {
+    @include text-emphasis-variant(".text-#{$media}", $color);
+}
+
+// TODO: Will be handled properly in master/saas-12.2, temp fix for website_event.registration_attendee_details
+.modal-footer > .float-start {
+    margin-right: auto;
+}
+
+// CoverProperties
+.o_record_cover_container {
+    position: relative;
+
+    .o_record_cover_component {
+        @include o-position-absolute(0, 0, 0, 0);
+
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+}
+
+// Scroll down button
+.o_scroll_button {
+    @include o-position-absolute(auto, 0, 0, 0);
+    display: flex;
+    width: 50px;
+    height: 50px;
+    animation: o-anim-heartbeat 2.6s ease-in-out 1s infinite;
+
+    &, &:hover {
+        text-decoration: none;
+    }
+    &:focus {
+        outline: none;
+    }
+    &:hover {
+        animation-iteration-count: 1;
+    }
+}
+
+// Attention keeper for the "scroll down" top-banner button
+@keyframes o-anim-heartbeat {
+    0%, 14%, 35% {
+        transform: scale(1);
+    }
+    7%, 21% {
+        transform: scale(1.3);
+        background-color: rgba(map-get($theme-colors, 'primary'), 0.8);
+    }
+}
+
+// Ribbons
+$ribbon-padding: 100px;
+.o_ribbon {
+    margin: 0;
+    @include font-size(1rem);
+    font-weight: bold;
+    white-space: nowrap;
+    text-align: center;
+    pointer-events: none;
+
+    &:empty {
+        display: none;
+    }
+}
+
+.o_ribbon_right {
+    @include o-ribbon-right();
+}
+
+.o_ribbon_left {
+    @include o-ribbon-left();
+}
+
+.o_tag_right {
+    @include o-tag-right();
+}
+
+.o_tag_left {
+    @include o-tag-left();
+}
+
+// Conditional visibility
+.o_conditional_hidden {
+    display: none !important;
+}
+
+// Cookies Bar
+#website_cookies_bar {
+    min-height: 0px;
+    height: 0px;
+}
+
+.o_cookies_bar_toggle {
+    inset-inline-end: 1rem;
+    inset-block-end: var(--cookies-bar-toggle-inset-block-end, 1rem);
+    z-index: $zindex-modal + 1; // Over the modal backdrop.
+}
+
+// Search results
+.o_search_result_item_detail {
+    flex: 1;
+}
+
+ul.o_checklist > li.o_checked::after {
+    left: - ($o-checklist-margin-left - $o-checklist-checkmark-width) - 1;
+    top: 0;
+}
+
+// Bottom fixed element (e.g. livechat button)
+.modal-open .o_bottom_fixed_element, .o_bottom_fixed_element_hidden {
+    // Prevent bottom fixed elements from hidding buttons and
+    // hide them if a modal is open.
+    display: none !important;
+}
+
+// On translation editor, inputs & textareas with translatable "placeholder" and
+// "value" will get HTML content as translation value for the attributes.
+// The goal here is to hide these values until the editor's code sets the right
+// ones on elements. The `o_text_content_invisible` class is mainly used on JS
+// to have the same behaviour for textareas, since it's not possible to target
+// them on CSS using the "value" attribute unlike inputs.
+.o_text_content_invisible {
+    color: transparent !important;
+}
+[placeholder*="data-oe-translation-source-sha"] {
+    &::-webkit-input-placeholder{ /* WebKit */
+        color: transparent;
+        opacity: 0;
+    }
+    &::-moz-placeholder { /* Firefox */
+        color: transparent;
+        opacity: 0;
+    }
+}
+input[value*="data-oe-translation-source-sha"] {
+    @extend .o_text_content_invisible;
+}
+[data-oe-translation-source-sha] {
+    > .o_translation_select {
+        border: $input-border-width solid $input-border-color;
+        @include border-radius($input-border-radius, 0);
+
+        // Hide translatable `<select/>`s since we use `.o_translation_select`
+        // elements to handle translations.
+        + select {
+            display: none !important;
+        }
+        > div:not(:last-child) {
+            border-bottom: inherit;
+        }
+    }
+}
+
+// Offcanvas menu for in page filters (e.g. product list)
+.o_website_offcanvas .accordion-button {
+    // Since this nav is visible on mobile only, remove all visual
+    // effects related to keyboard/mouse navigation.
+    &, &:focus, &:hover {
+        box-shadow: none;
+        z-index: 0;
+    }
+}
+
+// Notification
+.o_notification_manager .o_notification {
+    --Notification__background-color: #{$body-bg};
+}
+
+//------------------------------------------------------------------------------
+// Website Animate
+//------------------------------------------------------------------------------
+
+.o_animate {
+    // Elements with an animation must always be above the elements that are
+    // around so that the animation is fully visible.
+    z-index: 1;
+    animation-duration: 1s;
+    animation-fill-mode: both;
+    transform: translate3d(0,0,0); // force GPU acceleration
+    backface-visibility: hidden; // avoid flickering
+    text-rendering: geometricPrecision; // take care of animated titles
+    visibility: hidden;
+    --wanim-intensity: 50;
+    --wanim-intensity-squared: calc(var(--wanim-intensity) * var(--wanim-intensity));
+    --wanim-zoom-out-scale: calc(1 + (var(--wanim-intensity-squared) / 8333.3));
+    --wanim-zoom-in-scale: calc(1.01 - (var(--wanim-intensity) / 100 ));
+    --wanim-zoom-in-scale-60: calc(var(--wanim-zoom-in-scale) + ((1 - var(--wanim-zoom-in-scale)) / 2));
+    --wanim-opacity-adjustment: 0;
+
+    &:not(.o_animating):not(.o_animate_in_dropdown) {
+        transform: none !important;
+    }
+}
+.o_animate_preview {
+    visibility: visible;
+}
+.o_wanim_overflow_xy_hidden {
+    overflow-x: hidden !important;
+
+    &.o_rtl, .o_rtl {
+        // Fix for Chrome and Edge bug: resolves slow/stuck scrolling during
+        // left-overflowing animations on RTL web pages. Note: using overflow on
+        // the main element hides animated elements outside of it (e.g. "Framed"
+        // page layout). This may not be the ideal solution but could be the
+        // best workaround for now.
+        > main {
+            overflow-x: hidden;
+            overflow-y: hidden;
+        }
+    }
+    .o_footer_slideout {
+        overflow-y: hidden !important;
+    }
+}
+.o_animated_text {
+    display: inline-block;
+}
+.o_animate_on_scroll {
+    animation-play-state: paused;
+    --wanim-opacity-adjustment: 1;
+}
+
+// Slide //////////////////////////////////////////////////////////////////////
+
+@keyframes o_anim_slide_in_down {
+    0% {
+        opacity: 0;
+        transform: translate(0, calc(-2% * var(--wanim-intensity)));
+    }
+    10% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(0, 0);
+    }
+}
+.o_anim_slide_in.o_anim_from_top {
+    animation-name: o_anim_slide_in_down;
+}
+
+@keyframes o_anim_slide_in_left {
+    0% {
+        opacity: 0;
+        transform: translate(calc(-2% * var(--wanim-intensity)), 0);
+    }
+    10% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(0, 0);
+    }
+}
+.o_anim_slide_in.o_anim_from_left {
+    animation-name: o_anim_slide_in_left;
+}
+
+@keyframes o_anim_slide_in_right {
+    0% {
+        opacity: 0;
+        transform: translate(calc(2% * var(--wanim-intensity)), 0);
+    }
+    10% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(0, 0);
+    }
+}
+.o_anim_slide_in.o_anim_from_right{
+    animation-name: o_anim_slide_in_right;
+}
+
+@keyframes o_anim_slide_in_up {
+    0% {
+        opacity: 0;
+        transform: translate(0, calc(2% * var(--wanim-intensity)));
+    }
+    10% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(0, 0);
+    }
+}
+.o_anim_slide_in.o_anim_from_bottom {
+    animation-name: o_anim_slide_in_up;
+}
+
+// Bounce /////////////////////////////////////////////////////////////////////
+
+@keyframes o_anim_bounce_in {
+    0%, 20%, 40%, 60%, 80%, 100% {
+        transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+    0% {
+        opacity: 0;
+        transform: scale(calc(1 - (var(--wanim-intensity) / 71.4)));
+    }
+    10% {
+        opacity: calc(0.15 + (0.85 * (var(--wanim-opacity-adjustment))));
+    }
+    20% {
+        transform: scale(calc(1 + (var(--wanim-intensity-squared) / 25000)));
+    }
+    40% {
+        transform: scale(calc(1 - (var(--wanim-intensity-squared) / 25000)));
+    }
+    60% {
+        opacity: 1;
+        transform: scale(calc(1 + (var(--wanim-intensity-squared) / 83333.3)));
+    }
+    80% {
+        transform: scale(calc(1 - (var(--wanim-intensity-squared) / 83333.3)));
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+.o_anim_bounce_in {
+    animation-name: o_anim_bounce_in;
+}
+
+@keyframes o_anim_bounce_in_down {
+    0%, 20%, 40%, 60%, 80%, 100% {
+        transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+    0% {
+        opacity: 0;
+        transform: translate(0, -3000px);
+    }
+    10% {
+        opacity: calc(0.15 + (0.85 * (var(--wanim-opacity-adjustment))));
+    }
+    60% {
+        opacity: 1;
+        transform: translate(0, calc(1px * (var(--wanim-intensity-squared) / 100)));
+    }
+    75% {
+        transform: translate(0, calc(-1px * (var(--wanim-intensity-squared) / 250)));
+    }
+    90% {
+        transform: translate(0, calc(1px * (var(--wanim-intensity-squared) / 500)));
+    }
+    100% {
+        transform: translate(0, 0);
+    }
+}
+.o_anim_bounce_in.o_anim_from_top {
+    animation-name: o_anim_bounce_in_down;
+}
+
+@keyframes o_anim_bounce_in_left {
+    0%, 20%, 40%, 60%, 80%, 100% {
+        transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+    0% {
+        opacity: 0;
+        transform: translate(-3000px, 0);
+    }
+    10% {
+        opacity: calc(0.15 + (0.85 * (var(--wanim-opacity-adjustment))));
+    }
+    60% {
+        opacity: 1;
+        transform: translate(calc(1px * (var(--wanim-intensity-squared) / 100)), 0);
+    }
+    75% {
+        transform: translate(calc(-1px * (var(--wanim-intensity-squared) / 250)), 0);
+    }
+    90% {
+        transform: translate(calc(1px * (var(--wanim-intensity-squared) / 500)), 0);
+    }
+    100% {
+        transform: translate(0, 0);
+    }
+}
+.o_anim_bounce_in.o_anim_from_left {
+    animation-name: o_anim_bounce_in_left;
+}
+
+@keyframes o_anim_bounce_in_right {
+    0%, 20%, 40%, 60%, 80%, 100% {
+        transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+    0% {
+        opacity: 0;
+        transform: translate(3000px, 0);
+    }
+    10% {
+        opacity: calc(0.15 + (0.85 * (var(--wanim-opacity-adjustment))));
+    }
+    60% {
+        opacity: 1;
+        transform: translate(calc(-1px * (var(--wanim-intensity-squared) / 100)), 0);
+    }
+    75% {
+        transform: translate(calc(1px * (var(--wanim-intensity-squared) / 250)), 0);
+    }
+    90% {
+        transform: translate(calc(-1px * (var(--wanim-intensity-squared) / 500)), 0);
+    }
+    100% {
+        transform: translate(0, 0);
+    }
+}
+.o_anim_bounce_in.o_anim_from_right {
+    animation-name: o_anim_bounce_in_right;
+}
+
+@keyframes o_anim_bounce_in_up {
+    0%, 20%, 40%, 60%, 80%, 100% {
+        transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+    0% {
+        opacity: 0;
+        transform: translate(0, 3000px);
+    }
+    10% {
+        opacity: calc(0.15 + (0.85 * (var(--wanim-opacity-adjustment))));
+    }
+    60% {
+        opacity: 1;
+        transform: translate(0, calc(-1px * (var(--wanim-intensity-squared) / 100)));
+    }
+    75% {
+        transform: translate(0, calc(1px * (var(--wanim-intensity-squared) / 250)));
+    }
+    90% {
+        transform: translate(0, calc(-1px * (var(--wanim-intensity-squared) / 500)));
+    }
+    100% {
+        transform: translate(0, 0);
+    }
+}
+.o_anim_bounce_in.o_anim_from_bottom {
+    animation-name: o_anim_bounce_in_up;
+}
+
+// Fade ///////////////////////////////////////////////////////////////////////
+
+@keyframes o_anim_fade_in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+.o_anim_fade_in {
+    animation-name: o_anim_fade_in;
+}
+
+@keyframes o_anim_fade_in_down {
+    0% {
+        opacity: 0;
+        transform: translate(0, calc(-2% * var(--wanim-intensity)));
+    }
+    100% {
+        opacity: 1;
+        transform: translate(0, 0);
+    }
+}
+.o_anim_fade_in.o_anim_from_top {
+    animation-name: o_anim_fade_in_down;
+}
+
+@keyframes o_anim_fade_in_left {
+    0% {
+        opacity: 0;
+        transform: translate(calc(-2% * var(--wanim-intensity)), 0);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(0, 0);
+    }
+}
+.o_anim_fade_in.o_anim_from_left {
+    animation-name: o_anim_fade_in_left;
+}
+
+@keyframes o_anim_fade_in_right {
+    0% {
+        opacity: 0;
+        transform: translate(calc(2% * var(--wanim-intensity)), 0);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(0, 0);
+    }
+}
+.o_anim_fade_in.o_anim_from_right {
+    animation-name: o_anim_fade_in_right;
+}
+
+@keyframes o_anim_fade_in_up {
+    0% {
+        opacity: 0;
+        transform: translate(0, calc(2% * var(--wanim-intensity)));
+    }
+    100% {
+        opacity: 1;
+        transform: translate(0, 0);
+    }
+}
+.o_anim_fade_in.o_anim_from_bottom {
+    animation-name: o_anim_fade_in_up;
+}
+
+@keyframes o_anim_fade_out {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+.o_anim_fade_out {
+    animation-name: o_anim_fade_out;
+}
+
+// Rotate /////////////////////////////////////////////////////////////////////
+
+@keyframes o_anim_rotate_in {
+    0% {
+        opacity: 0;
+        transform: rotate(calc(-1deg * (5 + (var(--wanim-intensity-squared) / 12.82))));
+    }
+    10% {
+        opacity: calc(0.1 + (0.9 * (var(--wanim-opacity-adjustment))));
+    }
+    100% {
+        opacity: 1;
+        transform: rotate(0);
+    }
+}
+.o_anim_rotate_in {
+    animation-name: o_anim_rotate_in;
+}
+
+@keyframes o_anim_rotate_in_down_left {
+    0% {
+        opacity: 0;
+        transform-origin: left bottom;
+        transform: rotate(calc(-1deg * (5 + (var(--wanim-intensity-squared) / 62.5))));
+    }
+    10% {
+        opacity: calc(0.1 + (0.9 * (var(--wanim-opacity-adjustment))));
+    }
+    100% {
+        opacity: 1;
+        transform-origin: left bottom;
+        transform: rotate(0);
+    }
+}
+.o_anim_rotate_in.o_anim_from_bottom_left {
+    animation-name: o_anim_rotate_in_down_left;
+}
+
+@keyframes o_anim_rotate_in_down_right {
+    0% {
+        opacity: 0;
+        transform-origin: right bottom;
+        transform: rotate(calc(1deg * (5 + (var(--wanim-intensity-squared) / 62.5))));
+    }
+    10% {
+        opacity: calc(0.1 + (0.9 * (var(--wanim-opacity-adjustment))));
+    }
+    100% {
+        opacity: 1;
+        transform-origin: right bottom;
+        transform: rotate(0);
+    }
+}
+.o_anim_rotate_in.o_anim_from_bottom_right {
+    animation-name: o_anim_rotate_in_down_right;
+}
+
+@keyframes o_anim_rotate_in_up_left {
+    0% {
+        opacity: 0;
+        transform-origin: left top;
+        transform: rotate(calc(1deg * (5 + (var(--wanim-intensity-squared) / 62.5))));
+    }
+    10% {
+        opacity: calc(0.1 + (0.9 * (var(--wanim-opacity-adjustment))));
+    }
+    100% {
+        opacity: 1;
+        transform-origin: left top;
+        transform: rotate(0);
+    }
+}
+.o_anim_rotate_in.o_anim_from_top_left {
+    animation-name: o_anim_rotate_in_up_left;
+}
+
+@keyframes o_anim_rotate_in_up_right {
+    0% {
+        opacity: 0;
+        transform-origin: right top;
+        transform: rotate(calc(-1deg * (5 + (var(--wanim-intensity-squared) / 62.5))));
+    }
+    10% {
+        opacity: calc(0.1 + (0.9 * (var(--wanim-opacity-adjustment))));
+    }
+    100% {
+        opacity: 1;
+        transform-origin: right top;
+        transform: rotate(0);
+    }
+}
+.o_anim_rotate_in.o_anim_from_top_right {
+    animation-name: o_anim_rotate_in_up_right;
+}
+
+// Zoom out ///////////////////////////////////////////////////////////////////
+
+@keyframes o_anim_zoom_out {
+    0% {
+        opacity: 0;
+        transform: scale(var(--wanim-zoom-out-scale));
+    }
+    10% {
+        opacity: calc(0.1 + (0.9 * (var(--wanim-opacity-adjustment))));
+    }
+    100% {
+        opacity: 1;
+    }
+}
+.o_anim_zoom_out {
+    animation-name: o_anim_zoom_out;
+}
+
+@keyframes o_anim_zoom_out_right {
+    0% {
+        opacity: 0;
+        transform: scale(var(--wanim-zoom-out-scale)) translate(100%, 0);
+    }
+    10% {
+        opacity: calc(0.1 + (0.9 * (var(--wanim-opacity-adjustment))));
+    }
+    100% {
+        opacity: 1;
+    }
+}
+.o_anim_zoom_out.o_anim_from_right {
+    animation-name: o_anim_zoom_out_right;
+}
+
+@keyframes o_anim_zoom_out_left {
+    0% {
+        opacity: 0;
+        transform: scale(var(--wanim-zoom-out-scale)) translate(-100%, 0);
+    }
+    10% {
+        opacity: calc(0.1 + (0.9 * (var(--wanim-opacity-adjustment))));
+    }
+    100% {
+        opacity: 1;
+    }
+}
+.o_anim_zoom_out.o_anim_from_left {
+    animation-name: o_anim_zoom_out_left;
+}
+
+@keyframes o_anim_zoom_out_bottom {
+    0% {
+        opacity: 0;
+        transform: scale(var(--wanim-zoom-out-scale)) translate(0, 100%);
+    }
+    10% {
+        opacity: calc(0.1 + (0.9 * (var(--wanim-opacity-adjustment))));
+    }
+    100% {
+        opacity: 1;
+    }
+}
+.o_anim_zoom_out.o_anim_from_bottom {
+    animation-name: o_anim_zoom_out_bottom;
+}
+
+@keyframes o_anim_zoom_out_top {
+    0% {
+        opacity: 0;
+        transform: scale(var(--wanim-zoom-out-scale)) translate(0, -100%);
+    }
+    10% {
+        opacity: calc(0.1 + (0.9 * (var(--wanim-opacity-adjustment))));
+    }
+    100% {
+        opacity: 1;
+    }
+}
+.o_anim_zoom_out.o_anim_from_top {
+    animation-name: o_anim_zoom_out_top;
+}
+
+// Zoom in ////////////////////////////////////////////////////////////////////
+
+@keyframes o_anim_zoom_in {
+    0% {
+        opacity: 0;
+        transform: scale(var(--wanim-zoom-in-scale));
+    }
+    10% {
+        opacity: calc(0.2 + (0.8 * (var(--wanim-opacity-adjustment))));
+    }
+    50% {
+        opacity: 1;
+    }
+}
+.o_anim_zoom_in {
+    animation-name: o_anim_zoom_in;
+}
+
+@keyframes o_anim_zoom_in_down {
+    0% {
+        opacity: 0;
+        transform: scale(var(--wanim-zoom-in-scale)) translate(0, calc(-0.1px * var(--wanim-intensity-squared)));
+        animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+    }
+    10% {
+        opacity: calc(0.15 + (0.85 * (var(--wanim-opacity-adjustment))));
+    }
+    60% {
+        opacity: 1;
+        transform: scale(var(--wanim-zoom-in-scale-60)) translate(0, calc(1px * var(--wanim-intensity)));
+        animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1);
+    }
+}
+.o_anim_zoom_in.o_anim_from_top {
+    animation-name: o_anim_zoom_in_down;
+}
+
+@keyframes o_anim_zoom_in_up {
+    0% {
+        opacity: 0;
+        transform: scale(var(--wanim-zoom-in-scale)) translate(0, calc(0.1px * var(--wanim-intensity-squared)));
+        animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+    }
+    10% {
+        opacity: calc(0.15 + (0.85 * (var(--wanim-opacity-adjustment))));
+    }
+    60% {
+        opacity: 1;
+        transform: scale(var(--wanim-zoom-in-scale-60)) translate(0, calc(-1px * var(--wanim-intensity)));
+        animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1);
+    }
+}
+.o_anim_zoom_in.o_anim_from_bottom {
+    animation-name: o_anim_zoom_in_up;
+}
+
+@keyframes o_anim_zoom_in_left {
+    0% {
+        opacity: 0;
+        transform: scale(var(--wanim-zoom-in-scale)) translate(calc(-0.1px * var(--wanim-intensity-squared)), 0);
+        animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+    }
+    10% {
+        opacity: calc(0.15 + (0.85 * (var(--wanim-opacity-adjustment))));
+    }
+    60% {
+        opacity: 1;
+        transform: scale(var(--wanim-zoom-in-scale-60)) translate(calc(0.2px * var(--wanim-intensity)), 0);
+        animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1);
+    }
+}
+.o_anim_zoom_in.o_anim_from_left {
+    animation-name: o_anim_zoom_in_left;
+}
+
+@keyframes o_anim_zoom_in_right {
+    0% {
+        opacity: 0;
+        transform: scale(var(--wanim-zoom-in-scale)) translate(calc(0.1px * var(--wanim-intensity-squared)), 0);
+        animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+    }
+    10% {
+        opacity: calc(0.15 + (0.85 * (var(--wanim-opacity-adjustment))));
+    }
+    60% {
+        opacity: 1;
+        transform: scale(var(--wanim-zoom-in-scale-60)) translate(calc(-0.2px * var(--wanim-intensity)), 0);
+        animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1);
+    }
+}
+.o_anim_zoom_in.o_anim_from_right {
+    animation-name: o_anim_zoom_in_right;
+}
+
+// Flash / Pulse / Shake / Tada ///////////////////////////////////////////////
+
+@keyframes o_anim_flash {
+    0%, 50%, 100% {
+        opacity: 1;
+    }
+    25%, 75% {
+        opacity: calc(1 - (var(--wanim-intensity) / 100));
+    }
+}
+.o_anim_flash {
+    animation-name: o_anim_flash;
+}
+
+@keyframes o_anim_pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(calc(1.01 + (0.000016 * var(--wanim-intensity-squared))));
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+.o_anim_pulse {
+    animation-name: o_anim_pulse;
+}
+
+@keyframes o_anim_shake {
+    0%, 100% {
+        transform: translate(0, 0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translate(calc(-1px - (0.0036px * var(--wanim-intensity-squared))), 0);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translate(calc(1px + (0.0036px * var(--wanim-intensity-squared))), 0);
+    }
+}
+.o_anim_shake {
+    animation-name: o_anim_shake;
+}
+
+@keyframes o_anim_tada {
+    0% {
+        transform: scale(1);
+    }
+    10%, 20% {
+        transform: scale(calc(1 - (0.00004 * var(--wanim-intensity-squared)))) rotate(calc(-2deg - (0.02deg * var(--wanim-intensity))));
+    }
+    30%, 50%, 70%, 90% {
+        transform: scale(calc(1 + (0.00004 * var(--wanim-intensity-squared)))) rotate(calc(2deg + (0.02deg * var(--wanim-intensity))));
+    }
+    40%, 60%, 80% {
+        transform: scale(calc(1 + (0.00004 * var(--wanim-intensity-squared)))) rotate(calc(-2deg - (0.02deg * var(--wanim-intensity))));
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+.o_anim_tada {
+    animation-name: o_anim_tada;
+}
+
+// Flip in ////////////////////////////////////////////////////////////////////
+
+@keyframes o_anim_flip_in_x {
+    0% {
+        transform: perspective(1000px) rotateX(calc(1deg * (5 + (var(--wanim-intensity) * 1.7))));
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+.o_anim_flip_in_x {
+    backface-visibility: visible;
+    animation-name: o_anim_flip_in_x;
+    transition-timing-function: ease-out;
+}
+
+@keyframes o_anim_flip_in_y {
+    0% {
+        transform: perspective(1000px) rotateY(calc(1deg * (5 + (var(--wanim-intensity) * 1.7))));
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+.o_anim_flip_in_y {
+    backface-visibility: visible;
+    animation-name: o_anim_flip_in_y;
+    transition-timing-function: ease-out;
+}
+
+//------------------------------------------------------------------------------
+// Website Text Highlight Effects
+//------------------------------------------------------------------------------
+
+.o_text_highlight {
+    --text-highlight-color: currentColor;
+
+    // Default style for irregular text highlights.
+    &.o_text_highlight_fill {
+        --text-highlight-color: var(--primary);
+        --text-highlight-width: 0px !important;
+    }
+    // Text highlight SVG container.
+    > .o_text_highlight_item {
+        position: relative;
+        display: inline-block;
+        line-height: normal;
+        white-space: pre-wrap;
+        isolation: isolate;
+
+        > * {
+            text-decoration: none;
+        }
+        svg {
+            z-index: -1;
+        }
+    }
+}
+
+// Compatibility <= 13.0
+.o_anim_dur500 {
+    animation-duration: 500ms;
+}
+.o_anim_dur1500 {
+    animation-duration: 1500ms;
+}
+.o_anim_dur2000 {
+    animation-duration: 2000ms;
+}
+.o_anim_dur2500 {
+    animation-duration: 2500ms;
+}
+.o_anim_dur3000 {
+    animation-duration: 3000ms;
+}
+.o_anim_del500 {
+    animation-delay: 500ms;
+}
+.o_anim_del1000 {
+    animation-delay: 1000ms;
+}
+.o_anim_del1500 {
+    animation-delay: 1500ms;
+}
+.o_anim_del2000 {
+    animation-delay: 2000ms;
+}
+.o_anim_del2500 {
+    animation-delay: 2500ms;
+}
+
+// Odoo dropdown menu
+.o_dropdown_menu {
+    @extend .dropdown-menu;
+}
+
+// Override web_editor's rules
+.o_table tr {
+    border-color: $table-border-color;
+}
+
+// Disables the offset on dropdown to match relative position in mobile/offcanvas.
+.o_dropdown_without_offset {
+    transform: none !important;
+}
+
+// Subtle input-group-text
+// This can be set to an input-group-text placed directly before or after the input.
+.input-group-text.input-group-text-subtle {
+    @include transition($input-transition);
+    border-color: $input-border-color;
+    background-color: $input-bg;
+    background-clip: padding-box;
+    color: $input-color;
+
+    // The input border color is based on "currentColor", so we can't apply this
+    // color to the whole element, otherwise the border color won't match the
+    // input border. To fix that, we need to define the color on a child element
+    // (eg. <i/> for an icon or <span/> for text).
+    > * {
+        color: rgba($input-color, 0.6);
+    }
+    .is-invalid ~ &,
+    &:has(~ .is-invalid) {
+        border-color: $form-feedback-invalid-color;
+    }
+    .is-invalid ~ & + .input-group-text {
+        border-left-color: $form-feedback-invalid-color;
+    }
+    .form-control ~ &, .form-select ~ & {
+        padding-left: $input-group-addon-padding-x * .5;
+    }
+    &:has(~ .form-control), &:has(~ .form-select) {
+        padding-right: $input-group-addon-padding-x * .5;
+    }
+    .form-control:disabled ~ &, .form-control[readonly] ~ &, &:has(~ .form-select:disabled), &:has(~ .form-select[readonly]) {
+        background-color: $input-disabled-bg;
+        border-color: $input-disabled-border-color;
+    }
+}
+
+.input-group-text-subtle ~ .form-control:not(:focus),
+.input-group-text-subtle ~ .form-select:not(:focus):not(:hover) {
+    border-left-width: 0;
+}
+
+.form-control:not(:focus):has(~ .input-group-text-subtle),
+.form-select:not(:focus):not(:hover):has(~ .input-group-text-subtle) {
+    border-right-width: 0;
+}
+
+// The `nav-link` and `btn` classes do not induce the same padding and border
+// radius. However, in some cases, we need to apply these properties of `btn`
+// with the color of `nav-link` (e.g. for the "Sign In" button of the "sidebar"
+// header). Adding the `btn` class to the `.nav-link` element does not work, as
+// `nav-link` padding takes the priority over the `btn` one. This class forces
+// to keep the wanted `btn` properties for specific `.nav-link` elements.
+.o_nav_link_btn {
+    border-radius: $btn-border-radius;
+    padding: $btn-padding-y $btn-padding-x;
+}

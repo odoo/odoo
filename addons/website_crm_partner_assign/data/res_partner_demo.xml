@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+        <record id="base.res_partner_3" model="res.partner">
+            <field name="grade_id" ref="res_partner_grade_data_silver"/>
+            <field name="partner_weight">10</field>
+            <field name="partner_latitude">38.2809274</field>
+            <field name="partner_longitude">-121.9505130</field>
+            <field name="assigned_partner_id" ref="base.res_partner_3"/>
+        </record>
+
+       <record id="base.res_partner_4" model="res.partner">
+            <field name="grade_id" ref="res_partner_grade_data_bronze"/>
+            <field name="partner_weight">10</field>
+            <field name="partner_latitude">37.6952527</field>
+            <field name="partner_longitude">-121.3966916</field>
+            <field name="assigned_partner_id" ref="base.res_partner_3"/>
+        </record>
+
+        <record id="base.res_partner_12" model="res.partner">
+            <field name="grade_id" ref="res_partner_grade_data_silver"/>
+            <field name="partner_weight">10</field>
+            <field name="partner_latitude">37.5304271</field>
+            <field name="partner_longitude">-121.9746713</field>
+            <field name="assigned_partner_id" ref="base.res_partner_12"/>
+        </record>
+
+        <record id="base.res_partner_10" model="res.partner">
+            <field name="grade_id" ref="res_partner_grade_data_gold"/>
+            <field name="partner_weight">10</field>
+            <field name="partner_latitude">37.7019178</field>
+            <field name="partner_longitude">-121.4452084</field>
+            <field name="assigned_partner_id" ref="base.res_partner_12"/>
+        </record>
+        <record id="base.res_partner_18" model="res.partner">
+            <field name="grade_id" ref="res_partner_grade_data_gold"/>
+            <field name="partner_weight">10</field>
+            <field name="partner_latitude">37.9663420</field>
+            <field name="partner_longitude">-121.2908748</field>
+            <field name="assigned_partner_id" ref="base.res_partner_1"/>
+        </record>
+        <record id="base.res_partner_1" model="res.partner">
+            <field name="grade_id" ref="res_partner_grade_data_gold"/>
+            <field name="partner_weight">10</field>
+            <field name="partner_latitude">37.5055960</field>
+            <field name="partner_longitude">-120.8279940</field>
+            <field name="assigned_partner_id" ref="base.res_partner_2"/>
+        </record>
+</odoo>

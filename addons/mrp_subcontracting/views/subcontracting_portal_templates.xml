@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="portal_my_home_productions" name="Productions" customize_show="True" inherit_id="portal.portal_my_home" priority="20">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
+            <t t-set="portal_vendor_category_enable" t-value="True"/>
+        </xpath>
+        <div id="portal_vendor_category" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="icon" t-value="'/mrp_subcontracting/static/src/img/manufacturing.svg'"/>
+                <t t-set="title">Manufacturing Orders</t>
+                <t t-set="text">Follow manufacturing orders you have to fulfill</t>
+                <t t-set="url" t-value="'/my/productions'"/>
+                <t t-set="placeholder_count" t-value="'production_count'"/>
+            </t>
+        </div>
+    </template>
+
+    <template id="portal_my_home_menu_production" name="Portal layout : production menu entries" inherit_id="portal.portal_breadcrumbs" priority="25">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <t t-if="title">
+                <li t-if="page_name == 'production' or picking" t-attf-class="breadcrumb-item #{'active' if breadcrumbs_url else ''}">
+                    <a t-if="breadcrumbs_url" t-attf-href="/my/productions{{ keep_query() }}">Productions</a>
+                    <t t-else="" t-esc="title"></t>
+                </li>
+                <li t-if="picking" class="breadcrumb-item active">
+                    <t t-out="picking.name"/>
+                </li>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="portal_my_productions" name="My Productions">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Productions</t>
+            </t>
+
+            <t t-if="not pickings">
+                <p class="alert alert-warning">There are currently no productions for your account.</p>
+            </t>
+
+            <t t-if="pickings" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Order</th>
+                        <th class="text-end">Source Document</th>
+                        <th class="text-end">Scheduled Date</th>
+                        <th class="text-end">Deadline Date</th>
+                        <th class="text-end">State</th>
+                    </tr>
+                </thead>
+                <t t-foreach="pickings" t-as="picking">
+                    <tr>
+                        <td><a t-attf-href="/my/productions/#{picking.id}?{{ keep_query() }}"><span t-field="picking.name"/></a></td>
+                        <td class="text-end"><span t-field="picking.origin"/></td>
+                        <td class="text-end"><span t-field="picking.scheduled_date" t-options='{"widget": "date"}'/></td>
+                        <td class="text-end"><span t-field="picking.date_deadline" t-options='{"widget": "date"}'/></td>
+                        <td class="text-end"><span t-field="picking.state"/></td>
+                    </tr>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="subcontracting_portal" name="Subcontracting View in Portal">
+        <t t-call="portal.frontend_layout">
+            <div class="o_portal container mt-3">
+                <t t-call="mrp_subcontracting.portal_my_home_menu_production">
+                    <t t-set="title" t-value="picking.name"/>
+                    <t t-set="breadcrumbs_url">/my/productions</t>
+                </t>
+            </div>
+            <div class="o_portal container mt-3 o_subcontracting_portal">
+                <div class="o_subcontracting_portal">
+                    <t t-set="no_footer" t-value="true"/>
+                    <t t-call="mrp_subcontracting.subcontracting"/>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="subcontracting" name="Subcontracting Portal View">
+        <iframe width="100%" height="100%" frameborder="0" t-attf-src="/my/productions/{{ picking.id }}/subcontracting_portal" class="border rounded"/>
+    </template>
+
+    <template id="subcontracting_portal_embed" name="Subcontracting Portal">
+        <t t-call="web.layout">
+            <t t-set="head_subcontracting_portal">
+                <script type="text/javascript">
+                    odoo.__session_info__ = <t t-out="json.dumps(session_info)"/>;
+                </script>
+                <base target="_parent"/>
+                <t t-call-assets="mrp_subcontracting.webclient"/>
+                <t t-call="web.conditional_assets_tests"/>
+            </t>
+            <t t-set="head" t-value="head_subcontracting_portal + (head or '')"/>
+            <t t-set="body_classname" t-value="'o_web_client o_subcontracting_portal'"/>
+        </t>
+    </template>
+
+</odoo>

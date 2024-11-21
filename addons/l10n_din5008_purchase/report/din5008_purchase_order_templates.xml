@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_purchaseorder_document" inherit_id="purchase.report_purchaseorder_document">
+        <xpath expr="//t[@t-set='address']" position="after">
+            <t t-set="din5008_document_information">
+                <div class="information_block" t-if="o and o._name=='purchase.order'">
+                    <table>
+                        <tr t-if="o.name">
+                            <td t-if="o.state == 'draft'">Request for Quotation No.:</td>
+                            <td t-elif="o.state in {'sent', 'to approve', 'purchase', 'done'}">Purchase Order No.:</td>
+                            <td t-elif="o.state == 'cancel'">Cancelled Purchase Order No.:</td>
+                            <td><t t-out="o.name"/></td>
+                        </tr>
+                        <tr t-if="o.user_id">
+                            <td>Purchase Representative:</td>
+                            <td><t t-out="o.user_id.name"/></td>
+                        </tr>
+                        <tr t-if="o.partner_ref">
+                            <td>Order Reference:</td>
+                            <td><t t-out="o.partner_ref"/></td>
+                        </tr>
+                        <tr t-if="o.date_approve">
+                            <td>Order Date:</td>
+                            <td><t t-out="o.date_approve" t-options="{'widget': 'date'}"/></td>
+                        </tr>
+                        <tr t-if="o.date_order">
+                            <td>Order Deadline:</td>
+                            <td><t t-out="o.date_order" t-options="{'widget': 'date'}"/></td>
+                        </tr>
+                        <tr t-if="o.incoterm_id">
+                            <td>Incoterm:</td>
+                            <td><t t-out="o.incoterm_id"/></td>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+
+            <t t-set="din5008_address_block">
+                <tr t-if="o and o._name=='purchase.order'">
+                    <td class="shipping_address" t-if="o.dest_address_id">
+                        <span class="fw-bold">Shipping Address:</span>
+                        <address t-esc="o.dest_address_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
+                    </td>
+                    <td class="shipping_address" t-elif="'picking_type_id' in o._fields and o.picking_type_id.warehouse_id">
+                        <span class="fw-bold">Shipping Address:</span>
+                        <address t-esc="o.picking_type_id.warehouse_id.partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
+                    </td>
+                </tr>
+            </t>
+
+            <t t-set="din5008_document_title">
+                <span t-if="o and o._name == 'purchase.order'">
+                    <t t-if="o.state in {'draft', 'sent', 'to approve'}">Request for Quotation</t>
+                    <t t-elif="o.state in {'purchase', 'done'}">Purchase Order</t>
+                    <t t-elif="o.state == 'cancel'">Cancelled Purchase Order</t>
+                </span>
+            </t>
+        </xpath>
+    </template>
+</odoo>

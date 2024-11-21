@@ -1,0 +1,53 @@
+.s_process_steps[data-vcss='002']  {
+    $process-step-number-size: 5rem;
+
+    .s_process_step {
+        .s_process_step_number {
+            width: $process-step-number-size;
+            height: $process-step-number-size;
+
+            // It is possible to add icons or images with the "/" command
+            img {
+                // Note that we use contain and not cover. For "full images"
+                // (like a photo which is a rectangle with colors on the edges),
+                // cover would be better. But for "image icons", contain is a
+                // better fit (as we want the full icon to be visible). Also
+                // in the case of "photos", the user has to be possibility to
+                // crop the image to a square, that way it would act as cover.
+                object-fit: contain;
+            }
+        }
+
+        .s_process_step_connector {
+            height: $process-step-number-size;
+            width: calc(100% - #{$process-step-number-size});
+            left: calc(50% + #{$process-step-number-size / 2});
+
+            path {
+                stroke: $border-color;
+                fill: transparent;
+            }
+        }
+
+        &:last-child .s_process_step_connector {
+            display: none;
+        }
+    }
+
+    &.s_process_steps_connector_curved_arrow {
+        .s_process_step:nth-child(odd) .s_process_step_connector {
+            transform: scale(1, -1);
+        }
+    }
+
+    .s_process_steps_arrow_head path {
+        fill: map-get($grays, '600');
+        stroke: transparent;
+    }
+
+    @include media-breakpoint-down(lg) {
+        .s_process_step_connector {
+            display: none;
+        }
+    }
+}

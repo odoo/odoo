@@ -1,0 +1,89 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_project_stock
+# 
+# Translators:
+# Wil Odoo, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: sale_project_stock
+#: model_terms:ir.actions.act_window,help:sale_project_stock.stock_move_per_sale_order_line_action
+msgid "No stock move found"
+msgstr "Geen voorraadverplaatsing gevonden"
+
+#. module: sale_project_stock
+#: model:ir.model,name:sale_project_stock.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Verkooporderregel"
+
+#. module: sale_project_stock
+#: model:ir.model,name:sale_project_stock.model_stock_move
+msgid "Stock Move"
+msgstr "Voorraadverplaatsing"
+
+#. module: sale_project_stock
+#. odoo-python
+#: code:addons/sale_project_stock/models/stock_picking.py:0
+msgid ""
+"The Sales Order %(order)s linked to the Project %(project)s is cancelled. "
+"You cannot validate a stock picking on a cancelled Sales Order."
+msgstr ""
+"De verkooporder %(order)s gekoppeld aan het project %(project)s is "
+"geannuleerd. Je kunt een voorraadboeking niet valideren op een geannuleerde "
+"verkooporder."
+
+#. module: sale_project_stock
+#. odoo-python
+#: code:addons/sale_project_stock/models/stock_picking.py:0
+msgid ""
+"The Sales Order %(order)s linked to the Project %(project)s is currently "
+"locked. You cannot validate a stock picking on a locked Sales Order. Please "
+"create a new SO linked to this Project."
+msgstr ""
+"De Verkooporder %(order)s gekoppeld aan het Project %(project)s is momenteel"
+" vergrendeld. Je kunt een voorraadboeking niet valideren op een vergrendelde"
+" verkooporder. Maak een nieuwe SO aan die is gekoppeld aan dit project."
+
+#. module: sale_project_stock
+#. odoo-python
+#: code:addons/sale_project_stock/models/stock_picking.py:0
+msgid ""
+"The Sales Order %(order)s linked to the Project %(project)s must be "
+"validated before validating the stock picking."
+msgstr ""
+"De verkooporder %(order)s die is gekoppeld aan het project %(project)s moet "
+"worden gevalideerd voordat de voorraadboeking wordt gevalideerd."
+
+#. module: sale_project_stock
+#: model_terms:ir.actions.act_window,help:sale_project_stock.stock_move_per_sale_order_line_action
+msgid ""
+"This menu gives you the full traceability of inventory\n"
+"                operations on a specific product. You can filter on the product\n"
+"                to see all the past or future movements for the product."
+msgstr ""
+"Deze menu geeft je de volledige traceerbaarheid van voorraadbewerking op een specifiek product. Je kunt op het product\n"
+"filteren om alle vorige en toekomstige verplaatsingen voor het product te zien."
+
+#. module: sale_project_stock
+#: model:ir.model,name:sale_project_stock.model_stock_picking
+msgid "Transfer"
+msgstr "Verplaatsing"
+
+#. module: sale_project_stock
+#: model:ir.actions.act_window,name:sale_project_stock.stock_move_per_sale_order_line_action
+msgid "Transfers"
+msgstr "Verplaatsingen"

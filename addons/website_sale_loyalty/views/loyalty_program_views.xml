@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="loyalty_program_view_form_inherit_website_sale_loyalty" model="ir.ui.view">
+        <field name="name">loyalty.program.view.form.inherit.website.sale.loyalty</field>
+        <field name="model">loyalty.program</field>
+        <field name="inherit_id" ref="sale_loyalty.loyalty_program_view_form_inherit_sale_loyalty"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='available_on']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//div[@id='o_loyalty_program_availabilities']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//div[@id='o_loyalty_program_availabilities']" position="inside">
+                <span class="d-inline-block">
+                    <field name="ecommerce_ok" class="w-auto me-0"/>
+                    <label for="ecommerce_ok" string="Website" class="me-3"/>
+                </span>
+            </xpath>
+            <xpath expr="//div[@id='o_loyalty_program_availabilities']" position="after">
+                <field name="website_id" invisible="not ecommerce_ok" options="{'no_create': True}" groups="website.group_multi_website" placeholder="All websites"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="loyalty_program_view_tree_inherit_website_sale_loyalty" model="ir.ui.view">
+        <field name="name">loyalty.program.view.list.inherit.website.sale.loyalty</field>
+        <field name="model">loyalty.program</field>
+        <field name="inherit_id" ref="loyalty.loyalty_program_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="coupon_count_display" position="after">
+                <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+            </field>
+            <field name="company_id" position="after">
+                <button name="action_program_share" string="Share" type="object" icon="fa-share-alt" invisible="program_type != 'promo_code'"/>
+            </field>
+        </field>
+    </record>
+</odoo>

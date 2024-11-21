@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.CustomerFacingDisplayHead">
+        <div class="resources">
+            <base t-att-href="origin" />
+            <meta http-equiv="cache-control" content="no-cache" />
+            <meta http-equiv="pragma" content="no-cache" />
+            <link rel="stylesheet" type="text/css" t-att-href="origin + '/web/static/src/libs/fontawesome/css/font-awesome.css'"/>
+            <link rel="stylesheet" type="text/css" t-att-href="origin + '/point_of_sale/static/src/css/customer_facing_display.css'"/>
+            <link rel="stylesheet" type="text/css" t-att-href="origin + '/web/static/lib/bootstrap/dist/css/bootstrap.css'"/>
+            <!-- The scroll to the last selected order line (in the POS UI) is made using scroll-snap-* css properties, but the JS code below checks and does an alternative attempt with scrollIntoView if the css properties are not supported or not behaving correctly. (this JS script is in the xml template to be accessible for local and remote displays) -->
+            <script type="text/javascript" id="old_browser_fix_auto_scroll">
+                function isCentered(el) {
+                    const rect = el.getBoundingClientRect();
+                    const elemHeight = (rect.top + rect.bottom) / 2;
+                    const windowMiddleHeight = window.innerHeight / 2;
+                    return (windowMiddleHeight * 0.9 &lt;= elemHeight) &amp;&amp; (elemHeight &lt;= windowMiddleHeight * 1.1);
+                }
+
+                function fixScrollingIfNecessary() {
+                    const selectedOrderlineShouldBeScrolledTo = document.querySelector(".pos-customer_facing_display .pos_orderlines_list.backend_product_screen .selected_orderline");
+                    if (selectedOrderlineShouldBeScrolledTo &amp;&amp; !isCentered(selectedOrderlineShouldBeScrolledTo)) {
+                        selectedOrderlineShouldBeScrolledTo.scrollIntoView({ behavior: "instant", block: "center" });
+                    }
+                }
+            </script>
+        </div>
+    </t>
+
+    <t t-name="point_of_sale.CustomerFacingDisplayNoOrder">
+        <t t-set="backgroundImageURL" t-value="pos.config.customer_display_bg_img ? 'url(/web/image/pos.config/' + pos.config.id + '/customer_display_bg_img)' : 'none'" />
+        <t t-call="point_of_sale.CustomerFacingDisplayHead" />
+
+        <div class="pos-customer_facing_display pos-no-order pos-palette_01" t-attf-style="background-image: #{backgroundImageURL};">
+            <!-- The remote display replaces pos-customer_facing_display contents, but not it  -->
+            <!-- Therefore, pos-no-order is an inner div -->
+            <div class="pos-no-order" t-attf-style="background-image: #{backgroundImageURL};">
+                <div class="pos-company_logo" t-attf-style="background-image:url(/logo?company=#{pos.company.id})" />
+            </div>
+        </div>
+    </t>
+
+    <t t-name="point_of_sale.CustomerFacingDisplayOrder">
+        <t t-set="backgroundImageURL" t-value="pos.config.customer_display_bg_img ? 'url(/web/image/pos.config/' + pos.config.id + '/customer_display_bg_img)' : 'none'" />
+        <!-- Header -->
+        <t t-call="point_of_sale.CustomerFacingDisplayHead" />
+
+        <div class="pos-customer_facing_display pos-palette_01">
+            <!-- Only visible in portrait orientation -->
+            <div class="pos-portrait-top">
+                <div class="pos-header" t-attf-style="background-image: {{backgroundImageURL}};">
+                    <div class="pos-company_logo" t-attf-style="background-image:url(/logo?company=#{pos.company.id})" />
+                </div>
+            </div>
+
+            <!-- Orderlines -->
+            <div class="pos-customer_products" name="Products list">
+                <t t-call="point_of_sale.CustomerFacingDisplayMainContainer" />
+            </div>
+
+            <div class="pos-payment_info" t-attf-style="background-image: {{backgroundImageURL}};">
+                <!-- Company Logo only visible in landscape orientation -->
+                <div class="pos-company_logo" t-attf-style="background-image:url(/logo?company=#{pos.company.id})" />
+
+                <div class="pos-payment_info_details">
+                    <!-- Order Total -->
+                    <div class="pos-total">
+                        <div class="pos-amount-container pos-spaced-line-container">
+                            <span class="name">Total:</span>
+                            <div class="spacer" />
+                            <div class="pos-spaced-line-container">
+                                <div class="spacer" />
+                                <span class="pos-total_amount amount" t-esc="pos.env.utils.formatCurrency(order and order.get_total_with_tax() || 0)" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Paymentlines -->
+                    <t t-call="point_of_sale.CustomerFacingDisplayPaymentLines" />
+                </div>
+
+                <!-- Odoo Logo -->
+                <div class="pos-odoo_logo_container">
+                    <span>Powered by </span>
+                    <div class="logo" />
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="point_of_sale.CustomerFacingQR">
+        <div class="overlay" />
+        <div class="pos-customer_payment_popup rounded border border-dark">
+            <div class="text-center">
+                <p>Please scan the QR code with <t t-esc="order.uiState.PaymentScreen.qrPaymentData.name"/></p>
+                <img class="pos-customer_payment_qr_code my-1" t-att-src="order.uiState.PaymentScreen.qrPaymentData.qrCode" alt="QR Code" />
+            </div>
+            <div class="text-center">
+                <div>
+                    <strong>Amount: </strong>
+                    <span t-esc="order.uiState.PaymentScreen.qrPaymentData.amount" />
+                </div>
+                <div>
+                    <strong>Order reference: </strong>
+                    <span t-esc="order.name" />
+                </div>
+            </div>
+        </div>
+
+    </t>
+
+    <t t-name="point_of_sale.CustomerFacingDisplayMainContainer">
+        <t t-if="order.get_current_screen_data().name === 'PaymentScreen' and order.uiState.PaymentScreen?.qrPaymentData">
+            <t t-call="point_of_sale.CustomerFacingQR"/>
+        </t>
+        <div class="pos_orderlines">
+            <t t-if="order">
+                <t t-if="order.get_current_screen_data().name != 'ReceiptScreen'">
+                    <t t-call="point_of_sale.CustomerFacingDisplayOrderLines"/>
+                </t>
+                <t t-else="">
+                    <div class="pos-thank-you-message">
+                        <span>Thank you for your purchase!</span>
+                    </div>
+                </t>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="point_of_sale.CustomerFacingDisplayOrderLines">
+        <t t-if="order.get_orderlines().length > 0">
+            <div class="pos-order_top_bar">
+                <span>Your Order</span>
+            </div>
+            <div class="pos_orderlines_list" t-att-class="{ 'backend_product_screen': order.get_current_screen_data().name === 'ProductScreen' }">
+                <table>
+                    <thead>
+                        <tr>
+                            <th colspan="2" class="pos-product-th">
+                                <span>Product</span>
+                            </th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="order.get_orderlines()" t-key="orderline.id" t-as="orderline" class="pos_orderlines_item" t-att-class="{ 'selected_orderline': orderline.id === order.get_selected_orderline().id }">
+                            <td class="product_img">
+                                <img t-attf-src="#{productImages[orderline.product_id.id]}" />
+                            </td>
+                            <td class="product_text_info">
+                                <ul>
+                                    <li t-esc="orderline.get_full_product_name()" />
+                                    <t t-if="orderline.get_discount_str()">
+                                        <li class="product_details">
+                                            <i class="fa fa-tag" role="img" aria-label="Discount" title="Discount" />
+                                        <t t-esc="orderline.get_discount_str()" />% <span class="gray">discount</span>
+                                        </li>
+                                    </t>
+                                    <t t-if="orderline.get_customer_note()">
+                                        <li class="product_details">
+                                            <i class="fa fa-sticky-note" role="img" aria-label="Customer Note" title="Customer Note" />
+                                            <span class="gray" t-esc="orderline.get_customer_note()" />
+                                        </li>
+                                    </t>
+                                </ul>
+                            </td>
+                            <td class="product_quantity gray">
+                                <span t-esc="orderline.get_quantity_str()" />
+                                <span t-esc="orderline.get_unit().name" />
+                            </td>
+                            <td>
+                                <div t-esc="pos.env.utils.formatCurrency(orderline.get_display_price())" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <script type="text/javascript">
+                document.addEventListener("DOMContentLoaded", function() {
+                fixScrollingIfNecessary();
+                });
+            </script>
+        </t>
+        <t t-else="">
+            <div class="order-empty">
+                <i class="fa fa-shopping-cart" role="img" aria-label="Shopping cart"
+                    title="Shopping cart" />
+                <h1>This order is empty</h1>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="point_of_sale.CustomerFacingDisplayPaymentLines">
+        <div class="pos-paymentlines">
+            <t t-if="order">
+                <t t-foreach="order.payment_ids" t-as="paymentline"  t-key="paymentline_index">
+                    <div class="pos-amount-container pos-spaced-line-container">
+                        <span class="name"><t t-esc="paymentline.payment_method_id.name" />:</span>
+                        <div class="spacer" />
+                        <div class="pos-spaced-line-container">
+                            <div class="spacer" />
+                            <span class="amount" t-esc="pos.env.utils.formatCurrency(paymentline.get_amount())" />
+                        </div>
+                    </div>
+                </t>
+            </t>
+
+            <div class="pos-amount-container pos-spaced-line-container">
+                <span class="name">Change:</span>
+                <div class="spacer" />
+                <div class="pos-spaced-line-container">
+                    <div class="spacer" />
+                    <span class="amount" t-esc="pos.env.utils.formatCurrency(order and order.get_change() || 0)" />
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

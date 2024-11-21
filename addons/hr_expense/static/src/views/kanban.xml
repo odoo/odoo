@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_expense.KanbanRenderer" t-inherit="web.KanbanRenderer" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_kanban_renderer')]" position="attributes">
+            <attribute name="class" add="position-relative h-auto" separator=" "/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_kanban_renderer')]" position="before">
+            <div t-if="dragState.showDragZone" class="o_dropzone">
+                <i class="fa fa-upload fa-10x"></i>
+            </div>
+        </xpath>
+    </t>
+
+    <t t-name="hr_expense.DashboardKanbanRenderer" t-inherit="hr_expense.KanbanRenderer" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_kanban_renderer')]" position="before">
+            <ExpenseDashboard/>
+        </xpath>
+    </t>
+
+    <t t-name="hr_expense.KanbanButtons" t-inherit="web.KanbanView.Buttons" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_cp_buttons')]" position="attributes">
+            <!-- Ensure that dropdown items show vertically and not side-by-side -->
+            <attribute name="class" remove="d-flex" separator=" "/>
+            <attribute name="class" add="d-block d-xl-flex" separator=" "/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_cp_buttons')]" position="inside">
+            <input type="file" name="ufile" class="d-none" t-ref="fileInput" multiple="1" accept="*" t-on-change="onChangeFileInput" />
+            <!-- If Create Report is shown and window isSmall, 'New' button is added to the 'control-panel-additional-actions' slot (dropdown in mobile) -->
+            <t t-if="canCreate and props.showButtons and env.isSmall and displayCreateReport()">
+                <button type="button" class="btn btn-primary o-kanban-button-new" data-hotkey="c" t-on-click="() => this.createRecord()" data-bounce-button="">
+                    New
+                </button>
+            </t>
+            <button t-if="displayCreateReport()" class="btn btn-secondary" t-on-click="() => this.action_show_expenses_to_submit()">
+                Create Report
+            </button>
+        </xpath>
+    </t>
+
+    <t t-name="hr_expense.KanbanView" t-inherit="web.KanbanView" t-inherit-mode="primary">
+        <xpath expr="//button[hasclass('o-kanban-button-new')]" position="before">
+            <button t-if="!env.isSmall" type="button" class="o_button_upload_expense btn btn-primary" t-on-click.prevent="uploadDocument">
+                Upload
+            </button>
+            <button t-if="env.isSmall" type="button" t-att-class="'o_button_upload_expense btn btn-primary' + (!displayCreateReport() ? ' me-1' : '')" t-on-click.prevent="uploadDocument">
+                Scan
+            </button>
+        </xpath>
+
+         <!-- 'New' button isn't in the control-panel-create-button slot if window isSmall and Create Report button is shown -->
+        <xpath expr="//button[hasclass('o-kanban-button-new')]" position="attributes">
+            <attribute name="t-if">!env.isSmall or (env.isSmall and !displayCreateReport())</attribute>
+        </xpath>
+
+        <xpath expr="//t[@t-component='props.Renderer']" position="attributes">
+            <attribute name="uploadDocument.bind">uploadDocument</attribute>
+        </xpath>
+    </t>
+</templates>

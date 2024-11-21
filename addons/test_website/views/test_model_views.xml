@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<odoo>
+
+<!-- test.model views -->
+<record id="test_model_view_kanban" model="ir.ui.view">
+    <field name="name">test.model.kanban</field>
+    <field name="model">test.model</field>
+    <field name="arch" type="xml">
+        <kanban js_class="website_pages_kanban" class="o_kanban_mobile" action="open_website_url" type="object" sample="1">
+            <templates>
+                <t t-name="card">
+                    <field class="text-truncate mb-auto fw-bolder" name="name"/>
+                    <div class="d-flex border-top mt-2 pt-2">
+                        <field name="is_published" widget="boolean_toggle"/>
+                        <t t-if="record.is_published.raw_value">Published</t>
+                        <t t-else="">Not Published</t>
+                    </div>
+                </t>
+            </templates>
+        </kanban>
+    </field>
+</record>
+<record id="test_model_view_list" model="ir.ui.view">
+    <field name="name">Test Model Pages List</field>
+    <field name="model">test.model</field>
+    <field name="priority">99</field>
+    <field name="arch" type="xml">
+        <list js_class="website_pages_list" type="object" action="open_website_url" multi_edit="1">
+            <field name="name"/>
+            <field name="website_url"/>
+        </list>
+    </field>
+</record>
+<record id="action_test_model" model="ir.actions.act_window">
+    <field name="name">Test Model Pages</field>
+    <field name="res_model">test.model</field>
+    <field name="view_mode">list,kanban,form</field>
+    <field name="view_ids" eval="[(5, 0, 0),
+        (0, 0, {'view_mode': 'list', 'view_id': ref('test_model_view_list')}),
+        (0, 0, {'view_mode': 'kanban', 'view_id': ref('test_model_view_kanban')}),
+    ]"/>
+</record>
+
+</odoo>

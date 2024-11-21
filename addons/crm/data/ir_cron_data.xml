@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="1">
+    <record forcecreate="True" id="ir_cron_crm_lead_assign" model="ir.cron">
+        <field name="name">CRM: Lead Assignment</field>
+        <field name="model_id" ref="crm.model_crm_team"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_assign_leads()</field>
+        <field name="active" eval="False"/>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+    </record>
+</data></odoo>

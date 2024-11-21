@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="external_layout_standard" inherit_id="web.external_layout_standard" >
+        <!-- support for custom header -->
+        <div t-attf-class="header o_company_#{company.id}_layout" position="attributes">
+            <attribute name="t-if">not custom_header</attribute>
+        </div>
+        <div t-attf-class="header o_company_#{company.id}_layout" position="after">
+            <div t-attf-class="header o_company_#{company.id}_layout" t-if="custom_header">
+                <t t-call="#{custom_header}"/>
+            </div>
+        </div>
+
+        <!-- support for custom footer -->
+        <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}" position="attributes">
+            <attribute name="t-if">not custom_footer</attribute>
+        </div>
+
+        <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}" position="after">
+            <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}" t-if="custom_footer">
+                <t t-out="custom_footer"/>
+            </div>
+        </div>
+    </template>
+
+    <template id="external_layout_bold" inherit_id="web.external_layout_bold" >
+        <!-- support for custom header -->
+        <div t-attf-class="header o_company_#{company.id}_layout" position="attributes">
+            <attribute name="t-if">not custom_header</attribute>
+        </div>
+        <div t-attf-class="header o_company_#{company.id}_layout" position="after">
+            <div t-attf-class="header o_company_#{company.id}_layout" t-if="custom_header">
+                <t t-call="#{custom_header}"/>
+            </div>
+        </div>
+
+        <!-- support for custom footer -->
+        <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}" position="attributes">
+            <attribute name="t-if">not custom_footer</attribute>
+        </div>
+        <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}" position="after">
+            <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}" t-if="custom_footer">
+                <t t-out="custom_footer"/>
+            </div>
+        </div>
+    </template>
+
+    <template id="external_layout_boxed" inherit_id="web.external_layout_boxed" >
+        <!-- support for custom header -->
+        <div t-attf-class="header o_company_#{company.id}_layout" position="attributes">
+            <attribute name="t-if">not custom_header</attribute>
+        </div>
+        <div t-attf-class="header o_company_#{company.id}_layout" position="after">
+            <div t-attf-class="header o_company_#{company.id}_layout" t-if="custom_header">
+                <t t-call="#{custom_header}"/>
+            </div>
+        </div>
+
+        <!-- support for custom footer -->
+        <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}" position="attributes">
+            <attribute name="t-if">not custom_footer</attribute>
+        </div>
+        <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}" position="after">
+            <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}" t-if="custom_footer">
+                <t t-out="custom_footer"/>
+            </div>
+        </div>
+    </template>
+
+    <template id="external_layout_striped" inherit_id="web.external_layout_striped" >
+        <!-- support for custom header -->
+        <div t-attf-class="o_company_#{company.id}_layout header" position="attributes">
+            <attribute name="t-if">not custom_header</attribute>
+        </div>
+        <div t-attf-class="o_company_#{company.id}_layout header" position="after">
+            <div t-attf-class="o_company_#{company.id}_layout header" t-if="custom_header">
+                <t t-call="#{custom_header}"/>
+            </div>
+        </div>
+
+        <!-- support for custom footer -->
+        <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}" position="attributes">
+            <attribute name="t-if">not custom_footer</attribute>
+        </div>
+        <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}" position="after">
+            <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}" t-if="custom_footer">
+                <t t-out="custom_footer"/>
+            </div>
+        </div>
+    </template>
+
+    <template id="external_layout_bubble" inherit_id="web.external_layout_bubble">
+        <!-- support for custom header -->
+        <div t-attf-class="header o_company_#{company.id}_layout {{report_type == 'pdf' and 'pt-5'}}" position="attributes">
+            <attribute name="t-if">not custom_header</attribute>
+        </div>
+        <div t-attf-class="header o_company_#{company.id}_layout {{report_type == 'pdf' and 'pt-5'}}" position="after">
+            <div t-attf-class="header o_company_#{company.id}_layout {{report_type == 'pdf' and 'pt-5'}}" t-if="custom_header">
+                <t t-call="#{custom_header}"/>
+            </div>
+        </div>
+
+        <!-- support for custom footer -->
+        <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'position-relative mt-auto mx-n5'}}" position="attributes">
+            <attribute name="t-if">not custom_footer</attribute>
+        </div>
+        <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'position-relative mt-auto mx-n5'}}" position="after">
+            <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'position-relative mt-auto mx-n5'}}" t-if="custom_footer">
+                <t t-out="custom_footer"/>
+            </div>
+        </div>
+    </template>
+
+    <template id="external_layout_wave" inherit_id="web.external_layout_wave">
+        <!-- support for custom header -->
+        <div t-attf-class="header o_company_#{company.id}_layout {{report_type != 'pdf' and 'h-0'}}" position="attributes">
+            <attribute name="t-if">not custom_header</attribute>
+        </div>
+        <div t-attf-class="header o_company_#{company.id}_layout {{report_type != 'pdf' and 'h-0'}}" position="after">
+            <div t-attf-class="header o_company_#{company.id}_layout {{report_type != 'pdf' and 'h-0'}}" t-if="custom_header">
+                <t t-call="#{custom_header}"/>
+            </div>
+        </div>
+
+        <!-- support for custom footer -->
+        <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'position-relative mt-auto mx-n5'}}" position="attributes">
+            <attribute name="t-if">not custom_footer</attribute>
+        </div>
+        <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'position-relative mt-auto mx-n5'}}" position="after">
+            <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'position-relative mt-auto mx-n5'}}" t-if="custom_footer">
+                <t t-out="custom_footer"/>
+            </div>
+        </div>
+    </template>
+
+    <template id="external_layout_folder" inherit_id="web.external_layout_folder">
+        <!-- support for custom header -->
+        <div t-attf-class="header o_company_#{company.id}_layout {{report_type != 'pdf' and 'h-0'}}" position="attributes">
+            <attribute name="t-if">not custom_header</attribute>
+        </div>
+        <div t-attf-class="header o_company_#{company.id}_layout {{report_type != 'pdf' and 'h-0'}}" position="after">
+            <div t-attf-class="header o_company_#{company.id}_layout {{report_type != 'pdf' and 'h-0'}}" t-if="custom_header">
+                <t t-call="#{custom_header}"/>
+            </div>
+        </div>
+
+        <!-- support for custom footer -->
+        <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}" position="attributes">
+            <attribute name="t-if">not custom_footer</attribute>
+        </div>
+        <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}" position="after">
+            <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}" t-if="custom_footer">
+                <t t-out="custom_footer"/>
+            </div>
+        </div>
+    </template>
+</odoo>

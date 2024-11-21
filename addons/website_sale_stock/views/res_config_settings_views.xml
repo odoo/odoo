@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.website.sale.stock</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website_sale.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='comparator_option_setting']" position="after">
+                <setting id="product_availability_setting" string="Inventory Defaults" help="How to display products having low quantities (on hand - reserved)">
+                    <div class="content-group">
+                        <div class="row mt16"
+                            id="website_warehouse_setting"
+                            groups="stock.group_stock_multi_warehouses">
+                            <field name="website_company_id" invisible="1"/>
+                            <label for="website_warehouse_id" string="Warehouse" class="col-lg-3 o_light_label" />
+                            <field name="website_warehouse_id" placeholder="All warehouses"/>
+                        </div>
+                        <div class="content-group">
+                            <div class="row mt16"
+                                id="allow_out_of_stock_order_setting"
+                                title="Default availability mode set on newly created storable products. This can be changed at the product level.">
+                                <div class="col-12">
+                                    <label for="allow_out_of_stock_order" string="Out-of-Stock" class="p-0 col-4 o_light_label"/>
+                                    <field name="allow_out_of_stock_order" class=" w-auto"/>
+                                    <label for="allow_out_of_stock_order" class="o_light_label" string="Continue Selling"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="content-group">
+                            <div class="row"
+                                id="show_availability_setting"
+                                title="Default visibility for custom messages.">
+                                <div class="col-12">
+                                    <label for="show_availability" string="Show Available Qty" class="p-0 col-4 o_light_label mb-3 mt-2"/>
+                                    <field name="show_availability" class="w-auto"/>
+                                    <label for="available_threshold" string="only if below" class="o_light_label" invisible="not show_availability"/>
+                                    <field name="available_threshold" class="oe_inline col-1" widget="integer" invisible="not show_availability"/>
+                                    <span invisible="not show_availability">Units</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
+

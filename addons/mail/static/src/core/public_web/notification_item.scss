@@ -1,0 +1,52 @@
+.o-mail-NotificationItem {
+    outline: 1px solid transparent;
+    outline-offset: -1px;
+    background-color: var(--mail-MessagingMenu-bg, $o-view-background-color);
+
+    &.o-important {
+        background-color: mix($o-gray-100, $o-info, 92.5%) !important;
+        border-color: darken(mix($o-gray-100, $o-info, 92.5%), 5%) !important;
+    }
+    &.o-active {
+        outline-color: rgba($o-action, var(--mail-NotificationItem-activeOutlineOpacity, 0.5));
+    }
+    &:hover, &.o-active {
+        background-color: mix($o-gray-100, $o-gray-200) !important;
+
+        &.o-important {
+            background-color: mix($o-gray-100, $o-info, 87.5%) !important;
+        }
+    }
+}
+
+
+.o-mail-NotificationItem-badge {
+    padding: 3px 6px !important;
+}
+
+.o-mail-NotificationItem-country {
+    width: 16px;
+    bottom: -2px;
+    left: -4px;
+}
+
+.o-mail-NotificationItem-markAsRead {
+    background-color: transparent !important;
+    font-size: 0.85rem !important;
+    color: $success !important;
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.075) !important;
+    }
+}
+
+.o-mail-NotificationItem-text:before {
+    // invisible character so that typing status bar has constant height, regardless of text content.
+    content: "\200b"; /* unicode zero width space character */
+}
+
+.o-mail-NotificationItem-unreadIndicator {
+    color: darken($info, 5%);
+    font-size: 0.5rem;
+    left: map-get($spacers, 2);
+}

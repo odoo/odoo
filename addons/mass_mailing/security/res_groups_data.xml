@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="group_mass_mailing_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="category_id" ref="base.module_category_marketing_email_marketing"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <!-- Group to manage campaigns -->
+    <record id="group_mass_mailing_campaign" model="res.groups">
+        <field name="name">Manage Mass Mailing Campaigns</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+</odoo>

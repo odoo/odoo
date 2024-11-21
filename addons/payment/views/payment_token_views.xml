@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_token_form" model="ir.ui.view">
+        <field name="name">payment.token.form</field>
+        <field name="model">payment.token</field>
+        <field name="arch" type="xml">
+            <form string="Payment Tokens" create="false" edit="false">
+                <sheet>
+                    <field name="active" invisible="1"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button"
+                                name="%(action_payment_transaction_linked_to_token)d"
+                                type="action" icon="fa-money" string="Payments">
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <group>
+                        <group name="general_information">
+                            <field name="payment_details"/>
+                            <field name="payment_method_id"/>
+                            <field name="partner_id" />
+                        </group>
+                        <group name="technical_information">
+                            <field name="provider_id"/>
+                            <field name="provider_ref"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="payment_token_list" model="ir.ui.view">
+        <field name="name">payment.token.list</field>
+        <field name="model">payment.token</field>
+        <field name="arch" type="xml">
+            <list string="Payment Tokens" create="false">
+                <field name="payment_details"/>
+                <field name="partner_id"/>
+                <field name="payment_method_id"/>
+                <field name="provider_id"/>
+                <field name="provider_ref"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="payment_token_search" model="ir.ui.view">
+        <field name="name">payment.token.search</field>
+        <field name="model">payment.token</field>
+        <field name="arch" type="xml">
+            <search string="Payment Tokens">
+                <field name="partner_id"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <group expand="1" string="Group By">
+                    <filter string="Provider" name="provider_id" context="{'group_by': 'provider_id'}"/>
+                    <filter string="Partner" name="partner_id" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Company" name="company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_payment_token" model="ir.actions.act_window">
+        <field name="name">Payment Tokens</field>
+        <field name="res_model">payment.token</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                There is no token created yet.
+            </p>
+        </field>
+    </record>
+
+</odoo>

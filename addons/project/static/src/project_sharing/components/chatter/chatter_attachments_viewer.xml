@@ -1,0 +1,28 @@
+<templates id="template" xml:space="preserve">
+
+    <t t-name="project.ChatterAttachmentsViewer">
+        <div class="o_portal_chatter_attachments mt-3">
+            <div t-if="props.attachments.length" class="row">
+                <div t-foreach="props.attachments" t-as="attachment" t-key="attachment.id" class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="o_portal_chatter_attachment mb-2 position-relative text-center">
+                        <button
+                            t-if="props.canDelete and attachment.state == 'pending'"
+                            class="btn btn-sm btn-outline-danger"
+                            title="Delete"
+                            t-on-click="() => props.delete(attachment)"
+                        >
+                            <i class="fa fa-times"/>
+                        </button>
+                        <a t-attf-href="/web/content/#{attachment.id}?download=true&amp;access_token=#{attachment.access_token}" target="_blank">
+                            <div class='oe_attachment_embedded o_image' t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype"/>
+                            <div class='o_portal_chatter_attachment_name'>
+                                <t t-out='attachment.filename'/>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

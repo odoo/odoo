@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_account_payment_form_inherited" model="ir.ui.view">
+            <field name="name">account.payment.form.inherited</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_post']" position="before">
+                    <button name="print_checks" class="oe_highlight" invisible="payment_method_code != 'check_printing' or state != 'in_process' or is_sent" string="Print Check" type="object" data-hotkey="g" />
+                    <button name="unmark_as_sent" invisible="payment_method_code != 'check_printing' or not is_sent" string="Unmark Sent" type="object" data-hotkey="l" />
+                    <button name="action_void_check" invisible="payment_method_code != 'check_printing' or state != 'in_process' or not is_sent" string="Void Check" type="object" data-hotkey="o" />
+                </xpath>
+                <xpath expr="//div[@name='amount_div']" position="after">
+                    <field name="check_amount_in_words" invisible="payment_method_code != 'check_printing'" groups="base.group_no_one"/>
+                </xpath>
+                <xpath expr="//field[@name='payment_method_line_id']" position="after">
+                    <field name="check_manual_sequencing" invisible="1"/>
+                    <field name="show_check_number" invisible="1"/>
+                    <field name="check_number" invisible="not show_check_number"/>
+                </xpath>
+                <xpath expr="//field[@name='name']" position='before'>
+                    <widget name="web_ribbon" title="Sent" invisible="not is_sent or state in ('rejected', 'canceled')"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_payment_check_printing_search" model="ir.ui.view">
+            <field name="name">account.payment.check.printing.search</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='activities_overdue']" position="before">
+                    <separator/>
+                    <filter name="checks_to_send" string="Checks to Print" domain="[('payment_method_line_id.code', '=', 'check_printing'), ('state', '=', 'in_process'), ('is_sent', '=', False)]"/>
+                    <separator/>
+                </xpath>
+            </field>
+        </record>
+
+</odoo>

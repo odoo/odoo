@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_stock_track_confirmation" model="ir.ui.view">
+        <field name="name">stock.track.confirmation.view.form</field>
+        <field name="model">stock.track.confirmation</field>
+        <field name="arch" type="xml">
+            <form string="Lots or serial numbers were not provided for tracked products">
+                <field name="product_ids" invisible="1"/>
+                <field name="quant_ids" invisible="1"/>
+                <p>
+                    Those products you added are tracked but lots/serials were not defined. Once applied those can't be changed.<br/>
+                    Apply anyway?
+                </p>
+                <strong>Tracked product(s):</strong>
+                <field name="tracking_line_ids" readonly="1">
+                    <list>
+                        <field name="product_display_name"/>
+                        <field name="tracking"/>
+                    </list>
+                </field>
+                <footer>
+                    <button name="action_confirm" string="Apply" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Discard" special="cancel" data-hotkey="x" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

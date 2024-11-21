@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.QRConfirmationDialog" t-inherit="web.ConfirmationDialog" t-inherit-mode="primary">
+        <xpath expr="//p" position="replace">
+            <div class="d-flex flex-column align-items-center justify-content-center">
+                <p t-out="props.body" class="text-prewrap" style="font-weight: bold;"/>
+                <img t-att-src="props.qrCode" alt="QR Code" style="width: 200px; height: 200px;"/>
+                <div class="mt-1">
+                    <strong>Amount: </strong>
+                    <t t-out="amount" />
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//button[@t-on-click='_confirm']" position="attributes">
+            <attribute name="class" add="btn-secondary" remove="btn-primary" separator=" " />
+        </xpath>
+        <xpath expr="//button[@t-on-click='_cancel']" position="attributes">
+            <attribute name="class" add="btn-primary" remove="btn-secondary" separator=" " />
+        </xpath>
+    </t>
+
+</templates>

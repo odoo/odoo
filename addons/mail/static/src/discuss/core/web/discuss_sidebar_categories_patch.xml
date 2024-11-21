@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.DiscussSidebarCategory.main" t-inherit-mode="extension">
+        <xpath expr="//*[@name='header']" position="after">
+            <div t-if="state.editing and !store.discuss.isSidebarCompact" class="p-2" t-ref="selector">
+                <ChannelSelector category="category" onValidate.bind="stopEditing" autofocus="true" close.bind="stopEditing"/>
+            </div>
+        </xpath>
+    </t>
+    <t t-inherit="mail.DiscussSidebarCategory.actions" t-inherit-mode="extension">
+        <xpath expr="//*[@name='action-group']" position="replace">
+            <t t-if="state.editing and store.discuss.isSidebarCompact">
+                <ChannelSelector category="category" onValidate.bind="stopEditing" autofocus="true" close.bind="stopEditing"/>
+            </t>
+            <t t-else="">
+                <t>$0</t>
+            </t>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,360 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_work_entry_contract
+# 
+# Translators:
+# Wil Odoo, 2024
+# Daye Jeong, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Daye Jeong, 2024\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,help:hr_work_entry_contract.field_hr_contract__work_entry_source
+#: model:ir.model.fields,help:hr_work_entry_contract.field_hr_work_entry__work_entry_source
+msgid ""
+"\n"
+"        Defines the source for work entries generation\n"
+"\n"
+"        Working Schedule: Work entries will be generated from the working hours below.\n"
+"        Attendances: Work entries will be generated from the employee's attendances. (requires Attendance app)\n"
+"        Planning: Work entries will be generated from the employee's planning. (requires Planning app)\n"
+"    "
+msgstr ""
+"\n"
+"        근무 항목 생성에 대한 기준 정의\n"
+"\n"
+"        근무 일정: 아래의 근무 시간에서 근무 항목을 생성합니다.\n"
+"        근태: 직원 근태에서 근무 항목을 생서합니다. (근태관리 앱 필요)\n"
+"        일정 수립: 직원의 일정에서 근무 항목을 생성합니다. (일정 수립 앱 필요)\n"
+"    "
+
+#. module: hr_work_entry_contract
+#. odoo-python
+#: code:addons/hr_work_entry_contract/models/hr_work_entry.py:0
+msgid ""
+"%(employee)s does not have a contract from %(date_start)s to %(date_end)s."
+msgstr "%(employee)s의 %(date_start)s부터 %(date_end)s까지의 계약이 존재하지 않습니다."
+
+#. module: hr_work_entry_contract
+#. odoo-python
+#: code:addons/hr_work_entry_contract/models/hr_work_entry.py:0
+msgid ""
+"%(employee)s has multiple contracts from %(date_start)s to %(date_end)s. A "
+"work entry cannot overlap multiple contracts."
+msgstr ""
+"%(employee)s에게  %(date_start)s부터 %(date_end)s까지 여러 건의 근로 계약서가 있습니다. 작업 항목은 "
+"여러 계약과 겹칠 수 없습니다."
+
+#. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+msgid ""
+"<i class=\"fa fa-exclamation-triangle me-1\" title=\"Warning\"/>You are not "
+"allowed to regenerate validated work entries"
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle me-1\" title=\"Warning\"/>검증된 작업 입력 "
+"항목을 재생성할 권한이 없습니다."
+
+#. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+msgid "<i class=\"fa fa-info-circle me-1\" title=\"Hint\"/>"
+msgstr "<i class=\"fa fa-info-circle me-1\" title=\"Hint\"/>"
+
+#. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+msgid ""
+"<span class=\"text-muted\">Warning: The work entry regeneration will delete "
+"all manual changes on the selected period.</span>"
+msgstr ""
+"<span class=\"text-muted\">경고: 근로 항목을 다시 생성하면 선택한 기간에 대한 모든 수동 변경 사항은 "
+"삭제됩니다.</span>"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,help:hr_work_entry_contract.field_hr_work_entry_type__is_leave
+msgid "Allow the work entry type to be linked with time off types."
+msgstr "근로 입력 유형을 휴가 유형과 연결할 수 있도록 허용합니다."
+
+#. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+msgid "Cancel"
+msgstr "취소"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_compensatory
+msgid "Compensatory Time Off"
+msgstr "대체 휴가"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry__contract_id
+msgid "Contract"
+msgstr "근로 계약"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__create_uid
+msgid "Created by"
+msgstr "작성자"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__create_date
+msgid "Created on"
+msgstr "작성일자"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__earliest_available_date_message
+msgid "Earliest Available Date Message"
+msgstr "가장 빠른 사용 가능 날짜 메시지"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__earliest_available_date
+msgid "Earliest date"
+msgstr "가장 빠른 날짜"
+
+#. module: hr_work_entry_contract
+#: model:ir.model,name:hr_work_entry_contract.model_hr_employee
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry__employee_id
+msgid "Employee"
+msgstr "임직원"
+
+#. module: hr_work_entry_contract
+#: model:ir.model,name:hr_work_entry_contract.model_hr_contract
+msgid "Employee Contract"
+msgstr "근로 계약서"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__employee_ids
+msgid "Employees"
+msgstr "임직원 관리"
+
+#. module: hr_work_entry_contract
+#. odoo-javascript
+#: code:addons/hr_work_entry_contract/static/src/views/work_entry_calendar/work_entry_calendar_model.js:0
+msgid "Everybody's work entries"
+msgstr "기본적인 근로 항목"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_extra_hours
+msgid "Extra Hours"
+msgstr "추가 시간"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__date_from
+msgid "From"
+msgstr "시작"
+
+#. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_contract_view_form_inherit_work_entry
+msgid "Fully Flexible"
+msgstr "완전 유연 근무"
+
+#. module: hr_work_entry_contract
+#: model:ir.actions.server,name:hr_work_entry_contract.ir_cron_generate_missing_work_entries_ir_actions_server
+msgid "Generate Missing Work Entries"
+msgstr "누락된 근로 항목 생성"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__date_generated_from
+msgid "Generated From"
+msgstr "생성 시작"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__date_generated_to
+msgid "Generated To"
+msgstr "생성 종료"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_leave
+msgid "Generic Time Off"
+msgstr "일반 휴가"
+
+#. module: hr_work_entry_contract
+#: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry
+msgid "HR Work Entry"
+msgstr "인사 근로 항목"
+
+#. module: hr_work_entry_contract
+#: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry_type
+msgid "HR Work Entry Type"
+msgstr "인사 근로 항목 유형"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_home_working
+msgid "Home Working"
+msgstr "재택 근무"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_work_entry_contract
+#. odoo-python
+#: code:addons/hr_work_entry_contract/wizard/hr_work_entry_regeneration_wizard.py:0
+msgid ""
+"In order to regenerate the work entries, you need to provide the wizard with"
+" an employee_id, a date_from and a date_to. In addition to that, the time "
+"interval defined by date_from and date_to must not contain any validated "
+"work entries."
+msgstr ""
+"작업 항목을 재생성하려면, 마법사에 employee_id, date_from 및 date_to 항목 정보를 입력해야 합니다. 그 외에도 "
+"date_from 및 date_to로 정의된 시간 사이에는 검증된 작업 항목이 포함될 수 없습니다."
+
+#. module: hr_work_entry_contract
+#. odoo-javascript
+#: code:addons/hr_work_entry_contract/static/src/components/work_entry_source_field/work_entry_source_field.js:0
+msgid ""
+"Invalid option: For fully flexible calendars, the work entry source cannot "
+"be 'Working Hours'."
+msgstr "잘못된 옵션: 완전히 유연한 캘린더의 경우 근무 입력 소스를 '근무 시간'으로 설정할 수 없습니다."
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__last_generation_date
+msgid "Last Generation Date"
+msgstr "최근 생성일"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__write_uid
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__write_date
+msgid "Last Updated on"
+msgstr "최근 갱신 일자"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__latest_available_date_message
+msgid "Latest Available Date Message"
+msgstr "사용 가능한 최근 날짜 메시지"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__latest_available_date
+msgid "Latest date"
+msgstr "최근 날짜"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_long_leave
+msgid "Long Term Time Off"
+msgstr "장기 휴가"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_legal_leave
+msgid "Paid Time Off"
+msgstr "유급 휴가"
+
+#. module: hr_work_entry_contract
+#: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry_regeneration_wizard
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+msgid "Regenerate Employee Work Entries"
+msgstr "직원 작업 항목 재생성"
+
+#. module: hr_work_entry_contract
+#. odoo-javascript
+#: code:addons/hr_work_entry_contract/static/src/views/work_entry_calendar/work_entry_calendar.xml:0
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+msgid "Regenerate Work Entries"
+msgstr "작업 항목 재생성"
+
+#. module: hr_work_entry_contract
+#: model:ir.model,name:hr_work_entry_contract.model_resource_calendar
+msgid "Resource Working Time"
+msgstr "자원 근무 시간"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__search_criteria_completed
+msgid "Search Criteria Completed"
+msgstr "검색 기준 완성"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_sick_leave
+msgid "Sick Time Off"
+msgstr "병가"
+
+#. module: hr_work_entry_contract
+#. odoo-python
+#: code:addons/hr_work_entry_contract/models/hr_contract.py:0
+msgid ""
+"Sorry, generating work entries from cancelled contracts is not allowed."
+msgstr "죄송합니다. 계약이 취소된 경우 작업 항목을 생성하는 것은 허용되지 않습니다."
+
+#. module: hr_work_entry_contract
+#. odoo-python
+#: code:addons/hr_work_entry_contract/wizard/hr_work_entry_regeneration_wizard.py:0
+msgid ""
+"The from date must be >= '%(earliest_available_date)s' and the to date must "
+"be <= '%(latest_available_date)s', which correspond to the generated work "
+"entries time interval."
+msgstr ""
+"시작 날짜는 >= '%(earliest_available_date)s', 종료 날짜는 <= "
+"'%(latest_available_date)s'이여야 하며, 생성된 근로 항목 시간 간격에 해당됩니다."
+
+#. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_contract_view_form_inherit
+msgid "This work entry cannot be validated. The work entry type is undefined."
+msgstr "이 근로 항목을 확인할 수 없습니다. 근로 입력 유형이 정의되지 않았습니다."
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_type__is_leave
+msgid "Time Off"
+msgstr "휴가"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__date_to
+msgid "To"
+msgstr "종료 시간"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_unpaid_leave
+msgid "Unpaid"
+msgstr "무급 휴가"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__valid
+msgid "Valid"
+msgstr "유효"
+
+#. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+msgid "Work Entries"
+msgstr "근로 항목"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__validated_work_entry_ids
+msgid "Work Entries Within Interval"
+msgstr "시간 간격 내 근로 항목"
+
+#. module: hr_work_entry_contract
+#: model:ir.actions.act_window,name:hr_work_entry_contract.hr_work_entry_regeneration_wizard_action
+msgid "Work Entry Regeneration"
+msgstr "근로 항목 재생성"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__work_entry_source
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry__work_entry_source
+msgid "Work Entry Source"
+msgstr "작업 항목 원본"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__work_entry_source_calendar_invalid
+msgid "Work Entry Source Calendar Invalid"
+msgstr "작업 항목 원본 캘린더가 잘못되었습니다."
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields.selection,name:hr_work_entry_contract.selection__hr_contract__work_entry_source__calendar
+msgid "Working Schedule"
+msgstr "근무 일정"

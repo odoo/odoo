@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_accordion_image" name="Accordion Image">
+    <section class="s_accordion_image pt56 pb56 o_cc o_cc2">
+        <div class="container">
+            <div class="row align-items-start">
+                <div class="col-lg-6 pt16">
+                    <h2 class="h3-fs">Top questions answered</h2>
+                    <p class="lead">In this section, you can address common questions efficiently.</p>
+                    <p><br/></p>
+                    <t t-call="website.s_accordion">
+                        <t t-set="extra_classes" t-valuef="accordion-flush"/>
+                    </t>
+                </div>
+                <div class="col-lg-5 offset-lg-1 pt16">
+                    <img src="/web/image/website.s_accordion_image_default_image" class="img img-fluid mx-auto rounded" style="width: 100% !important;" alt=""/>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+</odoo>

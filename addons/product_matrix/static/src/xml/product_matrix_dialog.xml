@@ -1,0 +1,17 @@
+<templates>
+    <t t-name="product_matrix.dialog">
+        <Dialog size="size" title.translate="Choose Product Variants" withBodyPadding="false">
+            <t t-call="product_matrix.matrix">
+                <t t-set="header" t-value="props.header"/>
+                <t t-set="rows" t-value="props.rows"/>
+                <t t-set="format" t-value="_format"/>
+            </t>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="_onConfirm">Confirm</button>
+                <button class="btn btn-secondary" t-on-click="() => this.props.close()">
+                    Discard
+                </button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

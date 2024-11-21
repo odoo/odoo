@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<templates xml:space="preserve">
+
+    <t t-name="project_todo.TodoChatterPanel">
+        <chatter t-if="state.displayChatter" class="o_FormRenderer_chatterContainer">
+            <Chatter
+                threadModel="'project.task'"
+                threadId="props.record.resId"
+                webRecord="props.record"
+                hasParentReloadOnAttachmentsChanged="true"
+                hasParentReloadOnFollowersUpdate="true"
+                hasParentReloadOnMessagePosted="true"
+                saveRecord="props.record.save.bind(props.record, { reload: false })"
+            />
+        </chatter>
+    </t>
+
+</templates>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="invoice_form_inherit_l10n_in" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.l10n.in</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning mt-1 mb-1" role="alert" invisible="not l10n_in_warning">
+                    <div>
+                        <field name="l10n_in_warning" widget="actionable_errors"/>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='ref']" position="after">
+                <field name="l10n_in_state_id" domain="[('country_id.code', '=', 'IN')]"
+                    options="{'no_create': True, 'no_open': True}"
+                    invisible="country_code != 'IN' or move_type == 'entry'"
+                    readonly="state != 'draft'"
+                    required="country_code == 'IN' and move_type != 'entry' and l10n_in_journal_type in ('sale', 'purchase')"/>
+                <field name="l10n_in_gst_treatment"
+                    invisible="country_code != 'IN' or move_type == 'entry'"
+                    readonly="state != 'draft'"
+                    required="country_code == 'IN' and move_type != 'entry'"/>
+            </xpath>
+            <xpath expr="//page[@id='other_tab']/group[@id='other_tab_group']" position="after">
+                <group string="Export India" invisible="l10n_in_gst_treatment not in ['overseas', 'deemed_export'] or move_type not in ['out_invoice', 'out_refund']">
+                    <field name="l10n_in_shipping_bill_number" readonly="state != 'draft'"/>
+                    <field name="l10n_in_shipping_bill_date" readonly="state != 'draft'"/>
+                    <field name="l10n_in_shipping_port_code_id" readonly="state != 'draft'"/>
+                </group>
+                <group string="Import India" invisible="l10n_in_gst_treatment not in ['overseas', 'special_economic_zone'] or move_type not in ['in_invoice', 'in_refund']">
+                    <field name="l10n_in_shipping_bill_number" string="Bill of Entry Number" readonly="state != 'draft'"/>
+                    <field name="l10n_in_shipping_bill_date" string="Bill of Entry Date" readonly="state != 'draft'"/>
+                    <field name="l10n_in_shipping_port_code_id" readonly="state != 'draft'"/>
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='partner_shipping_id']" position="before">
+                <field name="l10n_in_reseller_partner_id"
+                       groups="l10n_in.group_l10n_in_reseller"
+                       invisible="move_type not in ('out_invoice', 'out_refund') or country_code != 'IN' or move_type == 'entry'"
+                       readonly="state != 'draft'"/>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/list//field[@name='product_id']" position="after">
+                <field name="l10n_in_hsn_code" optional="hide" column_invisible="parent.country_code != 'IN'"/>
+            </xpath>
+            <xpath expr="//field[@name='line_ids']/list//field[@name='name']" position="after">
+                <field name="l10n_in_hsn_code" optional="hide" column_invisible="parent.country_code != 'IN'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

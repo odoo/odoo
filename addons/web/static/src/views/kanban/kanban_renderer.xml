@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.KanbanRenderer">
+        <div class="o_kanban_renderer o_renderer d-flex"
+            t-attf-class="{{ props.list.isGrouped ? 'o_kanban_grouped align-content-stretch' : 'o_kanban_ungrouped align-content-start flex-wrap justify-content-start' }}"
+            t-ref="root"
+        >
+            <t t-foreach="getGroupsOrRecords()" t-as="groupOrRecord" t-key="groupOrRecord.key">
+                <t t-if="groupOrRecord.group">
+                    <t t-set="group" t-value="groupOrRecord.group" />
+                    <t t-set="isGroupProcessing" t-value="isProcessing(group.id)" />
+                    <div class="o_kanban_group flex-shrink-0 flex-grow-1 flex-md-grow-0"
+                        t-att-class="getGroupClasses(group, isGroupProcessing)"
+                        t-attf-class="{{ !env.isSmall and group.isFolded ? 'opacity-trigger-hover' : '' }}"
+                        t-att-data-id="group.id"
+                        t-on-click="(ev) => this.onGroupClick(group, ev)"
+                    >
+                        <KanbanHeader
+                            activeActions="props.archInfo.activeActions"
+                            canQuickCreate="props.canQuickCreate"
+                            deleteGroup="(group) => this.deleteGroup(group)"
+                            dialogClose="dialogClose"
+                            group="group"
+                            list="props.list"
+                            quickCreateState="props.quickCreateState"
+                            scrollTop="props.scrollTop"
+                            tooltipInfo="props.archInfo.tooltipInfo"
+                            progressBarState="props.progressBarState"
+                        />
+                        <t t-if="!group.isFolded">
+                            <t t-if="group.id === props.quickCreateState.groupId">
+                                <KanbanRecordQuickCreate
+                                    group="group"
+                                    onCancel="force => this.cancelQuickCreate(force)"
+                                    onValidate="(record, mode) => this.validateQuickCreate(record, mode, group)"
+                                    quickCreateView="props.quickCreateState.view"
+                                />
+                            </t>
+                            <t t-foreach="group.list.records" t-as="record" t-key="record.id">
+                                <KanbanRecord
+                                    archInfo="props.archInfo"
+                                    Compiler="props.Compiler"
+                                    canResequence="!isGroupProcessing and !isProcessing(record.id) and canResequenceRecords"
+                                    forceGlobalClick="props.forceGlobalClick"
+                                    group="group"
+                                    list="props.list"
+                                    deleteRecord="props.deleteRecord"
+                                    archiveRecord.bind="archiveRecord"
+                                    openRecord="props.openRecord"
+                                    readonly="props.readonly"
+                                    record="record"
+                                    templates="props.archInfo.templateDocs"
+                                    progressBarState="props.progressBarState"
+                                />
+                            </t>
+                            <t t-set="unloadedCount" t-value="getGroupUnloadedCount(group)" />
+                            <div t-if="unloadedCount > 0" class="o_kanban_load_more">
+                                <button class="btn btn-outline-primary w-100 mt-4" t-on-click="() => this.loadMore(group)">Load more... (<t t-out="unloadedCount"/> remaining)</button>
+                            </div>
+                        </t>
+                        <t t-elif="env.isSmall">
+                            <t t-set="unloadedCount" t-value="getGroupUnloadedCount(group)" />
+                            <div t-if="unloadedCount > 0" class="o_kanban_load_more">
+                                <button class="btn btn-outline-primary w-100 mt-4" t-on-click="() => this.toggleGroup(group)">Load more... (<t t-out="unloadedCount"/> remaining)</button>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+                <t t-else="">
+                    <KanbanRecord
+                        archInfo="props.archInfo"
+                        Compiler="props.Compiler"
+                        canResequence="!isProcessing(groupOrRecord.record.id) and canResequenceRecords"
+                        forceGlobalClick="props.forceGlobalClick"
+                        list="props.list"
+                        deleteRecord="props.deleteRecord"
+                        archiveRecord="(record, active) => this.archiveRecord(record, active)"
+                        openRecord="props.openRecord"
+                        readonly="props.readonly"
+                        record="groupOrRecord.record"
+                        templates="props.archInfo.templateDocs"
+                    />
+                </t>
+            </t>
+            <t t-if="props.list.isGrouped">
+                <t t-if="canCreateGroup()">
+                    <KanbanColumnQuickCreate
+                        folded="state.columnQuickCreateIsFolded"
+                        onFoldChange="folded => state.columnQuickCreateIsFolded = folded"
+                        onValidate="props.list.createGroup.bind(props.list)"
+                        exampleData="exampleData"
+                        groupByField="props.list.groupByField"
+                    />
+                    <!-- Kanban Example Background -->
+                    <div t-if="props.list.groups.length === 0" class="o_kanban_example_background_container d-flex opacity-50">
+                        <div class="o_kanban_example_background flex-grow-1">
+                            <div class="o_kanban_examples d-flex p-2">
+                                <div t-foreach="ghostColumns" t-as="column" t-key="column.name" class="o_kanban_examples_group flex-grow-1 m-3">
+                                    <h6><b t-esc="column.name"/></h6>
+                                    <div t-foreach="column.cards" t-as="card" t-key="card_index" class="o_kanban_examples_ghost d-flex flex-wrap justify-content-between mb-3 p-2 border bg-light">
+                                        <div class="o_ghost_content w-100 pb-3 bg-300"/>
+                                        <div class="o_ghost_content o_ghost_tag d-inline-block w-50 mt-3 pb-3 bg-300"/>
+                                        <span class="mt-2 rounded-circle bg-300">
+                                            <img class="o_ghost_avatar" src="/base/static/img/avatar.png" alt="Avatar"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+            <t t-else="">
+                <!-- kanban ghost cards are used to properly space last elements. -->
+                <div t-foreach="[,,,,,,]" t-as="i" t-key="i_index" class="o_kanban_record o_kanban_ghost flex-grow-1 flex-md-shrink-1 flex-shrink-0 my-0" />
+            </t>
+            <t t-if="showNoContentHelper">
+                <t t-if="props.noContentHelp" t-call="web.ActionHelper">
+                    <t t-set="noContentHelp" t-value="props.noContentHelp"/>
+                </t>
+                <t t-else="" t-call="web.NoContentHelper"/>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="web.KanbanDropdownMenuWrapper">
+        <div t-on-click="onClick" style="display:contents">
+            <t t-slot="default"/>
+        </div>
+    </t>
+
+</templates>

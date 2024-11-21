@@ -1,0 +1,540 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_online_payment
+# 
+# Translators:
+# Tiffany Chang, 2024
+# Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2024
+# Martin Trigaux, 2024
+# Tommi Rintala <tommi.rintala@gmail.com>, 2024
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
+# Kari Lindgren <karisatu@gmail.com>, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
+msgid "<strong>Error:</strong> The currency is missing or invalid."
+msgstr "<strong>Virhe:</strong> Valuutta puuttuu tai on virheellinen."
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+msgid ""
+"<strong>Error:</strong> There was a problem during the payment process."
+msgstr "<strong>Virhe:</strong> Maksuprosessissa ilmeni ongelma."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_config.py:0
+msgid "A POS config cannot have more than one online payment method."
+msgstr "Kassan määrittelyissä ei voi olla kuin yksi verkkomaksutapa."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+msgid "A payment option must be specified."
+msgstr "Maksuvaihtoehto on määritettävä."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+msgid ""
+"A validation payment cannot be used for a Point of Sale online payment."
+msgstr "Validointimaksua ei voi käyttää kassan verkkomaksuun."
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
+msgid "All available providers"
+msgstr "Kaikki saatavilla olevat palveluntarjoajat"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+msgid ""
+"All payment providers configured for an online payment method must use the "
+"same currency as the Sales Journal, or the company currency if that is not "
+"set, of the POS config."
+msgstr ""
+"Kaikkien verkkomaksutapaa varten määritettyjen maksupalveluntarjoajien on "
+"käytettävä samaa valuuttaa kuin kassamäärityksen myyntipäiväkirjassa "
+"käytetään tai yrityksen valuutta, jos päiväkirjan valuuttaa ei ole "
+"määritetty."
+
+#. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__online_payment_provider_ids
+msgid "Allowed Providers"
+msgstr "Sallitut palveluntarjoajat"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+msgid "Amount"
+msgstr "Arvo"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/online_payment_popup/online_payment_popup.xml:0
+msgid "Amount:"
+msgstr "Määrä:"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
+msgid "Cancel payment"
+msgstr "Peruuta maksu"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment.py:0
+msgid "Cannot create a POS online payment without an accounting payment."
+msgstr "Kassan verkkomaksua ei voi luoda ilman kirjanpitomaksua."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment.py:0
+msgid ""
+"Cannot create a POS payment with a not online payment method and an online "
+"accounting payment."
+msgstr ""
+"Kassamaksua ei voi luoda, kun maksutapa ei ole verkkomaksu ja "
+"verkkokirjanpidon maksu."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment.py:0
+msgid "Cannot edit a POS online payment essential data."
+msgstr "Kassan verkkomaksun olennaisia tietoja ei voi muokata."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+msgid ""
+"Could not create an online payment method (company_id=%(company_id)d, "
+"pos_config_id=%(pos_config_id)d)"
+msgstr ""
+
+#. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__has_an_online_payment_provider
+msgid "Has An Online Payment Provider"
+msgstr "Onko verkkomaksupalveluntarjoaja"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+msgid "Invalid online payment"
+msgstr "Virheellinen verkkomaksu"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+msgid "Invalid online payments"
+msgstr "Virheelliset verkkomaksut"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+msgid "Invoice could not be generated"
+msgstr "Laskua ei voitu luoda"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__next_online_payment_amount
+msgid "Next online payment amount to pay"
+msgstr "Seuraava verkkomaksu maksettava summa"
+
+#. module: pos_online_payment
+#: model:ir.model.fields.selection,name:pos_online_payment.selection__pos_payment_method__type__online
+msgid "Online"
+msgstr "Verkossa"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__is_online_payment
+msgid "Online Payment"
+msgstr "Verkkomaksu"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__online_payment_method_id
+msgid "Online Payment Method"
+msgstr "Online-maksutapa"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__online_account_payment_id
+msgid "Online accounting payment"
+msgstr "Online kirjanpito maksu"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+msgid "Online payment unavailable"
+msgstr "Verkkomaksu ei ole käytettävissä"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+msgid "Online payments cannot have a negative amount (%s: %s)."
+msgstr "Verkkomaksujen summa ei voi olla negatiivinen (%s: %s)."
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+msgid "Order ID"
+msgstr "Tilausnumero (ID)"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
+msgid "Order ID:"
+msgstr "Tilausnumero (ID):"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+msgid "Order Reference"
+msgstr "Tilauksen viite"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/online_payment_popup/online_payment_popup.xml:0
+msgid "Order reference:"
+msgstr "Tilausviite:"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+msgid "Order saving issue"
+msgstr "Tilauksen tallennusongelma"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/account_payment.py:0
+#: code:addons/pos_online_payment/models/payment_transaction.py:0
+#: model:ir.model.fields,field_description:pos_online_payment.field_account_payment__pos_order_id
+#: model:ir.model.fields,field_description:pos_online_payment.field_payment_transaction__pos_order_id
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.payment_transaction_form
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.view_account_payment_form_inherit_pos_online_payment
+msgid "POS Order"
+msgstr "Kassatilaus"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
+msgid "Payment Providers"
+msgstr "Maksupalvelujen tarjoajat"
+
+#. module: pos_online_payment
+#: model:ir.model,name:pos_online_payment.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Maksutapahtuma"
+
+#. module: pos_online_payment
+#: model:ir.model,name:pos_online_payment.model_account_payment
+msgid "Payments"
+msgstr "Maksut"
+
+#. module: pos_online_payment
+#: model:ir.model,name:pos_online_payment.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "Kassan asetukset"
+
+#. module: pos_online_payment
+#: model:ir.model,name:pos_online_payment.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Kassan tilaukset"
+
+#. module: pos_online_payment
+#: model:ir.model,name:pos_online_payment.model_pos_payment_method
+msgid "Point of Sale Payment Methods"
+msgstr "Kassan maksutavat"
+
+#. module: pos_online_payment
+#: model:ir.model,name:pos_online_payment.model_pos_payment
+msgid "Point of Sale Payments"
+msgstr "Kassan maksut"
+
+#. module: pos_online_payment
+#: model:ir.model,name:pos_online_payment.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Kassan istunto"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+msgid "Processed by"
+msgstr "Käsittelytila"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/online_payment_popup/online_payment_popup.xml:0
+msgid "QR Code to pay"
+msgstr "QR-koodi maksamiseen"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/online_payment_popup/online_payment_popup.xml:0
+msgid "Scan the QR code to pay"
+msgstr "Skannaa QR-koodi maksaaksesi"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/online_payment_popup/online_payment_popup.xml:0
+msgid "Scan to pay"
+msgstr ""
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+msgid "Server error"
+msgstr "Palvelinvirhe"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/payment_transaction.py:0
+msgid "The POS online payment (tx.id=%d) could not be saved correctly"
+msgstr "Kassan verkkomaksua (tx.id=%d) ei voitu tallentaa oikein"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/payment_transaction.py:0
+msgid ""
+"The POS online payment (tx.id=%d) could not be saved correctly because the "
+"online payment method could not be found"
+msgstr ""
+"Kassan verkkomaksua (tx.id=%d) ei voitu tallentaa oikein, koska "
+"verkkomaksutapaa ei löydetty"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+msgid "The POS session is not opened."
+msgstr "Kassan istuntoa ei ole avattu."
+
+#. module: pos_online_payment
+#: model:ir.model.fields,help:pos_online_payment.field_payment_transaction__pos_order_id
+msgid "The Point of Sale order linked to the payment transaction"
+msgstr "Maksutapahtumaan liittyvä kassan myyntitilaus"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,help:pos_online_payment.field_account_payment__pos_order_id
+msgid "The Point of Sale order linked to this payment"
+msgstr "Tähän maksuun liittyvä kassan myyntitilaus"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+msgid "The QR Code for paying could not be generated."
+msgstr "QR-koodia maksamista varten ei voitu luoda."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+msgid "The amount to pay has changed. Please refresh the page."
+msgstr "Maksettava määrä on muuttunut. Päivitä sivu."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+msgid "The currency is invalid."
+msgstr "Valuutta on virheellinen."
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+msgid "The invoice could not be generated."
+msgstr "Laskua ei voitu luoda."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+msgid "The order has been cancelled."
+msgstr ""
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+msgid "The order has not been saved correctly on the server."
+msgstr "Tilausta ei ole tallennettu oikein palvelimelle."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_session.py:0
+msgid "The partner of the POS online payment (id=%d) could not be found"
+msgstr "Kassan verkkomaksun kumppania (id=%d) ei löydetty"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+msgid "The payment provider is invalid."
+msgstr "Maksupalveluntarjoaja on virheellinen."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+msgid ""
+"The payment should either be direct, with redirection, or made by a token."
+msgstr ""
+"Maksun olisi oltava joko suora, uudelleenohjautuva tai suoritettava kupongin"
+" avulla."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+msgid "The payment token is invalid."
+msgstr "Maksutunniste on virheellinen."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/payment_transaction.py:0
+msgid "The payment transaction (%d) has a negative amount."
+msgstr "Maksutapahtuman (%d) summa on negatiivinen."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+msgid "The provided order or access token is invalid."
+msgstr "Annettu tilaus tai käyttöoikeustunniste on virheellinen."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+msgid "The provided partner_id is different than expected."
+msgstr "Annettu partner_id on eri kuin odotettu."
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+msgid "The saved order could not be retrieved."
+msgstr "Tallennettua tilausta ei voitu hakea."
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+msgid ""
+"The total amount of remaining online payments to execute (%s) doesn't "
+"correspond to the remaining unpaid amount of the order (%s)."
+msgstr ""
+"Jäljellä olevien suoritettavien verkkomaksujen kokonaismäärä (%s) ei vastaa "
+"tilauksen jäljellä olevaa maksamatonta määrää (%s)."
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+msgid "There are online payments that were missing in your view."
+msgstr "Näkymästäsi puuttui verkkomaksuja."
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+msgid ""
+"There is a problem with the server. The order online payment status cannot "
+"be retrieved."
+msgstr "Palvelimessa on ongelma. Tilauksen verkkomaksun tilaa ei voida hakea."
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+msgid ""
+"There is a problem with the server. The order online payment status cannot "
+"be retrieved. Are you sure there is no online payment for this order ?"
+msgstr ""
+"Palvelimessa on ongelma. Tilauksen verkkomaksun tilaa ei voida hakea. Oletko"
+" varma, että tilaukselle ei ole verkkomaksua?"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+msgid ""
+"There is no online payment method configured for this Point of Sale order."
+msgstr "Tälle kassan myyntitilaukselle ei ole määritetty verkkomaksutapaa."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+msgid "There is nothing to pay for this order."
+msgstr "Tästä tilauksesta ei tarvitse maksaa mitään."
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
+msgid "There is nothing to pay."
+msgstr "Ei ole mitään maksettavaa."
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
+msgid "To Pay"
+msgstr "Maksettava"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_config.py:0
+msgid ""
+"To use an online payment method in a POS config, it must have at least one "
+"published payment provider supporting the currency of that POS config."
+msgstr ""
+"Jos haluat käyttää verkkomaksutapaa kassan asetuksissa, siinä on oltava "
+"vähintään yksi julkaistu maksupalveluntarjoaja, joka tukee tämän kassan "
+"määritysten valuuttaa."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+msgid "Tokenization is not available for logged out customers."
+msgstr ""
+"Pääsytunnisteiden käsittely ei ole käytettävissä kirjautuneille asiakkaille."
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+msgid "Transaction Reference"
+msgstr "Tapahtuman viite"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+msgid "Try again"
+msgstr "Yritä uudelleen"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__type
+msgid "Type"
+msgstr "Tyyppi"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+msgid "Updated online payments"
+msgstr "Päivitetyt verkkomaksut"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,help:pos_online_payment.field_pos_payment_method__is_online_payment
+msgid ""
+"Use this payment method for online payments (payments made on a web page "
+"with online payment providers)"
+msgstr ""
+"Käytä tätä maksutapaa verkkomaksuihin (verkkomaksupalvelujen tarjoajien "
+"verkkosivulla suoritettavat maksut)"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+msgid "Yes"
+msgstr "Kyllä"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
+msgid "You have not activated any"
+msgstr "Et ole aktivoinut mitään"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
+msgid "payment provider"
+msgstr "maksupalveluntarjojaja"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
+msgid "to allow online payments."
+msgstr "sallia verkkomaksut."

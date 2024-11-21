@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="bill_to_po_wizard_form" model="ir.ui.view">
+        <field name="name">bill.to.po.wizard.form</field>
+        <field name="model">bill.to.po.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Add to PO">
+                <sheet>
+                    <group>
+                        <field name="purchase_order_id"
+                               domain="[('partner_id', '=', partner_id), ('state', 'in', ['purchase'])]"
+                               placeholder="or create new"
+                               context="{'show_total_amount': True}"/>
+                    </group>
+                    <footer>
+                        <button name="action_add_to_po" type="object" string="Add Products" invisible="not context.get('has_products')"/>
+                        <button name="action_add_downpayment" type="object" string="Add Down Payment"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="demo_certificate" model="certificate.certificate">
+            <field name="name">ES SII Demo Certificate</field>
+            <field name="content" type="base64" file="l10n_es_edi_sii/demo/certificates/sello_entidad_act.p12"/>
+            <field name="pkcs12_password">IZDesa2021</field>
+            <field name="scope">sii</field>
+            <field name="company_id" ref="base.demo_company_es"/>
+        </record>
+    </data>
+</odoo>

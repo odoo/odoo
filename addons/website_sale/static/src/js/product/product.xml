@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-inherit="sale.Product" t-inherit-mode="extension">
+        <QuantityButtons position="attributes">
+            <attribute name="t-if">this.props.can_be_sold</attribute>
+        </QuantityButtons>
+        <QuantityButtons position="after">
+            <t t-call="website_sale.not_for_sale"/>
+        </QuantityButtons>
+        <button name="sale_product_configurator_add_button" position="attributes">
+            <attribute name="t-if">this.props.can_be_sold</attribute>
+            <attribute name="class" remove="btn-secondary" add="btn-primary" separator=" "/>
+        </button>
+        <xpath
+            expr="//button[@name='sale_product_configurator_add_button']/*[hasclass('fa-plus')]"
+            position="attributes"
+        >
+            <attribute name="class" remove="fa-plus" add="fa-shopping-cart" separator=" "/>
+        </xpath>
+        <button name="sale_product_configurator_add_button" position="after">
+            <t t-call="website_sale.not_for_sale"/>
+        </button>
+        <t name="sale_product_configurator_price" position="before">
+            <t t-call="website_sale.strikethrough_product_price"/>
+        </t>
+        <t name="sale_product_configurator_optional_price" position="before">
+            <t t-call="website_sale.strikethrough_product_price"/>
+        </t>
+        <xpath
+            expr="//div[@name='o_sale_product_configurator_name']//span[hasclass('h5')]"
+            position="attributes">
+            <attribute name="class" remove="h5" add="h6" separator=" "/>
+        </xpath>
+    </t>
+
+    <t t-inherit="sale.product_price" t-inherit-mode="extension">
+        <span name="sale_product_configurator_formatted_price" position="attributes">
+            <attribute name="class" remove="h5" add="h6" separator=" "/>
+        </span>
+    </t>
+
+    <t t-name="website_sale.not_for_sale">
+        <div
+            t-if="!this.props.can_be_sold"
+            class="text-muted fst-italic"
+        >
+            <i class="fa fa-times me-1"/>
+            Not available for sale
+        </div>
+    </t>
+
+    <t t-name="website_sale.strikethrough_product_price">
+        <h5
+            class="oe_striked_price text-muted small"
+            t-if="this.props.strikethrough_price"
+            t-out="formattedStrikethroughPrice"
+        />
+    </t>
+</templates>

@@ -1,0 +1,259 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_authorize
+# 
+# Translators:
+# Wil Odoo, 2024
+# Thi Huong Nguyen, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid ""
+"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-select\">\n"
+"                        <option value=\"checking\">Personal Checking</option>\n"
+"                        <option value=\"savings\">Personal Savings</option>\n"
+"                        <option value=\"businessChecking\">Business Checking</option>\n"
+"                    </select>"
+msgstr ""
+"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-select\">\n"
+"                        <option value=\"checking\">Séc cá nhân</option>\n"
+"                        <option value=\"savings\">Tiết kiệm cá nhân</option>\n"
+"                        <option value=\"businessChecking\">Séc doanh nghiệp</option>\n"
+"                    </select>"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "ABA Routing Number"
+msgstr "Số định tuyến ABA"
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_client_key
+msgid "API Client Key"
+msgstr "Mã khóa khách hàng API"
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_login
+msgid "API Login ID"
+msgstr "ID đăng nhập API"
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_signature_key
+msgid "API Signature Key"
+msgstr "Mã khoá API Signature"
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_transaction_key
+msgid "API Transaction Key"
+msgstr "Khóa giao dịch API"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Account Number"
+msgstr "Số tài khoản"
+
+#. module: payment_authorize
+#: model:ir.model.fields.selection,name:payment_authorize.selection__payment_provider__code__authorize
+msgid "Authorize.Net"
+msgstr "Authorize.Net"
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_profile
+msgid "Authorize.Net Profile ID"
+msgstr "ID hồ sơ Authorize.Net"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Bank Account Type"
+msgstr "Loại tài khoản ngân hàng"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Bank Name"
+msgstr "Tên ngân hàng"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Card Code"
+msgstr "Mã thẻ"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Card Number"
+msgstr "Số thẻ"
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__code
+msgid "Code"
+msgstr "Mã"
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/models/payment_provider.py:0
+msgid ""
+"Could not fetch merchant details:\n"
+"%s"
+msgstr ""
+"Không thể lấy thông tin người bán:\n"
+"%s"
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/models/payment_transaction.py:0
+msgid ""
+"Could not retrieve the transaction details. (error code: %(error_code)s; "
+"error_details: %(error_message)s)"
+msgstr ""
+"Không thể truy xuất thông tin giao dịch. (mã lỗi: %(error_code)s; "
+"error_details: %(error_message)s)"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Expiration"
+msgstr "Ngày hết hạn"
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/models/payment_provider.py:0
+msgid ""
+"Failed to authenticate.\n"
+"%s"
+msgstr ""
+"Không thể xác thực.\n"
+"%s"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
+msgid "Generate Client Key"
+msgstr "Tạo mã khoá khách hàng"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
+msgid "How to get paid with Authorize.Net"
+msgstr "Cách thanh toán với Authorize.Net"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "MM"
+msgstr "MM"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Name On Account"
+msgstr "Tên trên tài khoản"
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/models/payment_transaction.py:0
+msgid "No transaction found matching reference %s."
+msgstr "Không tìm thấy giao dịch nào khớp với mã %s."
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/models/payment_provider.py:0
+msgid "Only one currency can be selected by Authorize.Net account."
+msgstr "Tài khoản Authorize.Net chỉ có thể chọn một loại tiền tệ."
+
+#. module: payment_authorize
+#: model:ir.model,name:payment_authorize.model_payment_provider
+msgid "Payment Provider"
+msgstr "Nhà cung cấp dịch vụ thanh toán"
+
+#. module: payment_authorize
+#: model:ir.model,name:payment_authorize.model_payment_token
+msgid "Payment Token"
+msgstr "Mã thanh toán"
+
+#. module: payment_authorize
+#: model:ir.model,name:payment_authorize.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Giao dịch thanh toán"
+
+#. module: payment_authorize
+#. odoo-javascript
+#: code:addons/payment_authorize/static/src/js/payment_form.js:0
+msgid "Payment processing failed"
+msgstr "Xử lý thanh toán không thành công"
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/models/payment_transaction.py:0
+msgid "Received data with status code \"%(status)s\" and error code \"%(error)s\""
+msgstr "Dữ liệu đã nhận với mã trạng thái \"%(status)s\" và mã lỗi \"%(error)s\""
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/controllers/main.py:0
+msgid "Received tampered payment request data."
+msgstr "Dữ liệu yêu cầu thanh toán giả mạo đã nhận."
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
+msgid "Set Account Currency"
+msgstr "Đặt tiền tệ tài khoản"
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_provider__authorize_login
+msgid "The ID solely used to identify the account with Authorize.Net"
+msgstr "ID chỉ được sử dụng để xác định tài khoản với Authorize.Net"
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_provider__authorize_client_key
+msgid ""
+"The public client key. To generate directly from Odoo or from Authorize.Net "
+"backend."
+msgstr ""
+"Mã khóa khách hàng công khai. Để tạo trực tiếp từ Odoo hoặc từ back-end "
+"Authorize.Net."
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "Mã kỹ thuật của nhà cung cấp dịch vụ thanh toán này."
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/models/payment_transaction.py:0
+msgid ""
+"The transaction is not in a status to be refunded. (status: %(status)s, "
+"details: %(message)s)"
+msgstr ""
+"Giao dịch không nằm ở trạng thái được hoàn tiền. (trạng thái: %(status)s, "
+"thông tin: %(message)s)"
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/models/payment_transaction.py:0
+msgid "The transaction is not linked to a token."
+msgstr "Giao dịch không được liên kết với token."
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_profile
+msgid ""
+"The unique reference for the partner/token combination in the Authorize.net "
+"backend."
+msgstr "Mã duy nhất cho kết hợp đối tác/token trong back-end Authorize.net."
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/models/payment_provider.py:0
+msgid "This action cannot be performed while the provider is disabled."
+msgstr "Không thể thực hiện tác vụ này khi nhà cung cấp bị vô hiệu hóa."
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "YY"
+msgstr "YY"

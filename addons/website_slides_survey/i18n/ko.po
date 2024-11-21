@@ -1,0 +1,665 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* website_slides_survey
+# 
+# Translators:
+# Daye Jeong, 2024
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-09-25 09:42+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel__members_certified_count
+msgid "# Certified Attendees"
+msgstr "# 인증된 참석자"
+
+#. module: website_slides_survey
+#. odoo-python
+#: code:addons/website_slides_survey/models/survey_survey.py:0
+msgid "- %(certification)s (Courses - %(courses)s)"
+msgstr "- %(certification)s (강좌 - %(courses)s)"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_kanban
+msgid ""
+"<br/>\n"
+"                        <span class=\"text-muted\">Courses</span>"
+msgstr ""
+"<br/>\n"
+"                        <span class=\"text-muted\">강좌</span>"
+
+#. module: website_slides_survey
+#: model:mail.template,body_html:website_slides_survey.mail_template_user_input_certification_failed
+msgid ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear <t t-out=\"object.partner_id.name or 'participant' or ''\">participant</t><br><br>\n"
+"        Unfortunately, you have failed the certification and are no longer a member of the course: <t t-out=\"object.slide_partner_id.channel_id.name or ''\">Basics of Gardening</t>.<br><br>\n"
+"        Don't hesitate to enroll again!\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href=\"(object.slide_partner_id.channel_id.website_url)\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                Enroll now\n"
+"            </a>\n"
+"        </div>\n"
+"        Thank you for your participation.\n"
+"    </p>\n"
+"</div>\n"
+"            "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        안녕하세요 <t t-out=\"object.partner_id.name or 'participant' or ''\">participant</t>님<br><br>\n"
+"        안타깝게도 인증에 통과하지 못하여 다음 강좌의 회원이 되지 못했습니다: <t t-out=\"object.slide_partner_id.channel_id.name or ''\">원예의 기초</t>.<br><br>\n"
+"        강좌를 다시 듣고 싶다면 새로 등록하여 주세요.\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href=\"(object.slide_partner_id.channel_id.website_url)\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                지금 등록하기\n"
+"            </a>\n"
+"        </div>\n"
+"        참여해 주셔서 감사합니다.\n"
+"    </p>\n"
+"</div>\n"
+"            "
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
+msgid "<i class=\"fa fa-arrow-right\"/> Get Certified"
+msgstr "<i class=\"fa fa-arrow-right\"/> 인증 받기 "
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
+msgid ""
+"<i class=\"fa fa-download\" aria-label=\"Download certification\" "
+"title=\"Download Certification\"/>"
+msgstr "<i class=\"fa fa-download\" aria-label=\"인증서 다운로드\" title=\"인증서 다운로드\"/>"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
+msgid ""
+"<i class=\"fa fa-fw fa-trophy\" role=\"img\" aria-label=\"Download "
+"certification\" title=\"Download certification\"/> Download certification"
+msgstr ""
+"<i class=\"fa fa-fw fa-trophy\" role=\"img\" aria-label=\"Download "
+"certification\" title=\"Download certification\"/> 인증서 다운로드"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_fill_form_done_inherit_website_slides
+msgid ""
+"<i class=\"fa fa-share-alt\" aria-label=\"Share certification\" title=\"Share certification\"/>\n"
+"                        Share your certification"
+msgstr ""
+"<i class=\"fa fa-share-alt\" aria-label=\"인증서 공유하기\" title=\"인증서 공유하기\"/>\n"
+"                        인증서 공유하기"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
+msgid "<i class=\"fa fa-share-alt\" aria-label=\"Share\" title=\"Share\"/>"
+msgstr "<i class=\"fa fa-share-alt\" aria-label=\"Share\" title=\"Share\"/>"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
+msgid "<i class=\"oi oi-arrow-right me-1\"/>Add Questions to this Survey"
+msgstr "<i class=\"oi oi-arrow-right me-1\"/>이 설문조사에 질문 추가"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
+msgid "<i class=\"oi oi-arrow-right me-1\"/>All Certifications"
+msgstr "<i class=\"oi oi-arrow-right me-1\"/>모든 인증서"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
+msgid "<i class=\"oi oi-arrow-right\"/> See Certifications"
+msgstr "<i class=\"oi oi-arrow-right\"/> 인증서 보기"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.badge_content
+msgid "<i class=\"text-muted\"> awarded users</i>"
+msgstr "<i class=\"text-muted\"> 수상자 </i>"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.courses_home_inherit_survey
+msgid "<span class=\"ms-1\">Certifications</span>"
+msgstr "<span class=\"ms-1\">인증</span>"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_view_form
+msgid "<span class=\"o_stat_text\">Certified</span>"
+msgstr "<span class=\"o_stat_text\">인증</span>"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.all_user_card
+msgid "<span class=\"text-muted small fw-bold\">Certifications</span>"
+msgstr "<span class=\"text-muted small fw-bold\">인증</span>"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.top3_user_card
+msgid "<span class=\"text-muted\">Certifications</span>"
+msgstr "<span class=\"text-muted\">인증</span>"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.course_main
+msgid "<span>Start Now</span><i class=\"oi oi-chevron-right ms-2 align-middle\"/>"
+msgstr "<span>지금 시작하기</span><i class=\"oi oi-chevron-right ms-2 align-middle\"/>"
+
+#. module: website_slides_survey
+#: model:ir.model.constraint,message:website_slides_survey.constraint_slide_slide_check_survey_id
+msgid "A slide of type 'certification' requires a certification."
+msgstr "'인증' 유형의 슬라이드에는 인증이 필요합니다."
+
+#. module: website_slides_survey
+#: model:ir.model.constraint,message:website_slides_survey.constraint_slide_slide_check_certification_preview
+msgid "A slide of type certification cannot be previewed."
+msgstr "인증 유형의 슬라이드는 미리 볼 수 없습니다."
+
+#. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.js:0
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_view_form
+msgid "Add Certification"
+msgstr "인증 추가"
+
+#. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
+msgid "Add Questions to this Survey"
+msgstr "이 설문조사에 질문 추가"
+
+#. module: website_slides_survey
+#: model_terms:ir.actions.act_window,help:website_slides_survey.slide_slide_action_certification
+msgid "Add a new certification"
+msgstr "새로운 인증 추가"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__is_preview
+msgid "Allow Preview"
+msgstr "미리보기 허용"
+
+#. module: website_slides_survey
+#. odoo-python
+#: code:addons/website_slides_survey/models/survey_survey.py:0
+msgid ""
+"Any Survey listed below is currently used as a Course Certification and cannot be deleted:\n"
+"%s"
+msgstr ""
+"아래의 설문조사들은 현재 코스 인증용으로 사용되고 있어 삭제할 수 없습니다:\n"
+"%s"
+
+#. module: website_slides_survey
+#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_1_choice_3
+msgid "Ash"
+msgstr "재"
+
+#. module: website_slides_survey
+#: model_terms:ir.actions.act_window,help:website_slides_survey.survey_survey_action_slides
+msgid ""
+"Assess the level of understanding of your attendees\n"
+"                <br>and send them a document if they pass the test."
+msgstr ""
+"참가자의 이해 수준을 평가하고\n"
+"                <br> 테스트를 통과한 경우 문서를 전송합니다."
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
+msgid "Attempt n°"
+msgstr "시도 n°"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_tree_slides
+msgid "Avg Score (%)"
+msgstr "평균 점수 (%)"
+
+#. module: website_slides_survey
+#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_2_choice_5
+msgid "Bed"
+msgstr "침대"
+
+#. module: website_slides_survey
+#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_1_choice_4
+msgid "Beech"
+msgstr "너도밤나무"
+
+#. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
+msgid "Begin Certification"
+msgstr "인증 시작"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.course_main
+msgid "Begin your <b>certification</b> today!"
+msgstr "오늘 귀하의 <b>인증</b>이 시작됩니다!"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__slide_category
+msgid "Category"
+msgstr "카테고리"
+
+#. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.js:0
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__survey_id
+#: model:ir.model.fields.selection,name:website_slides_survey.selection__slide_slide__slide_category__certification
+#: model:ir.model.fields.selection,name:website_slides_survey.selection__slide_slide__slide_type__certification
+msgid "Certification"
+msgstr "인증서"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
+msgid "Certification Attempts"
+msgstr "인증 시도"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.badge_content
+msgid "Certification Badges"
+msgstr "인증 배지"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_survey_survey__slide_channel_ids
+msgid "Certification Courses"
+msgstr "인증 코스"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_slide_partner_view_search
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_slide_partner_view_tree
+msgid "Certification Passed"
+msgstr "인증 합격"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_survey_survey__slide_ids
+msgid "Certification Slides"
+msgstr "인증서 슬라이드"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide_partner__survey_scoring_success
+msgid "Certification Succeeded"
+msgstr "인증 성공"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_tree_slides
+msgid "Certification Title"
+msgstr "인증 제목"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide_partner__user_input_ids
+msgid "Certification attempts"
+msgstr "인증 시도"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.o_wss_certification_icon
+msgid "Certification icon"
+msgstr "인증 아이콘"
+
+#. module: website_slides_survey
+#. odoo-python
+#: code:addons/website_slides_survey/controllers/slides.py:0
+msgid "Certification slides are completed when the survey is succeeded."
+msgstr "설문 조사에 성공하면 인증 슬라이드가 완료됩니다."
+
+#. module: website_slides_survey
+#: model:ir.actions.act_window,name:website_slides_survey.slide_slide_action_certification
+#: model:ir.actions.act_window,name:website_slides_survey.survey_survey_action_slides
+#: model:ir.ui.menu,name:website_slides_survey.website_slides_menu_courses_certification
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
+msgid "Certifications"
+msgstr "인증"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
+msgid "Certifications are exams that you successfully passed. <br/>"
+msgstr "인증은 시험을 성공적으로 통과할 경우 발행됩니다. <br/>"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_sidebar_done_button
+msgid "Certifications you have passed cannot be marked as not done"
+msgstr "합격한 인증은 완료하지 않음으로 표시할 수 없습니다."
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel_partner__survey_certification_success
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_partner_view_search
+msgid "Certified"
+msgstr "인증됨"
+
+#. module: website_slides_survey
+#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_2_choice_1
+msgid "Chair"
+msgstr "의자"
+
+#. module: website_slides_survey
+#: model:ir.model,name:website_slides_survey.model_slide_channel_partner
+msgid "Channel / Partners (Members)"
+msgstr "채널 / 협력서 (회원)"
+
+#. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
+msgid "Congratulations, you passed the Certification!"
+msgstr "축하합니다, 인증에 합격하셨습니다!"
+
+#. module: website_slides_survey
+#: model:ir.model,name:website_slides_survey.model_slide_channel
+msgid "Course"
+msgstr "강좌"
+
+#. module: website_slides_survey
+#. odoo-python
+#: code:addons/website_slides_survey/models/survey_survey.py:0
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_form
+msgid "Courses"
+msgstr "강좌"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_survey_survey__slide_channel_count
+msgid "Courses Count"
+msgstr "강좌 수"
+
+#. module: website_slides_survey
+#: model_terms:ir.actions.act_window,help:website_slides_survey.survey_survey_action_slides
+msgid "Create a Certification"
+msgstr "인증서 만들기"
+
+#. module: website_slides_survey
+#: model:slide.slide,name:website_slides_survey.slide_slide_demo_6_0
+msgid "DIY Furniture Certification"
+msgstr "가구 DIY 인증"
+
+#. module: website_slides_survey
+#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_2_choice_3
+msgid "Desk"
+msgstr "책상"
+
+#. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
+msgid "Download certification"
+msgstr "인증서 다운로드"
+
+#. module: website_slides_survey
+#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_1_choice_1
+msgid "Fir"
+msgstr "전나무"
+
+#. module: website_slides_survey
+#: model:survey.question,title:website_slides_survey.furniture_certification_page_1
+msgid "Furniture"
+msgstr "가구"
+
+#. module: website_slides_survey
+#: model:slide.slide,name:website_slides_survey.slide_slide_demo_5_4
+#: model:survey.survey,title:website_slides_survey.furniture_certification
+msgid "Furniture Creation Certification"
+msgstr "가구 제작 인증"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_fill_form_done_inherit_website_slides
+msgid "Go back to course"
+msgstr "강좌로 돌아가기"
+
+#. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
+msgid "How to upload a certification on your course?"
+msgstr "코스에 인증서를 업로드하려면 어떻게 해야 합니까?"
+
+#. module: website_slides_survey
+#: model_terms:slide.slide,description:website_slides_survey.slide_slide_demo_6_0
+msgid "It's time to test your knowledge!"
+msgstr "귀하의 지식을 테스트할 시간입니다!"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.res_config_settings_view_form
+msgid "Manage Certifications"
+msgstr "인증 관리"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
+msgid "Mark To Do"
+msgstr "할 일로 표시"
+
+#. module: website_slides_survey
+#. odoo-python
+#: code:addons/website_slides_survey/models/slide_channel.py:0
+msgid "No Attendee passed this course certification yet!"
+msgstr "아직 본 과정 인증을 통과한 수강생이 없습니다!"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
+msgid "No certification found for the given search term."
+msgstr "해당 검색어에 대한 인증이 없습니다."
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
+msgid "No certifications yet!"
+msgstr "아직 인증되지 않았습니다!"
+
+#. module: website_slides_survey
+#: model_terms:slide.slide,description:website_slides_survey.slide_slide_demo_5_4
+msgid ""
+"Now that you have completed the course, it's time to test your knowledge!"
+msgstr "강좌를 마쳤으므로 이제 지식을 시험할 차례입니다!"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel__nbr_certification
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel_partner__nbr_certification
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__nbr_certification
+msgid "Number of Certifications"
+msgstr "인증 수"
+
+#. module: website_slides_survey
+#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_1_choice_2
+msgid "Oak"
+msgstr "오크"
+
+#. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/js/public/components/slide_upload_dialog/slide_upload_category.xml:0
+msgid "Please select a certification."
+msgstr "인증서를 선택하세요"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_survey_user_input__slide_id
+msgid "Related course slide"
+msgstr "관련된 강좌 슬라이드"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
+msgid "Score:"
+msgstr "점수:"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
+msgid "Search"
+msgstr "검색"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
+msgid "Search Attempts..."
+msgstr "검색 시도..."
+
+#. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/js/public/components/slide_upload_dialog/slide_upload_category.js:0
+msgid "Select a certification"
+msgstr "인증서 선택하기"
+
+#. module: website_slides_survey
+#: model:survey.question,title:website_slides_survey.furniture_certification_page_1_question_2
+msgid "Select all the furniture shown in the video"
+msgstr "동영상에서 보여진 모든 가구를 선택하십시오"
+
+#. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
+msgid ""
+"Select an existing certification from the list. Creating or editing a "
+"certification can be done from the backend."
+msgstr "목록에서 기존 인증을 선택합니다. 백엔드에서 인증을 만들거나 편집할 수 있습니다."
+
+#. module: website_slides_survey
+#: model:mail.template,description:website_slides_survey.mail_template_user_input_certification_failed
+msgid "Sent to participant if they failed the certification"
+msgstr "인증에 실패한 경우 참가자에게 전송됩니다."
+
+#. module: website_slides_survey
+#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_2_choice_4
+msgid "Shelf"
+msgstr "선반"
+
+#. module: website_slides_survey
+#: model:ir.model,name:website_slides_survey.model_slide_slide_partner
+msgid "Slide / Partner decorated m2m"
+msgstr "슬라이드 / 파트너 장식 m2m"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__slide_type
+msgid "Slide Type"
+msgstr "슬라이드 유형"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,help:website_slides_survey.field_survey_user_input__slide_partner_id
+msgid "Slide membership information for the logged in user"
+msgstr "로그인한 사용자의 슬라이드 멤버쉽 정보"
+
+#. module: website_slides_survey
+#: model:ir.model,name:website_slides_survey.model_slide_slide
+msgid "Slides"
+msgstr "슬라이드"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_survey_user_input__slide_partner_id
+msgid "Subscriber information"
+msgstr "구독자 정보"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,help:website_slides_survey.field_slide_slide__slide_type
+msgid ""
+"Subtype of the slide category, allows more precision on the actual file type"
+" / source type."
+msgstr "슬라이드 카테고리의 하위 유형으로, 실제 파일 / 소스 유형을 보다 정확하게 파악할 수 있습니다."
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_tree_slides
+msgid "Success Ratio (%)"
+msgstr "성공률 (%)"
+
+#. module: website_slides_survey
+#: model:ir.model,name:website_slides_survey.model_survey_survey
+msgid "Survey"
+msgstr "설문 조사"
+
+#. module: website_slides_survey
+#: model:ir.model,name:website_slides_survey.model_survey_user_input
+msgid "Survey User Input"
+msgstr "설문 조사 사용자 입력"
+
+#. module: website_slides_survey
+#: model:mail.template,name:website_slides_survey.mail_template_user_input_certification_failed
+msgid "Survey: Certification Failure"
+msgstr "설문조사: 인증 실패"
+
+#. module: website_slides_survey
+#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_2_choice_2
+msgid "Table"
+msgstr "테이블"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
+msgid "Take Quiz"
+msgstr "퀴즈 풀기"
+
+#. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
+msgid "Test Certification"
+msgstr "테스트 인증"
+
+#. module: website_slides_survey
+#: model_terms:survey.question,description:website_slides_survey.furniture_certification_page_1
+#: model_terms:survey.survey,description:website_slides_survey.furniture_certification
+msgid "Test your furniture knowledge!"
+msgstr "가구에 대한 지식을 테스트합니다!"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,help:website_slides_survey.field_slide_slide__is_preview
+msgid ""
+"The course is accessible by anyone : the users don't need to join the "
+"channel to access the content of the course."
+msgstr "이 강좌는 누구나 접근할 수 있습니다. 사용자는 강좌 내용에 접근하기 위해 채널에 참여할 필요가 없습니다."
+
+#. module: website_slides_survey
+#: model:ir.model.fields,help:website_slides_survey.field_survey_survey__slide_channel_ids
+msgid ""
+"The courses this survey is linked to through the e-learning application"
+msgstr "이 설문조사는 e-러닝 앱에 연결되어 있는 코스입니다."
+
+#. module: website_slides_survey
+#: model:ir.model.fields,help:website_slides_survey.field_survey_user_input__slide_id
+msgid "The related course slide when there is no membership information"
+msgstr "회원 정보가 없을 때 관련 강좌 슬라이드"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,help:website_slides_survey.field_survey_survey__slide_ids
+msgid "The slides this survey is linked to through the e-learning application"
+msgstr "이 설문조사의 슬라이드는 e-러닝 앱에 연결되어 있습니다."
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__name
+msgid "Title"
+msgstr "제목"
+
+#. module: website_slides_survey
+#: model:survey.question,title:website_slides_survey.furniture_certification_page_1_question_3
+msgid "What do you think about the content of the course? (not rated)"
+msgstr "강좌 내용에 대해 어떻게 생각하십니까? (미평가)"
+
+#. module: website_slides_survey
+#: model:survey.question,title:website_slides_survey.furniture_certification_page_1_question_1
+msgid "What type of wood is the best for furniture?"
+msgstr "가구에 가장 적합한 목재 종류는 무엇입니까?"
+
+#. module: website_slides_survey
+#. odoo-python
+#: code:addons/website_slides_survey/controllers/slides.py:0
+msgid "You are not allowed to create a survey."
+msgstr "설문조사를 생성할 수 없습니다."
+
+#. module: website_slides_survey
+#. odoo-python
+#: code:addons/website_slides_survey/controllers/slides.py:0
+msgid "You are not allowed to link a certification."
+msgstr "인증서를 연결할 수 없습니다."
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.badge_content
+msgid ""
+"You can gain badges by passing certifications. Here is a list of all available certification badges.\n"
+"                            <br/>Follow the links to reach new heights and skill up!"
+msgstr ""
+"인증을 통과하면 배지가 부여됩니다. 사용 가능한 인증 배지 목록은 다음과 같습니다.\n"
+"                            <br/>링크를 클릭하여 새로운 지식과 기술을 습득해보세요!"
+
+#. module: website_slides_survey
+#: model:mail.template,subject:website_slides_survey.mail_template_user_input_certification_failed
+msgid ""
+"You have failed the course: {{ object.slide_partner_id.channel_id.name }}"
+msgstr "코스에 통과하지 못했습니다: {{ object.slide_partner_id.channel_id.name }}"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
+msgid "You have not taken any certification yet."
+msgstr "아직 인증을 받지 않으셨습니다."

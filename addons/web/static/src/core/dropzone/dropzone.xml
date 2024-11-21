@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="web.Dropzone">
+    <div class="o-Dropzone position-fixed align-items-center justify-content-center d-flex border-primary bg-100 text-primary opacity-75"
+        t-att-class="{ 'o-dragging-inside': state.isDraggingInside }"
+        t-attf-class="{{ props.extraClass }}"
+        t-on-dragenter="() => state.isDraggingInside = true"
+        t-on-dragleave="() => state.isDraggingInside = false"
+        t-on-drop="props.onDrop"
+        t-ref="root"
+    >
+        <h4>Drag Files Here <i class="fa fa-download"/></h4>
+    </div>
+</t>
+
+</templates>

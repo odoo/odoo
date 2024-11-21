@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.Many2ManyBinaryField">
+        <div t-attf-class="oe_fileupload {{props.className ? props.className : ''}}" aria-atomic="true">
+            <div class="o_attachments">
+                <t t-foreach="files" t-as="file" t-key="file_index">
+                   <t t-call="web.Many2ManyBinaryField.attachment_preview"/>
+                </t>
+            </div>
+            <div t-if="!props.readonly &amp;&amp; (!props.numberOfFiles or files.length &lt; props.numberOfFiles)"
+                 class="oe_add">
+                <FileInput
+                    acceptedFileExtensions="props.acceptedFileExtensions"
+                    multiUpload="true"
+                    onUpload.bind="onFileUploaded"
+                    resModel="props.record.resModel"
+                    resId="props.record.resId or 0"
+                >
+                    <button class="btn btn-secondary o_attach" data-tooltip="Attach">
+                        <span class="fa fa-paperclip" aria-label="Attach"/> <t t-esc="uploadText"/>
+                    </button>
+                </FileInput>
+            </div>
+        </div>
+    </t>
+
+<t t-name="web.Many2ManyBinaryField.attachment_preview">
+    <t t-set="editable" t-value="!props.readonly"/>
+    <div t-attf-class="o_attachment o_attachment_many2many #{ editable ? 'o_attachment_editable' : '' } #{upload ? 'o_attachment_uploading' : ''}" t-att-title="file.name">
+        <div class="o_attachment_wrap">
+            <t t-set="ext" t-value="getExtension(file)"/>
+            <t t-set="url" t-value="getUrl(file.id)"/>
+            <div class="o_image_box float-start" t-att-data-tooltip="'Download ' + file.name">
+                <a t-att-href="url" aria-label="Download" download="">
+                    <span class="o_image o_hover" t-att-data-mimetype="file.mimetype" t-att-data-ext="ext" role="img"/>
+                </a>
+            </div>
+
+            <div class="caption">
+                <a class="ml4" t-att-data-tooltip="'Download ' + file.name" t-att-href="url" download=""><t t-esc='file.name'/></a>
+            </div>
+            <div class="caption small">
+                <a class="ml4 small text-uppercase" t-att-href="url" download=""><b><t t-esc='ext'/></b></a>
+                <div t-if="editable" class="progress o_attachment_progress_bar">
+                    <div class="progress-bar progress-bar-striped active" style="width: 100%">Uploading</div>
+                </div>
+            </div>
+
+            <div class="o_attachment_uploaded"><i class="text-success fa fa-check" role="img" aria-label="Uploaded" title="Uploaded"/></div>
+            <div t-if="editable" class="o_attachment_delete" t-on-click.stop="() => this.onFileRemove(file.id)"><span role="img" aria-label="Delete" title="Delete">×</span></div>
+        </div>
+    </div>
+</t>
+
+</templates>

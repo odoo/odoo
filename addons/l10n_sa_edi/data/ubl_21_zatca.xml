@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="ubl_21_PaymentMeansType_zatca" inherit_id="account_edi_ubl_cii.ubl_20_PaymentMeansType" primary="True">
+            <xpath expr="//*[local-name()='InstructionID']" position="after">
+                <cbc:InstructionNote xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+                    xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                    t-out="vals['adjustment_reason']"/>
+            </xpath>
+        </template>
+
+        <template id="export_sa_zatca_ubl_extensions">
+            <ext:UBLExtensions xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+                               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                               xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2">
+                <ext:UBLExtension>
+                    <ext:ExtensionURI>urn:oasis:names:specification:ubl:dsig:enveloped:xades</ext:ExtensionURI>
+                    <ext:ExtensionContent>
+                        <sig:UBLDocumentSignatures
+                                xmlns:sac="urn:oasis:names:specification:ubl:schema:xsd:SignatureAggregateComponents-2"
+                                xmlns:sbc="urn:oasis:names:specification:ubl:schema:xsd:SignatureBasicComponents-2"
+                                xmlns:sig="urn:oasis:names:specification:ubl:schema:xsd:CommonSignatureComponents-2">
+                            <sac:SignatureInformation>
+                                <cbc:ID>urn:oasis:names:specification:ubl:signature:1</cbc:ID>
+                                <sbc:ReferencedSignatureID>urn:oasis:names:specification:ubl:signature:Invoice
+                                </sbc:ReferencedSignatureID>
+                                <ds:Signature Id="signature" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+                                    <ds:SignedInfo>
+                                        <ds:CanonicalizationMethod
+                                            Algorithm="http://www.w3.org/2006/12/xml-c14n11"/>
+                                        <ds:SignatureMethod
+                                            Algorithm="http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256"/>
+                                        <ds:Reference Id="invoiceSignedData" URI="">
+                                            <ds:Transforms>
+                                                <ds:Transform Algorithm="http://www.w3.org/TR/1999/REC-xpath-19991116">
+                                                    <ds:XPath>not(//ancestor-or-self::ext:UBLExtensions)</ds:XPath>
+                                                </ds:Transform>
+                                                <ds:Transform Algorithm="http://www.w3.org/TR/1999/REC-xpath-19991116">
+                                                    <ds:XPath>not(//ancestor-or-self::cac:Signature)</ds:XPath>
+                                                </ds:Transform>
+                                                <ds:Transform Algorithm="http://www.w3.org/TR/1999/REC-xpath-19991116">
+                                                    <ds:XPath>
+                                                        not(//ancestor-or-self::cac:AdditionalDocumentReference[cbc:ID='QR'])
+                                                    </ds:XPath>
+                                                </ds:Transform>
+                                                <ds:Transform Algorithm="http://www.w3.org/2006/12/xml-c14n11"/>
+                                            </ds:Transforms>
+                                            <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                                            <!-- b64encoded SHA256 digest of document -->
+                                            <ds:DigestValue/>
+                                        </ds:Reference>
+                                        <ds:Reference Type="http://www.w3.org/2000/09/xmldsig#SignatureProperties"
+                                                      URI="#xadesSignedProperties">
+                                            <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                                            <ds:DigestValue/>
+                                        </ds:Reference>
+                                    </ds:SignedInfo>
+                                    <ds:SignatureValue/>
+                                    <ds:KeyInfo>
+                                        <ds:X509Data>
+                                            <ds:X509Certificate/>
+                                        </ds:X509Data>
+                                    </ds:KeyInfo>
+                                    <ds:Object>
+                                        <xades:QualifyingProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#"
+                                                                    Target="signature">
+                                            <xades:SignedProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#"
+                                                                    Id="xadesSignedProperties">
+                                                <xades:SignedSignatureProperties>
+                                                    <xades:SigningTime/>
+                                                    <xades:SigningCertificate>
+                                                        <xades:Cert>
+                                                            <xades:CertDigest>
+                                                                <ds:DigestMethod
+                                                                    xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+                                                                    Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                                                                <ds:DigestValue
+                                                                    xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/>
+                                                            </xades:CertDigest>
+                                                            <xades:IssuerSerial>
+                                                                <ds:X509IssuerName
+                                                                    xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/>
+                                                                <ds:X509SerialNumber
+                                                                    xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/>
+                                                            </xades:IssuerSerial>
+                                                        </xades:Cert>
+                                                    </xades:SigningCertificate>
+                                                </xades:SignedSignatureProperties>
+                                            </xades:SignedProperties>
+                                        </xades:QualifyingProperties>
+                                    </ds:Object>
+                                </ds:Signature>
+                            </sac:SignatureInformation>
+                        </sig:UBLDocumentSignatures>
+                    </ext:ExtensionContent>
+                </ext:UBLExtension>
+            </ext:UBLExtensions>
+        </template>
+
+        <template id="export_sa_zatca_ubl_signed_properties">
+            <xades:SignedProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" Id="xadesSignedProperties">
+                <xades:SignedSignatureProperties>
+                    <xades:SigningTime t-out="signing_time"/>
+                    <xades:SigningCertificate>
+                        <xades:Cert>
+                            <xades:CertDigest>
+                                <ds:DigestMethod xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+                                    Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                                <ds:DigestValue xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+                                    t-out="public_key_hashing"/>
+                            </xades:CertDigest>
+                            <xades:IssuerSerial>
+                                <ds:X509IssuerName xmlns:ds="http://www.w3.org/2000/09/xmldsig#" t-out="issuer_name"/>
+                                <ds:X509SerialNumber xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+                                    t-out="serial_number"/>
+                            </xades:IssuerSerial>
+                        </xades:Cert>
+                    </xades:SigningCertificate>
+                </xades:SignedSignatureProperties>
+            </xades:SignedProperties>
+        </template>
+
+        <template id="ubl_21_InvoiceLineType_zatca" inherit_id="account_edi_ubl_cii.ubl_20_InvoiceLineType" primary="True">
+            <xpath expr="//*[local-name()='PricingReference']" position="before">
+                <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                   xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                    <cac:DocumentReference>
+                        <t t-set="prepayment_vals" t-value="vals.get('prepayment_vals', {})"/>
+                        <t t-set="issue_date" t-value="prepayment_vals.get('issue_date')"/>
+                        <cbc:ID t-out="prepayment_vals.get('prepayment_id')"/>
+                        <cbc:IssueDate t-out="issue_date and issue_date.strftime('%Y-%m-%d')"/>
+                        <cbc:IssueTime t-esc="issue_date and issue_date.strftime('%H:%M:%S')"/>
+                        <cbc:DocumentTypeCode t-out="prepayment_vals.get('document_type_code')"/>
+                    </cac:DocumentReference>
+                </t>
+            </xpath>
+        </template>
+
+        <template id="ubl_21_CreditNoteLineType_zatca" inherit_id="account_edi_ubl_cii.ubl_21_CreditNoteLineType" primary="True">
+            <xpath expr="//*[local-name()='CreditedQuantity']" position="replace">
+                <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                    <cbc:InvoicedQuantity
+                        t-att="vals.get('line_quantity_attrs', {})"
+                        t-out="vals.get('line_quantity')"/>
+                </t>
+            </xpath>
+            <xpath expr="//*[local-name()='PricingReference']" position="before">
+                <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                   xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                    <cac:DocumentReference>
+                        <t t-set="prepayment_vals" t-value="vals.get('prepayment_vals', {})"/>
+                        <t t-set="issue_date" t-value="prepayment_vals.get('issue_date')"/>
+                        <cbc:ID t-out="prepayment_vals.get('prepayment_id')"/>
+                        <cbc:IssueDate t-out="issue_date and issue_date.strftime('%Y-%m-%d')"/>
+                        <cbc:IssueTime t-esc="issue_date and issue_date.strftime('%H:%M:%S')"/>
+                        <cbc:DocumentTypeCode t-out="prepayment_vals.get('document_type_code')"/>
+                    </cac:DocumentReference>
+                </t>
+            </xpath>
+        </template>
+
+        <template id="ubl_21_DebitNoteLineType_zatca" inherit_id="account_edi_ubl_cii.ubl_21_DebitNoteLineType" primary="True">
+            <xpath expr="//*[local-name()='DebitedQuantity']" position="replace">
+                <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                    <cbc:InvoicedQuantity
+                        t-att="vals.get('line_quantity_attrs', {})"
+                        t-out="vals.get('line_quantity')"/>
+                </t>
+            </xpath>
+            <xpath expr="//*[local-name()='PricingReference']" position="before">
+                <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                   xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                    <cac:DocumentReference>
+                        <t t-set="prepayment_vals" t-value="vals.get('prepayment_vals', {})"/>
+                        <t t-set="issue_date" t-value="prepayment_vals.get('issue_date')"/>
+                        <cbc:ID t-out="prepayment_vals.get('prepayment_id')"/>
+                        <cbc:IssueDate t-out="issue_date and issue_date.strftime('%Y-%m-%d')"/>
+                        <cbc:IssueTime t-esc="issue_date and issue_date.strftime('%H:%M:%S')"/>
+                        <cbc:DocumentTypeCode t-out="prepayment_vals.get('document_type_code')"/>
+                    </cac:DocumentReference>
+                </t>
+            </xpath>
+        </template>
+
+        <template id="ubl_21_TaxTotalType_zatca" inherit_id="account_edi_ubl_cii.ubl_20_TaxTotalType" primary="True">
+            <xpath expr="//*[local-name()='TaxAmount']" position="after">
+                <cbc:RoundingAmount xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+                    xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                    t-att-currencyID="vals['currency'].name"
+                    t-esc="format_float(vals.get('total_amount_sa'), vals['currency_dp'])"/>
+            </xpath>
+        </template>
+
+        <template id="ubl_21_PartyType_zatca" inherit_id="account_edi_ubl_cii.ubl_20_PartyType" primary="True">
+            <xpath expr="//*[local-name()='PartyIdentification']" position="replace">
+                <cac:PartyIdentification
+                    xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                    xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                    t-foreach="vals.get('party_identification_vals', [])" t-as="party_vals">
+                    <cbc:ID t-att="party_vals.get('id_attrs', {})" t-out="party_vals.get('id')"/>
+                </cac:PartyIdentification>
+            </xpath>
+        </template>
+
+        <template id="ubl_21_AddressType_zatca" inherit_id="account_edi_ubl_cii.ubl_20_AddressType" primary="True">
+            <!-- AdditionalStreetName causes the Validation SDK to crash, so it has to be removed -->
+            <xpath expr="//*[local-name()='AdditionalStreetName']" position="replace"/>
+        </template>
+
+        <template id="ubl_21_InvoiceType_zatca" inherit_id="account_edi_ubl_cii.ubl_21_InvoiceType" primary="True">
+            <xpath expr="//*[local-name()='OrderReference']/*[local-name()='SalesOrderID']" position="replace"/>
+            <!-- Add Invoice UUID in compliance with rule BR-KSA-03 -->
+            <xpath expr="//*[local-name()='ID']" position="after">
+                <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                    <cbc:UUID t-out="invoice.l10n_sa_uuid"/>
+                </t>
+            </xpath>
+            <!-- Add Invoice Issue Time in compliance with rule KSA-25 -->
+            <xpath expr="//*[local-name()='IssueDate']" position="replace">
+                <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                    <cbc:IssueDate t-out="vals['issue_date'].strftime('%Y-%m-%d')"/>
+                    <cbc:IssueTime t-out="vals['issue_date'].strftime('%H:%M:%S')"/>
+                </t>
+            </xpath>
+            <!-- Add Previous Invoice Hash & Invoice Counter Value -->
+            <xpath expr="//*[local-name()='BillingReference']" position="after">
+                <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                    xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                    <!-- Add QR Code in compliance with rule BR-KSA-27 -->
+                    <cac:AdditionalDocumentReference t-if="invoice._l10n_sa_is_simplified()">
+                        <cbc:ID>QR</cbc:ID>
+                        <cac:Attachment>
+                            <cbc:EmbeddedDocumentBinaryObject mimeCode="text/plain">N/A</cbc:EmbeddedDocumentBinaryObject>
+                        </cac:Attachment>
+                    </cac:AdditionalDocumentReference>
+                    <!-- Add Previous Invoice Hash in compliance with rule BR-KSA-61 -->
+                    <cac:AdditionalDocumentReference>
+                        <cbc:ID>PIH</cbc:ID>
+                        <cac:Attachment>
+                            <cbc:EmbeddedDocumentBinaryObject mimeCode="text/plain"
+                                t-out="vals.get('previous_invoice_hash')"/>
+                        </cac:Attachment>
+                    </cac:AdditionalDocumentReference>
+                    <!-- Add Invoice Counter Value in compliance with rules BR-KSA-33 and BR-KSA-34 -->
+                    <cac:AdditionalDocumentReference>
+                        <cbc:ID>ICV</cbc:ID>
+                        <cbc:UUID t-out="invoice.l10n_sa_chain_index"/>
+                    </cac:AdditionalDocumentReference>
+                    <!-- Add Signature references in compliance with rules BR-KSA-29 and BR-KSA-30 -->
+                    <cac:Signature t-if="invoice._l10n_sa_is_simplified()">
+                        <cbc:ID>urn:oasis:names:specification:ubl:signature:Invoice</cbc:ID>
+                        <cbc:SignatureMethod>urn:oasis:names:specification:ubl:dsig:enveloped:xades</cbc:SignatureMethod>
+                    </cac:Signature>
+                </t>
+            </xpath>
+        </template>
+
+        <template id="ubl_21_CreditNoteType_zatca" inherit_id="account_edi_ubl_cii.ubl_21_CreditNoteType" primary="True">
+            <!-- For ZATCA, we do not use CreditNoteTypeCode tags. We always use InvoiceTypeCode. -->
+            <xpath expr="//*[local-name()='CreditNoteTypeCode']" position="replace">
+                <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                    <cbc:InvoiceTypeCode
+                        t-att="vals.get('document_type_code_attrs', {})"
+                        t-out="vals.get('document_type_code')"/>
+                </t>
+            </xpath>
+            <!-- For ZATCA, we do not use CreditNoteLine tags. We always use InvoiceLine. -->
+            <xpath expr="//*[local-name()='CreditNoteLine']" position="replace">
+                <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                    <cac:InvoiceLine t-foreach="vals.get('line_vals', [])" t-as="foreach_vals">
+                        <t t-call="{{InvoiceLineType_template}}">
+                            <t t-set="vals" t-value="foreach_vals"/>
+                        </t>
+                    </cac:InvoiceLine>
+                </t>
+            </xpath>
+            <xpath expr="//*[local-name()='OrderReference']/*[local-name()='SalesOrderID']" position="replace"/>
+            <!-- Add Invoice UUID in compliance with rule BR-KSA-03 -->
+            <xpath expr="//*[local-name()='ID']" position="after">
+                <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                    <cbc:UUID t-out="invoice.l10n_sa_uuid"/>
+                </t>
+            </xpath>
+            <!-- Add Invoice Issue Time in compliance with rule KSA-25 -->
+            <xpath expr="//*[local-name()='IssueDate']" position="replace">
+                <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                    <cbc:IssueDate t-out="vals['issue_date'].strftime('%Y-%m-%d')"/>
+                    <cbc:IssueTime t-out="vals['issue_date'].strftime('%H:%M:%S')"/>
+                </t>
+            </xpath>
+            <!-- Add Previous Invoice Hash & Invoice Counter Value -->
+            <xpath expr="//*[local-name()='BillingReference']" position="after">
+                <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                    xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                    <!-- Add QR Code in compliance with rule BR-KSA-27 -->
+                    <cac:AdditionalDocumentReference t-if="invoice._l10n_sa_is_simplified()">
+                        <cbc:ID>QR</cbc:ID>
+                        <cac:Attachment>
+                            <cbc:EmbeddedDocumentBinaryObject mimeCode="text/plain">N/A</cbc:EmbeddedDocumentBinaryObject>
+                        </cac:Attachment>
+                    </cac:AdditionalDocumentReference>
+                    <!-- Add Previous Invoice Hash in compliance with rule BR-KSA-61 -->
+                    <cac:AdditionalDocumentReference>
+                        <cbc:ID>PIH</cbc:ID>
+                        <cac:Attachment>
+                            <cbc:EmbeddedDocumentBinaryObject mimeCode="text/plain"
+                                t-out="vals.get('previous_invoice_hash')"/>
+                        </cac:Attachment>
+                    </cac:AdditionalDocumentReference>
+                    <!-- Add Invoice Counter Value in compliance with rules BR-KSA-33 and BR-KSA-34 -->
+                    <cac:AdditionalDocumentReference>
+                        <cbc:ID>ICV</cbc:ID>
+                        <cbc:UUID t-out="invoice.l10n_sa_chain_index"/>
+                    </cac:AdditionalDocumentReference>
+                    <!-- Add Signature references in compliance with rules BR-KSA-29 and BR-KSA-30 -->
+                    <cac:Signature t-if="invoice._l10n_sa_is_simplified()">
+                        <cbc:ID>urn:oasis:names:specification:ubl:signature:Invoice</cbc:ID>
+                        <cbc:SignatureMethod>urn:oasis:names:specification:ubl:dsig:enveloped:xades</cbc:SignatureMethod>
+                    </cac:Signature>
+                </t>
+            </xpath>
+        </template>
+
+        <template id="ubl_21_DebitNoteType_zatca" inherit_id="account_edi_ubl_cii.ubl_21_DebitNoteType" primary="True">
+            <!-- For ZATCA, we do not use DebitNoteLine tags. We always use InvoiceLine. -->
+            <xpath expr="//*[local-name()='DebitNoteLine']" position="replace">
+                <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                    <cac:InvoiceLine t-foreach="vals.get('line_vals', [])" t-as="foreach_vals">
+                        <t t-call="{{InvoiceLineType_template}}">
+                            <t t-set="vals" t-value="foreach_vals"/>
+                        </t>
+                    </cac:InvoiceLine>
+                </t>
+            </xpath>
+            <!-- For ZATCA, we do not use RequestedMonetaryTotal tags. We always use LegalMonetaryTotal. -->
+            <xpath expr="//*[local-name()='RequestedMonetaryTotal']" position="replace">
+                <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                    <cac:LegalMonetaryTotal>
+                        <t t-call="{{MonetaryTotalType_template}}">
+                            <t t-set="vals" t-value="vals.get('monetary_total_vals', {})"/>
+                        </t>
+                    </cac:LegalMonetaryTotal>
+                </t>
+            </xpath>
+            <xpath expr="//*[local-name()='OrderReference']/*[local-name()='SalesOrderID']" position="replace"/>
+            <!-- Add Invoice UUID in compliance with rule BR-KSA-03 -->
+            <xpath expr="//*[local-name()='ID']" position="after">
+                <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                    <cbc:UUID t-out="invoice.l10n_sa_uuid"/>
+                </t>
+            </xpath>
+            <!-- Add Invoice Issue Time in compliance with rule KSA-25 -->
+            <xpath expr="//*[local-name()='IssueDate']" position="replace">
+                <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                    <cbc:IssueDate t-out="vals['issue_date'].strftime('%Y-%m-%d')"/>
+                    <cbc:IssueTime t-out="vals['issue_date'].strftime('%H:%M:%S')"/>
+                </t>
+            </xpath>
+            <!-- Add Previous Invoice Hash & Invoice Counter Value -->
+            <xpath expr="//*[local-name()='BillingReference']" position="after">
+                <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                    xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                    <!-- Add QR Code in compliance with rule BR-KSA-27 -->
+                    <cac:AdditionalDocumentReference t-if="invoice._l10n_sa_is_simplified()">
+                        <cbc:ID>QR</cbc:ID>
+                        <cac:Attachment>
+                            <cbc:EmbeddedDocumentBinaryObject mimeCode="text/plain">N/A</cbc:EmbeddedDocumentBinaryObject>
+                        </cac:Attachment>
+                    </cac:AdditionalDocumentReference>
+                    <!-- Add Previous Invoice Hash in compliance with rule BR-KSA-61 -->
+                    <cac:AdditionalDocumentReference>
+                        <cbc:ID>PIH</cbc:ID>
+                        <cac:Attachment>
+                            <cbc:EmbeddedDocumentBinaryObject mimeCode="text/plain"
+                                t-out="vals.get('previous_invoice_hash')"/>
+                        </cac:Attachment>
+                    </cac:AdditionalDocumentReference>
+                    <!-- Add Invoice Counter Value in compliance with rules BR-KSA-33 and BR-KSA-34 -->
+                    <cac:AdditionalDocumentReference>
+                        <cbc:ID>ICV</cbc:ID>
+                        <cbc:UUID t-out="invoice.l10n_sa_chain_index"/>
+                    </cac:AdditionalDocumentReference>
+                    <!-- Add Signature references in compliance with rules BR-KSA-29 and BR-KSA-30 -->
+                    <cac:Signature t-if="invoice._l10n_sa_is_simplified()">
+                        <cbc:ID>urn:oasis:names:specification:ubl:signature:Invoice</cbc:ID>
+                        <cbc:SignatureMethod>urn:oasis:names:specification:ubl:dsig:enveloped:xades</cbc:SignatureMethod>
+                    </cac:Signature>
+                </t>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>

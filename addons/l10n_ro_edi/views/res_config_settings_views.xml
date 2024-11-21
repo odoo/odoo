@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_form_inherit_l10n_ro_edi" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.l10n.ro.edi</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='invoicing_settings']" position="after">
+                <block title="Romanian E-Factura" id="l10n_ro_edi_settings" invisible="country_code != 'RO'">
+                    <div class="col-12 col-lg-12 o_setting_box">
+                        <div class="o_setting_right_pane border-0">
+                            <div class="mb-2">
+                                <span class="o_form_label">
+                                    E-Factura Details
+                                </span>
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
+                            </div>
+                            <div class="text-muted oe_inline mb-3">
+                                <div class="mb-1">
+                                    <div>Data needed to generate token for sending RO-CIUS to Romanian government</div>
+                                    <div>
+                                        To benefit from this feature, you must have a digital signature USB token from
+                                        Romania connected with an ANAF account
+                                    </div>
+                                </div>
+                                <ul>
+                                    <li>
+                                        Go to <a href="https://pfinternet.anaf.ro/" target="_blank">https://pfinternet.anaf.ro/</a>.
+                                        Login or Sign Up if you don't have an account yet
+                                    </li>
+                                    <li>Go to "Editare profil Oauth"</li>
+                                    <li>Generate a new Client data
+                                        <ul>
+                                            <li>Fill "Denumire Aplicatie" with any desired name for your registration data</li>
+                                            <li>
+                                                Fill "Callback URL 1" with the following URL:
+                                                <br/><field name="l10n_ro_edi_callback_url" widget="text" class="w-100 text-success"/>
+                                            </li>
+                                            <li>In "Serviciu", select the option "E-Factura"</li>
+                                            <li>Submit the form by clicking on "Generare Client ID"</li>
+                                        </ul>
+                                    </li>
+                                    <li>Copy the generated Client ID and Client Secret to the fields below</li>
+                                    <li>With the digital signature USB token inserted, generate the token using the button below</li>
+                                </ul>
+                            </div>
+                            <div class="row text-warning" invisible="not l10n_ro_edi_oauth_error">
+                                Error when generating token:
+                                <field name="l10n_ro_edi_oauth_error" widget="text" class="w-100"/>
+                            </div>
+                            <div class="row">
+                                <label for="l10n_ro_edi_client_id" class="col-lg-3 o_light_label"/>
+                                <field name="l10n_ro_edi_client_id"/>
+                            </div>
+                            <div class="row">
+                                <label for="l10n_ro_edi_client_secret" class="col-lg-3 o_light_label"/>
+                                <field name="l10n_ro_edi_client_secret"/>
+                            </div>
+                            <div class="row">
+                                <label for="l10n_ro_edi_access_token" class="col-lg-3 o_light_label"/>
+                                <field name="l10n_ro_edi_access_token"/>
+                            </div>
+                            <div class="row">
+                                <label for="l10n_ro_edi_refresh_token" class="col-lg-3 o_light_label"/>
+                                <field name="l10n_ro_edi_refresh_token"/>
+                            </div>
+                            <div class="row">
+                                <label for="l10n_ro_edi_access_expiry_date" class="col-lg-3 o_light_label"/>
+                                <field name="l10n_ro_edi_access_expiry_date"/>
+                            </div>
+                            <div class="row">
+                                <label for="l10n_ro_edi_refresh_expiry_date" class="col-lg-3 o_light_label"/>
+                                <field name="l10n_ro_edi_refresh_expiry_date"/>
+                            </div>
+                            <div class="my-3" invisible="l10n_ro_edi_access_token">
+                                <button name="button_l10n_ro_edi_generate_token"
+                                        type="object"
+                                        string="Generate Token"
+                                        class="btn btn-primary"/>
+                            </div>
+                            <setting id="l10n_ro_edi_test_env_setting" class="mt-3"
+                                     help="Activate test environment for sending E-Factura to SPV">
+                                <field name="l10n_ro_edi_test_env"/>
+                            </setting>
+                        </div>
+                    </div>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

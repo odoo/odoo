@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- report.paperformat -->
+        <record id="paperformat_view_tree" model="ir.ui.view">
+            <field name="name">paper_format_view_tree</field>
+            <field name="model">report.paperformat</field>
+            <field name="arch" type="xml">
+                <list string="Paper format configuration">
+                    <field name="name" />
+                </list>
+            </field>
+        </record>
+        <record id="paperformat_view_form" model="ir.ui.view">
+            <field name="name">paper_format_view_form</field>
+            <field name="model">report.paperformat</field>
+            <field name="arch" type="xml">
+                <form string="Paper format configuration">
+                <sheet>
+                    <group>
+                        <field name="name" />
+                        <field name="format" />
+                        <field name="page_height" invisible="format != 'custom'" />
+                        <field name="page_width" invisible="format != 'custom'" />
+                        <field name="orientation" />
+                        <field name="margin_top" />
+                        <field name="margin_bottom" />
+                        <field name="margin_left" />
+                        <field name="margin_right" />
+                        <field name="header_line" />
+                        <field name="header_spacing" />
+                        <field name="disable_shrinking" />
+                        <field name="dpi" />
+                        <field name="report_ids" widget="many2many_tags" options="{'not_delete': True}"/>
+                    </group>
+                </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="paper_format_action" model="ir.actions.act_window">
+            <field name="name">Paper Format General Configuration</field>
+            <field name="res_model">report.paperformat</field>
+            <field name="view_mode">list,form</field>
+        </record>
+        <record id='reports_action' model='ir.actions.act_window'>
+            <field name="name">Reports</field>
+            <field name="res_model">ir.actions.report</field>
+            <field name="view_mode">list,form</field>
+        </record>
+        <menuitem
+            id="reporting_menuitem"
+            name="Reporting"
+            parent="base.menu_custom"
+            sequence="15"
+            groups="base.group_no_one"
+            />
+        <menuitem
+            id="paper_format_menuitem"
+            name="Paper Format"
+            parent="reporting_menuitem"
+            action="paper_format_action"
+            sequence="2"
+            groups="base.group_no_one"
+            />
+        <menuitem
+            id="reports_menuitem"
+            name="Reports"
+            parent="reporting_menuitem"
+            action="reports_action"
+            sequence="3"
+            groups="base.group_no_one"
+            />
+    </data>
+</odoo>

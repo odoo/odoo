@@ -1,0 +1,232 @@
+$o-default-report-font: 'Lato' !default;
+$o-default-report-primary-color: $o-gray-900 !default;
+$o-default-report-secondary-color: $o-default-report-primary-color !default;
+$o-default-report-margins:  11mm !default; // 7mm + container padding
+$o-snailmail-address-padding-top: 42px;
+
+
+html, body {
+    height: 100%;
+    direction: ltr;
+}
+
+body {
+    color: $o-default-report-primary-color;
+    word-wrap: break-word;
+    font-family: $o-default-report-font;
+    line-height: 1.5;
+}
+
+
+// Layout spacing in css instead of relying on paperformat using padding instead
+// of margins to override the .container padding while keeping its margin.
+
+.o_body_html, .o_body_pdf.o_css_margins {
+    padding: 0 $o-default-report-margins;
+
+    .header {
+        padding-top: $o-default-report-margins;
+    }
+
+    .footer > .o_footer_content {
+        padding-bottom: $o-default-report-margins;
+    }
+}
+
+span.o_force_ltr {
+    display: inline;
+}
+.o_force_ltr, .o_field_phone {
+    unicode-bidi: embed; // ensure element has level of embedding for direction
+    /*rtl:ignore*/
+    direction: ltr;
+}
+
+.zero_min_height {
+    min-height: 0px !important;
+}
+
+.o_bold {
+    font-weight: bolder;
+}
+
+.o_black_border tr th {
+    border-bottom: 2px solid black !important;
+}
+
+/* Checklist */
+ul.o_checklist {
+    > li {
+        list-style: none;
+        position: relative;
+        margin-left: 20px;
+
+        &:not(.oe-nested):before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            display: block;
+            height: 14px;
+            width: 14px;
+            top: 1px;
+            border: 1px solid;
+            cursor: pointer;
+        }
+        &.o_checked:after {
+            content: "✓";
+            transition: opacity .5s;
+            position: absolute;
+            left: -18px;
+            top: -1px;
+            opacity: 1;
+        }
+    }
+}
+
+blockquote {
+    padding: $spacer/2 $spacer;
+    border-left: 5px solid;
+    border-color: map-get($grays, '300');
+    font-style: italic;
+}
+
+li.oe-nested {
+    display: block;
+}
+
+.o_portal_address {
+    span[itemprop="telephone"] {
+        white-space: nowrap;
+        display: inline-block;
+    }
+}
+
+.o_report_layout_background {
+    background-size: contains;
+    background-position: center 300px;
+    background-repeat: no-repeat;
+}
+
+.o_company_logo {
+    max-height: 6rem;
+    max-width: 12rem;
+
+    &_small {
+        max-height: 4rem;
+    }
+
+    &_big {
+        max-height: 8rem;
+        max-width: 16rem;
+    }
+}
+
+.o_company_tagline p {
+    margin-bottom: 0;
+}
+
+div[name=comment] p, div[name=address] p {
+    // wkhtmltopdf trims margin top/bottom which would extend a flex
+    // container's height. This rule cut the address block's p margins to replicate in html.
+    margin-bottom: 0;
+}
+
+.o_snail_mail {
+    // Moving anything under the address (eg Tax ID) further down to
+    // avoid breaking Pingen validation. !important because field template
+    // comes with mb-0 utility class.
+    .address {
+        padding-top: $o-snailmail-address-padding-top;
+
+        div[name="address"] > address {
+            margin-bottom: $spacer !important;
+        }
+    }
+
+    // Same as above for followup, because it doesn't use the same structure.
+    .o_followup_address {
+        padding-top: $o-snailmail-address-padding-top;
+
+        div[itemscope="itemscope"] > div:first-child {
+            margin-bottom: $spacer;
+        }
+    }
+}
+
+// The default ir.qweb.field.contact uses a text-truncate on the address span
+// which doesn't work in wkhtml and breaks the wrapping behavior.
+span[itemprop="streetAddress"] {
+    white-space: normal;
+}
+
+// Override html_editor display styles as it uses 'calc' which doesn't work with wkhtmltopdf
+.display-1-fs {
+    font-size: 6rem;
+}
+
+.display-2-fs {
+    font-size: 5.5rem;
+}
+
+.display-3-fs {
+    font-size: 4.5rem;
+}
+
+.display-4-fs {
+    font-size: 3.5rem;
+}
+
+.h1-fs {
+    font-size: 2.5rem;
+}
+
+.h2-fs {
+    font-size: 2rem;
+}
+
+.h3-fs {
+    font-size: 1.75rem;
+}
+
+.h4-fs {
+    font-size: 1.5rem;
+}
+
+.h5-fs {
+    font-size: 1.25rem;
+}
+
+.h6-fs {
+    font-size: 1rem;
+}
+
+// Alert
+.alert {
+    padding: #{$alert-padding-y} #{$alert-padding-x};
+    margin-bottom: #{$alert-margin-bottom};
+    color: inherit;
+    background-color: transparent;
+    border: #{$alert-border-width} solid transparent;
+    @include border-radius(#{$border-radius});
+}
+
+.alert-heading {
+    color: inherit;
+}
+
+.alert-link {
+    font-weight: $alert-link-font-weight;
+    color: inherit;
+}
+
+@each $state in map-keys($theme-colors) {
+    .alert-#{$state} {
+        color: map-get($theme-colors-text, $state);
+        background-color: map-get($theme-colors-bg-subtle, $state);
+        border-color: map-get($theme-colors-border-subtle, $state);
+    }
+}
+
+hr {
+    border: 1px solid
+}

@@ -1,0 +1,28 @@
+.o_example_note {
+    padding-left: $spacer * .5;
+    padding-right: $spacer * .5;
+
+    div.o_draggable {
+        display: none;
+    }
+
+    div#note_0 {
+        padding-left: 0px;
+
+        &:not(:focus) {
+            border-color: #B9B9B9;
+        }
+    }
+
+    .note_editable {
+        margin-right: 2px;
+    }
+
+    p {
+        margin-bottom: 0;
+    }
+}
+
+.o_example_date {
+    width: 20% !important;
+}

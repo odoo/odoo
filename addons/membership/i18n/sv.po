@@ -1,0 +1,704 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* membership
+# 
+# Translators:
+# Haojun Zou <apollo_zhj@msn.com>, 2024
+# Simon S, 2024
+# Robin Calvin, 2024
+# Kristoffer Grundström <lovaren@gmail.com>, 2024
+# Lasse L, 2024
+# lynnliuying <lynn.liu1971@gmail.com>, 2024
+# Zou Haojun <haojunzou84@gmail.com>, 2024
+# Kim Asplund <kim.asplund@gmail.com>, 2024
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
+# Martin Trigaux, 2024
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2024
+# Michael Tanzi <michael.tanzi@vertel.se>, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
+"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sv\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership__num_invoiced
+msgid "# Invoiced"
+msgstr "# Fakturerad"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership__num_paid
+msgid "# Paid"
+msgstr "# Betald"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership__num_waiting
+msgid "# Waiting"
+msgstr "# Väntar"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
+msgid ""
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" "
+"title=\"Period\"/><strong> From: </strong>"
+msgstr ""
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" "
+"title=\"Period\"/><strong>Från:</strong>"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
+msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Price\" title=\"Price\"/>"
+msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Price\" title=\"Price\"/>"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
+msgid "<strong> To:</strong>"
+msgstr "<strong>Till:</strong>"
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_res_partner__associate_member
+#: model:ir.model.fields,help:membership.field_res_users__associate_member
+msgid ""
+"A member with whom you want to associate your membership.It will consider "
+"the membership state of the associated member."
+msgstr ""
+"En medlem som du vill associera med ditt medlemskap. Medlemmen kommer att "
+"överväga medlemskapet för den associerade medlemmen."
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__account_invoice_line
+msgid "Account Invoice line"
+msgstr "Bokföring fakturarad"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.membership_products_form
+msgid "Add a description..."
+msgstr "Lägg till en beskrivning..."
+
+#. module: membership
+#: model_terms:ir.actions.act_window,help:membership.action_membership_members
+msgid "Add a new member"
+msgstr "Lägg till ny medlem"
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_membership_membership_line__member_price
+msgid "Amount for the membership"
+msgstr "Belopp för medlemskap"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership__associate_member_id
+#: model:ir.model.fields,field_description:membership.field_res_partner__associate_member
+#: model:ir.model.fields,field_description:membership.field_res_users__associate_member
+#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "Associate Member"
+msgstr "Associerad medlem"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
+msgid "Associated Partner"
+msgstr "Associerad kontakt"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_partner_form
+msgid "Buy Membership"
+msgstr "Köp medlemskap"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_membership_invoice_view
+msgid "Cancel"
+msgstr "Avbryt"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_res_partner__membership_cancel
+#: model:ir.model.fields,field_description:membership.field_res_users__membership_cancel
+msgid "Cancel Membership Date"
+msgstr "Datum för uppsägning av medlemskap"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_cancel
+msgid "Cancel date"
+msgstr "Avbruten datum"
+
+#. module: membership
+#: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__canceled
+#: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__canceled
+#: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__canceled
+msgid "Cancelled Member"
+msgstr "Medlemskap upphört"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
+msgid "Category"
+msgstr "Kategori"
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_product_product__membership
+#: model:ir.model.fields,help:membership.field_product_template__membership
+msgid "Check if the product is eligible for membership."
+msgstr "Kontrollera om produkten är kvalificerad för medlemskap."
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__company_id
+#: model:ir.model.fields,field_description:membership.field_report_membership__company_id
+#: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
+msgid "Company"
+msgstr "Företag"
+
+#. module: membership
+#: model:ir.ui.menu,name:membership.menu_marketing_config_association
+msgid "Configuration"
+msgstr "Konfiguration"
+
+#. module: membership
+#: model:ir.model,name:membership.model_res_partner
+msgid "Contact"
+msgstr "Kontakt"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_invoice__create_uid
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__create_uid
+msgid "Created by"
+msgstr "Skapad av"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_invoice__create_date
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__create_date
+msgid "Created on"
+msgstr "Skapad den"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership__membership_state
+#: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
+msgid "Current Membership State"
+msgstr "Aktuell medlemsstatus"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_res_partner__membership_state
+#: model:ir.model.fields,field_description:membership.field_res_users__membership_state
+msgid "Current Membership Status"
+msgstr "Aktuell medlemsstatus"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "Customers"
+msgstr "Kunder"
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_product_product__membership_date_from
+#: model:ir.model.fields,help:membership.field_product_template__membership_date_from
+#: model:ir.model.fields,help:membership.field_res_partner__membership_start
+#: model:ir.model.fields,help:membership.field_res_users__membership_start
+msgid "Date from which membership becomes active."
+msgstr "Datum när medlemskapet blev aktivt."
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_membership_membership_line__date
+msgid "Date on which member has joined the membership"
+msgstr "Datum då personen blev medlem"
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_res_partner__membership_cancel
+#: model:ir.model.fields,help:membership.field_res_users__membership_cancel
+msgid "Date on which membership has been cancelled"
+msgstr "Datum då medlemskapet avbröts"
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_product_product__membership_date_to
+#: model:ir.model.fields,help:membership.field_product_template__membership_date_to
+#: model:ir.model.fields,help:membership.field_res_partner__membership_stop
+#: model:ir.model.fields,help:membership.field_res_users__membership_stop
+msgid "Date until which membership remains active."
+msgstr "Datum till vilket medlemskap fortfarande förblir aktivt."
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_invoice__display_name
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__display_name
+#: model:ir.model.fields,field_description:membership.field_report_membership__display_name
+msgid "Display Name"
+msgstr "Visningsnamn"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership__tot_earned
+msgid "Earned Amount"
+msgstr "Intjänat belopp"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership__date_to
+#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "End Date"
+msgstr "Slutdatum"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "End Membership Date"
+msgstr "Medlemskap avslutat datum"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "Ending Date Of Membership"
+msgstr "Slutdatum för medlemskap"
+
+#. module: membership
+#: model:ir.model.constraint,message:membership.constraint_product_template_membership_date_greater
+msgid "Error! Ending Date cannot be set before Beginning Date."
+msgstr "Fel! Slutdatum kan inte ställas in före startdatum."
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
+msgid "Forecast"
+msgstr "Prognos"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_res_partner__free_member
+#: model:ir.model.fields,field_description:membership.field_res_users__free_member
+#: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__free
+#: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__free
+#: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__free
+msgid "Free Member"
+msgstr "Gratis medlemsskap"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_from
+msgid "From"
+msgstr "Från"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
+#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "Group By"
+msgstr "Grupp Av"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
+msgid "Group by..."
+msgstr "Gruppera efter ..."
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_invoice__id
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__id
+#: model:ir.model.fields,field_description:membership.field_report_membership__id
+msgid "ID"
+msgstr "ID"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
+msgid "Inactive"
+msgstr "Inaktiv"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__account_invoice_id
+msgid "Invoice"
+msgstr "Faktura"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_membership_invoice_view
+msgid "Invoice Membership"
+msgstr "Fakturera medlemskap"
+
+#. module: membership
+#: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__invoiced
+#: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__invoiced
+#: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__invoiced
+msgid "Invoiced Member"
+msgstr "Fakturerad medlem"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "Invoiced/Paid/Free"
+msgstr "Fakturerad/Betald/Gratis"
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_res_partner__membership_state
+#: model:ir.model.fields,help:membership.field_res_users__membership_state
+msgid ""
+"It indicates the membership state.\n"
+"-Non Member: A partner who has not applied for any membership.\n"
+"-Cancelled Member: A member who has cancelled his membership.\n"
+"-Old Member: A member whose membership date has expired.\n"
+"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"-Invoiced Member: A member whose invoice has been created.\n"
+"-Paying member: A member who has paid the membership fee."
+msgstr ""
+"Det indikerar medlemsstatusen.\n"
+"-Icke medlem: En partner som inte har ansökt om något medlemskap.\n"
+"-Avbruten medlem: En medlem som har avbrutit sitt medlemskap.\n"
+"-Före detta medlem: En medlem vars medlemskap har gått ut.\n"
+"-Väntar på medlemskap: En medlem som har ansökt om medlemskap vars faktura kommer att skapas.\n"
+"-Fakturerad medlem: En medlem vars faktura har skapats.\n"
+"-Betalande medlem: En medlem som har betalat medlemsavgiften."
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_membership_membership_line__state
+msgid ""
+"It indicates the membership status.\n"
+"-Non Member: A member who has not applied for any membership.\n"
+"-Cancelled Member: A member who has cancelled his membership.\n"
+"-Old Member: A member whose membership date has expired.\n"
+"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"-Invoiced Member: A member whose invoice has been created.\n"
+"-Paid Member: A member who has paid the membership amount."
+msgstr ""
+"Det indikerar medlemsstatusen.\n"
+"-Icke medlem: En medlem som inte har ansökt om något medlemskap.\n"
+"-Avbruten Medlem: En medlem som har avbrutit sitt medlemskap.\n"
+"-Före detta medlem: En medlem vars medlemskap har gått ut.\n"
+"-Väntar på medlemskap: En medlem som har ansökt om medlemskap vars faktura kommer att skapas.\n"
+"-Fakturerad medlem: En medlem vars faktura har skapats.\n"
+"-Betalande medlem: En medlem som har betalat medlemsbeloppet."
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__date
+msgid "Join Date"
+msgstr "Anslutnings datum"
+
+#. module: membership
+#: model:ir.actions.act_window,name:membership.action_membership_invoice_view
+msgid "Join Membership"
+msgstr "Bli medlem"
+
+#. module: membership
+#: model:ir.model,name:membership.model_account_move
+msgid "Journal Entry"
+msgstr "Verifikat"
+
+#. module: membership
+#: model:ir.model,name:membership.model_account_move_line
+msgid "Journal Item"
+msgstr "Journalpost"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_invoice__write_uid
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__write_uid
+msgid "Last Updated by"
+msgstr "Senast uppdaterad av"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_invoice__write_date
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__write_date
+msgid "Last Updated on"
+msgstr "Senast uppdaterad den"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership__partner_id
+msgid "Member"
+msgstr "Medlem"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_invoice__member_price
+msgid "Member Price"
+msgstr "Medlemsavgift"
+
+#. module: membership
+#: model:ir.actions.act_window,name:membership.action_membership_members
+#: model:ir.ui.menu,name:membership.menu_association
+#: model:ir.ui.menu,name:membership.menu_membership
+#: model_terms:ir.ui.view,arch_db:membership.membership_members_tree
+#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "Members"
+msgstr "Medlemmar"
+
+#. module: membership
+#: model:ir.actions.act_window,name:membership.action_report_membership_tree
+msgid "Members Analysis"
+msgstr "Medlemsanalys"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_invoice__product_id
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__membership_id
+#: model:ir.model.fields,field_description:membership.field_product_product__membership
+#: model:ir.model.fields,field_description:membership.field_product_template__membership
+#: model:ir.model.fields,field_description:membership.field_res_partner__member_lines
+#: model:ir.model.fields,field_description:membership.field_res_users__member_lines
+#: model_terms:ir.ui.view,arch_db:membership.report_membership_view_tree
+#: model_terms:ir.ui.view,arch_db:membership.view_partner_form
+#: model_terms:ir.ui.view,arch_db:membership.view_report_membership_graph1
+#: model_terms:ir.ui.view,arch_db:membership.view_report_membership_pivot
+#: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
+msgid "Membership"
+msgstr "Medlemskap"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_res_partner__membership_amount
+#: model:ir.model.fields,field_description:membership.field_res_users__membership_amount
+msgid "Membership Amount"
+msgstr "Medlemsavgift"
+
+#. module: membership
+#: model:ir.model,name:membership.model_report_membership
+msgid "Membership Analysis"
+msgstr "Medlemskapsanalys"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.membership_products_form
+msgid "Membership Duration"
+msgstr "Medlemskapets varaktighet"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_product_product__membership_date_to
+#: model:ir.model.fields,field_description:membership.field_product_template__membership_date_to
+#: model:ir.model.fields,field_description:membership.field_res_partner__membership_stop
+#: model:ir.model.fields,field_description:membership.field_res_users__membership_stop
+msgid "Membership End Date"
+msgstr "Slutdatum för medlemskap"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__member_price
+#: model_terms:ir.ui.view,arch_db:membership.membership_products_form
+#: model_terms:ir.ui.view,arch_db:membership.membership_products_tree
+msgid "Membership Fee"
+msgstr "Medlemsavgift"
+
+#. module: membership
+#: model:ir.model,name:membership.model_membership_invoice
+#: model_terms:ir.ui.view,arch_db:membership.view_membership_invoice_view
+msgid "Membership Invoice"
+msgstr "Medlemskapsfaktura"
+
+#. module: membership
+#: model:ir.model,name:membership.model_membership_membership_line
+msgid "Membership Line"
+msgstr "Medlemskapslinje"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "Membership Partners"
+msgstr "Medlemskapspartners"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership__membership_id
+#: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
+#: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
+msgid "Membership Product"
+msgstr "Medlemskapprodukt"
+
+#. module: membership
+#: model:ir.actions.act_window,name:membership.action_membership_products
+#: model:ir.ui.menu,name:membership.menu_membership_products
+#: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
+msgid "Membership Products"
+msgstr "Medlemskapsprodukter"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_product_product__membership_date_from
+#: model:ir.model.fields,field_description:membership.field_product_template__membership_date_from
+#: model:ir.model.fields,field_description:membership.field_res_partner__membership_start
+#: model:ir.model.fields,field_description:membership.field_res_users__membership_start
+msgid "Membership Start Date"
+msgstr "Startdatum för medlemskap"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "Membership State"
+msgstr "Medlemskapstillstånd"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__state
+msgid "Membership Status"
+msgstr "Medlemsstatus"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.membership_products_form
+#: model_terms:ir.ui.view,arch_db:membership.membership_products_tree
+msgid "Membership products"
+msgstr "Medlemskapsprodukter"
+
+#. module: membership
+#: model:ir.actions.server,name:membership.ir_cron_update_membership_ir_actions_server
+msgid "Membership: update memberships"
+msgstr "Medlemskap: uppdatera medlemskap"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_partner_form
+msgid "Memberships"
+msgstr "Medlemskap"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
+msgid "Month"
+msgstr "Månad"
+
+#. module: membership
+#: model_terms:ir.actions.act_window,help:membership.action_report_membership_tree
+msgid "No data yet!"
+msgstr "Ingen data ännu!"
+
+#. module: membership
+#: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__none
+#: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__none
+#: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__none
+msgid "Non Member"
+msgstr "Icke medlem"
+
+#. module: membership
+#: model_terms:ir.actions.act_window,help:membership.action_membership_members
+msgid ""
+"Odoo helps you easily track all activities related to a member: \n"
+"                  Current Membership Status, Discussions and History of Membership, etc."
+msgstr ""
+"Odoo hjälper dig att enkelt spåra alla aktiviteter relaterade till en medlem:\n"
+"Aktuell medlemsstatus, diskussioner och historik om medlemskap etc."
+
+#. module: membership
+#: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__old
+#: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__old
+#: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__old
+msgid "Old Member"
+msgstr "Föredetta medlem"
+
+#. module: membership
+#: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__paid
+#: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__paid
+#: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__paid
+msgid "Paid Member"
+msgstr "Betalande medlem"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__partner
+msgid "Partner"
+msgstr "Partner"
+
+#. module: membership
+#. odoo-python
+#: code:addons/membership/models/partner.py:0
+msgid "Partner doesn't have an address to make the invoice."
+msgstr "Partner har inte en adress för att göra fakturan."
+
+#. module: membership
+#. odoo-python
+#: code:addons/membership/models/partner.py:0
+msgid "Partner is a free Member."
+msgstr "Partner är en gratis medlem."
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership__tot_pending
+msgid "Pending Amount"
+msgstr "Väntande belopp"
+
+#. module: membership
+#: model:ir.model,name:membership.model_product_template
+msgid "Product"
+msgstr "Produkt"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.membership_products_form
+msgid "Product Name"
+msgstr "Produktnamn"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership__quantity
+msgid "Quantity"
+msgstr "Antal"
+
+#. module: membership
+#: model:ir.ui.menu,name:membership.menu_report_membership
+msgid "Reporting"
+msgstr "Rapportering"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
+msgid "Revenue Done"
+msgstr "Intäkter klar"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership__user_id
+#: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
+#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "Salesperson"
+msgstr "Säljare"
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_res_partner__free_member
+#: model:ir.model.fields,help:membership.field_res_users__free_member
+msgid "Select if you want to give free membership."
+msgstr "Välj om du vill ge bort gratis medlemskap."
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership__start_date
+#: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
+#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "Start Date"
+msgstr "Startdatum"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "Starting Date Of Membership"
+msgstr "Startdatum för medlemskap"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.report_membership_view_tree
+msgid "Sum of # Invoiced"
+msgstr "Summa av # Fakturerad"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.report_membership_view_tree
+msgid "Sum of # Paid"
+msgstr "Summa av # Betald"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.report_membership_view_tree
+msgid "Sum of Earned Amount"
+msgstr "Summan av intjänat belopp"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.report_membership_view_tree
+msgid "Sum of Quantity"
+msgstr "Summa av kvantitet"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.membership_products_form
+msgid "Taxes"
+msgstr "Skatter"
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_res_partner__membership_amount
+#: model:ir.model.fields,help:membership.field_res_users__membership_amount
+msgid "The price negotiated by the partner"
+msgstr "Priset förhandlat av partner"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.membership_products_form
+msgid "This note will be displayed on quotations..."
+msgstr "Den här anteckningen kommer att visas på offerter ..."
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
+msgid "This will display paid, old and total earned columns"
+msgstr "Detta visar kolumnerna betalda, gamla och totalt intjänat"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
+msgid "This will display waiting, invoiced and total pending columns"
+msgstr "Detta visar kolumnerna väntande, fakturerade och totalt väntande"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_to
+msgid "To"
+msgstr "Till"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "Vendors"
+msgstr "Leverantörer"
+
+#. module: membership
+#: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__waiting
+#: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__waiting
+#: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__waiting
+msgid "Waiting Member"
+msgstr "Väntande medlem"
+
+#. module: membership
+#. odoo-python
+#: code:addons/membership/models/partner.py:0
+msgid "You cannot create recursive associated members."
+msgstr "Du kan inte skapa rekursiva associerade medlemmar."

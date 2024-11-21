@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.FormErrorDialog">
+        <Dialog header="false" size="'md'" contentClass="'o_error_dialog'">
+            <div role="alert">
+                <h1 class="text-danger">Oh snap!</h1>
+                <p t-esc="props.message" class="text-prewrap"/>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="stay">Stay here</button>
+                <button class="btn btn-secondary" t-on-click="discard">Discard changes</button>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

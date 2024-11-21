@@ -1,0 +1,38 @@
+.o_font_color_selector {
+    --bg: #{$o-we-toolbar-bg};
+    --text-rgb: #{red($o-we-toolbar-color-text)}, #{green($o-we-toolbar-color-text)}, #{blue($o-we-toolbar-color-text)};
+    --border-rgb: var(--text-rgb);
+    width: 222px;
+    box-shadow: $box-shadow;
+}
+
+.o_color_button {
+    width: 25px;
+    height: 24px;
+    box-shadow: inset 0 0 0 1px rgba(var(--border-rgb), .5);
+    margin: 1px;
+}
+
+.o_font_color_selector .o_colorpicker_section {
+    display: flex;
+    margin-bottom: 3px;
+}
+
+.o_colorpicker_section .o_color_button.selected {
+    // todo: check web_editor
+    border: 3px solid $o-enterprise-action-color;
+}
+
+:root {
+    @each $color, $value in $grays {
+        @include print-variable($color, $value);
+    }
+}
+
+// Extend bootstrap to create background and text utilities for some colors
+@for $index from 1 through 5 {
+    $-color-name: 'o-color-#{$index}';
+    $-color: map-get($colors, $-color-name);
+    @include bg-variant(".bg-#{$-color-name}", $-color);
+    @include text-emphasis-variant(".text-#{$-color-name}", $-color);
+}

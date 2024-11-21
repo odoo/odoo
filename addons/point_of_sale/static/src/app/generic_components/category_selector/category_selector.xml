@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.CategorySelector">
+        <div t-att-class="props.class" class="d-grid product-list gap-2" t-att-style="props.style">
+            <t t-foreach="props.categories" t-as="category" t-key="category.id">
+                <button t-on-click="() => props.onClick(category.id)"
+                    t-attf-class="o_colorlist_item_color_{{!category.isSelected and !category.isChildren ? 'transparent_': ''}}{{category.color or 'none'}}"
+                    t-att-class="{'opacity-50': !category.isChildren and !category.isSelected, 'justify-content-center': ui.isSmall}"
+                    class="category-button px-1 btn btn-light d-flex align-items-center rounded-3"
+                    style="height: 4rem;"
+                >
+                    <img t-if="category.imgSrc and !ui.isSmall" t-att-src="category.imgSrc"
+                        class="category-img-thumb h-100 rounded-3 object-fit-cover me-1"
+                        alt="Category"
+                    />
+                    <span t-if="category.name" class="text-wrap-categ text-center fs-5" t-esc="category.name" />
+                </button>
+            </t>
+        </div>
+    </t>
+</templates>

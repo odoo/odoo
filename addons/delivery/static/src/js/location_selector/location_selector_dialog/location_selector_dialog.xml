@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="delivery.locationSelector.dialog">
+        <Dialog
+            title="title"
+            bodyClass="'d-flex flex-column border-top p-0 px-md-3'"
+            contentClass="'o_location_selector h-100 overflow-hidden'"
+        >
+            <!-- Mobile view -->
+            <t t-if="this.state.isSmall">
+                <!-- Search bar -->
+                <t t-call="delivery.locationSelector.searchbar"/>
+
+                <!-- "List view / Map view" navigation -->
+                <div class="nav nav-tabs">
+                    <button
+                        class="o_location_selector_mobile_tab btn flex-grow-1 border-0 border-bottom rounded-0 py-3 bg-transparent"
+                        t-att-class="{'active': this.state.viewMode === 'list'}"
+                        t-on-click="() => this.state.viewMode = 'list'"
+                    >
+                        List view
+                    </button>
+                    <button
+                        class="o_location_selector_mobile_tab btn flex-grow-1 border-0 border-bottom rounded-0 py-3 bg-transparent"
+                        t-att-class="{'active' : this.state.viewMode === 'map'}"
+                        t-on-click="() => this.state.viewMode = 'map'"
+                    >
+                        Map view
+                    </button>
+                </div>
+
+                <!-- Component -->
+                <div class="flex-grow-1 overflow-x-auto">
+                    <t
+                        t-if="this.state.locations.length"
+                        t-component="mobileComponent"
+                        locations="this.state.locations"
+                        selectedLocationId="this.state.selectedLocationId.toString()"
+                        setSelectedLocation.bind="setSelectedLocation"
+                        validateSelection.bind="validateSelection"
+                    />
+                    <t t-else="">
+                        <p t-if="this.state.error" class="p-3 fw-bold">No result</p>
+                        <div t-else="" class="position-absolute start-50 top-50 translate-middle">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </t>
+
+            <!-- Desktop view -->
+            <div t-else="" class="d-flex h-100 mx-0 mx-md-n3 overflow-hidden">
+
+                <!-- List view -->
+                <section class="o_location_selector_view col-md-4 d-flex flex-grow-1 flex-column">
+
+                    <!-- Search bar -->
+                    <t t-call="delivery.locationSelector.searchbar">
+                        <t t-set="wrapClass" t-value="'d-flex'"/>
+                    </t>
+
+                    <!-- List group -->
+                    <LocationList
+                        t-if="this.state.locations.length"
+                        locations="this.state.locations"
+                        selectedLocationId="this.state.selectedLocationId.toString()"
+                        setSelectedLocation.bind="setSelectedLocation"
+                        validateSelection.bind="validateSelection"
+                    />
+                    <t t-else="">
+                        <p t-if="this.state.error" class="p-3 fw-bold">No result</p>
+                        <div t-else="" class="position-absolute start-50 top-50 translate-middle">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </t>
+                </section>
+
+                <!-- Map view -->
+                <section class="o_location_selector_view col-md-8 d-flex flex-grow-1 border-start pe-2">
+                    <MapContainer
+                        locations="this.state.locations"
+                        selectedLocationId="this.state.selectedLocationId.toString()"
+                        setSelectedLocation.bind="setSelectedLocation"
+                        validateSelection.bind="validateSelection"
+                    />
+                </section>
+            </div>
+
+            <!-- Validation button in mobile view -->
+            <t t-if="this.state.isSmall" t-set-slot="footer">
+                <div class="w-100 m-0 border-top p-3">
+                    <button
+                        type="button"
+                        id="submit_location_small"
+                        class="btn btn-primary w-100"
+                        t-att-disabled="!this.state.selectedLocationId"
+                        t-on-click="validateSelection"
+                    >
+                        Choose this location
+                    </button>
+                </div>
+            </t>
+        </Dialog>
+    </t>
+
+    <t t-name="delivery.locationSelector.searchbar">
+        <div role="search" class="input-group p-3 border-bottom" t-att-class="wrapClass">
+            <input
+                class="search-query form-control oe_search_box border-0 text-bg-light"
+                t-model.lazy="this.state.zipCode"
+                placeholder="Your postal code"
+            />
+            <button
+                t-on-click="() => this.debouncedSearchButton(this.state.zipCode)"
+                aria-label="Search"
+                title="Search"
+                class="btn btn-light"
+            >
+                <i class="oi oi-search"/>
+            </button>
+        </div>
+    </t>
+</templates>

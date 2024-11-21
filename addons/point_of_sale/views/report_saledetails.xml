@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="pos_daily_sales_report_layout" name="Daily Sales Report layout">&lt;!DOCTYPE html&gt;
+            <html t-att-lang="lang and lang.replace('_', '-')"
+                t-att-data-report-margin-top="8"
+                t-att-data-report-margin-bottom="8"
+                t-att-data-report-header-spacing="data_report_header_spacing"
+                t-att-data-report-dpi="data_report_dpi"
+                t-att-data-report-landscape="data_report_landscape"
+                t-att-web-base-url="web_base_url">
+                <head>
+                    <meta charset="utf-8"/>
+                    <meta name="viewport" content="initial-scale=1"/>
+                    <title><t t-esc="title or 'Odoo Report'"/></title>
+                    <t t-call-assets="web.report_assets_common"/>
+                    <script type="text/javascript">
+                        document.addEventListener('DOMContentLoaded', () => {
+                            if (window.self !== window.top) {
+                                document.body.classList.add("o_in_iframe", "container-fluid");
+                                document.body.classList.remove("container");
+                            }
+                        });
+                    </script>
+                </head>
+                <body t-attf-class="o_body_html {{'container' if not full_width else 'container-fluid'}} overflow-x-hidden" t-att-dir="env['res.lang']._get_data(code=lang or env.user.lang).direction or 'ltr'">
+                    <div id="wrapwrap">
+                        <main>
+                            <t t-out="0"/>
+                        </main>
+                    </div>
+                </body>
+            </html>
+        </template>
+
+        <template id="pos_daily_sales_html_container">
+            <t t-call="point_of_sale.pos_daily_sales_report_layout">
+                <t t-out="0"/>
+            </t>
+        </template>
+
+        <template id="report_saledetails">
+            <t t-set="company" t-value="env.company"/>
+            <t t-call="point_of_sale.pos_daily_sales_html_container">
+                <t t-call="web.basic_layout">
+                    <t t-call="point_of_sale.pos_session_sales_details"/>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,6 @@
+<t t-name="mail.MessagingMenuQuickSearch">
+    <div class="position-relative w-50 m-1" t-ref="search" t-on-keydown="onKeydownInput">
+        <input t-model="store.discuss.searchTerm" t-ref="autofocus" class="form-control px-1 py-0" placeholder="Quick search…" type="text" />
+        <button class="btn btn-link text-muted p-1 position-absolute top-50 end-0 translate-middle-y" title="Close search" t-on-click="props.onClose"><i class="oi oi-close"/></button>
+    </div>
+</t>

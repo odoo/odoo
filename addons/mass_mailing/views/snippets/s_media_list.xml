@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_media_list" name="Media List">
+    <div class="s_media_list o_mail_snippet_general pt8 pb8 o_cc o_cc2" data-vcss="001">
+        <div class="container">
+            <div class="row s_nb_column_fixed">
+                <div class="col-lg-12 s_media_list_item pt8 pb8" data-name="Media item">
+                    <div class="row s_col_no_resize s_col_no_bgcolor align-items-center o_cc o_cc1">
+                        <div class="col-lg-4 s_media_list_img_wrapper align-self-stretch px-0">
+                            <img src="/web/image/mass_mailing.s_media_list_default_image_1" class="s_media_list_img h-100 w-100" alt=""/>
+                        </div>
+                        <div class="col-lg-8 s_media_list_body">
+                            <h3>Media heading</h3>
+                            <p>Use this snippet to build various types of components that feature a left- or right-aligned image alongside textual content. Duplicate the element to create a list that fits your needs.</p>
+                            <a href="#" class="btn btn-primary">Discover</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 s_media_list_item pt8 pb8" data-name="Media item">
+                    <div class="row s_col_no_resize s_col_no_bgcolor align-items-center o_cc o_cc1">
+                        <div class="col-lg-4 s_media_list_img_wrapper align-self-stretch px-0">
+                            <img src="/web/image/mass_mailing.s_media_list_default_image_2" class="s_media_list_img h-100 w-100" alt=""/>
+                        </div>
+                        <div class="col-lg-8 s_media_list_body">
+                            <h3>Event heading</h3>
+                            <p>Speakers from all over the world will join our experts to give inspiring talks on various topics. Stay on top of the latest business management trends &amp; technologies</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 s_media_list_item pt8 pb8" data-name="Media item">
+                    <div class="row s_col_no_resize s_col_no_bgcolor align-items-center o_cc o_cc1">
+                        <div class="col-lg-4 s_media_list_img_wrapper align-self-stretch px-0">
+                            <img src="/web/image/mass_mailing.s_media_list_default_image_3" class="s_media_list_img h-100 w-100" alt=""/>
+                        </div>
+                        <div class="col-lg-8 s_media_list_body">
+                            <h3>Post heading</h3>
+                            <p>Use this component for creating a list of featured elements to which you want to bring attention.</p>
+                            <a href="#">Continue reading <i class="fa fa-long-arrow-right align-middle ms-1"/></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<record id="mass_mailing.s_media_list_001_scss" model="ir.asset">
+    <field name="name">Media list 001 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">mass_mailing/static/src/snippets/s_media_list/001.scss</field>
+</record>
+
+</odoo>

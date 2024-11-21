@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.AttachmentView">
+        <div t-if="state.thread.attachmentsInWebClientView.length > 0" class="o-mail-Attachment">
+            <div class="o_attachment_control popout d-print-none" t-on-click="onClickPopout"><i class="fa fa-window-restore" aria-hidden="Pop out" title="Pop out"/></div>
+            <t t-if="state.thread.mainAttachment">
+                <h3 t-if="!state.thread.mainAttachment.isPdf" class="mt0 mb8 ps-2 text-muted text-center"><t t-esc="displayName"/></h3>
+                <div t-if="state.thread.mainAttachment.isImage" class="o-mail-Attachment-imgContainer">
+                    <img id="attachment_img" class="img img-fluid d-block" t-att-src="state.thread.mainAttachment.defaultSource"/>
+                </div>
+                <iframe t-if="state.thread.mainAttachment.isPdf" class="d-print-none mb48" t-att-src="state.thread.mainAttachment.defaultSource" t-ref="iframeViewerPdf"/>
+                <t t-if="state.thread.attachmentsInWebClientView.length > 1">
+                    <a class="arrow o_move_previous text-center" href="#" t-on-click.prevent="onClickPrevious">
+                        <span class="oi oi-chevron-left"/>
+                    </a>
+                    <a class="arrow o_move_next text-center" href="#" t-on-click.prevent="onClickNext">
+                        <span class="oi oi-chevron-right"/>
+                    </a>
+                </t>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="mail.PopoutAttachmentView">
+        <div class="o-mail-PopoutAttachmentView">
+            <t t-call="mail.AttachmentView"/>
+        </div>
+    </t>
+
+</templates>

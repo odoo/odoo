@@ -1,0 +1,236 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* base_install_request
+# 
+# Translators:
+# Wil Odoo, 2024
+# Tony Ng, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Tony Ng, 2024\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: base_install_request
+#: model:mail.template,body_html:base_install_request.mail_template_base_install_request
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hello,\n"
+"        <br><br>\n"
+"        <span style=\"font-weight: bold;\" t-out=\"object.user_id.name\"></span> has requested to activate the <span style=\"font-weight: bold;\" t-out=\"object.module_id.shortdesc\"></span> module. This module is included in your subscription. It has <span style=\"color: #875A7B; font-weight: bold;\">no extra cost</span>, but an administrator role is required to activate it.\n"
+"        <br><br>\n"
+"        <blockquote>\n"
+"            <t t-out=\"object.body_html\"></t>\n"
+"        </blockquote>\n"
+"        <br><br>\n"
+"        <a style=\"background-color:#875A7B; padding:8px 16px 8px 16px; text-decoration:none; color:#fff; border-radius:5px\" t-attf-href=\"/odoo/{{ object.module_id.id }}/action-base_install_request.action_base_module_install_review?menu_id={{ ctx['menu_id'] }}\">Review Request</a>\n"
+"        <br><br>\n"
+"        Thanks,\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"        <br><br>\n"
+"    </p>\n"
+"</div>\n"
+"            "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        你好，\n"
+"        <br><br>\n"
+"        <span style=\"font-weight: bold;\" t-out=\"object.user_id.name\"></span> 要求啟用 <span style=\"font-weight: bold;\" t-out=\"object.module_id.shortdesc\"></span> 模組。你的服務計劃已涵蓋此模組，所以<span style=\"color: #875A7B; font-weight: bold;\">無需額外費用</span>，但模組只可由擁有管理員權限的用戶啟用。\n"
+"        <br><br>\n"
+"        <blockquote>\n"
+"            <t t-out=\"object.body_html\"></t>\n"
+"        </blockquote>\n"
+"        <br><br>\n"
+"        <a style=\"background-color:#875A7B; padding:8px 16px 8px 16px; text-decoration:none; color:#fff; border-radius:5px\" t-attf-href=\"/odoo/{{ object.module_id.id }}/action-base_install_request.action_base_module_install_review?menu_id={{ ctx['menu_id'] }}\">審視請求</a>\n"
+"        <br><br>\n"
+"        謝謝。\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"        <br><br>\n"
+"    </p>\n"
+"</div>\n"
+"            "
+
+#. module: base_install_request
+#. odoo-python
+#: code:addons/base_install_request/models/ir_module_module.py:0
+msgid "Activation Request of \"%s\""
+msgstr "啟動請求 \"%s\""
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__body_html
+msgid "Body"
+msgstr "內文"
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_view_form
+msgid "Cancel"
+msgstr "取消"
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__create_uid
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__create_uid
+msgid "Created by"
+msgstr "建立人員"
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__create_date
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__create_date
+msgid "Created on"
+msgstr "建立於"
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__module_ids
+msgid "Depending Apps"
+msgstr "取決於應用程式"
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__display_name
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__display_name
+msgid "Display Name"
+msgstr "顯示名稱"
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__id
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__id
+msgid "ID"
+msgstr "識別號"
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_view_form
+msgid "Install App"
+msgstr "安裝應用程式"
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__write_uid
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__write_uid
+msgid "Last Updated by"
+msgstr "最後更新者"
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__write_date
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__write_date
+msgid "Last Updated on"
+msgstr "最後更新於"
+
+#. module: base_install_request
+#: model:mail.template,name:base_install_request.mail_template_base_install_request
+msgid "Mail: Install Request"
+msgstr "郵件：安裝請求"
+
+#. module: base_install_request
+#: model:ir.model,name:base_install_request.model_ir_module_module
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__module_id
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__module_id
+msgid "Module"
+msgstr "模組"
+
+#. module: base_install_request
+#: model:ir.model,name:base_install_request.model_base_module_install_request
+msgid "Module Activation Request"
+msgstr "模組啟動請求"
+
+#. module: base_install_request
+#: model:mail.template,subject:base_install_request.mail_template_base_install_request
+msgid "Module Activation Request for \"{{ object.module_id.shortdesc }}\""
+msgstr "模組啟動請求 \"{{ object.module_id.shortdesc }}\""
+
+#. module: base_install_request
+#: model:ir.model,name:base_install_request.model_base_module_install_review
+msgid "Module Activation Review"
+msgstr "模組啟動審查"
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__modules_description
+msgid "Modules Description"
+msgstr "模塊描述"
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_view_form
+msgid "No extra cost, this application is free."
+msgstr "沒有額外成本，這個應用程式免費"
+
+#. module: base_install_request
+#. odoo-python
+#: code:addons/base_install_request/wizard/base_module_install_request.py:0
+msgid "No module selected."
+msgstr "未選擇模塊。"
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.ir_module_module_view_kanban
+msgid "Request Access"
+msgstr "請求訪問"
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
+msgid "Request Activation"
+msgstr "請求啟動"
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__user_ids
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
+msgid "Send to:"
+msgstr "發送至："
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_description
+msgid "The following apps will be installed:"
+msgstr "將安裝以下應用程式："
+
+#. module: base_install_request
+#. odoo-python
+#: code:addons/base_install_request/wizard/base_module_install_request.py:0
+msgid "The module is already installed."
+msgstr "模塊已安裝。"
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
+msgid ""
+"This app is included in your subscription. It's free to activate, but only "
+"an administrator can do it. Fill this form to send an activation request."
+msgstr "這個應用程序包含在你的訂閱中。免費激活，但只有管理員才能激活。填寫此表單以發送激活請求。"
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__user_id
+msgid "User"
+msgstr "使用者"
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
+msgid "Why do you need this module?"
+msgstr "為什麼需要該模塊？"
+
+#. module: base_install_request
+#: model:ir.actions.act_window,name:base_install_request.action_base_module_install_review
+msgid "You are about to install an extra application"
+msgstr "你將要安裝額外的應用程式"
+
+#. module: base_install_request
+#. odoo-python
+#: code:addons/base_install_request/wizard/base_module_install_request.py:0
+msgid "Your request has been successfully sent"
+msgstr "您的請求已成功發送"
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
+msgid ""
+"e.g. I'd like to use the SMS Marketing module to organize the promotion of "
+"our internal events, and exhibitions. I need access for 3 people of my team."
+msgstr "例如，我想使用短訊營銷模塊來組織我們內部活動和展覽的推廣。我需要我的團隊中的 3 個人的訪問權限。"

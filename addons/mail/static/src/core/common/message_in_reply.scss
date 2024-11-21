@@ -1,0 +1,42 @@
+.o-mail-MessageInReply-avatar {
+    width: $o-mail-Avatar-size / 2;
+    height: $o-mail-Avatar-size / 2;
+}
+
+.o-mail-MessageInReply-core {
+    border-left: 3px solid transparent !important;
+    background-color: rgba($o-view-background-color, .5) !important;
+    --border-opacity: 0.15;
+
+    &.o-otherMessageBlue {
+        border-left-color: mix($o-view-background-color, $info, 50%) !important
+    }
+    &.o-otherMessageGreen {
+        border-left-color: mix($o-view-background-color, $success, 50%) !important
+    }
+    &.o-otherMessageOrange {
+        border-left-color: mix($o-view-background-color, $warning, 40%) !important
+    }
+    &:hover {
+        filter: brightness(.975);
+    }
+}
+
+.o-mail-MessageInReply-content {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.o-mail-MessageInReply-message {
+    // Make the body single line when possible
+    p, div {
+        display: inline;
+        margin: 0;
+    }
+
+    br {
+        display: none;
+    }
+}
+

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.StateSelectionField">
+        <t t-if="props.readonly">
+            <button class="d-flex align-items-center btn fw-normal p-0">
+                <span t-attf-class="o_status {{ statusColor(currentValue) }} "/>
+                <span t-if="props.showLabel" class="o_status_label ms-1" t-esc="label"/>
+            </button>
+        </t>
+        <t t-else="">
+            <Dropdown menuClass="'state_selection_field_menu'">
+                <button class="btn btn-link d-flex p-0">
+                    <div class="d-flex align-items-center" t-att-title="props.showLabel ? '' : label">
+                        <span t-attf-class="o_status {{ statusColor(currentValue) }} "/>
+                        <span t-if="props.showLabel" class="o_status_label ms-1" t-esc="label"/>
+                    </div>
+                </button>
+                <t t-set-slot="content">
+                    <t t-foreach="options" t-as="option" t-key="option[0]">
+                        <DropdownItem
+                            class="`d-flex align-items-center ${option[0] === currentValue ? 'active' : ''}`"
+                            onSelected="() => this.updateRecord(option[0])">
+                                <span t-attf-class="o_status ms-2 {{ statusColor(option[0]) }} "/>
+                                <span t-esc="option[1]"/>
+                        </DropdownItem>
+                    </t>
+                </t>
+            </Dropdown>
+        </t>
+    </t>
+
+</templates>

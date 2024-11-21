@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_form" model="ir.ui.view">
+        <field name="name">res.company.form.inherit.l10n_in_upi</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='currency_id']" position="after">
+                <field name="l10n_in_upi_id" invisible="country_code != 'IN'"/>
+            </xpath>
+            <xpath expr="//label[@for='name']" position="attributes">
+                <attribute name="invisible">l10n_in_pan_type</attribute>
+            </xpath>
+            <xpath expr="//label[@for='name']" position="before">
+               <field class="o_form_label mb-0" name="l10n_in_pan_type" invisible="not l10n_in_pan_type"/>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="l10n_in_pan" invisible="country_code != 'IN'"/>
+            </xpath>
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning mt-1 mb-1" role="alert" invisible="not l10n_in_gst_state_warning or country_code != 'IN'">
+                    <field name="l10n_in_gst_state_warning"/>
+                    <button name="action_update_state_as_per_gstin"
+                            string="Update it"
+                            class="oe_link"
+                            invisible="country_code != 'IN'"
+                            type="object"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

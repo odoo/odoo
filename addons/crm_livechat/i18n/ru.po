@@ -1,0 +1,108 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* crm_livechat
+#
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2024-01-30 15:14+0400\n"
+"Last-Translator: \n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: crm_livechat
+#. odoo-python
+#: code:addons/crm_livechat/models/chatbot_script_step.py:0
+msgid "%s's New Lead"
+msgstr "Новый лид %s"
+
+#. module: crm_livechat
+#: model:ir.model,name:crm_livechat.model_chatbot_script
+msgid "Chatbot Script"
+msgstr "Скрипт чатбота"
+
+#. module: crm_livechat
+#: model:ir.model,name:crm_livechat.model_chatbot_script_step
+msgid "Chatbot Script Step"
+msgstr "Шаг сценария чатбота"
+
+#. module: crm_livechat
+#: model:ir.model.fields.selection,name:crm_livechat.selection__chatbot_script_step__step_type__create_lead
+msgid "Create Lead"
+msgstr "Создать Лида"
+
+#. module: crm_livechat
+#. odoo-python
+#. odoo-javascript
+#: code:addons/crm_livechat/models/discuss_channel.py:0
+#: code:addons/crm_livechat/static/src/core/channel_commands.js:0
+msgid "Create a new lead (/lead lead title)"
+msgstr "Создайте новую инициативу (/ название инициативы)"
+
+#. module: crm_livechat
+#. odoo-python
+#: code:addons/crm_livechat/models/discuss_channel.py:0
+msgid "Created a new lead: %s"
+msgstr "Создан новый лид: %s"
+
+#. module: crm_livechat
+#: model:ir.model,name:crm_livechat.model_discuss_channel
+msgid "Discussion Channel"
+msgstr "Дискуссионный канал"
+
+#. module: crm_livechat
+#: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script__lead_count
+msgid "Generated Lead Count"
+msgstr "Количество сгенерированных лидов"
+
+#. module: crm_livechat
+#: model:chatbot.script.step,message:crm_livechat.chatbot_script_lead_generation_step_welcome
+msgid "Hi there, what brings you to our website today? 👋"
+msgstr "Привет, что привело вас на наш сайт сегодня? 👋"
+
+#. module: crm_livechat
+#: model:chatbot.script.step,message:crm_livechat.chatbot_script_lead_generation_step_noone_available
+msgid "Hu-ho, it looks like none of our operators are available 🙁"
+msgstr "Ху-хо, похоже, никто из наших операторов не доступен 🙁"
+
+#. module: crm_livechat
+#: model:chatbot.script,title:crm_livechat.chatbot_script_lead_generation_bot
+msgid "Lead Generation Bot"
+msgstr "Бот для генерации лида"
+
+#. module: crm_livechat
+#: model_terms:ir.ui.view,arch_db:crm_livechat.chatbot_script_view_form
+msgid "Leads"
+msgstr "Лиды"
+
+#. module: crm_livechat
+#: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script_step__crm_team_id
+msgid "Sales Team"
+msgstr "Команда продаж"
+
+#. module: crm_livechat
+#: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script_step__step_type
+msgid "Step Type"
+msgstr "Тип шага"
+
+#. module: crm_livechat
+#: model:chatbot.script.step,message:crm_livechat.chatbot_script_welcome_step_just_looking
+msgid "Thank you, you should hear back from us very soon!"
+msgstr "Спасибо, мы ответим вам очень скоро!"
+
+#. module: crm_livechat
+#: model:ir.model.fields,help:crm_livechat.field_chatbot_script_step__crm_team_id
+msgid "Used in combination with 'create_lead' step type in order to automatically assign the created lead/opportunity to the defined team"
+msgstr "Используется в сочетании с типом шага 'create_lead' для автоматического назначения созданного лида/возможности определенной команде"
+
+#. module: crm_livechat
+#: model:chatbot.script.step,message:crm_livechat.chatbot_script_welcome_step_pricing_email
+msgid "Would you mind leaving your email address so that we can reach you back?"
+msgstr "Не могли бы вы оставить свой адрес электронной почты, чтобы мы могли связаться с вами?"

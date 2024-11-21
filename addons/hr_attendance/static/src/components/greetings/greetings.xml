@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr_attendance.EmployeeBadge">
+        <div class="o_hr_attendance_user_badge text-center">
+            <img
+                class="o_hr_attendance_employee_badge img rounded-circle"
+                t-attf-src="{{employeeAvatar}}"
+                t-attf-height="{{ employeeAvatarHeight or '120'}}"/>
+        </div>
+    </t>
+
+    <t t-name="hr_attendance.public_kiosk_greetings">
+        <t t-if="this.attendance">
+            <div class="o_hr_kiosk_mode_main d-flex flex-grow-1 justify-content-center align-items-center">
+                <div class="o_hr_attendance_kiosk_card card rounded-3">
+                    <div class="card-body rounded-3">
+                        <div class="o_hr_attendance_kiosk_card_wrapper d-flex flex-column align-items-center justify-content-center">
+                            <div class="o_hr_attendance_kiosk_card_main p-3 mx-3 mx-xl-0 text-center">
+                                <t t-call="hr_attendance.EmployeeBadge">
+                                    <t t-set="employeeAvatar" t-value="this.employeeAvatar"/>
+                                </t>
+                                <h5 class="text-muted mt-2 mb-0">
+                                    <t t-if="attendance.check_out" >Goodbye</t>
+                                    <t t-else="">Welcome</t>
+                                </h5>
+                                <h2><t t-esc="this.employeeName"/></h2>
+                            </div>
+                            <div class="o_hr_attendance_kiosk_card_bottom d-flex flex-column w-100">
+                                <div class="alert alert-info text-center p-3" role="status">
+                                    <t t-if="attendance.check_out">
+                                        Checked out at <strong><t t-esc="this.check_out_time"/></strong>
+                                    </t>
+                                    <t t-else="">
+                                        Checked in at <strong><t t-esc="this.check_in_time"/></strong>
+                                    </t>
+                                </div>
+                                <div class="d-flex flex-column w-100">
+                                    <div
+                                        class="alert alert-info text-center p-3"
+                                        t-if="this.hoursToday != '00:00'"
+                                        role="status">
+                                        <t t-if="attendance.check_out">
+                                            Hours Today: <strong><t t-esc="this.hoursToday"/></strong>
+                                        </t>
+                                        <t t-else="">
+                                            Hours Previously Today: <strong><t t-esc="this.hoursToday"/></strong>
+                                        </t>
+                                    </div>
+                                    <div t-if="attendance.check_out and this.overtimeToday" class="alert alert-warning d-flex flex-column gap-2 mb-0 p-2 p-xl-3 border border-warning text-center">
+                                        <div class="small fw-bolder text-uppercase">
+                                            Extra hours
+                                        </div>
+                                        <div class="d-flex gap-2">
+                                            <div class="d-flex flex-column w-100 mb-0 ">
+                                                <span class="text-nowrap">Today</span>
+                                                <span class="fs-6"><strong><t t-esc="this.overtimeToday"/></strong></span>
+                                            </div>
+                                            <div t-if="this.totalOvertime" class="d-flex flex-column w-100 mb-0 ">
+                                                <span class="text-nowrap">Total</span>
+                                                <span class="fs-6"><strong><t t-esc="this.totalOvertime"/></strong></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="o_hr_kiosk_mode_bottom my-4 mx-auto">
+                <button class="btn btn-primary btn-lg rounded-pill px-5" t-on-click="this.props.kioskReturn">
+                    OK
+                </button>
+            </div>
+        </t>
+        <t t-else="">
+            <div class="o_hr_kiosk_mode_main d-flex flex-grow-1 justify-content-center align-items-center">
+                <div class="alert alert-warning px-5 text-center" role="alert">
+                    <h4 class="alert-heading mt-3">Invalid request</h4>
+                    <p>Please return to the main menu.</p>
+                </div>
+            </div>
+            <div class="o_hr_kiosk_mode_bottom my-4 mx-auto">
+                <button class="btn btn-primary btn-lg rounded-pill px-5" t-on-click="this.props.kioskReturn">
+                    <i class="oi oi-chevron-left me-2"/>
+                    <span>Go back</span>
+                </button>
+            </div>
+        </t>
+    </t>
+</templates>

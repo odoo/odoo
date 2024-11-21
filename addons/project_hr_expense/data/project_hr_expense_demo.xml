@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Expense Sheet -->
+        <record id="transportation_expense_sheet" model="hr.expense.sheet">
+            <field name="name">Transportation Expense</field>
+            <field name="employee_id" ref="hr.employee_al"/>
+        </record>
+        <record id="restaurant_expense_sheet" model="hr.expense.sheet">
+            <field name="name">Restaurant Expense</field>
+            <field name="employee_id" ref="hr.employee_al"/>
+        </record>
+
+        <record id="hr_expense.travel_admin_by_car_expense" model="hr.expense">
+            <field name="analytic_distribution" eval="{ref('project.analytic_office_design'): 100}"/>
+        </record>
+        <record id="hr_expense.travel_demo_by_car_expense" model="hr.expense">
+            <field name="analytic_distribution" eval="{ref('project.analytic_office_design'): 100}"/>
+        </record>
+        <record id="transportation_expense" model="hr.expense">
+            <field name="name">Transportation</field>
+            <field name="employee_id" ref="hr.employee_al"/>
+            <field name="analytic_distribution" eval="{ref('project.analytic_construction'): 100}"/>
+            <field name="product_id" ref="hr_expense.expense_product_travel_accommodation"/>
+            <field name="total_amount_currency" eval="240.0"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="date" eval="time.strftime('%Y-%m-12')"/>
+            <field name="sheet_id" ref="transportation_expense_sheet"/>
+        </record>
+        <record id="restaurant_expense" model="hr.expense">
+            <field name="name">Restaurant</field>
+            <field name="employee_id" ref="hr.employee_al"/>
+            <field name="analytic_distribution" eval="{ref('project.analytic_construction'): 100}"/>
+            <field name="product_id" ref="hr_expense.expense_product_meal"/>
+            <field name="total_amount_currency" eval="320.0"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="date" eval="time.strftime('%Y-%m-10')"/>
+            <field name="sheet_id" ref="restaurant_expense_sheet"/>
+        </record>
+
+        <function name="action_submit_sheet" model="hr.expense.sheet">
+            <value model="hr.expense.sheet" eval="[ref('transportation_expense_sheet'), ref('restaurant_expense_sheet')]"/>
+        </function>
+
+        <function name="action_approve_expense_sheets" model="hr.expense.sheet">
+            <value model="hr.expense.sheet" eval="[ref('transportation_expense_sheet'), ref('restaurant_expense_sheet')]"/>
+        </function>
+    </data>
+</odoo>

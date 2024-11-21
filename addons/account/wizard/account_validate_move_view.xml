@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!--Account Move lines-->
+        <record id="validate_account_move_view" model="ir.ui.view">
+            <field name="name">Confirm Entries</field>
+            <field name="model">validate.account.move</field>
+            <field name="arch" type="xml">
+                <form string="Confirm Entries">
+                    <field name="move_ids" invisible="1"/>
+                    <h2 class="mb-4">
+                        Validating
+                        <t invisible="not is_entries"> entries </t>
+                        <t invisible="is_entries"> invoices </t>
+                        is a key action. Have you reviewed everything?</h2>
+                    <group invisible="not display_force_post">
+                        <field name="display_force_post" invisible="1"/>
+                        <div colspan="2">
+                            Future-dated
+                            <t invisible="not is_entries"> entries </t>
+                            <t invisible="is_entries"> invoices </t>
+                            will auto-confirm on their respective dates.
+                            <field name="force_post" class="oe_inline"/><label for="force_post" string="Confirm them now"/>
+                        </div>
+                    </group>
+                    <group invisible="not abnormal_date_partner_ids">
+                        <div colspan="2">
+                            <t invisible="not is_entries"> Entries </t>
+                            <t invisible="is_entries"> Invoices </t>
+                            dates for
+                            <field name="abnormal_date_partner_ids" widget="many2many_tags" class="oe_inline"/>
+                            fall outside the typical range.
+                            <field name="ignore_abnormal_date" class="oe_inline"/><label for="ignore_abnormal_date" string="Ignore future alerts"/>
+                        </div>
+                    </group>
+                    <group invisible="not abnormal_amount_partner_ids">
+                        <div colspan="2">
+                            <t invisible="not is_entries"> Entries </t>
+                            <t invisible="is_entries"> Invoices </t>
+                            amounts for
+                            <field name="abnormal_amount_partner_ids" widget="many2many_tags" class="oe_inline"/>
+                            fall outside the typical range.
+                            <field name="ignore_abnormal_amount" class="oe_inline"/><label for="ignore_abnormal_amount" string="Ignore future alerts"/>
+                        </div>
+                    </group>
+                    <footer>
+                        <button string="Confirm" name="validate_move" type="object" default_focus="1" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_validate_account_move" model="ir.actions.act_window">
+            <field name="name">Confirm Entries</field>
+            <field name="res_model">validate.account.move</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="validate_account_move_view"/>
+            <field name="context">{}</field>
+            <field name="target">new</field>
+            <field name="help">This wizard will validate all journal entries selected. Once journal entries are validated, you can not update them anymore.</field>
+            <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
+            <field name="binding_model_id" ref="account.model_account_move" />
+            <field name="binding_view_types">list</field>
+        </record>
+
+    </data>
+</odoo>

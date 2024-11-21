@@ -1,0 +1,32 @@
+<templates>
+
+    <t t-inherit="loyalty.portal_loyalty_card_dialog" t-inherit-mode="extension">
+        <div name="history_lines" position="after">
+            <div
+                t-if="props.program.program_type == 'loyalty'"
+                t-foreach="props.rewards"
+                t-as="reward"
+                t-key="reward_index"
+                class="mb-2 mt-2"
+            >
+                <div class="d-flex border rounded align-items-center justify-content-center p-2">
+                    <div class="flex-fill fs-6">
+                        <t t-out="reward.description"/>
+                    </div>
+                    <span class="text-primary" t-out="reward.points"/>
+                </div>
+            </div>
+            <div t-if="props.rewards.length > 0" class="d-flex justify-content-center">
+                <a
+                    t-if="props.program.program_type == 'loyalty'"
+                    type="button"
+                    href="/shop"
+                    class="btn btn-primary"
+                >
+                    Claim
+                </a>
+            </div>
+        </div>
+    </t>
+
+</templates>

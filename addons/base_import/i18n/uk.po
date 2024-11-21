@@ -1,0 +1,978 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* base_import
+# 
+# Translators:
+# Wil Odoo, 2024
+# Martin Trigaux, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-10-25 07:48+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Martin Trigaux, 2024\n"
+"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.js:0
+msgid "%(number)s file(s) selected"
+msgstr ""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "%(property_string)s (%(parent_name)s)"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "%s at multiple rows"
+msgstr "%s на кількох рядках"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+msgid "%s records successfully imported"
+msgstr "%s записи успішно імпортовано"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid ""
+"A single column was found in the file, this often means the file separator "
+"is incorrect."
+msgstr ""
+"У файлі знайдено один стовпець, це часто означає, що роздільник файлу "
+"неправильний."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
+msgid "Additional Fields"
+msgstr "Додаткові поля"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Advanced"
+msgstr "Розширено"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid ""
+"After each batch import, this delay is applied to avoid unthrottled calls"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Allow matching with subfields"
+msgstr "Дозволити узгодження з підполями"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid ""
+"An unknown issue occurred during import (possibly lost connection, data "
+"limit exceeded or memory limits exceeded). Please retry in case the issue is"
+" transient. If the issue still occurs, try to split the file rather than "
+"import it at once."
+msgstr ""
+"Під час імпортування сталася невідома проблема (можливо, втрачено "
+"підключення, перевищено ліміт даних або перевищено обмеження пам'яті). "
+"Повторіть спробу, якщо проблема перехідна. Якщо проблема все ще виникає, "
+"спробуйте розділити файл, а не імпортувати його одразу."
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base
+msgid "Base"
+msgstr "База"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_import
+msgid "Base Import"
+msgstr "Імпорт бази"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_mapping
+msgid "Base Import Mapping"
+msgstr "Зіставлення імпорту бази"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+msgid "Batch"
+msgstr "Група"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Batch Import"
+msgstr "Груповий імпорт"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Batch limit"
+msgstr "Груповий ліміт"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "But, you can also use .csv files"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Cancel"
+msgstr "Скасувати"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Click 'Resume' to proceed with the import, resuming at line %s."
+msgstr "Натисніть 'Продовжити' щоб продовжити імпорт, з рядка %s."
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "Column %(column)s contains incorrect values (value: %(value)s)"
+msgstr ""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"Column %(column)s contains incorrect values. Error in line %(line)d: "
+"%(error)s"
+msgstr ""
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
+msgid "Column Name"
+msgstr "Назва колонки"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Comma"
+msgstr "Кома"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "Comments"
+msgstr "Коментарі"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
+"%(error)s"
+msgstr ""
+"Не вдалося отримати URL: %(url)s [%(field_name)s: L%(line_number)d]: "
+"%(error)s"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+msgid "Create new values"
+msgstr "Створити нові значення"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__create_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__create_uid
+msgid "Created by"
+msgstr "Створив"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__create_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__create_date
+msgid "Created on"
+msgstr "Створено"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Data to import"
+msgstr ""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "Database ID"
+msgstr "ID бази даних"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Date Format:"
+msgstr "Формат дати:"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Datetime Format:"
+msgstr "Формат дати та часу:"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Decimals Separator:"
+msgstr "Десятковий роздільник:"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Defines how many megabytes can be imported in each batch import"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Delay after each batch"
+msgstr ""
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__display_name
+msgid "Display Name"
+msgstr "Назва для відображення"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Dot"
+msgstr "Крапка"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Download"
+msgstr "Завантажити"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Drop or upload a file to import"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Encoding:"
+msgstr "Кодування:"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "Error Parsing Date [%(field)s:L%(line)d]: %(error)s"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Error at row %(row)s: \"%(error)s\""
+msgstr ""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"Error while importing records: Text Delimiter should be a single character."
+msgstr ""
+"Помилка під час імпорту записів: Текстовий роздільник має складатися з "
+"одного символу."
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"Error while importing records: all rows should be of the same size, but the "
+"title row has %(title_row_entries)d entries while the first row has "
+"%(first_row_entries)d. You may need to change the separator character."
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+msgid "Estimated time left:"
+msgstr "Витрачений оцінений час:"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Everything seems valid."
+msgstr "Все здається вірним."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Excel files are recommended as formatting is automatic."
+msgstr ""
+"Файли Excel рекомендується, оскільки форматування відбувається автоматично."
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "External ID"
+msgstr "Зовнішній ID"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__field_name
+msgid "Field Name"
+msgstr "Назва поля"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__file
+msgid "File"
+msgstr "Файл"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "File Column"
+msgstr "Колонка файлу"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__file_name
+msgid "File Name"
+msgstr "Назва файлу"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__file_type
+msgid "File Type"
+msgstr "Тип файлу"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "File size exceeds configured maximum (%s bytes)"
+msgstr "Розмір файлу перевищує налаштований максимум (%s байтів)"
+
+#. module: base_import
+#: model:ir.model.fields,help:base_import.field_base_import_import__file
+msgid "File to check and/or import, raw binary (not base64)"
+msgstr "Файл для перевірки та/або імпорту, бінарний файл (не base64)"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Files to import"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+msgid "Finalizing current batch before interrupting..."
+msgstr "Завершення поточної групи перед перериванням..."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "For CSV files, you may need to select the correct separator."
+msgstr "Для файлів CSV вам потрібно буде вибрати правильний роздільник."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Formatting"
+msgstr "Форматування"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"Found invalid image data, images should be imported as either URLs or "
+"base64-encoded data."
+msgstr ""
+"Знайдені недійсні дані зображення, зображення слід імпортувати у вигляді "
+"URL-адрес або даних, кодованих base64."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Go to Import FAQ"
+msgstr "Перейдіть в імпорт FAQ"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Help"
+msgstr "Допомога"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "Here is the start of the file we could not import:"
+msgstr "Ось початок файла, який не вдалося імпортувати:"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__id
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__id
+msgid "ID"
+msgstr "ID"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid ""
+"If the file contains\n"
+"                    the column names, Odoo can try auto-detecting the\n"
+"                    field corresponding to the column. This makes imports\n"
+"                    simpler especially when the file has many columns."
+msgstr ""
+"Якщо файл містить\n"
+"                    назву колонки, Odoo може спробувати автоматичне визначення\n"
+"                    кореспондуючого поля в колонці. Це робить імпорт\n"
+"                    простішим, особливо коли у файлі багато колонок."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid ""
+"If the model uses openchatter, history tracking will set up subscriptions "
+"and send notifications during the import, but lead to a slower import."
+msgstr ""
+"Якщо модель використовує openchatter, відстеження історії налаштовує "
+"підписки та надсилає сповіщення під час імпорту, але призводить до "
+"повільнішого імпорту."
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"Image size excessive, imported images must be smaller than 42 million pixel"
+msgstr ""
+"Розмір зображення надмірний, імпортовані зображення мають бути меншими за 42"
+" мільйони пікселів"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Import"
+msgstr "Імпорт"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Import FAQ"
+msgstr "Імпортувати FAQ"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+msgid "Import a File"
+msgstr "Імпорт файлу"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "Import file has no content or is corrupt"
+msgstr "Імпортований файл не має вмісту або пошкоджений"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "Import preview failed due to: \""
+msgstr "Помилка попереднього перегляду імпорту через: \""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_records/import_records.xml:0
+msgid "Import records"
+msgstr "Імпортувати записи"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+msgid "Importing"
+msgstr "Імпортування"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with "
+"format: %(cell_format)s, as (%(format_type)s) formats are not supported."
+msgstr ""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
+msgstr ""
+"Недійсне значення клітинки в рядку %(row)s, колонки %(col)s: %(cell_value)s"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__write_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__write_uid
+msgid "Last Updated by"
+msgstr "Востаннє оновив"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__write_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__write_date
+msgid "Last Updated on"
+msgstr "Останнє оновлення"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Load Data File"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+msgid "Loading file..."
+msgstr "Завантаження файлу..."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_block_ui.xml:0
+msgid "Loading..."
+msgstr "Завантаження..."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Max size per batch"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Mb"
+msgstr "Mb"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__res_model
+msgid "Model"
+msgstr "Модель"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+msgid "Multiple errors occurred"
+msgstr "Виникло кілька помилок"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Need Help?"
+msgstr "Потрібна допомога?"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "No Separator"
+msgstr "Немає роздільника"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.js:0
+msgid "No file selected"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+msgid "No matching records found for the following name"
+msgstr "Для наступного імені не знайдено відповідних записів"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "Odoo Field"
+msgstr "Поле Odoo"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+msgid "Please upload a single file."
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+msgid "Please upload an Excel (.xls or .xlsx) or .csv file to import."
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+msgid "Prevent import"
+msgstr "Заборонити імпорт"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "Preview"
+msgstr "Попередній перегляд"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+msgid "Progress bar"
+msgstr "Гістограма прогресу"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Reimport"
+msgstr "Повторний імпорт"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
+msgid "Relation Fields"
+msgstr "Пов’язані поля"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
+msgid "Res Model"
+msgstr "Модель резервування"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Resume"
+msgstr "Продовжити"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "Search a field..."
+msgstr "Пошук поля..."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+msgid "See possible values"
+msgstr "Переглянути можливі значення"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Selected Sheet:"
+msgstr "Обраний баланс:"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Semicolon"
+msgstr "Крапка з комою"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Separator:"
+msgstr "Роздільник:"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+msgid "Set to: %s"
+msgstr "Встановити на: %s"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+msgid "Set to: False"
+msgstr "Встановити на: False"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+msgid "Set to: True"
+msgstr "Встановити на: True"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+msgid "Set value as empty"
+msgstr "Встановити значення як пусте"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Sheet:"
+msgstr "Таблиця:"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+msgid "Skip record"
+msgstr "Пропустити запис"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Space"
+msgstr "Пробіл"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
+msgid "Standard Fields"
+msgstr "Стандартні поля"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Start at line"
+msgstr "Почніть в рядку"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+msgid "Stop Import"
+msgstr "Зупинити імпорт"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
+msgid "Suggested Fields"
+msgstr "Рекомендовані поля"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Tab"
+msgstr "Tab"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Test"
+msgstr "Тест"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+msgid "Testing"
+msgstr "Тестування"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Text Delimiter:"
+msgstr "Роздільник тексту:"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "The file contains blocking errors (see below)"
+msgstr "Файл містить помилки блокування (перегляньте нижче)"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "The file will be imported by batches"
+msgstr "Файл буде імпортовано групами"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "This column will be concatenated in field"
+msgstr "Цей стовпець буде об’єднано в поле"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Thousands Separator:"
+msgstr "Тисячний роздільник:"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "To import multiple values, separate them by a comma."
+msgstr "Щоб імпортувати кілька значень, розділіть їх комою."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "To import, select a field..."
+msgstr "Щоб імпортувати, оберіть поле..."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Track history during import"
+msgstr "Історія переміщень під час імпорту"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
+msgstr ""
+"Неможливо завантажити файл \"{extension}\": потрібен модуль Python "
+"\"{modname}\""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
+msgstr ""
+"Формат файлу \"{}\" не підтримується, імпорт підтримує лише CSV, ODS, XLS та"
+" XLSX"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "Untitled"
+msgstr "Без назви"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Upload Data File"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Upload your files"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid ""
+"Use HH for hours in a 24h system, use II in conjonction with 'p' for a 12h "
+"system. You can use a custom format in addition to the suggestions provided."
+" Leave empty to let Odoo guess the format (recommended)"
+msgstr ""
+"Використовуйте HH для годин у 24-годинній системі, використовуйте II у "
+"поєднанні з «p» для 12-годинної системи. Ви можете використовувати власний "
+"формат на додаток до наданих пропозицій. Залиште порожнім, щоб Odoo "
+"зрозуміла формат (рекомендовано)"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid ""
+"Use YYYY to represent the year, MM for the month and DD for the day. Include"
+" separators such as a dot, forward slash or dash. You can use a custom "
+"format in addition to the suggestions provided. Leave empty to let Odoo "
+"guess the format (recommended)"
+msgstr ""
+"Використовуйте YYYY для позначення року, ММ для місяця та DD для дня. "
+"Додайте роздільники, наприклад крапку, скісну риску або тире. Ви можете "
+"використовувати власний формат на додаток до наданих пропозицій. Залиште "
+"порожнім, щоб Odoo зрозуміла формат (рекомендовано)"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Use first row as header"
+msgstr "Використовувати перший рядок як заголовок"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_res_users
+msgid "User"
+msgstr "Користувач"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid ""
+"Warning: ignores the labels line, empty lines and lines composed only of "
+"empty cells"
+msgstr ""
+"Попередження: ігнорує рядок мітки, порожні рядки та рядки, що складаються "
+"лише з порожніх клітинок"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.xml:0
+msgid "When a value cannot be matched:"
+msgstr "Коли значення не може бути співставлене:"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"You can not import images via URL, check with your administrator or support "
+"for the reason."
+msgstr ""
+"Не можна імпортувати зображення за допомогою URL-адреси, зверніться до свого"
+" адміністратора чи служби підтримки з цієї причини."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "You can test or reload your file before resuming the import."
+msgstr ""
+"Ви можете протестувати або перезавантажити ваш файл перед відновленням "
+"імпорту."
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "You must configure at least one field to import"
+msgstr "Щоб імпортувати, потрібно налаштувати хоча б одне поле"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+msgid "at multiple rows"
+msgstr "на кілька рядків"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+msgid "at row"
+msgstr "на рядку"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+msgid "in field"
+msgstr "у полі"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+msgid "minutes"
+msgstr "хвилин"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+msgid "more"
+msgstr "більше"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+msgid "out of"
+msgstr "з"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "seconds"
+msgstr "секунди"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "unknown error code %s"
+msgstr "невідома помилка коду %s"

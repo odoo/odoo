@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="project_view_account_analytic_line_graph" model="ir.ui.view">
+        <field name="name">account.analytic.line.graph</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_line_graph"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//graph" position="inside">
+                <field name="date" type="row"/>
+            </xpath>
+            <xpath expr="//field[@name='account_id']" position="replace">
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_view_account_analytic_line_pivot" model="ir.ui.view">
+        <field name="name">account.analytic.line.pivot</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_line_pivot"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//pivot" position="inside">
+                <field name="date" type="row"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="invisible">context.get('group_by_date', False)</attribute>
+            </xpath>
+            <xpath expr="//field[@name='account_id']" position="replace">
+            </xpath>
+        </field>
+    </record>
+</odoo>

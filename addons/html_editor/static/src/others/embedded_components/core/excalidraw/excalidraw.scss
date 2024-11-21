@@ -1,0 +1,24 @@
+[data-embedded="draw"] {
+    iframe {
+        min-height: unset !important;
+    }
+    &:not(:hover) .o_embedded_draw_handle, &:not(:hover) a.fa-external-link {
+        visibility: hidden;
+    }
+    .o_embedded_draw_handle {
+        z-index: 1;
+        color: $o-gray-500;
+        &.o_embedded_draw_handle_left {
+            transform: rotate(-45deg);
+            cursor: nesw-resize;
+        }
+        &.o_embedded_draw_handle_right {
+            transform: rotate(45deg);
+            cursor: nwse-resize;
+        }
+    }
+    .o_view_nocontent_empty_folder:before {
+        @extend %o-nocontent-empty-document;
+    }
+
+}

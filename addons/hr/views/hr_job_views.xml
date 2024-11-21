@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_hr_job_form" model="ir.ui.view">
+            <field name="name">hr.job.form</field>
+            <field name="model">hr.job</field>
+            <field name="arch" type="xml">
+                <form string="Job">
+                    <header/> <!-- inherited in other module -->
+                    <field name="active" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1><field name="name" options="{'line_breaks': False}" widget="text" placeholder="e.g. Sales Manager"/></h1>
+                        </div>
+                        <notebook>
+                            <page string="Recruitment" name="recruitment_page" invisible="1">
+                                <group>
+                                    <group name="recruitment">
+                                        <field name="company_id" options="{'no_create': True}" invisible="1" groups="base.group_multi_company"/>
+                                        <field name="department_id"/>
+                                        <field name="contract_type_id"/>
+                                    </group>
+                                    <group name="recruitment2">
+                                        <label for="no_of_recruitment"/>
+                                        <div class="o_row" name="recruitment_target">
+                                            <field name="no_of_recruitment" class="o_hr_narrow_field"/>
+                                            <span>new Employees</span>
+                                        </div>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Job Summary" name="job_description_page" invisible="1">
+                                <field name="description" options="{'collaborative': true}" placeholder="e.g. Summarize the position in one or two lines..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_hr_job_tree" model="ir.ui.view">
+            <field name="name">hr.job.list</field>
+            <field name="model">hr.job</field>
+            <field name="arch" type="xml">
+                <list string="Job" sample="1">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="no_of_employee" optional="hide" string="Number of Employees"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="hr_job_view_kanban" model="ir.ui.view">
+            <field name="name">hr.job.kanban</field>
+            <field name="model">hr.job</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile" sample="1">
+                    <templates>
+                        <t t-name="card">
+                            <field class="fw-bold" name="name"/>
+                            <field name="department_id"/>
+                            <span t-if="!selection_mode">Vacancies: <field name="expected_employees"/></span>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="view_job_filter" model="ir.ui.view">
+            <field name="name">hr.job.search</field>
+            <field name="model">hr.job</field>
+            <field name="arch" type="xml">
+                <search string="Jobs">
+                    <field name="name" string="Job Position"/>
+                    <field name="department_id" operator="child_of"/>
+                    <separator/>
+                    <filter name="message_needaction" string="Unread Messages" domain="[('message_needaction', '=', True)]" groups="mail.group_mail_notification_type_inbox"/>
+                    <separator/>
+                    <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Department" name="department" domain="[]" context="{'group_by': 'department_id'}"/>
+                        <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Employment Type" name="employment_type" domain="[]" context="{'group_by': 'contract_type_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_hr_job" model="ir.actions.act_window">
+            <field name="name">Job Positions</field>
+            <field name="res_model">hr.job</field>
+            <field name="view_mode">list,form</field>
+            <field name="search_view_id" ref="view_job_filter"/>
+            <field name="context">{"search_default_Current":1}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Ready to recruit more efficiently?
+              </p><p>
+                Let's create a job position.
+              </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

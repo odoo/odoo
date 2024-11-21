@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<odoo noupdate="1">
+    <record id="hr_candidate_mkt0_skill_lang_en" model="hr.candidate.skill">
+        <field name="candidate_id" ref="hr_recruitment.hr_candidate_mkt0"/>
+        <field name="skill_id" ref="hr_skills.hr_skill_english"/>
+        <field name="skill_level_id" ref="hr_skills.hr_skill_level_c2"/>
+        <field name="skill_type_id" ref="hr_skills.hr_skill_type_lang"/>
+    </record>
+    <record id="hr_candidate_mkt0_skill_lang_fr" model="hr.candidate.skill">
+        <field name="candidate_id" ref="hr_recruitment.hr_candidate_mkt0"/>
+        <field name="skill_id" ref="hr_skills.hr_skill_french"/>
+        <field name="skill_level_id" ref="hr_skills.hr_skill_level_b2"/>
+        <field name="skill_type_id" ref="hr_skills.hr_skill_type_lang"/>
+    </record>
+    <record id="hr_candidate_mkt0_skill_softskill_org" model="hr.candidate.skill">
+        <field name="candidate_id" ref="hr_recruitment.hr_candidate_mkt0"/>
+        <field name="skill_id" ref="hr_skills.hr_skill_organizational"/>
+        <field name="skill_level_id" ref="hr_skills.hr_skill_level_intermediate_softskill"/>
+        <field name="skill_type_id" ref="hr_skills.hr_skill_type_softskill"/>
+    </record>
+
+    <record id="hr_candidate_mkt1_skill_lang_en" model="hr.candidate.skill">
+        <field name="candidate_id" ref="hr_recruitment.hr_candidate_mkt1"/>
+        <field name="skill_id" ref="hr_skills.hr_skill_english"/>
+        <field name="skill_level_id" ref="hr_skills.hr_skill_level_c2"/>
+        <field name="skill_type_id" ref="hr_skills.hr_skill_type_lang"/>
+    </record>
+    <record id="hr_candidate_mkt1_skill_lang_fr" model="hr.candidate.skill">
+        <field name="candidate_id" ref="hr_recruitment.hr_candidate_mkt1"/>
+        <field name="skill_id" ref="hr_skills.hr_skill_french"/>
+        <field name="skill_level_id" ref="hr_skills.hr_skill_level_c1"/>
+        <field name="skill_type_id" ref="hr_skills.hr_skill_type_lang"/>
+    </record>
+
+     <function model="hr.job" name="write">
+            <value model="hr.job" search="[
+                ('name', '=', 'Chief Executive Officer'),
+            ]
+            "/>
+            <value eval="{
+                'skill_ids': [
+                    Command.set([
+                        ref('hr_skills.hr_skill_french'),
+                        ref('hr_skills.hr_skill_english'),
+                        ref('hr_skills.hr_skill_organizational'),
+                    ]),
+                ],
+            }"/>
+        </function>
+</odoo>

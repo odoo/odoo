@@ -1,0 +1,801 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* base_import
+#
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2024-01-30 15:14+0400\n"
+"Last-Translator: \n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "%s at multiple rows"
+msgstr "%s в нескольких рядах"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+msgid "%s records successfully imported"
+msgstr "%s записей успешно импортировано"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "A single column was found in the file, this often means the file separator is incorrect."
+msgstr "В файле обнаружен один столбец, что часто означает неправильный разделитель файлов."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
+msgid "Additional Fields"
+msgstr "Дополнительные поля"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Advanced"
+msgstr "Дополнительно"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Allow matching with subfields"
+msgstr "Разрешить сопоставление с подполями"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "An unknown issue occurred during import (possibly lost connection, data limit exceeded or memory limits exceeded). Please retry in case the issue is transient. If the issue still occurs, try to split the file rather than import it at once."
+msgstr "Во время импорта возникла неизвестная проблема (возможно, потеряно соединение, превышен лимит данных или памяти). Пожалуйста, повторите попытку, если проблема носит временный характер. Если проблема сохраняется, попробуйте разделить файл, а не импортировать его сразу."
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base
+msgid "Base"
+msgstr "База"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_import
+msgid "Base Import"
+msgstr "Импорт Базы"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_mapping
+msgid "Base Import Mapping"
+msgstr "Сопоставление базового импорта"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+msgid "Batch"
+msgstr "Порция"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Batch Import"
+msgstr "Пакетный импорт"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Batch limit"
+msgstr "Ограничение партии"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Cancel"
+msgstr "Отменить"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Click 'Resume' to proceed with the import, resuming at line %s."
+msgstr "Нажмите \"Возобновить\", чтобы продолжить импорт, возобновив его со строки %s."
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "Column %s contains incorrect values (value: %s)"
+msgstr "Колонка %s содержит неверные значения (значение: %s)"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "Column %s contains incorrect values. Error in line %d: %s"
+msgstr "Столбец %s содержит неверные значения. Ошибка в строке %d: %s"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
+msgid "Column Name"
+msgstr "Название столбца"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Comma"
+msgstr "Запятая"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "Comments"
+msgstr "Комментарии"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
+msgstr "Не удалось получить URL:%(url)s  [%(field_name)s : L%(line_number) d]:%(error)s"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+msgid "Create new values"
+msgstr "Создание новых значений"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__create_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__create_uid
+msgid "Created by"
+msgstr "Создано"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__create_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__create_date
+msgid "Created on"
+msgstr "Создано"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "Database ID"
+msgstr "ID базы данных"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Date Format:"
+msgstr "Формат даты:"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Datetime Format:"
+msgstr "Формат даты и времени:"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Decimals Separator:"
+msgstr "Разделитель десятичных дробей:"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__display_name
+msgid "Display Name"
+msgstr "Отображаемое имя"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Dot"
+msgstr "Точка"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Download"
+msgstr "Скачать"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Encoding:"
+msgstr "Кодировка:"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "Error Parsing Date [%s:L%d]: %s"
+msgstr "Ошибка парсинга данных [ %s: L %d]: %s"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Error at row %s: \"%s\""
+msgstr "Ошибка в строке %s: \"%s\""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "Error while importing records: Text Delimiter should be a single character."
+msgstr "Ошибка при импорте записей: Разделитель текста должен состоять из одного символа."
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "Error while importing records: all rows should be of the same size, but the title row has %d entries while the first row has %d. You may need to change the separator character."
+msgstr "Ошибка при импорте записей: все строки должны быть одинакового размера, но в заглавной строке содержится %d записей, а в первой - %d. Возможно, необходимо изменить символ-разделитель."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+msgid "Estimated time left:"
+msgstr "Предполагаемое оставшееся время:"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Everything seems valid."
+msgstr "Вроде всё правильно."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Excel files are recommended as formatting is automatic."
+msgstr "Рекомендуется использовать файлы Excel, так как форматирование происходит автоматически."
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "External ID"
+msgstr "Внешний ID"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__field_name
+msgid "Field Name"
+msgstr "Имя поля"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__file
+msgid "File"
+msgstr "Файл"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "File Column"
+msgstr "Колонка файлов"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__file_name
+msgid "File Name"
+msgstr "Имя файла"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__file_type
+msgid "File Type"
+msgstr "Тип файла"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "File size exceeds configured maximum (%s bytes)"
+msgstr "Размер файла превышает заданный максимум (%s байт)"
+
+#. module: base_import
+#: model:ir.model.fields,help:base_import.field_base_import_import__file
+msgid "File to check and/or import, raw binary (not base64)"
+msgstr "Файл для проверки и/или импорта, необработанный двоичный файл (не base64)"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+msgid "Finalizing current batch before interrupting..."
+msgstr "Завершение работы над текущей партией перед прерыванием..."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "For CSV files, you may need to select the correct separator."
+msgstr "Для файлов CSV может потребоваться выбрать правильный разделитель."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Formatting"
+msgstr "Форматирование"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "Found invalid image data, images should be imported as either URLs or base64-encoded data."
+msgstr "Найденные недействительные данные изображений, изображения должны быть импортированы либо как URL, либо как данные в базовой 64-кодировке."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Go to Import FAQ"
+msgstr "Перейти к FAQ по импорту"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Help"
+msgstr "Помощь"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "Here is the start of the file we could not import:"
+msgstr "Вот начало файла, который мы не смогли импортировать:"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__id
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__id
+msgid "ID"
+msgstr "ID"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid ""
+"If the file contains\n"
+"                    the column names, Odoo can try auto-detecting the\n"
+"                    field corresponding to the column. This makes imports\n"
+"                    simpler especially when the file has many columns."
+msgstr ""
+"Если файл содержит\n"
+"                    имена столбцов, Odoo может попробовать автоматически определить\n"
+"                    поле, соответствующее столбцу. Это делает импорт\n"
+"                    особенно если файл содержит много столбцов."
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "Image size excessive, imported images must be smaller than 42 million pixel"
+msgstr "Размер изображения слишком велик, импортируемые изображения должны быть меньше 42 миллионов пикселей"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Import"
+msgstr "Импорт"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Import FAQ"
+msgstr "Импортировать FAQ"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+msgid "Import a File"
+msgstr "Импорт файла"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "Import file has no content or is corrupt"
+msgstr "Файл импорта не содержит содержимого или поврежден"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "Import preview failed due to: \""
+msgstr "Предварительный просмотр импорта не удался из-за: \""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_records/import_records.xml:0
+msgid "Import records"
+msgstr "Импорт записей"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Imported file"
+msgstr "Импортированный файл"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+msgid "Importing"
+msgstr "Импорт"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
+msgstr "Недействительное значение ячейки в строке %(row)s, столбец %(col)s: %(cell_value)s"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__write_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__write_uid
+msgid "Last Updated by"
+msgstr "Последнее обновление"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__write_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__write_date
+msgid "Last Updated on"
+msgstr "Последнее обновление"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Load File"
+msgstr "Загрузка файла"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+msgid "Loading file..."
+msgstr "Загрузка файла..."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_block_ui.xml:0
+msgid "Loading..."
+msgstr "Загрузка..."
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__res_model
+msgid "Model"
+msgstr "Модель"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+msgid "Multiple errors occurred"
+msgstr "Произошло несколько ошибок"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Need Help?"
+msgstr "Нужна помощь?"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "No Separator"
+msgstr "Без разделителя"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+msgid "No matching records found for the following name"
+msgstr "Не найдено ни одной подходящей записи для следующего имени"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "Odoo Field"
+msgstr "Поле Odoo"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+msgid "Prevent import"
+msgstr "Предотвращение импорта"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "Preview"
+msgstr "Предпросмотр"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Reimport"
+msgstr "Реимпорт"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
+msgid "Relation Fields"
+msgstr "Поля отношений"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
+msgid "Res Model"
+msgstr "Res Model"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Resume"
+msgstr "Продолжить"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
+msgid "Search a field..."
+msgstr "Поиск по полю..."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+msgid "See possible values"
+msgstr "См. возможные значения"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Selected Sheet:"
+msgstr "Избранный лист:"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Semicolon"
+msgstr "Запятая"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Separator:"
+msgstr "Разделитель:"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+msgid "Set to: %s"
+msgstr "Установить на: %s"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+msgid "Set to: False"
+msgstr "Установить на: False"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+msgid "Set to: True"
+msgstr "Установить на: True"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+msgid "Set value as empty"
+msgstr "Установите значение как пустое"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Sheet:"
+msgstr "Лист:"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+msgid "Skip record"
+msgstr "Пропустить запись"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Space"
+msgstr "Пробел"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
+msgid "Standard Fields"
+msgstr "Стандартные поля"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Start at line"
+msgstr "Начните с линии"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+msgid "Stop Import"
+msgstr "Остановить импорт"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
+msgid "Suggested Fields"
+msgstr "Предлагаемые поля"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Tab"
+msgstr "Вкладка"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Test"
+msgstr "Тест"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+msgid "Testing"
+msgstr "Тестирование"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Text Delimiter:"
+msgstr "Ограничитель текста:"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "The file contains blocking errors (see below)"
+msgstr "Файл содержит ошибки блокировки (см. ниже)"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "The file will be imported by batches"
+msgstr "Файл будет импортироваться партиями"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "This column will be concatenated in field"
+msgstr "Этот столбец будет конкатенирован в поле"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Thousands Separator:"
+msgstr "Разделитель тысяч:"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "To import multiple values, separate them by a comma."
+msgstr "Чтобы импортировать несколько значений, разделите их запятой."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "To import, select a field..."
+msgstr "Для импорта выберите поле..."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Track history during import"
+msgstr "Отслеживание истории при импорте"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
+msgstr "Невозможно загрузить файл \"{extension}\": требуется модуль Python \"{modname}\""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
+msgstr "Неподдерживаемый формат файла \"{}\", импорт поддерживает только CSV, ODS, XLS и XLSX"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "Untitled"
+msgstr "Без названия"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Upload File"
+msgstr "Загрузить файл"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Upload an Excel or CSV file to import"
+msgstr "Загрузите файл Excel или CSV для импорта"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Use HH for hours in a 24h system, use II in conjonction with 'p' for a 12h system. You can use a custom format in addition to the suggestions provided. Leave empty to let Odoo guess the format (recommended)"
+msgstr "Используйте HH для обозначения часов в 24-часовой системе, II в сочетании с 'p' - в 12-часовой системе. Вы можете использовать собственный формат в дополнение к предложенным. Оставьте пустым, чтобы Odoo сам догадался о формате (рекомендуется)"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Use YYYY to represent the year, MM for the month and DD for the day. Include separators such as a dot, forward slash or dash. You can use a custom format in addition to the suggestions provided. Leave empty to let Odoo guess the format (recommended)"
+msgstr "Используйте YYYY для обозначения года, MM для месяца и DD для дня. Включите разделители, такие как точка, прямая косая черта или тире. Вы можете использовать собственный формат в дополнение к предложенным. Оставить пустым, чтобы Odoo сам догадался о формате (рекомендуется)"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Use first row as header"
+msgstr "Используйте первый ряд в качестве заголовка"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_res_users
+msgid "User"
+msgstr "Пользователь"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.xml:0
+msgid "When a value cannot be matched:"
+msgstr "Когда значение не может быть сопоставлено:"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "You can not import images via URL, check with your administrator or support for the reason."
+msgstr "Вы не можете импортировать изображения с помощью URL, обратитесь к администратору или в техподдержку."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "You can test or reload your file before resuming the import."
+msgstr "Вы можете протестировать или перезагрузить файл перед возобновлением импорта."
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "You must configure at least one field to import"
+msgstr "Вы должны настроить хотя бы одно поле для импорта"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+msgid "at multiple rows"
+msgstr "в несколько рядов"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+msgid "at row"
+msgstr "в ряд"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+msgid "in field"
+msgstr "в поле"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+msgid "minutes"
+msgstr "минут"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+msgid "more"
+msgstr "больше"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+msgid "out of"
+msgstr "из"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+msgid "seconds"
+msgstr "секунд"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "unknown error code %s"
+msgstr "неизвестный код ошибки %s"

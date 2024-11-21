@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.Popover">
+        <div
+            t-ref="ref"
+            t-att-class="defaultClassObj"
+            t-att-role="props.role"
+            t-on-pointerenter="() => props.holdOnHover and position.lock()"
+            t-on-pointerleave="() => props.holdOnHover and position.unlock()"
+        >
+            <t
+                t-component="props.component"
+                t-props="props.componentProps"
+                close="props.close"
+            />
+            <div t-if="props.arrow" class="popover-arrow"/>
+        </div>
+    </t>
+
+</templates>

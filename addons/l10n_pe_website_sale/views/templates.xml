@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <template id="partner_info" name="Peruvian partner">
+        <div class="col-xl-6 mb-3">
+            <label class="col-form-label" for="l10n_latam_identification_type_id">Identification Type</label>
+            <t t-if="can_edit_vat">
+                <select name="l10n_latam_identification_type_id" class="form-select">
+                    <option value="">Identification Type...</option>
+                    <t t-foreach="identification_types" t-as="id_type">
+                        <option t-att-value="id_type.id"
+                            t-att-selected="id_type.id == partner_sudo.l10n_latam_identification_type_id.id">
+                            <t t-out="id_type.name"/>
+                        </option>
+                    </t>
+                </select>
+            </t>
+            <t t-else="">
+                <p class="form-control"
+                    t-out="partner_sudo.l10n_latam_identification_type_id.name"
+                    readonly="1"
+                    title="Changing Identification type is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."/>
+                <input name="l10n_latam_identification_type_id"
+                    class="form-control"
+                    t-att-value="partner_sudo.l10n_latam_identification_type_id.id"
+                    type="hidden"/>
+            </t>
+        </div>
+    </template>
+
+    <template id="partner_address_info" name="Peruvian partner address">
+        <div id="div_city_id" class="col-lg-6 mb-3"
+            t-att-style="(country and country.code != 'PE') and 'display:none;'">
+            <label class="col-form-label" for="city_id">City</label>
+            <select id="city_id" name="city_id" class="form-select" data-init="1">
+                <option value="">City...</option>
+                <t t-foreach="state_cities" t-as="city">
+                    <option t-att-value="city.id"
+                        t-att-selected="city.id == partner_sudo.city_id.id">
+                        <t t-out="city.name" />
+                    </option>
+                </t>
+            </select>
+        </div>
+
+        <!-- show district -->
+        <div id="div_district" class="col-lg-6 mb-3"
+            t-att-style="((country and country.code != 'PE') or not city) and 'display:none;'">
+            <label class="col-form-label" for="l10n_pe_district">District</label>
+            <select id="l10n_pe_district" name="l10n_pe_district" class="form-select" data-init="1">
+                <option value="">District...</option>
+                <t t-foreach="city_districts" t-as="district">
+                    <option t-att-value="district.id"
+                        t-att-selected="district.id == partner_sudo.l10n_pe_district.id">
+                        <t t-out="district.name" />
+                    </option>
+                </t>
+            </select>
+        </div>
+
+    </template>
+
+    <template id="address" inherit_id="website_sale.address">
+        <div id="div_vat" position="before">
+            <t t-if="(use_delivery_as_billing and address_type == 'delivery' or address_type == 'billing') and res_company.country_id.code == 'PE'">
+                <div class="w-100" />
+                <t t-call="l10n_pe_website_sale.partner_info" />
+            </t>
+        </div>
+        <div id="div_state" position="after">
+            <t t-if="res_company.country_id.code == 'PE'">
+                <t t-call="l10n_pe_website_sale.partner_address_info" />
+            </t>
+        </div>
+    </template>
+
+</odoo>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+
+    <!-- Size -->
+    <record id="product_attribute_size" model="product.attribute">
+        <field name="name">Size</field>
+        <field name="sequence">19</field>
+    </record>
+    <record id="product_attribute_value_size_xs" model="product.attribute.value">
+        <field name="name">XS</field>
+        <field name="attribute_id" ref="product_attribute_size"/>
+        <field name="sequence">1</field>
+    </record>
+    <record id="product_attribute_value_size_s" model="product.attribute.value">
+        <field name="name">S</field>
+        <field name="attribute_id" ref="product_attribute_size"/>
+        <field name="sequence">2</field>
+    </record>
+    <record id="product_attribute_value_size_m" model="product.attribute.value">
+        <field name="name">M</field>
+        <field name="attribute_id" ref="product_attribute_size"/>
+        <field name="sequence">3</field>
+    </record>
+    <record id="product_attribute_value_size_l" model="product.attribute.value">
+        <field name="name">L</field>
+        <field name="attribute_id" ref="product_attribute_size"/>
+        <field name="sequence">4</field>
+    </record>
+    <record id="product_attribute_value_size_xl" model="product.attribute.value">
+        <field name="name">XL</field>
+        <field name="attribute_id" ref="product_attribute_size"/>
+        <field name="sequence">5</field>
+    </record>
+
+    <!-- Color -->
+    <record id="product_attribute_value_color_1" model="product.attribute.value">
+        <field name="name">Blue</field>
+        <field name="attribute_id" ref="product.product_attribute_2"/>
+        <field name="sequence">3</field>
+    </record>
+    <record id="product_attribute_value_color_2" model="product.attribute.value">
+        <field name="name">Pink</field>
+        <field name="attribute_id" ref="product.product_attribute_2"/>
+        <field name="sequence">4</field>
+    </record>
+    <record id="product_attribute_value_color_3" model="product.attribute.value">
+        <field name="name">Yellow</field>
+        <field name="attribute_id" ref="product.product_attribute_2"/>
+        <field name="sequence">5</field>
+    </record>
+    <record id="product_attribute_value_color_4" model="product.attribute.value">
+        <field name="name">Rainbow</field>
+        <field name="attribute_id" ref="product.product_attribute_2"/>
+        <field name="sequence">6</field>
+    </record>
+
+    <!-- Gender -->
+    <record id="product_attribute_gender" model="product.attribute">
+        <field name="name">Gender</field>
+        <field name="sequence">21</field>
+    </record>
+    <record id="product_attribute_value_m" model="product.attribute.value">
+        <field name="name">Men</field>
+        <field name="attribute_id" ref="product_attribute_gender"/>
+        <field name="sequence">1</field>
+    </record>
+    <record id="product_attribute_value_w" model="product.attribute.value">
+        <field name="name">Women</field>
+        <field name="attribute_id" ref="product_attribute_gender"/>
+        <field name="sequence">2</field>
+    </record>
+
+    <record id="matrix_product_template_shirt" model="product.template">
+        <field name="name">My Company Tshirt (GRID)</field>
+        <field name="categ_id" ref="product.product_category_6"/>
+        <field name="standard_price">7.0</field>
+        <field name="list_price">15.0</field>
+        <field name="type">consu</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="uom_po_id" ref="uom.product_uom_unit"/>
+        <field name="description_sale">Show your company love around you =).</field>
+        <field name="image_1920" type="base64" file="product_matrix/static/img/matrix_mycompany_tshirt.jpeg"/>
+    </record>
+
+    <record id="product_template_attribute_line_size" model="product.template.attribute.line">
+        <field name="product_tmpl_id" ref="matrix_product_template_shirt"/>
+        <field name="attribute_id" ref="product_attribute_size"/>
+        <field name="value_ids" eval="[
+          (6, 0, [
+          ref('product_attribute_value_size_xs'),
+          ref('product_attribute_value_size_s'),
+          ref('product_attribute_value_size_m'),
+          ref('product_attribute_value_size_l'),
+          ref('product_attribute_value_size_xl')])]"/>
+    </record>
+    <record id="product_template_attribute_line_gender" model="product.template.attribute.line">
+        <field name="product_tmpl_id" ref="matrix_product_template_shirt"/>
+        <field name="attribute_id" ref="product_attribute_gender"/>
+        <field name="value_ids" eval="[(6, 0, [ref('product_attribute_value_m'), ref('product_attribute_value_w')])]"/>
+    </record>
+    <record id="product_template_attribute_line_color" model="product.template.attribute.line">
+        <field name="product_tmpl_id" ref="matrix_product_template_shirt"/>
+        <field name="attribute_id" ref="product.product_attribute_2"/>
+        <field name="value_ids" eval="[(6, 0, [ref('product_attribute_value_color_1'), ref('product_attribute_value_color_2'), ref('product_attribute_value_color_3'), ref('product_attribute_value_color_4')])]"/>
+    </record>
+</odoo>

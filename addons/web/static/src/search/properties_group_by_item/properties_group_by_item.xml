@@ -1,0 +1,40 @@
+<templates xml:space="preserve">
+    <t t-name="web.PropertiesGroupByItem">
+        <AccordionItem
+            class="'o_add_custom_group_menu text-truncate'"
+            description="props.item.description"
+            selected="isActive">
+            <t t-set="items" t-value="state.groupByItems"/>
+            <t t-if="items and items.length">
+                <t t-foreach="items" t-as="item" t-key="item.name">
+                    <t t-set="description" t-value="isSingleParent ? item.description : `${item.description} (${item.definitionRecordName})`"/>
+                    <!-- Item with options (e.g. Date / Datetime with option "month / quarter / week") -->
+                    <AccordionItem t-if="item.options"
+                        description="description"
+                        selected="item.isActive">
+                        <t t-foreach="item.options" t-as="option" t-key="option.id">
+                            <t t-set="optionName" t-value="`${item.name}:${option.id}`"/>
+                            <CheckboxItem class="{ o_item_option: true, selected: option.isActive }"
+                                checked="option.isActive"
+                                closingMode="'none'"
+                                t-esc="option.description"
+                                onSelected="() => this.onGroup({ itemId: item.id, optionId: option.id})"
+                            />
+                        </t>
+                    </AccordionItem>
+                    <!-- Standard items without option -->
+                    <CheckboxItem t-else=""
+                        class="{ o_menu_item: true, selected: item.isActive }"
+                        checked="item.isActive"
+                        closingMode="'none'"
+                        t-esc="description"
+                        onSelected="() => this.onGroup({ itemId: item.id })"
+                    />
+                </t>
+            </t>
+            <DropdownItem t-else="" closingMode="'none'" class="'fst-italic'">
+                No Properties
+            </DropdownItem>
+        </AccordionItem>
+    </t>
+</templates>

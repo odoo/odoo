@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<odoo>
+
+        <record id="view_email_server_tree" model="ir.ui.view">
+            <field name="name">fetchmail.server.list</field>
+            <field name="model">fetchmail.server</field>
+            <field name="arch" type="xml">
+                <list string="POP/IMAP Servers">
+                    <field name="name"/>
+                    <field name="server_type"/>
+                    <field name="user" readonly="state != 'draft'"/>
+                    <field name="date"/>
+                    <field name="state" widget="badge"
+                        decoration-info="state == 'draft'"
+                        decoration-success="state == 'done'"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_email_server_form" model="ir.ui.view">
+            <field name="name">fetchmail.server.form</field>
+            <field name="model">fetchmail.server</field>
+            <field name="arch" type="xml">
+                <form string="Incoming Mail Server">
+                    <header invisible="server_type == 'local'">
+                        <button string="Test &amp; Confirm" type="object" name="button_confirm_login" invisible="state != 'draft'"/>
+                        <button string="Fetch Now" type="object" name="fetch_mail" invisible="state != 'done'"/>
+                        <button string="Reset Confirmation" type="object" name="set_draft" invisible="state != 'done'"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                    <field name="active" invisible="1"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger"
+                        invisible="active"/>
+                     <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="server_type" widget="radio" readonly="state == 'done'"/>
+                        </group>
+                        <group>
+                            <field name="date" invisible="not date"/>
+                            <div class="text-muted fst-italic" colspan="8" role="alert"
+                                invisible="not server_type_info">
+                                <field name="server_type_info"/>
+                            </div>
+                        </group>
+                     </group>
+                     <notebook>
+                        <page string="Server &amp; Login" name="server_login_details">
+                            <group>
+                                <group invisible="server_type == 'local'" string="Server Information">
+                                    <field name="server" readonly="state != 'draft'" required="server_type != 'local'" />
+                                    <field name="port"
+                                        required="1"
+                                        readonly="state != 'draft'"
+                                        options="{'format': false}" />
+                                    <field name="is_ssl"/>
+                                </group>
+                                <group invisible="server_type == 'local'" string="Login Information">
+                                    <field name="user" readonly="state != 'draft'" required="server_type != 'local'"/>
+                                    <field name="password" password="True"
+                                        invisible="server_type not in ('imap', 'pop')"
+                                        readonly="state != 'draft'"
+                                        required="server_type in ('imap', 'pop')"/>
+                                </group>
+                                <group string="Actions to Perform on Incoming Mails">
+                                    <field name="object_id"/>
+                                </group>
+                                <group invisible="server_type != 'local'" string="Configuration">
+                                    <field name="configuration"/>
+                                    <field name="script" widget="url"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Advanced" name="advanced_options" groups="base.group_no_one">
+                            <group>
+                                <group string="Advanced Options">
+                                    <field name="priority" readonly="state != 'draft'"/>
+                                    <field name="attach"/>
+                                    <field name="original"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                  </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_email_server_search" model="ir.ui.view">
+            <field name="name">fetchmail.server.search</field>
+            <field name="model">fetchmail.server</field>
+            <field name="arch" type="xml">
+                <search string="Search Incoming Mail Servers">
+                    <field name="name" string="Incoming Mail Server"/>
+                    <field name="user"/>
+                    <filter string="IMAP" name="imap" domain="[('server_type', '=', 'imap')]" help="Server type IMAP."/>
+                    <filter string="POP" name="pop" domain="[('server_type', '=', 'pop')]" help="Server type POP."/>
+                    <separator/>
+                    <filter string="SSL" name="ssl" domain="[('is_ssl', '=', True)]" help="If SSL required."/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_email_server_tree" model="ir.actions.act_window">
+            <field name="name">Incoming Mail Servers</field>
+            <field name="res_model">fetchmail.server</field>
+            <field name="view_mode">list,form</field>
+            <field name="view_id" ref="view_email_server_tree"/>
+            <field name="search_view_id" ref="view_email_server_search"/>
+        </record>
+
+</odoo>

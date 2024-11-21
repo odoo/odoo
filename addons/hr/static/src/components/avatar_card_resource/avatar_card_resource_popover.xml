@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="resource_mail.AvatarCardResourcePopover" t-inherit-mode="extension">
+        <xpath expr="//span[hasclass('o_avatar')]/img" position="attributes">
+            <attribute name="t-if">this.record.employee_id?.length</attribute>
+        </xpath>
+        <xpath expr="//span[hasclass('o_user_im_status')]" position="after">
+            <span t-elif="record.show_hr_icon_display" name="icon" class="o_card_avatar_im_status position-absolute d-flex align-items-center justify-content-center o_employee_presence_status">
+                <!-- Employee is present/connected and it is normal according to his work schedule  -->
+                <i t-if="record.hr_icon_display == 'presence_present'" class="fa fa-fw fa-circle text-success" title="Present" role="img" aria-label="Present"/>
+                <!-- Employee is not present/connected and it is normal according to his work schedule -->
+                <i t-if="record.hr_icon_display == 'presence_absent'" class="fa fa-fw fa-circle text-warning" title="Absent" role="img" aria-label="Absent"/>
+                <!-- Employee is connected but according to his work schedule, he should not work for now  -->
+                <i t-if="record.hr_icon_display == 'presence_out_of_working_hour'" class="fa fa-fw fa-circle text-muted" title="Out of Working Hours" role="img" aria-label="Out of Working Hours"/>
+            </span>
+        </xpath>
+    </t>
+
+    <t t-name="hr.avatarCardResourceInfos">
+        <small class="text-muted" t-if="record.job_title" t-esc="record.job_title"/>
+        <span class="text-muted" t-if="record.department_id" data-tooltip="Department" t-esc="record.department_id[1]"/>
+    </t>
+</templates>

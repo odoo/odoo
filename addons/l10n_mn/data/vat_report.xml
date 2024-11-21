@@ -1,0 +1,681 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="account_report_vat_report" model="account.report">
+        <field name="name">VAT Repayment Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.mn"/>
+        <field name="filter_multi_company">tax_units</field>
+        <field name="column_ids">
+            <record id="account_report_vat_report_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="vat_report_lineA" model="account.report.line">
+                <field name="name">A. CALCULATION OF VAT ON GOODS, WORKS AND SERVICES SOLD FOR THAT MONTH</field>
+                <field name="code">VAT_LINEA</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="vat_report_line1" model="account.report.line">
+                        <field name="name">Total sales revenue for that month (1=2+3)</field>
+                        <field name="code">VAT_LINE1</field>
+                        <field name="aggregation_formula">VAT_LINE2.balance + VAT_LINE3.balance</field>
+                    </record>
+                    <record id="vat_report_line2" model="account.report.line">
+                        <field name="name">VAT-exempt sales for the month specified in Article 13 of the Law (2)</field>
+                        <field name="code">VAT_LINE2</field>
+                        <field name="expression_ids">
+                            <record id="vat_report_line2_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">TT3a[2]</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="vat_report_line3" model="account.report.line">
+                        <field name="name">Total revenue from sales of goods, works and services subject to value added tax (3=4+10+29)</field>
+                        <field name="code">VAT_LINE3</field>
+                        <field name="aggregation_formula">VAT_LINE4.balance + VAT_LINE10.balance + VAT_LINE29.balance</field>
+                    </record>
+                    <record id="vat_report_line4" model="account.report.line">
+                        <field name="name">Income from sales of goods subject to VAT (4=5+...+9)</field>
+                        <field name="code">VAT_LINE4</field>
+                        <field name="aggregation_formula">VAT_LINE5.balance + VAT_LINE6.balance + VAT_LINE7.balance + VAT_LINE8.balance + VAT_LINE9.balance</field>
+                        <field name="children_ids">
+                            <record id="vat_report_line5" model="account.report.line">
+                                <field name="name">Revenue from sales of goods sold in the domestic market (5)</field>
+                                <field name="code">VAT_LINE5</field>
+                                <field name="expression_ids">
+                                    <record id="vat_report_line5_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">TT3a[5]</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="vat_report_line6" model="account.report.line">
+                                <field name="name">Revenue from sales of other goods (6)</field>
+                                <field name="code">VAT_LINE6</field>
+                                <field name="expression_ids">
+                                    <record id="vat_report_line6_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">TT3a[6]</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="vat_report_line7" model="account.report.line">
+                                <field name="name">Revenue from the sale of rights (7)</field>
+                                <field name="code">VAT_LINE7</field>
+                                <field name="expression_ids">
+                                    <record id="vat_report_line7_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">TT3a[7]</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="vat_report_line8" model="account.report.line">
+                                <field name="name">Proceeds from retained goods on liquidation (8)</field>
+                                <field name="code">VAT_LINE8</field>
+                                <field name="expression_ids">
+                                    <record id="vat_report_line8_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">TT3a[8]</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="vat_report_line9" model="account.report.line">
+                                <field name="name">Income from goods transferred for debt payment (9)</field>
+                                <field name="code">VAT_LINE9</field>
+                                <field name="expression_ids">
+                                    <record id="vat_report_line9_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">TT3a[9]</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="vat_report_line10" model="account.report.line">
+                        <field name="name">Income from work and services per VAT (10=11+...+24)</field>
+                        <field name="code">VAT_LINE10</field>
+                        <field name="aggregation_formula">VAT_LINE11.balance + VAT_LINE12.balance + VAT_LINE13.balance + VAT_LINE14.balance + VAT_LINE15.balance + VAT_LINE16.balance + VAT_LINE17.balance + VAT_LINE18.balance + VAT_LINE19.balance + VAT_LINE20.balance + VAT_LINE21.balance + VAT_LINE22.balance + VAT_LINE23.balance + VAT_LINE24.balance</field>
+                        <field name="children_ids">
+                            <record id="vat_report_line11" model="account.report.line">
+                                <field name="name">Income from performing work and providing services calculated for debt payment (11)</field>
+                                <field name="code">VAT_LINE11</field>
+                                <field name="expression_ids">
+                                    <record id="vat_report_line11_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">TT3a[11]</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="vat_report_line12" model="account.report.line">
+                                <field name="name">Income from electricity, heat, gas, water supply, sewerage, postal, telecommunications and other services (12)</field>
+                                <field name="code">VAT_LINE12</field>
+                                <field name="expression_ids">
+                                    <record id="vat_report_line12_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">TT3a[12]</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="vat_report_line13" model="account.report.line">
+                                <field name="name">Income from services for leasing, owning and using goods in other forms (13)</field>
+                                <field name="code">VAT_LINE13</field>
+                                <field name="expression_ids">
+                                    <record id="vat_report_line13_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">TT3a[13]</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="vat_report_line14" model="account.report.line">
+                                <field name="name">Income from services for renting, owning and using hotels and similar premises (14)</field>
+                                <field name="code">VAT_LINE14</field>
+                                <field name="expression_ids">
+                                    <record id="vat_report_line14_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">TT3a[14]</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="vat_report_line15" model="account.report.line">
+                                <field name="name">Income from rental and ownership of immovable and movable property (15)</field>
+                                <field name="code">VAT_LINE15</field>
+                                <field name="expression_ids">
+                                    <record id="vat_report_line15_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">TT3a[15]</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="vat_report_line16" model="account.report.line">
+                                <field name="name">Income from the transfer, rental, or sale of inventions, product designs, copyrighted works, trademarks, and know-how (16)</field>
+                                <field name="code">VAT_LINE16</field>
+                                <field name="expression_ids">
+                                    <record id="vat_report_line16_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">TT3a[16]</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="vat_report_line17" model="account.report.line">
+                                <field name="name">Income from cash lotteries and paid guessing games (17)</field>
+                                <field name="code">VAT_LINE17</field>
+                                <field name="expression_ids">
+                                    <record id="vat_report_line17_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">TT3a[17]</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="vat_report_line18" model="account.report.line">
+                                <field name="name">Income from brokerage services (18)</field>
+                                <field name="code">VAT_LINE18</field>
+                                <field name="expression_ids">
+                                    <record id="vat_report_line18_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">TT3a[18]</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="vat_report_line19" model="account.report.line">
+                                <field name="name">Income from interest, fines and penalties received due to wrongful actions of others (19)</field>
+                                <field name="code">VAT_LINE19</field>
+                                <field name="expression_ids">
+                                    <record id="vat_report_line19_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">TT3a[19]</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="vat_report_line20" model="account.report.line">
+                                <field name="name">Income from property valuation services (20)</field>
+                                <field name="code">VAT_LINE20</field>
+                                <field name="expression_ids">
+                                    <record id="vat_report_line20_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">TT3a[20]</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="vat_report_line21" model="account.report.line">
+                                <field name="name">Budget funding, subsidies, and incentive income provided by the government (21)</field>
+                                <field name="code">VAT_LINE21</field>
+                                <field name="expression_ids">
+                                    <record id="vat_report_line21_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">TT3a[21]</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="vat_report_line22" model="account.report.line">
+                                <field name="name">Income from advocacy and legal advice services (22)</field>
+                                <field name="code">VAT_LINE22</field>
+                                <field name="expression_ids">
+                                    <record id="vat_report_line22_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">TT3a[22]</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="vat_report_line23" model="account.report.line">
+                                <field name="name">Income from hairdressing, beauty, maintenance, laundry and dry cleaning services (23)</field>
+                                <field name="code">VAT_LINE23</field>
+                                <field name="expression_ids">
+                                    <record id="vat_report_line23_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">TT3a[23]</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="vat_report_line24" model="account.report.line">
+                                <field name="name">Income from all types of services other than those specified in Article 13 of the Law (24)</field>
+                                <field name="code">VAT_LINE24</field>
+                                <field name="expression_ids">
+                                    <record id="vat_report_line24_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">TT3a[24]</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="vat_report_line25" model="account.report.line">
+                        <field name="name">Revenue of domestic goods, works and services per VAT for the month (25=4+10)</field>
+                        <field name="code">VAT_LINE25</field>
+                        <field name="aggregation_formula">VAT_LINE4.balance + VAT_LINE10.balance</field>
+                    </record>
+                    <record id="vat_report_line26" model="account.report.line">
+                        <field name="name">Tax imposed (26=25*10%)</field>
+                        <field name="code">VAT_LINE26</field>
+                        <field name="aggregation_formula">VAT_LINE25.balance * 0.10</field>
+                    </record>
+                    <record id="vat_report_line27" model="account.report.line">
+                        <field name="name">Income from the sale of goods subject to zero value added tax (27)</field>
+                        <field name="code">VAT_LINE27</field>
+                        <field name="expression_ids">
+                            <record id="vat_report_line27_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">TT3a[27]</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="vat_report_line28" model="account.report.line">
+                        <field name="name">Income from services subject to 0% value added tax (28)</field>
+                        <field name="code">VAT_LINE28</field>
+                        <field name="expression_ids">
+                            <record id="vat_report_line28_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">TT3a[28]</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="vat_report_line29" model="account.report.line">
+                        <field name="name">Revenue of export goods, works and services per VAT for the month (29=27+28)</field>
+                        <field name="code">VAT_LINE29</field>
+                        <field name="aggregation_formula">VAT_LINE27.balance + VAT_LINE28.balance</field>
+                    </record>
+                    <record id="vat_report_line30" model="account.report.line">
+                        <field name="name">Tax imposed (30=29*0%)</field>
+                        <field name="code">VAT_LINE30</field>
+                        <field name="aggregation_formula">(VAT_LINE27.balance + VAT_LINE28.balance) * 0</field>
+                    </record>
+                    <record id="vat_report_line31" model="account.report.line">
+                        <field name="name">Total VAT tax imposed in that month (31=26+30)</field>
+                        <field name="code">VAT_LINE31</field>
+                        <field name="aggregation_formula">VAT_LINE26.balance + VAT_LINE30.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="vat_report_lineB" model="account.report.line">
+                <field name="name">B. CALCULATION OF VAT ON GOODS, WORKS AND SERVICES PURCHASED IN THAT MONTH</field>
+                <field name="code">VAT_LINEB</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="vat_report_line32" model="account.report.line">
+                        <field name="name">Total amount of goods and services purchased in that month (32)</field>
+                        <field name="code">VAT_LINE32</field>
+                        <field name="expression_ids">
+                            <record id="vat_report_line32_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">TT3a[32]</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="vat_report_line33" model="account.report.line">
+                        <field name="name">The amount of goods, works and services purchased with VAT from BAU purchased in that month (33=34+...+41)</field>
+                        <field name="code">VAT_LINE33</field>
+                        <field name="aggregation_formula">VAT_LINE34.balance + VAT_LINE35.balance + VAT_LINE36.balance + VAT_LINE37.balance + VAT_LINE38.balance + VAT_LINE39.balance + VAT_LINE40.balance + VAT_LINE41.balance</field>
+                        <field name="children_ids">
+                            <record id="vat_report_line34" model="account.report.line">
+                                <field name="name">Amount of imported goods and services /Amount without VAT/ (34)</field>
+                                <field name="code">VAT_LINE34</field>
+                                <field name="expression_ids">
+                                    <record id="vat_report_line34_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">TT3a[34]</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="vat_report_line35" model="account.report.line">
+                                <field name="name">Amount paid for goods, works, and services purchased from the domestic market /Amount without VAT/ (35)</field>
+                                <field name="code">VAT_LINE35</field>
+                                <field name="expression_ids">
+                                    <record id="vat_report_line35_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">TT3a[35]</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="vat_report_line36" model="account.report.line">
+                                <field name="name">VAT-free amount of imported goods and services at the time of registration as a withholding tax payer (36)</field>
+                                <field name="code">VAT_LINE36</field>
+                                <field name="expression_ids">
+                                    <record id="vat_report_line36_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">TT3a[36]</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="vat_report_line37" model="account.report.line">
+                                <field name="name">Amount without VAT paid for import purchases for the preparation of fixed assets for the month: buildings and structures (37)</field>
+                                <field name="code">VAT_LINE37</field>
+                                <field name="expression_ids">
+                                    <record id="vat_report_line37_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">TT3a[37]</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="vat_report_line38" model="account.report.line">
+                                <field name="name">Amount without VAT paid for import purchases for the preparation of fixed assets for the month: machinery and equipment (38)</field>
+                                <field name="code">VAT_LINE38</field>
+                                <field name="expression_ids">
+                                    <record id="vat_report_line38_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">TT3a[38]</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="vat_report_line39" model="account.report.line">
+                                <field name="name">Amounts without VAT paid for import purchases for the preparation of fixed assets for the month: other fixed assets (39)</field>
+                                <field name="code">VAT_LINE39</field>
+                                <field name="expression_ids">
+                                    <record id="vat_report_line39_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">TT3a[39]</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="vat_report_line40" model="account.report.line">
+                                <field name="name">Amount excluding VAT paid for import purchases for the preparation of fixed assets applicable to the month: exploratory valuation assets (40)</field>
+                                <field name="code">VAT_LINE40</field>
+                                <field name="expression_ids">
+                                    <record id="vat_report_line40_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">TT3a[40]</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="vat_report_line41" model="account.report.line">
+                                <field name="name">Amount without VAT of goods and services purchased from livestock and agricultural producers (41)</field>
+                                <field name="code">VAT_LINE41</field>
+                                <field name="expression_ids">
+                                    <record id="vat_report_line41_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">TT3a[41]</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="vat_report_line42" model="account.report.line">
+                        <field name="name">· Total amount of VAT paid on purchased goods, works and services (42=33*10%)</field>
+                        <field name="code">VAT_LINE42</field>
+                        <field name="groupby" eval="False"/>
+                        <field name="foldable" eval="False"/>
+                    </record>
+                    <record id="vat_report_line42" model="account.report.line">
+                        <field name="aggregation_formula">VAT_LINE33.balance * 0.10</field>
+                    </record>
+                    <record id="vat_report_line43" model="account.report.line">
+                        <field name="name">· Amount of non-deductible VAT paid on purchased goods, works and services (43=44+..+48)</field>
+                        <field name="code">VAT_LINE43</field>
+                        <field name="aggregation_formula">VAT_LINE44.balance + VAT_LINE45.balance + VAT_LINE46.balance + VAT_LINE47.balance + VAT_LINE48.balance</field>
+                        <field name="children_ids">
+                            <record id="vat_report_line44" model="account.report.line">
+                                <field name="name">VAT paid on passenger cars and their spare parts (44)</field>
+                                <field name="code">VAT_LINE44</field>
+                                <field name="expression_ids">
+                                    <record id="vat_report_line44_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">TT3a[44]</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="vat_report_line45" model="account.report.line">
+                                <field name="name">VAT paid on goods and services for personal and employee use (45)</field>
+                                <field name="code">VAT_LINE45</field>
+                                <field name="expression_ids">
+                                    <record id="vat_report_line45_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">TT3a[45]</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="vat_report_line46" model="account.report.line">
+                                <field name="name">VAT paid on goods and services imported for exempted production and services under Article 13 of the Act (46)</field>
+                                <field name="code">VAT_LINE46</field>
+                                <field name="expression_ids">
+                                    <record id="vat_report_line46_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">TT3a[46]</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="vat_report_line47" model="account.report.line">
+                                <field name="name">VAT paid on imported goods and services for pre-use operations (47)</field>
+                                <field name="code">VAT_LINE47</field>
+                                <field name="expression_ids">
+                                    <record id="vat_report_line47_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">TT3a[47]</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="vat_report_line48" model="account.report.line">
+                                <field name="name">VAT paid on imported goods and services regardless of taxable goods and services during the reporting period (48)</field>
+                                <field name="code">VAT_LINE48</field>
+                                <field name="expression_ids">
+                                    <record id="vat_report_line48_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">TT3a[48]</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="vat_report_line49" model="account.report.line">
+                        <field name="name">The amount of VAT to be deducted in that month (49=42-43)</field>
+                        <field name="code">VAT_LINE49</field>
+                        <field name="aggregation_formula">VAT_LINE42.balance - VAT_LINE43.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="vat_report_lineC" model="account.report.line">
+                <field name="name">C. VAT CALCULATION FOR FINANCIAL LEASE AND FINANCING DEALINGS</field>
+                <field name="code">VAT_LINEC</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="vat_report_line50" model="account.report.line">
+                        <field name="name">Income from sale of financial lease items in the domestic market under financial lease (50)</field>
+                        <field name="code">VAT_LINE50</field>
+                        <field name="expression_ids">
+                            <record id="vat_report_line50_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">TT3a[50]</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="vat_report_line51" model="account.report.line">
+                        <field name="name">Revenue from similar transaction services such as factoring and forfeiting (51)</field>
+                        <field name="code">VAT_LINE51</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="vat_report_line51_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">TT3a[51]</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="vat_report_line52" model="account.report.line">
+                        <field name="name">Charged VAT (52=(50+51)*10%)</field>
+                        <field name="code">VAT_LINE52</field>
+                        <field name="groupby" eval="False"/>
+                        <field name="foldable" eval="False"/>
+                    </record>
+                    <record id="vat_report_line52" model="account.report.line">
+                        <field name="aggregation_formula">(VAT_LINE50.balance + VAT_LINE51.balance) * 0.10</field>
+                    </record>
+                    <record id="vat_report_line53" model="account.report.line">
+                        <field name="name">Financial Leases Rents paid for domestic market purchases under financial leases (53)</field>
+                        <field name="code">VAT_LINE53</field>
+                        <field name="expression_ids">
+                            <record id="vat_report_line53_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">TT3a[53]</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="vat_report_line54" model="account.report.line">
+                        <field name="name">Payments made for the purchase of factoring and forfeiting equivalents (54)</field>
+                        <field name="code">VAT_LINE54</field>
+                        <field name="expression_ids">
+                            <record id="vat_report_line54_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">TT3a[54]</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="vat_report_line55" model="account.report.line">
+                        <field name="name">Deductible VAT (55=(53+54)*10%)</field>
+                        <field name="code">VAT_LINE55</field>
+                        <field name="aggregation_formula">(VAT_LINE53.balance + VAT_LINE54.balance) * 0.10</field>
+                    </record>
+                </field>
+            </record>
+            <record id="vat_report_lineD" model="account.report.line">
+                <field name="name">C. OFFICIAL CALCULATION OF VALUE ADDED TAX FOR THE MONTH</field>
+                <field name="code">VAT_LINED</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="vat_report_line56" model="account.report.line">
+                        <field name="name">VAT payable in that month (56=31+52)</field>
+                        <field name="code">VAT_LINE56</field>
+                        <field name="aggregation_formula">VAT_LINE31.balance + VAT_LINE52.balance</field>
+                    </record>
+                    <record id="vat_report_line57" model="account.report.line">
+                        <field name="name">VAT to be refunded in that month (57=49+55)</field>
+                        <field name="code">VAT_LINE57</field>
+                        <field name="aggregation_formula">VAT_LINE49.balance + VAT_LINE55.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="vat_report_lineE" model="account.report.line">
+                <field name="name">E. CORRECTION TO PREVIOUS MONTH'S REPORT</field>
+                <field name="code">VAT_LINEE</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="vat_report_line58" model="account.report.line">
+                        <field name="name">Sales revenue returns and discounts (58)</field>
+                        <field name="code">VAT_LINE58</field>
+                        <field name="expression_ids">
+                            <record id="vat_report_line58_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">TT3a[58]</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="vat_report_line59" model="account.report.line">
+                        <field name="name">Paid VAT (59)</field>
+                        <field name="code">VAT_LINE59</field>
+                        <field name="expression_ids">
+                            <record id="vat_report_line59_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">TT3a[59]</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="vat_report_line60" model="account.report.line">
+                        <field name="name">Purchase returns and discounts (60)</field>
+                        <field name="code">VAT_LINE60</field>
+                        <field name="expression_ids">
+                            <record id="vat_report_line60_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">TT3a[60]</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="vat_report_line61" model="account.report.line">
+                        <field name="name">Deductible VAT (61)</field>
+                        <field name="code">VAT_LINE61</field>
+                        <field name="expression_ids">
+                            <record id="vat_report_line61_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">TT3a[61]</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="vat_report_lineF" model="account.report.line">
+                <field name="name">F. OFFICIAL CALCULATION OF VALUE ADDED TAX FOR THE MONTH</field>
+                <field name="code">VAT_LINEF</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="vat_report_line62" model="account.report.line">
+                        <field name="name">TOTAL PAYMENT APPROPRIATE VAT (62=56+61)</field>
+                        <field name="code">VAT_LINE62</field>
+                        <field name="aggregation_formula">VAT_LINE56.balance + VAT_LINE61.balance</field>
+                    </record>
+                    <record id="vat_report_line63" model="account.report.line">
+                        <field name="name">TOTAL RECOVERY VAT (63=57+59)</field>
+                        <field name="code">VAT_LINE63</field>
+                        <field name="aggregation_formula">VAT_LINE57.balance + VAT_LINE59.balance</field>
+                    </record>
+                    <record id="vat_report_line64" model="account.report.line">
+                        <field name="name">VAT TO BE PAYABLE IN THE FINAL CALCULATION (64=62-63)</field>
+                        <field name="code">VAT_LINE64</field>
+                        <field name="aggregation_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="vat_report_line64_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">VAT_LINE62.balance - VAT_LINE63.balance</field>
+                                <field name="subformula">if_above(MNT(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="vat_report_line65" model="account.report.line">
+                        <field name="name">VAT RECOVERED IN FINAL CALCULATION (65=63-62)</field>
+                        <field name="code">VAT_LINE65</field>
+                        <field name="aggregation_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="vat_report_line64_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">VAT_LINE63.balance - VAT_LINE62.balance</field>
+                                <field name="subformula">if_above(MNT(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

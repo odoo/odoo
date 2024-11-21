@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="web_editor.ChatGPTTranslateDialog">
+        <Dialog size="'lg'" title.translate="Translate with AI">
+            <div t-if="state.translationInProgress" class="d-flex">
+                <img src="/web/static/img/spin.svg" alt="Loading..." class="me-2"
+                    style="filter:invert(1); opacity: 0.5; width: 30px; height: 30px;" />
+                <p class="m-0 text-muted align-self-center">
+                    <em>Translating...</em>
+                </p>
+            </div>
+            <t t-else="">
+                <t t-set="message" t-value="state.messages[0]" />
+                <div t-att-data-message-id="message.id"
+                    t-att-class="message.isError ? 'o-message-error border-danger bg-danger p-2' : ''"
+                    class="o-chatgpt-translated">
+                    <t t-out="formatContent(message.text)" />
+                </div>
+            </t>
+            <!-- FOOTER -->
+            <t t-set-slot="footer">
+                <button class="btn btn-primary"
+                    t-att-disabled="state.translationInProgress || state.messages[0].isError"
+                    t-on-click="_confirm">Insert</button>
+                <button class="btn btn-secondary" t-on-click="_cancel">Cancel</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

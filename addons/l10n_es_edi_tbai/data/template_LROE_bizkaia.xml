@@ -1,0 +1,138 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!--Bizkaia uses an extra layer to send TicketBAI invoices, called LROE 
+    see https://www.batuz.eus/es/documentacion-tecnica -->
+<odoo>
+    <data>
+        <template id="template_LROE_240_main">
+            <lrpjfecsgap:LROEPJ240FacturasEmitidasConSGAltaPeticion
+                xmlns:lrpjfecsgap="https://www.batuz.eus/fitxategiak/batuz/LROE/esquemas/LROE_PJ_240_1_1_FacturasEmitidas_ConSG_AltaPeticion_V1_0_2.xsd"
+                t-if="is_emission"
+                t-call="l10n_es_edi_tbai.template_LROE_240_inner"/>
+            <lrpjfecsgap:LROEPJ240FacturasEmitidasConSGAnulacionPeticion
+                xmlns:lrpjfecsgap="https://www.batuz.eus/fitxategiak/batuz/LROE/esquemas/LROE_PJ_240_1_1_FacturasEmitidas_ConSG_AnulacionPeticion_V1_0_0.xsd"
+                t-else=""
+                t-call="l10n_es_edi_tbai.template_LROE_240_inner"/>
+        </template>
+
+        <template id="template_LROE_240_inner">
+            <Cabecera>
+                <Modelo>240</Modelo>
+                <Capitulo>1</Capitulo>
+                <Subcapitulo>1.1</Subcapitulo>
+                <Operacion t-out="'A00' if is_emission else 'AN0'"/>
+                <Version>1.0</Version>
+                <Ejercicio t-out="fiscal_year"/>
+                <ObligadoTributario>
+                    <NIF t-out="sender_vat"/>
+                    <ApellidosNombreRazonSocial t-out="sender.name"/>
+                </ObligadoTributario>
+            </Cabecera>
+            <FacturasEmitidas>
+                <FacturaEmitida t-foreach="tbai_b64_list" t-as="tbai_b64">
+                    <TicketBai t-if="is_emission" t-out="tbai_b64"/>
+                    <AnulacionTicketBai t-else="" t-out="tbai_b64"/>
+                </FacturaEmitida>
+            </FacturasEmitidas>
+        </template>
+
+
+        <template id="template_LROE_240_main_recibidas">
+            <lrpjframp:LROEPJ240FacturasRecibidasAltaModifPeticion
+                xmlns:lrpjframp="https://www.batuz.eus/fitxategiak/batuz/LROE/esquemas/LROE_PJ_240_2_FacturasRecibidas_AltaModifPeticion_V1_0_1.xsd"
+                t-if="is_emission"
+                t-call="l10n_es_edi_tbai.template_LROE_240_inner_recibidas"/>
+            <lrpjfrap:LROEPJ240FacturasRecibidasAnulacionPeticion
+                xmlns:lrpjfrap="https://www.batuz.eus/fitxategiak/batuz/LROE/esquemas/LROE_PJ_240_2_FacturasRecibidas_AnulacionPeticion_V1_0_0.xsd"
+                t-else=""
+                t-call="l10n_es_edi_tbai.template_LROE_240_inner_recibidas"/>
+        </template>
+
+        <template id="template_LROE_240_inner_recibidas">
+            <Cabecera>
+                <Modelo>240</Modelo>
+                <Capitulo>2</Capitulo>
+                <Operacion t-out="'A00' if is_emission else 'AN0'"/>
+                <Version>1.0</Version>
+                <Ejercicio t-out="fiscal_year"/>
+                <ObligadoTributario>
+                    <NIF t-out="sender_vat"/>
+                    <ApellidosNombreRazonSocial t-out="sender.name"/>
+                </ObligadoTributario>
+            </Cabecera>
+            <FacturasRecibidas>
+                <FacturaRecibida>
+                    <t t-if="not is_emission"> <!-- cancel case -->
+                        <IDRecibida>
+                            <t t-set="seq_and_num" t-value="doc._get_tbai_sequence_and_number()"/>
+                            <SerieFactura t-out="seq_and_num[0]"/>
+                            <NumFactura t-out="seq_and_num[1]"/>
+                            <FechaExpedicionFactura t-out="format_date(invoice_date)"/>
+                            <EmisorFacturaRecibida>
+                                <NIF t-if="recipient.get('nif')" t-out="recipient['nif']"/>
+                                <IDOtro t-else="">
+                                    <CodigoPais t-if="recipient.get('alt_id_country')" t-out="recipient['alt_id_country']"/>
+                                    <IDType t-out="recipient['alt_id_type']"/>
+                                    <ID t-out="recipient['alt_id_number']"/>
+                                </IDOtro>
+                            </EmisorFacturaRecibida>
+                        </IDRecibida>
+                    </t>
+                    <t t-else="">
+                        <EmisorFacturaRecibida>
+                            <NIF t-if="recipient.get('nif')" t-out="recipient['nif']"/>
+                            <IDOtro t-else="">
+                                <CodigoPais t-if="recipient.get('alt_id_country')" t-out="recipient['alt_id_country']"/>
+                                <IDType t-out="recipient['alt_id_type']"/>
+                                <ID t-out="recipient['alt_id_number']"/>
+                            </IDOtro>
+                            <t t-set="partner" t-value="recipient['partner']"/>
+                            <ApellidosNombreRazonSocial t-out="partner.name"/>
+                        </EmisorFacturaRecibida>
+                        <CabeceraFactura>
+                            <t t-set="seq_and_num" t-value="doc._get_tbai_sequence_and_number()"/>
+                            <SerieFactura t-out="seq_and_num[0]"/>
+                            <NumFactura t-out="seq_and_num[1]"/>
+                            <FechaExpedicionFactura t-out="format_date(invoice_date)"/>
+                            <FechaRecepcion t-out="format_date(doc.date)"/>
+                            <TipoFactura t-out="tipofactura"/>
+                            <t t-if="is_refund">
+                                <FacturaRectificativa>
+                                    <Codigo t-out="refund_reason"/>
+                                    <Tipo>I</Tipo>
+                                </FacturaRectificativa>
+                                <FacturasRectificadasSustituidas t-if="credit_note_invoices">
+                                    <IDFacturaRectificadaSustituida t-foreach="credit_note_invoices" t-as="credit_note_invoice">
+                                        <t t-set="seq_and_num" t-value="credit_note_invoice.l10n_es_tbai_post_document_id._get_tbai_sequence_and_number()"/>
+                                        <SerieFactura t-out="seq_and_num[0]"/>
+                                        <NumFactura t-out="seq_and_num[1]"/>
+                                        <FechaExpedicionFactura t-out="format_date(credit_note_invoice.invoice_date)"/>
+                                    </IDFacturaRectificadaSustituida>
+                                </FacturasRectificadasSustituidas>
+                            </t>
+                        </CabeceraFactura>
+                        <DatosFactura>
+                            <DescripcionOperacion t-out="ref"/>
+
+                            <Claves>
+                                <IDClave t-foreach="regime_key" t-as="key">
+                                    <ClaveRegimenIvaOpTrascendencia t-out="key"/>
+                                </IDClave>
+                            </Claves>
+                            <ImporteTotalFactura t-out="format_float(amount_total)"/>
+                        </DatosFactura>
+                        <IVA>
+                            <DetalleIVA t-foreach="iva_values" t-as="tax">
+                                <CompraBienesCorrientesGastosBienesInversion t-out="tax['code']"/>
+                                <InversionSujetoPasivo t-out="'N' if tax['rec'].l10n_es_type != 'sujeto_isp' else 'S'"/>
+                                <BaseImponible t-out="format_float(tax['base'])"/>
+                                <TipoImpositivo t-out="tax['rec'].amount"/>
+                                <CuotaIVASoportada t-out="format_float(tax['tax'])"/>
+                                <CuotaIVADeducible t-out="format_float(tax['tax'])"/>
+                            </DetalleIVA>
+                        </IVA>
+                    </t>
+                </FacturaRecibida>
+            </FacturasRecibidas>
+        </template>
+    </data>
+</odoo>

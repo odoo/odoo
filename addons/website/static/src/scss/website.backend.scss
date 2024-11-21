@@ -1,0 +1,150 @@
+.o_dashboards {
+    background-color: $o-view-background-color;
+    height: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+
+    .o_content {
+        overflow: scroll;
+    }
+    .o_website_dashboard {
+        background-color: $o-view-background-color;
+    }
+    &.has_plausible {
+        background-color: #f9fafb; // Copied from iframe.
+        .o_website_dashboard {
+            background-color: #f9fafb; // Copied from iframe.
+            iframe {
+                // TODO: Find another way to set the height, not robust enough,
+                // especially if plausible change those values later.
+                height: 2950px; // Copied from iframe.
+                top: 2px; // Do not cover eCommerce dashboard border.
+
+                @include media-breakpoint-only(md) {
+                    height: 2855px; // Copied from iframe.
+                }
+                @include media-breakpoint-only(lg) {
+                    height: 2040px; // Copied from iframe.
+                }
+                @include media-breakpoint-only(xl) {
+                    height: 1875px; // Copied from iframe.
+                }
+                @include media-breakpoint-only(xxl) {
+                    height: 1875px; // Copied from iframe.
+                }
+            }
+        }
+    }
+    .o_dashboard_common {
+        .o_box {
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: flex-start;
+
+            > .o_inner_box {
+                @include media-breakpoint-down(md) {
+                    flex: 1 1 200px;
+                    display: block !important;
+                }
+                @include media-breakpoint-up(md) {
+                    flex: 0 0 16.6%;
+                }
+            }
+        }
+    }
+    .o_dashboard_visits {
+
+        .o_demo_background {
+
+            margin-top: 16px;
+            height: 300px;
+            background-size: 100% !important;
+            background: var(--Dashboard__demoBackground, url("/website/static/src/img/website_dashboard_visit_demo.png")) no-repeat;
+            position: relative;
+
+            .o_buttons {
+                position: relative;
+            }
+
+            .o_layer {
+                background-color: rgba($o-view-background-color,.3);
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
+        }
+    }
+}
+
+.oe_stat_button.o_stat_button_info {
+    pointer-events: none;
+}
+
+.o_field_website_redirect_button {
+    display: contents;
+}
+
+// Mobile preview
+%o-mobile-phone {
+    @include media-breakpoint-up(md) {
+        height: 735px !important;
+        width: 362px;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+
+        // Below the following height, the preview size decreases to ensure it
+        // will always be fully visible.
+        @media(max-height: calc(800px + #{$o-navbar-height})) {
+            height: 602px !important;
+            width: 310px;
+
+            div.o_mobile_preview_layout, img.img_mobile {
+                height: 659px;
+                width: 342px;
+                top: -30px;
+                left: -17px;
+            }
+        }
+
+        .o_mobile_preview_layout, .img_mobile {
+            position: absolute;
+            pointer-events: none;
+            // The mobile phone image placed on top of the iframe must be moved
+            // to align the outlines of the iframe with the outlines of the
+            // mobile screen.
+            top: -36px;
+            left: -20px;
+        }
+    }
+}
+
+.o_view_form_theme_preview_controller {
+    div.o_form_nosheet {
+        padding: 0px;
+        height:100%;
+        width:100%;
+    }
+
+    .o_field_iframe {
+        width: 100%;
+        height: 100%;
+
+        div.is_mobile {
+            @extend %o-mobile-phone;
+            @include media-breakpoint-up(md) {
+                position: relative;
+            }
+        }
+    }
+}
+
+// TODO adapt theme previews then remove this
+.o_preview_frame::after {
+    content: "";
+    position: absolute;
+    inset: 0 0 0 0;
+    background-color: white;
+}

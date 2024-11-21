@@ -1,0 +1,1000 @@
+// Prevent grid gutter to be higher that bootstrap gutter width to make sure
+// the negative margin layout does not overflow on elements. This prevents the
+// use of an ugly overflow: hidden which would break box-shadows.
+$o-wsale-products-layout-grid-gutter-width: $grid-gutter-width / 2 !default;
+$o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale-products-layout-grid-gutter-width);
+$input-border-color: $gray-400;
+
+.oe_website_sale {
+    // ==== Products list designs
+    .o_wsale_design_cards {
+        --o-wsale-card-border-width: 1px;
+        --o-wsale-card-border-radius: #{$card-border-radius};
+        --o-wsale-card-info-padding: #{map-get($spacers, 2)};
+        --o-wsale-card-info-grow: 1;
+        --o-wsale-card-bg: #{$card-bg};
+        --o-wsale-card-color: #{adjust-color-to-background($body-color, $card-bg)};
+        --o-wsale-card-text-muted: #{adjust-color-to-background($text-muted, $card-bg, mute-color($color-contrast-light), mute-color($color-contrast-dark))};
+
+        $-br-top: calc(#{$card-border-radius} - 1px);
+        --o-wsale-card-thumb-border-radius: #{$-br-top} #{$-br-top} 0 0;
+    }
+    .o_wsale_design_thumbs {
+        --o-wsale-card-border-width: 0;
+        --o-wsale-card-info-padding: #{map-get($spacers, 3)} 0 0;
+        --o-wsale-card-thumb-border-radius: #{$o-wsale-products-layout-grid-gutter-width * .5};
+        --o-wsale-card-thumb-shadow: 0 13px 27px -5px #{scale-color(map-get($theme-colors, 'primary'), $alpha: -90%)},
+                                     0 8px 16px -8px rgba(0, 0, 0, .28);
+    }
+    .o_wsale_design_grid {
+        --o-wsale-card-border-width: 0;
+        --o-wsale-card-info-padding: #{map-get($spacers, 2)};
+        --o-wsale-card-info-grow: 1;
+    }
+
+    // ==== Products list thumb options
+    .o_wsale_context_thumb_4_3 {
+        --o-wsale-card-thumb-aspect-ratio: 4/3;
+    }
+    .o_wsale_context_thumb_4_5 {
+        --o-wsale-card-thumb-aspect-ratio: 4/5;
+    }
+    .o_wsale_context_thumb_2_3 {
+        --o-wsale-card-thumb-aspect-ratio: 2/3;
+    }
+    .o_wsale_context_thumb_cover {
+        --o-wsale-card-thumb-fill-mode: cover;
+    }
+
+    .o_wsale_filmstip_container {
+        $-o-scrollbar-subdle-bg: rgba($dark, 0.05);
+
+        transform: translateZ(0);
+
+        &.o_wsale_filmstip_fancy_disabled {
+            scrollbar-color: currentColor $-o-scrollbar-subdle-bg;
+        }
+
+        .o_wsale_filmstip_wrapper {
+            margin-bottom: map-get($spacers, 2);
+            scroll-snap-type: x mandatory;
+            cursor: grab;
+
+            &::-webkit-scrollbar {
+                height: 2px;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                border-radius: $btn-border-radius-sm;
+                background: currentColor;
+            }
+
+            &::-webkit-scrollbar-track {
+                background: $-o-scrollbar-subdle-bg;
+            }
+        }
+
+        &:not(.o_wsale_filmstip_fancy_disabled):hover {
+            .o_wsale_filmstip_wrapper {
+                margin-bottom: map-get($spacers, 1);
+
+                &::-webkit-scrollbar {
+                    height: 6px;
+                }
+            }
+        }
+    }
+
+    .activeDrag * {
+        cursor: grabbing !important;
+        cursor: -webkit-grabbing;
+    }
+
+    .o_wsale_products_grid_before_rail{
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .o_wsale_products_grid_before_rail::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+    }
+
+    .o_payment_form .card {
+        border-radius: 4px !important;
+    }
+    .address-inline address {
+        display: inline-block;
+    }
+
+    h1[itemprop="name"] {
+        word-break: break-word;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+
+    h1[itemprop="name"] {
+        @include font-size($h3-font-size);
+        font-weight: $font-weight-bold;
+    }
+
+    .toggle_summary_div {
+        @include media-breakpoint-up(xl) {
+            max-width: $o-wsale-input-max-width;
+        }
+    }
+
+    // Extra price badge
+    .text-bg-light .variant_price_extra.text-muted {
+        // Needed to be visible on a dark <body> background.
+        color: adjust-color-to-background($text-muted, $light, mute-color($color-contrast-light), mute-color($color-contrast-dark)) !important;
+    }
+
+    input.js_quantity {
+        min-width: 48px;
+        text-align: center;
+    }
+    input.quantity {
+        padding: 0;
+    }
+
+    .table-striped tbody tr td:nth-of-type(even) {
+        --table-accent-bg: rgba(0, 0, 0, 0.025);
+    }
+    .table-striped tbody tr td:nth-of-type(odd) {
+        --table-accent-bg: rgba(0, 0, 0, 0);
+    }
+    *:not(#product_attributes_simple) > .table-sm tbody td {
+        padding-top: map-get($spacers, 2);
+        padding-bottom: map-get($spacers, 2);
+    }
+
+    #products_grid_before {
+        // == Guess the distance with the navbar
+        $-container-top-gap: calc(#{map-get($spacers, 2)} + var(--gutter-x));
+
+        // == Guess the distance with the viewport's top.
+        // Defined using CSS variables to ease custom-headers overrides.
+        --o_ws_sidebar_top_gap: calc(#{$navbar-padding-y * 2} + #{$btn-padding-y-lg * 2} + #{$-container-top-gap});
+
+        @if (o-website-value('header-scroll-effect') == null) or (o-website-value('header-scroll-effect') == 'fixed') {
+            top: var(--o_ws_sidebar_top_gap);
+        } @else {
+            top: $-container-top-gap;
+        }
+
+        .css_attribute_color {
+            height: 32px;
+            width: 32px;
+        }
+    }
+    .o_pricelist_dropdown, .o_sortby_dropdown {
+        //truncates the dropdown pricelist > 8rem
+        .o_pricelist_dropdown_span {
+            max-width: $o-wsale-dropdown-width-overflow;
+        }
+    }
+
+    // Remove the breadcrumb splitter '/' on small devices
+    // since show only 1 entry on the product page.
+    @include media-breakpoint-down(lg) {
+        .o_wsale_breadcrumb .breadcrumb-item {
+            padding-left: 0;
+
+            &::before {
+                content: "";
+            }
+        }
+    }
+}
+
+#product_detail ~ .oe_structure.oe_empty > section:first-child {
+    border-top: $border-width solid $border-color;
+}
+
+.o_alternative_product {
+    margin: auto;
+}
+
+// Base style for a product card with image/description
+.oe_product_cart {
+    flex-direction: var(--o-wsale-card-flex-direction, column);
+    align-items: var(--o-wsale-card-flex-align-items);
+    border: $card-border-width solid $card-border-color;
+    border-width: var(--o-wsale-card-border-width, 0 0 1px);
+    border-radius: var(--o-wsale-card-border-radius, 0);
+    padding: var(--o-wsale-card-padding, 0);
+    background-color: var(--o-wsale-card-bg);
+    color: var(--o-wsale-card-color);
+
+    .oe_product_image {
+        min-width: var(--o-wsale-card-thumb-size);
+        width: var(--o-wsale-card-thumb-size);
+        border-radius: var(--o-wsale-card-thumb-border-radius);
+        box-shadow: var(--o-wsale-card-thumb-shadow);
+
+        .oe_product_image_link {
+            aspect-ratio: var(--o-wsale-card-thumb-aspect-ratio, 1);
+
+            .oe_product_image_img_wrapper {
+                @include o-position-absolute(0, 0, 0, 0);
+
+                img {
+                    object-fit: var(--o-wsale-card-thumb-fill-mode, contain);
+                    object-position: var(--o-wsale-card-thumb-position, center);;
+                }
+            }
+        }
+    }
+
+    .o_wsale_product_information {
+        padding: var(--o-wsale-card-info-padding, #{map-get($spacers, 2)} 0);
+    }
+
+    .o_wsale_product_information_text {
+        flex-grow: var(--o-wsale-card-info-grow);
+    }
+
+    .oe_subdescription div {
+        min-height: calc(#{$font-size-sm * 1.1} * 2.4);
+        overflow: hidden;
+        display: -webkit-box;
+        text-overflow: ellipsis;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        line-height: 1.1;
+
+        // Hide empty product description in not-edition mode
+        body:not(.editor_enable) &:empty {
+            display: none;
+        }
+    }
+
+    // Outline product description boxes to ease edition
+    body.editor_enable &:hover .oe_subdescription {
+        div:has(br:first-child:last-child):not(:hover), div:empty:not(:hover) {
+            outline: $border-width dashed fade-currentColor(25%);
+        }
+    }
+
+    // Needed to be visible on a dark <body> background. The rule is defined on
+    // the <div> child to avoid overriding the default "text-muted" color if the
+    // "--o-wsale-card-text-muted" variable is not defined.
+    .oe_subdescription.text-muted > div {
+        color: var(--o-wsale-card-text-muted) !important;
+    }
+
+    .o_wsale_product_btn {
+        .btn {
+            padding-left: .9rem;
+            padding-right: .9rem;
+            border: $border-width solid $border-color;
+            transition: none;
+
+            &:hover {
+                background-color: $primary;
+                color: color-contrast($primary);
+            }
+        }
+
+        &:empty {
+            display: none !important;
+        }
+    }
+
+    .o_product_link {
+        @include o-position-absolute(0, 0, 0, 0);
+        z-index: 1;
+    }
+}
+
+// ==== THE GRID
+#products_grid {
+    .o_wsale_products_grid_table {
+        --o-wsale-products-grid-gap-y: calc(var(--o-wsale-products-grid-gap, 16px) * 1.25);
+        --gap: var(--o-wsale-products-grid-gap-y) var(--o-wsale-products-grid-gap, 16px);
+
+        container-type: inline-size;
+        container-name: o-wsale-grid;
+        grid-template-rows: minmax(auto, auto);
+
+        &.o_wsale_design_grid {
+            overflow: hidden;
+
+            .oe_product {
+                --line-offset-y: calc(var(--o-wsale-products-grid-gap-y) / 2);
+                --line-offset-x: calc(var(--o-wsale-products-grid-gap) / 2);
+
+                &:before, &:after {
+                    content: '';
+                    position: absolute;
+                    background-color: $gray-300;
+                }
+
+                &::before {
+                    height: calc(100% + var(--o-wsale-products-grid-gap-y));
+                    width: $border-width;
+                    left: calc(calc(var(--line-offset-x) * -1) - 1px);
+                    top: calc(var(--line-offset-y) * -1);
+                }
+
+                &::after {
+                    width: 100vw;
+                    height: $border-width;
+                    bottom: calc(var(--line-offset-y) * -1);
+                    left: calc(var(--line-offset-x) * -1);
+                }
+            }
+        }
+    }
+}
+
+#products_grid:where(:not(.o_wsale_layout_list)) {
+    @mixin desktop-setup {
+
+        // .o_wsale_products_grid_table
+        // Necessary just to ensure that a product with custom height behaves
+        // correctly when rendered into the last row.
+        grid-auto-rows: minmax(160px, auto);
+
+        .oe_product {
+            grid-row: span var(--o-wsale-products-grid-product-col-height, 1);
+        }
+
+        .oe_product:not(.oe_product_size_stretch) {
+            .o_wsale_product_btn {
+                @include o-position-absolute(auto, auto, calc(100% + #{map-get($spacers, 2)}), map-get($spacers, 2));
+                z-index: 2;
+            }
+
+            &:not(:hover) .o_wsale_product_btn {
+                opacity: 0;
+            }
+        }
+
+        // Stretch
+        .oe_product.oe_product_size_stretch {
+            --o-wsale-card-border-radius: 0;
+            --o-wsale-card-flex-direction: row;
+            --o-wsale-card-flex-align-items: start;
+            --o-wsale-card-info-padding: 0 #{map-get($spacers, 3)};
+            --o-wsale-card-thumb-size: calc(
+                calc(100cqw / var(--o-wsale-ppr)) - calc(var(--o-wsale-products-grid-gap) / 2)
+            );
+            --o-wsale-card-padding: #{0 0 $o-wsale-products-layout-grid-gutter-width};
+
+            .oe_subdescription div {
+                -webkit-line-clamp: initial;
+                line-height: inherit;
+            }
+        }
+
+        &:not(.o_wsale_context_thumb_cover) .oe_product.oe_product_size_stretch {
+            .oe_product_image img {
+                object-position: top left;
+            }
+        }
+
+        &.o_wsale_context_thumb_cover .oe_product.oe_product_size_stretch {
+            --o-wsale-card-info-grow: 1;
+
+            .o_wsale_product_information {
+                height: 100%;
+            }
+
+            .oe_product_image, .oe_product_image_link {
+                height: 100%;
+                max-width: 100%;
+                padding: 0;
+            }
+        }
+
+        &.o_wsale_design_cards .oe_product.oe_product_size_stretch {
+            --o-wsale-card-padding: 0;
+            --o-wsale-card-border-radius: #{$card-border-radius};
+            --o-wsale-card-info-padding: #{map-get($spacers, 3)};
+        }
+
+        &.o_wsale_design_grid .oe_product.oe_product_size_stretch {
+            --o-wsale-card-padding: 0;
+            --o-wsale-card-info-padding: #{map-get($spacers, 2)} #{map-get($spacers, 3)};
+
+            &[data-colspan="4"] {
+                --o-wsale-card-thumb-size: 50cqw;
+            }
+        }
+
+        .oe_product.oe_product_custom_portrait {
+            .oe_product_image, .oe_product_image_link {
+                min-height: calc(
+                    calc(90cqw / var(--o-wsale-ppr)) * var(--o-wsale-card-thumb-aspect-ratio)
+                );
+                height: 100%;
+            }
+
+            .oe_product_image_link {
+                --o-wsale-card-thumb-fill-mode: cover;
+                --o-wsale-card-thumb-aspect-ratio: auto;
+            }
+        }
+    }
+
+    .o_wsale_product_information {
+        container-type: inline-size;
+        container-name: o-wsale-grid-product-information;
+
+        .o_wsale_products_item_title {
+            font-size: unquote("clamp(0.95rem, 0.5rem + 3cqw, 1.4rem)");
+        }
+
+        .o_wsale_product_sub .product_price .h6 {
+            font-size: unquote("clamp(0.95rem, 0.5rem + 3cqw, 4rem)");
+        }
+    }
+
+    .o_wsale_products_grid_table {
+        @include media-breakpoint-up(lg) {
+            @include desktop-setup();
+        }
+    }
+
+    .o_wsale_products_grid_table_md {
+        @include media-breakpoint-only(md) {
+            @include desktop-setup();
+        }
+    }
+}
+
+#products_grid.o_wsale_layout_list {
+    .oe_product {
+        --o-wsale-card-flex-direction: row;
+        --o-wsale-card-flex-align-items: start;
+        --o-wsale-card-info-padding: 0 #{map-get($spacers, 3)};
+        --o-wsale-card-info-grow: 1;
+        --o-wsale-card-thumb-size: calc(100px * var(--o-wsale-card-thumb-aspect-ratio, 1));
+        --o-wsale-card-padding: #{0 0 $o-wsale-products-layout-grid-gutter-width};
+
+        grid-column: span $grid-columns;
+        grid-row: span 1;
+    }
+
+    .o_wsale_design_cards, .o_wsale_design_grid {
+        .o_wsale_product_information {
+            min-height: 100%;
+        }
+
+        .oe_product_cart:where(:not(.oe_product_cart_has_description)) {
+            --o-wsale-card-padding: 0;
+            --o-wsale-card-info-padding: #{map-get($spacers, 2)} #{map-get($spacers, 3)} #{map-get($spacers, 2)} #{map-get($spacers, 2)};
+        }
+
+        .oe_product_cart.oe_product_cart_has_description {
+            --o-wsale-card-padding: #{map-get($spacers, 2)} #{map-get($spacers, 3)} #{map-get($spacers, 2)} #{map-get($spacers, 2)};
+            --o-wsale-card-thumb-position: center top;
+        }
+
+        &.o_wsale_context_thumb_cover .oe_product_cart.oe_product_cart_has_description {
+            --o-wsale-card-thumb-position: center;
+        }
+    }
+}
+
+.o_wsale_products_main_row {
+    // Special case. Normally vertical margins would be set using the BS4
+    // mt-* / my-* / mb-* utility classes, but here we need to use the shop max
+    // grid gutter width to prevent the grid wrapper to overflow because of its
+    // negative margins.
+    margin-bottom: $grid-gutter-width / 2;
+    margin-top: $grid-gutter-width / 2;
+}
+
+.oe_cart {
+
+    > .oe_structure {
+        clear: both;
+    }
+}
+
+div#payment_method {
+    div.list-group {
+        margin-left: 40px;
+    }
+
+    .list-group-item {
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+}
+
+.js_change_address {
+    cursor: pointer;
+}
+
+a.no-decoration {
+    cursor: pointer;
+    text-decoration: none !important;
+}
+
+#o-carousel-product {
+    transition: top 200ms;
+
+    &.css_not_available {
+        opacity: 0.2;
+    }
+
+    .carousel-inner {
+        img {
+            object-fit: contain;
+        }
+    }
+
+    &.o_carousel_not_single .carousel-outer {
+        aspect-ratio: 1 / 1;
+
+        &.o_wsale_carousel_ratio_4x3 {
+            aspect-ratio: 4 / 3;
+        }
+
+        &.o_wsale_carousel_ratio_4x5 {
+            aspect-ratio: 4 / 5;
+        }
+
+        &.o_wsale_carousel_ratio_16x9 {
+            aspect-ratio: 16 / 9;
+        }
+
+        &.o_wsale_carousel_ratio_21x9 {
+            aspect-ratio: 21 / 9;
+        }
+
+        .product_detail_img {
+            width: auto !important;
+        }
+    }
+
+    @include media-breakpoint-up(xl) {
+        &:not(:hover) {
+            .carousel-control-prev, .carousel-control-next {
+                opacity: 0;
+            }
+        }
+    }
+
+    .carousel-item, .o_carousel_product_indicators {
+        transition: transform 0.2s ease-out;
+    }
+
+    .carousel-indicators {
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .o_carousel_product_indicators {
+        max-height: 400px;
+
+        @include media-breakpoint-up(lg) {
+            .carousel-indicators {
+                justify-content: start;
+
+                li {
+                    width: 64px;
+                    height: 64px;
+                    text-indent: unset;
+                    transition: none;
+                    border: 1px solid map-get($grays, '400');
+
+                    .o_product_video_thumb {
+                        @include o-position-absolute(0, 0, 0, 0);
+                        line-height: 64px;
+                    }
+
+                    &.active {
+                        border-color: map-get($theme-colors, 'primary');
+                    }
+
+                    &:hover {
+                        opacity: 1;
+                    }
+                }
+            }
+        }
+    }
+
+    @include media-breakpoint-down(lg) {
+        &.o_carousel_product_left_indicators {
+            flex-direction: column-reverse;
+        }
+
+        .carousel-indicators {
+            justify-content: center;
+
+            li {
+                width: 8px;
+                height: 8px;
+                min-width: 8px;
+                border-radius: 50%;
+                border: 2px solid map-get($grays, '400');
+
+                &.active {
+                    border-color: map-get($theme-colors, 'primary');
+                    background-color: map-get($theme-colors, 'primary');
+                }
+                > div {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    @include media-breakpoint-up(lg) {
+        .carousel-indicators li {
+            margin: 0;
+
+            &:not(:first-child) {
+                margin-left: 10px;
+            }
+        }
+
+        &.o_carousel_product_left_indicators {
+            .carousel-indicators li {
+                margin: 0;
+
+                &:not(:first-child) {
+                    margin-top: 10px;
+                }
+            }
+        }
+    }
+}
+
+#o-carousel-product, .o_wsale_image_viewer {
+    .carousel-control-prev, .carousel-control-next {
+        top: auto;
+        bottom: auto;
+        opacity: 0.5;
+        cursor: pointer;
+        transition: opacity 0.8s;
+
+        &:focus {
+            opacity: 0.65;
+        }
+
+        &:hover {
+            opacity: 0.8;
+        }
+
+        > i {
+            width: 2.5rem;
+            height: 2.5rem;
+            line-height: 2.5rem;
+            @include font-size(1.15rem);
+            border-radius: var(--btn-border-radius);
+        }
+
+        @include media-breakpoint-down(lg) {
+            > i {
+                width: 2rem;
+                height: 2rem;
+                line-height: 2rem;
+                font-size: 1rem;
+            }
+        }
+    }
+}
+
+// Customization of the grid on /product page.
+.o_wsale_product_page_grid_column div {
+    &:first-child {
+        margin-top: 0 !important;
+    }
+
+    &:last-child {
+        margin-bottom: 0 !important;
+    }
+}
+
+.ecom-zoomable {
+    &[data-ecom-zoom-click] {
+        img.product_detail_img {
+            cursor: zoom-in;
+        }
+    }
+    img[data-zoom] {
+        cursor: zoom-in;
+    }
+    .o_editable img[data-zoom] {
+        cursor: pointer;
+    }
+    .zoomodoo-flyout {
+        box-shadow: 0 0 20px 2px rgba(black, 0.2);
+        z-index: 1050;
+    }
+}
+
+#coupon_box form {
+    max-width: 300px;
+}
+
+.o_website_sale_animate {
+    opacity: 0.7;
+    position: absolute !important;
+    height: 150px;
+    width: 150px;
+    z-index: 1020;
+}
+
+.o_red_highlight {
+    --background-color: #{map-get($theme-colors, 'danger')};
+    --bg-solid: var(--background-color) !important;
+
+    box-shadow: 0 0 0 0 rgba(240,8,0,0.4);
+    transition: all 0.5s linear;
+}
+
+.o_shadow_animation {
+    box-shadow: 0 0 5px 10px rgba(240,8,0,0.4)!important;
+}
+
+.o_mycart_zoom_animation {
+    transform: scale(1.4);
+    transition: all 0.3s ease-in-out;
+}
+
+/* product recently viewed snippet */
+
+.o_carousel_product_card {
+    .o_carousel_product_card_img_top {
+        object-fit: scale-down;
+        @include media-breakpoint-down(md) {
+            height: 12rem;
+        }
+        @include media-breakpoint-up(md) {
+            height: 8rem;
+        }
+        @include media-breakpoint-up(lg) {
+            height: 12rem;
+        }
+    }
+    .o_carousel_product_img_link:hover + .o_carousel_product_remove {
+        display: block;
+    }
+}
+
+.o_carousel_product_card_wrap {
+    @include media-breakpoint-up(sm) {
+        float: left;
+    }
+}
+
+.o_carousel_product_control {
+    top: percentage(1/3);
+    bottom: percentage(1/3);
+    width: 2rem;
+    border-radius: 5px;
+    background-color: $o-enterprise-action-color;
+}
+
+.o_carousel_product_remove {
+    position: absolute;
+    display: none;
+    cursor: pointer;
+    right: 5%;
+    top: 5%;
+}
+
+.o_carousel_product_remove:hover {
+    display: block;
+}
+
+// customer reviews
+.o_product_page_reviews_title {
+    .fa {
+        @include font-size(1.4rem);
+        color: map-get($theme-colors, 'primary');
+
+        &:before {
+            content: "\f067";
+        }
+    }
+    &:not(.collapsed) {
+        .fa:before {
+            content: "\f068";
+        }
+    }
+}
+
+#o_product_page_reviews_content {
+    .o_website_rating_avg {
+        h1 {
+            @include font-size(3.5rem);
+        }
+    }
+    .o_portal_chatter_composer {
+        position: sticky;
+        transition: top 200ms;
+    }
+    .o_portal_chatter_messages > .o_portal_chatter_message {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);;
+        padding: 1rem 0;
+        margin-bottom: 1rem;
+    }
+    .o_portal_chatter_avatar {
+        border-radius: 50%;
+    }
+}
+
+.o_product_tag_img {
+    height: 2rem;
+}
+
+.o_wsale_share_menu {
+    min-width: 3em;
+}
+
+.o_website_sale_checkout {
+    .o_total_card {
+        // The accordion have to mimick the styling of a card
+        background-color: $card-bg;
+        border: $border-width solid $border-color;
+        border-radius: $card-border-radius;
+
+        .accordion-item {
+            @include o-bg-color(rgba($card-bg, $o-card-body-bg-opacity));
+        }
+
+        // TODO VCR This value should adapt to the offsetHeight
+        // of the header this is an arbitrary value as a temporary solution
+        // to offset the summary regarding the tallest header (Magazine)
+        @include media-breakpoint-up(lg) {
+            top: 9rem;
+        }
+
+        @include media-breakpoint-down(lg) {
+            border: 0;
+
+            .card-body, .accordion-item, .accordion-button {
+                border-radius: 0;
+                background-color: var(--o-cc1-bg) !important;
+                color: inherit;
+            }
+        }
+    }
+
+    #cart_total {
+        @include media-breakpoint-down(lg) {
+            padding-top: map-get($spacers, 3);
+            border-top: $border-width solid $border-color;
+        }
+    }
+
+    .o_wsale_accordion {
+        .accordion-button{
+            background-color: unset;
+        }
+
+        .o_wsale_scrollable_table {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            &::-webkit-scrollbar {
+              display: none;
+            }
+            @include media-breakpoint-up(lg) {
+                overflow-y: scroll;
+                height: 15rem;
+            }
+        }
+    }
+
+    span[itemprop='name'] {
+        font-size: $h6-font-size;
+        font-weight: $headings-font-weight;
+        line-height: $headings-line-height;
+    }
+
+    div[itemprop="address"] {
+        margin: map-get($spacers, 2) 0;
+        font-size: $font-size-sm;
+    }
+
+    .o_wsale_address_fill {
+        .col-form-label:not(.label-optional)::after {
+            content: " *";
+            font-weight: normal;
+        }
+    }
+
+    .all_delivery, .all_billing {
+        @include media-breakpoint-down(md) {
+            overflow-x: auto;
+
+            > div {
+                width: auto;
+            }
+        }
+
+        .o_wsale_add_address {
+            min-height: 8rem;
+        }
+    }
+
+    div[name="o_express_checkout_container"] {
+        margin-bottom: -#{map-get($spacers, 3)};
+        margin-top: map-get($spacers, 3);
+    }
+
+    button[name="o_payment_submit_button"] {
+        margin-left: 0 !important;
+    }
+
+    // We can't technically duplicate navigations CTA therefore we use
+    // an absolute positioning to move the CTA from the summary to the
+    // bottom of the page.
+    @include media-breakpoint-down(lg){
+        .o_cta_navigation_container {
+            padding: 0 calc(var(--gutter-x) * .5);
+        }
+    }
+
+    // TODO This height is arbitrary and the calculation should be improved.
+    .o_cta_navigation_placeholder {
+        height: o-to-rem(111px) + map-get($spacers, 4) + 2rem;
+    }
+
+    a.disabled {
+        pointer-events: none;
+    }
+}
+
+.oe_website_sale {
+    // Changes the chevron color to contrast with user's theme background color
+    .accordion-button:not(.collapsed)::after {
+        background-image: escape-svg($accordion-button-icon);
+    }
+
+    #product_accordion {
+        --accordion-active-bg: inherit;
+        --accordion-active-color: var(--accordion-btn-color);
+        --accordion-btn-padding-x : 0;
+        --accordion-body-padding-x: 0;
+
+        .accordion-item {
+            border-top: $border-width solid $border-color;
+            border-bottom: $border-width solid $border-color;
+
+            &:not(:last-child) {
+                border-bottom: 0;
+            }
+        }
+
+        .accordion-button:not(.collapsed) {
+            box-shadow: none;
+        }
+
+        // Necessary to display the first accordion entry as opened before the
+        // JS code is loaded. When loaded, the `.o_accordion_not_initialized` class
+        // will be removed.
+        &.o_accordion_not_initialized > .accordion-item:first-child {
+            .accordion-button::after {
+                transform: var(--accordion-btn-icon-transform);
+            }
+
+            .accordion-collapse {
+                display: block;
+            }
+        }
+    }
+}
+
+.o_wsale_products_grid_before_rail .accordion {
+    --accordion-btn-icon-width: 1rem;
+}
+
+.wsale_accordion_collapsible {
+    .products_attributes_filters & div.accordion-item:first-of-type {
+        border-top: none;
+    }
+}
+
+// Hide chevrons for collapsed categories
+.o_categories_recursive_button:after {
+    display: none;
+}

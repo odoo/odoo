@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="product_template_form_view" model="ir.ui.view">
+        <field name="name">product.template.form.view.inherit.sale</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <page name="sales" position="attributes">
+                <attribute name="invisible" remove="1" separator="or"/>
+            </page>
+            <field name="product_variant_count" position="after">
+                <field name="service_type" widget="radio" invisible="True"/>
+                <field name="visible_expense_policy" invisible="1"/>
+            </field>
+            <field name="type" position="after">
+                <field
+                    name="invoice_policy"
+                    required="1"
+                    invisible="not sale_ok or type == 'combo'"
+                />
+            </field>
+            <field name="service_tracking" position="attributes">
+                <attribute name="invisible" add="not sale_ok" separator="or"/>
+            </field>
+            <group name="description" position="after">
+                <t groups="sales_team.group_sale_salesman">
+                    <group string="Warning when Selling this Product" groups="sale.group_warning_sale">
+                        <field name="sale_line_warn" string="Warning"/>
+                        <field name="sale_line_warn_msg"
+                               string="Message"
+                               placeholder="Type a message..."
+                               invisible="sale_line_warn == 'no-message'"
+                               required="sale_line_warn != 'no-message'"/>
+                    </group>
+                </t>
+                <group name="expense_info" string="Expense" invisible="not visible_expense_policy">
+                    <field name="expense_policy" widget="radio"/>
+                </group>
+            </group>
+        </field>
+    </record>
+
+    <!-- TODO VFE inherit product_template_form_view and factorize both views -->
+    <record id="product_form_view_sale_order_button" model="ir.ui.view">
+        <field name="name">product.product.sale.order</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button"
+                    name="action_view_sales"
+                    type="object"
+                    icon="fa-signal"
+                    help="Sold in the last 365 days"
+                    groups="sales_team.group_sale_salesman"
+                    invisible="not sale_ok">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value d-flex gap-1">
+                            <field name="sales_count" widget="statinfo" nolabel="1" class="oe_inline"/>
+                            <field name="uom_name" class="oe_inline"/>
+                        </span>
+                        <span class="o_stat_text">Sold</span>
+                    </div>
+                </button>
+            </div>
+        </field>
+    </record>
+
+    <record id="product_template_form_view_sale_order_button" model="ir.ui.view">
+        <field name="name">product.template.sale.order.button</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <button name="action_open_documents" position="after">
+                <button class="oe_stat_button"
+                    name="action_view_sales"
+                    type="object" icon="fa-signal"
+                    help="Sold in the last 365 days"
+                    groups="sales_team.group_sale_salesman"
+                    invisible="not sale_ok">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value d-flex gap-1">
+                            <field name="sales_count" widget="statinfo" nolabel="1" class="oe_inline"/>
+                            <field name="uom_name" class="oe_inline"/>
+                        </span>
+                        <span class="o_stat_text">Sold</span>
+                    </div>
+                </button>
+            </button>
+        </field>
+    </record>
+
+    <record id="product_template_action" model="ir.actions.act_window">
+        <field name="name">Products</field>
+        <field name="res_model">product.template</field>
+        <field name="path">products</field>
+        <field name="view_mode">kanban,list,form,activity</field>
+        <field name="view_id" ref="product.product_template_kanban_view"/>
+        <field name="search_view_id" ref="product.product_template_search_view"/>
+        <field name="context">{"search_default_filter_to_sell":1, "sale_multi_pricelist_product_template": 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new product
+            </p><p>
+                You must define a product for everything you sell or purchase,
+                whether it's a storable product, a consumable or a service.
+            </p>
+        </field>
+    </record>
+
+    <record id="product_view_kanban_catalog" model="ir.ui.view">
+        <field name="name">product.view.kanban.catalog.inherit.sale</field>
+        <field name="inherit_id" ref="product.product_view_kanban_catalog"/>
+        <field name="model">product.product</field>
+        <field name="arch" type="xml">
+            <xpath expr="//t[@t-name='menu']" position="attributes">
+                <attribute name="groups">sales_team.group_sale_manager</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_view_search_catalog" model="ir.ui.view">
+        <field name="name">product.view.search.catalog.inherit.sale</field>
+        <field name="inherit_id" ref="product.product_view_search_catalog"/>
+        <field name="model">product.product</field>
+        <field name="arch" type="xml">
+            <filter name="goods" position="after">
+                <filter string="In the Order"
+                        invisible="context.get('active_model', '') != 'sale.order.line'"
+                        name="products_in_order"
+                        domain="[('product_catalog_product_is_in_sale_order', '=', True)]"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="view_category_property_form" model="ir.ui.view">
+        <field name="name">product.category.property.form.inherit.sale</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_form_view"/>
+        <field name="arch" type="xml">
+            <field name="property_account_expense_categ_id" position="after">
+                <field name="property_account_downpayment_categ_id"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

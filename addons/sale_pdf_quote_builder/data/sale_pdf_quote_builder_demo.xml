@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="sale_pdf_header_demo_page" model="quotation.document">
+        <field name="name">Header</field>
+        <field name="datas" type="base64" file="sale_pdf_quote_builder/static/quote_builder_pdf/quote_header.pdf"/>
+        <field name="mimetype">application/pdf</field>
+        <field name="document_type">header</field>
+        <field name="sequence">15</field>
+    </record>
+
+    <record id="sale_pdf_header_about_us_demo_page" model="quotation.document">
+        <field name="name">About Us</field>
+        <field name="datas" type="base64" file="sale_pdf_quote_builder/static/quote_builder_pdf/quote_header_about_us.pdf"/>
+        <field name="mimetype">application/pdf</field>
+        <field name="document_type">header</field>
+        <field name="sequence">25</field>
+    </record>
+
+    <record id="sale_pdf_header_project_description_demo_page" model="quotation.document">
+        <field name="name">Project Description</field>
+        <field name="datas" type="base64" file="sale_pdf_quote_builder/static/quote_builder_pdf/quote_header_project_description.pdf"/>
+        <field name="mimetype">application/pdf</field>
+        <field name="document_type">header</field>
+        <field name="sequence">30</field>
+    </record>
+
+    <record id="sale_pdf_footer_testimonials_demo_page" model="quotation.document">
+        <field name="name">Testimonials</field>
+        <field name="datas" type="base64" file="sale_pdf_quote_builder/static/quote_builder_pdf/quote_footer_testimonials.pdf"/>
+        <field name="mimetype">application/pdf</field>
+        <field name="document_type">footer</field>
+        <field name="sequence">35</field>
+    </record>
+
+    <record id="sale_pdf_footer_terms_demo_page" model="quotation.document">
+        <field name="name">Terms and Conditions</field>
+        <field name="datas" type="base64" file="sale_pdf_quote_builder/static/quote_builder_pdf/quote_footer_terms.pdf"/>
+        <field name="mimetype">application/pdf</field>
+        <field name="document_type">footer</field>
+        <field name="sequence">40</field>
+    </record>
+
+    <record id="consu_delivery_02_document" model="product.document">
+        <field name="name">Large Meeting Table Document</field>
+        <field name="datas" type="base64" file="sale_pdf_quote_builder/static/quote_builder_pdf/large_meeting_table_with_form_fields.pdf"/>
+        <field name="mimetype">application/pdf</field>
+        <field name="res_model">product.template</field>
+        <field name="attached_on_sale">inside</field>
+        <field name="res_id" ref="product.consu_delivery_02_product_template"/>
+    </record>
+
+    <record id="product.product_product_4_product_template_document" model="product.document">
+        <field name="attached_on_sale">inside</field>
+    </record>
+
+    <record id="product.product_product_25_document" model="product.document">
+        <field name="attached_on_sale">inside</field>
+    </record>
+
+    <record id="sale_management.sale_order_template_1" model="sale.order.template">
+        <field
+            name="quotation_document_ids"
+            eval="[
+                Command.link(ref('sale_pdf_header_demo_page')),
+                Command.link(ref('sale_pdf_header_project_description_demo_page')),
+                Command.link(ref('sale_pdf_footer_testimonials_demo_page')),
+                Command.link(ref('sale_pdf_footer_terms_demo_page')),
+            ]"
+        />
+    </record>
+
+</odoo>

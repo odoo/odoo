@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="address" inherit_id="website_sale.address" name="Show l10n_it fields" customize_show="True">
+        <div id="div_vat" position="after">
+            <t t-if="res_company.account_fiscal_country_id.code == 'IT'">
+                <div class="w-100"/>
+                <div class="col-lg-6 mb-3" id="div_l10n_it_codice_fiscale">
+                    <label class="col-form-label fw-normal label-optional" for="l10n_it_codice_fiscale">Codice Fiscale</label>
+                    <input type="text"
+                        name="l10n_it_codice_fiscale"
+                        class="form-control"
+                        t-att-value="partner_sudo.l10n_it_codice_fiscale"/>
+                </div>
+                <div class="col-lg-6 mb-3" id="div_l10n_it_pa_index">
+                    <label class="col-form-label fw-normal label-optional" for="l10n_it_pa_index">Destination Code (SDI)</label>
+                    <input type="text"
+                        name="l10n_it_pa_index"
+                        class="form-control"
+                        t-att-value="partner_sudo.l10n_it_pa_index"/>
+                </div>
+            </t>
+        </div>
+    </template>
+
+</odoo>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="partner_demo_company_zm" model="res.partner">
+        <field name="name">ZM Company</field>
+        <field name="vat">1234567890</field>
+        <field name="street">1 Makishi Rd</field>
+        <field name="city">Lusaka</field>
+        <field name="country_id" ref="base.zm"/>
+        <field name="state_id"/>
+        <field name="zip"/>
+        <field name="phone">+260 96 123456</field>
+        <field name="email">info@company.zmexample.com</field>
+        <field name="website">www.zmexample.com</field>
+    </record>
+
+    <record id="demo_company_zm" model="res.company">
+        <field name="name">ZM Company</field>
+        <field name="partner_id" ref="partner_demo_company_zm"/>
+    </record>
+
+    <function model="res.company" name="_onchange_country_id">
+        <value eval="[ref('demo_company_zm')]"/>
+    </function>
+
+    <function model="res.users" name="write">
+        <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
+        <value eval="{'company_ids': [(4, ref('l10n_zm_account.demo_company_zm'))]}"/>
+    </function>
+
+    <function model="account.chart.template" name="try_loading">
+        <value eval="[]"/>
+        <value>zm</value>
+        <value model="res.company" eval="obj().env.ref('l10n_zm_account.demo_company_zm')"/>
+        <value name="install_demo" eval="True"/>
+    </function>
+</odoo>
