@@ -199,6 +199,14 @@ class TestIrModel(TransactionCase):
             bananas = self.env['x_bananas'].search([])
             self.assertEqual(bananas.mapped('x_name'), names, 'failed to order by %s' % order)
 
+    def test_model_fold_search(self):
+        """Check that custom orders are applied when querying a model."""
+        self.assertEqual(self.bananas_model.fold_name, False)
+        self.assertEqual(self.env['x_bananas']._fold_name, None)
+
+        self.bananas_model.fold_name = 'x_name'
+        self.assertEqual(self.env['x_bananas']._fold_name, 'x_name')
+
     def test_group_expansion(self):
         """Check that the basic custom group expansion works."""
         model = self.env['x_bananas'].with_context(read_group_expand=True)
