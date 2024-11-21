@@ -267,10 +267,6 @@ export class Message extends Component {
         return this.env.inChatter ? 3 : this.env.inChatWindow ? 2 : 4;
     }
 
-    get showSeenIndicator() {
-        return this.props.message.isSelfAuthored && this.props.thread?.hasSeenFeature;
-    }
-
     get showSubtypeDescription() {
         return (
             this.message.subtype_description &&
