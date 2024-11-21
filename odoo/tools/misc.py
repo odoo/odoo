@@ -28,7 +28,7 @@ from collections import defaultdict
 from collections.abc import Iterable, Iterator, Mapping, MutableMapping, MutableSet, Reversible
 from contextlib import ContextDecorator, contextmanager
 from difflib import HtmlDiff
-from functools import wraps
+from functools import reduce, wraps
 from itertools import islice, groupby as itergroupby
 from operator import itemgetter
 
@@ -1080,6 +1080,9 @@ class OrderedSet(MutableSet[T], typing.Generic[T]):
 
     def __repr__(self):
         return f'{type(self).__name__}({list(self)!r})'
+
+    def intersection(self, *others):
+        return reduce(OrderedSet.__and__, others, self)
 
 
 class LastOrderedSet(OrderedSet[T], typing.Generic[T]):
