@@ -91,7 +91,7 @@ export function search(field, searchWord) {
 export function settleTips() {
     return [
         {
-            trigger: ".ticket-screen .buttons .settle-tips",
+            trigger: ".ticket-screen .controls .settle-tips",
             run: "click",
         },
         isSyncStatusConnected(),
@@ -147,13 +147,6 @@ export function contains(string) {
         },
     ];
 }
-export function noNewTicketButton() {
-    return [
-        {
-            trigger: ".ticket-screen .controls .buttons:nth-child(1):has(.discard)",
-        },
-    ];
-}
 export function filterIs(name) {
     return [
         {
@@ -205,12 +198,4 @@ export function back() {
         trigger: ".back-button",
         run: "click",
     };
-}
-
-export function nthColumnContains(nRow, nCol, string) {
-    return [
-        {
-            trigger: `.ticket-screen .order-row:nth-last-child(${nRow}) > .col:nth-child(${nCol}):contains("${string}")`,
-        },
-    ];
 }

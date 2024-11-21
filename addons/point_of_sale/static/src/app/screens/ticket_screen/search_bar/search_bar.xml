@@ -7,7 +7,7 @@
                 <div class="input-group">
                     <input class="form-control bg-view border-light ps-2 ps-5" t-ref="autofocus"
                     t-model="state.searchInput" t-on-keydown="onSearchInputKeydown" t-on-keyup="onSearchInputKeyup" type="text" t-att-placeholder="props.placeholder" />
-                    <div t-if="state.showSearchFields and state.searchInput" class="fields">
+                    <div t-if="state.showSearchFields and state.searchInput" class="fields z-1">
                         <ul class="py-1 bg-view small">
                             <t t-foreach="searchFieldsList" t-as="fieldName" t-key="fieldName">
                                 <li class="ps-5 py-1 text-start"

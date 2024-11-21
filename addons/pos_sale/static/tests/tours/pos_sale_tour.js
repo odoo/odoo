@@ -22,7 +22,7 @@ registry.category("web_tour.tours").add("PosSettleOrder", {
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.isShown(),
-            Chrome.clickMenuOption("Orders"),
+            Chrome.clickOrders(),
         ].flat(),
 });
 
@@ -76,7 +76,7 @@ registry.category("web_tour.tours").add("PosRefundDownpayment", {
             ...ProductScreen.clickRefund(),
             // Filter should be automatically 'Paid'.
             TicketScreen.filterIs("Paid"),
-            TicketScreen.selectOrder("-00001"),
+            TicketScreen.selectOrder("001"),
             Order.hasLine({
                 productName: "Down Payment",
                 withClass: ".selected",
