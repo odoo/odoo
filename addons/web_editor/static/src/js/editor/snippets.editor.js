@@ -3151,6 +3151,11 @@ class SnippetsMenu extends Component {
             optionEl.dataset.selector = '.o_wblog_post_page_cover[data-res-model="blog.post"]';
         }
 
+        // TODO: Remove in master and add it in template s_website_form
+        const websiteFormEditorOptionsEl = $html.find('[data-js="WebsiteFormEditor"]')[0];
+        if (websiteFormEditorOptionsEl) {
+            websiteFormEditorOptionsEl.dataset.dropExcludeAncestor = "form";
+        }
         this.templateOptions = [];
         var selectors = [];
         var $styles = $html.find('[data-selector]');
