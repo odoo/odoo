@@ -15,6 +15,16 @@
                 <xpath expr="//field[@name='move_ids_without_package']//tree//field[@name='product_uom_qty']" position="after">
                     <field name="remaining_qty" />
                     <field name="delivery_receipt_state"/>
+                    <field name="packed" optional="hide" column_invisible="parent.state=='draft'"/>
+                    <field name="released_manual" optional="hide" column_invisible="parent.state=='draft'"/>
+                </xpath>
+
+                <!-- Add the Pack button in the header -->
+                <xpath expr="//form/header" position="inside">
+                    <button name="button_manual_pack"
+                            string="Pack"
+                            type="object"
+                            class="btn-primary"/>
                 </xpath>
             </field>
         </record>
