@@ -488,6 +488,19 @@ class ResPartner(models.Model):
         for partner in self:
             partner.journal_item_count = AccountMoveLine.search_count([('partner_id', '=', partner.id)])
 
+    def _compute_available_invoice_template_pdf_report_ids(self):
+        moves = self.env['account.move']
+
+        for move_type in ['out_invoice', 'out_refund', 'out_receipt']:
+            moves += self.env['account.move'].new({'move_type': move_type})
+
+        available_reports = moves._get_available_action_reports()
+
+        if not available_reports:
+            raise UserError(_("There is no template that applies to invoices."))
+
+        self.available_invoice_template_pdf_report_ids = available_reports
+
     def _get_company_currency(self):
         for partner in self:
             if partner.company_id:
@@ -496,8 +509,8 @@ class ResPartner(models.Model):
                 partner.currency_id = self.env.company.currency_id
 
     def _default_display_invoice_template_pdf_report_id(self):
-        available_templates_count = self.env['ir.actions.report'].search_count([('is_invoice_report', '=', True)], limit=2)
-        return available_templates_count > 1
+        """ Show PDF template selection if there are more than 1 template available for invoices. """
+        return len(self.available_invoice_template_pdf_report_ids) > 1
 
     name = fields.Char(tracking=True)
     credit = fields.Monetary(compute='_credit_debit_get', search=_credit_search,
@@ -564,7 +577,7 @@ class ResPartner(models.Model):
     invoice_sending_method = fields.Selection(
         string="Invoice sending",
         selection=[
-            ('manual', 'Download'),
+            ('manual', 'Manual'),
             ('email', 'by Email'),
         ],
         company_dependent=True,
@@ -578,10 +591,15 @@ class ResPartner(models.Model):
     invoice_edi_format_store = fields.Char(company_dependent=True)
     display_invoice_edi_format = fields.Boolean(default=lambda self: len(self._fields['invoice_edi_format'].selection), store=False)
     invoice_template_pdf_report_id = fields.Many2one(
+        string="Invoice report",
         comodel_name='ir.actions.report',
-        domain="[('is_invoice_report', '=', True)]",
+        domain="[('id', 'in', available_invoice_template_pdf_report_ids)]",
         readonly=False,
         store=True,
+    )
+    available_invoice_template_pdf_report_ids = fields.One2many(
+        comodel_name='ir.actions.report',
+        compute="_compute_available_invoice_template_pdf_report_ids",
     )
     display_invoice_template_pdf_report_id = fields.Boolean(default=_default_display_invoice_template_pdf_report_id, store=False)
     # Computed fields to order the partners as suppliers/customers according to the

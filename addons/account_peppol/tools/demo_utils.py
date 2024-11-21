@@ -87,7 +87,6 @@ def _mock_button_verify_partner_endpoint(func, self, *args, **kwargs):
     endpoint, eas, edi_format = self.peppol_endpoint, self.peppol_eas, self.invoice_edi_format
     if endpoint and eas and edi_format:
         self.peppol_verification_state = 'valid'
-        self.invoice_sending_method = 'peppol'
         self._log_verification_state_update(self.env.company, old_value, 'valid')
 
 

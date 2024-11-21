@@ -733,7 +733,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         ]
 
         invoice.action_post()
-        invoice._generate_and_send(mail_template_id=self.move_template.id)
+        invoice._generate_and_send(template_id=self.move_template.id)
 
         self.assertRecordValues(invoice, [{
             'amount_untaxed': 600.00,

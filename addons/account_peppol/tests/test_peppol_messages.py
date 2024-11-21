@@ -370,7 +370,6 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
             'peppol_eas': '0208',
             'peppol_endpoint': '0477472701',
             'invoice_edi_format': 'ubl_bis3',
-            'invoice_sending_method': 'peppol',
         }])
         # but not valid for company 2
         self.assertRecordValues(new_partner.with_company(company_2), [{
@@ -378,7 +377,6 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
             'peppol_eas': '0208',
             'peppol_endpoint': '0477472701',
             'invoice_edi_format': False,
-            'invoice_sending_method': 'peppol',
         }])
         move_1 = self.create_move(new_partner)
         move_2 = self.create_move(new_partner)

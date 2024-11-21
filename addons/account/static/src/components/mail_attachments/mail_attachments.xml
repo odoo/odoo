@@ -1,66 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-
-    <t t-name="account.mail_attachment_file"
-       t-inherit="web.Many2ManyBinaryField.attachment_preview"
-       t-inherit-mode="primary">
-        <!-- Remove the download on hover for placeholder. -->
-        <xpath expr="//div[hasclass('o_image_box', 'float-start')]" position="replace">
-            <div class="o_image_box float-start"
-                 t-att="{
-                    'data-tooltip': !file.placeholder ? `Download ${file.name}` : undefined,
-                 }"
-            >
-                <a t-att="{
-                    'href': !file.placeholder ? url : undefined,
-                    'aria-label': !file.placeholder ? 'Download' : undefined,
-                    'download': !file.placeholder ? '' : undefined,
-                   }"
-                >
-                    <span class="o_image o_hover"
-                          style="height:15px;width:30px;"
-                          t-att-data-mimetype="file.mimetype"
-                          t-att-data-ext="ext"
-                          role="img"/>
-                </a>
-            </div>
-        </xpath>
-        <xpath expr="//div[hasclass('caption')]/a" position="replace">
-            <a class="ml4"
-               t-att="{
-                'data-tooltip': !file.placeholder ? `Download ${file.name}` : undefined,
-                'href': !file.placeholder ? url : undefined,
-                'download': !file.placeholder ? '' : undefined,
-               }"
-               t-esc='file.name'/>
-        </xpath>
-        <!-- Remove the mimetype on the second line. -->
-        <xpath expr="//div[hasclass('caption', 'small')]" position="replace"/>
-    </t>
-
     <t t-name="account.mail_attachments">
-        <t t-set="data" t-value="getValue()"/>
+        <ul class="list-unstyled m-0">
+            <t t-foreach="attachments" t-as="attachment" t-key="attachment.id">
+                <t t-if="!attachment.skip">
+                    <li class="d-flex align-items-center bg-200 p-1 ps-3 my-2">
+                        <span t-out="attachment.name" class="flex-grow-1 text-truncate"/>
 
-        <div t-attf-class="oe_fileupload" aria-atomic="true">
-            <div class="o_attachments">
-                <t t-foreach="data" t-as="file" t-key="file.id">
-                    <t t-if="!file.skip">
-                        <t t-call="account.mail_attachment_file"/>
-                    </t>
+                        <button class="btn flex-shrink-0" t-on-click.stop="() => this.onFileRemove(attachment.id)">
+                            <i class="fa fa-fw fa-times"/>
+                        </button>
+                    </li>
                 </t>
-            </div>
-            <div t-if="!props.readonly" class="oe_add">
-                <FileInput
-                    multiUpload="true"
-                    onUpload.bind="onFileUploaded"
-                    resModel="props.record.resModel"
-                    resId="props.record.resId or 0">
-                    <button class="btn btn-secondary o_attach" data-tooltip="Attach">
-                        <span class="fa fa-paperclip" aria-label="Attach"/> Attachments
-                    </button>
-                </FileInput>
-            </div>
-        </div>
+            </t>
+        </ul>
     </t>
-
 </templates>

@@ -18,7 +18,7 @@ export class AccountMoveFormController extends FormController {
     get cogMenuProps() {
         return {
             ...super.cogMenuProps,
-            printDropdownTitle: _t("Download"),
+            printDropdownTitle: _t("Print"),
             loadExtraPrintItems: this.loadExtraPrintItems.bind(this),
         };
     }

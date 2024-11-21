@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Invoicing',
-    'version': '1.3',
+    'version': '1.4',
     'summary': 'Invoices, Payments, Follow-ups & Bank Synchronization',
     'sequence': 10,
     'description': """
@@ -107,6 +107,7 @@ You could use this simplified accounting in case you work with an (external) acc
             'account/static/src/scss/account_payment_term.scss',
             'account/static/src/scss/account_reconcile_model.scss',
             'account/static/src/scss/account_multi_ledger.scss',
+            'account/static/src/scss/account_move_send_wizard.scss',
             'account/static/src/components/**/*',
             'account/static/src/services/*.js',
             'account/static/src/views/**/*',
