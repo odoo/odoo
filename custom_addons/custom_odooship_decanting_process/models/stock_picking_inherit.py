@@ -54,11 +54,11 @@ class StockPicking(models.Model):
                 # Determine environment-specific URL
                 is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
                 url_manual_packing = (
-                    "https://shiperooconnect-prod.automation.shiperoo.com/release_container"
+                    "https://shiperooconnect-prod.automation.shiperoo.com/receive_payload"
                     if is_production == 'True'
-                    else "https://shiperooconnect.automation.shiperoo.com/release_container"
+                    else "https://shiperooconnect.automation.shiperoo.com/receive_payload"
                 )
-                line.released_manual = True
+                # line.released_manual = True
                 # Headers for the request
                 headers = {
                     'Content-Type': 'application/json'
