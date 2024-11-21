@@ -105,12 +105,14 @@ class CustomerPortal(payment_portal.PaymentPortal):
     def portal_my_quotes(self, **kwargs):
         values = self._prepare_sale_portal_rendering_values(quotation_page=True, **kwargs)
         request.session['my_quotations_history'] = values['quotations'].ids[:100]
+        request.session['current_history'] = 'my_quotations_history'
         return request.render("sale.portal_my_quotations", values)
 
     @http.route(['/my/orders', '/my/orders/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_orders(self, **kwargs):
         values = self._prepare_sale_portal_rendering_values(quotation_page=False, **kwargs)
         request.session['my_orders_history'] = values['orders'].ids[:100]
+        request.session['current_history'] = 'my_orders_history'
         return request.render("sale.portal_my_orders", values)
 
     @http.route(['/my/orders/<int:order_id>'], type='http', auth="public", website=True)
@@ -177,10 +179,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
                 )
             )
 
-        if order_sudo.state in ('draft', 'sent', 'cancel'):
-            history_session_key = 'my_quotations_history'
-        else:
-            history_session_key = 'my_orders_history'
+        history_session_key = request.session['current_history'] or 'my_orders_history'
 
         values = self._get_page_view_values(
             order_sudo, access_token, values, history_session_key, False)
