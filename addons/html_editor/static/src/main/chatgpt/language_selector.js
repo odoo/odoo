@@ -4,6 +4,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { loadLanguages } from "@web/core/l10n/translation";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
+import { user } from "@web/core/user";
 
 export class LanguageSelector extends Component {
     static template = "html_editor.LanguageSelector";
@@ -19,9 +20,11 @@ export class LanguageSelector extends Component {
             languages: [],
         });
         onWillStart(() => {
-            loadLanguages(this.orm).then((res) => {
-                this.state.languages = res;
-            });
+            if (user.userId) {
+                loadLanguages(this.orm).then((res) => {
+                    this.state.languages = res;
+                });
+            }
         });
     }
     onSelected(language) {
