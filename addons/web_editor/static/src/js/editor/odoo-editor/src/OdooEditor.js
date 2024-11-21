@@ -3595,7 +3595,7 @@ export class OdooEditor extends EventTarget {
      * @returns {boolean}
      */
     _isWhitelisted(item) {
-        if (item instanceof Attr) {
+        if (item && item.nodeType === Node.ATTRIBUTE_NODE) {
             return CLIPBOARD_WHITELISTS.attributes.includes(item.name);
         } else if (typeof item === 'string') {
             return CLIPBOARD_WHITELISTS.classes.some(okClass =>
