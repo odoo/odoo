@@ -145,10 +145,10 @@
             <field name="arch" type="xml">
                 <form string="Partners">
                 <div class="alert alert-warning oe_edit_only" role="alert" name="warning_tax" invisible="not same_vat_partner_id">
-                  A partner with the same <span><span class="o_vat_label">Tax ID</span></span> already exists (<field name="same_vat_partner_id" context="{'show_address': False, 'show_vat': False}"/>), are you sure you want to create a new one?
+                  A partner with the same <span><field name="vat_label" /></span> already exists (<field name="same_vat_partner_id" context="{'show_address': False, 'show_vat': False}"/>), are you sure you want to create a new one?
                 </div>
                 <div class="alert alert-warning oe_edit_only" role="alert" name="warning_company" invisible="not same_company_registry_partner_id">
-                  A partner with the same <span><span class="o_vat_label">Company Registry</span></span> already exists (<field name="same_company_registry_partner_id" context="{'show_address': False, 'show_vat': False}"/>), are you sure you want to create a new one?
+                  A partner with the same <span><field name="company_registry_label" /></span> already exists (<field name="same_company_registry_partner_id" context="{'show_address': False, 'show_vat': False}"/>), are you sure you want to create a new one?
                 </div>
                 <sheet>
                     <div class="oe_button_box" name="button_box"/>
