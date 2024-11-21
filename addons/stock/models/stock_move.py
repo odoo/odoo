@@ -572,8 +572,26 @@ Please change the quantity done or the rounding precision of your unit of measur
                         move_lines_commands.append(Command.update(move_line.id, sml_lot_vals))
                         mls_without_lots -= move_line
                     else:  # No line without serial number, creates a new one.
+<<<<<<< saas-17.2
                         move_line_vals = self._prepare_move_line_vals(quantity=0)
                         move_line_vals.update(**sml_lot_vals)
+||||||| f8559bc78bb651c92e7590720223381c53fd2eff
+                        move_line_vals = self._prepare_move_line_vals(quantity=0)
+                        move_line_vals['lot_id'] = lot.id
+                        move_line_vals['lot_name'] = lot.name
+                        move_line_vals['product_uom_id'] = move.product_id.uom_id.id
+                        move_line_vals['quantity'] = 1
+=======
+                        reserved_quants = self.env['stock.quant']._get_reserve_quantity(move.product_id, move.location_id, 1.0, lot)
+                        if reserved_quants:
+                            move_line_vals = self._prepare_move_line_vals(quantity=0, reserved_quant=reserved_quants[0][0])
+                        else:
+                            move_line_vals = self._prepare_move_line_vals(quantity=0)
+                            move_line_vals['lot_id'] = lot.id
+                            move_line_vals['lot_name'] = lot.name
+                        move_line_vals['product_uom_id'] = move.product_id.uom_id.id
+                        move_line_vals['quantity'] = 1
+>>>>>>> 642adcf01412deb8b10ae26db5c9c3a8ebe3a369
                         move_lines_commands.append((0, 0, move_line_vals))
                 else:
                     move_line = move.move_line_ids.filtered(lambda line: line.lot_id.id == lot.id)
@@ -1234,6 +1252,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         quantity = sum(ml.quantity_product_uom for ml in self.move_line_ids.filtered(lambda ml: not ml.lot_id and ml.lot_name))
         quantity += self.product_id.uom_id._compute_quantity(len(self.lot_ids), self.product_uom)
         self.update({'quantity': quantity})
+<<<<<<< saas-17.2
 
         base_location = self.picking_id.location_id or self.location_id
         quants = self.env['stock.quant'].sudo().search([
@@ -1244,6 +1263,24 @@ Please change the quantity done or the rounding precision of your unit of measur
             ('location_id', 'not any', [('location_id', 'child_of', base_location.id)])
         ])
 
+||||||| f8559bc78bb651c92e7590720223381c53fd2eff
+
+        quants = self.env['stock.quant'].search([('product_id', '=', self.product_id.id),
+                                                 ('lot_id', 'in', self.lot_ids.ids),
+                                                 ('quantity', '!=', 0),
+                                                 ('location_id', '!=', self.location_id.id),# Exclude the source location
+                                                 '|', ('location_id.usage', '=', 'customer'),
+                                                      '&', ('company_id', '=', self.company_id.id),
+                                                           ('location_id.usage', 'in', ('internal', 'transit'))])
+=======
+        quants = self.env['stock.quant'].search([('product_id', '=', self.product_id.id),
+                                                 ('lot_id', 'in', self.lot_ids.ids),
+                                                 ('quantity', '!=', 0),
+                                                 '!', ('location_id', 'child_of', self.location_id.id),
+                                                 '|', ('location_id.usage', '=', 'customer'),
+                                                      '&', ('company_id', '=', self.company_id.id),
+                                                           ('location_id.usage', 'in', ('internal', 'transit'))])
+>>>>>>> 642adcf01412deb8b10ae26db5c9c3a8ebe3a369
         if quants:
             sn_to_location = ""
             for quant in quants:
