@@ -4242,7 +4242,7 @@ class BaseModel(metaclass=MetaModel):
 
         if field.store and any(self._ids):
             # check constraints of the fields that have been computed
-            fnames = [f.name for f in self.pool.field_computed[field]]
+            fnames = [f.name for f in self.pool.field_computed.get(field, [field])]
             self.filtered('id')._validate_fields(fnames)
 
     def _parent_store_create(self):

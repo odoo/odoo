@@ -1376,7 +1376,7 @@ class Field(MetaField('DummyField', (object,), {})):
         env = records.env
         if self.compute_sudo:
             records = records.sudo()
-        fields = records.pool.field_computed[self]
+        fields = records.pool.field_computed.get(self, [self])
 
         # Just in case the compute method does not assign a value, we already
         # mark the computation as done. This is also necessary if the compute

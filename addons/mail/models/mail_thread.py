@@ -398,7 +398,7 @@ class MailThread(models.AbstractModel):
 
     def _compute_field_value(self, field):
         if not self._context.get('tracking_disable') and not self._context.get('mail_notrack'):
-            self._track_prepare(f.name for f in self.pool.field_computed[field] if f.store)
+            self._track_prepare(f.name for f in self.pool.field_computed.get(field, [field]) if f.store)
 
         return super()._compute_field_value(field)
 
