@@ -966,7 +966,7 @@ class AccountGroup(models.Model):
                        child.id AS child_id,
                        parent.id AS parent_id
                   FROM account_group parent
-                  JOIN account_group child
+            RIGHT JOIN account_group child
                     ON char_length(parent.code_prefix_start) < char_length(child.code_prefix_start)
                    AND parent.code_prefix_start <= LEFT(child.code_prefix_start, char_length(parent.code_prefix_start))
                    AND parent.code_prefix_end >= LEFT(child.code_prefix_end, char_length(parent.code_prefix_end))
