@@ -46,8 +46,12 @@ registry.category("website-builder-actions").add("styleAction", {
 });
 
 registry.category("website-builder-actions").add("attributeAction", {
-    isActive: ({ editingElement, param: attributeName }) => {
-        return editingElement.hasAttribute(attributeName);
+    isActive: ({ editingElement, param: attributeName, value }) => {
+        if (value) {
+            return editingElement.hasAttribute(attributeName);
+        } else {
+            return !editingElement.hasAttribute(attributeName);
+        }
     },
     apply: ({ editingElement, param: attributeName, value }) => {
         if (value) {

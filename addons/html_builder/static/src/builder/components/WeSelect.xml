@@ -2,8 +2,11 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.WeSelect">
-    <Dropdown>
-        <button class="btn btn-primary mx-1" t-att-title="props.title" t-out="props.label"/>
+    <!-- Render the SelectItem(s) into an invisible node to ensure the label of the
+    button is being set. -->
+    <div t-if="firstRender" class="d-none"><t t-slot="default" /></div>
+    <Dropdown state="this.dropdown">
+        <button class="btn btn-primary mx-1" t-ref="button" />
         <t t-set-slot="content">
             <t t-slot="default" />
         </t>

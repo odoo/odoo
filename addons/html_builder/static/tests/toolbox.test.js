@@ -324,7 +324,7 @@ describe("Web editor widgets", () => {
                 },
                 template: xml`
                     <ElementToolboxContainer title="'TestToolbox'">
-                        <WeSelect label="'MySelect'">
+                        <WeSelect>
                             <WeSelectItem action="'customAction'" actionParam="'myParam'" actionValue="'myValue'">MyAction</WeSelectItem>
                         </WeSelect>
                     </ElementToolboxContainer>`,
@@ -339,6 +339,32 @@ describe("Web editor widgets", () => {
             await click("[data-action-id='customAction']");
             // The function `apply` should be called twice (on hover (for preview), then, on click).
             expect.verifySteps(["customAction myParam myValue", "customAction myParam myValue"]);
+        });
+        test("set the label of the select from the active select item", async () => {
+            addToolbox({
+                selector: ".test-toolbox-target",
+                template: xml`
+                    <ElementToolboxContainer title="'TestToolbox'">
+                        <WeSelect attributeAction="'customAttribute'">
+                            <WeSelectItem attributeActionValue="null">None</WeSelectItem>
+                            <WeSelectItem attributeActionValue="'a'">A</WeSelectItem>
+                            <WeSelectItem attributeActionValue="'b'">B</WeSelectItem>
+                        </WeSelect>
+                    </ElementToolboxContainer>`,
+            });
+            await setupWebsiteBuilder(
+                `<div class="test-toolbox-target" customAttribute="a">x</div>`
+            );
+            await openSnippetsMenu();
+            await contains(":iframe .test-toolbox-target").click();
+            expect(".element-toolbox").toBeDisplayed();
+            expect(".we-bg-toolbox .dropdown").toHaveText("A");
+            await click(".we-bg-toolbox .dropdown");
+            await animationFrame();
+            await click(".o-overlay-item [data-attribute-action-value-id='b']");
+            expect(".we-bg-toolbox .dropdown").toHaveText("B");
+            await animationFrame();
+            expect(".o-overlay-item [data-attribute-action-value-id='b']").not.toBeDisplayed();
         });
     });
 });
