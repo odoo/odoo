@@ -270,7 +270,8 @@ class StockMoveLine(models.Model):
                     excluded_smls.discard(sml.id)
                     used_locations.add(sml.location_dest_id)
                 if len(used_locations) > 1:
-                    smls.location_dest_id = smls.move_id.location_dest_id
+                    for move, grouped_smls in smls.grouped('move_id').items():
+                        grouped_smls.location_dest_id = move.location_dest_id
                 else:
                     smls.package_level_id.location_dest_id = smls.location_dest_id
             else:
