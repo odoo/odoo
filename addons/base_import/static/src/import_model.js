@@ -419,8 +419,14 @@ export class BaseImportModel {
         // Push local image to records
         await this._pushLocalImageToRecords(ids, binary_filenames, isTest);
 
-        this.setOption("skip", nextrow || 0);
-        importRes.nextrow = nextrow;
+        // Check if we should continue
+        if (nextrow) {
+            this.setOption("skip", nextrow);
+            importRes.nextrow = nextrow;
+        } else {
+            // Falsy `nextrow` signals there's nothing left to import
+            this.stopImport();
+        }
         return false;
     }
 
