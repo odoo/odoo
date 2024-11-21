@@ -40,8 +40,9 @@ class StockPicking(models.Model):
             for line in packed_lines:
                 sku_list.append({
                     "sku_code": line.product_id.default_code,  # Product code (SKU)
-                    "sku_amount": line.product_uom_qty,  # Quantity (expected)
-                    "amount": line.quantity_done,  # Quantity (actual)
+                    "sku_amount": line.quantity,  # Quantity
+                    "amount": line.quantity,  # Quantity
+                    "sku_type_amount":1,
                     "out_batch_code": "ECOM",  # Batch code
                     "owner_code": picking.tenant_code_id.name,  # Tenant code
                 })
