@@ -29,9 +29,7 @@ patch(ControlButtons.prototype, {
         if (eWalletRewards.length === 0 && orderTotal >= 0) {
             this.dialog.add(AlertDialog, {
                 title: _t("No valid eWallet found"),
-                body: _t(
-                    "You either have not created an eWallet or all your eWallets have expired."
-                ),
+                body: _t("Please select a customer and a valid eWallet."),
             });
             return;
         }
