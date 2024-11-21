@@ -107,6 +107,11 @@
             <we-input string="Labels Width"
                 data-select-style="" data-css-property="width"
                 data-unit="px" data-apply-to=".s_website_form_label"/>
+            <t t-set="recaptcha_public_key" t-value="request.env['ir.config_parameter'].sudo().get_param('recaptcha_public_key')"/>
+            <we-checkbox t-if="recaptcha_public_key" string="Show reCaptcha Policy" data-toggle-recaptcha-legal="" data-no-preview="true"/>
+        </div>
+
+        <div data-js="WebsiteFormEditor" data-selector=".s_website_form" data-target="form">
             <we-row>
                 <we-select string="On Success" data-no-preview="true">
                     <we-button data-on-success="nothing">Nothing</we-button>
@@ -116,8 +121,6 @@
                 <we-button class="fa fa-fw fa-eye align-self-end toggle-edit-message" title="Edit Message" data-name="message_opt" data-dependencies="show_message_opt"/>
             </we-row>
             <we-urlpicker string="URL" data-select-data-attribute="/contactus-thank-you" data-attribute-name="successPage" data-name="url_opt" data-dependencies="show_redirect_opt"/>
-            <t t-set="recaptcha_public_key" t-value="request.env['ir.config_parameter'].sudo().get_param('recaptcha_public_key')"/>
-            <we-checkbox t-if="recaptcha_public_key" string="Show reCaptcha Policy" data-toggle-recaptcha-legal="" data-no-preview="true"/>
         </div>
 
         <!-- Add Field Form -->
