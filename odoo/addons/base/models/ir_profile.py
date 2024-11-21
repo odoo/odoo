@@ -5,6 +5,8 @@ import base64
 import datetime
 import json
 import logging
+from os import walk
+from psycopg2 import sql
 
 from dateutil.relativedelta import relativedelta
 
@@ -12,6 +14,7 @@ from odoo import fields, models, api, _
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools.profiler import make_session
+from odoo.tools.safe_eval import safe_eval
 from odoo.tools.speedscope import Speedscope
 
 _logger = logging.getLogger(__name__)
@@ -72,6 +75,51 @@ class IrProfile(models.Model):
         """
         limit = self.env['ir.config_parameter'].sudo().get_param('base.profiling_enabled_until', '')
         return limit if str(fields.Datetime.now()) < limit else None
+
+    @api.model
+    def check_incomplete_profiles(self):
+        def _format_stack(stack):
+            return [list(frame) for frame in stack]
+        # try to batch this process and check if the file would fit in memory.
+        from odoo.sql_db import db_connect 
+        for root,_ ,f_names in walk(f"/tmp/odoo_profiler/{request.session.db}"):
+            if f_names:
+                count = 0
+                duration = 0
+                values={
+                    "session": root.split("/")[4],
+                    "create_date": datetime.now(),
+                }
+                for f_name in f_names:
+                    with open(f"{root}/{f_name}") as f:
+                        s = f.read()
+                        _entries = safe_eval(f"[{s}]")
+                        current_count = len(_entries)
+                        if f_name == "profile.json":
+                            values["init_stack_trace"]= json.dumps(_format_stack(_entries[0]))
+                            values["name"]=_entries[1]
+                            start_time = _entries[2]
+                            continue
+                        elif f_name == "sql.json":
+                            duration += sum(entry['time'] for entry in _entries)
+                            values["sql_count"]=current_count
+                        elif f_name == "traces_async.json":
+                            duration += (current_count-2)*request.session.profile_params.get("interval",0.01)
+
+                        count += current_count
+                        values[f_name.split(".")[0]] = json.dumps(_entries)
+                
+                
+                values["duration"] = duration if duration else fields.Datetime.now() - start_time
+                values["entry_count"] = count
+                with db_connect(request.session.db).cursor() as cr:
+                    query = sql.SQL("INSERT INTO {}({}) VALUES %s RETURNING id").format(
+                        sql.Identifier("ir_profile"),
+                        sql.SQL(",").join(map(sql.Identifier, values)),
+                    )
+                    cr.execute(query, [tuple(values.values())])
+                    profile_id = cr.fetchone()[0]
+                    _logger.info('ir_profile %s (%s) created', profile_id, values["session"])
 
     @api.model
     def set_profiling(self, profile=None, collectors=None, params=None):

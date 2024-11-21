@@ -12,6 +12,7 @@
                             <label class="form-check-label">Enable profiling</label>
                         </span>
                     </span>
+                    <button class="btn btn-secondary" t-on-click="() => this.profiling.checkIncompleteProfiles()">Check Incomplete Profiles</button>
                     <t t-if="profiling.state.isEnabled">
                         <span class="o_profiling_switch form-check form-switch mt-2" t-on-click.stop.prevent="() => this.profiling.toggleCollector('sql')">
                             <input type="checkbox" class="form-check-input" id="profile_sql"
