@@ -42,6 +42,8 @@ class TestUi(AccountTestInvoicingHttpCommon):
             'account_purchase_tax_id': None,
         })
 
+        self.env.company.external_report_layout_id = self.env.ref('web.external_layout_standard').id
+
         account_with_taxes = self.env['account.account'].search([('tax_ids', '!=', False), ('company_ids', '=', self.env.company.id)])
         account_with_taxes.write({
             'tax_ids': [Command.clear()],
