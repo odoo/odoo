@@ -152,10 +152,6 @@ class MrpWorkorder(models.Model):
 
     @api.depends('production_availability', 'blocked_by_workorder_ids.state', 'qty_ready')
     def _compute_state(self):
-        # Force to compute the production_availability right away.
-        # It is a trick to force that the state of workorder is computed at the end of the
-        # cyclic depends with the mo.state, mo.reservation_state and wo.state and avoid recursion error
-        self.mapped('production_availability')
         for workorder in self:
             if workorder.state not in ('pending', 'waiting', 'ready'):
                 continue
