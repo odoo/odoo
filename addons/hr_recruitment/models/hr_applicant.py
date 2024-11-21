@@ -557,16 +557,19 @@ class HrApplicant(models.Model):
             res.update(super(HrApplicant, leftover)._notify_get_reply_to(default=default))
         return res
 
-    def _message_get_suggested_recipients(self):
-        recipients = super()._message_get_suggested_recipients()
-        if self.partner_id:
-            self._message_add_suggested_recipient(recipients, partner=self.partner_id.sudo(), reason=_('Contact'))
-        elif self.email_from:
-            email_from = tools.email_normalize(self.email_from)
-            if email_from and self.partner_name:
-                email_from = tools.formataddr((self.partner_name, email_from))
-                self._message_add_suggested_recipient(recipients, email=email_from, reason=_('Contact Email'))
-        return recipients
+    def _get_customer_information(self):
+        email_keys_to_values = super()._get_customer_information()
+
+        for applicant in self:
+            email_key = tools.email_normalize(applicant.email_from) or applicant.email_from
+            # do not fill Falsy with random data, unless monorecord (= always correct)
+            if not email_key and len(self) > 1:
+                continue
+            email_keys_to_values.setdefault(email_key, {}).update({
+                'name': applicant.partner_name or tools.parse_contact_from_email(applicant.email_from)[0] or applicant.email_from,
+                'phone': applicant.partner_phone,
+            })
+        return email_keys_to_values
 
     @api.depends('partner_name')
     @api.depends_context('show_partner_name')

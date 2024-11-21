@@ -1950,21 +1950,6 @@ class CrmLead(models.Model):
             } for r in self
         }
 
-    def _message_get_suggested_recipients(self):
-        recipients = super()._message_get_suggested_recipients()
-        try:
-            # check if that language is correctly installed (and active) before using it
-            lang_code = self.env['res.lang']._get_data(code=self.lang_code).code or None
-            if self.partner_id:
-                self._message_add_suggested_recipient(
-                    recipients, partner=self.partner_id, lang=lang_code, reason=_('Customer'))
-            elif self.email_from:
-                self._message_add_suggested_recipient(
-                    recipients, email=self.email_from, lang=lang_code, reason=_('Customer Email'))
-        except AccessError:  # no read access rights -> just ignore suggested recipients because this imply modifying followers
-            pass
-        return recipients
-
     @api.model
     def message_new(self, msg_dict, custom_values=None):
         # remove default author when going through the mail gateway. Indeed we
@@ -2004,32 +1989,6 @@ class CrmLead(models.Model):
                     ('partner_id', '=', False), email_domain, ('stage_id.fold', '=', False)
                 ]).write({'partner_id': new_partner[0].id})
         return super()._message_post_after_hook(message, msg_vals)
-
-    def _message_partner_info_from_emails(self, emails, link_mail=False):
-        """ Try to propose a better recipient when having only an email by populating
-        it with the partner_name / contact_name field of the lead e.g. if lead
-        contact_name is "Raoul" and email is "raoul@raoul.fr", suggest
-        "Raoul" <raoul@raoul.fr> as recipient. """
-        result = super()._message_partner_info_from_emails(emails, link_mail=link_mail)
-        if not (self.partner_name or self.contact_name) or not self.email_from:
-            return result
-        for email, partner_info in zip(emails, result):
-            if partner_info.get('partner_id') or not email:
-                continue
-            # reformat email if no name information
-            name_emails = tools.mail.email_split_tuples(email)
-            name_from_email = name_emails[0][0] if name_emails else False
-            if name_from_email:
-                continue  # already containing name + email
-            name_from_email = self.contact_name or self.partner_name
-            emails_normalized = tools.email_normalize_all(email)
-            email_normalized = emails_normalized[0] if emails_normalized else False
-            if email.lower() == self.email_from.lower() or (email_normalized and self.email_normalized == email_normalized):
-                partner_info['full_name'] = tools.formataddr((
-                    name_from_email,
-                    ','.join(emails_normalized) if emails_normalized else email))
-                break
-        return result
 
     @api.model
     def get_import_templates(self):

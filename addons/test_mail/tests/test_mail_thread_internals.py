@@ -405,8 +405,8 @@ class TestAPI(MailCommon, TestRecipients):
         suggestions = ticket._message_get_suggested_recipients()
         self.assertEqual(len(suggestions), 2)
         for suggestion, expected in zip(suggestions, [{
+            'create_values': {},
             'email': self.user_employee.email_normalized,
-            'lang': None,
             'name': self.user_employee.name,
             'partner_id': self.partner_employee.id,
             'reason': 'Responsible',
@@ -416,9 +416,9 @@ class TestAPI(MailCommon, TestRecipients):
                 'mobile': '+32455998877',
                 'phone': 'wrong',
             },
-            'email': '"Paulette Vachette" <paulette@test.example.com>',
-            'lang': None,
-            'name': '"Paulette Vachette" <paulette@test.example.com>',
+            'email': 'paulette@test.example.com',
+            'name': 'Paulette Vachette',
+            'partner_id': False,
             'reason': 'Customer Email',
         }]):
             self.assertDictEqual(suggestion, expected)
@@ -442,13 +442,17 @@ class TestAPI(MailCommon, TestRecipients):
                 self.assertDictEqual(
                     suggestions[0],
                     {
+                        'create_values': {},
                         'email': self.test_partner.email_normalized,
-                        'lang': None,
                         'name': self.test_partner.name,
                         'partner_id': self.test_partner.id,
                         'reason': 'Customer Email',
                     }
                 )
+
+        # do not propose public partners
+        ticket_public = self.env['mail.test.ticket.mc'].create({'customer_id': self.user_public.partner_id.id})
+        self.assertFalse(ticket_public._message_get_suggested_recipients())
 
     @mute_logger('openerp.addons.mail.models.mail_mail')
     @users('employee')
