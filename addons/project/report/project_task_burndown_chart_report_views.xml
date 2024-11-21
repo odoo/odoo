@@ -25,7 +25,7 @@
                 <filter string="Open Tasks" name="open_tasks" domain="[('is_closed', '=', False)]"/>
                 <filter string="Closed Tasks" name="closed_tasks" domain="[('is_closed', '=', True)]"/>
                 <group expand="0" string="Group By">
-                    <filter string="Date" name="date" context="{'group_by': 'date'}" />
+                    <filter string="Date" name="date" context="{'group_by': 'date:week'}" />
                     <filter string="Stage (Burndown Chart)" name="stage" context="{'group_by': 'stage_id'}"/>
                     <filter string="Is Closed (Burn-up Chart)" name="is_closed" context="{'group_by': 'is_closed'}"/>
                 </group>
@@ -37,8 +37,8 @@
         <field name="name">project.task.burndown.chart.report.view.graph</field>
         <field name="model">project.task.burndown.chart.report</field>
         <field name="arch" type="xml">
-            <graph string="Burndown Chart" type="line" sample="1" disable_linking="1" js_class="burndown_chart">
-                <field name="date" string="Date" interval="month"/>
+            <graph string="Burndown Chart" type="line" sample="1" disable_linking="1" js_class="burndown_chart" cumulated="1">
+                <field name="date" string="Date" interval="week"/>
                 <field name="stage_id"/>
                 <field name="is_closed"/>
             </graph>
