@@ -3,7 +3,6 @@
 
 """ Modules migration handling. """
 import glob
-import importlib.util
 import inspect
 import itertools
 import logging
@@ -45,14 +44,6 @@ VERSION_RE = re.compile(
     $""",
     re.VERBOSE | re.ASCII,
 )
-
-
-def load_script(path, module_name):
-    full_path = file_path(path) if not os.path.isabs(path) else path
-    spec = importlib.util.spec_from_file_location(module_name, full_path)
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
 
 
 class MigrationManager(object):

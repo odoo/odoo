@@ -512,3 +512,11 @@ def check_manifest_dependencies(manifest):
             tools.find_in_path(binary)
         except IOError:
             raise Exception('Unable to find %r in path' % (binary,))
+
+
+def load_script(path, module_name):
+    full_path = file_path(path) if not os.path.isabs(path) else path
+    spec = importlib.util.spec_from_file_location(module_name, full_path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module

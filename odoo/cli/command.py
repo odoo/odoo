@@ -1,11 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import contextlib
-import logging
+import re
 import sys
 from pathlib import Path
 
 import odoo.cli
-from odoo.modules import get_module_path, get_modules, initialize_sys_path
+from odoo.modules import initialize_sys_path, load_script
+
+
+COMMAND_NAME_RE = re.compile(r"^[a-zA-Z0-9\-_]+$")
 
 commands = {}
 """All loaded commands"""
@@ -17,6 +20,14 @@ class Command:
 
     def __init_subclass__(cls):
         cls.name = cls.name or cls.__name__.lower()
+        if not COMMAND_NAME_RE.match(cls.name):
+            raise ValueError(
+                f"command name must match {COMMAND_NAME_RE.pattern}: "
+                f"{cls.name!r}")
+        if (modname := cls.__module__.rpartition('.')[2]) != cls.name:
+            raise ValueError(
+                f"command must be defined in a module of the same name: "
+                f"{cls.name!r} vs {modname!r} ({cls.__module__})")
         commands[cls.name] = cls
 
 
@@ -31,31 +42,40 @@ def load_internal_commands():
 
 def load_addons_commands():
     """Load `commands` from `odoo.addons.*.cli`"""
-    logging.disable(logging.CRITICAL)
     initialize_sys_path()
-    for module in get_modules():
-        if (Path(get_module_path(module)) / 'cli').is_dir():
-            with contextlib.suppress(ImportError):
-                __import__(f'odoo.addons.{module}')
-    logging.disable(logging.NOTSET)
+    for addon_path in odoo.addons.__path__:
+        for cli_path in Path(addon_path).glob('*/cli/*.py'):
+            if cli_path.name == '__init__.py':
+                continue
+            app = cli_path.parents[1].name
+            load_script(
+                path=str(cli_path),
+                module_name=f'odoo.addons.{app}.cli.{cli_path.stem}'
+            )
     return list(commands)
 
 
 def find_command(name: str) -> Command | None:
     """ Get command by name. """
+    if not COMMAND_NAME_RE.match(name):
+        e = f"invalid command name {name!r}"
+        raise ValueError(e)
     # check in the loaded commands
     if command := commands.get(name):
         return command
     # import from odoo.cli
-    try:
+    with contextlib.suppress(ImportError):
         __import__(f'odoo.cli.{name}')
-    except ImportError:
-        pass
-    else:
-        if command := commands.get(name):
-            return command
-    # last try, import from odoo.addons.*.cli
-    load_addons_commands()
+        return commands[name]
+    # last try, find a odoo.addons.<module>.cli.<name>
+    initialize_sys_path()
+    for addon_path in odoo.addons.__path__:
+        for cli_path in Path(addon_path).glob(f'*/cli/{name}.py'):
+            app = cli_path.parents[1].name
+            load_script(
+                path=str(cli_path),
+                module_name=f'odoo.addons.{app}.cli.{cli_path.stem}'
+            )
     return commands.get(name)
 
 
@@ -73,6 +93,8 @@ def main():
         # Command specified, search for it
         command_name = args[0]
         args = args[1:]
+        if not COMMAND_NAME_RE.match(command_name):
+            sys.exit(f"Invalid command: {command_name}")
     elif '-h' in args or '--help' in args:
         # No command specified, but help is requested
         command_name = 'help'
@@ -85,4 +107,4 @@ def main():
         o = command()
         o.run(args)
     else:
-        sys.exit('Unknown command %r' % (command,))
+        sys.exit(f'Unknown command: {command_name}')
