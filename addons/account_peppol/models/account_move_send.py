@@ -1,11 +1,23 @@
 from base64 import b64encode
-from odoo import models, _
+from odoo import api, models, _
 from odoo.addons.account.models.company import PEPPOL_LIST
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 
 
 class AccountMoveSend(models.AbstractModel):
     _inherit = 'account.move.send'
+
+    @api.model
+    def _get_default_sending_methods(self, move) -> set:
+        """ By default, we use the sending method set on the partner or email and peppol. """
+        # OVERRIDE 'account'
+        if invoice_sending_method := move.partner_id.with_company(move.company_id).invoice_sending_method:
+            return {invoice_sending_method}
+
+        if self._is_applicable_to_company('peppol', move.company_id):
+            return {'email', 'peppol'}
+
+        return {'email'}
 
     # -------------------------------------------------------------------------
     # ALERTS

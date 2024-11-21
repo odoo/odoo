@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 import calendar
 from collections import defaultdict
 from contextlib import ExitStack, contextmanager
@@ -5127,7 +5128,7 @@ class AccountMove(models.Model):
 
     def action_send_and_print(self):
         return {
-            'name': _("Print & Send"),
+            'name': _("Send"),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'account.move.send.wizard' if len(self) == 1 else 'account.move.send.batch.wizard',
@@ -5434,6 +5435,29 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
     # HELPER METHODS
     # -------------------------------------------------------------------------
+    def _get_available_action_reports(self, is_invoice_report=True):
+        domain = [('model', '=', 'account.move')]
+
+        if is_invoice_report:
+            domain += [('is_invoice_report', '=', 'True')]
+
+        model_reports = self.env['ir.actions.report'].search(domain)
+
+        available_reports = model_reports.filtered(
+            lambda model_template: len(self.filtered_domain(ast.literal_eval(model_template.domain))) == len(self)
+        )
+
+        return available_reports
+
+    def _is_action_report_available(self, action_report, is_invoice_report=True):
+        assert len(action_report) == 1
+
+        self.ensure_one()
+
+        if available_report := action_report.filtered(lambda available_report: not (is_invoice_report^available_report.is_invoice_report)):
+            return bool(self.filtered_domain(ast.literal_eval(available_report.domain)))
+
+        return False
 
     @api.model
     def get_invoice_types(self, include_receipts=False):
@@ -6206,14 +6230,9 @@ class AccountMove(models.Model):
 
     def get_extra_print_items(self):
         """ Helper to dynamically add items in the 'Print' menu of list and form of account.move.
-        This is necessary to avoid the re-generation of the PDF through the action_report.
-        Indeed, once a legal PDF is generated, it should be used and not re-generated.
         """
-        return [{
-            'key': 'download_pdf',
-            'description': _('PDF'),
-            **self.action_invoice_download_pdf()
-        }]
+        # TO OVERRIDE
+        return []
 
     @staticmethod
     def _can_commit():

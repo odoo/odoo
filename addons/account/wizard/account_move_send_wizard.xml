@@ -5,7 +5,7 @@
         <field name="name">account.move.send.wizard.form</field>
         <field name="model">account.move.send.wizard</field>
         <field name="arch" type="xml">
-            <form>
+            <form class="o_account_move_send_wizard">
                 <field name="move_id" invisible="1"/>
 
                 <!-- Warnings -->
@@ -19,71 +19,66 @@
                     <field name="sending_method_checkboxes" widget="account_json_checkboxes"/>
                 </div>
 
-
                 <!-- PDF template -->
                 <field name="pdf_report_id" invisible="1"/>
-                <group id="pdf_report" invisible="not display_pdf_report_id">
-                    <field name="pdf_report_id"
-                           class="w-50"
-                           options="{'no_create': True, 'no_edit': True}"/>
+                <group invisible="not display_pdf_report_id or 'email' in sending_methods">
+                    <field name="pdf_report_id" options="{'no_create': True, 'no_edit': True}"/>
                 </group>
 
                 <!-- Mail composer -->
                 <div invisible="'email' not in sending_methods">
+                    <field name="model" invisible="1"/>
+                    <field name="res_ids" invisible="1"/>
+                    <field name="render_model" invisible="1"/>
+
                     <group>
+                        <field name="pdf_report_id" options="{'no_create': True, 'no_edit': True}" invisible="not display_pdf_report_id"/>
+
                         <label for="mail_partner_ids" string="Recipients"/>
                         <div>
-                            <span>Followers of the document and</span>
+                            <widget name="mail_composer_recipient_list" thread_model_field="model" thread_id_field="res_ids"/>
                             <field name="mail_partner_ids"
                                    widget="many2many_tags"
                                    placeholder="Add contacts to notify..."
                                    options="{'no_quick_create': True}"
                                    context="{'show_email': True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
                         </div>
-                        <field name="mail_subject"
+                        <field name="subject"
                                placeholder="Subject..."
                                required="'email' in sending_methods"/>
                     </group>
-                    <field name="mail_body"
+                    <field name="body"
                            class="oe-bordered-editor"
                            widget="html_mail"/>
-                    <group>
-                        <group>
-                            <field name="mail_attachments_widget"
-                                   widget="mail_attachments"
-                                   string="Attach a file"
-                                   nolabel="1"
-                                   colspan="2"/>
-                        </group>
-                        <group>
-                            <field name="mail_template_id"
-                                   options="{'no_create': True, 'no_edit': True}"
-                                   context="{'default_model': 'account.move'}"/>
-                        </group>
-                    </group>
+                    <field name="mail_attachments_widget"
+                           widget="mail_attachments"
+                           string="Attach a file"
+                           nolabel="1"
+                           colspan="2"/>
                 </div>
 
                 <footer>
-                    <button string="Print &amp; Send"
+                    <button string="Send"
                             data-hotkey="q"
                             name="action_send_and_print"
                             type="object"
-                            invisible="is_download_only"
-                            class="print btn-primary o_mail_send">
-                    </button>
-                    <button string="Print"
-                            data-hotkey="w"
+                            class="btn-primary"
+                            invisible="not sending_methods"/>
+                    <button string="Generate"
+                            data-hotkey="q"
                             name="action_send_and_print"
                             type="object"
-                            invisible="not is_download_only"
-                            class="print btn-primary o_mail_send">
-                    </button>
-                    <button string="Cancel"
+                            class="btn-primary"
+                            invisible="sending_methods"/>
+                    <button string="Discard"
                             data-hotkey="x"
                             special="cancel"
                             class="btn-secondary"/>
-                </footer>
 
+                    <field name="mail_attachments_widget" widget="mail_attachments_selector" invisible="'email' not in sending_methods"/>
+                    <field name="template_id" widget="mail_composer_template_selector"/>
+                    <field name="body" widget="mail_composer_chatgpt" invisible="'email' not in sending_methods"/>
+                </footer>
             </form>
         </field>
     </record>
