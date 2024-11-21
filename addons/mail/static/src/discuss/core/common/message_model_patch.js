@@ -13,6 +13,14 @@ const messagePatch = {
                 return this.thread?.membersThatCanSeen.every((m) => m.hasSeen(this));
             },
         });
+        this.hasSomeoneFetched = Record.attr(false, {
+            /** @this {import("models").Message} */
+            compute() {
+                return this.thread?.channel_member_ids.some(
+                    (m) => m.persona.notEq(this.author) && m.fetched_message_id?.id >= this.id
+                );
+            },
+        });
         this.hasSomeoneSeen = Record.attr(false, {
             /** @this {import("models").Message} */
             compute() {
