@@ -111,7 +111,7 @@
                 <div class="oe_title pe-0">
                     <label for="candidate_id" class="oe_edit_only"/>
                     <h1 class="d-flex justify-content-between align-items-center">
-                        <field name="candidate_id" options="{'line_breaks': False}"/>
+                        <field name="candidate_id" options="{'line_breaks': False}" context="{'default_company_id': company_id}"/>
                     </h1>
                 </div>
                 <group>
