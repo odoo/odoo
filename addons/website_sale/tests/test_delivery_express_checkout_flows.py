@@ -257,9 +257,9 @@ class TestWebsiteSaleDeliveryExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
                     self.express_checkout_anonymized_shipping_values_2[k]
                 )
 
-    def test_express_checkout_partial_delivery_address_context_key(self):
+    def test_partial_delivery_address_context_key(self):
         """ Test that when using express checkout with only partial delivery information,
-            `express_checkout_partial_delivery_address` context key is in the context.
+            `partial_delivery_address` context key is in the context.
         """
         delivery_carrier_mock = Mock()
         delivery_carrier_mock.rate_shipment = Mock(
@@ -269,10 +269,10 @@ class TestWebsiteSaleDeliveryExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         )
 
         WebsiteSaleDeliveryController._get_rate(
-            delivery_carrier_mock, self.sale_order, is_express_checkout_flow=True
+            delivery_carrier_mock, self.sale_order, partial_delivery_address=True
         )
         sale_order = delivery_carrier_mock.rate_shipment.call_args[0][0]
-        self.assertTrue(sale_order._context.get('express_checkout_partial_delivery_address'))
+        self.assertTrue(sale_order._context.get('partial_delivery_address'))
 
     def test_express_checkout_registered_user_with_shipping_option(self):
         """ Test that when you use the express checkout as a registered user and the shipping

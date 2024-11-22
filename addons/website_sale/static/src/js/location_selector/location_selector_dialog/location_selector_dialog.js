@@ -30,6 +30,10 @@ patch(LocationSelectorDialog.prototype, {
         // The original definition of this getter is in `delivery` module which is not a frontend module. This problem happens in the context of the website. So, it should be repeated here as translations are only fetched in the context of a frontend module, which is `website_sale` in this case.
         return _t("Choose this location");
     },
+    get addressChangeWarning() {
+        // The original definition of this getter is in `delivery` module which is not a frontend module. This problem happens in the context of the website. So, it should be repeated here as translations are only fetched in the context of a frontend module, which is `website_sale` in this case.
+        return _t("This address may require to recompute taxes.");
+    },
 
     get postalCodePlaceholder() {
         // The original definition of this getter is in `delivery` module which is not a frontend module. This problem happens in the context of the website. So, it should be repeated here as translations are only fetched in the context of a frontend module, which is `website_sale` in this case.

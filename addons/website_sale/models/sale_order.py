@@ -261,10 +261,10 @@ class SaleOrder(models.Model):
             # Pricelist may have been recomputed by the `partner_id` field update
             # we need to recompute the prices to match the new pricelist if it changed
             self._recompute_prices()
-
-            new_pricelist = self.pricelist_id
-            request.session[PRICELIST_SESSION_CACHE_KEY] = new_pricelist.id
-            request.pricelist = new_pricelist
+            if not (isinstance(self.id, int) or self.id.origin): # If order is not dummy order
+                new_pricelist = self.pricelist_id
+                request.session[PRICELIST_SESSION_CACHE_KEY] = new_pricelist.id
+                request.pricelist = new_pricelist
 
         if self.carrier_id and 'partner_shipping_id' in fnames and self._has_deliverable_products():
             # Update the delivery method on shipping address change.

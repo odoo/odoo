@@ -154,19 +154,20 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
      * @return {void}
      */
     async _selectPickupLocation(ev) {
-        const { zipCode, locationId } = ev.currentTarget.dataset;
+        const { zipCode, countryCode, locationId } = ev.currentTarget.dataset;
         const deliveryMethodContainer = this._getDeliveryMethodContainer(ev.currentTarget);
         this.call('dialog', 'add', LocationSelectorDialog, {
             zipCode: zipCode,
+            countryCode: countryCode,
             selectedLocationId: locationId,
             isFrontend: true,
-            save: async location => {
+            save: async (location, countryCode) => {
                 const jsonLocation = JSON.stringify(location);
                 // Assign the selected pickup location to the order.
                 await this._setPickupLocation(jsonLocation);
 
                 //  Show and set the order location details.
-                this._updatePickupLocation(deliveryMethodContainer, location, jsonLocation);
+                this._updatePickupLocation(deliveryMethodContainer, location, jsonLocation, countryCode);
 
                 this._enableMainButton();
             },
@@ -184,7 +185,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
      * @param jsonLocation - The selected location as an JSON string.
      * @return {void}
      */
-    _updatePickupLocation(deliveryMethodContainer, location, jsonLocation) {
+    _updatePickupLocation(deliveryMethodContainer, location, jsonLocation, countryCode) {
         const pickupLocation = deliveryMethodContainer.querySelector('[name="o_pickup_location"]');
         pickupLocation.querySelector('[name="o_pickup_location_name"]').innerText = location.name;
         pickupLocation.querySelector(
@@ -196,6 +197,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
         editPickupLocationButton.dataset.locationId = location.id;
         editPickupLocationButton.dataset.zipCode = location.zip_code;
         editPickupLocationButton.dataset.pickupLocationData = jsonLocation;
+        editPickupLocationButton.dataset.countryCode = countryCode;
         pickupLocation.querySelector(
             '[name="o_pickup_location_details"]'
         ).classList.remove('d-none');
@@ -506,7 +508,9 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
      * @return {void}
      */
     async _setPickupLocation(pickupLocationData) {
-        await rpc('/website_sale/set_pickup_location', {pickup_location_data: pickupLocationData});
+        let result = await rpc(
+            '/website_sale/set_pickup_location', { pickup_location_data: pickupLocationData });
+        this._updateCartSummary(result);
     },
 
     // #=== GETTERS & SETTERS ===#
