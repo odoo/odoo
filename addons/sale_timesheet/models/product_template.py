@@ -96,10 +96,121 @@ class ProductTemplate(models.Model):
             raise ValidationError(_('The %s product is required by the Timesheets app and cannot be archived nor deleted.', time_product.name))
 
     def write(self, vals):
-        # timesheet product can't be archived
+        # timesheet product can't be archived or linked to a company
         test_mode = getattr(threading.current_thread(), 'testing', False) or self.env.registry.in_test_mode()
         if not test_mode and 'active' in vals and not vals['active']:
             time_product = self.env.ref('sale_timesheet.time_product')
             if time_product.product_tmpl_id in self:
                 raise ValidationError(_('The %s product is required by the Timesheets app and cannot be archived nor deleted.', time_product.name))
+<<<<<<< saas-17.4:addons/sale_timesheet/models/product_template.py
         return super().write(vals)
+||||||| c17b6b8831542985a420fe5197a208ee0a55b540:addons/sale_timesheet/models/product.py
+        return super(ProductTemplate, self).write(vals)
+
+
+class ProductProduct(models.Model):
+    _inherit = 'product.product'
+
+    @tools.ormcache()
+    def _get_default_uom_id(self):
+        return self.env.ref('uom.product_uom_unit')
+
+    def _is_delivered_timesheet(self):
+        """ Check if the product is a delivered timesheet """
+        self.ensure_one()
+        return self.type == 'service' and self.service_policy == 'delivered_timesheet'
+
+    @api.onchange('type', 'service_type', 'service_policy')
+    def _onchange_service_fields(self):
+        for record in self:
+            if record.type == 'service' and record.service_type == 'timesheet' and \
+               not (record._origin.service_policy and record.service_policy == record._origin.service_policy):
+                record.uom_id = self.env.ref('uom.product_uom_hour')
+            elif record._origin.uom_id:
+                record.uom_id = record._origin.uom_id
+            else:
+                record.uom_id = self._get_default_uom_id()
+            record.uom_po_id = record.uom_id
+
+    @api.onchange('service_policy')
+    def _onchange_service_policy(self):
+        self._inverse_service_policy()
+        vals = self.product_tmpl_id._get_onchange_service_policy_updates(self.service_tracking,
+                                                                        self.service_policy,
+                                                                        self.project_id,
+                                                                        self.project_template_id)
+        if vals:
+            self.update(vals)
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_master_data(self):
+        time_product = self.env.ref('sale_timesheet.time_product')
+        if time_product in self:
+            raise ValidationError(_('The %s product is required by the Timesheets app and cannot be archived nor deleted.', time_product.name))
+
+    def write(self, vals):
+        # timesheet product can't be archived
+        test_mode = getattr(threading.current_thread(), 'testing', False) or self.env.registry.in_test_mode()
+        if not test_mode and 'active' in vals and not vals['active']:
+            time_product = self.env.ref('sale_timesheet.time_product')
+            if time_product in self:
+                raise ValidationError(_('The %s product is required by the Timesheets app and cannot be archived nor deleted.', time_product.name))
+        return super(ProductProduct, self).write(vals)
+=======
+        # TODO: avoid duplicate code by joining both conditions in master
+        if not test_mode and 'company_id' in vals and vals['company_id']:
+            time_product = self.env.ref('sale_timesheet.time_product')
+            if time_product.product_tmpl_id in self:
+                raise ValidationError(_('The %s product is required by the Timesheets app and cannot be linked to a company.', time_product.name))
+        return super(ProductTemplate, self).write(vals)
+
+
+class ProductProduct(models.Model):
+    _inherit = 'product.product'
+
+    @tools.ormcache()
+    def _get_default_uom_id(self):
+        return self.env.ref('uom.product_uom_unit')
+
+    def _is_delivered_timesheet(self):
+        """ Check if the product is a delivered timesheet """
+        self.ensure_one()
+        return self.type == 'service' and self.service_policy == 'delivered_timesheet'
+
+    @api.onchange('type', 'service_type', 'service_policy')
+    def _onchange_service_fields(self):
+        for record in self:
+            if record.type == 'service' and record.service_type == 'timesheet' and \
+               not (record._origin.service_policy and record.service_policy == record._origin.service_policy):
+                record.uom_id = self.env.ref('uom.product_uom_hour')
+            elif record._origin.uom_id:
+                record.uom_id = record._origin.uom_id
+            else:
+                record.uom_id = self._get_default_uom_id()
+            record.uom_po_id = record.uom_id
+
+    @api.onchange('service_policy')
+    def _onchange_service_policy(self):
+        self._inverse_service_policy()
+        vals = self.product_tmpl_id._get_onchange_service_policy_updates(self.service_tracking,
+                                                                        self.service_policy,
+                                                                        self.project_id,
+                                                                        self.project_template_id)
+        if vals:
+            self.update(vals)
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_master_data(self):
+        time_product = self.env.ref('sale_timesheet.time_product')
+        if time_product in self:
+            raise ValidationError(_('The %s product is required by the Timesheets app and cannot be archived nor deleted.', time_product.name))
+
+    def write(self, vals):
+        # timesheet product can't be archived
+        test_mode = getattr(threading.current_thread(), 'testing', False) or self.env.registry.in_test_mode()
+        if not test_mode and 'active' in vals and not vals['active']:
+            time_product = self.env.ref('sale_timesheet.time_product')
+            if time_product in self:
+                raise ValidationError(_('The %s product is required by the Timesheets app and cannot be archived nor deleted.', time_product.name))
+        return super(ProductProduct, self).write(vals)
+>>>>>>> a2ab51ebbf5bd8e793304e0e08d090558169377a:addons/sale_timesheet/models/product.py
