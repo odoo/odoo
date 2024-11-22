@@ -347,7 +347,7 @@ class ResUsers(models.Model):
             'image_1024', 'image_512', 'image_256', 'image_128', 'lang', 'tz',
             'tz_offset', 'groups_id', 'partner_id', 'write_date', 'action_id',
             'avatar_1920', 'avatar_1024', 'avatar_512', 'avatar_256', 'avatar_128',
-            'share', 'device_ids',
+            'share', 'device_ids', 'api_key_ids',
         ]
 
     @property
@@ -355,7 +355,7 @@ class ResUsers(models.Model):
         """ The list of fields a user can write on their own user record.
         In order to add fields, please override this property on model extensions.
         """
-        return ['signature', 'action_id', 'company_id', 'email', 'name', 'image_1920', 'lang', 'tz']
+        return ['signature', 'action_id', 'company_id', 'email', 'name', 'image_1920', 'lang', 'tz', 'api_key_ids']
 
     def _default_groups(self):
         """Default groups for employees
@@ -376,6 +376,7 @@ class ResUsers(models.Model):
         help="Specify a value only when creating a user or if you're "\
              "changing the user's password, otherwise leave empty. After "\
              "a change of password, the user has to login again.")
+    api_key_ids = fields.One2many('res.users.apikeys', 'user_id', string="API Keys")
     signature = fields.Html(string="Email Signature", compute='_compute_signature', readonly=False, store=True)
     active = fields.Boolean(default=True)
     active_partner = fields.Boolean(related='partner_id.active', readonly=True, string="Partner is Active")
@@ -447,6 +448,10 @@ class ResUsers(models.Model):
         )
         self.browse(uid).invalidate_recordset(['password'])
 
+    def _rpc_api_keys_only(self):
+        """ To be overridden if RPC access needs to be restricted to API keys, e.g. for 2FA """
+        return False
+
     def _check_credentials(self, credential, env):
         """ Validates the current user's password.
 
@@ -480,29 +485,51 @@ class ResUsers(models.Model):
         """
         if not (credential['type'] == 'password' and credential['password']):
             raise AccessDenied()
-        self.env.cr.execute(
-            "SELECT COALESCE(password, '') FROM res_users WHERE id=%s",
-            [self.env.user.id]
-        )
-        [hashed] = self.env.cr.fetchone()
-        valid, replacement = self._crypt_context()\
-            .verify_and_update(credential['password'], hashed)
-        if replacement is not None:
-            self._set_encrypted_password(self.env.user.id, replacement)
-            if request and self == self.env.user:
-                self.env.flush_all()
-                self.env.registry.clear_cache()
-                # update session token so the user does not get logged out
-                new_token = self.env.user._compute_session_token(request.session.sid)
-                request.session.session_token = new_token
 
-        if not valid:
-            raise AccessDenied()
-        return {
-            'uid': self.env.user.id,
-            'auth_method': 'password',
-            'mfa': 'default',
-        }
+        env = env or {}
+        interactive = env.get('interactive', True)
+
+        if interactive or not self.env.user._rpc_api_keys_only():
+            if 'interactive' not in env:
+                _logger.warning(
+                    "_check_credentials without 'interactive' env key, assuming interactive login. \
+                    Check calls and overrides to ensure the 'interactive' key is properly set in \
+                    all _check_credentials environments"
+                )
+
+            self.env.cr.execute(
+                "SELECT COALESCE(password, '') FROM res_users WHERE id=%s",
+                [self.env.user.id]
+            )
+            [hashed] = self.env.cr.fetchone()
+            valid, replacement = self._crypt_context()\
+                .verify_and_update(credential['password'], hashed)
+            if replacement is not None:
+                self._set_encrypted_password(self.env.user.id, replacement)
+                if request and self == self.env.user:
+                    self.env.flush_all()
+                    self.env.registry.clear_cache()
+                    # update session token so the user does not get logged out
+                    new_token = self.env.user._compute_session_token(request.session.sid)
+                    request.session.session_token = new_token
+
+            if valid:
+                return {
+                    'uid': self.env.user.id,
+                    'auth_method': 'password',
+                    'mfa': 'default',
+                }
+
+        if not interactive:
+            # 'rpc' scope does not really exist, we basically require a global key (scope NULL)
+            if self.env['res.users.apikeys']._check_credentials(scope='rpc', key=credential['password']) == self.env.uid:
+                return {
+                    'uid': self.env.user.id,
+                    'auth_method': 'apikey',
+                    'mfa': 'default',
+                }
+
+        raise AccessDenied()
 
     def _compute_password(self):
         for user in self:
@@ -1151,6 +1178,16 @@ class ResUsers(models.Model):
             'target': 'new',
             'res_model': 'change.password.own',
             'view_mode': 'form',
+        }
+
+    @check_identity
+    def api_key_wizard(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'res.users.apikeys.description',
+            'name': 'New API Key',
+            'target': 'new',
+            'views': [(False, 'form')],
         }
 
     @check_identity
@@ -2226,61 +2263,6 @@ KEY_CRYPT_CONTEXT = CryptContext(
     # attacks on API keys isn't much of a concern
     ['pbkdf2_sha512'], pbkdf2_sha512__rounds=6000,
 )
-
-
-class APIKeysUser(models.Model):
-    _inherit = 'res.users'
-
-    api_key_ids = fields.One2many('res.users.apikeys', 'user_id', string="API Keys")
-
-    @property
-    def SELF_READABLE_FIELDS(self):
-        return super().SELF_READABLE_FIELDS + ['api_key_ids']
-
-    @property
-    def SELF_WRITEABLE_FIELDS(self):
-        return super().SELF_WRITEABLE_FIELDS + ['api_key_ids']
-
-    def _rpc_api_keys_only(self):
-        """ To be overridden if RPC access needs to be restricted to API keys, e.g. for 2FA """
-        return False
-
-    def _check_credentials(self, credential, user_agent_env):
-        user_agent_env = user_agent_env or {}
-        if user_agent_env.get('interactive', True):
-            if 'interactive' not in user_agent_env:
-                _logger.warning(
-                    "_check_credentials without 'interactive' env key, assuming interactive login. \
-                    Check calls and overrides to ensure the 'interactive' key is properly set in \
-                    all _check_credentials environments"
-                )
-            return super()._check_credentials(credential, user_agent_env)
-
-        if not self.env.user._rpc_api_keys_only():
-            try:
-                return super()._check_credentials(credential, user_agent_env)
-            except AccessDenied:
-                pass
-
-        # 'rpc' scope does not really exist, we basically require a global key (scope NULL)
-        if self.env['res.users.apikeys']._check_credentials(scope='rpc', key=credential['password']) == self.env.uid:
-            return {
-                'uid': self.env.user.id,
-                'auth_method': 'apikey',
-                'mfa': 'default',
-            }
-
-        raise AccessDenied()
-
-    @check_identity
-    def api_key_wizard(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'res.users.apikeys.description',
-            'name': 'New API Key',
-            'target': 'new',
-            'views': [(False, 'form')],
-        }
 
 
 class ResUsersApikeys(models.Model):
