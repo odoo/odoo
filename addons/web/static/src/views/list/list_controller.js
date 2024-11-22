@@ -57,8 +57,8 @@ export class ListController extends Component {
     static props = {
         ...standardViewProps,
         allowSelectors: { type: Boolean, optional: true },
-        editable: { type: Boolean, optional: true },
         onSelectionChanged: { type: Function, optional: true },
+        readonly: { type: Boolean, optional: true },
         showButtons: { type: Boolean, optional: true },
         Model: Function,
         Renderer: Function,
@@ -68,7 +68,6 @@ export class ListController extends Component {
     static defaultProps = {
         allowSelectors: true,
         createRecord: () => {},
-        editable: true,
         selectRecord: () => {},
         showButtons: true,
     };
@@ -80,9 +79,8 @@ export class ListController extends Component {
 
         this.archInfo = this.props.archInfo;
         this.activeActions = this.archInfo.activeActions;
-        this.editable =
-            this.activeActions.edit && this.props.editable ? this.archInfo.editable : false;
         this.onOpenFormView = this.openRecord.bind(this);
+        this.editable = (!this.props.readonly && this.archInfo.editable) || false;
         this.hasOpenFormViewButton = this.editable ? this.archInfo.openFormView : false;
         this.model = useState(useModelWithSampleData(this.props.Model, this.modelParams));
 
@@ -130,9 +128,7 @@ export class ListController extends Component {
         });
         useSetupAction({
             rootRef: this.rootRef,
-            beforeLeave: async () => {
-                return this.model.root.leaveEditMode();
-            },
+            beforeLeave: async () => this.model.root.leaveEditMode(),
             beforeUnload: async (ev) => {
                 if (this.editedRecord) {
                     const isValid = await this.editedRecord.urgentSave();
@@ -152,9 +148,7 @@ export class ListController extends Component {
                     },
                 };
             },
-            getOrderBy: () => {
-                return this.model.root.orderBy;
-            },
+            getOrderBy: () => this.model.root.orderBy,
         });
 
         usePager(() => {

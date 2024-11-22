@@ -106,7 +106,7 @@ QUnit.module("QuestionPageOneToManyField", (hooks) => {
                     </field>
                 </form>
             `,
-            mode: "readonly",
+            readonly: true,
         });
 
         await click(target.querySelector(".o_data_cell"));

@@ -124,7 +124,6 @@ test("leave stats reload when employee/department changes", async () => {
     await mountView({
         type: "form",
         resModel: "hr.leave",
-        mode: "edit",
         arch: `
             <form string="Leave">
                 <field name="employee_id"/>

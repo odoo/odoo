@@ -248,7 +248,6 @@ test("many2many kanban: edition", async () => {
                             <t t-name="card">
                                 <div>
                                     <a
-                                        t-if="!read_only_mode"
                                         type="delete"
                                         class="fa fa-times float-end delete_icon"
                                     />
@@ -416,7 +415,7 @@ test("many2many kanban: create action disabled", async () => {
                         <templates>
                             <t t-name="card">
                                 <div>
-                                    <a t-if="!read_only_mode" type="delete" class="fa fa-times float-end delete_icon"/>
+                                    <a type="delete" class="fa fa-times float-end delete_icon"/>
                                     <field name="name"/>
                                 </div>
                             </t>

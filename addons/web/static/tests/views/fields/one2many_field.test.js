@@ -2456,7 +2456,7 @@ test("edition of one2many field with pager", async () => {
                         <templates>
                             <t t-name="card">
                                 <div>
-                                    <a t-if="!read_only_mode" type="delete" class="fa fa-times float-end delete_icon"/>
+                                    <a type="delete" class="fa fa-times float-end delete_icon"/>
                                     <field name="name"/>
                                 </div>
                             </t>
@@ -2592,7 +2592,7 @@ test("edition of one2many field with pager on desktop", async () => {
                         <templates>
                             <t t-name="card">
                                 <div>
-                                    <a t-if="!read_only_mode" type="delete" class="fa fa-times float-end delete_icon"/>
+                                    <a type="delete" class="fa fa-times float-end delete_icon"/>
                                     <field name="name"/>
                                 </div>
                             </t>
@@ -3429,7 +3429,7 @@ test("one2many kanban: edition", async () => {
                         <templates>
                             <t t-name="card">
                                 <div>
-                                    <a t-if="!read_only_mode" type="delete" class="fa fa-times float-end delete_icon"/>
+                                    <a type="delete" class="fa fa-times float-end delete_icon"/>
                                     <field name="name"/>
                                     <field name="color"/>
                                 </div>
@@ -3531,7 +3531,7 @@ test("one2many kanban: create action disabled", async () => {
                         <templates>
                             <t t-name="card">
                                 <div>
-                                    <a t-if="!read_only_mode" type="delete" class="fa fa-times float-end delete_icon"/>
+                                    <a type="delete" class="fa fa-times float-end delete_icon"/>
                                     <field name="name"/>
                                 </div>
                             </t>
@@ -4086,7 +4086,6 @@ test("save a record with not new, dirty and invalid subrecord", async () => {
                 </field>
             </form>`,
         resId: 1,
-        mode: "edit",
     });
 
     expect(".o_form_editable").toHaveCount(1);
@@ -11974,7 +11973,6 @@ test("nested one2manys, multi page, onchange", async () => {
                 </field>
             </form>`,
         resId: 1,
-        mode: "edit",
     });
 
     await contains(".o_field_widget[name=int_field] input").edit("5", { confirm: "blur" });
@@ -12106,7 +12104,6 @@ test("active actions are passed to o2m field", async () => {
                 </field>
             </form>`,
         resId: 1,
-        mode: "edit",
     });
 
     expect(".o_data_row").toHaveCount(3);

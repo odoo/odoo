@@ -9081,47 +9081,6 @@ test(`form view is not broken if save operation fails`, async () => {
     expect.verifySteps(["web_save"]); // write on save (it works)
 });
 
-test(`form view is not broken if save failed in readonly mode on field changed`, async () => {
-    expect.errors(1);
-
-    let failFlag = false;
-    onRpc("web_save", () => {
-        expect.step("web_save");
-        if (failFlag) {
-            throw makeServerError();
-        }
-    });
-    onRpc("web_read", () => expect.step("web_read"));
-
-    await mountView({
-        resModel: "partner",
-        type: "form",
-        arch: `
-            <form>
-                <header>
-                    <field name="parent_id" widget="statusbar" options="{'clickable': '1'}"/>
-                </header>
-            </form>
-        `,
-        mode: "readonly",
-        resId: 1,
-    });
-    expect.verifySteps(["web_read"]);
-    expect(`button[data-value="4"]`).toHaveClass("o_arrow_button_current");
-    expect(`button[data-value="4"]`).not.toBeEnabled();
-
-    failFlag = true;
-    await contains(`button[data-value="1"]`).click();
-    expect(`button[data-value="4"]`).toHaveClass("o_arrow_button_current");
-    expect.verifyErrors(["RPC_ERROR: Odoo Server Error"]);
-    expect.verifySteps(["web_save", "web_read"]); // must reload when saving fails
-
-    failFlag = false;
-    await contains(`button[data-value="1"]`).click();
-    expect(`button[data-value="4"]`).toHaveClass("o_arrow_button_current");
-    expect.verifySteps(["web_save"]);
-});
-
 test.tags("desktop");
 test(`context is correctly passed after save & new in FormViewDialog`, async () => {
     Product._views = {

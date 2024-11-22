@@ -17,6 +17,11 @@ export const handleField = {
     supportedTypes: ["integer"],
     isEmpty: () => false,
     listViewWidth: 20,
+    extractProps(_, dynamicInfo) {
+        return {
+            readonly: dynamicInfo.readonly,
+        };
+    },
 };
 
 registry.category("fields").add("handle", handleField);

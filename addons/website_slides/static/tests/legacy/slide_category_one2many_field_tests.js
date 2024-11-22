@@ -80,7 +80,6 @@ QUnit.test("click on section behaves as usual in readonly mode", async (assert) 
         resModel: "partner",
         resId: 1,
         serverData,
-        mode: "readonly",
         arch: `
             <form>
                 <field name="lines" widget="slide_category_one2many">
@@ -91,6 +90,7 @@ QUnit.test("click on section behaves as usual in readonly mode", async (assert) 
                     </list>
                 </field>
             </form>`,
+        readonly: true,
     });
     await click($(".o_data_cell")[0]);
     assert.containsNone($, ".o_selected_row");
