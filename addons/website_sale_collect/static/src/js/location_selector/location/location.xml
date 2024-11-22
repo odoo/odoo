@@ -6,21 +6,21 @@
             <t t-if="props.additionalData and !!props.additionalData.in_store_stock_data">
                 <t t-if="!!props.additionalData.in_store_stock_data.in_stock">
                     <t t-if="!!props.additionalData.in_store_stock_data.show_quantity">
-                        <span class="text-warning">
-                            <i class="fa fa-circle me-1"/>
+                        <span class="badge text-bg-warning mt-1 align-self-start">
+                            <i class="fa fa-circle text-warning me-2"/>
                             <t t-out="props.additionalData.in_store_stock_data.quantity"/> <t t-out="props.additionalData.in_store_stock_data.uom_name"/>
                             in stock
                         </span>
                     </t>
                     <t t-else="">
-                        <span class="text-success">
-                            <i class="fa fa-circle"/> Available
+                        <span class="badge text-bg-success mt-1 align-self-start">
+                            <i class="fa fa-circle text-success me-2"/>Available
                         </span>
                     </t>
                 </t>
                 <t t-else="">
-                    <span class="text-danger">
-                        <i class="fa fa-times"/> Out of stock
+                    <span class="badge text-bg-danger mt-1 align-self-start">
+                        <i class="fa fa-circle text-danger me-2"/>Out of stock
                     </span>
                 </t>
             </t>

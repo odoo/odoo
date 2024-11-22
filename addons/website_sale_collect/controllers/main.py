@@ -33,6 +33,13 @@ class WebsiteSaleCollect(WebsiteSale):
                     or request.geoip.postal.code
                     or ''  # String expected for the widget.
                 ),
+                'country_code': (
+                    order_sudo.partner_shipping_id.country_id.code
+                    or selected_location_data.get('country_code')
+                    or request.geoip.country_code
+                    or ''
+                ),
+                'delivery_method': in_store_dm_sudo,
             })
         return res
 

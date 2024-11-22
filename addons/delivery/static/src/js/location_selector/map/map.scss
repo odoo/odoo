@@ -2,12 +2,18 @@
     --LocationSelectorMarker-border-color: #{mix($body-bg, $body-color)};
     --LocationSelectorMarker-background: #{$body-bg};
     --LocationSelectorMarker-color: #{$body-color};
+
+    font-family: var(--body-font-family);
+    font-size: calc(var(--body-font-size) * .85);
 }
 
 .o_location_selector_marker_icon_selected {
     --LocationSelectorMarker-border-color: #{mix(map-get($theme-colors, 'primary'), color-contrast(map-get($theme-colors, 'primary')))};
     --LocationSelectorMarker-background: #{map-get($theme-colors, 'primary')};
     --LocationSelectorMarker-color: #{color-contrast(map-get($theme-colors, 'primary'))};
+
+    font-family: var(--body-font-family);
+    font-size: calc(var(--body-font-size) * .85);
 }
 
 .o_location_selector_map {

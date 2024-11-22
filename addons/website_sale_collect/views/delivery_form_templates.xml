@@ -124,6 +124,20 @@
                 </t>
             </t>
         </div>
+        <span name="o_pickup_location_selector" position="attributes">
+            <attribute name="t-att-data-country-code">
+                pickup_location_data.get('country_code')
+            </attribute>
+            <attribute name="t-att-data-delivery-method-id">dm.id</attribute>
+            <attribute name="t-att-data-delivery-method-type">dm.delivery_type</attribute>
+        </span>
+        <button name="o_pickup_location_selector" position="attributes">
+            <attribute name="t-att-data-country-code">
+                order.partner_shipping_id.country_code
+            </attribute>
+            <attribute name="t-att-data-delivery-method-id">dm.id</attribute>
+            <attribute name="t-att-data-delivery-method-type">dm.delivery_type</attribute>
+        </button>
     </template>
 
 </odoo>

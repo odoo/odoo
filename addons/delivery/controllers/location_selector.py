@@ -34,4 +34,4 @@ class LocationSelectorController(Controller):
             )
         else:
             country = order.partner_shipping_id.country_id
-        return order._get_pickup_locations(zip_code, country)
+        return order._get_pickup_locations(zip_code=zip_code, country=country)
