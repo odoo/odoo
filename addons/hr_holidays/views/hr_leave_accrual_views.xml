@@ -188,7 +188,7 @@
                                                     initially
                                                 </t>
                                             </div>
-                                            <t t-if="!read_only_mode">
+                                            <t t-if="widget.editable">
                                                 <a type="open" t-attf-class="oe_kanban_action text-black">
                                                     <t t-call="level_content"/>
                                                 </a>

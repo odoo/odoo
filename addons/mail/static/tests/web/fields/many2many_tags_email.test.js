@@ -50,7 +50,6 @@ test("fieldmany2many tags email (edition)", async () => {
                 <field name="partner_ids" widget="many2many_tags_email"/>
             </form>
         `,
-        mode: "edit",
     });
     await waitForSteps([]);
     await contains('.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0');

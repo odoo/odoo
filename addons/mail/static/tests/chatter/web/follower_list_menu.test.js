@@ -22,7 +22,7 @@ defineMailModels();
 
 test("base rendering not editable", async () => {
     await start();
-    await openFormView("res.partner", undefined, { mode: "edit" });
+    await openFormView("res.partner", undefined, {});
     await contains(".o-mail-Followers");
     await contains(".o-mail-Followers-button:disabled");
     await contains(".o-mail-Followers-dropdown", { count: 0 });

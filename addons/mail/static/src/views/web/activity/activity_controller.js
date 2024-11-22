@@ -128,9 +128,9 @@ export class ActivityController extends Component {
         this.model.orm.call(this.props.resModel, "activity_send_mail", [resIds, templateID], {});
     }
 
-    async openRecord(record, { mode, newWindow }) {
+    async openRecord(record, { newWindow }) {
         const activeIds = this.model.root.records.map((datapoint) => datapoint.resId);
-        this.props.selectRecord(record.resId, { activeIds, mode, newWindow });
+        this.props.selectRecord(record.resId, { activeIds, newWindow });
     }
 
     get rendererProps() {

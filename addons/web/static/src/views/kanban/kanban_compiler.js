@@ -29,7 +29,6 @@ const SPECIAL_TYPES = [
 
 export class KanbanCompiler extends ViewCompiler {
     setup() {
-        this.ctx.readonly = "read_only_mode";
         this.compilers.push(
             { selector: "t[t-call]", fn: this.compileTCall },
             { selector: "img", fn: this.compileImage }

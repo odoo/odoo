@@ -9165,7 +9165,6 @@ test(`navigation with tab on a one2many list with create="0"`, async () => {
             </form>
         `,
         resId: 1,
-        mode: "edit",
     });
     expect(`.o_field_widget[name=o2m] .o_data_row`).toHaveCount(2);
 
@@ -17293,7 +17292,6 @@ test(`list: remove a record from sorted recordlist`, async () => {
             </form>
         `,
         resId: 1,
-        mode: "edit",
     });
     // 3 th (1 for delete button, 2 for columns)
     expect(`th`).toHaveCount(3, { message: "should have 2 columns and delete buttons" });

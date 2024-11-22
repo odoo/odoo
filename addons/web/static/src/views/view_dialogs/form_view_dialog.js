@@ -14,10 +14,7 @@ export class FormViewDialog extends Component {
 
         context: { type: Object, optional: true },
         nextRecordsContext: { type: Object, optional: true },
-        mode: {
-            optional: true,
-            validate: (m) => ["edit", "readonly"].includes(m),
-        },
+        readonly: { type: Boolean, optional: true },
         onRecordSaved: { type: Function, optional: true },
         onRecordDiscarded: { type: Function, optional: true },
         removeRecord: { type: Function, optional: true },
@@ -55,7 +52,7 @@ export class FormViewDialog extends Component {
 
             context: this.props.context || {},
             display: { controlPanel: false },
-            mode: this.props.mode || "edit",
+            readonly: this.props.readonly,
             resId: this.props.resId || false,
             resModel: this.props.resModel,
             viewId: this.props.viewId || false,

@@ -7,7 +7,7 @@
                 <t t-if="!value_first">
                     <t t-if="props.readonly">
                         <span
-                            class="o_priority_star fa"
+                            class="o_priority_star fa o_disabled"
                             role="radio"
                             t-att-class="value_index lte index ? 'fa-star' : 'fa-star-o'"
                             t-att-tabindex="value_index === state.index ? 0 : -1"
