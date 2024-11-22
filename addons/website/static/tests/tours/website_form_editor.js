@@ -6,6 +6,7 @@ import {
     insertSnippet,
     goBackToBlocks,
     registerWebsitePreviewTour,
+    selectElementInWeSelectWidget,
 } from '@website/js/tours/tour_utils';
 
 // Visibility possible values:
@@ -197,11 +198,13 @@ registerWebsitePreviewTour("website_form_editor_tour", {
         content: 'Edit the Phone Number field',
         trigger: ':iframe input[name="phone"]',
         run: "click",
-    }, {
-        content: 'Change the label position of the phone field',
-        trigger: 'we-button[data-select-label-position="right"]',
+    },
+    {
+        content: "Open the collapse to edit the label position of the phone field",
+        trigger: "we-collapse:has(we-input[data-set-label-text]) we-toggler",
         run: "click",
     },
+    ...selectElementInWeSelectWidget("input_label_position_opt", "Right"),
     ...addCustomField("char", "text", "Conditional Visibility Check 1", false),
     ...addCustomField("char", "text", "Conditional Visibility Check 2", false),
     ...selectButtonByData("data-set-visibility='conditional'"),
@@ -759,8 +762,8 @@ registerWebsitePreviewTour('website_form_contactus_edition_no_email', {
 }, () => editContactUs([
     {
         content: "Change a random option",
-        trigger: '[data-set-mark] input',
-        run: "edit ** && click body",
+        trigger: '[data-css-property="width"][data-apply-to=".s_website_form_label"] input',
+        run: "edit 210 && click body",
     }, {
         content: "Check that the recipient email is correct",
         trigger: 'we-input[data-field-name="email_to"] input:value("website_form_contactus_edition_no_email@mail.com")',
@@ -911,9 +914,8 @@ registerWebsitePreviewTour('website_form_contactus_change_random_option', {
 }, () => editContactUs([
     {
         content: "Change a random option",
-        trigger: '[data-set-mark] input',
-        // TODO: remove && click body
-        run: "edit ** && click body",
+        trigger: '[data-css-property="width"][data-apply-to=".s_website_form_label"] input',
+        run: "edit 210 && click body",
     },
 ]));
 

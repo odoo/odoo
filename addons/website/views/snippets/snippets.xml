@@ -2222,6 +2222,21 @@
         </we-select>
     </div>
     <div data-js="OptionsTab" data-selector="theme-input" data-no-check="true">
+        <we-select string="Label Position" data-variable="input-label-position" data-reload="/">
+            <we-button data-customize-website-variable="'none'">Hide</we-button>
+            <we-button data-customize-website-variable="'top'">Top</we-button>
+            <we-button data-customize-website-variable="'left'" data-name="input_label_position_left_opt">Left</we-button>
+            <we-button data-customize-website-variable="'right'" data-name="input_label_position_right_opt">Right</we-button>
+            <we-button data-customize-website-variable="'floating'">Floating</we-button>
+        </we-select>
+        <we-row string="Width" class="o_we_sublevel_1">
+            <we-input data-dependencies="input_label_position_left_opt,input_label_position_right_opt"
+                data-customize-website-variable=""
+                data-variable="input-label-width"
+                title="Label Width"
+                data-reload="/"
+                data-unit="px"/>
+        </we-row>
         <we-collapse>
             <we-row string="Paddings">
                 <we-input title="Y" data-customize-website-variable="" data-variable="input-padding-y" data-unit="px" data-save-unit="rem"/>

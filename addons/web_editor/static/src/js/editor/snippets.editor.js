@@ -3167,6 +3167,7 @@ class SnippetsMenu extends Component {
     _computeSnippetTemplates(html) {
         var self = this;
         var $html = $(html);
+        this._adaptSnippetTemplates($html);
 
         this.templateOptions = [];
         var selectors = [];
@@ -4068,6 +4069,14 @@ class SnippetsMenu extends Component {
             delete $target[0].dataset.name;
         }
     }
+    /**
+     * Used to customize the snippets content before being dropped.
+     *
+     * @private
+     * @abstract
+     * @param {jQuery} $html
+     */
+    _adaptSnippetTemplates($html) {}
 
     //--------------------------------------------------------------------------
     // Handlers

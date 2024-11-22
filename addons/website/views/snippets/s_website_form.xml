@@ -4,7 +4,7 @@
 <template id="s_website_form" name="Form">
     <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form">
         <div class="container-fluid">
-            <form action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-pre-fill="true" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you">
+            <form action="/website/form/" method="post" enctype="multipart/form-data" data-pre-fill="true" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you">
                 <div class="s_website_form_rows row s_col_no_bgcolor">
                     <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_dnone">
                         <div class="row s_col_no_resize s_col_no_bgcolor">
@@ -20,7 +20,6 @@
                         <div class="row s_col_no_resize s_col_no_bgcolor">
                             <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="obij2aulqyau">
                                 <span class="s_website_form_label_content">Your Name</span>
-                                <span class="s_website_form_mark"> *</span>
                             </label>
                             <div class="col-sm">
                                 <input class="form-control s_website_form_input" type="text" name="name" required="1" data-fill-with="name" id="obij2aulqyau"/>
@@ -41,7 +40,6 @@
                         <div class="row s_col_no_resize s_col_no_bgcolor">
                             <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="oub62hlfgjwf">
                                 <span class="s_website_form_label_content">Your Email</span>
-                                <span class="s_website_form_mark"> *</span>
                             </label>
                             <div class="col-sm">
                                 <input class="form-control s_website_form_input" type="email" name="email_from" required="" data-fill-with="email" id="oub62hlfgjwf"/>
@@ -62,7 +60,6 @@
                         <div class="row s_col_no_resize s_col_no_bgcolor">
                             <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="oqsf4m51acj">
                                 <span class="s_website_form_label_content">Subject</span>
-                                <span class="s_website_form_mark"> *</span>
                             </label>
                             <div class="col-sm">
                                 <input class="form-control s_website_form_input" type="text" name="subject" required="" id="oqsf4m51acj"/>
@@ -73,7 +70,6 @@
                         <div class="row s_col_no_resize s_col_no_bgcolor">
                             <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="oyeqnysxh10b">
                                 <span class="s_website_form_label_content">Your Question</span>
-                                <span class="s_website_form_mark"> *</span>
                             </label>
                             <div class="col-sm">
                                 <textarea class="form-control s_website_form_input" name="description" required="1" id="oyeqnysxh10b" rows="3"></textarea>
@@ -98,14 +94,8 @@
     <xpath expr="//div" position="after">
         <!-- Form -->
         <div data-js="WebsiteFormEditor" data-selector=".s_website_form" data-target="form">
-            <we-select string="Marked Fields" data-name="field_mark_select">
-                <we-button data-select-class="">None</we-button>
-                <we-button data-select-class="o_mark_required" data-name="form_required_opt">Required</we-button>
-                <we-button data-select-class="o_mark_optional" data-name="form_optional_opt">Optional</we-button>
-            </we-select>
-            <we-input string="Mark Text" data-set-mark="" data-dependencies="form_required_opt, form_optional_opt"/>
             <we-input string="Labels Width"
-                data-select-style="" data-css-property="width"
+                data-select-style="" data-set-label-width="" data-css-property="width"
                 data-unit="px" data-apply-to=".s_website_form_label"/>
             <we-row>
                 <we-select string="On Success" data-no-preview="true">
@@ -188,25 +178,20 @@
                 t-att-data-unit="unit_textarea_height" data-step="1"
                 t-attf-data-select-attribute="3#{unit_textarea_height}"
                 data-attribute-name="rows"/>
-            <we-input string="Label" class="o_we_large" data-set-label-text=""/>
-            <we-button-group string="Position" class="o_we_sublevel_1">
-                <we-button title="Hide"
-                           data-select-label-position="none">
-                    <i class="fa fa-eye-slash"/>
-                </we-button>
-                <we-button title="Top"
-                           data-select-label-position="top"
-                           data-img="/website/static/src/img/snippets_options/pos_top.svg"/>
-                <we-button title="Left"
-                           data-select-label-position="left"
-                           data-img="/website/static/src/img/snippets_options/pos_left.svg"/>
-                <we-button title="Right"
-                           data-select-label-position="right"
-                           data-img="/website/static/src/img/snippets_options/pos_right.svg"/>
-            </we-button-group>
+            <we-collapse>
+                <we-input string="Label" class="o_we_large" data-set-label-text=""/>
+                <we-select string="Position" class="o_we_sublevel_1" data-name="input_label_position_opt">
+                    <we-button data-select-label-position="none">Hide</we-button>
+                    <we-button data-select-label-position="top">Top</we-button>
+                    <we-button data-select-label-position="left">Left</we-button>
+                    <we-button data-select-label-position="right">Right</we-button>
+                    <we-button data-select-label-position="floating" data-name="input_label_position_floating_opt">Floating</we-button>
+                    <we-button data-select-label-position="after-checkbox" data-name="input_label_position_after_opt">After Checkbox</we-button>
+                </we-select>
+            </we-collapse>
             <we-checkbox string="Description" data-toggle-description="true" data-no-preview="true"/>
             <we-input string="Placeholder" class="o_we_large"
-                data-select-attribute="" data-attribute-name="placeholder"
+                data-select-attribute="" data-attribute-name="placeholder" data-name="input_placeholder_opt"
                 data-apply-to="input[type='text'], input[type='email'], input[type='number'], input[type='tel'], input[type='url'], textarea"/>
             <t t-set="default_value_label">Default Value</t>
             <we-input t-att-string="default_value_label" class="o_we_large" data-select-textarea-value="" data-apply-to="textarea"/>
@@ -234,7 +219,7 @@
             <we-input string="Max File Size"
                 title="The maximum size (in MB) an uploaded file can have."
                 data-attribute-name="maxFileSize"
-                data-select-data-attribute="1MB"
+                data-select-data-attribute="10MB"
                 data-apply-to="input[type='file']"
                 data-unit="MB"/>
 
