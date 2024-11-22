@@ -44,10 +44,11 @@ class ResPartnerBank(models.Model):
     _inherit = ['res.partner.bank']
 
     @api.depends_context('uid')
-    def _compute_display_name(self):
-        account_employee = self.browse()
+    def name_get(self):
+        res = super().name_get()
+        name_mapping = dict(res)
         if not self.user_has_groups('hr.group_hr_user'):
             account_employee = self.sudo().filtered("partner_id.employee_ids")
             for account in account_employee:
-                account.display_name = account.acc_number[:2] + "*" * len(account.acc_number[2:-4]) + account.acc_number[-4:]
-        super(ResPartnerBank, self - account_employee)._compute_display_name()
+                name_mapping[account.id] = account.acc_number[:2] + "*" * len(account.acc_number[2:-4]) + account.acc_number[-4:]
+        return list(name_mapping.items())
