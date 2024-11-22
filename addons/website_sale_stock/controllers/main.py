@@ -11,12 +11,12 @@ class WebsiteSaleStock(Controller):
 
     @route('/shop/add/stock_notification', type='jsonrpc', auth='public', website=True)
     def add_stock_email_notification(self, email, product_id):
+        # TDE FIXME: seems a bit open
         if not email_re.match(email):
             raise BadRequest(_("Invalid Email"))
 
         product = request.env['product.product'].browse(int(product_id))
-        partners = request.env['res.partner'].sudo()._mail_find_partner_from_emails([email], force_create=True)
-        partner = partners[0]
+        partner = request.env['mail.thread'].sudo()._partner_find_from_emails_single([email])
 
         if not product._has_stock_notification(partner):
             product.sudo().stock_notification_partner_ids += partner

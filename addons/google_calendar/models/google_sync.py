@@ -355,20 +355,10 @@ class GoogleCalendarSync(models.AbstractModel):
     @api.model
     def _get_sync_partner(self, emails):
         normalized_emails = [email_normalize(contact) for contact in emails if email_normalize(contact)]
-        user_partners = self.env['res.users'].sudo().search(
-            [('email_normalized', 'in', normalized_emails), ('share', '=', False)]
-        ).mapped('partner_id')
-        user_partners = self.env['res.partner'].search([('id', 'in', user_partners.ids)])
-        partners = list(user_partners)
-        remaining = [email for email in normalized_emails if
-                     email not in [partner.email_normalized for partner in partners]]
-        if remaining:
-            partners += self.env['mail.thread']._mail_find_partner_from_emails(remaining, records=self, force_create=True)
-        unsorted_partners = self.env['res.partner'].browse([p.id for p in partners if p.id])
+        partners = self.env['mail.thread']._partner_find_from_emails_single(normalized_emails)
         # partners needs to be sorted according to the emails order provided by google
         k = {value: idx for idx, value in enumerate(emails)}
-        result = unsorted_partners.sorted(key=lambda p: k.get(p.email_normalized, -1))
-        return result
+        return partners.sorted(key=lambda p: k.get(p.email_normalized, -1))
 
     @api.model
     def _odoo_values(self, google_event: GoogleEvent, default_reminders=()):
