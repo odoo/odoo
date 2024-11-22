@@ -4,7 +4,7 @@ import { toRaw } from "@odoo/owl";
 
 import { patch } from "@web/core/utils/patch";
 
-/** @type {Thread} */
+/** @type {import("models").Thread} */
 const threadPatch = {
     /** @override */
     fetchMessages() {
@@ -12,6 +12,13 @@ const threadPatch = {
             toRaw(this.props.thread).loadAround(this.props.thread.selfMember.new_message_separator);
         } else {
             super.fetchMessages();
+        }
+    },
+    /** @override */
+    isDisplayedOnUpdate() {
+        super.isDisplayedOnUpdate(...arguments);
+        if (this.selfMember && !this.isDisplayed) {
+            this.selfMember.syncUnread = true;
         }
     },
 };

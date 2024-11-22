@@ -169,11 +169,10 @@ export class Thread extends Record {
             return this.computeIsDisplayed();
         },
         onUpdate() {
-            if (this.selfMember && !this.isDisplayed) {
-                this.selfMember.syncUnread = true;
-            }
+            this.isDisplayedOnUpdate();
         },
     });
+    isDisplayedOnUpdate() {}
     isLoadingAttachments = false;
     isLoadedDeferred = new Deferred();
     isLoaded = Record.attr(false, {
