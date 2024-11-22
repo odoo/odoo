@@ -16,6 +16,8 @@ from . import test_project_pricing_type
 from . import test_project_update
 from . import test_sale_timesheet_accrued_entries
 from . import test_sale_timesheet_report
+from . import test_sale_timesheet_product_product
+from . import test_sale_timesheet_product_template
 from . import test_sale_timesheet_dashboard
 from . import test_task_analysis
 from . import test_performance
