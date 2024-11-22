@@ -127,7 +127,6 @@ export class Message extends Record {
     subject;
     /** @type {string} */
     subtype_description;
-    threadAsFirstUnread = Record.one("Thread", { inverse: "firstUnreadMessage" });
     /** @type {Object[]} */
     trackingValues = [];
     /** @type {string|undefined} */

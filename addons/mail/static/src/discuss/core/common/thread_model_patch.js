@@ -1,6 +1,6 @@
 import { Record } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
-import { compareDatetime } from "@mail/utils/common/misc";
+import { compareDatetime, nearestGreaterThanOrEqual } from "@mail/utils/common/misc";
 
 import { formatList } from "@web/core/l10n/utils";
 import { rpc } from "@web/core/network/rpc";
@@ -41,6 +41,29 @@ const threadPatch = {
             compute() {
                 return this.store.channel_types_with_seen_infos.includes(this.channel_type);
             },
+        });
+        this.firstUnreadMessage = Record.one("mail.message", {
+            /** @this {import("models").Thread} */
+            compute() {
+                if (!this.selfMember) {
+                    return null;
+                }
+                const messages = this.nonEmptyMessages;
+                const separator = this.selfMember.localNewMessageSeparator;
+                if (separator === 0 && !this.loadOlder) {
+                    return messages[0];
+                }
+                if (!separator || messages.length === 0 || messages.at(-1).id < separator) {
+                    return null;
+                }
+                // try to find a perfect match according to the member's separator
+                let message = this.store["mail.message"].get({ id: separator });
+                if (!message || this.notEq(message.thread) || message.isEmpty) {
+                    message = nearestGreaterThanOrEqual(messages, separator, (msg) => msg.id);
+                }
+                return message;
+            },
+            inverse: "threadAsFirstUnread",
         });
         this.invitedMembers = Record.many("discuss.channel.member");
         /** @type {luxon.DateTime} */

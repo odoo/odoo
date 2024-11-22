@@ -46,6 +46,7 @@ const messagePatch = {
             },
         });
         this.mentionedChannelPromises = [];
+        this.threadAsFirstUnread = Record.one("Thread", { inverse: "firstUnreadMessage" });
     },
     get channelMemberHaveSeen() {
         return this.thread.membersThatCanSeen.filter(

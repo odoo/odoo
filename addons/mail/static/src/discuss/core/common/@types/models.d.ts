@@ -11,6 +11,7 @@ declare module "models" {
         hasSomeoneSeen: boolean,
         isMessagePreviousToLastSelfMessageSeenByEveryone: boolean,
         mentionedChannelPromises: Promise<Thread>[],
+        threadAsFirstUnread: Thread,
     }
 
     export interface Persona {
@@ -34,6 +35,7 @@ declare module "models" {
         readonly correspondents: ChannelMember[],
         default_display_mode: "video_full_screen" | false | undefined,
         fetchChannelMembers(): Promise<void>,
+        firstUnreadMessage: Message,
         hasOtherMembersTyping: boolean,
         readonly hasMemberList: boolean,
         readonly hasSeenFeature: boolean,

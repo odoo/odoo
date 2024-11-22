@@ -1,6 +1,6 @@
 import { AND, Record } from "@mail/core/common/record";
 import { prettifyMessageContent } from "@mail/utils/common/format";
-import { assignDefined, nearestGreaterThanOrEqual } from "@mail/utils/common/misc";
+import { assignDefined } from "@mail/utils/common/misc";
 import { rpc } from "@web/core/network/rpc";
 
 import { _t } from "@web/core/l10n/translation";
@@ -365,29 +365,6 @@ export class Thread extends Record {
         inverse: "threadAsNewest",
         compute() {
             return this.messages.findLast((msg) => !msg.isEmpty);
-        },
-    });
-
-    firstUnreadMessage = Record.one("mail.message", {
-        /** @this {import("models").Thread} */
-        compute() {
-            if (!this.selfMember) {
-                return null;
-            }
-            const messages = this.nonEmptyMessages;
-            const separator = this.selfMember.localNewMessageSeparator;
-            if (separator === 0 && !this.loadOlder) {
-                return messages[0];
-            }
-            if (!separator || messages.length === 0 || messages.at(-1).id < separator) {
-                return null;
-            }
-            // try to find a perfect match according to the member's separator
-            let message = this.store["mail.message"].get({ id: separator });
-            if (!message || this.notEq(message.thread) || message.isEmpty) {
-                message = nearestGreaterThanOrEqual(messages, separator, (msg) => msg.id);
-            }
-            return message;
         },
     });
 
