@@ -15,17 +15,44 @@ from odoo.tests import Form, tagged, users
 from odoo.tools import mute_logger
 
 
-@tagged('mail_thread')
+@tagged('mail_thread', 'mail_tools')
 class TestAPI(MailCommon, TestRecipients):
 
     @classmethod
     def setUpClass(cls):
-        super(TestAPI, cls).setUpClass()
-        cls.ticket_record = cls.env['mail.test.ticket'].with_context(cls._test_context).create({
+        super().setUpClass()
+        cls.test_partner = cls.env['res.partner'].create({
+            'email': '"Test External" <test.external@example.com>',
+            'mobile': '+32455001122',
+            'name': 'Test External',
+        })
+        cls.ticket_record = cls.env['mail.test.ticket.mc'].create({
+            'company_id': cls.user_employee.company_id.id,
             'email_from': '"Paulette Vachette" <paulette@test.example.com>',
+            'mobile_number': '+32455998877',
+            'phone_number': 'wrong',
             'name': 'Test',
             'user_id': cls.user_employee.id,
         })
+        cls.ticket_records = cls.ticket_record + cls.env['mail.test.ticket.mc'].create([
+            {
+                'email_from': '"Maybe Paulette" <PAULETTE@test.example.com>',
+                'name': 'Duplicate email',
+            }, {
+                'email_from': '"Multi Customer" <multi@test.example.com>, "Multi 2" <multi.2@test.example.com>',
+                'name': 'Multi Email',
+            }, {
+                'email_from': 'wrong',
+                'mobile_number': '+32455000001',
+                'name': 'Wrong email',
+            }, {
+                'email_from': False,
+                'name': 'Falsy email',
+            }, {
+                'email_from': f'"Other Name" <{cls.test_partner.email_normalized}>',
+                'name': 'Test Partner Email',
+            },
+        ])
 
     @users('employee')
     def test_body_escape(self):
@@ -97,6 +124,174 @@ class TestAPI(MailCommon, TestRecipients):
         self.assertEqual(message.body, expected)
         ticket_record._message_update_content(message, "Hello <R&D/>")
         self.assertEqual(message.body, Markup('<p>Hello &lt;R&amp;D/&gt;<span class="o-mail-Message-edited"></span></p>'))
+
+    @users('employee')
+    def test_mail_partner_find_from_emails(self):
+        """ Test '_mail_find_partner_from_emails'. Multi mode is mainly targeting
+        finding or creating partners based on record information or message
+        history. """
+        existing_partners = self.env['res.partner'].sudo().search([])
+        tickets = self.ticket_records.with_user(self.env.user)
+        self.assertEqual(len(tickets), 6)
+        res = tickets._mail_find_partner_from_emails(
+            [ticket.email_from for ticket in tickets],
+            force_create=True,
+        )
+        self.assertEqual(len(tickets), len(res))
+
+        # fetch partners that should have been created
+        new = self.env['res.partner'].search([('email_normalized', '=', 'paulette@test.example.com')])
+        self.assertEqual(len(new), 2, 'FIXME: created twice because does not check for duplicated when creating')
+        # self.assertEqual(len(new), 1, 'Should have created once the customer, even if found in various duplicates')
+        self.assertNotIn(new, existing_partners)
+        new_wrong = self.env['res.partner'].search([('email', '=', 'wrong')])
+        self.assertFalse(new_wrong)
+        # self.assertEqual(len(new_wrong), 1, 'Should have created once the wrong email')
+        # self.assertNotIn(new, new_wrong)
+        new_multi = self.env['res.partner'].search([('email_normalized', '=', 'multi@test.example.com')])
+        self.assertEqual(len(new_multi), 1, 'Should have created a based for multi email, using the first found email')
+        self.assertNotIn(new, new_multi)
+
+        # assert results: found / create partners and their values (if applies)
+        record_customer_values = {
+            # 'company_id': self.user_employee.company_id,  # FIXME: does not respect customer info propagation
+            'email': 'paulette@test.example.com',
+            # 'mobile': '+32455998877',
+            'name': 'Paulette Vachette',
+            # 'phone': 'wrong',
+        }
+        expected_all = [
+            (new[1], [record_customer_values]),  # FIXME: duplicate, wrong name, ...
+            (new[0], [{'email': 'paulette@test.example.com', 'name': 'Maybe Paulette'}]),  # FIXME: duplicate, wrong name, ...
+            (new_multi, [{  # not the actual record customer hence no mobile / phone, see _get_customer_information
+                # 'company_id': self.user_employee.company_id,
+                'email': 'multi@test.example.com',
+                'mobile': False,
+                'name': 'Multi Customer',
+                'phone': False,
+            }]),
+            (new_wrong, [{'name': 'wrong', 'email': 'wrong', 'company_id': self.env['res.company']}]),
+            (self.env['res.partner'], [{}]),
+            (self.test_partner, [{}]),
+        ]
+        for partners, (exp_partners, exp_values_list) in zip(res, expected_all):
+            with self.subTest(ticket_name=exp_partners.name):
+                self.assertEqual(partners, exp_partners)
+                for partner, exp_values in zip(partners, exp_values_list):
+                    for fname, fvalue in exp_values.items():
+                        self.assertEqual(partners[fname], fvalue)
+
+    @users('employee')
+    def test_mail_partner_find_from_emails_ordering(self):
+        """ Test '_mail_find_partner_from_emails' on a single record, to test notably
+        ordering and filtering. """
+        self.user_employee.write({'company_ids': [(4, self.company_2.id)]})
+        # create a mess, mix of portal / internal users + customer, to test ordering
+        portal_user, internal_user = self.env['res.users'].sudo().create([
+            {
+                'company_id': self.env.user.company_id.id,
+                'email': 'test.ordering@test.example.com',
+                'groups_id': [(4, self.env.ref('base.group_portal').id)],
+                'login': 'order_portal',
+                'name': 'Portal Test User for ordering',
+            }, {
+                'company_id': self.env.user.company_id.id,
+                'email': 'test.ordering@test.example.com',
+                'groups_id': [(4, self.env.ref('base.group_user').id)],
+                'login': 'order_internal',
+                'name': 'Zuper Internal Test User for ordering',  # name based: after portal
+            }
+        ])
+        dupe_partners = self.env['res.partner'].create([
+            {
+                'company_id': self.company_2.id,
+                'email': 'test.ordering@test.example.com',
+                'name': 'Dupe Partner (C2)',
+            }, {
+                'company_id': False,
+                'email': 'test.ordering@test.example.com',
+                'name': 'Dupe Partner (NoC)',
+            }, {
+                'company_id': self.env.user.company_id.id,
+                'email': 'test.ordering@test.example.com',
+                'name': 'Dupe Partner (C1)',
+            }, {
+                'company_id': False,
+                'email': '"ID ordering check" <test.ordering@test.example.com>',
+                'name': 'A Dupe Partner (NoC)',  # name based: before other, but newest, check ID order
+            },
+        ])
+        all_partners = portal_user.partner_id + internal_user.partner_id + dupe_partners
+        self.assertTrue(portal_user.partner_id.id < internal_user.partner_id.id)
+        self.assertTrue(internal_user.partner_id.id < dupe_partners[0].id)
+
+        for active_partners, followers, expected in [
+            # nothing to find
+            (self.env['res.partner'], self.env['res.partner'], self.env['res.partner']),
+            # one result, easy yay
+            (dupe_partners[3], self.env['res.partner'], dupe_partners[3]),
+            # various partners: should be id ASC FIXME
+            # (dupe_partners[1] + dupe_partners[3], self.env['res.partner'], dupe_partners[1]),
+            (dupe_partners[1] + dupe_partners[3], self.env['res.partner'], dupe_partners[3]),  # complete_name asc -> remove me when fixed
+            # involving matching company check: matching company wins
+            (dupe_partners, self.env['res.partner'], dupe_partners[2]),
+            # users > partner
+            (portal_user.partner_id + dupe_partners, self.env['res.partner'], portal_user.partner_id),
+            # internal user > any other user FIXME not correctly computed
+            # (portal_user.partner_id + internal_user.partner_id + dupe_partners, self.env['res.partner'], internal_user.partner_id),
+            (portal_user.partner_id + internal_user.partner_id + dupe_partners, self.env['res.partner'], portal_user.partner_id),  # internal user > any other user -> remove me when fixed
+            # follower > any other thing
+            (internal_user.partner_id + dupe_partners, dupe_partners[0], dupe_partners[0]),
+        ]:
+            with self.subTest(names=active_partners.mapped('name'), followers=followers.mapped('name')):
+                # removes (through deactivating) some partners to check ordering
+                (portal_user + internal_user).filtered(lambda u: u.partner_id not in active_partners).active = False
+                (all_partners - active_partners).active = False
+                self.ticket_record.message_subscribe(followers.ids)
+
+                ticket = self.ticket_record.with_user(self.env.user)
+                res = ticket._mail_find_partner_from_emails(
+                    [ticket.email_from, 'test.ordering@test.example.com'],
+                    force_create=False,
+                    records=ticket,
+                )
+
+                # new - linked to record: not existing, hence not found
+                self.assertFalse(res[0])
+                self.assertEqual(res[1], expected, f'Found {res[1].name} instead of {expected.name}')
+
+                all_partners.active = True
+                (portal_user + internal_user).active = True
+                self.ticket_record.message_unsubscribe(followers.ids)
+
+    @users('employee')
+    def test_mail_partner_find_from_emails_record(self):
+        """ On a given record, give several emails and check it is effectively
+        based on record information. """
+        ticket = self.ticket_record.with_user(self.env.user)
+        res = ticket._mail_find_partner_from_emails(
+            [
+                'raoul@test.example.com',
+                ticket.email_from,
+                self.test_partner.email,
+            ],
+            force_create=True,
+        )
+
+        # new - extra email
+        other = res[0]
+        # self.assertEqual(other.company_id, self.user_employee.company_id)
+        self.assertEqual(other.email, "raoul@test.example.com")
+        self.assertFalse(other.mobile)
+        self.assertEqual(other.name, "raoul@test.example.com")
+        # new - linked to record
+        customer = res[1]
+        # self.assertEqual(customer.company_id, self.user_employee.company_id)
+        self.assertEqual(customer.email, "paulette@test.example.com")
+        # self.assertEqual(customer.mobile, "+32455998877", "Should come from record, see '_get_customer_information'")
+        self.assertEqual(customer.name, "Paulette Vachette")
+        # found
+        self.assertEqual(res[2], self.test_partner)
 
     @users('employee')
     def test_message_get_default_recipients(self):
@@ -171,6 +366,55 @@ class TestAPI(MailCommon, TestRecipients):
                 {'email_cc': '', 'email_to': '', 'partner_ids': self.partner_1.ids},
                 'Mail: prioritize email should not return partner if email is found'
             )
+
+    @users("employee")
+    def test_message_get_suggested_recipients(self):
+        """ Test default creation values returned for suggested recipient. """
+        ticket = self.ticket_record.with_user(self.env.user)
+        ticket.message_unsubscribe(ticket.user_id.partner_id.ids)
+        suggestions = ticket._message_get_suggested_recipients()
+        self.assertEqual(len(suggestions), 2)
+        for suggestion, expected in zip(suggestions, [{
+            'email': self.user_employee.email_normalized,
+            'lang': None,
+            'name': self.user_employee.name,
+            'partner_id': self.partner_employee.id,
+            'reason': 'Responsible',
+        }, {
+            'create_values': {'mobile': '+32455998877', 'phone': 'wrong'},
+            'email': '"Paulette Vachette" <paulette@test.example.com>',
+            'lang': None,
+            'name': '"Paulette Vachette" <paulette@test.example.com>',
+            'reason': 'Customer Email',
+        }]):
+            self.assertDictEqual(suggestion, expected)
+
+        # existing partner not linked -> should propose it
+        ticket_partner_email = self.env['mail.test.ticket.mc'].create({
+            'customer_id': False,
+            'email_from': self.test_partner.email_formatted,
+            'mobile_number': '+33199001015',
+            'user_id': self.env.user.id,  # should not be proposed, already follower
+        })
+        # existing partner -> should propose it
+        ticket_partner = self.env['mail.test.ticket.mc'].create({
+            'customer_id': self.test_partner.id,
+            'email_from': self.test_partner.email_formatted,
+        })
+        for ticket in ticket_partner_email + ticket_partner:
+            with self.subTest(ticket=ticket.name):
+                suggestions = ticket_partner_email._message_get_suggested_recipients()
+                self.assertEqual(len(suggestions), 1)
+                self.assertDictEqual(
+                    suggestions[0],
+                    {
+                        'email': self.test_partner.email_normalized,
+                        'lang': None,
+                        'name': self.test_partner.name,
+                        'partner_id': self.test_partner.id,
+                        'reason': 'Customer Email',
+                    }
+                )
 
     @mute_logger('openerp.addons.mail.models.mail_mail')
     @users('employee')
@@ -544,29 +788,6 @@ class TestDiscuss(MailCommon, TestRecipients):
         # and the failure from employee's message should not be taken into account for admin
         threads_admin = self.test_record.with_user(self.user_admin).search([('message_has_error', '=', True)])
         self.assertEqual(len(threads_admin), 0)
-
-    @users("employee")
-    def test_suggested_recipients_default_create_value(self):
-        """ Test default creation values returned for suggested recipient. """
-        email = 'newpartner@example.com'
-        data_from_record_mobile = '+33199001015'
-        record = self.env['mail.test.ticket'].create({
-            'email_from': email,
-            'mobile_number': data_from_record_mobile,
-        })
-        suggestions = record._message_get_suggested_recipients()
-        self.assertItemsEqual(
-            suggestions,
-            [
-                {
-                    'lang': None,
-                    'reason': 'Customer Email',
-                    'name': 'newpartner@example.com',
-                    'email': 'newpartner@example.com',
-                    'create_values': {'mobile': '+33199001015', 'phone': False},
-                }
-            ],
-        )
 
     @users("employee")
     def test_unlink_notification_message(self):
