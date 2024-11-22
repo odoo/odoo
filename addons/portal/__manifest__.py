@@ -17,7 +17,6 @@ a dependency towards website editing and customization capabilities.""",
     'depends': ['web', 'web_editor', 'http_routing', 'mail', 'auth_signup'],
     'data': [
         'security/ir.model.access.csv',
-        'data/mail_template_data.xml',
         'data/mail_templates.xml',
         'views/mail_templates_public.xml',
         'views/portal_templates.xml',
