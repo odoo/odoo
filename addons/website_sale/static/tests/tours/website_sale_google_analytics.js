@@ -22,11 +22,11 @@ let itemId;
 
 
 registry.category("web_tour.tours").add('google_analytics_view_item', {
-    url: '/shop?search=Customizable Desk',
+    url: '/shop?search=Colored T-Shirt',
     steps: () => [
     {
-        content: "select customizable desk",
-        trigger: '.oe_product_cart a:contains("Customizable Desk")',
+        content: "select Colored T-Shirt",
+        trigger: '.oe_product_cart a:contains("Colored T-Shirt")',
         run: "click",
     },
     {
@@ -56,9 +56,9 @@ registry.category("web_tour.tours").add('google_analytics_view_item', {
 ]});
 
 registry.category("web_tour.tours").add('google_analytics_add_to_cart', {
-    url: '/shop?search=Acoustic Bloc Screens',
+    url: '/shop?search=Basic Shirt',
     steps: () => [
-    ...tourUtils.addToCart({productName: 'Acoustic Bloc Screens', search: false}),
+    ...tourUtils.addToCart({productName: 'Basic Shirt', search: false}),
     {
         trigger: "body[cart-event-id]",
     },

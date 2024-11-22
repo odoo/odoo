@@ -78,16 +78,16 @@ class TestStockValuationBase(TransactionCase):
         })
 
         cls.stock_input_account, cls.stock_output_account, cls.stock_valuation_account, cls.expense_account, cls.stock_journal = _create_accounting_data(cls.env)
-        cls.product1.categ_id.property_valuation = 'real_time'
-        cls.product2.categ_id.property_valuation = 'real_time'
-        cls.product1.write({
-            'property_account_expense_id': cls.expense_account.id,
-        })
         cls.product1.categ_id.write({
             'property_stock_account_input_categ_id': cls.stock_input_account.id,
             'property_stock_account_output_categ_id': cls.stock_output_account.id,
             'property_stock_valuation_account_id': cls.stock_valuation_account.id,
             'property_stock_journal': cls.stock_journal.id,
+        })
+        cls.product1.categ_id.property_valuation = 'real_time'
+        cls.product2.categ_id.property_valuation = 'real_time'
+        cls.product1.write({
+            'property_account_expense_id': cls.expense_account.id,
         })
 
     def _get_stock_input_move_lines(self):

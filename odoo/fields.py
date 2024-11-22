@@ -42,6 +42,7 @@ from .tools.mimetypes import guess_mimetype
 from .tools.misc import unquote, has_list_types, Sentinel, SENTINEL
 from .tools.translate import html_translate
 
+from odoo import SUPERUSER_ID
 from odoo.exceptions import CacheMiss
 from odoo.osv import expression
 
@@ -783,7 +784,10 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
 
     def get_company_dependent_fallback(self, records):
         assert self.company_dependent
-        fallback = records.env['ir.default']._get_model_defaults(records._name).get(self.name)
+        fallback = records.env['ir.default'] \
+            .with_user(SUPERUSER_ID) \
+            .with_company(records.env.company) \
+            ._get_model_defaults(records._name).get(self.name)
         fallback = self.convert_to_cache(fallback, records, validate=False)
         return self.convert_to_record(fallback, records)
 

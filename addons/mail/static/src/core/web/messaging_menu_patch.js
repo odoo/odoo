@@ -6,7 +6,6 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { MessagingMenuQuickSearch } from "@mail/core/web/messaging_menu_quick_search";
-import { isDisplayStandalone, isIOS, isIosApp } from "@web/core/browser/feature_detection";
 
 Object.assign(MessagingMenu.components, { MessagingMenuQuickSearch });
 
@@ -178,10 +177,6 @@ patch(MessagingMenu.prototype, {
         return this.store.discuss.activeTab !== "channel" && !this.state.adding;
     },
     get shouldAskPushPermission() {
-        if (isIOS() && !isDisplayStandalone() && !isIosApp()) {
-            // iOS browser apps do not have push notifications: Only PWA and apps have them.
-            return false;
-        }
         return this.notification.permission === "prompt";
     },
 });

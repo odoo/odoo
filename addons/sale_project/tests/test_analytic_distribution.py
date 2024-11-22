@@ -7,14 +7,21 @@ from odoo.tests.common import tagged
 
 @tagged('post_install', '-at_install')
 class TestAnalyticDistribution(HttpCase, TestSaleProjectCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        # Creating analytic plans within tests could cause some registry issues
+        # hence we are creating them in the setupClass instead.
+        # This is because creating a plan creates fields and columns on models inheriting
+        # from the mixin.
+        # The registry is reset on class cleanup.
+        cls.plan_b = cls.env['account.analytic.plan'].create({'name': 'Q'})
+
     def test_project_transmits_analytic_plans_to_sol_distribution(self):
-        AnalyticPlan = self.env['account.analytic.plan']
         plan_a = self.analytic_plan
-        plan_b = AnalyticPlan.sudo().search([
-            ('parent_id', '=', False),
-            ('id', '!=', plan_a.id),
-        ], limit=1)
-        plan_b = plan_b or AnalyticPlan.create({'name': 'Q'})
+        plan_b = self.plan_b
         account_a, account_b = self.env['account.analytic.account'].create([{
             'name': 'account',
             'plan_id': plan.id,

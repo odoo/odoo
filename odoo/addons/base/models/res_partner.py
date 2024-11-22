@@ -916,9 +916,10 @@ class Partner(models.Model):
         if not parsed_email_normalized and assert_valid_email:
             raise ValueError(_('A valid email is required for find_or_create to work properly.'))
 
-        partners = self.search([('email', '=ilike', parsed_email_normalized)], limit=1)
-        if partners:
-            return partners
+        if parsed_email_normalized:
+            partners = self.search([('email', '=ilike', parsed_email_normalized)], limit=1)
+            if partners:
+                return partners
 
         create_values = {self._rec_name: parsed_name or parsed_email_normalized}
         if parsed_email_normalized:  # keep default_email in context

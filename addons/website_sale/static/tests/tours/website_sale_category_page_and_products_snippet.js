@@ -1,14 +1,18 @@
 /** @odoo-modules */
 
-import { clickOnSave, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
+import { clickOnSave, clickOnEditAndWaitEditMode, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
 import { registry } from "@web/core/registry";
 
-const PRODUCT_CATEGORY_ID = 2;
 
 registerWebsitePreviewTour('category_page_and_products_snippet_edition', {
-    url: `/shop/category/${PRODUCT_CATEGORY_ID}`,
-    edition: true,
+    url: '/shop',
 }, () => [
+    {
+        content: "Navigate to category",
+        trigger: ':iframe .o_wsale_filmstip > li:contains("Test Category") > a',
+        run: "click",
+    },
+    ...clickOnEditAndWaitEditMode(),
     {
         trigger: ".o_website_preview.editor_enable.editor_has_snippets",
     },
@@ -42,18 +46,22 @@ registerWebsitePreviewTour('category_page_and_products_snippet_edition', {
 ]);
 
 registry.category("web_tour.tours").add('category_page_and_products_snippet_use', {
-    url: `/shop/category/${PRODUCT_CATEGORY_ID}`,
+    url: '/shop',
     steps: () => [
+    {
+        content: "Navigate to category",
+        trigger: '.o_wsale_filmstip > li:contains("Test Category") > a',
+        run: "click",
+    },
     {
         content: "Check that the snippet displays the right products",
         // Wait for at least one shown product
         trigger: '#category_header .s_dynamic_snippet_products:has(.o_carousel_product_img_link)',
         run() {
-            // Note: this could be more robust to not rely on demo data and
-            // make sure that the newest products are not by chance all of
-            // the second category (used for the test) and ... but should be ok.
-            const productGridEl = this.anchor.closest("#products_grid");
-            const regex = new RegExp(`^/shop/[\\w-/]+-(\\d+)\\?category=${PRODUCT_CATEGORY_ID}$`);
+            // Fetch the category's id from the url.
+            const productCategoryId = window.location.href.match('/shop/category/test-category-(\\d+)')[1]
+            const productGridEl = this.anchor.closest('#products_grid');
+            const regex = new RegExp(`^/shop/[\\w-/]+-(\\d+)\\?category=${productCategoryId}$`);
             const allPageProductIDs = [...productGridEl.querySelectorAll('.oe_product_image_link')]
                 .map(el => el.getAttribute('href').match(regex)[1]);
 
