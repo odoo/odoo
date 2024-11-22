@@ -1,6 +1,6 @@
 import { AND, Record } from "@mail/core/common/record";
 import { prettifyMessageContent } from "@mail/utils/common/format";
-import { assignDefined, compareDatetime, nearestGreaterThanOrEqual } from "@mail/utils/common/misc";
+import { assignDefined, nearestGreaterThanOrEqual } from "@mail/utils/common/misc";
 import { rpc } from "@web/core/network/rpc";
 
 import { _t } from "@web/core/l10n/translation";
@@ -235,17 +235,6 @@ export class Thread extends Record {
     canPostOnReadonly;
     /** @type {luxon.DateTime} */
     last_interest_dt = Record.attr(undefined, { type: "datetime" });
-    /** @type {luxon.DateTime} */
-    lastInterestDt = Record.attr(undefined, {
-        type: "datetime",
-        compute() {
-            const selfMemberLastInterestDt = this.selfMember?.last_interest_dt;
-            const lastInterestDt = this.last_interest_dt;
-            return compareDatetime(selfMemberLastInterestDt, lastInterestDt) > 0
-                ? selfMemberLastInterestDt
-                : lastInterestDt;
-        },
-    });
     /** @type {Boolean} */
     is_editable;
     /**

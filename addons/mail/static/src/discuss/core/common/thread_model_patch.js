@@ -1,11 +1,12 @@
 import { Record } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
-import { patch } from "@web/core/utils/patch";
+import { compareDatetime } from "@mail/utils/common/misc";
 
 import { formatList } from "@web/core/l10n/utils";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { Mutex } from "@web/core/utils/concurrency";
+import { patch } from "@web/core/utils/patch";
 import { imageUrl } from "@web/core/utils/urls";
 
 const commandRegistry = registry.category("discuss.channel_commands");
@@ -42,6 +43,18 @@ const threadPatch = {
             },
         });
         this.invitedMembers = Record.many("discuss.channel.member");
+        /** @type {luxon.DateTime} */
+        this.lastInterestDt = Record.attr(undefined, {
+            type: "datetime",
+            /** @this {import("models").Thread} */
+            compute() {
+                const selfMemberLastInterestDt = this.selfMember?.last_interest_dt;
+                const lastInterestDt = this.last_interest_dt;
+                return compareDatetime(selfMemberLastInterestDt, lastInterestDt) > 0
+                    ? selfMemberLastInterestDt
+                    : lastInterestDt;
+            },
+        });
         this.lastMessageSeenByAllId = Record.attr(undefined, {
             /** @this {import("models").Thread} */
             compute() {
