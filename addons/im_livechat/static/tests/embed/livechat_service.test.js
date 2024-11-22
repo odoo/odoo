@@ -127,6 +127,7 @@ test("Only necessary requests are made when creating a new chat", async () => {
             },
             post_data: {
                 body: "Hello!",
+                email_add_signature: true,
                 message_type: "comment",
                 subtype_xmlid: "mail.mt_comment",
             },
