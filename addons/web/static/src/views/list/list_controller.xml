@@ -90,13 +90,14 @@
                     activeActions="activeActions"
                     archInfo="archInfo"
                     allowSelectors="props.allowSelectors"
-                    editable="editable"
+                    editable="props.editable"
                     onOpenFormView="onOpenFormView"
                     hasOpenFormViewButton="hasOpenFormViewButton"
                     openRecord.bind="openRecord"
                     noContentHelp="props.info.noContentHelp"
                     onAdd.bind="createRecord"
                     optionalActiveFields="optionalActiveFields"
+                    readonly="props.readonly"
                 />
             </Layout>
         </div>

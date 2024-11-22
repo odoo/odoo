@@ -4097,7 +4097,6 @@ test("save a record with not new, dirty and invalid subrecord", async () => {
                 </field>
             </form>`,
         resId: 1,
-        mode: "edit",
     });
 
     expect(".o_form_editable").toHaveCount(1);
@@ -11972,7 +11971,6 @@ test("nested one2manys, multi page, onchange", async () => {
                 </field>
             </form>`,
         resId: 1,
-        mode: "edit",
     });
 
     await contains(".o_field_widget[name=int_field] input").edit("5", { confirm: "blur" });
@@ -12104,7 +12102,6 @@ test("active actions are passed to o2m field", async () => {
                 </field>
             </form>`,
         resId: 1,
-        mode: "edit",
     });
 
     expect(".o_data_row").toHaveCount(3);

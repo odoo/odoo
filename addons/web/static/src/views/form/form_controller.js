@@ -140,10 +140,7 @@ export class FormController extends Component {
     static props = {
         ...standardViewProps,
         discardRecord: { type: Function, optional: true },
-        mode: {
-            optional: true,
-            validate: (m) => ["edit", "readonly"].includes(m),
-        },
+        readonly: { type: Boolean, optional: true },
         saveRecord: { type: Function, optional: true },
         removeRecord: { type: Function, optional: true },
         Model: Function,
@@ -354,10 +351,6 @@ export class FormController extends Component {
     }
 
     get modelParams() {
-        let mode = this.props.mode || "edit";
-        if (!this.canEdit && this.props.resId) {
-            mode = "readonly";
-        }
         return {
             config: {
                 resModel: this.props.resModel,
@@ -366,7 +359,7 @@ export class FormController extends Component {
                 fields: this.props.fields,
                 activeFields: {}, // will be generated after loading sub views (see willStart)
                 isMonoRecord: true,
-                mode,
+                mode: this.props.readonly ? "readonly" : "edit",
                 context: this.props.context,
             },
             state: this.props.state?.modelState,

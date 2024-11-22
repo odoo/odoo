@@ -69,6 +69,7 @@ export class SelectCreateDialog extends Component {
             context: this.props.context,
             domain: this.props.domain,
             dynamicFilters: this.props.dynamicFilters,
+            readonly: true,
             resModel: this.props.resModel,
             searchViewId: this.props.searchViewId,
             type,

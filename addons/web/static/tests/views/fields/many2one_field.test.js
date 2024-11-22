@@ -3404,7 +3404,7 @@ test("updating a many2one from a many2many", async () => {
     expect(".o_dialog:not(.o_inactive_modal) div[name=turtle_trululu] input").toHaveValue("test");
 });
 
-test("search more in many2one: resequence inside dialog", async () => {
+test("search more in many2one: cannot resequence inside dialog", async () => {
     // when the user clicks on 'Search More...' in a many2one dropdown, resequencing inside
     // the dialog works
     Partner._fields.sequence = fields.Integer();
@@ -3441,11 +3441,7 @@ test("search more in many2one: resequence inside dialog", async () => {
     await contains(`.o_field_widget[name="trululu"] .o_m2o_dropdown_option_search_more`).click();
 
     expect(".modal").toHaveCount(1);
-    expect(".modal .ui-sortable-handle").toHaveCount(11);
-    await contains(".modal .o_data_row:nth-child(2) .ui-sortable-handle").dragAndDrop(
-        ".modal tbody tr"
-    );
-    await animationFrame();
+    expect(".modal .ui-sortable-handle").toHaveCount(0);
 
     expect.verifySteps([
         "get_views",
@@ -3454,8 +3450,6 @@ test("search more in many2one: resequence inside dialog", async () => {
         "get_views", // list view in dialog
         "web_search_read", // to display results in the dialog
         "has_group",
-        "/web/dataset/resequence", // resequencing lines
-        "read",
     ]);
 });
 
