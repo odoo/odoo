@@ -8,7 +8,7 @@ import { defineWebsiteModels, getEditable, openSnippetsMenu, setupWebsiteBuilder
 defineWebsiteModels();
 
 test("open SnippetsMenu and discard", async () => {
-    await setupWebsiteBuilder(`<h1> Homepage </h1>`);
+    await setupWebsiteBuilder(`<h1> Homepage </h1>`, { openEditor: false });
     expect(".o_menu_systray .o-website-btn-custo-primary").toHaveCount(1);
     await openSnippetsMenu();
     expect(".o_menu_systray .o-website-btn-custo-primary").toHaveCount(0);
@@ -22,7 +22,6 @@ test("navigate between builder tab don't fetch snippet description again", async
         expect.step("render_public_asset");
     });
     await setupWebsiteBuilder(`<h1> Homepage </h1>`);
-    await openSnippetsMenu();
     expect(queryAllTexts(".o-website-snippetsmenu .o-snippets-tabs span")).toEqual([
         "BLOCKS",
         "CUSTOMIZE",
@@ -40,7 +39,9 @@ test("navigate between builder tab don't fetch snippet description again", async
 });
 
 test("undo and redo buttons", async () => {
-    const { getEditor } = await setupWebsiteBuilder(getEditable("<p> Text </p>"));
+    const { getEditor } = await setupWebsiteBuilder(getEditable("<p> Text </p>"), {
+        openEditor: false,
+    });
     expect(".o_menu_systray .o-website-btn-custo-primary").toHaveCount(1);
     await openSnippetsMenu();
     expect(":iframe #wrap").not.toHaveClass("o_dirty");

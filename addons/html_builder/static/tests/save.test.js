@@ -1,10 +1,10 @@
-import { expect, test } from "@odoo/hoot";
-import { defineWebsiteModels, openSnippetsMenu, setupWebsiteBuilder, getEditable } from "./helpers";
-import { insertText } from "@html_editor/../tests/_helpers/user_actions";
-import { setContent } from "@html_editor/../tests/_helpers/selection";
-import { onRpc, patchWithCleanup, contains } from "@web/../tests/web_test_helpers";
-import { click, animationFrame } from "@odoo/hoot-dom";
 import { SnippetsMenu } from "@html_builder/builder/snippets_menu";
+import { setContent } from "@html_editor/../tests/_helpers/selection";
+import { insertText } from "@html_editor/../tests/_helpers/user_actions";
+import { expect, test } from "@odoo/hoot";
+import { animationFrame, click } from "@odoo/hoot-dom";
+import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { defineWebsiteModels, getEditable, setupWebsiteBuilder } from "./helpers";
 
 defineWebsiteModels();
 
@@ -15,7 +15,6 @@ const emptyWrap = `<div id="wrap" data-oe-model="ir.ui.view" data-oe-id="539" da
 test("basic save", async () => {
     const resultSave = setupSaveAndReloadIframe();
     const { getEditor } = await setupWebsiteBuilder(getEditable(websiteContent));
-    await openSnippetsMenu();
     expect(":iframe #wrap").not.toHaveClass("o_dirty");
     await modifyText(getEditor());
 
@@ -32,7 +31,6 @@ test("basic save", async () => {
 test("nothing to save", async () => {
     const resultSave = setupSaveAndReloadIframe();
     const { getEditor } = await setupWebsiteBuilder(getEditable(websiteContent));
-    await openSnippetsMenu();
     await modifyText(getEditor());
     await animationFrame();
     await contains(".o-snippets-menu button.fa-undo").click();
@@ -46,7 +44,6 @@ test("nothing to save", async () => {
 test("discard modified elements", async () => {
     setupSaveAndReloadIframe();
     const { getEditor } = await setupWebsiteBuilder(getEditable(websiteContent));
-    await openSnippetsMenu();
     await modifyText(getEditor());
     await contains(".o-snippets-top-actions button[data-action='cancel']").click();
     await contains(".modal-content button.btn-primary").click();
@@ -63,7 +60,6 @@ test("discard without any modifications", async () => {
         },
     });
     await setupWebsiteBuilder(getEditable(websiteContent));
-    await openSnippetsMenu();
     await contains(".o-snippets-top-actions button[data-action='cancel']").click();
     expect(":iframe #wrap").not.toHaveClass("o_dirty");
     expect(":iframe #wrap").not.toHaveClass("o_editable");
@@ -72,7 +68,6 @@ test("discard without any modifications", async () => {
 
 test("disable discard button when clicking on save", async () => {
     await setupWebsiteBuilder();
-    await openSnippetsMenu();
     await click(".o-snippets-top-actions button[data-action='save']");
     expect(".o-snippets-top-actions button[data-action='cancel']").toHaveAttribute("disabled", "");
 });

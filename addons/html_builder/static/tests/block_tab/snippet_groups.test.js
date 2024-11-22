@@ -9,7 +9,7 @@ import {
     waitFor,
 } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, openSnippetsMenu, setupWebsiteBuilder } from "../helpers";
+import { defineWebsiteModels, setupWebsiteBuilder } from "../helpers";
 
 defineWebsiteModels();
 
@@ -39,7 +39,6 @@ test("display group snippet", async () => {
     await setupWebsiteBuilder("<div><p>Text</p></div>", {
         snippets,
     });
-    await openSnippetsMenu();
     const snippetGroupsSelector = `.o-snippets-menu [data-category="snippet_groups"]`;
     expect(snippetGroupsSelector).toHaveCount(3);
     expect(queryAllTexts(snippetGroupsSelector)).toEqual(["A", "B", "C"]);
@@ -77,7 +76,6 @@ test("open add snippet dialog + switch snippet category", async () => {
             ),
         },
     });
-    await openSnippetsMenu();
     expect(queryAllTexts(`.o-snippets-menu [data-category="snippet_groups"]`)).toEqual(["A", "B"]);
 
     await click(queryFirst(`.o-snippets-menu [data-category="snippet_groups"] div`));
@@ -127,7 +125,6 @@ test("insert snippet structure", async () => {
             ),
         },
     });
-    await openSnippetsMenu();
     const editor = getEditor();
     expect(editor.editable).toHaveInnerHTML(`<section><p>Text</p></section>`);
 
@@ -163,7 +160,6 @@ test("drag&drop snippet structure", async () => {
             ),
         },
     });
-    await openSnippetsMenu();
     const editor = getEditor();
     expect(editor.editable).toHaveInnerHTML(`<section><p>Text</p></section>`);
 
