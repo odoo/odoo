@@ -7183,6 +7183,44 @@ test(`click on a button in a list view`, async () => {
     expect.verifySteps(["doActionButton", "web_search_read"]);
 });
 
+test("click on a button in a list view on second page", async () => {
+    onRpc("web_search_read", ({ kwargs }) => {
+        expect.step(`web_search_read (offset: ${kwargs.offset})`);
+    });
+    mockService("action", {
+        doActionButton: (action) => {
+            expect.step("doActionButton");
+            action.onClose();
+        },
+    });
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list limit="3">
+                <field name="foo"/>
+                <button string="a button" name="button_action" icon="fa-car" type="object"/>
+            </list>
+        `,
+    });
+
+    expect(".o_data_row").toHaveCount(3);
+
+    await pagerNext();
+    expect(".o_data_row").toHaveCount(1);
+
+    await contains(".o_data_row .o_list_button button").click();
+    expect(".o_data_row").toHaveCount(1);
+
+    expect.verifySteps([
+        "web_search_read (offset: 0)",
+        "web_search_read (offset: 3)",
+        "doActionButton",
+        "web_search_read (offset: 3)",
+    ]);
+});
+
 test(`invisible attrs in readonly and editable list`, async () => {
     await mountView({
         resModel: "foo",
@@ -10943,9 +10981,7 @@ test(`list view move to previous page when all records from last page deleted`, 
     let checkSearchRead = false;
     onRpc("web_search_read", ({ kwargs }) => {
         if (checkSearchRead) {
-            expect.step("web_search_read");
-            expect(kwargs.limit).toBe(3, { message: "limit should 3" });
-            expect(kwargs.offset).toBe(0, { message: "offset should be 0" });
+            expect.step(`web_search_read (limit: ${kwargs.limit}, offset: ${kwargs.offset})`);
         }
     });
     await mountView({
@@ -10971,16 +11007,17 @@ test(`list view move to previous page when all records from last page deleted`, 
     await contains(`.modal button.btn-primary`).click();
     expect(getPagerValue()).toEqual([1, 3]);
     expect(getPagerLimit()).toBe(3);
-    expect.verifySteps(["web_search_read"]);
+    expect.verifySteps([
+        "web_search_read (limit: 3, offset: 3)",
+        "web_search_read (limit: 3, offset: 0)",
+    ]);
 });
 
 test(`grouped list view move to previous page of group when all records from last page deleted`, async () => {
     let checkSearchRead = false;
     onRpc("web_search_read", ({ kwargs }) => {
         if (checkSearchRead) {
-            expect.step("web_search_read");
-            expect(kwargs.limit).toBe(2, { message: "limit should 2" });
-            expect(kwargs.offset).toBe(0, { message: "offset should be 0" });
+            expect.step(`web_search_read (limit: ${kwargs.limit}, offset: ${kwargs.offset})`);
         }
     });
 
@@ -11015,7 +11052,10 @@ test(`grouped list view move to previous page of group when all records from las
     await contains(`.modal .btn-primary`).click();
     expect(`th.o_group_name:eq(0) .o_pager_counter`).toHaveCount(0);
     expect(`.o_data_row`).toHaveCount(2);
-    expect.verifySteps(["web_search_read"]);
+    expect.verifySteps([
+        "web_search_read (limit: 2, offset: 2)",
+        "web_search_read (limit: 2, offset: 0)",
+    ]);
 });
 
 test(`grouped list view move to next page when all records from the current page deleted`, async () => {
