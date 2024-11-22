@@ -6,8 +6,7 @@ from inspect import cleandoc
 from pathlib import Path
 
 import odoo.cli
-from odoo.modules import initialize_sys_path
-from odoo.modules.migration import load_script
+from odoo.modules import initialize_sys_path, load_script
 from odoo.tools import config
 
 
