@@ -101,7 +101,7 @@ class MailTestTicket(models.Model):
     def _message_get_suggested_recipients(self):
         recipients = super()._message_get_suggested_recipients()
         if self.customer_id:
-            self.customer_id._message_add_suggested_recipient(
+            self._message_add_suggested_recipient(
                 recipients,
                 partner=self.customer_id,
                 lang=None,
