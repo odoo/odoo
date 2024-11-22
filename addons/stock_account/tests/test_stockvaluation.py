@@ -3068,8 +3068,19 @@ class TestStockValuation(TestStockValuationBase):
         self.assertAlmostEqual(self.product1.quantity_svl, 19)
         self.assertAlmostEqual(self.product1.value_svl, 240, delta=0.04)
 
-        # an accounting entry should be created
-        # FIXME sle check it
+        amls = self.env['account.move.line'].search([
+            ('product_id', '=', self.product1.id),
+            ('name', 'ilike', 'Costing method change%'),
+        ], order='id')
+        self.assertRecordValues(
+            amls,
+            [
+                {'account_id': self.stock_input_account.id, 'debit': 240, 'credit': 0},
+                {'account_id': self.stock_valuation_account.id, 'debit': 0, 'credit': 240},
+                {'account_id': self.stock_valuation_account.id, 'debit': 239.97, 'credit': 0},
+                {'account_id': self.stock_input_account.id, 'debit': 0, 'credit': 239.97},
+            ]
+        )
 
         self.assertEqual(self.product1.standard_price, 12.63)
 
@@ -3140,8 +3151,19 @@ class TestStockValuation(TestStockValuationBase):
         self.assertAlmostEqual(self.product1.value_svl, 240, delta=0.04)
         self.assertAlmostEqual(self.product1.quantity_svl, 19)
 
-        # no accounting entry should be created
-        # FIXME sle check it
+        amls = self.env['account.move.line'].search([
+            ('product_id', '=', self.product1.id),
+            ('name', 'ilike', 'Costing method change%'),
+        ], order='id')
+        self.assertRecordValues(
+            amls,
+            [
+                {'account_id': self.stock_input_account.id, 'debit': 240, 'credit': 0},
+                {'account_id': self.stock_valuation_account.id, 'debit': 0, 'credit': 240},
+                {'account_id': self.stock_valuation_account.id, 'debit': 239.97, 'credit': 0},
+                {'account_id': self.stock_input_account.id, 'debit': 0, 'credit': 239.97},
+            ]
+        )
 
         self.assertEqual(self.product1.standard_price, 12.63)
 
@@ -4167,8 +4189,10 @@ class TestStockValuation(TestStockValuationBase):
         self.product1.categ_id.property_cost_method = 'fifo'
         other_categ = self.product1.categ_id.copy({
             'property_cost_method': 'average',
-            'property_stock_account_output_categ_id': self.product1.categ_id.property_stock_account_output_categ_id.id,
-            'property_stock_valuation_account_id': self.product1.categ_id.property_stock_valuation_account_id.id,
+            'property_stock_account_output_categ_id': self.stock_output_account.id,
+            'property_stock_valuation_account_id': self.stock_valuation_account.id,
+            'property_stock_account_input_categ_id': self.stock_input_account.id,
+            'property_stock_journal': self.stock_journal.id,
         })
         move1 = self.env['stock.move'].create({
             'name': 'IN 10 units @ 7.20 per unit',
