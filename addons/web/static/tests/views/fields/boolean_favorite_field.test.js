@@ -242,6 +242,7 @@ test("FavoriteField in kanban view with readonly attribute", async () => {
         message: "should be favorite",
     });
     expect(`.o_kanban_record .o_field_widget .o_favorite > a`).toHaveClass("pe-none");
+    expect(`.o_kanban_record .o_field_widget .o_favorite`).toHaveClass("o_disabled");
     expect(`.o_kanban_record .o_field_widget`).toHaveText("");
 
     // click on favorite

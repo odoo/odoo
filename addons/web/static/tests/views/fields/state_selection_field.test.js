@@ -162,6 +162,7 @@ test("StateSelectionField with readonly modifier", async () => {
     });
 
     expect(".o_field_state_selection").toHaveClass("o_readonly_modifier");
+    expect(".o_field_state_selection button").toHaveClass("o_disabled");
     expect(".dropdown-menu").not.toBeVisible();
     await click(".o_field_state_selection span.o_status");
     await animationFrame();

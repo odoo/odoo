@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.HandleField">
-        <span class="o_row_handle oi oi-draggable ui-sortable-handle" t-on-click.stop="" />
+        <span class="o_row_handle oi oi-draggable ui-sortable-handle" t-att-class="{ 'o_disabled': props.readonly }" t-on-click.stop="" />
     </t>
 
 </templates>
