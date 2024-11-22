@@ -1183,7 +1183,6 @@ test(`freeze widths: x2many, edit a record`, async () => {
                 </field>
             </form>`,
         resId: 1,
-        mode: "edit",
     });
 
     const initialWidths = getColumnWidths();
@@ -1214,7 +1213,6 @@ test(`freeze widths: x2many, remove last record`, async () => {
                 </field>
             </form>`,
         resId: 1,
-        mode: "edit",
     });
 
     const initialWidths = getColumnWidths();
@@ -1527,7 +1525,6 @@ test(`resize: unnamed columns cannot be resized`, async () => {
             </form>
         `,
         resId: 1,
-        mode: "edit",
     });
     expect(Math.floor(queryRect(`.o_field_one2many th:eq(0)`).right)).toBe(
         Math.floor(queryRect(`.o_field_one2many th:eq(0) .o_resize`).right),

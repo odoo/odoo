@@ -5265,9 +5265,8 @@ test("clicking on a link triggers correct event", async () => {
                     </t>
                 </templates>
             </kanban>`,
-        selectRecord: (resId, { mode }) => {
+        selectRecord: (resId) => {
             expect(resId).toBe(1);
-            expect(mode).toBe("edit");
         },
     });
     await contains("a", { root: getKanbanRecord({ index: 0 }) }).click();
@@ -10258,9 +10257,9 @@ test("set cover image", async () => {
     });
 
     mockService("action", {
-        switchView(_viewType, { mode, resModel, res_id, view_type }) {
-            expect({ mode, resModel, res_id, view_type }).toBe({
-                mode: "readonly",
+        switchView(_viewType, { readonly, resModel, res_id, view_type }) {
+            expect({ readonly, resModel, res_id, view_type }).toBe({
+                readonly: true,
                 resModel: "partner",
                 res_id: 1,
                 view_type: "form",

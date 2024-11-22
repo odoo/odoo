@@ -24,7 +24,7 @@ test("PhoneField in form view on normal screens (readonly)", async () => {
     await mountView({
         type: "form",
         resModel: "partner",
-        mode: "readonly",
+        readonly: true,
         arch: /* xml */ `
             <form>
                 <sheet>
@@ -159,7 +159,7 @@ test("href is correctly formatted", async () => {
     await mountView({
         type: "form",
         resModel: "partner",
-        mode: "readonly",
+        readonly: true,
         arch: /* xml */ `
             <form>
                 <sheet>
