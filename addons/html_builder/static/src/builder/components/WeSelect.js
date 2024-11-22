@@ -18,7 +18,9 @@ export class WeSelect extends Component {
         useWeComponent();
         this.dropdown = useDropdownState();
         this.firstRender = true;
-        onMounted(() => (this.firstRender = false));
+        onMounted(() => {
+            this.firstRender = false;
+        });
         useSubEnv({
             weSelectBus: new EventBus(),
             weSetSelectLabel: (labelHtml) => {
