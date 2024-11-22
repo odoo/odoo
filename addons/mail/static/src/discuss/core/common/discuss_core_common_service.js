@@ -157,7 +157,7 @@ export class DiscussCoreCommon {
             this.store.self.type === "partner" &&
             channel.newestPersistentMessage?.eq(channel.newestMessage)
         ) {
-            channel.markAsRead();
+            channel.markAsRead({ sync: false });
         }
         this.env.bus.trigger("discuss.channel/new_message", { channel, message, silent });
         const authorMember = channel.channel_member_ids.find(({ persona }) =>

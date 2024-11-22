@@ -716,30 +716,15 @@ export class Thread extends Record {
     }
 
     /**
-     * @param {Object} [options]
-     * @param {boolean} [options.sync] Whether to sync the unread message
-     * state with the server values.
+     * @param {Object} [options] used in overrides
      */
-    markAsRead({ sync } = {}) {
+    markAsRead(options) {
         const newestPersistentMessage = this.newestPersistentOfAllMessage;
         if (!newestPersistentMessage && !this.isLoaded) {
-            this.isLoadedDeferred.then(() => new Promise(setTimeout)).then(() => this.markAsRead());
-        }
-        const alreadyReadBySelf = newestPersistentMessage?.isReadBySelf;
-        if (this.selfMember) {
-            this.selfMember.syncUnread = sync ?? this.selfMember.syncUnread;
-            this.selfMember.seen_message_id = newestPersistentMessage;
-        }
-        if (newestPersistentMessage && this.selfMember && !alreadyReadBySelf) {
-            rpc("/discuss/channel/mark_as_read", {
-                channel_id: this.id,
-                last_message_id: newestPersistentMessage.id,
-                sync,
-            }).catch((e) => {
-                if (e.code !== 404) {
-                    throw e;
-                }
-            });
+            this.isLoadedDeferred
+                .then(() => new Promise(setTimeout))
+                .then(() => this.markAsRead(options));
+            return;
         }
         if (this.message_needaction_counter > 0) {
             this.markAllMessagesAsRead();

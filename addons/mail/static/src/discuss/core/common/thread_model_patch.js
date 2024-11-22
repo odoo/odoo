@@ -215,6 +215,37 @@ const threadPatch = {
         return Boolean(this.selfMember);
     },
     /**
+     * @override
+     * @param {Object} [options]
+     * @param {boolean} [options.sync] Whether to sync the unread message
+     * state with the server values.
+     */
+    markAsRead({ sync } = {}) {
+        super.markAsRead(...arguments);
+        if (!this.selfMember) {
+            return;
+        }
+        const newestPersistentMessage = this.newestPersistentOfAllMessage;
+        if (!newestPersistentMessage) {
+            return;
+        }
+        const alreadyReadBySelf =
+            this.selfMember.seen_message_id?.id >= newestPersistentMessage.id &&
+            this.selfMember.new_message_separator > newestPersistentMessage.id;
+        if (alreadyReadBySelf) {
+            return;
+        }
+        rpc("/discuss/channel/mark_as_read", {
+            channel_id: this.id,
+            last_message_id: newestPersistentMessage.id,
+            sync,
+        }).catch((e) => {
+            if (e.code !== 404) {
+                throw e;
+            }
+        });
+    },
+    /**
      * To be overridden.
      * The purpose is to exclude technical channel_member_ids like bots and avoid
      * "wrong" seen message indicator

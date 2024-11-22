@@ -46,9 +46,6 @@ export class MessagingMenu extends Component {
         if (thread.needactionMessages.length > 0) {
             thread.markAllMessagesAsRead();
         }
-        if (thread.model === "discuss.channel") {
-            thread.markAsRead();
-        }
     }
 
     navigate(direction) {
