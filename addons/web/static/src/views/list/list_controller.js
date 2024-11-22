@@ -57,8 +57,9 @@ export class ListController extends Component {
     static props = {
         ...standardViewProps,
         allowSelectors: { type: Boolean, optional: true },
-        editable: { type: Boolean, optional: true },
+        editable: { type: [Boolean, String], optional: true },
         onSelectionChanged: { type: Function, optional: true },
+        readonly: { type: Boolean, optional: true },
         showButtons: { type: Boolean, optional: true },
         Model: Function,
         Renderer: Function,
@@ -80,10 +81,8 @@ export class ListController extends Component {
 
         this.archInfo = this.props.archInfo;
         this.activeActions = this.archInfo.activeActions;
-        this.editable =
-            this.activeActions.edit && this.props.editable ? this.archInfo.editable : false;
         this.onOpenFormView = this.openRecord.bind(this);
-        this.hasOpenFormViewButton = this.editable ? this.archInfo.openFormView : false;
+        this.hasOpenFormViewButton = this.props.editable ? this.archInfo.openFormView : false;
         this.model = useState(useModelWithSampleData(this.props.Model, this.modelParams));
 
         // In multi edition, we save or notify invalidity directly when a field is updated, which
@@ -265,13 +264,13 @@ export class ListController extends Component {
 
     async createRecord({ group } = {}) {
         const list = (group && group.list) || this.model.root;
-        if (this.editable && !list.isGrouped) {
+        if (this.props.editable && !list.isGrouped) {
             if (!(list instanceof DynamicRecordList)) {
                 throw new Error("List should be a DynamicRecordList");
             }
             await list.leaveEditMode();
             if (!list.editedRecord) {
-                await (group || list).addNewRecord(this.editable === "top");
+                await (group || list).addNewRecord(this.props.editable === "top");
             }
             this.render();
         } else {
