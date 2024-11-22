@@ -29,6 +29,25 @@ class SaleOrder(models.Model):
         self.pickup_location_data = json.loads(pickup_location_data)
         if self.pickup_location_data:
             self.warehouse_id = self.pickup_location_data['id']
+            partner_id = self.warehouse_id.partner_id
+            # using `.new()` was not helpful because `_update_address` wasn't updating the fields
+            dummy_order = self.copy()
+            dummy_order._update_address(partner_id.id, ['partner_id'])
+            self.write({
+                'amount_tax': dummy_order.amount_tax,
+                'amount_to_invoice': dummy_order.amount_to_invoice,
+                'amount_total': dummy_order.amount_total,
+                'fiscal_position_id': dummy_order.fiscal_position_id.id,
+                'order_line': dummy_order.order_line.ids,
+                'website_order_line': dummy_order.website_order_line.ids,
+                'pricelist_id': dummy_order.pricelist_id,
+                'tax_totals': dummy_order.tax_totals,
+            })
+            # Removing order_lines resets carrier_id need to set it after the write
+            self.write({
+                'carrier_id': dummy_order.carrier_id.id,
+            })
+            dummy_order.unlink()
         else:
             self._compute_warehouse_id()
 
