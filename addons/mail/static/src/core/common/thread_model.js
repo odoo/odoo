@@ -159,9 +159,6 @@ export class Thread extends Record {
         if (this.model === "mail.box") {
             return this.counter;
         }
-        if (this.isChatChannel && this.selfMember?.message_unread_counter) {
-            return this.selfMember.totalUnreadMessageCounter;
-        }
         return this.message_needaction_counter;
     }
     isDisplayed = Record.attr(false, {
@@ -326,7 +323,7 @@ export class Thread extends Record {
     }
 
     get isUnread() {
-        return this.selfMember?.message_unread_counter > 0 || this.needactionMessages.length > 0;
+        return this.needactionMessages.length > 0;
     }
 
     get isMuted() {

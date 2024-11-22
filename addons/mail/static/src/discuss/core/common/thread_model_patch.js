@@ -214,6 +214,17 @@ const threadPatch = {
     get hasSelfAsMember() {
         return Boolean(this.selfMember);
     },
+    /** @override */
+    get importantCounter() {
+        if (this.isChatChannel && this.selfMember?.message_unread_counter) {
+            return this.selfMember.totalUnreadMessageCounter;
+        }
+        return super.importantCounter;
+    },
+    /** @override */
+    get isUnread() {
+        return this.selfMember?.message_unread_counter > 0 || super.isUnread;
+    },
     /**
      * @override
      * @param {Object} [options]
