@@ -63,5 +63,6 @@ class ResPartnerBank(models.Model):
         if not self.env.user.has_groups('hr.group_hr_user'):
             account_employee = self.sudo().filtered("partner_id.employee_ids")
             for account in account_employee:
-                account.display_name = account.acc_number[:2] + "*" * len(account.acc_number[2:-4]) + account.acc_number[-4:]
+                account.sudo(self.env.su).display_name = \
+                    account.acc_number[:2] + "*" * len(account.acc_number[2:-4]) + account.acc_number[-4:]
         super(ResPartnerBank, self - account_employee)._compute_display_name()
