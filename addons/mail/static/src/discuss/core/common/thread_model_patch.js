@@ -258,6 +258,15 @@ const threadPatch = {
         // knowledge of members for groups).
         return Boolean(this.displayName);
     },
+    /** @override */
+    onNewSelfMessage(message) {
+        if (!this.selfMember || message.id < this.selfMember.seen_message_id?.id) {
+            return;
+        }
+        this.selfMember.syncUnread = true;
+        this.selfMember.seen_message_id = message;
+        this.selfMember.new_message_separator = message.id + 1;
+    },
     /** @param {string} body */
     async post(body) {
         if (this.model === "discuss.channel" && body.startsWith("/")) {

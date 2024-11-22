@@ -749,6 +749,9 @@ export class Thread extends Record {
         );
     }
 
+    /** @param {import("models").Message} message */
+    onNewSelfMessage(message) {}
+
     /** @param {Object} [options] */
     open(options) {}
 
@@ -862,11 +865,7 @@ export class Thread extends Record {
                 { html: true }
             );
             this.messages.push(tmpMsg);
-            if (this.selfMember) {
-                this.selfMember.syncUnread = true;
-                this.selfMember.seen_message_id = tmpMsg;
-                this.selfMember.new_message_separator = tmpMsg.id + 1;
-            }
+            this.onNewSelfMessage(tmpMsg);
         }
         const data = await this.store.doMessagePost(params, tmpMsg);
         if (!data) {
@@ -876,10 +875,7 @@ export class Thread extends Record {
         /** @type {import("models").Message} */
         const message = messages[0];
         this.addOrReplaceMessage(message, tmpMsg);
-        if (this.selfMember?.seen_message_id?.id < message.id) {
-            this.selfMember.seen_message_id = message;
-            this.selfMember.new_message_separator = message.id + 1;
-        }
+        this.onNewSelfMessage(message);
         // Only delete the temporary message now that seen_message_id is updated
         // to avoid flickering.
         tmpMsg?.delete();
