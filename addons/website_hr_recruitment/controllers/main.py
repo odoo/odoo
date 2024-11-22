@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import warnings
+import base64
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
@@ -313,8 +314,30 @@ class WebsiteHrRecruitment(WebsiteForm):
             introduction_label = self.env._("Short introduction from applicant")
             data["custom"] = data["custom"].replace("short_introduction", introduction_label)
         return data
+<<<<<<< 4c18143c4d46c007bce9f2324f3a666383fc31b1
 
     def _should_log_authenticate_message(self, record):
         if record._name == "hr.applicant" and not request.session.uid:
             return False
         return super()._should_log_authenticate_message(record)
+||||||| 7c513de528c9f9fdbfc8c5fa8496c94c2c7e96a0
+=======
+
+    def insert_attachment(self, model, id_record, files):
+        if model.sudo().model == 'hr.applicant':
+            candidate_id = request.env['hr.applicant'].browse(id_record).candidate_id
+            if candidate_id:
+                attachment_value = []
+                for file in files:
+                    if file_data := file.read():
+                        attachment_value.append({
+                            'name': file.filename,
+                            'datas': base64.b64encode(file_data),
+                            'res_model': 'hr.candidate',
+                            'res_id': candidate_id,
+                        })
+                        file.stream.seek(0)
+                if attachment_value:
+                    request.env['ir.attachment'].sudo().create(attachment_value)
+        super().insert_attachment(model, id_record, files)
+>>>>>>> 7e296cc7f5b16131ca902b55521440a451bfcfa6
