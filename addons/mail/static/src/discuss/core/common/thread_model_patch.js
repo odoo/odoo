@@ -311,6 +311,9 @@ const threadPatch = {
         }
         return super.post(...arguments);
     },
+    get showUnreadBanner() {
+        return !this.selfMember?.hideUnreadBanner && this.selfMember?.localMessageUnreadCounter > 0;
+    },
     get unknownMembersCount() {
         return (this.member_count ?? 0) - this.channel_member_ids.length;
     },

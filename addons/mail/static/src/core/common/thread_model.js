@@ -457,10 +457,6 @@ export class Thread extends Record {
         return this.isChatChannel ? "@" : "#";
     }
 
-    get showUnreadBanner() {
-        return !this.selfMember?.hideUnreadBanner && this.selfMember?.localMessageUnreadCounter > 0;
-    }
-
     get rpcParams() {
         return {};
     }

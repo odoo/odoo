@@ -102,29 +102,6 @@ export class Thread extends Component {
             "scrollend",
             () => (this.state.scrollTop = this.scrollableRef.el.scrollTop)
         );
-        useEffect(
-            (loadNewer, mountedAndLoaded, unreadSynced) => {
-                if (
-                    loadNewer ||
-                    unreadSynced || // just marked as unread (local and server state are synced)
-                    !mountedAndLoaded ||
-                    !this.props.thread.selfMember ||
-                    !this.scrollableRef.el
-                ) {
-                    return;
-                }
-                const el = this.scrollableRef.el;
-                if (Math.abs(el.scrollTop + el.clientHeight - el.scrollHeight) <= 1) {
-                    this.props.thread.selfMember.hideUnreadBanner = true;
-                }
-            },
-            () => [
-                this.props.thread.loadNewer,
-                this.state.mountedAndLoaded,
-                this.props.thread.selfMember?.unreadSynced,
-                this.state.scrollTop,
-            ]
-        );
         this.loadOlderState = useVisible(
             "load-older",
             async () => {
@@ -500,13 +477,6 @@ export class Thread extends Component {
         return this.state.showJumpPresent ? threshold - 200 : threshold;
     }
 
-    get newMessageBannerText() {
-        if (this.props.thread.selfMember?.totalUnreadMessageCounter > 1) {
-            return _t("%s new messages", this.props.thread.selfMember.totalUnreadMessageCounter);
-        }
-        return _t("1 new message");
-    }
-
     get preferenceButtonText() {
         const [, before, inside, after] =
             _t(
@@ -542,14 +512,6 @@ export class Thread extends Component {
         this.props.thread.loadNewer = false;
         this.props.thread.scrollTop = "bottom";
         this.state.showJumpPresent = false;
-    }
-
-    async onClickUnreadMessagesBanner() {
-        await this.props.thread.loadAround(this.props.thread.selfMember.localNewMessageSeparator);
-        this.messageHighlight?.highlightMessage(
-            this.props.thread.firstUnreadMessage,
-            this.props.thread
-        );
     }
 
     registerMessageRef(message, ref) {
