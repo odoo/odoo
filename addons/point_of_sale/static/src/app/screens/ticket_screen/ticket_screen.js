@@ -402,6 +402,7 @@ export class TicketScreen extends Component {
             (orders.length === 1 && orders[0].lines.length === 0) ||
             (this.ui.isSmall && order != this.state.selectedOrder) ||
             this.isDefaultOrderEmpty(order) ||
+            order.finalized ||
             order.payment_ids.some(
                 (payment) => payment.isElectronic() && payment.getPaymentStatus() === "done"
             ) ||
