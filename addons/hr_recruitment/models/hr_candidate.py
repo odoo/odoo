@@ -237,6 +237,17 @@ class HrCandidate(models.Model):
             else:
                 candidate.meeting_display_text = _('Last Meeting')
 
+    def write(self, vals):
+        res = super().write(vals)
+
+        if vals.get("company_id") and not self.env.context.get('do_not_propagate_company', False):
+            self.applicant_ids.with_context(do_not_propagate_company=True).write({"company_id": vals["company_id"]})
+            self.applicant_ids.filtered(
+                lambda a: a.job_id.company_id.id != vals["company_id"]
+            ).with_context(do_not_propagate_company=True).write({"company_id": vals['company_id'], "job_id": False})
+
+        return res
+
     def action_open_similar_candidates(self):
         self.ensure_one()
         domain = self._get_similar_candidates_domain()
