@@ -50,7 +50,7 @@ class TestWebsiteSession(HttpCaseWithUserDemo):
         self.assertTrue(res.next.path_url.startswith("/web/login/totp"))
 
     def test_04_ensure_website_get_cached_values_can_be_called(self):
-        session = self.authenticate('portal', 'portal')
+        session = self.authenticate('admin', 'admin')
 
         # Force a browser language that is not installed
         session.context['lang'] = 'fr_MC'
