@@ -81,7 +81,6 @@ class PosConfig(models.Model):
         ref_name = 'pos_restaurant.pos_config_main_bar'
         if not self.env.ref(ref_name, raise_if_not_found=False):
             self._load_bar_data()
-
         journal, payment_methods_ids = self._create_journal_and_payment_methods(cash_journal_vals={'name': 'Cash Bar', 'show_on_dashboard': False})
         bar_categories = self.get_record_by_ref([
             'pos_restaurant.pos_category_cocktails',
