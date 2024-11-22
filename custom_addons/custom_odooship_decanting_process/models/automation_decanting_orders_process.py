@@ -55,6 +55,7 @@ class AutomationDecantingOrdersProcess(models.Model):
                                    store=True)
     location_dest_id = fields.Many2one(related='picking_id.location_dest_id', string='Destination location')
     count_lines = fields.Integer(string='Count Lines')
+    source_document = fields.Char(related='picking_id.origin', store=True)
 
     def action_open_decanting_wizard(self):
         """
@@ -212,17 +213,19 @@ class AutomationDecantingOrdersProcess(models.Model):
                 "container_code": self.crate_barcode,  # Crate Barcode
                 "container_type": self.container_code,  # Container Code
                 "bin_code": line.bin_code,  # Bin Code
-                "batch_property07": 'yyy',  # Assuming Color is stored here
+                # "batch_property07": 'yyy',  # Assuming Color is stored here
+                "batch_property07": self.source_document,  # Assuming Color is stored here
                 "batch_property08": 'zzz',
             })
-            stock_quant_obj._update_available_quantity(
-                product_id=line.product_id,
-                location_id=line.location_dest_id,
-                quantity=line.quantity,
-                # lot_id=line.lot_id,
-                # package_id=line.package_id,
-                # owner_id=line.owner_id
-            )
+            # Comment out this code because stock is updating through Receipt Wizard
+            # stock_quant_obj._update_available_quantity(
+            #     product_id=line.product_id,
+            #     location_id=line.location_dest_id,
+            #     quantity=line.quantity,
+            #     # lot_id=line.lot_id,
+            #     # package_id=line.package_id,
+            #     # owner_id=line.owner_id
+            # )
         # Add the receipt entry (for external systems or integration purposes)
         receipt_list.append({
             "warehouse_code": self.site_code_id.name,  # Site Code

@@ -2,6 +2,7 @@ from odoo import models, fields, api
 import requests
 import logging
 
+
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -34,6 +35,16 @@ class SaleOrder(models.Model):
             logger.info(f"Processing order: {order.name}")
             all_products_available = True
             products_data = []
+
+            # Fetch picking records for the current order
+            picking_records = self.env['stock.picking'].search([
+                ('origin', '=', order.name),
+                ('state', '!=', 'cancel')  # Exclude canceled pickings
+            ])
+            # Filter only "pick" type pickings
+            pick_only_picking_records = picking_records.filtered(
+                lambda p: 'Pick' in p.picking_type_id.name  # Adjust logic based on your type naming convention
+            )
             for line in order.order_line:
                 product_qty = line.product_uom_qty  
                 product = line.product_id
@@ -61,6 +72,19 @@ class SaleOrder(models.Model):
                     all_products_available = False
                     break
 
+                # Collect pickings that include the product
+                product_pickings = pick_only_picking_records.filtered(
+                    lambda p: product.id in p.move_ids.mapped('product_id').ids
+                ).mapped('name')
+
+                if not product_pickings:
+                    logger.warning(f"No picklist found for product {product.name} in order {order.name}.")
+                    product_pickings = ["No picklist"]  # Fallback value
+                elif len(product_pickings) > 1:
+                    logger.warning(
+                        f"Multiple picklists found for product {product.name} in order {order.name}. Using the first one.")
+                    product_pickings = product_pickings[:1]  # Take only the first picklist
+
                 # Collect data to be sent to the external system
                 products_data.append({
                     'default_code': product_default_code,
@@ -68,8 +92,10 @@ class SaleOrder(models.Model):
                     'quantity': product_qty,
                     'location': location_name,
                     'system': location_system,
+                    'product_class': product.automation_manual_product,
+                    'picklist': product_pickings[0] if product_pickings else "No picklist",
                 })
-
+                logger.debug(f"Product data for {product.name}: {products_data[-1]}")
             # Update order status
             logger.info("Proceeding without authentication...")
 
@@ -81,6 +107,7 @@ class SaleOrder(models.Model):
                     'order_number': order.name,
                     'products': products_data,
                 }
+                logger.debug(f"Data to be sent for order {order.name}: {data_to_send}")
                 # Send data to external API
                 release_url = "https://shiperooconnect-prod.automation.shiperoo.com/api/odoo_release"
 

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Sequence for Automation Bulk Putaway -->
+        <record id="seq_automation_bulk" model="ir.sequence">
+            <field name="name">Automation Bulk Sequence</field>
+            <field name="code">automation.bulk.putaway</field>
+            <field name="prefix">AUTO-BULK/</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <!-- Sequence for Manual Putaway -->
+        <record id="seq_manual_putaway" model="ir.sequence">
+            <field name="name">Manual Putaway Sequence</field>
+            <field name="code">manual.putaway</field>
+            <field name="prefix">MANUAL/</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+    </data>
+</odoo>

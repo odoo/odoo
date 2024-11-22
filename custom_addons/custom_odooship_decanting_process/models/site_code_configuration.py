@@ -11,4 +11,5 @@ class SiteCodeConfiguration(models.Model):
     _inherit = 'mail.thread'
 
     name = fields.Char(string='Site Code', tracking=True)
+    warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse')
 

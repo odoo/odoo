@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View for Automation Bulk and Manual Putaway -->
+    <record id="view_automation_bulk_manual_form" model="ir.ui.view">
+        <field name="name">automation.bulk.manual.putaway.form</field>
+        <field name="model">automation.bulk.manual.putaway</field>
+        <field name="arch" type="xml">
+            <form string="Automation Bulk and Manual Putaway">
+                <sheet>
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+                        <button name="send_message_to_automation" type="object" string="Send to Automation" class="btn-primary" invisible="automation_manual not in ('automation_bulk') or state in ('done') " />
+                        <button name="update_manual_bulk_location" type="object" string="Manual Location Update" class="btn-primary" invisible="state in ('done') or automation_manual not in ('manual')" />
+                    </header>
+                    <group>
+                        <group>
+                            <field name="name" readonly="1"/>
+                            <field name="license_plate_ids" widget="many2many_tags"/>
+                            <field name="box_pallet"/>
+                        </group>
+                        <group>
+                            <field name="automation_manual"/>
+                            <field name="delivery_receipt_order_id"/>
+                        </group>
+                    </group>
+                    <group string="Customer Information">
+                        <group>
+                            <field name="picking_id"/>
+                            <field name="partner_id"/>
+                            <field name="tenant_code_id"/>
+                        </group>
+                        <group>
+                            <field name="site_code_id"/>
+                            <field name="parent_location_id"/>
+                            <field name="location_dest_id"/>
+                            <field name="source_document"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Product Lines">
+                            <field name="automation_bulk_manual_putaway_line_ids">
+                                <tree editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="sku_code"/>
+                                    <field name="quantity"/>
+                                    <field name="picking_id" column_invisible="1"/>
+                                    <field name="location_dest_id" column_invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+
+                    <footer>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View for Automation Bulk and Manual Putaway -->
+    <record id="view_automation_bulk_manual_tree" model="ir.ui.view">
+        <field name="name">automation.bulk.manual.putaway.tree</field>
+        <field name="model">automation.bulk.manual.putaway</field>
+        <field name="arch" type="xml">
+            <tree string="Automation Bulk and Manual Putaway">
+                <field name="name"/>
+                <field name="license_plate_ids" widget="many2many_tags"/>
+                <field name="picking_id"/>
+                <field name="partner_id"/>
+                <field name="tenant_code_id"/>
+                <field name="site_code_id"/>
+                <field name="location_dest_id"/>
+                <field name="delivery_receipt_order_id"/>
+                <field name="box_pallet"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search View for Automation Bulk and Manual Putaway -->
+    <record id="view_automation_bulk_manual_search" model="ir.ui.view">
+        <field name="name">automation.bulk.manual.putaway.search</field>
+        <field name="model">automation.bulk.manual.putaway</field>
+        <field name="arch" type="xml">
+            <search string="Search Automation Bulk and Manual Putaway">
+                <field name="name" string="Reference"/>
+                <field name="license_plate_ids" string="License Plate Barcodes"/>
+                <field name="picking_id" string="Receipt Order"/>
+                <field name="partner_id" string="Customer"/>
+                <field name="tenant_code_id" string="Tenant Code"/>
+                <field name="site_code_id" string="Site Code"/>
+                <field name="location_dest_id" string="Destination Location"/>
+                <field name="box_pallet" string="Box/Pallet"/>
+                <field name="state" string="State"/>
+
+                <!-- Filters -->
+                <filter name="filter_draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <filter name="filter_done" string="Done" domain="[('state', '=', 'done')]"/>
+                <filter name="filter_box" string="Box" domain="[('box_pallet', '=', 'box')]"/>
+                <filter name="filter_pallet" string="Pallet" domain="[('box_pallet', '=', 'pallet')]"/>
+                <filter name="filter_automation" string="Automation" domain="[('automation_manual', '=', 'automation')]"/>
+                <filter name="filter_automation_bulk" string="Automation Bulk" domain="[('automation_manual', '=', 'automation_bulk')]"/>
+                <filter name="filter_manual" string="Manual" domain="[('automation_manual', '=', 'manual')]"/>
+
+                <!-- Group By Options -->
+                <group expand="1" string="Group By">
+                    <filter name="group_by_state" string="State" context="{'group_by': 'state'}"/>
+                    <filter name="group_by_customer" string="Customer" context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_by_tenant_code" string="Tenant Code" context="{'group_by': 'tenant_code_id'}"/>
+                    <filter name="group_by_site_code" string="Site Code" context="{'group_by': 'site_code_id'}"/>
+                    <filter name="group_by_box_pallet" string="Box/Pallet" context="{'group_by': 'box_pallet'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action for Automation Bulk and Manual Putaway -->
+    <record id="action_automation_bulk_manual" model="ir.actions.act_window">
+        <field name="name">Automation Bulk and Manual Putaway</field>
+        <field name="res_model">automation.bulk.manual.putaway</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_automation_bulk_manual_tree"/>
+        <field name="search_view_id" ref="view_automation_bulk_manual_search"/>
+    </record>
+</odoo>
