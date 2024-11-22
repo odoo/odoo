@@ -5,7 +5,6 @@ import {
     EventBus,
     onWillDestroy,
     onWillStart,
-    useExternalListener,
     useRef,
     useState,
     useSubEnv,
@@ -25,6 +24,7 @@ import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { useSetupAction } from "@web/search/action_hook";
 
 const BUILDER_PLUGIN = [
     ElementToolboxPlugin,
@@ -71,8 +71,6 @@ export class SnippetsMenu extends Component {
         this.orm = useService("orm");
         this.dialog = useService("dialog");
         this.ui = useService("ui");
-
-        useExternalListener(window, "beforeunload", this.onBeforeUnload);
 
         const editorBus = new EventBus();
         this.editor = new Editor(
@@ -123,6 +121,10 @@ export class SnippetsMenu extends Component {
         onWillDestroy(() => {
             this.editor.destroy();
             // actionService.setActionMode("current");
+        });
+        useSetupAction({
+            beforeUnload: (ev) => this.onBeforeUnload(ev),
+            beforeLeave: () => this.onBeforeLeave(),
         });
     }
 
@@ -210,8 +212,28 @@ export class SnippetsMenu extends Component {
 
     onBeforeUnload(event) {
         if (!this.isSaving && this.editor.shared.dirty.isEditableDirty()) {
+            event.preventDefault();
             event.returnValue = "Unsaved changes";
         }
+    }
+
+    async onBeforeLeave() {
+        if (this.editor.shared.dirty.isEditableDirty()) {
+            let continueProcess = true;
+            await new Promise((resolve) => {
+                this.dialog.add(ConfirmationDialog, {
+                    body: _t("If you proceed, your changes will be lost"),
+                    confirmLabel: _t("Continue"),
+                    confirm: () => resolve(),
+                    cancel: () => {
+                        continueProcess = false;
+                        resolve();
+                    },
+                });
+            });
+            return continueProcess;
+        }
+        return true;
     }
 }
 

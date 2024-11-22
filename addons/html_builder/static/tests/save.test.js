@@ -1,36 +1,37 @@
 import { SnippetsMenu } from "@html_builder/builder/snippets_menu";
-import { setContent } from "@html_editor/../tests/_helpers/selection";
-import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, click } from "@odoo/hoot-dom";
 import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, getEditable, setupWebsiteBuilder } from "./helpers";
+import {
+    defineWebsiteModels,
+    exampleWebsiteContent,
+    getEditable,
+    modifyText,
+    setupWebsiteBuilder,
+    wrapExample,
+} from "./helpers";
 
 defineWebsiteModels();
 
-const websiteContent = '<h1 class="title">Hello</h1>';
-
-const emptyWrap = `<div id="wrap" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">${websiteContent}</div>`;
-
 test("basic save", async () => {
     const resultSave = setupSaveAndReloadIframe();
-    const { getEditor } = await setupWebsiteBuilder(getEditable(websiteContent));
+    const { getEditor } = await setupWebsiteBuilder(getEditable(exampleWebsiteContent));
     expect(":iframe #wrap").not.toHaveClass("o_dirty");
     await modifyText(getEditor());
 
     await contains(".o-snippets-top-actions button:contains(Save)").click();
     expect(resultSave.length).toBe(1);
     expect(resultSave[0]).toBe(
-        '<div id="wrap" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch"><h1 class="title">Hello1</h1></div>'
+        '<div id="wrap" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch"><h1 class="title">H1ello</h1></div>'
     );
     expect(":iframe #wrap").not.toHaveClass("o_dirty");
     expect(":iframe #wrap").not.toHaveClass("o_editable");
-    expect(":iframe #wrap .title:contains('Hello1')").toHaveCount(1);
+    expect(":iframe #wrap .title:contains('H1ello')").toHaveCount(1);
 });
 
 test("nothing to save", async () => {
     const resultSave = setupSaveAndReloadIframe();
-    const { getEditor } = await setupWebsiteBuilder(getEditable(websiteContent));
+    const { getEditor } = await setupWebsiteBuilder(getEditable(exampleWebsiteContent));
     await modifyText(getEditor());
     await animationFrame();
     await contains(".o-snippets-menu button.fa-undo").click();
@@ -43,7 +44,7 @@ test("nothing to save", async () => {
 
 test("discard modified elements", async () => {
     setupSaveAndReloadIframe();
-    const { getEditor } = await setupWebsiteBuilder(getEditable(websiteContent));
+    const { getEditor } = await setupWebsiteBuilder(getEditable(exampleWebsiteContent));
     await modifyText(getEditor());
     await contains(".o-snippets-top-actions button[data-action='cancel']").click();
     await contains(".modal-content button.btn-primary").click();
@@ -55,11 +56,11 @@ test("discard modified elements", async () => {
 test("discard without any modifications", async () => {
     patchWithCleanup(SnippetsMenu.prototype, {
         async reloadIframeAndCloseEditor() {
-            this.props.iframe.contentDocument.body.innerHTML = emptyWrap;
+            this.props.iframe.contentDocument.body.innerHTML = wrapExample;
             this.props.closeEditor();
         },
     });
-    await setupWebsiteBuilder(getEditable(websiteContent));
+    await setupWebsiteBuilder(getEditable(exampleWebsiteContent));
     await contains(".o-snippets-top-actions button[data-action='cancel']").click();
     expect(":iframe #wrap").not.toHaveClass("o_dirty");
     expect(":iframe #wrap").not.toHaveClass("o_editable");
@@ -80,14 +81,9 @@ function setupSaveAndReloadIframe() {
     });
     patchWithCleanup(SnippetsMenu.prototype, {
         async reloadIframeAndCloseEditor() {
-            this.props.iframe.contentDocument.body.innerHTML = resultSave.at(-1) || emptyWrap;
+            this.props.iframe.contentDocument.body.innerHTML = resultSave.at(-1) || wrapExample;
             this.props.closeEditor();
         },
     });
     return resultSave;
-}
-
-async function modifyText(editor) {
-    setContent(editor.editable, getEditable('<h1 class="title">Hello[]</h1>'));
-    await insertText(editor, "1");
 }
