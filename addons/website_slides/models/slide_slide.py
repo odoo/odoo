@@ -593,16 +593,18 @@ class SlideSlide(models.Model):
         super()._compute_website_url()
         for slide in self:
             if slide.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
-                base_url = slide.channel_id.get_base_url()
-                slide.website_url = '%s/slides/slide/%s' % (base_url, self.env['ir.http']._slug(slide))
+                slide.website_url = f"/slides/slide/{self.env['ir.http']._slug(slide)}"
 
-    @api.depends('is_published')
+    @api.depends('channel_id.website_id.domain')
+    def _compute_website_absolute_url(self):
+        super()._compute_website_absolute_url()
+
+    @api.depends('website_absolute_url', 'is_published')
     def _compute_website_share_url(self):
         self.website_share_url = False
         for slide in self:
-            if slide.id:  # ensure we can build the URL
-                base_url = slide.channel_id.get_base_url()
-                slide.website_share_url = '%s/slides/slide/%s/share' % (base_url, slide.id)
+            if slide.website_absolute_url:
+                slide.website_share_url = slide.website_absolute_url + '/share'
 
     @api.depends('channel_id.can_publish')
     def _compute_can_publish(self):
@@ -728,7 +730,7 @@ class SlideSlide(models.Model):
         if force_website or self.website_published:
             return {
                 'type': 'ir.actions.act_url',
-                'url': '%s' % self.website_url,
+                'url': self.website_absolute_url,
                 'target': 'self',
                 'target_type': 'public',
                 'res_id': self.id,
@@ -1381,13 +1383,11 @@ class SlideSlide(models.Model):
         results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
         for slide, data in zip(self, results_data):
             data['_fa'] = icon_per_category.get(slide.slide_category, 'fa-file-pdf-o')
-            data['url'] = slide.website_url
+            data['url'] = slide.website_absolute_url
             data['course'] = _('Course: %s', slide.channel_id.name)
-            data['course_url'] = slide.channel_id.website_url
+            data['course_url'] = slide.channel_id.website_absolute_url
         return results_data
 
-    def open_website_url(self):
-        """ Overridden to use a relative URL instead of an absolute when website_id is False. """
-        if self.website_id:
-            return super().open_website_url()
-        return self.env['website'].get_client_action(f'/slides/slide/{self.env["ir.http"]._slug(self)}')
+    def get_base_url(self):
+        """ As website_id is not defined on this record, we rely on channel website_id for base URL. """
+        return self.channel_id.get_base_url()
