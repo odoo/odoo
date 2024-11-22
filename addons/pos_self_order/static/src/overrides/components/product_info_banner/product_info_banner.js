@@ -8,9 +8,4 @@ patch(ProductInfoBanner.prototype, {
             this.props.productTemplate.self_order_available ? "bg-success" : "bg-danger"
         }`;
     },
-    async switchSelfAvailability() {
-        await this.pos.data.write("product.template", [this.props.productTemplate.id], {
-            self_order_available: !this.props.productTemplate.self_order_available,
-        });
-    },
 });
