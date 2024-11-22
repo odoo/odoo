@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -34,23 +33,32 @@ def _prepare_data(env, docids, data):
         return {}
 
     total = 0
-    qty_by_product_in = data.get('quantity_by_product')
+    qty_by_product_in = data.get('quantity_by_product', [])
+    qty_by_packaging_in = data.get('quantity_by_packaging', [])
     # search for products all at once, ordered by name desc since popitem() used in xml to print the labels
     # is LIFO, which results in ordering by product name in the report
-    products = Product.search([('id', 'in', [int(p) for p in qty_by_product_in.keys()])], order='name desc')
-    quantity_by_product = defaultdict(list)
+    products = Product.search([('id', 'in', [int(p) for p in qty_by_product_in])], order='name desc')
+    quantity = defaultdict(list)
     for product in products:
         q = qty_by_product_in[str(product.id)]
-        quantity_by_product[product].append((product.barcode, q))
+        quantity[product].append(('product', product.barcode, q))
         total += q
     if data.get('custom_barcodes'):
-        # we expect custom barcodes format as: {product: [(barcode, qty_of_barcode)]}
+        # we expect custom barcodes format as: {product: [('product', barcode, qty_of_barcode)]}
         for product, barcodes_qtys in data.get('custom_barcodes').items():
-            quantity_by_product[Product.browse(int(product))] += (barcodes_qtys)
-            total += sum(qty for _, qty in barcodes_qtys)
+            quantity[Product.browse(int(product))] += (barcodes_qtys)
+            total += sum(qty for _type, _barcode, qty in barcodes_qtys)
+
+    if qty_by_packaging_in:
+        packaging_ids = [int(p) for p in qty_by_packaging_in]
+        packagings = env['product.packaging'].search([('id', 'in', packaging_ids)], order='name desc')
+        for packaging in packagings:
+            q = qty_by_packaging_in[str(packaging.id)]
+            quantity[packaging].append(('packaging', packaging.barcode, q))
+            total += q
 
     return {
-        'quantity': quantity_by_product,
+        'quantity': quantity,
         'page_numbers': (total - 1) // (layout_wizard.rows * layout_wizard.columns) + 1,
         'price_included': data.get('price_included'),
         'extra_html': layout_wizard.extra_html,
