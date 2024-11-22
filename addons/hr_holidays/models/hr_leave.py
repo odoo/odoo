@@ -728,6 +728,8 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                 if mapped_validation_type[leave_type_id] == 'both':
                     self._check_double_validation_rules(employee_id, values.get('state', False))
 
+        if any(not vals.get('employee_id') for vals in vals_list):
+            raise UserError(_("There is no selected employee on the time off request."))
         holidays = super(HrLeave, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
         holidays._check_validity()
 
