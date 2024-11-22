@@ -4374,6 +4374,66 @@ class TestStockValuation(TestStockValuationBase):
             ]
         )
 
+    def test_journal_entries_from_change_category(self):
+        """ Changing category having a different cost methods when an underlying product has real_time
+        accounting and a negative on hand quantity should result in journal entries with offsetting
+        debit/credits for the stock valuation and stock output accounts (inverse of positive qty).
+        """
+        self.product1.categ_id.property_cost_method = 'fifo'
+        other_categ = self.product1.categ_id.copy({
+            'property_cost_method': 'average',
+            'property_stock_account_output_categ_id': self.product1.categ_id.property_stock_account_output_categ_id.id,
+            'property_stock_valuation_account_id': self.product1.categ_id.property_stock_valuation_account_id.id,
+        })
+        move1 = self.env['stock.move'].create({
+            'name': 'IN 10 units @ 7.20 per unit',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom_qty': 10.0,
+            'price_unit': 7.2,
+        })
+        move2 = self.env['stock.move'].create({
+            'name': 'IN 20 units @ 15.30 per unit',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom_qty': 20.0,
+            'price_unit': 15.3,
+        })
+        (move1 + move2)._action_confirm()
+        (move1 + move2)._action_assign()
+        move1.quantity = 10
+        move2.quantity = 20
+        (move1 + move2).picked = True
+        (move1 + move2)._action_done()
+        move3 = self.env['stock.move'].create({
+            'name': 'OUT 100 units',
+            'product_id': self.product1.id,
+            'product_uom_qty': 100,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+        move3._action_confirm()
+        move3._action_assign()
+        move3.quantity = 100
+        move3.picked = True
+        move3._action_done()
+        self.product1.product_tmpl_id.categ_id = other_categ
+        amls = self.env['account.move.line'].search([
+            ('product_id', '=', self.product1.id),
+            ('name', 'ilike', 'Due to a change%'),
+        ], order='id')
+        self.assertRecordValues(
+            amls,
+            [
+                {'account_id': self.stock_valuation_account.id, 'debit': 1071.0, 'credit': 0.0},
+                {'account_id': self.stock_output_account.id, 'debit': 0.0, 'credit': 1071.0},
+                {'account_id': self.stock_output_account.id, 'debit': 1071.0, 'credit': 0.0},
+                {'account_id': self.stock_valuation_account.id, 'debit': 0.0, 'credit': 1071.0},
+            ]
+        )
+
     def test_diff_uom_quantity_update_after_done(self):
         """Test that when the UoM of the stock.move.line is different from the stock.move,
         the quantity update after done (unlocked) use the correct UoM"""
