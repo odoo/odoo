@@ -1850,20 +1850,23 @@ class CrmLead(models.Model):
         email_normalized_to_values = super()._get_customer_information()
         Partner = self.env['res.partner']
 
-        for record in self.filtered('email_normalized'):
-            values = email_normalized_to_values.setdefault(record.email_normalized, {})
-            contact_name = record.contact_name or record.partner_name or parse_contact_from_email(record.email_from)[0] or record.email_from
+        for lead in self.filtered('email_normalized'):
+            values = email_normalized_to_values.setdefault(lead.email_normalized, {})
+            contact_name = lead.contact_name or parse_contact_from_email(lead.email_from)[0] or lead.partner_name or lead.email_from
+            is_company = bool(lead.partner_name) and contact_name == lead.partner_name
             # Note that we don't attempt to create the parent company even if partner name is set
-            values.update(record._prepare_customer_values(contact_name, is_company=False))
-            values['company_name'] = record.partner_name
-            if contact_name == record.partner_name:
-                values['company_type'] = 'company'
+            values.update({
+                key: val for key, val in lead._prepare_customer_values(
+                    contact_name, is_company=is_company, parent_id=False
+                ).items() if val and key != 'email'  # don't force email used as criterion
+            })
+            values['is_company'] = is_company
         return email_normalized_to_values
 
     def _prepare_customer_values(self, partner_name, is_company=False, parent_id=False):
         """ Extract data from lead to create a partner.
 
-        :param name : furtur name of the partner
+        :param partner_name : future name of the partner
         :param is_company : True if the partner is a company
         :param parent_id : id of the parent partner (False if no parent)
 
@@ -1874,12 +1877,12 @@ class CrmLead(models.Model):
             'name': partner_name,
             'user_id': self.env.context.get('default_user_id') or self.user_id.id,
             'comment': self.description,
-            'parent_id': parent_id,
             'phone': self.phone,
             'mobile': self.mobile,
             'email': email_parts[0] if email_parts else False,
             'title': self.title.id,
             'function': self.function,
+            # address
             'street': self.street,
             'street2': self.street2,
             'zip': self.zip,
@@ -1887,7 +1890,10 @@ class CrmLead(models.Model):
             'country_id': self.country_id.id,
             'state_id': self.state_id.id,
             'website': self.website,
+            # company / hierarchy
+            'parent_id': parent_id,
             'is_company': is_company,
+            'company_name': not is_company and not parent_id and self.partner_name,
             'type': 'contact'
         }
         if self.lang_id.active:
@@ -2025,7 +2031,7 @@ class CrmLead(models.Model):
             name_from_email = name_emails[0][0] if name_emails else False
             if name_from_email:
                 continue  # already containing name + email
-            name_from_email = self.partner_name or self.contact_name
+            name_from_email = self.contact_name or self.partner_name
             emails_normalized = tools.email_normalize_all(email)
             email_normalized = emails_normalized[0] if emails_normalized else False
             if email.lower() == self.email_from.lower() or (email_normalized and self.email_normalized == email_normalized):
