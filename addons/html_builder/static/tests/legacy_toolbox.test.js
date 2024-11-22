@@ -1,8 +1,8 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, click, fill, hover, queryFirst } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
-import { addToolbox, defineWebsiteModels, openSnippetsMenu, setupWebsiteBuilder } from "./helpers";
 import { contains } from "@web/../tests/web_test_helpers";
+import { addToolbox, defineWebsiteModels, setupWebsiteBuilder } from "./helpers";
 
 defineWebsiteModels();
 
@@ -15,7 +15,6 @@ test("Open toolbox", async () => {
             </ElementToolboxContainer>`,
     });
     await setupWebsiteBuilder(`<div class="test-toolbox-target">b</div>`);
-    await openSnippetsMenu();
     await click(":iframe .test-toolbox-target");
     await animationFrame();
     expect(".element-toolbox").toBeDisplayed();
@@ -38,7 +37,6 @@ describe("Web editor widgets", () => {
                     </ElementToolboxContainer>`,
             });
             await setupWebsiteBuilder(`<div class="test-toolbox-target">b</div>`);
-            await openSnippetsMenu();
             await contains(":iframe .test-toolbox-target").click();
             expect(".element-toolbox").toBeDisplayed();
             expect("[data-action-id='customAction']").toHaveText("MyAction");
@@ -55,7 +53,6 @@ describe("Web editor widgets", () => {
                     </ElementToolboxContainer>`,
             });
             await setupWebsiteBuilder(`<div class="test-toolbox-target">b</div>`);
-            await openSnippetsMenu();
             await contains(":iframe .test-toolbox-target").click();
             expect(".element-toolbox").toBeDisplayed();
             await click("[data-class-action='my-custom-class']");
@@ -78,7 +75,6 @@ describe("Web editor widgets", () => {
                     </ElementToolboxContainer>`,
             });
             await setupWebsiteBuilder(`<div class="test-toolbox-target">b</div>`);
-            await openSnippetsMenu();
             await contains(":iframe .test-toolbox-target").click();
             expect(".element-toolbox").toBeDisplayed();
             await click("[data-action-id='customAction'][data-class-action='my-custom-class']");
@@ -104,7 +100,6 @@ describe("Web editor widgets", () => {
                     </ElementToolboxContainer>`,
             });
             await setupWebsiteBuilder(`<div class="test-toolbox-target">b</div>`);
-            await openSnippetsMenu();
             await contains(":iframe .test-toolbox-target").click();
             expect(".element-toolbox").toBeDisplayed();
             await hover("[data-action-id='customAction'][data-class-action='my-custom-class']");
@@ -127,7 +122,6 @@ describe("Web editor widgets", () => {
                     </ElementToolboxContainer>`,
             });
             await setupWebsiteBuilder(`<div class="test-toolbox-target">b</div>`);
-            await openSnippetsMenu();
             await contains(":iframe .test-toolbox-target").click();
             expect(".element-toolbox").toBeDisplayed();
             await click("[data-class-action='my-custom-class1']");
@@ -151,7 +145,6 @@ describe("Web editor widgets", () => {
                     </ElementToolboxContainer>`,
             });
             await setupWebsiteBuilder(`<div class="test-toolbox-target my-custom-class1">b</div>`);
-            await openSnippetsMenu();
             await contains(":iframe .test-toolbox-target").click();
             expect("[data-class-action='my-custom-class1']").toHaveClass("active");
             expect("[data-class-action='my-custom-class2']").not.toHaveClass("active");
@@ -180,7 +173,6 @@ describe("Web editor widgets", () => {
                     <div class="a">b</div>
                 </div>
             `);
-            await openSnippetsMenu();
             await contains(":iframe .test-toolbox-target").click();
             expect(".element-toolbox").toBeDisplayed();
             await hover("[data-action-id='customAction']");
@@ -208,7 +200,6 @@ describe("Web editor widgets", () => {
                     <div class="a">b</div>
                 </div>
             `);
-            await openSnippetsMenu();
             await contains(":iframe .test-toolbox-target").click();
             expect(".element-toolbox").toBeDisplayed();
             await hover("[data-action-id='customAction']");
@@ -237,7 +228,6 @@ describe("Web editor widgets", () => {
             await setupWebsiteBuilder(`
                 <div class="test-toolbox-target">10</div>
             `);
-            await openSnippetsMenu();
             await contains(":iframe .test-toolbox-target").click();
             expect(".element-toolbox").toBeDisplayed();
             const input = queryFirst(".element-toolbox input");
@@ -265,7 +255,6 @@ describe("Web editor widgets", () => {
             await setupWebsiteBuilder(`
                 <div class="test-toolbox-target">10</div>
             `);
-            await openSnippetsMenu();
             await contains(":iframe .test-toolbox-target").click();
             expect(".element-toolbox").toBeDisplayed();
             await click(".element-toolbox input");
@@ -297,7 +286,6 @@ describe("Web editor widgets", () => {
             await setupWebsiteBuilder(`
                 <div class="test-toolbox-target">10</div>
             `);
-            await openSnippetsMenu();
             await contains(":iframe .test-toolbox-target").click();
             expect(".element-toolbox").toBeDisplayed();
             await click(".element-toolbox input");
@@ -330,7 +318,6 @@ describe("Web editor widgets", () => {
                     </ElementToolboxContainer>`,
             });
             await setupWebsiteBuilder(`<div class="test-toolbox-target">b</div>`);
-            await openSnippetsMenu();
             await contains(":iframe .test-toolbox-target").click();
             expect(".element-toolbox").toBeDisplayed();
             await click(".we-bg-toolbox .dropdown");
@@ -355,7 +342,6 @@ describe("Web editor widgets", () => {
             await setupWebsiteBuilder(
                 `<div class="test-toolbox-target" customAttribute="a">x</div>`
             );
-            await openSnippetsMenu();
             await contains(":iframe .test-toolbox-target").click();
             expect(".element-toolbox").toBeDisplayed();
             expect(".we-bg-toolbox .dropdown").toHaveText("A");

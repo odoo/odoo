@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, dblclick } from "@odoo/hoot-dom";
-import { defineWebsiteModels, openSnippetsMenu, setupWebsiteBuilder } from "./helpers";
+import { defineWebsiteModels, setupWebsiteBuilder } from "./helpers";
 
 defineWebsiteModels();
 
@@ -9,7 +9,6 @@ const base64Img =
 
 test("double click on Image", async () => {
     await setupWebsiteBuilder(`<div><img class=a_nice_img src='${base64Img}'></div>`);
-    await openSnippetsMenu();
     expect(".modal-content").toHaveCount(0);
     await dblclick(":iframe img.a_nice_img");
     await animationFrame();
@@ -18,7 +17,6 @@ test("double click on Image", async () => {
 
 test("double click on text", async () => {
     await setupWebsiteBuilder("<div><p class=text_class>Text</p></div>");
-    await openSnippetsMenu();
     expect(".modal-content").toHaveCount(0);
     await dblclick(":iframe .text_class");
     await animationFrame();

@@ -14,7 +14,6 @@ import { loadBundle } from "@web/core/assets";
 import { Component } from "@odoo/owl";
 import { ElementToolboxContainer } from "../src/builder/components/ElementToolboxContainer";
 import { defaultOptionComponents } from "../src/builder/components/defaultComponents";
-import { ElementToolboxPlugin } from "../src/builder/plugins/element_toolbox_plugin";
 import { after } from "@odoo/hoot";
 import { registry } from "@web/core/registry";
 
@@ -37,7 +36,7 @@ export function defineWebsiteModels() {
     defineModels([Website, IrUiView]);
 }
 
-export async function setupWebsiteBuilder(websiteContent, { snippets } = {}) {
+export async function setupWebsiteBuilder(websiteContent, { snippets, openEditor = true } = {}) {
     const pyEnv = await startServer();
     pyEnv["website"].create({});
     let editor;
@@ -65,6 +64,9 @@ export async function setupWebsiteBuilder(websiteContent, { snippets } = {}) {
 
     const iframe = queryOne("iframe[data-src='/website/force/1']");
     iframe.contentDocument.body.innerHTML = `<div id="wrapwrap">${websiteContent}</div>`;
+    if (openEditor) {
+        await openSnippetsMenu();
+    }
     return { getEditor: () => editor };
 }
 

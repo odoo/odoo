@@ -1,7 +1,7 @@
-import { expect, test, beforeEach } from "@odoo/hoot";
+import { beforeEach, expect, test } from "@odoo/hoot";
 import { animationFrame, click, queryAll, queryAllTexts } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, openSnippetsMenu, setupWebsiteBuilder } from "../helpers";
+import { defineWebsiteModels, setupWebsiteBuilder } from "../helpers";
 
 defineWebsiteModels();
 
@@ -23,7 +23,6 @@ test("display inner content snippet", async () => {
     await setupWebsiteBuilder("<div><p>Text</p></div>", {
         snippets,
     });
-    await openSnippetsMenu();
     const snippetInnerContentSelector = `.o-snippets-menu [data-category="snippet_content"]`;
     expect(snippetInnerContentSelector).toHaveCount(2);
     expect(queryAllTexts(snippetInnerContentSelector)).toEqual(["Button A", "Button B"]);
@@ -35,7 +34,6 @@ test("drag & drop inner content block", async () => {
     const { getEditor } = await setupWebsiteBuilder("<div><p>Text</p></div>", {
         snippets,
     });
-    await openSnippetsMenu();
     const editor = getEditor();
     expect(editor.editable).toHaveInnerHTML(`<div><p>Text</p></div>`);
     expect(".o-website-snippetsmenu .fa-undo").not.toBeEnabled();
@@ -64,7 +62,6 @@ test("drag & drop inner content block + undo/redo", async () => {
     const { getEditor } = await setupWebsiteBuilder("<div><p>Text</p></div>", {
         snippets,
     });
-    await openSnippetsMenu();
     const editor = getEditor();
     expect(editor.editable).toHaveInnerHTML(`<div><p>Text</p></div>`);
     expect(".o-website-snippetsmenu .fa-undo").not.toBeEnabled();
