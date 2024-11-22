@@ -32,7 +32,32 @@ describe("Range collapsed", () => {
             });
         });
 
-        test("should turn a ordered list into a checklist", async () => {
+        test("should turn a first line into a checklist", async () => {
+            await testEditor({
+                contentBefore: "<p>a[]<br>b<br>c<br>d<br>e</p>",
+                stepFunction: toggleCheckList,
+                contentAfter: '<ul class="o_checklist"><li>a[]</li></ul><p>b<br>c<br>d<br>e</p>',
+            });
+        });
+
+        test("should turn a middle line into a checklist", async () => {
+            await testEditor({
+                contentBefore: "<p>a<br>b<br>AB[]cDE<br>d<br>e</p>",
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<p>a<br>b</p><ul class="o_checklist"><li>AB[]cDE</li></ul><p>d<br>e</p>',
+            });
+        });
+
+        test("should turn a last line into a checklist", async () => {
+            await testEditor({
+                contentBefore: "<p>a<br>b<br>c<br>d<br>AB[]e</p>",
+                stepFunction: toggleCheckList,
+                contentAfter: '<p>a<br>b<br>c<br>d</p><ul class="o_checklist"><li>AB[]e</li></ul>',
+            });
+        });
+
+        test("should turn an ordered list into a checklist", async () => {
             await testEditor({
                 contentBefore: "<ol><li>ab[]cd</li></ol>",
                 stepFunction: toggleCheckList,
@@ -40,11 +65,27 @@ describe("Range collapsed", () => {
             });
         });
 
-        test("should turn a unordered list into a checklist", async () => {
+        test("should turn an ordered list into a checklist, with line breaks", async () => {
+            await testEditor({
+                contentBefore: "<ol><li>a<br>b<br>ABc[]DE<br>d<br>e</li></ol>",
+                stepFunction: toggleCheckList,
+                contentAfter: '<ul class="o_checklist"><li>a<br>b<br>ABc[]DE<br>d<br>e</li></ul>',
+            });
+        });
+
+        test("should turn an unordered list into a checklist", async () => {
             await testEditor({
                 contentBefore: "<ul><li>ab[]cd</li></ul>",
                 stepFunction: toggleCheckList,
                 contentAfter: '<ul class="o_checklist"><li>ab[]cd</li></ul>',
+            });
+        });
+
+        test("should turn an unordered list into a checklist, with line breaks", async () => {
+            await testEditor({
+                contentBefore: "<ul><li>a<br>b<br>ABc[]DE<br>d<br>e</li></ul>",
+                stepFunction: toggleCheckList,
+                contentAfter: '<ul class="o_checklist"><li>a<br>b<br>ABc[]DE<br>d<br>e</li></ul>',
             });
         });
 
@@ -78,6 +119,15 @@ describe("Range collapsed", () => {
             });
         });
 
+        test("should turn a line in a paragraph in a div into a checklist", async () => {
+            await testEditor({
+                contentBefore: "<div><p>a<br>b<br>ABc[]<br>d<br>e</p></div>",
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<div><p>a<br>b</p><ul class="o_checklist"><li>ABc[]</li></ul><p>d<br>e</p></div>',
+            });
+        });
+
         test("should turn a paragraph with formats into a checklist", async () => {
             await testEditor({
                 contentBefore: "<p><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</p>",
@@ -87,7 +137,17 @@ describe("Range collapsed", () => {
             });
         });
 
-        test("should turn a paragraph between 2 checklist into a checklist item", async () => {
+        test("should turn a line in a paragraph with formats into a checklist", async () => {
+            await testEditor({
+                contentBefore:
+                    "<p><span><b>a<br>b<br>c</b></span> <span><i>d[]<br>e</i></span> f<br>g</p>",
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<p><span><b>a<br>b</b></span></p><ul class="o_checklist"><li><span><b>c</b></span> <span><i>d[]</i></span></li></ul><p><span><i>e</i></span> f<br>g</p>',
+            });
+        });
+
+        test("should turn a paragraph between 2 checklists into a checklist item", async () => {
             await testEditor({
                 contentBefore:
                     '<ul class="o_checklist"><li class="o_checked">abc</li></ul><p>d[]ef</p><ul class="o_checklist"><li class="o_checked">ghi</li></ul>',
@@ -97,7 +157,17 @@ describe("Range collapsed", () => {
             });
         });
 
-        test("should turn a unordered list into a checklist between 2 checklists inside a checklist", async () => {
+        test("should turn a line in a paragraph between 2 checklists into a new checklist", async () => {
+            await testEditor({
+                contentBefore:
+                    '<ul class="o_checklist"><li class="o_checked">abc</li></ul><p>d<br>[]e<br>f</p><ul class="o_checklist"><li class="o_checked">ghi</li></ul>',
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<ul class="o_checklist"><li class="o_checked">abc</li></ul><p>d</p><ul class="o_checklist"><li>[]e</li></ul><p>f</p><ul class="o_checklist"><li class="o_checked">ghi</li></ul>',
+            });
+        });
+
+        test("should turn an unordered list into a checklist between 2 checklists inside a checklist", async () => {
             await testEditor({
                 contentBefore: unformat(`
                     <ul class="o_checklist">
@@ -343,11 +413,28 @@ describe("Range collapsed", () => {
             });
         });
 
+        test("should turn a checklist into a paragraph, with line breaks", async () => {
+            await testEditor({
+                contentBefore: '<ul class="o_checklist"><li>a<br>b<br>[]c<br>d<br>e</li></ul>',
+                stepFunction: toggleCheckList,
+                contentAfter: "<p>a<br>b<br>[]c<br>d<br>e</p>",
+            });
+        });
+
         test("should turn a checklist into a heading", async () => {
             await testEditor({
                 contentBefore: '<ul class="o_checklist"><li><h1>ab[]cd</h1></li></ul>',
                 stepFunction: toggleCheckList,
                 contentAfter: "<h1>ab[]cd</h1>",
+            });
+        });
+
+        test("should turn a checklist into a heading, with line breaks", async () => {
+            await testEditor({
+                contentBefore:
+                    '<ul class="o_checklist"><li><h1>a<br>b<br>[]c<br>d<br>e</h1></li></ul>',
+                stepFunction: toggleCheckList,
+                contentAfter: "<h1>a<br>b<br>[]c<br>d<br>e</h1>",
             });
         });
 
@@ -359,12 +446,32 @@ describe("Range collapsed", () => {
             });
         });
 
+        test("should turn a checklist item into a paragraph, with line breaks", async () => {
+            await testEditor({
+                contentBefore:
+                    '<p>ab</p><ul class="o_checklist"><li>cd</li><li>e<br>f<br>[]g<br>h<br>i</li></ul>',
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<p>ab</p><ul class="o_checklist"><li>cd</li></ul><p>e<br>f<br>[]g<br>h<br>i</p>',
+            });
+        });
+
         test("should turn a checklist with formats into a paragraph", async () => {
             await testEditor({
                 contentBefore:
                     '<ul class="o_checklist"><li><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</li></ul>',
                 stepFunction: toggleCheckList,
                 contentAfter: "<p><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</p>",
+            });
+        });
+
+        test("should turn a checklist with formats into a paragraph, with line breaks", async () => {
+            await testEditor({
+                contentBefore:
+                    '<ul class="o_checklist"><li><span><b>ab</b></span> <span><i>cd</i></span> e<br>f<br>[]g<br>h<br>i</li></ul>',
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    "<p><span><b>ab</b></span> <span><i>cd</i></span> e<br>f<br>[]g<br>h<br>i</p>",
             });
         });
 
@@ -388,6 +495,46 @@ describe("Range collapsed", () => {
                             <li><p>a</p></li>
                         </ul>
                         <p>[]b</p>
+                        <ul class="o_checklist">
+                            <li class="oe-nested">
+                                <ul class="o_checklist">
+                                    <li class="oe-nested">
+                                        <ul class="o_checklist">
+                                            <li class="o_checked">c</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>`),
+            });
+        });
+
+        test("should turn nested list items into paragraphs, with line breaks", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                        <ul class="o_checklist">
+                            <li class="o_checked">a</li>
+                            <li class="oe-nested">
+                                <ul class="o_checklist">
+                                    <li class="o_checked">w<br>x<br>[]b<br>y<br>z</li>
+                                </ul>
+                            </li>
+                            <li class="oe-nested">
+                                <ul class="o_checklist">
+                                    <li class="oe-nested">
+                                        <ul class="o_checklist">
+                                            <li class="o_checked">c</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>`),
+                stepFunction: toggleCheckList,
+                contentAfter: unformat(`
+                        <ul class="o_checklist">
+                            <li class="o_checked"><p>a</p></li>
+                        </ul>
+                        <p>w</p><p>x</p><p>[]b</p><p>y</p><p>z</p>
                         <ul class="o_checklist">
                             <li class="oe-nested">
                                 <ul class="o_checklist">
@@ -492,11 +639,155 @@ describe("Range not collapsed", () => {
             });
         });
 
+        test("should turn a multi-line paragraph into a checklist with multiple items", async () => {
+            await testEditor({
+                contentBefore: "<p>[a<br>b<br>c<br>d<br>e]</p>",
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<ul class="o_checklist"><li>[a</li><li>b</li><li>c</li><li>d</li><li>e]</li></ul>',
+            });
+        });
+
+        test("should turn a multi-line paragraph into a checklist with multiple items (reversed selection)", async () => {
+            await testEditor({
+                contentBefore: "<p>]a<br>b<br>c<br>d<br>e[</p>",
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<ul class="o_checklist"><li>]a</li><li>b</li><li>c</li><li>d</li><li>e[</li></ul>',
+            });
+        });
+
+        test("should turn the first few lines of a paragraph into a checklist with multiple items", async () => {
+            await testEditor({
+                contentBefore: "<p>[a<br>b<br>c]<br>d<br>e</p>",
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<ul class="o_checklist"><li>[a</li><li>b</li><li>c]</li></ul><p>d<br>e</p>',
+            });
+        });
+
+        test("should turn the first few lines of a paragraph into a checklist with multiple items (reversed selection)", async () => {
+            await testEditor({
+                contentBefore: "<p>]a<br>b<br>c[<br>d<br>e</p>",
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<ul class="o_checklist"><li>]a</li><li>b</li><li>c[</li></ul><p>d<br>e</p>',
+            });
+        });
+
+        test("should turn the middle few lines of a paragraph into a checklist with multiple items", async () => {
+            await testEditor({
+                contentBefore: "<p>a<br>[b<br>c<br>d]<br>e</p>",
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<p>a</p><ul class="o_checklist"><li>[b</li><li>c</li><li>d]</li></ul><p>e</p>',
+            });
+        });
+
+        test("should turn the middle few lines of a paragraph into a checklist with multiple items (reversed selection)", async () => {
+            await testEditor({
+                contentBefore: "<p>a<br>]b<br>c<br>d[<br>e</p>",
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<p>a</p><ul class="o_checklist"><li>]b</li><li>c</li><li>d[</li></ul><p>e</p>',
+            });
+        });
+
+        test("should turn a last few lines of a paragraph into a checklist with multiple items", async () => {
+            await testEditor({
+                contentBefore: "<p>a<br>b<br>[c<br>d<br>e]</p>",
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<p>a<br>b</p><ul class="o_checklist"><li>[c</li><li>d</li><li>e]</li></ul>',
+            });
+        });
+
+        test("should turn a last few lines of a paragraph into a checklist with multiple items (reversed selection)", async () => {
+            await testEditor({
+                contentBefore: "<p>a<br>b<br>]c<br>d<br>e[</p>",
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<p>a<br>b</p><ul class="o_checklist"><li>]c</li><li>d</li><li>e[</li></ul>',
+            });
+        });
+
         test("should turn a heading into a checklist", async () => {
             await testEditor({
                 contentBefore: "<p>ab</p><h1>cd[ef]gh</h1>",
                 stepFunction: toggleCheckList,
                 contentAfter: '<p>ab</p><ul class="o_checklist"><li><h1>cd[ef]gh</h1></li></ul>',
+            });
+        });
+
+        test("should turn a multi-line heading into a checklist with multiple items", async () => {
+            await testEditor({
+                contentBefore: "<p>xy</p><h1>AB[a<br>b<br>c<br>d<br>e]FG</h1>",
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<p>xy</p><ul class="o_checklist"><li><h1>AB[a</h1></li><li><h1>b</h1></li><li><h1>c</h1></li><li><h1>d</h1></li><li><h1>e]FG</h1></li></ul>',
+            });
+        });
+
+        test("should turn a multi-line heading into a checklist with multiple items (reversed selection)", async () => {
+            await testEditor({
+                contentBefore: "<p>xy</p><h1>AB]a<br>b<br>c<br>d<br>e[FG</h1>",
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<p>xy</p><ul class="o_checklist"><li><h1>AB]a</h1></li><li><h1>b</h1></li><li><h1>c</h1></li><li><h1>d</h1></li><li><h1>e[FG</h1></li></ul>',
+            });
+        });
+
+        test("should turn the first few lines of a heading into a checklist with multiple items", async () => {
+            await testEditor({
+                contentBefore: "<p>xy</p><h1>AB[a<br>b<br>c]<br>d<br>e</h1>",
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<p>xy</p><ul class="o_checklist"><li><h1>AB[a</h1></li><li><h1>b</h1></li><li><h1>c]</h1></li></ul><h1>d<br>e</h1>',
+            });
+        });
+
+        test("should turn the first few lines of a heading into a checklist with multiple items (reversed selection)", async () => {
+            await testEditor({
+                contentBefore: "<p>xy</p><h1>AB]a<br>b<br>c[<br>d<br>e</h1>",
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<p>xy</p><ul class="o_checklist"><li><h1>AB]a</h1></li><li><h1>b</h1></li><li><h1>c[</h1></li></ul><h1>d<br>e</h1>',
+            });
+        });
+
+        test("should turn the middle few lines of a heading into a checklist with multiple items", async () => {
+            await testEditor({
+                contentBefore: "<p>xy</p><h1>a<br>AB[b<br>c<br>d]EF<br>e</h1>",
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<p>xy</p><h1>a</h1><ul class="o_checklist"><li><h1>AB[b</h1></li><li><h1>c</h1></li><li><h1>d]EF</h1></li></ul><h1>e</h1>',
+            });
+        });
+
+        test("should turn the middle few lines of a heading into a checklist with multiple items (reversed selection)", async () => {
+            await testEditor({
+                contentBefore: "<p>xy</p><h1>a<br>AB]b<br>c<br>d[EF<br>e</h1>",
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<p>xy</p><h1>a</h1><ul class="o_checklist"><li><h1>AB]b</h1></li><li><h1>c</h1></li><li><h1>d[EF</h1></li></ul><h1>e</h1>',
+            });
+        });
+
+        test("should turn a last few lines of a heading into a checklist with multiple items", async () => {
+            await testEditor({
+                contentBefore: "<p>xy</p><h1>a<br>b<br>AB[c<br>d<br>e]EF</h1>",
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<p>xy</p><h1>a<br>b</h1><ul class="o_checklist"><li><h1>AB[c</h1></li><li><h1>d</h1></li><li><h1>e]EF</h1></li></ul>',
+            });
+        });
+
+        test("should turn a last few lines of a heading into a checklist with multiple items (reversed selection)", async () => {
+            await testEditor({
+                contentBefore: "<p>xy</p><h1>a<br>b<br>AB]c<br>d<br>e[EF</h1>",
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<p>xy</p><h1>a<br>b</h1><ul class="o_checklist"><li><h1>AB]c</h1></li><li><h1>d</h1></li><li><h1>e[EF</h1></li></ul>',
             });
         });
 
@@ -508,12 +799,48 @@ describe("Range not collapsed", () => {
             });
         });
 
+        test("should turn four lines over two paragraphs into a checklist with four items", async () => {
+            await testEditor({
+                contentBefore: "<p>ab</p><p>c<br>d[e<br>f</p><p>g<br>h]i<br>j</p>",
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<p>ab</p><p>c</p><ul class="o_checklist"><li>d[e</li><li>f</li><li>g</li><li>h]i</li></ul><p>j</p>',
+            });
+        });
+
+        test("should turn four lines over two paragraphs into a checklist with four items (reversed selection)", async () => {
+            await testEditor({
+                contentBefore: "<p>ab</p><p>c<br>d]e<br>f</p><p>g<br>h[i<br>j</p>",
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<p>ab</p><p>c</p><ul class="o_checklist"><li>d]e</li><li>f</li><li>g</li><li>h[i</li></ul><p>j</p>',
+            });
+        });
+
         test("should turn two paragraphs in a div into a checklist with two items", async () => {
             await testEditor({
                 contentBefore: "<div><p>ab[cd</p><p>ef]gh</p></div>",
                 stepFunction: toggleCheckList,
                 contentAfter:
                     '<div><ul class="o_checklist"><li>ab[cd</li><li>ef]gh</li></ul></div>',
+            });
+        });
+
+        test("should turn four lines over two paragraphs in a div into a checklist with four items", async () => {
+            await testEditor({
+                contentBefore: "<div><p>a<br>b[c<br>d</p><p>e<br>f]g<br>h</p></div>",
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<div><p>a</p><ul class="o_checklist"><li>b[c</li><li>d</li><li>e</li><li>f]g</li></ul><p>h</p></div>',
+            });
+        });
+
+        test("should turn four lines over two paragraphs in a div into a checklist with four items (reversed selection)", async () => {
+            await testEditor({
+                contentBefore: "<div><p>a<br>b]c<br>d</p><p>e<br>f[g<br>h</p></div>",
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<div><p>a</p><ul class="o_checklist"><li>b]c</li><li>d</li><li>e</li><li>f[g</li></ul><p>h</p></div>',
             });
         });
 
@@ -534,6 +861,76 @@ describe("Range not collapsed", () => {
             });
         });
 
+        test("should turn two lines of a paragraph and a checklist item into three list items", async () => {
+            await testEditor({
+                contentBefore:
+                    '<p>a<br>x[b<br>y</p><ul class="o_checklist"><li class="o_checked">c]d</li><li>ef</li></ul>',
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<p>a</p><ul class="o_checklist"><li>x[b</li><li>y</li><li class="o_checked">c]d</li><li>ef</li></ul>',
+            });
+            await testEditor({
+                contentBefore:
+                    '<p>a<br>x[b<br>y</p><ul class="o_checklist"><li class="o_checked">c]d</li><li class="o_checked">ef</li></ul>',
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<p>a</p><ul class="o_checklist"><li>x[b</li><li>y</li><li class="o_checked">c]d</li><li class="o_checked">ef</li></ul>',
+            });
+        });
+
+        test("should turn two lines of a paragraph and a checklist item into three list items (reversed selection)", async () => {
+            await testEditor({
+                contentBefore:
+                    '<p>a<br>x]b<br>y</p><ul class="o_checklist"><li class="o_checked">c[d</li><li>ef</li></ul>',
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<p>a</p><ul class="o_checklist"><li>x]b</li><li>y</li><li class="o_checked">c[d</li><li>ef</li></ul>',
+            });
+            await testEditor({
+                contentBefore:
+                    '<p>a<br>x]b<br>y</p><ul class="o_checklist"><li class="o_checked">c[d</li><li class="o_checked">ef</li></ul>',
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<p>a</p><ul class="o_checklist"><li>x]b</li><li>y</li><li class="o_checked">c[d</li><li class="o_checked">ef</li></ul>',
+            });
+        });
+
+        test("should turn two lines of a paragraph and two lines of a checklist item into four list items", async () => {
+            // TODO: is this what we want?
+            await testEditor({
+                contentBefore:
+                    '<p>a<br>x[b<br>y</p><ul class="o_checklist"><li class="o_checked">c<br>z]d<br>A</li><li>ef</li></ul>',
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<p>a</p><ul class="o_checklist"><li>x[b</li><li>y</li><li class="o_checked">c<br>z]d<br>A</li><li>ef</li></ul>',
+            });
+            await testEditor({
+                contentBefore:
+                    '<p>a<br>x[b<br>y</p><ul class="o_checklist"><li class="o_checked">c<br>z]d<br>A</li><li class="o_checked">ef</li></ul>',
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<p>a</p><ul class="o_checklist"><li>x[b</li><li>y</li><li class="o_checked">c<br>z]d<br>A</li><li class="o_checked">ef</li></ul>',
+            });
+        });
+
+        test("should turn two lines of a paragraph and two lines of a checklist item into four list items (reversed selection)", async () => {
+            // TODO: is this what we want?
+            await testEditor({
+                contentBefore:
+                    '<p>a<br>x]b<br>y</p><ul class="o_checklist"><li class="o_checked">c<br>z[d<br>A</li><li>ef</li></ul>',
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<p>a</p><ul class="o_checklist"><li>x]b</li><li>y</li><li class="o_checked">c<br>z[d<br>A</li><li>ef</li></ul>',
+            });
+            await testEditor({
+                contentBefore:
+                    '<p>a<br>x]b<br>y</p><ul class="o_checklist"><li class="o_checked">c<br>z[d<br>A</li><li class="o_checked">ef</li></ul>',
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<p>a</p><ul class="o_checklist"><li>x]b</li><li>y</li><li class="o_checked">c<br>z[d<br>A</li><li class="o_checked">ef</li></ul>',
+            });
+        });
+
         test("should turn a checklist item and a paragraph into two list items", async () => {
             await testEditor({
                 contentBefore:
@@ -541,6 +938,46 @@ describe("Range not collapsed", () => {
                 stepFunction: toggleCheckList,
                 contentAfter:
                     '<ul class="o_checklist"><li>ab</li><li class="o_checked">c[d</li><li>e]f</li></ul>',
+            });
+        });
+
+        test("should turn a checklist item and two lines of a paragraph into three list items", async () => {
+            await testEditor({
+                contentBefore:
+                    '<ul class="o_checklist"><li>ab</li><li class="o_checked">c[d</li></ul><p>e<br>x]f<br>g</p>',
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<ul class="o_checklist"><li>ab</li><li class="o_checked">c[d</li><li>e</li><li>x]f</li></ul><p>g</p>',
+            });
+        });
+
+        test("should turn a checklist item and two lines of a paragraph into three list items (reversed selection)", async () => {
+            await testEditor({
+                contentBefore:
+                    '<ul class="o_checklist"><li>ab</li><li class="o_checked">c]d</li></ul><p>e<br>x[f<br>g</p>',
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<ul class="o_checklist"><li>ab</li><li class="o_checked">c]d</li><li>e</li><li>x[f</li></ul><p>g</p>',
+            });
+        });
+
+        test("should turn two lines of a checklist item and two lines of a paragraph into three list items", async () => {
+            await testEditor({
+                contentBefore:
+                    '<ul class="o_checklist"><li>ab</li><li class="o_checked">c[d<br>A</li></ul><p>e<br>x]f<br>g</p>',
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<ul class="o_checklist"><li>ab</li><li class="o_checked">c[d<br>A</li><li>e</li><li>x]f</li></ul><p>g</p>',
+            });
+        });
+
+        test("should turn two lines of a checklist item and two lines of a paragraph into three list items (reversed selection)", async () => {
+            await testEditor({
+                contentBefore:
+                    '<ul class="o_checklist"><li>ab</li><li class="o_checked">c]d<br>A</li></ul><p>e<br>x[f<br>g</p>',
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<ul class="o_checklist"><li>ab</li><li class="o_checked">c]d<br>A</li><li>e</li><li>x[f</li></ul><p>g</p>',
             });
         });
 
