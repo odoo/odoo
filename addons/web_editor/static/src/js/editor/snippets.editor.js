@@ -1906,6 +1906,7 @@ var SnippetsMenu = Widget.extend({
         this.customizePanel = document.createElement('div');
         this.customizePanel.classList.add('o_we_customize_panel', 'd-none');
 
+        this.options.wysiwyg.toolbarEl.classList.add('d-none');
         this._toolbarWrapperEl = document.createElement('div');
         this._toolbarWrapperEl.classList.add('o_we_toolbar_wrapper');
         class WebsiteToolbar extends Component {
@@ -1932,7 +1933,6 @@ var SnippetsMenu = Widget.extend({
 
         const toolbarEl = this._toolbarWrapperEl.firstChild;
         toolbarEl.classList.remove('oe-floating');
-        this.options.wysiwyg.toolbarEl.classList.add('d-none');
         this.options.wysiwyg.setupToolbar(toolbarEl);
         this._addToolbar();
         this._checkEditorToolbarVisibilityCallback = this._checkEditorToolbarVisibility.bind(this);

@@ -92,8 +92,11 @@ export class SMLX2ManyField extends X2ManyField {
             "stock.move.line",
             "get_move_line_quant_match",
             [
-                dirtyMoveLines.map((rec) => rec.resId),
+                this.props.record.data.move_line_ids.records
+                    .filter((rec) => rec.resId)
+                    .map((rec) => rec.resId),
                 this.props.record.resId,
+                dirtyMoveLines.filter((rec) => rec.resId).map((rec) => rec.resId),
                 dirtyQuantMoveLines.map((ml) => ml.data.quant_id[0]),
             ],
             {}

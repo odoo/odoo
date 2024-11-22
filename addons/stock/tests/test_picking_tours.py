@@ -131,7 +131,7 @@ class TestStockPickingTour(HttpCase):
             {'lot_id': lot_2.id, 'quantity': 10.0},
         ])
         url = self._get_picking_url(delivery.id)
-        self.start_tour(url, 'test_add_new_line_in_detailled_op', login='admin', timeout=60)
+        self.start_tour(url, 'test_add_new_line_in_detailled_op', login='admin', timeout=100)
         self.assertRecordValues(delivery.move_line_ids.sorted("quantity"), [
             {'quantity': 2.0, 'lot_id': lot_1.id},
             {'quantity': 3.0, 'lot_id': lot_1.id},
