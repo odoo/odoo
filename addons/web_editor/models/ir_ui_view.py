@@ -237,6 +237,8 @@ class IrUiView(models.Model):
         for attribute in self._get_allowed_root_attrs():
             if attribute in replacement.attrib:
                 root.attrib[attribute] = replacement.attrib[attribute]
+            elif attribute in root.attrib:
+                del root.attrib[attribute]
 
         # Note: after a standard edition, the tail *must not* be replaced
         if replace_tail:
