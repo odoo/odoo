@@ -146,6 +146,7 @@ export class DeletePlugin extends Plugin {
      */
     delete(direction, granularity) {
         const selection = this.dependencies.selection.getEditableSelection();
+        this.dispatchTo("before_delete_handlers");
 
         if (!selection.isCollapsed) {
             this.deleteSelection(selection);
@@ -1168,7 +1169,9 @@ export class DeletePlugin extends Plugin {
         if (ev.inputType === "insertText") {
             const selection = this.dependencies.selection.getSelectionData().deepEditableSelection;
             if (!selection.isCollapsed) {
+                this.dispatchTo("before_delete_handlers");
                 this.deleteSelection(selection);
+                this.dispatchTo("delete_handlers");
             }
             // Default behavior: insert text and trigger input event
         }
