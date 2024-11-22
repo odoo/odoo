@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 from datetime import datetime
 
 from odoo import api, fields, models, tools
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools.translate import _
 
@@ -340,6 +340,8 @@ class HrApplicant(models.Model):
             ('res_model', '=', "hr.candidate")
         ], groupby=['res_id'], aggregates=['id:recordset']))
         for applicant in applicants:
+            if applicant.company_id != applicant.candidate_id.company_id:
+                raise ValidationError(_("You cannot create an applicant in a different company than the candidate"))
             candidate_id = applicant.candidate_id.id
             if candidate_id not in attachments_by_candidate:
                 continue
@@ -395,6 +397,11 @@ class HrApplicant(models.Model):
             for applicant in self:
                 if applicant.job_id.date_to:
                     applicant.candidate_id.availability = applicant.job_id.date_to + relativedelta(days=1)
+
+        if vals.get("company_id") and not self.env.context.get('do_not_propagate_company', False):
+            self.candidate_id.with_context(do_not_propagate_company=True).write({"company_id": vals["company_id"]})
+            self.candidate_id.applicant_ids.with_context(do_not_propagate_company=True).write({"company_id": vals["company_id"]})
+
         return res
 
     def get_empty_list_help(self, help_message):
