@@ -42,7 +42,9 @@
                         </div>
                     </div>
                     <p class="text-large">
-                        <a role="button" class="btn btn-lg btn-secondary fw-bolder" t-on-click="createNewProducts">
+                        <a role="button" class="btn btn-lg btn-secondary fw-bolder"
+                            t-on-click="createNewProducts"
+                            t-att-class="{ 'disabled': !posState.has_chart_template || loadScenario.status === 'loading' }">
                             Create my own products
                         </a>
                     </p>
@@ -53,7 +55,8 @@
 
     <t t-name="point_of_sale.ScenarioCard">
         <div class="col-lg-4">
-            <div class="card mb-3 rounded-3 scenario-card" style="max-width: 540px;" t-on-click="() => this.loadScenario.call(item)">
+            <div class="card mb-3 rounded-3 scenario-card" style="max-width: 540px;"
+                t-on-click="() => this.clickLoadScenario(item)">
                 <div class="row g-0">
                     <div class="col-lg-4">
                         <div class="img-container m-2 d-flex align-items-center justify-content-center">

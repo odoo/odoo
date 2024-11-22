@@ -63,6 +63,13 @@ export class PosKanbanRenderer extends KanbanRenderer {
         });
     }
 
+    async clickLoadScenario(item) {
+        await this.loadScenario.call(item);
+        if (this.loadScenario.status == "error") {
+            throw this.loadScenario.result;
+        }
+    }
+
     checkDisplayedResult() {
         this.posState.show_predefined_scenarios = this.props.list.count === 0;
     }
@@ -94,7 +101,7 @@ export class PosKanbanRenderer extends KanbanRenderer {
                 iconFile: "clothes-icon.png",
             },
             {
-                name: _t("Furnitures"),
+                name: _t("Furniture"),
                 description: _t("Stock, product configurator, replenishment, discounts"),
                 functionName: "load_onboarding_furniture_scenario",
                 iconFile: "furniture-icon.png",
