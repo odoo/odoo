@@ -1,4 +1,7 @@
 declare module "models" {
+    export interface Store{
+        getDiscussSidebarCategoryCounter: (categoryId: number) => number,
+    }
     export interface Thread {
         displayInSidebar: boolean;
         from_message_id: Message;
