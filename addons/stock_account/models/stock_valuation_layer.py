@@ -74,7 +74,8 @@ class StockValuationLayer(models.Model):
                 continue
             candidate_quantity = abs(candidate.quantity)
             returned_qty = sum([sm.product_uom._compute_quantity(sm.quantity_done, self.uom_id)
-                                for sm in candidate.stock_move_id.returned_move_ids if sm.state == 'done'])
+                                for sm in candidate.stock_move_id.returned_move_ids if sm.state == 'done' and (
+                                    sm.restrict_partner_id.id in (False, sm.company_id.partner_id.id))])
             candidate_quantity -= returned_qty
             if float_is_zero(candidate_quantity, precision_rounding=rounding):
                 continue
