@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import warnings
+import base64
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
@@ -383,5 +384,19 @@ class WebsiteHrRecruitment(WebsiteForm):
                 })
         data = super().extract_data(model, values)
         if candidate:
+            for file in data['attachments']:
+                file_data = base64.encodebytes(file.read())
+                if file_data:
+                    attachment_value = {
+                        'name': file.filename,
+                        'datas': file_data,
+                        'res_model': 'hr.candidate',
+                        'res_id': candidate.id,
+                    }
+                    request.env['ir.attachment'].sudo().create(attachment_value)
             data['record']['candidate_id'] = candidate.id
         return data
+
+    def insert_attachment(self, model, id_record, files):
+        if model.sudo().model != 'hr.applicant':
+            super().insert_attachment(model, id_record, files)
