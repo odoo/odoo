@@ -122,5 +122,5 @@ class SaleOrderLine(models.Model):
 
     def _get_downpayment_line_price_unit(self, invoices):
         return super()._get_downpayment_line_price_unit(invoices) + sum(
-            pol.price_unit for pol in self.pos_order_line_ids
+            pol.price_unit for pol in self.sudo().pos_order_line_ids
         )
