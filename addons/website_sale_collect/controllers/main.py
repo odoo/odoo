@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import json
 
 from odoo import _
 from odoo.http import request
@@ -33,6 +34,12 @@ class WebsiteSaleCollect(WebsiteSale):
                     or request.geoip.postal.code
                     or ''  # String expected for the widget.
                 ),
+                'country_code': (
+                    order_sudo.partner_shipping_id.country_id.code
+                    or selected_location_data.get('country_code')
+                    or request.geoip.country_code
+                    or ''
+                )
             })
         return res
 

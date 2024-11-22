@@ -14,12 +14,11 @@ patch(LocationSelectorDialog, {
 });
 
 patch(LocationSelectorDialog.prototype, {
-    async _getLocations(zip) {
-         if (this.props.isProductPage) {
-             return rpc(this.getLocationUrl, { zip_code: zip, product_id: this.props.productId });
-         }
-        else {
-            return super._getLocations(...arguments);
-         }
+    _getLocationsParams() {
+        let params = super._getLocationsParams(...arguments);
+        if (this.props.isProductPage) {
+            params.product_id = this.props.productId;
+        }
+        return params
     },
 });
