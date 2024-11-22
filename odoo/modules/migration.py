@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import glob
-import importlib.util
 import inspect
 import itertools
 import logging
@@ -16,6 +15,7 @@ from os.path import join as opj
 
 import odoo.release as release
 import odoo.upgrade
+from odoo.modules.module import load_script
 from odoo.orm.registry import Registry
 from odoo.tools.misc import file_path
 from odoo.tools.parse_version import parse_version
@@ -53,15 +53,6 @@ VERSION_RE = re.compile(
     $""",
     re.VERBOSE | re.ASCII,
 )
-
-
-def load_script(path: str, module_name: str):
-    full_path = file_path(path) if not os.path.isabs(path) else path
-    spec = importlib.util.spec_from_file_location(module_name, full_path)
-    assert spec and spec.loader, f"spec not found for {module_name}"
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
 
 
 class MigrationManager:

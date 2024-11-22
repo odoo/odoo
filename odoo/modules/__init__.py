@@ -20,6 +20,7 @@ from .module import (
     initialize_sys_path,
     get_manifest,
     load_openerp_module,
+    load_script
 )
 
 from . import registry
