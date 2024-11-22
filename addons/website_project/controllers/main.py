@@ -30,8 +30,7 @@ class WebsiteForm(form.WebsiteForm):
     def extract_data(self, model_sudo, values):
         data = super().extract_data(model_sudo, values)
         if model_sudo.model == 'project.task' and values.get('email_from'):
-            partners_list = request.env['mail.thread'].sudo()._mail_find_partner_from_emails([values['email_from']])
-            partner = partners_list[0] if partners_list else self.env['res.partner']
+            partner = request.env['mail.thread'].sudo()._partner_find_from_emails_single([values['email_from']], no_create=True)
             data['record']['partner_id'] = partner.id
             data['record']['email_from'] = values['email_from']
             if partner:

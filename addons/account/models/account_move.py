@@ -5971,35 +5971,34 @@ class AccountMove(models.Model):
             # Helper to know if the partner is an internal one.
             return partner == company.partner_id or (partner.user_ids and all(user._is_internal() for user in partner.user_ids))
 
-        extra_domain = False
-        if custom_values.get('company_id'):
-            extra_domain = ['|', ('company_id', '=', custom_values['company_id']), ('company_id', '=', False)]
+        def is_right_company(partner):
+            if custom_values.get('company_id'):
+                return partner.company_id in [False, custom_values['company_id']]
+            return True
 
         # Search for partners in copy.
         cc_mail_addresses = email_split(msg_dict.get('cc', ''))
-        followers = [partner for partner in self._mail_find_partner_from_emails(cc_mail_addresses, extra_domain=extra_domain) if partner]
+        followers = self._partner_find_from_emails_single(cc_mail_addresses, filter_found=is_right_company, no_create=True)
 
         # Search for partner that sent the mail.
         from_mail_addresses = email_split(msg_dict.get('from', ''))
-        senders = partners = [partner for partner in self._mail_find_partner_from_emails(from_mail_addresses, extra_domain=extra_domain) if partner]
+        senders = partners = self._partner_find_from_emails_single(from_mail_addresses, filter_found=is_right_company, no_create=True)
 
         # Search for partners using the user.
         if not senders:
             user_partners = self.env['res.users'].sudo().search(
                 [('email_normalized', 'in', from_mail_addresses)]
             ).mapped('partner_id')
-            senders = partners = list(self.env['res.partner'].search([('id', 'in', user_partners.ids)]))
+            senders = partners = self.env['res.partner'].search([('id', 'in', user_partners.ids)])
 
         if partners:
             # Check we are not in the case when an internal user forwarded the mail manually.
             if is_internal_partner(partners[0]):
                 # Search for partners in the mail's body.
                 body_mail_addresses = set(email_re.findall(msg_dict.get('body')))
-                partners = [
-                    partner
-                    for partner in self._mail_find_partner_from_emails(body_mail_addresses, extra_domain=extra_domain)
-                    if not is_internal_partner(partner) and partner.company_id.id in (False, company.id)
-                ]
+                partners = self._partner_find_from_emails_single(
+                    body_mail_addresses, filter_found=is_right_company, no_create=True
+                ).filtered(lambda p: not is_internal_partner(p))
         # Little hack: Inject the mail's subject in the body.
         if msg_dict.get('subject') and msg_dict.get('body'):
             msg_dict['body'] = Markup('<div><div><h3>%s</h3></div>%s</div>') % (msg_dict['subject'], msg_dict['body'])

@@ -23,11 +23,13 @@ class WebsiteMail(http.Controller):
             partner_ids = request.env.user.partner_id.ids
         else:
             # mail_thread method
-            partner_ids = [p.id for p in request.env['mail.thread'].sudo()._mail_find_partner_from_emails([email], records=record.sudo()) if p]
-            if not partner_ids or not partner_ids[0]:
+            try:
                 self.env['ir.http']._verify_request_recaptcha_token('website_mail_follow')
-                name = email.split('@')[0]
-                partner_ids = request.env['res.partner'].sudo().create({'name': name, 'email': email}).ids
+            except Exception:
+                no_create = True
+            else:
+                no_create = False
+            partner_ids = record.sudo()._partner_find_from_emails_single([email], no_create=no_create).ids
         # add or remove follower
         if is_follower:
             record.sudo().message_unsubscribe(partner_ids)
