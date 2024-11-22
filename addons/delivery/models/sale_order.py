@@ -103,6 +103,11 @@ class SaleOrder(models.Model):
                 'country_id': country.id,
                 'zip': zip_code,
             })
+        elif country:
+            partner_address = self.env['res.partner'].new({
+                'active': False,
+                'country_id': country.id,
+            })
         else:
             partner_address = self.partner_shipping_id
         try:
@@ -113,7 +118,15 @@ class SaleOrder(models.Model):
             pickup_locations = getattr(self.carrier_id, function_name)(partner_address, **kwargs)
             if not pickup_locations:
                 return error
-            return {'pickup_locations': pickup_locations}
+            return {
+                'pickup_locations': pickup_locations,
+                'selected_country': {
+                    'name': partner_address.country_id.name,
+                    'code': partner_address.country_id.code,
+                    'image_url': partner_address.country_id.image_url,
+                    'fields': partner_address.country_id.get_address_fields(),
+                },
+            }
         except UserError as e:
             return {'error': str(e)}
 

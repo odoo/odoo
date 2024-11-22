@@ -38,6 +38,7 @@ export class MapContainer extends Component {
         selectedLocationId: [String, {value: false}],
         setSelectedLocation: Function,
         validateSelection: Function,
+        isCountryChanged: Boolean,
     };
 
     setup() {

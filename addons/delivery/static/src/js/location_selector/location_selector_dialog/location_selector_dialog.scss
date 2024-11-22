@@ -43,3 +43,10 @@
         gap: 0 map-get($spacers, 3);
     }
 }
+
+.o_locationSelector_countrySelector {
+    --#{$prefix}dropdown-link-active-color: #{$body-color};
+    --#{$prefix}tertiary-bg: #{rgba(color-contrast($body-color), .5)};
+
+    min-width: calc(360px - #{map-get($spacers, 3)} * 2);
+}

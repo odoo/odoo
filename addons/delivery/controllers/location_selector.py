@@ -15,6 +15,7 @@ class LocationSelectorController(Controller):
         """
         order = request.env['sale.order'].browse(order_id)
         order._set_pickup_location(pickup_location_data)
+        return order
 
     @route('/delivery/get_pickup_locations', type='jsonrpc', auth='user')
     def delivery_get_pickup_locations(self, order_id, zip_code=None):

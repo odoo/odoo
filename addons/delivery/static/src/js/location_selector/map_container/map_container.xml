@@ -38,6 +38,9 @@
                         t-on-click="this.props.validateSelection">
                             Choose this location
                     </button>
+                    <div class="alert alert-warning mt-3" t-if="this.props.isCountryChanged">
+                        <span>This address may require to recompute taxes and prices.</span>
+                    </div>
                 </div>
 
                 <!-- Schedule -->
