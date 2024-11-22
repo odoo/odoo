@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-name="pos_self_order.ProductInfoBanner" t-inherit="point_of_sale.ProductInfoBanner" t-inherit-mode="extension">
-        <xpath expr="//div[hasclass('section-product-info-title')]" position="after">
-                <div t-if="this.pos.cashier._role !== 'minimal'"  class="section-self-order-availability mt-3 mb-4 pb-4 border-bottom text-start d-flex align-items-center">
+    <t t-name="pos_self_order.ProductInfoPopup" t-inherit="point_of_sale.ProductInfoPopup" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('section-inventory')]" position="before">
+                <div t-if="this.pos.cashier._role !== 'minimal' and this.pos.config.self_ordering_mode != 'nothing'"  class="section-self-order-availability mt-3 mb-4 pb-4 border-bottom text-start d-flex align-items-center">
                     <h3 class="section-title">Self-ordering:</h3>
                     <div class="section-self-order-availability-body d-flex ms-auto">
                         <div class="form-check form-switch">
