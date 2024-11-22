@@ -23,7 +23,7 @@
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
             <group name="pos" position="inside">
-                <field name="self_order_available"/>
+                <field name="self_order_available" invisible="not self_order_visible"/>
             </group>
             <xpath expr="//group[@name='public_description']" position="attributes">
                 <attribute name="invisible">0</attribute>
