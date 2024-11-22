@@ -383,9 +383,7 @@ export class Thread extends Record {
     }
 
     get needactionCounter() {
-        return this.isChatChannel
-            ? this.selfMember?.message_unread_counter ?? 0
-            : this.message_needaction_counter;
+        return this.message_needaction_counter;
     }
 
     newestMessage = Record.one("mail.message", {

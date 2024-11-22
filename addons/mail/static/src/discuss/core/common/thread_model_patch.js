@@ -253,6 +253,12 @@ const threadPatch = {
     get membersThatCanSeen() {
         return this.channel_member_ids;
     },
+    /** @override */
+    get needactionCounter() {
+        return this.isChatChannel
+            ? this.selfMember?.message_unread_counter ?? 0
+            : super.needactionCounter;
+    },
     get notifyOnLeave() {
         // Skip notification if display name is unknown (might depend on
         // knowledge of members for groups).
