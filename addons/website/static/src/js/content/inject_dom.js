@@ -41,6 +41,17 @@ export function setUtmsHtmlDataset() {
     }
 }
 
+function resizeVideos() {
+    const verticalVideoEls = document.querySelectorAll('.media_iframe_video_instagram');
+    for (const verticalVideoEl of verticalVideoEls) {
+        verticalVideoEl.style.height = (1.25*(verticalVideoEl.clientWidth-15)+54) + "px";
+    }
+    const horizontalVideoEls = document.querySelectorAll('.media_iframe_video_default');
+    for (const horizontalVideoEl of horizontalVideoEls) {
+        horizontalVideoEl.style.height = ((2/3)*(horizontalVideoEl.clientWidth)) + "px";
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     // Transfer cookie/session data as HTML element's attributes so that CSS
     // selectors can be based on them.
@@ -54,3 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     unhideConditionalElements();
 });
+
+window.addEventListener('resize', resizeVideos);
+
+window.addEventListener('DOMContentLoaded', resizeVideos);
