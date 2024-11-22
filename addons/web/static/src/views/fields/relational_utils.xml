@@ -3,10 +3,10 @@
 
 <t t-name="web.X2ManyFieldDialog">
     <Dialog t-props="dialogProps">
-        <FormRenderer record="record" archInfo="archInfo"/>
+        <FormRenderer readonly="readonly" record="record" archInfo="archInfo"/>
         <t t-set-slot="footer">
             <t t-if="footerArchInfo">
-                <FormRenderer record="record" archInfo="footerArchInfo">
+                <FormRenderer readonly="readonly" record="record" archInfo="footerArchInfo">
                     <t t-set-slot="default_buttons">
                         <t t-call="web.X2ManyFieldDialogDefaultButtons"/>
                     </t>

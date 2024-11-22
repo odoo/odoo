@@ -644,10 +644,14 @@ export function makeActionManager(env, router = _router) {
         if (typeof groupBy === "string") {
             groupBy = [groupBy];
         }
-        const openFormView = (resId, { activeIds, mode, force, newWindow } = {}) => {
+        const openFormView = (resId, { activeIds, readonly, force, newWindow } = {}) => {
             if (target !== "new") {
                 if (_getView("form")) {
-                    return switchView("form", { mode, resId, resIds: activeIds }, { newWindow });
+                    return switchView(
+                        "form",
+                        { readonly, resId, resIds: activeIds },
+                        { newWindow }
+                    );
                 } else if (force || !resId) {
                     return doAction(
                         {
@@ -655,7 +659,7 @@ export function makeActionManager(env, router = _router) {
                             res_model: action.res_model,
                             views: [[false, "form"]],
                         },
-                        { newWindow, props: { mode, resId, resIds: activeIds } }
+                        { newWindow, props: { readonly, resId, resIds: activeIds } }
                     );
                 }
             }
@@ -674,7 +678,7 @@ export function makeActionManager(env, router = _router) {
         });
         if (view.type === "form") {
             if (target === "new") {
-                viewProps.mode = "edit";
+                viewProps.readonly = false;
                 if (!viewProps.onSave) {
                     viewProps.onSave = (record, params) => {
                         if (params && params.closable) {

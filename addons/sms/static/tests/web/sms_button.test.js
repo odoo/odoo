@@ -28,7 +28,7 @@ test("Sms button in form view", async () => {
         type: "form",
         resModel: "visitor",
         resId: visitorId,
-        mode: "readonly",
+        readonly: true,
         arch:
             `<form>
                 <sheet>
@@ -46,7 +46,7 @@ test("Sms button with option enable_sms set as False", async () => {
         type: "form",
         resModel: "visitor",
         resId: visitorId,
-        mode: "readonly",
+        readonly: true,
         arch:
             `<form>
                 <sheet>

@@ -227,9 +227,7 @@ export class Many2XAutocomplete extends Component {
             resModel,
             activeActions,
             isToMany,
-            onRecordSaved: (record) => {
-                return update([{ ...record.data, id: record.resId }]);
-            },
+            onRecordSaved: (record) => update([{ ...record.data, id: record.resId }]),
             onRecordDiscarded: () => {
                 if (!isToMany) {
                     this.props.update(false);
@@ -495,7 +493,7 @@ export function useOpenMany2XRecord({
         }
 
         const { create: canCreate, write: canWrite } = activeActions;
-        const mode = (resId ? canWrite : canCreate) ? "edit" : "readonly";
+        const readonly = !(resId ? canWrite : canCreate);
 
         addDialog(
             FormViewDialog,
@@ -505,7 +503,7 @@ export function useOpenMany2XRecord({
                 title,
                 context,
                 nextRecordsContext,
-                mode,
+                readonly,
                 resId,
                 resModel: model,
                 viewId,
@@ -572,6 +570,7 @@ export class X2ManyFieldDialog extends Component {
             beforeExecuteAction: this.beforeExecuteActionButton.bind(this),
         }); // maybe pass the model directly in props
 
+        this.readonly = this.record.resId && !this.archInfo.activeActions.edit;
         this.canCreate = !this.record.resId;
 
         if (this.archInfo.xmlDoc.querySelector("footer:not(field footer)")) {
@@ -751,7 +750,7 @@ export function useOpenX2ManyRecord({
     const addDialog = useOwnedDialogs();
     const viewMode = activeField.viewMode;
 
-    async function openRecord({ record, mode, context, title, controls, onClose }) {
+    async function openRecord({ record, readonly, context, title, controls, onClose }) {
         if (!title) {
             title = record
                 ? _t("Open: %s", activeField.string)
@@ -775,7 +774,8 @@ export function useOpenX2ManyRecord({
         let deleteButtonLabel = undefined;
         const isDuplicate = !!record;
 
-        const params = { activeFields, fields, mode };
+        const params = { activeFields, fields, readonly };
+        params.mode = params.readonly ? "readonly" : "edit";
         if (record) {
             const { delete: canDelete, onDelete } = activeActions;
             deleteRecord = viewMode === "kanban" && canDelete ? () => onDelete(record) : null;
@@ -798,9 +798,7 @@ export function useOpenX2ManyRecord({
                 archInfo,
                 record,
                 controls,
-                addNew: () => {
-                    return getList().extendRecord(params);
-                },
+                addNew: () => getList().extendRecord(params),
                 save: (rec) => {
                     if (isDuplicate && rec.id === record.id) {
                         return updateRecord(rec);
@@ -857,9 +855,7 @@ export function useX2ManyCrud(getList, isMany2Many) {
             }
         };
     } else {
-        saveRecord = async (record) => {
-            return getList().validateExtendedRecord(record);
-        };
+        saveRecord = async (record) => getList().validateExtendedRecord(record);
     }
 
     const updateRecord = async (record) => {

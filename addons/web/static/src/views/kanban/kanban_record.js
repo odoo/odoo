@@ -233,8 +233,10 @@ export class KanbanRecord extends Component {
         const { activeActions } = archInfo;
         // Widget
         const deletable =
-            activeActions.delete && (!groupByField || groupByField.type !== "many2many");
-        const editable = activeActions.edit;
+            activeActions.delete &&
+            (!groupByField || groupByField.type !== "many2many") &&
+            !props.readonly;
+        const editable = activeActions.edit && !props.readonly;
         this.dataState.widget = {
             deletable,
             editable,
@@ -305,7 +307,7 @@ export class KanbanRecord extends Component {
         const { type } = params;
         switch (type) {
             case "open": {
-                return openRecord(record, { mode: "edit" });
+                return openRecord(record);
             }
             case "archive": {
                 return archiveRecord(record, true);
@@ -358,7 +360,6 @@ export class KanbanRecord extends Component {
             context: this.props.record.context,
             JSON,
             luxon,
-            read_only_mode: this.props.readonly,
             record: this.dataState.record,
             selection_mode: this.props.forceGlobalClick,
             widget: this.dataState.widget,

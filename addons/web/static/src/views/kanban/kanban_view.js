@@ -23,6 +23,7 @@ export const kanbanView = {
 
         return {
             ...genericProps,
+            readonly: genericProps.readonly || !archInfo.activeActions?.edit,
             // Compiler: view.Compiler, // don't pass it automatically in stable, for backward compat
             Model: view.Model,
             Renderer: view.Renderer,

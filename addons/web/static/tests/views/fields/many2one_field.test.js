@@ -343,9 +343,7 @@ test("editing a many2one (with form view opened with external button)", async ()
             </form>`,
     };
 
-    onRpc("get_formview_id", () => {
-        return false;
-    });
+    onRpc("get_formview_id", () => false);
     onRpc("web_save", () => {
         expect.step("web_save");
     });
@@ -2155,9 +2153,7 @@ test("list in form: call button in sub view", async () => {
             });
         },
     });
-    onRpc("get_formview_id", () => {
-        return false;
-    });
+    onRpc("get_formview_id", () => false);
 
     await mountViewInDialog({
         type: "form",
@@ -2249,9 +2245,7 @@ test("X2Many sequence list in modal", async () => {
             </list>`,
     };
 
-    onRpc("partner.type", "get_formview_id", () => {
-        return false;
-    });
+    onRpc("partner.type", "get_formview_id", () => false);
     onRpc("partner.type", "web_save", () => {
         expect.step("partner.type web_save");
     });
@@ -2711,9 +2705,7 @@ test("can_create and can_write option on a many2one", async () => {
             </form>`,
     };
 
-    onRpc("product", "get_formview_id", () => {
-        return false;
-    });
+    onRpc("product", "get_formview_id", () => false);
 
     await mountViewInDialog({
         type: "form",
@@ -2799,9 +2791,7 @@ test("propagate can_create onto the search popup", async () => {
                 <field name="name"/>
             </search>`,
     };
-    onRpc("get_formview_id", () => {
-        return false;
-    });
+    onRpc("get_formview_id", () => false);
 
     await mountView({
         type: "form",
@@ -3404,7 +3394,7 @@ test("updating a many2one from a many2many", async () => {
     expect(".o_dialog:not(.o_inactive_modal) div[name=turtle_trululu] input").toHaveValue("test");
 });
 
-test("search more in many2one: resequence inside dialog", async () => {
+test("search more in many2one: cannot resequence inside dialog", async () => {
     // when the user clicks on 'Search More...' in a many2one dropdown, resequencing inside
     // the dialog works
     Partner._fields.sequence = fields.Integer();
@@ -3441,11 +3431,7 @@ test("search more in many2one: resequence inside dialog", async () => {
     await contains(`.o_field_widget[name="trululu"] .o_m2o_dropdown_option_search_more`).click();
 
     expect(".modal").toHaveCount(1);
-    expect(".modal .ui-sortable-handle").toHaveCount(11);
-    await contains(".modal .o_data_row:nth-child(2) .ui-sortable-handle").dragAndDrop(
-        ".modal tbody tr"
-    );
-    await animationFrame();
+    expect(".modal .o_row_handle.o_disabled").toHaveCount(11);
 
     expect.verifySteps([
         "get_views",
@@ -3454,8 +3440,6 @@ test("search more in many2one: resequence inside dialog", async () => {
         "get_views", // list view in dialog
         "web_search_read", // to display results in the dialog
         "has_group",
-        "/web/dataset/resequence", // resequencing lines
-        "read",
     ]);
 });
 
@@ -3551,9 +3535,7 @@ test("focus when closing many2one modal in many2one modal", async () => {
         form: '<form><field name="trululu"/></form>',
     };
 
-    onRpc("get_formview_id", () => {
-        return false;
-    });
+    onRpc("get_formview_id", () => false);
 
     await mountViewInDialog({
         type: "form",
@@ -3770,17 +3752,15 @@ test("external_button opens a new tab when middle clicked or ctrl+click", async 
         form: '<form><field name="trululu"/></form>',
         search: "<search></search>",
     };
-    onRpc("get_formview_action", () => {
-        return {
-            type: "ir.actions.act_window",
-            res_model: "partner",
-            view_type: "form",
-            view_mode: "form",
-            views: [[false, "form"]],
-            target: "current",
-            res_id: false,
-        };
-    });
+    onRpc("get_formview_action", () => ({
+        type: "ir.actions.act_window",
+        res_model: "partner",
+        view_type: "form",
+        view_mode: "form",
+        views: [[false, "form"]],
+        target: "current",
+        res_id: false,
+    }));
     await mountWithCleanup(WebClient);
     await getService("action").doAction({
         name: "Partner",
@@ -3802,9 +3782,7 @@ test("keep changes when editing related record in a dialog", async () => {
     Partner._views = {
         [["form", 98]]: '<form><field name="int_field"/></form>',
     };
-    onRpc("get_formview_id", () => {
-        return 98;
-    });
+    onRpc("get_formview_id", () => 98);
     onRpc("web_save", () => {
         expect.step("web_save");
     });
@@ -3838,9 +3816,7 @@ test("create and edit, save and then discard", async () => {
     Partner.views = {
         [[98, "form"]]: '<form><field name="name"/></form>',
     };
-    onRpc("get_formview_id", () => {
-        return 98;
-    });
+    onRpc("get_formview_id", () => 98);
     await mountView({
         type: "form",
         resModel: "partner",
@@ -3904,9 +3880,7 @@ test("many2one field with false as name", async () => {
 });
 
 test("many2one search with false as name", async () => {
-    onRpc("name_search", () => {
-        return [[1, false]];
-    });
+    onRpc("name_search", () => [[1, false]]);
     await mountView({
         type: "form",
         resModel: "partner",
