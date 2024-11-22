@@ -2079,17 +2079,12 @@ class MailThread(models.AbstractModel):
         in the target model. Purpose is to link document creation to users whenever
         possible, for example when creating document through mailgateway.
 
-        Heuristic
-
-          * alias owner record: fetch in its followers for user with matching email;
-          * find any user with matching emails;
-          * try alias owner as fallback;
-
-        Note that standard search order is applied.
+        Look in parent document followers if a user match. Order is made by
+        right company order.
 
         :param str email_value: will be sanitized and parsed to find email;
-        :param mail.alias alias: optional alias. Used to fetch owner followers
-          or fallback user (alias owner);
+        :param mail.alias alias: optional alias, used to link to a owner document
+          for followers;
 
         :return res.user user: user matching email or void recordset if none found
         """
@@ -2098,29 +2093,13 @@ class MailThread(models.AbstractModel):
         if not normalized_email:
             return self.env['res.users']
 
-        if self.env['mail.alias'].sudo().search_count([('alias_full_name', '=', email_value)]):
-            return self.env['res.users']
-
+        record_su = self.env['mail.thread'].sudo()
         if alias and alias.alias_parent_model_id and alias.alias_parent_thread_id:
-            followers = self.env['mail.followers'].search([
-                ('res_model', '=', alias.alias_parent_model_id.sudo().model),
-                ('res_id', '=', alias.alias_parent_thread_id)]
-            ).mapped('partner_id')
-        else:
-            followers = self.env['res.partner']
+            record_su = self.env[alias.alias_parent_model_id.sudo().model].browse(alias.alias_parent_thread_id).sudo()
+            record_su = record_su if hasattr(record_su, '_partner_find_from_emails_single') else self.env['mail.thread'].sudo()
 
-        follower_users = self.env['res.users'].search([
-            ('partner_id', 'in', followers.ids), ('email_normalized', '=', normalized_email)
-        ], limit=1) if followers else self.env['res.users']
-        matching_user = follower_users[0] if follower_users else self.env['res.users']
-        if matching_user:
-            return matching_user
-
-        if not matching_user:
-            std_users = self.env['res.users'].sudo().search([('email_normalized', '=', normalized_email)], limit=1)
-            matching_user = std_users[0] if std_users else self.env['res.users']
-
-        return matching_user
+        partner = record_su._partner_find_from_emails_single([email_value], filter_found=lambda p: p.user_ids, no_create=True)
+        return partner.user_ids and partner.user_ids[0] or self.env['res.users']
 
     @api.model
     def _mail_find_partner_from_emails(self, emails, records=None, force_create=False, extra_domain=False):
@@ -2924,7 +2903,7 @@ class MailThread(models.AbstractModel):
         """
         if author_id is None:
             if email_from:
-                author = self._mail_find_partner_from_emails([email_from])[0]
+                author = self._partner_find_from_emails_single([email_from], no_create=True)
             else:
                 author = self.env.user.partner_id
                 email_from = author.email_formatted
