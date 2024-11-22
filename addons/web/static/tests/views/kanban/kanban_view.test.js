@@ -4457,7 +4457,7 @@ test.tags("desktop")("drag and drop a record with load more", async () => {
 });
 
 test.tags("desktop")("can drag and drop a record from one column to the next", async () => {
-    onRpc("/web/dataset/resequence", () => {
+    onRpc("web_resequence", () => {
         expect.step("resequence");
     });
 
@@ -4499,7 +4499,7 @@ test.tags("desktop");
 test("user without permission cannot drag and drop a column thus sequence remains unchanged on drag and drop attempt", async () => {
     expect.errors(1);
 
-    onRpc("/web/dataset/resequence", () => {
+    onRpc("web_resequence", () => {
         throw makeServerError({ message: "No Permission" }); // Simulate user without permission
     });
 
@@ -4621,9 +4621,8 @@ test("drag and drop outside of a column", async () => {
 });
 
 test.tags("desktop")("drag and drop a record, grouped by selection", async () => {
-    onRpc("/web/dataset/resequence", () => {
+    onRpc("web_resequence", () => {
         expect.step("resequence");
-        return true;
     });
     onRpc("partner", "web_save", ({ args }) => {
         expect.step(args[1]);
@@ -4673,7 +4672,6 @@ test.tags("desktop")("prevent drag and drop of record if grouped by readonly", a
     Partner._fields.bar = fields.Boolean({ readonly: true });
     Partner._fields.product_id = fields.Many2one({ relation: "product", readonly: true });
 
-    onRpc("/web/dataset/resequence", () => true);
     onRpc("partner", "write", () => {
         expect.step("should not be called");
     });
@@ -5240,10 +5238,8 @@ test.tags("desktop")("environment is updated when (un)folding groups", async () 
 });
 
 test.tags("desktop")("create a column in grouped on m2o", async () => {
-    onRpc("/web/dataset/resequence", async (request) => {
-        expect.step("/web/dataset/resequence");
-        const { params } = await request.json();
-        expect.step(params.ids.toString());
+    onRpc("web_resequence", async ({ args }) => {
+        expect.step(["web_resequence", args[0]]);
     });
     onRpc("name_create", () => {
         expect.step("name_create");
@@ -5306,7 +5302,7 @@ test.tags("desktop")("create a column in grouped on m2o", async () => {
     expect(getKanbanColumn(2)).not.toHaveClass("o_column_folded", {
         message: "the created column should not be folded",
     });
-    expect.verifySteps(["name_create", "/web/dataset/resequence", "3,5,6"]);
+    expect.verifySteps(["name_create", ["web_resequence", [3, 5, 6]]]);
 
     // fold and unfold the created column, and check that no RPCs are done (as there are no records)
     const clickColumnAction = await toggleKanbanColumnActions(2);
@@ -5333,11 +5329,9 @@ test("create a column in grouped on m2o without sequence field on view model", a
     onRpc("name_create", () => {
         expect.step("name_create");
     });
-    onRpc("/web/dataset/resequence", async (request) => {
-        expect.step("resequence");
-        const { params } = await request.json();
-        expect.step(params.ids.toString());
-        return true;
+    onRpc("web_resequence", async ({ args }) => {
+        expect.step(["resequence", args[0]]);
+        return [];
     });
 
     await mountView({
@@ -5366,7 +5360,7 @@ test("create a column in grouped on m2o without sequence field on view model", a
     await editKanbanColumnName("new value");
     await validateKanbanColumn();
 
-    expect.verifySteps(["name_create", "resequence", "3,5,6"]);
+    expect.verifySteps(["name_create", ["resequence", [3, 5, 6]]]);
 });
 
 test.tags("desktop")("auto fold group when reach the limit", async () => {
@@ -5523,9 +5517,8 @@ test.tags("desktop", "focus required")("show/hide help message (ESC) in quick cr
 test.tags("desktop")("delete a column in grouped on m2o", async () => {
     stepAllNetworkCalls();
     let resequencedIDs = [];
-    onRpc("/web/dataset/resequence", async (request) => {
-        const { params } = await request.json();
-        resequencedIDs = params.ids;
+    onRpc("web_resequence", async ({ args }) => {
+        resequencedIDs = args[0];
         expect(resequencedIDs.filter(isNaN).length).toBe(0, {
             message: "column resequenced should be existing records with IDs",
         });
@@ -5648,7 +5641,7 @@ test.tags("desktop")("delete a column in grouped on m2o", async () => {
     await editKanbanColumnName("once third column");
     await validateKanbanColumn();
 
-    expect.verifySteps(["name_create", "/web/dataset/resequence"]);
+    expect.verifySteps(["name_create", "web_resequence"]);
     expect(resequencedIDs).toEqual([3, 4], {
         message: "creating a column should trigger a resequence",
     });
@@ -5665,7 +5658,7 @@ test.tags("desktop")("delete a column in grouped on m2o", async () => {
     await contains(".o_kanban_group:nth-child(2) .o_column_title").dragAndDrop(
         queryAll(".o_kanban_group")[2]
     );
-    expect.verifySteps(["/web/dataset/resequence"]);
+    expect.verifySteps(["web_resequence"]);
     expect(resequencedIDs).toEqual([4, 3], {
         message: "moved column should be resequenced accordingly",
     });
@@ -7838,20 +7831,14 @@ test.tags("desktop")("resequence columns in grouped by m2o", async () => {
 });
 
 test.tags("desktop")("resequence all when creating new record + partial resequencing", async () => {
-    let resequenceOffset;
-    onRpc("/web/dataset/resequence", async (request) => {
-        const { params } = await request.json();
-        const { ids, offset } = params;
+    onRpc("web_resequence", async ({ args }) => {
+        const [ids, fieldName, offset] = args;
         expect.step({ ids, ...(offset ? { offset } : {}) });
-        resequenceOffset = offset || 0;
-        return true;
-    });
-    onRpc("read", ({ args }) => {
-        // Important to simulate the server returning the new sequence.
-        const [ids, fields] = args;
+        const resequenceOffset = offset || 0;
+
         return ids.map((id, index) => ({
             id,
-            [fields[0]]: resequenceOffset + index,
+            [fieldName]: resequenceOffset + index,
         }));
     });
 
@@ -8437,7 +8424,7 @@ test.tags("desktop")("resequence a record twice", async () => {
     Partner._records = [];
 
     const def = new Deferred();
-    onRpc("/web/dataset/resequence", () => {
+    onRpc("web_resequence", () => {
         expect.step("resequence");
         return def;
     });
@@ -8775,13 +8762,6 @@ test("column progressbars should not crash in non grouped views", async () => {
 
 test("column progressbars: creating a new column should create a new progressbar", async () => {
     stepAllNetworkCalls();
-    // // FIXME: use stepAllNetworkCalls when fixed in hoot (return true/false)
-    // onRpc(({ method }) => {
-    //     expect.step(method);
-    // });
-    // onRpc("/web/dataset/resequence", () => {
-    //     expect.step("/web/dataset/resequence");
-    // });
 
     await mountView({
         type: "kanban",
@@ -8817,7 +8797,7 @@ test("column progressbars: creating a new column should create a new progressbar
         "web_search_read",
         "web_search_read",
         "name_create",
-        "/web/dataset/resequence",
+        "web_resequence",
     ]);
 });
 
@@ -9195,16 +9175,13 @@ test.tags("desktop")("drag & drop records grouped by m2o with progressbar", asyn
         "web_search_read",
         "web_save",
         "read_progress_bar",
-        "/web/dataset/resequence",
-        "read",
+        "web_resequence",
         "web_save",
         "read_progress_bar",
-        "/web/dataset/resequence",
-        "read",
+        "web_resequence",
         "web_save",
         "read_progress_bar",
-        "/web/dataset/resequence",
-        "read",
+        "web_resequence",
     ]);
 });
 
@@ -9259,8 +9236,7 @@ test.tags("desktop")("d&d records grouped by date with progressbar with aggregat
         "web_save",
         "read_progress_bar",
         "web_read_group",
-        "/web/dataset/resequence",
-        "read",
+        "web_resequence",
     ]);
 });
 
@@ -9338,8 +9314,7 @@ test.tags("desktop")("progress bar recompute after d&d to and from other column"
         "web_search_read",
         "web_save",
         "read_progress_bar",
-        "/web/dataset/resequence",
-        "read",
+        "web_resequence",
     ]);
 });
 
@@ -9772,8 +9747,8 @@ test.tags("desktop")("progressbars and active filter with quick_create_view", as
 });
 
 test.tags("desktop")("quickcreate in first column after moving a record from it", async () => {
-    onRpc("/web/dataset/resequence", () => {
-        return true;
+    onRpc("web_resequence", () => {
+        return [];
     });
 
     await mountView({
@@ -10423,12 +10398,11 @@ test.tags("desktop")("unset cover image", async () => {
 test.tags("desktop")("ungrouped kanban with handle field", async () => {
     expect.assertions(3);
 
-    onRpc("/web/dataset/resequence", async (request) => {
-        const { params } = await request.json();
-        expect(params.ids).toEqual([2, 1, 3, 4], {
+    onRpc("web_resequence", async ({ args }) => {
+        expect(args[0]).toEqual([2, 1, 3, 4], {
             message: "should write the sequence in correct order",
         });
-        return true;
+        return [];
     });
 
     await mountView({
@@ -10453,9 +10427,9 @@ test.tags("desktop")("ungrouped kanban with handle field", async () => {
 });
 
 test("ungrouped kanban without handle field", async () => {
-    onRpc("/web/dataset/resequence", () => {
+    onRpc("web_resequence", () => {
         expect.step("resequence");
-        return true;
+        return [];
     });
 
     await mountView({
@@ -10849,8 +10823,7 @@ test.tags("desktop")("filtered column counters when dropping in non-matching rec
         "read_progress_bar",
         "web_save",
         "read_progress_bar",
-        "/web/dataset/resequence",
-        "read",
+        "web_resequence",
     ]);
 });
 
@@ -10915,13 +10888,7 @@ test.tags("desktop")("filtered column is reloaded when dragging out its last rec
     expect(getKanbanRecordTexts(0)).toEqual(["4blip", "1yop"]);
     expect(getKanbanColumnTooltips(1)).toEqual(["1 blip", "1 Other"]);
     expect(getKanbanRecordTexts(1)).toEqual(["2blip", "3gnap"]);
-    expect.verifySteps([
-        "web_save",
-        "read_progress_bar",
-        "web_search_read",
-        "/web/dataset/resequence",
-        "read",
-    ]);
+    expect.verifySteps(["web_save", "read_progress_bar", "web_search_read", "web_resequence"]);
 });
 
 test("kanban widget can extract props from attrs", async () => {
@@ -11888,7 +11855,7 @@ test.tags("desktop")("keep focus in cp when pressing arrowdown and no kanban car
 
 test.tags("desktop")("no leak of TransactionInProgress (grouped case)", async () => {
     const def = new Deferred();
-    onRpc("/web/dataset/resequence", () => {
+    onRpc("web_resequence", () => {
         expect.step("resequence");
         return def;
     });
@@ -11958,7 +11925,7 @@ test.tags("desktop")("no leak of TransactionInProgress (grouped case)", async ()
 
 test.tags("desktop")("no leak of TransactionInProgress (not grouped case)", async () => {
     const def = new Deferred();
-    onRpc("/web/dataset/resequence", () => {
+    onRpc("web_resequence", () => {
         expect.step("resequence");
         return def;
     });
@@ -12522,7 +12489,7 @@ test.tags("desktop")("d&d records grouped by m2o with m2o displayed in records",
     def.resolve();
     await animationFrame();
 
-    expect.verifySteps(["web_save", "/web/dataset/resequence", "read"]);
+    expect.verifySteps(["web_save", "web_resequence"]);
     expect(queryAllTexts(".o_kanban_record")).toEqual(["hello", "hello", "hello", "xmo"]);
 });
 
@@ -12567,7 +12534,7 @@ test.tags("desktop")("rerenders only once after resequencing records", async () 
     });
 
     onRpc("web_save", () => saveDef);
-    onRpc("/web/dataset/resequence", () => resequenceDef);
+    onRpc("web_resequence", () => resequenceDef);
     stepAllNetworkCalls();
 
     await mountView({
@@ -12630,11 +12597,9 @@ test.tags("desktop")("rerenders only once after resequencing records", async () 
         "web_search_read",
         "web_search_read",
         "web_save",
-        "/web/dataset/resequence",
-        "read",
+        "web_resequence",
         "web_save",
-        "/web/dataset/resequence",
-        "read",
+        "web_resequence",
     ]);
 });
 
@@ -13060,9 +13025,9 @@ test.tags("desktop")("group by properties and drag and drop", async () => {
             ],
         };
     });
-    onRpc("/web/dataset/resequence", () => {
+    onRpc("web_resequence", () => {
         expect.step("resequence");
-        return true;
+        return [];
     });
     onRpc("web_save", ({ args }) => {
         expect.step("web_save");
