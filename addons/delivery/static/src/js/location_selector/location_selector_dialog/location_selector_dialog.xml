@@ -84,6 +84,8 @@
                         selectedLocationId="this.state.selectedLocationId.toString()"
                         setSelectedLocation.bind="setSelectedLocation"
                         validateSelection.bind="validateSelection"
+                        addressChangeWarning="addressChangeWarning"
+                        isCountryChanged="this.state.isCountryChanged"
                     />
                 </section>
             </div>
@@ -99,6 +101,9 @@
                         t-on-click="validateSelection"
                         t-out="validationButtonLabel"
                     />
+                    <div class="alert alert-warning mt-3" t-if="this.state.isCountryChanged">
+                        <span t-out="addressChangeWarning"/>
+                    </div>
                 </div>
             </t>
         </Dialog>
@@ -106,8 +111,37 @@
 
     <t t-name="delivery.locationSelector.searchbar">
         <div role="search" class="input-group p-3 border-bottom" t-att-class="wrapClass">
+            <!-- Country selector -->
+            <SelectMenu
+                choices="this.state.countries"
+                searchable="this.state.countries.length > 10"
+                required="true"
+                onSelect.bind="this.setSelectedCountry"
+                class="'rounded-end-0 border-0'"
+                togglerClass="'rounded-end-0 pe-0'"
+                menuClass="'o_locationSelector_countrySelector'"
+            >
+                <img
+                    t-ref="togglerRef"
+                    t-att-src="state.selectedCountry.image_url"
+                    class="pe-2"
+                    style="height: auto; width: 30px;"
+                    t-att-alt="state.selectedCountry.name"
+                />
+                <t t-set-slot="choice" t-slot-scope="choice">
+                    <span class="text-truncate">
+                        <img
+                            t-att-src="choice.data.value.image_url"
+                            class="pe-2"
+                            style="height: auto; width: 30px;"
+                            t-att-alt="choice.data.label"
+                        />
+                        <t t-out="choice.data.label"/>
+                    </span>
+                </t>
+            </SelectMenu>
             <input
-                class="search-query form-control oe_search_box border-0 text-bg-light"
+                class="search-query form-control oe_search_box border-0 px-2 text-bg-light"
                 t-model.lazy="this.state.zipCode"
                 t-att-placeholder="postalCodePlaceholder"
             />
@@ -115,7 +149,7 @@
                 t-on-click="() => this.debouncedSearchButton(this.state.zipCode)"
                 aria-label="Search"
                 title="Search"
-                class="btn btn-light"
+                class="btn btn-light ps-2"
             >
                 <i class="oi oi-search"/>
             </button>
