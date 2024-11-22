@@ -6,6 +6,7 @@ declare module "models" {
     export interface Message {
         readonly channelMemberHaveSeen: ChannelMember[],
         hasEveryoneSeen: boolean,
+        hasNewMessageSeparator: boolean,
         hasSomeoneFetched: boolean,
         hasSomeoneSeen: boolean,
         isMessagePreviousToLastSelfMessageSeenByEveryone: boolean,

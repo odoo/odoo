@@ -13,6 +13,13 @@ const messagePatch = {
                 return this.thread?.membersThatCanSeen.every((m) => m.hasSeen(this));
             },
         });
+        this.hasNewMessageSeparator = Record.attr(false, {
+            compute() {
+                // compute for caching the value and not re-rendering all
+                // messages when new_message_separator changes
+                return this.thread?.selfMember.new_message_separator === this.id;
+            },
+        });
         this.hasSomeoneFetched = Record.attr(false, {
             /** @this {import("models").Message} */
             compute() {

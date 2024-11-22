@@ -12,7 +12,6 @@ import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { url } from "@web/core/utils/urls";
 import { stateToUrl } from "@web/core/browser/router";
-import { toRaw } from "@odoo/owl";
 
 const { DateTime } = luxon;
 export class Message extends Record {
@@ -441,19 +440,6 @@ export class Message extends Record {
             _t('You are no longer following "%(thread_name)s".', { thread_name: thread.name }),
             { type: "success" }
         );
-    }
-
-    /** @param {import("models").Thread} thread the thread where the message is shown */
-    onClickMarkAsUnread(thr) {
-        const message = toRaw(this);
-        const thread = toRaw(thr);
-        if (!thread.selfMember || thread.selfMember?.new_message_separator === message.id) {
-            return;
-        }
-        return rpc("/discuss/channel/mark_as_unread", {
-            channel_id: message.thread.id,
-            message_id: message.id,
-        });
     }
 }
 

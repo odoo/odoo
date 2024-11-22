@@ -245,7 +245,7 @@ export const busService = {
             subscribe(notificationType, callback) {
                 const wrapper = ({ detail }) => {
                     const { id, payload } = detail;
-                    callback(payload, { id });
+                    callback(JSON.parse(JSON.stringify(payload)), { id });
                 };
                 subscribeFnToWrapper.set(callback, wrapper);
                 notificationBus.addEventListener(notificationType, wrapper);
