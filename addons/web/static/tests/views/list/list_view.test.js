@@ -16276,3 +16276,54 @@ test(`properties do not disappear after domain change`, async () => {
     await toggleMenuItem("My filter");
     expect(`.o_list_renderer th[data-name="properties.property_char"]`).toHaveCount(1);
 });
+
+test("two pages, go page 2, record deleted meanwhile", async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list limit="3">
+                <field name="foo"/>
+                <field name="int_field"/>
+            </list>
+        `,
+    });
+
+    expect(".o_data_row").toHaveCount(3);
+    expect(getPagerValue()).toEqual([1, 3]);
+    expect(getPagerLimit()).toBe(4);
+
+    Foo._records.splice(3);
+    await pagerNext();
+    expect(".o_data_row").toHaveCount(3);
+    expect(getPagerValue()).toEqual([1, 3]);
+    expect(getPagerLimit()).toBe(3);
+});
+
+test("two pages, go page 2, record deleted meanwhile (grouped case)", async () => {
+    for (let i = 0; i < 4; i++) {
+        Foo._records[i].bar = true;
+    }
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        groupBy: ["bar"],
+        arch: `<list limit="3">
+                <field name="foo"/>
+                <field name="int_field"/>
+            </list>
+        `,
+    });
+
+    expect(".o_group_header").toHaveCount(1);
+    expect(".o_data_row").toHaveCount(0);
+
+    await contains(".o_group_header").click();
+    expect(".o_data_row").toHaveCount(3);
+    expect(getPagerValue(queryFirst(".o_group_header"))).toEqual([1, 3]);
+    expect(getPagerLimit(queryFirst(".o_group_header"))).toBe(4);
+
+    Foo._records.splice(3);
+    await pagerNext(queryFirst(".o_group_header"));
+    expect(".o_data_row").toHaveCount(3);
+    expect(".o_group_header .o_pager").toHaveCount(0);
+});
