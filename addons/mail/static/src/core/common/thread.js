@@ -206,13 +206,7 @@ export class Thread extends Component {
                 if (this.env.chatter) {
                     this.env.chatter.fetchMessages = false;
                 }
-                if (this.props.thread.selfMember && this.props.thread.scrollUnread) {
-                    toRaw(this.props.thread).loadAround(
-                        this.props.thread.selfMember.new_message_separator
-                    );
-                } else {
-                    toRaw(this.props.thread).fetchNewMessages();
-                }
+                this.fetchMessages();
             }
         });
         useEffect(
@@ -479,6 +473,10 @@ export class Thread extends Component {
             },
             () => [ref.el, this.state.mountedAndLoaded]
         );
+    }
+
+    fetchMessages() {
+        toRaw(this.props.thread).fetchNewMessages();
     }
 
     get viewportEl() {
