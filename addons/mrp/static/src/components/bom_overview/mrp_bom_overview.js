@@ -54,7 +54,9 @@ export class BomOverviewComponent extends Component {
         if (resModel === 'product.product' && variantId !== undefined) {
             this.state.currentVariantId = variantId;
         }
-
+        if (variantId == undefined && this.props.action.context.variant_bom_id) {
+            this.state.currentVariantId = this.props.action.context.variant_bom_id;
+        }    
         const bomData = await this.getBomData();
         this.state.bomQuantity = bomData["bom_qty"];
         this.state.showOptions.uom = bomData["is_uom_applied"];
