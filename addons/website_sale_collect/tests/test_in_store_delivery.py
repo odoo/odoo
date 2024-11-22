@@ -18,7 +18,7 @@ class TestInStoreDeliveryController(PaymentHttpCommon, ClickAndCollectCommon):
         count_so_before = self.env['sale.order'].search_count([])
         url = self._build_url('/website_sale/get_pickup_locations')
         with patch(
-            'odoo.addons.website_sale_collect.models.sale_order.SaleOrder._get_pickup_locations',
+            'odoo.addons.website_sale_collect.controllers.delivery',
             return_value={}
         ):
             self.make_jsonrpc_request(url, {'product_id': 1})
