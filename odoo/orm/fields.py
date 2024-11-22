@@ -11,6 +11,7 @@ from operator import attrgetter
 
 from psycopg2.extras import Json as PsycopgJson
 
+from odoo import SUPERUSER_ID
 from odoo.exceptions import AccessError, MissingError
 from odoo.osv import expression
 from odoo.tools import SQL, lazy_property, sql
@@ -738,7 +739,10 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
 
     def get_company_dependent_fallback(self, records):
         assert self.company_dependent
-        fallback = records.env['ir.default']._get_model_defaults(records._name).get(self.name)
+        fallback = records.env['ir.default'] \
+            .with_user(SUPERUSER_ID) \
+            .with_company(records.env.company) \
+            ._get_model_defaults(records._name).get(self.name)
         fallback = self.convert_to_cache(fallback, records, validate=False)
         return self.convert_to_record(fallback, records)
 
