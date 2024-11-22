@@ -52,7 +52,7 @@ patch(Checkout.prototype, {
      * @return {void}
      */
     _adaptDeliveryTitles() {
-        const checkedRadio = document.querySelector('input[name="o_delivery_radio"]:checked');
+        const checkedRadio = this._getSelectedDeliveryRadio();
         if (!checkedRadio || !this.deliveryAddressTitle || !this.useDeliveryAsBillingLabel) {
             return;
         }
@@ -63,6 +63,30 @@ patch(Checkout.prototype, {
             this.deliveryAddressTitle.textContent = this.deliveryTitle;
             this.useDeliveryAsBillingLabel.textContent = this.useDeliveryAsBillingLabelText;
         }
+    },
+
+    /**
+     * Add country selector specific data to location selector.
+     *
+     * @override method from `@website_sale/interactions/checkout`
+     */
+    _prepareLocationDialogData(dataset) {
+        const {
+            countryCode,
+            deliveryMethodId,
+            deliveryMethodType,
+        } = dataset;
+        const superDialogData = super._prepareLocationDialogData(dataset);
+        if (deliveryMethodType === 'in_store') {
+            return {
+                ...superDialogData,
+                countryCode: countryCode,
+                deliveryMethodId: parseInt(deliveryMethodId),
+                deliveryMethodType: deliveryMethodType,
+            };
+        }
+        return superDialogData;
+
     },
 
     /**
@@ -90,7 +114,7 @@ patch(Checkout.prototype, {
         if (this.dmRadios.length === 0) { // If there are no delivery methods.
             return super._isDeliveryMethodReady(...arguments); // Skip override.
         }
-        const checkedRadio = this.el.querySelector('input[name="o_delivery_radio"]:checked');
+        const checkedRadio = this._getSelectedDeliveryRadio();
         let hasWarning = false;
         if (checkedRadio) {
             const deliveryContainer = this._getDeliveryMethodContainer(checkedRadio);

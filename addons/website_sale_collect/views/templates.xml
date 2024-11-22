@@ -31,10 +31,13 @@
                 t-att-props="json.dumps({
                     'productId': product_variant.id,
                     'zipCode': zip_code,
+                    'countryCode': country_code,
                     'showSelectStoreButton': show_select_store_button,
                     'selectedLocationData': selected_location_data or {},
                     'inStoreStockData': combination_info.get('in_store_stock_data', {}),
                     'deliveryStockData': combination_info.get('delivery_stock_data', {}),
+                    'deliveryMethodId': delivery_method.id,
+                    'deliveryMethodType': delivery_method.delivery_type,
                 })"
                 t-attf-class="d-flex o_not_editable mb-4 #{'w-100' if not is_50_pc else 'w-100 w-sm-75'}"
             />

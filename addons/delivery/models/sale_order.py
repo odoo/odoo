@@ -103,8 +103,7 @@ class SaleOrder(models.Model):
         :rtype: dict
         """
         self.ensure_one()
-        if zip_code:
-            assert country  # country is required if zip_code is provided.
+        if country:
             partner_address = self.env['res.partner'].new({
                 'active': False,
                 'country_id': country.id,

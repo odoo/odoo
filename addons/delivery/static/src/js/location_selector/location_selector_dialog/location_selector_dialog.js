@@ -11,7 +11,6 @@ export class LocationSelectorDialog extends Component {
     static components = { Dialog, LocationList, MapContainer };
     static template = 'delivery.locationSelector.dialog';
     static props = {
-        orderId: Number,
         zipCode: String,
         selectedLocationId: { type: String, optional: true},
         save: Function,
@@ -35,9 +34,9 @@ export class LocationSelectorDialog extends Component {
         this.getLocationUrl = '/delivery/get_pickup_locations';
 
         this.debouncedOnResize = useDebounced(this.updateSize, 300);
-        this.debouncedSearchButton = useDebounced((zipCode) => {
+        this.debouncedSearchButton = useDebounced(() => {
             this.state.locations = [];
-            this._updateLocations(zipCode);
+            this._loadLocations();
         }, 300);
 
         onMounted(() => {
@@ -48,8 +47,8 @@ export class LocationSelectorDialog extends Component {
 
         // Fetch new locations when the zip code is updated.
         useEffect(
-            (zipCode) => {
-                this._updateLocations(zipCode)
+            () => {
+                this._loadLocations();
                 return () => {
                     this.state.locations = []
                 };
@@ -62,15 +61,26 @@ export class LocationSelectorDialog extends Component {
     // Data Exchanges
     //--------------------------------------------------------------------------
 
+    get locations() { return this.state.locations; }
+
     /**
      * Fetch the closest pickup locations based on the zip code.
      *
      * @private
-     * @param {String} zip - The zip code used to look for close locations.
      * @return {Object} The result values.
      */
-    async _getLocations(zip) {
-        return rpc(this.getLocationUrl, {order_id: this.props.orderId, zip_code: zip});
+    async _getLocations() {
+        return await rpc(this.getLocationUrl, this._getLocationsParams());
+    }
+
+    /**
+     * Fetch the information needed to get the closest pickup locations
+     *
+     * @private
+     * @return {Object} The result values.
+     */
+    _getLocationsParams() {
+        return { zip_code: this.state.zipCode };
     }
 
     //--------------------------------------------------------------------------
@@ -84,27 +94,30 @@ export class LocationSelectorDialog extends Component {
      * selected location is not on the list anymore.
      *
      * @private
-     * @param {String} zip - The zip code used to look for close locations.
      * @return {void}
      */
-    async _updateLocations(zip) {
+    async _loadLocations() {
         this.state.error = false;
-        const { pickup_locations, error } = await this._getLocations(zip);
+        const { pickup_locations, error } = await this._getLocations();
         if (error) {
             this.state.error = error;
             console.error(error);
         } else {
-            this.state.locations = pickup_locations;
-            if (!this.state.locations.find(l => String(l.id) === this.state.selectedLocationId)) {
-                this.state.selectedLocationId = this.state.locations[0]
-                                                ? String(this.state.locations[0].id)
-                                                : false;
-            }
+            this._updateLocations(pickup_locations);
+            this._selectLocation();
         }
     }
 
-    get showListView() {
-        return this.state.locations.length !== 1;
+    _updateLocations(locations) {
+        this.state.locations = locations;
+    }
+
+    _selectLocation() {
+        if (!this.locations.find(l => String(l.id) === this.state.selectedLocationId)) {
+            this.state.selectedLocationId = this.locations[0]
+                ? String(this.locations[0].id)
+                : false;
+        }
     }
 
     /**

@@ -4,7 +4,7 @@
         <button
             t-attf-id="location-{{this.props.id}}"
             class="list-group-item list-group-item-action collapsed d-flex gap-2 gap-lg-3"
-            t-att-class="{'text-bg-light': props.isSelected}"
+            t-att-class="{'border-left-primary text-bg-light': props.isSelected}"
             t-on-click="() => props.setSelectedLocation(props.id)"
             type="button"
             t-attf-data-bs-target="#collapseHours_{{props.id}}"
@@ -16,14 +16,18 @@
                 class="position-absolute top-0 start-0 h-100 ps-1 bg-primary transition-base"
                 t-attf-class="#{props.isSelected ? 'ms-0' : 'ms-n1' }"
             />
-            <strong t-out="props.number" class="o_location_selector_number fw-bold text-center"/>
-            <span class="d-flex flex-column gap-1 gap-md-0 w-100">
-                <span class="d-flex flex-column">
+            <span t-attf-class="o_location_selector_number d-none d-md-block position-absolute {{ props.isSelected ? 'o_location_selector_marker_icon_selected' : 'o_location_selector_marker_icon' }}">
+                <t t-call="delivery.locationSelector.map.pinIndicator">
+                    <t t-set="number" t-value="props.number"/>
+                </t>
+            </span>
+            <span class="d-flex flex-column w-100">
+                <span class="d-flex flex-column mb-1 mb-md-0">
                     <strong t-out="props.name" class="fw-bold"/>
                     <small class="opacity-75" t-out="props.street"/>
                     <small class="opacity-75" t-out="this.getCityAndZipCode()"/>
                 </span>
-                <small name="location_opening_hours" class="d-flex d-md-none align-items-center gap-1 fw-bold">
+                <small name="location_opening_hours" t-attf-class="d-flex align-items-center mb-1 mb-md-0 gap-1 fw-bold {{Object.keys(props.openingHours).length > 0 ? 'd-md-none' : 'd-none'}}">
                     <i class="fa fa-clock-o" role="img"/>
                     <t t-out="openingHoursLabel"/>
                     <i class="o_location_selector_hours_caret fa fa-caret-up ms-auto transition-base"/>

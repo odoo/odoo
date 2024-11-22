@@ -7,7 +7,6 @@ import { _t } from '@web/core/l10n/translation';
 patch(LocationSelectorDialog, {
     props: {
         ...LocationSelectorDialog.props,
-        orderId: { type: Number, optional: true },
         isFrontend: { type: Boolean, optional: true },
     },
 });
@@ -41,12 +40,12 @@ patch(LocationSelectorDialog.prototype, {
 
     get listViewButtonLabel() {
         // The original definition of this getter is in `delivery` module which is not a frontend module. This problem happens in the context of the website. So, it should be repeated here as translations are only fetched in the context of a frontend module, which is `website_sale` in this case.
-        return _t("List view");
+        return _t("List");
     },
 
     get mapViewButtonLabel() {
         // The original definition of this getter is in `delivery` module which is not a frontend module. This problem happens in the context of the website. So, it should be repeated here as translations are only fetched in the context of a frontend module, which is `website_sale` in this case.
-        return _t("Map view");
+        return _t("Map");
     },
 
     get errorMessage() {

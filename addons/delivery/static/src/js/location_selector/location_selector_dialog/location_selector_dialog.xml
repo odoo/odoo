@@ -3,7 +3,7 @@
     <t t-name="delivery.locationSelector.dialog">
         <Dialog
             title="title"
-            bodyClass="'d-flex flex-column border-top p-0 px-md-3'"
+            bodyClass="'d-flex flex-column p-0 px-md-3'"
             contentClass="'o_location_selector h-100 overflow-hidden'"
         >
             <!-- Mobile view -->
@@ -14,14 +14,14 @@
                 <!-- "List view / Map view" navigation -->
                 <div class="nav nav-tabs">
                     <button
-                        class="o_location_selector_mobile_tab btn flex-grow-1 border-0 border-bottom rounded-0 py-3 bg-transparent"
-                        t-att-class="{'active': this.state.viewMode === 'list'}"
+                        class="o_location_selector_mobile_tab btn flex-grow-1 border-0 rounded-0 py-3 bg-transparent"
+                        t-att-class="{'border-bottom active': this.state.viewMode === 'list'}"
                         t-on-click="() => this.state.viewMode = 'list'"
                         t-out="listViewButtonLabel"
                     />
                     <button
-                        class="o_location_selector_mobile_tab btn flex-grow-1 border-0 border-bottom rounded-0 py-3 bg-transparent"
-                        t-att-class="{'active' : this.state.viewMode === 'map'}"
+                        class="o_location_selector_mobile_tab btn flex-grow-1 border-0 rounded-0 py-3 bg-transparent"
+                        t-att-class="{'border-bottom border-primary fw-bold active' : this.state.viewMode === 'map'}"
                         t-on-click="() => this.state.viewMode = 'map'"
                         t-out="mapViewButtonLabel"
                     />
@@ -30,9 +30,9 @@
                 <!-- Component -->
                 <div class="flex-grow-1 overflow-x-auto">
                     <t
-                        t-if="this.state.locations.length"
+                        t-if="locations.length"
                         t-component="mobileComponent"
-                        locations="this.state.locations"
+                        locations="locations"
                         selectedLocationId="this.state.selectedLocationId.toString()"
                         setSelectedLocation.bind="setSelectedLocation"
                         validateSelection.bind="validateSelection"
@@ -53,7 +53,7 @@
 
                 <!-- List view -->
                 <section
-                    t-if="showListView"
+                    id="location_selector_list_view"
                     class="o_location_selector_view col-md-4 d-flex flex-grow-1 flex-column"
                 >
 
@@ -64,8 +64,8 @@
 
                     <!-- List group -->
                     <LocationList
-                        t-if="this.state.locations.length"
-                        locations="this.state.locations"
+                        t-if="locations.length"
+                        locations="locations"
                         selectedLocationId="this.state.selectedLocationId.toString()"
                         setSelectedLocation.bind="setSelectedLocation"
                         validateSelection.bind="validateSelection"
@@ -83,7 +83,7 @@
                 <!-- Map view -->
                 <section class="o_location_selector_view col-md-8 d-flex flex-grow-1 border-start">
                     <MapContainer
-                        locations="this.state.locations"
+                        locations="locations"
                         selectedLocationId="this.state.selectedLocationId.toString()"
                         setSelectedLocation.bind="setSelectedLocation"
                         validateSelection.bind="validateSelection"
@@ -110,12 +110,13 @@
     <t t-name="delivery.locationSelector.searchbar">
         <div role="search" class="input-group p-3 border-bottom" t-att-class="wrapClass">
             <input
+                id="o_location_selector_search"
                 class="search-query form-control oe_search_box border-0 text-bg-light"
                 t-model.lazy="this.state.zipCode"
                 t-att-placeholder="postalCodePlaceholder"
             />
             <button
-                t-on-click="() => this.debouncedSearchButton(this.state.zipCode)"
+                t-on-click="debouncedSearchButton"
                 aria-label="Search"
                 title="Search"
                 class="btn btn-light"

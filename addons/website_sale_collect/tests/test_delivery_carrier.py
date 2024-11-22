@@ -66,27 +66,38 @@ class TestDeliveryCarrier(ClickAndCollectCommon, WebsiteSaleStockCommon):
             return_value=True
         ), MockRequest(self.env, website=self.website, sale_order_id=so.id):
             locations = self.in_store_dm._in_store_get_close_locations(wh_address_partner)
+            country = wh_address_partner.country_id
             self.assertEqual(
-                locations, [{
-                    'id': self.warehouse.id,
-                    'name': wh_address_partner['name'].title(),
-                    'street': wh_address_partner['street'].title(),
-                    'city': wh_address_partner.city.title(),
-                    'zip_code': wh_address_partner.zip,
-                    'state': wh_address_partner.state_id.code,
-                    'country_code': wh_address_partner.country_code,
-                    'latitude': wh_address_partner.partner_latitude,
-                    'longitude': wh_address_partner.partner_longitude,
-                    'additional_data': {'in_store_stock_data': {'in_stock': True}},
-                    'opening_hours': {
-                        '0': ['08:00 - 12:00', '13:00 - 17:00'],
-                        '1': [],
-                        '2': [],
-                        '3': [],
-                        '4': [],
-                        '5': [],
-                        '6': [],
-                    },
-                    'distance': 0.0,
-                }]
+                locations, {
+                    'country_data': [{
+                        'label': country.name,
+                        'value': {
+                            'name': country.name,
+                            'code': country.code,
+                            'image_url': country.image_url,
+                        }
+                    }],
+                    'pickup_location_data': [{
+                        'id': self.warehouse.id,
+                        'name': wh_address_partner['name'].title(),
+                        'street': wh_address_partner['street'].title(),
+                        'city': wh_address_partner.city.title(),
+                        'zip_code': wh_address_partner.zip,
+                        'state': wh_address_partner.state_id.code,
+                        'country_code': wh_address_partner.country_code,
+                        'latitude': wh_address_partner.partner_latitude,
+                        'longitude': wh_address_partner.partner_longitude,
+                        'additional_data': {'in_store_stock_data': {'in_stock': True}},
+                        'opening_hours': {
+                            '0': ['08:00 - 12:00', '13:00 - 17:00'],
+                            '1': [],
+                            '2': [],
+                            '3': [],
+                            '4': [],
+                            '5': [],
+                            '6': [],
+                        },
+                        'distance': 0.0,
+                    }]
+                }
             )
