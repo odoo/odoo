@@ -1,13 +1,15 @@
 import {
-    mountWithCleanup,
     defineModels,
-    models,
-    patchWithCleanup,
     getService,
+    models,
+    mountWithCleanup,
+    patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { defineMailModels, startServer } from "@mail/../tests/mail_test_helpers";
 import { advanceTime, animationFrame, click, queryOne } from "@odoo/hoot-dom";
 import { getWebsiteSnippets } from "./snippets_getter.hoot";
+import { insertText } from "@html_editor/../tests/_helpers/user_actions";
+import { setContent } from "@html_editor/../tests/_helpers/selection";
 import { SnippetsMenu } from "@html_builder/builder/snippets_menu";
 import { WebClient } from "@web/webclient/webclient";
 import { loadBundle } from "@web/core/assets";
@@ -30,6 +32,10 @@ class IrUiView extends models.Model {
         return getWebsiteSnippets();
     }
 }
+
+export const exampleWebsiteContent = '<h1 class="title">Hello</h1>';
+
+export const wrapExample = `<div id="wrap" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">${exampleWebsiteContent}</div>`;
 
 export function defineWebsiteModels() {
     defineMailModels();
@@ -107,6 +113,11 @@ export function addToolbox({ selector, template, actions = {} }) {
             actionsRegistry.remove(name);
         }
     });
+}
+
+export async function modifyText(editor) {
+    setContent(editor.editable, getEditable('<h1 class="title">H[]ello</h1>'));
+    await insertText(editor, "1");
 }
 
 function getSnippetView(snippets) {
