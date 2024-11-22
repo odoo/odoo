@@ -382,10 +382,6 @@ export class Store extends BaseStore {
             this._fetchDataDebounced,
             Store.FETCH_DATA_DEBOUNCE_DELAY
         );
-        this.updateBusSubscription = debounce(
-            () => this.env.services.bus_service.forceUpdateChannels(),
-            0
-        );
     }
 
     /** Provides an override point for when the store service has started. */

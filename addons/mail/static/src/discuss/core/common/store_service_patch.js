@@ -2,6 +2,7 @@ import { Store } from "@mail/core/common/store_service";
 import { compareDatetime } from "@mail/utils/common/misc";
 
 import { patch } from "@web/core/utils/patch";
+import { debounce } from "@web/core/utils/timing";
 
 /** @type {import("models").Store} */
 const storeServicePatch = {
@@ -15,6 +16,10 @@ const storeServicePatch = {
          * @type {string[]}
          */
         this.channel_types_with_seen_infos = [];
+        this.updateBusSubscription = debounce(
+            () => this.env.services.bus_service.forceUpdateChannels(),
+            0
+        );
     },
     get onlineMemberStatuses() {
         return ["away", "bot", "online"];

@@ -105,6 +105,18 @@ const threadPatch = {
         this.selfMember = Record.one("discuss.channel.member", {
             inverse: "threadAsSelf",
         });
+        this.toggleBusSubscription = Record.attr(false, {
+            /** @this {import("models").Thread} */
+            compute() {
+                return (
+                    this.model === "discuss.channel" &&
+                    this.selfMember?.memberSince >= this.store.env.services.bus_service.startedAt
+                );
+            },
+            onUpdate() {
+                this.store.updateBusSubscription();
+            },
+        });
         this.typingMembers = Record.many("discuss.channel.member", { inverse: "threadAsTyping" });
     },
     _computeOfflineMembers() {

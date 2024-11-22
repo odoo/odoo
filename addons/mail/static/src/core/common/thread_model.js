@@ -89,17 +89,6 @@ export class Thread extends Record {
     get canUnpin() {
         return this.channel_type === "chat" && this.importantCounter === 0;
     }
-    toggleBusSubscription = Record.attr(false, {
-        compute() {
-            return (
-                this.model === "discuss.channel" &&
-                this.selfMember?.memberSince >= this.store.env.services.bus_service.startedAt
-            );
-        },
-        onUpdate() {
-            this.store.updateBusSubscription();
-        },
-    });
     composer = Record.one("Composer", {
         compute: () => ({}),
         inverse: "thread",
