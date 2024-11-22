@@ -3,8 +3,19 @@
 import { registry } from "@web/core/registry";
 import { X2ManyField } from "@web/views/fields/x2many/x2many_field";
 import { ListRenderer } from "@web/views/list/list_renderer";
+import { useEffect } from "@odoo/owl";
 
 export class MrpProductionComponentsListRenderer extends ListRenderer {
+    setup() {
+        super.setup();
+        useEffect(
+            () => {
+                this.keepColumnWidths = false;
+            },
+            () => [this.state.columns]
+        );
+    }
+
     getCellClass(column, record) {
         let classNames = super.getCellClass(...arguments);
         if (column.name == "quantity_done" && !record.data.manual_consumption) {
