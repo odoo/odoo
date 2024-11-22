@@ -22,6 +22,7 @@ export const listView = {
 
         return {
             ...genericProps,
+            readonly: genericProps.readonly || !archInfo.activeActions?.edit,
             Model: view.Model,
             Renderer: view.Renderer,
             buttonTemplate: view.buttonTemplate,
