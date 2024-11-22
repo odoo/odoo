@@ -60,12 +60,12 @@ class AccountChartTemplate(models.AbstractModel):
 
     @api.model
     def _get_demo_data_bank(self, company=False):
-        if company.partner_id.bank_ids:
+        if company.root_id.partner_id.bank_ids:
             return {}
         return {
             'demo_bank_1': {
                 'acc_number': f'BANK{company.id}34567890',
-                'partner_id': company.partner_id.id,
+                'partner_id': company.root_id.partner_id.id,
                 'journal_id': 'bank',
             },
         }
@@ -102,7 +102,7 @@ class AccountChartTemplate(models.AbstractModel):
         )
         default_receivable = self.env.ref('base.res_partner_3').with_company(company or self.env.company).property_account_receivable_id
         income_account = self.env['account.account'].with_company(company or self.env.company).search([
-            ('company_ids', '=', cid),
+            *self.env['account.account']._check_company_domain(cid),
             ('account_type', '=', 'income'),
             ('id', '!=', (company or self.env.company).account_journal_early_pay_discount_gain_account_id.id)
         ], limit=1)
