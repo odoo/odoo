@@ -213,6 +213,11 @@ export class LinkPlugin extends Plugin {
 
         /** Handlers */
         beforeinput_handlers: withSequence(5, this.onBeforeInput.bind(this)),
+        input_handlers: this.onInputDeleteNormalizeLink.bind(this),
+        before_delete_handlers: this.updateCurrentLinkSyncState.bind(this),
+        delete_handlers: this.onInputDeleteNormalizeLink.bind(this),
+        before_paste_handlers: this.updateCurrentLinkSyncState.bind(this),
+        after_paste_handlers: this.onPasteNormalizeLink.bind(this),
         selectionchange_handlers: this.handleSelectionChange.bind(this),
         clean_for_save_handlers: ({ root }) => this.removeEmptyLinks(root),
         normalize_handlers: this.normalizeLink.bind(this),
@@ -517,15 +522,6 @@ export class LinkPlugin extends Plugin {
     }
 
     normalizeLink(root) {
-        const { anchorNode } = this.dependencies.selection.getEditableSelection();
-        const linkEl = closestElement(anchorNode, "a");
-        if (linkEl && linkEl.isContentEditable) {
-            const label = linkEl.innerText;
-            const url = deduceURLfromText(label, linkEl);
-            if (url) {
-                linkEl.setAttribute("href", url);
-            }
-        }
         for (const anchorEl of selectElements(root, "a")) {
             const { color } = anchorEl.style;
             const childNodes = [...anchorEl.childNodes];
@@ -751,6 +747,22 @@ export class LinkPlugin extends Plugin {
         }
     }
 
+    updateCurrentLinkSyncState() {
+        const { anchorNode } = this.dependencies.selection.getEditableSelection();
+        const linkEl = closestElement(anchorNode, "a");
+        if (linkEl && linkEl.isContentEditable) {
+            const label = linkEl.innerText;
+            const url = deduceURLfromText(label, linkEl);
+            const href = linkEl.getAttribute("href");
+            if (
+                url &&
+                (url === href || url + "/" === href || url === deduceURLfromText(href, linkEl))
+            ) {
+                this.isCurrentLinkInSync = true;
+            }
+        }
+    }
+
     onBeforeInput(ev) {
         if (ev.inputType === "insertParagraph" || ev.inputType === "insertLineBreak") {
             const nodeForSelectionRestore = this.handleAutomaticLinkInsertion();
@@ -781,7 +793,29 @@ export class LinkPlugin extends Plugin {
                 ev.preventDefault();
             }
         }
+        this.updateCurrentLinkSyncState();
     }
+
+    onInputDeleteNormalizeLink() {
+        const { anchorNode } = this.dependencies.selection.getEditableSelection();
+        const linkEl = closestElement(anchorNode, "a");
+        if (linkEl && linkEl.isContentEditable) {
+            const label = linkEl.innerText;
+            const url = deduceURLfromText(label, linkEl);
+            if (url && this?.isCurrentLinkInSync) {
+                linkEl.setAttribute("href", url);
+                this.isCurrentLinkInSync = false;
+                if (this.overlay.isOpen) {
+                    this.overlay.close();
+                }
+            }
+        }
+    }
+    onPasteNormalizeLink() {
+        this.updateCurrentLinkSyncState();
+        this.onInputDeleteNormalizeLink();
+    }
+
     /**
      * Inserts a link in the editor. Called after pressing space or (shif +) enter.
      * Performs a regex check to determine if the url has correct syntax.
