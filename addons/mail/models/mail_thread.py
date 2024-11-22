@@ -2021,17 +2021,6 @@ class MailThread(models.AbstractModel):
 
         return recipients
 
-    def _mail_search_on_user(self, normalized_emails, extra_domain=False):
-        """ Find partners linked to users, given an email address that will
-        be normalized. Search is done as sudo on res.users model to avoid domain
-        on partner like ('user_ids', '!=', False) that would not be efficient. """
-        domain = [('email_normalized', 'in', normalized_emails)]
-        if extra_domain:
-            domain = expression.AND([domain, extra_domain])
-        partners = self.env['res.users'].sudo().search(domain).mapped('partner_id')
-        # return a search on partner to filter results current user should not see (multi company for example)
-        return self.env['res.partner'].search([('id', 'in', partners.ids)])
-
     def _mail_find_user_for_gateway(self, email_value, alias=None):
         """ Utility method to find user from email address that can create documents
         in the target model. Purpose is to link document creation to users whenever
