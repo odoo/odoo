@@ -9257,6 +9257,45 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("click on a button in a list view on second page", async function (assert) {
+        const list = await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree limit="3">
+                    <field name="foo"/>
+                    <button string="a button" name="button_action" icon="fa-car" type="object"/>
+                </tree>`,
+            mockRPC(route, { method, kwargs }) {
+                if (method === "web_search_read") {
+                    assert.step(`web_search_read (offset: ${kwargs.offset})`);
+                }
+            },
+        });
+        patchWithCleanup(list.env.services.action, {
+            doActionButton: (action) => {
+                assert.deepEqual(action.resId, 4, "should call with correct id");
+                assert.strictEqual(action.resModel, "foo", "should call with correct model");
+                assert.strictEqual(action.name, "button_action", "should call correct method");
+                assert.strictEqual(action.type, "object", "should have correct type");
+                action.onClose();
+            },
+        });
+
+        assert.containsN(target, ".o_data_row", 3);
+
+        await pagerNext(target);
+        assert.containsOnce(target, ".o_data_row");
+
+        await click(target.querySelector(".o_data_row .o_list_button > button"));
+        assert.verifySteps([
+            "web_search_read (offset: 0)",
+            "web_search_read (offset: 3)",
+            "web_search_read (offset: 3)",
+        ]);
+    });
+
     QUnit.test("invisible attrs in readonly and editable list", async function (assert) {
         await makeView({
             type: "list",
