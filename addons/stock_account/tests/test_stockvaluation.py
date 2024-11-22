@@ -3290,8 +3290,19 @@ class TestStockValuation(TestStockValuationBase):
         self.assertAlmostEqual(self.product1.quantity_svl, 19)
         self.assertAlmostEqual(self.product1.value_svl, 240, delta=0.04)
 
-        # an accounting entry should be created
-        # FIXME sle check it
+        amls = self.env['account.move.line'].search([
+            ('product_id', '=', self.product1.id),
+            ('name', 'ilike', 'Costing method change%'),
+        ], order='id')
+        self.assertRecordValues(
+            amls,
+            [
+                {'account_id': self.stock_input_account.id, 'debit': 240, 'credit': 0},
+                {'account_id': self.stock_valuation_account.id, 'debit': 0, 'credit': 240},
+                {'account_id': self.stock_valuation_account.id, 'debit': 239.97, 'credit': 0},
+                {'account_id': self.stock_input_account.id, 'debit': 0, 'credit': 239.97},
+            ]
+        )
 
         self.assertEqual(self.product1.standard_price, 12.63)
 
@@ -3362,8 +3373,19 @@ class TestStockValuation(TestStockValuationBase):
         self.assertAlmostEqual(self.product1.value_svl, 240, delta=0.04)
         self.assertAlmostEqual(self.product1.quantity_svl, 19)
 
-        # no accounting entry should be created
-        # FIXME sle check it
+        amls = self.env['account.move.line'].search([
+            ('product_id', '=', self.product1.id),
+            ('name', 'ilike', 'Costing method change%'),
+        ], order='id')
+        self.assertRecordValues(
+            amls,
+            [
+                {'account_id': self.stock_input_account.id, 'debit': 240, 'credit': 0},
+                {'account_id': self.stock_valuation_account.id, 'debit': 0, 'credit': 240},
+                {'account_id': self.stock_valuation_account.id, 'debit': 239.97, 'credit': 0},
+                {'account_id': self.stock_input_account.id, 'debit': 0, 'credit': 239.97},
+            ]
+        )
 
         self.assertEqual(self.product1.standard_price, 12.63)
 
