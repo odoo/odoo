@@ -271,6 +271,7 @@ class MrpProduction(models.Model):
         string='Date Category', store=False,
         search='_search_date_category', readonly=True
     )
+    employee_ids = fields.Many2many('hr.employee', string="working employees", compute='_compute_employee_ids')
 
     _name_uniq = models.Constraint(
         'unique(name, company_id)',
@@ -818,6 +819,11 @@ class MrpProduction(models.Model):
                 record.state in ['confirmed', 'progress', 'to_close'] and (
                     record.date_deadline and (record.date_deadline < datetime.datetime.now() or record.date_deadline < record.date_finished))
             )
+
+    @api.depends('workorder_ids', 'workorder_ids.employee_ids')
+    def _compute_employee_ids(self):
+        for record in self:
+            record.employee_ids = record.workorder_ids.employee_ids
 
     def _search_date_category(self, operator, value):
         if operator != '=':
