@@ -50,3 +50,34 @@ class Partner(models.Model):
             'country': employee_id.private_country_id.code,
         }
         return [pstl_addr] + super()._get_all_addr()
+<<<<<<< 18.0
+||||||| 84e5580cb4cafc8e90e469d5225197260ff91648
+
+
+class ResPartnerBank(models.Model):
+    _inherit = ['res.partner.bank']
+
+    @api.depends_context('uid')
+    def _compute_display_name(self):
+        account_employee = self.browse()
+        if not self.env.user.has_groups('hr.group_hr_user'):
+            account_employee = self.sudo().filtered("partner_id.employee_ids")
+            for account in account_employee:
+                account.display_name = account.acc_number[:2] + "*" * len(account.acc_number[2:-4]) + account.acc_number[-4:]
+        super(ResPartnerBank, self - account_employee)._compute_display_name()
+=======
+
+
+class ResPartnerBank(models.Model):
+    _inherit = ['res.partner.bank']
+
+    @api.depends_context('uid')
+    def _compute_display_name(self):
+        account_employee = self.browse()
+        if not self.env.user.has_groups('hr.group_hr_user'):
+            account_employee = self.sudo().filtered("partner_id.employee_ids")
+            for account in account_employee:
+                account.sudo(self.env.su).display_name = \
+                    account.acc_number[:2] + "*" * len(account.acc_number[2:-4]) + account.acc_number[-4:]
+        super(ResPartnerBank, self - account_employee)._compute_display_name()
+>>>>>>> c780d10603d1839cb9c2f6cbef93f9ab38c13730
