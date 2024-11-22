@@ -12,7 +12,6 @@ const {
     getChartTitle,
     getPieChartLegend,
     getChartShowValues,
-    truncateLabel,
 } = chartHelpers;
 
 chartRegistry.add("odoo_pie", {
@@ -41,7 +40,7 @@ function createOdooChartRuntime(chart, getters) {
     const config = {
         type: "pie",
         data: {
-            labels: chartData.labels.map(truncateLabel),
+            labels: chartData.labels,
             datasets: getPieChartDatasets(definition, chartData),
         },
         options: {
