@@ -871,17 +871,27 @@ class PosOrder(models.Model):
         if not moves:
             return {}
 
-        return {
+        action_vals = {
             'name': _('Customer Invoice'),
-            'view_mode': 'form',
-            'view_id': self.env.ref('account.view_move_form').id,
             'res_model': 'account.move',
             'context': "{'move_type':'out_invoice'}",
             'type': 'ir.actions.act_window',
             'nodestroy': True,
             'target': 'current',
-            'res_id': moves and moves.ids[0] or False,
+            'domain': [('id', 'in', moves.ids)],
         }
+        if len(moves) == 1:
+            action_vals.update({
+                'views': [(self.env.ref('account.view_move_form').id, 'form')],
+                'view_mode': 'form',
+                'res_id': moves.id,
+            })
+        else:
+            action_vals.update({
+                'views': [(False, 'tree'), (self.env.ref('account.view_move_form').id, 'form')],
+                'view_mode': 'tree,form',
+            })
+        return action_vals
 
     # this method is unused, and so is the state 'cancel'
     def action_pos_order_cancel(self):
