@@ -18,11 +18,18 @@ class WebsiteSaleCollect(WebsiteSale):
                 and order_sudo.pickup_location_data
             ):
                 res['selected_wh_location'] = order_sudo.pickup_location_data
+            order_address = order_sudo.partner_shipping_id
+            selected_wh_location = res.get('selected_wh_location', {})
             res['zip_code'] = (  # Define the zip code.
-                order_sudo.partner_shipping_id.zip
-                or res.get('selected_wh_location', {}).get('zip_code')
+                order_address.zip
+                or selected_wh_location.get('zip_code')
                 or request.geoip.postal.code
                 or ''  # String expected for the widget.
+            )
+            res['country_code'] = (
+                order_address.country_id.code
+                or selected_wh_location.get('country_code')
+                or request.geoip.country_code
             )
         return res
 

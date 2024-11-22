@@ -89,7 +89,7 @@ class SaleOrder(models.Model):
                 pickup_location = None
             self.pickup_location_data = pickup_location
 
-    def _get_pickup_locations(self, zip_code=None, country=None, **kwargs):
+    def _get_pickup_locations(self, zip_code=None, country_code=None, **kwargs):
         """ Return the pickup locations of the delivery method close to a given zip code.
 
         Use provided `zip_code` and `country` or the order's delivery address to determine the zip
@@ -98,17 +98,30 @@ class SaleOrder(models.Model):
         Note: self.ensure_one()
 
         :param int zip_code: The zip code to look up to, optional.
-        :param res.country country: The country to look up to, required if `zip_code` is provided.
+        :param string country_code: The code of the country to look up to, required if `zip_code`
+                                    is provided.
         :return: The close pickup locations data.
         :rtype: dict
         """
         self.ensure_one()
+        if country_code:
+            country = self.env['res.country'].search(
+                [('code', '=', country_code)],
+                limit=1,
+            )
+        else:
+            country = self.partner_shipping_id.country_id
         if zip_code:
             assert country  # country is required if zip_code is provided.
             partner_address = self.env['res.partner'].new({
                 'active': False,
                 'country_id': country.id,
                 'zip': zip_code,
+            })
+        elif country:
+            partner_address = self.env['res.partner'].new({
+                'active': False,
+                'country_id': country.id,
             })
         else:
             partner_address = self.partner_shipping_id
@@ -120,7 +133,28 @@ class SaleOrder(models.Model):
             pickup_locations = getattr(self.carrier_id, function_name)(partner_address, **kwargs)
             if not pickup_locations:
                 return error
-            return {'pickup_locations': pickup_locations}
+
+            if (
+                not country or
+                any(location['country_code'] != country.code for location in pickup_locations)
+            ):
+                country = self.env['stock.warehouse'].browse(
+                    pickup_locations[0]['id']
+                ).partner_id.country_id
+                pickup_locations = [
+                    location for location in pickup_locations
+                    if location['country_code'] == country.code
+                ]
+
+            return {
+                'pickup_locations': pickup_locations,
+                'selected_country': {
+                    'name': country.name,
+                    'code': country.code,
+                    'image_url': country.image_url,
+                    'fields': country.get_address_fields(),
+                },
+            }
         except UserError as e:
             return {'error': str(e)}
 
