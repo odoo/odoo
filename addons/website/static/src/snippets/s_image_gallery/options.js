@@ -318,6 +318,20 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
             }, 0.2 * _slideDuration);
         });
     },
+    /**
+     * @override
+     */
+    cleanForSave() {
+        // Set Indicator to the first image on save
+        const targetEL = this.$target[0];
+        const carouselEl = targetEL.classList.contains("carousel")
+            ? targetEL
+            : targetEL.querySelector(".carousel");
+        carouselEl.classList.remove("slide");
+        $(carouselEl).carousel(0);
+        targetEL.querySelector(".carousel-indicators button[data-bs-slide-to='0']");
+        carouselEl.classList.add("slide");
+    },
 });
 
 options.registry.gallery = options.registry.GalleryLayout.extend({
