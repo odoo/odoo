@@ -1,4 +1,4 @@
-from PyPDF2 import filters, generic, utils as errors, PdfFileReader, PdfFileWriter
+from PyPDF2 import filters, generic, utils as errors, PdfFileReader as PdfReader, PdfFileWriter
 from PyPDF2.generic import createStringObject as create_string_object
 
 __all__ = [
@@ -9,14 +9,6 @@ __all__ = [
     "filters",
     "generic",
 ]
-
-
-# by default PdfFileReader will overwrite warnings.showwarning which is what
-# logging.captureWarnings does, meaning it essentially reverts captureWarnings
-# every time it's called which is undesirable
-class PdfReader(PdfFileReader):
-    def __init__(self, stream, strict=True, warndest=None, overwriteWarnings=True):
-        super().__init__(stream, strict=True, warndest=None, overwriteWarnings=False)
 
 
 class PdfWriter(PdfFileWriter):
