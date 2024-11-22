@@ -18,8 +18,6 @@
         flex: 1 0 50px;
 
         .o_input {
-            --o-input-background-color: transparent;
-
             height: 100%;
             border: none;
         }
@@ -41,6 +39,12 @@
             @include o-text-overflow(inline-block);
             max-width: var(--Tag-max-width, 200px);
         }
+    }
+}
+
+.o_field_widget.o_field_many2many_tags, .o_field_widget.o_field_many2many_tags_avatar {
+    .o_field_many2many_selection .o_input {
+        --o-input-background-color: transparent;
     }
 }
 
