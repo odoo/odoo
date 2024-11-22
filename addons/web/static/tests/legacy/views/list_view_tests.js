@@ -20883,4 +20883,55 @@ QUnit.module("Views", (hooks) => {
             "1 selected  Select all 4"
         );
     });
+
+    QUnit.test("two pages, go page 2, record deleted meanwhile", async (assert) => {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `<tree limit="3">
+                    <field name="foo"/>
+                    <field name="int_field"/>
+                </tree>`,
+        });
+
+        assert.containsN(target, ".o_data_row", 3);
+        assert.strictEqual(target.querySelector(".o_pager_counter").innerText.trim(), "1-3 / 4");
+
+        serverData.models.foo.records.splice(3);
+        await pagerNext(target);
+        assert.containsN(target, ".o_data_row", 3);
+        assert.strictEqual(target.querySelector(".o_pager_counter").innerText.trim(), "1-3 / 3");
+    });
+
+    QUnit.test("two pages, go page 2, record deleted meanwhile (grouped case)", async (assert) => {
+        for (let i = 0; i < 4; i++) {
+            serverData.models.foo.records[i].bar = true;
+        }
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            groupBy: ["bar"],
+            arch: `<tree limit="3">
+                    <field name="foo"/>
+                    <field name="int_field"/>
+                </tree>`,
+        });
+
+        assert.containsOnce(target, ".o_group_header");
+        assert.containsNone(target, ".o_data_row");
+
+        await click(target.querySelector(".o_group_header"));
+        assert.containsN(target, ".o_data_row", 3);
+        assert.strictEqual(
+            target.querySelector(".o_group_header .o_pager_counter").innerText.trim(),
+            "1-3 / 4"
+        );
+
+        serverData.models.foo.records.splice(3);
+        await pagerNext(target.querySelector(".o_group_header"));
+        assert.containsN(target, ".o_data_row", 3);
+        assert.containsNone(target, ".o_group_header .o_pager");
+    });
 });
