@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import models
-from . import wizard
 
 
 def _assign_default_sms_template_picking_id(env):
@@ -14,3 +13,13 @@ def _assign_default_sms_template_picking_id(env):
         company_ids_without_default_sms_template_id.write({
             'stock_sms_confirmation_template_id': default_sms_template_id.id,
         })
+
+
+def _reset_text_confirmation(env):
+    company_ids_with_text_confirmation_sms = env['res.company'].search([
+        ('text_confirmation', '=', True),
+        ('confirmation_type', '=', 'sms'),
+    ])
+    company_ids_with_text_confirmation_sms.write({
+        'text_confirmation': False,
+    })
