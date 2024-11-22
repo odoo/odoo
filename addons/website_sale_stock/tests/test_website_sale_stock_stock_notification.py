@@ -35,8 +35,7 @@ class TestStockNotificationProduct(HttpCase):
     def test_back_in_stock_notification_product(self):
         self.start_tour("/", 'back_in_stock_notification_product')
 
-        partner_ids = self.env['res.partner']._mail_find_partner_from_emails(['test@test.test'])
-        partner = partner_ids[0]
+        partner = self.env['mail.thread']._partner_find_from_emails_single(['test@test.test'], no_create=True)
         ProductProduct = self.env['product.product']
         product = ProductProduct.browse(self.product.id)
         self.assertTrue(product._has_stock_notification(partner))
