@@ -1259,7 +1259,8 @@ Attempting to double-book your time off won't magically make your vacation 2x be
 
     def _get_responsible_for_approval(self):
         self.ensure_one()
-        responsible = self.env.user
+
+        responsible = self.env['res.users']
         if self.validation_type == 'manager' or (self.validation_type == 'both' and self.state == 'confirm'):
             if self.employee_id.leave_manager_id:
                 responsible = self.employee_id.leave_manager_id
@@ -1297,7 +1298,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                             leave_type=holiday.holiday_status_id.name,
                         )
                         to_do_confirm_activity |= holiday
-                    user_ids = holiday.sudo()._get_responsible_for_approval().ids or self.env.user.ids
+                    user_ids = holiday.sudo()._get_responsible_for_approval().ids
                     for user_id in user_ids:
                         date_deadline = (
                             (holiday.date_from -
