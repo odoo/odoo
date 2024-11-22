@@ -41,6 +41,7 @@ declare module "models" {
         readonly hasSeenFeature: boolean,
         readonly hasSelfAsMember: boolean,
         invitedMembers: ChannelMember[],
+        last_interest_dt: luxon.DateTime,
         lastInterestDt: luxon.DateTime,
         readonly lastMessageSeenByAllId: number,
         readonly lastSelfMessageSeenByEveryone: Message,

@@ -66,6 +66,7 @@ const threadPatch = {
             inverse: "threadAsFirstUnread",
         });
         this.invitedMembers = Record.many("discuss.channel.member");
+        this.last_interest_dt = Record.attr(undefined, { type: "datetime" });
         /** @type {luxon.DateTime} */
         this.lastInterestDt = Record.attr(undefined, {
             type: "datetime",

@@ -234,7 +234,6 @@ export class Thread extends Record {
     hasLoadingFailed = false;
     canPostOnReadonly;
     /** @type {luxon.DateTime} */
-    last_interest_dt = Record.attr(undefined, { type: "datetime" });
     /** @type {Boolean} */
     is_editable;
     /**
