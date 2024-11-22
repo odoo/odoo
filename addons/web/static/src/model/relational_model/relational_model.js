@@ -280,8 +280,8 @@ export class RelationalModel extends Model {
                 config.orderBy = config.orderBy.filter((order) => order.name !== "__count");
             }
         }
-        if (!config.isMonoRecord && this.root) {
-            // always reset the offset to 0 when reloading from above
+        if (!config.isMonoRecord && this.root && params.domain) {
+            // always reset the offset to 0 when reloading from above with a domain
             const resetOffset = (config) => {
                 config.offset = 0;
                 for (const group of Object.values(config.groups || {})) {
