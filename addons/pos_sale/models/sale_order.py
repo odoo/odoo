@@ -144,3 +144,17 @@ class SaleOrderLine(models.Model):
         super()._compute_untaxed_amount_invoiced()
         for line in self:
             line.untaxed_amount_invoiced += sum(line.pos_order_line_ids.mapped('price_subtotal'))
+<<<<<<< master
+||||||| a5c7126bca2b2ad1551e4a01073a5791e2b7ce32
+
+    def _get_downpayment_line_price_unit(self, invoices):
+        return super()._get_downpayment_line_price_unit(invoices) + sum(
+            pol.price_unit for pol in self.pos_order_line_ids
+        )
+=======
+
+    def _get_downpayment_line_price_unit(self, invoices):
+        return super()._get_downpayment_line_price_unit(invoices) + sum(
+            pol.price_unit for pol in self.sudo().pos_order_line_ids
+        )
+>>>>>>> 696ae2b26e14eb4492f39b9cd295f842afc4757c
