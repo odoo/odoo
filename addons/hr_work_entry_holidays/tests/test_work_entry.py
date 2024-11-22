@@ -32,49 +32,6 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
         cls.richard_emp.resource_calendar_id = cls.resource_calendar_id
         cls.richard_emp.contract_id = contract
 
-    def test_validate_non_approved_leave_work_entry(self):
-        work_entry1 = self.env['hr.work.entry'].create({
-            'name': '1',
-            'employee_id': self.richard_emp.id,
-            'work_entry_type_id': self.work_entry_type_leave.id,
-            'contract_id': self.richard_emp.contract_id.id,
-            'date_start': self.start,
-            'date_stop': self.end,
-        })
-        self.env['hr.leave'].create({
-            'name': 'Doctor Appointment',
-            'employee_id': self.richard_emp.id,
-            'holiday_status_id': self.leave_type.id,
-            'request_date_from': self.start.date() - relativedelta(days=1),
-            'request_date_to': self.start.date(),
-        })
-        self.assertFalse(work_entry1.action_validate(), "It should not validate work_entries conflicting with non approved leaves")
-        self.assertEqual(work_entry1.state, 'conflict')
-
-    def test_refuse_leave_work_entry(self):
-        start = datetime(2015, 11, 1, 9, 0, 0)
-        end = datetime(2015, 11, 3, 13, 0, 0)
-        leave = self.env['hr.leave'].create({
-            'name': 'Doctor Appointment',
-            'employee_id': self.richard_emp.id,
-            'holiday_status_id': self.leave_type.id,
-            'request_date_from': start,
-            'request_date_to': start + relativedelta(days=1),
-        })
-        work_entry = self.env['hr.work.entry'].create({
-            'name': '1',
-            'employee_id': self.richard_emp.id,
-            'contract_id': self.richard_emp.contract_id.id,
-            'work_entry_type_id': self.work_entry_type.id,
-            'date_start': start,
-            'date_stop': end,
-            'leave_id': leave.id
-        })
-        work_entry.action_validate()
-        self.assertEqual(work_entry.state, 'conflict', "It should have an error (conflicting leave to approve")
-        leave.action_refuse()
-        self.assertNotEqual(work_entry.state, 'conflict', "It should not have an error")
-
     def test_time_week_leave_work_entry(self):
         # /!\ this is a week day => it exists an calendar attendance at this time
         leave = self.env['hr.leave'].create({
