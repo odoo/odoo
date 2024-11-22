@@ -40,13 +40,12 @@ class ProductProduct(models.Model):
     def _unlink_except_master_data(self):
         time_product = self.env.ref('sale_timesheet.time_product')
         if time_product in self:
-            raise ValidationError(_('The %s product is required by the Timesheets app and cannot be archived nor deleted.', time_product.name))
+            raise ValidationError(_('The %s product is required by the Timesheets app and cannot be archived, deleted nor linked to a company.', time_product.name))
 
     def write(self, vals):
-        # timesheet product can't be archived
-        test_mode = getattr(threading.current_thread(), 'testing', False) or self.env.registry.in_test_mode()
-        if not test_mode and 'active' in vals and not vals['active']:
+        # timesheet product can't be deleted, archived or linked to a company
+        if ('active' in vals and not vals['active']) or ('company_id' in vals and vals['company_id']):
             time_product = self.env.ref('sale_timesheet.time_product')
             if time_product in self:
-                raise ValidationError(_('The %s product is required by the Timesheets app and cannot be archived nor deleted.', time_product.name))
+                raise ValidationError(_('The %s product is required by the Timesheets app and cannot be archived, deleted nor linked to a company.', time_product.name))
         return super().write(vals)
