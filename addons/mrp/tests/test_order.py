@@ -4553,9 +4553,11 @@ class TestMrpOrder(TestMrpCommon):
     def test_update_qty_producing_done_MO_with_lot(self):
         """
         Test that increasing the qty producing of a done MO for a product tracked by lot
-        will create an additional sml for the final product with the same producing lot
+        will create an additional sml for the final product with the same producing lot.
+        And test that removing products from stock, then increasing the qty producing of the MO
+        results in the correct qty of tracked products in stock.
         """
-        tracked_product = self.env['product.template'].create({
+        tracked_product = self.env['product.product'].create({
             'name': 'Super Product',
             'tracking': 'lot',
             'is_storable': True,
@@ -4565,8 +4567,8 @@ class TestMrpOrder(TestMrpCommon):
             })],
         })
         mo = self.env['mrp.production'].create({
-            'product_id': tracked_product.product_variant_ids.id,
-            'product_uom_qty': 2.0,
+            'product_id': tracked_product.id,
+            'product_uom_qty': 5.0,
         })
         mo.action_confirm()
         mo.action_generate_serial()
@@ -4575,9 +4577,17 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo.state, 'done')
         self.assertEqual(mo.move_finished_ids.lot_ids, producing_lot)
         self.assertEqual(mo.move_finished_ids.move_line_ids.mapped('lot_id'), producing_lot)
-        mo.qty_producing = 3.0
+        mo.qty_producing = 10.0
         self.assertTrue(all(sml.lot_id == producing_lot for sml in mo.move_finished_ids.move_line_ids))
-        self.assertEqual(sum(sml.quantity for sml in mo.move_finished_ids.move_line_ids), 3.0)
+        self.assertEqual(sum(sml.quantity for sml in mo.move_finished_ids.move_line_ids), 10.0)
+
+        stock_location = self.env.ref('stock.stock_location_stock')
+        self.env['stock.quant']._update_available_quantity(tracked_product, stock_location, -3, lot_id=producing_lot)
+        mo.qty_producing = 15.0
+        quants = tracked_product.stock_quant_ids.filtered(lambda q: q.location_id == stock_location)
+        self.assertRecordValues(quants, [
+            {'quantity': 12.0, 'lot_id': producing_lot.id},
+        ])
 
     def test_mrp_link_new_operations(self):
         """
