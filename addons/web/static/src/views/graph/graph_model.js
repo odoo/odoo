@@ -106,7 +106,6 @@ export class GraphModel extends Model {
                     "graph_cumulated" in context ? context.graph_cumulated : metaData.cumulated;
             }
         }
-
         this._normalize(metaData);
 
         metaData.measures = computeReportMeasures(metaData.fields, metaData.fieldAttrs, [
@@ -456,11 +455,6 @@ export class GraphModel extends Model {
     }
 
     /**
-     * Process metaData.groupBy in order to keep only the finest interval option for
-     * elements based on date/datetime field (e.g. 'date:year'). This means that
-     * 'week' is prefered to 'month'. The field stays at the place of its first occurence.
-     * For instance,
-     * ['foo', 'date:month', 'bar', 'date:week'] becomes ['foo', 'date:week', 'bar'].
      * @protected
      * @param {Object} metaData
      */
@@ -474,19 +468,44 @@ export class GraphModel extends Model {
             }
             groupBy.push(ngb);
         }
+        let processedGroupBy = groupBy;
+        processedGroupBy = this._filterGroupableFields(fields, processedGroupBy);
+        processedGroupBy = this._filterFinestTimeInterval(processedGroupBy);
+        metaData.groupBy = processedGroupBy;
 
+        metaData.measure = processMeasure(metaData.measure);
+    }
+
+    /**
+     * @param {object[]} groupBy
+     * @returns {object[]}
+     */
+    _filterGroupableFields(fields, groupBy) {
+        return groupBy.filter((gb) => {
+            const { fieldName } = gb;
+            const { groupable, type } = fields[fieldName];
+            return (
+                groupable &&
+                GROUPABLE_TYPES.includes(type) &&
+                !["id", "__count"].includes(fieldName)
+            );
+        });
+    }
+
+    /**
+     * Process groupBy in order to keep only the finest interval option for
+     * elements based on date/datetime field (e.g. 'date:year'). This means that
+     * 'week' is preferred to 'month'. The field stays at the place of its first occurrence.
+     * For instance,
+     * ['foo', 'date:month', 'bar', 'date:week'] becomes ['foo', 'date:week', 'bar'].
+     * @protected
+     * @param {object[]} groupBy
+     * @returns {object[]}
+     */
+    _filterFinestTimeInterval(groupBy) {
         const processedGroupBy = [];
         for (const gb of groupBy) {
             const { fieldName, interval } = gb;
-            const { groupable, type } = fields[fieldName];
-            if (
-                // cf. _description_groupable in odoo/fields.py
-                !groupable ||
-                ["id", "__count"].includes(fieldName) ||
-                !GROUPABLE_TYPES.includes(type)
-            ) {
-                continue;
-            }
             const index = processedGroupBy.findIndex((gb) => gb.fieldName === fieldName);
             if (index === -1) {
                 processedGroupBy.push(gb);
@@ -497,9 +516,7 @@ export class GraphModel extends Model {
                 }
             }
         }
-        metaData.groupBy = processedGroupBy;
-
-        metaData.measure = processMeasure(metaData.measure);
+        return processedGroupBy;
     }
 
     /**

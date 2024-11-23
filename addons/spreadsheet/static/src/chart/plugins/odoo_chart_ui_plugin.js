@@ -5,6 +5,7 @@ import { sprintf } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
 import { OdooUIPlugin } from "@spreadsheet/plugins";
 import { navigateTo } from "../../actions/helpers";
+import { deepEqual } from "@web/core/utils/objects";
 
 export class OdooChartUIPlugin extends OdooUIPlugin {
     static getters = /** @type {const} */ ([
@@ -51,10 +52,21 @@ export class OdooChartUIPlugin extends OdooUIPlugin {
                     case "odoo_line": {
                         const dataSource = this.getChartDataSource(cmd.id);
                         const chart = this.getters.getChart(cmd.id);
-                        if (
-                            cmd.definition.type !== chart.type ||
+                        const typeHasChanged = chart.type !== cmd.definition.type;
+                        const domainHasChanged =
                             dataSource.getInitialDomainString() !==
-                                new Domain(cmd.definition.searchParams.domain).toString()
+                            new Domain(cmd.definition.searchParams.domain).toString();
+                        const groupByHasChanged = !deepEqual(
+                            chart.metaData.groupBy,
+                            cmd.definition.metaData.groupBy
+                        );
+                        const hasMeasureChanged =
+                            chart.metaData.measure !== cmd.definition.metaData.measure;
+                        if (
+                            typeHasChanged ||
+                            domainHasChanged ||
+                            groupByHasChanged ||
+                            hasMeasureChanged
                         ) {
                             this.shouldChartUpdateReloadDataSource = true;
                         }
