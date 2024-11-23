@@ -486,10 +486,9 @@ class TestSaleOrder(SaleCommon):
 
     def test_so_company_empty(self):
         """Check emptying company on SO form"""
-        company_2 = self.env['res.company'].create({
+        self.env['res.company'].create({  # activate multi company for the form view
             'name': 'Company 2'
         })
-        self.env.companies = [self.env.company, company_2]
         so_form = Form(self.env['sale.order'])
         with self.assertRaises(ValidationError):
             so_form.company_id = self.env['res.company']
