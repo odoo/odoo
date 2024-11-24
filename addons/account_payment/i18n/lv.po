@@ -6,7 +6,6 @@
 # Camille Dantinne <cmd@odoo.com>, 2023
 # ievaputnina <ievai.putninai@gmail.com>, 2023
 # Arnis Putniņš <arnis@allegro.lv>, 2023
-# Konstantins Zabogonskis <inculin4ik@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Will Sensors, 2024
 # Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024
@@ -106,7 +105,7 @@ msgstr ""
 #: code:addons/account_payment/models/account_payment.py:0
 #, python-format
 msgid "A payment transaction with reference %s already exists."
-msgstr ""
+msgstr "Maksājums darījums ar atsauci %s jau pastāv."
 
 #. module: account_payment
 #. odoo-python
@@ -123,7 +122,7 @@ msgstr "Aktivizēt Stripe"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__amount_available_for_refund
 msgid "Amount Available For Refund"
-msgstr ""
+msgstr "Summa pieejama atmaksai"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__amount_paid
@@ -195,11 +194,13 @@ msgid ""
 "Done, your online payment has been successfully processed. Thank you for "
 "your order."
 msgstr ""
+"Pabeigts, Jūsu tiešsaistes maksājums tika veiksmīgi apstrādāts. Paldies Jums"
+" par Jūsu pasūtījumu."
 
 #. module: account_payment
 #: model:onboarding.onboarding.step,description:account_payment.onboarding_onboarding_step_payment_provider
 msgid "Enable credit & debit card payments supported by Stripe."
-msgstr ""
+msgstr "Iespējot Stripe atbalstītos kredītkaršu un debitkaršu maksājumus."
 
 #. module: account_payment
 #: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__full_only
@@ -241,7 +242,7 @@ msgstr "Rēķina tiešsaistes maksājums"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_transaction_form
 msgid "Invoice(s)"
-msgstr "Rēķini"
+msgstr "Rēķins(i)"
 
 #. module: account_payment
 #. odoo-python
@@ -416,12 +417,12 @@ msgstr "Atmaksa"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__amount_to_refund
 msgid "Refund Amount"
-msgstr ""
+msgstr "Atmaksāt summu"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__refunded_amount
 msgid "Refunded Amount"
-msgstr ""
+msgstr "Atmaksātā summa"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_payment_form_inherit_payment
@@ -456,17 +457,17 @@ msgstr ""
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__source_payment_id
 msgid "Source Payment"
-msgstr "Atsauces maksājums"
+msgstr "Avota maksājums"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_state
 msgid "State"
-msgstr "Stadija"
+msgstr "Stāvoklis"
 
 #. module: account_payment
 #: model:onboarding.onboarding.step,done_text:account_payment.onboarding_onboarding_step_payment_provider
 msgid "Step Completed!"
-msgstr "Solis Pabeigts!"
+msgstr "Solis pabeigts!"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__suitable_payment_token_ids
@@ -519,7 +520,7 @@ msgstr "Atgrieztā maksājuma attiecīgais maksājums."
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: invalid invoice."
-msgstr ""
+msgstr "Radās kļūda apstrādājot Jūsu maksājumu: nederīgs rēķins."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -527,23 +528,24 @@ msgid ""
 "There was an error processing your payment: issue with credit card ID "
 "validation."
 msgstr ""
+"Radās kļūda apstrādājot Jūsu maksājumu: kļūda ar kredītkartes ID validāciju."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: transaction failed.<br/>"
-msgstr ""
+msgstr "Radās kļūda apstrādājot Jūsu maksājumu: darījums neizdevās.<br/>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was en error processing your payment: invalid credit card ID."
-msgstr ""
+msgstr "Radās kļūda apstrādājot Jūsu maksājumu: nederīgs kredītkartes ID."
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__transaction_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_move__transaction_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__transaction_ids
 msgid "Transactions"
-msgstr "Grāmatojumi"
+msgstr "Darījumi"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__support_refund
@@ -554,12 +556,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__use_electronic_payment_method
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__use_electronic_payment_method
 msgid "Use Electronic Payment Method"
-msgstr ""
+msgstr "Izmantot elektronisko maksājumu metodi"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Void Transaction"
-msgstr "Darījuma anulēšana"
+msgstr "Anulēt darījumu"
 
 #. module: account_payment
 #. odoo-python
@@ -578,6 +580,8 @@ msgid ""
 "You cannot uninstall this module as payments using this payment method "
 "already exist."
 msgstr ""
+"Jūs nevarat atinstalēt šo moduli, jo maksājumi izmantojot šo maksājumu "
+"metodi jau pastāv."
 
 #. module: account_payment
 #. odoo-python

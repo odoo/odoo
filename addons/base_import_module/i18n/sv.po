@@ -12,14 +12,15 @@
 # Kristoffer Grundström <lovaren@gmail.com>, 2023
 # Robin Calvin, 2024
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2024-11-18 09:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
+"Last-Translator: Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -229,6 +230,11 @@ msgid "Module Type"
 msgstr "Typ av modul"
 
 #. module: base_import_module
+#: model:ir.model,name:base_import_module.model_base_module_uninstall
+msgid "Module Uninstall"
+msgstr "Modul Avinstallera"
+
+#. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Module file (.zip)"
 msgstr "Fil för modul (.zip)"
@@ -287,13 +293,6 @@ msgstr "Status"
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
-msgid "Studio customizations require Studio"
-msgstr "Studio-anpassningar kräver Studio"
-
-#. module: base_import_module
-#. odoo-python
-#: code:addons/base_import_module/models/ir_module.py:0
-#, python-format
 msgid "Studio customizations require the Odoo Studio app."
 msgstr "Studio-anpassningar kräver Odoo Studio-appen."
 
@@ -323,6 +322,13 @@ msgstr ""
 #, python-format
 msgid "The module %s cannot be downloaded"
 msgstr "Modulen %s kan inte laddas ner"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid "Unknown module dependencies:"
+msgstr ""
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit

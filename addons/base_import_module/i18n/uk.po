@@ -3,16 +3,16 @@
 # 	* base_import_module
 # 
 # Translators:
-# Wil Odoo, 2024
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2024-11-18 09:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -221,6 +221,11 @@ msgid "Module Type"
 msgstr "Тип модуля"
 
 #. module: base_import_module
+#: model:ir.model,name:base_import_module.model_base_module_uninstall
+msgid "Module Uninstall"
+msgstr "Видалення модуля"
+
+#. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Module file (.zip)"
 msgstr "Файл модуля (.zip)"
@@ -279,13 +284,6 @@ msgstr "Статус"
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
-msgid "Studio customizations require Studio"
-msgstr "Для налаштування Студії потрібен модуль Студія"
-
-#. module: base_import_module
-#. odoo-python
-#: code:addons/base_import_module/models/ir_module.py:0
-#, python-format
 msgid "Studio customizations require the Odoo Studio app."
 msgstr "Налаштування Студії вимагають додаток Odoo Студія."
 
@@ -315,6 +313,13 @@ msgstr ""
 #, python-format
 msgid "The module %s cannot be downloaded"
 msgstr "Модуль %s неможливо завантажити"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid "Unknown module dependencies:"
+msgstr ""
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit

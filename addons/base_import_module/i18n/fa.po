@@ -5,19 +5,19 @@
 # Translators:
 # Hamed Mohammadi <hamed@dehongi.com>, 2023
 # Yousef Shadmanesh <y.shadmanesh@gmail.com>, 2023
-# Mohammad Tahmasebi <hit.tah75@gmail.com>, 2023
 # Hamid Darabi, 2023
 # Martin Trigaux, 2023
 # Hanna Kheradroosta, 2024
 # Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
+# Mohammad Tahmasebi <hit.tah75@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2024-11-18 09:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
+"Last-Translator: Mohammad Tahmasebi <hit.tah75@gmail.com>, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -221,6 +221,11 @@ msgid "Module Type"
 msgstr "نوع ماژول"
 
 #. module: base_import_module
+#: model:ir.model,name:base_import_module.model_base_module_uninstall
+msgid "Module Uninstall"
+msgstr "لغو نصب ماژول"
+
+#. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Module file (.zip)"
 msgstr "فایل ماژول (.zip)"
@@ -279,13 +284,6 @@ msgstr "وضعیت"
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
-msgid "Studio customizations require Studio"
-msgstr "سفارشی‌سازی‌های استودیو نیاز به استودیو دارد"
-
-#. module: base_import_module
-#. odoo-python
-#: code:addons/base_import_module/models/ir_module.py:0
-#, python-format
 msgid "Studio customizations require the Odoo Studio app."
 msgstr ""
 "<پشتیبانی>سفارشی‌سازی‌های استودیو به برنامه Odoo Studio نیاز "
@@ -316,6 +314,13 @@ msgstr "لیست برنامه‌های صنعتی قابل دریافت نیست
 #, python-format
 msgid "The module %s cannot be downloaded"
 msgstr "ماژول %s قابل دانلود نیست"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid "Unknown module dependencies:"
+msgstr ""
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit
