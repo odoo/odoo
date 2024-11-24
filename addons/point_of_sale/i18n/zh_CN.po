@@ -3,7 +3,6 @@
 # 	* point_of_sale
 # 
 # Translators:
-# Raymond Yu <cl_yu@hotmail.com>, 2022
 # digitalliuzg8888, 2023
 # Martin Trigaux, 2023
 # Emily Jia <eji@odoo.com>, 2023
@@ -11,7 +10,8 @@
 # 湘子 南 <1360857908@qq.com>, 2024
 # Wil Odoo, 2024
 # Chloe Wang, 2024
-# 何彬 <vnsoft.he@gmail.com>, 2024
+# Odoo哥 <vnsoft.he@gmail.com>, 2024
+# Raymond Yu <cl_yu@hotmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: 何彬 <vnsoft.he@gmail.com>, 2024\n"
+"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -100,7 +100,7 @@ msgstr "%s 找到 “%s” 的产品."
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "%s untaxed"
-msgstr ""
+msgstr "%s未缴税"
 
 #. module: point_of_sale
 #. odoo-python
@@ -939,6 +939,9 @@ msgid ""
 "When the session is open, we keep on loading all remaining partners in the background.\n"
 "In the meantime, you can use the 'Load Customers' button to load partners from database."
 msgstr ""
+"默认情况下，会加载 10000 个业务伙伴。\n"
+"当会话打开时，我们会在后台继续加载所有剩余的业务伙伴。\n"
+"同时，您可以使用 “加载客户 ”按钮从数据库加载业务伙伴。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_via_proxy
@@ -1315,7 +1318,7 @@ msgstr "关闭会话向导"
 #: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid "Close anyway"
-msgstr ""
+msgstr "请关闭"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__closed
@@ -2096,7 +2099,7 @@ msgstr "显示名称"
 #: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid "Do not close"
-msgstr ""
+msgstr "请勿关闭"
 
 #. module: point_of_sale
 #. odoo-python
@@ -3637,14 +3640,14 @@ msgstr "发送错误的消息数量"
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "Number of partners loaded can not be 0"
-msgstr ""
+msgstr "已加载的业务伙伴数量不能为 0"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "Number of product loaded can not be 0"
-msgstr ""
+msgstr "已加载的产品数量不能为 0"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3687,7 +3690,7 @@ msgstr "离线订单"
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductItem.js:0
 #, python-format
 msgid "OfflineErrorPopup"
-msgstr ""
+msgstr "离线错误弹出窗口"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4275,7 +4278,7 @@ msgstr "支付："
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Pending Electronic Payments"
-msgstr ""
+msgstr "待支付电子付款"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__user_id
@@ -4519,7 +4522,7 @@ msgstr "PoS产品类别"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "PoS order %s can not be processed"
-msgstr ""
+msgstr "POS订单%s无法处理"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
@@ -6235,6 +6238,8 @@ msgid ""
 "from the point of sale has been saved in the attachments.<br/>Please contact"
 " your support service to assist you on restoring it"
 msgstr ""
+"Odoo "
+"服务器已收到包含以下参考信息%s的销售点订单，但订单处理阶段失败。<br/>从销售点收到的数据已保存在附件中。<br/>请联系您的支持服务，以协助您恢复该数据"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6597,6 +6602,8 @@ msgid ""
 "There is at least one pending electronic payment.\n"
 "Please finish the payment with the terminal or cancel it then remove the payment line."
 msgstr ""
+"至少有一笔电子付款未结清。\n"
+"请使用终端完成付款或取消付款，然后移除付款行。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form

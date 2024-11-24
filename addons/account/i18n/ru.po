@@ -39,6 +39,7 @@
 # Сергей Шебанин <sergey@shebanin.ru>, 2024
 # Nadia Martynova, 2024
 # Wil Odoo, 2024
+# Ilya Rozhkov, 2024
 # 
 msgid ""
 msgstr ""
@@ -46,7 +47,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Ilya Rozhkov, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1492,14 +1493,14 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Account %s is of payable type, but is used in a sale operation."
-msgstr ""
+msgstr " Счет %s имеет тип «к оплате», но используется в операции продажи."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Account %s is of receivable type, but is used in a purchase operation."
-msgstr ""
+msgstr "Счет %s имеет тип «к получению», но используется в операции закупки."
 
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
@@ -6094,7 +6095,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "Early Payment Discount of"
-msgstr ""
+msgstr "Скидка за досрочную оплату в размере"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
@@ -7819,7 +7820,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_report_line__tax_tags_formula
 msgid ""
 "Internal field to shorten expression_ids creation for the tax_tags engine"
-msgstr ""
+msgstr "Внутреннее поле для упрощения создания expression_ids для tax_tags."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_incoterm_id
@@ -7852,6 +7853,8 @@ msgid ""
 "Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
 " for the zip range and \"To\" should be greater than \"From\"."
 msgstr ""
+"Неверный «Диапазон почтовых индексов«. Укажите значения «От» и «До», при "
+"этом «До» должно быть больше «От»."
 
 #. module: account
 #. odoo-python
@@ -9633,7 +9636,7 @@ msgstr "Легко перейдите с помощью отчетов и пос
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
 msgid "Nearest"
-msgstr ""
+msgstr "Ближайший"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
@@ -9664,7 +9667,7 @@ msgstr "Отрицательное значение поля суммы, есл�
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "Nested group of taxes are not allowed."
-msgstr ""
+msgstr "Вложенные группы налогов не допускаются."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_hierarchy__never
@@ -13531,7 +13534,7 @@ msgstr "Теги Налоги"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__tax_tags_formula
 msgid "Tax Tags Formula Shortcut"
-msgstr ""
+msgstr "Сокращение формулы для налоговых тегов"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_search
@@ -13861,6 +13864,8 @@ msgid ""
 "The Availability is set to 'Country Matches' but the field Country is not "
 "set."
 msgstr ""
+"Доступность установлена как «Соответствие стране», но поле «Страна» не "
+"указано."
 
 #. module: account
 #. odoo-python
@@ -14093,6 +14098,7 @@ msgid ""
 "The country code of the foreign VAT number does not match any country in the"
 " group."
 msgstr ""
+"Код страны иностранного НДС не соответствует ни одной стране в группе."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
@@ -15223,7 +15229,7 @@ msgstr ""
 #, python-format
 msgid ""
 "This journal is associated with a payment method. You cannot archive it"
-msgstr ""
+msgstr "Этот журнал связан с методом оплаты. Вы не можете его архивировать"
 
 #. module: account
 #. odoo-python
@@ -16690,6 +16696,8 @@ msgid ""
 "You can't register payments for both inbound and outbound moves at the same "
 "time."
 msgstr ""
+"Нельзя зарегистрировать платежи для входящих и исходящих операций "
+"одновременно."
 
 #. module: account
 #. odoo-python
@@ -16754,6 +16762,8 @@ msgid ""
 "You cannot create a fiscal position with a country outside of the selected "
 "country group."
 msgstr ""
+"Невозможно создать фискальную позицию для страны, не входящей в выбранную "
+"группу стран."
 
 #. module: account
 #. odoo-python
@@ -16841,6 +16851,8 @@ msgid ""
 "You cannot delete this account tag (%s), it is used on the chart of account "
 "definition."
 msgstr ""
+"Невозможно удалить этот тег счета (%s), он используется в определении плана "
+"счетов."
 
 #. module: account
 #. odoo-python
@@ -16964,6 +16976,8 @@ msgid ""
 "already posted.                 If you are absolutely sure you want to "
 "modify the opening balance of your accounts, reset the move to draft."
 msgstr ""
+"Невозможно импортировать «opening_balance», если начальная проводка (%s) уже"
+" проведена. Чтобы изменить баланс, сбросьте проводку в черновик."
 
 #. module: account
 #. odoo-python
@@ -17437,7 +17451,7 @@ msgstr "для этого поставщика. Вы можете сопоста
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "has been applied."
-msgstr ""
+msgstr "было применено."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
