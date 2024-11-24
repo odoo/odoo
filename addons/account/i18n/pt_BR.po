@@ -729,7 +729,10 @@ msgstr ""
 "            Comprove o pagamento assim que puder.\n"
 "            <t t-if=\"object.payment_reference\">\n"
 "                <br><br>\n"
-"                Use o seguinte código para comunicações sobre seu pagamento: <span style=\"font-weight:bold;\" t-out=\"object.payment_reference or ''\">INV/2021/05/0005</span>.\n"
+"                Use o seguinte código para comunicações sobre seu pagamento: I<strong t-out=\"object.payment_reference or ''\">NV/2021/05/0005.</strong>\n"
+"<t t-if=\"object.partner_bank_id\">\n"
+"na conta <strong t-out=\"object.partner_bank_id.acc_number\"></strong>\n"
+"</t>\n"
 "            </t>\n"
 "        </t>\n"
 "        <t t-if=\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
@@ -3037,7 +3040,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__applicability
 msgid "Applicability"
-msgstr "Aplicações"
+msgstr "Aplicabilidade"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding_sale_tax
@@ -3776,7 +3779,7 @@ msgstr "Contas atrasadas"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills to Pay"
-msgstr "Faturas para pagar"
+msgstr "Contas a pagar"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view

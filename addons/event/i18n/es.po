@@ -7,6 +7,7 @@
 # Martin Trigaux, 2024
 # Wil Odoo, 2024
 # Larissa Manderfeld, 2024
+# Pilar Vargas, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 07:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Pilar Vargas, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -103,13 +104,13 @@ msgid ""
 "'Badge - %s - %s' % ((object.event_id.name or 'Event').replace('/',''), "
 "(object.name or '').replace('/',''))"
 msgstr ""
-"'Pase - %s - %s' % ((object.event_id.name or 'Event').replace('/',''), "
-"(object.name or '').replace('/',''))"
+"'Credencial - %s - %s' % ((object.event_id.name or 'Event').replace('/',''),"
+" (object.name or '').replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_badge
 msgid "'Badge - %s' % (object.name or 'Event').replace('/','')"
-msgstr "'Pase - %s' % (object.name or 'Event').replace('/','')"
+msgstr "'Credencial - %s' % (object.name or 'Event').replace('/','')"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_full_page_ticket
@@ -644,7 +645,7 @@ msgstr ""
 "                    </span>\n"
 "                </td><td valign=\"middle\" align=\"right\">\n"
 "                    <a t-attf-href=\"/event/{{ object.event_id.id }}/my_tickets?badge_mode=1&amp;registration_ids={{ registration_ids }}&amp;tickets_hash={{ object.event_id._get_tickets_access_hash(registration_ids) }}\" target=\"_blank\" style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
-"                        Descargar pase\n"
+"                        Descargar credencial\n"
 "                    </a>\n"
 "                    <t t-if=\"not object.company_id.uses_default_logo\">\n"
 "                        <img t-att-src=\"'/logo.png?company=%s' % object.company_id.id\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"'%s' % object.company_id.name\">\n"
@@ -663,7 +664,7 @@ msgstr ""
 "                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
 "                    <div>\n"
 "                        Hola <t t-out=\"object.name or 'Guest'\"></t>,<br><br>\n"
-"                        Aquí encontrará adjunto su pase para la\n"
+"                        Aquí encontrará adjunto su credencial para la\n"
 "                        <t t-if=\"is_online\">\n"
 "                            <a t-att-href=\"object.event_id.website_url\" style=\"font-weight:bold;color:#875A7B;text-decoration:none;\" t-out=\"object.event_id.name or ''\">Presentación en línea de la colección OpenWood</a>\n"
 "                        </t>\n"
@@ -2088,7 +2089,7 @@ msgstr "Asientos disponibles"
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_badge
 msgid "Badge"
-msgstr "Pase"
+msgstr "Credencial"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_badge_96x134
@@ -2103,23 +2104,23 @@ msgstr "Identificación (96 x 82 mm)"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_image
 msgid "Badge Background"
-msgstr "Fondo del pase"
+msgstr "Fondo de la credencial"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_format
 msgid "Badge Dimension"
-msgstr "Dimensión del pase"
+msgstr "Dimensión de la credencial"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_badge
 msgid "Badge Example"
-msgstr "Pase de ejemplo"
+msgstr "Credencial de ejemplo"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/controllers/main.py:0
 msgid "Badges"
-msgstr "Pases"
+msgstr "Credenciales"
 
 #. module: event
 #: model_terms:event.event,description:event.event_3
@@ -2884,7 +2885,7 @@ msgstr "Evento: planificador de correo"
 #. module: event
 #: model:mail.template,name:event.event_registration_mail_template_badge
 msgid "Event: Registration Badge"
-msgstr "Evento: pase de inscripción"
+msgstr "Evento: credencial de inscripción"
 
 #. module: event
 #: model:mail.template,name:event.event_subscription
@@ -4101,7 +4102,7 @@ msgstr "Fecha de inscripción"
 #: model:res.groups,name:event.group_event_registration_desk
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Registration Desk"
-msgstr "Mostrador de inscripción"
+msgstr "Escáner de credenciales"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__end_sale_datetime
@@ -5132,7 +5133,7 @@ msgstr ""
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge
 msgid "Your badge for {{ object.event_id.name }}"
-msgstr "Su pase para {{ object.event_id.name }}"
+msgstr "Su credencial para {{ object.event_id.name }}"
 
 #. module: event
 #: model:mail.template,subject:event.event_subscription

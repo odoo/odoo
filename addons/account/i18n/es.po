@@ -842,6 +842,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-check\" aria-label=\"processing_payment\" title=\"Processing Payment\" role=\"img\"/>\n"
 "                                    <span class=\"d-none d-md-inline\"> Processing Payment</span>"
 msgstr ""
+"<i class=\"fa fa-fw fa-check\" aria-label=\"processing_payment\" title=\"Processing Payment\" role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\"> Procesando pago</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -892,6 +894,9 @@ msgid ""
 "                    You can choose how you want us to send your invoices, and with which electronic format.\n"
 "                </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                    Usted elige cómo desea que enviemos las facturas y en qué formato electrónico.\n"
+"                </small>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -985,6 +990,9 @@ msgid ""
 "                                        Audit\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                        Auditar\n"
+"                                    </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -3210,7 +3218,7 @@ msgstr "Pista de auditoría"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__audit_trail_message_ids
 #: model:ir.model.fields,field_description:account.field_account_move__audit_trail_message_ids
 msgid "Audit Trail Messages"
-msgstr ""
+msgstr "Mensajes de la pista de auditoría"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__auditable
@@ -4079,7 +4087,7 @@ msgstr "Cuenta de efectivo"
 #. module: account
 #: model:account.account,name:account.1_cash_journal_default_account_52
 msgid "Cash Bakery"
-msgstr ""
+msgstr "Efectivo de la panadería"
 
 #. module: account
 #: model:account.account,name:account.1_cash_journal_default_account_54
@@ -4125,7 +4133,7 @@ msgstr "Cuenta transitoria con criterio de caja"
 #. module: account
 #: model:account.account,name:account.1_cash_journal_default_account_51
 msgid "Cash Clothes Shop"
-msgstr ""
+msgstr "Efectivo de la tienda de ropa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_expense_account_id
@@ -4183,7 +4191,7 @@ msgstr "Cuenta de pérdida por desajuste por descuento por pronto pago"
 #. module: account
 #: model:account.account,name:account.1_cash_journal_default_account_50
 msgid "Cash Furn. Shop"
-msgstr ""
+msgstr "Efectivo de la mueblería"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
@@ -6364,7 +6372,7 @@ msgstr "Mostrar informe PDF de la plantilla de la factura"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__display_mapping_tab
 msgid "Display Mapping Tab"
-msgstr ""
+msgstr "Mostrar pestaña de mapeo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__display_name
@@ -7972,7 +7980,7 @@ msgstr "Tiene advertencia de transferencia de dinero"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__has_negative_factor
 msgid "Has Negative Factor"
-msgstr ""
+msgstr "Tiene un factor negativo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_posted_entries
@@ -8999,6 +9007,8 @@ msgid ""
 "Invoice and credit note distribution should have a total factor (+) equals "
 "to 100."
 msgstr ""
+"La distribución de facturas y facturas rectificativas debe tener un factor "
+"total (+) igual a 100."
 
 #. module: account
 #. odoo-python
@@ -9007,6 +9017,8 @@ msgid ""
 "Invoice and credit note distribution should have a total factor (-) equals "
 "to 100."
 msgstr ""
+"La distribución de facturas y facturas rectificativas debe tener un factor "
+"total (-) igual a 100."
 
 #. module: account
 #. odoo-python
@@ -9205,7 +9217,7 @@ msgstr "Facturación"
 #. module: account
 #: model:res.groups,name:account.group_account_basic
 msgid "Invoicing & Banks"
-msgstr ""
+msgstr "Facturación y bancos"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__invoicing_legacy
@@ -10864,7 +10876,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
 msgid "No outstanding account could be found to make the payment"
-msgstr ""
+msgstr "No se encontró ninguna cuenta pendiente para realizar el pago"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -16453,6 +16465,8 @@ msgid ""
 "This analytic item was created by a journal item. Please edit the analytic "
 "distribution on the journal item instead."
 msgstr ""
+"Este asiento analítico fue creado por un apunte contable. Edite la "
+"distribución analítica en el apunte contable."
 
 #. module: account
 #. odoo-python
@@ -18202,6 +18216,7 @@ msgstr ""
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "You can't create payments for entries belonging to different branches."
 msgstr ""
+"No puede crear pagos para asientos que pertenezcan a diferentes sucursales."
 
 #. module: account
 #. odoo-python
