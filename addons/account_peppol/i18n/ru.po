@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Ilya Rozhkov, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-07-15 18:11+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Ilya Rozhkov, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,6 +51,9 @@ msgid ""
 "deregister from that service, or request a migration key before trying "
 "again. "
 msgstr ""
+"Участник с такими данными уже зарегистрирован в сети. Если вы использовали "
+"другую службу Peppol, отмените регистрацию там или запросите ключ для "
+"миграции, прежде чем попробовать снова."
 
 #. module: account_peppol
 #. odoo-python
@@ -126,7 +130,7 @@ msgstr "Невозможно отменить запись, которая уж�
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_valid_format
 msgid "Cannot receive this format"
-msgstr ""
+msgstr "Этот формат не поддерживается"
 
 #. module: account_peppol
 #. odoo-python
@@ -139,7 +143,7 @@ msgstr "Невозможно зарегистрировать пользоват
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send.py:0
 msgid "Check Partner(s)"
-msgstr ""
+msgstr "Проверьте партнера(ов)"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
@@ -209,7 +213,7 @@ msgstr "Контактная информация была обновлена."
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "Contact email and mobile number are required."
-msgstr ""
+msgstr "Требуется указать контактный email и номер мобильного телефона."
 
 #. module: account_peppol
 #. odoo-python
@@ -381,7 +385,7 @@ msgstr "Журнал входящих счетов-фактур"
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__is_peppol_edi_format
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__is_peppol_edi_format
 msgid "Is Peppol Edi Format"
-msgstr ""
+msgstr "Это формат Peppol EDI"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_account_peppol_service_wizard__service_json
@@ -648,6 +652,9 @@ msgid ""
 "For example: +32123456789, where +32 is the country code.\n"
 "Currently, only European countries are supported."
 msgstr ""
+"Введите номер мобильного телефона в правильном международном формате. \n"
+"Например: +32123456789, где +32 — это код страны. \n"
+"В настоящее время поддерживаются только страны Европы."
 
 #. module: account_peppol
 #. odoo-python
@@ -846,7 +853,7 @@ msgstr "Идентификационный номер конечной точк�
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "The Peppol service that is used is likely to be %s."
-msgstr ""
+msgstr "Вероятно, используется Peppol: %s."
 
 #. module: account_peppol
 #. odoo-python
@@ -949,7 +956,7 @@ msgstr "Срок действия этого кода проверки исте�
 msgid ""
 "To generate complete electronic invoices, also set a country for this "
 "partner."
-msgstr ""
+msgstr "Для создания электронных счетов укажите страну партнера."
 
 #. module: account_peppol
 #. odoo-python
@@ -1009,7 +1016,7 @@ msgstr "Проверка конечной точки PEPPOL партнера"
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send.py:0
 msgid "View Partner(s)"
-msgstr ""
+msgstr "Просмотреть партнера(ов)"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__wizard_id
@@ -1064,7 +1071,7 @@ msgstr ""
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_phone_number
 msgid "You will receive a verification code to this mobile number"
-msgstr ""
+msgstr "На этот номер придет код подтверждения."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
