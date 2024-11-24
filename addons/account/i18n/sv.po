@@ -32,9 +32,9 @@
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
 # Larissa Manderfeld, 2024
 # Lasse L, 2024
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2024
 # Claes-Johan Dahlin, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
@@ -42,7 +42,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-06 12:08+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Claes-Johan Dahlin, 2024\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1639,13 +1639,14 @@ msgstr ""
 #, python-format
 msgid "Account %s is of payable type, but is used in a sale operation."
 msgstr ""
+"Konto %s är av betalbar typ, men används i en försäljningstransaktion."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Account %s is of receivable type, but is used in a purchase operation."
-msgstr ""
+msgstr "Konto %s är av typen fordran, men används i en inköpstransaktion."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_avatax
@@ -5998,7 +5999,7 @@ msgstr "Ditt bokföringsland"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
 msgid "Down"
-msgstr ""
+msgstr "Ner"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__checkbox_download
@@ -14068,6 +14069,8 @@ msgid ""
 "The Availability is set to 'Country Matches' but the field Country is not "
 "set."
 msgstr ""
+"Tillgängligheten är inställd på \"Country Matches\", men fältet Country är "
+"inte inställt."
 
 #. module: account
 #. odoo-python
@@ -16116,7 +16119,7 @@ msgstr "Måttenhet"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
 msgid "Up"
-msgstr ""
+msgstr "Upp"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16927,7 +16930,7 @@ msgstr ""
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "You can't create payments for entries belonging to different branches."
-msgstr ""
+msgstr "Du kan inte skapa betalningar för poster som hör till olika filialer."
 
 #. module: account
 #. odoo-python
