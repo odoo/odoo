@@ -94,7 +94,7 @@ msgstr ""
 "                    <span t-out=\"object.name or ''\">Joel Willis</span>!\n"
 "                </p>\n"
 "                <p>\n"
-"                    Je hebt zonet een nieuwe rang bereikt: <strong t-out=\"object.rank_id.name or ''\">Newbie</strong>\n"
+"                    Je hebt zonet een nieuwe rang bereikt: <strong t-out=\"object.rank_id.name or ''\">Starter</strong>\n"
 "                </p>\n"
 "                <t t-if=\"object.next_rank_id.name\">\n"
 "                    <p>Ga door met het goede werk om <strong t-out=\"object.next_rank_id.name or ''\">Student</strong> te worden!</p>\n"
@@ -844,7 +844,7 @@ msgstr "Geavanceerde opties"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__rule_auth
 msgid "Allowance to Grant"
-msgstr "Toelage toe te kennen"
+msgstr "Badge toekennen door"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__challenge_category
@@ -1989,7 +1989,7 @@ msgstr "Nieuwe rang: {{ object.rank_id.name }}"
 #. module: gamification
 #: model:gamification.karma.rank,name:gamification.rank_newbie
 msgid "Newbie"
-msgstr "Newbie"
+msgstr "Starter"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__next_rank_id
@@ -2024,7 +2024,7 @@ msgstr "Niemand kan uitdagingen oplossen zoals jij."
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__rule_auth__nobody
 msgid "No one, assigned through challenges"
-msgstr "Niemand aangeduid via uitdagingen"
+msgstr "Niemand, wordt toegewezen via uitdagingen"
 
 #. module: gamification
 #. odoo-python
@@ -2997,7 +2997,7 @@ msgstr "Je hebt de verborgen badge gevonden"
 #. module: gamification
 #: model_terms:gamification.karma.rank,description:gamification.rank_doctor
 msgid "You have reached the last rank. Congratulations!"
-msgstr "Je hebt de laatste rang bereikt. Gefeliciteerd!"
+msgstr "Je hebt de hoogste rang bereikt. Gefeliciteerd!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description:gamification.rank_newbie

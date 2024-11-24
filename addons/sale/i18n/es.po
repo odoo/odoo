@@ -1056,12 +1056,16 @@ msgid ""
 "A sale order line's combo item must be among its linked line's available "
 "combo items."
 msgstr ""
+"El artículo de la combinación de la línea del pedido de venta debe estar "
+"entre los artículos de combinación disponibles de su línea vinculada."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "A sale order line's product must match its combo item's product."
 msgstr ""
+"El producto de la línea del pedido de venta debe coincidir con el producto "
+"de su artículo de combinación."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1380,7 +1384,7 @@ msgstr "¿Está seguro de que desea cancelar los"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 msgid "Are you sure you want to cancel the selected item?"
-msgstr ""
+msgstr "¿Está seguro de que desea cancelar el artículo seleccionado?"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3075,7 +3079,7 @@ msgstr "Líneas de pedido vinculadas"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__linked_virtual_id
 msgid "Linked Virtual"
-msgstr ""
+msgstr "Vinculado virtualmente"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4135,7 +4139,7 @@ msgstr "Calificaciones"
 #: model:ir.model.fields,field_description:sale.field_product_product__expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__expense_policy
 msgid "Re-Invoice Costs"
-msgstr ""
+msgstr "Volver a facturar los costes"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_expense_policy
@@ -4595,7 +4599,7 @@ msgstr "Seleccione un producto o cree uno nuevo sobre la marcha."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__selected_combo_items
 msgid "Selected Combo Items"
-msgstr ""
+msgstr "Artículos de combinación seleccionados"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__sale_line_warn
@@ -4802,12 +4806,15 @@ msgid ""
 "Some confirmed orders are selected. Their related documents might be\n"
 "                        affected by the cancellation."
 msgstr ""
+"Están seleccionados algunos pedidos confirmados. Los documentos relacionados podrían verse\n"
+"                        afectados por la cancelación."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Some orders are not in a state requiring confirmation."
 msgstr ""
+"Algunos pedidos no se encuentran en un estado que necesite confirmación."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__source_id
@@ -4961,7 +4968,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__technical_price_unit
 msgid "Technical Price Unit"
-msgstr ""
+msgstr "Precio unitario técnico"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5120,6 +5127,8 @@ msgid ""
 "The number of selected combo items must match the number of available combo "
 "choices."
 msgstr ""
+"El número de artículos de combinación seleccionados debe coincidir con el "
+"número de opciones correspondientes disponibles."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5606,6 +5615,9 @@ msgid ""
 "Validated expenses, vendor bills, or stock pickings (set up to track costs) "
 "can be invoiced to the customer at either cost or sales price."
 msgstr ""
+"Puede volver a facturar gastos validados, facturas de proveedores o pickings"
+" de stock (configuración de seguimiento de los costes) a un cliente a su "
+"costo o a precio de venta."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__validity_date
@@ -5899,6 +5911,8 @@ msgid ""
 "selected\n"
 "                    items?"
 msgstr ""
+"artículos\n"
+"                    seleccionados?"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document

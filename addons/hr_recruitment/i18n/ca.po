@@ -6,13 +6,13 @@
 # M Palau <mpalau@tda.ad>, 2024
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2024
 # jabiri7, 2024
+# Arnau Ros, 2024
 # eriiikgt, 2024
 # RGB Consulting <odoo@rgbconsulting.com>, 2024
 # Iván Infantes Castarnado, 2024
 # Santiago Payà <santiagopim@gmail.com>, 2024
 # 7b9408628f00af852f513eb4f12c005b_f9c6891, 2024
 # Susanna Pujol, 2024
-# Arnau Ros, 2024
 # Cristian Cruz, 2024
 # Harcogourmet, 2024
 # ericrolo, 2024
@@ -33,7 +33,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 08:17+0000\n"
+"POT-Creation-Date: 2024-10-29 10:13+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: marcescu, 2024\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
@@ -417,6 +417,14 @@ msgid ""
 msgstr ""
 "Diccionari Python que s'avaluarà per a proporcionar valors per defecte quan "
 "es creïn nous registres per aquest pseudònim."
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
+msgid ""
+"At least one applicant doesn't have a email; you can't use send email "
+"option."
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_needaction
@@ -1337,14 +1345,6 @@ msgstr "cc de correu electrònic"
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
 msgstr "Domini de correu electrònic p.ex. 'example.com' a 'odoo@example.com'"
-
-#. module: hr_recruitment
-#. odoo-python
-#: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
-msgid "Email of the applicant is not set, email won't be sent."
-msgstr ""
-"No s'ha definit el correu electrònic del sol·licitant, no s'enviarà el "
-"correu electrònic."
 
 #. module: hr_recruitment
 #. odoo-python
@@ -2546,12 +2546,6 @@ msgid "Publish job offers on your website"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__rating_ids
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__rating_ids
-msgid "Ratings"
-msgstr "Valoracions"
-
-#. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment_stage.py:0
 #: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job0
@@ -3155,14 +3149,6 @@ msgstr ""
 
 #. module: hr_recruitment
 #. odoo-python
-#: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
-msgid ""
-"The email will not be sent to the following applicant(s) as they don't have "
-"an email address:"
-msgstr ""
-
-#. module: hr_recruitment
-#. odoo-python
 #: code:addons/hr_recruitment/wizard/applicant_send_mail.py:0
 msgid "The following applicants are missing an email address: %s."
 msgstr "Als següents sol·licitants els falta una adreça electrònica: %s."
@@ -3464,6 +3450,14 @@ msgstr ""
 msgid ""
 "You can define the requirements here. They will be displayed when you hover "
 "over the stage title."
+msgstr ""
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
+msgid ""
+"You can't select Send email option.\n"
+"The email will not be sent to the following applicant(s) as they don't have an email address:"
 msgstr ""
 
 #. module: hr_recruitment

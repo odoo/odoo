@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 08:17+0000\n"
+"POT-Creation-Date: 2024-10-29 10:13+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
@@ -624,6 +624,14 @@ msgstr ""
 "predeterminados cuando se creen nuevos registros para este seudónimo."
 
 #. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
+msgid ""
+"At least one applicant doesn't have a email; you can't use send email "
+"option."
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_needaction
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__message_needaction
 msgid "Action Needed"
@@ -1076,7 +1084,7 @@ msgstr "Cancelar"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_employee__candidate_id
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Candidate"
-msgstr "Postulante"
+msgstr "Candidato"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__user_id
@@ -1561,14 +1569,6 @@ msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
 msgstr ""
 "Dominio del correo electrónico, por ejemplo, \"ejemplo.com\" en "
 "\"odoo@ejemplo.com\""
-
-#. module: hr_recruitment
-#. odoo-python
-#: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
-msgid "Email of the applicant is not set, email won't be sent."
-msgstr ""
-"No se estableció un correo electrónico para este candidato, por lo que no se"
-" le podrá enviar ningún correo."
 
 #. module: hr_recruitment
 #. odoo-python
@@ -2776,12 +2776,6 @@ msgid "Publish job offers on your website"
 msgstr "Publique ofertas de trabajo en su sitio web"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__rating_ids
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__rating_ids
-msgid "Ratings"
-msgstr "Calificaciones"
-
-#. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment_stage.py:0
 #: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job0
@@ -3400,16 +3394,6 @@ msgstr ""
 
 #. module: hr_recruitment
 #. odoo-python
-#: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
-msgid ""
-"The email will not be sent to the following applicant(s) as they don't have "
-"an email address:"
-msgstr ""
-"No se enviará el correo electrónico a los siguientes postulantes porque no "
-"tienen una dirección de correo electrónico:"
-
-#. module: hr_recruitment
-#. odoo-python
 #: code:addons/hr_recruitment/wizard/applicant_send_mail.py:0
 msgid "The following applicants are missing an email address: %s."
 msgstr ""
@@ -3736,6 +3720,14 @@ msgid ""
 msgstr ""
 "Aquí puede definir los requisitos, aparecerán cuando pase el cursor sobre el"
 " título de la etapa."
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
+msgid ""
+"You can't select Send email option.\n"
+"The email will not be sent to the following applicant(s) as they don't have an email address:"
+msgstr ""
 
 #. module: hr_recruitment
 #. odoo-python
