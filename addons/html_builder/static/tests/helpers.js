@@ -94,7 +94,7 @@ export function getEditable(inWrap) {
 const actionsRegistry = registry.category("website-builder-actions");
 
 export function addOption({ selector, template, actions = {} }) {
-    class TestToolbox extends Component {
+    class TestOption extends Component {
         static template = template;
         static props = {};
         static components = {
@@ -102,16 +102,16 @@ export function addOption({ selector, template, actions = {} }) {
             ...defaultOptionComponents,
         };
     }
-    const toolboxId = uniqueId("test-toolbox");
-    registry.category("sidebar-element-option").add(toolboxId, {
-        OptionComponent: TestToolbox,
+    const optionId = uniqueId("test-option");
+    registry.category("sidebar-element-option").add(optionId, {
+        OptionComponent: TestOption,
         selector,
     });
     for (const [name, action] of Object.entries(actions)) {
         actionsRegistry.add(name, action);
     }
     after(() => {
-        registry.category("sidebar-element-option").remove(toolboxId);
+        registry.category("sidebar-element-option").remove(optionId);
         for (const [name] of Object.entries(actions)) {
             actionsRegistry.remove(name);
         }
