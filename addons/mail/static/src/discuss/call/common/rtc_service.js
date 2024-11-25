@@ -10,7 +10,7 @@ import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
-import { loadBundle } from "@web/core/assets";
+import { loadBundle, loadJS } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
 import { callActionsRegistry } from "./call_actions";
 
@@ -445,6 +445,7 @@ export class Rtc extends Record {
      * @param {boolean} [initialState.camera]
      */
     async toggleCall(channel, { audio = true, camera } = {}) {
+        await loadJS("/mail/static/lib/selfie_segmentation/selfie_segmentation.js");
         if (this.state.hasPendingRequest) {
             return;
         }
