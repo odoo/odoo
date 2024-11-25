@@ -192,6 +192,10 @@ export class LinkPlugin extends Plugin {
                 ev.preventDefault();
                 this.toggleLinkTools({ link: ev.target });
             }
+            const linkEl = closestElement(ev.target, "a");
+            if (linkEl && ev.target.isContentEditable && (ev.ctrlKey || ev.metaKey)) {
+                window.open(linkEl.href, "_blank");
+            }
         });
         // link creation is added to the command service because of a shortcut conflict,
         // as ctrl+k is used for invoking the command palette
