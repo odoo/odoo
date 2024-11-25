@@ -273,7 +273,7 @@ class PosSession(models.Model):
             },
             'product.tag': {
                 'domain': [],
-                'fields': [],
+                'fields': ['name'],
             }
         }
 
