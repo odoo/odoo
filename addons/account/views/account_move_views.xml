@@ -1009,7 +1009,9 @@
                                            'default_currency_id': currency_id or company_currency_id,
                                            'default_display_type': 'product',
                                            'quick_encoding_vals': quick_encoding_vals,
-                                       }" readonly="state != 'draft'">
+                                       }"
+                                       force_save="1"
+                                        readonly="state != 'draft'">
                                     <tree editable="bottom" string="Journal Items" default_order="sequence, id">
                                         <control>
                                             <create name="add_line_control" string="Add a line"/>
@@ -1037,7 +1039,7 @@
                                         <field name="analytic_distribution" widget="analytic_distribution"
                                                groups="analytic.group_analytic_accounting"
                                                optional="show"
-                                               options="{'product_field': 'product_id', 'account_field': 'account_id', 'amount_field': 'price_subtotal'}"
+                                               options="{'product_field': 'product_id', 'account_field': 'account_id', 'amount_field': 'price_subtotal', 'readonly': false}"
                                                business_domain_compute="parent.move_type in ['out_invoice', 'out_refund', 'out_receipt'] and 'invoice' or parent.move_type in ['in_invoice', 'in_refund', 'in_receipt'] and 'bill' or 'general'"/>
                                         <field name="quantity" optional="show"/>
                                         <field name="product_uom_category_id" column_invisible="True"/>
