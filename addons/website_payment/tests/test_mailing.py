@@ -8,6 +8,9 @@ class TestMailing(PaymentCommon, MockEmail):
 
     @users("admin")
     def test_donation_email(self):
+        self.env.company.write({
+            'email': 'companybot@company.com',
+        })
         tx = self._create_transaction('direct')
         with self.mock_mail_gateway():
             tx._send_donation_email(

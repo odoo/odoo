@@ -55,6 +55,9 @@ class TestDataRecycle(TransactionCase):
         self.assertTrue(self.old_servers[0].id not in self.recycle_model.recycle_record_ids.mapped('res_id'))
 
     def test_recycle_notification(self):
+        self.env.ref('base.user_admin').write({
+            'email': 'mitchell.admin@example.com',
+        })
         self.recycle_model.notify_user_ids = [(4, self.env.ref('base.user_admin').id)]
         old_notif_count = self.env['mail.notification'].search_count([])
         self.recycle_model._cron_recycle_records()

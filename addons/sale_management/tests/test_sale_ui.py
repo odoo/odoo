@@ -9,5 +9,8 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 class TestUi(AccountTestInvoicingCommon, HttpCase):
 
     def test_01_sale_tour(self):
+        self.env.ref('base.user_admin').write({
+            'email': 'mitchell.admin@example.com',
+        })
         self.env['res.partner'].create({'name': 'Agrolait', 'email': 'agro@lait.be'})
         self.start_tour("/odoo", 'sale_tour', login="admin")

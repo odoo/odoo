@@ -32,6 +32,9 @@ class TestHrLeaveTypeTour(HttpCase):
         leave_type_3 will always be available.
         """
         admin_user = self.env.ref('base.user_admin')
+        admin_user.write({
+            'email': 'mitchell.admin@example.com',
+        })
         admin_employee = admin_user.employee_id
         HRLeave = self.env['hr.leave']
         date_from = date(2022, 1, 17)
