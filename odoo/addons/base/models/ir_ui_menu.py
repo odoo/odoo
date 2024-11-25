@@ -74,13 +74,11 @@ class IrUiMenu(models.Model):
             raise ValidationError(_('Error! You cannot create recursive menus.'))
 
     @api.model
-    @tools.ormcache('frozenset(self.env.user.groups_id.ids)', 'debug')
+    @tools.ormcache('frozenset(self.env.user._get_group_ids())', 'debug')
     def _visible_menu_ids(self, debug=False):
         """ Return the ids of the menu items visible to the user. """
         # retrieve all menus, and determine which ones are visible
-        context = {'ir.ui.menu.full_list': True}
-        menus = self.with_context(context).search_fetch([], ['action', 'parent_id']).sudo()
-
+        menus = self.with_context({}).search_fetch([], ['action', 'parent_id'], order='id').sudo()
         # first discard all menus with groups the user does not have
         group_ids = set(self.env.user._get_group_ids())
         if not debug:
@@ -127,7 +125,7 @@ class IrUiMenu(models.Model):
                     visible += menu
                     menu = menu.parent_id
 
-        return set(visible.ids)
+        return frozenset(visible.ids)
 
     @api.returns('self')
     def _filter_visible_menus(self):
@@ -137,24 +135,6 @@ class IrUiMenu(models.Model):
         """
         visible_ids = self._visible_menu_ids(request.session.debug if request else False)
         return self.filtered(lambda menu: menu.id in visible_ids)
-
-    @api.model
-    def search_fetch(self, domain, field_names, offset=0, limit=None, order=None):
-        menus = super().search_fetch(domain, field_names, order=order)
-        if menus:
-            # menu filtering is done only on main menu tree, not other menu lists
-            if not self._context.get('ir.ui.menu.full_list'):
-                menus = menus._filter_visible_menus()
-            if offset:
-                menus = menus[offset:]
-            if limit:
-                menus = menus[:limit]
-        return menus
-
-    @api.model
-    def search_count(self, domain, limit=None):
-        # to be consistent with search() above
-        return len(self.search(domain, limit=limit))
 
     @api.depends('parent_id')
     def _compute_display_name(self):
@@ -190,9 +170,7 @@ class IrUiMenu(models.Model):
         # cascade-delete submenus blindly. We also can't use ondelete=set null because
         # that is not supported when _parent_store is used (would silently corrupt it).
         # TODO: ideally we should move them under a generic "Orphans" menu somewhere?
-        extra = {'ir.ui.menu.full_list': True,
-                 'active_test': False}
-        direct_children = self.with_context(**extra).search([('parent_id', 'in', self.ids)])
+        direct_children = self.with_context(active_test=False).search([('parent_id', 'in', self.ids)])
         direct_children.write({'parent_id': False})
 
         self.env.registry.clear_cache()
@@ -217,7 +195,7 @@ class IrUiMenu(models.Model):
         :return: the root menu ids
         :rtype: list(int)
         """
-        return self.search([('parent_id', '=', False)])
+        return self.search([('parent_id', '=', False)])._filter_visible_menus()
 
     def _load_menus_blacklist(self):
         return []
@@ -272,7 +250,7 @@ class IrUiMenu(models.Model):
         blacklisted_menu_ids = self._load_menus_blacklist()
         if blacklisted_menu_ids:
             menus_domain = expression.AND([menus_domain, [('id', 'not in', blacklisted_menu_ids)]])
-        menus = self.search(menus_domain)
+        menus = self.search(menus_domain)._filter_visible_menus()
         menu_items = menus.read(fields)
         xmlids = (menu_roots + menus)._get_menuitems_xmlids()
 
