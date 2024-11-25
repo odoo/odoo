@@ -62,6 +62,7 @@ export class SnippetModel extends Reactive {
         );
         const snippetsDocument = new DOMParser().parseFromString(html, "text/html");
         this.computeSnippetTemplates(snippetsDocument);
+        this.setSnippetName(snippetsDocument);
     }
 
     computeSnippetTemplates(snippetsDocument) {
@@ -147,5 +148,12 @@ export class SnippetModel extends Reactive {
             view_id: snippet.viewId,
             template_key: this.snippetsName,
         });
+    }
+
+    setSnippetName(snippetsDocument) {
+        // TODO: this should probably be done in py
+        for (const snippetEl of snippetsDocument.body.querySelectorAll("snippets > *")) {
+            snippetEl.children[0].dataset["name"] = snippetEl.getAttribute("name");
+        }
     }
 }

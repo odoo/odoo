@@ -9,17 +9,14 @@ import {
     waitFor,
 } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, setupWebsiteBuilder } from "../helpers";
+import { defineWebsiteModels, getSnippetStructure, setupWebsiteBuilder } from "../helpers";
 
 defineWebsiteModels();
 
-function getSnippetStructure({ name, content, keywords = [], groupName, imagePreview = "" }) {
-    keywords = keywords.join(", ");
-    return `<div name="${name}" data-oe-snippet-id="123" data-o-image-preview="${imagePreview}" data-oe-keywords="${keywords}" data-o-group="${groupName}">${content}</div>`;
-}
-
-function getBasicSection(content) {
-    return unformat(`<section class="s_test" data-snippet="s_test">
+function getBasicSection(content, { name }) {
+    return unformat(`<section class="s_test" data-snippet="s_test" ${
+        name ? `data-name="${name}"` : ""
+    }>
         <div class="test_a">${content}</div>
     </section>`);
 }
@@ -69,23 +66,26 @@ test("install an app from snippet group", async () => {
 });
 
 test("open add snippet dialog + switch snippet category", async () => {
-    const snippetsDescription = [
-        {
-            name: "Test",
-            groupName: "a",
-            content: getBasicSection("Yop"),
-        },
-        {
-            name: "Test",
-            groupName: "a",
-            content: getBasicSection("Hello"),
-        },
-        {
-            name: "Test",
-            groupName: "b",
-            content: getBasicSection("Nice"),
-        },
-    ];
+    const snippetsDescription = (withName = false) => {
+        const name = "Test";
+        return [
+            {
+                name: name,
+                groupName: "a",
+                content: getBasicSection("Yop", { name: withName ? name : "" }),
+            },
+            {
+                name: name,
+                groupName: "a",
+                content: getBasicSection("Hello", { name: withName ? name : "" }),
+            },
+            {
+                name: name,
+                groupName: "b",
+                content: getBasicSection("Nice", { name: withName ? name : "" }),
+            },
+        ];
+    };
 
     await setupWebsiteBuilder("<div><p>Text</p></div>", {
         snippets: {
@@ -93,7 +93,7 @@ test("open add snippet dialog + switch snippet category", async () => {
                 '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
                 '<div name="B" data-oe-thumbnail="b.svg" data-oe-snippet-id="123" data-o-snippet-group="b"><section data-snippet="s_snippet_group"></section></div>',
             ],
-            snippet_structure: snippetsDescription.map((snippetDesc) =>
+            snippet_structure: snippetsDescription().map((snippetDesc) =>
                 getSnippetStructure(snippetDesc)
             ),
         },
@@ -116,7 +116,11 @@ test("open add snippet dialog + switch snippet category", async () => {
         queryAll(".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap").map(
             (el) => el.innerHTML
         )
-    ).toEqual(snippetsDescription.filter((s) => s.groupName === "a").map((s) => s.content));
+    ).toEqual(
+        snippetsDescription(true)
+            .filter((s) => s.groupName === "a")
+            .map((s) => s.content)
+    );
 
     await click(".o_add_snippet_dialog aside .list-group .list-group-item:contains('B')");
     await animationFrame();
@@ -125,30 +129,39 @@ test("open add snippet dialog + switch snippet category", async () => {
         queryAll(".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap").map(
             (el) => el.innerHTML
         )
-    ).toEqual(snippetsDescription.filter((s) => s.groupName === "b").map((s) => s.content));
+    ).toEqual(
+        snippetsDescription(true)
+            .filter((s) => s.groupName === "b")
+            .map((s) => s.content)
+    );
 });
 
 test("search snippet in add snippet dialog", async () => {
-    const snippetsDescription = [
-        {
-            name: "gravy",
-            groupName: "a",
-            content: getBasicSection("content 1"),
-            keywords: ["jumper"],
-        },
-        {
-            name: "bandage",
-            groupName: "a",
-            content: getBasicSection("content 2"),
-            keywords: ["order"],
-        },
-        {
-            name: "banana",
-            groupName: "b",
-            content: getBasicSection("content 3"),
-            keywords: ["grape", "orange"],
-        },
-    ];
+    const snippetsDescription = (withName = false) => {
+        const name1 = "gravy";
+        const name2 = "bandage";
+        const name3 = "banana";
+        return [
+            {
+                name: name1,
+                groupName: "a",
+                content: getBasicSection("content 1", { name: withName ? name1 : "" }),
+                keywords: ["jumper"],
+            },
+            {
+                name: name2,
+                groupName: "a",
+                content: getBasicSection("content 2", { name: withName ? name2 : "" }),
+                keywords: ["order"],
+            },
+            {
+                name: name3,
+                groupName: "b",
+                content: getBasicSection("content 3", { name: withName ? name3 : "" }),
+                keywords: ["grape", "orange"],
+            },
+        ];
+    };
 
     await setupWebsiteBuilder("<div><p>Text</p></div>", {
         snippets: {
@@ -156,7 +169,7 @@ test("search snippet in add snippet dialog", async () => {
                 '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
                 '<div name="B" data-oe-thumbnail="b.svg" data-oe-snippet-id="123" data-o-snippet-group="b"><section data-snippet="s_snippet_group"></section></div>',
             ],
-            snippet_structure: snippetsDescription.map((snippetDesc) =>
+            snippet_structure: snippetsDescription().map((snippetDesc) =>
                 getSnippetStructure(snippetDesc)
             ),
         },
@@ -164,11 +177,14 @@ test("search snippet in add snippet dialog", async () => {
     await click(queryFirst(`.o-snippets-menu [data-category="snippet_groups"] div`));
     await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe", { timeout: 500 });
     expect("aside .list-group .list-group-item").toHaveCount(2);
+    const snippetsDescriptionProcessed = snippetsDescription(true);
     expect(
         queryAll(".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap").map(
             (el) => el.innerHTML
         )
-    ).toEqual(snippetsDescription.filter((s) => s.groupName === "a").map((s) => s.content));
+    ).toEqual(
+        snippetsDescriptionProcessed.filter((s) => s.groupName === "a").map((s) => s.content)
+    );
 
     // Search base on snippet name
     await contains(".o_add_snippet_dialog aside input[type='search']").edit("ban");
@@ -177,7 +193,9 @@ test("search snippet in add snippet dialog", async () => {
         queryAll(".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap").map(
             (el) => el.innerHTML
         )
-    ).toEqual([snippetsDescription[1], snippetsDescription[2]].map((s) => s.content));
+    ).toEqual(
+        [snippetsDescriptionProcessed[1], snippetsDescriptionProcessed[2]].map((s) => s.content)
+    );
 
     // Search base on snippet name and keywords
     await contains(".o_add_snippet_dialog aside input[type='search']").edit("gra");
@@ -186,7 +204,9 @@ test("search snippet in add snippet dialog", async () => {
         queryAll(".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap").map(
             (el) => el.innerHTML
         )
-    ).toEqual([snippetsDescription[0], snippetsDescription[2]].map((s) => s.content));
+    ).toEqual(
+        [snippetsDescriptionProcessed[0], snippetsDescriptionProcessed[2]].map((s) => s.content)
+    );
 
     // Search base on keywords
     await contains(".o_add_snippet_dialog aside input[type='search']").edit("or");
@@ -195,23 +215,29 @@ test("search snippet in add snippet dialog", async () => {
         queryAll(".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap").map(
             (el) => el.innerHTML
         )
-    ).toEqual([snippetsDescription[1], snippetsDescription[2]].map((s) => s.content));
+    ).toEqual(
+        [snippetsDescriptionProcessed[1], snippetsDescriptionProcessed[2]].map((s) => s.content)
+    );
 });
 
 test("add snippet dialog with imagePreview", async () => {
-    const snippetsDescription = [
-        {
-            name: "gravy",
-            groupName: "a",
-            content: getBasicSection("content 1"),
-        },
-        {
-            name: "banana",
-            groupName: "a",
-            content: getBasicSection("content 2"),
-            imagePreview: "banana.png",
-        },
-    ];
+    const snippetsDescription = (withName = false) => {
+        const name1 = "gravy";
+        const name2 = "banana";
+        return [
+            {
+                name: name1,
+                groupName: "a",
+                content: getBasicSection("content 1", { name: withName ? name1 : "" }),
+            },
+            {
+                name: name2,
+                groupName: "a",
+                content: getBasicSection("content 2", { name: withName ? name2 : "" }),
+                imagePreview: "banana.png",
+            },
+        ];
+    };
 
     await setupWebsiteBuilder("<div><p>Text</p></div>", {
         snippets: {
@@ -219,7 +245,7 @@ test("add snippet dialog with imagePreview", async () => {
                 '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
                 '<div name="B" data-oe-thumbnail="b.svg" data-oe-snippet-id="123" data-o-snippet-group="b"><section data-snippet="s_snippet_group"></section></div>',
             ],
-            snippet_structure: snippetsDescription.map((snippetDesc) =>
+            snippet_structure: snippetsDescription().map((snippetDesc) =>
                 getSnippetStructure(snippetDesc)
             ),
         },
@@ -229,27 +255,33 @@ test("add snippet dialog with imagePreview", async () => {
         ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap";
     await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe", { timeout: 500 });
     expect(`${previewSnippetIframeSelector}`).toHaveCount(2);
-    expect(`${previewSnippetIframeSelector}:first`).toHaveInnerHTML(snippetsDescription[0].content);
+    const snippetsDescriptionProcessed = snippetsDescription(true);
+    expect(`${previewSnippetIframeSelector}:first`).toHaveInnerHTML(
+        snippetsDescriptionProcessed[0].content
+    );
     expect(
         `${previewSnippetIframeSelector}:nth-child(1) .s_dialog_preview_image img`
-    ).toHaveAttribute("data-src", snippetsDescription[1].imagePreview);
+    ).toHaveAttribute("data-src", snippetsDescriptionProcessed[1].imagePreview);
 });
 
 test("insert snippet structure", async () => {
-    const snippetsDescription = [
-        {
-            name: "Test",
-            groupName: "a",
-            content: getBasicSection("Yop"),
-        },
-    ];
+    const snippetsDescription = (withName = false) => {
+        const name = "Test";
+        return [
+            {
+                name: name,
+                groupName: "a",
+                content: getBasicSection("Yop", { name: withName ? name : "" }),
+            },
+        ];
+    };
 
     const { getEditor } = await setupWebsiteBuilder("<section><p>Text</p></section>", {
         snippets: {
             snippet_groups: [
                 '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
             ],
-            snippet_structure: snippetsDescription.map((snippetDesc) =>
+            snippet_structure: snippetsDescription().map((snippetDesc) =>
                 getSnippetStructure(snippetDesc)
             ),
         },
@@ -266,25 +298,28 @@ test("insert snippet structure", async () => {
     await contains(previewSelector).click();
     expect(".o_add_snippet_dialog").toHaveCount(0);
     expect(editor.editable).toHaveInnerHTML(
-        `<section><p>Text</p></section>${snippetsDescription[0].content}`
+        `<section><p>Text</p></section>${snippetsDescription(true)[0].content}`
     );
 });
 
 test("drag&drop snippet structure", async () => {
-    const snippetsDescription = [
-        {
-            name: "Test",
-            groupName: "a",
-            content: getBasicSection("Yop"),
-        },
-    ];
+    const snippetsDescription = (withName = false) => {
+        const name = "Test";
+        return [
+            {
+                name: name,
+                groupName: "a",
+                content: getBasicSection("Yop", { name: withName ? name : "" }),
+            },
+        ];
+    };
 
     const { getEditor } = await setupWebsiteBuilder("<section><p>Text</p></section>", {
         snippets: {
             snippet_groups: [
                 '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
             ],
-            snippet_structure: snippetsDescription.map((snippetDesc) =>
+            snippet_structure: snippetsDescription().map((snippetDesc) =>
                 getSnippetStructure(snippetDesc)
             ),
         },
@@ -321,6 +356,6 @@ test("drag&drop snippet structure", async () => {
     await contains(previewSelector).click();
     expect(".o_add_snippet_dialog").toHaveCount(0);
     expect(editor.editable).toHaveInnerHTML(
-        `${snippetsDescription[0].content}<section><p>Text</p></section>`
+        `${snippetsDescription(true)[0].content}<section><p>Text</p></section>`
     );
 });

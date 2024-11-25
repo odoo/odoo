@@ -37,3 +37,38 @@
         box-shadow: $o-we-sidebar-content-field-colorpicker-shadow;
     }
 }
+
+.o_we_invisible_el_panel {
+    max-height: 220px;
+    overflow-y: auto;
+    padding: $o-we-sidebar-blocks-content-spacing;
+    background-color: $o-we-sidebar-blocks-content-bg;
+    box-shadow: $o-we-item-standup-top rgba($o-we-item-standup-color-light, .2);
+
+    .o_panel_header {
+        padding: $o-we-sidebar-content-field-spacing 0;
+    }
+
+    .o_we_invisible_entry {
+        padding: $o-we-sidebar-content-field-spacing $o-we-sidebar-content-field-clickable-spacing;
+        cursor: pointer;
+
+        &:hover {
+            background-color: $o-we-sidebar-bg;
+        }
+    }
+
+    ul {
+        list-style: none;
+        padding-inline-start: 15px;
+        margin-bottom: $o-we-sidebar-content-field-spacing - 4px;
+    }
+}
+
+.o_we_sublevel > div::before {
+    content: "└"; // TODO The size and look of this depends on the
+                  // browser default font, we should use a SVG instead.
+    display: inline-block;
+    margin-right: 0.4em;
+    // TODO take care of the rtl icon case
+}
