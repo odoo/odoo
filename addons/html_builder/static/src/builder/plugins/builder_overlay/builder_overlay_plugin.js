@@ -20,14 +20,14 @@ export class BuilderOverlayPlugin extends Plugin {
         this.removeCurrentOverlay?.();
     }
 
-    openBuilderOverlay(toolboxes) {
-        const toolbox = toolboxes[0];
+    openBuilderOverlay(optionsContainers) {
+        const optionContainer = optionsContainers[0];
         this.removeCurrentOverlay?.();
-        if (!toolbox) {
+        if (!optionContainer) {
             return;
         }
         this.removeCurrentOverlay = this.services.overlay.add(BuilderOverlay, {
-            target: toolbox.element,
+            target: optionContainer.element,
             container: this.document.documentElement,
         });
     }

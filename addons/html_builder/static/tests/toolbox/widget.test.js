@@ -9,7 +9,7 @@ defineWebsiteModels();
 describe("WeButton", () => {
     test("call a specific action with some params and value", async () => {
         addOption({
-            selector: ".test-toolbox-target",
+            selector: ".test-options-target",
             actions: {
                 customAction: {
                     apply: ({ param, value }) => {
@@ -19,8 +19,8 @@ describe("WeButton", () => {
             },
             template: xml`<WeButton action="'customAction'" actionParam="'myParam'" actionValue="'myValue'">MyAction</WeButton>`,
         });
-        await setupWebsiteBuilder(`<div class="test-toolbox-target">b</div>`);
-        await contains(":iframe .test-toolbox-target").click();
+        await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+        await contains(":iframe .test-options-target").click();
         expect(".options-container").toBeDisplayed();
         expect("[data-action-id='customAction']").toHaveText("MyAction");
         await click("[data-action-id='customAction']");
@@ -29,18 +29,18 @@ describe("WeButton", () => {
     });
     test("call a shorthand action", async () => {
         addOption({
-            selector: ".test-toolbox-target",
+            selector: ".test-options-target",
             template: xml`<WeButton classAction="'my-custom-class'"/>`,
         });
-        await setupWebsiteBuilder(`<div class="test-toolbox-target">b</div>`);
-        await contains(":iframe .test-toolbox-target").click();
+        await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+        await contains(":iframe .test-options-target").click();
         expect(".options-container").toBeDisplayed();
         await click("[data-class-action='my-custom-class']");
-        expect(":iframe .test-toolbox-target").toHaveClass("my-custom-class");
+        expect(":iframe .test-options-target").toHaveClass("my-custom-class");
     });
     test("call a shorthand action and a specific action", async () => {
         addOption({
-            selector: ".test-toolbox-target",
+            selector: ".test-options-target",
             actions: {
                 customAction: {
                     apply: ({ editingElement }) => {
@@ -51,18 +51,18 @@ describe("WeButton", () => {
             },
             template: xml`<WeButton action="'customAction'" classAction="'my-custom-class'"/>`,
         });
-        await setupWebsiteBuilder(`<div class="test-toolbox-target">b</div>`);
-        await contains(":iframe .test-toolbox-target").click();
+        await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+        await contains(":iframe .test-options-target").click();
         expect(".options-container").toBeDisplayed();
         await click("[data-action-id='customAction'][data-class-action='my-custom-class']");
-        expect(":iframe .test-toolbox-target").toHaveClass("my-custom-class");
+        expect(":iframe .test-options-target").toHaveClass("my-custom-class");
         // The function `apply` should be called twice (on hover (for preview), then, on click).
         expect.verifySteps(["customAction", "customAction"]);
-        expect(":iframe .test-toolbox-target").toHaveInnerHTML("c");
+        expect(":iframe .test-options-target").toHaveInnerHTML("c");
     });
     test("preview a shorthand action and a specific action", async () => {
         addOption({
-            selector: ".test-toolbox-target",
+            selector: ".test-options-target",
             actions: {
                 customAction: {
                     apply: ({ editingElement }) => {
@@ -73,49 +73,49 @@ describe("WeButton", () => {
             },
             template: xml`<WeButton action="'customAction'" classAction="'my-custom-class'"/>`,
         });
-        await setupWebsiteBuilder(`<div class="test-toolbox-target">b</div>`);
-        await contains(":iframe .test-toolbox-target").click();
+        await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+        await contains(":iframe .test-options-target").click();
         expect(".options-container").toBeDisplayed();
         await hover("[data-action-id='customAction'][data-class-action='my-custom-class']");
-        expect(":iframe .test-toolbox-target").toHaveClass("my-custom-class");
+        expect(":iframe .test-options-target").toHaveClass("my-custom-class");
         expect.verifySteps(["customAction"]);
-        expect(":iframe .test-toolbox-target").toHaveInnerHTML("c");
-        await hover(".test-toolbox-target");
-        expect(":iframe .test-toolbox-target").toHaveInnerHTML("b");
+        expect(":iframe .test-options-target").toHaveInnerHTML("c");
+        await hover(".test-options-target");
+        expect(":iframe .test-options-target").toHaveInnerHTML("b");
         expect.verifySteps([]);
     });
     test("clean another action", async () => {
         addOption({
-            selector: ".test-toolbox-target",
+            selector: ".test-options-target",
             template: xml`
                     <WeButtonGroup>
                         <WeButton classAction="'my-custom-class1'"/>
                         <WeButton classAction="'my-custom-class2'"/>
                     </WeButtonGroup>`,
         });
-        await setupWebsiteBuilder(`<div class="test-toolbox-target">b</div>`);
-        await contains(":iframe .test-toolbox-target").click();
+        await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+        await contains(":iframe .test-options-target").click();
         expect(".options-container").toBeDisplayed();
         await click("[data-class-action='my-custom-class1']");
-        expect(":iframe .test-toolbox-target").toHaveAttribute(
+        expect(":iframe .test-options-target").toHaveAttribute(
             "class",
-            "test-toolbox-target my-custom-class1"
+            "test-options-target my-custom-class1"
         );
         await click("[data-class-action='my-custom-class2']");
-        expect(":iframe .test-toolbox-target").toHaveAttribute(
+        expect(":iframe .test-options-target").toHaveAttribute(
             "class",
-            "test-toolbox-target my-custom-class2"
+            "test-options-target my-custom-class2"
         );
     });
     test("add the active class if the condition is met", async () => {
         addOption({
-            selector: ".test-toolbox-target",
+            selector: ".test-options-target",
             template: xml`
                         <WeButton classAction="'my-custom-class1'"/>
                         <WeButton classAction="'my-custom-class2'"/>`,
         });
-        await setupWebsiteBuilder(`<div class="test-toolbox-target my-custom-class1">b</div>`);
-        await contains(":iframe .test-toolbox-target").click();
+        await setupWebsiteBuilder(`<div class="test-options-target my-custom-class1">b</div>`);
+        await contains(":iframe .test-options-target").click();
         expect("[data-class-action='my-custom-class1']").toHaveClass("active");
         expect("[data-class-action='my-custom-class2']").not.toHaveClass("active");
     });
@@ -123,7 +123,7 @@ describe("WeButton", () => {
 describe("WeButtonGroup", () => {
     test("change the editingElement of sub widget through `applyTo` prop", async () => {
         addOption({
-            selector: ".test-toolbox-target",
+            selector: ".test-options-target",
             actions: {
                 customAction: {
                     apply: ({ editingElement }) => {
@@ -137,18 +137,18 @@ describe("WeButtonGroup", () => {
                     </WeButtonGroup>`,
         });
         await setupWebsiteBuilder(`
-                <div class="test-toolbox-target">
+                <div class="test-options-target">
                     <div class="a">b</div>
                 </div>
             `);
-        await contains(":iframe .test-toolbox-target").click();
+        await contains(":iframe .test-options-target").click();
         expect(".options-container").toBeDisplayed();
         await hover("[data-action-id='customAction']");
         expect.verifySteps(["customAction a"]);
     });
     test("should propagate actionParam in the context", async () => {
         addOption({
-            selector: ".test-toolbox-target",
+            selector: ".test-options-target",
             actions: {
                 customAction: {
                     apply: ({ param }) => {
@@ -162,11 +162,11 @@ describe("WeButtonGroup", () => {
                     </WeButtonGroup>`,
         });
         await setupWebsiteBuilder(`
-                <div class="test-toolbox-target">
+                <div class="test-options-target">
                     <div class="a">b</div>
                 </div>
             `);
-        await contains(":iframe .test-toolbox-target").click();
+        await contains(":iframe .test-options-target").click();
         expect(".options-container").toBeDisplayed();
         await hover("[data-action-id='customAction']");
         expect.verifySteps(["customAction myParam"]);
@@ -175,7 +175,7 @@ describe("WeButtonGroup", () => {
 describe("WeNumberInput", () => {
     test("should get the initial value of the input", async () => {
         addOption({
-            selector: ".test-toolbox-target",
+            selector: ".test-options-target",
             actions: {
                 customAction: {
                     getValue: ({ editingElement }) => {
@@ -189,16 +189,16 @@ describe("WeNumberInput", () => {
             template: xml`<WeNumberInput action="'customAction'"/>`,
         });
         await setupWebsiteBuilder(`
-                <div class="test-toolbox-target">10</div>
+                <div class="test-options-target">10</div>
             `);
-        await contains(":iframe .test-toolbox-target").click();
+        await contains(":iframe .test-options-target").click();
         expect(".options-container").toBeDisplayed();
         const input = queryFirst(".options-container input");
         expect(input).toHaveValue("10");
     });
     test("should preview changes", async () => {
         addOption({
-            selector: ".test-toolbox-target",
+            selector: ".test-options-target",
             actions: {
                 customAction: {
                     getValue: ({ editingElement }) => {
@@ -213,20 +213,20 @@ describe("WeNumberInput", () => {
             template: xml`<WeNumberInput action="'customAction'"/>`,
         });
         await setupWebsiteBuilder(`
-                <div class="test-toolbox-target">10</div>
+                <div class="test-options-target">10</div>
             `);
-        await contains(":iframe .test-toolbox-target").click();
+        await contains(":iframe .test-options-target").click();
         expect(".options-container").toBeDisplayed();
         await click(".options-container input");
         await fill("2");
         expect.verifySteps(["customAction 102"]);
-        expect(":iframe .test-toolbox-target").toHaveInnerHTML("102");
+        expect(":iframe .test-options-target").toHaveInnerHTML("102");
         expect(".o-snippets-top-actions .fa-undo").not.toBeEnabled();
         expect(".o-snippets-top-actions .fa-repeat").not.toBeEnabled();
     });
     test("should commit changes", async () => {
         addOption({
-            selector: ".test-toolbox-target",
+            selector: ".test-options-target",
             actions: {
                 customAction: {
                     getValue: ({ editingElement }) => {
@@ -241,14 +241,14 @@ describe("WeNumberInput", () => {
             template: xml`<WeNumberInput action="'customAction'"/>`,
         });
         await setupWebsiteBuilder(`
-                <div class="test-toolbox-target">10</div>
+                <div class="test-options-target">10</div>
             `);
-        await contains(":iframe .test-toolbox-target").click();
+        await contains(":iframe .test-options-target").click();
         expect(".options-container").toBeDisplayed();
         await click(".options-container input");
         await fill("2");
         expect.verifySteps(["customAction 102"]);
-        expect(":iframe .test-toolbox-target").toHaveInnerHTML("102");
+        expect(":iframe .test-options-target").toHaveInnerHTML("102");
         await click(document.body);
         await animationFrame();
         expect.verifySteps(["customAction 102"]);
@@ -259,7 +259,7 @@ describe("WeNumberInput", () => {
 describe("WeSelectItem", () => {
     test("call a specific action with some params and value (WeSelectItem)", async () => {
         addOption({
-            selector: ".test-toolbox-target",
+            selector: ".test-options-target",
             actions: {
                 customAction: {
                     apply: ({ param, value }) => {
@@ -272,8 +272,8 @@ describe("WeSelectItem", () => {
                         <WeSelectItem action="'customAction'" actionParam="'myParam'" actionValue="'myValue'">MyAction</WeSelectItem>
                     </WeSelect>`,
         });
-        await setupWebsiteBuilder(`<div class="test-toolbox-target">b</div>`);
-        await contains(":iframe .test-toolbox-target").click();
+        await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+        await contains(":iframe .test-options-target").click();
         expect(".options-container").toBeDisplayed();
         await click(".we-bg-options-container .dropdown");
         await animationFrame();
@@ -284,7 +284,7 @@ describe("WeSelectItem", () => {
     });
     test("set the label of the select from the active select item", async () => {
         addOption({
-            selector: ".test-toolbox-target",
+            selector: ".test-options-target",
             template: xml`
                     <WeSelect attributeAction="'customAttribute'">
                         <WeSelectItem attributeActionValue="null">None</WeSelectItem>
@@ -292,8 +292,8 @@ describe("WeSelectItem", () => {
                         <WeSelectItem attributeActionValue="'b'">B</WeSelectItem>
                     </WeSelect>`,
         });
-        await setupWebsiteBuilder(`<div class="test-toolbox-target" customAttribute="a">x</div>`);
-        await contains(":iframe .test-toolbox-target").click();
+        await setupWebsiteBuilder(`<div class="test-options-target" customAttribute="a">x</div>`);
+        await contains(":iframe .test-options-target").click();
         expect(".options-container").toBeDisplayed();
         expect(".we-bg-options-container .dropdown").toHaveText("A");
         await click(".we-bg-options-container .dropdown");
