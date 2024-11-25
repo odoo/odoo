@@ -121,6 +121,26 @@ export function clickCustomer(name) {
         },
     ];
 }
+export function inputCustomerSearchbar(value) {
+    return [
+        {
+            trigger: ".pos-search-bar input",
+            run: `text ${value}`,
+        },
+        {
+            /**
+             * Manually trigger keyup event to show the search field list
+             * because the previous step do not trigger keyup event.
+             */
+            trigger: ".pos-search-bar input",
+            run: function () {
+                document
+                    .querySelector(".pos-search-bar input")
+                    .dispatchEvent(new KeyboardEvent("keyup", { key: "" }));
+            },
+        },
+    ];
+}
 export function clickRefund() {
     return [
         clickReview(),
