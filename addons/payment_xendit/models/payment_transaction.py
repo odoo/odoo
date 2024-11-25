@@ -7,7 +7,9 @@ from werkzeug import urls
 
 from odoo import _, models
 from odoo.exceptions import ValidationError
+from odoo.tools import float_round
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_xendit import const
 
 
@@ -16,6 +18,28 @@ _logger = logging.getLogger(__name__)
 
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
+
+    def _get_specific_processing_values(self, processing_values):
+        """ Override of payment to return Xendit-specific processing values.
+
+        Note: self.ensure_one() from `_get_processing_values`
+
+        :param dict processing_values: The generic processing values of the transaction
+        :return: The dict of provider-specific processing values
+        :rtype: dict
+        """
+        res = super()._get_specific_processing_values(processing_values)
+        if self.provider_code != 'xendit':
+            return res
+
+        if self.currency_id.name in const.CURRENCY_DECIMALS:
+            rounding = const.CURRENCY_DECIMALS.get(self.currency_id.name)
+        else:
+            rounding = self.currency_id.decimal_places
+        rounded_amount = float_round(self.amount, rounding, rounding_method='DOWN')
+        return {
+            'rounded_amount': rounded_amount
+        }
 
     def _get_specific_rendering_values(self, processing_values):
         """ Override of `payment` to return Xendit-specific rendering values.
@@ -108,10 +132,15 @@ class PaymentTransaction(models.Model):
         :param str token_ref: The reference of the Xendit token to use to make the payment.
         :return: None
         """
+        if self.currency_id.name in const.CURRENCY_DECIMALS:
+            rounding = const.CURRENCY_DECIMALS.get(self.currency_id.name)
+        else:
+            rounding = self.currency_id.decimal_places
+        rounded_amount = float_round(self.amount, rounding, rounding_method='DOWN')
         payload = {
             'token_id': token_ref,
             'external_id': self.reference,
-            'amount': self.amount,
+            'amount': rounded_amount,
             'currency': self.currency_id.name,
         }
         charge_notification_data = self.provider_id._xendit_make_request(

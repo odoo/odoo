@@ -121,7 +121,7 @@ paymentForm.include({
                 ...this._xenditGetPaymentDetails(paymentOptionId),
                 // Allow reusing tokens when the users wants to tokenize.
                 is_multiple_use: this.paymentContext.tokenizationRequested,
-                amount: processingValues.amount,
+                amount: processingValues['rounded_amount'],
             },
             (err, token) => this._xenditHandleResponse(err, token, processingValues),
         );

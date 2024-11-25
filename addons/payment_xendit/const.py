@@ -6,6 +6,12 @@ SUPPORTED_CURRENCIES = [
     'PHP',
 ]
 
+# To correctly allow lowest decimal place rounding
+# https://docs.xendit.co/payment-link/payment-channels
+CURRENCY_DECIMALS = {
+    'IDR': 0,
+}
+
 # The codes of the payment methods to activate when Xendit is activated.
 DEFAULT_PAYMENT_METHOD_CODES = {
     # Primary payment methods.
