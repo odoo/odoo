@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="point_of_sale.Many2ManyPlaceholderListView" t-inherit="web.Many2ManyTagsField" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_field_tags')]" position="inside">
+            <span t-elif="!tags.length" class="opacity-50" t-esc="props.placeholder"/>
+        </xpath>
+    </t>
+</templates>
