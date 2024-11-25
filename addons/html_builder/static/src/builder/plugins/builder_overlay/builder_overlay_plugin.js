@@ -5,7 +5,7 @@ export class BuilderOverlayPlugin extends Plugin {
     static id = "builder_overlay";
     static dependencies = ["selection", "overlay"];
     static resources = (p) => ({
-        change_selected_toolboxes_listeners: p.openBuilderOverlay.bind(p),
+        change_current_options_containers_listeners: p.openBuilderOverlay.bind(p),
     });
 
     setup() {

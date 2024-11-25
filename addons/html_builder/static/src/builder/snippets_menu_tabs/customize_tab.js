@@ -6,6 +6,6 @@ export class CustomizeTab extends Component {
     static template = "html_builder.CustomizeTab";
     static components = { WithSubEnv, OptionsContainer };
     static props = {
-        selectedToolboxes: { type: Object },
+        currentOptionsContainers: { type: Object },
     };
 }

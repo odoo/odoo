@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 import { uniqueId } from "@web/core/utils/functions";
 
 export class BuilderOptionsPlugin extends Plugin {
-    static id = "element-toolbox";
+    static id = "builder-options";
     static dependencies = ["selection", "overlay"];
     static resources = (p) => ({
         onSelectionChange: p.onSelectionChange.bind(p),
@@ -11,7 +11,7 @@ export class BuilderOptionsPlugin extends Plugin {
 
     setup() {
         // todo: use resources instead of registry
-        this.toolboxes = registry.category("sidebar-element-option").getAll();
+        this.builderOptions = registry.category("sidebar-element-option").getAll();
         this.addDomListener(this.editable, "pointerup", (e) => {
             if (!this.dependencies.selection.getEditableSelection().isCollapsed) {
                 return;
@@ -36,24 +36,24 @@ export class BuilderOptionsPlugin extends Plugin {
 
     changeSidebarTarget(selectedElement) {
         const map = new Map();
-        for (const toolbox of this.toolboxes) {
-            const { selector } = toolbox;
+        for (const option of this.builderOptions) {
+            const { selector } = option;
             const element = selectedElement.closest(selector);
             if (element) {
                 if (map.has(element)) {
-                    map.get(element).push(toolbox);
+                    map.get(element).push(option);
                 } else {
-                    map.set(element, [toolbox]);
+                    map.set(element, [option]);
                 }
             }
         }
-        const toolboxes = [...map]
+        const optionsContainers = [...map]
             .sort(([a], [b]) => {
                 return b.contains(a) ? 1 : -1;
             })
-            .map(([element, toolbox]) => ({ element, toolbox, id: uniqueId() }));
-        for (const handler of this.getResource("change_selected_toolboxes_listeners")) {
-            handler(toolboxes);
+            .map(([element, options]) => ({ element, options, id: uniqueId() }));
+        for (const handler of this.getResource("change_current_options_containers_listeners")) {
+            handler(optionsContainers);
         }
         return;
     }
