@@ -9,7 +9,7 @@
                 <filter name="absent" string="Absent" domain="[('hr_presence_state_display', '=', 'absent')]"/>
                 <filter name="out_of_working_hours" string="Out of Working Hours" domain="[('hr_presence_state_display', '=', 'out_of_working_hour')]"/>
             </filter>
-            <filter name="group_start" position="before">
+            <filter name="group_birthday" position="before">
                 <filter name="group_hr_presence_state" string="Presence/Absence" domain="[]" context="{'group_by':'hr_presence_state_display'}" groups="hr.group_hr_manager"/>
             </filter>
         </field>
@@ -21,7 +21,7 @@
         <field name="inherit_id" ref="hr.view_employee_tree"/>
         <field name="arch" type="xml">
             <field name="work_email" position="after">
-                <field name="hr_presence_state_display" string="Presence" optional="show"/>
+                <field name="hr_presence_state_display" string="Presence" optional="hide"/>
             </field>
         </field>
     </record>
