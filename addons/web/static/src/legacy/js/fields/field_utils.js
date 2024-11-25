@@ -296,7 +296,7 @@ function formatMany2one(value, field, options) {
  * @returns {string}
  */
 function formatX2Many(value) {
-    if (value.data.length === 0) {
+    if (!value.data || value.data.length === 0) {
         return _t('No records');
     } else if (value.data.length === 1) {
         return _t('1 record');
