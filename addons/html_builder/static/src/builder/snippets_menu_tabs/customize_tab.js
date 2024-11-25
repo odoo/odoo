@@ -5,6 +5,9 @@ export class CustomizeTab extends Component {
     static template = "html_builder.CustomizeTab";
     static components = { OptionsContainer };
     static props = {
-        currentOptionsContainers: { type: Object },
+        currentOptionsContainers: { type: Array, optional: true },
+    };
+    static defaultProps = {
+        currentOptionsContainers: [],
     };
 }
