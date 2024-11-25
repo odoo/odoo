@@ -41,9 +41,15 @@ patch(Thread, {
     },
 });
 
-patch(Thread.prototype, {
+/** @type {import("models").Thread} */
+const threadPatch = {
     setup() {
         super.setup(...arguments);
+        this.discussAppCategory = Record.one("DiscussAppCategory", {
+            compute() {
+                return this._computeDiscussAppCategory();
+            },
+        });
         this.from_message_id = Record.one("mail.message");
         this.parent_channel_id = Record.one("Thread", {
             onDelete() {
@@ -71,6 +77,17 @@ patch(Thread.prototype, {
     },
     get canUnpin() {
         return (this.parent_channel_id && this.importantCounter === 0) || super.canUnpin;
+    },
+    _computeDiscussAppCategory() {
+        if (this.parent_channel_id) {
+            return;
+        }
+        if (["group", "chat"].includes(this.channel_type)) {
+            return this.store.discuss.chats;
+        }
+        if (this.channel_type === "channel") {
+            return this.store.discuss.channels;
+        }
     },
     get allowCalls() {
         return super.allowCalls && !this.parent_channel_id;
@@ -156,4 +173,5 @@ patch(Thread.prototype, {
             this.isLocallyPinned = true;
         }
     },
-});
+};
+patch(Thread.prototype, threadPatch);
