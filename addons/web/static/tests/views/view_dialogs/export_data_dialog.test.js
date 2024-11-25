@@ -1105,3 +1105,70 @@ test("Export dialog: no column_invisible fields in default export list", async (
     expect(".modal .o_export_field").toHaveCount(1);
     expect(".modal .o_export_field").toHaveText("Foo");
 });
+
+import { ListController } from "@web/views/list/list_controller";
+
+test("domain handling in getExportedFields", async () => {
+    const rpcCalls = [];
+
+    onRpc("/web/export/get_fields", async (request) => {
+        const bodyText = await request.text();
+        const params = JSON.parse(bodyText)['params'];
+        rpcCalls.push(params);
+        return [];
+    });
+
+    onRpc("res.users", "has_group", () => {
+        return true;
+    });
+
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: `
+            <list>
+                <field name="display_name"/>
+            </list>
+        `, 
+    });
+
+    const controller = new ListController({
+        props: {
+            Model: class {},
+            archInfo: { activeActions: {} },
+            fields: {},
+            info: { actionMenus: {} },
+        }
+    });
+
+    controller.model = {
+        root: {
+            domain: [["name", "ilike", "Partner"]],
+            resModel: "partner",
+            getResIds: async () => [1, 2],
+            _isDomainSelected: true,
+            get isDomainSelected() {
+                return this._isDomainSelected;
+            },
+            set isDomainSelected(value) {
+                this._isDomainSelected = value;
+            }
+        }
+    };
+
+    // if resModle and model are the same, and `isDomainSelected` is true then domain of root should be used should be used
+    controller.model.root.isDomainSelected = true;
+    await controller.getExportedFields("partner", false, {});
+    expect(rpcCalls[0].domain).toEqual([["name", "ilike", "Partner"]]);
+
+    // if resModle and model are not the same, and `isDomainSelected` is true then domain should be empty
+    controller.model.root.resModel = "res.users";
+    await controller.getExportedFields("partner", false, {});
+    expect(rpcCalls[1].domain).toEqual([]);
+
+    // if isDomainSelected is false then domain should be getResIds()
+    controller.model.root.isDomainSelected = false;
+    await controller.getExportedFields("partner", false, {});
+    expect(rpcCalls[2].domain).toEqual([["id", "in", [1, 2]]]);
+
+});
