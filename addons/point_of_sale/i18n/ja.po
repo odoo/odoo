@@ -6,8 +6,8 @@
 # Noma Yuki, 2024
 # Martin Trigaux, 2024
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
-# Junko Augias, 2024
 # Wil Odoo, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 07:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -559,6 +559,12 @@ msgstr "Stripe決済端末での支払いを受け付ける"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with an Adyen payment terminal"
 msgstr "Adyen決済端末での支払いを受け付ける"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
+msgid "Access Denied"
+msgstr "アクセスが拒否されました。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__access_token
@@ -1134,13 +1140,13 @@ msgstr "ベーグル"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Bakery"
-msgstr "パン屋"
+msgstr "製パン店"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Bakery Shop"
-msgstr "パン屋店舗"
+msgstr "製パン店 店舗"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3582,6 +3588,14 @@ msgid "It is possible to print your tickets by making use of an IoT Box."
 msgstr "IoTボックスを利用すれば、チケットの印刷も可能です。"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
+msgid ""
+"It seems like you don't have enough rights to create point of sale "
+"configurations."
+msgstr "POS設定を作成する権限がないようです。"
+
+#. module: point_of_sale
 #: model:product.template,name:point_of_sale.jean_jacket_product_template
 msgid "Jean Jacket"
 msgstr "デニムジャケット"
@@ -4793,7 +4807,7 @@ msgstr "ペストリー"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "Pay"
-msgstr "お支払い"
+msgstr "支払"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment
@@ -4959,7 +4973,7 @@ msgstr "支払差額"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_payment_methods_tree
 msgid "Payments Methods"
-msgstr "お支払い方法"
+msgstr "支払方法"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6207,7 +6221,7 @@ msgstr "要求が送信されました"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Rescue Sessions"
-msgstr ""
+msgstr "レスキューセッション"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6703,13 +6717,13 @@ msgstr "プロダクト毎に複数の価格や自動値引などを設定"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid "Set the new discount"
-msgstr ""
+msgstr "新規割引を設定"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid "Set the new price"
-msgstr ""
+msgstr "新規価格を設定"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7915,6 +7929,9 @@ msgid ""
 "\n"
 "Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"
 msgstr ""
+"プロダクトを削除するには、全てのPOSセッションが終了していることを確認して下さい。\n"
+"\n"
+"セッションで利用可能なプロダクトを削除することは、ハンバーガーを食べている途中の客の手からハンバーガーを奪い取ろうとするようなものです!"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7922,7 +7939,7 @@ msgstr ""
 msgid ""
 "To ensure due balance follow-up, generate an invoice or download the "
 "accounting application. "
-msgstr ""
+msgstr "支払残高を確実にフォローアップするために、顧客請求書を作成するか、会計アプリケーションをダウンロードして下さい。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice
@@ -7993,7 +8010,7 @@ msgstr "合計税抜価格:"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__amount
 msgid "Total amount of the payment."
-msgstr "お支払い総額。"
+msgstr "支払総額。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__total_cost
@@ -8618,7 +8635,7 @@ msgstr "複数の現金支払方法で同じ仕訳帳を使用することはで
 msgid ""
 "You do not have permission to open a POS session. Please try opening a "
 "session with a different user"
-msgstr ""
+msgstr "POSセッションを開く権限がありません。別のユーザでセッションを開いてみて下さい。"
 
 #. module: point_of_sale
 #. odoo-python

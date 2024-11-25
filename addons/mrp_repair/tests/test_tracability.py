@@ -260,7 +260,6 @@ class TestRepairTraceability(TestMrpCommon):
         """
         stock_location = self.env.ref('stock.stock_location_stock')
         scrap_location = self.env['stock.location'].search([('company_id', '=', self.env.company.id), ('scrap_location', '=', True)], limit=1)
-        internal_type = self.env.ref('stock.picking_type_internal')
 
         finished = self.bom_4.product_id
         component = self.bom_4.bom_line_ids.product_id
@@ -308,7 +307,6 @@ class TestRepairTraceability(TestMrpCommon):
             'product_id': component.id,
             'product_uom_qty': 1,
             'product_uom': component.uom_id.id,
-            'picking_id': internal_type.id,
             'location_id': scrap_location.id,
             'location_dest_id': stock_location.id,
         })

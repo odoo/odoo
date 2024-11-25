@@ -12088,3 +12088,62 @@ test("onchange returns values w.r.t. extended record specs, for not extended one
     await contains(`.o_form_button_save`).click();
     expect.verifySteps(["web_save"]);
 });
+
+test(`do not perform button action for records with invalid datas`, async () => {
+        mockService("action", {
+            doActionButton(params) {
+                expect.step("Perform Action");
+                expect(params.name).toBe("lovely action");
+            },
+        });
+        mockService("notification", {
+            add: (message) => {
+                expect.step(`Pop Up: Invalid Field: ${message}`);
+            },
+        });
+        defineActions([
+            {
+                id: "lovely action",
+                name: "lovely action",
+                res_model: "partner",
+                type: "ir.actions.server",
+            },
+        ]);
+        patchWithCleanup(FormController.prototype, {
+            beforeExecuteActionButton(clickParams) {
+                expect.step("Check/prepare record datas");
+                return super.beforeExecuteActionButton(clickParams);
+            }
+        });
+        onRpc("partner", "web_save", () => {
+            expect.step("web_save");
+        });
+        // The records data are invalid since foo is required
+        Partner._records[0].name = "Bob";
+        Partner._records[0].foo = "";
+        await mountView({
+            resModel: "partner",
+            type: "form",
+            arch: `
+                <form>
+                    <field name="foo" required="1"></field>
+                    <button type="action" name="lovely action" string="Use Foo"/>
+                </form>`,
+            resId: 1,
+        });
+        expect.verifySteps([]);
+        // Try to perform the action with invalid datas
+        await contains(".btn[name='lovely action']").click();
+        // the action should not be called thanks to the `_checkValidity`
+        expect.verifySteps([
+            "Check/prepare record datas",
+            "Pop Up: Invalid Field: <ul><li>Foo</li></ul>",
+        ]);
+        // Edit the required field
+        await contains(`.o_input`).edit("Foo Value");
+        // Try to perform the action once more
+        await contains(".btn[name='lovely action']").click();
+        // the record should have been saved and the action performed.
+        expect.verifySteps(["Check/prepare record datas", "web_save", "Perform Action"]);
+    }
+);

@@ -5,13 +5,14 @@ import { click } from "@odoo/hoot-dom";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { getContent, setContent } from "./_helpers/selection";
 import { withSequence } from "@html_editor/utils/resource";
+import { execCommand } from "./_helpers/userCommands";
 
 test("can instantiate a Editor", async () => {
     const { el, editor } = await setupEditor("<p>hel[lo] world</p>", {});
     expect(el.innerHTML).toBe(`<p>hello world</p>`);
     expect(getContent(el)).toBe(`<p>hel[lo] world</p>`);
     setContent(el, "<div>a[dddb]</div>");
-    editor.dispatch("FORMAT_BOLD");
+    execCommand(editor, "formatBold");
     expect(getContent(el)).toBe(`<div>a<strong>[dddb]</strong></div>`);
 });
 
@@ -35,7 +36,7 @@ test.tags("iframe")("can instantiate a Editor in an iframe", async () => {
     expect(el.innerHTML).toBe(`<p>hello world</p>`);
     expect(getContent(el)).toBe(`<p>hel[lo] world</p>`);
     setContent(el, "<div>a[dddb]</div>");
-    editor.dispatch("FORMAT_BOLD");
+    execCommand(editor, "formatBold");
     expect(getContent(el)).toBe(`<div>a<strong>[dddb]</strong></div>`);
 });
 
@@ -82,7 +83,7 @@ test("no arrow key press or mouse click should keep selection near a contentedit
 test("event handlers are properly cleaned up after destruction", async () => {
     let count = 0;
     class TestHandlerPlugin extends Plugin {
-        static name = "test_handler";
+        static id = "testHandler";
 
         setup() {
             this.addDomListener(document.body, "click", () => count++);
@@ -105,7 +106,7 @@ test("event handlers are properly cleaned up after destruction", async () => {
 test("can give resources in config", async () => {
     expect.assertions(1);
     class TestPlugin extends Plugin {
-        static name = "test";
+        static id = "test";
 
         setup() {
             expect(this.getResource("some")).toEqual(["value"]);
@@ -123,7 +124,7 @@ test("can give resources in config", async () => {
 test("resource can have sequence", async () => {
     expect.assertions(1);
     class TestPlugin extends Plugin {
-        static name = "test";
+        static id = "test";
         resources = {
             test_resource: [
                 { value: 2 },

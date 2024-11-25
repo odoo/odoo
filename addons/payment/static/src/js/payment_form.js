@@ -394,9 +394,8 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
             if (error instanceof RPCError) {
                 this._displayErrorDialog(_t("Payment processing failed"), error.data.message);
                 this._enableButton(); // The button has been disabled before initiating the flow.
-            } else {
-                return Promise.reject(error);
             }
+            return Promise.reject(error);
         });
     },
 

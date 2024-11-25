@@ -39,7 +39,8 @@ export class ClosePosPopup extends Component {
     }
     autoFillCashCount() {
         const count = this.props.default_cash_details.amount;
-        this.state.payments[this.props.default_cash_details.id].counted = count.toString();
+        this.state.payments[this.props.default_cash_details.id].counted =
+            this.env.utils.formatCurrency(count, false);
         this.setManualCashInput(count);
     }
     get cashMoveData() {
@@ -244,34 +245,39 @@ export class ClosePosPopup extends Component {
         }
     }
     async handleClosingControlError() {
-        this.dialog.add(AlertDialog, {
-            title: _t("Closing session error"),
-            body: _t(
-                "An error has occurred when trying to close the session.\n" +
-                    "You will be redirected to the back-end to manually close the session."
-            ),
-            onClose: () => {
-                this.dialog.add(
-                    FormViewDialog,
-                    {
-                        resModel: "pos.session",
-                        resId: this.pos.session.id,
-                    },
-                    {
-                        onClose: async () => {
-                            const session = await this.pos.data.read("pos.session", [
-                                this.pos.session.id,
-                            ]);
-                            if (session[0] && session[0].state === "closed") {
-                                location.reload();
-                            } else {
-                                this.pos.redirectToBackend();
-                            }
-                        },
-                    }
-                );
+        this.dialog.add(
+            AlertDialog,
+            {
+                title: _t("Closing session error"),
+                body: _t(
+                    "An error has occurred when trying to close the session.\n" +
+                        "You will be redirected to the back-end to manually close the session."
+                ),
             },
-        });
+            {
+                onClose: () => {
+                    this.dialog.add(
+                        FormViewDialog,
+                        {
+                            resModel: "pos.session",
+                            resId: this.pos.session.id,
+                        },
+                        {
+                            onClose: async () => {
+                                const session = await this.pos.data.read("pos.session", [
+                                    this.pos.session.id,
+                                ]);
+                                if (session[0] && session[0].state === "closed") {
+                                    location.reload();
+                                } else {
+                                    this.pos.redirectToBackend();
+                                }
+                            },
+                        }
+                    );
+                },
+            }
+        );
     }
     async handleClosingError(response) {
         this.dialog.add(ConfirmationDialog, {

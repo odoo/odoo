@@ -35,6 +35,7 @@ import { ActionScreen } from "@point_of_sale/app/screens/action_screen";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { CashMovePopup } from "@point_of_sale/app/navbar/cash_move_popup/cash_move_popup";
 import { ClosePosPopup } from "../navbar/closing_popup/closing_popup";
+import { user } from "@web/core/user";
 
 const { DateTime } = luxon;
 
@@ -1487,7 +1488,11 @@ export class PosStore extends Reactive {
         const baseUrl = this.session._base_url;
         return order.export_for_printing(baseUrl, headerData);
     }
-    async printReceipt({ basic = false, order = this.get_order() } = {}) {
+    async printReceipt({
+        basic = false,
+        order = this.get_order(),
+        printBillActionTriggered = false,
+    } = {}) {
         await this.printer.print(
             OrderReceipt,
             {
@@ -1497,8 +1502,10 @@ export class PosStore extends Reactive {
             },
             { webPrintFallback: true }
         );
-        const nbrPrint = order.nb_print;
-        await this.data.write("pos.order", [order.id], { nb_print: nbrPrint + 1 });
+        if (!printBillActionTriggered) {
+            const nbrPrint = order.nb_print;
+            await this.data.write("pos.order", [order.id], { nb_print: nbrPrint + 1 });
+        }
         return true;
     }
     getOrderChanges(skipped = false, order = this.get_order()) {
@@ -1772,6 +1779,9 @@ export class PosStore extends Reactive {
             }
         );
     }
+    async allowProductCreation() {
+        return await user.hasGroup("base.group_system");
+    }
     async orderDetails(order) {
         this.dialog.add(FormViewDialog, {
             resModel: "pos.order",
@@ -2041,14 +2051,7 @@ export class PosStore extends Reactive {
             if (this._shouldLoadOrders()) {
                 try {
                     this.setLoadingOrderState(true);
-                    const orders = await this.getServerOrders();
-                    if (orders && orders.length > 0) {
-                        const message = _t(
-                            "%s orders have been loaded from the server. ",
-                            orders.length
-                        );
-                        this.notification.add(message);
-                    }
+                    await this.getServerOrders();
                 } finally {
                     this.setLoadingOrderState(false);
                     this.showScreen("TicketScreen");

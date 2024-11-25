@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2024-10-25 07:49+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
@@ -28,6 +28,12 @@ msgstr ""
 #: code:addons/web/static/src/core/expression_editor/expression_editor.xml:0
 msgid "# Code editor"
 msgstr "# Code editor"
+
+#. module: web
+#. odoo-python
+#: code:addons/web/controllers/export.py:0
+msgid "%(property_string)s (%(parent_name)s)"
+msgstr "%(property_string)s (%(parent_name)s)"
 
 #. module: web
 #. odoo-javascript
@@ -1323,6 +1329,12 @@ msgid "Barcode Scanner"
 msgstr "Barcodescanner"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/barcode/barcode_video_scanner.js:0
+msgid "Barcode Video Scanner could not be mounted properly."
+msgstr "Barcode-videoscanner kon niet goed worden gemonteerd."
+
+#. module: web
 #: model:ir.model,name:web.model_base
 msgid "Base"
 msgstr "Basis"
@@ -1421,7 +1433,7 @@ msgid ""
 " all purposes when it is used on documents, including legally binding "
 "contracts."
 msgstr ""
-"Door op Aannemen & Ondertekenen te klikken, ga ik ermee akkoord dat de "
+"Door op Bevestigen & Ondertekenen te klikken, ga ik ermee akkoord dat de "
 "gekozen handtekening/initialen een geldige elektronische weergave zijn van "
 "mijn handgeschreven handtekening/initialen voor alle doeleinden wanneer deze"
 " wordt gebruikt op documenten, inclusief juridisch bindende contracten."
@@ -2152,6 +2164,12 @@ msgid "Data"
 msgstr "Data"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/debug_items.js:0
+msgid "Data: %(model)s(%(id)s)"
+msgstr "Data: %(model)s(%(id)s)"
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
 msgid "Database"
 msgstr "Database"
@@ -2471,6 +2489,17 @@ msgstr "Geeft de tijd in de datumwaarde weer of verbergt deze."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/char/char_field.js:0
+msgid ""
+"Displays the value of the selected field as a textual hint. If the selected "
+"field is empty, the static placeholder attribute is displayed instead."
+msgstr ""
+"Toont de waarde van het geselecteerde veld als een tekstuele hint. Als het "
+"geselecteerde veld leeg is, wordt in plaats daarvan het statische "
+"placeholderattribuut weergegeven."
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/file_upload/file_upload_progress_bar.js:0
 msgid "Do you really want to cancel the upload of %s?"
 msgstr "Wil je de upload van %s echt annuleren?"
@@ -2579,7 +2608,7 @@ msgstr "Dupliceren"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/char/char_field.js:0
-msgid "Dynamic placeholder"
+msgid "Dynamic Placeholder"
 msgstr "Dynamische placeholder"
 
 #. module: web
@@ -2668,15 +2697,6 @@ msgstr "Regeleinden inschakelen"
 #: code:addons/web/static/src/webclient/debug/profiling/profiling_item.xml:0
 msgid "Enable profiling"
 msgstr "Profilering inschakelen"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/fields/char/char_field.js:0
-msgid ""
-"Enable this option to allow the input to display a dynamic placeholder."
-msgstr ""
-"Schakel deze optie in om toe te staan dat de invoer een dynamische "
-"tijdelijke aanduiding weergeeft."
 
 #. module: web
 #. odoo-javascript
@@ -3288,6 +3308,19 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.js:0
+msgid ""
+"If checked, clicking on the tag will open the form that allows to directly "
+"edit it. Note that if a color field is also set, the tag edition will "
+"prevail. So, the color picker will not be displayed on click on the tag."
+msgstr ""
+"Als deze optie is aangevinkt, opent een klik op de tag het formulier waarmee"
+" je de tag direct kunt bewerken. Merk op dat als er ook een kleurveld is "
+"ingesteld, de tag editie voorrang heeft. De kleurenkiezer wordt dus niet "
+"weergegeven als je op de tag klikt."
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/boolean_favorite/boolean_favorite_field.js:0
 #: code:addons/web/static/src/views/fields/boolean_toggle/boolean_toggle_field.js:0
 #: code:addons/web/static/src/views/fields/priority/priority_field.js:0
@@ -3297,16 +3330,6 @@ msgid ""
 msgstr ""
 "Indien aangevinkt, wordt het record direct opgeslagen wanneer het veld wordt"
 " gewijzigd."
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.js:0
-msgid ""
-"If checked, users will be able to edit tag related records by clicking on "
-"the tags."
-msgstr ""
-"Als deze optie is aangevinkt, kunnen gebruikers label-gerelateerde records "
-"bewerken door op de labels te klikken."
 
 #. module: web
 #. odoo-javascript
@@ -3448,6 +3471,12 @@ msgid "Invalid data"
 msgstr "Ongeldige gegevens"
 
 #. module: web
+#. odoo-python
+#: code:addons/web/controllers/json.py:0
+msgid "Invalid default search filter name for %s"
+msgstr "Ongeldige standaard zoekfilternaam voor %s"
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
 msgid "Invalid domain"
@@ -3502,6 +3531,12 @@ msgstr "Ongeldig model: %s"
 #: code:addons/web/static/src/core/tree_editor/tree_editor_autocomplete.js:0
 msgid "Invalid record ID: %s"
 msgstr "Ongeldig record-ID: %s"
+
+#. module: web
+#. odoo-python
+#: code:addons/web/controllers/json.py:0
+msgid "Invalid view type '%(view_type)s' for action id=%(action)s"
+msgstr "Ongeldig weergavetype '%(view_type)s' voor actie id=%(action)s"
 
 #. module: web
 #. odoo-javascript
@@ -4157,6 +4192,12 @@ msgid "Missing Record"
 msgstr "Ontbrekend record"
 
 #. module: web
+#. odoo-python
+#: code:addons/web/controllers/json.py:0
+msgid "Missing record id"
+msgstr "Ontbrekend record id"
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/fields/upgrade_dialog.xml:0
 msgid "Mobile support"
@@ -4193,12 +4234,6 @@ msgstr "Modelveld"
 #: code:addons/web/static/src/views/fields/field_tooltip.xml:0
 msgid "Model field:"
 msgstr "Modelveld:"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/fields/char/char_field.js:0
-msgid "Model reference field"
-msgstr "Modelreferentieveld"
 
 #. module: web
 #. odoo-javascript
@@ -5106,12 +5141,6 @@ msgstr "Draaitabel instellingen"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/char/char_field.js:0
-msgid "Placeholder field"
-msgstr "Plaatshouderveld"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/ui/block_ui.js:0
 msgid "Please be patient."
 msgstr "Wees alsjeblieft geduldig."
@@ -5650,18 +5679,6 @@ msgstr "Draaien (r)"
 #: code:addons/web/static/src/webclient/clickbot/clickbot_loader.js:0
 msgid "Run Click Everywhere"
 msgstr "Overal klikken"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/debug/debug_providers.js:0
-msgid "Run QUnit Mobile Tests (legacy)"
-msgstr "QUnit mobiele testen uitvoeren (legacy)"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/debug/debug_providers.js:0
-msgid "Run QUnit Tests (legacy)"
-msgstr "QUnit testen uitvoeren (legacy)"
 
 #. module: web
 #. odoo-javascript
@@ -6990,6 +7007,12 @@ msgid "Unselect All"
 msgstr "Deselecteer alles"
 
 #. module: web
+#. odoo-python
+#: code:addons/web/controllers/json.py:0
+msgid "Unsupported server action"
+msgstr "Niet-ondersteunde serveractie"
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/graph/graph_view.js:0
 #: code:addons/web/static/src/views/pivot/pivot_view.js:0
@@ -7220,7 +7243,7 @@ msgstr "Bekijk"
 #. odoo-javascript
 #: code:addons/web/static/src/views/list/list_renderer.xml:0
 msgid "View Button"
-msgstr "Knop Weergave"
+msgstr "Bekijkknop"
 
 #. module: web
 #. odoo-javascript
@@ -7494,7 +7517,7 @@ msgstr ""
 
 #. module: web
 #. odoo-python
-#: code:addons/web/controllers/home.py:0
+#: code:addons/web/controllers/json.py:0
 msgid "You need export permissions to use the /json route"
 msgstr "Je hebt exportrechten nodig om de /json route te gebruiken"
 
@@ -16957,7 +16980,7 @@ msgstr "man in lotushouding"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "man in manual wheelchair"
-msgstr "man in manuele rolstoel"
+msgstr "man in rolstoel"
 
 #. module: web
 #. odoo-javascript
@@ -17269,7 +17292,7 @@ msgstr "mantilla"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "manual wheelchair"
-msgstr "manuele rolstoel"
+msgstr "rolstoel"
 
 #. module: web
 #. odoo-javascript
@@ -25736,7 +25759,7 @@ msgstr "vrouw in lotushouding"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "woman in manual wheelchair"
-msgstr "vrouw in manuele rolstoel"
+msgstr "vrouw in rolstoel"
 
 #. module: web
 #. odoo-javascript

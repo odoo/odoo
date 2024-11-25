@@ -9,7 +9,6 @@
 # Siim Raasuke, 2024
 # Katrin Kampura, 2024
 # Martin Trigaux, 2024
-# Stevin Lilla, 2024
 # Birgit Vijar, 2024
 # Piia Paurson <piia@avalah.ee>, 2024
 # Martin Aavastik <martin@avalah.ee>, 2024
@@ -19,6 +18,7 @@
 # JanaAvalah, 2024
 # Triine Aavik <triine@avalah.ee>, 2024
 # Anna, 2024
+# Stevin Lilla, 2024
 # 
 msgid ""
 msgstr ""
@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:56+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Anna, 2024\n"
+"Last-Translator: Stevin Lilla, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -131,12 +131,12 @@ msgstr "4 päeva pärast invervjuud"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "<b>Daily Cost: </b>"
-msgstr ""
+msgstr "<b>Päevakulu: </b>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "<b>Unit Price: </b>"
-msgstr ""
+msgstr "<b>Ühiku hind: </b>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
@@ -162,6 +162,9 @@ msgid ""
 "order associated with this timesheet entry has been cancelled.\" "
 "invisible=\"sale_order_state != 'cancel'\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"The sales "
+"order associated with this timesheet entry has been cancelled.\" "
+"invisible=\"sale_order_state != 'cancel'\"/>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
@@ -323,6 +326,15 @@ msgid ""
 "                        outside the box. We expect the candidate to be proactive and have a \"get it done\"\n"
 "                        spirit. To be successful, you will have solid solving problem skills."
 msgstr ""
+"Meie ettevõtte töötajana teete <b>koostööd iga osakonnaga\n"
+"                         toodete loomiseks ja juurutamiseks.</b> Tulge tööle kasvavasse ettevõttesse\n"
+"                         mis pakub suuri eeliseid koos võimalusega edasi liikuda ja õppida\n"
+"                         kõrvuti edukate juhtidega. Otsime kogenud ja silmapaistvat inimest\n"
+"                         meeskonnaliiget.\\\n"
+"                         <br><br>\n"
+"                         See ametikoht on oma olemuselt nii <b>loov kui ka range</b>, peate mõtlema\n"
+"                         väljaspool kasti. Ootame kandidaadilt proaktiivset suhtumist ja \"teen ära\"\n"
+"                         suhtumist. Edu saavutamiseks tulevad kasuks head probleemide lahendamise oskused."
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -352,7 +364,7 @@ msgstr "Arveldatav"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__billable_time
 msgid "Billable Time"
-msgstr ""
+msgstr "Arveldatav aeg"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__timesheet_invoice_type
@@ -549,6 +561,11 @@ msgid ""
 "                    Several activities are often organized all over the year, such as weekly\n"
 "                    sports sessions, team building events, monthly drink, and much more"
 msgstr ""
+"Igal töötajal on võimalus näha oma töö mõju.\n"
+"                         Saate anda tõelise panuse ettevõtte edusse.\n"
+"                         <br>\n"
+"                         Sageli korraldatakse aastaringselt mitmeid tegevusi, näiteks kord nädalas\n"
+"                         sporditunnid, meeskonnaüritused ja palju muud"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -560,7 +577,7 @@ msgstr "Söök ja jook"
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_product_elevator_installation_product_template
 msgid "Elevator Installation"
-msgstr ""
+msgstr "Lifti paigaldus"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_hr_employee
@@ -631,7 +648,7 @@ msgstr "Toetav, sõbralik ja professionaalne meeskond."
 #. module: sale_timesheet
 #: model:hr.job,name:sale_timesheet.job_labour
 msgid "Handyman"
-msgstr ""
+msgstr "Käsitööline"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__has_multi_sol
@@ -669,12 +686,12 @@ msgstr "ID"
 #. module: sale_timesheet
 #: model:hr.job,name:sale_timesheet.job_interior_designer
 msgid "Interior Designer"
-msgstr ""
+msgstr "Sisekujundaja"
 
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_product_interior_designing_product_template
 msgid "Interior Designing"
-msgstr ""
+msgstr "Sisekujundus"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -697,7 +714,7 @@ msgstr "Arvelduse meetod"
 #. odoo-python
 #: code:addons/sale_timesheet/models/product_template.py:0
 msgid "Invoice based on timesheets (delivered quantity)."
-msgstr ""
+msgstr "Arve põhineb tööaja arvestuslehtedelt (tarnitud kogused). "
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
@@ -886,7 +903,7 @@ msgstr "Mittearveldatav"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__non_billable_time
 msgid "Non-billable Time"
-msgstr ""
+msgstr "Mittearveldatav aeg"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
@@ -1099,7 +1116,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_product_roofing_product_template
 msgid "Roofing"
-msgstr ""
+msgstr "Katusetööd"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
@@ -1215,12 +1232,12 @@ msgstr "Teenused"
 #. module: sale_timesheet
 #: model:hr.job,name:sale_timesheet.job_engineer
 msgid "Site Manager"
-msgstr ""
+msgstr "Objekti juht"
 
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_product_solar_installation_product_template
 msgid "Solar Panel Installation"
-msgstr ""
+msgstr "Päikesepaneelide paigaldus"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -1428,7 +1445,7 @@ msgstr "Tööaja arvestuslehed (Fikseeritud hind)"
 #. odoo-python
 #: code:addons/sale_timesheet/models/project_project.py:0
 msgid "Timesheets (Non-Billable)"
-msgstr ""
+msgstr "Tööaja arvestuslehed (Mittearveldatav)"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_pivot_invoice_type
@@ -1490,7 +1507,7 @@ msgstr "Timesheets taken when invoicing time spent"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "Timesheets without a sales order item are reported as"
-msgstr ""
+msgstr "Tööaja arvestuslehed ilma müügitellimuse artiklita märgitakse kui "
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
@@ -1572,7 +1589,7 @@ msgstr "Väärtus ei ole hinnakujundustüübis olemas"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit
 msgid "View Timesheet"
-msgstr ""
+msgstr "Vaata tööaja arvestuslehti"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit

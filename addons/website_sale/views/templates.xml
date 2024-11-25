@@ -1696,7 +1696,7 @@
                       t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                 <span itemprop="price" style="display:none;" t-out="combination_info['price']"/>
                 <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name"/>
-                <span t-attf-class="text-danger oe_default_price ms-1 h5 {{'' if combination_info['has_discounted_price'] and not combination_info['compare_list_price'] else 'd-none'}}"
+                <span t-attf-class="text-muted oe_default_price ms-1 h5 {{'' if combination_info['has_discounted_price'] and not combination_info['compare_list_price'] else 'd-none'}}"
                       style="text-decoration: line-through; white-space: nowrap;"
                       t-esc="combination_info['list_price']"
                       t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
@@ -1704,7 +1704,7 @@
                 />
                 <t t-if="is_view_active('website_sale.tax_indication')" t-call="website_sale.tax_indication"/>
                 <del t-if="combination_info['compare_list_price'] and (combination_info['compare_list_price'] &gt; combination_info['price'])"
-                    class="text-danger ms-1 h5 oe_compare_list_price">
+                    class="text-muted ms-1 h5 oe_compare_list_price">
                     <bdi dir="inherit">
                     <span t-esc="combination_info['compare_list_price']"
                           groups="website_sale.group_product_price_comparison"
@@ -1902,14 +1902,29 @@
                  t-attf-class="o_cart_product d-flex align-items-stretch gap-3 #{line.linked_line_id and 'optional_product info'} #{not line_last and 'border-bottom pb-4'} #{line_index &gt; 0 and 'pt-4'}"
                  t-attf-data-product-id="#{line.product_id and line.product_id.id}">
                 <t t-if="line.product_id">
-                    <img t-if="line._is_not_sellable_line() and line.product_id.image_128"
-                         t-att-src="image_data_uri(line.product_id.image_128)"
-                         class="o_image_64_max  img rounded"
-                         t-att-alt="line.name_short"/>
-                    <div t-elif="line.product_id.image_128"
-                         t-field="line.product_id.image_128"
-                         t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'o_image_64_max rounded'}"/>
-                    <div t-else="" class="o_image_64_contain invisible"/>
+                    <div style="width: 64px">
+                        <!--
+                            Unsellable lines can have unpublished products, but portal users have no
+                            access to unpublished product images. To ensure product images are
+                            always shown for unsellable lines, we use the raw image data as src
+                            (which doesn't require access, unlike the image URL).
+                        -->
+                        <img
+                            t-if="line._is_not_sellable_line() and line.product_id.image_128"
+                            t-att-src="image_data_uri(line.product_id.image_128)"
+                            class="o_image_64_max img rounded"
+                            t-att-alt="line.name_short"
+                        />
+                        <div
+                            t-elif="line.product_id.image_128"
+                            t-field="line.product_id.image_128"
+                            t-options="{
+                                'widget': 'image',
+                                'qweb_img_responsive': False,
+                                'class': 'o_image_64_max rounded',
+                            }"
+                        />
+                    </div>
                     <div class="flex-grow-1">
                         <t t-call="website_sale.cart_line_product_link">
                             <h6 t-field="line.name_short" class="d-inline align-top h6 fw-bold"/>
@@ -1988,7 +2003,7 @@
                         </div>
                         <div class="mb-0 h6 fw-bold text-end" name="website_sale_cart_line_price">
                             <t t-if="line.discount">
-                                <del t-attf-class="#{'text-danger mr8'}"
+                                <del t-attf-class="#{'text-muted mr8'}"
                                      style="white-space: nowrap;"
                                      t-out="line._get_displayed_unit_price() * line.product_uom_qty"
                                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
@@ -2102,7 +2117,7 @@
                      t-as="product"
                      t-attf-class="d-flex gap-3 #{not product_last and 'border-bottom pb-4'} #{product_index &gt; 0 and 'pt-4'}"
                      t-att-data-publish="product.website_published and 'on' or 'off'">
-                    <div>
+                    <div style="width: 64px">
                         <a t-att-href="product.website_url">
                             <span t-field="product.image_128" t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'o_image_64_max rounded'}"/>
                         </a>
@@ -2126,7 +2141,7 @@
                              name="website_sale_suggested_product_price">
                             <t t-set="combination_info"
                                t-value="product._get_combination_info_variant()"/>
-                            <del t-attf-class="text-danger mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
+                            <del t-attf-class="text-muted mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
                                  t-esc="combination_info['list_price']"
                                  t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
                                  style="white-space: nowrap;"/>

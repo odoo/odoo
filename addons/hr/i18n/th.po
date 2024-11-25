@@ -140,12 +140,12 @@ msgstr "<small><b>อ่าน</b></small>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "<span class=\"flex-shrink-0 ml8 me-2\">IP Addresses</span>"
-msgstr ""
+msgstr "<span class=\"flex-shrink-0 ml8 me-2\">ที่อยู่ IP</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "<span class=\"flex-shrink-0 ml8 me-2\">Sent Emails</span>"
-msgstr ""
+msgstr "<span class=\"flex-shrink-0 ml8 me-2\">ส่งอีเมลแล้ว</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
@@ -295,7 +295,7 @@ msgstr "จำเป็นต้องดำเนินการ"
 #: model_terms:digest.tip,tip_description:hr.digest_tip_hr_0
 msgid ""
 "Activate Remote Work to let Employees specify where they are working from."
-msgstr ""
+msgstr "เปิดใช้งานการทำงานระยะไกลเพื่อให้พนักงานระบุได้ว่าตนเองทำงานจากที่ใด"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__active
@@ -462,7 +462,7 @@ msgstr "นำไปใช้"
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_apprenticeship
 msgid "Apprenticeship"
-msgstr ""
+msgstr "การฝึกงาน"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -1015,11 +1015,13 @@ msgid ""
 "Define the allowed IP to be displayed as Present. In case of multiple "
 "addresses, separate them by a coma."
 msgstr ""
+"กำหนด IP ที่อนุญาตให้แสดงเป็นปัจจุบัน ในกรณีที่มีหลายที่อยู่ "
+"ให้คั่นด้วยเครื่องหมายจุลภาค"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Define the minimum number of sent emails to be displayed as Present."
-msgstr ""
+msgstr "กำหนดจำนวนอีเมลที่ส่งขั้นต่ำที่จะแสดงเป็น \"ปัจจุบัน\""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__resource_calendar_id
@@ -1653,13 +1655,13 @@ msgstr "ระยะห่างระหว่างบ้าน-ที่ท�
 #: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
 #: model:ir.model.fields,field_description:hr.field_res_users__km_home_work
 msgid "Home-Work Distance in Km"
-msgstr ""
+msgstr "ระยะทางบ้าน-ที่ทำงาน กม."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__distance_home_work_unit
 #: model:ir.model.fields,field_description:hr.field_res_users__distance_home_work_unit
 msgid "Home-Work Distance unit"
-msgstr ""
+msgstr "หน่วยระยะทางบ้าน-ที่ทำงาน"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_icon_display
@@ -1672,7 +1674,7 @@ msgstr "แสดงไอคอน Hr"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_manager_department_report
 msgid "Hr Manager Department Report"
-msgstr ""
+msgstr "รายงานฝ่ายผู้จัดการฝ่ายทรัพยากรบุคคล"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_presence_state
@@ -1816,14 +1818,14 @@ msgstr "ชั่วคราว"
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_part_time
 msgid "Intern"
-msgstr ""
+msgstr "นักศึกษาฝึกงาน"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_flexible
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__is_flexible
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__is_flexible
 msgid "Is Flexible"
-msgstr ""
+msgstr "มีความยืดหยุ่น"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_is_follower
@@ -1837,7 +1839,7 @@ msgstr "เป็นผู้ติดตาม"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__is_fully_flexible
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__is_fully_flexible
 msgid "Is Fully Flexible"
-msgstr ""
+msgstr "มีความยืดหยุ่นแบบสมบูรณ์"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__is_manager
@@ -2353,6 +2355,10 @@ msgid ""
 "that loop is linked to a user.                        Please double-check "
 "that everyone reports to the correct manager."
 msgstr ""
+"อุ๊ย! ดูเหมือนว่าโครงสร้างทีมของคุณมีปัญหา                        "
+"เราพบวงจรการรายงานแบบวงกลม และไม่มีใครในวงจรนั้นที่เชื่อมโยงกับผู้ใช้"
+"                        "
+"โปรดตรวจสอบซ้ำอีกครั้งว่าทุกคนรายงานต่อผู้จัดการที่ถูกต้อง"
 
 #. module: hr
 #. odoo-javascript
@@ -2401,7 +2407,7 @@ msgstr "นอกเวลาทำการ"
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_out_of_working_hour
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__out_of_working_hour
 msgid "Out of Working hours"
-msgstr ""
+msgstr "นอกเวลาทำการ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__pin
@@ -2587,12 +2593,12 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence Condition"
-msgstr ""
+msgstr "เงื่อนไขการแสดงตัวตน"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence Display"
-msgstr ""
+msgstr "แสดงการแสดงตัวตน"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -3063,7 +3069,7 @@ msgstr ""
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_statutaire
 msgid "Statutory"
-msgstr ""
+msgstr "ตามกฏหมาย"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -3095,6 +3101,8 @@ msgid ""
 "Structure Employees per department and have an overview of e.g.\n"
 "                    expenses, timesheets, time off, recruitment, etc."
 msgstr ""
+"จัดโครงสร้างพนักงานในแต่ละแผนกและมีภาพรวม เช่น\n"
+"                    ค่าใช้จ่าย ตารางเวลา เวลาพัก การสรรหาบุคลากร ฯลฯ"
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_student
@@ -3155,7 +3163,7 @@ msgstr "ชั่วคราว"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "The Badge ID must be a sequence of digits."
-msgstr ""
+msgstr "รหัสป้ายจะต้องเรียงตามลำดับตัวเลข"
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
@@ -3216,6 +3224,7 @@ msgid ""
 "The fields “%s”, which you are trying to read, are not available for "
 "employee public profiles."
 msgstr ""
+"ฟิลด์ “%s” ที่คุณพยายามอ่านนั้นไม่พร้อมใช้งานสำหรับโปรไฟล์สาธารณะของพนักงาน"
 
 #. module: hr
 #. odoo-python
@@ -3261,7 +3270,7 @@ msgstr "ใบอนุญาตทำงานของ %(employee)s จะห�
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_thesis
 msgid "Thesis"
-msgstr ""
+msgstr "วิทยานิพนธ์"
 
 #. module: hr
 #. odoo-python
@@ -3285,12 +3294,12 @@ msgstr "ฟิลด์นี้ใช้เพื่อกำหนดโซน
 msgid ""
 "This report gives you an overview of your employees based on the measures of"
 " your choice."
-msgstr ""
+msgstr "รายงานนี้ช่วยให้คุณเห็นภาพรวมของพนักงานของคุณตามมาตรการที่คุณเลือก"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "This setting block is utilized to manage the frontend design."
-msgstr ""
+msgstr "บล็อกการตั้งค่านี้ใช้ในการจัดการการออกแบบส่วนหน้า"
 
 #. module: hr
 #. odoo-python
@@ -3309,7 +3318,7 @@ msgstr "โซนเวลา"
 #: model:digest.tip,name:hr.digest_tip_hr_0
 #: model_terms:digest.tip,tip_description:hr.digest_tip_hr_0
 msgid "Tip: Where's Bryan?"
-msgstr ""
+msgstr "เคล็ดลับ: ไบรอันอยู่ไหน?"
 
 #. module: hr
 #. odoo-python
@@ -3631,6 +3640,8 @@ msgid ""
 "You are not allowed to create an employee because the user does not have "
 "access rights for %s"
 msgstr ""
+"คุณไม่ได้รับอนุญาตให้สร้างพนักงานเนื่องจากผู้ใช้ไม่มีสิทธิ์การเข้าถึงสำหรับ "
+"%s"
 
 #. module: hr
 #. odoo-python
@@ -3720,7 +3731,7 @@ msgstr "แผนก"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. Building 2, Remote, etc."
-msgstr ""
+msgstr "เช่น อาคาร 2, ระยะไกล อื่นๆ"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -3736,17 +3747,17 @@ msgstr "เช่น ผู้จัดการฝ่ายขาย"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Summarize the position in one or two lines..."
-msgstr ""
+msgstr "เช่น สรุปตำแหน่งเป็นหนึ่งหรือสองบรรทัด..."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. johndoe@example.com"
-msgstr ""
+msgstr "เช่น johndoe@example.com"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. myprivateemail@example.com"
-msgstr ""
+msgstr "เช่น myprivateemail@example.com"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__distance_home_work_unit__kilometers

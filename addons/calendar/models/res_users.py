@@ -25,7 +25,7 @@ class Users(models.Model):
 
     @property
     def SELF_WRITEABLE_FIELDS(self):
-        return super().SELF_READABLE_FIELDS + ['calendar_default_privacy']
+        return super().SELF_WRITEABLE_FIELDS + ['calendar_default_privacy']
 
     def get_selected_calendars_partner_ids(self, include_user=True):
         """

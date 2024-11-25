@@ -35,3 +35,5 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
         parent_line_id = self.env['pos.order.line'].search([('product_id.name', '=', 'Office Combo'), ('order_id', '=', order.id)])
         combo_line_ids = self.env['pos.order.line'].search([('product_id.name', '!=', 'Office Combo'), ('order_id', '=', order.id)])
         self.assertEqual(parent_line_id.combo_line_ids, combo_line_ids, "The combo parent should have 3 combo lines")
+        self.assertEqual(parent_line_id.qty, 2, "There should be 2 combo products")
+        self.assertEqual(parent_line_id.qty, combo_line_ids[0].qty, "The quantities should match with the parent")

@@ -32,7 +32,7 @@
             </div>
             <div t-if="parts['detail'] and widget.displayDetail" class="flex-shrink-0 ms-auto">
                 <t t-if="result['detail_strike']">
-                    <span class="text-danger text-nowrap" style="text-decoration: line-through;">
+                    <span class="text-muted text-nowrap" style="text-decoration: line-through;">
                         <t t-out="result['detail_strike']"/>
                     </span>
                     <br/>

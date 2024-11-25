@@ -303,14 +303,13 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         """Test that the price difference is correctly computed when a subcontracted
         product is resupplied.
         """
-        if not loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
+        self.env.company.anglo_saxon_accounting = True
         resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
         (self.comp1 + self.comp2).write({'route_ids': [(6, None, [resupply_sub_on_order_route.id])]})
         product_category_all = self.env.ref('product.product_category_all')
         product_category_all.property_cost_method = 'standard'
         product_category_all.property_valuation = 'real_time'
+        self._setup_category_stock_journals()
 
         stock_price_diff_acc_id = self.env['account.account'].create({
             'name': 'default_account_stock_price_diff',
@@ -712,7 +711,6 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         """
         search_qty_less_than_or_equal_moved = 10
         moved_quantity_to_subcontractor = 20
-        search_qty_less_than_or_equal_total = 90
         total_component_quantity = 100
         search_qty_more_than_total = 110
 
@@ -761,8 +759,8 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         self.assertEqual(quantity_after_move, quantity_before_move + moved_quantity_to_subcontractor)
 
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom.id, searchQty=search_qty_less_than_or_equal_moved, searchVariant=False)
-        self.assertEqual(report_values['lines']['components'][0]['quantity_available'], total_component_quantity)
-        self.assertEqual(report_values['lines']['components'][0]['quantity_on_hand'], total_component_quantity)
+        self.assertEqual(report_values['lines']['components'][0]['quantity_available'], moved_quantity_to_subcontractor)
+        self.assertEqual(report_values['lines']['components'][0]['quantity_on_hand'], moved_quantity_to_subcontractor)
         self.assertEqual(report_values['lines']['quantity_available'], 0)
         self.assertEqual(report_values['lines']['quantity_on_hand'], 0)
         self.assertEqual(report_values['lines']['producible_qty'], moved_quantity_to_subcontractor)
@@ -770,7 +768,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
 
         self.assertEqual(report_values['lines']['components'][0]['stock_avail_state'], 'available')
 
-        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom.id, searchQty=search_qty_less_than_or_equal_total, searchVariant=False)
+        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom.id, searchQty=search_qty_less_than_or_equal_moved, searchVariant=False)
         self.assertEqual(report_values['lines']['components'][0]['stock_avail_state'], 'available')
 
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom.id, searchQty=search_qty_more_than_total, searchVariant=False)

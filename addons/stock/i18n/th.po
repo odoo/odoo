@@ -139,6 +139,12 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
+msgid "%(name)s Sequence picking"
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_warehouse.py:0
 msgid "%(name)s Sequence quality control"
 msgstr ""
 
@@ -502,10 +508,10 @@ msgstr ""
 #: code:addons/stock/models/stock_rule.py:0
 msgid ""
 "<br>If the products are not available in <b>%s</b>, a rule will be triggered"
-" to bring products in this location."
+" to bring the missing quantity in this location."
 msgstr ""
-"<br>หากสินค้าไม่พร้อมจำหน่ายใน<b>%s "
-"กฎจะถูกทริกเกอร์ให้นำสินค้ามาที่ตำแหน่งนี้"
+"<br>หากไม่มีสินค้าใน <b>%s</b> "
+"จะมีการใช้กฎเพื่อนำปริมาณที่ขาดหายไปมาไว้ในตำแหน่งนี้"
 
 #. module: stock
 #. odoo-python
@@ -2348,6 +2354,9 @@ msgid ""
 "Creation date of this move line until updated due to: quantity being "
 "increased, 'picked' status has updated, or move line is done."
 msgstr ""
+"วันที่สร้างบรรทัดการเคลื่อนย้ายนี้จนกว่าจะมีการอัปเดต เนื่องจาก: "
+"ปริมาณเพิ่มขึ้น สถานะ 'เลือกแล้ว' ได้รับการอัปเดต "
+"หรือบรรทัดการเคลื่อนย้ายเสร็จสิ้นแล้ว"
 
 #. module: stock
 #. odoo-python
@@ -2497,7 +2506,7 @@ msgstr "วันที่"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__search_date_category
 msgid "Date Category"
-msgstr ""
+msgstr "หมวดหมู่วันที่"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
@@ -2718,7 +2727,7 @@ msgstr "ล่าช้า %s"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__ship_only
 msgid "Deliver (1 step)"
-msgstr ""
+msgstr "ส่งมอบ (1 ขั้นตอน)"
 
 #. module: stock
 #. odoo-python
@@ -6491,12 +6500,12 @@ msgstr "ชนิดการรับ"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__pick_ship
 msgid "Pick then Deliver (2 steps)"
-msgstr ""
+msgstr "รับแล้วส่ง (2 ขั้นตอน)"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__pick_pack_ship
 msgid "Pick, Pack, then Deliver (3 steps)"
-msgstr ""
+msgstr "รับ บรรจุ จากนั้นจัดส่ง (3 ขั้นตอน)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__picked
@@ -6908,7 +6917,7 @@ msgstr "ตัวแปรสินค้า"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "Product barcode"
-msgstr ""
+msgstr "บาร์โค้ดสินค้า"
 
 #. module: stock
 #. odoo-python
@@ -7416,7 +7425,7 @@ msgstr "รับจาก"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__one_step
 msgid "Receive and Store (1 step)"
-msgstr ""
+msgstr "รับและจัดเก็บ (1 ขั้นตอน)"
 
 #. module: stock
 #. odoo-python
@@ -7439,12 +7448,12 @@ msgstr "รับสินค้าใน 3 ขั้นตอน (นำเข�
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__two_steps
 msgid "Receive then Store (2 steps)"
-msgstr ""
+msgstr "รับแล้วจัดเก็บ (2 ขั้นตอน)"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__three_steps
 msgid "Receive, Quality Control, then Store (3 steps)"
-msgstr ""
+msgstr "รับ, ควบคุมคุณภาพ และจัดเก็บ (3 ขั้นตอน)"
 
 #. module: stock
 #. odoo-python
@@ -8229,18 +8238,12 @@ msgstr "ลำดับ"
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Sequence %(code)s"
-msgstr ""
+msgstr "ลำดับ %(code)s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__sequence_code
 msgid "Sequence Prefix"
 msgstr "คำนำหน้าลำดับ"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_warehouse.py:0
-msgid "Sequence picking"
-msgstr "ลำดับการหยิบสินค้า"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
@@ -9083,6 +9086,9 @@ msgid ""
 "The following combinations contain duplicates:\n"
 "%(error_lines)s"
 msgstr ""
+"การรวมกันของหมายเลขล็อต/หมายเลขซีเรียลและผลิตภัณฑ์จะต้องไม่ซ้ำกันภายในบริษัท รวมถึงเมื่อไม่มีการกำหนดบริษัท\n"
+"ชุดค่าผสมต่อไปนี้มีรายการที่ซ้ำกัน:\n"
+"%(error_lines)s"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__company_id
@@ -9173,6 +9179,8 @@ msgid ""
 "The operation brings the products to the intermediate location.But this "
 "operation is part of a chain of operations targeting the final location."
 msgstr ""
+"การดำเนินการนำผลิตภัณฑ์ไปยังตำแหน่งกลาง "
+"แต่การดำเนินการนี้เป็นส่วนหนึ่งของห่วงโซ่การดำเนินการที่กำหนดเป้าหมายไปยังตำแหน่งสุดท้าย"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_id
@@ -9400,22 +9408,22 @@ msgstr "ฟิลด์นี้จะเติมจุดเริ่มต้
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_dest_id
 msgid ""
-"This is the default destination location when you create a picking manually "
-"with this operation type. It is possible however to change it or that the "
-"routes put another location."
+"This is the default destination location when this operation is manually "
+"created. However, it is possible to change it afterwards or that the routes "
+"use another one by default."
 msgstr ""
-"นี่คือสถานที่ปลายทางเริ่มต้นเมื่อคุณสร้างการเบิกสินค้าด้วยตนเองด้วยชนิดการดำเนินงานนี้"
-" อย่างไรก็ตาม สามารถเปลี่ยนแปลงหรือเปลี่ยนเส้นทางเป็นตำแหน่งอื่นได้"
+"นี่คือตำแหน่งปลายทางเริ่มต้นเมื่อดำเนินการนี้ด้วยตนเอง อย่างไรก็ตาม "
+"อาจมีการเปลี่ยนแปลงในภายหลังหรือเส้นทางจะใช้ตำแหน่งอื่นตามค่าเริ่มต้น"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_src_id
 msgid ""
-"This is the default source location when you create a picking manually with "
-"this operation type. It is possible however to change it or that the routes "
-"put another location."
+"This is the default source location when this operation is manually created."
+" However, it is possible to change it afterwards or that the routes use "
+"another one by default."
 msgstr ""
-"นี่คือตำแหน่งที่ตั้งต้นทางเริ่มต้นเมื่อคุณสร้างการเบิกสินค้าด้วยตนเองด้วยชนิดการดำเนินงานนี้"
-" อย่างไรก็ตาม สามารถเปลี่ยนแปลงหรือเปลี่ยนเส้นทางเป็นตำแหน่งอื่นได้"
+"นี่คือตำแหน่งแหล่งที่มาเริ่มต้นเมื่อดำเนินการนี้ด้วยตนเอง อย่างไรก็ตาม "
+"อาจมีการเปลี่ยนแปลงในภายหลังหรือเส้นทางจะใช้ตำแหน่งอื่นตามค่าเริ่มต้น"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__owner_id
@@ -9846,7 +9854,7 @@ msgstr "รายงานการติดตามาย้อนกลับ
 #: model:ir.model.fields,field_description:stock.field_product_template__is_storable
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_storable
 msgid "Track Inventory"
-msgstr ""
+msgstr "ติดตามสินค้าคงคลัง"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__module_product_expiry
@@ -10221,6 +10229,9 @@ msgid ""
 "\n"
 "To avoid this, please discard the source location change before saving."
 msgstr ""
+"การอัปเดตตำแหน่งการโอนย้ายนี้จะส่งผลให้มีการยกเลิกการจองรายการที่ได้รับมอบหมายในปัจจุบัน จะพยายามจองรายการในตำแหน่งใหม่ และลิงก์กับการโอนย้ายครั้งก่อนจะถูกยกเลิก\n"
+"\n"
+"เพื่อหลีกเลี่ยงปัญหานี้ โปรดยกเลิกการเปลี่ยนแปลงตำแหน่งแหล่งที่มาก่อนบันทึก"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__1
@@ -10955,6 +10966,9 @@ msgid ""
 "You can only snooze manual orderpoints. You should rather archive 'auto-"
 "trigger' orderpoints if you do not want them to be triggered."
 msgstr ""
+"คุณสามารถระงับการทำงานของจุดสั่งซื้อด้วยตนเองได้เท่านั้น "
+"คุณควรเก็บจุดสั่งซื้อแบบ 'ทริกเกอร์อัตโนมัติ' ไว้เป็นไฟล์ถาวร "
+"หากคุณไม่ต้องการให้จุดสั่งซื้อเหล่านั้นถูกทริกเกอร์"
 
 #. module: stock
 #. odoo-python

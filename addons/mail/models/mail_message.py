@@ -730,7 +730,9 @@ class Message(models.Model):
         messages_by_partner = defaultdict(lambda: self.env['mail.message'])
         partners_with_user = self.partner_ids.filtered('user_ids')
         for elem in self:
-            for partner in elem.partner_ids & partners_with_user:
+            for partner in (
+                elem.partner_ids & partners_with_user | elem.notification_ids.author_id
+            ):
                 messages_by_partner[partner] |= elem
         # Notify front-end of messages deletion for partners having a user
         for partner, messages in messages_by_partner.items():

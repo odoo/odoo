@@ -32,10 +32,10 @@
 # Marko Happonen <marko.happonen@sprintit.fi>, 2024
 # Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2024
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2024
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2024
 # Karoliina Nisula <karoliina.nisula@tawasta.fi>, 2024
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # Martin Trigaux, 2024
 # 
 msgid ""
@@ -587,6 +587,12 @@ msgstr "Hyväksy maksuja Stripe-maksupäätteellä"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with an Adyen payment terminal"
 msgstr "Hyväksy maksuja Adyen-maksupäätteellä"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
+msgid "Access Denied"
+msgstr "Käyttö estetty"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__access_token
@@ -3656,6 +3662,14 @@ msgid "It is possible to print your tickets by making use of an IoT Box."
 msgstr "Kuitit on mahdollista tulostaa käyttämällä IoT-laatikkoa."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
+msgid ""
+"It seems like you don't have enough rights to create point of sale "
+"configurations."
+msgstr ""
+
+#. module: point_of_sale
 #: model:product.template,name:point_of_sale.jean_jacket_product_template
 msgid "Jean Jacket"
 msgstr ""
@@ -6420,7 +6434,7 @@ msgstr "Tarkasta"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.js:0
 msgid "Review Orders"
-msgstr ""
+msgstr "Tarkista tilaukset"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_pain_au_chocolat_product_template

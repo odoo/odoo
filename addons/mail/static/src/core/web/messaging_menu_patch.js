@@ -6,7 +6,6 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { MessagingMenuQuickSearch } from "@mail/core/web/messaging_menu_quick_search";
-import { isIOS } from "@web/core/browser/feature_detection";
 
 Object.assign(MessagingMenu.components, { MessagingMenuQuickSearch });
 
@@ -178,6 +177,6 @@ patch(MessagingMenu.prototype, {
         return this.store.discuss.activeTab !== "channel" && !this.state.adding;
     },
     get shouldAskPushPermission() {
-        return this.notification.permission === "prompt" && !isIOS();
+        return this.notification.permission === "prompt";
     },
 });

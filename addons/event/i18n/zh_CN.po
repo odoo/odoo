@@ -5,8 +5,8 @@
 # Translators:
 # Tiffany Chang, 2024
 # Martin Trigaux, 2024
-# Chloe Wang, 2024
 # Wil Odoo, 2024
+# Chloe Wang, 2024
 # Odoo哥 <vnsoft.he@gmail.com>, 2024
 # 
 msgid ""
@@ -62,7 +62,7 @@ msgstr "%(event_name)s-登记用于%(attendee_name)s"
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "%(start_date)s to %(end_date)s"
-msgstr ""
+msgstr "从 %(start_date)s 到 %(end_date)s"
 
 #. module: event
 #. odoo-python
@@ -86,7 +86,7 @@ msgstr "%s（副本）"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.js:0
 msgid "'%(name)s' badge sent to printer '%(printer)s'"
-msgstr ""
+msgstr "'%(name)s' 识别证发送到打印机 '%(printer)s'"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_attendee_list
@@ -178,12 +178,12 @@ msgstr "5-10"
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__96x134
 msgid "96x134mm (Badge Printer)"
-msgstr ""
+msgstr "96x134 毫米（识别证打印机）"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__96x82
 msgid "96x82mm (Badge Printer)"
-msgstr ""
+msgstr "96x82 毫米（识别证打印机）"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -1787,7 +1787,7 @@ msgstr "所需操作"
 #: model:ir.model.fields,field_description:event.field_event_event__active
 #: model:ir.model.fields,field_description:event.field_event_registration__active
 msgid "Active"
-msgstr "已启用"
+msgstr "有效"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_ids
@@ -1969,7 +1969,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event__message_attachment_count
 #: model:ir.model.fields,field_description:event.field_event_registration__message_attachment_count
 msgid "Attachment Count"
-msgstr "附件计数"
+msgstr "附件数量"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -2004,7 +2004,7 @@ msgstr "与会者回答"
 #: model:ir.actions.report,name:event.action_report_event_event_attendee_list
 #: model:ir.actions.report,name:event.action_report_event_registration_attendee_list
 msgid "Attendee List"
-msgstr "参加者名单"
+msgstr "参会名单"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__name
@@ -2019,7 +2019,7 @@ msgstr "与会者选择答案"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
 msgid "Attendee list"
-msgstr "参加者名单"
+msgstr "参会名单"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_registration_from_event
@@ -2032,7 +2032,7 @@ msgstr "参加者名单"
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Attendees"
-msgstr "参加者"
+msgstr "参会者"
 
 #. module: event
 #. odoo-javascript
@@ -2054,12 +2054,12 @@ msgstr "徽章"
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_badge_96x134
 msgid "Badge (96x134mm)"
-msgstr ""
+msgstr "识别证（96x134 毫米）"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_badge_96x82
 msgid "Badge (96x82mm)"
-msgstr ""
+msgstr "识别证（96x82 毫米）"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_image
@@ -3084,7 +3084,7 @@ msgstr "有消息"
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Having attended this conference, participants should be able to:"
-msgstr "已出席本次会议的参加者应能："
+msgstr "已出席本次会议的参会者应能："
 
 #. module: event
 #: model_terms:event.event,description:event.event_3
@@ -4128,7 +4128,7 @@ msgstr "短信发送错误"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Scan or Tap"
-msgstr ""
+msgstr "扫描或点击"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -4160,7 +4160,7 @@ msgstr "定期时间"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__mail_registration_ids
 msgid "Scheduler Emails"
-msgstr ""
+msgstr "调度员电子邮件"
 
 #. module: event
 #: model_terms:event.event,description:event.event_5
@@ -4638,7 +4638,7 @@ msgstr "门票类型"
 msgid ""
 "Ticket types allow you to distinguish your attendees. Let's <b>create</b> a "
 "new one."
-msgstr "票证类型使您可以区分参加者。 让我们<b>创建</b>一个新的。"
+msgstr "票证类型使您可以区分参会者。 让我们<b>创建</b>一个新的。"
 
 #. module: event
 #. odoo-python
@@ -4754,7 +4754,7 @@ msgid ""
 msgstr ""
 "未确认：处于待处理状态、等待采取行动的注册（具体情况，特别是销售状态）\n"
 "已注册：客户认为已注册的注册\n"
-"已参加：参加者参加了活动的注册\n"
+"已参加：参会者参加了活动的注册\n"
 "取消：手动取消的注册"
 
 #. module: event

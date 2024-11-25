@@ -1,9 +1,10 @@
 import { tourState } from "./tour_state";
 import { config as transitionConfig } from "@web/core/transition";
 import { TourStepAutomatic } from "./tour_step_automatic";
-import { MacroEngine } from "@web/core/macro";
+import { Macro } from "@web/core/macro";
 import { browser } from "@web/core/browser/browser";
 import { setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
+import { delay } from "@odoo/hoot-dom";
 
 export class TourAutomatic {
     mode = "auto";
@@ -12,12 +13,7 @@ export class TourAutomatic {
     constructor(data) {
         Object.assign(this, data);
         this.steps = this.steps.map((step, index) => new TourStepAutomatic(step, this, index));
-        this.macroEngine = new MacroEngine({
-            target: document,
-            defaultCheckDelay: 500,
-        });
-        const tourConfig = tourState.getCurrentConfig();
-        this.stepDelay = tourConfig.stepDelay;
+        this.config = tourState.getCurrentConfig() || {};
     }
 
     get currentIndex() {
@@ -29,15 +25,18 @@ export class TourAutomatic {
     }
 
     get debugMode() {
-        const tourConfig = tourState.getCurrentConfig() || {};
-        return tourConfig.debug !== false;
+        return this.config.debug !== false;
+    }
+
+    get checkForUndeterminisms() {
+        return this.config.delayToCheckUndeterminisms > 0;
     }
 
     start(pointer) {
         const macroSteps = this.steps
             .filter((step) => step.index >= this.currentIndex)
             .flatMap((step) => {
-                const timeout = (step.timeout || 10000) + this.stepDelay;
+                const timeout = (step.timeout || 10000) + this.config.stepDelay;
                 return [
                     {
                         action: async () => {
@@ -56,28 +55,35 @@ export class TourAutomatic {
                             // This delay is important for making the current set of tour tests pass.
                             // IMPROVEMENT: Find a way to remove this delay.
                             await new Promise((resolve) => requestAnimationFrame(resolve));
-                            await new Promise((resolve) =>
-                                browser.setTimeout(resolve, this.stepDelay)
-                            );
+                            if (this.config.stepDelay > 0) {
+                                await delay(this.config.stepDelay);
+                            }
                         },
                     },
                     {
+                        initialDelay: () => {
+                            return this.previousStepIsJustACheck ? 0 : null;
+                        },
                         trigger: () => step.findTrigger(),
                         timeout,
-                        onTimeout: () => {
-                            this.throwError(
-                                `TIMEOUT: The step failed to complete within ${timeout} ms.`
-                            );
-                        },
                         action: async () => {
+                            if (this.checkForUndeterminisms) {
+                                try {
+                                    await step.checkForUndeterminisms();
+                                } catch (error) {
+                                    this.throwError([
+                                        ...this.currentStep.describeWhyIFailed,
+                                        error.message,
+                                    ]);
+                                }
+                            }
+                            this.previousStepIsJustACheck = !this.currentStep.hasAction;
                             if (this.debugMode) {
                                 this.paused = step.pause;
                                 if (!step.skipped && this.showPointerDuration > 0 && step.element) {
                                     // Useful in watch mode.
                                     pointer.pointTo(step.element, this);
-                                    await new Promise((r) =>
-                                        browser.setTimeout(r, this.showPointerDuration)
-                                    );
+                                    await delay(this.showPointerDuration);
                                     pointer.hide();
                                 }
                                 console.log(step.element);
@@ -102,13 +108,12 @@ export class TourAutomatic {
             pointer.stop();
         };
 
-        const macro = {
+        this.macro = new Macro({
             name: this.name,
-            checkDelay: this.checkDelay,
+            checkDelay: this.checkDelay || 500,
             steps: macroSteps,
             onError: (error) => {
-                this.throwError(error);
-                console.error("tour not succeeded");
+                this.throwError([error]);
                 end();
             },
             onComplete: () => {
@@ -121,15 +126,21 @@ export class TourAutomatic {
                 browser.console.log(`\n\n${msg.join("\n")}\n`);
                 end();
             },
-        };
-        if (this.debugMode) {
+            onTimeout: (timeout) => {
+                this.throwError([
+                    ...this.currentStep.describeWhyIFailed,
+                    `TIMEOUT: The step failed to complete within ${timeout} ms.`,
+                ]);
+                end();
+            },
+        });
+        if (this.debugMode && this.currentIndex === 0) {
             // Starts the tour with a debugger to allow you to choose devtools configuration.
             // eslint-disable-next-line no-debugger
             debugger;
         }
         transitionConfig.disabled = true;
-        //Activate macro in exclusive mode (only one macro per MacroEngine)
-        this.macroEngine.activate(macro, true);
+        this.macro.start();
     }
 
     get describeWhereIFailed() {
@@ -155,16 +166,11 @@ export class TourAutomatic {
     /**
      * @param {string} [error]
      */
-    throwError(error = ``) {
+    throwError(errors = []) {
         console.groupEnd();
         tourState.setCurrentTourOnError();
         // console.error notifies the test runner that the tour failed.
-        const errors = [
-            `FAILED: ${this.currentStep.describeMe}.`,
-            ...this.currentStep.describeWhyIFailed,
-            error,
-        ];
-        browser.console.error(errors.filter(Boolean).join("\n"));
+        browser.console.error([`FAILED: ${this.currentStep.describeMe}.`, ...errors].join("\n"));
         // The logged text shows the relative position of the failed step.
         // Useful for finding the failed step.
         browser.console.dir(this.describeWhereIFailed);

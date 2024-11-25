@@ -32,19 +32,19 @@
 # Murat Durmuş <muratd@projetgrup.com>, 2024
 # Levent Karakaş <levent@mektup.at>, 2024
 # Ömer ABA <omeraba93@gmail.com>, 2024
-# Ayhan Kızıltan, 2024
 # Tugay Hatıl <tugayh@projetgrup.com>, 2024
 # Mehmet YAYLA, 2024
 # Martin Trigaux, 2024
 # abc Def <hdogan1974@gmail.com>, 2024
-# Nadir Gazioglu <nadirgazioglu@gmail.com>, 2024
 # Murat Kaplan <muratk@projetgrup.com>, 2024
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2024
 # Deniz Guvener, 2024
-# Ediz Duman <neps1192@gmail.com>, 2024
 # Sinem Cil, 2024
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2024
 # Halil, 2024
+# Ediz Duman <neps1192@gmail.com>, 2024
+# Ayhan Kızıltan, 2024
+# Nadir Gazioglu <nadirgazioglu@gmail.com>, 2024
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -52,7 +52,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 08:16+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Halil, 2024\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2024\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -140,13 +140,13 @@ msgstr "%(action)s  yevmiye için %(journal)s"
 #. odoo-python
 #: code:addons/account/models/product.py:0
 msgid "%(amount)s Excl. Taxes"
-msgstr ""
+msgstr "%(amount)s Vergiler Hariç"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/product.py:0
 msgid "%(amount)s Incl. Taxes"
-msgstr ""
+msgstr "%(amount)s Vergiler Dahil"
 
 #. module: account
 #. odoo-python
@@ -364,7 +364,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/components/x2many_buttons/x2many_buttons.xml:0
 msgid "... (View all)"
-msgstr ""
+msgstr "... (Tümünü göster)"
 
 #. module: account
 #. odoo-python
@@ -1659,6 +1659,18 @@ msgid ""
 msgstr ""
 "%s hesabı denkleştirmeye izin vermez. İzin vermek için önce bu hesabın "
 "yapılandırmasını değiştirin."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "Account %s is of payable type, but is used in a sale operation."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "Account %s is of receivable type, but is used in a purchase operation."
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
@@ -6636,7 +6648,7 @@ msgstr "Bu ödeme dönemi için verilen Erken Ödeme İndirimi"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "Early Payment Discount of"
-msgstr ""
+msgstr "Şunun için erken ödeme indirimi"
 
 #. module: account
 #. odoo-python
@@ -10620,6 +10632,12 @@ msgstr ""
 "bulunamadı."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_payment.py:0
+msgid "No outstanding account could be found to make the payment"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "No payment journal entries"
 msgstr ""
@@ -11291,9 +11309,21 @@ msgid "Outstanding Account"
 msgstr "Bekleyen Hesap"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+msgid "Outstanding Payments"
+msgstr "Ödenmemiş Ödemeler"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Outstanding Payments accounts"
 msgstr "Bekleyen Ödemeler hesapları"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+msgid "Outstanding Receipts"
+msgstr "Gelen Ödemeler"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -12412,7 +12442,7 @@ msgstr "Satınalma Vergisi"
 #: model:ir.model.fields,field_description:account.field_product_product__supplier_taxes_id
 #: model:ir.model.fields,field_description:account.field_product_template__supplier_taxes_id
 msgid "Purchase Taxes"
-msgstr ""
+msgstr "Satınalma Vergileri"
 
 #. module: account
 #: model:account.account,name:account.1_expense_invest
@@ -13223,7 +13253,7 @@ msgstr "Satış Vergisi"
 #: model:ir.model.fields,field_description:account.field_product_product__taxes_id
 #: model:ir.model.fields,field_description:account.field_product_template__taxes_id
 msgid "Sales Taxes"
-msgstr ""
+msgstr "Satış Vergileri"
 
 #. module: account
 #. odoo-python
@@ -14473,7 +14503,7 @@ msgstr "Vergi Adı"
 #. module: account
 #: model:account.account,name:account.1_tax_paid
 msgid "Tax Paid"
-msgstr ""
+msgstr "Vergi Ödendi"
 
 #. module: account
 #: model:account.account,name:account.1_tax_payable
@@ -16900,7 +16930,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_subtotal_currency
 msgid "Untaxed Amount in Currency"
-msgstr ""
+msgstr "Döviz Cinsinden Vergisiz Tutar"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
@@ -16940,7 +16970,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Update Taxes and Accounts"
-msgstr ""
+msgstr "Vergileri ve Hesapları Güncelle"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -17749,6 +17779,12 @@ msgid ""
 msgstr ""
 "%s yevmiyesinde bir geçici hesap ayarlanmadan yeni bir ekstre satırı "
 "oluşturamazsınız."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_payment_register.py:0
+msgid "You can't create payments for entries belonging to different branches."
+msgstr ""
 
 #. module: account
 #. odoo-python

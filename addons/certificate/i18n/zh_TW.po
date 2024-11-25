@@ -24,7 +24,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/certificate/models/key.py:0
 msgid "A private key is required to decrypt data."
-msgstr ""
+msgstr "要解密數據，需要有私鑰。"
 
 #. module: certificate
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__active
@@ -35,12 +35,12 @@ msgstr "生效"
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
 msgid "Add, edit and delete certificates."
-msgstr ""
+msgstr "加入、編輯及刪除證書。"
 
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
 msgid "Add, edit and delete keys."
-msgstr ""
+msgstr "加入、編輯及刪除密鑰。"
 
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
@@ -51,12 +51,12 @@ msgstr "已封存"
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
 msgid "Archived certificates"
-msgstr ""
+msgstr "已封存證書"
 
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_search
 msgid "Archived keys"
-msgstr ""
+msgstr "已封存密鑰"
 
 #. module: certificate
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__date_start
@@ -94,7 +94,7 @@ msgstr "證書"
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
 msgid "Certificates and Keys"
-msgstr ""
+msgstr "證書及密鑰"
 
 #. module: certificate
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__company_id
@@ -110,12 +110,12 @@ msgstr "國家/地區代碼"
 #. module: certificate
 #: model_terms:ir.actions.act_window,help:certificate.certificate_certificate_action_view_list
 msgid "Create a first certificate"
-msgstr ""
+msgstr "建立第一個證書"
 
 #. module: certificate
 #: model_terms:ir.actions.act_window,help:certificate.certificate_key_action_view_list
 msgid "Create a first key"
-msgstr ""
+msgstr "建立第一個密鑰"
 
 #. module: certificate
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__create_uid
@@ -159,7 +159,7 @@ msgstr "一般"
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
 msgid "General certificates"
-msgstr ""
+msgstr "通用證書"
 
 #. module: certificate
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__id
@@ -216,17 +216,17 @@ msgstr "載入錯誤"
 #. odoo-python
 #: code:addons/certificate/models/key.py:0
 msgid "Make sure to use a private key to sign documents."
-msgstr ""
+msgstr "簽署文件時，請確保使用私鑰。"
 
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
 msgid "Manage your certificates"
-msgstr ""
+msgstr "管理你的證書"
 
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
 msgid "Manage your keys"
-msgstr ""
+msgstr "管理你的密鑰"
 
 #. module: certificate
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__name
@@ -239,12 +239,12 @@ msgstr "名稱"
 #: code:addons/certificate/models/certificate.py:0
 msgid ""
 "No private key linked to the certificate, it is required to sign documents."
-msgstr ""
+msgstr "沒有已連結至證書的私鑰。簽署文件需要這種私鑰。"
 
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
 msgid "Not valid certificates"
-msgstr ""
+msgstr "無效的證書"
 
 #. module: certificate
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__content_format
@@ -330,13 +330,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/certificate/models/certificate.py:0
 msgid "The certificate and private key are not compatible."
-msgstr ""
+msgstr "證書與私鑰不相容。"
 
 #. module: certificate
 #. odoo-python
 #: code:addons/certificate/models/certificate.py:0
 msgid "The certificate and public key are not compatible."
-msgstr ""
+msgstr "證書與公鑰不相容。"
 
 #. module: certificate
 #. odoo-python
@@ -344,7 +344,7 @@ msgstr ""
 msgid ""
 "The certificate subject field contains invalid characters. Make sure all "
 "characters are unicode valid."
-msgstr ""
+msgstr "證書主題欄位有無效字符。請確保所有字符都是unicode。"
 
 #. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__date_end
@@ -360,19 +360,19 @@ msgstr "證書開始生效日期（UTC）"
 #. odoo-python
 #: code:addons/certificate/models/key.py:0
 msgid "The private key could not be loaded."
-msgstr ""
+msgstr "未能載入該私鑰。"
 
 #. module: certificate
 #. odoo-python
 #: code:addons/certificate/models/key.py:0
 msgid "The public key could not be loaded."
-msgstr ""
+msgstr "未能載入該公鑰。"
 
 #. module: certificate
 #. odoo-python
 #: code:addons/certificate/models/certificate.py:0
 msgid "The public key from the certificate could not be loaded."
-msgstr ""
+msgstr "未能從證書中載入該公鑰。"
 
 #. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__serial_number
@@ -385,13 +385,13 @@ msgstr "新增至電子文件的序號"
 msgid ""
 "This certificate could not be loaded. Either the content or the password is "
 "erroneous."
-msgstr ""
+msgstr "未能載入此證書。內容或密碼錯誤。"
 
 #. module: certificate
 #. odoo-python
 #: code:addons/certificate/models/certificate.py:0
 msgid "This certificate is not valid, its validity has expired."
-msgstr ""
+msgstr "此證書已失效，有效期已過。"
 
 #. module: certificate
 #. odoo-python
@@ -399,7 +399,7 @@ msgstr ""
 msgid ""
 "This key could not be loaded. Either its content or its password is "
 "erroneous."
-msgstr ""
+msgstr "未能載入此密鑰。內容或密碼錯誤。"
 
 #. module: certificate
 #. odoo-python
@@ -407,7 +407,7 @@ msgstr ""
 msgid ""
 "Unsupported asymmetric cryptography algorithm '%s'. Currently supported for "
 "decryption: RSA."
-msgstr ""
+msgstr "尚未支援非對稱式的加密演算法「%s」。目前支援的解密方式：RSA。"
 
 #. module: certificate
 #. odoo-python
@@ -415,7 +415,7 @@ msgstr ""
 msgid ""
 "Unsupported asymmetric cryptography algorithm '%s'. Currently supported for "
 "signature: EC and RSA."
-msgstr ""
+msgstr "尚未支援非對稱式的加密演算法「%s」。目前支援的電子簽名方式：EC 及 RSA。"
 
 #. module: certificate
 #. odoo-python
@@ -423,7 +423,7 @@ msgstr ""
 msgid ""
 "Unsupported asymmetric cryptography algorithm '%s'. Currently supported: EC,"
 " RSA."
-msgstr ""
+msgstr "尚未支援非對稱式的加密演算法「%s」。目前支援：EC、RSA。"
 
 #. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__public_key_id
@@ -445,7 +445,7 @@ msgstr "有效"
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
 msgid "Valid certificates"
-msgstr ""
+msgstr "有效的證書"
 
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_form
@@ -456,34 +456,34 @@ msgstr "驗證"
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_form
 msgid "certificate form"
-msgstr ""
+msgstr "證書表單"
 
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_list
 msgid "certificate list"
-msgstr ""
+msgstr "證書清單"
 
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
 msgid "certificate search"
-msgstr ""
+msgstr "證書搜尋"
 
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_form
 msgid "e.g. New Certificate"
-msgstr ""
+msgstr "例：新證書"
 
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_form
 msgid "key form"
-msgstr ""
+msgstr "密鑰表單"
 
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_list
 msgid "key list"
-msgstr ""
+msgstr "密鑰清單"
 
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_search
 msgid "key search"
-msgstr ""
+msgstr "密鑰搜尋"

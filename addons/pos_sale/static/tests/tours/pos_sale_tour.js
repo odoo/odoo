@@ -125,9 +125,10 @@ registry.category("web_tour.tours").add("PosSettleOrderNotGroupable", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             PosSale.settleNthOrder(1),
-            ProductScreen.totalAmountIs(32.2), // 3.5 * 8 * 1.15
+            ProductScreen.totalAmountIs(28.98), // 3.5 * 8 * 1.15 * 90%
             ProductScreen.selectedOrderlineHas("Product A", "0.50"),
             ProductScreen.checkOrderlinesNumber(4),
+            ProductScreen.selectedOrderlineHas("Product A", "0.5", "4.14"),
         ].flat(),
 });
 
@@ -306,5 +307,37 @@ registry.category("web_tour.tours").add("PoSDownPaymentAmount", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PoSDownPaymentLinesPerFixedTax", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.downPaymentFirstOrder("+20"),
+            Order.hasLine({
+                productName: "Down Payment",
+                quantity: "1.0",
+                price: "22",
+            }),
+            Order.hasNoTax(),
+            ProductScreen.totalAmountIs(22.0),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosSettleOrder4", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1),
+            ProductScreen.selectedOrderlineHas("Product A", "1.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.remainingIs("0.0"),
+            PaymentScreen.clickShipLaterButton(),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
         ].flat(),
 });

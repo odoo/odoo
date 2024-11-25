@@ -144,6 +144,10 @@ msgid ""
 "        - Never: Variants are never created for the attribute.\n"
 "        Note: this cannot be changed once the attribute is used on a product."
 msgstr ""
+"- แบบทันที: ตัวแปรที่เป็นไปได้ทั้งหมดจะถูกสร้างขึ้นทันทีที่มีการเพิ่มแอตทริบิวต์และค่าต่างๆ ลงในผลิตภัณฑ์\n"
+"        - แบบไดนามิก: แต่ละตัวแปรจะถูกสร้างขึ้นเมื่อมีการเพิ่มคุณลักษณะและค่าที่สอดคล้องกันลงในใบสั่งขายเท่านั้น\n"
+"        - ไม่เคย: ไม่มีการสร้างตัวแปรสำหรับแอตทริบิวต์\n"
+"        หมายเหตุ: ไม่สามารถเปลี่ยนแปลงได้เมื่อใช้แอตทริบิวต์กับผลิตภัณฑ์แล้ว"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_5
@@ -478,7 +482,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__update_product_attribute_value__mode__add
 msgid "Add to existing products"
-msgstr ""
+msgstr "เพิ่มเข้าในผลิตภัณฑ์ที่มีอยู่"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
@@ -535,7 +539,7 @@ msgstr "อัปโหลดไฟล์ทั้งหมด"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "All products"
-msgstr ""
+msgstr "สินค้าทั้งหมด"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -867,7 +871,7 @@ msgstr "ทางเลือกคอมโบ"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo__combo_item_ids
 msgid "Combo Item"
-msgstr ""
+msgstr "รายการคอมโบ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo__base_price
@@ -2100,7 +2104,7 @@ msgstr "ขาตั้งจอมอนิเตอร์"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__multi
 msgid "Multi-checkbox"
-msgstr ""
+msgstr "ช่องทำเครื่องหมายหลายรายการ"
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_attribute_check_multi_checkbox_no_variant
@@ -2299,6 +2303,12 @@ msgid ""
 msgstr ""
 "ในสินค้า %(product)s คุณไม่สามารถแปลงคุณสมบัติ %(attribute_src)s "
 "ให้เป็นคุณสมบัติ %(attribute_dest)s ได้"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/product_document_kanban/upload_button/upload_button.js:0
+msgid "Oops! '%(fileName)s' didn’t upload since its format isn’t allowed."
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__original_id
@@ -2639,12 +2649,12 @@ msgstr "หมวดหมู่สินค้า"
 #. module: product
 #: model:ir.model,name:product.model_product_combo
 msgid "Product Combo"
-msgstr ""
+msgstr "สินค้าคอมโบ"
 
 #. module: product
 #: model:ir.model,name:product.model_product_combo_item
 msgid "Product Combo Item"
-msgstr ""
+msgstr "รายการสินค้าคอมโบ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo__combo_item_count
@@ -3130,6 +3140,9 @@ msgid ""
 "Rounding is applied after the discount and before the surcharge.\n"
 "To have prices that end in 9.99, round off to 10.00 and set an extra at -0.01"
 msgstr ""
+"กำหนดราคาให้เป็นทวีคูณของค่านี้\n"
+"ปัดเศษหลังส่วนลดและก่อนคิดค่าธรรมเนียมเพิ่มเติม\n"
+"หากต้องการให้ราคาลงท้ายด้วย 9.99 ให้ปัดเศษเป็น 10.00 และตั้งค่าส่วนเพิ่มเป็น -0.01"
 
 #. module: product
 #. odoo-javascript
@@ -3357,6 +3370,10 @@ msgid ""
 "combo product. This heuristic ensures that whatever product the user chooses"
 " in a combo, it will always be the same price."
 msgstr ""
+"ราคาขั้นต่ำระหว่างผลิตภัณฑ์ในชุดคอมโบนี้ "
+"ค่านี้จะใช้ในการกำหนดราคาชุดคอมโบนี้โดยเทียบกับชุดคอมโบอื่นๆ "
+"ในผลิตภัณฑ์ชุดคอมโบ Heuristic "
+"นี้รับประกันว่าผลิตภัณฑ์ใดก็ตามที่ผู้ใช้เลือกในชุดคอมโบก็จะมีราคาเท่ากันเสมอ"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category__product_count
@@ -3486,6 +3503,9 @@ msgid ""
 "This may cause inconsistencies in computations.\n"
 "Please set a precision between %(min_precision)s and 1."
 msgstr ""
+"ความแม่นยำในการปัดเศษนี้สูงกว่าความแม่นยำของทศนิยม (%(digits)s หลัก)\n"
+"ซึ่งอาจทำให้เกิดความไม่สอดคล้องกันในการคำนวณ\n"
+"โปรดตั้งค่าความแม่นยำระหว่าง %(min_precision)s และ 1"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
@@ -3607,7 +3627,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__update_product_attribute_value__mode__update_extra_price
 msgid "Update the extra price on existing products"
-msgstr ""
+msgstr "อัพเดทราคาพิเศษสินค้าที่มีอยู่"
 
 #. module: product
 #. odoo-javascript

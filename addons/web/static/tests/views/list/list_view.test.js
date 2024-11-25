@@ -123,7 +123,7 @@ class Foo extends models.Model {
             amount: 1200,
             currency_id: 2,
             reference: "bar,1",
-            properties: [],
+            properties: {},
         },
         {
             id: 2,
@@ -135,7 +135,7 @@ class Foo extends models.Model {
             m2m: [1, 2, 3],
             amount: 500,
             reference: "res.currency,1",
-            properties: [],
+            properties: {},
         },
         {
             id: 3,
@@ -147,7 +147,7 @@ class Foo extends models.Model {
             m2m: [],
             amount: 300,
             reference: "res.currency,2",
-            properties: [],
+            properties: {},
         },
         {
             id: 4,
@@ -158,7 +158,7 @@ class Foo extends models.Model {
             m2o: 1,
             m2m: [1],
             amount: 0,
-            properties: [],
+            properties: {},
         },
     ];
 }
@@ -770,6 +770,29 @@ test(`list view with adjacent buttons with invisible modifier`, async () => {
     expect(`td button i.fa-star`).toHaveCount(2);
     expect(`td button i.fa-refresh`).toHaveCount(3);
     expect(`td button i.fa-exclamation`).toHaveCount(3);
+});
+
+test(`list view with adjacent buttons with width attribute`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <button icon="fa-play"/>
+                <button icon="fa-heart" width="25px"/>
+                <button icon="fa-cog"/>
+                <button icon="fa-list"/>
+            </list>
+        `,
+    });
+    expect(`th:not(.o_list_record_selector)`).toHaveCount(4, {
+        message: "adjacent buttons with no width in the arch must be grouped in a single column",
+    });
+    expect(".o_data_row td:not(.o_list_record_selector):nth-child(3) .fa-play").toHaveCount(4);
+    expect(".o_data_row td:not(.o_list_record_selector):nth-child(4) .fa-heart").toHaveCount(4);
+    expect(".o_data_row td:not(.o_list_record_selector):nth-child(5) .fa-cog").toHaveCount(4);
+    expect(".o_data_row td:not(.o_list_record_selector):nth-child(5) .fa-list").toHaveCount(4);
 });
 
 test(`list view with icon buttons`, async () => {
@@ -2408,45 +2431,6 @@ test(`opening records when clicking on record`, async () => {
     await contains(`th.o_group_name`).click();
     await contains(`tr:not(.o_group_header) td:not(.o_list_record_selector)`).click();
     expect.verifySteps(["openRecord", "openRecord"]);
-});
-
-test(`open invalid but unchanged record`, async () => {
-    const listView = registry.category("views").get("list");
-    class CustomListController extends listView.Controller {
-        openRecord(record) {
-            expect.step(`open record ${record.resId}`);
-            return super.openRecord(record);
-        }
-    }
-    registry.category("views").add(
-        "custom_list",
-        {
-            ...listView,
-            Controller: CustomListController,
-        },
-        { force: true }
-    );
-
-    mockService("notification", {
-        add() {
-            expect.step("should not display a notification");
-        },
-    });
-
-    await mountView({
-        resModel: "foo",
-        type: "list",
-        arch: `
-            <list js_class="custom_list">
-                <field name="foo"/>
-                <field name="date" required="1"/>
-            </list>`,
-    });
-
-    // second record is invalid as date is not set
-    expect(".o_data_row:eq(1) .o_data_cell[name=date]").toHaveText("");
-    await contains(".o_data_row:eq(1) .o_data_cell").click();
-    expect.verifySteps(["open record 2"]);
 });
 
 test(`execute an action before and after each valid save in a list view`, async () => {
@@ -9475,7 +9459,7 @@ test(`multi edit field with daterange widget (edition without using the picker)`
 
     onRpc("write", ({ args }) => {
         expect.step("write");
-        expect(args).toEqual([[1, 2], { date_start: "2021-04-01" }]);
+        expect(args).toEqual([[1, 2], { date_start: "2016-04-01" }]);
     });
 
     await mountView({
@@ -9495,7 +9479,7 @@ test(`multi edit field with daterange widget (edition without using the picker)`
     // Change the date in the first datetime
     await contains(
         `.o_data_row .o_data_cell .o_field_daterange[name='date_start'] input[data-field='date_start']`
-    ).edit("2021-04-01 11:00:00", { confirm: "enter" });
+    ).edit("2016-04-01 11:00:00", { confirm: "enter" });
     expect(`.modal`).toHaveCount(1, {
         message: "The confirm dialog should appear to confirm the multi edition.",
     });
@@ -9503,7 +9487,7 @@ test(`multi edit field with daterange widget (edition without using the picker)`
         "Field:",
         "Date start",
         "Update to:",
-        "04/01/2021\n01/26/2017",
+        "04/01/2016\n01/26/2017",
     ]);
 
     // Valid the confirm dialog
@@ -14998,7 +14982,7 @@ test(`Properties: char`, async () => {
     Bar._records[0].definitions = [definition];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition, value: "CHAR" }];
+            record.properties = { [definition.name]: "CHAR" };
         }
     }
 
@@ -15045,7 +15029,7 @@ test(`Properties: boolean`, async () => {
     Bar._records[0].definitions = [definition];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition, value: true }];
+            record.properties = { [definition.name]: true };
         }
     }
 
@@ -15088,7 +15072,7 @@ test(`Properties: integer`, async () => {
     Bar._records[0].definitions = [definition];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition, value: 123 }];
+            record.properties = { [definition.name]: 123 };
         }
     }
 
@@ -15135,7 +15119,7 @@ test(`Properties: float`, async () => {
     Bar._records[0].definitions = [definition];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition, value: record.id === 4 ? false : 123.45 }];
+            record.properties = { [definition.name]: record.id === 4 ? false : 123.45 };
         }
     }
 
@@ -15182,7 +15166,7 @@ test(`Properties: date`, async () => {
     Bar._records[0].definitions = [definition];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition, value: "2022-12-12" }];
+            record.properties = { [definition.name]: "2022-12-12" };
         }
     }
 
@@ -15226,7 +15210,7 @@ test(`Properties: datetime`, async () => {
     Bar._records[0].definitions = [definition];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition, value: "2022-12-12 12:12:00" }];
+            record.properties = { [definition.name]: "2022-12-12 12:12:00" };
         }
     }
 
@@ -15278,7 +15262,7 @@ test(`Properties: selection`, async () => {
     Bar._records[0].definitions = [definition];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition, value: "b" }];
+            record.properties = { [definition.name]: "b" };
         }
     }
 
@@ -15326,7 +15310,7 @@ test(`Properties: tags`, async () => {
     Bar._records[0].definitions = [definition];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition, value: ["a", "c"] }];
+            record.properties = { [definition.name]: ["a", "c"] };
         }
     }
 
@@ -15378,7 +15362,7 @@ test(`Properties: many2one`, async () => {
     Bar._records[0].definitions = [definition];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition, value: [1, "USD"] }];
+            record.properties = { [definition.name]: [1, "USD"] };
         }
     }
 
@@ -15423,7 +15407,7 @@ test(`Properties: many2many`, async () => {
     Bar._records[0].definitions = [definition];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition, value: [[1, "USD"]] }];
+            record.properties = { [definition.name]: [[1, "USD"]] };
         }
     }
 
@@ -15461,9 +15445,9 @@ test(`multiple sources of properties definitions`, async () => {
     Bar._records[1].definitions = [definition1];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition0, value: "0" }];
+            record.properties = { [definition0.name]: "0" };
         } else if (record.m2o === 2) {
-            record.properties = [{ ...definition1, value: true }];
+            record.properties = { [definition1.name]: true };
         }
     }
 
@@ -15506,9 +15490,12 @@ test(`toggle properties`, async () => {
     Bar._records[1].definitions = [definition1, definition2];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition0, value: "0" }];
+            record.properties = { [definition0.name]: "0" };
         } else if (record.m2o === 2) {
-            record.properties = [definition1, { ...definition2, value: true }];
+            record.properties = {
+                [definition1.name]: false,
+                [definition2.name]: true,
+            };
         }
     }
 
@@ -15551,7 +15538,7 @@ test(`properties: optional show/hide (no config in local storage)`, async () => 
     Bar._records[0].definitions = [definition];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition, value: "0" }];
+            record.properties = { [definition.name]: "0" };
         }
     }
 
@@ -15580,7 +15567,7 @@ test(`properties: optional show/hide (config from local storage)`, async () => {
     Bar._records[0].definitions = [definition];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition, value: "0" }];
+            record.properties = { [definition.name]: "0" };
         }
     }
 
@@ -15615,7 +15602,7 @@ test(`properties: optional show/hide (at reload, config from local storage)`, as
     Bar._records[0].definitions = [definition];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition, value: "0" }];
+            record.properties = { [definition.name]: "0" };
         }
     }
 
@@ -15661,7 +15648,7 @@ test(`reload properties definitions when domain change`, async () => {
     Bar._records[0].definitions = [definition0];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition0, value: "AA" }];
+            record.properties = { [definition0.name]: "AA" };
         }
     }
 
@@ -15708,7 +15695,7 @@ test(`do not reload properties definitions when page change`, async () => {
     Bar._records[0].definitions = [definition0];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition0, value: "0" }];
+            record.properties = { [definition0.name]: "0" };
         }
     }
 
@@ -15744,7 +15731,7 @@ test(`load properties definitions only once when grouped`, async () => {
     Bar._records[0].definitions = [definition0];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition0, value: "0" }];
+            record.properties = { [definition0.name]: "0" };
         }
     }
 
@@ -15781,7 +15768,7 @@ test(`Invisible Properties`, async () => {
     Bar._records[0].definitions = [definition];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition, value: 123 }];
+            record.properties = { [definition.name]: 123 };
         }
     }
 
@@ -16254,7 +16241,7 @@ test(`properties do not disappear after domain change`, async () => {
     Bar._records[0].definitions = [definition0];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
-            record.properties = [{ ...definition0, value: "AA" }];
+            record.properties = { [definition0.name]: "AA" };
         }
     }
 

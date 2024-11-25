@@ -78,19 +78,19 @@ msgstr "%(item_name)s：結束日期（%(end_date)s）應在開始日期（%(sta
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% %(discount_type)s on %(base)s %(extra)s"
-msgstr ""
+msgstr "%(percentage)s%% %(discount_type)s 套用至 %(base)s %(extra)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% discount on %(pricelist)s"
-msgstr ""
+msgstr "%(percentage)s%% 折扣套用至 %(pricelist)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% discount on sales price"
-msgstr ""
+msgstr "%(percentage)s%% 折扣套用至售價"
 
 #. module: product
 #. odoo-python
@@ -124,13 +124,13 @@ msgstr "（例如：產品描述、電子書、法律聲明等）。"
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "+ %(amount)s extra fee"
-msgstr ""
+msgstr "+ %(amount)s 額外費用"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "- %(amount)s rebate"
-msgstr ""
+msgstr "- %(amount)s 回贈"
 
 #. module: product
 #. odoo-python
@@ -322,25 +322,25 @@ msgstr "一個條碼只能分配給一個包裝."
 #. odoo-python
 #: code:addons/product/models/product_combo.py:0
 msgid "A combo choice can't contain duplicate products."
-msgstr ""
+msgstr "組合選擇不可包含重複產品。"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_combo_item.py:0
 msgid "A combo choice can't contain products of type \"combo\"."
-msgstr ""
+msgstr "組合選擇不可包含「組合」類型的產品。"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_combo.py:0
 msgid "A combo choice must contain at least 1 product."
-msgstr ""
+msgstr "組合選擇必須包含至少 1 項產品。"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "A combo product must contain at least 1 combo choice."
-msgstr ""
+msgstr "組合產品必須包含至少 1 個組合選擇。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__description_sale
@@ -376,7 +376,7 @@ msgstr "產品已使用此條碼"
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "A sellable combo product can only contain sellable products."
-msgstr ""
+msgstr "可銷售組合產品只可包含「可銷售」產品。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__access_token
@@ -470,7 +470,7 @@ msgstr "加入產品"
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Add Products to pricelist report"
-msgstr ""
+msgstr "將產品加入至價目表報告"
 
 #. module: product
 #. odoo-javascript
@@ -485,12 +485,14 @@ msgid ""
 "Add products using the \"Add Products\" button at the top right to\n"
 "                                include them in the report."
 msgstr ""
+"使用右上角的「加入產品」按鈕，\n"
+"                                將產品加入報告中。"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 msgid "Add to all products"
-msgstr ""
+msgstr "加入至所有產品"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__update_product_attribute_value__mode__add
@@ -500,7 +502,7 @@ msgstr "加入至現有產品"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Add to products"
-msgstr ""
+msgstr "加入至產品"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
@@ -891,7 +893,7 @@ msgstr "組合價格"
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "Combo products can't have attributes"
-msgstr ""
+msgstr "組合產品不可有屬性"
 
 #. module: product
 #. odoo-python
@@ -899,7 +901,7 @@ msgstr ""
 msgid ""
 "Combos allow to choose one product amongst a selection of choices per "
 "category."
-msgstr ""
+msgstr "使用「組合」時，可從每個類別的一系列選擇中，選擇其中一項產品。"
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
@@ -1416,7 +1418,7 @@ msgstr "人類工程學"
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Error exporting file. Please try again."
-msgstr ""
+msgstr "匯出檔案時發生錯誤。請再試一次。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__exclude_for
@@ -2182,7 +2184,7 @@ msgstr "找不到產品。"
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "No products found in the report"
-msgstr ""
+msgstr "報告中找不到產品"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
@@ -2263,7 +2265,7 @@ msgstr "辦公室椅 黑色"
 #. module: product
 #: model:product.template,name:product.office_combo_product_template
 msgid "Office Combo"
-msgstr ""
+msgstr "辦公室組合"
 
 #. module: product
 #: model:product.template,name:product.product_order_01_product_template
@@ -2290,6 +2292,12 @@ msgid ""
 "On the product %(product)s you cannot transform the attribute "
 "%(attribute_src)s into the attribute %(attribute_dest)s."
 msgstr "對於產品 %(product)s，不可將屬性 %(attribute_src)s 轉換為屬性 %(attribute_dest)s。"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/product_document_kanban/upload_button/upload_button.js:0
+msgid "Oops! '%(fileName)s' didn’t upload since its format isn’t allowed."
+msgstr "哎唷！系統不允許「%(fileName)s」的格式，檔案未能上載。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__original_id
@@ -2380,7 +2388,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Please select some products first."
-msgstr ""
+msgstr "請先選擇一些產品。"
 
 #. module: product
 #. odoo-python
@@ -2499,7 +2507,7 @@ msgstr "價格表報表"
 #. odoo-python
 #: code:addons/product/models/product_pricelist.py:0
 msgid "Pricelist Report Preview"
-msgstr ""
+msgstr "價目表報告預覽"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
@@ -2629,12 +2637,12 @@ msgstr "產品分類"
 #. module: product
 #: model:ir.model,name:product.model_product_combo
 msgid "Product Combo"
-msgstr ""
+msgstr "產品組合"
 
 #. module: product
 #: model:ir.model,name:product.model_product_combo_item
 msgid "Product Combo Item"
-msgstr ""
+msgstr "產品組合項目"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo__combo_item_count
@@ -2645,7 +2653,7 @@ msgstr "產品數量"
 #. module: product
 #: model:res.groups,name:product.group_product_manager
 msgid "Product Creation"
-msgstr ""
+msgstr "產品建立"
 
 #. module: product
 #: model:ir.model,name:product.model_product_document
@@ -2940,7 +2948,7 @@ msgstr "數量"
 #. odoo-python
 #: code:addons/product/controllers/pricelist_report.py:0
 msgid "Quantity (%s UoM)"
-msgstr ""
+msgstr "數量（計量單位：%s）"
 
 #. module: product
 #. odoo-javascript
@@ -3559,18 +3567,18 @@ msgstr "計量單位"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Update extra prices"
-msgstr ""
+msgstr "更新額外價格"
 
 #. module: product
 #: model:ir.model,name:product.model_update_product_attribute_value
 msgid "Update product attribute value"
-msgstr ""
+msgstr "更新產品屬性值"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 msgid "Update product extra prices"
-msgstr ""
+msgstr "更新產品額外價格"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__update_product_attribute_value__mode__update_extra_price
@@ -3892,13 +3900,13 @@ msgstr "寫入日期"
 msgid ""
 "You are about to add the value \"%(attribute_value)s\" to %(product_count)s "
 "products."
-msgstr ""
+msgstr "你即將加入屬性值「%(attribute_value)s」至 %(product_count)s 項產品。"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/wizard/update_product_attribute_value.py:0
 msgid "You are about to update the extra price of %s products."
-msgstr ""
+msgstr "你即將為 %s 項產品更新額外價格。"
 
 #. module: product
 #. odoo-python
@@ -3966,7 +3974,7 @@ msgstr "不可在目錄中編輯此產品。"
 #: code:addons/product/models/product_attribute.py:0
 msgid ""
 "You cannot archive this attribute as there are still products linked to it"
-msgstr ""
+msgstr "你不可封存此屬性，因為仍有產品使用它（已連結至此屬性）。"
 
 #. module: product
 #. odoo-python
@@ -4168,7 +4176,7 @@ msgstr "例：1234567890"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_combo_view_form
 msgid "e.g. Burger Choice"
-msgstr ""
+msgstr "例：漢堡包選項"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_form_normalized
@@ -4230,7 +4238,7 @@ msgstr "商品"
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "product cost"
-msgstr ""
+msgstr "產品成本"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view

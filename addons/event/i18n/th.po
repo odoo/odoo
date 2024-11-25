@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Tiffany Chang, 2024
-# Rasareeyar Lappiam, 2024
 # Wichanon Jamwutthipreecha, 2024
 # Wil Odoo, 2024
+# Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 07:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,7 +61,7 @@ msgstr "%(event_name)s - การลงทะเบียนสำหรับ%
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "%(start_date)s to %(end_date)s"
-msgstr ""
+msgstr "%(start_date)s ถึง %(end_date)s"
 
 #. module: event
 #. odoo-python
@@ -85,7 +85,7 @@ msgstr "%s (สำเนา)"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.js:0
 msgid "'%(name)s' badge sent to printer '%(printer)s'"
-msgstr ""
+msgstr "ส่งป้าย '%(name)s' ไปยังเครื่องพิมพ์ '%(printer)s' แล้ว"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_attendee_list
@@ -177,12 +177,12 @@ msgstr "5-10"
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__96x134
 msgid "96x134mm (Badge Printer)"
-msgstr ""
+msgstr "96x134 มม. (เครื่องพิมพ์บัตร)"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__96x82
 msgid "96x82mm (Badge Printer)"
-msgstr ""
+msgstr "96x82 มม. (เครื่องพิมพ์บัตร)"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -247,6 +247,8 @@ msgid ""
 "<br/>\n"
 "                                            <span class=\"me-1\">from</span>"
 msgstr ""
+"<br/>\n"
+"                                            <span class=\"me-1\">จาก</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
@@ -254,6 +256,8 @@ msgid ""
 "<br/>\n"
 "                                            <span class=\"me-1\">to</span>"
 msgstr ""
+"<br/>\n"
+"                                            <span class=\"me-1\">ถึง</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -299,6 +303,8 @@ msgid ""
 "<i class=\"fa fa-check fa-3x\" role=\"img\" aria-label=\"Confirm Attendance "
 "Button\" title=\"Confirm Attendance\"/>"
 msgstr ""
+"<i class=\"fa fa-check fa-3x\" role=\"img\" aria-label=\"Confirm Attendance "
+"Button\" title=\"Confirm Attendance\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -306,6 +312,8 @@ msgid ""
 "<i class=\"fa fa-check fa-3x\" role=\"img\" aria-label=\"Reset To Registered"
 " Button\" title=\"Reset To Registered\"/>"
 msgstr ""
+"<i class=\"fa fa-check fa-3x\" role=\"img\" aria-label=\"Reset To Registered"
+" Button\" title=\"Reset To Registered\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -343,7 +351,7 @@ msgstr "<i class=\"fa fa-ticket\" title=\"ประเภทตั๋ว\"/>"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"oi oi-arrow-right me-2\" title=\"End date\"/>"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right me-2\" title=\"End date\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -357,7 +365,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "<span class=\"me-1\">to</span>"
-msgstr ""
+msgstr "<span class=\"me-1\">ถึง</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_badge_card
@@ -2057,7 +2065,7 @@ msgstr "ผู้เข้าร่วม"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Auto-Print"
-msgstr ""
+msgstr "พิมพ์อัตโนมัติ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_available
@@ -2073,12 +2081,12 @@ msgstr "เหรียญรางวัล"
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_badge_96x134
 msgid "Badge (96x134mm)"
-msgstr ""
+msgstr "ป้าย (96x134มม.)"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_badge_96x82
 msgid "Badge (96x82mm)"
-msgstr ""
+msgstr "ป้าย (96x82มม.)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_image
@@ -2242,6 +2250,7 @@ msgid ""
 "Choose a template to auto-fill tickets, communications, descriptions and "
 "other fields."
 msgstr ""
+"เลือกเทมเพลตเพื่อกรอกทิกเก็ต การสื่อสาร คำอธิบาย และฟิลด์อื่นๆ โดยอัตโนมัติ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__color
@@ -2344,13 +2353,13 @@ msgstr "ยืนยันการเข้าร่วม"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "Confirm Attendance Button"
-msgstr ""
+msgstr "ปุ่มยืนยันการเข้าร่วม"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Confirm attendance?"
-msgstr ""
+msgstr "ยืนยันการเข้าร่วมใช่ไหม?"
 
 #. module: event
 #: model:ir.model,name:event.model_res_partner
@@ -2664,7 +2673,7 @@ msgstr "ตัวจัดกำหนดการเมลอีเวนต์
 #. odoo-javascript
 #: code:addons/event/static/src/template_reference_field/field_event_mail_template_reference.js:0
 msgid "Event Mail Template Reference"
-msgstr ""
+msgstr "อ้างอิงเทมเพลตอีเมลกิจกรรม"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_activity
@@ -2939,6 +2948,8 @@ msgid ""
 "Finished events. Odoo will automatically move them to this stage once their "
 "end date has passed."
 msgstr ""
+"กิจกรรมเสร็จสิ้น Odoo "
+"จะย้ายกิจกรรมเหล่านี้ไปยังขั้นตอนนี้โดยอัตโนมัติเมื่อผ่านวันที่สิ้นสุด"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__fold
@@ -3110,7 +3121,7 @@ msgstr "กลุ่มโดย"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Guest #"
-msgstr ""
+msgstr "ลูกค้า #"
 
 #. module: event
 #: model_terms:res.partner,website_description:event.res_partner_event_1
@@ -3410,7 +3421,7 @@ msgstr "30 วันล่าสุด"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__last_registration_id
 msgid "Last Attendee"
-msgstr ""
+msgstr "ผู้เข้าร่วมครั้งสุดท้าย"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__write_uid
@@ -3810,6 +3821,7 @@ msgstr "ออนไลน์หากไม่ได้ตั้งค่า"
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "Open date range picker.<br/>Pick a Start and End date for your event."
 msgstr ""
+"เปิดตัวเลือกช่วงวันที่ <br/>เลือกวันที่เริ่มต้นและสิ้นสุดสำหรับกิจกรรมของคุณ"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -4136,12 +4148,12 @@ msgstr "สำรแงที่นั้งแล้ว"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "Reset To Registered"
-msgstr ""
+msgstr "รีเซ็ตเป็นลงทะเบียน"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "Reset To Registered Button"
-msgstr ""
+msgstr "รีเซ็ตเป็นปุ่มลงทะเบียน"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__user_id
@@ -4181,7 +4193,7 @@ msgstr "ข้อผิดพลาดในการส่ง SMS"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Scan or Tap"
-msgstr ""
+msgstr "สแกนหรือแตะ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -4215,7 +4227,7 @@ msgstr "วันที่ตามกำหนดการ"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__mail_registration_ids
 msgid "Scheduler Emails"
-msgstr ""
+msgstr "อีเมลผู้จัดกำหนดการ"
 
 #. module: event
 #: model_terms:event.event,description:event.event_5
@@ -4238,7 +4250,7 @@ msgstr "การเลือกผู้เข้าร่วม"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Select printer..."
-msgstr ""
+msgstr "เลือกเครื่องพิมพ์..."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_answer_view_tree
@@ -4258,7 +4270,7 @@ msgstr "ขายทิกเก็ตบนเว็บไซต์ของค
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets with Point of Sale"
-msgstr ""
+msgstr "จำหน่ายบัตรด้วยระบบ Point of Sale"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -4441,7 +4453,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Successfully registered!"
-msgstr ""
+msgstr "ลงทะเบียนสำเร็จ!"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_answer__value_answer_id
@@ -4659,7 +4671,7 @@ msgstr "ขั้นตอนนี้เสร็จสิ้น คลิก�
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "This ticket is for another event!"
-msgstr ""
+msgstr "บัตรใบนี้ใช้สำหรับกิจกรรมอื่น!"
 
 #. module: event
 #. odoo-javascript
@@ -4696,7 +4708,7 @@ msgstr "ประเภททิกเก็ต"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Ticket already scanned!"
-msgstr ""
+msgstr "สแกนบัตรเรียบร้อยแล้ว!"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
@@ -4729,12 +4741,12 @@ msgstr "สามารถพิมพ์หรือสแกนทิกเก
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_pos_event
 msgid "Tickets with PoS"
-msgstr ""
+msgstr "บัตรกับ PoS"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_sale
 msgid "Tickets with Sale"
-msgstr ""
+msgstr "บัตรกับการขาย"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_tz
@@ -5197,4 +5209,4 @@ msgstr "พรุ่งนี้"
 #. module: event
 #: model:mail.template,subject:event.event_reminder
 msgid "{{ object.event_id.name }}: {{ object.event_date_range }}"
-msgstr ""
+msgstr "{{ object.event_id.name }}: {{ object.event_date_range }}"

@@ -366,6 +366,17 @@ export function enterLotNumber(number) {
     ];
 }
 
+export function enterLastLotNumber(number) {
+    return [
+        {
+            content: "enter lot number",
+            trigger: ".edit-list-inputs .input-group:last-child input",
+            run: "edit " + number,
+        },
+        Dialog.confirm(),
+    ];
+}
+
 export function isShown() {
     return [
         {
@@ -413,6 +424,21 @@ export function productIsDisplayed(name, position = -1) {
             trigger: `.product-list ${
                 position > -1 ? `article:eq(${position})` : ""
             } .product-name:contains("${name}")`,
+        },
+    ];
+}
+export function searchProduct(string) {
+    return [
+        {
+            isActive: ["mobile"],
+            content: `Click search field`,
+            trigger: `.fa-search`,
+            run: `click`,
+        },
+        {
+            content: "Search for a product using the search bar",
+            trigger: ".pos-rightheader .form-control > input",
+            run: `edit ${string}`,
         },
     ];
 }

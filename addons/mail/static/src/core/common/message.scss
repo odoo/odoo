@@ -2,7 +2,7 @@
     transition: background-color .2s ease-out, opacity .5s ease-out, box-shadow .5s ease-out, transform .2s ease-out;
 
     &.o-card {
-        outline: $border-width solid $border-color;
+        outline: $border-width solid rgba($border-color, .35);
         outline-offset: -$border-width;
         background-color: $o-view-background-color;
     }
@@ -97,17 +97,29 @@
 }
 
 .o-mail-Message-bubble {
-    --border-opacity: 0.15;
-
     &.o-blue {
         background-color: mix($o-view-background-color, $info, 87.5%) !important;
+        border-color: darken(mix($o-view-background-color, $info, 87.5%), 10%) !important;
+
+        &.o-muted {
+            background-color: mix($white, mix($o-view-background-color, $info, 87.5%)) !important;
+        }
     }
     &.o-green {
         background-color: mix($o-view-background-color, $success, 87.5%) !important;
+        border-color: darken(mix($o-view-background-color, $success, 87.5%), 10%) !important;
+
+        &.o-muted {
+            background-color: mix($white, mix($o-view-background-color, $success, 87.5%)) !important;
+        }
     }
     &.o-orange {
-        --border-opacity: 0.3;
         background-color: mix($o-view-background-color, $warning, 75%) !important;
+        border-color: darken(mix($o-view-background-color, $warning, 75%), 10%) !important;
+
+        &.o-muted {
+            background-color: mix($white, mix($o-view-background-color, $warning, 75%), 85%) !important;
+        }
     }
 }
 

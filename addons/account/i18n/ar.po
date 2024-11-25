@@ -5,8 +5,9 @@
 # Translators:
 # Mustafa Rawi <mustafa@mrawi.com>, 2024
 # Martin Trigaux, 2024
-# Malaz Abuidris <msea@odoo.com>, 2024
 # Wil Odoo, 2024
+# Ibrahim Elnahas, 2024
+# Malaz Abuidris <msea@odoo.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 08:16+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -839,6 +840,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-check\" aria-label=\"processing_payment\" title=\"Processing Payment\" role=\"img\"/>\n"
 "                                    <span class=\"d-none d-md-inline\"> Processing Payment</span>"
 msgstr ""
+"<i class=\"fa fa-fw fa-check\" aria-label=\"processing_payment\" title=\"معالجة المدفوعات \" role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\">معالجة المدفوعات</span> "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -889,6 +892,9 @@ msgid ""
 "                    You can choose how you want us to send your invoices, and with which electronic format.\n"
 "                </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                    يمكنك اختيار الطريقة التي تريدنا أن نرسل بها فواتيرك، وبأي صيغة إلكترونية.\n"
+"                </small>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -984,6 +990,9 @@ msgid ""
 "                                        Audit\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                        التدقيق\n"
+"                                    </span> "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -1715,7 +1724,7 @@ msgstr "الحساب "
 msgid ""
 "Account %(account)s will be split in %(num_accounts)s, one for each "
 "company:\n"
-msgstr ""
+msgstr "سيتم تقسيم الحساب %(account)s إلى %(num_accounts)s، واحد لكل شركة:\n"
 
 #. module: account
 #. odoo-python
@@ -1736,6 +1745,18 @@ msgid ""
 msgstr ""
 "الحساب %s لا يقبل التسوية. عليك أن تقوم بتغيير إعدادات تهيئة هذا الحساب "
 "أولاً ليتم قبولها. "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "Account %s is of payable type, but is used in a sale operation."
+msgstr "الحساب %s هو حساب مستحق الدفع، ولكنه يُستخدم في عملية بيع. "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "Account %s is of receivable type, but is used in a purchase operation."
+msgstr "الحساب %s هو حساب مستحق القبض، ولكنه يُستخدم في عملية شراء. "
 
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
@@ -3050,7 +3071,7 @@ msgstr "مؤرشف"
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "Are you sure? This will perform the following operations:\n"
-msgstr ""
+msgstr "أأنت واثق؟ سيؤدي ذلك إلى إجراء العمليات التالية:\n"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__autopost_bills__ask
@@ -3148,7 +3169,7 @@ msgstr "سجل المراجعة "
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__audit_trail_message_ids
 #: model:ir.model.fields,field_description:account.field_account_move__audit_trail_message_ids
 msgid "Audit Trail Messages"
-msgstr ""
+msgstr "رسالة سجل المراجعة "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__auditable
@@ -3377,7 +3398,7 @@ msgstr "البنك والنقد "
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "Bank & Cash accounts cannot be shared between companies."
-msgstr ""
+msgstr "لا يمكن أن تكون الحسابات البنكية والنقدية مشتركة بين الشركات. "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_account_id
@@ -3656,7 +3677,7 @@ msgstr "قبل"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__installments_mode__before_date
 msgid "Before Next Payment Date"
-msgstr ""
+msgstr "قبل تاريخ الدفع التالي "
 
 #. module: account
 #. odoo-python
@@ -5561,7 +5582,7 @@ msgstr "قطع"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Cut-off {label}"
-msgstr ""
+msgstr "استقطاع"
 
 #. module: account
 #. odoo-python
@@ -6262,7 +6283,7 @@ msgstr "عرض قالب تقرير الفاتورة بصيغة PDF "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__display_mapping_tab
 msgid "Display Mapping Tab"
-msgstr ""
+msgstr "عرض علامة تبويب التخطيط "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__display_name
@@ -6750,7 +6771,7 @@ msgstr "تبادل البيانات إلكترونياً "
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details_fields
 msgid "Electronic format"
-msgstr ""
+msgstr "التنسيق الإلكتروني "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_email
@@ -7852,7 +7873,7 @@ msgstr "يحتوي على تحذير تحويل الأموال "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__has_negative_factor
 msgid "Has Negative Factor"
-msgstr ""
+msgstr "لديه عامل سلبي"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_posted_entries
@@ -8855,6 +8876,7 @@ msgid ""
 "Invoice and credit note distribution should have a total factor (+) equals "
 "to 100."
 msgstr ""
+"يجب أن يكون لتوزيع الفواتير والإشعارات الدائنة عامل إجمالي (+) يساوي 100. "
 
 #. module: account
 #. odoo-python
@@ -8863,6 +8885,7 @@ msgid ""
 "Invoice and credit note distribution should have a total factor (-) equals "
 "to 100."
 msgstr ""
+"يجب أن يكون لتوزيع الفواتير والإشعارات الدائنة عامل إجمالي (-) يساوي 100. "
 
 #. module: account
 #. odoo-python
@@ -10700,6 +10723,12 @@ msgstr ""
 "لم يتم العثور على مستندات الشراء الأصلية لأي من مستندات الشراء المحددة. "
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_payment.py:0
+msgid "No outstanding account could be found to make the payment"
+msgstr "لم يتم العثور على أي حساب مستحق لسداد المدفوعات "
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "No payment journal entries"
 msgstr "لا توجد قيود في دفتر اليومية للدفع "
@@ -11366,9 +11395,21 @@ msgid "Outstanding Account"
 msgstr "حساب مستحق "
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+msgid "Outstanding Payments"
+msgstr "المدفوعات المستحقة "
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Outstanding Payments accounts"
 msgstr "حسابات الدفعات المستحقة "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+msgid "Outstanding Receipts"
+msgstr "الإيصالات المستحقة "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -12437,13 +12478,13 @@ msgstr "حساب الربح"
 #: model:ir.model.fields,field_description:account.field_res_partner__property_inbound_payment_method_line_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_inbound_payment_method_line_id
 msgid "Property Inbound Payment Method Line"
-msgstr ""
+msgstr "خصائص بند طريقة الدفع الواردة "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_outbound_payment_method_line_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_outbound_payment_method_line_id
 msgid "Property Outbound Payment Method Line"
-msgstr ""
+msgstr "خصائص بند طريقة الدفع الصادرة "
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__purchase
@@ -12632,7 +12673,7 @@ msgstr "استلام المال "
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details_fields
 msgid "Receive invoices"
-msgstr ""
+msgstr "استلام الفواتير "
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_nature__amount_received
@@ -13508,7 +13549,7 @@ msgstr "آمن "
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 msgid ""
 "Securing these entries will also secure entries after the selected date."
-msgstr ""
+msgstr "سيؤدي تأمين هذه القيود إلى تأمين القيود بعد التاريخ المحدد أيضاً. "
 
 #. module: account
 #. odoo-python
@@ -14870,7 +14911,7 @@ msgstr ""
 msgid ""
 "The Availability is set to 'Country Matches' but the field Country is not "
 "set."
-msgstr ""
+msgstr "تم تعيين التوفر على 'تطابق الدولة' ولكن لم يتم تعيين حقل 'الدولة'. "
 
 #. module: account
 #. odoo-python
@@ -16138,6 +16179,8 @@ msgid ""
 "This analytic item was created by a journal item. Please edit the analytic "
 "distribution on the journal item instead."
 msgstr ""
+"تم إنشاء هذا العنصر التحليلي بواسطة عنصر اليومية. يرجى تحرير التوزيع "
+"التحليلي على عنصر اليومية عوضاً عن ذلك. "
 
 #. module: account
 #. odoo-python
@@ -16673,7 +16716,7 @@ msgstr "المبلغ الإجمالي الذي يجب دفعه لهذا المو
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "Total for the installments before %(date)s."
-msgstr ""
+msgstr "إجمالي الأقساط قبل %(date)s. "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_total
@@ -16695,7 +16738,7 @@ msgstr "تتبع التكاليف والإيرادات حسب المشروع أ�
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "Trade %s"
-msgstr ""
+msgstr "تجاري"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__transaction_details
@@ -17846,6 +17889,12 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
+msgid "You can't create payments for entries belonging to different branches."
+msgstr "لا يمكنك إنشاء دفعات لقيود تنتمي لفروع أخرى. "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_payment_register.py:0
 msgid ""
 "You can't create payments for entries belonging to different companies."
 msgstr "لا يمكنك إنشاء دفعات لقيود تنتمي لشركات أخرى. "
@@ -18014,7 +18063,7 @@ msgstr "لا يمكنك حذف بند ضريبي، حيث إنه سيؤثر عل
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "You cannot delete journal items belonging to a locked journal entry."
-msgstr ""
+msgstr "لا يمكنك حذف عناصر اليومية التي تنتمي إلى قيد يومية مقفل. "
 
 #. module: account
 #. odoo-python

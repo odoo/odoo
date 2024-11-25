@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-27 08:16+0000\n"
+"POT-Creation-Date: 2024-10-25 07:49+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -928,6 +928,8 @@ msgid ""
 "<span><b>Congratulations</b>, your first quotation is sent!<br>Check your email to validate the quote.\n"
 "        </span>"
 msgstr ""
+"<span><b>Chúc mừng</b>, báo giá đầu tiên của bạn đã được gửi!<br> Hãy kiểm tra email để xác nhận báo giá.\n"
+"</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -973,7 +975,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<span>Warning: this order might be a duplicate of</span>"
-msgstr ""
+msgstr "<span>Cảnh báo: đơn hàng này có thể trùng lặp với</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -984,7 +986,7 @@ msgstr "<strong class=\"mr16\">Thành tiền</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Expiration</strong>"
-msgstr ""
+msgstr "<strong>Ngày hết hạn</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -994,7 +996,7 @@ msgstr "<strong>Ghi chú vị trí tài chính:</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Salesperson</strong>"
-msgstr ""
+msgstr "<strong>Chuyên viên sales</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1024,7 +1026,7 @@ msgstr "<strong>Báo giá này đã bị huỷ.</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Your Reference</strong>"
-msgstr ""
+msgstr "<strong>Mã số của bạn</strong>"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_date_order_conditional_required
@@ -1036,6 +1038,8 @@ msgstr "Một đơn bán hàng đã xác nhận cần phải có ngày xác nh�
 #: code:addons/sale/models/sale_order.py:0
 msgid "A line on these orders missing a product, you cannot confirm it."
 msgstr ""
+"Nếu một dòng trong đơn hàng này đang thiếu sản phẩm, nên bạn không thể xác "
+"nhận."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1050,12 +1054,16 @@ msgid ""
 "A sale order line's combo item must be among its linked line's available "
 "combo items."
 msgstr ""
+"Sản phẩm combo của dòng đơn bán hàng phải nằm trong số các sản phẩm combo có"
+" sẵn của dòng liên kết."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "A sale order line's product must match its combo item's product."
 msgstr ""
+"Sản phẩm trong dòng đơn bán hàng phải khớp với sản phẩm trong sản phẩm "
+"combo."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1373,7 +1381,7 @@ msgstr "Bạn có chắc chắn muốn huỷ"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 msgid "Are you sure you want to cancel the selected item?"
-msgstr ""
+msgstr "Bạn có chắc chắn muốn hủy sản phẩm đã chọn không?"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1656,7 +1664,7 @@ msgstr "Lựa chọn combo"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__combo_item_id
 msgid "Combo Item"
-msgstr ""
+msgstr "Sản phẩm combo"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_commission
@@ -1756,7 +1764,7 @@ msgstr "Cấu hình"
 
 #. module: sale
 #. odoo-javascript
-#: code:addons/sale/static/src/js/product_configurator_dialog/product_configurator_dialog.xml:0
+#: code:addons/sale/static/src/js/product_configurator_dialog/product_configurator_dialog.js:0
 msgid "Configure your product"
 msgstr "Cấu hình sản phẩm của bạn"
 
@@ -2182,6 +2190,19 @@ msgid "Discount %"
 msgstr "% chiết khấu"
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+msgid "Discount %(percent)s%%"
+msgstr "Chiết khấu %(percent)s%%"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+msgid "Discount %(percent)s%%- On products with the following taxes %(taxes)s"
+msgstr ""
+"Chiết khấu %(percent)s%%- Trên sản phẩm có các loại thuế sau %(taxes)s"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__discount
 msgid "Discount (%)"
 msgstr "Chiết khấu (%)"
@@ -2215,20 +2236,6 @@ msgstr "Chiết khấu theo dòng"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Discount:"
 msgstr "Chiết khấu:"
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/wizard/sale_order_discount.py:0
-msgid "Discount: %(percent)s%%"
-msgstr "Chiết khấu: %(percent)s%%"
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/wizard/sale_order_discount.py:0
-msgid ""
-"Discount: %(percent)s%%- On products with the following taxes %(taxes)s"
-msgstr ""
-"Chiết khấu: %(percent)s%%- Trên sản phẩm có các loại thuế sau %(taxes)s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_discount_per_so_line
@@ -2354,7 +2361,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_category__property_account_downpayment_categ_id
 msgid "Downpayment Account"
-msgstr ""
+msgstr "Tài khoản khoản trả trước"
 
 #. module: sale
 #. odoo-python
@@ -2371,7 +2378,7 @@ msgstr "Chứng từ trùng lặp"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__duplicated_order_ids
 msgid "Duplicated Order"
-msgstr ""
+msgstr "Đơn hàng trùng lặp"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_easypost
@@ -2411,6 +2418,8 @@ msgstr "Nhập giá trị tùy chỉnh"
 msgid ""
 "Error importing attachment '%(file_name)s' as order (decoder=%(decoder)s)"
 msgstr ""
+"Lỗi khi nhập tệp đính kèm '%(file_name)s' dưới dạng đơn hàng (giải "
+"mã=%(decoder)s)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
@@ -2561,7 +2570,7 @@ msgstr "Tự động tạo hóa đơn khi thanh toán online được xác nhậ
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Generated Orders"
-msgstr ""
+msgstr "Đơn hàng đã tạo"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2585,6 +2594,8 @@ msgid ""
 "Goods are tangible materials and merchandise you provide.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"Hàng hóa là nguyên vật liệu hữu hình và hàng hóa bạn cung cấp.\n"
+"Dịch vụ là sản phẩm phi vật chất bạn cung cấp."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2709,7 +2720,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Immediate"
-msgstr ""
+msgstr "Ngay lập tức"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2856,7 +2867,7 @@ msgstr "Số lượng đã xuất hoá đơn"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_invoiced_posted
 msgid "Invoiced Quantity (posted)"
-msgstr ""
+msgstr "Số lượng đã lập hoá đơn (đã ghi sổ)"
 
 #. module: sale
 #. odoo-python
@@ -2972,7 +2983,7 @@ msgstr "Đúng nếu dòng đơn hàng đến từ chi phí hoặc hóa đơn mu
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Issued Date"
-msgstr ""
+msgstr "Ngày phát hành"
 
 #. module: sale
 #. odoo-python
@@ -3060,7 +3071,7 @@ msgstr "Dòng đơn hàng được liên kết"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__linked_virtual_id
 msgid "Linked Virtual"
-msgstr ""
+msgstr "Đã liên kết ảo"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3107,7 +3118,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage Sales & teams targets and commissions"
-msgstr ""
+msgstr "Quản lý doanh số & mục tiêu và hoa hồng bộ phận"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__manual
@@ -4045,7 +4056,7 @@ msgstr "Hiệu lực báo giá là bắt buộc và phải lớn hơn hoặc b�
 #: model:mail.message.subtype,name:sale.mt_order_viewed
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_viewed
 msgid "Quotation Viewed"
-msgstr ""
+msgstr "Báo giá đã được xem"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
@@ -4110,7 +4121,7 @@ msgstr "Đánh giá"
 #: model:ir.model.fields,field_description:sale.field_product_product__expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__expense_policy
 msgid "Re-Invoice Costs"
-msgstr ""
+msgstr "Xuất lại hoá đơn chi phí"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_expense_policy
@@ -4137,12 +4148,6 @@ msgstr "Tính lại toàn bộ giá cả dựa vào bảng giá này"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all taxes based on this fiscal position"
 msgstr "Tính lại toàn bộ thuế dựa vào vị trí tài chính này"
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/controllers/portal.py:0
-msgid "Reference"
-msgstr "Mã tham chiếu"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__origin
@@ -4358,7 +4363,7 @@ msgstr "Phân tích bán hàng theo khách hàng"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_products
 msgid "Sales Analysis By Products"
-msgstr ""
+msgstr "Phân tích bán hàng theo sản phẩm"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_salesperson
@@ -4447,7 +4452,6 @@ msgstr "(Các) đơn bán hàng"
 #: model:ir.ui.menu,name:sale.menu_sales_config
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -4577,7 +4581,7 @@ msgstr "Chọn một sản phẩm, hoặc tạo mới thật nhanh chóng. "
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__selected_combo_items
 msgid "Selected Combo Items"
-msgstr ""
+msgstr "Sản phẩm combo đã chọn"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__sale_line_warn
@@ -4777,12 +4781,14 @@ msgid ""
 "Some confirmed orders are selected. Their related documents might be\n"
 "                        affected by the cancellation."
 msgstr ""
+"Một số đơn hàng đã xác nhận đã được chọn. Các chứng từ liên quan đến chúng "
+"có thể bị ảnh hưởng bởi thao tác huỷ này."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Some orders are not in a state requiring confirmation."
-msgstr ""
+msgstr "Một số đơn sau hiện không ở trạng thái cần xác nhận."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__source_id
@@ -4801,12 +4807,6 @@ msgstr "Chứng từ gốc"
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_product_email_template
 msgid "Specific Email"
 msgstr "Email cụ thể"
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/controllers/portal.py:0
-msgid "Stage"
-msgstr "Giai đoạn"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_starshipit
@@ -4926,7 +4926,7 @@ msgstr "Thuế"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_discount__tax_ids
 msgid "Taxes to add on the discount line."
-msgstr ""
+msgstr "Thuế cần cộng vào dòng chiết khấu."
 
 #. module: sale
 #. odoo-python
@@ -4941,7 +4941,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__technical_price_unit
 msgid "Technical Price Unit"
-msgstr ""
+msgstr "Đơn giá kỹ thuật"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4994,6 +4994,8 @@ msgid ""
 "The Sales Order %(order)s to be reinvoiced is cancelled. You cannot register"
 " an expense on a cancelled Sales Order."
 msgstr ""
+"Đơn bán hàng %(order)s cần xuất hoá đơn lại đã bị hủy. Bạn không thể ghi "
+"nhận chi phí cho một đơn bán hàng đã bị hủy."
 
 #. module: sale
 #. odoo-python
@@ -5002,6 +5004,8 @@ msgid ""
 "The Sales Order %(order)s to be reinvoiced is currently locked. You cannot "
 "register an expense on a locked Sales Order."
 msgstr ""
+"Đơn bán hàng %(order)s cần xuất hoá đơn lại hiện đang bị khoá. Bạn không thể"
+" ghi nhận chi phí cho một đơn bán hàng bị khoá."
 
 #. module: sale
 #. odoo-python
@@ -5010,6 +5014,8 @@ msgid ""
 "The Sales Order %(order)s to be reinvoiced must be validated before "
 "registering expenses."
 msgstr ""
+"Đơn bán hàng %(order)s cần xuất hóa đơn lại phải được xác thực trước khi ghi"
+" nhận chi phí."
 
 #. module: sale
 #. odoo-python
@@ -5092,6 +5098,8 @@ msgid ""
 "The number of selected combo items must match the number of available combo "
 "choices."
 msgstr ""
+"Số lượng sản phẩm combo đã chọn phải khớp với số lượng các lựa chọn combo có"
+" sẵn."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5181,11 +5189,14 @@ msgid ""
 "yet. You can either use a per-line discount, or ask an administrator to "
 "grant the discount the first time."
 msgstr ""
+"Có vẻ như chưa có sản phẩm chiết khấu nào được cấu hình cho công ty này. Bạn"
+" có thể sử dụng chiết khấu theo dòng hoặc yêu cầu quản trị viên cấp chiết "
+"khấu lần đầu."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_category__property_account_downpayment_categ_id
 msgid "This account will be used on Downpayment invoices."
-msgstr ""
+msgstr "Tài khoản này sẽ được sử dụng trên hóa đơn khoản trả trước."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5381,10 +5392,10 @@ msgstr "Tổng đã gồm thuế"
 
 #. module: sale
 #. odoo-javascript
-#: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
-#: code:addons/sale/static/src/js/product_list/product_list.xml:0
-msgid "Total:"
-msgstr "Tổng:"
+#: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.js:0
+#: code:addons/sale/static/src/js/product_list/product_list.js:0
+msgid "Total: %s"
+msgstr "Tổng: %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__service_type
@@ -5446,7 +5457,7 @@ msgstr "Chiến dịch UTM"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_to_invoice
 msgid "Un-invoiced Balance"
-msgstr ""
+msgstr "Số dư chưa được lập hoá đơn"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_unit
@@ -5514,7 +5525,7 @@ msgstr "Tổng tiền trước thuế"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_line_wizard_form
 msgid "Untaxed discount"
-msgstr ""
+msgstr "Chiết khấu trước thuế"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -5569,6 +5580,9 @@ msgid ""
 "Validated expenses, vendor bills, or stock pickings (set up to track costs) "
 "can be invoiced to the customer at either cost or sales price."
 msgstr ""
+"Các khoản chi phí đã xác thực, hóa đơn mua hàng hoặc phiếu lấy hàng tồn kho "
+"(được thiết lập để theo dõi chi phí) có thể được lập hóa đơn cho khách hàng "
+"theo giá thành hoặc giá bán."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__validity_date
@@ -5603,7 +5617,7 @@ msgstr "Xem báo giá"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__virtual_id
 msgid "Virtual"
-msgstr ""
+msgstr "Ảo"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -5748,6 +5762,7 @@ msgstr ""
 "                 dù đó là sản phẩm lưu kho, sản phẩm tiêu thụ hay dịch vụ."
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Your Orders"
 msgstr "Đơn hàng của bạn"
@@ -5860,6 +5875,8 @@ msgid ""
 "selected\n"
 "                    items?"
 msgstr ""
+"các sản phẩm\n"
+"                    đã chọn không?"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document

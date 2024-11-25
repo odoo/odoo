@@ -544,13 +544,14 @@ class SaleOrderLine(models.Model):
             # check if the price has been manually set or there is already invoiced amount.
             # if so, the price shouldn't change as it might have been manually edited.
             if (
-                line.technical_price_unit not in (0.0, line.price_unit)
+                (line.technical_price_unit != line.price_unit and not line.env.context.get('force_price_recomputation'))
                 or line.qty_invoiced > 0
                 or (line.product_id.expense_policy == 'cost' and line.is_expense)
             ):
                 continue
             if not line.product_uom or not line.product_id:
                 line.price_unit = 0.0
+                line.technical_price_unit = 0.0
             else:
                 line = line.with_company(line.company_id)
                 price = line._get_display_price()
@@ -591,7 +592,7 @@ class SaleOrderLine(models.Model):
 
         pricelist_price = self._get_pricelist_price()
 
-        if not self.pricelist_item_id or not self.pricelist_item_id._show_discount():
+        if not self.pricelist_item_id._show_discount():
             # No pricelist rule found => no discount from pricelist
             return pricelist_price
 
@@ -720,7 +721,7 @@ class SaleOrderLine(models.Model):
 
             line.discount = 0.0
 
-            if not (line.pricelist_item_id and line.pricelist_item_id._show_discount()):
+            if not line.pricelist_item_id._show_discount():
                 # No pricelist rule was found for the product
                 # therefore, the pricelist didn't apply any discount/change
                 # to the existing sales price.
@@ -1366,6 +1367,13 @@ class SaleOrderLine(models.Model):
                 'business_domain': 'sale_order',
                 'company_id': line.company_id.id,
             })
+
+    def _get_downpayment_line_price_unit(self, invoices):
+        return sum(
+            l.price_unit if l.move_id.move_type == 'out_invoice' else -l.price_unit
+            for l in self.invoice_lines
+            if l.move_id.state == 'posted' and l.move_id not in invoices  # don't recompute with the final invoice
+        )
 
     #=== CORE METHODS OVERRIDES ===#
 

@@ -76,8 +76,9 @@ export class ActivityController extends Component {
             context: this.props.context,
             onSelected: async (resIds) => {
                 await this.store.scheduleActivity(this.props.resModel, resIds);
-                this.model.load(this.getSearchProps());
             },
+        }, {
+            onClose: () => this.model.load(this.getSearchProps())
         });
     }
 

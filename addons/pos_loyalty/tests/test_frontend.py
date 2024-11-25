@@ -2252,3 +2252,110 @@ class TestUi(TestPointOfSaleHttpCommon):
             "PosRewardProductScanGS1",
             login="pos_admin",
         )
+
+    def test_coupon_pricelist(self):
+        self.env["product.product"].create(
+            {
+                "name": "Test Product 1",
+                "is_storable": True,
+                "list_price": 25,
+                "available_in_pos": True,
+            }
+        )
+
+        alt_pos_config = self.main_pos_config.copy()
+        pricelist_1 = self.env['product.pricelist'].create(
+            {
+                "name": "test pricelist 1",
+                "currency_id": self.env.ref("base.USD").id,
+            }
+        )
+        alt_pos_config.write({
+            'use_pricelist': True,
+            'available_pricelist_ids': [(4, pricelist_1.id)],
+            'pricelist_id': pricelist_1.id,
+        })
+
+        self.env["loyalty.program"].create(
+            {
+                "name": "Test Loyalty Program",
+                "program_type": "promotion",
+                "trigger": "with_code",
+                'pos_ok': True,
+                "pricelist_ids": [(4, pricelist_1.id)],
+                "rule_ids": [
+                    Command.create({"mode": "with_code", "code": "hellopromo", "minimum_amount": 10}),
+                ],
+                "reward_ids": [
+                    Command.create({
+                        "reward_type": "discount",
+                        "discount": 10,
+                        "discount_mode": "percent",
+                        "discount_applicability": "order",
+                        "required_points": 1,
+                    }),
+                ],
+                'pos_config_ids': [Command.link(alt_pos_config.id)],
+
+            }
+        )
+
+        alt_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % alt_pos_config.id,
+            "PosLoyaltyPromocodePricelist",
+            login="pos_user",
+        )
+
+    def test_gift_card_program_create_with_invoice(self):
+        """
+        Test for gift card program when pos.config.gift_card_settings == 'create_set'.
+        """
+        self.pos_user.write({
+            'groups_id': [
+                (4, self.env.ref('stock.group_stock_user').id),
+            ]
+        })
+        LoyaltyProgram = self.env['loyalty.program']
+        (LoyaltyProgram.search([])).write({'pos_ok': False})
+        self.env.ref('loyalty.gift_card_product_50').write({'active': True})
+
+        gift_card_program = self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
+        self.env['res.partner'].create({'name': 'Test Partner'})
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "GiftCardProgramInvoice",
+            login="pos_user",
+        )
+        self.assertEqual(len(gift_card_program.coupon_ids), 1)
+
+    def test_refund_product_part_of_rules(self):
+
+        self.product_a.available_in_pos = True
+        self.env['loyalty.program'].search([]).write({'active': False})
+        self.env['loyalty.program'].create({
+            'name': 'My super program',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [Command.create({
+                'product_ids': [Command.set(self.product_a.ids)],
+                'reward_point_mode': 'order',
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'discount': 50,
+                'discount_mode': 'percent',
+                'discount_applicability': 'order',
+            })],
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "RefundRulesProduct",
+            login="pos_user",
+        )

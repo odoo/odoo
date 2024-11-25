@@ -5,6 +5,7 @@ import { Component, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { getContent, getSelection, setContent } from "./selection";
 import { animationFrame } from "@odoo/hoot-mock";
+import { dispatchCleanForSave } from "./dispatch";
 
 export const Direction = {
     BACKWARD: "BACKWARD",
@@ -67,9 +68,13 @@ class TestEditor extends Component {
  */
 
 /**
+ *@typedef { import("@html_editor/plugin").Plugin } Plugin
+ */
+
+/**
  * @param { string } content
  * @param {TestConfig} [options]
- * @returns { Promise<{el: HTMLElement; editor: Editor; }> }
+ * @returns { Promise<{el: HTMLElement; editor: Editor; plugins: Map<string,Plugin>}> }
  */
 export async function setupEditor(content, options = {}) {
     const wysiwygProps = Object.assign({}, options.props);
@@ -99,10 +104,10 @@ export async function setupEditor(content, options = {}) {
     const editor = await attachedEditor;
     const plugins = new Map(
         editor.plugins.map((plugin) => {
-            return [plugin.constructor.name, plugin];
+            return [plugin.constructor.id, plugin];
         })
     );
-    if (plugins.get("embedded_components")) {
+    if (plugins.get("embeddedComponents")) {
         // await an extra animation frame for embedded components mounting
         // TODO @phoenix: would be more accurate to register mounting
         // promises in embedded_component_plugin and await them, change this
@@ -149,13 +154,14 @@ export async function testEditor(config) {
         };
     }
     const { el, editor } = await setupEditor(contentBefore, config);
-    // The HISTORY_STAGE_SELECTION should have been triggered by the click on
+    // The stageSelection should have been triggered by the click on
     // the editable. As we set the selection programmatically, we dispatch the
     // selection here for the commands that relies on it.
     // If the selection of the editor would be programatically set upon start
     // (like an autofocus feature), it would be the role of the autofocus
-    // feature to trigger the HISTORY_STAGE_SELECTION.
-    editor.dispatch("HISTORY_STAGE_SELECTION");
+    // feature to trigger the stageSelection.
+    editor.shared.history.stageSelection();
+
     if (config.props?.iframe) {
         expect("iframe").toHaveCount(1);
     }
@@ -174,7 +180,7 @@ export async function testEditor(config) {
     }
     if (contentAfter) {
         const content = editor.getContent();
-        editor.dispatch("CLEAN_FOR_SAVE", { root: el, preserveSelection: true });
+        dispatchCleanForSave(editor, { root: el, preserveSelection: true });
         compareFunction(getContent(el), contentAfter, "Editor content, after clean");
         compareFunction(content, el.innerHTML, "Value from editor.getContent()");
     }

@@ -19,7 +19,6 @@ $o-discuss-talkingColor: lighten($success, 5%);
     background-color: var(--o-discuss-badge-bg) !important;
     align-items: center;
     justify-content: center;
-    min-width: 2.1ch;
 
     &.o-muted {
         --o-discuss-badge-bg: #{$gray-400};
@@ -32,7 +31,7 @@ $o-discuss-talkingColor: lighten($success, 5%);
 }
 
 .o-discuss-separator {
-    opacity: $hr-opacity / 2;
+    opacity: $hr-opacity / 3;
 }
 
 .o-discuss-badge, .o-discuss-badgeShape {
@@ -110,6 +109,7 @@ a.o_mail_redirect, a.o_channel_redirect, a.o-discuss-mention {
     padding: 0rem 0.1875rem;
     border: 1px solid;
     font-weight: $font-weight-bold;
+    display: inline-block;
 }
 
 a.o_mail_redirect, a.o_channel_redirect {

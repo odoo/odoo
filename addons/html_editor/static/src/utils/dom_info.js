@@ -460,7 +460,7 @@ export const paragraphRelatedElements = [
  * @returns {boolean}
  */
 export function allowsParagraphRelatedElements(node) {
-    return isBlock(node) && !paragraphRelatedElements.includes(node.nodeName);
+    return isBlock(node) && !["P", "H1", "H2", "H3", "H4", "H5", "H6"].includes(node.nodeName);
 }
 
 export const phrasingContent = new Set(["#text", ...phrasingTagNames]);
@@ -656,6 +656,10 @@ export function areSimilarElements(node, node2) {
 
 export function isTextNode(node) {
     return node.nodeType === Node.TEXT_NODE;
+}
+
+export function isElement(node) {
+    return node.nodeType === Node.ELEMENT_NODE;
 }
 
 export function isContentEditable(node) {

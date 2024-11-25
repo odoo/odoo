@@ -28,7 +28,8 @@ class AccountMove(models.Model):
         compute="_compute_kode_transaksi", store=True)
     l10n_id_efaktur_range = fields.Many2one("l10n_id_efaktur.efaktur.range", string="E-faktur Range", copy=False, domain="[('company_id', '=', company_id), ('available', '>', 0)]")
     l10n_id_need_kode_transaksi = fields.Boolean(compute='_compute_need_kode_transaksi')
-    l10n_id_available_range_count = fields.Integer(compute="_compute_available_range_count")
+    l10n_id_available_range_count = fields.Integer(compute="_compute_available_range_count", compute_sudo=True)
+    l10n_id_show_kode_transaksi = fields.Boolean(compute='_compute_show_kode_transaksi')
 
     @api.depends('company_id')
     def _compute_available_range_count(self):
@@ -73,6 +74,15 @@ class AccountMove(models.Model):
                 and move.invoice_line_ids.tax_ids
             )
 
+    @api.depends('commercial_partner_id')
+    def _compute_show_kode_transaksi(self):
+        for move in self:
+            move.l10n_id_show_kode_transaksi = (
+                move.commercial_partner_id.l10n_id_pkp
+                and move.move_type == 'out_invoice'
+                and move.country_code == 'ID'
+            )
+
     @api.constrains('l10n_id_kode_transaksi', 'line_ids', 'partner_id')
     def _constraint_kode_ppn(self):
         ppn_tag = self.env.ref('l10n_id.ppn_tag')
@@ -100,6 +110,9 @@ class AccountMove(models.Model):
         """Set E-Faktur number after validation."""
         for move in self:
             if move.l10n_id_need_kode_transaksi:
+                # If the code was set on the partner after the invoice was created, we set it on the move at this step so that it triggers the constrains if needed.
+                if not move.l10n_id_kode_transaksi and move.commercial_partner_id.l10n_id_kode_transaksi:
+                    move.l10n_id_kode_transaksi = move.commercial_partner_id.l10n_id_kode_transaksi
                 if not move.l10n_id_kode_transaksi:
                     raise ValidationError(_('You need to put a Kode Transaksi for this partner.'))
                 if move.l10n_id_replace_invoice_id.l10n_id_tax_number:

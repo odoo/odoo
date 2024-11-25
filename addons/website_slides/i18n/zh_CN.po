@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Odoo哥 <vnsoft.he@gmail.com>, 2024
 # Chloe Wang, 2024
-# 何彬 <vnsoft.he@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-10-25 07:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: 何彬 <vnsoft.he@gmail.com>, 2024\n"
+"Last-Translator: Chloe Wang, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,7 +39,7 @@ msgstr "已完成"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__members_completed_count
 msgid "# Completed Attendees"
-msgstr "已完成参加者数目"
+msgstr "已完成参会者数目"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__completed_slides_count
@@ -430,7 +430,7 @@ msgstr "<i class=\"fa fa-check\"/>已完成"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "<i class=\"fa fa-circle-o-notch fa-spin me-2\"/><b>Loading...</b>"
-msgstr "<i class=\"fa fa-circle-o-notch fa-spin me-2\"/><b>加载……</b>"
+msgstr "<i class=\"fa fa-circle-o-notch fa-spin me-2\"/><b>加载中……</b>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_embed
@@ -817,7 +817,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "<span class=\"o_stat_text\">Attendees</span>"
-msgstr "<span class=\"o_stat_text\">参加者</span>"
+msgstr "<span class=\"o_stat_text\">参会者</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_partner_view_form
@@ -841,7 +841,7 @@ msgid ""
 "                                Create a Google Project and Get a Key"
 msgstr ""
 "<span class=\"oi oi-arrow-right\"/>\n"
-"                                创建 Google 项目并获取密钥"
+"                                创建 谷歌 项目并获取密钥"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_training
@@ -875,29 +875,33 @@ msgid "<span class=\"text-muted fw-bold me-3\">Rating</span>"
 msgstr "<span class=\"text-muted fw-bold me-3\">额定值</span>"
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
+msgid ""
+"<span class=\"text-muted text-truncate mw-100\" "
+"title=\"Invited\">Invited</span>"
+msgstr "<span class=\"text-muted text-truncate mw-100\" title=\"已邀請\">已邀请</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
+msgid ""
+"<span class=\"text-muted text-truncate mw-100\" "
+"title=\"Ongoing\">Ongoing</span>"
+msgstr "<span class=\"text-muted text-truncate mw-100\" title=\"Ongoing\">进行中</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
+msgid "<span class=\"text-muted text-truncate mw-100\" title=\"Total\">Total</span>"
+msgstr "<span class=\"text-muted text-truncate mw-100\" title=\"Total\">总数</span>"
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
 msgid "<span class=\"text-muted\">Common tasks for a computer scientist</span>"
 msgstr "<span class=\"text-muted\">计算机科学家的常见任务</span>"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
-msgid "<span class=\"text-muted\">Invited</span>"
-msgstr "<span class=\"text-muted\">获邀请</span>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
-msgid "<span class=\"text-muted\">Ongoing</span>"
-msgstr "<span class=\"text-muted\">进行中</span>"
-
-#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
 msgid "<span class=\"text-muted\">Parts of computer science</span>"
 msgstr "<span class=\"text-muted\">计算机科学的各个部分</span>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
-msgid "<span class=\"text-muted\">Total</span>"
-msgstr "<span class=\"text-muted\">总数</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
@@ -942,8 +946,12 @@ msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
-msgid "<span name=\"done_members_count_label\" class=\"text-muted\">Finished</span>"
-msgstr "<span name=\"done_members_count_label\" class=\"text-muted\">完成</span>"
+msgid ""
+"<span name=\"done_members_count_label\" class=\"text-muted text-truncate "
+"mw-100\" title=\"Finished\">Finished</span>"
+msgstr ""
+"<span name=\"done_members_count_label\" class=\"text-muted text-truncate "
+"mw-100\" title=\"Finished\">已完成</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -986,7 +994,7 @@ msgstr "<span>提出正确的问题</span>"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "<span>Content only accessible to course attendees.</span>"
-msgstr "<span>内容仅供课程参加者查看。</span>"
+msgstr "<span>内容仅供课程参会者查看。</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
@@ -1192,12 +1200,12 @@ msgstr "所需操作"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__active
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__active
 msgid "Active"
-msgstr "已启用"
+msgstr "有效"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__members_engaged_count
 msgid "Active attendees include both 'joined' and 'ongoing' attendees."
-msgstr "活跃参加者包括  '已加入' 和 '进行中' 参加者。"
+msgstr "活跃参会者包括  '已加入' 和 '进行中' 参会者。"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__activity_ids
@@ -1229,7 +1237,7 @@ msgstr "添加"
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Add Attendees"
-msgstr "加入参加者"
+msgstr "加入参会者"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__karma_slide_comment
@@ -1331,7 +1339,7 @@ msgstr "高级"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__channel_partner_all_ids
 msgid "All Attendees Information"
-msgstr "所有参加者信息"
+msgstr "所有参会者信息"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.slide_channel_action_overview
@@ -1475,7 +1483,7 @@ msgstr "归档内容"
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Archived"
-msgstr "已存档"
+msgstr "已归档"
 
 #. module: website_slides
 #. odoo-javascript
@@ -1514,7 +1522,7 @@ msgstr "文章"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_attachment_count
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_attachment_count
 msgid "Attachment Count"
-msgstr "附件计数"
+msgstr "附件数量"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__attachment_ids
@@ -1555,7 +1563,7 @@ msgstr "出席者状态"
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_partner_view_tree
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Attendees"
-msgstr "参加者"
+msgstr "参会者"
 
 #. module: website_slides
 #. odoo-python
@@ -2497,7 +2505,7 @@ msgstr "日期（从旧到新）"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
 msgid "Default training image"
-msgstr ""
+msgstr "默认训练图片"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_gamification_challenge__challenge_category
@@ -2872,7 +2880,7 @@ msgstr "享受独家内容！"
 #. odoo-python
 #: code:addons/website_slides/models/slide_channel.py:0
 msgid "Enroll Attendees to %(course_name)s"
-msgstr "将参加者注册至 %(course_name)s"
+msgstr "将参会者注册至 %(course_name)s"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__enroll_msg
@@ -2893,7 +2901,7 @@ msgstr "注册合作伙伴"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__channel_partner_ids
 msgid "Enrolled Attendees Information"
-msgstr "已报名参加者信息"
+msgstr "已报名参会者信息"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__partner_ids
@@ -3042,7 +3050,7 @@ msgstr "首先，让我们添加一个 <b>文档</b>。它必须是一个.pdf文
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "First, upload the file on your Google Drive account."
-msgstr "首先，将文件上传到您的 Google 云端硬盘帐户。"
+msgstr "首先，将文件上传到您的 谷歌 云端硬盘帐户。"
 
 #. module: website_slides
 #. odoo-javascript
@@ -3184,7 +3192,7 @@ msgstr "谷歌文档密钥"
 #: code:addons/website_slides/models/slide_slide.py:0
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__video_source_type__google_drive
 msgid "Google Drive"
-msgstr "Google网盘"
+msgstr "谷歌网盘"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
@@ -3317,7 +3325,7 @@ msgstr "如何找到优质木材"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_3
 msgid "How to plant a potted.list"
-msgstr ""
+msgstr "如何种植盆栽"
 
 #. module: website_slides
 #. odoo-javascript
@@ -3477,7 +3485,7 @@ msgstr "无法发送电子邮件。先为课程 %(course_names)s 选择一个 \"
 msgid ""
 "Impossible to send emails. Select a \"Share Template\" for courses "
 "%(course_names)s first"
-msgstr "未能发送电邮。请先选择 \"分享模板\" 给课程%(course_names)s使用"
+msgstr "未能发送电子邮件。请先选择 \"分享模板\" 给课程%(course_names)s使用"
 
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_1_4_question_0_1
@@ -3552,7 +3560,7 @@ msgstr "有趣的事实"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_1
 msgid "Interesting List Facts"
-msgstr ""
+msgstr "有趣的列表事实"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_0_1
@@ -3595,7 +3603,7 @@ msgstr "邀请"
 #. odoo-python
 #: code:addons/website_slides/models/slide_channel.py:0
 msgid "Invite Attendees to %(course_name)s"
-msgstr "邀请参加者参加%(course_name)s"
+msgstr "邀请参会者参加%(course_name)s"
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel_partner__member_status__invited
@@ -3616,7 +3624,7 @@ msgstr "是编辑者"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__is_member
 msgid "Is Enrolled Attendee"
-msgstr "是已报名参加者"
+msgstr "已注册参会者"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_is_follower
@@ -3627,7 +3635,7 @@ msgstr "是关注者"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__is_member_invited
 msgid "Is Invited Attendee"
-msgstr "是受邀参加者"
+msgstr "受邀参会者"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__user_has_completed
@@ -3932,12 +3940,12 @@ msgstr "视频链接（我们支持YouTube，Google Drive和Vimeo作为来源）
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_0
 msgid "List Infographic"
-msgstr ""
+msgstr "列表信息图"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_2_2
 msgid "List planting in hanging bottles on wall"
-msgstr ""
+msgstr "墙面悬挂瓶种植列表"
 
 #. module: website_slides
 #. odoo-javascript
@@ -3987,7 +3995,7 @@ msgstr "标记为待办事项"
 #: code:addons/website_slides/static/src/xml/website_slides_sidebar.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_sidebar_done_button
 msgid "Mark as done"
-msgstr "完成"
+msgstr "标记为完成"
 
 #. module: website_slides
 #. odoo-javascript
@@ -4421,7 +4429,7 @@ msgstr "主管"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "On Google Drive"
-msgstr "Google网盘"
+msgstr "谷歌网盘"
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__enroll__invite
@@ -4560,7 +4568,7 @@ msgstr "请输入有效的Vimeo视频链接"
 #. odoo-python
 #: code:addons/website_slides/controllers/main.py:0
 msgid "Please enter valid Google Drive Link"
-msgstr "请输入有效Google Drive链接"
+msgstr "请输入有效谷歌 Drive链接"
 
 #. module: website_slides
 #. odoo-javascript
@@ -4840,7 +4848,7 @@ msgstr "创造新记录"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__partner_ids
 msgid "Recipients"
-msgstr "收款人"
+msgstr "收件人"
 
 #. module: website_slides
 #. odoo-javascript
@@ -5178,7 +5186,7 @@ msgstr "发送"
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/email_sharing_input.xml:0
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__send_email
 msgid "Send Email"
-msgstr "发送电邮"
+msgstr "发送电子邮件"
 
 #. module: website_slides
 #: model:mail.template,description:website_slides.mail_template_channel_completed
@@ -5198,7 +5206,7 @@ msgstr "在与会者被添加到课程时发送给他们"
 #. module: website_slides
 #: model:mail.template,description:website_slides.mail_template_slide_channel_invite
 msgid "Sent to potential attendees to check out the course."
-msgstr "发送给潜在参加者以查看课程。"
+msgstr "发送给潜在参会者以查看课程。"
 
 #. module: website_slides
 #: model:mail.template,description:website_slides.slide_template_shared
@@ -5331,7 +5339,7 @@ msgstr "分享就是关怀！"
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__sheet
 msgid "Sheet (Excel, Google Sheet, ...)"
-msgstr "表格(Excel, Google表格，……)"
+msgstr "表格(Excel, 谷歌表格，……)"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__description_short
@@ -5669,7 +5677,7 @@ msgstr "您的课程的<b>标题</b>是自动填写的，但如果您想的话�
 msgid ""
 "The Enroll Policy should be set to 'On Invitation' when visibility is set to"
 " 'Course Attendees'"
-msgstr "若课程设定为只向 '课程参加者' 显示，注册政策应设为 '只限受邀者'"
+msgstr "若课程设定为只向 '课程参会者' 显示，注册政策应设为 '只限受邀者'"
 
 #. module: website_slides
 #. odoo-javascript
@@ -5804,7 +5812,7 @@ msgstr "此课程不存在。"
 msgid ""
 "This course is not published. Attendees may not be able to access its "
 "contents."
-msgstr "此课程尚未发布。参加者可能无法存取其内容。"
+msgstr "此课程尚未发布。参会者可能无法存取其内容。"
 
 #. module: website_slides
 #. odoo-javascript
@@ -5860,7 +5868,7 @@ msgstr "本题必须至少有一个正确答案和一个错误答案。"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/slides_course_quiz.js:0
 msgid "This quiz is already done. Retaking it is not possible."
-msgstr "这个测验已经做完了, 重新开始是不可能的。"
+msgstr "这个测验已经做完了, 不允许重新开始。"
 
 #. module: website_slides
 #. odoo-python
@@ -5895,7 +5903,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.xml:0
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__name
 msgid "Title"
-msgstr "称谓"
+msgstr "标题"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
@@ -6357,7 +6365,7 @@ msgstr "使用本地文件时，我们只支持PDF文件。"
 msgid ""
 "Whether invited partners will be added as enrolled. Otherwise, they will be "
 "added as invited."
-msgstr "是否将邀请的合作伙伴添加为已报名参加者。若否，他们将被添加为受邀伙伴。"
+msgstr "是否将邀请的合作伙伴添加为已报名参与者。若否，他们将被添加为受邀伙伴。"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_4_1
@@ -6803,7 +6811,7 @@ msgstr "例如：孩子们的计算机科学"
 msgid ""
 "e.g. In this video, we'll give you the keys on how Odoo can help you to grow"
 " your business. At the end, we'll propose you a quiz to test your knowledge."
-msgstr "例如: 在本视频中，我们将向您介绍Odoo如何帮助您拓展业务。 最后，我们将为测试您的知识。"
+msgstr "例如：在本视频中，我们将向您介绍Odoo如何帮助您拓展业务。 最后，我们将为测试您的知识。"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form

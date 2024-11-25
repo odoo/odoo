@@ -3,7 +3,7 @@ import unittest
 import odoo
 from odoo.tests import TransactionCase
 from odoo.tools import file_path, file_open, file_open_temporary_directory
-from odoo.tools.config import configmanager, _get_default_datadir
+from odoo.tools.config import conf, configmanager, _get_default_datadir
 
 
 IS_POSIX = 'workers' in odoo.tools.config.options
@@ -12,6 +12,13 @@ ROOT_PATH = odoo.tools.config.options['root_path'].removesuffix('/odoo')
 
 class TestConfigManager(TransactionCase):
     maxDiff = None
+
+    def setUp(self):
+        super().setUp()
+        # _parse_config() as the side-effect of changing those two
+        # values, make sure the original value is restored at the end.
+        self.patch(conf, 'addons_paths', odoo.conf.addons_paths)
+        self.patch(conf, 'server_wide_modules', odoo.conf.server_wide_modules)
 
     def test_01_default_config(self):
         config = configmanager(fname=file_path('base/tests/config/empty.conf'))
@@ -134,7 +141,7 @@ class TestConfigManager(TransactionCase):
         config._parse_config()
         self.assertEqual(config.options, default_values, "Options don't match")
 
-    def test_02_default_config_file(self):
+    def test_02_config_file(self):
         values = {
             # options not exposed on the command line
             'admin_passwd': 'Tigrou007',
@@ -147,18 +154,18 @@ class TestConfigManager(TransactionCase):
             'websocket_keep_alive_timeout': '600',
 
             # common
-            'config': '/foo/bar/config',  # blacklist for save, read from the config file
+            'config': '/tmp/config',  # blacklist for save, read from the config file
             'save': True,  # blacklist for save, read from the config file
             'init': {},  # blacklist for save, ignored from the config file
             'update': {},  # blacklist for save, ignored from the config file
             'without_demo': True,
             'demo': {},  # blacklist for save, ignored from the config file
-            'import_partial': 'bob',
-            'pidfile': '/binary/pg_pid',
-            'addons_path': '/foo/bar/odoo',
-            'upgrade_path': '/foo/bar/upgrade',
-            'server_wide_modules': 'base,web,mail',
-            'data_dir': '/home/navy/.local/share/Odoo',
+            'import_partial': '/tmp/import-partial',
+            'pidfile': '/tmp/pidfile',
+            'addons_path': '/tmp/odoo',
+            'upgrade_path': '/tmp/upgrade',
+            'server_wide_modules': 'base,mail',
+            'data_dir': '/tmp/data-dir',
 
             # HTTP
             'http_interface': '10.0.0.254',
@@ -172,50 +179,50 @@ class TestConfigManager(TransactionCase):
             'dbfilter': '.*',
 
             # testing
-            'test_file': '/dev/null',
+            'test_file': '/tmp/file-file',
             'test_enable': True,
             'test_tags': ':TestMantra.test_is_extra_mile_done',
-            'screencasts': '/temp/screencasts',
-            'screenshots': '/temp/screenshots',
+            'screencasts': '/tmp/screencasts',
+            'screenshots': '/tmp/screenshots',
 
             # logging
-            'logfile': '/foo/bar/odoo.log',
-            'syslog': True,
+            'logfile': '/tmp/odoo.log',
+            'syslog': False,
             'log_handler': [':DEBUG'],
-            'log_db': True,
+            'log_db': 'logdb',
             'log_db_level': 'debug',
             'log_level': 'debug',
 
             # SMTP
             'email_from': 'admin@example.com',
             'from_filter': '.*',
-            'smtp_server': 'localhoost',
-            'smtp_port': 12,
+            'smtp_server': 'smtp.localhost',
+            'smtp_port': 1299,
             'smtp_ssl': True,
             'smtp_user': 'spongebob',
-            'smtp_password': 'Tigrou007',
-            'smtp_ssl_certificate_filename': '/var/www/cert',
-            'smtp_ssl_private_key_filename': '/var/www/key',
+            'smtp_password': 'Tigrou0072',
+            'smtp_ssl_certificate_filename': '/tmp/tlscert',
+            'smtp_ssl_private_key_filename': '/tmp/tlskey',
 
             # database
             'db_name': 'horizon',
             'db_user': 'kiwi',
-            'db_password': 'Tigrou007',
-            'pg_path': '/binary/pg_path',
-            'db_host': True,
+            'db_password': 'Tigrou0073',
+            'pg_path': '/tmp/pg_path',
+            'db_host': 'db.localhost',
             'db_port': 4269,
             'db_sslmode': 'verify-full',
             'db_maxconn': 42,
-            'db_maxconn_gevent': True,
+            'db_maxconn_gevent': 100,
             'db_template': 'backup1706',
-            'db_replica_host': '192.168.0.255',
+            'db_replica_host': 'db2.localhost',
             'db_replica_port': 2038,
 
             # i18n
             'load_language': 'fr_FR',  # blacklist for save, read from the config file
             'language': 'fr_FR',  # blacklist for save, read from the config file
-            'translate_out': '/foo/bar/translate_out.csv',  # blacklist for save, read from the config file
-            'translate_in': '/foo/bar/translate_in.csv',  # blacklist for save, read from the config file
+            'translate_out': '/tmp/translate_out.csv',  # blacklist for save, read from the config file
+            'translate_in': '/tmp/translate_in.csv',  # blacklist for save, read from the config file
             'overwrite_existing_translations': True,  # blacklist for save, read from the config file
             'translate_modules': ['all'],  # ignored from the config file
 
@@ -230,8 +237,8 @@ class TestConfigManager(TransactionCase):
             'transient_age_limit': 4.0,
             'max_cron_threads': 4,
             'unaccent': True,
-            'geoip_city_db': '/foo/bar/city.db',
-            'geoip_country_db': '/foo/bar/country.db',
+            'geoip_city_db': '/tmp/city.db',
+            'geoip_country_db': '/tmp/country.db',
         }
 
         if IS_POSIX:
@@ -239,14 +246,14 @@ class TestConfigManager(TransactionCase):
             values.update(
                 {
                     'workers': 92,
-                    'limit_memory_soft': 1234,
-                    'limit_memory_soft_gevent': 1234,
-                    'limit_memory_hard': 5678,
-                    'limit_memory_hard_gevent': 5678,
-                    'limit_time_cpu': 3,
-                    'limit_time_real': 4,
-                    'limit_time_real_cron': -3,
-                    'limit_request': 1,
+                    'limit_memory_soft': 1048576,
+                    'limit_memory_soft_gevent': 1048577,
+                    'limit_memory_hard': 1048578,
+                    'limit_memory_hard_gevent': 1048579,
+                    'limit_time_cpu': 60,
+                    'limit_time_real': 61,
+                    'limit_time_real_cron': 62,
+                    'limit_request': 100,
                 }
             )
 
@@ -390,3 +397,130 @@ class TestConfigManager(TransactionCase):
         config._warn_deprecated_options()
         config._parse_config()
         config._warn_deprecated_options()
+
+    def test_06_cli(self):
+        config = configmanager(fname=file_path('base/tests/config/empty.conf'))
+        with file_open('base/tests/config/cli') as file:
+            config._parse_config(file.read().split())
+
+        values = {
+            # options not exposed on the command line
+            'admin_passwd': 'admin',
+            'csv_internal_sep': ',',
+            'publisher_warranty_url': 'http://services.odoo.com/publisher-warranty/',
+            'reportgz': False,
+            'root_path': f'{ROOT_PATH}/odoo',
+            'websocket_rate_limit_burst': 10,
+            'websocket_rate_limit_delay': .2,
+            'websocket_keep_alive_timeout': 3600,
+
+            # common
+            'config': None,
+            'save': None,
+            'init': {'hr': 1, 'stock': 1},
+            'update': {'account': 1, 'website': 1},
+            'without_demo': 'rigolo',
+            'demo': {},
+            'import_partial': '/tmp/import-partial',
+            'pidfile': '/tmp/pidfile',
+            'addons_path': f'{ROOT_PATH}/odoo/addons,{ROOT_PATH}/addons',
+            'upgrade_path': '',
+            'server_wide_modules': 'base,mail',
+            'data_dir': '/tmp/data-dir',
+
+            # HTTP
+            'http_interface': '10.0.0.254',
+            'http_port': 6942,
+            'gevent_port': 8012,
+            'http_enable': False,
+            'proxy_mode': True,
+            'x_sendfile': True,
+
+            # web
+            'dbfilter': '.*',
+
+            # testing
+            'test_file': '/tmp/file-file',
+            'test_enable': True,
+            'test_tags': ':TestMantra.test_is_extra_mile_done',
+            'screencasts': '/tmp/screencasts',
+            'screenshots': '/tmp/screenshots',
+
+            # logging
+            'logfile': '/tmp/odoo.log',
+            'syslog': False,
+            'log_handler': [
+                ':INFO',
+                'odoo.tools.config:DEBUG',
+                ':WARNING',
+                'odoo.http:DEBUG',
+                'odoo.sql_db:DEBUG',
+            ],
+            'log_db': 'logdb',
+            'log_db_level': 'debug',
+            'log_level': 'debug',
+
+            # SMTP
+            'email_from': 'admin@example.com',
+            'from_filter': '.*',
+            'smtp_server': 'smtp.localhost',
+            'smtp_port': 1299,
+            'smtp_ssl': True,
+            'smtp_user': 'spongebob',
+            'smtp_password': 'Tigrou0072',
+            'smtp_ssl_certificate_filename': '/tmp/tlscert',
+            'smtp_ssl_private_key_filename': '/tmp/tlskey',
+
+            # database
+            'db_name': 'horizon',
+            'db_user': 'kiwi',
+            'db_password': 'Tigrou0073',
+            'pg_path': '/tmp/pg_path',
+            'db_host': 'db.localhost',
+            'db_port': 4269,
+            'db_sslmode': 'verify-full',
+            'db_maxconn': 42,
+            'db_maxconn_gevent': 100,
+            'db_template': 'backup1706',
+            'db_replica_host': 'db2.localhost',
+            'db_replica_port': 2038,
+
+            # i18n
+            'load_language': 'fr_FR',
+            'language': 'fr_FR',
+            'translate_out': '/tmp/translate_out.csv',
+            'translate_in': '/tmp/translate_in.csv',
+            'overwrite_existing_translations': True,
+            'translate_modules': ['hr', 'mail', 'stock'],
+
+            # security
+            'list_db': False,
+
+            # advanced
+            'dev_mode': ['xml', 'reload'],
+            'shell_interface': 'ipython',
+            'stop_after_init': True,
+            'osv_memory_count_limit': 71,
+            'transient_age_limit': 4.0,
+            'max_cron_threads': 4,
+            'unaccent': True,
+            'geoip_city_db': '/tmp/city.db',
+            'geoip_country_db': '/tmp/country.db',
+        }
+
+        if IS_POSIX:
+            # multiprocessing
+            values.update(
+                {
+                    'workers': 92,
+                    'limit_memory_soft': 1048576,
+                    'limit_memory_soft_gevent': 1048577,
+                    'limit_memory_hard': 1048578,
+                    'limit_memory_hard_gevent': 1048579,
+                    'limit_time_cpu': 60,
+                    'limit_time_real': 61,
+                    'limit_time_real_cron': 62,
+                    'limit_request': 100,
+                }
+            )
+        self.assertEqual(config.options, values)

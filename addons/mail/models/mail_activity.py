@@ -560,9 +560,11 @@ class MailActivity(models.Model):
 
         return messages, next_activities
 
+    @api.readonly
     def action_close_dialog(self):
         return {'type': 'ir.actions.act_window_close'}
 
+    @api.readonly
     def action_open_document(self):
         """ Opens the related record based on the model and ID """
         self.ensure_one()

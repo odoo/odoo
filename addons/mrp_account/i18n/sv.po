@@ -4,14 +4,13 @@
 # 
 # Translators:
 # Daniel Osser <danielosser@gmail.com>, 2024
-# Leif Persson <leifpz54@gmail.com>, 2024
-# Kim Asplund <kim.asplund@gmail.com>, 2024
-# 3eec91a23d05c632ffac786ac42b81b8_b6fff7b <8985b7bc57db860af29969457dbb51b3_1018915>, 2024
 # Robin Calvin, 2024
 # Simon S, 2024
+# Leif Persson <leifpz54@gmail.com>, 2024
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2024
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
+# Kim Asplund <kim.asplund@gmail.com>, 2024
 # Kristoffer Grundström <lovaren@gmail.com>, 2024
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
 # Lasse L, 2024
 # Martin Trigaux, 2024
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
@@ -44,7 +43,7 @@ msgstr "$5000"
 #. odoo-python
 #: code:addons/mrp_account/models/mrp_production.py:0
 msgid "%s - Labour"
-msgstr ""
+msgstr "%s - Arbetskraft"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -99,7 +98,7 @@ msgstr "<span>Måttenhet</span>"
 #. module: mrp_account
 #: model:ir.model.constraint,message:mrp_account.constraint_mrp_account_wip_accounting_line_check_debit_credit
 msgid "A single line cannot be both credit and debit."
-msgstr ""
+msgstr "En och samma rad kan inte vara både kredit och debet."
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__account_id
@@ -109,12 +108,12 @@ msgstr "Konto"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__account_move_line_id
 msgid "Account Move Line"
-msgstr "Transaktionsrad"
+msgstr "Konto Flytta linje"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting_line
 msgid "Account move line to be created when posting WIP account move"
-msgstr ""
+msgstr "Kontoflyttrad som ska skapas vid bokföring av WIP-kontoflytt"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -203,7 +202,7 @@ msgstr "Skapad av"
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__create_date
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__create_date
 msgid "Created on"
-msgstr "Skapad den"
+msgstr "Skapad på"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__credit
@@ -228,7 +227,7 @@ msgstr "Debet"
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
 msgid "Discard"
-msgstr "Avbryt"
+msgstr "Kassera"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__display_name
@@ -249,7 +248,7 @@ msgstr "Domän"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__expense_account_id
 msgid "Expense Account"
-msgstr "Kostnadskonto"
+msgstr "Utgiftskonto"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__extra_cost
@@ -275,12 +274,12 @@ msgstr "Verifikat"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_move_line
 msgid "Journal Item"
-msgstr "Journalpost"
+msgstr "Transaktion"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__label
 msgid "Label"
-msgstr "Beskrivning"
+msgstr "Etikett"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -308,7 +307,7 @@ msgstr "MO Översiktsrapport"
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "Manual Entry"
-msgstr ""
+msgstr "Manuell inmatning"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_production
@@ -335,12 +334,12 @@ msgstr "Orderingång för tillverkningsindustrin"
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "Manufacturing WIP - %(orders_list)s"
-msgstr ""
+msgstr "Tillverkning WIP - %(orders_list)s"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__mo_ids
 msgid "Mo"
-msgstr "Mån"
+msgstr "Mo"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__mo_analytic_account_line_ids
@@ -353,21 +352,23 @@ msgstr "Mo Analytic Account Line"
 msgid ""
 "Please make sure the total credit amount equals the total debit amount."
 msgstr ""
+"Kontrollera att det totala kreditbeloppet är lika stort som det totala "
+"debetbeloppet."
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
 msgid "Post Manufacturing WIP"
-msgstr ""
+msgstr "WIP efter tillverkning"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
 msgid "Post WIP"
-msgstr ""
+msgstr "Post WIP"
 
 #. module: mrp_account
 #: model:ir.actions.act_window,name:mrp_account.action_wip_accounting
 msgid "Post WIP Accounting Entry"
-msgstr ""
+msgstr "Bokföring av WIP"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_template
@@ -408,24 +409,24 @@ msgstr "Referens"
 #: model:ir.model.fields,field_description:mrp_account.field_account_bank_statement_line__wip_production_ids
 #: model:ir.model.fields,field_description:mrp_account.field_account_move__wip_production_ids
 msgid "Relevant WIP MOs"
-msgstr ""
+msgstr "Relevanta WIP MOs"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__reversal_date
 msgid "Reversal Date"
-msgstr "Återföringsdatum"
+msgstr "Datum för återkallande"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "Reversal date must be after the posting date."
-msgstr ""
+msgstr "Återföringsdatumet måste vara efter bokföringsdatumet."
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "Reversal of: %s"
-msgstr "Omvändning av: %s"
+msgstr "Återföring av: %s"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__show_valuation
@@ -444,6 +445,8 @@ msgid ""
 "The MOs that this WIP entry was based on. Expected to be set at time of WIP "
 "entry creation."
 msgstr ""
+"De MO:n som denna WIP-post baserades på. Förväntas vara inställd vid "
+"tidpunkten för skapandet av WIP-posten."
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__expense_account_id
@@ -452,6 +455,9 @@ msgid ""
 " If not set, it is the expense account of the final product that will be "
 "used instead."
 msgstr ""
+"Kostnaden bokförs när tillverkningsordern markeras som klar. Om den inte är "
+"inställd är det istället kostnadskontot för slutprodukten som kommer att "
+"användas."
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_product_category__property_stock_account_production_cost_id
@@ -470,7 +476,7 @@ msgstr "Total kredit"
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
 msgid "Total Debit"
-msgstr "Total skuld"
+msgstr "Summa Debet"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -481,19 +487,19 @@ msgstr "Enheter"
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "WIP - Component Value"
-msgstr ""
+msgstr "WIP - Komponentvärde"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "WIP - Overhead"
-msgstr ""
+msgstr "WIP - Omkostnader"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/models/account_move.py:0
 msgid "WIP MOs of %s"
-msgstr ""
+msgstr "WIP MOs av %s"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -503,12 +509,12 @@ msgstr "WIP-rapport för"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__line_ids
 msgid "WIP accounting lines"
-msgstr ""
+msgstr "WIP-redovisningsrader"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__wip_accounting_id
 msgid "WIP accounting wizard"
-msgstr ""
+msgstr "Assistent för WIP-redovisning"
 
 #. module: mrp_account
 #: model:ir.actions.report,name:mrp_account.wip_report
@@ -523,7 +529,7 @@ msgstr "Wc Objekt Kontolinje"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting
 msgid "Wizard to post Manufacturing WIP account move"
-msgstr ""
+msgstr "Wizard för att bokföra flytt av WIP-konto för tillverkning"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter
@@ -559,7 +565,7 @@ msgstr "Produktionsgrupp"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter_productivity
 msgid "Workcenter Productivity Log"
-msgstr "Produktionsgrupp Produktivitets Log"
+msgstr "Workcenter Produktivitetslogg"
 
 #. module: mrp_account
 #. odoo-python

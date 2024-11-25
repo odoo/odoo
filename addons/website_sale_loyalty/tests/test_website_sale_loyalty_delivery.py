@@ -3,9 +3,20 @@
 from odoo import Command
 from odoo.tests import HttpCase, tagged
 
+from odoo.addons.website.tools import MockRequest
+from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
+from odoo.addons.website_sale_loyalty.controllers.delivery import (
+    WebsiteSaleLoyaltyDelivery,
+)
+
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleDelivery(HttpCase):
+class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.Controller = WebsiteSaleLoyaltyDelivery()
 
     def setUp(self):
         super().setUp()
@@ -13,8 +24,7 @@ class TestWebsiteSaleDelivery(HttpCase):
         self.env['product.pricelist'].with_context(active_test=False).search([]).unlink()
 
         self.partner_admin = self.env.ref('base.partner_admin')
-        self.user_admin = self.partner_admin.user_id
-        self.user_admin.write({
+        self.partner_admin.write({
             'name': 'Mitchell Admin',
             'street': '215 Vine St',
             'phone': '+1 555-555-5555',
@@ -24,6 +34,8 @@ class TestWebsiteSaleDelivery(HttpCase):
             'state_id': self.env.ref('base.state_us_39').id,
         })
 
+        # Remove taxes completely during the following tests.
+        self.env.companies.account_sale_tax_id = False
         self.env['product.product'].create({
             'name': "Plumbus",
             'list_price': 100.0,
@@ -36,7 +48,6 @@ class TestWebsiteSaleDelivery(HttpCase):
             'type': 'service',
             'is_published': True,
             'sale_ok': True,
-            'taxes_id': False,
         })
 
         # Disable any other program
@@ -144,3 +155,35 @@ class TestWebsiteSaleDelivery(HttpCase):
             })],
         })
         self.start_tour("/", 'check_shipping_discount', login="admin")
+
+    def test_express_checkout_shipping_discount(self):
+        """
+        Check display of shipping discount promotion in express checkout form by ensuring is present
+        in the values returned to the form.
+        """
+        # Create a discount code
+        program = self.env['loyalty.program'].sudo().create({
+            'name': 'Free Shipping',
+            'program_type': 'promo_code',
+            'rule_ids': [
+                Command.create({
+                    'code': "FREE",
+                    'minimum_amount': 0,
+                })
+            ],
+            'reward_ids': [
+                Command.create({
+                    'reward_type': 'shipping',
+                    'discount_max_amount': 6.0,
+                })
+            ]
+            }
+        )
+
+        # Apply discount
+        self.cart._try_apply_code("FREE")
+        self.cart._apply_program_reward(program.reward_ids, program.coupon_ids)
+
+        with MockRequest(self.env, sale_order_id=self.cart.id, website=self.website):
+            result = self.Controller.shop_set_delivery_method(self.normal_delivery2.id)
+        self.assertEqual(result['delivery_discount_minor_amount'], -600)

@@ -17,7 +17,7 @@ import { click, queryFirst, waitFor } from "@odoo/hoot-dom";
 import { browser } from "@web/core/browser/browser";
 import { Dialog } from "@web/core/dialog/dialog";
 import { session } from "@web/session";
-import { MacroEngine } from "@web/core/macro";
+import { Macro } from "@web/core/macro";
 import { tourState } from "@web_tour/tour_service/tour_state";
 import { useService } from "@web/core/utils/hooks";
 
@@ -44,15 +44,23 @@ class Counter extends Component {
     }
 }
 
+async function waitForStep(first = false) {
+    await advanceTime(10);
+    await advanceTime(500);
+    if (!first) {
+        await advanceTime(50);
+    }
+}
+
 const tourRegistry = registry.category("web_tour.tours");
-let macroEngines = [];
+let macro;
 const tourConsumed = [];
 
 beforeEach(() => {
-    patchWithCleanup(MacroEngine.prototype, {
+    patchWithCleanup(Macro.prototype, {
         start() {
             super.start(...arguments);
-            macroEngines.push(this);
+            macro = this;
         },
     });
     patchWithCleanup(console, {
@@ -61,8 +69,6 @@ beforeEach(() => {
         log: () => {},
         dir: () => {},
     });
-    macroEngines.forEach((e) => e.stop());
-    macroEngines = [];
     onRpc("/web/dataset/call_kw/web_tour.tour/consume", async (request) => {
         const { params } = await request.json();
         tourConsumed.push(params.args[0]);
@@ -86,8 +92,12 @@ beforeEach(() => {
     });
 });
 
-afterEach(() => {
+afterEach(async () => {
+    macro.stop();
     clearRegistry(tourRegistry);
+    //Necessary in this case because the tours do not do
+    //synchronous setTimeouts one after the other.
+    await runAllTimers();
 });
 
 test("Step Tour validity", async () => {
@@ -274,20 +284,17 @@ test("a failing tour logs the step that failed in run", async () => {
         ],
     });
     await odoo.startTour("tour2", { mode: "auto" }); // Use odoo to run tour from registry because this is a test tour
-    await advanceTime(750);
-    await advanceTime(750);
-    await advanceTime(750);
-    await advanceTime(750);
+    await waitForStep(true);
+    await waitForStep();
+    await waitForStep();
 
     const expectedError = [
         "log: [1/2] Tour tour2 → Step .button0",
         `log: [2/2] Tour tour2 → Step .button1`,
         [
             "error: FAILED: [2/2] Tour tour2 → Step .button1.",
-            "Element has been found.",
             "ERROR IN ACTION: Cannot read properties of null (reading 'click')",
         ].join("\n"),
-        "error: tour not succeeded",
     ];
     expect.verifySteps(expectedError);
 });
@@ -328,15 +335,14 @@ test("a failing tour with disabled element", async () => {
         ],
     });
     await odoo.startTour("tour3", { mode: "auto" });
-    await advanceTime(750);
-    await advanceTime(750);
-    await advanceTime(750);
-    await advanceTime(750);
+    await waitForStep(true);
+    await waitForStep();
+    await waitForStep();
     await advanceTime(10000);
     const expectedError = [
         `error: FAILED: [2/3] Tour tour3 → Step .button1.
 Element has been found.
-BUT: Element is not enabled.
+BUT: Element is not enabled. TIP: You can use :enable to wait the element is enabled before doing action on it.
 TIMEOUT: The step failed to complete within 10000 ms.`,
     ];
     expect.verifySteps(expectedError);
@@ -420,21 +426,21 @@ test("a failing tour logs the step that failed", async () => {
         ],
     });
     await odoo.startTour("tour1", { mode: "auto" });
-    await advanceTime(750);
-    expect.verifySteps(["log: [1/9] Tour tour1 → Step content (trigger: .button0)"]);
-    await advanceTime(750);
-    expect.verifySteps(["log: [2/9] Tour tour1 → Step content (trigger: .button1)"]);
-    await advanceTime(750);
-    expect.verifySteps(["log: [3/9] Tour tour1 → Step content (trigger: .button2)"]);
-    await advanceTime(750);
-    expect.verifySteps(["log: [4/9] Tour tour1 → Step content (trigger: .button3)"]);
-    await advanceTime(750);
-    expect.verifySteps(["log: [5/9] Tour tour1 → Step content (trigger: .wrong_selector)"]);
-    await advanceTime(750);
-    await advanceTime(111);
+    await waitForStep(true);
+    await waitForStep();
+    await waitForStep();
+    await waitForStep();
+    await waitForStep();
+    await waitForStep();
+    await waitForStep();
     expect.verifySteps([
+        "log: [1/9] Tour tour1 → Step content (trigger: .button0)",
+        "log: [2/9] Tour tour1 → Step content (trigger: .button1)",
+        "log: [3/9] Tour tour1 → Step content (trigger: .button2)",
+        "log: [4/9] Tour tour1 → Step content (trigger: .button3)",
+        "log: [5/9] Tour tour1 → Step content (trigger: .wrong_selector)",
         `error: FAILED: [5/9] Tour tour1 → Step content (trigger: .wrong_selector).
-The cause is that trigger (.wrong_selector) element cannot be found in DOM. TIP: You can use :not(:visible) to force the search for an invisible element.
+Element (.wrong_selector) has not been found.
 TIMEOUT: The step failed to complete within 111 ms.`,
         `runbot: {"content":"content","trigger":".button1","run":"click"},{"content":"content","trigger":".button2","run":"click"},{"content":"content","trigger":".button3","run":"click"},FAILED:[5/9]Tourtour1→Stepcontent(trigger:.wrong_selector){"content":"content","trigger":".wrong_selector","run":"click","timeout":111},{"content":"content","trigger":".button4","run":"click"},{"content":"content","trigger":".button5","run":"click"},{"content":"content","trigger":".button6","run":"click"},`,
     ]);
@@ -482,14 +488,14 @@ test("check tour with inactive steps", async () => {
         ],
     });
     await odoo.startTour("pipu_tour", { mode: "auto" });
-    await advanceTime(750);
-    await advanceTime(750);
-    await advanceTime(750);
-    expect.verifySteps(["this action 1 has not been skipped"]);
-    await advanceTime(750);
-    await advanceTime(750);
-    await advanceTime(750);
-    expect.verifySteps(["this action 3 has not been skipped"]);
+    await waitForStep(true);
+    await waitForStep();
+    await waitForStep();
+    await waitForStep();
+    expect.verifySteps([
+        "this action 1 has not been skipped",
+        "this action 3 has not been skipped",
+    ]);
 });
 
 test("pointer is added on top of overlay's stack", async () => {
@@ -875,14 +881,14 @@ test("automatic tour with invisible element", async () => {
         ],
     });
     await odoo.startTour("tour_de_wallonie", { mode: "auto" });
-    await animationFrame();
-    await advanceTime(750);
-    await advanceTime(750);
-    await advanceTime(750);
+    await waitForStep(true);
+    await waitForStep();
+    await waitForStep();
     await advanceTime(10000);
     expect.verifySteps([
         `error: FAILED: [2/3] Tour tour_de_wallonie → Step .button1.
-The cause is that trigger (.button1) element cannot be found in DOM. TIP: You can use :not(:visible) to force the search for an invisible element.
+Element has been found.
+BUT: Element is not visible. TIP: You can use :not(:visible) to force the search for an invisible element.
 TIMEOUT: The step failed to complete within 10000 ms.`,
     ]);
 });
@@ -929,12 +935,10 @@ test("automatic tour with invisible element but use :not(:visible))", async () =
         ],
     });
     await odoo.startTour("tour_de_wallonie", { mode: "auto" });
-    await animationFrame();
-    await advanceTime(750);
-    await animationFrame();
-    await advanceTime(750);
-    await animationFrame();
-    await advanceTime(750);
+    await waitForStep(true);
+    await waitForStep();
+    await waitForStep();
+    await waitForStep();
     expect.verifySteps(["succeeded"]);
 });
 
@@ -1054,9 +1058,11 @@ test("automatic tour with alternative trigger", async () => {
     }
     await mountWithCleanup(Root);
     await odoo.startTour("tour_des_flandres", { mode: "auto" });
-    for (let i = 0; i <= 5; i++) {
-        await advanceTime(750);
-    }
+    await waitForStep(true);
+    await waitForStep();
+    await waitForStep();
+    await waitForStep();
+    await waitForStep();
     await advanceTime(10000);
     expect.verifySteps(["on step", "on step", "on step", "on step", "succeeded"]);
 });
@@ -1477,10 +1483,9 @@ test("check not possible to click below modal", async () => {
         ],
     });
     await odoo.startTour("tour_check_modal", { mode: "auto" });
-    await animationFrame();
-    await advanceTime(750);
-    await advanceTime(750);
-    await advanceTime(750);
+    await waitForStep(true);
+    await waitForStep();
+    await waitForStep();
     await advanceTime(10000);
     expect.verifySteps([
         "log: [1/2] Tour tour_check_modal → Step .button0",
@@ -1525,13 +1530,72 @@ test("a tour where hoot trigger failed", async () => {
         ],
     });
     await odoo.startTour("tour_hoot_failed", { mode: "auto" });
-    await advanceTime(750);
-    await advanceTime(750);
-    await advanceTime(750);
+    await waitForStep(true);
+    await waitForStep();
+    await waitForStep();
     expect.verifySteps([
         `error: FAILED: [2/2] Tour tour_hoot_failed → Step content (trigger: .button1:brol(:machin)).
-HOOT: Failed to execute 'querySelectorAll' on 'Element': '.button1:brol(:machin)' is not a valid selector.
-TypeError: Cannot read properties of undefined (reading 'find')`,
-        "error: tour not succeeded",
+SyntaxError: Failed to execute 'querySelectorAll' on 'Element': '.button1:brol(:machin)' is not a valid selector.`,
+    ]);
+});
+
+test("check for undeterminisms", async () => {
+    patchWithCleanup(browser.console, {
+        warn: (s) => {},
+        error: (s) => expect.step(`error: ${s}`),
+        log: (s) => expect.step(`log: ${s}`),
+    });
+    await makeMockEnv();
+
+    class Root extends Component {
+        static components = {};
+        static template = xml/*html*/ `
+            <t>
+                <div class="container">
+                    <button class="button0">Button 0</button>
+                    <button class="button1">Button 1</button>
+                    <button class="button2">Button 2</button>
+                </div>
+            </t>
+        `;
+        static props = ["*"];
+    }
+
+    await mountWithCleanup(Root);
+    registry.category("web_tour.tours").add("tour_und", {
+        steps: () => [
+            {
+                trigger: ".button0",
+                run: "click",
+            },
+            {
+                trigger: ".button1",
+                run: "click",
+            },
+            {
+                trigger: ".button2",
+                run: "click",
+            },
+        ],
+    });
+    await odoo.startTour("tour_und", {
+        mode: "auto",
+        delayToCheckUndeterminisms: 3000,
+    });
+    await advanceTime(10);
+    await advanceTime(500);
+    expect.verifySteps(["log: [1/3] Tour tour_und → Step .button0"]);
+    await advanceTime(3001);
+    await advanceTime(10);
+    await advanceTime(500);
+    expect.verifySteps(["log: [2/3] Tour tour_und → Step .button1"]);
+    await advanceTime(1000);
+    queryFirst(".button1").textContent = "Text has changed :)";
+    await advanceTime(1500);
+    await advanceTime(10000);
+    expect.verifySteps([
+        `error: FAILED: [2/3] Tour tour_und → Step .button1.
+Element has been found.
+UNDETERMINISM: two differents elements have been found in 3000ms for trigger .button1`,
     ]);
 });

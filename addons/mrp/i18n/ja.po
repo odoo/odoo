@@ -3,8 +3,9 @@
 # 	* mrp
 # 
 # Translators:
-# Junko Augias, 2024
 # Wil Odoo, 2024
+# Junko Augias, 2024
+# Ryoko Tsuda <ryoko@quartile.co>, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 08:17+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1959,6 +1960,12 @@ msgid ""
 "  Note that in the case of component Highlight Consumption, where consumption is registered manually exclusively, consumption warnings will still be issued when appropriate also.\n"
 "  * Blocked: only a manager can close a manufacturing order when the BoM consumption is not respected."
 msgstr ""
+"部品表に定義された数量より多く、もしくはま少なく構成品を消費できるかどうかを定義:\n"
+"  * 許可: 全ての製造ユーザに対して許可\n"
+"  * 警告付き許可: 全ての製造ユーザに対して許可され、製造オーダをクローズする際に消費量の差の概要を表示\n"
+"   構成品ハイライト消費の場合、消費は手動でのみ登録され、消費警告は適宜適切な場合に発行\n"
+"* ブロック: 部品表の消費数量と異なる場合、マネージャのみが製造オーダーを完了できる\n"
+" "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__delay_alert_date
@@ -2530,7 +2537,7 @@ msgstr "非表示"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__manual_consumption
 msgid "Highlight Consumption"
-msgstr ""
+msgstr "ハイライト消費"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__costs_hour
@@ -3483,7 +3490,7 @@ msgstr "活動期限"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "My MOs"
-msgstr ""
+msgstr "自分の購買オーダ"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__never_product_template_attribute_value_ids
@@ -5311,7 +5318,7 @@ msgstr "外注"
 #. module: mrp
 #: model:product.template,name:mrp.product_product_computer_desk_product_template
 msgid "Table"
-msgstr "表"
+msgstr "テーブル"
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_table_kit_product_template

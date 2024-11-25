@@ -247,6 +247,16 @@ describe("Simple text", () => {
                 contentAfter: '<div><span style="font-size: 9px;">ab<br>c<br>d[]</span></div>',
             });
         });
+
+        test("should paste text and understand \\n newlines within PRE element", async () => {
+            await testEditor({
+                contentBefore: "<pre>[]<br></pre>",
+                stepFunction: async (editor) => {
+                    pasteText(editor, "a\nb\nc");
+                },
+                contentAfter: "<pre>a<br>b<br>c[]</pre>",
+            });
+        });
     });
 
     describe("range not collapsed", () => {
@@ -2197,6 +2207,72 @@ describe("Special cases", () => {
     });
 });
 
+describe("pasting within blockquote", () => {
+    test("should paste paragraph related elements within blockquote", async () => {
+        await testEditor({
+            contentBefore: "<blockquote>[]<br></blockquote>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
+            },
+            contentAfter: "<blockquote><h1>abc</h1><h2>def</h2><h3>ghi[]</h3></blockquote>",
+        });
+        await testEditor({
+            contentBefore: "<blockquote>x[]</blockquote>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
+            },
+            contentAfter: "<blockquote>x<h1>abc</h1><h2>def</h2><h3>ghi[]</h3></blockquote>",
+        });
+        await testEditor({
+            contentBefore: "<blockquote>[]x</blockquote>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
+            },
+            contentAfter: "<blockquote><h1>abc</h1><h2>def</h2><h3>ghi[]</h3>x</blockquote>",
+        });
+        await testEditor({
+            contentBefore: "<blockquote>x[]y</blockquote>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
+            },
+            contentAfter: "<blockquote>x<h1>abc</h1><h2>def</h2><h3>ghi[]</h3>y</blockquote>",
+        });
+    });
+});
+
+describe("pasting within pre", () => {
+    test("should paste paragraph releted elements within pre", async () => {
+        await testEditor({
+            contentBefore: "<pre>[]<br></pre>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
+            },
+            contentAfter: "<pre><h1>abc</h1><h2>def</h2><h3>ghi[]</h3></pre>",
+        });
+        await testEditor({
+            contentBefore: "<pre>x[]</pre>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
+            },
+            contentAfter: "<pre>x<h1>abc</h1><h2>def</h2><h3>ghi[]</h3></pre>",
+        });
+        await testEditor({
+            contentBefore: "<pre>[]x</pre>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
+            },
+            contentAfter: "<pre><h1>abc</h1><h2>def</h2><h3>ghi[]</h3>x</pre>",
+        });
+        await testEditor({
+            contentBefore: "<pre>x[]y</pre>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
+            },
+            contentAfter: "<pre>x<h1>abc</h1><h2>def</h2><h3>ghi[]</h3>y</pre>",
+        });
+    });
+});
+
 const url = "https://www.odoo.com";
 const imgUrl = "https://download.odoocdn.com/icons/website/static/description/icon.png";
 const videoUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
@@ -2411,6 +2487,16 @@ describe("link", () => {
                     pasteHtml(editor, "<span>123</span>");
                 },
                 contentAfter: '<p><a href="#">a123[]b</a></p>',
+            });
+        });
+
+        test("should paste and not transform an URL in a pre tag", async () => {
+            await testEditor({
+                contentBefore: "<pre>[]<br></pre>",
+                stepFunction: async (editor) => {
+                    pasteText(editor, "http://www.xyz.com");
+                },
+                contentAfter: "<pre>http://www.xyz.com[]</pre>",
             });
         });
     });
@@ -2839,14 +2925,12 @@ describe("youtube video", () => {
         });
 
         test("should paste and not transform a youtube URL in a existing link", async () => {
-            const { el, editor } = await setupEditor(
+            const { el, editor, plugins } = await setupEditor(
                 '<p>a<a href="http://existing.com">b[]c</a>d</p>'
             );
             pasteText(editor, "https://youtu.be/dQw4w9WgXcQ");
             // Ensure the powerbox is active
-            const powerbox = editor.plugins.find(
-                (plugin) => plugin.constructor.name === "powerbox"
-            );
+            const powerbox = plugins.get("powerbox");
             expect(powerbox.overlay.isOpen).not.toBe(true);
             expect(cleanLinkArtifacts(getContent(el))).toBe(
                 '<p>a<a href="http://existing.com">bhttps://youtu.be/dQw4w9WgXcQ[]c</a>d</p>'
@@ -2921,14 +3005,12 @@ describe("youtube video", () => {
         });
 
         test("should paste and not transform a youtube URL in a existing link", async () => {
-            const { el, editor } = await setupEditor(
+            const { el, editor, plugins } = await setupEditor(
                 '<p>a<a href="http://existing.com">b[qsdqsd]c</a>d</p>'
             );
             pasteText(editor, videoUrl);
             // Ensure the powerbox is active
-            const powerbox = editor.plugins.find(
-                (plugin) => plugin.constructor.name === "powerbox"
-            );
+            const powerbox = plugins.get("powerbox");
             expect(powerbox.overlay.isOpen).not.toBe(true);
             expect(cleanLinkArtifacts(getContent(el))).toBe(
                 `<p>a<a href="http://existing.com">b${videoUrl}[]c</a>d</p>`
