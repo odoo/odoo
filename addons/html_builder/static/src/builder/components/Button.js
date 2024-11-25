@@ -1,5 +1,4 @@
 import { Component } from "@odoo/owl";
-import { useDomState } from "../builder_helpers";
 
 export class Button extends Component {
     static template = "html_builder.Button";
@@ -9,12 +8,6 @@ export class Button extends Component {
         iconImg: { type: String, optional: true },
         iconImgAlt: { type: String, optional: true },
         onClick: Function,
-        isActive: { Function, optional: true },
+        isActive: { Boolean, optional: true },
     };
-
-    setup() {
-        this.state = useDomState(() => ({
-            isActive: this.props.isActive?.(),
-        }));
-    }
 }

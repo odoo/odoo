@@ -3,7 +3,7 @@
 
 <t t-name="html_builder.Button">
     <button type="button" class="btn btn-primary"
-        t-att-class="{'active': this.state.isActive}"
+        t-att-class="{'active': this.props.isActive}"
         t-att-title="props.title"
         t-on-click="() => props.onClick()">
         <img t-if="props.iconImg" t-att-src="props.iconImg" t-att-alt="props.iconImgAlt"/>
