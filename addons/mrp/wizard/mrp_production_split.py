@@ -22,40 +22,43 @@ class MrpProductionSplit(models.TransientModel):
     product_qty = fields.Float(related='production_id.product_qty')
     product_uom_id = fields.Many2one(related='production_id.product_uom_id')
     production_capacity = fields.Float(related='production_id.production_capacity')
-    counter = fields.Integer(
-        "Split #", default=2, compute="_compute_counter",
-        store=True, readonly=False)
     production_detailed_vals_ids = fields.One2many(
         'mrp.production.split.line', 'mrp_production_split_id',
         'Split Details', compute="_compute_details", store=True, readonly=False)
     valid_details = fields.Boolean("Valid", compute="_compute_valid_details")
+    max_batch_size = fields.Float("Max Batch Size", compute="_compute_max_batch_size", readonly=False)
+    num_splits = fields.Integer("# Splits", compute="_compute_num_splits", readonly=True)
 
-    @api.depends('production_detailed_vals_ids')
-    def _compute_counter(self):
+    @api.depends('production_id')
+    def _compute_max_batch_size(self):
         for wizard in self:
-            wizard.counter = len(wizard.production_detailed_vals_ids)
+            wizard.max_batch_size = wizard.product_qty
 
-    @api.depends('counter')
+    @api.depends('max_batch_size')
+    def _compute_num_splits(self):
+        for wizard in self:
+            wizard.num_splits = float_round(
+                wizard.product_qty / wizard.max_batch_size,
+                precision_digits=0,
+                rounding_method='UP')
+
+    @api.depends('num_splits')
     def _compute_details(self):
         for wizard in self:
             commands = [Command.clear()]
-            if wizard.counter < 1 or not wizard.production_id:
+            if wizard.num_splits <= 0 or not wizard.production_id:
                 wizard.production_detailed_vals_ids = commands
                 continue
-            quantity = float_round(wizard.product_qty / wizard.counter, precision_rounding=wizard.product_uom_id.rounding)
-            remaining_quantity = wizard.product_qty
-            for _ in range(wizard.counter - 1):
+            remaining_qty = wizard.product_qty
+            for _ in range(wizard.num_splits):
+                qty = min(wizard.max_batch_size, remaining_qty)
                 commands.append(Command.create({
-                    'quantity': quantity,
-                    'user_id': wizard.production_id.user_id,
+                    'quantity': qty,
+                    'user_id': wizard.production_id.user_id.id,
                     'date': wizard.production_id.date_start,
                 }))
-                remaining_quantity = float_round(remaining_quantity - quantity, precision_rounding=wizard.product_uom_id.rounding)
-            commands.append(Command.create({
-                'quantity': remaining_quantity,
-                'user_id': wizard.production_id.user_id,
-                'date': wizard.production_id.date_start,
-            }))
+                remaining_qty = float_round(remaining_qty - qty, precision_rounding=wizard.product_uom_id.rounding)
+
             wizard.production_detailed_vals_ids = commands
 
     @api.depends('production_detailed_vals_ids')
@@ -84,7 +87,7 @@ class MrpProductionSplit(models.TransientModel):
 
     def action_return_to_list(self):
         self.production_detailed_vals_ids = [Command.clear()]
-        self.counter = 0
+        self.max_batch_size = 0
         action = self.env['ir.actions.actions']._for_xml_id('mrp.action_mrp_production_split_multi')
         action['res_id'] = self.production_split_multi_id.id
         return action

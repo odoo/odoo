@@ -103,7 +103,7 @@ class TestManualConsumption(TestMrpCommon):
         # Split in 3 parts
         action = mo.action_split()
         wizard = Form.from_action(self.env, action)
-        wizard.counter = 3
+        wizard.max_batch_size = 4
         action = wizard.save().action_split()
         for production in mo.procurement_group_id.mrp_production_ids:
             self.assertTrue(production.move_raw_ids.filtered(lambda m: m.product_id == p1).manual_consumption)
