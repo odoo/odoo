@@ -192,6 +192,8 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         trigger: ".modal-header .btn-close",
         run: "click",
     }, {
+        trigger: "body:not(.modal)",
+    }, {
         content: "Go back to projects view. this step is added because Tour can't be finished with an open form view in edition mode.",
         trigger: 'a[data-menu-xmlid="project.menu_projects"]',
         run: "click",
