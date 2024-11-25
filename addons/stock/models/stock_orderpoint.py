@@ -353,6 +353,8 @@ class StockWarehouseOrderpoint(models.Model):
 
     def _get_qty_to_order(self, force_visibility_days=False, qty_in_progress_by_orderpoint={}):
         self.ensure_one()
+        if not self.product_id or not self.location_id:
+            return False
         visibility_days = self.visibility_days
         if force_visibility_days is not False:
             # Accepts falsy values such as 0.
