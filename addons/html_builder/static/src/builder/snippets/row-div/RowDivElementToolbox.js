@@ -1,6 +1,6 @@
 import { Component } from "@odoo/owl";
 import { ElementToolboxContainer } from "../../components/ElementToolboxContainer";
-import { BorderOption } from "../../components/options/BorderOption";
+import { BorderOption } from "../../options/BorderOption";
 
 // TODO TO convert and remove
 export class RowDivElementToolbox extends Component {
