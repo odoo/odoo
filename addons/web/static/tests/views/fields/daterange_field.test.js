@@ -1,5 +1,6 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
 import {
+    click,
     queryAll,
     queryAllProperties,
     queryAllTexts,
@@ -7,6 +8,7 @@ import {
     queryFirst,
     queryValue,
     resize,
+    select,
 } from "@odoo/hoot-dom";
 import { animationFrame, Deferred, mockDate, mockTimeZone } from "@odoo/hoot-mock";
 import { getTimePickers } from "@web/../tests/core/datetime/datetime_test_helpers";
@@ -1087,4 +1089,47 @@ test("daterange field in kanban with show_time option", async () => {
     });
 
     expect(queryAllTexts(".o_field_daterange span")).toEqual(["02/08/2017", "03/13/2017"]);
+});
+
+test("updating time keeps selected dates", async () => {
+    Partner._records[0].datetime_end = "2017-03-13 00:02:00";
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <field name="datetime" options="{'end_date_field': 'datetime_end'}"/>
+            </form>
+        `,
+    });
+
+    expect("input[data-field=datetime]").toHaveValue("02/08/2017 15:30:00");
+    expect("input[data-field=datetime_end]").toHaveValue("03/13/2017 05:32:00");
+
+    await contains("input[data-field=datetime_end]").click();
+
+    expect(".o_time_picker:first .o_time_picker_select:last").toHaveValue("30");
+    expect(".o_time_picker:last .o_time_picker_select:last").not.toHaveValue();
+
+    await click(getPickerCell("16").at(-1));
+    await animationFrame();
+    await click(".o_time_picker:last .o_time_picker_select:last");
+    await select("5");
+    await animationFrame();
+
+    expect("input[data-field=datetime]").toHaveValue("02/08/2017 15:30:00");
+    expect("input[data-field=datetime_end]").toHaveValue("03/16/2017 05:05:00");
+    expect(".o_time_picker:first .o_time_picker_select:last").toHaveValue("30");
+    expect(".o_time_picker:last .o_time_picker_select:last").toHaveValue("5");
+
+    await click(".o_time_picker:first .o_time_picker_select:last");
+    await select("35");
+    await animationFrame();
+
+    expect("input[data-field=datetime]").toHaveValue("02/08/2017 15:35:00");
+    expect("input[data-field=datetime_end]").toHaveValue("03/16/2017 05:05:00");
+    expect(".o_time_picker:first .o_time_picker_select:last").toHaveValue("35");
+    expect(".o_time_picker:last .o_time_picker_select:last").toHaveValue("5");
 });
