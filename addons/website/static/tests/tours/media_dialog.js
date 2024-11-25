@@ -169,17 +169,16 @@ wTourUtils.registerWebsitePreviewTour("website_media_dialog_insert_media", {
         trigger: ".oe-toolbar #media-insert",
     },
     {
-        content: "Search for an illustration/image",
-        trigger: ".o_select_media_dialog .o_we_search",
-        run: "text a",
+        content: "Click on the 'Icons' tab",
+        trigger: ".o_select_media_dialog a.nav-link:contains('Icons')",
     },
     {
-        content: "Click on the first illustration/image",
-        trigger: ".o_select_media_dialog img.o_we_attachment_highlight",
+        content: "Click on the first icon",
+        trigger: ".o_select_media_dialog .font-icons-icon",
     },
     {
-        content: "Verify that the illustration/image was inserted",
-        trigger: "iframe .s_text_block p > img",
+        content: "Verify that the icon was inserted",
+        trigger: "iframe .s_text_block p > span.fa",
         run: () => {}, //it's a check
     },
 ]);
