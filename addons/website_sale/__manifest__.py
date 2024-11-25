@@ -24,6 +24,9 @@
         'data/ir_cron_data.xml',
         'data/tour.xml',
 
+        # Images
+        'data/image_library.xml',
+
         # Reports
         'report/sale_report_views.xml',
 
@@ -60,6 +63,7 @@
         'views/snippets/s_dynamic_snippet_products.xml',
         'views/snippets/s_dynamic_snippet_products_preview_data.xml',
         'views/snippets/s_popup.xml',
+        'views/snippets/s_floating_blocks.xml',
         'views/snippets/s_mega_menu/big_icons_subtitles.xml',
         'views/snippets/s_mega_menu/cards.xml',
         'views/snippets/s_mega_menu/image_menu.xml',
@@ -154,6 +158,8 @@
             'website_sale/static/src/scss/website_sale.editor.scss',
             'website_sale/static/src/snippets/s_dynamic_snippet_products/options.js',
             'website_sale/static/src/snippets/s_add_to_cart/options.js',
+            'website_sale/static/src/snippets/s_floating_blocks/options.js',
+            'website_sale/static/src/snippets/s_floating_blocks/options.xml',
             'website_sale/static/src/js/website_sale.editor.js',
             'website_sale/static/src/js/website_sale_form_editor.js',
             'website_sale/static/src/js/editor/snippets.options.js',

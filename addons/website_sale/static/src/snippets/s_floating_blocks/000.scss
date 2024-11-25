@@ -1,0 +1,39 @@
+.s_floating_blocks {
+    --floating-boxes-box-ratio-mobile: .91;
+    --floating-boxes-box-ratio-desktop: 2.5;
+    --floating-boxes-box-ratio-adjust: 0.45;
+    --floating-boxes-box-ratio: var(--floating-boxes-box-ratio-mobile);
+
+    .s_floating_blocks_wrapper {
+        &.s_floating_blocks_wrapper_shadow {
+            box-shadow: 0px 1vh 2vh rgba($black, .175);
+        }
+    }
+
+    .o_block {
+        //Inherited form s_floating_blocks_wrapper
+        border-radius: inherit;
+        box-shadow: inherit;
+
+        top: 0;
+        max-height: calc(100vh - #{map-get($spacers, 5) * 2}) !important;
+        transition: top .4s;
+        will-change: transform;
+        transform-origin: center top;
+
+        aspect-ratio: calc(var(--floating-boxes-box-ratio) - var(--floating-boxes-box-ratio-adjust));
+    }
+
+    @include media-breakpoint-up(lg) {
+        --floating-boxes-box-ratio: var(--floating-boxes-box-ratio-desktop);
+
+        > .container-fluid > div {
+            padding-left: map-get($spacers, 5);
+            padding-right: map-get($spacers, 5);
+        }
+
+        > .o_container_small {
+            --floating-boxes-box-ratio-desktop: 2;
+        }
+    }
+}
