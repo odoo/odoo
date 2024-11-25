@@ -42,10 +42,15 @@
                             </div>
                         </group>
                         <group>
-                            <field name="counter"/>
+                            <label for="max_batch_size"/>
+                            <div class="d-flex">
+                                <field name="max_batch_size" class="w-50"/>
+                                <field name="product_uom_id" groups="uom.group_uom"/>
+                            </div>
+                            <field name="num_splits"/>
                         </group>
                     </group>
-                    <field name="production_detailed_vals_ids" invisible="counter == 0">
+                    <field name="production_detailed_vals_ids" invisible="max_batch_size &lt;= 0">
                         <list editable="top">
                             <field name="date"/>
                             <field name="user_id"/>
@@ -54,7 +59,7 @@
                     </field>
                     <field name="production_split_multi_id" invisible="1"/>
                     <field name="valid_details" invisible="1"/>
-                    <div class="alert alert-danger" role="alert" invisible="valid_details or counter == 0">
+                    <div class="alert alert-danger" role="alert" invisible="valid_details or max_batch_size &lt;= 0">
                         The total should be equal to the quantity to produce.
                     </div>
                     <footer>
