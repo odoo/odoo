@@ -2195,3 +2195,14 @@ test(`any/not any operator (readonly) for one2many`, async () => {
     const text = `Match\nall\nof the following rules:\nPlayers\nmatch\nall\nof:\nPlayer Name\nis in\n(\nKevin De Bruyne\n,\nJeremy Doku\n)`;
     expect(".o_domain_selector").toHaveText(text);
 });
+
+test("shorten descriptions of long lists", async (assert) => {
+    const values = new Array(500).fill(42525245);
+    await makeDomainSelector({
+        domain: `[("id", "in", [${values}])]`,
+        readonly: true,
+    });
+    expect(".o_tree_editor_condition").toHaveText(
+        `Id\nis in\n(\n${values.slice(0, 20).join("\n,\n")}\n,\n...\n)`
+    );
+});
