@@ -194,6 +194,28 @@ export function customerIsSelected(name) {
         },
     ];
 }
+export function inputCustomerSearchbar(value) {
+    return [
+        {
+            isActive: ["mobile"],
+            content: "click more button",
+            trigger: ".modal-header .fa-search",
+            run: "click",
+        },
+        {
+            trigger: ".modal-header .input-group input",
+            run: "edit " + value,
+        },
+        {
+            trigger: ".modal-header .input-container input",
+            run: function () {
+                document
+                    .querySelector(".modal-header .input-container input")
+                    .dispatchEvent(new KeyboardEvent("keyup", { key: "" }));
+            },
+        },
+    ];
+}
 export function clickRefund() {
     return [clickReview(), ...clickControlButton("Refund")];
 }

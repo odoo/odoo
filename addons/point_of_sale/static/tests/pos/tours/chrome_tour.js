@@ -142,3 +142,28 @@ registry.category("web_tour.tours").add("OrderModificationAfterValidationError",
             ProductScreen.clickDisplayedProduct("Test Product", true, "2"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("SearchMoreCustomer", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.inputCustomerSearchbar("1111"),
+            {
+                // Searching more customers by pressing enter
+                trigger: ".modal-header .input-group input",
+                run: function () {
+                    document
+                        .querySelector(".modal-header .input-group input")
+                        .dispatchEvent(
+                            new KeyboardEvent("keydown", { bubbles: true, key: "Enter" })
+                        );
+                },
+            },
+            // Utils.selectButton("Search more"),
+            ProductScreen.clickCustomer("BPartner"),
+            ProductScreen.isShown(),
+        ].flat(),
+});
