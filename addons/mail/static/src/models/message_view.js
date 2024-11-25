@@ -22,35 +22,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         async onClick(ev) {
-            if (ev.target.closest('.o_channel_redirect')) {
-                // avoid following dummy href
-                ev.preventDefault();
-                const channel = this.messaging.models['Thread'].insert({
-                    id: Number(ev.target.dataset.oeId),
-                    model: 'mail.channel',
-                });
-                if (!channel.isPinned) {
-                    await channel.join();
-                    channel.update({ isServerPinned: true });
-                }
-                channel.open();
-                return;
-            } else if (ev.target.closest('.o_mail_redirect')) {
-                ev.preventDefault();
-                this.messaging.openChat({
-                    partnerId: Number(ev.target.dataset.oeId)
-                });
-                return;
-            }
-            if (ev.target.tagName === 'A') {
-                if (ev.target.dataset.oeId && ev.target.dataset.oeModel) {
-                    // avoid following dummy href
-                    ev.preventDefault();
-                    this.messaging.openProfile({
-                        id: Number(ev.target.dataset.oeId),
-                        model: ev.target.dataset.oeModel,
-                    });
-                }
+            if (await this.messaging.handleClickOnLink(ev)) {
                 return;
             }
             if (
