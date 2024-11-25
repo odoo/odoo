@@ -1150,6 +1150,7 @@ class Users(models.Model):
         devices.filtered(lambda d: not d.is_current)._revoke()
         return {'type': 'ir.actions.client', 'tag': 'reload'}
 
+    @api.readonly
     def has_groups(self, group_spec: str) -> bool:
         """ Return whether user ``self`` satisfies the given group restrictions
         ``group_spec``, i.e., whether it is member of at least one of the groups,
@@ -1181,6 +1182,7 @@ class Users(models.Model):
             return True
         return not positives
 
+    @api.readonly
     def has_group(self, group_ext_id: str) -> bool:
         """ Return whether user ``self`` belongs to the given group (given by its
         fully-qualified external ID).
