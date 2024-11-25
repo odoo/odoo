@@ -415,6 +415,8 @@ export class Thread extends Component {
                 }),
                 this.props.thread
             );
+        } else {
+            this.store.handleClickOnLink(ev, this.props.thread);
         }
     }
 
