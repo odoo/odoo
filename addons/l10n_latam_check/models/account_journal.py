@@ -10,8 +10,6 @@ class AccountJournal(models.Model):
             return res
         if self._is_payment_method_available('own_checks'):
             res |= self.env.ref('l10n_latam_check.account_payment_method_own_checks')
-        if self._is_payment_method_available('out_third_party_checks'):
-            res |= self.env.ref('l10n_latam_check.account_payment_method_out_third_party_checks')
         if self._is_payment_method_available('return_third_party_checks'):
             res |= self.env.ref('l10n_latam_check.account_payment_method_return_third_party_checks')
         return res
