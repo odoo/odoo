@@ -38,7 +38,7 @@ const { DateTime, Info } = luxon;
  * @property {PrecisionLevel} [maxPrecision="decades"]
  * @property {DateLimit} [minDate]
  * @property {PrecisionLevel} [minPrecision="days"]
- * @property {(value: DateTime) => any} [onSelect]
+ * @property {(value: DateTime | DateRange, unit: "date" | "time") => any} [onSelect]
  * @property {boolean} [range]
  * @property {number} [rounding=5] the rounding in minutes, pass 0 to show seconds, pass 1 to avoid
  *  rounding minutes without displaying seconds.
@@ -629,14 +629,15 @@ export class DateTimePicker extends Component {
      */
     selectTime(valueIndex) {
         const value = this.values[valueIndex] || today();
-        this.validateAndSelect(value, valueIndex);
+        this.validateAndSelect(value, valueIndex, "time");
     }
 
     /**
      * @param {DateTime} value
      * @param {number} valueIndex
+     * @param {"date" | "time"} unit
      */
-    validateAndSelect(value, valueIndex) {
+    validateAndSelect(value, valueIndex, unit) {
         if (!this.props.onSelect) {
             // No onSelect handler
             return false;
@@ -654,7 +655,7 @@ export class DateTimePicker extends Component {
             // Date is outside range defined by min and max dates
             return false;
         }
-        this.props.onSelect(result.length === 2 ? result : result[0]);
+        this.props.onSelect(result.length === 2 ? result : result[0], unit);
         return true;
     }
 
@@ -701,7 +702,7 @@ export class DateTimePicker extends Component {
         }
         const [value] = dateItem.range;
         const valueIndex = this.props.focusedDateIndex;
-        const isValid = this.validateAndSelect(value, valueIndex);
+        const isValid = this.validateAndSelect(value, valueIndex, "date");
         this.shouldAdjustFocusDate = isValid && !this.props.range;
     }
 }
