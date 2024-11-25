@@ -68,3 +68,12 @@ test("undo and redo buttons", async () => {
         '<div id="wrap" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch"> <div id="wrap" class="o_editable o_dirty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch"> <p> Texta </p> </div> </div>'
     );
 });
+
+test("activate customize tab without any selection", async () => {
+    await setupWebsiteBuilder("<h1> Homepage </h1>");
+    expect(queryOne(".o-website-snippetsmenu .o-snippets-tabs span.active")).toHaveText("BLOCKS");
+    await contains(".o-website-snippetsmenu .o-snippets-tabs span:contains(CUSTOMIZE)").click();
+    expect(queryOne(".o-website-snippetsmenu .o-snippets-tabs span.active")).toHaveText(
+        "CUSTOMIZE"
+    );
+});
