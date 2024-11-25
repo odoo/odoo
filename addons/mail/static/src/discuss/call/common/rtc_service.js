@@ -310,16 +310,6 @@ export class Rtc extends Record {
                 this.sfuClient?.disconnect();
             }
         });
-        browser.navigator.serviceWorker?.addEventListener("message", ({ data: { action, id } }) => {
-            if (action === "JOIN_CALL") {
-                const channel = this.store.Thread.get({ model: "discuss.channel", id });
-                channel.open();
-                if (this.state.channel) {
-                    return;
-                }
-                this.joinCall(channel);
-            }
-        });
         /**
          * Call all sessions for which no peerConnection is established at
          * a regular interval to try to recover any connection that failed

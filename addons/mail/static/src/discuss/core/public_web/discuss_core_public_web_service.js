@@ -14,6 +14,7 @@ export class DiscussCorePublicWeb {
         this.store = services["mail.store"];
         this.busService = services.bus_service;
         this.notificationService = services.notification;
+        this.rtcService = services["discuss.rtc"];
         try {
             this.sidebarCategoriesBroadcast = new browser.BroadcastChannel(
                 "discuss_core_public_web.sidebar_categories"
@@ -41,6 +42,25 @@ export class DiscussCorePublicWeb {
                 );
             }
         });
+        browser.navigator.serviceWorker?.addEventListener(
+            "message",
+            async ({ data: { action, data } }) => {
+                if (action === "OPEN_CHANNEL") {
+                    const channel = await this.store.Thread.getOrFetch({
+                        model: "discuss.channel",
+                        id: data.id,
+                    });
+                    channel?.open();
+                    if (!data.joinCall || !channel || this.rtcService.state.channel?.eq(channel)) {
+                        return;
+                    }
+                    if (this.rtcService.state.channel) {
+                        await this.rtcService.leaveCall();
+                    }
+                    this.rtcService.joinCall(channel);
+                }
+            }
+        );
     }
 
     /**
@@ -54,7 +74,7 @@ export class DiscussCorePublicWeb {
 }
 
 export const discussCorePublicWeb = {
-    dependencies: ["bus_service", "mail.store", "notification"],
+    dependencies: ["bus_service", "discuss.rtc", "mail.store", "notification"],
 
     /**
      * @param {import("@web/env").OdooEnv} env
