@@ -102,7 +102,7 @@ class ProjectProject(models.Model):
                AND Task.parent_id IS NULL
                AND Task.state IN ('01_in_progress', '02_changes_requested', '03_approved', '04_waiting_normal')
           GROUP BY Project.id
-            HAVING ProjectProject.allocated_hours - SUM(Task.effective_hours) < 0
+            HAVING Project.allocated_hours - SUM(Task.effective_hours) < 0
         )""")
         if (operator == '=' and value is True) or (operator == '!=' and value is False):
             operator_new = 'in'
