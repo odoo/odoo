@@ -11,6 +11,8 @@ from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_pos_combo_items
 from datetime import date, timedelta
 from odoo.addons.point_of_sale.tests.common import archive_products
+from odoo.addons.point_of_sale.models.pos_config import PosConfig
+from unittest.mock import patch
 
 _logger = logging.getLogger(__name__)
 
@@ -1270,6 +1272,18 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.env['ir.config_parameter'].sudo().set_param('barcode.max_time_between_keys_in_ms', 1)
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'CashRoundingPayment', login="accountman")
+
+    def test_customer_search_more(self):
+        partner_test_a = self.env["res.partner"].create({"name": "APartner"})
+        self.env["res.partner"].create({"name": "BPartner", "zip": 1111})
+
+        def mocked_get_limited_partners_loading(self):
+            return [(partner_test_a.id,)]
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        with patch.object(PosConfig, 'get_limited_partners_loading', mocked_get_limited_partners_loading):
+            self.main_pos_config.open_ui()
+            self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'SearchMoreCustomer', login="pos_user")
 
 
 # This class just runs the same tests as above but with mobile emulation
