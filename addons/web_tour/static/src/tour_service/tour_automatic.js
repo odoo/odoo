@@ -102,8 +102,7 @@ export class TourAutomatic {
             checkDelay: this.checkDelay || 500,
             steps: macroSteps,
             onError: (error) => {
-                this.throwError(error);
-                console.error("tour not succeeded");
+                this.throwError([error]);
                 end();
             },
             onComplete: () => {
@@ -117,8 +116,10 @@ export class TourAutomatic {
                 end();
             },
             onTimeout: (timeout) => {
-                this.throwError(`TIMEOUT: The step failed to complete within ${timeout} ms.`);
-                console.error("tour not succeeded");
+                this.throwError([
+                    ...this.currentStep.describeWhyIFailed,
+                    `TIMEOUT: The step failed to complete within ${timeout} ms.`,
+                ]);
                 end();
             },
         });
@@ -154,16 +155,11 @@ export class TourAutomatic {
     /**
      * @param {string} [error]
      */
-    throwError(error = ``) {
+    throwError(errors = []) {
         console.groupEnd();
         tourState.setCurrentTourOnError();
         // console.error notifies the test runner that the tour failed.
-        const errors = [
-            `FAILED: ${this.currentStep.describeMe}.`,
-            ...this.currentStep.describeWhyIFailed,
-            error,
-        ];
-        browser.console.error(errors.filter(Boolean).join("\n"));
+        browser.console.error([`FAILED: ${this.currentStep.describeMe}.`, ...errors].join("\n"));
         // The logged text shows the relative position of the failed step.
         // Useful for finding the failed step.
         browser.console.dir(this.describeWhereIFailed);
