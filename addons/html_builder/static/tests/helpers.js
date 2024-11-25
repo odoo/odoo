@@ -104,7 +104,7 @@ export function addOption({ selector, template, actions = {} }) {
     }
     const toolboxId = uniqueId("test-toolbox");
     registry.category("sidebar-element-option").add(toolboxId, {
-        ToolboxComponent: TestToolbox,
+        OptionComponent: TestToolbox,
         selector,
     });
     for (const [name, action] of Object.entries(actions)) {

@@ -12,7 +12,7 @@
             <WithSubEnv env="{editingElement: selectedToolbox.element, weContext: {}}">
             <OptionsContainer title="'Section'">
                 <t t-foreach="selectedToolbox.toolbox" t-as="toolbox" t-key="toolbox_index">
-                    <t t-component="toolbox.ToolboxComponent" />
+                    <t t-component="toolbox.OptionComponent" />
                 </t>
             </OptionsContainer>
             </WithSubEnv>

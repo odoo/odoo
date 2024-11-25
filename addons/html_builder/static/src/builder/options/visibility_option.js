@@ -10,6 +10,6 @@ export class VisibilityOption extends Component {
 }
 
 registry.category("sidebar-element-option").add("VisibilityOption", {
-    ToolboxComponent: VisibilityOption,
+    OptionComponent: VisibilityOption,
     selector: "section, .s_hr",
 });

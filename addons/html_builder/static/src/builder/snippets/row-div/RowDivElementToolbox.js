@@ -12,6 +12,6 @@ export class RowDivElementToolbox extends Component {
 }
 
 // registry.category("sidebar-element-legacy-toolbox").add("RowDivElementToolbox", {
-//     ToolboxComponent: RowDivElementToolbox,
+//     OptionComponent: RowDivElementToolbox,
 //     selector: "section .row > div",
 // });
