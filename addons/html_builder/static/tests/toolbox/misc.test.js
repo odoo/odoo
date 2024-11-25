@@ -16,7 +16,7 @@ test("Open toolbox", async () => {
     });
     await setupWebsiteBuilder(`<div class="test-toolbox-target">b</div>`);
     await contains(":iframe .test-toolbox-target").click();
-    expect(".element-toolbox").toBeDisplayed();
+    expect(".options-container").toBeDisplayed();
 });
 
 test("basic multi toolboxes", async () => {
@@ -37,15 +37,12 @@ test("basic multi toolboxes", async () => {
     });
     await setupWebsiteBuilder(`<div><p class="test-toolbox-target">b</p></div>`);
     await contains(":iframe .test-toolbox-target").click();
-    expect(".element-toolbox").toHaveCount(2);
-    expect(queryAllTexts(".element-toolbox:first .we-bg-toolbox > div > div")).toEqual([
+    expect(".options-container").toHaveCount(2);
+    expect(queryAllTexts(".options-container:first .we-bg-options-container > div > div")).toEqual([
         "Row 3",
         "C",
     ]);
-    expect(queryAllTexts(".element-toolbox:nth-child(2) .we-bg-toolbox > div > div")).toEqual([
-        "Row 1",
-        "A",
-        "Row 2",
-        "B",
-    ]);
+    expect(
+        queryAllTexts(".options-container:nth-child(2) .we-bg-options-container > div > div")
+    ).toEqual(["Row 1", "A", "Row 2", "B"]);
 });
