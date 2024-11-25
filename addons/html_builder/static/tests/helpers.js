@@ -103,7 +103,7 @@ export function addToolbox({ selector, template, actions = {} }) {
         };
     }
     const toolboxId = uniqueId("test-toolbox");
-    registry.category("sidebar-element-toolbox").add(toolboxId, {
+    registry.category("sidebar-element-option").add(toolboxId, {
         ToolboxComponent: TestToolbox,
         selector,
     });
@@ -111,7 +111,7 @@ export function addToolbox({ selector, template, actions = {} }) {
         actionsRegistry.add(name, action);
     }
     after(() => {
-        registry.category("sidebar-element-toolbox").remove(toolboxId);
+        registry.category("sidebar-element-option").remove(toolboxId);
         for (const [name] of Object.entries(actions)) {
             actionsRegistry.remove(name);
         }
