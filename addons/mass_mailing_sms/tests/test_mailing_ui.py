@@ -17,6 +17,9 @@ class TestMailingUi(HttpCase):
                 - activities linked to records with mailing_type set to sms are listed
                   in the 'SMS Marketing' category
         """
+        self.env.ref('base.user_admin').write({
+            'email': 'mitchell.admin@example.com',
+        })
         sms_rec, email_rec = self.env['mailing.mailing'].create([
             {
                 'body_plaintext': 'Some sms spam',

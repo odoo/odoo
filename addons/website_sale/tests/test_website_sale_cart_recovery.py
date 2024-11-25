@@ -11,6 +11,9 @@ class TestWebsiteSaleCartRecovery(HttpCaseWithUserPortal):
 
     def test_01_shop_cart_recovery_tour(self):
         """The goal of this test is to make sure cart recovery works."""
+        self.env.ref('base.user_admin').write({
+            'email': 'mitchell.admin@example.com',
+        })
         self.env['product.product'].create({
             'name': 'Acoustic Bloc Screens',
             'list_price': 2950.0,

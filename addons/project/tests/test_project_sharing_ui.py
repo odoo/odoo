@@ -85,6 +85,9 @@ class TestProjectSharingUi(HttpCase):
 
     def test_01_project_sharing(self):
         """ Test Project Sharing UI with an internal user """
+        self.env.ref('base.user_admin').write({
+            'email': 'mitchell.admin@example.com',
+        })
         self.start_tour("/odoo", 'project_sharing_tour', login="admin")
 
     def test_02_project_sharing(self):

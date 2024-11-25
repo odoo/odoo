@@ -59,4 +59,7 @@ class TestTodoUi(HttpCaseWithUserDemo):
         - Mark a task as done from the todo form view
         - Convert a todo to a task
         """
+        self.env.ref('base.user_admin').write({
+            'email': 'mitchell.admin@example.com',
+        })
         self.start_tour("/odoo", 'project_todo_main_functions', login='admin')

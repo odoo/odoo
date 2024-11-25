@@ -1922,6 +1922,9 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         the pick move in 2+ step deliveries.
         """
         admin = self.env.ref('base.user_admin')
+        admin.write({
+            'email': 'mitchell.admin@example.com',
+        })
         warehouse = self.env.ref('stock.warehouse0').with_user(admin)
         warehouse.delivery_steps = 'pick_pack_ship'
         product = self.product_a

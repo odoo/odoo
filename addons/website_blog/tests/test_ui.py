@@ -30,6 +30,9 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         })
 
     def test_admin(self):
+        self.env.ref('base.user_admin').write({
+            'email': 'mitchell.admin@example.com',
+        })
         # Ensure at least two blogs exist for the step asking to select a blog
         self.env['blog.blog'].create({'name': 'Travel'})
 

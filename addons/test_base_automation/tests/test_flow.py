@@ -929,6 +929,13 @@ if env.context.get('old_values', None):  # on write
 
 @common.tagged('post_install', '-at_install')
 class TestCompute(common.TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env.ref('base.user_admin').write({
+            'email': 'mitchell.admin@example.com',
+        })
+
     def test_inversion(self):
         """ If a stored field B depends on A, an update to the trigger for A
         should trigger the recomputaton of A, then B.

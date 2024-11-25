@@ -32,6 +32,7 @@ class TestWebsiteCrm(odoo.tests.HttpCase):
         self.env.ref('base.partner_admin').write({
             'name': 'Mitchell Admin',
             'company_name': 'YourCompany',
+            'email': 'mitchell.admin@example.com',
         })
         user_login = 'admin'
         user_partner = self.env['res.users'].search([('login', '=', user_login)]).partner_id

@@ -251,6 +251,9 @@ class TestAttendeeCase(HttpCaseWithUserPortal):
     def setUp(self):
         super(TestAttendeeCase, self).setUp()
         self.user_admin = self.env.ref('base.user_admin')
+        self.user_admin.write({
+            'email': 'mitchell.admin@example.com',
+        })
         self.user_emp = mail_new_test_user(
             self.env,
             email='employee@example.com',

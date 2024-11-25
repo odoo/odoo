@@ -485,6 +485,13 @@ class TestCalendar(SavepointCaseWithUserDemo):
 
 @tagged('post_install', '-at_install')
 class TestCalendarTours(HttpCaseWithUserDemo):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env.ref('base.user_admin').write({
+            'email': 'mitchell.admin@example.com',
+        })
+
     def test_calendar_month_view_start_hour_displayed(self):
         """ Test that the time is displayed in the month view. """
         self.start_tour("/odoo", 'calendar_appointments_hour_tour', login="demo")

@@ -7,6 +7,13 @@ from odoo.tests import Form, TransactionCase, tagged
 @tagged('post_install', '-at_install')
 class TestSaleMrpKitBom(TransactionCase):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env.ref('base.user_admin').write({
+            'email': 'mitchell.admin@example.com',
+        })
+
     def _create_product(self, name, storable, price):
         return self.env['product.product'].create({
             'name': name,
