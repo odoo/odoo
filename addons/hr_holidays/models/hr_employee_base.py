@@ -14,7 +14,7 @@ class HrEmployeeBase(models.AbstractModel):
     _inherit = "hr.employee.base"
 
     leave_manager_id = fields.Many2one(
-        'res.users', string='Time Off',
+        'res.users', string='Time Off Approver',
         compute='_compute_leave_manager', store=True, readonly=False,
         domain="[('share', '=', False), ('company_ids', 'in', company_id)]",
         help='Select the user responsible for approving "Time Off" of this employee.\n'
