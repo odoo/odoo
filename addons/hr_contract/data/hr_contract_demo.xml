@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="structure_type_employee_cp200_pfi" model="hr.payroll.structure.type">
-        <field name="default_resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
+    <!-- Structure Type -->
+    <record id="structure_type_employee" model="hr.payroll.structure.type">
+        <field name="name">Employee</field>
+        <field name="country_id" eval="False"/>
     </record>
-
-    <record id="structure_type_employee_cp200" model="hr.payroll.structure.type">
-        <field name="default_resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
+    <record id="structure_type_worker" model="hr.payroll.structure.type">
+        <field name="name">Worker</field>
+        <field name="country_id" eval="False"/>
     </record>
 
     <data noupdate="1">
