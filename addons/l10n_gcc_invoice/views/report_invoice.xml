@@ -451,8 +451,61 @@
                         <div class="col-6 text-end">
                             <span dir="rtl" t-out="o_sec.invoice_payment_term_id.note"/>
                         </div>
-
                     </div>
+                    <t t-if="o.invoice_payment_term_id.display_on_invoice and o.payment_term_details">
+                        <div t-if="o.show_payment_term_details" id="total_payment_term_details_table" class="row">
+                            <t t-set="pt_size" t-value="'col-9 offset-3' if o.show_discount_details else 'col-6 offset-6'"/>
+                            <t t-set="pt_size_html" t-value="'col-sm-9 col-md-8 offset-sm-3 offset-md-4' if o.show_discount_details else 'col-sm-6 col-md-6 offset-sm-6 offset-md-6'"/>
+                            <div t-attf-class="#{pt_size if report_type != 'html' else pt_size_html} mt-2 mb-2">
+                                <table class="table table-sm" style="page-break-inside: avoid;">
+                                    <th class="border-black text-start">
+                                        <span>
+                                            تاريخ الاستحقاق
+                                        </span>
+                                        <br/>
+                                        <span>
+                                            Due Date
+                                        </span>
+                                    </th>
+                                    <th class="border-black text-end">
+                                        <span>
+                                            المبلغ المستحق
+                                        </span>
+                                        <br/>
+                                        <span>
+                                            Amount Due
+                                        </span>
+                                    </th>
+                                    <th t-if="o.show_discount_details" class="border-black text-end">
+                                        <span>
+                                            الخصم
+                                        </span>
+                                        <br/>
+                                        <span>
+                                            Discount
+                                        </span>
+                                    </th>
+                                    <t t-foreach="o.payment_term_details" t-as="term">
+                                        <tr>
+                                            <td t-esc="term.get('date')" class="text-start"/>
+                                            <td t-options="{'widget': 'monetary', 'display_currency': o.currency_id}" t-esc="term.get('amount')" class="text-end"/>
+                                            <td t-if="term.get('discount_date')" class="text-end">
+                                                <span dir="rtl" style="white-space: normal;">
+                                                    <span t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"
+                                                          t-esc="term.get('discount_amount_currency')"/> إذا تم الدفع قبل
+                                                    <span t-esc="term.get('discount_date')"/>
+                                                </span>
+                                                <br/>
+                                                <span t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"
+                                                      t-esc="term.get('discount_amount_currency')"/> if paid before
+                                                <span t-esc="term.get('discount_date')"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </table>
+                            </div>
+                        </div>
+                    </t>
                 </p>
                 <p t-if="o.narration" name="comment">
                     <div class="row">
