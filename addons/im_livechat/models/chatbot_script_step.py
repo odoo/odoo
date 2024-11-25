@@ -342,26 +342,18 @@ class ChatbotScriptStep(models.Model):
         # handle edge case where we found yourself as available operator -> don't do anything
         # it will act as if no-one is available (which is fine)
         if human_operator and human_operator != self.env.user:
-            discuss_channel.sudo().add_members(
-                human_operator.partner_id.ids,
-                open_chat_window=True,
-                post_joined_message=False)
-
-            # rename the channel to include the operator's name
-            discuss_channel.sudo().name = ' '.join([
-                self.env.user.display_name if not self.env.user._is_public() else discuss_channel.anonymous_name,
-                human_operator.livechat_username if human_operator.livechat_username else human_operator.name
-            ])
-
             if self.message:
                 # first post the message of the step (if we have one)
                 posted_message = discuss_channel._chatbot_post_message(self.chatbot_script_id, plaintext2html(self.message))
 
-            # then post a small custom 'Operator has joined' notification
-            discuss_channel._chatbot_post_message(
-                self.chatbot_script_id,
-                Markup('<div class="o_mail_notification">%s</div>')
-                % _('%s has joined', human_operator.livechat_username or human_operator.partner_id.name))
+            # next, add the human_operator to the channel and post a "Operator joined the channel" notification
+            discuss_channel.with_user(human_operator).sudo().add_members(human_operator.partner_id.ids, open_chat_window=True)
+
+            # finally, rename the channel to include the operator's name
+            discuss_channel.sudo().name = ' '.join([
+                self.env.user.display_name if not self.env.user._is_public() else discuss_channel.anonymous_name,
+                human_operator.livechat_username if human_operator.livechat_username else human_operator.name
+            ])
 
             discuss_channel._broadcast(human_operator.partner_id.ids)
             discuss_channel.channel_pin(pinned=True)
