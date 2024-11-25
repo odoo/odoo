@@ -140,6 +140,7 @@ export const tourService = {
             }
 
             let tourConfig = {
+                delayToCheckUndeterminisms: 0,
                 stepDelay: 0,
                 keepWatchBrowser: false,
                 mode: "auto",

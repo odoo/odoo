@@ -117,8 +117,8 @@ export class Macro {
         }
         if (proceedToAction) {
             this.safeCall(this.onStep, this.currentElement, this.currentStep);
-            const actionResult = await this.performAction();
             this.clearTimer();
+            const actionResult = await this.performAction();
             if (!actionResult) {
                 // If falsy action result, it means the action worked properly.
                 // So we can proceed to the next step.
