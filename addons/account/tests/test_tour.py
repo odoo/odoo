@@ -35,6 +35,7 @@ class TestUi(AccountTestInvoicingHttpCommon):
         self.env.ref('base.user_admin').write({
             'company_id': self.env.company.id,
             'company_ids': [(4, self.env.company.id)],
+            'email': 'mitchell.admin@example.com',
         })
         self.env.company.write({
             'country_id': None, # Also resets account_fiscal_country_id
