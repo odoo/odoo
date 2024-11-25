@@ -16,7 +16,7 @@ import { loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { uniqueId } from "@web/core/utils/functions";
 import { WebClient } from "@web/webclient/webclient";
-import { ElementToolboxContainer } from "../src/builder/components/ElementToolboxContainer";
+import { OptionsContainer } from "../src/builder/components/OptionsContainer";
 import { defaultOptionComponents } from "../src/builder/components/defaultComponents";
 import { getWebsiteSnippets } from "./snippets_getter.hoot";
 
@@ -93,12 +93,12 @@ export function getEditable(inWrap) {
 
 const actionsRegistry = registry.category("website-builder-actions");
 
-export function addToolbox({ selector, template, actions = {} }) {
+export function addOption({ selector, template, actions = {} }) {
     class TestToolbox extends Component {
         static template = template;
         static props = {};
         static components = {
-            ElementToolboxContainer,
+            OptionsContainer,
             ...defaultOptionComponents,
         };
     }

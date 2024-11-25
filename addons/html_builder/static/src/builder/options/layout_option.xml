@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.LayoutOption">
-    <ToolboxRow label="'Layout'">
+    <WeRow label="'Layout'">
        <WeButtonGroup>
             <Button label="'Grid'" onClick.bind="setGridLayout" isActive="state.elementLayout === 'grid'" />
             <Button label="'Column'" onClick.bind="setColumnLayout"  isActive="state.elementLayout === 'column'" />
@@ -23,20 +23,20 @@
                 </t>
             </Dropdown>
         </t>
-    </ToolboxRow>
+    </WeRow>
     <t t-if="state.elementLayout === 'grid'">
         <AddElementOption />
         <SpacingOption />
     </t>
     <t t-else="">
-        <ToolboxRow label="'└ Hor. Alignment'">
+        <WeRow label="'└ Hor. Alignment'">
             <WeButtonGroup applyTo="'.row'">
                 <WeButton classAction="'align-items-start'" title="'Align Top'" iconImg="'/website/static/src/img/snippets_options/align_top.svg'"  />
                 <WeButton classAction="'align-items-center'" title="'Align Middle'" iconImg="'/website/static/src/img/snippets_options/align_middle.svg'" />
                 <WeButton classAction="'align-items-end'" title="'Align Bottom'" iconImg="'/website/static/src/img/snippets_options/align_bottom.svg'" />
                 <WeButton classAction="'align-items-stretch'" title="'Stretch'" iconImg="'/website/static/src/img/snippets_options/align_stretch.svg'" />
             </WeButtonGroup>
-        </ToolboxRow>
+        </WeRow>
     </t>
 </t>
 
