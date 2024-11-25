@@ -1,33 +1,26 @@
-import { Component, useState } from "@odoo/owl";
-import { defaultOptionComponents } from "../defaultComponents";
+import { Component } from "@odoo/owl";
+import { registry } from "@web/core/registry";
+import { defaultOptionComponents } from "../components/defaultComponents";
+import { useDomState } from "../builder_helpers";
+import { SpacingOption } from "./spacing_option";
+import { AddElementOption } from "./add_element_option";
+
+// TODO to import in html_builder
 import {
     _convertToNormalColumn,
     _reloadLazyImages,
     _toggleGridMode,
 } from "@web_editor/js/common/grid_layout_utils";
-import { AddElementOption } from "./AddElementOption";
-import { SpacingOption } from "./SpacingOption";
 
 export class LayoutOption extends Component {
     static template = "html_builder.LayoutOption";
-    static components = {
-        ...defaultOptionComponents,
-        AddElementOption,
-        SpacingOption,
-    };
+    static components = { ...defaultOptionComponents, SpacingOption, AddElementOption };
+
     setup() {
-        this.state = useState(this.setState({}));
-        this.env.editorBus.addEventListener("STEP_ADDED", () => {
-            this.setState(this.state);
-        });
-    }
-    setState(object) {
-        Object.assign(object, {
+        this.state = useDomState(() => ({
             elementLayout: this.isGrid() ? "grid" : "column",
             columnCount: this.getRow()?.children.length,
-        });
-
-        return object;
+        }));
     }
     getRow() {
         return this.env.editingElement.querySelector(".row");
@@ -37,8 +30,7 @@ export class LayoutOption extends Component {
         return rowEl && rowEl.classList.contains("o_grid_mode");
     }
     setGridLayout() {
-        const rowEl = this.env.editingElement.querySelector(".row");
-        if (rowEl && rowEl.classList.contains("o_grid_mode")) {
+        if (this.isGrid()) {
             // Prevent toggling grid mode twice.
             return;
         }
@@ -76,3 +68,10 @@ export class LayoutOption extends Component {
         console.warn(`changeColumnCount:`, nbColumns);
     }
 }
+
+registry.category("sidebar-element-toolbox").add("SectionToolbox", {
+    ToolboxComponent: LayoutOption,
+    selector: "section, section.s_carousel_wrapper .carousel-item, .s_carousel_intro_item",
+    // TODO add exclude  data-exclude=".s_dynamic, .s_dynamic_snippet_content, .s_dynamic_snippet_title, .s_masonry_block, .s_framed_intro, .s_features_grid, .s_media_list, .s_table_of_content, .s_process_steps, .s_image_gallery, .s_timeline, .s_pricelist_boxed, .s_quadrant, .s_pricelist_cafe, .s_faq_horizontal, .s_image_frame, .s_card_offset, .s_contact_info"
+    // TODO add target (applyTo) data-target="> *:has(> .row), > .s_allow_columns"
+});
