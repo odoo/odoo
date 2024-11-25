@@ -294,3 +294,16 @@ class TestWebsiteAccess(HttpCaseWithUserDemo, OnlineEventCase):
 
         with self.assertRaises(AccessError):
             self.env['res.partner'].browse(self.partner.id).read()
+
+
+@tagged('-at_install', 'post_install')
+class TestImageProcessing(HttpCase):
+
+    def test_cover_image_mimetype(self):
+        self.start_tour('/event', "website_event_cover_image_mimetype", login='admin')
+
+    def test_cover_image_mimetype_no_webp(self):
+        self.start_tour('/event', "website_event_cover_image_mimetype_no_webp", login='admin')
+
+    def test_cover_image_mimetype_bigger_output(self):
+        self.start_tour('/event', "website_event_cover_image_mimetype_bigger_output", login='admin')

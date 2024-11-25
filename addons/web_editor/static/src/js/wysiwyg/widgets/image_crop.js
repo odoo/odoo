@@ -23,10 +23,12 @@ export class ImageCrop extends Component {
         activeOnStart: { type: Boolean, optional: true },
         media: { optional: true },
         mimetype: { type: String, optional: true },
+        mimetypeOutputAttribute: { type: String, optional: true },
     };
     static defaultProps = {
         activeOnStart: false,
         showCount: 0,
+        mimetypeOutputAttribute: "mimetype",
     };
     aspectRatios = {
         "0/0": {label: _t("Flexible"), value: 0},
@@ -81,6 +83,7 @@ export class ImageCrop extends Component {
             this.elRef.el.ownerDocument.removeEventListener('keydown', this._onDocumentKeydown, {capture: true});
         }
         this.media.setAttribute('src', this.initialSrc);
+        this.media.dataset[this.props.mimetypeOutputAttribute] = this.mimetype;
         this.$media.trigger('image_cropper_destroyed');
         this.state.active = false;
         this.restoreCursor();
@@ -202,7 +205,13 @@ export class ImageCrop extends Component {
             }
         });
         delete this.media.dataset.resizeWidth;
-        this.initialSrc = await applyModifications(this.media, {forceModification: true, mimetype: this.mimetype});
+        const { dataURL, mimetype } = await applyModifications(
+            this.media,
+            { forceModification: true, mimetype: this.mimetype },
+            true // TODO: remove in master
+        );
+        this.initialSrc = dataURL;
+        this.mimetype = mimetype;
         this.media.classList.toggle('o_we_image_cropped', cropped);
         this.$media.trigger('image_cropped');
         this._closeCropper();

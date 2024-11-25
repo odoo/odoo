@@ -5,6 +5,7 @@ import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import "@website/js/editor/snippets.options";
+import { convertCanvasToDataURL } from "@web/core/utils/image_processing";
 import { renderToElement } from "@web/core/utils/render";
 import { useChildSubEnv } from "@odoo/owl";
 import weUtils from '@web_editor/js/common/utils';
@@ -625,7 +626,7 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
         await new Promise(resolve => imgEl.addEventListener("load", resolve));
         const originalSize = Math.max(imgEl.width, imgEl.height);
         const smallerSizes = [1024, 512, 256, 128].filter(size => size < originalSize);
-        const webpName = attachment.name.replace(/\.(jpe?g|png)$/i, ".webp");
+        const fileBasename = attachment.name.replace(/\.(jpe?g|png)$/i, "");
         let referenceId = undefined;
         for (const size of [originalSize, ...smallerSizes]) {
             const ratio = size / originalSize;
@@ -636,23 +637,24 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
             ctx.fillStyle = "rgb(255, 255, 255)";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(imgEl, 0, 0, imgEl.width, imgEl.height, 0, 0, canvas.width, canvas.height);
+            const imageData = convertCanvasToDataURL(canvas, "image/webp", 0.75);
             const [resizedId] = await this.orm.call("ir.attachment", "create_unique", [[{
-                name: webpName,
+                name: `${fileBasename}.${imageData.defaultFileExtension}`,
                 description: size === originalSize ? "" : `resize: ${size}`,
-                datas: canvas.toDataURL("image/webp", 0.75).split(",")[1],
+                datas: imageData.base64Part,
                 res_id: referenceId,
                 res_model: "ir.attachment",
-                mimetype: "image/webp",
+                mimetype: imageData.mimetype,
             }]]);
             if (size === originalSize) {
                 attachment.original_id = attachment.id;
                 attachment.id = resizedId;
                 attachment.image_src = `/web/image/${resizedId}-autowebp/${attachment.name}`;
-                attachment.mimetype = "image/webp";
+                attachment.mimetype = imageData.mimetype;
             }
             referenceId = referenceId || resizedId; // Keep track of original.
             await this.orm.call("ir.attachment", "create_unique", [[{
-                name: webpName.replace(/\.webp$/, ".jpg"),
+                name: `${fileBasename}.jpg`,
                 description: "format: jpeg",
                 datas: canvas.toDataURL("image/jpeg", 0.75).split(",")[1],
                 res_id: resizedId,

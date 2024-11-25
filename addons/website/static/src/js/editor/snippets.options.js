@@ -4,6 +4,7 @@ import { loadCSS } from "@web/core/assets";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useChildRef } from "@web/core/utils/hooks";
+import { canExportCanvasAsWebp } from "@web/core/utils/image_processing";
 import weUtils from "@web_editor/js/common/utils";
 import options from "@web_editor/js/editor/snippets.options";
 import { NavbarLinkPopoverWidget } from "@website/js/widgets/link_popover_widget";
@@ -3082,17 +3083,22 @@ options.registry.CoverProperties = options.Class.extend({
                 const imgEl = document.createElement("img");
                 imgEl.src = widgetValue;
                 await loadImageInfo(imgEl, this.rpc);
-                if (imgEl.dataset.mimetype && ![
+                const originalMimetype = imgEl.dataset.mimetype;
+                if (originalMimetype && ![
                     "image/gif",
                     "image/svg+xml",
                     "image/webp",
-                ].includes(imgEl.dataset.mimetype)) {
+                ].includes(originalMimetype) && canExportCanvasAsWebp()) {
                     // Convert to webp but keep original width.
-                    imgEl.dataset.mimetype = "image/webp";
-                    const base64src = await applyModifications(imgEl, {
-                        mimetype: "image/webp",
-                    });
-                    widgetValue = base64src;
+                    const { dataURL, mimetype } = await applyModifications(
+                        imgEl,
+                        {
+                            mimetype: "image/webp",
+                        },
+                        true // TODO: remove in master
+                    );
+                    imgEl.dataset.mimetype = mimetype;
+                    widgetValue = dataURL;
                     this.$image[0].classList.add("o_b64_image_to_save");
                 }
             }

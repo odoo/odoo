@@ -4,6 +4,10 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import {
+    convertCanvasToDataURL,
+    getDefaultFileExtensionForMimetype,
+} from "@web/core/utils/image_processing";
 import { url } from "@web/core/utils/urls";
 import { isBinarySize } from "@web/core/utils/binary";
 import { FileUploader } from "../file_handler";
@@ -155,18 +159,28 @@ export class ImageField extends Component {
                     canvas.width,
                     canvas.height
                 );
+
+                const fileBasename = info.name.replace(/\.webp$/, "");
+
+                const imageData = {};
+                if (size === originalSize) {
+                    imageData.base64Part = info.data;
+                    imageData.mimetype = info.type;
+                    imageData.defaultFileExtension = getDefaultFileExtensionForMimetype(
+                        imageData.mimetype
+                    );
+                } else {
+                    Object.assign(imageData, convertCanvasToDataURL(canvas, info.type, 0.75));
+                }
                 const [resizedId] = await this.orm.call("ir.attachment", "create_unique", [
                     [
                         {
-                            name: info.name,
+                            name: `${fileBasename}.${imageData.defaultFileExtension}`,
                             description: size === originalSize ? "" : `resize: ${size}`,
-                            datas:
-                                size === originalSize
-                                    ? info.data
-                                    : canvas.toDataURL("image/webp", 0.75).split(",")[1],
+                            datas: imageData.base64Part,
                             res_id: referenceId,
                             res_model: "ir.attachment",
-                            mimetype: "image/webp",
+                            mimetype: imageData.mimetype,
                         },
                     ],
                 ]);
@@ -174,7 +188,7 @@ export class ImageField extends Component {
                 await this.orm.call("ir.attachment", "create_unique", [
                     [
                         {
-                            name: info.name.replace(/\.webp$/, ".jpg"),
+                            name: `${fileBasename}.jpg`,
                             description: "format: jpeg",
                             datas: canvas.toDataURL("image/jpeg", 0.75).split(",")[1],
                             res_id: resizedId,

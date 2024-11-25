@@ -525,6 +525,48 @@ function toggleMobilePreview(toggleOn) {
     }];
 }
 
+/**
+ * Waits for an HTMLImageElement to load. Skips waiting if already loaded.
+ *
+ * @param {string} selector The {@link HTMLImageElement} to wait for.
+ * @return {Array}
+ */
+function waitForImageToLoad(selector) {
+    if (selector) {
+        return [
+            {
+                content: "Wait for image to load",
+                trigger: selector,
+                async run() {
+                    const img = this.$anchor[0];
+                    await new Promise((resolve) => {
+                        if (img.complete) {
+                            resolve();
+                        } else {
+                            img.addEventListener("load", resolve);
+                        }
+                    });
+                },
+            },
+        ];
+    } else {
+        return waitForNextRenderFrame();
+    }
+}
+
+function waitForNextRenderFrame() {
+    return [
+        {
+            content: "Wait for next render frame",
+            trigger: "body",
+            async run() {
+                await new Promise((resolve) => window.requestAnimationFrame(resolve));
+                await new Promise((resolve) => setTimeout(resolve));
+            },
+        },
+    ];
+}
+
 export default {
     addMedia,
     assertCssVariable,
@@ -558,4 +600,6 @@ export default {
     switchWebsite,
     testSwitchWebsite,
     toggleMobilePreview,
+    waitForImageToLoad,
+    waitForNextRenderFrame,
 };
