@@ -347,12 +347,12 @@
                             <div class="row" t-if="dashboard.number_waiting">
                                 <div class="col overflow-hidden text-start">
                                     <span t-if="journal_type == 'sale'">
-                                        <a type="object" name="open_action" context="{'action_name': 'action_amounts_to_settle', 'search_default_invoices': '1', 'journal_type': type}">
+                                        <a type="object" name="open_action" context="{'action_name': 'action_amounts_to_settle', 'journal_type': type}">
                                             <t t-out="dashboard.number_waiting"/> Unpaid
                                         </a>
                                     </span>
                                     <span t-if="journal_type == 'purchase'">
-                                        <a type="object" name="open_action" context="{'action_name': 'action_amounts_to_settle', 'search_default_bills': '1', 'journal_type': type}">
+                                        <a type="object" name="open_action" context="{'action_name': 'action_amounts_to_settle', 'journal_type': type}">
                                             <t t-out="dashboard.number_waiting"/> To Pay
                                         </a>
                                     </span>
@@ -364,12 +364,12 @@
                             <div class="row" t-if="dashboard.number_late">
                                 <div class="col overflow-hidden text-start">
                                     <span t-if="journal_type == 'sale'">
-                                        <a type="object" name="open_action" context="{'action_name': 'action_amounts_to_settle', 'search_default_invoices': '1', 'search_default_late': '1', 'journal_type': type}">
+                                        <a type="object" name="open_action" context="{'action_name': 'action_amounts_to_settle', 'search_default_late': '1', 'journal_type': type}">
                                             <t t-out="dashboard.number_late"/> Late
                                         </a>
                                     </span>
                                     <span t-if="journal_type == 'purchase'">
-                                        <a type="object" name="open_action" context="{'action_name': 'action_amounts_to_settle', 'search_default_bills': '1', 'search_default_late': '1', 'journal_type': type}">
+                                        <a type="object" name="open_action" context="{'action_name': 'action_amounts_to_settle', 'search_default_late': '1', 'journal_type': type}">
                                             <t t-out="dashboard.number_late"/> Late
                                         </a>
                                     </span>
