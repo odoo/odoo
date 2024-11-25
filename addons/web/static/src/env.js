@@ -4,6 +4,7 @@ import { registry } from "@web/core/registry";
 import { getTemplate } from "@web/core/templates";
 import { _t } from "@web/core/l10n/translation";
 import { session } from "@web/session";
+import { isMacOS } from "@web/core/browser/feature_detection";
 
 // -----------------------------------------------------------------------------
 // Types
@@ -169,6 +170,48 @@ async function _startServices(env, toStart) {
     }
 }
 
+export const customDirectives = {
+    // t-custom-click="handler"
+    // This custom directive will add two even listeners ("click"; "auxclick") and call the global value "click".
+    // The global value "click" will call the handler with two parameters :
+    //      - ev (the original event)
+    //      - isMiddleClick (a boolean that says if the user middle clicked, or if he did a ctrl+click)
+    //
+    click: (node, value, modifiers) => {
+        let mods = "";
+        if (modifiers.includes("synthetic")) {
+            mods += ".synthetic";
+        }
+        if (modifiers.includes("capture")) {
+            mods += ".capture";
+        }
+        const handlerFunction = `(ev) => __globals__.click(ev, (${value}).bind(this), '${JSON.stringify(
+            modifiers
+        )}')`;
+        node.setAttribute(`t-on-click${mods}`, handlerFunction);
+        node.setAttribute(`t-on-auxclick${mods}`, handlerFunction);
+    },
+};
+
+export const globalValues = {
+    click: (ev, value, modifiers) => {
+        if (ev.button === 0 || ev.button === 1) {
+            modifiers = JSON.parse(modifiers);
+            for (const modifier of modifiers) {
+                if (modifier === "stop") {
+                    ev.stopPropagation();
+                }
+                if (modifier === "prevent") {
+                    ev.preventDefault();
+                }
+            }
+            const ctrlKey = isMacOS() ? ev.metaKey : ev.ctrlKey;
+            const isMiddleClick = (ctrlKey && ev.button === 0) || ev.button === 1;
+            value(ev, isMiddleClick);
+        }
+    },
+};
+
 /**
  * Create an application with a given component as root and mount it. If no env
  * is provided, the application will be treated as a "root": an env will be
@@ -195,6 +238,8 @@ export async function mountComponent(component, target, appConfig = {}) {
         name: component.constructor.name,
         translatableAttributes: ["data-tooltip"],
         translateFn: _t,
+        customDirectives,
+        globalValues,
         ...appConfig,
     });
     const root = await app.mount(target);
