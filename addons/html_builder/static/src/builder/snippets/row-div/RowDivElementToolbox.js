@@ -1,12 +1,12 @@
 import { Component } from "@odoo/owl";
-import { ElementToolboxContainer } from "../../components/ElementToolboxContainer";
+import { OptionsContainer } from "../../components/OptionsContainer";
 import { BorderOption } from "../../options/BorderOption";
 
 // TODO TO convert and remove
 export class RowDivElementToolbox extends Component {
     static template = "html_builder.RowDivElementToolbox";
     static components = {
-        ElementToolboxContainer,
+        OptionsContainer,
         BorderOption,
     };
 }
