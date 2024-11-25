@@ -554,6 +554,42 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             {'amount_residual': 0.06,       'amount_residual_currency': 0.24,   'reconciled': False},
         ])
 
+    def test_reconcile_lines_corner_case_6_prevent_rounding_when_amounts_match_in_different_currencies(self):
+        """ Test a corner case when both lines have the same amount in company currency, but one
+        has an amount in foreign currency and the other one does not.
+
+        When reconciling both lines, the one in company currency will be converted to foreign currency,
+        but due to currency precision issues, it might end up being slightly different from the foreign
+        currency amount, yet still within the rounding tolerance in company currency.
+
+        In this case, a meaningless exchange diff might be created to cover those few cents. This test
+        ensures that the reconciliation amount in foreign currency matches exactly the AML in foreign
+        currency so that no exchange diff is created.
+        """
+        # self.env.ref('base.USD').rounding = '1'
+        currency = self.setup_other_currency('MYR', rates=[('2017-01-01', 1 / 0.225)])
+
+        line_1 = self.create_line_for_reconciliation(1.13, 5.0, currency, '2017-01-01')
+        line_2 = self.create_line_for_reconciliation(-1.13, -1.13, self.company_data['currency'], '2017-01-01')
+        amls = line_1 + line_2
+
+        amls.reconcile()
+        partials = self._get_partials(amls)
+
+        self.assertRecordValues(partials, [
+            {
+                'amount': 1.13,
+                'debit_amount_currency': 5.0,
+                'credit_amount_currency': 1.13,
+                'debit_move_id': line_1.id,
+                'credit_move_id': line_2.id,
+            },
+        ])
+        self.assertRecordValues(amls, [
+            {'amount_residual': 0.0, 'amount_residual_currency': 0.0, 'reconciled': True},
+            {'amount_residual': 0.0, 'amount_residual_currency': 0.0, 'reconciled': True},
+        ])
+
     def test_reconcile_exchange_difference_on_partial_same_foreign_currency_debit_expense_partial_payment(self):
         currency = self.other_currency
 
