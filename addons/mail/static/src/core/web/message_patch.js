@@ -61,6 +61,22 @@ patch(Message.prototype, {
             }
         }
     },
+    onClick(ev) {
+        if (ev.target.closest(".o_mail_redirect")) {
+            ev.preventDefault();
+            let id = Number(ev.target.dataset.oeId);
+            const partner = this.store.Persona.get({ type: "partner", id: id });
+            if (partner.userId) {
+                id = partner.userId;
+            }
+            this.avatarCard.open(ev.target, {
+                id: id,
+                resModel: partner.userId ? "res.users" : "res.partner",
+            });
+            return;
+        }
+        super.onClick(ev);
+    },
     openRecord() {
         this.message.thread.open();
     },
