@@ -7,6 +7,7 @@ import { getPopoverForTarget } from "@web/core/popover/popover";
 import { getTemplate } from "@web/core/templates";
 import { patch } from "@web/core/utils/patch";
 import { getMockEnv, makeMockEnv } from "./env_test_helpers";
+import { customDirectives, globalValues } from "@web/env";
 
 /**
  * @typedef {import("@odoo/owl").Component} Component
@@ -89,6 +90,8 @@ export async function mountWithCleanup(ComponentClass, options) {
         getTemplate,
         props: options?.props || {},
         translateFn: _t,
+        customDirectives,
+        globalValues,
     };
 
     getFixture().classList.add("o_web_client");
