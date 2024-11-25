@@ -51,13 +51,25 @@ patch(Thread.prototype, {
                             message.recipients?.includes(this.store.self)))))
         ) {
             if (this.model === "discuss.channel") {
-                const chatWindow = this.store.ChatWindow.get({ thread: this });
+                let chatWindow = this.store.ChatWindow.get({ thread: this });
                 if (!chatWindow) {
-                    this.store.ChatWindow.insert({ thread: this }).fold();
+                    chatWindow = this.store.ChatWindow.insert({ thread: this });
+                    if (
+                        this.autoOpenChatWindowOnNewMessage &&
+                        !this.store.discuss.isActive &&
+                        this.store.chatHub.opened.length < this.store.chatHub.maxOpened
+                    ) {
+                        chatWindow.open();
+                    } else {
+                        chatWindow.fold();
+                    }
                 }
             }
             this.store.env.services["mail.out_of_focus"].notify(message, this);
         }
+    },
+    get autoOpenChatWindowOnNewMessage() {
+        return false;
     },
     /** @param {boolean} pushState */
     setAsDiscussThread(pushState) {
