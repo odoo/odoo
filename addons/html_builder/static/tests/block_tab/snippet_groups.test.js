@@ -8,7 +8,7 @@ import {
     queryFirst,
     waitFor,
 } from "@odoo/hoot-dom";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "../helpers";
 
 defineWebsiteModels();
@@ -44,6 +44,28 @@ test("display group snippet", async () => {
     expect(queryAllTexts(snippetGroupsSelector)).toEqual(["A", "B", "C"]);
     const imgSrc = queryAll(`${snippetGroupsSelector} img`).map((img) => img.dataset.src);
     expect(imgSrc).toEqual(["a.svg", "b.svg", "c.svg"]);
+});
+
+test("install an app from snippet group", async () => {
+    onRpc("ir.module.module", "button_immediate_install", ({ args }) => {
+        expect(args[0]).toEqual([111]);
+        expect.step(`button_immediate_install`);
+        return true;
+    });
+    await setupWebsiteBuilder("<div><p>Text</p></div>", {
+        snippets: {
+            snippet_groups: [
+                '<div name="A" data-module-id="111" data-oe-thumbnail="a.svg"><section class="s_snippet_group" data-snippet="s_snippet_group"></section></div>',
+            ],
+        },
+    });
+    await click(`.o-snippets-menu [data-category="snippet_groups"] .btn:contains(install)`);
+    await animationFrame();
+    expect(".modal").toHaveCount(1);
+    expect(".modal-body").toHaveText("Do you want to install A App?\nMore info about this app.");
+
+    await contains(".modal .btn-primary:contains('Save and Install')").click();
+    expect.verifySteps([`button_immediate_install`]);
 });
 
 test("open add snippet dialog + switch snippet category", async () => {

@@ -86,6 +86,9 @@ export class BlockTab extends Component {
     }
 
     openSnippetDialog(snippet, position) {
+        if (snippet.moduleId) {
+            return;
+        }
         if (!position) {
             this.dropzonePlugin.displayDropZone("section");
         }
@@ -121,10 +124,8 @@ export class BlockTab extends Component {
             confirm: async () => {
                 try {
                     await this.orm.call("ir.module.module", "button_immediate_install", [
-                        [snippet.moduleID],
+                        [Number(snippet.moduleId)],
                     ]);
-                    this.invalidateSnippetCache = true;
-
                     // TODO Need to Reload webclient
                     // this._onSaveRequest({
                     //     data: {
