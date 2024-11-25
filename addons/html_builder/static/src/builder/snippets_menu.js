@@ -13,7 +13,7 @@ import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { registry } from "@web/core/registry";
 import { BuilderOverlayPlugin } from "./plugins/builder_overlay/builder_overlay_plugin";
 import { DropZonePlugin } from "./plugins/drop_zone_plugin";
-import { BuilderOptionsPlugin } from "./plugins/element_toolbox_plugin";
+import { BuilderOptionsPlugin } from "./plugins/builder_options_plugin";
 import { HandleDirtyElementPlugin } from "./plugins/handle_dirty_element_plugin";
 import { MediaWebsitePlugin } from "./plugins/media_website_plugin";
 import { SetupEditorPlugin } from "./plugins/setup_editor_plugin";
