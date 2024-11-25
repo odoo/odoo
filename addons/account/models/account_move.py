@@ -3516,12 +3516,13 @@ class AccountMove(models.Model):
 
     def _get_invoice_reference_euro_invoice(self):
         """ This computes the reference based on the RF Creditor Reference.
-            The data of the reference is the database id number of the invoice.
-            For instance, if an invoice is issued with id 43, the check number
-            is 07 so the reference will be 'RF07 43'.
+            The data of the reference is the journal short code and the database
+            id number of the invoice. For instance, if a journal code is INV and
+            an invoice is issued with id 37, the check number is 67 so the
+            reference will be 'RF67 INV0 0003 7'.
         """
         self.ensure_one()
-        return format_structured_reference_iso(self.id)
+        return format_structured_reference_iso(f'{self.journal_id.code}{str(self.id).zfill(6)}')
 
     def _get_invoice_reference_euro_partner(self):
         """ This computes the reference based on the RF Creditor Reference.
@@ -3537,8 +3538,24 @@ class AccountMove(models.Model):
         self.ensure_one()
         partner_ref = self.partner_id.ref
         partner_ref_nr = re.sub(r'\D', '', partner_ref or '')[-21:] or str(self.partner_id.id)[-21:]
-        partner_ref_nr = partner_ref_nr[-21:]
+        partner_ref_nr = f'{self.journal_id.code}{partner_ref_nr}'[-21:]
         return format_structured_reference_iso(partner_ref_nr)
+
+    def _get_invoice_reference_number_invoice(self):
+        """ This computes the reference based on the Number format.
+            Return the number of the invoice, defined on the journal sequence.
+        """
+        ref = self._get_invoice_reference_odoo_invoice() or ''
+        return ''.join(char for char in ref if char.isdigit())
+
+    def _get_invoice_reference_number_partner(self):
+        """ This computes the reference based on the Number format.
+            The data used is the reference set on the partner or its database
+            id otherwise. For instance if the reference of the customer is
+            'customer 97', the reference will be '97'.
+        """
+        ref = self._get_invoice_reference_odoo_partner()
+        return ''.join(char for char in ref if char.isdigit())
 
     def _get_invoice_reference_odoo_invoice(self):
         """ This computes the reference based on the Odoo format.
@@ -3560,8 +3577,6 @@ class AccountMove(models.Model):
 
     def _get_invoice_computed_reference(self):
         self.ensure_one()
-        if self.journal_id.invoice_reference_type == 'none':
-            return ''
         ref_function = getattr(self, f'_get_invoice_reference_{self.journal_id.invoice_reference_model}_{self.journal_id.invoice_reference_type}', None)
         if ref_function is None:
             raise UserError(_("The combination of reference model and reference type on the journal is not implemented"))

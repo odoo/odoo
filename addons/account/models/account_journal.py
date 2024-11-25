@@ -126,8 +126,27 @@ class AccountJournal(models.Model):
         help="If ticked, when an entry is posted, we retroactively hash all moves in the sequence from the entry back to the last hashed entry. The hash can also be performed on demand by the Secure Entries wizard.")
     sequence = fields.Integer(help='Used to order Journals in the dashboard view', default=10)
 
-    invoice_reference_type = fields.Selection(string='Communication Type', required=True, selection=[('none', 'Open'), ('partner', 'Based on Customer'), ('invoice', 'Based on Invoice')], default='invoice', help='You can set here the default communication that will appear on customer invoices, once validated, to help the customer to refer to that particular invoice when making the payment.')
-    invoice_reference_model = fields.Selection(string='Communication Standard', required=True, selection=[('odoo', 'Odoo'), ('euro', 'European')], default=_default_invoice_reference_model, help="You can choose different models for each type of reference. The default one is the Odoo reference.")
+    invoice_reference_type = fields.Selection(
+        string="Communication Type",
+        required=True,
+        selection=[
+            ('partner', "Based on Customer"),
+            ('invoice', "Based on Invoice")
+        ],
+        default='invoice',
+        help="You can set here the default communication that will appear on customer invoices, once validated, to help the customer to refer to that particular invoice when making the payment."
+    )
+    invoice_reference_model = fields.Selection(
+        string="Communication Standard",
+        required=True,
+        selection=[
+            ('odoo', "Full Reference (INV/2024/00001)"),
+            ('euro', "European (RF83INV202400001)"),
+            ('number', "Numbers only (202400001)"),
+        ],
+        default=_default_invoice_reference_model,
+        help="You can choose different models for each type of reference. The default one is the Odoo reference.",
+    )
 
     #groups_id = fields.Many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', string='Groups')
     currency_id = fields.Many2one('res.currency', help='The currency used to enter statement', string="Currency")
