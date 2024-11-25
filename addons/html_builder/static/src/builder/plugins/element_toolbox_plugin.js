@@ -11,7 +11,7 @@ export class ElementToolboxPlugin extends Plugin {
 
     setup() {
         // todo: use resources instead of registry
-        this.toolboxes = registry.category("sidebar-element-toolbox").getAll();
+        this.toolboxes = registry.category("sidebar-element-option").getAll();
         this.addDomListener(this.editable, "pointerup", (e) => {
             if (!this.dependencies.selection.getEditableSelection().isCollapsed) {
                 return;

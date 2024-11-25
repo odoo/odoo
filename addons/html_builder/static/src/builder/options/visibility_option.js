@@ -9,7 +9,7 @@ export class VisibilityOption extends Component {
     };
 }
 
-registry.category("sidebar-element-toolbox").add("VisibilityOption", {
+registry.category("sidebar-element-option").add("VisibilityOption", {
     ToolboxComponent: VisibilityOption,
     selector: "section, .s_hr",
 });
