@@ -35,8 +35,8 @@ This module allows to generate a project/task from sales orders.
         'web.assets_tests': [
             'sale_project/static/tests/tours/**/*',
         ],
-        'web.qunit_suite_tests': [
-            'sale_project/static/tests/**/*.js',
+        'web.assets_unit_tests': [
+            'sale_project/static/tests/*',
         ],
     },
     'post_init_hook': '_set_allow_billable_in_project',
