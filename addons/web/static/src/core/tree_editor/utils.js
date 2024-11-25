@@ -177,9 +177,11 @@ function _getConditionDescription(node, getFieldDef, getPathDescription, display
 
     const coModeldisplayNames = displayNames[getResModel(fieldDef)];
     const dis = disambiguate(value, coModeldisplayNames);
-    const values = (Array.isArray(value) ? value : [value]).map((val) =>
-        formatValue(val, dis, fieldDef, coModeldisplayNames)
-    );
+    const values = (Array.isArray(value) ? value : [value])
+        .slice(0, 21)
+        .map((val, index) =>
+            index < 20 ? formatValue(val, dis, fieldDef, coModeldisplayNames) : "..."
+        );
     let join;
     let addParenthesis = Array.isArray(value);
     switch (operator) {

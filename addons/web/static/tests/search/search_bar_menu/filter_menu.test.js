@@ -1040,3 +1040,26 @@ test("group by properties", async () => {
     expect(searchBar.env.searchModel.groupBy).toEqual(["properties.my_datetime:quarter"]);
     expect(getFacetTexts()).toEqual(["My Datetime: Quarter"]);
 });
+
+test("shorten descriptions of long lists", async function () {
+    patchWithCleanup(odoo, { debug: true });
+    onRpc("/web/domain/validate", () => true);
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "foo",
+        searchMenuTypes: ["filter"],
+        searchViewId: false,
+        searchViewArch: `<search />`,
+    });
+    expect(getFacetTexts()).toEqual([]);
+    expect(searchBar.env.searchModel.domain).toEqual([]);
+
+    await toggleSearchBarMenu();
+    await openAddCustomFilterDialog();
+    const values = new Array(500).fill(42525245);
+    await contains(`.o_domain_selector_debug_container textarea`).edit(
+        `[("id", "in", [${values}])]`
+    );
+    await contains(".modal footer button").click();
+    expect(getFacetTexts()).toEqual([`Id is in ( ${values.slice(0, 20).join(" , ")} , ... )`]);
+    expect(searchBar.env.searchModel.domain).toEqual([["id", "in", values]]);
+});
