@@ -375,10 +375,13 @@ class PosSession(models.Model):
             session.write(values)
         return True
 
+    def get_session_orders(self):
+        return self.order_ids
+
     def action_pos_session_closing_control(self, balancing_account=False, amount_to_balance=0, bank_payment_method_diffs=None):
         bank_payment_method_diffs = bank_payment_method_diffs or {}
         for session in self:
-            if any(order.state == 'draft' for order in session.order_ids):
+            if any(order.state == 'draft' for order in self.get_session_orders()):
                 raise UserError(_("You cannot close the POS when orders are still in draft"))
             if session.state == 'closed':
                 raise UserError(_('This session is already closed.'))
@@ -416,7 +419,7 @@ class PosSession(models.Model):
         self.ensure_one()
         data = {}
         sudo = self.env.user.has_group('point_of_sale.group_pos_user')
-        if self.order_ids.filtered(lambda o: o.state != 'cancel') or self.sudo().statement_line_ids:
+        if self.get_session_orders().filtered(lambda o: o.state != 'cancel') or self.sudo().statement_line_ids:
             self.cash_real_transaction = sum(self.sudo().statement_line_ids.mapped('amount'))
             if self.state == 'closed':
                 raise UserError(_('This session is already closed.'))
@@ -462,7 +465,7 @@ class PosSession(models.Model):
             self.sudo()._post_statement_difference(self.cash_register_difference)
 
         if self.config_id.order_edit_tracking:
-            edited_orders = self.order_ids.filtered(lambda o: o.is_edited)
+            edited_orders = self.get_session_orders().filtered(lambda o: o.is_edited)
             if len(edited_orders) > 0:
                 body = _("Edited order(s) during the session:%s",
                     Markup("<br/><ul>%s</ul>") % Markup().join(Markup("<li>%s</li>") % order._get_html_link() for order in edited_orders)
@@ -546,7 +549,7 @@ class PosSession(models.Model):
         self.ensure_one()
         # Even if this is called in `post_closing_cash_details`, we need to call this here too for case
         # where cash_control = False
-        open_order_ids = self.order_ids.filtered(lambda o: o.state == 'draft').ids
+        open_order_ids = self.get_session_orders().filtered(lambda o: o.state == 'draft').ids
         check_closing_session = self._cannot_close_session(bank_payment_method_diffs)
         if check_closing_session:
             check_closing_session['open_order_ids'] = open_order_ids
@@ -593,7 +596,7 @@ class PosSession(models.Model):
         self.ensure_one()
         check_closing_session = self._cannot_close_session()
         if check_closing_session:
-            open_order_ids = self.order_ids.filtered(lambda o: o.state == 'draft').ids
+            open_order_ids = self.get_session_orders().filtered(lambda o: o.state == 'draft').ids
             check_closing_session['open_order_ids'] = open_order_ids
             return check_closing_session
 
@@ -650,7 +653,7 @@ class PosSession(models.Model):
         It should return {'successful': False, 'message': str, 'redirect': bool} if we can't close the session
         """
         bank_payment_method_diffs = bank_payment_method_diffs or {}
-        if any(order.state == 'draft' for order in self.order_ids):
+        if any(order.state == 'draft' for order in self.get_session_orders()):
             return {'successful': False, 'message': _("You cannot close the POS when orders are still in draft"), 'redirect': False}
         if self.state == 'closed':
             return {
@@ -1709,7 +1712,7 @@ class PosSession(models.Model):
                 )
 
     def _check_if_no_draft_orders(self):
-        draft_orders = self.order_ids.filtered(lambda order: order.state == 'draft')
+        draft_orders = self.get_session_orders().filtered(lambda order: order.state == 'draft')
         if draft_orders:
             raise UserError(_(
                     'There are still orders in draft state in the session. '
