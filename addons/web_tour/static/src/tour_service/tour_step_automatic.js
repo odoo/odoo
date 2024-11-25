@@ -4,6 +4,7 @@ import { callWithUnloadCheck } from "./tour_utils";
 import { TourHelpers } from "./tour_helpers";
 import { TourStep } from "./tour_step";
 import { getTag } from "@web/core/utils/xml";
+import { browser } from "@web/core/browser/browser";
 
 export class TourStepAutomatic extends TourStep {
     skipped = false;
@@ -12,6 +13,26 @@ export class TourStepAutomatic extends TourStep {
         super(data, tour);
         this.index = index;
         this.tourConfig = tourState.getCurrentConfig();
+    }
+
+    async checkForUndeterminisms() {
+        const delay = this.tourConfig.delayToCheckUndeterminisms;
+        if (delay > 0 && this.element) {
+            const snapshot = this.element.cloneNode(true);
+            return new Promise((resolve, reject) => {
+                browser.setTimeout(() => {
+                    if (this.element.isEqualNode(snapshot)) {
+                        resolve();
+                    } else {
+                        reject(
+                            new Error(
+                                `UNDETERMINISM: two differents elements have been found in ${delay}ms for trigger ${this.trigger}`
+                            )
+                        );
+                    }
+                }, delay);
+            });
+        }
     }
 
     get describeWhyIFailed() {
