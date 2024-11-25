@@ -2239,4 +2239,16 @@ QUnit.module("Components", (hooks) => {
             `Dateis between03|11|2023 and 13|11|2023`
         );
     });
+
+    QUnit.test("shorten descriptions of long lists", async (assert) => {
+        const values = new Array(500).fill(42525245);
+        await makeDomainSelector({
+            domain: `[("id", "in", [${values}])]`,
+            readonly: true,
+        });
+        assert.strictEqual(
+            target.querySelector(".o_tree_editor_condition").textContent,
+            `IDis in( ${values.slice(0, 20).join(" , ")} , ... )`
+        );
+    });
 });

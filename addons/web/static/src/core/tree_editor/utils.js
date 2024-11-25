@@ -90,9 +90,9 @@ export function leafToString(tree, fieldDef, displayNames) {
     }
 
     const dis = disambiguate(value, displayNames);
-    const values = (Array.isArray(value) ? value : [value]).map((val) =>
-        formatValue(val, dis, fieldDef, displayNames)
-    );
+    const values = (Array.isArray(value) ? value : [value])
+        .slice(0, 21)
+        .map((val, index) => (index < 20 ? formatValue(val, dis, fieldDef, displayNames) : "..."));
     let join;
     let addParenthesis = Array.isArray(value);
     switch (operator) {
