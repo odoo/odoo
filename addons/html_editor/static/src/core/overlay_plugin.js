@@ -34,7 +34,7 @@ export class OverlayPlugin extends Plugin {
     }
 
     destroy() {
-        this.throttledUpdateContainer.cancel();
+        this.throttledUpdateContainer?.cancel();
         super.destroy();
         for (const overlay of this.overlays) {
             overlay.close();

@@ -485,10 +485,15 @@ export class Store extends BaseStore {
         const { attachments, cannedResponseIds, isNote, mentionedChannels, mentionedPartners } =
             postData;
         const subtype = isNote ? "mail.mt_note" : "mail.mt_comment";
-        const validMentions = this.getMentionsFromText(body, {
-            mentionedChannels,
-            mentionedPartners,
-        });
+        // const validMentions = this.getMentionsFromText(body, {
+        //     mentionedChannels,
+        //     mentionedPartners,
+        // });
+        const validMentions = {
+            threads: [],
+            partners: [],
+            specialMentions: [],
+        };
         const partner_ids = validMentions?.partners.map((partner) => partner.id) ?? [];
         const recipientEmails = [];
         const recipientAdditionalValues = {};
@@ -505,7 +510,7 @@ export class Store extends BaseStore {
             partner_ids.push(...recipientIds);
         }
         postData = {
-            body: await prettifyMessageContent(body, validMentions),
+            body,
             message_type: "comment",
             subtype_xmlid: subtype,
         };

@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { isZWS } from "@html_editor/utils/dom_info";
 import { reactive } from "@odoo/owl";
-import { isTextNode } from "@web/views/view_compiler";
+// import { isTextNode } from "@web/views/view_compiler";
 import { Toolbar } from "./toolbar";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { registry } from "@web/core/registry";
@@ -100,6 +100,10 @@ import { omit, pick } from "@web/core/utils/objects";
 /** Delay in ms for toolbar open after keyup, double click or triple click. */
 const DELAY_TOOLBAR_OPEN = 300;
 
+export function isTextNode(node) {
+    return node.nodeType === 3;
+}
+
 /**
  * @typedef { Object } ToolbarShared
  * @property { ToolbarPlugin['getToolbarInfo'] } getToolbarInfo
@@ -197,8 +201,8 @@ export class ToolbarPlugin extends Plugin {
     }
 
     destroy() {
-        this.debouncedUpdateToolbar.cancel();
-        this.overlay.close();
+        this.debouncedUpdateToolbar?.cancel();
+        this.overlay?.close();
         super.destroy();
     }
 

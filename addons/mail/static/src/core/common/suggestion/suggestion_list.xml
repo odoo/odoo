@@ -1,0 +1,28 @@
+<templates xml:space="preserve">
+    <t t-name="mail.SuggestionList">
+        <div t-ref="root" class="o-mail-SuggestionList py-2 bg-white overflow-auto my-1" style="width:300px;max-height:40vh;" t-on-mousedown.stop="" t-on-scroll="onScroll" >
+            <t t-foreach="suggestions" t-as="suggestion" t-key="suggestion_index">
+                <!-- <t t-if="showCategories and command.categoryId !== lastCategory">
+                    <div class="o-we-category mx-3 my-1 text-uppercase"><t t-esc="command.categoryName"/></div></t>
+                    <t t-set="lastCategory" t-value="command.categoryId">
+                </t> -->
+                <div class="o-mail-Suggestion d-flex align-items-center px-3 py-2 cursor-pointer"
+                    t-att-class="{active: suggestion_index === currentIndex}"
+                    t-on-mouseenter="() => this.onMouseEnter(suggestion_index)"
+                    t-on-click="() => this.props.applySuggestion(suggestion)">
+                    <div class="border rounded">
+                        <i class="o-mail-Suggestion-img rounded d-flex align-items-center justify-content-center fa fa-check-square-o"/>
+                    </div>
+                    <div class="ms-3">
+                        <div class="o-mail-Suggestion-title" t-esc="suggestion.title"/>
+                        <div class="o-mail-Suggestion-description" t-esc="suggestion.description"/>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+    <t t-name="mail.Suggestion.Partner">
+        <a t-att-href="href" t-att-data-res_id="partnerId" target="_blank" contenteditable="false" draggable="false"
+           class="o-discuss-mention" t-out="displayName"/>
+    </t>
+</templates>

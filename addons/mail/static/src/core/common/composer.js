@@ -4,13 +4,14 @@ import { useDropzone } from "@web/core/dropzone/dropzone_hook";
 import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
 import { NavigableList } from "@mail/core/common/navigable_list";
 import { useSuggestion } from "@mail/core/common/suggestion_hook";
-import { prettifyMessageContent } from "@mail/utils/common/format";
+import { prettifyMessageContent, isEmpty } from "@mail/utils/common/format";
 import { useSelection } from "@mail/utils/common/hooks";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { rpc } from "@web/core/network/rpc";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { browser } from "@web/core/browser/browser";
 import { useDebounced } from "@web/core/utils/timing";
+import { Wysiwyg } from "@html_editor/wysiwyg";
 
 import {
     Component,
@@ -32,11 +33,56 @@ import { isDisplayStandalone, isIOS, isMobileOS } from "@web/core/browser/featur
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useComposerActions } from "./composer_actions";
+import { PowerboxPlugin } from "@html_editor/main/powerbox/powerbox_plugin";
+import { ToolbarPlugin } from "@html_editor/main/toolbar/toolbar_plugin";
+import { ShortCutPlugin } from "@html_editor/core/shortcut_plugin";
+import { SearchPowerboxPlugin } from "@html_editor/main/powerbox/search_powerbox_plugin";
+import { ListPlugin } from "@html_editor/main/list/list_plugin";
+import { LinkPlugin } from "@html_editor/main/link/link_plugin";
+import { InlineCodePlugin } from "@html_editor/main/inline_code";
+import { TabulationPlugin } from "@html_editor/main/tabulation_plugin";
+import { SuggestionPlugin } from "./suggestion/suggestion_plugin";
+import { SearchSuggestionPlugin } from "./suggestion/search_suggestion_plugin";
+import { ClipboardPlugin } from "@html_editor/core/clipboard_plugin";
+import { CommentPlugin } from "@html_editor/core/comment_plugin";
+import { DeletePlugin } from "@html_editor/core/delete_plugin";
+import { DialogPlugin } from "@html_editor/core/dialog_plugin";
+import { DomPlugin } from "@html_editor/core/dom_plugin";
+import { FormatPlugin } from "@html_editor/core/format_plugin";
+import { HistoryPlugin } from "@html_editor/core/history_plugin";
+import { InputPlugin } from "@html_editor/core/input_plugin";
+import { LineBreakPlugin } from "@html_editor/core/line_break_plugin";
+import { NoInlineRootPlugin } from "@html_editor/core/no_inline_root_plugin";
+import { OverlayPlugin } from "@html_editor/core/overlay_plugin";
+import { ProtectedNodePlugin } from "@html_editor/core/protected_node_plugin";
+import { SanitizePlugin } from "@html_editor/core/sanitize_plugin";
+import { SelectionPlugin } from "@html_editor/core/selection_plugin";
+import { SplitPlugin } from "@html_editor/core/split_plugin";
+import { UserCommandPlugin } from "@html_editor/core/user_command_plugin";
 
 const EDIT_CLICK_TYPE = {
     CANCEL: "cancel",
     SAVE: "save",
 };
+
+const CORE_PLUGINS = [
+    ClipboardPlugin,
+    CommentPlugin,
+    DeletePlugin,
+    DialogPlugin,
+    DomPlugin,
+    FormatPlugin,
+    HistoryPlugin,
+    InputPlugin,
+    LineBreakPlugin,
+    NoInlineRootPlugin,
+    OverlayPlugin,
+    ProtectedNodePlugin,
+    SanitizePlugin,
+    SelectionPlugin,
+    SplitPlugin,
+    UserCommandPlugin,
+];
 
 /**
  * @typedef {Object} Props
@@ -60,6 +106,7 @@ export class Composer extends Component {
         DropdownItem,
         FileUploader,
         NavigableList,
+        Wysiwyg,
     };
     static defaultProps = {
         mode: "normal",
@@ -203,6 +250,29 @@ export class Composer extends Component {
                 this.restoreContent();
             }
         });
+        this.wysiwyg = {
+            config: {
+                content: `<p placeholder="${this.placeholder}"><br/></p>`,
+                placeholder: this.placeholder,
+                disableVideo: true,
+                Plugins: [
+                    ...CORE_PLUGINS,
+                    InlineCodePlugin,
+                    LinkPlugin,
+                    ListPlugin,
+                    PowerboxPlugin,
+                    SearchPowerboxPlugin,
+                    ShortCutPlugin,
+                    TabulationPlugin,
+                    ToolbarPlugin,
+                    SuggestionPlugin,
+                    SearchSuggestionPlugin,
+                ],
+                onChange: this.onChange.bind(this),
+            },
+            editor: undefined,
+            message: "",
+        };
     }
 
     get areAllActionsDisabled() {
@@ -323,9 +393,10 @@ export class Composer extends Component {
 
     get isSendButtonDisabled() {
         const attachments = this.props.composer.attachments;
+        const editable = this.wysiwyg?.editor?.editable;
         return (
             !this.state.active ||
-            (!this.props.composer.text && attachments.length === 0) ||
+            ((!editable || isEmpty(editable)) && attachments.length === 0) ||
             attachments.some(({ uploading }) => Boolean(uploading))
         );
     }
@@ -419,6 +490,21 @@ export class Composer extends Component {
             default:
                 return props;
         }
+    }
+
+    onChange() {
+        this.props.composer.text = this.wysiwyg.editor.getContent();
+    }
+
+    /**
+     * @param {Editor} editor
+     */
+    onLoadWysiwyg(editor) {
+        this.wysiwyg.editor = editor;
+    }
+
+    onBlurWysiwyg() {
+        // this.props.composer.text = this.wysiwyg.editor.getContent();
     }
 
     onDropFile(ev) {
@@ -583,8 +669,8 @@ export class Composer extends Component {
     }
 
     clear() {
-        this.props.composer.clear();
-        browser.localStorage.removeItem(this.props.composer.localId);
+        this.wysiwyg.editor.editable.innerHTML = "<p><br></p>";
+        this.wysiwyg.editor.shared.history.addStep();
     }
 
     notifySendFromMailbox() {
@@ -600,13 +686,14 @@ export class Composer extends Component {
 
     async processMessage(cb) {
         const el = this.ref.el;
+        const editor = this.wysiwyg.editor;
         const attachments = this.props.composer.attachments;
         if (attachments.some(({ uploading }) => uploading)) {
             this.env.services.notification.add(_t("Please wait while the file is uploading."), {
                 type: "warning",
             });
         } else if (
-            this.props.composer.text.trim() ||
+            editor.getElContent() ||
             attachments.length > 0 ||
             (this.message && this.message.attachment_ids.length > 0)
         ) {
@@ -614,13 +701,14 @@ export class Composer extends Component {
                 return;
             }
             this.state.active = false;
-            await cb(this.props.composer.text);
+            await cb(editor.getContent());
             if (this.props.onPostCallback) {
                 this.props.onPostCallback();
             }
+
             this.clear();
             this.state.active = true;
-            el.focus();
+            // el.focus();
         }
     }
 

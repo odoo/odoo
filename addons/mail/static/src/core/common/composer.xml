@@ -85,6 +85,7 @@
                             t-ref="fakeTextarea"
                             disabled="1"
                         />
+                        <Wysiwyg class="'w-100 p-2'" config="wysiwyg.config" onLoad.bind="onLoadWysiwyg" onBlur.bind="onBlurWysiwyg"/>
                     </div>
                     <t t-call="mail.Composer.quickActions"/>
                 </div>
