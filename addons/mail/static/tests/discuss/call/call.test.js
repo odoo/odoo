@@ -16,6 +16,7 @@ import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 import { describe, expect, test } from "@odoo/hoot";
 import { hover, queryFirst } from "@odoo/hoot-dom";
 import { mockUserAgent } from "@odoo/hoot-mock";
+import { EventBus } from "@odoo/owl";
 import {
     asyncStep,
     Command,
@@ -426,4 +427,22 @@ test("expand call participants when joining a call", async () => {
     await contains("img[title='Eric']");
     await contains("img[title='Frank']");
     await contains("img[title='Mitchell Admin']");
+});
+
+test("start call when accepting from push notification", async () => {
+    patchWithCleanup(window.navigator, {
+        serviceWorker: Object.assign(new EventBus(), { register: () => Promise.resolve() }),
+    });
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss();
+    await contains(".o-mail-Discuss-threadName[title=Inbox]");
+    browser.navigator.serviceWorker.dispatchEvent(
+        new MessageEvent("message", {
+            data: { action: "OPEN_CHANNEL", data: { id: channelId, joinCall: true } },
+        })
+    );
+    await contains(".o-mail-Discuss-threadName[title=General]");
+    await contains(`.o-discuss-CallParticipantCard[title='${serverState.partnerName}']`);
 });
