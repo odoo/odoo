@@ -151,6 +151,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
     def test_mail_server_get_test_email_from(self):
         """ Test the email used to test the mail server connection. Check
         from_filter parsing / default fallback value. """
+        self.env.user.email = 'mitchell.admin@example.com'
         test_server = self.env['ir.mail_server'].create({
             'from_filter': 'example_2.com, example_3.com',
             'name': 'Test Server',
