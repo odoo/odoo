@@ -116,6 +116,22 @@ class ResConfigSettings(models.TransientModel):
     pos_orderlines_sequence_in_cart_by_category = fields.Boolean(related='pos_config_id.orderlines_sequence_in_cart_by_category', readonly=False)
     pos_basic_receipt = fields.Boolean(related='pos_config_id.basic_receipt', readonly=False)
 
+    def open_payment_method_form(self):
+        bank_journal = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', 'in', self.env.company.parent_ids.ids)], limit=1)
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'pos.payment.method',
+            'views': [(False, 'form')],
+            'target': 'current',
+            'context': {
+                'default_config_ids': self.env.context.get('config_ids', False) or False,
+                'default_payment_method_type': 'terminal',
+                'default_use_payment_terminal': self.env.context.get('selection', False),
+                'default_journal_id': bank_journal.id if bank_journal else False,
+                'default_name': f"Bank {self.env.context.get('provider_name', False)}",
+            }
+        }
+
     @api.model_create_multi
     def create(self, vals_list):
         # STEP: Remove the 'pos' fields from each vals.
