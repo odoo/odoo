@@ -699,7 +699,7 @@ class account_journal(models.Model):
                 *self.env['account.move.line']._check_company_domain(self.env.companies),
                 ('journal_id', 'in', self.ids),
                 ('payment_state', 'in', ('not_paid', 'partial')),
-                ('move_type', '=', 'out_invoice' if journal_type == 'sale' else 'in_invoice'),
+                ('move_type', 'in', ('out_invoice', 'out_refund') if journal_type == 'sale' else ('in_invoice', 'in_refund')),
                 ('state', '=', 'posted'),
             ])),
             ('account_type', '=', 'asset_receivable' if journal_type == 'sale' else 'liability_payable'),
