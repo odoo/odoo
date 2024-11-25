@@ -114,7 +114,8 @@ class PaymentTransaction(models.Model):
     def _reconcile_after_done(self):
         """ Override of payment to automatically confirm quotations and generate invoices. """
         confirmed_orders = self._check_amount_and_confirm_order()
-        (self.sale_order_ids - confirmed_orders)._send_payment_succeeded_for_order_mail()
+        payment_txs = self.filtered(lambda tx: tx.operation != 'validation')
+        (payment_txs.sale_order_ids - confirmed_orders)._send_payment_succeeded_for_order_mail()
 
         auto_invoice = str2bool(
             self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice'))
