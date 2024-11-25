@@ -1,5 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
+import { uniqueId } from "@web/core/utils/functions";
 
 export class ElementToolboxPlugin extends Plugin {
     static id = "element-toolbox";
@@ -39,14 +40,18 @@ export class ElementToolboxPlugin extends Plugin {
             const { selector } = toolbox;
             const element = selectedElement.closest(selector);
             if (element) {
-                map.set(element, toolbox);
+                if (map.has(element)) {
+                    map.get(element).push(toolbox);
+                } else {
+                    map.set(element, [toolbox]);
+                }
             }
         }
         const toolboxes = [...map]
             .sort(([a], [b]) => {
                 return b.contains(a) ? 1 : -1;
             })
-            .map(([element, toolbox]) => ({ element, toolbox }));
+            .map(([element, toolbox]) => ({ element, toolbox, id: uniqueId() }));
         for (const handler of this.getResource("change_selected_toolboxes_listeners")) {
             handler(toolboxes);
         }

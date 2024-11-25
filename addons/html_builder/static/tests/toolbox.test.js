@@ -10,15 +10,15 @@ test("Open toolbox", async () => {
     addToolbox({
         selector: ".test-toolbox-target",
         template: xml`
-            <ElementToolboxContainer title="'TestToolbox'">
-                Test toolbox
-            </ElementToolboxContainer>`,
+        <ToolboxRow label="'Row 1'">
+            Test
+        </ToolboxRow>`,
     });
     await setupWebsiteBuilder(`<div class="test-toolbox-target">b</div>`);
-    await click(":iframe .test-toolbox-target");
-    await animationFrame();
+    await contains(":iframe .test-toolbox-target").click();
     expect(".element-toolbox").toBeDisplayed();
 });
+
 describe("Web editor widgets", () => {
     describe("WeButton", () => {
         test("call a specific action with some params and value", async () => {
@@ -31,10 +31,7 @@ describe("Web editor widgets", () => {
                         },
                     },
                 },
-                template: xml`
-                    <ElementToolboxContainer title="'TestToolbox'">
-                        <WeButton action="'customAction'" actionParam="'myParam'" actionValue="'myValue'">MyAction</WeButton>
-                    </ElementToolboxContainer>`,
+                template: xml`<WeButton action="'customAction'" actionParam="'myParam'" actionValue="'myValue'">MyAction</WeButton>`,
             });
             await setupWebsiteBuilder(`<div class="test-toolbox-target">b</div>`);
             await contains(":iframe .test-toolbox-target").click();
@@ -47,10 +44,7 @@ describe("Web editor widgets", () => {
         test("call a shorthand action", async () => {
             addToolbox({
                 selector: ".test-toolbox-target",
-                template: xml`
-                    <ElementToolboxContainer title="'TestToolbox'">
-                        <WeButton classAction="'my-custom-class'"/>
-                    </ElementToolboxContainer>`,
+                template: xml`<WeButton classAction="'my-custom-class'"/>`,
             });
             await setupWebsiteBuilder(`<div class="test-toolbox-target">b</div>`);
             await contains(":iframe .test-toolbox-target").click();
@@ -69,10 +63,7 @@ describe("Web editor widgets", () => {
                         },
                     },
                 },
-                template: xml`
-                    <ElementToolboxContainer title="'TestToolbox'">
-                        <WeButton action="'customAction'" classAction="'my-custom-class'"/>
-                    </ElementToolboxContainer>`,
+                template: xml`<WeButton action="'customAction'" classAction="'my-custom-class'"/>`,
             });
             await setupWebsiteBuilder(`<div class="test-toolbox-target">b</div>`);
             await contains(":iframe .test-toolbox-target").click();
@@ -94,10 +85,7 @@ describe("Web editor widgets", () => {
                         },
                     },
                 },
-                template: xml`
-                    <ElementToolboxContainer title="'TestToolbox'">
-                        <WeButton action="'customAction'" classAction="'my-custom-class'"/>
-                    </ElementToolboxContainer>`,
+                template: xml`<WeButton action="'customAction'" classAction="'my-custom-class'"/>`,
             });
             await setupWebsiteBuilder(`<div class="test-toolbox-target">b</div>`);
             await contains(":iframe .test-toolbox-target").click();
@@ -114,12 +102,10 @@ describe("Web editor widgets", () => {
             addToolbox({
                 selector: ".test-toolbox-target",
                 template: xml`
-                    <ElementToolboxContainer title="'TestToolbox'">
-                        <WeButtonGroup>
-                            <WeButton classAction="'my-custom-class1'"/>
-                            <WeButton classAction="'my-custom-class2'"/>
-                        </WeButtonGroup>
-                    </ElementToolboxContainer>`,
+                    <WeButtonGroup>
+                        <WeButton classAction="'my-custom-class1'"/>
+                        <WeButton classAction="'my-custom-class2'"/>
+                    </WeButtonGroup>`,
             });
             await setupWebsiteBuilder(`<div class="test-toolbox-target">b</div>`);
             await contains(":iframe .test-toolbox-target").click();
@@ -139,10 +125,8 @@ describe("Web editor widgets", () => {
             addToolbox({
                 selector: ".test-toolbox-target",
                 template: xml`
-                    <ElementToolboxContainer title="'TestToolbox'">
                         <WeButton classAction="'my-custom-class1'"/>
-                        <WeButton classAction="'my-custom-class2'"/>
-                    </ElementToolboxContainer>`,
+                        <WeButton classAction="'my-custom-class2'"/>`,
             });
             await setupWebsiteBuilder(`<div class="test-toolbox-target my-custom-class1">b</div>`);
             await contains(":iframe .test-toolbox-target").click();
@@ -162,11 +146,9 @@ describe("Web editor widgets", () => {
                     },
                 },
                 template: xml`
-                    <ElementToolboxContainer title="'TestToolbox'">
-                        <WeButtonGroup applyTo="'.a'">
-                            <WeButton action="'customAction'"/>
-                        </WeButtonGroup>
-                    </ElementToolboxContainer>`,
+                    <WeButtonGroup applyTo="'.a'">
+                        <WeButton action="'customAction'"/>
+                    </WeButtonGroup>`,
             });
             await setupWebsiteBuilder(`
                 <div class="test-toolbox-target">
@@ -189,11 +171,9 @@ describe("Web editor widgets", () => {
                     },
                 },
                 template: xml`
-                    <ElementToolboxContainer title="'TestToolbox'">
-                        <WeButtonGroup actionParam="'myParam'">
-                            <WeButton action="'customAction'"/>
-                        </WeButtonGroup>
-                    </ElementToolboxContainer>`,
+                    <WeButtonGroup actionParam="'myParam'">
+                        <WeButton action="'customAction'"/>
+                    </WeButtonGroup>`,
             });
             await setupWebsiteBuilder(`
                 <div class="test-toolbox-target">
@@ -220,10 +200,7 @@ describe("Web editor widgets", () => {
                         },
                     },
                 },
-                template: xml`
-                    <ElementToolboxContainer title="'TestToolbox'">
-                        <WeNumberInput action="'customAction'"/>
-                    </ElementToolboxContainer>`,
+                template: xml`<WeNumberInput action="'customAction'"/>`,
             });
             await setupWebsiteBuilder(`
                 <div class="test-toolbox-target">10</div>
@@ -247,10 +224,7 @@ describe("Web editor widgets", () => {
                         },
                     },
                 },
-                template: xml`
-                    <ElementToolboxContainer title="'TestToolbox'">
-                        <WeNumberInput action="'customAction'"/>
-                    </ElementToolboxContainer>`,
+                template: xml`<WeNumberInput action="'customAction'"/>`,
             });
             await setupWebsiteBuilder(`
                 <div class="test-toolbox-target">10</div>
@@ -278,10 +252,7 @@ describe("Web editor widgets", () => {
                         },
                     },
                 },
-                template: xml`
-                    <ElementToolboxContainer title="'TestToolbox'">
-                        <WeNumberInput action="'customAction'"/>
-                    </ElementToolboxContainer>`,
+                template: xml`<WeNumberInput action="'customAction'"/>`,
             });
             await setupWebsiteBuilder(`
                 <div class="test-toolbox-target">10</div>
@@ -311,11 +282,9 @@ describe("Web editor widgets", () => {
                     },
                 },
                 template: xml`
-                    <ElementToolboxContainer title="'TestToolbox'">
-                        <WeSelect>
-                            <WeSelectItem action="'customAction'" actionParam="'myParam'" actionValue="'myValue'">MyAction</WeSelectItem>
-                        </WeSelect>
-                    </ElementToolboxContainer>`,
+                    <WeSelect>
+                        <WeSelectItem action="'customAction'" actionParam="'myParam'" actionValue="'myValue'">MyAction</WeSelectItem>
+                    </WeSelect>`,
             });
             await setupWebsiteBuilder(`<div class="test-toolbox-target">b</div>`);
             await contains(":iframe .test-toolbox-target").click();
@@ -331,13 +300,11 @@ describe("Web editor widgets", () => {
             addToolbox({
                 selector: ".test-toolbox-target",
                 template: xml`
-                    <ElementToolboxContainer title="'TestToolbox'">
-                        <WeSelect attributeAction="'customAttribute'">
-                            <WeSelectItem attributeActionValue="null">None</WeSelectItem>
-                            <WeSelectItem attributeActionValue="'a'">A</WeSelectItem>
-                            <WeSelectItem attributeActionValue="'b'">B</WeSelectItem>
-                        </WeSelect>
-                    </ElementToolboxContainer>`,
+                    <WeSelect attributeAction="'customAttribute'">
+                        <WeSelectItem attributeActionValue="null">None</WeSelectItem>
+                        <WeSelectItem attributeActionValue="'a'">A</WeSelectItem>
+                        <WeSelectItem attributeActionValue="'b'">B</WeSelectItem>
+                    </WeSelect>`,
             });
             await setupWebsiteBuilder(
                 `<div class="test-toolbox-target" customAttribute="a">x</div>`

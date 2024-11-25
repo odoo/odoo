@@ -8,9 +8,13 @@
         </div>
     </t>
     <t t-else="">
-        <t t-foreach="props.selectedToolboxes" t-as="selectedToolbox" t-key="selectedToolbox.toolbox.selector">
+        <t t-foreach="props.selectedToolboxes" t-as="selectedToolbox" t-key="selectedToolbox.id">
             <WithSubEnv env="{editingElement: selectedToolbox.element, weContext: {}}">
-                <t t-component="selectedToolbox.toolbox.ToolboxComponent" />
+            <ElementToolboxContainer title="'Section'">
+                <t t-foreach="selectedToolbox.toolbox" t-as="toolbox" t-key="toolbox_index">
+                    <t t-component="toolbox.ToolboxComponent" />
+                </t>
+            </ElementToolboxContainer>
             </WithSubEnv>
         </t>
     </t>

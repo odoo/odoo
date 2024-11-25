@@ -18,6 +18,7 @@ import { ElementToolboxContainer } from "../src/builder/components/ElementToolbo
 import { defaultOptionComponents } from "../src/builder/components/defaultComponents";
 import { after } from "@odoo/hoot";
 import { registry } from "@web/core/registry";
+import { uniqueId } from "@web/core/utils/functions";
 
 class Website extends models.Model {
     _name = "website";
@@ -101,7 +102,7 @@ export function addToolbox({ selector, template, actions = {} }) {
             ...defaultOptionComponents,
         };
     }
-    registry.category("sidebar-element-toolbox").add("test-toolbox", {
+    registry.category("sidebar-element-toolbox").add(uniqueId("test-toolbox"), {
         ToolboxComponent: TestToolbox,
         selector,
     });
