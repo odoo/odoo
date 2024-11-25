@@ -78,6 +78,7 @@
             'point_of_sale/static/src/backend/pos_payment_provider_cards/*',
             'point_of_sale/static/src/app/hooks/hooks.js',
             'point_of_sale/static/src/backend/many2one_with_placeholder_field/*',
+            'point_of_sale/static/src/backend/many2many_placeholder_list_view/*',
         ],
         'web.assets_tests': [
             'barcodes/static/tests/legacy/helpers.js',
