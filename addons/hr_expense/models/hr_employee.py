@@ -45,7 +45,7 @@ class HrEmployee(models.Model):
 
     expense_manager_id = fields.Many2one(
         comodel_name='res.users',
-        string='Expense',
+        string='Expense Approver',
         compute='_compute_expense_manager', store=True, readonly=False,
         domain=_group_hr_expense_user_domain,
         help='Select the user responsible for approving "Expenses" of this employee.\n'
