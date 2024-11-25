@@ -867,15 +867,26 @@ class MrpProduction(models.Model):
                 if production.state == 'draft' and picking_type != production.picking_type_id:
                     production.name = picking_type.sequence_id.next_by_id()
 
-        res = super(MrpProduction, self).write(vals)
+        date_start_map = dict()
+        if 'date_start' in vals:
+            date_start_map = {
+                prod: vals['date_start'] - datetime.timedelta(days=prod.bom_id.produce_delay)
+                if prod.bom_id else vals['date_start']
+                for prod in self
+            }
+            res = True
+            for production in self:
+                res &= super(MrpProduction, production).write({**vals, 'date_start': date_start_map[production]})
+        else:
+            res = super().write(vals)
 
         for production in self:
-            if 'date_start' in vals and not self.env.context.get('force_date', False):
+            if production in date_start_map and not self.env.context.get('force_date', False):
                 if production.state in ['done', 'cancel']:
                     raise UserError(_('You cannot move a manufacturing order once it is cancelled or done.'))
                 if production.is_planned:
                     production.button_unplan()
-            if vals.get('date_start'):
+            if production in date_start_map:
                 production.move_raw_ids.write({'date': production.date_start, 'date_deadline': production.date_start})
             if vals.get('date_finished'):
                 production.move_finished_ids.write({'date': production.date_finished})
@@ -891,8 +902,8 @@ class MrpProduction(models.Model):
                     finished_move_lines.write({'lot_id': vals.get('lot_producing_id')})
                 if 'qty_producing' in vals:
                     finished_move.quantity = vals.get('qty_producing')
-            if self._has_workorders() and not production.workorder_ids.operation_id and vals.get('date_start') and not vals.get('date_finished'):
-                new_date_start = fields.Datetime.to_datetime(vals.get('date_start'))
+            if self._has_workorders() and not production.workorder_ids.operation_id and production in date_start_map and not vals.get('date_finished'):
+                new_date_start = fields.Datetime.to_datetime(production.date_start)
                 if not production.date_finished or new_date_start >= production.date_finished:
                     production.date_finished = new_date_start + datetime.timedelta(hours=1)
         return res
