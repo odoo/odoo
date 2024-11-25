@@ -21,7 +21,7 @@ describe("WeButton", () => {
         });
         await setupWebsiteBuilder(`<div class="test-toolbox-target">b</div>`);
         await contains(":iframe .test-toolbox-target").click();
-        expect(".element-toolbox").toBeDisplayed();
+        expect(".options-container").toBeDisplayed();
         expect("[data-action-id='customAction']").toHaveText("MyAction");
         await click("[data-action-id='customAction']");
         // The function `apply` should be called twice (on hover (for preview), then, on click).
@@ -34,7 +34,7 @@ describe("WeButton", () => {
         });
         await setupWebsiteBuilder(`<div class="test-toolbox-target">b</div>`);
         await contains(":iframe .test-toolbox-target").click();
-        expect(".element-toolbox").toBeDisplayed();
+        expect(".options-container").toBeDisplayed();
         await click("[data-class-action='my-custom-class']");
         expect(":iframe .test-toolbox-target").toHaveClass("my-custom-class");
     });
@@ -53,7 +53,7 @@ describe("WeButton", () => {
         });
         await setupWebsiteBuilder(`<div class="test-toolbox-target">b</div>`);
         await contains(":iframe .test-toolbox-target").click();
-        expect(".element-toolbox").toBeDisplayed();
+        expect(".options-container").toBeDisplayed();
         await click("[data-action-id='customAction'][data-class-action='my-custom-class']");
         expect(":iframe .test-toolbox-target").toHaveClass("my-custom-class");
         // The function `apply` should be called twice (on hover (for preview), then, on click).
@@ -75,7 +75,7 @@ describe("WeButton", () => {
         });
         await setupWebsiteBuilder(`<div class="test-toolbox-target">b</div>`);
         await contains(":iframe .test-toolbox-target").click();
-        expect(".element-toolbox").toBeDisplayed();
+        expect(".options-container").toBeDisplayed();
         await hover("[data-action-id='customAction'][data-class-action='my-custom-class']");
         expect(":iframe .test-toolbox-target").toHaveClass("my-custom-class");
         expect.verifySteps(["customAction"]);
@@ -95,7 +95,7 @@ describe("WeButton", () => {
         });
         await setupWebsiteBuilder(`<div class="test-toolbox-target">b</div>`);
         await contains(":iframe .test-toolbox-target").click();
-        expect(".element-toolbox").toBeDisplayed();
+        expect(".options-container").toBeDisplayed();
         await click("[data-class-action='my-custom-class1']");
         expect(":iframe .test-toolbox-target").toHaveAttribute(
             "class",
@@ -142,7 +142,7 @@ describe("WeButtonGroup", () => {
                 </div>
             `);
         await contains(":iframe .test-toolbox-target").click();
-        expect(".element-toolbox").toBeDisplayed();
+        expect(".options-container").toBeDisplayed();
         await hover("[data-action-id='customAction']");
         expect.verifySteps(["customAction a"]);
     });
@@ -167,7 +167,7 @@ describe("WeButtonGroup", () => {
                 </div>
             `);
         await contains(":iframe .test-toolbox-target").click();
-        expect(".element-toolbox").toBeDisplayed();
+        expect(".options-container").toBeDisplayed();
         await hover("[data-action-id='customAction']");
         expect.verifySteps(["customAction myParam"]);
     });
@@ -192,8 +192,8 @@ describe("WeNumberInput", () => {
                 <div class="test-toolbox-target">10</div>
             `);
         await contains(":iframe .test-toolbox-target").click();
-        expect(".element-toolbox").toBeDisplayed();
-        const input = queryFirst(".element-toolbox input");
+        expect(".options-container").toBeDisplayed();
+        const input = queryFirst(".options-container input");
         expect(input).toHaveValue("10");
     });
     test("should preview changes", async () => {
@@ -216,8 +216,8 @@ describe("WeNumberInput", () => {
                 <div class="test-toolbox-target">10</div>
             `);
         await contains(":iframe .test-toolbox-target").click();
-        expect(".element-toolbox").toBeDisplayed();
-        await click(".element-toolbox input");
+        expect(".options-container").toBeDisplayed();
+        await click(".options-container input");
         await fill("2");
         expect.verifySteps(["customAction 102"]);
         expect(":iframe .test-toolbox-target").toHaveInnerHTML("102");
@@ -244,8 +244,8 @@ describe("WeNumberInput", () => {
                 <div class="test-toolbox-target">10</div>
             `);
         await contains(":iframe .test-toolbox-target").click();
-        expect(".element-toolbox").toBeDisplayed();
-        await click(".element-toolbox input");
+        expect(".options-container").toBeDisplayed();
+        await click(".options-container input");
         await fill("2");
         expect.verifySteps(["customAction 102"]);
         expect(":iframe .test-toolbox-target").toHaveInnerHTML("102");
@@ -274,8 +274,8 @@ describe("WeSelectItem", () => {
         });
         await setupWebsiteBuilder(`<div class="test-toolbox-target">b</div>`);
         await contains(":iframe .test-toolbox-target").click();
-        expect(".element-toolbox").toBeDisplayed();
-        await click(".we-bg-toolbox .dropdown");
+        expect(".options-container").toBeDisplayed();
+        await click(".we-bg-options-container .dropdown");
         await animationFrame();
         expect("[data-action-id='customAction']").toHaveText("MyAction");
         await click("[data-action-id='customAction']");
@@ -294,12 +294,12 @@ describe("WeSelectItem", () => {
         });
         await setupWebsiteBuilder(`<div class="test-toolbox-target" customAttribute="a">x</div>`);
         await contains(":iframe .test-toolbox-target").click();
-        expect(".element-toolbox").toBeDisplayed();
-        expect(".we-bg-toolbox .dropdown").toHaveText("A");
-        await click(".we-bg-toolbox .dropdown");
+        expect(".options-container").toBeDisplayed();
+        expect(".we-bg-options-container .dropdown").toHaveText("A");
+        await click(".we-bg-options-container .dropdown");
         await animationFrame();
         await click(".o-overlay-item [data-attribute-action-value-id='b']");
-        expect(".we-bg-toolbox .dropdown").toHaveText("B");
+        expect(".we-bg-options-container .dropdown").toHaveText("B");
         await animationFrame();
         expect(".o-overlay-item [data-attribute-action-value-id='b']").not.toBeDisplayed();
     });
