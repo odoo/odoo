@@ -135,6 +135,31 @@ export function customerIsSelected(name) {
         },
     ];
 }
+export function inputCustomerSearchbar(value) {
+    return [
+        {
+            content: "click more button",
+            trigger: ".modal-header .fa-search",
+            mobile: true,
+        },
+        {
+            trigger: ".modal-header .input-group input",
+            run: `text ${value}`,
+        },
+        {
+            /**
+             * Manually trigger keyup event to show the search field list
+             * because the previous step do not trigger keyup event.
+             */
+            trigger: ".modal-header .input-group input",
+            run: function () {
+                document
+                    .querySelector(".modal-header .input-group input")
+                    .dispatchEvent(new KeyboardEvent("keyup", { key: "" }));
+            },
+        },
+    ];
+}
 export function clickRefund() {
     return [clickReview(), controlButtonMore(), controlButton("Refund")];
 }
