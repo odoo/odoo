@@ -2060,10 +2060,16 @@ class HttpCase(TransactionCase):
             'keepWatchBrowser': kwargs.get('watch', False),
             'debug': kwargs.get('debug', False),
             'startUrl': url_path,
+            'delayToCheckUndeterminisms': kwargs.pop('delay_to_check_undeterminisms', 0),
         }
         code = kwargs.pop('code', f"odoo.startTour({tour_name!r}, {json.dumps(options)})")
         ready = kwargs.pop('ready', f"odoo.isTourReady({tour_name!r})")
-        return self.browser_js(url_path=url_path, code=code, ready=ready, success_signal="tour succeeded", **kwargs)
+        timeout = kwargs.pop('timeout', 60)
+
+        if options["delayToCheckUndeterminisms"] > 0:
+            timeout = timeout + 1000 * options["delayToCheckUndeterminisms"]
+            _logger.runbot("Tour %s is launched with mode: check for undeterminisms.", tour_name)
+        return self.browser_js(url_path=url_path, code=code, ready=ready, timeout=timeout, success_signal="tour succeeded", **kwargs)
 
     def profile(self, **kwargs):
         """
