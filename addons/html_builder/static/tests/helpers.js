@@ -1,3 +1,10 @@
+import { SnippetsMenu } from "@html_builder/builder/snippets_menu";
+import { setContent } from "@html_editor/../tests/_helpers/selection";
+import { insertText } from "@html_editor/../tests/_helpers/user_actions";
+import { defineMailModels, startServer } from "@mail/../tests/mail_test_helpers";
+import { after } from "@odoo/hoot";
+import { advanceTime, animationFrame, click, queryOne } from "@odoo/hoot-dom";
+import { Component } from "@odoo/owl";
 import {
     defineModels,
     getService,
@@ -5,20 +12,13 @@ import {
     mountWithCleanup,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { defineMailModels, startServer } from "@mail/../tests/mail_test_helpers";
-import { advanceTime, animationFrame, click, queryOne } from "@odoo/hoot-dom";
-import { getWebsiteSnippets } from "./snippets_getter.hoot";
-import { insertText } from "@html_editor/../tests/_helpers/user_actions";
-import { setContent } from "@html_editor/../tests/_helpers/selection";
-import { SnippetsMenu } from "@html_builder/builder/snippets_menu";
-import { WebClient } from "@web/webclient/webclient";
 import { loadBundle } from "@web/core/assets";
-import { Component } from "@odoo/owl";
-import { ElementToolboxContainer } from "../src/builder/components/ElementToolboxContainer";
-import { defaultOptionComponents } from "../src/builder/components/defaultComponents";
-import { after } from "@odoo/hoot";
 import { registry } from "@web/core/registry";
 import { uniqueId } from "@web/core/utils/functions";
+import { WebClient } from "@web/webclient/webclient";
+import { ElementToolboxContainer } from "../src/builder/components/ElementToolboxContainer";
+import { defaultOptionComponents } from "../src/builder/components/defaultComponents";
+import { getWebsiteSnippets } from "./snippets_getter.hoot";
 
 class Website extends models.Model {
     _name = "website";
@@ -102,7 +102,8 @@ export function addToolbox({ selector, template, actions = {} }) {
             ...defaultOptionComponents,
         };
     }
-    registry.category("sidebar-element-toolbox").add(uniqueId("test-toolbox"), {
+    const toolboxId = uniqueId("test-toolbox");
+    registry.category("sidebar-element-toolbox").add(toolboxId, {
         ToolboxComponent: TestToolbox,
         selector,
     });
@@ -110,6 +111,7 @@ export function addToolbox({ selector, template, actions = {} }) {
         actionsRegistry.add(name, action);
     }
     after(() => {
+        registry.category("sidebar-element-toolbox").remove(toolboxId);
         for (const [name] of Object.entries(actions)) {
             actionsRegistry.remove(name);
         }
