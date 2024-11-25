@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { queryOne } from "@odoo/hoot-dom";
 import {
     changeOption,
     clickOnEditAndWaitEditMode,
@@ -66,10 +65,7 @@ const selectButtonByData = function (data) {
     return [{
         content: "Open the select",
         trigger: `we-select:has(we-button[${data}]) we-toggler`,
-        run() {
-            // TODO: use run: "click", instead
-            this.anchor.click();
-        }
+        run: "click",
     }, {
         content: "Click on the option",
         trigger: `we-select we-button[${data}]`,
@@ -492,14 +488,22 @@ registerWebsitePreviewTour("website_form_editor_tour", {
     }, {
         content: "Change button's style",
         trigger: '.dropdown:has([name="link_style_color"]) > button',
-        run: () => {
-            queryOne('.dropdown:has([name="link_style_color"]) > button').click();
-            queryOne('[data-value="secondary"]').click();
-            queryOne('.dropdown:has([name="link_style_shape"]) > button').click();
-            queryOne('[data-value="rounded-circle"]').click();
-            queryOne('.dropdown:has([name="link_style_size"]) > button').click();
-            queryOne('[data-value="sm"]').click();
-        },
+        run: "click",
+    }, {
+        trigger: "[data-value=secondary]",
+        run: "click",
+    }, {
+        trigger: ".dropdown:has([name=link_style_shape]) > button",
+        run: "click",
+    }, {
+        trigger: "[data-value=rounded-circle]",
+        run: "click",
+    }, {
+        trigger: ".dropdown:has([name=link_style_size]) > button",
+        run: "click",
+    }, {
+        trigger: "[data-value=sm]",
+        run: "click",
     }, {
         content: "Check the resulting button",
         trigger: ':iframe .s_website_form_send.btn.btn-sm.btn-secondary.rounded-circle',

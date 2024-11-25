@@ -110,11 +110,7 @@ registerWebsitePreviewTour('edit_megamenu', {
         // If this step fails, it means that a patch inside bootstrap was lost.
         content: "Press the 'down arrow' key.",
         trigger: ':iframe .o_mega_menu h4',
-        run() {
-            this.anchor.dispatchEvent(
-                new window.KeyboardEvent("keydown", {key: "ArrowDown"})
-            );
-        },
+        run: "press ArrowDown",
     },
     ...clickOnSave(),
     clickOnExtraMenuItem({}, true),
