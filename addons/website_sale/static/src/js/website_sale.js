@@ -5,6 +5,7 @@ import publicWidget from "@web/legacy/js/public/public_widget";
 import "@website/libs/zoomodoo/zoomodoo";
 import { ProductImageViewer } from "@website_sale/js/components/website_sale_image_viewer";
 import VariantMixin from "@website_sale/js/sale_variant_mixin";
+import { _t } from "@web/core/l10n/translation";
 
 
 export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
@@ -72,9 +73,24 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
 
         return def;
     },
+
     destroy() {
         this._super.apply(this, arguments);
         this._cleanupZoom();
+
+        const allProductsLinkSpanEl = this.el.querySelector("#all_products_link_span");
+        if (allProductsLinkSpanEl) {
+            Popover.getOrCreateInstance(allProductsLinkSpanEl, {
+                content: _t("Will be displayed on all your products"),
+                trigger: "focus",
+                container: "body",
+                placement: "bottom",
+            });
+
+            if(allProductsLinkSpanEl.textContent.length == 0) {
+                allProductsLinkSpanEl.textContent = "\u200b";
+            }
+        }
     },
 
     //--------------------------------------------------------------------------
