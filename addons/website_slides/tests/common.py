@@ -10,6 +10,10 @@ class SlidesCase(MailCommon):
     def setUpClass(cls):
         super(SlidesCase, cls).setUpClass()
 
+        cls.env.ref('base.user_admin').write({
+            'email': 'mitchell.admin@example.com',
+        })
+
         cls.user_officer = mail_new_test_user(
             cls.env,
             email='officer@example.com',

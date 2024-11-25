@@ -14,6 +14,9 @@ class TestUi(HttpCaseGamification):
             'name': 'Very Smart Question',
             'forum_id': cls.env.ref('website_forum.forum_help').id,
         })
+        cls.env.ref('base.user_admin').write({
+            'email': 'mitchell.admin@example.com',
+        })
 
     def test_01_admin_forum_tour(self):
         self.start_tour("/", 'question', login="admin")

@@ -26,6 +26,7 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
         self.partner_admin = self.env.ref('base.partner_admin')
         self.partner_admin.write({
             'name': 'Mitchell Admin',
+            'email': 'mitchell.admin@example.com',
             'street': '215 Vine St',
             'phone': '+1 555-555-5555',
             'city': 'Scranton',

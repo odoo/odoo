@@ -22,6 +22,7 @@ class EventCase(common.TransactionCase):
         # set country in order to format Belgian numbers
         cls.company_admin.write({
             'country_id': cls.env.ref('base.be').id,
+            'email': 'noreply@company.com',
         })
 
         # Test users to use through the various tests
