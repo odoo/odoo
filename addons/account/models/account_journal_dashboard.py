@@ -717,7 +717,7 @@ class account_journal(models.Model):
             *self.env['account.move']._check_company_domain(self.env.companies),
             ('journal_id', 'in', self.ids),
             ('payment_state', 'in', ('not_paid', 'partial')),
-            ('move_type', '=', 'out_invoice' if journal_type == 'sale' else 'in_invoice'),
+            ('move_type', 'in', ('out_invoice', 'out_refund') if journal_type == 'sale' else ('in_invoice', 'in_refund')),
             ('state', '=', 'posted'),
         ])
         selects = [
@@ -990,9 +990,9 @@ class account_journal(models.Model):
         elif self.type == 'cash':
             return 'action_view_bank_statement_tree'
         elif self.type == 'sale':
-            return 'action_move_out_invoice_type'
+            return 'action_move_out_invoice'
         elif self.type == 'purchase':
-            return 'action_move_in_invoice_type'
+            return 'action_move_in_invoice'
         else:
             return 'action_move_journal_line'
 
