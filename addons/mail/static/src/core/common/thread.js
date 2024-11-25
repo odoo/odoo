@@ -548,6 +548,7 @@ export class Thread extends Component {
         this.scrollingToHighlight = false;
     }
 
+<<<<<<< 18.0
     async onClickUnreadMessagesBanner() {
         await this.props.thread.loadAround(this.props.thread.selfMember.localNewMessageSeparator);
         this.messageHighlight?.highlightMessage(
@@ -560,6 +561,39 @@ export class Thread extends Component {
         if (!ref) {
             this.refByMessageId.delete(message.id);
             return;
+||||||| 98a4d4351dd5f9a9663669847b5542514c4f6d77
+    /**
+     * @param {MouseEvent} ev
+     */
+    async onClickNotification(ev) {
+        const { oeType, oeId } = ev.target.dataset;
+        if (oeType === "highlight") {
+            await this.env.messageHighlight?.highlightMessage(
+                this.store.Message.insert({
+                    id: Number(oeId),
+                    res_id: this.props.thread.id,
+                    model: this.props.thread.model,
+                }),
+                this.props.thread
+            );
+=======
+    /**
+     * @param {MouseEvent} ev
+     */
+    async onClickNotification(ev) {
+        const { oeType, oeId } = ev.target.dataset;
+        if (oeType === "highlight") {
+            await this.env.messageHighlight?.highlightMessage(
+                this.store.Message.insert({
+                    id: Number(oeId),
+                    res_id: this.props.thread.id,
+                    model: this.props.thread.model,
+                }),
+                this.props.thread
+            );
+        } else {
+            this.store.handleClickOnLink(ev, this.props.thread);
+>>>>>>> 2faee8c65468882573751b6a3a89420f102bbaef
         }
         this.refByMessageId.set(message.id, markRaw(ref));
     }
