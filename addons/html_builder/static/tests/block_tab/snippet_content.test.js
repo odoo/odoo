@@ -53,7 +53,7 @@ test("drag & drop inner content block", async () => {
 
     await drop(editor.editable.querySelector(".oe_drop_zone"));
     expect(editor.editable).toHaveInnerHTML(
-        `<div>\ufeff<a class="btn btn-primary" href="#" data-snippet="s_button">\ufeffButton A\ufeff</a>\ufeff<p>Text</p></div>`
+        `<div>\ufeff<a class="btn btn-primary" href="#" data-snippet="s_button" data-name="Button A">\ufeffButton A\ufeff</a>\ufeff<p>Text</p></div>`
     );
     expect(".o-website-snippetsmenu .fa-undo").toBeEnabled();
 });
@@ -70,7 +70,7 @@ test("drag & drop inner content block + undo/redo", async () => {
     const { drop } = await contains(".o-website-snippetsmenu [name='Button A']").drag();
     await drop(editor.editable.querySelector(".oe_drop_zone"));
     expect(editor.editable).toHaveInnerHTML(
-        `<div>\ufeff<a class="btn btn-primary" href="#" data-snippet="s_button">\ufeffButton A\ufeff</a>\ufeff<p>Text</p></div>`
+        `<div>\ufeff<a class="btn btn-primary" href="#" data-snippet="s_button" data-name="Button A">\ufeffButton A\ufeff</a>\ufeff<p>Text</p></div>`
     );
     expect(".o-website-snippetsmenu .fa-undo").toBeEnabled();
     expect(".o-website-snippetsmenu .fa-repeat").not.toBeEnabled();

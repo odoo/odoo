@@ -3,6 +3,7 @@ import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import {
     Component,
     EventBus,
+    onMounted,
     onWillDestroy,
     onWillStart,
     useRef,
@@ -20,6 +21,7 @@ import { SetupEditorPlugin } from "./plugins/setup_editor_plugin";
 import { SnippetModel } from "./snippet_model";
 import { BlockTab, blockTab } from "./snippets_menu_tabs/block_tab";
 import { CustomizeTab, customizeTab } from "./snippets_menu_tabs/customize_tab";
+import { InvisibleElementsPanel } from "./snippets_menu_tabs/invisible_elements_panel";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
@@ -48,7 +50,7 @@ function onIframeLoaded(iframe, callback) {
 // todo: Why is it called SnippetsMenu? Should we rename it to BuilderSidebar?
 export class SnippetsMenu extends Component {
     static template = "html_builder.SnippetsMenu";
-    static components = { BlockTab, CustomizeTab };
+    static components = { BlockTab, CustomizeTab, InvisibleElementsPanel };
     static props = {
         iframe: { type: Object },
         closeEditor: { type: Function },
@@ -65,6 +67,7 @@ export class SnippetsMenu extends Component {
             canRedo: false,
             activeTab: "blocks",
             currentOptionsContainers: undefined,
+            invisibleEls: [],
         });
         useHotkey("control+z", () => this.undo());
         useHotkey("control+y", () => this.redo());
@@ -73,6 +76,9 @@ export class SnippetsMenu extends Component {
         this.orm = useService("orm");
         this.dialog = useService("dialog");
         this.ui = useService("ui");
+        // TODO: modify this selector when the mobile version is implemented
+        this.invisibleSelector =
+            ".o_snippet_invisible, .o_snippet_mobile_invisible, .o_snippet_desktop_invisible";
 
         const editorBus = new EventBus();
         this.editor = new Editor(
@@ -81,6 +87,7 @@ export class SnippetsMenu extends Component {
                 onChange: () => {
                     this.state.canUndo = this.editor.shared.history.canUndo();
                     this.state.canRedo = this.editor.shared.history.canRedo();
+                    this.updateInvisibleEls();
                     editorBus.trigger("STEP_ADDED");
                 },
                 resources: {
@@ -129,9 +136,15 @@ export class SnippetsMenu extends Component {
             this.editor.destroy();
             // actionService.setActionMode("current");
         });
+
         useSetupAction({
             beforeUnload: (ev) => this.onBeforeUnload(ev),
             beforeLeave: () => this.onBeforeLeave(),
+        });
+
+        onMounted(() => {
+            // TODO: onload editor
+            this.updateInvisibleEls();
         });
     }
 
@@ -246,6 +259,12 @@ export class SnippetsMenu extends Component {
     onMobilePreviewClick() {
         this.props.toggleMobile();
         // TODO update invisible elements panel
+    }
+
+    updateInvisibleEls() {
+        this.state.invisibleEls = [
+            ...this.editor.editable.querySelectorAll(this.invisibleSelector),
+        ];
     }
 }
 

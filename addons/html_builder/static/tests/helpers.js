@@ -134,3 +134,14 @@ function getSnippetView(snippets) {
         ${(snippet_content || []).join("")}
     </snippets>`;
 }
+
+export function getSnippetStructure({
+    name,
+    content,
+    keywords = [],
+    groupName,
+    imagePreview = "",
+}) {
+    keywords = keywords.join(", ");
+    return `<div name="${name}" data-oe-snippet-id="123" data-o-image-preview="${imagePreview}" data-oe-keywords="${keywords}" data-o-group="${groupName}">${content}</div>`;
+}
