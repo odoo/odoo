@@ -37,7 +37,7 @@
             </div>
             <div class="d-flex flex-column">
                 <t t-if="!store.settings.use_push_to_talk">
-                    <span class="me-2 my-1 text-truncate text-wrap">Voice detection sensitivity</span>
+                    <span class="me-2 my-1">Voice detection sensitivity</span>
                     <div class="d-flex align-items-center w-100 h-100">
                         <button class="btn btn-primary" t-on-click="microphoneVolume.toggle" t-att-disabled="!microphoneVolume.isReady">
                             <div class="position-relative">
