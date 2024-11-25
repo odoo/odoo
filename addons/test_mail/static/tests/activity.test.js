@@ -16,8 +16,14 @@ import { ActivityController } from "@mail/views/web/activity/activity_controller
 import { ActivityModel } from "@mail/views/web/activity/activity_model";
 import { ActivityRenderer } from "@mail/views/web/activity/activity_renderer";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
+<<<<<<< master
 import { keyDown, waitFor } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
+||||||| 273557d571cf65786a17d476ea3b25f6c3767003
+import { mockDate } from "@odoo/hoot-mock";
+=======
+import { mockDate, animationFrame } from "@odoo/hoot-mock";
+>>>>>>> 7201b8673ef4005c411164b85212cfa8ad60994c
 import { onMounted, onWillUnmount } from "@odoo/owl";
 import { MailTestActivity } from "@test_mail/../tests/mock_server/models/mail_test_activity";
 import { defineTestMailModels } from "@test_mail/../tests/test_mail_test_helpers";
@@ -1187,6 +1193,7 @@ test("update activity view after creating multiple activities", async () => {
     expect(".o_activity_summary_cell:not(.o_activity_empty_cell)").toHaveCount(1);
 });
 
+<<<<<<< master
 test("Activity view: context given to the rpc to fetch data", async () => {
     registerArchs(archs);
     const context = { custom_context: true };
@@ -1202,4 +1209,30 @@ test("Activity view: context given to the rpc to fetch data", async () => {
         context,
     });
     await waitForSteps(["get_activity_data"]);
+||||||| 273557d571cf65786a17d476ea3b25f6c3767003
+=======
+test("Activity View: Hide 'New' button in SelectCreateDialog based on action context", async () => {
+    registerArchs(archs);
+    MailTestActivity._views = {
+        ...MailTestActivity._views,
+        "list,false": `
+            <list string="MailTestActivity">
+                <field name="name"/>
+                <field name="activity_ids" widget="list_activity"/>
+            </list>`
+        ,
+    };
+
+    await start();
+    await openView({
+        res_model: "mail.test.activity",
+        views: [[false, "activity"]],
+        context: { create: false },
+    });
+    await click("table tfoot tr .o_record_selector");
+    await animationFrame();
+    expect('.o_create_button').toHaveCount(0, {
+        message: "'New' button should be hidden",
+    });
+>>>>>>> 7201b8673ef4005c411164b85212cfa8ad60994c
 });
