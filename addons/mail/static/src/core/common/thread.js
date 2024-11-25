@@ -68,6 +68,8 @@ export class Thread extends Component {
     setup() {
         super.setup();
         this.escape = escape;
+        this.applyScroll = this.applyScroll.bind(this);
+        this.saveScroll = this.saveScroll.bind(this);
         this.registerMessageRef = this.registerMessageRef.bind(this);
         this.store = useState(useService("mail.store"));
         this.state = useState({
@@ -257,7 +259,6 @@ export class Thread extends Component {
      *    highlighted message to be scrolled to.
      */
     setupScroll() {
-        const ref = this.scrollableRef;
         /**
          * Last scroll value that was automatically set. This prevents from
          * setting the same value 2 times in a row. This is not supposed to have
@@ -266,48 +267,37 @@ export class Thread extends Component {
          * other change. This should give enough time to scroll/resize event to
          * register the new scroll value.
          */
-        let lastSetValue;
+        this.lastSetValue = undefined;
         /**
          * The snapshot mechanism (point 2) should only apply after the messages
          * have been loaded and displayed at least once. Technically this is
          * after the first patch following when `mountedAndLoaded` is true. This
          * is what this variable holds.
          */
-        let loadedAndPatched = false;
+        this.loadedAndPatched = false;
         /**
          * The snapshot of current scrollTop and scrollHeight for the purpose
          * of keeping messages in place when loading older/newer (point 2).
          */
-        let snapshot;
+        this.snapshot = undefined;
         /**
          * The newest message that is already rendered, useful to detect
          * whether newer messages have been loaded since last render to decide
          * when to apply the snapshot to keep messages in place (point 2).
          */
-        let newestPersistentMessage;
+        this.newestPersistentMessage = undefined;
         /**
          * The oldest message that is already rendered, useful to detect
          * whether older messages have been loaded since last render to decide
          * when to apply the snapshot to keep messages in place (point 2).
          */
-        let oldestPersistentMessage;
+        this.oldestPersistentMessage = undefined;
         /**
          * Whether it was possible to load newer messages in the last rendered
          * state, useful to decide when to apply the snapshot to keep messages
          * in place (point 2).
          */
-        let loadNewer;
-        const reset = () => {
-            this.state.mountedAndLoaded = false;
-            this.loadOlderState.ready = false;
-            this.loadNewerState.ready = false;
-            lastSetValue = undefined;
-            snapshot = undefined;
-            newestPersistentMessage = undefined;
-            oldestPersistentMessage = undefined;
-            loadedAndPatched = false;
-            loadNewer = false;
-        };
+        this.loadNewer = undefined;
         /**
          * These states need to be immediately reset when the value changes on
          * the record, because the transition is important, not only the final
@@ -317,7 +307,7 @@ export class Thread extends Component {
          */
         let stopOnChange = Record.onChange(this.props.thread, "isLoaded", () => {
             if (!this.props.thread.isLoaded || !this.state.mountedAndLoaded) {
-                reset();
+                this.reset();
             }
         });
         onWillUpdateProps((nextProps) => {
@@ -325,131 +315,105 @@ export class Thread extends Component {
                 stopOnChange();
                 stopOnChange = Record.onChange(nextProps.thread, "isLoaded", () => {
                     if (!nextProps.thread.isLoaded || !this.state.mountedAndLoaded) {
-                        reset();
+                        this.reset();
                     }
                 });
             }
         });
         onWillDestroy(() => stopOnChange());
-        const saveScroll = () => {
-            const thread = toRaw(this.props.thread);
-            const isBottom =
-                this.props.order === "asc"
-                    ? ref.el.scrollHeight - ref.el.scrollTop - ref.el.clientHeight < 30
-                    : ref.el.scrollTop < 30;
-            if (isBottom) {
-                thread.scrollTop = "bottom";
-            } else {
-                thread.scrollTop =
-                    this.props.order === "asc"
-                        ? ref.el.scrollTop
-                        : ref.el.scrollHeight - ref.el.scrollTop - ref.el.clientHeight;
-            }
-        };
-        const setScroll = (value) => {
-            ref.el.scrollTop = value;
-            lastSetValue = value;
-            saveScroll();
-        };
-        const applyScroll = () => {
-            if (!this.props.thread.isLoaded || !this.state.mountedAndLoaded) {
-                reset();
-                return;
-            }
-            // Use toRaw() to prevent scroll check from triggering renders.
-            const thread = toRaw(this.props.thread);
-            const olderMessages = thread.oldestPersistentMessage?.id < oldestPersistentMessage?.id;
-            const newerMessages = thread.newestPersistentMessage?.id > newestPersistentMessage?.id;
-            const messagesAtTop =
-                (this.props.order === "asc" && olderMessages) ||
-                (this.props.order === "desc" && newerMessages);
-            const messagesAtBottom =
-                (this.props.order === "desc" && olderMessages) ||
-                (this.props.order === "asc" &&
-                    newerMessages &&
-                    (loadNewer || thread.scrollTop !== "bottom"));
-            if (thread.selfMember && thread.scrollUnread) {
-                if (thread.firstUnreadMessage) {
-                    const messageEl = this.refByMessageId.get(thread.firstUnreadMessage.id)?.el;
-                    if (!messageEl) {
-                        return;
-                    }
-                    const messageCenter =
-                        messageEl.offsetTop -
-                        this.scrollableRef.el.offsetHeight / 2 +
-                        messageEl.offsetHeight / 2;
-                    setScroll(messageCenter);
-                } else {
-                    const scrollTop =
-                        this.props.order === "asc"
-                            ? this.scrollableRef.el.scrollHeight -
-                              this.scrollableRef.el.clientHeight
-                            : 0;
-                    setScroll(scrollTop);
-                }
-                thread.scrollUnread = false;
-            } else if (snapshot && messagesAtTop) {
-                setScroll(snapshot.scrollTop + ref.el.scrollHeight - snapshot.scrollHeight);
-            } else if (snapshot && messagesAtBottom) {
-                setScroll(snapshot.scrollTop);
-            } else if (
-                !this.env.messageHighlight?.highlightedMessageId &&
-                thread.scrollTop !== undefined
-            ) {
-                let value;
-                if (thread.scrollTop === "bottom") {
-                    value =
-                        this.props.order === "asc" ? ref.el.scrollHeight - ref.el.clientHeight : 0;
-                } else {
-                    value =
-                        this.props.order === "asc"
-                            ? thread.scrollTop
-                            : ref.el.scrollHeight - thread.scrollTop - ref.el.clientHeight;
-                }
-                if (lastSetValue === undefined || Math.abs(lastSetValue - value) > 1) {
-                    setScroll(value);
-                }
-            }
-            snapshot = undefined;
-            newestPersistentMessage = thread.newestPersistentMessage;
-            oldestPersistentMessage = thread.oldestPersistentMessage;
-            loadNewer = thread.loadNewer;
-            if (!loadedAndPatched) {
-                loadedAndPatched = true;
-                this.loadOlderState.ready = true;
-                this.loadNewerState.ready = true;
-            }
-        };
         onWillPatch(() => {
-            if (!loadedAndPatched) {
+            if (!this.loadedAndPatched) {
                 return;
             }
-            snapshot = {
-                scrollHeight: ref.el.scrollHeight,
-                scrollTop: ref.el.scrollTop,
+            this.snapshot = {
+                scrollHeight: this.scrollableRef.el.scrollHeight,
+                scrollTop: this.scrollableRef.el.scrollTop,
             };
         });
-        useEffect(applyScroll);
+        useEffect(this.applyScroll);
         useChildSubEnv({
-            onImageLoaded: applyScroll,
+            onImageLoaded: this.applyScroll,
         });
         const observer = new ResizeObserver(() => {
             this.computeJumpPresentPosition();
-            applyScroll();
+            this.applyScroll();
         });
         useEffect(
             (el, mountedAndLoaded) => {
                 if (el && mountedAndLoaded) {
-                    el.addEventListener("scroll", saveScroll);
+                    el.addEventListener("scroll", this.saveScroll);
                     observer.observe(el);
                     return () => {
                         observer.unobserve(el);
-                        el.removeEventListener("scroll", saveScroll);
+                        el.removeEventListener("scroll", this.saveScroll);
                     };
                 }
             },
-            () => [ref.el, this.state.mountedAndLoaded]
+            () => [this.scrollableRef.el, this.state.mountedAndLoaded]
         );
+    }
+
+    applyScroll() {
+        if (!this.props.thread.isLoaded || !this.state.mountedAndLoaded) {
+            this.reset();
+            return;
+        }
+        // Use toRaw() to prevent scroll check from triggering renders.
+        const thread = toRaw(this.props.thread);
+        this.applyScrollContextually(thread);
+        this.snapshot = undefined;
+        this.newestPersistentMessage = thread.newestPersistentMessage;
+        this.oldestPersistentMessage = thread.oldestPersistentMessage;
+        this.loadNewer = thread.loadNewer;
+        if (!this.loadedAndPatched) {
+            this.loadedAndPatched = true;
+            this.loadOlderState.ready = true;
+            this.loadNewerState.ready = true;
+        }
+    }
+
+    /** @param {import("models").Thread} thread */
+    applyScrollContextually(thread) {
+        const olderMessages = thread.oldestPersistentMessage?.id < this.oldestPersistentMessage?.id;
+        const newerMessages = thread.newestPersistentMessage?.id > this.newestPersistentMessage?.id;
+        const messagesAtTop =
+            (this.props.order === "asc" && olderMessages) ||
+            (this.props.order === "desc" && newerMessages);
+        const messagesAtBottom =
+            (this.props.order === "desc" && olderMessages) ||
+            (this.props.order === "asc" &&
+                newerMessages &&
+                (this.loadNewer || thread.scrollTop !== "bottom"));
+        if (this.snapshot && messagesAtTop) {
+            this.setScroll(
+                this.snapshot.scrollTop +
+                    this.scrollableRef.el.scrollHeight -
+                    this.snapshot.scrollHeight
+            );
+        } else if (this.snapshot && messagesAtBottom) {
+            this.setScroll(this.snapshot.scrollTop);
+        } else if (
+            !this.env.messageHighlight?.highlightedMessageId &&
+            thread.scrollTop !== undefined
+        ) {
+            let value;
+            if (thread.scrollTop === "bottom") {
+                value =
+                    this.props.order === "asc"
+                        ? this.scrollableRef.el.scrollHeight - this.scrollableRef.el.clientHeight
+                        : 0;
+            } else {
+                value =
+                    this.props.order === "asc"
+                        ? thread.scrollTop
+                        : this.scrollableRef.el.scrollHeight -
+                          thread.scrollTop -
+                          this.scrollableRef.el.clientHeight;
+            }
+            if (this.lastSetValue === undefined || Math.abs(this.lastSetValue - value) > 1) {
+                this.setScroll(value);
+            }
+        }
     }
 
     fetchMessages() {
@@ -522,6 +486,18 @@ export class Thread extends Component {
         this.refByMessageId.set(message.id, markRaw(ref));
     }
 
+    reset() {
+        this.state.mountedAndLoaded = false;
+        this.loadOlderState.ready = false;
+        this.loadNewerState.ready = false;
+        this.lastSetValue = undefined;
+        this.snapshot = undefined;
+        this.newestPersistentMessage = undefined;
+        this.oldestPersistentMessage = undefined;
+        this.loadedAndPatched = false;
+        this.loadNewer = false;
+    }
+
     isSquashed(msg, prevMsg) {
         if (this.props.thread.model === "mail.box") {
             return false;
@@ -544,6 +520,27 @@ export class Thread extends Component {
         return msg.datetime.ts - prevMsg.datetime.ts < 5 * 60 * 1000;
     }
 
+    saveScroll() {
+        const thread = toRaw(this.props.thread);
+        const isBottom =
+            this.props.order === "asc"
+                ? this.scrollableRef.el.scrollHeight -
+                      this.scrollableRef.el.scrollTop -
+                      this.scrollableRef.el.clientHeight <
+                  30
+                : this.scrollableRef.el.scrollTop < 30;
+        if (isBottom) {
+            thread.scrollTop = "bottom";
+        } else {
+            thread.scrollTop =
+                this.props.order === "asc"
+                    ? this.scrollableRef.el.scrollTop
+                    : this.scrollableRef.el.scrollHeight -
+                      this.scrollableRef.el.scrollTop -
+                      this.scrollableRef.el.clientHeight;
+        }
+    }
+
     scrollToHighlighted() {
         if (!this.messageHighlight?.highlightedMessageId || this.scrollingToHighlight) {
             return;
@@ -559,5 +556,11 @@ export class Thread extends Component {
         return this.props.order === "asc"
             ? [...this.props.thread.nonEmptyMessages]
             : [...this.props.thread.nonEmptyMessages].reverse();
+    }
+
+    setScroll(value) {
+        this.scrollableRef.el.scrollTop = value;
+        this.lastSetValue = value;
+        this.saveScroll();
     }
 }

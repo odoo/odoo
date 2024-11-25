@@ -142,6 +142,7 @@ const threadPatch = {
         this.selfMember = Record.one("discuss.channel.member", {
             inverse: "threadAsSelf",
         });
+        this.scrollUnread = true;
         this.toggleBusSubscription = Record.attr(false, {
             /** @this {import("models").Thread} */
             compute() {

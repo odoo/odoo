@@ -34,6 +34,31 @@ const threadPatch = {
         );
     },
     /** @override */
+    applyScrollContextually(thread) {
+        if (thread.selfMember && thread.scrollUnread) {
+            if (thread.firstUnreadMessage) {
+                const messageEl = this.refByMessageId.get(thread.firstUnreadMessage.id)?.el;
+                if (!messageEl) {
+                    return;
+                }
+                const messageCenter =
+                    messageEl.offsetTop -
+                    this.scrollableRef.el.offsetHeight / 2 +
+                    messageEl.offsetHeight / 2;
+                this.setScroll(messageCenter);
+            } else {
+                const scrollTop =
+                    this.props.order === "asc"
+                        ? this.scrollableRef.el.scrollHeight - this.scrollableRef.el.clientHeight
+                        : 0;
+                this.setScroll(scrollTop);
+            }
+            thread.scrollUnread = false;
+        } else {
+            super.applyScrollContextually(...arguments);
+        }
+    },
+    /** @override */
     fetchMessages() {
         if (this.props.thread.selfMember && this.props.thread.scrollUnread) {
             toRaw(this.props.thread).loadAround(this.props.thread.selfMember.new_message_separator);

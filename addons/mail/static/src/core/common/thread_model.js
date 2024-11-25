@@ -218,7 +218,6 @@ export class Thread extends Record {
      */
     scrollTop = "bottom";
     transientMessages = Record.many("mail.message");
-    scrollUnread = true;
     suggestedRecipients = Record.attr([], {
         onUpdate() {
             for (const recipient of this.suggestedRecipients) {
