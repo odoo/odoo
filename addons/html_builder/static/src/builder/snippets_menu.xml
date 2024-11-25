@@ -24,7 +24,7 @@
                     <BlockTab snippetModel="snippetModel"/>
                 </t>
                 <t t-if="state.activeTab === 'customize'">
-                    <CustomizeTab selectedToolboxes="state.selectedToolboxes" />
+                    <CustomizeTab currentOptionsContainers="state.currentOptionsContainers" />
                 </t>
                 <t t-if="state.activeTab === 'theme'">
                     theme

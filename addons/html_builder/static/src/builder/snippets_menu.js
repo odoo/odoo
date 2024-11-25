@@ -62,7 +62,7 @@ export class SnippetsMenu extends Component {
             canUndo: false,
             canRedo: false,
             activeTab: "blocks",
-            selectedToolboxes: undefined,
+            currentOptionsContainers: undefined,
         });
         useHotkey("control+z", () => this.undo());
         useHotkey("control+y", () => this.redo());
@@ -82,8 +82,8 @@ export class SnippetsMenu extends Component {
                     editorBus.trigger("STEP_ADDED");
                 },
                 resources: {
-                    change_selected_toolboxes_listeners: (selectedToolboxes) => {
-                        this.state.selectedToolboxes = selectedToolboxes;
+                    change_current_options_containers_listeners: (currentOptionsContainers) => {
+                        this.state.currentOptionsContainers = currentOptionsContainers;
                         this.setTab("customize");
                     },
                 },
