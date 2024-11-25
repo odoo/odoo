@@ -45,7 +45,6 @@ class MailControllerCommon(HttpCase, MailCommon):
         super().setUpClass()
         cls.maxDiff = None
         cls._create_portal_user()
-        cls.user_public = cls.env.ref("base.public_user")
         cls.guest = cls.env["mail.guest"].create({"name": "Guest"})
         last_message = cls.env["mail.message"].search([], order="id desc", limit=1)
         cls.fake_message = cls.env["mail.message"].browse(last_message.id + 1000000)
