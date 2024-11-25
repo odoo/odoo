@@ -2,7 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { uniqueId } from "@web/core/utils/functions";
 
-export class ElementToolboxPlugin extends Plugin {
+export class BuilderOptionsPlugin extends Plugin {
     static id = "element-toolbox";
     static dependencies = ["selection", "overlay"];
     static resources = (p) => ({
