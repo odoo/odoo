@@ -6677,15 +6677,17 @@ registry.ImageTools = ImageHandlerOption.extend({
             mimetype: this._getImageMimetype(img),
         });
 
-        await new Promise(resolve => {
-            this.$target.one('image_cropper_destroyed', async () => {
-                if (isGif(this._getImageMimetype(img))) {
-                    img.dataset[img.dataset.shape ? 'originalMimetype' : 'mimetype'] = 'image/png';
-                }
-                await this._reapplyCurrentShape();
-                resolve();
+        if (!imageCropWrapper.component._cropperClosed) {
+            await new Promise(resolve => {
+                this.$target.one('image_cropper_destroyed', async () => {
+                    if (isGif(this._getImageMimetype(img))) {
+                        img.dataset[img.dataset.shape ? 'originalMimetype' : 'mimetype'] = 'image/png';
+                    }
+                    await this._reapplyCurrentShape();
+                    resolve();
+                });
             });
-        });
+        }
         imageCropWrapperElement.remove();
         imageCropWrapper.destroy();
         this.trigger_up('enable_loading_effect');
