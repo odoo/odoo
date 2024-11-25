@@ -304,3 +304,21 @@ describe("WeSelectItem", () => {
         expect(".o-overlay-item [data-attribute-action-value-id='b']").not.toBeDisplayed();
     });
 });
+describe("WeColorpicker", () => {
+    test("should apply color to the editing element", async () => {
+        addOption({
+            selector: ".test-toolbox-target",
+            template: xml`
+                    <ElementToolboxContainer title="'TestToolbox'">
+                        <WeColorpicker/>
+                    </ElementToolboxContainer>`,
+        });
+        await setupWebsiteBuilder(`<div class="test-toolbox-target">b</div>`);
+        await contains(":iframe .test-toolbox-target").click();
+        expect(".element-toolbox").toBeDisplayed();
+        await click(".we-bg-toolbox .dropdown");
+        await animationFrame();
+        await click(".o-overlay-item [data-color='o-color-1']");
+        expect(":iframe .test-toolbox-target").toHaveClass("test-toolbox-target bg-o-color-1");
+    });
+});

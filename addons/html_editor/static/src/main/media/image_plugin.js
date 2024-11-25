@@ -82,10 +82,10 @@ export class ImagePlugin extends Plugin {
             },
             {
                 id: "image_description",
-                title: _t("Edit media description"),
                 groupId: "image_description",
                 Component: ImageDescription,
                 props: {
+                    title: _t("Edit media description"),
                     getDescription: () => this.getImageAttribute("alt"),
                     getTooltip: () => this.getImageAttribute("title"),
                     updateImageDescription: this.updateImageDescription.bind(this),
@@ -118,9 +118,9 @@ export class ImagePlugin extends Plugin {
             {
                 id: "image_padding",
                 groupId: "image_padding",
-                title: _t("Image padding"),
                 Component: ImagePadding,
                 props: {
+                    title: _t("Image padding"),
                     onSelected: this.setImagePadding.bind(this),
                 },
             },

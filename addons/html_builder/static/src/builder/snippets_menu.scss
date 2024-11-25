@@ -22,3 +22,18 @@
     background-color: #3e3e46;
 }
 
+.o_we_color_preview {
+    @extend %o-preview-alpha-background;
+    flex: 0 0 auto;
+    display: block;
+    width: $o-we-sidebar-content-field-colorpicker-size;
+    height: $o-we-sidebar-content-field-colorpicker-size;
+    border: $o-we-sidebar-content-field-border-width solid $o-we-bg-darkest;
+    border-radius: 10rem;
+    cursor: pointer;
+
+    &::after {
+        content: "" !important;
+        box-shadow: $o-we-sidebar-content-field-colorpicker-shadow;
+    }
+}
