@@ -8,9 +8,30 @@
       text-transform: uppercase;
     }
 
-    .o_mailing_list_unsubscribed {
-        margin-left: 20px;
-        color: #005326;
-        font-size: 90%;
+    .o_mailing_subscription_form_list_toggle {
+        > span:last-of-type {
+            color: #005326;
+        }
+        &:hover {
+            opacity: .85;
+            cursor: pointer;
+        }
+    }
+    .o_mailing_subscription_form_list_description {
+        margin-left: 54px;
+    }
+    li {
+        border-radius: 0.5em;
+    }
+
+    &.editor_enable {
+        .o_mailing_portal_alert, #o_mailing_subscription_feedback_info, #o_mailing_subscription_feedback,
+        #o_mailing_subscription_form_manage, #o_mailing_subscription_form_blocklisted,
+        #button_subscription_update_preferences {
+            display: block !important;
+        }
+        .o_mailing_subscription_form_list_description {
+            margin-bottom: 16px;
+        }
     }
 }
