@@ -137,6 +137,7 @@ class AccountMoveSend(models.TransientModel):
 
     def _get_default_mail_attachments_widget(self, move, mail_template):
         return self._get_placeholder_mail_attachments_data(move) \
+            + self._get_placeholder_mail_template_dynamic_attachments_data(move, mail_template) \
             + self._get_invoice_extra_attachments_data(move) \
             + self._get_mail_template_attachments_data(mail_template)
 
@@ -191,6 +192,21 @@ class AccountMoveSend(models.TransientModel):
             'mimetype': 'application/pdf',
             'placeholder': True,
         }]
+
+    @api.model
+    def _get_placeholder_mail_template_dynamic_attachments_data(self, move, mail_template):
+        invoice_template = self.env.ref('account.account_invoices')
+        extra_mail_templates = mail_template.report_template_ids - invoice_template
+        filename = move._get_invoice_report_filename()
+        return [
+            {
+                'id': f'placeholder_{extra_mail_template.name.lower()}_{filename}',
+                'name': f'{extra_mail_template.name.lower()}_{filename}',
+                'mimetype': 'application/pdf',
+                'placeholder': True,
+                'dynamic_report': extra_mail_template.report_name,
+            } for extra_mail_template in extra_mail_templates
+        ]
 
     @api.model
     def _get_invoice_extra_attachments(self, move):
@@ -519,8 +535,46 @@ class AccountMoveSend(models.TransientModel):
         }
 
     @api.model
+    def _generate_dynamic_reports(self, moves_data):
+        for move, move_data in moves_data.items():
+            mail_attachments_widget = move_data.get('mail_attachments_widget', [])
+
+            dynamic_reports = [
+                attachment_widget
+                for attachment_widget in mail_attachments_widget
+                if attachment_widget.get('dynamic_report')
+                and not attachment_widget.get('skip')
+            ]
+
+            attachments_to_create = []
+            for dynamic_report in dynamic_reports:
+                content, _report_format = self.env['ir.actions.report']\
+                .with_company(move.company_id)\
+                .with_context(from_account_move_send=True)\
+                ._render(dynamic_report['dynamic_report'], move.ids)
+
+                attachments_to_create.append({
+                    'raw': content,
+                    'name': dynamic_report['name'],
+                    'mimetype': 'application/pdf',
+                    'res_model': move._name,
+                    'res_id': move.id,
+                })
+
+            attachments = self.env['ir.attachment'].create(attachments_to_create)
+            mail_attachments_widget += [{
+                'id': attachment.id,
+                'name': attachment.name,
+                'mimetype': 'application/pdf',
+                'placeholder': False,
+                'protect_from_deletion': True,
+            } for attachment in attachments]
+
+    @api.model
     def _send_mails(self, moves_data):
         subtype = self.env.ref('mail.mt_comment')
+
+        self._generate_dynamic_reports(moves_data)
 
         for move, move_data in [(move, move_data) for move, move_data in moves_data.items() if move.partner_id.email]:
             mail_template = move_data['mail_template_id']

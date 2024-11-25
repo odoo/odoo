@@ -165,8 +165,8 @@
                 <field name="sale_line_id"
                     groups="!sales_team.group_sale_salesman"
                     string="Sales Order Item"
-                    options='{"no_open": True, "no_create": True}'
-                    context="{'create': False, 'edit': False, 'delete': False}"
+                    options='{"no_open": True}'
+                    readonly="1"
                     invisible="not allow_billable or not project_id or not sale_line_id or not partner_id"/>
                 <field name="sale_line_id"
                     groups="sales_team.group_sale_salesman"

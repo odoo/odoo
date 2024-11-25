@@ -42,7 +42,6 @@ const installPromptService = {
             browser.addEventListener("beforeinstallprompt", (ev) => {
                 // This event is only triggered by the browser when the native prompt to install can be shown
                 // This excludes incognito tabs, as well as visiting the website while the app is installed
-                ev.preventDefault();
                 nativePrompt = ev;
                 if (installationState === "accepted") {
                     // If this event is triggered with the installationState stored, it means that the app has been

@@ -4534,4 +4534,159 @@ QUnit.module("Views", (hooks) => {
         checkLabels(assert, graph, ["xphone / None", "xphone / red", "xpad / None"]);
         checkLegend(assert, graph, ["xphone / None", "xphone / red", "xpad / None"]);
     });
+
+    QUnit.test("missing property field definition is fetched", async function (assert) {
+        Object.assign(serverData.models.foo.fields, {
+            properties: {
+                string: "Properties",
+                type: "properties",
+                definition_record: "parent_id",
+                definition_record_field: "properties_definition",
+                name: "properties",
+            },
+            parent_id: {
+                string: "Parent",
+                type: "many2one",
+                relation: "foo",
+                name: "parent_id",
+            },
+            properties_definition: {
+                string: "Properties",
+                type: "properties_definition",
+            },
+        });
+        const graph = await makeView({
+            type: "graph",
+            resModel: "foo",
+            serverData,
+            arch: `<graph/>`,
+            irFilters: [
+                {
+                    user_id: [2, "Mitchell Admin"],
+                    name: "My Filter",
+                    id: 5,
+                    context: `{"group_by": ['properties.my_char']}`,
+                    sort: "[]",
+                    domain: "[]",
+                    is_default: true,
+                    model_id: "foo",
+                    action_id: false,
+                },
+            ],
+            mockRPC(_, { method, kwargs }) {
+                if (method === "web_read_group" && kwargs.groupby?.includes("properties.my_char")) {
+                    assert.step(JSON.stringify(kwargs.groupby));
+                    return {
+                        groups: [
+                            {
+                                "properties.my_char": false,
+                                __domain: [["properties.my_char", "=", false]],
+                                __count: 2,
+                            },
+                            {
+                                "properties.my_char": "aaa",
+                                __domain: [["properties.my_char", "=", "aaa"]],
+                                __count: 1,
+                            },
+                        ],
+                        length: 2,
+                    };
+                } else if (method === "get_property_definition") {
+                    return {
+                        name: "my_char",
+                        type: "char",
+                    };
+                }
+            },
+        });
+        assert.verifySteps([`["properties.my_char"]`]);
+        checkLabels(assert, graph, ["None", "aaa"]);
+        checkDatasets(
+            assert,
+            graph,
+            ["data", "label"],
+            [
+                {
+                    data: [2, 1],
+                    label: "Count",
+                },
+            ]
+        );
+    });
+
+    QUnit.test("missing deleted property field definition is created", async function (assert) {
+        Object.assign(serverData.models.foo.fields, {
+            properties: {
+                string: "Properties",
+                type: "properties",
+                definition_record: "parent_id",
+                definition_record_field: "properties_definition",
+                name: "properties",
+            },
+            parent_id: {
+                string: "Parent",
+                type: "many2one",
+                relation: "foo",
+                name: "parent_id",
+            },
+            properties_definition: {
+                string: "Properties",
+                type: "properties_definition",
+            },
+        });
+        const graph = await makeView({
+            type: "graph",
+            resModel: "foo",
+            serverData,
+            arch: `<graph/>`,
+            irFilters: [
+                {
+                    user_id: [2, "Mitchell Admin"],
+                    name: "My Filter",
+                    id: 5,
+                    context: `{"group_by": ['properties.my_char']}`,
+                    sort: "[]",
+                    domain: "[]",
+                    is_default: true,
+                    model_id: "foo",
+                    action_id: false,
+                },
+            ],
+            mockRPC(_, { method, kwargs }) {
+                if (method === "web_read_group" && kwargs.groupby?.includes("properties.my_char")) {
+                    assert.step(JSON.stringify(kwargs.groupby));
+                    return {
+                        groups: [
+                            {
+                                "properties.my_char": false,
+                                __domain: [["properties.my_char", "=", false]],
+                                __count: 2,
+                            },
+                            {
+                                "properties.my_char": "aaa",
+                                __domain: [["properties.my_char", "=", "aaa"]],
+                                __count: 1,
+                            },
+                        ],
+                        length: 2,
+                    };
+                } else if (method === "get_property_definition") {
+                    return {};
+                }
+            },
+        });
+        assert.verifySteps([`["properties.my_char"]`]);
+        checkLabels(assert, graph, ["None", "aaa"]);
+        checkDatasets(
+            assert,
+            graph,
+            ["data", "label"],
+            [
+                {
+                    data: [2, 1],
+                    label: "Count",
+                },
+            ]
+        );
+    });
 });

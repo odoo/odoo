@@ -2079,7 +2079,8 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
         ))
         composer = composer_form.save()
         with self.mock_mail_gateway(mail_unlink_sent=False), self.mock_mail_app():
-            composer.action_send_mail()
+            # don't want to test duplicates, more email management
+            composer.with_context(mailing_document_based=True).action_send_mail()
 
         # find partners created during sending (as emails are transformed into partners)
         # FIXME: currently email finding based on formatted / multi emails does
