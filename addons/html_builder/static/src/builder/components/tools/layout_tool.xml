@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.LayoutTool">
+    <ToolboxRow label="'Layout'">
+       <WeButtonGroup>
+            <Button label="'Grid'" onClick.bind="setGridLayout" isActive="state.elementLayout === 'grid'" />
+            <Button label="'Column'" onClick.bind="setColumnLayout"  isActive="state.elementLayout === 'column'" />
+        </WeButtonGroup>
+        <t t-if="state.elementLayout === 'column'">
+            <Dropdown>
+                <button class="btn btn-primary mx-1" t-att-title="props.title">
+                    <t class="px-1" t-out="state.columnCount"/>
+                </button>
+                <t t-set-slot="content">
+                    <t t-foreach="[1, 2, 3, 4, 5, 6]" t-as="column" t-key="column_index">
+                        <DropdownItem onSelected="() => this.changeColumnCount(column)">
+                            <div class="user-select-none">
+                                <t t-out="column"/>
+                            </div>
+                        </DropdownItem>
+                    </t>
+                </t>
+            </Dropdown>
+        </t>
+    </ToolboxRow>
+    <t t-if="state.elementLayout === 'grid'">
+        <AddElementOption />
+        <SpacingOption />
+    </t>
+    <t t-else="">
+        <ToolboxRow label="'└ Hor. Alignment'">
+            <WeButtonGroup applyTo="'.row'">
+                <WeButton classAction="'align-items-start'" title="'Align Top'" iconImg="'/website/static/src/img/snippets_options/align_top.svg'"  />
+                <WeButton classAction="'align-items-center'" title="'Align Middle'" iconImg="'/website/static/src/img/snippets_options/align_middle.svg'" />
+                <WeButton classAction="'align-items-end'" title="'Align Bottom'" iconImg="'/website/static/src/img/snippets_options/align_bottom.svg'" />
+                <WeButton classAction="'align-items-stretch'" title="'Stretch'" iconImg="'/website/static/src/img/snippets_options/align_stretch.svg'" />
+            </WeButtonGroup>
+        </ToolboxRow>
+    </t>
+</t>
+
+</templates>

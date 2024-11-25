@@ -1,5 +1,6 @@
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { defaultOptionComponents } from "../defaultComponents";
+import { useDomState } from "../../builder_helpers";
 
 export class SpacingOption extends Component {
     static template = "html_builder.SpacingOption";
@@ -10,17 +11,10 @@ export class SpacingOption extends Component {
         this.target = this.env.editingElement.querySelector(".o_grid_mode");
         this.targetComputedStyle = getComputedStyle(this.target);
 
-        this.state = useState(this.setState({}));
-        this.env.editorBus.addEventListener("STEP_ADDED", () => {
-            this.setState(this.state);
-        });
-    }
-    setState(object) {
-        Object.assign(object, {
+        this.state = useDomState(() => ({
             spacingX: parseInt(this.targetComputedStyle.columnGap),
             spacingY: parseInt(this.targetComputedStyle.rowGap),
-        });
-        return object;
+        }));
     }
     previewSpacingX(spacing) {
         this.target.style["column-gap"] = `${spacing}px`;
