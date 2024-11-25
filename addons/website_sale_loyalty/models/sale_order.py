@@ -241,7 +241,11 @@ class SaleOrder(models.Model):
                     r.reward_type == 'discount' and r.discount_applicability == 'order'
                 ))
                 if global_discounts:
-                    res[coupon] -= global_discounts - max(global_discounts, key=lambda d: d.discount)
+                    best_discount = global_discounts[0]
+                    for discount in global_discounts[1:]:
+                        if not self._best_global_discount_already_applied(best_discount, discount):
+                            best_discount = discount
+                    res[coupon] -= global_discounts - best_discount
 
         return res
 
