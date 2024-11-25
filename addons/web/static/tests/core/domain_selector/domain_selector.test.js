@@ -2306,3 +2306,14 @@ test(`within operator (edit) for datetime with invalid period`, async () => {
         `["&", ("datetime", ">=", datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")), ("datetime", "<=", datetime.datetime.combine(context_today() + relativedelta(days = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))]`,
     ]);
 });
+
+test("shorten descriptions of long lists", async (assert) => {
+    const values = new Array(500).fill(42525245);
+    await makeDomainSelector({
+        domain: `[("id", "in", [${values}])]`,
+        readonly: true,
+    });
+    expect(".o_tree_editor_condition").toHaveText(
+        `Id\nis in\n(\n${values.slice(0, 20).join("\n,\n")}\n,\n...\n)`
+    );
+});
