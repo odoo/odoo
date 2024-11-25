@@ -54,7 +54,13 @@
                                 <span>Please note that the kiosk only works with Adyen &amp; Stripe terminals</span>
                             </div>
                             <setting id="payment_methods_new" string="Payment Methods" help="Payment methods available" documentation="/applications/sales/point_of_sale/payment_methods.html">
-                                <field name="pos_payment_method_ids" colspan="4" widget="many2many_tags" readonly="pos_has_active_session" required="pos_company_has_template" options="{'no_create': True}" />
+                                <field name="pos_payment_method_ids"
+                                    colspan="4"
+                                    widget="many2many_tags"
+                                    readonly="pos_has_active_session"
+                                    required="pos_company_has_template"
+                                    options="{'no_quick_create': True}"
+                                    context="{'default_config_ids': [pos_config_id], 'form_view_ref': 'point_of_sale.action_pos_payment_method_form' }" />
                                 <div>
                                     <button name="%(action_payment_methods_tree)d" icon="oi-arrow-right" type="action" string="Payment Methods" class="btn-link"/>
                                 </div>
@@ -319,21 +325,33 @@
                             <setting id="adyen_payment_terminal_setting" title="The transactions are processed by Adyen. Set your Adyen credentials on the related payment method." string="Adyen" help="Accept payments with an Adyen payment terminal"
                                      documentation="/applications/sales/point_of_sale/payment_methods/terminals/adyen.html">
                                 <field name="module_pos_adyen"/>
+                                <button name="open_payment_method_form" icon="oi-arrow-right" type="object" string="Payment method" class="btn-link"
+                                    context="{'selection': 'adyen', 'config_ids': [pos_config_id], 'provider_name': 'Adyen'}" invisible="not module_pos_adyen" />
                             </setting>
                             <setting id="stripe_payment_terminal_setting" title="The transactions are processed by Stripe. Set your Stripe credentials on the related payment method." string="Stripe" help="Accept payments with a Stripe payment terminal" documentation="applications/sales/point_of_sale/payment_methods/terminals/stripe.html">
                                 <field name="module_pos_stripe"/>
+                                <button name="open_payment_method_form" icon="oi-arrow-right" type="object" string="Payment method" class="btn-link"
+                                    context="{'selection': 'stripe', 'config_ids': [pos_config_id], 'provider_name': 'Stripe'}" invisible="not module_pos_stripe" />
                             </setting>
                             <setting title="The transactions are processed by Six. Set the IP address of the terminal on the related payment method." string="Six" documentation="/applications/sales/point_of_sale/payment_methods/terminals/six.html" help="Accept payments with a Six payment terminal">
                                 <field name="module_pos_six"/>
+                                <button name="open_payment_method_form" icon="oi-arrow-right" type="object" string="Payment method" class="btn-link"
+                                    context="{'selection': 'six', 'config_ids': [pos_config_id], 'provider_name': 'SIX'}" invisible="not module_pos_six" />
                             </setting>
                             <setting title="The transactions are processed by Viva Wallet on terminal or tap on phone." string="Viva Wallet" help="Accept payments with Viva Wallet on a terminal or tap on phone">
                                 <field name="module_pos_viva_wallet"/>
+                                <button name="open_payment_method_form" icon="oi-arrow-right" type="object" string="Payment method" class="btn-link"
+                                    context="{'selection': 'viva_wallet', 'config_ids': [pos_config_id], 'provider_name': 'Viva Wallet'}" invisible="not module_pos_viva_wallet" />
                             </setting>
                             <setting id="pos_razorpay_setting" title="The transactions are processed by Razorpay. Set your Razorpay credentials on the related payment method." string="Razorpay" help="Accept payments with a Razorpay payment terminal">
                                 <field name="module_pos_razorpay"/>
+                                <button name="open_payment_method_form" icon="oi-arrow-right" type="object" string="Payment method" class="btn-link"
+                                    context="{'selection': 'paytm', 'config_ids': [pos_config_id], 'provider_name': 'Razorpay'}" invisible="not module_pos_razorpay" />
                             </setting>
                             <setting title="The transactions are processed by Mercado Pago on terminal" string="Mercado Pago" help="Accept payments with Mercado Pago on a terminal">
                                 <field name="module_pos_mercado_pago"/>
+                                <button name="open_payment_method_form" icon="oi-arrow-right" type="object" string="Payment method" class="btn-link"
+                                    context="{'selection': 'mercado_pago', 'config_ids': [pos_config_id], 'provider_name': 'Mercado Pago'}" invisible="not module_pos_mercado_pago" />
                             </setting>
                         </block>
 
