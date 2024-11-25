@@ -69,6 +69,23 @@ describe('Copy', () => {
                     window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('<table><tbody><tr><td><ul><li>a</li><li>b</li><li>c</li></ul></td><td><br></td></tr></tbody></table>');
                 },
             });
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>[abcd</p><table><tbody><tr><td><br></td><td><br></td></tr></tbody></table>]`,
+                stepFunction: async (editor) => {
+                  const clipboardData = new DataTransfer();
+                  await triggerEvent(editor.editable, "copy", { clipboardData });
+                  window.chai
+                    .expect(clipboardData.getData("text/html"))
+                    .to.be.equal(
+                      `<p>abcd</p><table class="o_selected_table"><tbody><tr><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td></tr></tbody></table>`
+                    );
+                  window.chai
+                    .expect(clipboardData.getData("text/odoo-editor"))
+                    .to.be.equal(
+                      `<p>abcd</p><table class="o_selected_table"><tbody><tr><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td></tr></tbody></table>`
+                    );
+                },
+            });
         });
         it('should wrap the selected text with clones of ancestors up to a block element to keep styles', async () => {
             await testEditor(BasicEditor, {
