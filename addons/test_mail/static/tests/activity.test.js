@@ -18,7 +18,7 @@ import {
     DEFAULT_MAIL_VIEW_ID,
 } from "@mail/../tests/mock_server/mock_models/constants";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { mockDate } from "@odoo/hoot-mock";
+import { mockDate, animationFrame } from "@odoo/hoot-mock";
 import { onMounted, onWillUnmount } from "@odoo/owl";
 import { MailTestActivity } from "@test_mail/../tests/mock_server/models/mail_test_activity";
 import { defineTestMailModels } from "@test_mail/../tests/test_mail_test_helpers";
@@ -1129,4 +1129,35 @@ test("update activity view after creating multiple activities", async () => {
     await click(".modal-footer button.o_form_button_cancel");
     await waitFor(".o_activity_summary_cell:not(.o_activity_empty_cell)");
     expect(".o_activity_summary_cell:not(.o_activity_empty_cell)").toHaveCount(1);
+});
+
+test("Activity View: Hide 'New' button in SelectCreateDialog based on action context", async () => {
+    MailTestActivity._views = {
+        ...MailTestActivity._views,
+        [`activity,${DEFAULT_MAIL_VIEW_ID}`]: `
+            <activity string="MailTestActivity">
+                <templates>
+                    <div t-name="activity-box">
+                        <field name="name"/>
+                    </div>
+                </templates>
+            </activity>`,
+        "list,false": `
+            <tree string="MailTestActivity">
+                <field name="name"/>
+                <field name="activity_ids" widget="list_activity"/>
+            </tree>
+        `,
+    }
+    await start();
+    await openView({
+        res_model: "mail.test.activity",
+        views: [[false, "activity"]],
+        context: { create: false },
+    });
+    await click("table tfoot tr .o_record_selector");
+    await animationFrame();
+    expect('.o_create_button').toHaveCount(0, {
+        message: "'New' button should be hidden",
+    });
 });
