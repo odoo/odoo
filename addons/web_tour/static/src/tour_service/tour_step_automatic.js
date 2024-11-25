@@ -1,4 +1,3 @@
-import { _legacyIsVisible } from "@web/core/utils/ui";
 import { tourState } from "./tour_state";
 import * as hoot from "@odoo/hoot-dom";
 import { callWithUnloadCheck } from "./tour_utils";
@@ -20,7 +19,7 @@ export class TourStepAutomatic extends TourStep {
         if (this.element) {
             errors.push(`Element has been found.`);
             if (this.isUIBlocked) {
-                errors.push("ERROR: DOM is blocked by UI.");
+                errors.push("BUT: DOM is blocked by UI.");
             }
             if (!this.elementIsInModal) {
                 errors.push(
@@ -28,15 +27,19 @@ export class TourStepAutomatic extends TourStep {
                 );
             }
             if (!this.elementIsEnabled) {
-                errors.push(`BUT: Element is not enabled.`);
+                errors.push(
+                    `BUT: Element is not enabled. TIP: You can use :enable to wait the element is enabled before doing action on it.`
+                );
             }
         } else {
-            if (this.error) {
-                errors.push(this.error);
-            } else {
+            const checkElement = hoot.queryFirst(this.trigger);
+            if (checkElement) {
+                errors.push(`Element has been found.`);
                 errors.push(
-                    `The cause is that trigger (${this.trigger}) element cannot be found in DOM. TIP: You can use :not(:visible) to force the search for an invisible element.`
+                    `BUT: Element is not visible. TIP: You can use :not(:visible) to force the search for an invisible element.`
                 );
+            } else {
+                errors.push(`Element (${this.trigger}) has not been found.`);
             }
         }
         return errors;
@@ -79,15 +82,8 @@ export class TourStepAutomatic extends TourStep {
             this.skipped = true;
             return true;
         }
-        let nodes;
-        try {
-            nodes = hoot.queryAll(this.trigger);
-        } catch (error) {
-            this.error = `HOOT: ${error.message}`;
-        }
-        this.element = this.trigger.includes(":visible")
-            ? nodes.at(0)
-            : nodes.find(_legacyIsVisible);
+        const visible = !this.trigger.includes(":visible");
+        this.element = hoot.queryFirst(this.trigger, { visible });
         return !this.isUIBlocked && this.elementIsEnabled && this.elementIsInModal
             ? this.element
             : false;

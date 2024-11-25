@@ -87,7 +87,10 @@ registry.category("web_tour.tours").add("crm_rainbowman", {
             content: "move lead to won stage",
             run: "click",
         },
-        ...stepUtils.saveForm(),
+        {
+            content: "wait for save completion",
+            trigger: ".o_form_readonly, .o_form_saved",
+        },
         {
             trigger: ".o_reward_rainbow",
         },
@@ -101,7 +104,10 @@ registry.category("web_tour.tours").add("crm_rainbowman", {
             content: "click button mark won",
             run: "click",
         },
-        ...stepUtils.saveForm(),
+        {
+            content: "wait for save completion",
+            trigger: ".o_form_readonly, .o_form_saved",
+        },
         {
             trigger: ".o_reward_rainbow",
         },
