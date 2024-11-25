@@ -80,7 +80,7 @@ test("new message from operator displays unread counter", async () => {
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-ChatBubble-counter", { text: "1" });
+    await contains(".o-mail-ChatWindow-counter", { text: "1" });
 });
 
 test.tags("focus required")("focus on unread livechat marks it as read", async () => {
