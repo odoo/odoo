@@ -1833,6 +1833,25 @@
             <field name="view_id" ref="view_out_invoice_tree"/>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="domain">[('move_type', 'in', ['out_invoice', 'out_refund'])]</field>
+            <field name="context">{'default_move_type': 'out_invoice'}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a customer invoice
+              </p><p>
+                Create invoices, register payments and keep track of the discussions with your customers.
+              </p>
+            </field>
+        </record>
+
+        <!-- ADDED IN STABLE - DO NOT USE IN 18.0 -->
+        <record id="action_move_out_invoice" model="ir.actions.act_window">
+            <field name="name">Invoices</field>
+            <field name="path">customer-invoices</field>
+            <field name="res_model">account.move</field>
+            <field name="view_mode">list,kanban,form,activity</field>
+            <field name="view_id" ref="view_out_invoice_tree"/>
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
+            <field name="domain">[('move_type', 'in', ['out_invoice', 'out_refund'])]</field>
             <field name="context">{'search_default_out_invoice': 1, 'default_move_type': 'out_invoice'}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -1866,6 +1885,26 @@
             <field name="name">Bills</field>
             <field name="res_model">account.move</field>
             <field name="path">bills</field>
+            <field name="view_mode">list,kanban,form,activity</field>
+            <field name="view_id" ref="view_in_invoice_bill_tree"/>
+            <field name="search_view_id" ref="view_account_bill_filter"/>
+            <field name="domain">[('move_type', 'in', ['in_invoice', 'in_refund'])]</field>
+            <field name="context">{'default_move_type': 'in_invoice', 'display_account_trust': True}</field>
+            <field name="help" type="html">
+                <!-- An owl component should be displayed instead -->
+                <p class="o_view_nocontent_smiling_face">
+                    Create a vendor bill
+                </p><p>
+                    Capture invoices, register payments and keep track of the discussions with your vendors.
+                </p>
+            </field>
+        </record>
+
+        <!-- ADDED IN STABLE - DO NOT USE IN 18.0 -->
+        <record id="action_move_in_invoice" model="ir.actions.act_window">
+            <field name="name">Bills</field>
+            <field name="res_model">account.move</field>
+            <field name="path">vendor-bills</field>
             <field name="view_mode">list,kanban,form,activity</field>
             <field name="view_id" ref="view_in_invoice_bill_tree"/>
             <field name="search_view_id" ref="view_account_bill_filter"/>
