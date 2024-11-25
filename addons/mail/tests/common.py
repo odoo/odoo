@@ -1344,6 +1344,8 @@ class MailCommon(common.TransactionCase, MailCase):
         # have root available at hand, just in case
         cls.user_root = cls.env.ref('base.user_root')
         cls.partner_root = cls.user_root.partner_id
+        # have public available at hand just in case
+        cls.user_public = cls.env.ref("base.public_user")
 
         # setup MC environment
         cls._activate_multi_company()
@@ -1416,6 +1418,7 @@ class MailCommon(common.TransactionCase, MailCase):
 
         # new companies
         cls.company_2 = cls.env['res.company'].create({
+            'country_id': cls.env.ref('base.ca').id,
             'currency_id': cls.env.ref('base.CAD').id,
             'email': 'company_2@test.example.com',
             'name': 'Company 2',
