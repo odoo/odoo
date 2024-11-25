@@ -1,10 +1,10 @@
 import { Component } from "@odoo/owl";
 import { WithSubEnv } from "../builder_helpers";
-import { ElementToolboxContainer } from "../components/ElementToolboxContainer";
+import { OptionsContainer } from "../components/OptionsContainer";
 
 export class CustomizeTab extends Component {
     static template = "html_builder.CustomizeTab";
-    static components = { WithSubEnv, ElementToolboxContainer };
+    static components = { WithSubEnv, OptionsContainer };
     static props = {
         selectedToolboxes: { type: Object },
     };
