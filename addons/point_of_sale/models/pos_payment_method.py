@@ -63,6 +63,16 @@ class PosPaymentMethod(models.Model):
     hide_qr_code_method = fields.Boolean(compute='_compute_hide_qr_code_method')
 
     @api.model
+    def get_provider_status(self, modules_list):
+        return {
+            'state': self.env['ir.module.module'].search_read([('name', 'in', modules_list)], ['name', 'state']),
+            'iot_state': {
+                'worldline': self.env['ir.config_parameter'].sudo().get_param('pos_iot.worldline_payment_terminal'),
+                'ingenico': self.env['ir.config_parameter'].sudo().get_param('pos_iot.ingenico_payment_terminal'),
+            }
+        }
+
+    @api.model
     def _load_pos_data_domain(self, data):
         return ['|', ('active', '=', False), ('active', '=', True)]
 
@@ -84,6 +94,9 @@ class PosPaymentMethod(models.Model):
     @api.onchange('payment_method_type')
     def _onchange_payment_method_type(self):
         # We don't display the field if there is only one option and cannot set a default on it
+        if self.payment_method_type == 'none':
+            self.use_payment_terminal = False
+
         selection_options = self.env['res.partner.bank'].get_available_qr_methods_in_sequence()
         if len(selection_options) == 1:
             self.qr_code_method = selection_options[0][0]
