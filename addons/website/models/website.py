@@ -1790,6 +1790,60 @@ class Website(models.Model):
                     return True
         return False
 
+    def _check_snippet_version(self):
+
+        # Récupérer les templates de snippets pour leurs versions officielles
+        snippet_templates = self.env['ir.ui.view'].search([
+            ('key', 'like', 'website.s\\_%'),
+        ])
+
+        # Extraire les versions officielles des snippets
+        snippet_versions = {}
+        for template in snippet_templates:
+            snippet_id = template.key.split(".")[1]
+            tree = etree.fromstring(template.arch_db.encode('utf-8'))
+            for element in tree.xpath('//*[@data-vxml or @data-vcss or @data-vjs or @class]'):
+                if snippet_id in element.attrib.get('class').split():
+                    snippet_versions[snippet_id] = {
+                        'data-vxml': element.attrib.get('data-vxml', '000'),
+                        'data-vcss': element.attrib.get('data-vcss', '000'),
+                        'data-vjs': element.attrib.get('data-vjs', '000'),
+                    }
+                # TO-DO - improve this hardcoded part
+                elif 's_text_image' in element.attrib.get('class').split():
+                    snippet_versions['s_image_text'] = {
+                        'data-vxml': element.attrib.get('data-vxml', '000'),
+                        'data-vcss': element.attrib.get('data-vcss', '000'),
+                        'data-vjs': element.attrib.get('data-vjs', '000'),
+                    }
+                if 's_image_gallery' in element.attrib.get('class').split() and template.key == 'website.s_images_wall':
+                    snippet_versions['s_images_wall'] = {
+                        'data-vxml': element.attrib.get('data-vxml', '000'),
+                        'data-vcss': element.attrib.get('data-vcss', '000'),
+                        'data-vjs': element.attrib.get('data-vjs', '000'),
+                    }
+
+        html_fields = [(self.env[model_name], field_name) for model_name, field_name in self._get_html_fields()]
+        for model, field_name in html_fields:
+            records = model.search([(field_name, '!=', False)])
+            for record in records:
+                html_content = getattr(record, field_name)
+                tree = html.fromstring(html_content.encode('utf-8'))
+                for element in tree.xpath('//*[@data-snippet]'):
+                    snippet_id = element.attrib.get('data-snippet')
+                    versions = {
+                        'data-vxml': element.attrib.get('data-vxml', '000'),
+                        'data-vcss': element.attrib.get('data-vcss', '000'),
+                        'data-vjs': element.attrib.get('data-vjs', '000'),
+                    }
+                    if snippet_id in snippet_versions:
+                        official_versions = snippet_versions[snippet_id]
+                        mismatches = {k: (v, official_versions.get(k)) for k, v in versions.items() if v != official_versions.get(k)}
+                        if mismatches:
+                            print(f"Vue: {(record, field_name)}, Snippet: {snippet_id}, Versions incorrectes: {mismatches}")
+                    else:
+                        print(f"Snippet inconnu trouvé dans la vue: {(record, field_name)}, Snippet: {snippet_id}")
+
     def _check_user_can_modify(self, record):
         """ Verify that the current user can modify the given record.
 
