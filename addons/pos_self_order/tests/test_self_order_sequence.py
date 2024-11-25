@@ -9,19 +9,21 @@ class TestSelfOrderSequence(SelfOrderCommonTest):
     browser_size = "1920,1080"
 
     def test_self_order_order_number_conflict_with_normal_orders(self):
+        self.env['restaurant.table'].search([]).action_archive()
+        self.env['restaurant.floor'].search([]).action_archive()
         main_floor = self.env['restaurant.floor'].create({
             'name': 'Main Floor',
             'pos_config_ids': [(4, self.pos_config.id)],
         })
         self.env['restaurant.table'].create({
-            'table_number': 1,
+            'table_number': 101,
             'floor_id': main_floor.id,
             'seats': 4,
             'position_h': 150,
             'position_v': 100,
         })
         self.env['restaurant.table'].create({
-            'table_number': 3,
+            'table_number': 103,
             'floor_id': main_floor.id,
             'seats': 4,
             'position_h': 100,
