@@ -26,7 +26,6 @@ registry.category("web_tour.tours").add('order_lunch_tour', {
 },
 {
     trigger: '.lunch_location input:value("Farm 1")',
-    run: () => {},  // wait for article to be correctly loaded
 },
 {
     trigger: ".o_kanban_record",

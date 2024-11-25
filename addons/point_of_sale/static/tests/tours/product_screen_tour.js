@@ -324,7 +324,6 @@ registry.category("web_tour.tours").add("CheckProductInformation", {
             },
             {
                 trigger: ".section-product-info-title:not(:contains('On hand:'))",
-                run: () => {},
             },
         ].flat(),
 });

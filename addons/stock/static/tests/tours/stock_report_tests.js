@@ -74,7 +74,6 @@ registry.category("web_tour.tours").add('test_multiple_warehouses_filter', {
         {
             trigger: '.o_graph_view',
             content: 'Wait for the Forecast page to load.',
-            run: () => {},
         },
     ],
 });
