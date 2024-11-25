@@ -2,14 +2,14 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.SpacingOption">
-    <ToolboxRow label="'└ Spacing (Y, X)'">
+    <WeRow label="'└ Spacing (Y, X)'">
         <input type="number" class="form-control" t-att-value="state.spacingY"
             t-on-input="(e) => this.previewSpacingY(e.target.value)"
             t-on-change="(e) => this.changeSpacingY(e.target.value)"/>
         <input type="number" class="form-control" t-att-value="state.spacingX"
             t-on-input="(e) => this.previewSpacingX(e.target.value)"
             t-on-change="(e) => this.changeSpacingX(e.target.value)"/>
-    </ToolboxRow>
+    </WeRow>
 </t>
 
 </templates>

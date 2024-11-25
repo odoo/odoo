@@ -2,17 +2,17 @@ import { expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
-import { addToolbox, defineWebsiteModels, setupWebsiteBuilder } from "../helpers";
+import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../helpers";
 
 defineWebsiteModels();
 
 test("Open toolbox", async () => {
-    addToolbox({
+    addOption({
         selector: ".test-toolbox-target",
         template: xml`
-        <ToolboxRow label="'Row 1'">
+        <WeRow label="'Row 1'">
             Test
-        </ToolboxRow>`,
+        </WeRow>`,
     });
     await setupWebsiteBuilder(`<div class="test-toolbox-target">b</div>`);
     await contains(":iframe .test-toolbox-target").click();
@@ -20,20 +20,20 @@ test("Open toolbox", async () => {
 });
 
 test("basic multi toolboxes", async () => {
-    addToolbox({
+    addOption({
         selector: ".test-toolbox-target",
         template: xml`
-        <ToolboxRow label="'Row 1'">A</ToolboxRow>`,
+        <WeRow label="'Row 1'">A</WeRow>`,
     });
-    addToolbox({
+    addOption({
         selector: "p",
         template: xml`
-        <ToolboxRow label="'Row 2'">B</ToolboxRow>`,
+        <WeRow label="'Row 2'">B</WeRow>`,
     });
-    addToolbox({
+    addOption({
         selector: "div",
         template: xml`
-        <ToolboxRow label="'Row 3'">C</ToolboxRow>`,
+        <WeRow label="'Row 3'">C</WeRow>`,
     });
     await setupWebsiteBuilder(`<div><p class="test-toolbox-target">b</p></div>`);
     await contains(":iframe .test-toolbox-target").click();

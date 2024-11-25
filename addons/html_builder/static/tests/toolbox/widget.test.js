@@ -2,13 +2,13 @@ import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, click, fill, hover, queryFirst } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
-import { addToolbox, defineWebsiteModels, setupWebsiteBuilder } from "../helpers";
+import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../helpers";
 
 defineWebsiteModels();
 
 describe("WeButton", () => {
     test("call a specific action with some params and value", async () => {
-        addToolbox({
+        addOption({
             selector: ".test-toolbox-target",
             actions: {
                 customAction: {
@@ -28,7 +28,7 @@ describe("WeButton", () => {
         expect.verifySteps(["customAction myParam myValue", "customAction myParam myValue"]);
     });
     test("call a shorthand action", async () => {
-        addToolbox({
+        addOption({
             selector: ".test-toolbox-target",
             template: xml`<WeButton classAction="'my-custom-class'"/>`,
         });
@@ -39,7 +39,7 @@ describe("WeButton", () => {
         expect(":iframe .test-toolbox-target").toHaveClass("my-custom-class");
     });
     test("call a shorthand action and a specific action", async () => {
-        addToolbox({
+        addOption({
             selector: ".test-toolbox-target",
             actions: {
                 customAction: {
@@ -61,7 +61,7 @@ describe("WeButton", () => {
         expect(":iframe .test-toolbox-target").toHaveInnerHTML("c");
     });
     test("preview a shorthand action and a specific action", async () => {
-        addToolbox({
+        addOption({
             selector: ".test-toolbox-target",
             actions: {
                 customAction: {
@@ -85,7 +85,7 @@ describe("WeButton", () => {
         expect.verifySteps([]);
     });
     test("clean another action", async () => {
-        addToolbox({
+        addOption({
             selector: ".test-toolbox-target",
             template: xml`
                     <WeButtonGroup>
@@ -108,7 +108,7 @@ describe("WeButton", () => {
         );
     });
     test("add the active class if the condition is met", async () => {
-        addToolbox({
+        addOption({
             selector: ".test-toolbox-target",
             template: xml`
                         <WeButton classAction="'my-custom-class1'"/>
@@ -122,7 +122,7 @@ describe("WeButton", () => {
 });
 describe("WeButtonGroup", () => {
     test("change the editingElement of sub widget through `applyTo` prop", async () => {
-        addToolbox({
+        addOption({
             selector: ".test-toolbox-target",
             actions: {
                 customAction: {
@@ -147,7 +147,7 @@ describe("WeButtonGroup", () => {
         expect.verifySteps(["customAction a"]);
     });
     test("should propagate actionParam in the context", async () => {
-        addToolbox({
+        addOption({
             selector: ".test-toolbox-target",
             actions: {
                 customAction: {
@@ -174,7 +174,7 @@ describe("WeButtonGroup", () => {
 });
 describe("WeNumberInput", () => {
     test("should get the initial value of the input", async () => {
-        addToolbox({
+        addOption({
             selector: ".test-toolbox-target",
             actions: {
                 customAction: {
@@ -197,7 +197,7 @@ describe("WeNumberInput", () => {
         expect(input).toHaveValue("10");
     });
     test("should preview changes", async () => {
-        addToolbox({
+        addOption({
             selector: ".test-toolbox-target",
             actions: {
                 customAction: {
@@ -225,7 +225,7 @@ describe("WeNumberInput", () => {
         expect(".o-snippets-top-actions .fa-repeat").not.toBeEnabled();
     });
     test("should commit changes", async () => {
-        addToolbox({
+        addOption({
             selector: ".test-toolbox-target",
             actions: {
                 customAction: {
@@ -258,7 +258,7 @@ describe("WeNumberInput", () => {
 });
 describe("WeSelectItem", () => {
     test("call a specific action with some params and value (WeSelectItem)", async () => {
-        addToolbox({
+        addOption({
             selector: ".test-toolbox-target",
             actions: {
                 customAction: {
@@ -283,7 +283,7 @@ describe("WeSelectItem", () => {
         expect.verifySteps(["customAction myParam myValue", "customAction myParam myValue"]);
     });
     test("set the label of the select from the active select item", async () => {
-        addToolbox({
+        addOption({
             selector: ".test-toolbox-target",
             template: xml`
                     <WeSelect attributeAction="'customAttribute'">
