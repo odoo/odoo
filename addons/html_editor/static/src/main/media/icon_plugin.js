@@ -68,14 +68,12 @@ export class IconPlugin extends Plugin {
             {
                 id: "icon_forecolor",
                 groupId: "icon_color",
-                title: _t("Font Color"),
                 Component: ColorSelector,
                 props: this.dependencies.color.getPropsForColorSelector("foreground"),
             },
             {
                 id: "icon_backcolor",
                 groupId: "icon_color",
-                title: _t("Background Color"),
                 Component: ColorSelector,
                 props: this.dependencies.color.getPropsForColorSelector("background"),
             },
