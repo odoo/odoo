@@ -28,7 +28,7 @@
                     <i class="fa fa-files-o me-1"/>Split
                 </button>
                 <button class="btn btn-secondary btn-lg py-5" t-on-click.stop="() => this.clickTransferOrder()">
-                    <i class="oi oi-arrow-right me-1" />Transfer / Merge
+                    <i class="oi oi-arrow-right me-1" />Transfer
                 </button>
                 <button t-if="!pos.getOrder()?.table_id" class="btn btn-secondary btn-lg py-5" t-on-click="() => this.editFloatingOrderName(this.pos.getOrder())">
                     <i class="fa fa-pencil-square-o me-1" />Edit Order Name
