@@ -2,8 +2,7 @@ import { Dropzone } from "@web/core/dropzone/dropzone";
 import { useEffect, useExternalListener } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
-
-export function useDropzone(targetRef, onDrop, extraClass, isDropzoneEnabled = () => true) {
+export function useCustomDropzone(targetRef, dropzoneComponent, dropzoneComponentProps, isDropzoneEnabled = () => true) {
     const overlayService = useService("overlay");
     const uiService = useService("ui");
 
@@ -28,10 +27,9 @@ export function useDropzone(targetRef, onDrop, extraClass, isDropzoneEnabled = (
         const shouldDisplayDropzone = dragCount && hasTarget && isTargetInActiveElement && isDropzoneEnabled();
 
         if (shouldDisplayDropzone && !hasDropzone) {
-            removeDropzone = overlayService.add(Dropzone, {
-                extraClass,
-                onDrop,
-                ref: targetRef
+            removeDropzone = overlayService.add(dropzoneComponent, {
+                ref: targetRef,
+                ...dropzoneComponentProps
             });
         }
         if (!shouldDisplayDropzone && hasDropzone) {
@@ -61,4 +59,10 @@ export function useDropzone(targetRef, onDrop, extraClass, isDropzoneEnabled = (
         },
         () => [targetRef.el]
     );
+}
+
+export function useDropzone(targetRef, onDrop, extraClass, isDropzoneEnabled = () => true) {
+    const dropzoneComponent = Dropzone;
+    const dropzoneComponentProps = { extraClass, onDrop };
+    useCustomDropzone(targetRef, dropzoneComponent, dropzoneComponentProps, isDropzoneEnabled);
 }

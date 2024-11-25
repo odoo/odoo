@@ -5,6 +5,7 @@ export class Dropzone extends Component {
         extraClass: { type: String, optional: true },
         onDrop: { type: Function, optional: true },
         ref: Object,
+        slots: { type: Object, optional: true },
     };
     static template = "web.Dropzone";
 
