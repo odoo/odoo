@@ -17,7 +17,7 @@ import { ActivityModel } from "@mail/views/web/activity/activity_model";
 import { ActivityRenderer } from "@mail/views/web/activity/activity_renderer";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { keyDown, waitFor } from "@odoo/hoot-dom";
-import { mockDate } from "@odoo/hoot-mock";
+import { animationFrame, mockDate } from "@odoo/hoot-mock";
 import { onMounted, onWillUnmount } from "@odoo/owl";
 import { MailTestActivity } from "@test_mail/../tests/mock_server/models/mail_test_activity";
 import { defineTestMailModels } from "@test_mail/../tests/test_mail_test_helpers";
@@ -1202,4 +1202,29 @@ test("Activity view: context given to the rpc to fetch data", async () => {
         context,
     });
     await waitForSteps(["get_activity_data"]);
+});
+
+test("Activity View: Hide 'New' button in SelectCreateDialog based on action context", async () => {
+    registerArchs(archs);
+    MailTestActivity._views = {
+        ...MailTestActivity._views,
+        "list,false": `
+            <list string="MailTestActivity">
+                <field name="name"/>
+                <field name="activity_ids" widget="list_activity"/>
+            </list>`
+        ,
+    };
+
+    await start();
+    await openView({
+        res_model: "mail.test.activity",
+        views: [[false, "activity"]],
+        context: { create: false },
+    });
+    await click("table tfoot tr .o_record_selector");
+    await animationFrame();
+    expect('.o_create_button').toHaveCount(0, {
+        message: "'New' button should be hidden",
+    });
 });
