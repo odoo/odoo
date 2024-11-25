@@ -321,14 +321,16 @@ class TestAPI(MailCommon, TestRecipients):
                 'name': 'No info (void partner)',
             }, {
                 'name': 'No info at all',
-            },
+            }, {
+                'customer_id': self.user_public.partner_id.id,
+            }
         ])
         self.assertFalse(test_records[2].customer_email)
         self.flush_tracking()
 
         # test default computation of recipients
         self.env.invalidate_all()
-        with self.assertQueryCount(16):
+        with self.assertQueryCount(20):
             defaults = test_records._message_get_default_recipients()
         for record, expected in zip(test_records, [
             {
@@ -348,6 +350,8 @@ class TestAPI(MailCommon, TestRecipients):
             }, {
                 'email_cc': '', 'email_to': '', 'partner_ids': void_partner.ids,
             }, {
+                'email_cc': '', 'email_to': '', 'partner_ids': [],
+            }, {  # public user should not be proposed
                 'email_cc': '', 'email_to': '', 'partner_ids': [],
             },
         ]):

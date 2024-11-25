@@ -282,7 +282,7 @@ class ResPartner(models.Model):
     mobile = fields.Char()
     is_company = fields.Boolean(string='Is a Company', default=False,
         help="Check if the contact is a company, otherwise it is a person")
-    is_public = fields.Boolean(compute='_compute_is_public')
+    is_public = fields.Boolean(compute='_compute_is_public', compute_sudo=True)
     industry_id: ResPartnerIndustry = fields.Many2one('res.partner.industry', 'Industry')
     # company_type is only an interface field, do not use it in business logic
     company_type = fields.Selection(string='Company Type',
