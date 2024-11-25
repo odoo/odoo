@@ -462,6 +462,7 @@ class StockMove(models.Model):
         # we go further with the list of ids potentially changed by action_explode
         return super(StockMove, moves)._action_confirm(merge=merge, merge_into=merge_into)
 
+
     def action_explode(self):
         """ Explodes pickings """
         # in order to explode a move, we must have a picking_type_id on that move because otherwise the move

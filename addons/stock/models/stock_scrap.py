@@ -133,6 +133,7 @@ class StockScrap(models.Model):
                 'lot_id': self.lot_id.id,
             })],
             # 'restrict_partner_id': self.owner_id.id,
+            'production_id': self.production_id.id,
             'picked': True,
             'picking_id': self.picking_id.id
         }
