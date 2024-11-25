@@ -140,6 +140,8 @@ class Website(models.Model):
         default="Not Available For Sale",
     )
 
+    first_breadcrumb_shop = fields.Char(string="First breadcrumb in shop", default="All Products", required=True, help="TEST")
+
     # Computed fields
     fiscal_position_id = fields.Many2one(
         comodel_name='account.fiscal.position',
