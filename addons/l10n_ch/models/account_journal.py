@@ -13,7 +13,7 @@ class AccountJournal(models.Model):
     _inherit = 'account.journal'
 
     invoice_reference_model = fields.Selection(selection_add=[
-        ('ch', 'Switzerland')
+        ('ch', 'Switzerland (12 34560 00103 88500 1000 19188)')
     ], ondelete={'ch': lambda recs: recs.write({'invoice_reference_model': 'odoo'})})
 
     def _process_reference_for_sale_order(self, order_reference):
