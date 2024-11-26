@@ -3556,3 +3556,53 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time('2024-07-31'):
             allocation._update_accrual()
             self.assertEqual(allocation.number_of_days, 1, 'Days should be allocated even when leave is taken in the future')
+
+    def test_accrual_days_left_under_carryover_maximum(self):
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': '21 days per year, 28 days cap, 7 carryover max',
+            'transition_mode': 'immediately',
+            'carryover_date': 'year_start',
+            'accrued_gain_time': 'start',
+            'level_ids':
+                [(0, 0, {
+                "accrued_gain_time": "start",
+                "action_with_unused_accruals": "maximum",
+                "added_value": 21,
+                "cap_accrued_time": True,
+                "first_day": 1,
+                "first_month": "jan",
+                "first_month_day": 1,
+                "frequency": "yearly",
+                "maximum_leave": 28,
+                "postpone_max_days": 7,
+                "start_count": 0,
+                "start_type": "day",
+                "yearly_day": 1,
+                "yearly_month": "jan"
+            })
+            ],
+        })
+
+        with freeze_time('2024-11-25'):
+            with Form(self.env['hr.leave.allocation']) as f:
+                f.allocation_type = "accrual"
+                f.accrual_plan_id = accrual_plan
+                f.date_from = '2024-01-01'
+                f.employee_id = self.employee_emp
+                f.holiday_status_id = self.leave_type
+                f.name = "Employee Allocation"
+
+            allocation = f.record
+            allocation.action_approve()
+
+            # take 15 days, left with 6 days on the alloc
+            leave = self.env['hr.leave'].create({
+                'employee_id': self.employee_emp_id,
+                'holiday_status_id': self.leave_type.id,
+                'request_date_from': '2024-10-07',
+                'request_date_to': '2024-10-25',
+            })
+            leave.action_validate()
+            data = self.leave_type.get_allocation_data(self.employee_emp, date(2025, 1, 15))
+            remaining_future = data[self.employee_emp][0][1]["remaining_leaves"]
+            self.assertEqual(remaining_future, 27)
