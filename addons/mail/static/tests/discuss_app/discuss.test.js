@@ -2038,6 +2038,8 @@ test("Correct breadcrumb when open discuss from chat window then see settings", 
     await start();
     await click(".o_main_navbar i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", { text: "General" });
+    // dropdown requires an extra delay before click (because handler is registered in useEffect)
+    await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
     await click(".o-dropdown-item", { text: "Open in Discuss" });
     await click("[title='Channel settings']", {
@@ -2097,6 +2099,8 @@ test("Notification settings: basic rendering", async () => {
     await contains("button", { text: "All Messages" });
     await contains("button", { text: "Mentions Only", count: 2 }); // the extra is in the Use Default as subtitle
     await contains("button", { text: "Nothing" });
+    // dropdown requires an extra delay before click (because handler is registered in useEffect)
+    await contains("button", { text: "Mute Conversation" });
     await click("button", { text: "Mute Conversation" });
     await contains("button", { text: "For 15 minutes" });
     await contains("button", { text: "For 1 hour" });
@@ -2120,6 +2124,8 @@ test("Notification settings: mute conversation will change the style of sidebar"
         count: 0,
     });
     await click("[title='Notification Settings']");
+    // dropdown requires an extra delay before click (because handler is registered in useEffect)
+    await contains("button", { text: "Mute Conversation" });
     await click("button", { text: "Mute Conversation" });
     await click("button", { text: "For 15 minutes" });
     await contains(".o-mail-DiscussSidebar-item", { text: "Mario Party" });
@@ -2140,11 +2146,15 @@ test("Notification settings: change the mute duration of the conversation", asyn
         count: 0,
     });
     await click("[title='Notification Settings']");
+    // dropdown requires an extra delay before click (because handler is registered in useEffect)
+    await contains("button", { text: "Mute Conversation" });
     await click("button", { text: "Mute Conversation" });
     await click("button", { text: "For 15 minutes" });
     await click("[title='Notification Settings']");
     await click(".o-discuss-NotificationSettings span", { text: "Unmute Conversation" });
     await click("[title='Notification Settings']");
+    // dropdown requires an extra delay before click (because handler is registered in useEffect)
+    await contains("button", { text: "Mute Conversation" });
     await click("button", { text: "Mute Conversation" });
     await click("button", { text: "For 1 hour" });
 });
@@ -2158,6 +2168,8 @@ test("Notification settings: mute/unmute conversation works correctly", async ()
     await start();
     await openDiscuss(channelId);
     await click("[title='Notification Settings']");
+    // dropdown requires an extra delay before click (because handler is registered in useEffect)
+    await contains("button", { text: "Mute Conversation" });
     await click("button", { text: "Mute Conversation" });
     await click("button", { text: "For 15 minutes" });
     await click("[title='Notification Settings']");

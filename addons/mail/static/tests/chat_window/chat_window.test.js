@@ -184,6 +184,8 @@ test("chat window: basic rendering", async () => {
     await contains("[title='Fold']");
     await contains("[title*='Close Chat Window']");
     await contains(".o-mail-ChatWindow .o-mail-Thread", { text: "The conversation is empty." });
+    // dropdown requires an extra delay before click (because handler is registered in useEffect)
+    await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
     await contains(".o-mail-ChatWindow-command", { count: 14 });
     await contains(".o-dropdown-item", { text: "Attachments" });
@@ -433,6 +435,8 @@ test("Close active thread action in chatwindow on ESCAPE", async () => {
     });
     await start();
     await contains(".o-mail-ChatWindow");
+    // dropdown requires an extra delay before click (because handler is registered in useEffect)
+    await contains(".o-mail-ChatWindow-command", { text: "General" });
     await click(".o-mail-ChatWindow-command", { text: "General" });
     await click(".o-dropdown-item", { text: "Invite People" });
     await contains(".o-discuss-ChannelInvitation");
@@ -450,6 +454,8 @@ test("ESC cancels thread rename", async () => {
         ],
     });
     await start();
+    // dropdown requires an extra delay before click (because handler is registered in useEffect)
+    await contains(".o-mail-ChatWindow-command", { text: "General" });
     await click(".o-mail-ChatWindow-command", { text: "General" });
     await click(".o-dropdown-item", { text: "Rename Thread" });
     await contains(".o-mail-AutoresizeInput.o-focused[title='General']");
@@ -864,6 +870,8 @@ test("folded chat window should hide member-list and settings buttons", async ()
     // Open Thread
     await click("button i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
+    // dropdown requires an extra delay before click (because handler is registered in useEffect)
+    await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
     await contains(".o-dropdown-item", { text: "Members" });
     await contains(".o-dropdown-item", { text: "Call Settings" });
@@ -876,6 +884,8 @@ test("folded chat window should hide member-list and settings buttons", async ()
     await contains(".o-dropdown-item", { text: "Call Settings", count: 0 });
     // Unfold chat window
     await click(".o-mail-ChatBubble");
+    // dropdown requires an extra delay before click (because handler is registered in useEffect)
+    await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
     await contains(".o-dropdown-item", { text: "Members" });
     await contains(".o-dropdown-item", { text: "Call Settings" });
@@ -919,6 +929,7 @@ test("chat window of channels should not have 'Open in Discuss' (mobile)", async
     patchUiSize({ size: SIZES.SM });
     await start();
     await openDiscuss(channelId);
+    // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
     await contains(".o-dropdown-item", { text: "Open in Discuss", count: 0 });
@@ -1034,11 +1045,15 @@ test("Notification settings rendering in chatwindow", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", { text: "general" });
     await contains(".o-mail-ChatWindow", { count: 1 });
+    // dropdown requires an extra delay before click (because handler is registered in useEffect)
+    await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
     await click(".o-dropdown-item", { text: "Notification Settings" });
     await contains("button", { text: "All Messages" });
     await contains("button", { text: "Mentions Only", count: 2 }); // the extra is in the Use Default as subtitle
     await contains("button", { text: "Nothing" });
+    // dropdown requires an extra delay before click (because handler is registered in useEffect)
+    await contains("button", { text: "Mute Conversation" });
     await click("button", { text: "Mute Conversation" });
     await contains("button", { text: "For 15 minutes" });
     await contains("button", { text: "For 1 hour" });

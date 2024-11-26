@@ -181,6 +181,8 @@ test("keep new message separator when switching between chat window and discuss 
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Mark as Unread']");
     await contains(".o-mail-Thread-newMessage");
+    // dropdown requires an extra delay before click (because handler is registered in useEffect)
+    await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
     await click(".o-dropdown-item", { text: "Open in Discuss" });
     await contains(".o-mail-Discuss-threadName", { value: "General" });
