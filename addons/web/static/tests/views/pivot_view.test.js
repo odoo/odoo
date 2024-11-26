@@ -3772,3 +3772,60 @@ test("missing deleted property field definition is created", async function (ass
     expect.verifySteps([`["properties.my_char"]`]);
     expect(getCurrentValues()).toBe("4,2,1");
 });
+
+test("middle clicking on a cell triggers a doAction", async () => {
+    expect.assertions(3);
+    Partner._views["form,2"] = `<form/>`;
+    Partner._views["list,false"] = `<list/>`;
+    Partner._views["kanban,5"] = `<kanban/>`;
+
+    mockService("action", {
+        doAction(action, options) {
+            expect(action).toEqual({
+                context: {
+                    lang: "en",
+                    tz: "taht",
+                    someKey: true,
+                    uid: 7,
+                    allowed_company_ids: [1],
+                },
+                domain: [["product_id", "=", 37]],
+                name: "Partners",
+                res_model: "partner",
+                target: "current",
+                type: "ir.actions.act_window",
+                view_mode: "list",
+                views: [
+                    [false, "list"],
+                    [2, "form"],
+                ],
+            });
+            expect(options).toEqual({
+                newWindow: true,
+            });
+            return Promise.resolve(true);
+        },
+    });
+
+    await mountView({
+        type: "pivot",
+        resModel: "partner",
+        arch: `
+			<pivot string="Partners">
+				<field name="product_id" type="row"/>
+				<field name="foo" type="measure"/>
+			</pivot>`,
+        context: { someKey: true, search_default_test: 3 },
+        config: {
+            views: [
+                [2, "form"],
+                [5, "kanban"],
+                [false, "list"],
+                [false, "pivot"],
+            ],
+        },
+    });
+
+    expect("table").toHaveClass("o_enable_linking");
+    await contains(".o_pivot_cell_value:eq(1)").click({ ctrlKey: true }); // should trigger a do_action
+});
