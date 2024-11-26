@@ -103,7 +103,7 @@ class TestItEdiReverseCharge(TestItEdi):
             'amount': 0.0,
             'amount_type': 'percent',
             'l10n_it_exempt_reason': 'N1',
-            'l10n_it_law_reference': 'test',
+            'invoice_legal_notes': 'test',
         })
 
         # Export tax 0% Internal Reverse Charge
@@ -114,7 +114,7 @@ class TestItEdiReverseCharge(TestItEdi):
             'amount': 0.0,
             'amount_type': 'percent',
             'l10n_it_exempt_reason': 'N6.3',
-            'l10n_it_law_reference': 'test',
+            'invoice_legal_notes': 'test',
         })
 
     def test_invoice_external_reverse_charge(self):
