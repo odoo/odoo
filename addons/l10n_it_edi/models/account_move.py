@@ -10,7 +10,7 @@ from odoo import _, api, Command, fields, models, modules
 from odoo.addons.base.models.ir_qweb_fields import Markup, nl2br, nl2br_enclose
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.exceptions import UserError
-from odoo.tools import float_repr, cleanup_xml_node, float_is_zero
+from odoo.tools import cleanup_xml_node, float_is_zero, float_repr, html2plaintext
 
 _logger = logging.getLogger(__name__)
 
@@ -368,7 +368,7 @@ class AccountMove(models.Model):
                 'imponibile_importo': values['base_amount'],
                 'imposta': values['tax_amount'],
                 'esigibilita_iva': grouping_key['tax_exigibility_code'],
-                'riferimento_normativo': grouping_key['l10n_it_law_reference'],
+                'riferimento_normativo': grouping_key['invoice_legal_notes'],
             })
         return tax_lines
 
@@ -406,7 +406,7 @@ class AccountMove(models.Model):
         return {
             'tax_amount_field': -23.0 if tax.amount == -11.5 else tax.amount,
             'l10n_it_exempt_reason': tax.l10n_it_exempt_reason,
-            'l10n_it_law_reference': tax.l10n_it_law_reference,
+            'invoice_legal_notes': html2plaintext(tax.invoice_legal_notes),
             'tax_exigibility_code': tax_exigibility_code,
             'tax_amount_type_field': tax.amount_type,
             'skip': tax_data['is_reverse_charge'] or self._l10n_it_edi_is_neg_split_payment(tax_data),
