@@ -6,4 +6,23 @@
         <div t-if="warning" t-out="warning" class="alert alert-danger mb-0"/>
     </template>
 
+    <template id="authorization_error" name="Authorization Error">
+        <!-- Variables description:
+            - 'error_message' - The reason of the error.
+            - 'provider_url' - The URL to the Razorpay provider.
+        -->
+        <t t-call="portal.frontend_layout">
+            <div class="wrap">
+                <div class="container">
+                    <h1>An error occurred</h1>
+                    <p>An error occurred while linking your Razorpay account with Odoo.</p>
+                    <p><t t-out="error_message"/></p>
+                    <a t-att-href="provider_url" class="btn btn-primary mt-2">
+                        Back to the Razorpay provider
+                    </a>
+                </div>
+            </div>
+        </t>
+    </template>
+
 </odoo>

@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+OAUTH_URL = 'https://razorpay.api.odoo.com/api/razorpay/1'
+
 # The currencies supported by Razorpay, in ISO 4217 format. Last updated on May 26, 2021.
 # See https://razorpay.com/docs/payments/payments/international-payments/#supported-currencies.
 # Last seen online: 16 November 2022.
