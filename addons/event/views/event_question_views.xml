@@ -72,10 +72,9 @@
         <field name="action" ref="event.action_event_question_view"/>
     </record>
 
-
-    <record id="action_event_question_reporting" model="ir.actions.act_window">
-        <field name="name">Questions</field>
-        <field name="res_model">event.question</field>
+    <record id="action_event_registration_answer_reporting" model="ir.actions.act_window">
+        <field name="name">Question</field>
+        <field name="res_model">event.registration.answer</field>
         <field name="view_mode">graph</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -86,21 +85,28 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_event_question_graph">
-        <field name="name">event.question.graph</field>
-        <field name="model">event.question</field>
+    <record model="ir.ui.view" id="view_event_answer_graph">
+        <field name="name">event.registration.answer.graph</field>
+        <field name="model">event.registration.answer</field>
         <field name="arch" type="xml">
-            <graph string="Question" sample="1">
-                <field name="answer_id"/>
+            <graph string="Question" type="bar">
+                    <field name="question_id" type="col"/>
+                    <field name="value_answer_id" type="row" stacked="1"/>
+                    <field name="event_id" type="row"/>
+<!--                <field name="value_answer_id" type="row"/>-->
+<!--                <field name="event_id" type="col"/>-->
             </graph>
+        </field>
+        <field name="domaine">
+            ('question_id.question_type', '=', 'simple_choice')
         </field>
     </record>
 
-    <menuitem name="Questions"
-        id="menu_action_event_question_reporting"
+    <menuitem name="Question"
+        id="menu_action_event_registration_answer_reporting"
         parent="event.menu_reporting_events"
         sequence="4"
-        action="action_event_question_reporting"
+        action="action_event_registration_answer_reporting"
         groups="event.group_event_user"/>
 
 </odoo>

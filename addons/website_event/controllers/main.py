@@ -358,7 +358,6 @@ class WebsiteEventController(http.Controller):
             registration_values['visitor_id'] = visitor_sudo.id
 
             registrations_to_create.append(registration_values)
-
         return request.env['event.registration'].sudo().create(registrations_to_create)
 
     @http.route(['''/event/<model("event.event"):event>/registration/confirm'''], type='http', auth="public", methods=['POST'], website=True)
