@@ -33,6 +33,7 @@ export class TourAutomatic {
     }
 
     start(pointer) {
+        setupEventActions(document.createElement("div"));
         const macroSteps = this.steps
             .filter((step) => step.index >= this.currentIndex)
             .flatMap((step) => {
@@ -41,7 +42,6 @@ export class TourAutomatic {
                     {
                         action: async () => {
                             await this.pause();
-                            setupEventActions(document.createElement("div"));
                             if (this.debugMode) {
                                 console.groupCollapsed(step.describeMe);
                                 console.log(step.stringify);
