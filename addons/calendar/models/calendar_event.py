@@ -832,8 +832,21 @@ class CalendarEvent(models.Model):
             }
 
         template = self.env.ref('calendar.calendar_template_delete_event', raise_if_not_found=False)
+        if not template:
+            # Notify the user if the template is missing
+            self.unlink()
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'type': 'danger',
+                    'message': _("Unable to notify the user as the template could not be found."),
+                    'next': {'type': 'ir.actions.client', 'tag': 'soft_reload'},
+                },
+            }
+
         lang = self.env.context.get('lang')
-        if template.lang:
+        if template and template.lang:
             # This method ensures that the template is translated according
             # to the user's or record's language settings.
             lang = template._render_lang(self.ids)[self.id]
@@ -843,9 +856,9 @@ class CalendarEvent(models.Model):
             'default_attendee_id': attendee_id,
             'default_record': self.id,
             'default_recurrence': recurrence,
-            'model_description': self.with_context(lang=lang)
+            'model_description': self.with_context(lang=lang),
         }
-        action = {
+        return {
             'name': _('Delete Event'),
             'res_model': 'calendar.popover.delete.wizard',
             'view_id': self.env.ref('calendar.view_event_delete_wizard_form').id,
@@ -854,7 +867,6 @@ class CalendarEvent(models.Model):
             'target': 'new',
             'views': [(False, 'form')],
         }
-        return action
 
     @api.model
     def _get_mail_message_access(self, res_ids, operation, model_name=None):
