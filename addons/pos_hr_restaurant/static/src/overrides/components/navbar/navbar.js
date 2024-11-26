@@ -5,7 +5,7 @@ patch(Navbar.prototype, {
     get showEditPlanButton() {
         if (
             this.pos.config.module_pos_restaurant &&
-            (!this.pos.config.module_pos_hr || this.pos.employeeIsAdmin)
+            (!this.pos.config.module_pos_hr || !this.pos.isCashier)
         ) {
             return super.showEditPlanButton;
         } else {
