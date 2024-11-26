@@ -688,6 +688,68 @@ publicWidget.registry.CarouselBootstrapUpgradeFix = publicWidget.Widget.extend({
     },
 });
 
+publicWidget.registry.CarouselSingleScrollMode = publicWidget.Widget.extend({
+    selector: ".carousel.o_slide_single",
+    disabledInEditableMode: false,
+    events: {
+        "slide.bs.carousel": "_onSlide",
+        "slid.bs.carousel": "_onSlideEnd",
+    },
+
+    /**
+     * @override
+     */
+    start() {
+        this.carouselInnerEl = this.el.querySelector(".carousel-inner");
+        return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Allow the carousel to cycle otherwise it would reach an end
+     * This method is called when the carousel is sliding
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onSlide(ev){
+        // We need to keep the active element at the beginning of the carousel-items elements
+        // This allows to have a smooth transition when the carousel is sliding
+        if (ev.direction === "right") {
+            const carouselItemsEls = Array.from(this.carouselInnerEl.querySelectorAll(".carousel-item"));
+            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
+            this.carouselInnerEl.prepend(carouselItemsEls.pop()); // Move the last item to the beginning
+            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
+        }
+    },
+
+    /**
+     * Prepare the carousel for the next sliding animation if needed
+     * This method is called after a sliding animation has finished
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onSlideEnd(ev) {
+        // As for the _onSlide method, we need to keep the active element at the beginning of the
+        // carousel-items list in the DOM. So when animation is done,
+        // we move the first item (which is not active anymore) to the end
+        if (ev.direction === "left") {
+            const carouselItemsEls = Array.from(this.carouselInnerEl.querySelectorAll(".carousel-item"));
+            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
+            this.carouselInnerEl.appendChild(carouselItemsEls[0]); // Move the first item to the end
+            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
+        }
+    },
+})
+
 registry.Parallax = Animation.extend({
     selector: '.parallax',
     disabledInEditableMode: false,
