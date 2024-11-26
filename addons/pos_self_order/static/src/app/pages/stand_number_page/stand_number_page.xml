@@ -10,7 +10,11 @@
                 </div>
             </div>
             <div class="d-flex justify-content-around align-items-center py-4 py-md-5 my-auto">
-                <Numpad buttons="[1, 2, 3, 4, 5, 6, 7, 8, 9, { value: '', disabled: true }, '0', { value: 'Backspace', text: '⌫' }]" onClick="numberClick.bind(this)" class="'mx-auto my-3 w-75 max-width-325px'"/>
+                <Numpad
+                    buttons="[1, 2, 3, 4, 5, 6, 7, 8, 9, { value: '', disabled: true }, '0', { value: 'Backspace', text: '⌫' }]"
+                    onClick="(button) => this.state.standNumber=button.modifier(this.state.standNumber)"
+                    class="'mx-auto my-3 w-75 max-width-325px'"
+                />
             </div>
         </div>
         <div class="d-flex justify-content-between p-3 bg-view border-top">

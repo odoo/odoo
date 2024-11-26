@@ -39,13 +39,10 @@ export class DebugWidget extends Component {
         this.barcodeReader = useService("barcode_reader");
         this.hardwareProxy = useService("hardware_proxy");
         this.notification = useService("notification");
-        const numberBuffer = useService("number_buffer");
         this.dialog = useService("dialog");
-        useBus(numberBuffer, "buffer-update", this._onBufferUpdate);
         this.state = useState({
             barcodeInput: "",
             weightInput: "",
-            buffer: numberBuffer.get(),
         });
         this.root = useRef("root");
         this.position = useState({ left: null, top: null });
@@ -184,12 +181,6 @@ export class DebugWidget extends Component {
     }
     refreshDisplay() {
         this.hardwareProxy.message("display_refresh", {});
-    }
-    _onBufferUpdate({ detail: value }) {
-        this.state.buffer = value;
-    }
-    get bufferRepr() {
-        return `"${this.state.buffer}"`;
     }
     get style() {
         const { left, top } = this.position;
