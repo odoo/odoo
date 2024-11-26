@@ -418,6 +418,8 @@ Function .onInit
     ${If} $previous_install_dir == ""
         StrCpy $INSTDIR "$PROGRAMFILES64\Odoo ${VERSION}"
         WriteRegStr HKLM "${REGISTRY_KEY}" "Install_dir" "$INSTDIR"
+    ${Else}
+        StrCpy $INSTDIR $previous_install_dir
     ${EndIf}
 
     Push $R0
