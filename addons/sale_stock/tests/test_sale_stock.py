@@ -960,7 +960,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         invoice status of the associated SO should be 'Nothing to Invoice'
         """
         group_auto_done = self.env.ref('sale.group_auto_done_setting')
-        self.env.user.group_ids = [(4, group_auto_done.id)]
+        self.group_user.implied_ids = [Command.link(group_auto_done.id)]
 
         product = self.product_a
         product.invoice_policy = 'delivery'
