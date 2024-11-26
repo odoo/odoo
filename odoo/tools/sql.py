@@ -16,6 +16,7 @@ if TYPE_CHECKING:
     from collections.abc import Iterable
 
 import psycopg2
+import psycopg2.sql as pgsql
 
 from .misc import named_to_positional_printf
 
@@ -440,11 +441,11 @@ def constraint_definition(cr, tablename, constraintname):
 
 def add_constraint(cr, tablename, constraintname, definition):
     """ Add a constraint on the given table. """
-    if "%" in definition:
-        definition = definition.replace("%", "%%")
-    query1 = SQL(
-        "ALTER TABLE %s ADD CONSTRAINT %s %s",
-        SQL.identifier(tablename), SQL.identifier(constraintname), SQL(definition),
+    # There is a fundamental issue with SQL implementation that messes up with queries
+    # using %, for details check the PR discussion of this patch #188716. To be fixed
+    # in master. Here we use instead psycopg.sql
+    query1 = pgsql.SQL("ALTER TABLE {} ADD CONSTRAINT {} {}").format(
+        pgsql.Identifier(tablename), pgsql.Identifier(constraintname), pgsql.SQL(definition),
     )
     query2 = SQL(
         "COMMENT ON CONSTRAINT %s ON %s IS %s",
