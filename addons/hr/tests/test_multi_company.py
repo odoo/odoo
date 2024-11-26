@@ -97,3 +97,11 @@ class TestMultiCompany(TestHrCommon):
 
         with self.assertRaises(AccessError):
             self.employee_a.with_user(self.user_b).name
+
+    def test_compute_presence_state(self):
+        self.user_a.company_ids = self.company_a
+        # user A should still read the employee since he is the manager of that employee
+        self.employee_b.with_user(self.user_a).with_company(self.company_a).name
+
+        # user A should still read hr_presence_state even if he does not have access to the company of the employee
+        self.employee_b.with_user(self.user_a).with_company(self.company_a).hr_presence_state
