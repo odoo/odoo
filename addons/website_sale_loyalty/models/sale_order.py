@@ -237,15 +237,14 @@ class SaleOrder(models.Model):
 
         for coupon, rewards in list(res.items()):
             if coupon.program_id.applies_on == 'current':
-                global_discounts = rewards.filtered(lambda r: (
-                    r.reward_type == 'discount' and r.discount_applicability == 'order'
-                ))
-                if global_discounts:
-                    best_discount = global_discounts[0]
-                    for discount in global_discounts[1:]:
-                        if not self._best_global_discount_already_applied(best_discount, discount):
-                            best_discount = discount
-                    res[coupon] -= global_discounts - best_discount
+                discounts = rewards.filtered(
+                    lambda r: r.reward_type == 'discount' and r.discount_applicability == 'order')
+                if discounts:
+                    _, best_discount = min(
+                        (sum(value['price_unit'] for value in self._get_reward_values_discount(d, coupon)), d)
+                        for d in discounts
+                    )
+                    res[coupon] -= discounts - best_discount
 
         return res
 
