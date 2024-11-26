@@ -142,8 +142,10 @@ class IrHttp(models.AbstractModel):
                 "load_menus": hashlib.sha512(menu_json_utf8).hexdigest()[:64], # sha512/256
             })
             # We need sudo since a user may not have access to ancestor companies
-            disallowed_ancestor_companies_sudo = user.company_ids.sudo().parent_ids - user.company_ids
-            all_companies_in_hierarchy_sudo = disallowed_ancestor_companies_sudo + user.company_ids
+            # We use `_get_company_ids` because it is cached and we sudo it because env.user return a sudo user.
+            user_company_ids = self.env['res.company'].browse(user._get_company_ids()).sudo()
+            disallowed_ancestor_companies_sudo = user_company_ids.parent_ids - user_company_ids
+            all_companies_in_hierarchy_sudo = disallowed_ancestor_companies_sudo + user_company_ids
             session_info.update({
                 # current_company should be default_company
                 "user_companies": {
@@ -153,9 +155,9 @@ class IrHttp(models.AbstractModel):
                             'id': comp.id,
                             'name': comp.name,
                             'sequence': comp.sequence,
-                            'child_ids': (comp.child_ids & user.company_ids).ids,
+                            'child_ids': (comp.child_ids & user_company_ids).ids,
                             'parent_id': comp.parent_id.id,
-                        } for comp in user.company_ids
+                        } for comp in user_company_ids
                     },
                     'disallowed_ancestor_companies': {
                         comp.id: {
@@ -168,7 +170,7 @@ class IrHttp(models.AbstractModel):
                     },
                 },
                 "show_effect": True,
-                "display_switch_company_menu": user.has_group('base.group_multi_company') and len(user.company_ids) > 1,
+                "display_switch_company_menu": user.has_group('base.group_multi_company') and len(user_company_ids) > 1,
             })
         return session_info
 
