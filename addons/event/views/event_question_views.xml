@@ -72,4 +72,35 @@
         <field name="action" ref="event.action_event_question_view"/>
     </record>
 
+
+    <record id="action_event_question_reporting" model="ir.actions.act_window">
+        <field name="name">Questions</field>
+        <field name="res_model">event.question</field>
+        <field name="view_mode">graph</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No answer yet!
+            </p><p>
+                From this dashboard you can report, analyze and detect trends regarding the answers of your registered attendees.
+            </p>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_event_question_graph">
+        <field name="name">event.question.graph</field>
+        <field name="model">event.question</field>
+        <field name="arch" type="xml">
+            <graph string="Question" sample="1">
+                <field name="answer_id"/>
+            </graph>
+        </field>
+    </record>
+
+    <menuitem name="Questions"
+        id="menu_action_event_question_reporting"
+        parent="event.menu_reporting_events"
+        sequence="4"
+        action="action_event_question_reporting"
+        groups="event.group_event_user"/>
+
 </odoo>
