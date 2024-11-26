@@ -17,7 +17,7 @@ patch(ActivityMenu.prototype, {
         return super.availableViews(...arguments);
     },
 
-    openActivityGroup(group, filter = "all") {
+    openActivityGroup(group, filter = "all", newWindow) {
         // fetch the data from the button otherwise fetch the ones from the parent (.o_ActivityMenuView_activityGroup).
         const context = {};
         if (group.model === "crm.lead") {
@@ -32,11 +32,12 @@ patch(ActivityMenu.prototype, {
             // So, duplicates are faking the count and "Load more" doesn't show up
             context["force_search_count"] = 1;
             this.action.doAction("crm.crm_lead_action_my_activities", {
+                newWindow,
                 additionalContext: context,
                 clearBreadcrumbs: true,
             });
         } else {
-            return super.openActivityGroup(group, filter);
+            return super.openActivityGroup(...arguments);
         }
     },
 });

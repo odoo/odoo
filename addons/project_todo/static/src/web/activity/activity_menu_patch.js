@@ -63,7 +63,7 @@ patch(ActivityMenu.prototype, {
         return super.onClickAction(...arguments);
     },
 
-    async openActivityGroup(group, filter = "all") {
+    async openActivityGroup(group) {
         if (group.is_todo) {
             await this.loadTodoViews();
         }
