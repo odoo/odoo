@@ -219,10 +219,11 @@
                                                      style="white-space: nowrap;"
                                                      t-out="combination_info['list_price']"
                                                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-                                                <small t-if="combination_info['base_unit_price']"
-                                                       class="d-block text-muted"
-                                                       groups="website_sale.group_show_uom_price">
-                                                    <t t-call='website_sale.base_unit_price'/>
+                                                <small t-if="combination_info.get('base_unit_price')"
+                                                       class="d-block text-muted">
+                                                    <t t-call="website_sale.base_unit_price">
+                                                        <t t-set="base_unit_price" t-value="combination_info['base_unit_price']"/>
+                                                    </t>
                                                 </small>
                                             </span>
                                             <form class="text-center o_add_cart_form_compare">

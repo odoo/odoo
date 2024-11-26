@@ -1270,7 +1270,7 @@
 
     <!-- /shop/product page -->
     <template id="base_unit_price" name="Product Base unit price">
-        (<span class="o_base_unit_price" t-esc="combination_info['base_unit_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+        (<span class="o_base_unit_price" t-esc="base_unit_price" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
          / <span class="oe_custom_base_unit" t-field="product.base_unit_name"/>)
     </template>
 
@@ -1370,9 +1370,11 @@
                                 <div class="js_product js_main_product mb-3">
                                     <div>
                                         <t t-call="website_sale.product_price"/>
-                                        <small t-if="'base_unit_price' in combination_info"
-                                               class="ms-1 text-muted o_base_unit_price_wrapper d-none" groups="website_sale.group_show_uom_price">
-                                            <t t-call='website_sale.base_unit_price'/>
+                                        <small t-if="combination_info.get('base_unit_price')"
+                                               class="ms-1 text-muted o_base_unit_price_wrapper d-none">
+                                            <t t-call="website_sale.base_unit_price">
+                                                <t t-set="base_unit_price" t-value="combination_info['base_unit_price']"/>
+                                            </t>
                                         </small>
                                     </div>
                                     <t name="variant_info">
@@ -2033,13 +2035,14 @@
                             </t>
                             <t t-set="product_price" t-value="line._get_cart_display_price()"/>
                             <t t-call="website_sale.cart_product_price"/>
-                            <small t-if="not line._is_not_sellable_line() and line.product_id.base_unit_price"
-                                   class="cart_product_base_unit_price d-block text-muted"
-                                   groups="website_sale.group_show_uom_price">
-                                <t t-call='website_sale.base_unit_price'>
-                                    <t t-set='product' t-value='line.product_id'/>
-                                    <t t-set='combination_info'
-                                       t-value="{'base_unit_price': product._get_base_unit_price(product_price/line.product_uom_qty)}"/>
+                            <small
+                                t-if="not line._is_not_sellable_line() and line.env['res.groups']._is_feature_enabled('website_sale.group_show_uom_price') and line.product_id.base_unit_price"
+                                class="cart_product_base_unit_price d-block text-muted"
+                            >
+                                <t t-call="website_sale.base_unit_price">
+                                    <t t-set="product" t-value="line.product_id"/>
+                                    <t t-set="base_unit_price"
+                                       t-value="product._get_base_unit_price(product_price/line.product_uom_qty)"/>
                                 </t>
                             </small>
                         </div>
