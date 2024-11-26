@@ -4056,4 +4056,23 @@
         <field name="image" type="base64" file="payment/static/img/visa.png"/>
     </record>
 
+    <record id="payment_method_kueski" model="payment.method">
+        <field name="name">Kueski Pay</field>
+        <field name="code">kueski_pay</field>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="base64" file="base/static/img/icons/payment_kueski.png" />
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_refund">partial</field>
+        <field name="supported_country_ids"
+               eval="[Command.set([
+                         ref('base.mx'),
+            ])]"/>
+        <field name="supported_currency_ids"
+               eval="[Command.set([
+                         ref('base.MXN'),
+            ])]"/>
+    </record>
+
 </odoo>

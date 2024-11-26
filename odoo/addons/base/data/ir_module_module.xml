@@ -292,5 +292,16 @@
             <field name="to_buy" eval="True"/>
             <field name="icon">/base/static/img/icons/payment_sepa_direct_debit.png</field>
         </record>
+
+        <record model="ir.module.module" id="base.module_payment_kueski">
+            <field name="name">payment_kueski</field>
+            <field name="shortdesc">Kueski Pay Payment Provider</field>
+            <field name="summary">Checkout with Kueski Pay</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+            <field name="license">OEEL-1</field>
+            <field name="author">Odoo S.A.</field>
+            <field name="to_buy" eval="True"/>
+            <field name="icon">/base/static/img/icons/payment_kueski.png</field>
+        </record>
     </data>
 </odoo>
