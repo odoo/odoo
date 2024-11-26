@@ -2,6 +2,7 @@
 from __future__ import annotations
 from typing import List, Dict
 from odoo import api, models, fields
+from odoo.osv.expression import AND
 
 
 class ProductTemplate(models.Model):
@@ -19,7 +20,7 @@ class ProductTemplate(models.Model):
     )
 
     def _load_pos_self_data(self, data):
-        domain = self._load_pos_data_domain(data)
+        domain = self._load_pos_self_data_domain(data)
 
         # Add custom fields for 'formula' taxes.
         fields = set(self._load_pos_self_data_fields(data['pos.config'][0]['id']))
@@ -53,6 +54,11 @@ class ProductTemplate(models.Model):
         params = super()._load_pos_data_fields(config_id)
         params += ['self_order_available']
         return params
+
+    @api.model
+    def _load_pos_self_data_domain(self, data):
+        domain = super()._load_pos_self_data_domain(data)
+        return AND([domain, [('self_order_available', '=', True)]])
 
     @api.onchange('available_in_pos')
     def _on_change_available_in_pos(self):
