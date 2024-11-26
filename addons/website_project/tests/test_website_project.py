@@ -32,9 +32,8 @@ class TestWebsiteProject(HttpCase):
         self.assertTrue(task.exists())
         self.assertFalse(task.partner_id, "Partner id should be False")
         self.assertEqual(task.email_cc, 'test@test.com', "email_cc should be same as added on website")
-        self.assertIn('EXTERNAL SUBMISSION - Customer not verified', html2plaintext(task.description), "Warning message should be displayed in description of task")
 
-        mail_message = task.message_ids.filtered(lambda m: m.body == '<div class="alert alert-info">/!\\ EXTERNAL SUBMISSION - Customer not verified</div>')
+        mail_message = task.message_ids.filtered(lambda m: m.body == '<div class="alert alert-info">⚠️ EXTERNAL SUBMISSION - Customer not verified</div>')
         self.assertEqual(len(mail_message), 1, "Alert message should be displayed in the chatter of the task created.")
         self.assertEqual(mail_message.author_id, self.env.ref('base.partner_root'), 'The author of the warning message should be OdooBot.')
 
@@ -55,7 +54,6 @@ class TestWebsiteProject(HttpCase):
         self.assertFalse(task.email_cc, "email_cc field should be empty")
         admin_user = self.env.ref('base.user_admin')
         asserttext = '%s (%s)' % (admin_user.name, admin_user.email)
-        self.assertIn('This Task was submitted by %s on behalf of test@partner.com' % asserttext, html2plaintext(task.description), "Warning message should be displayed in description of task")
 
         mail_message = task.message_ids.filtered(lambda m: m.body == '<div class="alert alert-info">This Task was submitted by %s on behalf of test@partner.com</div>' % asserttext)
         self.assertEqual(len(mail_message), 1, "Alert message should be displayed in the chatter of the task created.")

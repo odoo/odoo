@@ -1,9 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _
-from odoo.addons.base.models.ir_qweb_fields import nl2br, nl2br_enclose
+from markupsafe import Markup
+
+from odoo import _, SUPERUSER_ID
 from odoo.addons.website.controllers import form
-from odoo.tools import html2plaintext
+from odoo.http import request
 
 
 class WebsiteForm(form.WebsiteForm):
@@ -19,22 +20,30 @@ class WebsiteForm(form.WebsiteForm):
         res = super().insert_record(request, model, values, custom, meta=meta)
         if model.model != 'project.task':
             return res
-        task = request.env['project.task'].sudo().browse(res)
-        custom = custom.replace('email_from', 'Email')
-        custom_label = nl2br_enclose(_("Other Information"), 'h4')  # Title for custom fields
-        default_field = model.website_form_default_field_id
-        default_field_data = values.get(default_field.name, '')
-        default_field_content = nl2br_enclose(default_field.name.capitalize(), 'h4') + nl2br_enclose(html2plaintext(default_field_data), 'p')
-        custom_content = (default_field_content if default_field_data else '') \
-                        + (custom_label + custom if custom else '') \
-                        + (self._meta_label + meta if meta else '')
-
-        if default_field.name:
-            if default_field.ttype == 'html':
-                custom_content = nl2br(custom_content)
-            task[default_field.name] = custom_content
-            task._message_log(
-                body=custom_content,
-                message_type='comment',
+        task = request.env['project.task'].browse(res)
+        authenticate_message = False
+        if request.session.uid:
+            user_email = request.env.user.email
+            form_email = values.get('email_from')
+            if user_email != form_email:
+                authenticate_message = _("This Task was submitted by %(user_name)s (%(user_email)s) on behalf of %(form_email)s",
+                    user_name=request.env.user.name, user_email=user_email, form_email=form_email)
+        else:
+            authenticate_message = _("⚠️ EXTERNAL SUBMISSION - Customer not verified")
+        if authenticate_message:
+            task.with_user(SUPERUSER_ID)._message_log(
+                body=Markup('<div class="alert alert-info" role="alert">{message}</div>').format(message=authenticate_message),
+                message_type='notification',
             )
         return res
+
+    def extract_data(self, model, values):
+        data = super().extract_data(model, values)
+        if model.model == 'project.task' and values.get('email_from'):
+            partners_list = request.env['mail.thread'].sudo()._mail_find_partner_from_emails([values['email_from']])
+            partner_id = partners_list[0].id if partners_list else False
+            data['record']['partner_id'] = partner_id
+            data['record']['email_from'] = values['email_from']
+            if not partner_id:
+                data['record']['email_cc'] = values['email_from']
+        return data
