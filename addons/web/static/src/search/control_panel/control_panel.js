@@ -349,9 +349,9 @@ export class ControlPanel extends Component {
      *
      * @param {ViewType} viewType
      */
-    switchView(viewType) {
+    switchView(viewType, newWindow) {
         this.resetSearchState();
-        this.actionService.switchView(viewType);
+        this.actionService.switchView(viewType, {}, { newWindow });
     }
 
     cycleThroughViews() {
