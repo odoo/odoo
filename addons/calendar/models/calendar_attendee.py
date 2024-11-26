@@ -80,6 +80,7 @@ class CalendarAttendee(models.Model):
         return super().write(vals)
 
     def unlink(self):
+        self.event_id.check_access('unlink')
         self._unsubscribe_partner()
         return super().unlink()
 
