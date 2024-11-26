@@ -804,9 +804,15 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         if (formInfo) {
             const formatInfo = this._getDefaultFormat();
             await formInfo.formFields.forEach(async field => {
-                field.formatInfo = formatInfo;
-                await this._fetchFieldRecords(field);
-                this.$target.find('.s_website_form_submit, .s_website_form_recaptcha').first().before(this._renderField(field));
+                // Create a shallow copy to prevent unintended mutations to the
+                // original field stored in FormRegistry.
+                const _field = { ...field };
+                _field.formatInfo = formatInfo;
+                await this._fetchFieldRecords(_field);
+                const targetEl = this.$target[0].querySelector(".s_website_form_submit, .s_website_form_recaptcha");
+                if (targetEl) {
+                    targetEl.parentNode.insertBefore(this._renderField(_field), targetEl);               
+                }
             });
         }
     },

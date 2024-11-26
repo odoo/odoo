@@ -877,5 +877,37 @@ odoo.define('website.tour.form_editor', function (require) {
         },
     ]);
 
+    const dragNDropFormSnippetInMain = wTourUtils.dragNDrop({ id: "s_website_form", name: "Form" });
+    dragNDropFormSnippetInMain.run = "drag_and_drop iframe #wrap";
+    wTourUtils.registerWebsitePreviewTour("website_form_multiple_drop", {
+        url: '/',
+        edition: true,
+        test: true,
+    }, [
+        dragNDropFormSnippetInMain,
+        {
+            content: "Check if the form snippet is dropped",
+            trigger: "iframe .s_website_form_field",
+            run: () => {}, // it's a check,
+        },
+        dragNDropFormSnippetInMain,
+        {
+            content: "Check if there are two form snippets on the page",
+            trigger: "iframe .s_website_form:nth-of-type(1), iframe .s_website_form:nth-of-type(2)",
+            run: () => {}, // it's a check,
+        }, {
+            content: "Check that the first field of both the form snippets have different IDs",
+            trigger: "iframe section.s_website_form:nth-of-type(1) input[name='name']",
+            run: () => {
+                const iframeDocEl = document.querySelector("iframe").contentDocument;
+                const firstFieldForm1El = iframeDocEl.querySelector("section.s_website_form:nth-of-type(1) input[name='name']");
+                const firstFieldForm2El = iframeDocEl.querySelector("section.s_website_form:nth-of-type(2) input[name='name']");
+                if (firstFieldForm1El.id === firstFieldForm2El.id) {
+                    console.error("The first fields of two different form snippet have the same ID");
+                }
+            },
+        },
+    ])
+
     return {};
 });
