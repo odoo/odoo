@@ -3,7 +3,7 @@
 
 import logging
 
-from odoo import api, models, exceptions, _
+from odoo import api, exceptions, models, modules, _
 from odoo.addons.iap.tools import iap_tools
 from requests.exceptions import HTTPError
 
@@ -17,7 +17,7 @@ class IapAutocompleteApi(models.AbstractModel):
 
     @api.model
     def _contact_iap(self, local_endpoint, action, params, timeout=15):
-        if self.env.registry.in_test_mode():
+        if modules.module.current_test:
             raise exceptions.ValidationError(_('Test mode'))
         account = self.env['iap.account'].get('partner_autocomplete')
         if not account.account_token:

@@ -1,12 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
 import logging
-import threading
-import warnings
 
-from odoo import api, fields, models, tools, _, Command, SUPERUSER_ID
+from odoo import api, fields, models, modules, tools, _, Command, SUPERUSER_ID
 from odoo.exceptions import ValidationError, UserError
 from odoo.osv import expression
 from odoo.tools import html2plaintext, file_open, ormcache
@@ -230,7 +227,7 @@ class ResCompany(models.Model):
         is_ready_and_not_test = (
             not tools.config['test_enable']
             and (self.env.registry.ready or not self.env.registry._init)
-            and not getattr(threading.current_thread(), 'testing', False)
+            and not modules.module.current_test
         )
         if uninstalled_modules and is_ready_and_not_test:
             return uninstalled_modules.button_immediate_install()

@@ -88,28 +88,28 @@ class TestMailResend(MailCommon):
     def test_remove_mail_become_canceled(self):
         # two failure sent on bus, one for each mail
         self._reset_bus()
-        with self.mock_mail_gateway(), self.assertBus([(self.cr.dbname, 'res.partner', self.partner_admin.id)] * 2):
-            message = self.test_record.with_user(self.user_admin).message_post(partner_ids=self.partners.ids, subtype_xmlid='mail.mt_comment', message_type='notification')
+        with self.mock_mail_gateway():
+            with self.assertBus([(self.cr.dbname, 'res.partner', self.partner_admin.id)] * 2):
+                message = self.test_record.with_user(self.user_admin).message_post(partner_ids=self.partners.ids, subtype_xmlid='mail.mt_comment', message_type='notification')
 
-        self.assertMailNotifications(message, [
-            {'content': '', 'message_type': 'notification',
-             'notif': [{'partner': partner, 'type': 'email', 'status': 'exception' if partner in self.user1.partner_id | self.partner1 else 'sent'} for partner in self.partners]}],
-            bus_notif_count=2,
-        )
+            self.assertMailNotifications(message, [
+                {'content': '', 'message_type': 'notification',
+                'notif': [{'partner': partner, 'type': 'email', 'status': 'exception' if partner in self.user1.partner_id | self.partner1 else 'sent'} for partner in self.partners]}],
+                bus_notif_count=2,
+            )
 
-        self._reset_bus()
-        wizard = self.env['mail.resend.message'].with_context({'mail_message_to_resend': message.id}).create({})
-        partners = wizard.partner_ids.mapped("partner_id")
-        self.assertEqual(self.invalid_email_partners, partners)
-        wizard.partner_ids.filtered(lambda p: p.partner_id == self.partner1).write({"resend": False})
-        wizard.resend_mail_action()
+            wizard = self.env['mail.resend.message'].with_context({'mail_message_to_resend': message.id}).create({})
+            partners = wizard.partner_ids.mapped("partner_id")
+            self.assertEqual(self.invalid_email_partners, partners)
+            wizard.partner_ids.filtered(lambda p: p.partner_id == self.partner1).write({"resend": False})
+            wizard.resend_mail_action()
 
-        self.assertMailNotifications(message, [
-            {'content': '', 'message_type': 'notification',
-             'notif': [{'partner': partner, 'type': 'email',
-                        'status': (partner == self.user1.partner_id and 'exception') or (partner == self.partner1 and 'canceled') or 'sent'} for partner in self.partners]}],
-            bus_notif_count=2,
-        )
+            self.assertMailNotifications(message, [
+                {'content': '', 'message_type': 'notification',
+                'notif': [{'partner': partner, 'type': 'email',
+                            'status': (partner == self.user1.partner_id and 'exception') or (partner == self.partner1 and 'canceled') or 'sent'} for partner in self.partners]}],
+                bus_notif_count=4,  # we have 2 more notifications
+            )
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_cancel_all(self):

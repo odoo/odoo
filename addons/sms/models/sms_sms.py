@@ -1,13 +1,11 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import threading
 from uuid import uuid4
 
 from werkzeug.urls import url_join
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, modules, tools, _
 from odoo.addons.sms.tools.sms_api import SmsApi
 
 _logger = logging.getLogger(__name__)
@@ -105,7 +103,7 @@ class SmsSms(models.Model):
         for batch_ids in self._split_batch():
             self.browse(batch_ids)._send(unlink_failed=unlink_failed, unlink_sent=unlink_sent, raise_exception=raise_exception)
             # auto-commit if asked except in testing mode
-            if auto_commit is True and not getattr(threading.current_thread(), 'testing', False):
+            if auto_commit is True and not modules.module.current_test:
                 self._cr.commit()
 
     def resend_failed(self):
@@ -155,7 +153,7 @@ class SmsSms(models.Model):
         res = None
         try:
             # auto-commit except in testing mode
-            auto_commit = not getattr(threading.current_thread(), 'testing', False)
+            auto_commit = not modules.module.current_test
             res = self.browse(ids).send(unlink_failed=False, unlink_sent=True, auto_commit=auto_commit, raise_exception=False)
         except Exception:
             _logger.exception("Failed processing SMS queue")
