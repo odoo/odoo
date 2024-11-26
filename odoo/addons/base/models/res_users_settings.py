@@ -39,9 +39,8 @@ class ResUsersSettings(models.Model):
         return res
 
     def _format_settings(self, fields_to_format):
-        res = self._read_format(fnames=fields_to_format)[0]
+        res = self._read_format(fnames=[fname for fname in fields_to_format if fname != 'user_id'])[0]
         if 'user_id' in fields_to_format:
-            res = self._read_format(fnames=fields_to_format)[0]
             res['user_id'] = {'id': self.user_id.id}
         return res
 
