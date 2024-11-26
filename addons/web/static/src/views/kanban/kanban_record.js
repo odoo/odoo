@@ -270,25 +270,30 @@ export class KanbanRecord extends Component {
     /**
      * @param {MouseEvent} ev
      */
-    onGlobalClick(ev) {
+    onGlobalClick(ev, newWindow) {
         if (ev.target.closest(CANCEL_GLOBAL_CLICK)) {
             return;
         }
         const { archInfo, forceGlobalClick, openRecord, record } = this.props;
         if (!forceGlobalClick && archInfo.openAction) {
-            this.action.doActionButton({
-                name: archInfo.openAction.action,
-                type: archInfo.openAction.type,
-                resModel: record.resModel,
-                resId: record.resId,
-                resIds: record.resIds,
-                context: record.context,
-                onClose: async () => {
-                    await record.model.root.load();
+            this.action.doActionButton(
+                {
+                    name: archInfo.openAction.action,
+                    type: archInfo.openAction.type,
+                    resModel: record.resModel,
+                    resId: record.resId,
+                    resIds: record.resIds,
+                    context: record.context,
+                    onClose: async () => {
+                        await record.model.root.load();
+                    },
                 },
-            });
+                {
+                    newWindow,
+                }
+            );
         } else if (forceGlobalClick || this.props.archInfo.canOpenRecords) {
-            openRecord(record);
+            openRecord(record, { newWindow });
         }
     }
 
@@ -301,7 +306,7 @@ export class KanbanRecord extends Component {
         switch (type) {
             // deprecated, records are always in edit mode in form views now, use "open" instead
             case "edit": {
-                return openRecord(record, "edit");
+                return openRecord(record, { mode: "edit" });
             }
             case "open": {
                 return openRecord(record);

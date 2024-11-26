@@ -80,6 +80,7 @@ import { kanbanView } from "@web/views/kanban/kanban_view";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { AnimatedNumber } from "@web/views/view_components/animated_number";
 import { WebClient } from "@web/webclient/webclient";
+import { browser } from "@web/core/browser/browser";
 
 const { IrAttachment } = webModels;
 
@@ -13386,4 +13387,58 @@ test.tags("mobile")("Should load grouped kanban with folded column", async () =>
     await contains(".o_kanban_load_more button").click();
     expect(".o_kanban_load_more").toHaveCount(0, { message: "Shouldn't have a load more button" });
     expect(".o_kanban_record").toHaveCount(4, { message: "Should have 4 loaded record" });
+});
+
+test("kanban records are middle clickable by default", async () => {
+    patchWithCleanup(browser, {
+        open: (url) => {
+            expect.step(`opened in new window: ${url}`);
+        },
+    });
+    patchWithCleanup(browser.sessionStorage, {
+        setItem(key, value) {
+            expect.step(`set ${key}-${value}`);
+            super.setItem(key, value);
+        },
+        getItem(key) {
+            const res = super.getItem(key);
+            expect.step(`get ${key}-${res}`);
+            return res;
+        },
+    });
+    Partner._views["kanban,false"] = `
+        <kanban>
+            <templates>
+                <t t-name="card">
+                    <field name="foo"/>
+                </t>
+            </templates>
+        </kanban>`;
+    Partner._views["search,false"] = "<search/>";
+    Partner._views["form,false"] = `
+        <form>
+            <field name="product_id"/>
+            <field name="foo"/>
+        </form>`;
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        id: 1,
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [
+            [false, "kanban"],
+            [false, "form"],
+        ],
+    });
+
+    await contains(".o_kanban_record").click({ ctrlKey: true });
+    expect.verifySteps([
+        "get current_action-null",
+        'set current_action-{"id":1,"res_model":"partner","type":"ir.actions.act_window","views":[[false,"kanban"],[false,"form"]]}',
+        'get current_action-{"id":1,"res_model":"partner","type":"ir.actions.act_window","views":[[false,"kanban"],[false,"form"]]}',
+        'set current_action-{"id":1,"res_model":"partner","type":"ir.actions.act_window","views":[[false,"kanban"],[false,"form"]]}',
+        "opened in new window: /odoo/action-1/1",
+        'set current_action-{"id":1,"res_model":"partner","type":"ir.actions.act_window","views":[[false,"kanban"],[false,"form"]]}',
+    ]);
 });
