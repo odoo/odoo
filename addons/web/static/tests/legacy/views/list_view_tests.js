@@ -16602,6 +16602,48 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_data_row", 5);
     });
 
+    QUnit.test("editable grouped list: fold group with edited row", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree editable="top"><field name="foo"/></tree>',
+            groupBy: ["bar"],
+        });
+
+        await click(target.querySelector(".o_group_header"));
+        assert.strictEqual(target.querySelector(".o_data_row .o_data_cell").innerText, "blip");
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        await editInput(target, ".o_selected_row [name=foo] input", "some change");
+        await click(target.querySelector(".o_group_header"));
+        await click(target.querySelector(".o_group_header"));
+        assert.strictEqual(
+            target.querySelector(".o_data_row .o_data_cell").innerText,
+            "some change"
+        );
+    });
+
+    QUnit.test("editable grouped list: add row with edited row", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree editable="bottom"><field name="foo"/></tree>',
+            groupBy: ["bar"],
+        });
+
+        await click(target.querySelector(".o_group_header"));
+        assert.containsOnce(target, ".o_data_row");
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        await editInput(target, ".o_selected_row [name=foo] input", "some change");
+        await click(target.querySelector(".o_group_field_row_add a"));
+        assert.containsN(target, ".o_data_row", 2);
+        assert.strictEqual(
+            target.querySelector(".o_data_row .o_data_cell").innerText,
+            "some change"
+        );
+    });
+
     QUnit.test(
         "add and discard a line through keyboard navigation without crashing",
         async function (assert) {
