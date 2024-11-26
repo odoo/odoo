@@ -1319,19 +1319,20 @@ class SaleOrder(models.Model):
         elif program in self._get_applied_programs():
             return {'error': _('This program is already applied to this order.'), 'already_applied': True}
         elif program.reward_ids:
-            global_reward = program.reward_ids.filtered('is_global_discount')
+            global_rewards = program.reward_ids.filtered('is_global_discount')
             applied_global_reward = self._get_applied_global_discount()
-            if (
-                global_reward
-                and applied_global_reward
-                and self._best_global_discount_already_applied(applied_global_reward, global_reward)
-            ):
-                return {'error': _(
-                    'This discount (%(discount)s) is not compatible with "%(other_discount)s". '
-                    'Please remove it in order to apply this one.',
-                    discount=global_reward.description,
-                    other_discount=applied_global_reward.program_id.reward_ids.description,
-                )}
+            for global_reward in global_rewards:
+                if (
+                    global_reward
+                    and applied_global_reward
+                    and self._best_global_discount_already_applied(applied_global_reward, global_reward)
+                ):
+                    return {'error': _(
+                        'This discount (%(discount)s) is not compatible with "%(other_discount)s". '
+                        'Please remove it in order to apply this one.',
+                        discount=global_reward.description,
+                        other_discount=applied_global_reward.program_id.reward_ids.description,
+                    )}
         # Check for applicability from the program's triggers/rules.
         # This step should also compute the amount of points to give for that program on that order.
         status = self._program_check_compute_points(program)[program]

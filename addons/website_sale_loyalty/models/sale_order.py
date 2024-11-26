@@ -235,16 +235,23 @@ class SaleOrder(models.Model):
                     else:
                         res[coupon] = reward
 
-        for coupon, rewards in list(res.items()):
-            if coupon.program_id.applies_on == 'current':
-                discounts = rewards.filtered(
-                    lambda r: r.reward_type == 'discount' and r.discount_applicability == 'order')
-                if discounts:
-                    _, best_discount = min(
-                        (sum(value['price_unit'] for value in self._get_reward_values_discount(d, coupon)), d)
-                        for d in discounts
-                    )
-                    res[coupon] -= discounts - best_discount
+        # Only show the best overall global discount that applies on the current order only
+        global_discounts = {
+            coupon: rewards.filtered(lambda r: r.is_global_discount)
+            for coupon, rewards in res.items()
+            if coupon.program_id.applies_on == 'current'
+        }
+        best_global_discount = False
+        for discounts in global_discounts.values():
+            for discount in discounts:
+                if (
+                    not best_global_discount
+                    or not self._best_global_discount_already_applied(best_global_discount, discount)
+                ):
+                    best_global_discount = discount
+        if best_global_discount:
+            for coupon, discounts in global_discounts.items():
+                res[coupon] -= discounts - best_global_discount
 
         return res
 
