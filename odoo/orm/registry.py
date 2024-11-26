@@ -42,7 +42,7 @@ if typing.TYPE_CHECKING:
     from odoo.fields import Field
     from odoo.models import BaseModel
     from odoo.sql_db import BaseCursor, Connection, Cursor
-    from odoo.modules import graph
+    from odoo.modules import packages
 
 
 _logger = logging.getLogger('odoo.registry')
@@ -284,7 +284,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 queue.extend(func(model))
         return models
 
-    def load(self, cr: Cursor, module: graph.Node) -> OrderedSet[str]:
+    def load(self, cr: Cursor, module: packages.Package) -> OrderedSet[str]:
         """ Load a given module in the registry, and return the names of the
         modified models.
 
