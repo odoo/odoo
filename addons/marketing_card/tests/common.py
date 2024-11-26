@@ -3,7 +3,7 @@ from contextlib import contextmanager
 from unittest.mock import patch
 
 from odoo.tests import BaseCase, TransactionCase
-from odoo.addons.base.models.ir_actions_report import IrActionsReport
+from odoo.addons.base.models.ir_actions_report_wkhtmltopdf import IrActionsReport
 from odoo.addons.mail.tests.common import mail_new_test_user
 
 

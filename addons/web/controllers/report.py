@@ -101,14 +101,16 @@ class ReportController(http.Controller):
 
         """
         requestcontent = json.loads(data)
-        url, type_ = requestcontent[0], requestcontent[1]
+        url, types = requestcontent[0], requestcontent[1].split('-')
         reportname = '???'
         try:
-            if type_ in ['qweb-pdf', 'qweb-text']:
-                converter = 'pdf' if type_ == 'qweb-pdf' else 'text'
-                extension = 'pdf' if type_ == 'qweb-pdf' else 'txt'
+            # type: qweb-text, qweb-pdf, qweb-pdf-wkhtmltopdf, qweb-pdf-papermuncher
+            if types[0] == 'qweb' and ('pdf' in types or 'text' in types):
+                converter = 'pdf' if 'pdf' in types else 'text'
+                extension = 'pdf' if 'pdf' in types else 'txt'
+                subtype = types[2] if len(types) > 2 else None
 
-                pattern = '/report/pdf/' if type_ == 'qweb-pdf' else '/report/text/'
+                pattern = '/report/pdf/' if converter == 'pdf' else '/report/text/'
                 reportname = url.split(pattern)[1].split('?')[0]
 
                 docids = None
@@ -117,10 +119,12 @@ class ReportController(http.Controller):
 
                 if docids:
                     # Generic report:
-                    response = self.report_routes(reportname, docids=docids, converter=converter, context=context)
+                    response = self.report_routes(reportname, docids=docids, converter=converter, context=context, subtype=subtype)
                 else:
                     # Particular report:
                     data = url_parse(url).decode_query(cls=dict)  # decoding the args represented in JSON
+                    if subtype:
+                        data.setdefault('report_subtype', subtype)
                     if 'context' in data:
                         context, data_context = json.loads(context or '{}'), json.loads(data.pop('context'))
                         context = json.dumps({**context, **data_context})
@@ -150,6 +154,6 @@ class ReportController(http.Controller):
             res = request.make_response(html_escape(json.dumps(error)))
             raise werkzeug.exceptions.InternalServerError(response=res) from e
 
-    @http.route(['/report/check_wkhtmltopdf'], type='jsonrpc', auth='user', readonly=True)
-    def check_wkhtmltopdf(self):
-        return request.env['ir.actions.report'].get_wkhtmltopdf_state()
+    @http.route(['/report/check_pdf_engine'], type='jsonrpc', auth='user', readonly=True)
+    def check_pdf_engine(self, subtype=None):
+        return request.env['ir.actions.report'].get_pdf_engine_state(subtype)
