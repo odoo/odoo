@@ -419,7 +419,6 @@ class Cursor(BaseCursor):
 
         start = real_time()
         try:
-            params = params or None
             self._obj.execute(query, params)
         except Exception as e:
             if log_exceptions:
