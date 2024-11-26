@@ -996,7 +996,7 @@ export class ListRenderer extends Component {
      * @param {Object} column
      * @param {PointerEvent} ev
      */
-    async onCellClicked(record, column, ev) {
+    async onCellClicked(record, column, ev, newWindow) {
         if (ev.target.special_click) {
             return;
         }
@@ -1039,7 +1039,7 @@ export class ListRenderer extends Component {
         } else if (this.props.list.editedRecord && this.props.list.editedRecord !== record) {
             this.props.list.leaveEditMode();
         } else if (!this.props.archInfo.noOpen) {
-            this.props.openRecord(record);
+            this.props.openRecord(record, { newWindow });
         }
     }
 
