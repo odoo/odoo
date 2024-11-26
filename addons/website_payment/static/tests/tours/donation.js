@@ -45,12 +45,10 @@ registerWebsitePreviewTour('donation_snippet_edition', {
         {
             content: "Check if custom amount radio input is selected",
             trigger: ":iframe input#other_amount:checked",
-            run: () => {}, // This is a check
         },
         {
             content: "Check if custom amount radio input has value 55",
             trigger: ':iframe input#other_amount[value="55.0"]',
-            run: () => {}, // This is a check
         },
         {
             content: "Select the amount of 25",
@@ -60,12 +58,10 @@ registerWebsitePreviewTour('donation_snippet_edition', {
         {
             content: "Verify that amount_1 is checked",
             trigger: ":iframe input#amount_1:checked",
-            run: () => {}, // This is a check
         },
         {
             content: "Verify that other_amount is not checked",
             trigger: ":iframe input#other_amount:not(:checked)",
-            run: () => {}, // This is a check
         },
         {
             content: "Change custom amount to 67",
@@ -90,8 +86,7 @@ registerWebsitePreviewTour('donation_snippet_edition', {
         {
             content: "Verify that the amount displayed is 67",
             trigger: ':iframe span.oe_currency_value:contains("67.00")',
-            run: () => {}, // This is a check
-            timeout: 10000  // Make sure the payment process animation is finished
+            timeout: 10000, // Make sure the payment process animation is finished
         },
     ]
 );
