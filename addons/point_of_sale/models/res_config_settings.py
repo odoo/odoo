@@ -35,7 +35,6 @@ class ResConfigSettings(models.TransientModel):
     module_pos_stripe = fields.Boolean(string="Stripe Payment Terminal", help="The transactions are processed by Stripe. Set your Stripe credentials on the related payment method.")
     module_pos_six = fields.Boolean(string="Six Payment Terminal", help="The transactions are processed by Six. Set the IP address of the terminal on the related payment method.")
     module_pos_viva_wallet = fields.Boolean(string="Viva Wallet Payment Terminal", help="The transactions are processed by Viva Wallet on terminal or tap on phone.")
-    module_pos_paytm = fields.Boolean(string="PayTM Payment Terminal", help="The transactions are processed by PayTM. Set your PayTM credentials on the related payment method.")
     module_pos_razorpay = fields.Boolean(string="Razorpay Payment Terminal", help="The transactions are processed by Razorpay. Set your Razorpay credentials on the related payment method.")
     module_pos_mercado_pago = fields.Boolean(string="Mercado Pago Payment Terminal", help="The transactions are processed by Mercado Pago. Set your Mercado Pago credentials on the related payment method.")
     module_pos_preparation_display = fields.Boolean(string="Preparation Display", help="Show orders on the preparation display screen.")
