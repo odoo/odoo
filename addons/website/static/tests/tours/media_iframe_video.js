@@ -49,6 +49,25 @@ registerWebsitePreviewTour("website_media_iframe_video", {
             run: "click",
         },
         {
+            content: "Click on replace media",
+            trigger: "[data-replace-media='true']",
+            run: "click",
+        },
+        {
+            content: "Check that video url has protocol",
+            trigger: "#o_video_text",
+            run() {
+                if (!this.anchor.value.startsWith("https")) {
+                    console.error("Video Url is missing protocol");
+                }
+            },
+        },
+        {
+            content: "Close the dialog",
+            trigger: "button.btn-close",
+            run: "click",
+        },
+        {
             content: "Ensure that the parent of media_iframe_video is not an 'a' tag.",
             trigger: ":iframe .media_iframe_video",
             run: function () {
