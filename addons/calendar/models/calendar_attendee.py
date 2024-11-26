@@ -83,8 +83,6 @@ class Attendee(models.Model):
         mapped_followers = defaultdict(lambda: self.env['calendar.event'])
         for event in self.event_id:
             partners = (event.attendee_ids & self).partner_id - event.message_partner_ids
-            # current user is automatically added as followers, don't add it twice.
-            partners -= self.env.user.partner_id
             mapped_followers[partners] |= event
         for partners, events in mapped_followers.items():
             events.message_subscribe(partner_ids=partners.ids)
