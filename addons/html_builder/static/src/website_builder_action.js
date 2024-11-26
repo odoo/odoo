@@ -27,7 +27,7 @@ class WebsiteBuilder extends Component {
         useSubEnv({
             builderRef: useRef("container"),
         });
-        this.state = useState({ isEditing: false });
+        this.state = useState({ isEditing: false, isMobile: false });
         this.websiteService = useService("website");
         // TODO: to remove: this is only needed to not use the website systray
         // when using the "website preview" app.
@@ -55,6 +55,7 @@ class WebsiteBuilder extends Component {
             iframe: this.websiteContent.el,
             closeEditor: this.closeEditor.bind(this),
             snippetsName: "website.snippets",
+            toggleMobile: this.toggleMobile.bind(this),
         };
     }
 
@@ -96,6 +97,9 @@ class WebsiteBuilder extends Component {
             targetDoc: this.websiteContent.el.contentDocument,
         });
         this.websiteService.pageDocument = this.websiteContent.el.contentDocument;
+    }
+    toggleMobile() {
+        this.state.isMobile = !this.state.isMobile;
     }
 }
 
