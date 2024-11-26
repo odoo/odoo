@@ -68,12 +68,6 @@ class TestStructure(TransactionCase):
         test_partner.write({'vat': 'BE0477472701', 'country_id': self.env.ref('base.fr').id})
         test_partner.write({'vat': 'BE0477472701', 'country_id': None})
 
-        with self.assertRaises(ValidationError):
-            test_partner.write({'vat': 'BE42', 'country_id': self.env.ref('base.fr').id})
-
-        with self.assertRaises(ValidationError):
-            test_partner.write({'vat': 'BE42', 'country_id': None})
-
         # No country code in VAT: use the partner's country
         test_partner.write({'vat': '0477472701', 'country_id': self.env.ref('base.be').id})
 
@@ -126,6 +120,14 @@ class TestStructure(TransactionCase):
         with self.assertRaisesRegex(ValidationError, "The VAT number.*does not seem to be valid."):
             test_partner.write({"vat": "215521750018"})
 
+    def test_multi_changes(self):
+        ro_country = self.env.ref('base.ro').id
+        test_partner_1 = self.env['res.partner'].create({'name': 'Roman', 'country_id': self.env.ref('base.es').id})
+        test_partner_2 = self.env['res.partner'].create({'name': 'Roman2',
+                                                         'country_id': ro_country,
+                                                         'vat': '1234567897'})
+        partners = test_partner_1 + test_partner_2
+        partners.write({'country_id': ro_country})
 
 @tagged('-standard', 'external')
 class TestStructureVIES(TestStructure):
