@@ -10,7 +10,7 @@
     <t t-else="">
         <t t-foreach="props.currentOptionsContainers" t-as="optionsContainer" t-key="optionsContainer.id">
             <WithSubEnv env="{editingElement: optionsContainer.element, weContext: {}}">
-            <OptionsContainer title="'Section'">
+            <OptionsContainer>
                 <t t-foreach="optionsContainer.options" t-as="option" t-key="option_index">
                     <t t-component="option.OptionComponent" />
                 </t>
