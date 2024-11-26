@@ -16,6 +16,7 @@ from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.misc import file_open
 from odoo.addons.iap.tools import iap_tools
 from odoo.addons.mail.tools import link_preview
+from lxml import html
 
 from ..models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
 
@@ -560,7 +561,10 @@ class HTML_Editor(http.Controller):
 
     @http.route('/html_editor/link_preview_external', type="jsonrpc", auth="public", methods=['POST'])
     def link_preview_metadata(self, preview_url):
-        return link_preview.get_link_preview_from_url(preview_url)
+        link_preview_data = link_preview.get_link_preview_from_url(preview_url)
+        if link_preview_data['og_description']:
+            link_preview_data['og_description'] = html.fromstring(link_preview_data['og_description']).text_content()
+        return link_preview_data
 
     @http.route('/html_editor/link_preview_internal', type="jsonrpc", auth="user", methods=['POST'])
     def link_preview_metadata_internal(self, preview_url):
@@ -590,7 +594,7 @@ class HTML_Editor(http.Controller):
 
             result = {}
             if 'description' in record:
-                result['description'] = record.description
+                result['description'] = html.fromstring(record.description).text_content() if record.description else ""
 
             if 'link_preview_name' in record:
                 result['link_preview_name'] = record.link_preview_name

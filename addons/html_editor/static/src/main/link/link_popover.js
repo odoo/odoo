@@ -220,7 +220,6 @@ export class LinkPopover extends Component {
                 this.state.urlTitle = this.state.label;
             }
         } else {
-            const html_parser = new window.DOMParser();
             // Set state based on cached link meta data
             // for record missing errors, we push a warning that the url is likely invalid
             // for other errors, we log them to not block the ui
@@ -243,10 +242,7 @@ export class LinkPopover extends Component {
                     internalMetadata.link_preview_name ||
                     internalMetadata.display_name ||
                     internalMetadata.name;
-                this.state.urlDescription = internalMetadata.description
-                    ? html_parser.parseFromString(internalMetadata.description, "text/html").body
-                          .textContent
-                    : "";
+                this.state.urlDescription = internalMetadata?.description || "";
                 this.state.urlTitle = this.state.linkPreviewName
                     ? this.state.linkPreviewName
                     : this.state.url;
