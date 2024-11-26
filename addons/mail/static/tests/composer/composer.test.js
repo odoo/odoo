@@ -232,8 +232,11 @@ test("keep emoji picker scroll value when re-opening it", async () => {
     await start();
     await openDiscuss(channelId);
     await click("button[title='Add Emojis']");
+    // requires an extra delay (give time for auto scroll before setting new value)
+    await contains(".o-EmojiPicker-content", { scroll: 0 });
     await scroll(".o-EmojiPicker-content", 150);
     await click("button[title='Add Emojis']");
+    await contains(".o-EmojiPicker-content", { count: 0 });
     await click("button[title='Add Emojis']");
     await contains(".o-EmojiPicker-content", { scroll: 150 });
 });
@@ -244,6 +247,8 @@ test("reset emoji picker scroll value after an emoji is picked", async () => {
     await start();
     await openDiscuss(channelId);
     await click("button[title='Add Emojis']");
+    // requires an extra delay (give time for auto scroll before setting new value)
+    await contains(".o-EmojiPicker-content", { scroll: 0 });
     await scroll(".o-EmojiPicker-content", 150);
     await click(".o-Emoji", { text: "😎" });
     await click("button[title='Add Emojis']");
@@ -266,6 +271,8 @@ test("keep emoji picker scroll value independent if two or more different emoji 
     await click("button[title='Add Emojis']", {
         parent: [".o-mail-ChatWindow", { text: "Sales" }],
     });
+    // requires an extra delay (give time for auto scroll before setting new value)
+    await contains(".o-EmojiPicker-content", { scroll: 0 });
     await scroll(".o-EmojiPicker-content", 200);
     await contains(".o-EmojiPicker-content", { scroll: 200 });
     await click("button[title='Add Emojis']", {
@@ -275,6 +282,8 @@ test("keep emoji picker scroll value independent if two or more different emoji 
     await click("button[title='Add Emojis']", {
         parent: [".o-mail-ChatWindow", { text: "roblox-jaywalking" }],
     });
+    // requires an extra delay (give time for auto scroll before setting new value)
+    await contains(".o-EmojiPicker-content", { scroll: 0 });
     await scroll(".o-EmojiPicker-content", 150);
     await contains(".o-EmojiPicker-content", { scroll: 150 });
     await click("button[title='Add Emojis']", {

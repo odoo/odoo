@@ -611,6 +611,9 @@ class Contains {
         this.done = false;
         this.def = new Deferred();
         this.scrollListeners = new Set();
+        this.onBlur = () => this.runOnce("after blur");
+        this.onChange = () => this.runOnce("after change");
+        this.onFocus = () => this.runOnce("after focus");
         this.onScroll = () => this.runOnce("after scroll");
         if (!this.runOnce("immediately")) {
             this.timer = setTimeout(
@@ -629,6 +632,9 @@ class Contains {
                 childList: true,
                 subtree: true,
             });
+            document.body.addEventListener("blur", this.onBlur, { capture: true });
+            document.body.addEventListener("change", this.onChange, { capture: true });
+            document.body.addEventListener("focus", this.onFocus, { capture: true });
             after(() => {
                 if (!this.done) {
                     this.runOnce("Test ended", { crashOnFail: true });
@@ -659,6 +665,9 @@ class Contains {
             for (const el of this.scrollListeners ?? []) {
                 el.removeEventListener("scroll", this.onScroll);
             }
+            document.body.removeEventListener("blur", this.onBlur, { capture: true });
+            document.body.removeEventListener("change", this.onChange, { capture: true });
+            document.body.removeEventListener("focus", this.onFocus, { capture: true });
             this.done = true;
         }
         if ((res?.length ?? 0) === this.options.count) {

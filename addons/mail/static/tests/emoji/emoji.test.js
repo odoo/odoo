@@ -6,6 +6,7 @@ import {
     defineMailModels,
     insertText,
     openDiscuss,
+    scroll,
     start,
     startServer,
     triggerHotkey,
