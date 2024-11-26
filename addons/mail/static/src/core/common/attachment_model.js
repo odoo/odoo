@@ -34,7 +34,13 @@ export class Attachment extends FileModelMixin(Record) {
 
     thread = Record.one("Thread", { inverse: "attachments" });
     res_name;
-    message = Record.one("mail.message", { inverse: "attachment_ids" });
+    message_ids;
+    message = Record.one("mail.message", {
+        inverse: "attachment_ids",
+        compute() {
+            return this.message ?? this.message_ids?.[0];
+        },
+    });
     /** @type {luxon.DateTime} */
     create_date = Record.attr(undefined, { type: "datetime" });
     /** @type {'binary'|'url'} */
