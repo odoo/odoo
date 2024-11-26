@@ -249,7 +249,8 @@
                         t-att-colspan="column.colspan"
                         t-att-data-tooltip="!isInvisible ? getCellTitle(column, record) : false"
                         data-tooltip-delay="1000"
-                        t-on-click="(ev) => this.onCellClicked(record, column, ev)" tabindex="-1">
+                        t-custom-click="(ev, isMiddleClick) => this.onCellClicked(record, column, ev, isMiddleClick)"
+                        tabindex="-1">
                         <t t-if="!isInvisible">
                             <t t-if="canUseFormatter(column, record)" t-out="getFormattedValue(column, record)"/>
                             <Field t-else="" name="column.name" record="record" type="column.widget" class="getFieldClass(column)" fieldInfo="column" t-props="getFieldProps(record, column)"/>
@@ -286,7 +287,7 @@
             <t t-if="hasOpenFormViewColumn">
                 <td class="o_list_record_open_form_view w-print-0 p-print-0 text-center"
                     t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)"
-                    t-on-click.stop="() => isX2Many and record.isNew ? this.displaySaveNotification() : props.onOpenFormView(record, true)"
+                    t-custom-click.stop="(ev, newWindow) => isX2Many and record.isNew ? this.displaySaveNotification() : props.onOpenFormView(record, { force: true, newWindow })"
                     tabindex="-1"
                 >
                     <button class="btn btn-link align-top text-end"
