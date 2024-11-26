@@ -29,6 +29,10 @@ export class SplitBillScreen extends Component {
         return Object.values(this.priceTracker).reduce((a, b) => a + b, 0);
     }
 
+    get qtyTrackerLength() {
+        return Object.values(this.qtyTracker).filter((l) => l > 0).length;
+    }
+
     onClickLine(line) {
         const lines = line.getAllLinesInCombo();
 
@@ -102,7 +106,6 @@ export class SplitBillScreen extends Component {
                         ...data,
                         qty: this.qtyTracker[line.uuid],
                         order_id: newOrder.id,
-                        skip_change: true,
                     },
                     false,
                     true
@@ -110,15 +113,22 @@ export class SplitBillScreen extends Component {
 
                 if (line.getQuantity() === this.qtyTracker[line.uuid]) {
                     lineToDel.push(line);
-                } else {
-                    line.qty = line.getQuantity() - this.qtyTracker[line.uuid];
+                }
+                // Update line quantity and handle zero values after sending order in preparation
+                line.update({ qty: line.getQuantity() - this.qtyTracker[line.uuid] });
+                // Mark line as 'splitted' in the originalOrder's last_order_preparation_change
+                if (line.preparationKey in originalOrder.last_order_preparation_change.lines) {
+                    originalOrder.last_order_preparation_change.lines[line.preparationKey][
+                        "splitted"
+                    ] = true;
                 }
             }
         }
-
-        for (const line of lineToDel) {
-            line.delete();
-        }
+        const deleteLines = () => {
+            for (const line of lineToDel) {
+                line.delete();
+            }
+        };
 
         // for the kitchen printer we assume that everything
         // has already been sent to the kitchen before splitting
@@ -131,8 +141,20 @@ export class SplitBillScreen extends Component {
             newOrder.updateLastOrderChange();
         }
 
+        // Update preparation display if originalOrder is included.
+        // Add originalOrder UUID to newOrder and send both orders for update.
+        if (Object.keys(originalOrder.last_order_preparation_change.lines).length > 0) {
+            newOrder.last_order_preparation_change["original_order_uuid"] = originalOrder.uuid;
+            await this.pos.sendOrderInPreparationUpdateLastChange(originalOrder);
+            deleteLines();
+            await this.pos.sendOrderInPreparationUpdateLastChange(newOrder);
+        } else {
+            deleteLines();
+        }
+
         originalOrder.customer_count -= 1;
         originalOrder.setScreenData({ name: "ProductScreen" });
+        newOrder.setScreenData({ name: "ProductScreen" });
         this.pos.selectedOrderUuid = null;
         this.pos.setOrder(newOrder);
         this.back();
