@@ -10,6 +10,7 @@ export class WeButton extends Component {
         label: { type: String, optional: true },
         iconImg: { type: String, optional: true },
         iconImgAlt: { type: String, optional: true },
+        icon: { type: String, optional: true },
 
         slots: { type: Object, optional: true },
     };
@@ -20,5 +21,17 @@ export class WeButton extends Component {
         this.onClick = call.commit;
         this.onMouseenter = call.preview;
         this.onMouseleave = call.revert;
+    }
+
+    get className() {
+        if (!this.props.icon) {
+            return "";
+        }
+        if (this.props.icon.startsWith("fa-")) {
+            return `fa fa-fw ${this.props.icon}`;
+        } else if (this.props.icon.startsWith("oi-")) {
+            return `oi oi-fw ${this.props.icon}`;
+        }
+        return "";
     }
 }
