@@ -191,6 +191,7 @@ export class LinkPopover extends Component {
         }
         this.resetPreview();
         const protocol = url.protocol;
+        const html_parser = new window.DOMParser();
         if (!protocol.startsWith("http")) {
             const faMap = { "mailto:": "fa-envelope-o", "tel:": "fa-phone" };
             const icon = faMap[protocol];
@@ -210,7 +211,10 @@ export class LinkPopover extends Component {
             const externalMetadata = await this.props.getExternalMetaData(this.state.url);
 
             this.state.urlTitle = externalMetadata?.og_title || this.state.url;
-            this.state.urlDescription = externalMetadata?.og_description || "";
+            this.state.urlDescription = externalMetadata?.og_description
+                ? html_parser.parseFromString(externalMetadata.og_description, "text/html").body
+                      .textContent
+                : "";
             this.state.imgSrc = externalMetadata?.og_image || "";
             if (
                 externalMetadata?.og_image &&
@@ -220,7 +224,6 @@ export class LinkPopover extends Component {
                 this.state.urlTitle = this.state.label;
             }
         } else {
-            const html_parser = new window.DOMParser();
             // Set state based on cached link meta data
             // for record missing errors, we push a warning that the url is likely invalid
             // for other errors, we log them to not block the ui
