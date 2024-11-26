@@ -3,13 +3,14 @@
 
 import time
 
-from odoo.tests.common import TransactionCase
+from odoo.tests import Form
+from odoo.tests.common import tagged, TransactionCase
 
-class TestEquipment(TransactionCase):
-    """ Test used to check that when doing equipment/maintenance_request/equipment_category creation."""
+
+class TestEquipmentCommon(TransactionCase):
 
     def setUp(self):
-        super(TestEquipment, self).setUp()
+        super().setUp()
         self.equipment = self.env['maintenance.equipment']
         self.maintenance_request = self.env['maintenance.request']
         self.res_users = self.env['res.users']
@@ -37,6 +38,9 @@ class TestEquipment(TransactionCase):
         self.equipment_monitor = self.env['maintenance.equipment.category'].create({
             'name': 'Monitors - Test',
         })
+
+
+class TestEquipment(TestEquipmentCommon):
 
     def test_10_equipment_request_category(self):
 
@@ -119,3 +123,29 @@ class TestEquipment(TransactionCase):
             {'kanban_state': 'blocked', 'stage_id': self.ref('maintenance.stage_0')},
             {'kanban_state': 'blocked', 'stage_id': self.ref('maintenance.stage_0')},
         ])
+
+
+@tagged("post_install", "-at_install")
+class TestEquipmentPostInstall(TestEquipmentCommon):
+
+    def test_basic_access_and_new_equipment(self):
+        """
+        Ensure that
+        - a maintenance manager can create an equipment and assign it to a
+        specific user
+        - the user can open it
+        """
+        equipment_name = "Super Equipment"
+
+        with self.with_user('hm'):
+            form = Form(self.env['maintenance.equipment'])
+            form.name = equipment_name
+            equipment = form.save()
+
+        self.assertTrue(equipment)
+        equipment.owner_user_id = self.user
+
+        with self.with_user('emp'):
+            # Using browse to avoid the env of record `equipment`
+            form = Form(self.env['maintenance.equipment'].browse(equipment.id))
+            self.assertEqual(form.name, equipment_name)
