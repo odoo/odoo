@@ -42,7 +42,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour", {
             SplitBillScreen.subtotalIs("8.0"),
 
             // click pay to split, go back to check the lines
-            SplitBillScreen.clickPay(),
+            SplitBillScreen.clickButton("Split"),
             ProductScreen.clickOrderline("Water", "3"),
             ProductScreen.clickOrderline("Coca-Cola", "1"),
 
@@ -66,7 +66,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour", {
             SplitBillScreen.orderlineHas("Minute Maid", "3", "1"),
             SplitBillScreen.subtotalIs("4.0"),
 
-            SplitBillScreen.clickPay(),
+            SplitBillScreen.clickButton("Split"),
 
             // go back to the original order and see if the order is changed
             Chrome.clickOrders(),
@@ -95,7 +95,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour2", {
             SplitBillScreen.orderlineHas("Water", "1", "1"),
             SplitBillScreen.clickOrderline("Coca-Cola"),
             SplitBillScreen.orderlineHas("Coca-Cola", "1", "1"),
-            SplitBillScreen.clickPay(),
+            SplitBillScreen.clickButton("Split"),
             Chrome.clickOrders(),
             TicketScreen.selectOrder("002"),
             TicketScreen.loadSelectedOrder(),
@@ -128,7 +128,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour3", {
             SplitBillScreen.subtotalIs("2.0"),
 
             // click pay to split, and pay
-            SplitBillScreen.clickPay(),
+            SplitBillScreen.clickButton("Split"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
@@ -184,7 +184,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour4ProductCombo", {
             SplitBillScreen.orderlineHas("Combo Product 7", "1", "0"),
 
             ...SplitBillScreen.subtotalIs("53.80"),
-            ...SplitBillScreen.clickPay(),
+            ...SplitBillScreen.clickButton("Split"),
             ProductScreen.clickPayButton(),
             ...PaymentScreen.clickPaymentMethod("Bank"),
             ...PaymentScreen.clickValidate(),
@@ -199,5 +199,76 @@ registry.category("web_tour.tours").add("SplitBillScreenTour4ProductCombo", {
             ...ProductScreen.orderLineHas("Combo Product 4", "1"),
             ...ProductScreen.orderLineHas("Combo Product 7", "1"),
             ...ProductScreen.totalAmountIs("45.53"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("SplitBillScreenTour5Actions", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("2"),
+            ProductScreen.addOrderline("Water", "2", "2", "4.00"),
+            ProductScreen.addOrderline("Minute Maid", "1", "3", "3.00"),
+            ProductScreen.clickControlButton("Split"),
+
+            SplitBillScreen.orderlineHas("Water", "2", "0"),
+            SplitBillScreen.clickOrderline("Water"),
+            SplitBillScreen.clickOrderline("Minute Maid"),
+            SplitBillScreen.subtotalIs("5.0"),
+
+            // click transfer button to split and transfer
+            SplitBillScreen.clickButton("Transfer"),
+            FloorScreen.isShown(),
+            FloorScreen.clickTable("5"),
+
+            // check table 5 order and pay
+            ProductScreen.orderLineHas("Water", "1"),
+            ProductScreen.orderLineHas("Minute Maid", "1"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            {
+                ...Dialog.confirm(),
+                content:
+                    "acknowledge printing error ( because we don't have printer in the test. )",
+            },
+            ReceiptScreen.clickNextOrder(),
+
+            // Add products in order
+            FloorScreen.clickTable("2"),
+            ProductScreen.orderLineHas("Water", "1"),
+            ProductScreen.addOrderline("Minute Maid", "2", "3", "6.00"),
+            ProductScreen.clickControlButton("Split"),
+
+            SplitBillScreen.clickOrderline("Minute Maid"),
+            SplitBillScreen.clickOrderline("water"),
+            SplitBillScreen.subtotalIs("5.0"),
+
+            // click pay to split, and pay
+            SplitBillScreen.clickButton("Pay"),
+            PaymentScreen.isShown(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            {
+                ...Dialog.confirm(),
+                content:
+                    "acknowledge printing error ( because we don't have printer in the test. )",
+            },
+            ReceiptScreen.clickContinueOrder(),
+
+            // Check if redirect to split bill screen of original order
+            SplitBillScreen.orderlineHas("Minute Maid", "1", "0"),
+            SplitBillScreen.clickButton("Pay"),
+            PaymentScreen.isShown(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            // Check if there is no more order to continue
+            {
+                ...Dialog.confirm(),
+                content:
+                    "acknowledge printing error ( because we don't have printer in the test. )",
+            },
+            ReceiptScreen.clickNextOrder(),
         ].flat(),
 });

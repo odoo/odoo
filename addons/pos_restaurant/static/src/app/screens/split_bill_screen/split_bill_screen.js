@@ -92,6 +92,23 @@ export class SplitBillScreen extends Component {
         return `${latestOrderName.slice(0, -1)}${nextChar}`;
     }
 
+    async paySplittedOrder() {
+        if (this.getNumberOfProducts() > 0) {
+            const originalOrder = this.currentOrder;
+            await this.createSplittedOrder();
+            originalOrder.setScreenData({ name: "SplitBillScreen" });
+        }
+        this.pos.pay();
+    }
+    async transferSplittedOrder(event) {
+        // Prevents triggering the 'startTransferOrder' event listener
+        event.stopPropagation();
+        if (this.getNumberOfProducts() > 0) {
+            await this.createSplittedOrder();
+        }
+        this.pos.startTransferOrder();
+    }
+
     async createSplittedOrder() {
         const curOrderUuid = this.currentOrder.uuid;
         const originalOrder = this.pos.models["pos.order"].find((o) => o.uuid === curOrderUuid);
