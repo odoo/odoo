@@ -3,7 +3,6 @@
 import logging
 import pprint
 from datetime import timedelta
-from urllib.parse import urlencode
 
 from werkzeug.exceptions import Forbidden
 
@@ -55,7 +54,7 @@ class RazorpayController(Controller):
             )
         except ValidationError as e:
             return request.render(
-                'payment_razorpay_oauth.authorization_error',
+                'payment_razorpay.authorization_error',
                 qcontext={'error_message': str(e), 'provider_url': redirect_url},
             )
         expires_in = fields.Datetime.now() + timedelta(seconds=int(response_content['expires_in']))
