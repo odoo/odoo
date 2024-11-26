@@ -45,24 +45,7 @@ patch(ControlButtons.prototype, {
     },
     clickTransferOrder() {
         this.dialog.closeAll();
-        this.pos.isOrderTransferMode = true;
-        const orderUuid = this.pos.getOrder().uuid;
-        this.pos.getOrder().setBooked(true);
-        this.pos.showScreen("FloorScreen");
-        document.addEventListener(
-            "click",
-            async (ev) => {
-                this.pos.isOrderTransferMode = false;
-                const tableElement = ev.target.closest(".table");
-                if (!tableElement) {
-                    return;
-                }
-                const table = this.pos.getTableFromElement(tableElement);
-                await this.pos.transferOrder(orderUuid, table);
-                this.pos.setTableFromUi(table);
-            },
-            { once: true }
-        );
+        this.pos.startTransferOrder();
     },
 });
 patch(ControlButtons, {

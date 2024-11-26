@@ -321,3 +321,7 @@ class TestFrontend(TestFrontendCommon):
         self.start_pos_tour('CrmTeamTour')
         order = self.env['pos.order'].search([], limit=1)
         self.assertEqual(order.crm_team_id.id, sale_team.id)
+
+    def test_14_split_bill_screen_actions(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('SplitBillScreenTour5Actions')
