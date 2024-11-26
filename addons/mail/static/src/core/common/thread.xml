@@ -6,6 +6,7 @@
     <div class="o-mail-Thread position-relative flex-grow-1 d-flex flex-column overflow-auto" t-att-class="{ 'pb-5': env.inChatter?.aside, 'pb-4': !env.inChatter?.aside, 'px-3': !env.inChatter and !props.isInChatWindow }" t-ref="messages" tabindex="-1">
         <t t-if="!props.thread.isEmpty or props.thread.loadOlder or props.thread.hasLoadingFailed" name="content">
             <div class="d-flex flex-column position-relative flex-grow-1" t-att-class="{'justify-content-end': !env.inChatter and props.thread.model !== 'mail.box'}">
+                <t t-if="props.thread.channel_type === 'channel'" t-call="mail.Thread.welcomeMessage"/>
                 <span class="position-absolute w-100 invisible" t-att-class="props.order === 'asc' ? 'bottom-0' : 'top-0'" t-ref="present-treshold" t-att-style="`height: Min(${PRESENT_THRESHOLD}px, 100%)`"/>
                 <t t-set="currentDay" t-value="0"/>
                 <t t-if="props.order === 'asc'">
@@ -48,11 +49,19 @@
             </div>
         </t>
         <t t-else="">
-            <div class="o-mail-Thread-empty d-flex flex-column align-items-center justify-content-center text-muted h-100" t-att-class="{'p-4': props.showEmptyMessage}">
+            <div class="o-mail-Thread-empty d-flex flex-column text-muted h-100"
+                t-att-class="{
+                    'p-4': props.showEmptyMessage and !showWelcomeMessage,
+                    'align-items-start justify-content-end': showWelcomeMessage,
+                    'align-items-center justify-content-center': !showWelcomeMessage
+                }">
                 <t t-if="props.thread.isLoaded and props.showEmptyMessage">
                     <t name="empty-message">
-                        <span class="fs-1" style="filter: grayscale(1);">😶</span>
-                        <span>The conversation is empty.</span>
+                        <t t-if="props.thread.channel_type === 'channel'" t-call="mail.Thread.welcomeMessage"/>
+                        <div t-else="">
+                            <span class="fs-1" style="filter: grayscale(1);">😶</span>
+                            <span>The conversation is empty.</span>
+                        </div>
                     </t>
                 </t>
             </div>
@@ -84,6 +93,20 @@
         <button class="btn btn-link" t-on-click="onClickLoadOlder">
             Click here to retry
         </button>
+    </div>
+</t>
+
+<t t-name="mail.Thread.welcomeMessage">
+    <div class="pt-4 mb-n4 ps-3" t-att-class="{ 'px-2': env.inChatWindow }">
+        <div class="o-mail-Thread-avatar" t-att-class="{'o-mail-Thread-avatarChatWindow': env.inChatWindow }">
+            <img t-if="!props.thread.parent_channel_id" class="rounded" t-att-src="props.thread?.avatarUrl" alt="Thread Image"/>
+            <i t-else="" class="fa fa-comments-o"/>
+        </div>
+        <div>
+            <h1><t t-if="!props.thread.parent_channel_id" t-esc="'Welcome to #'"/><t t-esc="props.thread.name"/></h1>
+            <p t-if="!props.thread.parent_channel_id" class="text-muted">This is the start of #<t t-esc="props.thread.name"/></p>
+            <p t-else="" class="text-muted">Started by <t t-esc="threadCreatorName"/></p>
+        </div>
     </div>
 </t>
 </templates>

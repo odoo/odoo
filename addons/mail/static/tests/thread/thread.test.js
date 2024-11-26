@@ -175,7 +175,7 @@ test("do not display day separator if all messages of the day are empty", async 
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Thread", { text: "The conversation is empty." });
+    await contains(".o-mail-Thread", { text: "Welcome to #" });
     await contains(".o-mail-DateSection", { count: 0 });
 });
 
@@ -218,13 +218,14 @@ test("scroll position is kept when navigating from one channel to another [CAN F
     await openDiscuss(channelId_1);
     await contains(".o-mail-Message", { count: 20 });
     const scrollValue1 = queryFirst(".o-mail-Thread").scrollHeight / 2;
-    await contains(".o-mail-Thread", { scroll: 0 });
+    const scrollTopValue = queryFirst(".o-mail-Thread").scrollTop;
+    await contains(".o-mail-Thread", { scroll: scrollTopValue });
     await tick(); // wait for the scroll to first unread to complete
     await scroll(".o-mail-Thread", scrollValue1);
     await click(".o-mail-DiscussSidebarChannel", { text: "channel-2" });
     await contains(".o-mail-Message", { count: 30 });
     const scrollValue2 = queryFirst(".o-mail-Thread").scrollHeight / 3;
-    await contains(".o-mail-Thread", { scroll: 0 });
+    await contains(".o-mail-Thread", { scroll: scrollTopValue });
     await tick(); // wait for the scroll to first unread to complete
     await scroll(".o-mail-Thread", scrollValue2);
     await click(".o-mail-DiscussSidebarChannel", { text: "channel-1" });
@@ -251,7 +252,7 @@ test("thread is still scrolling after scrolling up then to bottom", async () => 
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 20 });
-    await contains(".o-mail-Thread", { scroll: 0 });
+    await contains(".o-mail-Thread");
     await tick(); // wait for the scroll to first unread to complete
     await scroll(".o-mail-Thread", queryFirst(".o-mail-Thread").scrollHeight / 2);
     await scroll(".o-mail-Thread", "bottom");
@@ -435,7 +436,7 @@ test("should not scroll on receiving new message if the list is initially scroll
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-Message", { count: 11 });
-    await contains(".o-mail-Thread", { scroll: 0 });
+    await contains(".o-mail-Thread", { scroll: 42 });
     // simulate receiving a message
     withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -445,7 +446,7 @@ test("should not scroll on receiving new message if the list is initially scroll
         })
     );
     await contains(".o-mail-Message", { count: 12 });
-    await contains(".o-mail-ChatWindow .o-mail-Thread", { scroll: 0 });
+    await contains(".o-mail-ChatWindow .o-mail-Thread", { scroll: 42 });
 });
 
 test("show empty placeholder when thread contains no message", async () => {
@@ -453,7 +454,7 @@ test("show empty placeholder when thread contains no message", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Thread", { text: "The conversation is empty." });
+    await contains(".o-mail-Thread", { text: "Welcome to #general" });
     await contains(".o-mail-Message", { count: 0 });
 });
 
@@ -463,7 +464,7 @@ test("show empty placeholder when thread contains only empty messages", async ()
     pyEnv["mail.message"].create({ model: "discuss.channel", res_id: channelId });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Thread", { text: "The conversation is empty." });
+    await contains(".o-mail-Thread", { text: "Welcome to #General" });
     await contains(".o-mail-Message", { count: 0 });
 });
 

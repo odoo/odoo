@@ -600,4 +600,17 @@ export class Thread extends Component {
             ? [...this.props.thread.nonEmptyMessages]
             : [...this.props.thread.nonEmptyMessages].reverse();
     }
+
+    get showWelcomeMessage() {
+        return (
+            this.props.thread.model !== "mail.box" && this.props.thread.channel_type === "channel"
+        );
+    }
+
+    get threadCreatorName() {
+        const user = Object.values(this.store.Persona.records).find(
+            (persona) => persona.userId === this.props.thread.create_uid
+        );
+        return user ? user.name : "OdooBot";
+    }
 }
