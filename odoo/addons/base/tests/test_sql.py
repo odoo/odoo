@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import BaseCase
-from odoo.tools import SQL
+from psycopg2.errors import CheckViolation
+
+from odoo.tests.common import BaseCase, TransactionCase
+from odoo.tools import SQL, mute_logger, sql
 
 
 class TestSQL(BaseCase):
@@ -40,6 +42,23 @@ class TestSQL(BaseCase):
 
         with self.assertRaises(KeyError):
             SQL("SELECT id FROM table WHERE foo=%(one)s AND bar=%(two)s", one=1, to=2)
+
+    def test_escape_percent(self):
+        sql = SQL("'%%' || %s", 'a')
+        self.assertEqual(sql.code, "'%%' || %s")
+        with self.assertRaises(TypeError):
+            SQL("'%'")  # not enough arguments
+        with self.assertRaises(ValueError):
+            SQL("'%' || %s", 'a')  # unescaped percent
+        with self.assertRaises(TypeError):
+            SQL("'%%' || %s")  # not enough arguments
+
+        self.assertEqual(SQL("'foo%%'").code, "'foo%%'")
+        self.assertEqual(SQL("'foo%%' || %s", 'bar').code, "'foo%%' || %s")
+        self.assertEqual(SQL("'foo%%' || %(bar)s", bar='bar').code, "'foo%%' || %s")
+
+        self.assertEqual(SQL("%(foo)s AND bar='baz%%'", foo=SQL("qrux='%%'")).code, "qrux='%%' AND bar='baz%%'")
+        self.assertEqual(SQL("%(foo)s AND bar='baz%%'", foo=SQL("%s='%%s'", "qrux")).code, "%s='%%s' AND bar='baz%%'")
 
     def test_sql_equality(self):
         sql1 = SQL("SELECT id FROM table WHERE foo=%s", 42)
@@ -158,3 +177,35 @@ class TestSQL(BaseCase):
             repr(sql),
             """SQL('SELECT "id" FROM "table" WHERE "table"."foo"=%s AND "table"."bar"=%s', 1, 2)"""
         )
+
+
+class TestSqlTools(TransactionCase):
+
+    def test_add_constraint(self):
+        definition = "CHECK (name !~ '%')"
+        sql.add_constraint(self.env.cr, 'res_bank', 'test_constraint_dummy', definition)
+
+        # ensure the constraint with % works and it's in the DB
+        with self.assertRaises(CheckViolation), mute_logger('odoo.sql_db'):
+            self.env['res.bank'].create({'name': r'10% bank'})
+
+        # ensure the definitions match
+        db_definition = sql.constraint_definition(self.env.cr, 'res_bank', 'test_constraint_dummy')
+        self.assertEqual(db_definition, definition)
+
+    def test_add_index(self):
+        definition = "(name, id)"
+        sql.add_index(self.env.cr, 'res_bank_test_name', 'res_bank', definition, unique=False)
+
+        # check the definition
+        db_definition = sql.index_definition(self.env.cr, 'res_bank_test_name')
+        self.assertIn(definition, db_definition)
+
+    def test_add_index_escape(self):
+        definition = "(id) WHERE name ~ '%'"
+        comment = r'some%comment'
+        sql.add_index(self.env.cr, 'res_bank_test_percent_escape', 'res_bank', definition, unique=False, comment=comment)
+
+        # ensure the definitions match (definition is the comment if it is set)
+        db_definition = sql.index_definition(self.env.cr, 'res_bank_test_percent_escape')
+        self.assertEqual(db_definition, comment)

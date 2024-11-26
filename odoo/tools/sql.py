@@ -50,9 +50,10 @@ class SQL:
         cr.execute(sql)
 
     The code is given as a ``%``-format string, and supports either positional
-    arguments (with `%s`) or named arguments (with `%(name)s`). Escaped
-    characters (like ``"%%"``) are not supported, though. The arguments are
-    meant to be merged into the code using the `%` formatting operator.
+    arguments (with `%s`) or named arguments (with `%(name)s`). The arguments
+    are meant to be merged into the code using the `%` formatting operator.
+    Note that the character ``%`` must always be escaped (as ``%%``), even if
+    the code does not have parameters, like in ``SQL("foo LIKE 'a%%'")``.
 
     The SQL wrapper is designed to be composable: the arguments can be either
     actual parameters, or SQL objects themselves::
@@ -121,7 +122,7 @@ class SQL:
         if to_flush is not None:
             to_flush_list.append(to_flush)
 
-        self.__code = code % tuple(code_list)
+        self.__code = code.replace('%%', '%%%%') % tuple(code_list)
         self.__params = tuple(params_list)
         self.__to_flush = tuple(to_flush_list)
 
@@ -439,11 +440,9 @@ def constraint_definition(cr, tablename, constraintname):
 
 def add_constraint(cr, tablename, constraintname, definition):
     """ Add a constraint on the given table. """
-    if "%" in definition:
-        definition = definition.replace("%", "%%")
     query1 = SQL(
         "ALTER TABLE %s ADD CONSTRAINT %s %s",
-        SQL.identifier(tablename), SQL.identifier(constraintname), SQL(definition),
+        SQL.identifier(tablename), SQL.identifier(constraintname), SQL(definition.replace('%', '%%')),
     )
     query2 = SQL(
         "COMMENT ON CONSTRAINT %s ON %s IS %s",
@@ -591,7 +590,10 @@ def create_index(
 
 def add_index(cr, indexname, tablename, definition, *, unique: bool, comment=''):
     """ Create an index. """
-    definition = SQL(definition)
+    if isinstance(definition, str):
+        definition = SQL(definition.replace('%', '%%'))
+    else:
+        definition = SQL(definition)
     cr.execute(SQL(
         "CREATE %sINDEX %s ON %s %s",
         SQL("UNIQUE ") if unique else SQL(),
