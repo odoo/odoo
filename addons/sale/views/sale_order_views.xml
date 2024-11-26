@@ -546,9 +546,6 @@
                                         'default_lst_price': price_unit,
                                         'default_uom_id': product_uom_id,
                                     }"
-                                    options="{
-                                        'no_open': True,
-                                    }"
                                     optional="hide"
                                     domain="[('sale_ok', '=', True)]"
                                     widget="sol_product_many2one"/>
@@ -559,9 +556,6 @@
                                     context="{
                                         'default_list_price': price_unit,
                                         'default_uom_id': product_uom_id,
-                                    }"
-                                    options="{
-                                        'no_open': True,
                                     }"
                                     optional="show"
                                     domain="[('sale_ok', '=', True)]"

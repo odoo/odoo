@@ -110,12 +110,6 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
                 this.props.record.model.root._isReadonly("order_line"))
         );
     }
-    get hasExternalButton() {
-        // Keep external button, even if field is specified as 'no_open' so that the user is not
-        // redirected to the product when clicking on the field content
-        const res = super.hasExternalButton;
-        return res || (!!this.props.record.data[this.props.name] && !this.state.isFloating);
-    }
     get hasConfigurationButton() {
         return this.isConfigurableLine || this.isConfigurableTemplate || this.isCombo;
     }
