@@ -222,6 +222,7 @@ class PosController(PortalAccount):
             'invoice_required_fields': additional_invoice_fields,
             'partner_required_fields': additional_partner_fields,
             'access_token': access_token,
+            'invoice_sending_methods': {'email': _('by Email')},
             **form_values,
         })
 
