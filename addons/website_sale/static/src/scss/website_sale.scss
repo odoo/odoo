@@ -717,8 +717,8 @@ a.no-decoration {
 }
 
 .o_red_highlight {
-    --background-color: #{map-get($theme-colors, 'danger')};
-    --bg-solid: var(--background-color) !important;
+    --badge-bg: #{map-get($theme-colors, 'danger')} !important;
+    --badge-border-color: var(--badge-bg);
 
     box-shadow: 0 0 0 0 rgba(240,8,0,0.4);
     transition: all 0.5s linear;
