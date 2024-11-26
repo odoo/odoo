@@ -115,18 +115,20 @@ export class DynamicList extends DataPoint {
     }
 
     async leaveEditMode({ discard } = {}) {
-        const editedRecord = this.editedRecord;
+        let editedRecord = this.editedRecord;
         if (editedRecord) {
             let canProceed = true;
             if (discard) {
                 await editedRecord.discard();
+                editedRecord = this.editedRecord;
                 if (editedRecord && editedRecord.isNew) {
                     this._removeRecords([editedRecord.id]);
                 }
             } else {
                 if (!this.model._urgentSave) {
                     await editedRecord.checkValidity();
-                    if (!this.editedRecord) {
+                    editedRecord = this.editedRecord;
+                    if (!editedRecord) {
                         return true;
                     }
                 }
@@ -137,6 +139,7 @@ export class DynamicList extends DataPoint {
                 }
             }
 
+            editedRecord = this.editedRecord;
             if (canProceed && editedRecord) {
                 this.model._updateConfig(
                     editedRecord.config,
