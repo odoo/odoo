@@ -403,7 +403,7 @@ class TestItEdiExport(TestItEdi):
             'amount': 0.0,
             'amount_type': 'percent',
             'l10n_it_exempt_reason': 'N3.1',
-            'l10n_it_law_reference': 'Art. 8, c.1, lett.a - D.P.R. 633/1972',
+            'invoice_legal_notes': 'Art. 8, c.1, lett.a - D.P.R. 633/1972',
         })
 
         american_partner_b = self.env['res.partner'].create({
