@@ -10,7 +10,6 @@ from odoo.tools.translate import html_translate
 
 from odoo.addons.website.models import ir_http
 
-
 _logger = logging.getLogger(__name__)
 
 
@@ -283,7 +282,9 @@ class ProductTemplate(models.Model):
         date = fields.Date.context_today(self)
 
         pricelist_prices = pricelist._compute_price_rule(self, 1.0)
-        comparison_prices_enabled = self.env.user.has_group('website_sale.group_product_price_comparison')
+        comparison_prices_enabled = self.env['res.groups']._is_feature_enabled(
+            'website_sale.group_product_price_comparison'
+        )
 
         res = {}
         for template in self:
@@ -494,7 +495,9 @@ class ProductTemplate(models.Model):
         if (
             not has_discounted_price
             and product_or_template.compare_list_price
-            and self.env.user.has_group('website_sale.group_product_price_comparison')
+            and self.env['res.groups']._is_feature_enabled(
+                'website_sale.group_product_price_comparison'
+            )
         ):
             # TODO VCR comparison price only depends on the product template, but is shown/hidden
             # depending on product price, should be removed from combination info in the future
@@ -538,7 +541,7 @@ class ProductTemplate(models.Model):
             'taxes': taxes,  # taxes after fpos mapping
         })
 
-        if self.env.user.has_group('website_sale.group_show_uom_price'):
+        if self.env['res.groups']._is_feature_enabled('website_sale.group_show_uom_price'):
             combination_info.update({
                 'base_unit_name': product_or_template.base_unit_name,
                 'base_unit_price': product_or_template._get_base_unit_price(

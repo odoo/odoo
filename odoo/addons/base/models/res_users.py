@@ -299,6 +299,10 @@ class ResGroups(models.Model):
 
         return result
 
+    @api.model
+    def _is_feature_enabled(self, group_reference):
+        return self.env['res.users'].sudo().browse(SUPERUSER_ID)._has_group(group_reference)
+
 
 class ResUsersLog(models.Model):
     _name = 'res.users.log'

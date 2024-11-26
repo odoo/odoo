@@ -15,10 +15,7 @@ class ProductTemplate(models.Model):
             ('delivered_manual', _('Based on Delivered Quantity (Manual)')),
         ]
 
-        user = self.env['res.users'].sudo().browse(SUPERUSER_ID)
-        if (self.env.user.has_group('project.group_project_milestone') or
-                (self.env.user.has_group('base.group_public') and user.has_group('project.group_project_milestone'))
-        ):
+        if self.env['res.groups']._is_feature_enabled('project.group_project_milestone'):
             service_policies.insert(1, ('delivered_milestones', _('Based on Milestones')))
         return service_policies
 
