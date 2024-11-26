@@ -420,7 +420,7 @@ class AccountMoveSend(models.AbstractModel):
                 message_type='comment',
                 **kwargs,
                 **{  # noqa: PIE804
-                    'email_layout_xmlid': 'mail.mail_notification_layout_with_responsible_signature',
+                    'email_layout_xmlid': self._get_mail_layout(),
                     'email_add_signature': not mail_template,
                     'mail_auto_delete': mail_template.auto_delete,
                     'mail_server_id': mail_template.mail_server_id.id,
@@ -436,6 +436,10 @@ class AccountMoveSend(models.AbstractModel):
             'res_model': new_message._name,
             'res_id': new_message.id,
         })
+
+    @api.model
+    def _get_mail_layout(self):
+        return 'mail.mail_notification_layout_with_responsible_signature'
 
     @api.model
     def _get_mail_params(self, move, move_data):
