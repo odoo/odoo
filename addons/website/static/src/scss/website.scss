@@ -1282,6 +1282,79 @@ $-o-carousel-controllers-size: map-get($spacers, 5);
     }
 }
 
+
+.s_dynamic_snippet_title_aside + .s_dynamic_snippet_content {
+    width: 75%;
+}
+
+// Single scroll animation for the carousel
+.carousel.o_slide_single {
+
+    --o-flex-value: 50%;
+    // Set up css variables
+    // (Define 1 to 4 cards in the carousel)
+    .o_with_1_cards {
+        --o-flex-value: 100%;
+    }
+    .o_with_2_cards {
+        --o-flex-value: 50%;
+    }
+    .o_with_3_cards {
+        --o-flex-value: 33.33%;
+    }
+    .o_with_4_cards {
+        --o-flex-value: 25%;
+    }
+
+    @include media-breakpoint-up(md) {
+        .carousel-inner {
+            // Display the carousel items in a row
+            display: flex;
+            flex-wrap: nowrap;
+
+            //   slide right animation
+            .carousel-item.active,
+            .carousel-item-end:not(.active),
+            .carousel-item-prev:not(.active) {
+                &, & ~ .carousel-item {
+                    display: block;
+                    flex: 0 0 var(--o-flex-value);
+                    margin-right: 0;
+                }
+            }
+
+            //.active.carousel-item-end {
+            //  transform: translateX(0%);
+            //}
+            //.carousel-item-end:not(.active),
+            .active.carousel-item-end + .carousel-item-prev.carousel-item-end,
+            .carousel-item-prev.carousel-item-end ~ .carousel-item {
+                right: var(--o-flex-value);
+                transform: translateX(100%);
+                display: block;
+                margin-right: 0;
+            }
+
+            //   Slide left animation
+            .carousel-item-start.active,
+            .carousel-item-start:not(.active),
+            .carousel-item-start:not(.active) ~ .carousel-item {
+                transform: translateX(-100%);
+            }
+
+            .carousel-item.active:not(.carousel-item-start):not(.carousel-item-end),
+            .carousel-item.active:not(.carousel-item-start):not(.carousel-item-end) ~ .carousel-item {
+                transition: none;
+                margin-right: initial;
+            }
+
+            .carousel-item-next:not(.carousel-item-start) {
+                transform: translateX(0%);
+            }
+        }
+    }
+}
+
 // Parallax
 .parallax {
     // TODO this introduces a limitation: no dropdown will be able to
