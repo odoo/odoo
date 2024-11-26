@@ -75,7 +75,7 @@ _ref_vat = {
     'sk': 'SK2022749619',
     'sm': 'SM24165',
     'tr': _('17291716060 (NIN) or 1729171602 (VKN)'),
-    'uy': _("'219999830019' (should be 12 digits)"),
+    'uy': _("Example: '219999830019' (format: 12 digits, all numbers, valid check digit)"),
     've': 'V-12345678-1, V123456781, V-12.345.678-1',
     'xi': 'XI123456782',
     'sa': _('310175397400003 [Fifteen digits, first and last digits should be "3"]')
@@ -603,6 +603,35 @@ class ResPartner(models.Model):
                 else:
                     res.append(False)
         return all(res)
+
+    def check_vat_uy(self, vat):
+        """ Taken from python-stdnum's master branch, as the release doesn't handle RUT numbers starting with 22.
+        origin https://github.com/arthurdejong/python-stdnum/blob/master/stdnum/uy/rut.py
+        FIXME Can be removed when python-stdnum does a new release. """
+
+        def compact(number):
+            """Convert the number to its minimal representation."""
+            number = clean(number, ' -').upper().strip()
+            if number.startswith('UY'):
+                return number[2:]
+            return number
+
+        def calc_check_digit(number):
+            """Calculate the check digit."""
+            weights = (4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2)
+            total = sum(int(n) * w for w, n in zip(weights, number))
+            return str(-total % 11)
+
+        vat = compact(vat)
+
+        return (
+            vat.isdigit()  # InvalidFormat
+            and len(vat) == 12  # InvalidLength
+            and '01' <= vat[:2] <= '22'  # InvalidComponent
+            and vat[2:8] != '000000'
+            and vat[8:11] == '001'
+            and vat[-1] == calc_check_digit(vat)  # Invalid Check Digit
+        )
 
     def check_vat_ve(self, vat):
         # https://tin-check.com/en/venezuela/
