@@ -5,6 +5,7 @@ import { nextLeaf } from "@html_editor/utils/dom_info";
 import { isBlock } from "@html_editor/utils/blocks";
 import { renderFileCard } from "./utils";
 import { FileDocumentsSelector } from "./file_documents_selector";
+import { withSequence } from "@html_editor/utils/resource";
 
 const fileMediaDialogTab = {
     id: "FILES",
@@ -34,6 +35,7 @@ export class FilePlugin extends Plugin {
             commandId: "uploadFile",
             keywords: ["file"],
         },
+        power_buttons: withSequence(5, { commandId: "uploadFile" }),
         mount_component_handlers: this.setupNewFile.bind(this),
         media_dialog_tabs_providers: () => (this.config.disableFile ? [] : [fileMediaDialogTab]),
     };
