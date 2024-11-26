@@ -1863,13 +1863,10 @@ def format_frame(frame) -> str:
 
 def named_to_positional_printf(string: str, args: Mapping) -> tuple[str, tuple]:
     """ Convert a named printf-style format string with its arguments to an
-    equivalent positional format string with its arguments. This implementation
-    does not support escaped ``%`` characters (``"%%"``).
+    equivalent positional format string with its arguments.
     """
-    if '%%' in string:
-        raise ValueError(f"Unsupported escaped '%' in format string {string!r}")
     pargs = _PrintfArgs(args)
-    return string % pargs, tuple(pargs.values)
+    return string.replace('%%', '%%%%') % pargs, tuple(pargs.values)
 
 
 class _PrintfArgs:
