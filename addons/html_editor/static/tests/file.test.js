@@ -2,8 +2,8 @@ import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { setupEditor } from "./_helpers/editor";
 import { EMBEDDED_COMPONENT_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { insertText } from "./_helpers/user_actions";
-import { animationFrame, click, press, waitFor } from "@odoo/hoot-dom";
 import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { animationFrame, click, press, queryOne, waitFor } from "@odoo/hoot-dom";
 import { execCommand } from "./_helpers/userCommands";
 import { MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embedding_sets";
 import { DocumentPlugin } from "@html_editor/others/document_plugin";
@@ -40,6 +40,20 @@ describe("file command", () => {
         await mockedUpload;
         // Check that file card (embedded component) was inserted in the editable.
         expect('.odoo-editor-editable [data-embedded="file"]').toHaveCount(1);
+    });
+
+    test("file card should have inline display, BS alert-info style and no download button", async () => {
+        const { editor } = await setupEditor("<p>[]<br></p>", { config });
+        patchUpload(editor);
+        execCommand(editor, "uploadFile");
+        // wait for the embedded component to be mounted
+        await waitFor('[data-embedded="file"] .o_file_name:contains("file.txt")');
+        // Check that file card has inline display, with alert style.
+        const fileCard = queryOne('[data-embedded="file"]');
+        expect(fileCard).toHaveStyle({ display: "inline-block" });
+        expect(fileCard.firstElementChild).toHaveClass(["alert", "alert-info"]);
+        // No download button in file card.
+        expect('[data-embedded="file"] .fa-download').toHaveCount(0);
     });
 });
 
