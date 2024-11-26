@@ -69,6 +69,7 @@ export class KanbanArchParser {
                             type: "create",
                             context: childNode.getAttribute("context"),
                             string: childNode.getAttribute("string"),
+                            invisible: childNode.getAttribute("invisible"),
                         });
                     }
                 }

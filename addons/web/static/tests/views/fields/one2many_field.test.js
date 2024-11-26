@@ -8879,6 +8879,128 @@ test("o2m add an action button control", async () => {
     expect.verifySteps(["do_something"]);
 });
 
+test("one2many list with custom control with invisible modifier", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 2,
+        arch: `
+            <form>
+                <field name="bar"/>
+                <field name="p">
+                    <list>
+                        <control>
+                            <create string="A" invisible="parent.bar"/>
+                            <create string="B" invisible="not parent.bar"/>
+                            <button string="C" name="do_something" type="object" invisible="parent.bar"/>
+                            <button string="D" name="do_something" type="object" invisible="not parent.bar"/>
+                        </control>
+                        <field name="name"/>
+                    </list>
+                </field>
+            </form>`,
+    });
+
+    expect(".o_field_x2many_list_row_add a:contains(A)").toHaveCount(0);
+    expect(".o_field_x2many_list_row_add a:contains(B)").toHaveCount(1);
+    expect(".o_field_x2many_list_row_add button:contains(C)").toHaveCount(0);
+    expect(".o_field_x2many_list_row_add button:contains(D)").toHaveCount(1);
+});
+
+test("one2many list with custom control with invisible modifier using context", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 2,
+        arch: `
+            <form>
+                <field name="bar"/>
+                <field name="p">
+                    <list>
+                        <control>
+                            <create string="A" invisible="context.get('someKey')"/>
+                            <create string="B" invisible="not context.get('someKey')"/>
+                            <button string="C" name="do_something" type="object" invisible="context.get('someKey')"/>
+                            <button string="D" name="do_something" type="object" invisible="not context.get('someKey')"/>
+                        </control>
+                        <field name="name"/>
+                    </list>
+                </field>
+            </form>`,
+        context: { someKey: true },
+    });
+
+    expect(".o_field_x2many_list_row_add a:contains(A)").toHaveCount(0);
+    expect(".o_field_x2many_list_row_add a:contains(B)").toHaveCount(1);
+    expect(".o_field_x2many_list_row_add button:contains(C)").toHaveCount(0);
+    expect(".o_field_x2many_list_row_add button:contains(D)").toHaveCount(1);
+});
+
+test("one2many kanban with custom control with invisible modifier", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 2,
+        arch: `
+            <form>
+                <field name="bar"/>
+                <field name="p">
+                    <kanban>
+                        <control>
+                            <create string="A" invisible="parent.bar"/>
+                            <create string="B" invisible="not parent.bar"/>
+                            <button string="C" name="do_something" type="object" invisible="parent.bar"/>
+                            <button string="D" name="do_something" type="object" invisible="not parent.bar"/>
+                        </control>
+                        <templates>
+                            <t t-name="card">
+                                <field name="name"/>
+                            </t>
+                        </templates>
+                    </kanban>
+                </field>
+            </form>`,
+    });
+
+    expect(".o_cp_buttons button:contains(A)").toHaveCount(0);
+    expect(".o_cp_buttons button:contains(B)").toHaveCount(1);
+    expect(".o_cp_buttons button:contains(C)").toHaveCount(0);
+    expect(".o_cp_buttons button:contains(D)").toHaveCount(1);
+});
+
+test("one2many kanban with custom control with invisible modifier using context", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 2,
+        arch: `
+            <form>
+                <field name="bar"/>
+                <field name="p">
+                    <kanban>
+                        <control>
+                            <create string="A" invisible="context.get('someKey')"/>
+                            <create string="B" invisible="not context.get('someKey')"/>
+                            <button string="C" name="do_something" type="object" invisible="context.get('someKey')"/>
+                            <button string="D" name="do_something" type="object" invisible="not context.get('someKey')"/>
+                        </control>
+                        <templates>
+                            <t t-name="card">
+                                <field name="name"/>
+                            </t>
+                        </templates>
+                    </kanban>
+                </field>
+            </form>`,
+        context: { someKey: true },
+    });
+
+    expect(".o_cp_buttons button:contains(A)").toHaveCount(0);
+    expect(".o_cp_buttons button:contains(B)").toHaveCount(1);
+    expect(".o_cp_buttons button:contains(C)").toHaveCount(0);
+    expect(".o_cp_buttons button:contains(D)").toHaveCount(1);
+});
+
 test("o2m button with parent in context", async () => {
     onRpc("test_button", (args) => {
         expect.step("test_button");

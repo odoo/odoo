@@ -8,7 +8,7 @@
                     <div class="o_cp_buttons gap-1" role="toolbar" aria-label="Control panel buttons" t-ref="buttons">
                         <t t-foreach="creates" t-as="create" t-key="create_index">
                             <button
-                                t-if="create.type === 'create'"
+                                t-if="create.type === 'create' and !evalInvisible(create.invisible)"
                                 type="button"
                                 class="btn btn-secondary"
                                 t-att-class="create.class"
@@ -17,7 +17,7 @@
                                 <t t-esc="create.string"/>
                             </button>
                             <ViewButton
-                                t-if="create.type === 'button'"
+                                t-if="create.type === 'button' and !evalInvisible(create.invisible)"
                                 className="`${create.className}`"
                                 clickParams="create.clickParams"
                                 icon="create.icon"
