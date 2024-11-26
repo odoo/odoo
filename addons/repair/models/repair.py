@@ -450,6 +450,7 @@ class RepairOrder(models.Model):
                 "partner_id": self.partner_id.id,
                 "warehouse_id": self.picking_type_id.warehouse_id.id,
                 "repair_order_ids": [Command.link(repair.id)],
+                "origin": repair.name,
             })
         self.env['sale.order'].create(sale_order_values_list)
         # Add Sale Order Lines for 'add' move_ids
