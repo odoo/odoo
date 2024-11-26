@@ -16,8 +16,12 @@
                         </div>
                         <div class="input-group mb-1">
                             <input t-ref="url" class="o_we_href_input_link form-control form-control-sm" t-model="state.url" title="URL" placeholder="Type your URL" t-on-keydown="onKeydownEnter"/>
+                            <span class="ms-1" t-if="props.canUpload and !state.url">
+                                or <button class="btn btn-secondary btn-sm" t-on-click="uploadFile">Upload File</button>
+                            </span>
+
                         </div>
-                        <div class="input-group" t-on-change="onChangeClasses">
+                        <div class="input-group">
                             <select name="link_type" class="form-select form-select-sm" t-att-class="{'mb-1': state.type !==  ''}" t-on-change="(ev)=>this.state.type = ev.target.value">
                                 <t t-foreach="this.colorsData" t-as="colorData" t-key="colorData.type">
                                     <t t-if="colorData.type !== 'custom'">
@@ -43,15 +47,15 @@
                                         </t>
                                     </select>
                             </div>
-                            <button class="o_we_apply_link btn btn-sm btn-primary" t-att-class="{'mx-1': state.type ===  ''}" t-on-click="onClickApply">Apply</button>
+                            <button class="o_we_apply_link btn btn-sm btn-primary" t-att-class="{'ms-1': state.type ===  ''}" t-on-click="onClickApply">Apply</button>
                         </div>
                     </div>
 
-                    <div t-if="!this.ui.isSmall" class="col o_link_dialog_preview" style="max-width: 125px;border-left: 1px solid var(--border-color);">
+                    <div t-if="!this.ui.isSmall and state.url" class="col o_link_dialog_preview" style="max-width: 125px;border-left: 1px solid var(--border-color);">
                         <div class="text-center p-2">
                             <label>Preview</label>
                             <div style="max-width: 100px; max-height: 200px;" class="text-truncate">
-                                <a href="#" t-if="state.url" id="link-preview" aria-label="Preview" title="Preview" t-attf-class="{{state.classes}} text-truncate" style="max-width: 90px;">
+                                <a href="#" t-if="state.url" id="link-preview" aria-label="Preview" title="Preview" t-attf-class="{{classes}} text-truncate" style="max-width: 90px;">
                                     <t t-esc="state.label or state.url"/>
                                 </a>
                             </div>

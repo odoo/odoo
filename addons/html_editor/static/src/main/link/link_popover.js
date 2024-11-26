@@ -15,7 +15,10 @@ export class LinkPopover extends Component {
         getInternalMetaData: Function,
         getExternalMetaData: Function,
         isImage: Boolean,
+        recordInfo: Object,
         canEdit: { type: Boolean, optional: true },
+        canUpload: { type: Boolean, optional: true },
+        onUpload: { type: Function, optional: true },
     };
     static defaultProps = {
         canEdit: true,
@@ -44,7 +47,7 @@ export class LinkPopover extends Component {
     setup() {
         this.ui = useService("ui");
         this.notificationService = useService("notification");
-        this.http = useService("http");
+        this.uploadService = useService("uploadLocalFiles");
 
         this.state = useState({
             editing: this.props.linkEl.href ? false : true,
@@ -57,7 +60,6 @@ export class LinkPopover extends Component {
             linkPreviewName: "",
             imgSrc: "",
             iconSrc: "",
-            classes: this.props.linkEl.className || "",
             type:
                 this.props.linkEl.className.match(/btn(-[a-z0-9_-]*)(primary|secondary)/)?.pop() ||
                 "",
@@ -96,7 +98,7 @@ export class LinkPopover extends Component {
             ? this.correctLink(deducedUrl)
             : this.correctLink(this.state.url);
         this.loadAsyncLinkPreview();
-        this.props.onApply(this.state.url, this.state.label, this.state.classes);
+        this.props.onApply(this.state.url, this.state.label, this.classes);
     }
     onClickEdit() {
         this.state.editing = true;
@@ -260,16 +262,33 @@ export class LinkPopover extends Component {
         }
     }
 
-    /**
-     * link style preview in editing mode
-     */
-    onChangeClasses() {
+    get classes() {
         const shapes = this.state.buttonStyle ? this.state.buttonStyle.split(",") : [];
         const style = ["outline", "fill"].includes(shapes[0]) ? `${shapes[0]}-` : "fill-";
         const shapeClasses = shapes.slice(style ? 1 : 0).join(" ");
-        this.state.classes =
-            (this.state.type ? `btn btn-${style}${this.state.type}` : "") +
-            (this.state.type && shapeClasses ? ` ${shapeClasses}` : "") +
-            (this.state.type && this.state.buttonSize ? " btn-" + this.state.buttonSize : "");
+        if (!this.state.type) {
+            return "";
+        }
+        let className = `btn btn-${style}${this.state.type}`;
+        if (shapeClasses) {
+            className += ` ${shapeClasses}`;
+        }
+        if (this.state.buttonSize) {
+            className += ` btn-${this.state.buttonSize}`;
+        }
+        return className;
+    }
+
+    async uploadFile() {
+        const { upload, getURL } = this.uploadService;
+        const { resModel, resId } = this.props.recordInfo;
+        const [attachment] = await upload({ resModel, resId, accessToken: true });
+        if (!attachment) {
+            // No file selected or upload failed
+            return;
+        }
+        this.props.onUpload?.(attachment);
+        this.state.url = getURL(attachment, { download: true, unique: true, accessToken: true });
+        this.state.label ||= attachment.name;
     }
 }
