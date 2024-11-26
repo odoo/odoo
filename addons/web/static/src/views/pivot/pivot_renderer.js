@@ -206,22 +206,27 @@ export class PivotRenderer extends Component {
      * @param {Array} views
      * @param {Object} context
      */
-    openView(domain, views, context) {
-        this.actionService.doAction({
-            type: "ir.actions.act_window",
-            name: this.model.metaData.title,
-            res_model: this.model.metaData.resModel,
-            views: views,
-            view_mode: "list",
-            target: "current",
-            context,
-            domain,
-        });
+    openView(domain, views, context, newWindow) {
+        this.actionService.doAction(
+            {
+                type: "ir.actions.act_window",
+                name: this.model.metaData.title,
+                res_model: this.model.metaData.resModel,
+                views: views,
+                view_mode: "list",
+                target: "current",
+                context,
+                domain,
+            },
+            {
+                newWindow,
+            }
+        );
     }
     /**
      * @param {CustomEvent} ev
      */
-    onOpenView(cell) {
+    onOpenView(cell, newWindow) {
         if (cell.value === undefined || this.model.metaData.disableLinking) {
             return;
         }
@@ -245,6 +250,6 @@ export class PivotRenderer extends Component {
             colValues: cell.groupId[1],
             originIndex: cell.originIndexes[0],
         };
-        this.openView(this.model.getGroupDomain(group), this.views, context);
+        this.openView(this.model.getGroupDomain(group), this.views, context, newWindow);
     }
 }
