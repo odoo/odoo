@@ -2,7 +2,7 @@ import { Record } from "@mail/core/common/record";
 import { Store } from "@mail/core/common/store_service";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
-
+import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
 
 /** @type {import("models").Store} */
@@ -90,6 +90,13 @@ const StorePatch = {
                 { onClose: resolve }
             )
         );
+    },
+    async fetchSuggestedRecipients(resModel, resId) {
+        console.log('cacaprout', resModel, resId);
+        await rpc("/mail/thread/fetch_suggested", {
+            thread_model: resModel,
+            thread_id: resId,
+        });
     },
     _onActivityBroadcastChannelMessage({ data }) {
         switch (data.type) {

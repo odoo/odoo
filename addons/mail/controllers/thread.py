@@ -40,6 +40,17 @@ class ThreadController(http.Controller):
             "messages": Store.many_ids(messages),
         }
 
+    @http.route("/mail/thread/fetch_suggested", methods=["POST"], type="jsonrpc", auth="user")
+    def mail_thread_fetch_suggested(self, thread_model, thread_id):
+        result = [
+            {"id": recipient["partner_id"], "name": recipient["name"], "email": recipient["email"]}
+            for recipient in request.env[thread_model].browse(thread_id)._message_get_suggested_recipients(
+                force_create_partners=True,
+            )
+        ]
+        print("cacaprout", result)
+        return result
+
     @http.route("/mail/partner/from_email", methods=["POST"], type="jsonrpc", auth="user")
     def mail_thread_partner_from_email(self, thread_model, thread_id, emails):
         partners = [
