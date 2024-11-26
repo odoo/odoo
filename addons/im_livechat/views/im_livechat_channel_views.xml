@@ -127,6 +127,16 @@
                                             <field name="button_text_color" widget="color" class="mb-4 w-auto o_im_livechat_field_widget_color"/>
                                             <widget name="colors_reset_button" options="{'default_colors': {'button_background_color': '#878787', 'button_text_color': '#FFFFFF'}}" />
                                         </div>
+                                        <setting id="concurrent_sessions_number" name="concurrent_sessions_number_container">
+                                          <field name="concurrent_session" string="Limit the number of concurrent sessions" help="If limited, operators will only handle the selected number of sessions at a time. While on a call, they will not receive new conversations."/>
+                                          <div class="content-group" invisible="not concurrent_session">
+                                            <div class="mt16">
+                                              <field name="concurrent_session_number" string="Sessions" class="oe_inline"/>
+                                              <label for="concurrent_session_number" class="o_light_label mr8"/>
+                                            </div>
+                                          </div>
+                                        </setting>
+
                                     </group>
                                     <group string="Livechat Window">
                                         <field name="default_message" placeholder="e.g. Hello, how may I help you?"/>

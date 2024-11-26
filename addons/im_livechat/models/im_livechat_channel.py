@@ -7,6 +7,8 @@ import re
 from odoo import api, Command, fields, models, _
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.bus.websocket import WebsocketConnectionHandler
+from odoo.exceptions import ValidationError
+from odoo.osv import expression
 
 
 class Im_LivechatChannel(models.Model):
@@ -40,6 +42,8 @@ class Im_LivechatChannel(models.Model):
     title_color = fields.Char(default="#FFFFFF", help="Default title color of the channel once open")
     button_background_color = fields.Char(default="#875A7B", help="Default background color of the Livechat button")
     button_text_color = fields.Char(default="#FFFFFF", help="Default text color of the Livechat button")
+    concurrent_session = fields.Boolean()
+    concurrent_session_number = fields.Integer(default=10)
 
     # computed fields
     web_page = fields.Char('Web Page', compute='_compute_web_page_link', store=False, readonly=True,
@@ -58,14 +62,64 @@ class Im_LivechatChannel(models.Model):
     chatbot_script_count = fields.Integer(string='Number of Chatbot', compute='_compute_chatbot_script_count')
     rule_ids = fields.One2many('im_livechat.channel.rule', 'channel_id', 'Rules')
 
+    _concurrent_session_greater_than_zero = models.Constraint(
+        "CHECK(concurrent_session IS NOT TRUE OR concurrent_session_number > 0)",
+        "Concurrent session number should be greater than zero.",
+    )
+
     def _are_you_inside(self):
         for channel in self:
             channel.are_you_inside = self.env.user in channel.user_ids
 
-    @api.depends('user_ids.im_status')
+    @api.depends(
+        "user_ids.im_status",
+        "channel_ids.livechat_active",
+        "channel_ids.last_interest_dt",
+        "channel_ids.rtc_session_ids",
+    )
     def _compute_available_operator_ids(self):
+        session_count_by_operator = {}
+        operator_in_call = self.env["res.partner"]
+        if any(r.concurrent_session for r in self):
+            old_livechat_dt = fields.Datetime.now() - timedelta(minutes=30)
+            available_user_operators = self.user_ids.filtered(
+                lambda user: user._is_user_available()
+            )
+            session_count_by_operator = dict(
+                self.env["discuss.channel"]._read_group(
+                    expression.AND(
+                        [
+                            [("livechat_operator_id", "in", available_user_operators.partner_id.ids)],
+                            [("channel_type", "=", "livechat")],
+                            expression.OR(
+                                [
+                                    [("livechat_active", "=", True)],
+                                    [("last_interest_dt", "<=", old_livechat_dt)],
+                                ]
+                            ),
+                        ]
+                    ),
+                    groupby=["livechat_operator_id"],
+                    aggregates=["__count"],
+                )
+            )
+            operator_in_call = (
+                self.env["discuss.channel.rtc.session"]
+                .search([("partner_id", "in", available_user_operators.partner_id.ids)])
+                .partner_id
+            )
         for record in self:
-            record.available_operator_ids = record.user_ids.filtered(lambda user: user._is_user_available())
+            operator_with_too_many_sessions = []
+            if record.concurrent_session:
+                operator_with_too_many_sessions = [
+                    partner for partner, count in session_count_by_operator.items()
+                    if count >= record.concurrent_session_number
+                ]
+            record.available_operator_ids = record.user_ids.filtered(
+                lambda user: user._is_user_available()
+                and user.partner_id not in operator_with_too_many_sessions
+                and user.partner_id not in operator_in_call
+            )
 
     @api.depends('rule_ids.chatbot_script_id')
     def _compute_chatbot_script_count(self):
