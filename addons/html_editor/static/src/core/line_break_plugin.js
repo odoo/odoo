@@ -17,7 +17,6 @@ export class LineBreakPlugin extends Plugin {
     static shared = ["insertLineBreak", "insertLineBreakNode", "insertLineBreakElement"];
     resources = {
         beforeinput_handlers: this.onBeforeInput.bind(this),
-        split_unsplittable_handlers: this.insertLineBreakElement.bind(this),
     };
 
     insertLineBreak() {
