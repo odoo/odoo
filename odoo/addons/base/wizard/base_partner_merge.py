@@ -216,22 +216,25 @@ class MergePartnerAutomatic(models.TransientModel):
         self.env.flush_all()
 
         # Company-dependent fields
-        with self._cr.savepoint():
-            params = {
-                'destination_id': f'{referenced_model},{dst_record.id}',
-                'source_ids': tuple(f'{referenced_model},{src}' for src in src_records.ids),
-            }
-            self._cr.execute("""
-        UPDATE ir_property AS _ip1
-        SET res_id = %(destination_id)s
-        WHERE res_id IN %(source_ids)s
-        AND NOT EXISTS (
-             SELECT
-             FROM ir_property AS _ip2
-             WHERE _ip2.res_id = %(destination_id)s
-             AND _ip2.fields_id = _ip1.fields_id
-             AND _ip2.company_id = _ip1.company_id
-        )""", params)
+        try:
+            with self._cr.savepoint():
+                params = {
+                    'destination_id': f'{referenced_model},{dst_record.id}',
+                    'source_ids': tuple(f'{referenced_model},{src}' for src in src_records.ids),
+                }
+                self._cr.execute("""
+            UPDATE ir_property AS _ip1
+            SET res_id = %(destination_id)s
+            WHERE res_id IN %(source_ids)s
+            AND NOT EXISTS (
+                 SELECT
+                 FROM ir_property AS _ip2
+                 WHERE _ip2.res_id = %(destination_id)s
+                 AND _ip2.fields_id = _ip1.fields_id
+                 AND _ip2.company_id IS NOT DISTINCT FROM _ip1.company_id
+            )""", params)
+        except psycopg2.Error:
+            _logger.info(f'Could not move ir.property from partners: {src_records.ids} to partner: {dst_record.id}')
 
     @api.model
     def _update_foreign_keys(self, src_partners, dst_partner):
