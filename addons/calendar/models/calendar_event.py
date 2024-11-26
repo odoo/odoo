@@ -833,29 +833,34 @@ class CalendarEvent(models.Model):
             }
 
         template = self.env.ref('calendar.calendar_template_delete_event', raise_if_not_found=False)
+        if not template:
+            self.unlink()
+            _logger.warning('Template "calendar.calendar_template_delete_event" was not found. Cannot send delete notifications.')
+            return {}
+
         lang = self.env.context.get('lang')
-        if template.lang:
-            # This method ensures that the template is translated according
-            # to the user's or record's language settings.
-            lang = template._render_lang(self.ids)[self.id]
-        context = {
-            'default_use_template': bool(template),
-            'default_template_id': template.id,
-            'default_attendee_id': attendee_id,
-            'default_record': self.id,
-            'default_recurrence': recurrence,
-            'model_description': self.with_context(lang=lang)
-        }
-        action = {
-            'name': _('Delete Event'),
-            'res_model': 'calendar.popover.delete.wizard',
-            'view_id': self.env.ref('calendar.view_event_delete_wizard_form').id,
-            'type': 'ir.actions.act_window',
-            'context': context,
-            'target': 'new',
-            'views': [(False, 'form')],
-        }
-        return action
+        if template:
+            if template.lang:
+                # This method ensures that the template is translated according
+                # to the user's or record's language settings.
+                lang = template._render_lang(self.ids)[self.id]
+                context = {
+                    'default_use_template': bool(template),
+                    'default_template_id': template.id,
+                    'default_attendee_id': attendee_id,
+                    'default_record': self.id,
+                    'default_recurrence': recurrence,
+                    'model_description': self.with_context(lang=lang),
+                }
+                return {
+                    'name': _('Delete Event'),
+                    'res_model': 'calendar.popover.delete.wizard',
+                    'view_id': self.env.ref('calendar.view_event_delete_wizard_form').id,
+                    'type': 'ir.actions.act_window',
+                    'context': context,
+                    'target': 'new',
+                    'views': [(False, 'form')],
+                }
 
     @api.model
     def _get_mail_message_access(self, res_ids, operation, model_name=None):

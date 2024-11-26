@@ -51,12 +51,18 @@ export class CalendarFormController extends FormController {
             // Call the default delete if the event has only one attendee and the user is not listed in partner_ids.
             super.deleteRecord(...arguments);
         } else {
-            const action = await this.orm.call("calendar.event", "action_unlink_event", [
+            await this.orm.call("calendar.event", "action_unlink_event", [
                 this.model.root.resId,
                 this.model.root.data.partner_ids.resIds,
                 this.model.root.data.recurrence_update,
-            ]);
-            this.actionService.doAction(action);
+            ])
+            .then((action) => {
+                if (action && action.context) {
+                    this.actionService.doAction(action);
+                } else {
+                    location.reload();
+                }
+            });
         }
     }
 }

@@ -91,11 +91,17 @@ export class AttendeeCalendarController extends CalendarController {
                 record.rawRecord.attendees_count == 1) {
                 super.deleteRecord(...arguments);
             } else {
-                const action = this.orm.call("calendar.event", "action_unlink_event", [
+                this.orm.call("calendar.event", "action_unlink_event", [
                     record.id,
                     record.attendeeId,
-                ]);
-                this.actionService.doAction(action);
+                ])
+                .then((action) => {
+                    if (action && action.context) {
+                        this.actionService.doAction(action);
+                    } else {
+                        location.reload();
+                    }
+                });
             }
         } else {
             // Decline event
