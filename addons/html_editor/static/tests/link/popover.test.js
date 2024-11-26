@@ -632,7 +632,7 @@ describe("link preview", () => {
     test("test internal link preview", async () => {
         onRpc("/html_editor/link_preview_internal", () => {
             return {
-                description: markup("<p>Test description</p>"),
+                description: markup("Test description"),
                 link_preview_name: "Task name | Project name",
             };
         });
