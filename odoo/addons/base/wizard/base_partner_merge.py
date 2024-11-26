@@ -258,6 +258,7 @@ class MergePartnerAutomatic(models.TransientModel):
 
         self.env.flush_all()
 
+<<<<<<< 18.0
         # company_dependent fields of merged records
         with self._cr.savepoint():
             for fname, field in dst_record._fields.items():
@@ -287,6 +288,46 @@ class MergePartnerAutomatic(models.TransientModel):
                         destination_id=dst_record.id,
                         source_ids=tuple(src_records.ids),
                     ))
+||||||| 44ca7f0091493057a1ab6fdba41b647905bd1fc3
+        # Company-dependent fields
+        with self._cr.savepoint():
+            params = {
+                'destination_id': f'{referenced_model},{dst_record.id}',
+                'source_ids': tuple(f'{referenced_model},{src}' for src in src_records.ids),
+            }
+            self._cr.execute("""
+        UPDATE ir_property AS _ip1
+        SET res_id = %(destination_id)s
+        WHERE res_id IN %(source_ids)s
+        AND NOT EXISTS (
+             SELECT
+             FROM ir_property AS _ip2
+             WHERE _ip2.res_id = %(destination_id)s
+             AND _ip2.fields_id = _ip1.fields_id
+             AND _ip2.company_id = _ip1.company_id
+        )""", params)
+=======
+        # Company-dependent fields
+        try:
+            with self._cr.savepoint():
+                params = {
+                    'destination_id': f'{referenced_model},{dst_record.id}',
+                    'source_ids': tuple(f'{referenced_model},{src}' for src in src_records.ids),
+                }
+                self._cr.execute("""
+            UPDATE ir_property AS _ip1
+            SET res_id = %(destination_id)s
+            WHERE res_id IN %(source_ids)s
+            AND NOT EXISTS (
+                 SELECT
+                 FROM ir_property AS _ip2
+                 WHERE _ip2.res_id = %(destination_id)s
+                 AND _ip2.fields_id = _ip1.fields_id
+                 AND _ip2.company_id IS NOT DISTINCT FROM _ip1.company_id
+            )""", params)
+        except psycopg2.Error:
+            _logger.info(f'Could not move ir.property from partners: {src_records.ids} to partner: {dst_record.id}')
+>>>>>>> d56a0d1cebeb3a963c1fe7d9ae99f8e29e04b2ab
 
     @api.model
     def _update_foreign_keys(self, src_partners, dst_partner):
