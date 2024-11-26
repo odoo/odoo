@@ -21,9 +21,21 @@ patch(PosStore.prototype, {
             this.employeeBuffer = [];
         });
     },
-    get employeeIsAdmin() {
+    get isAdmin() {
         const cashier = this.getCashier();
-        return cashier._role === "manager" || cashier.user_id?.id === this.user.id;
+        return cashier._role === "admin";
+    },
+    get isUser() {
+        const cashier = this.getCashier();
+        return cashier._role === "user";
+    },
+    get isManager() {
+        const cashier = this.getCashier();
+        return cashier._role === "manager";
+    },
+    get isCashier() {
+        const cashier = this.getCashier();
+        return cashier._role === "cashier";
     },
     checkPreviousLoggedCashier() {
         if (this.config.module_pos_hr) {
@@ -144,7 +156,7 @@ patch(PosStore.prototype, {
     },
     async allowProductCreation() {
         if (this.config.module_pos_hr) {
-            return this.employeeIsAdmin;
+            return this.isAdmin || (this.isManager && this.pos.user._raw.role == "admin");
         }
         return await super.allowProductCreation();
     },
