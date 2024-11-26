@@ -310,6 +310,9 @@ class IrAttachment(models.Model):
                 mimetype = guess_mimetype(raw)
         return mimetype and mimetype.lower() or 'application/octet-stream'
 
+    def _get_max_resolution(self, values):
+        return self.env['ir.config_parameter'].sudo().get_param('base.image_autoresize_max_px', '1920x1920')
+
     def _postprocess_contents(self, values):
         ICP = self.env['ir.config_parameter'].sudo().get_param
         supported_subtype = ICP('base.image_autoresize_extensions', 'png,jpeg,bmp,tiff').split(',')
@@ -321,7 +324,7 @@ class IrAttachment(models.Model):
             is_raw = values.get('raw')
 
             # Can be set to 0 to skip the resize
-            max_resolution = ICP('base.image_autoresize_max_px', '1920x1920')
+            max_resolution = self._get_max_resolution(values)
             if str2bool(max_resolution, True):
                 try:
                     img = fn_quality = False
