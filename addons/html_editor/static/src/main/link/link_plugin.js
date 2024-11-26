@@ -318,6 +318,7 @@ export class LinkPlugin extends Plugin {
             },
             getInternalMetaData: this.getInternalMetaData,
             getExternalMetaData: this.getExternalMetaData,
+            recordInfo: this.config.getRecordInfo?.() || {},
         };
         if (!selectionData.documentSelectionIsInEditable) {
             // note that data-prevent-closing-overlay also used in color picker but link popover
@@ -406,6 +407,8 @@ export class LinkPlugin extends Plugin {
                     this.dependencies.history.addStep();
                 },
                 canEdit: !this.linkElement.classList.contains("o_link_readonly"),
+                canUpload: !this.config.disableFile,
+                onUpload: this.config.onAttachmentChange,
             };
 
             if (linkEl.isConnected) {
