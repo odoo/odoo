@@ -241,7 +241,7 @@ export class Many2OneField extends Component {
     getDomain() {
         return getFieldDomain(this.props.record, this.props.name, this.props.domain);
     }
-    async openAction() {
+    async openAction(newWindow) {
         const { name, openActionContext, record } = this.props;
         const context = makeContext(
             [openActionContext || this.context, record.fields[name].context],
@@ -250,7 +250,7 @@ export class Many2OneField extends Component {
         const action = await this.orm.call(this.relation, "get_formview_action", [[this.resId]], {
             context,
         });
-        await this.action.doAction(action);
+        await this.action.doAction(action, { newWindow });
     }
     async openDialog(resId) {
         return this.openMany2X({ resId, context: this.context });
@@ -279,11 +279,11 @@ export class Many2OneField extends Component {
             this.openAction();
         }
     }
-    onExternalBtnClick() {
-        if (this.env.inDialog) {
+    onExternalBtnClick(middleClick) {
+        if (this.env.inDialog && !middleClick) {
             this.openDialog(this.resId);
         } else {
-            this.openAction();
+            this.openAction(middleClick);
         }
     }
     async onBarcodeBtnClick() {

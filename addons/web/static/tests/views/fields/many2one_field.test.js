@@ -3747,6 +3747,51 @@ test("external_button opens a FormViewDialog in dialogs", async () => {
     expect(".modal").toHaveCount(2);
 });
 
+test("external_button opens a new tab when middle clicked or ctrl+click", async () => {
+    mockService("action", {
+        doAction(params, options) {
+            if (options?.newWindow) {
+                expect.step("opened in a new window");
+                return;
+            }
+            super.doAction(params);
+        },
+        loadState() {},
+    });
+    Partner._views = {
+        form: '<form><field name="trululu"/></form>',
+        search: "<search></search>",
+    };
+    onRpc("get_formview_action", () => {
+        return {
+            type: "ir.actions.act_window",
+            res_model: "partner",
+            view_type: "form",
+            view_mode: "form",
+            views: [[false, "form"]],
+            target: "current",
+            res_id: false,
+        };
+    });
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        name: "Partner",
+        res_model: "partner",
+        res_id: 1,
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    });
+
+    await selectFieldDropdownItem("trululu", "first record");
+    await contains(".o_external_button", { visible: false }).click({ ctrlKey: true });
+    expect.verifySteps(["opened in a new window"]);
+    getFixture()
+        .querySelector(".o_external_button")
+        .dispatchEvent(new PointerEvent("auxclick", { button: 1 }));
+    await animationFrame();
+    expect.verifySteps(["opened in a new window"]);
+});
+
 test("keep changes when editing related record in a dialog", async () => {
     Partner._views = {
         [["form", 98]]: '<form><field name="int_field"/></form>',
