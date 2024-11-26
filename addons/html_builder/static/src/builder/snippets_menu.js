@@ -52,6 +52,7 @@ export class SnippetsMenu extends Component {
         iframe: { type: Object },
         closeEditor: { type: Function },
         snippetsName: { type: String },
+        toggleMobile: { type: Function },
     };
 
     setup() {
@@ -234,6 +235,11 @@ export class SnippetsMenu extends Component {
             return continueProcess;
         }
         return true;
+    }
+
+    onMobilePreviewClick() {
+        this.props.toggleMobile();
+        // TODO update invisible elements panel
     }
 }
 
