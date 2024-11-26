@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, mockService, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { Component, useRef, xml } from "@odoo/owl";
 
@@ -112,4 +112,59 @@ test("ViewButton clicked in Dropdown close the Dropdown", async () => {
     await contains("a[type=action]").click();
     expect.verifySteps(["doActionButton"]);
     expect(".dropdown-menu").toHaveCount(0);
+});
+
+test("execute action in new window", async () => {
+    mockService("action", {
+        doActionButton(params, options) {
+            expect.step(options);
+        },
+    });
+
+    class MyComponent extends Component {
+        static template = xml`<div t-ref="root" t-on-click="onClick" class="myComponent">Some text</div>`;
+        static props = ["*"];
+        setup() {
+            const rootRef = useRef("root");
+            useViewButtons(rootRef);
+        }
+
+        onClick() {
+            const getResParams = () => ({
+                resIds: [3],
+                resId: 3,
+            });
+            const clickParams = {};
+            this.env.onClickViewButton({ getResParams, clickParams, newWindow: true });
+        }
+    }
+
+    await mountWithCleanup(MyComponent);
+    await contains(".myComponent").click({ ctrlKey: true });
+    expect.verifySteps([{ newWindow: true }]);
+});
+
+test("execute action in new window - 2", async () => {
+    mockService("action", {
+        doActionButton(params, options) {
+            expect.step(options);
+        },
+    });
+
+    class MyComponent extends Component {
+        static components = { ViewButton };
+        static template = xml`
+                <div t-ref="root" class="myComponent">
+                    <ViewButton tag="'a'" clickParams="{ type:'action' }" string="'coucou'" record="{ resId: 1 }" />
+                </div>`;
+        static props = ["*"];
+        setup() {
+            const rootRef = useRef("root");
+            useViewButtons(rootRef);
+        }
+    }
+
+    await mountWithCleanup(MyComponent);
+    await contains("a[type=action]").click({ ctrlKey: true });
+    expect.verifySteps([{ newWindow: true }]);
 });
