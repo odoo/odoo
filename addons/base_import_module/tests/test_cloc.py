@@ -252,6 +252,28 @@ class TestClocFields(test_cloc.TestClocCustomization):
         # Import test module
         self.env['ir.module.module']._import_zipfile(stream)
 
+        cl = cloc.Cloc()
+        cl.count_customization(self.env)
+        self.assertEqual(cl.code.get('test_imported_module', 0), 0)
+
+    def test_module_with_exclude_cloc_can_be_imported_twice(self):
+        manifest_content = json.dumps({
+            'name': 'test_imported_module',
+            'description': 'Test',
+            'data': ['data/test.xml'],
+            'cloc_exclude': ['data/test.xml'],
+            'license': 'LGPL-3',
+        })
+
+        stream = BytesIO()
+        with ZipFile(stream, 'w', compression=ZIP_DEFLATED) as archive:
+            archive.writestr('test_imported_module/__manifest__.py', manifest_content)
+            archive.writestr('test_imported_module/data/test.xml', VALID_XML_2)
+
+        # Import test module
+        self.env['ir.module.module']._import_zipfile(stream)
+        # Import test module again (during an upgrade for instance)
+        self.env['ir.module.module']._import_zipfile(stream)
 
         cl = cloc.Cloc()
         cl.count_customization(self.env)

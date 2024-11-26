@@ -140,12 +140,15 @@ class IrModule(models.Model):
                     elif ext == '.xml':
                         convert_xml_import(self.env, module, fp, idref, mode, noupdate)
                         if filename in exclude_list:
-                            self.env['ir.model.data'].create([{
-                                'name': f"cloc_exclude_{key}",
-                                'model': self.env['ir.model.data']._xmlid_lookup(f"{module}.{key}")[0],
-                                'module': "__cloc_exclude__",
-                                'res_id': value,
-                            } for key, value in idref.items()])
+                            for key, value in idref.items():
+                                vals = {
+                                    'module': '__cloc_exclude__',
+                                    'name': f"cloc_exclude_{key}",
+                                    'model': self.env['ir.model.data']._xmlid_lookup(f"{module}.{key}")[0],
+                                    'res_id': value
+                                }
+                                existing = self.env['ir.model.data'].search([('module', '=', vals['module']), ('name', '=', vals['name'])])
+                                existing.write(vals) if existing else self.env['ir.model.data'].create(vals)
 
         path_static = opj(path, 'static')
         IrAttachment = self.env['ir.attachment']
