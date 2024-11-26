@@ -89,9 +89,9 @@ class ChannelController(http.Controller):
             return  # ignore if the member left in the meantime
         member._mark_as_read(last_message_id, sync=sync)
 
-    @http.route("/discuss/channel/mark_as_unread", methods=["POST"], type="jsonrpc", auth="public")
+    @http.route("/discuss/channel/set_new_message_separator", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
-    def discuss_channel_mark_as_unread(self, channel_id, message_id):
+    def discuss_channel_set_new_message_separator(self, channel_id, message_id):
         member = request.env["discuss.channel.member"].search([
             ("channel_id", "=", channel_id),
             ("is_self", "=", True),

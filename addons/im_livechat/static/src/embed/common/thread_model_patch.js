@@ -1,5 +1,6 @@
 import { Record } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
+import "@mail/discuss/core/common/thread_model_patch";
 
 import { patch } from "@web/core/utils/patch";
 import { SESSION_STATE } from "./livechat_service";

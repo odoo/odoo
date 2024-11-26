@@ -1,15 +1,16 @@
-import { compareDatetime } from "@mail/utils/common/misc";
-import { rpc } from "@web/core/network/rpc";
+import { cleanTerm, prettifyMessageContent } from "@mail/utils/common/format";
 import { Store as BaseStore, makeStore, Record } from "@mail/core/common/record";
+import { threadCompareRegistry } from "@mail/core/common/thread_compare";
+
 import { reactive } from "@odoo/owl";
 
+import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { Deferred, Mutex } from "@web/core/utils/concurrency";
 import { debounce } from "@web/core/utils/timing";
 import { session } from "@web/session";
-import { _t } from "@web/core/l10n/translation";
-import { cleanTerm, prettifyMessageContent } from "@mail/utils/common/format";
 
 /**
  * @typedef {{isSpecial: boolean, channel_types: string[], label: string, displayName: string, description: string}} SpecialMention
@@ -74,13 +75,6 @@ export class Store extends BaseStore {
     /** @type {typeof import("@mail/core/common/volume_model").Volume} */
     Volume;
 
-    /**
-     * Defines channel types that have the message seen indicator/info feature.
-     * @see `discuss.channel`._types_allowing_seen_infos()
-     *
-     * @type {string[]}
-     */
-    channel_types_with_seen_infos = [];
     /** This is the current logged partner / guest */
     self = Record.one("Persona");
     /**
@@ -163,46 +157,18 @@ export class Store extends BaseStore {
         },
         /**
          * @this {import("models").Store}
-         * @param {import("models").Thread} a
-         * @param {import("models").Thread} b
+         * @param {import("models").Thread} thread1
+         * @param {import("models").Thread} thread2
          */
-        sort(a, b) {
-            /**
-             * Ordering:
-             * - threads with needaction
-             * - unread channels
-             * - read channels
-             *
-             * In each group, thread with most recent message comes first
-             */
-            const aNeedaction = a.needactionMessages.length;
-            const bNeedaction = b.needactionMessages.length;
-            if (aNeedaction > 0 && bNeedaction === 0) {
-                return -1;
+        sort(thread1, thread2) {
+            const compareFunctions = threadCompareRegistry.getAll();
+            for (const fn of compareFunctions) {
+                const result = fn(thread1, thread2);
+                if (result !== undefined) {
+                    return result;
+                }
             }
-            if (bNeedaction > 0 && aNeedaction === 0) {
-                return 1;
-            }
-            const aUnread = a.selfMember?.message_unread_counter;
-            const bUnread = b.selfMember?.message_unread_counter;
-            if (aUnread > 0 && bUnread === 0) {
-                return -1;
-            }
-            if (bUnread > 0 && aUnread === 0) {
-                return 1;
-            }
-            const aMessageDatetime = a.newestPersistentNotEmptyOfAllMessage?.datetime;
-            const bMessageDateTime = b.newestPersistentNotEmptyOfAllMessage?.datetime;
-            if (!aMessageDatetime && bMessageDateTime) {
-                return 1;
-            }
-            if (!bMessageDateTime && aMessageDatetime) {
-                return -1;
-            }
-            if (aMessageDatetime && bMessageDateTime && aMessageDatetime !== bMessageDateTime) {
-                return bMessageDateTime - aMessageDatetime;
-            }
-            return b.localId > a.localId ? 1 : -1;
+            return thread2.localId > thread1.localId ? 1 : -1;
         },
     });
 
@@ -416,10 +382,6 @@ export class Store extends BaseStore {
             this._fetchDataDebounced,
             Store.FETCH_DATA_DEBOUNCE_DELAY
         );
-        this.updateBusSubscription = debounce(
-            () => this.env.services.bus_service.forceUpdateChannels(),
-            0
-        );
     }
 
     /** Provides an override point for when the store service has started. */
@@ -604,19 +566,6 @@ export class Store extends BaseStore {
             }
             return partner;
         }
-    }
-
-    /**
-     * List of known partner ids with a direct chat, ordered
-     * by most recent interest (1st item being the most recent)
-     *
-     * @returns {[integer]}
-     */
-    getRecentChatPartnerIds() {
-        return Object.values(this.Thread.records)
-            .filter((thread) => thread.channel_type === "chat" && thread.correspondent)
-            .sort((a, b) => compareDatetime(b.lastInterestDt, a.lastInterestDt) || b.id - a.id)
-            .map((thread) => thread.correspondent.persona.id);
     }
 
     async joinChat(id, forceOpen = false) {

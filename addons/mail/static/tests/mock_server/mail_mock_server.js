@@ -465,9 +465,12 @@ async function discuss_channel_mark_as_read(request) {
     return DiscussChannelMember._mark_as_read([memberId], last_message_id, sync);
 }
 
-registerRoute("/discuss/channel/mark_as_unread", discuss_channel_mark_as_unread);
+registerRoute(
+    "/discuss/channel/set_new_message_separator",
+    discuss_channel_set_new_message_separator
+);
 /** @type {RouteCallback} */
-async function discuss_channel_mark_as_unread(request) {
+async function discuss_channel_set_new_message_separator(request) {
     const { channel_id, message_id } = await parseRequestParams(request);
     const [partner, guest] = this.env["res.partner"]._get_current_persona();
     const [memberId] = this.env["discuss.channel.member"].search([

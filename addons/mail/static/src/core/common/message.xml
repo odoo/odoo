@@ -102,13 +102,6 @@
                                                         <t t-if="showSubtypeDescription" t-out="props.messageSearch?.highlight(message.subtype_description) ?? message.subtype_description"/>
                                                     </t>
                                                 </div>
-                                                <div class="o-mail-Message-seenContainer position-absolute">
-                                                    <MessageSeenIndicator
-                                                        t-if="showSeenIndicator"
-                                                        message="props.message"
-                                                        thread="props.thread"
-                                                    />
-                                                </div>
                                             </div>
                                         </t>
                                     </t>

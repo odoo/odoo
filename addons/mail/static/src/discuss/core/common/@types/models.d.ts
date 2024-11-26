@@ -3,12 +3,25 @@ declare module "models" {
 
     export interface ChannelMember extends ChannelMemberClass {}
 
+    export interface Message {
+        readonly channelMemberHaveSeen: ChannelMember[],
+        hasEveryoneSeen: boolean,
+        hasNewMessageSeparator: boolean,
+        hasSomeoneFetched: boolean,
+        hasSomeoneSeen: boolean,
+        isMessagePreviousToLastSelfMessageSeenByEveryone: boolean,
+        mentionedChannelPromises: Promise<Thread>[],
+        threadAsFirstUnread: Thread,
+    }
+
     export interface Persona {
         channelMembers: ChannelMember[],
     }
 
     export interface Store {
+        channel_types_with_seen_infos: string[],
         "discuss.channel.member": typeof ChannelMemberClass,
+        getRecentChatPartnerIds(): number[],
         readonly onlineMemberStatuses: String[],
         sortMembers(m1: ChannelMember, m2: ChannelMember)
     }
@@ -22,16 +35,25 @@ declare module "models" {
         readonly correspondents: ChannelMember[],
         default_display_mode: "video_full_screen" | false | undefined,
         fetchChannelMembers(): Promise<void>,
+        firstUnreadMessage: Message,
         hasOtherMembersTyping: boolean,
         readonly hasMemberList: boolean,
+        readonly hasSeenFeature: boolean,
         readonly hasSelfAsMember: boolean,
         invitedMembers: ChannelMember[],
+        last_interest_dt: luxon.DateTime,
+        lastInterestDt: luxon.DateTime,
+        readonly lastMessageSeenByAllId: number,
+        readonly lastSelfMessageSeenByEveryone: Message,
         member_count: number | undefined,
         readonly membersThatCanSeen: ChannelMember[],
+        newMessageBannerText: string,
+        onClickUnreadMessagesBanner(): void,
         onlineMembers: ChannelMember[],
         offlineMembers: ChannelMember[],
         otherTypingMembers: ChannelMember[],
         selfMember: ChannelMember,
+        showUnreadBanner(): boolean,
         typingMembers: ChannelMember[],
         readonly hasMemberList: boolean,
         readonly notifyOnleave: boolean,

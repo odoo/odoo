@@ -17,6 +17,7 @@ const livechatChannelPatch = {
                     sequence: 22,
                 };
             },
+            eager: true,
             inverse: "livechatChannel",
         });
         this.threads = Record.many("Thread", { inverse: "livechatChannel" });

@@ -1,4 +1,4 @@
-import { waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
+import { waitNotifications, waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
 import {
     defineLivechatModels,
     loadDefaultEmbedConfig,
@@ -81,7 +81,7 @@ test.tags("focus required")("Seen message is saved on the server", async () => {
     const pyEnv = await startServer();
     await loadDefaultEmbedConfig();
     const userId = serverState.userId;
-    await start({ authenticateAs: false });
+    const env = await start({ authenticateAs: false });
     await mountWithCleanup(LivechatButton);
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-Thread");
@@ -112,6 +112,7 @@ test.tags("focus required")("Seen message is saved on the server", async () => {
         ["guest_id", "=", guestId],
         ["channel_id", "=", getService("im_livechat.livechat").thread.id],
     ]);
+    await waitNotifications([env, "mail.record/insert"]);
     expect(initialSeenMessageId).not.toBe(member.seen_message_id[0]);
     expect(getService("im_livechat.livechat").thread.selfMember.seen_message_id.id).toBe(
         member.seen_message_id[0]
