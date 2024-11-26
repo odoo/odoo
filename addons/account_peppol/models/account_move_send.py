@@ -38,6 +38,10 @@ class AccountMoveSend(models.AbstractModel):
     # SENDING METHODS
     # -------------------------------------------------------------------------
 
+    def _get_mail_layout(self):
+        # OVERRIDE 'account'
+        return 'account_peppol.mail_notification_layout_with_responsible_signature_and_peppol'
+
     def _do_peppol_pre_send(self, moves):
         if len(moves.company_id) == 1:
             can_send = self.env['account_edi_proxy_client.user']._get_can_send_domain()
