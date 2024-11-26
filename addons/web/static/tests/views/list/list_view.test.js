@@ -13061,6 +13061,40 @@ test(`add a new row in grouped editable="bottom" list`, async () => {
     expect(`.o_data_row`).toHaveCount(5);
 });
 
+test("editable grouped list: fold group with edited row", async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: '<list editable="top"><field name="foo"/></list>',
+        groupBy: ["bar"],
+    });
+
+    await contains(".o_group_header").click();
+    expect(".o_data_row .o_data_cell").toHaveText("blip");
+    await contains(".o_data_row .o_data_cell").click();
+    await contains(".o_selected_row [name=foo] input").edit("some change");
+    await contains(".o_group_header").click();
+    await contains(".o_group_header").click();
+    expect(".o_data_row .o_data_cell").toHaveText("some change");
+});
+
+test("editable grouped list: add row with edited row", async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: '<list editable="bottom"><field name="foo"/></list>',
+        groupBy: ["bar"],
+    });
+
+    await contains(".o_group_header").click();
+    expect(".o_data_row").toHaveCount(1);
+    await contains(".o_data_row .o_data_cell").click();
+    await contains(".o_selected_row [name=foo] input").edit("some change");
+    await contains(".o_group_field_row_add a").click();
+    expect(".o_data_row").toHaveCount(2);
+    expect(".o_data_row:first .o_data_cell").toHaveText("some change");
+});
+
 test(`add and discard a line through keyboard navigation without crashing`, async () => {
     await mountView({
         resModel: "foo",
