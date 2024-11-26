@@ -67,7 +67,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'sequence': 2,
                 'auto_apply': True,
                 'tax_ids': self._get_l10n_in_fiscal_tax_vals(),
-                'country_id': self.env.ref('base.in').id
+                'country_group_id': 'l10n_in.inter_state_group',
             },
         }
         if company.parent_id:
