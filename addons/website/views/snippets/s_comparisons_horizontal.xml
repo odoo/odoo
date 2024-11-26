@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_comparisons_horizontal" name="Comparisons Horizontal">
+    <section class="s_comparisons_horizontal o_colored_level pt64 pb48">
+        <div class="container">
+            <h2 class="h3-fs">Our Pricing</h2>
+            <p class="lead">Discover what is the best pricing for you.</p>
+            <div class="row">
+                <div class="col-12 col-lg-6 pb16 pt16" data-name="Card">
+                    <div class="s_card card o_cc o_cc1 h-100 my-0" data-vxml="001" data-snippet="s_card" data-name="Card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12 col-lg-6">
+                                    <h3 class="card-title h5-fs">Professional</h3>
+                                    <div class="my-2">
+                                        <strong class="h2-fs">$ 65.00</strong>
+                                        <small class="text-muted">/ month</small>
+                                    </div>
+                                    <p class="card-text small">Comprehensive tools for growing businesses. Optimize your processes and productivity across your team.</p>
+                                    <a href="/contactus" class="btn btn-outline-primary mb-3">Start Now</a>
+                                </div>
+                                <div class="col-12 col-lg-6" data-name="List Group Column">
+                                    <ul class="list-group list-group-flush text-start">
+                                        <li class="list-group-item px-0 bg-transparent text-reset"><i class="fa fa-check-circle-o" role="img"/>  Complete CRM for any team</li>
+                                        <li class="list-group-item px-0 bg-transparent text-reset"><i class="fa fa-check-circle-o" role="img"/>  Access all modules</li>
+                                        <li class="list-group-item px-0 bg-transparent text-reset"><i class="fa fa-check-circle-o" role="img"/>  Limited Customization</li>
+                                        <li class="list-group-item px-0 bg-transparent text-reset"><i class="fa fa-check-circle-o" role="img"/>  Email support</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer" style="text-align: center;">
+                            <small>Instant setup, satisfied or reimbursed.</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6 pb16 pt16" data-name="Card">
+                    <div class="s_card card o_cc o_cc1 h-100 my-0" data-vxml="001" data-snippet="s_card" data-name="Card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12 col-lg-6">
+                                    <h3 class="card-title h5-fs">Expert</h3>
+                                    <div class="my-2">
+                                        <strong class="h2-fs">$ 125.00</strong>
+                                        <small class="text-muted">/ month</small>
+                                    </div>
+                                    <p class="card-text small">Advanced solution for enterprises. Cutting-edge features and top-tier support for maximum performance.</p>
+                                    <a href="/contactus" class="btn btn-primary mb-3">Start Now</a>
+                                </div>
+                                <div class="col-12 col-lg-6" data-name="List Group Column">
+                                    <ul class="list-group list-group-flush text-start">
+                                        <li class="list-group-item px-0 bg-transparent text-reset"><i class="fa fa-check-circle-o" role="img"/>  PaaS Access</li>
+                                        <li class="list-group-item px-0 bg-transparent text-reset"><i class="fa fa-check-circle-o" role="img"/>  Unlimited CRM support</li>
+                                        <li class="list-group-item px-0 bg-transparent text-reset"><i class="fa fa-check-circle-o" role="img"/>  All modules &amp; features</li>
+                                        <li class="list-group-item px-0 bg-transparent text-reset"><i class="fa fa-check-circle-o" role="img"/>  Unlimited customization</li>
+                                        <li class="list-group-item px-0 bg-transparent text-reset"><i class="fa fa-check-circle-o" role="img"/>  24/7 Support</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer" style="text-align: center;">
+                            <small>Instant setup, satisfied or reimbursed.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_comparisons_horizontal_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <div data-selector="[data-name='List Group Column']" data-target=".list-group">
+            <we-checkbox string="Hide Borders" data-select-class="o_list_group_borderless"/>
+        </div>
+    </xpath>
+</template>
+
+<record id="website.s_comparisons_horizontal_000_scss" model="ir.asset">
+    <field name="name">Comparisons Horizontal 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_comparisons_horizontal/000.scss</field>
+</record>
+
+</odoo>
