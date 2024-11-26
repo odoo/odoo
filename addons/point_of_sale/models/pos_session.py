@@ -1737,13 +1737,14 @@ class PosSession(models.Model):
     def find_product_by_barcode(self, barcode, config_id):
         product_fields = self.env['product.product']._load_pos_data_fields(config_id)
         product_packaging_fields = self.env['product.packaging']._load_pos_data_fields(config_id)
+        product_context = {**self.env.context, 'display_default_code': False}
         product = self.env['product.product'].search([
             ('barcode', '=', barcode),
             ('sale_ok', '=', True),
             ('available_in_pos', '=', True),
         ])
         if product:
-            return {'product.product': product.with_context({'display_default_code': False}).read(product_fields, load=False)}
+            return {'product.product': product.with_context(product_context).read(product_fields, load=False)}
 
         domain = [('barcode', 'not in', ['', False])]
         loaded_data = self._context.get('loaded_data')
@@ -1761,7 +1762,7 @@ class PosSession(models.Model):
         packaging = self.env['product.packaging'].search(packaging_params['search_params']['domain'])
 
         if packaging and packaging.product_id:
-            return {'product.product': packaging.product_id.with_context({'display_default_code': False}).read(product_fields, load=False), 'product.packaging': packaging.read(product_packaging_fields, load=False)}
+            return {'product.product': packaging.product_id.with_context(product_context).read(product_fields, load=False), 'product.packaging': packaging.read(product_packaging_fields, load=False)}
         else:
             return {
                 'product.product': [],
