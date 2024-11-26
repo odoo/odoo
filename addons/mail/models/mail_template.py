@@ -8,6 +8,7 @@ from ast import literal_eval
 
 from odoo import _, api, fields, models, tools, Command
 from odoo.exceptions import ValidationError, UserError
+from odoo.osv import expression
 from odoo.tools import is_html_empty
 from odoo.tools.safe_eval import safe_eval, time
 
@@ -131,19 +132,40 @@ class MailTemplate(models.Model):
 
     @api.model
     def _search_template_category(self, operator, value):
-        if operator in ['in', 'not in'] and isinstance(value, list):
-            value_templates = self.env['mail.template'].search([]).filtered(
-                lambda t: t.template_category in value
-            )
-            return [('id', operator, value_templates.ids)]
+        template_ids = [
+            t["res_id"]
+            for t in self.env['ir.model.data'].sudo().search_read(
+                [("model", "=", "mail.template")], ['res_id'], order='id')
+        ]
 
-        if operator in ['=', '!='] and isinstance(value, str):
-            value_templates = self.env['mail.template'].search([]).filtered(
-                lambda t: t.template_category == value
-            )
-            return [('id', 'in' if operator == "=" else 'not in', value_templates.ids)]
+        def search_equal(oper, val):
+            assert oper in ('=', '!=')
+            if val == "hidden_template":
+                # hidden templates are inactives
+                return ['|', ('active', '=', oper == "!="),
+                           '&', ('description', oper, False),
+                                ('id', 'in' if oper == '=' else 'not in', template_ids)]
+            elif val == "base_template":
+                if oper == "=":
+                    # base_template have an imd and description, custom do not
+                    return [('description', '!=', False), ('id', 'in', template_ids)]
+                else:
+                    return ['|', ('description', '=', False), ('id', 'not in', template_ids)]
+            else:
+                if oper == "=":
+                    # custom templates are ones without xmlid
+                    return [('active', '=', True), ('id', 'not in', template_ids)]
+                else:
+                    return ['|', ('active', '=', False),
+                                 ('id', 'in', template_ids)]
 
-        raise NotImplementedError(_('Operation not supported'))
+        if isinstance(value, list):
+            if operator == "in":
+                return expression.OR([search_equal('=', val) for val in value])
+            else:
+                return expression.AND([search_equal('!=', val) for val in value])
+        else:
+            return search_equal(operator, value)
 
     # ------------------------------------------------------------
     # CRUD
