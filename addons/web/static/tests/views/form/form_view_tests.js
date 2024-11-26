@@ -6005,6 +6005,32 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(target.querySelector(".o_pager_counter").textContent, "1 / 2");
     });
 
+    QUnit.test("open a new record from an invalid one", async function (assert) {
+        // in this scenario, the record is already invalid in db, so we should be allowed to
+        // leave it
+        serverData.models.partner.records[0].foo = false;
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="foo" required="1"/>
+                </form>`,
+            resIds: [1],
+            resId: 1,
+        });
+
+        assert.strictEqual(target.querySelector(".o_breadcrumb").innerText, "first record");
+        assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "o_required_modifier");
+        await click(
+            target,
+            ".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_form_button_create"
+        );
+        assert.strictEqual(target.querySelector(".o_breadcrumb").innerText, "New");
+    });
+
     QUnit.test("keynav: switching to another record from a dirty one", async function (assert) {
         let nbWrite = 0;
         await makeView({

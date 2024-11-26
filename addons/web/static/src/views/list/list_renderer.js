@@ -277,6 +277,13 @@ export class ListRenderer extends Component {
         }
     }
 
+    async addInGroup(group) {
+        const left = await this.props.list.leaveEditMode({ canAbandon: false });
+        if (left) {
+            group.addNewRecord({}, this.props.editable === "top");
+        }
+    }
+
     processAllColumn(allColumns, list) {
         return allColumns.flatMap((column) => {
             if (column.type === "field" && list.fields[column.name].type === "properties") {
@@ -1173,8 +1180,8 @@ export class ListRenderer extends Component {
     async onDeleteRecord(record, ev) {
         this.keepColumnWidths = true;
         if (this.editedRecord && this.editedRecord !== record) {
-            const leaved = await this.props.list.leaveEditMode();
-            if (!leaved) {
+            const left = await this.props.list.leaveEditMode();
+            if (!left) {
                 return;
             }
         }
@@ -1836,6 +1843,13 @@ export class ListRenderer extends Component {
             (hotkey === "tab" && index < focusableEls.length - 1) ||
             (hotkey === "shift+tab" && index > 0)
         );
+    }
+
+    async onGroupHeaderClicked(ev, group) {
+        const left = await this.props.list.leaveEditMode();
+        if (left) {
+            this.toggleGroup(group);
+        }
     }
 
     toggleGroup(group) {

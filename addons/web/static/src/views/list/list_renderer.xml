@@ -155,7 +155,7 @@
                         >
                             <a href="#"
                                 role="button"
-                                t-on-click.stop.prevent="() => group.addNewRecord({}, props.editable === 'top')"
+                                t-on-click.stop.prevent="() => this.addInGroup(group)"
                                 t-on-keydown="(ev) => this.onCellKeydown(ev)"
                             >
                                 Add a line
@@ -169,7 +169,7 @@
 
     <t t-name="web.ListRenderer.GroupRow">
         <tr t-attf-class="{{group.count > 0 ? 'o_group_has_content' : ''}} o_group_header {{!group.isFolded ? 'o_group_open' : ''}} cursor-pointer"
-            t-on-click="() => this.toggleGroup(group)"
+            t-on-click="(ev) => this.onGroupHeaderClicked(ev, group)"
         >
             <th t-on-keydown="(ev) => this.onCellKeydown(ev, group)"
                 tabindex="-1"

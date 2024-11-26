@@ -1835,7 +1835,7 @@ class PosSession(models.Model):
         return self.env['product.tag'].search_read(**params['search_params'])
 
     def _loader_params_product_tag(self):
-        return {'search_params': {'domain': [], 'fields': []}}
+        return {'search_params': {'domain': [], 'fields': ['name']}}
 
     def _loader_params_account_tax(self):
         return {
