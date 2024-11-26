@@ -3,7 +3,7 @@
 
     <template id="sale_order_portal_content_inherit" inherit_id="sale.sale_order_portal_template">
         <xpath expr="//t[@t-set='entries']/div/div/div[hasclass('o_download_pdf')]" position="inside">
-            <t t-if="sale_order.timesheet_count > 0 and sale_order.state == 'sale'">
+            <t t-if="sale_order._has_timesheet_portal() and sale_order.state == 'sale'">
                 <a class="btn btn-light flex-grow-1" t-att-href="'/my/timesheets?search_in=so&amp;search=%s' % sale_order.name" title="View Timesheets" target="_blank" role="button">View Timesheets</a>
             </t>
         </xpath>
@@ -70,10 +70,10 @@
 
     <template id="portal_invoice_page_inherit" inherit_id="account.portal_invoice_page">
         <xpath expr="//t[@t-set='entries']/div/div/div[hasclass('o_download_pdf')]" position="after">
-            <t t-if="invoice.timesheet_count > 0">
+            <t t-if="invoice._has_timesheet_portal()">
                 <t t-set="search_value" t-value="invoice.name"/>
                 <t t-if="invoice.state == 'draft'" t-set="search_value" t-value="invoice.id"/>
-                <a t-if="invoice.move_type == 'out_invoice' and invoice.state in ('draft', 'posted') and invoice.timesheet_count > 0"
+                <a t-if="invoice.move_type == 'out_invoice' and invoice.state in ('draft', 'posted') and invoice._has_timesheet_portal()"
                     target="_blank" t-att-href="'/my/timesheets?search_in=invoice&amp;search=%s' % search_value" class="btn btn-light" role="button" title="View Timesheet">View Timesheets</a>
             </t>
         </xpath>

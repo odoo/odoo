@@ -1,8 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 from collections import defaultdict
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.osv import expression
 
 
@@ -41,32 +42,34 @@ class AccountMove(models.Model):
         for invoice in self:
             invoice.timesheet_count = mapped_data.get(invoice.id, 0)
 
+    def _has_timesheet_portal(self):
+        Timesheet = self.env['account.analytic.line']
+        initial_domain = Timesheet._timesheet_get_portal_domain()
+        domain = expression.AND([initial_domain, self.env['account.analytic.line']._timesheet_get_sale_domain(self.line_ids.sale_line_ids, self)])
+        return Timesheet.sudo().search(domain, limit=1)
+
     def action_view_timesheet(self):
         self.ensure_one()
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('Timesheets'),
-            'domain': [('project_id', '!=', False)],
-            'res_model': 'account.analytic.line',
-            'view_id': False,
-            'view_mode': 'list,form',
-            'help': _("""
-                <p class="o_view_nocontent_smiling_face">
-                    Record timesheets
-                </p><p>
-                    You can register and track your workings hours by project every
-                    day. Every time spent on a project will become a cost and can be re-invoiced to
-                    customers if required.
-                </p>
-            """),
-            'limit': 80,
-            'context': {
-                'default_project_id': self.id,
-                'search_default_project_id': [self.id]
-            }
-        }
+        action = self.env['ir.actions.actions']._for_xml_id('sale_timesheet.action_timesheet_from_invoice')
+        context = ast.literal_eval(action.get('context', '{}'))
+        context['default_is_so_line_edited'] = True
 
-    def _link_timesheets_to_invoice(self, start_date=None, end_date=None):
+        default_so_line = next((
+            sale_line for sale_line in self.line_ids.sale_line_ids
+            if sale_line.is_service and sale_line.product_id.service_policy != 'delivered_timesheet'
+        ), False)
+        if default_so_line:
+            context.update({
+                'default_so_line': default_so_line.id,
+                'default_timesheet_invoice_id': self.id,
+                'default_task_id': default_so_line.task_id.id,
+                'default_project_id': default_so_line.project_id.id or default_so_line.task_id.project_id.id,
+            })
+        action['context'] = context
+
+        return action
+
+    def _link_timesheets_to_invoice(self, start_date=None, end_date=None, service_policies=['delivered_timesheet']):
         """ Search timesheets from given period and link this timesheets to the invoice
 
             When we create an invoice from a sale order, we need to
@@ -74,14 +77,36 @@ class AccountMove(models.Model):
             Then, we can know which timesheets are invoiced in the sale order.
             :param start_date: the start date of the period
             :param end_date: the end date of the period
+            :param service_policies: the service policies of the sol products to consider
         """
-        for line in self.filtered(lambda i: i.move_type == 'out_invoice' and i.state == 'draft').invoice_line_ids:
-            sale_line_delivery = line.sale_line_ids.filtered(lambda sol: sol.product_id.invoice_policy == 'delivery' and sol.product_id.service_type == 'timesheet')
+        for line in self.filtered(lambda i: i.move_type in ['out_invoice', 'out_refund'] and i.state == 'draft').invoice_line_ids:
+            sale_line_delivery = line.sale_line_ids.filtered(lambda sol: sol.product_id.service_policy in service_policies)
             if sale_line_delivery:
                 domain = line._timesheet_domain_get_invoiced_lines(sale_line_delivery)
                 if start_date:
                     domain = expression.AND([domain, [('date', '>=', start_date)]])
+                if sale_line_delivery.product_id.service_policy == 'delivered_manual':
+                    end_date = line.move_id.invoice_date or fields.Date.today()
                 if end_date:
                     domain = expression.AND([domain, [('date', '<=', end_date)]])
                 timesheets = self.env['account.analytic.line'].sudo().search(domain)
                 timesheets.write({'timesheet_invoice_id': line.move_id.id})
+
+    def _unlink_timesheets_from_invoice(self, service_policies):
+        for move in self:
+            if move.move_type in ['out_invoice', 'out_refund'] and move.state == 'posted':
+                timesheets = move.timesheet_ids.filtered(lambda t: t.so_line.product_id.service_policy in service_policies)
+                timesheets.timesheet_invoice_id = False
+
+    def _post(self, soft=True):
+        self._link_timesheets_to_invoice(service_policies=['delivered_milestones', 'delivered_manual'])
+        return super()._post(soft)
+
+    def button_draft(self):
+        self._unlink_timesheets_from_invoice(['ordered_prepaid', 'delivered_milestones', 'delivered_manual'])
+        return super().button_draft()
+
+    def _reverse_moves(self, default_values_list=None, cancel=False):
+        reverse_moves = super()._reverse_moves(default_values_list, cancel)
+        (self + reverse_moves)._unlink_timesheets_from_invoice(['ordered_prepaid', 'delivered_milestones', 'delivered_manual'])
+        return reverse_moves
