@@ -401,7 +401,7 @@ export class KanbanRenderer extends Component {
             withProgressBars: true,
         });
         if (mode === "edit") {
-            await this.props.openRecord(record, "edit");
+            await this.props.openRecord(record, { mode: "edit" });
         } else {
             this.props.progressBarState?.updateCounts(group);
         }

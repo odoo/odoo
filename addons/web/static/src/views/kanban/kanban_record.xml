@@ -6,7 +6,7 @@
             t-att-class="getRecordClasses()"
             t-att-data-id="props.record.id"
             t-att-tabindex="props.record.model.useSampleModel ? -1 : 0"
-            t-on-click="onGlobalClick"
+            t-custom-click="onGlobalClick"
             t-ref="root">
                 <t t-call="{{ this.templates[this.constructor.KANBAN_CARD_ATTRIBUTE] }}" t-call-context="this.renderingContext"/>
                 <t t-call="{{ this.constructor.menuTemplate }}"/>
