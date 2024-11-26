@@ -129,8 +129,8 @@ export class DiscussCoreCommon {
             } else if (channel.status === "loading") {
                 channel.pendingNewMessages.push(message);
             }
-            if (message.isSelfAuthored && channel.selfMember) {
-                channel.selfMember.seen_message_id = message;
+            if (message.isSelfAuthored) {
+                channel.onNewSelfMessage(message);
             } else {
                 if (!channel.isDisplayed && channel.selfMember) {
                     channel.selfMember.syncUnread = true;
@@ -157,7 +157,7 @@ export class DiscussCoreCommon {
             this.store.self.type === "partner" &&
             channel.newestPersistentMessage?.eq(channel.newestMessage)
         ) {
-            channel.markAsRead();
+            channel.markAsRead({ sync: false });
         }
         this.env.bus.trigger("discuss.channel/new_message", { channel, message, silent });
         const authorMember = channel.channel_member_ids.find(({ persona }) =>

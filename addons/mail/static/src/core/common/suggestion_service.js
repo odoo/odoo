@@ -200,7 +200,7 @@ export class SuggestionService {
     sortPartnerSuggestions(partners, searchTerm = "", thread = undefined) {
         const cleanedSearchTerm = cleanTerm(searchTerm);
         const compareFunctions = partnerCompareRegistry.getAll();
-        const context = { recentChatPartnerIds: this.store.getRecentChatPartnerIds() };
+        const context = this.sortPartnerSuggestionsContext();
         const memberPartnerIds = new Set(
             thread?.channel_member_ids
                 .filter((member) => member.persona.type === "partner")
@@ -225,6 +225,10 @@ export class SuggestionService {
                 }
             }
         });
+    }
+
+    sortPartnerSuggestionsContext() {
+        return {};
     }
 
     searchChannelSuggestions(cleanedSearchTerm, sort) {

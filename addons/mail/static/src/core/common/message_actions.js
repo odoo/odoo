@@ -88,15 +88,6 @@ messageActionsRegistry
         onClick: (component) => component.props.message.unfollow(),
         sequence: 60,
     })
-    .add("mark-as-unread", {
-        condition: (component) =>
-            component.props.thread?.model === "discuss.channel" &&
-            component.store.self.type === "partner",
-        icon: "fa fa-eye-slash",
-        title: _t("Mark as Unread"),
-        onClick: (component) => component.props.message.onClickMarkAsUnread(component.props.thread),
-        sequence: 70,
-    })
     .add("edit", {
         condition: (component) => component.props.message.editable,
         icon: "fa fa-pencil",

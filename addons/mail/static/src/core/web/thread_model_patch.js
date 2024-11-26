@@ -4,7 +4,8 @@ import { patch } from "@web/core/utils/patch";
 import { Record } from "../common/record";
 import { compareDatetime } from "@mail/utils/common/misc";
 
-patch(Thread.prototype, {
+/** @type {import("models").Thread} */
+const threadPatch = {
     /** @type {integer|undefined} */
     recipientsCount: undefined,
     setup() {
@@ -78,4 +79,5 @@ patch(Thread.prototype, {
         await chatWindow?.close();
         super.unpin(...arguments);
     },
-});
+};
+patch(Thread.prototype, threadPatch);

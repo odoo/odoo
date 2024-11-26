@@ -12,7 +12,6 @@ import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { url } from "@web/core/utils/urls";
 import { stateToUrl } from "@web/core/browser/router";
-import { toRaw } from "@odoo/owl";
 
 const { DateTime } = luxon;
 export class Message extends Record {
@@ -61,49 +60,6 @@ export class Message extends Record {
                     // when the message is edited
                     .querySelector(".o-mail-Message-edited")
             );
-        },
-    });
-    hasEveryoneSeen = Record.attr(false, {
-        /** @this {import("models").Message} */
-        compute() {
-            return this.thread?.membersThatCanSeen.every((m) => m.hasSeen(this));
-        },
-    });
-    isMessagePreviousToLastSelfMessageSeenByEveryone = Record.attr(false, {
-        /** @this {import("models").Message} */
-        compute() {
-            if (!this.thread?.lastSelfMessageSeenByEveryone) {
-                return false;
-            }
-            return this.id < this.thread.lastSelfMessageSeenByEveryone.id;
-        },
-    });
-    isReadBySelf = Record.attr(false, {
-        compute() {
-            return (
-                this.thread?.selfMember?.seen_message_id?.id >= this.id &&
-                this.thread?.selfMember?.new_message_separator > this.id
-            );
-        },
-    });
-    hasSomeoneSeen = Record.attr(false, {
-        /** @this {import("models").Message} */
-        compute() {
-            return this.thread?.membersThatCanSeen
-                .filter(({ persona }) => !persona.eq(this.author))
-                .some((m) => m.hasSeen(this));
-        },
-    });
-    hasSomeoneFetched = Record.attr(false, {
-        /** @this {import("models").Message} */
-        compute() {
-            if (!this.thread) {
-                return false;
-            }
-            const otherFetched = this.thread.channel_member_ids.filter(
-                (m) => m.persona.notEq(this.author) && m.fetched_message_id?.id >= this.id
-            );
-            return otherFetched.length > 0;
         },
     });
     hasLink = Record.attr(false, {
@@ -171,7 +127,6 @@ export class Message extends Record {
     subject;
     /** @type {string} */
     subtype_description;
-    threadAsFirstUnread = Record.one("Thread", { inverse: "firstUnreadMessage" });
     /** @type {Object[]} */
     trackingValues = [];
     /** @type {string|undefined} */
@@ -484,25 +439,6 @@ export class Message extends Record {
             _t('You are no longer following "%(thread_name)s".', { thread_name: thread.name }),
             { type: "success" }
         );
-    }
-
-    get channelMemberHaveSeen() {
-        return this.thread.membersThatCanSeen.filter(
-            (m) => m.hasSeen(this) && m.persona.notEq(this.author)
-        );
-    }
-
-    /** @param {import("models").Thread} thread the thread where the message is shown */
-    onClickMarkAsUnread(thr) {
-        const message = toRaw(this);
-        const thread = toRaw(thr);
-        if (!thread.selfMember || thread.selfMember?.new_message_separator === message.id) {
-            return;
-        }
-        return rpc("/discuss/channel/mark_as_unread", {
-            channel_id: message.thread.id,
-            message_id: message.id,
-        });
     }
 }
 

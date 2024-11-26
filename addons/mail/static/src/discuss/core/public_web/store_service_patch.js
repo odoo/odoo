@@ -11,6 +11,15 @@ const StorePatch = {
         this.channels = this.makeCachedFetchData({ channels_as_member: true });
         this.fetchSsearchConversationsSequential = useSequential();
     },
+    getDiscussSidebarCategoryCounter(categoryId) {
+        return this.DiscussAppCategory.get({ id: categoryId }).threads.reduce((acc, channel) => {
+            if (categoryId === "channels") {
+                return channel.message_needaction_counter > 0 ? acc + 1 : acc;
+            } else {
+                return channel.selfMember?.message_unread_counter > 0 ? acc + 1 : acc;
+            }
+        }, 0);
+    },
     async searchConversations(searchValue) {
         const data = await this.fetchSsearchConversationsSequential(async () => {
             const data = await rpc("/discuss/search", { term: searchValue });
