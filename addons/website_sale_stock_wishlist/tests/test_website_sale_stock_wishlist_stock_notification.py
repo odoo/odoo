@@ -1,10 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import HttpCase, tagged
+from odoo.tests import tagged
+from odoo.addons.website.tests.common import HttpCaseWithWebsiteUser
 
 
 @tagged('post_install', '-at_install')
-class TestStockNotificationWishlist(HttpCase):
+class TestStockNotificationWishlist(HttpCaseWithWebsiteUser):
 
     @classmethod
     def setUpClass(cls):
@@ -30,16 +31,15 @@ class TestStockNotificationWishlist(HttpCase):
             'name': 'Public Pricelist',
         })
         cls.currency = cls.env.ref("base.USD")
-        cls.partner = cls.env['res.partner'].search([('id', '=', 3)])
         cls.env['product.wishlist'].create({
-            'partner_id': cls.partner.id,
+            'partner_id': cls.partner_website_user.id,
             'product_id': cls.product.id,
             'website_id': current_website.id,
             'pricelist_id': cls.pricelist.id
         })
 
     def test_stock_notification_wishlist(self):
-        self.start_tour("/", 'stock_notification_wishlist', login='admin')
+        self.start_tour("/", 'stock_notification_wishlist', login="website_user")
 
         partner_ids = self.env['res.partner']._mail_find_partner_from_emails(['test@test.test'])
         partner = partner_ids[0]

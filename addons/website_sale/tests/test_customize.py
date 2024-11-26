@@ -7,10 +7,11 @@ from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUser
 from odoo.addons.sale.tests.product_configurator_common import (
     TestProductConfiguratorCommon,
 )
+from odoo.addons.website.tests.common import HttpCaseWithWebsiteUser
 
 
 @tagged('post_install', '-at_install')
-class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductConfiguratorCommon):
+class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductConfiguratorCommon, HttpCaseWithWebsiteUser):
 
     @classmethod
     def setUpClass(cls):
@@ -231,7 +232,7 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
             {'name': 'Base Pricelist', 'selectable': True},
             {'name': 'Other Pricelist', 'selectable': True}
         ])
-        self.start_tour("/", 'shop_editor', login="admin")
+        self.start_tour("/", 'shop_editor', login="website_user")
 
     def test_08_portal_tour_archived_variant_multiple_attributes(self):
         """The goal of this test is to make sure that an archived variant with multiple
@@ -405,4 +406,4 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
             ],
         })
 
-        self.start_tour("/", 'tour_shop_multi_checkbox_single_value', login="admin")
+        self.start_tour("/", 'tour_shop_multi_checkbox_single_value', login="website_user")
