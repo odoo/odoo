@@ -157,7 +157,7 @@
             </div>
 
             <div t-if="!this.hasSnippetGroups" class="o_snippet_search_filter" t-att-class="{ 'd-none': state.currentTab !== constructor.tabs.BLOCKS }">
-                <input type="text" class="o_snippet_search_filter_input" t-ref="search-input" t-model="state.search" placeholder="Search for a block (e.g. numbers, image wall, ...)"/>
+                <input type="text" class="o_snippet_search_filter_input" t-ref="search-input" t-model="state.search" placeholder="Search for a block (e.g. numbers, image, ...)"/>
                 <i role="button" class="fa fa-times o_snippet_search_filter_reset" t-att-class="{ 'd-none': state.search === ''}" t-on-click="() => state.search = ''"/>
             </div>
 
