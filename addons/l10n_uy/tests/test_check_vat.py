@@ -1,6 +1,5 @@
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
@@ -62,14 +61,19 @@ class CheckUyVat(AccountTestInvoicingCommon):
             self._create_partner("it_nie", "ABC 93:402. asas 010-1")
 
     def test_invalid_rut(self):
-        common_msg = "The RUT number.*does not seem to be valid."
+
+        common_msg = "The VAT check digit does not match."
         with self.assertRaisesRegex(ValidationError, common_msg, msg="invalid number"):
             self._create_partner("it_rut", "215521750018")
-        with self.assertRaisesRegex(ValidationError, common_msg, msg="do not accept dot ('.') character"):
-            self._create_partner("it_rut", "21.55217500.17")
-        with self.assertRaisesRegex(ValidationError, common_msg, msg="should not contain letters"):
-            self._create_partner("it_rut", "2155 ABC 21750017")
 
+        common_msg = "The VAT must contain only numbers."
+        with self.assertRaisesRegex(ValidationError, common_msg, msg="do not accept dot ('.') character"):
+            self._create_partner("it_rut", "21.557500.17")
+
+        with self.assertRaisesRegex(ValidationError, common_msg, msg="should not contain letters"):
+            self._create_partner("it_rut", "2155ABC21717")
+
+        common_msg = "The VAT check digit does not match."
         with self.assertRaisesRegex(ValidationError, common_msg, msg="Validation not working with generic VAT id type"):
             self.env["res.partner"].create({
                 "name": "Uruguayan Partner",

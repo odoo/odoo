@@ -121,11 +121,9 @@ class TestStructure(TransactionCase):
         test_partner.write({"vat": "21-55217500-17"})
         test_partner.write({"vat": "21 55217500 17"})
         test_partner.write({"vat": "UY215521750017"})
-
-        # Test invalid VAT (should raise a ValidationError)
-        with self.assertRaisesRegex(ValidationError, "The VAT number.*does not seem to be valid."):
-            test_partner.write({"vat": "215521750018"})
-
+        # Test invalid VAT (should raise a ValidationError)        
+        with self.assertRaisesRegex(ValidationError, "The VAT check digit does not match.", msg=f"Invalid VAT: {'215521750018'}"):
+            test_partner.write({"vat": '215521750018'})
 
 @tagged('-standard', 'external')
 class TestStructureVIES(TestStructure):
