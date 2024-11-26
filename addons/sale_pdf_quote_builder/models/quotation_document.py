@@ -46,10 +46,10 @@ class QuotationDocument(models.Model):
         compute='_compute_form_field_ids',
         store=True,
     )
-    default = fields.Boolean(
-        string="Set Default",
-        default=False,
+    add_by_default = fields.Boolean(
+        string="Add By Default",
         help="If checked, this header or footer will be added by default on new quotes.",
+        default=False,
     )
 
     # === CONSTRAINT METHODS ===#

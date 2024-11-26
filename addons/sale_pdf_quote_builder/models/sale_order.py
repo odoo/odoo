@@ -25,23 +25,11 @@ class SaleOrder(models.Model):
         string="Customizable PDF Form Fields",
         readonly=False,
     )
-    ignore_default_ids = fields.Many2many(
+    ignored_default_ids = fields.Many2many(
         string="Default Quotation Document To Ignore",
         relation='ignore_default_relation',
         comodel_name='quotation.document',
-        readonly=False,
     )
-
-    # === CRUD METHODS === #
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        orders = super().create(vals_list)
-        default_quotes = self.env['quotation.document'].search([('default', '=', True)])
-        for order in self:
-            order.quotation_document_ids |= default_quotes & order.available_product_document_ids
-            order.ignore_default_ids = order.available_product_document_ids - order.quotation_document_ids
-        return orders
 
     # === COMPUTE METHODS === #
 
@@ -57,7 +45,9 @@ class SaleOrder(models.Model):
             )
             order.quotation_document_ids &= order.available_product_document_ids
             order.quotation_document_ids |= (
-                default_quotes - order.ignore_default_ids) & order.available_product_document_ids
+                (default_quotes - order.ignored_default_ids)
+                & order.available_product_document_ids
+            )
 
     @api.depends('available_product_document_ids', 'order_line', 'order_line.available_product_document_ids')
     def _compute_is_pdf_quote_builder_available(self):
@@ -66,6 +56,19 @@ class SaleOrder(models.Model):
                 order.available_product_document_ids
                 or order.order_line.available_product_document_ids
             )
+
+    # === CRUD METHODS === #
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        orders = super().create(vals_list)
+        default_quotes = self.env['quotation.document'].search([('default', '=', True)])
+        for order in self:
+            order.quotation_document_ids |= default_quotes & order.available_product_document_ids
+            order.ignored_default_ids = (
+                order.available_product_document_ids - order.quotation_document_ids
+            )
+        return orders
 
     # === ACTION METHODS === #
 

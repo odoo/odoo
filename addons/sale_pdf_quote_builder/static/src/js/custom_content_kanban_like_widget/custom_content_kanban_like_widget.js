@@ -100,7 +100,7 @@ export class CustomContentKanbanLikeWidget extends Component {
                 quotation_document_ids: [
                     x2ManyCommands.link(docId),
                 ],
-                ignore_default_ids: [
+                ignored_default_ids: [
                     x2ManyCommands.unlink(docId),
                 ],
             });
@@ -109,7 +109,7 @@ export class CustomContentKanbanLikeWidget extends Component {
                 quotation_document_ids: [
                     x2ManyCommands.unlink(docId),
                 ],
-                ignore_default_ids: [
+                ignored_default_ids: [
                     x2ManyCommands.link(docId),
                 ],
             });
