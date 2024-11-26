@@ -51,8 +51,7 @@ class SQL:
         cr.execute(sql)
 
     The code is given as a ``%``-format string, and supports either positional
-    arguments (with `%s`) or named arguments (with `%(name)s`). Escaped
-    characters (like ``"%%"``) are not supported, though. The arguments are
+    arguments (with `%s`) or named arguments (with `%(name)s`). The arguments are
     meant to be merged into the code using the `%` formatting operator.
 
     The SQL wrapper is designed to be composable: the arguments can be either
@@ -102,7 +101,11 @@ class SQL:
         if kwargs:
             code, args = named_to_positional_printf(code, kwargs)
         elif not args:
-            code % ()  # check that code does not contain %s
+            if '%s' in code:
+                code % ()  # raise type error
+            else:
+                # accept SQL containing '%' characters, escape them
+                code = code.replace('%', '%%')
             self.__code = code
             self.__params = ()
             self.__to_flush = () if to_flush is None else (to_flush,)
@@ -122,7 +125,7 @@ class SQL:
         if to_flush is not None:
             to_flush_list.append(to_flush)
 
-        self.__code = code % tuple(code_list)
+        self.__code = code.replace('%%', '%%%%') % tuple(code_list)
         self.__params = tuple(params_list)
         self.__to_flush = tuple(to_flush_list)
 
@@ -440,8 +443,6 @@ def constraint_definition(cr, tablename, constraintname):
 
 def add_constraint(cr, tablename, constraintname, definition):
     """ Add a constraint on the given table. """
-    if "%" in definition:
-        definition = definition.replace("%", "%%")
     query1 = SQL(
         "ALTER TABLE %s ADD CONSTRAINT %s %s",
         SQL.identifier(tablename), SQL.identifier(constraintname), SQL(definition),
