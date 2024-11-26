@@ -179,7 +179,9 @@
                     <!-- IDENTIFICACION (ADQUIRIENTE-LOCATARIO-PRESTARIO) -->
 
                     <!-- (14) Apellido uy Nombre: Denominicacion o Razon Soclial -->
-                    <strong>Customer: </strong><span t-field="o.partner_id.commercial_partner_id.name"/>
+                    <t t-if="o.is_sale_document(include_receipts=True)"><strong>Customer: </strong></t>
+                    <t t-else=""><strong>Supplier: </strong></t>
+                    <span t-field="o.partner_id.commercial_partner_id.name"/>
 
                     <!-- (15) Domicilio Comercial -->
                     <br/>
