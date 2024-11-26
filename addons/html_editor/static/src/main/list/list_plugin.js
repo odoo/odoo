@@ -842,6 +842,7 @@ export class ListPlugin extends Plugin {
     }
 
     handleTab() {
+        this.dependencies.split.splitBlockSegments();
         const selection = this.dependencies.selection.getEditableSelection();
         const closestLI = closestElement(selection.anchorNode, "LI");
         if (closestLI) {
