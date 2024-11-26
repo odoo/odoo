@@ -51,7 +51,7 @@
                         draggable="false"
                         aria-label="Internal link"
                         data-tooltip="Internal link"
-                        t-on-click="onExternalBtnClick"
+                        t-custom-click="(ev, isMiddleClick) => this.onExternalBtnClick(isMiddleClick)"
                     />
                 </t>
                 <button

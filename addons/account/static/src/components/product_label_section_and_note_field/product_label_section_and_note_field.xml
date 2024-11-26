@@ -88,7 +88,7 @@
                                 tabindex="-1"
                                 type="button"
                                 t-att-class="env.inDialog ? 'oi-launch' : 'oi-arrow-right'"
-                                t-on-click="onExternalBtnClick"
+                                t-custom-click="(ev, isMiddleClick) => this.onExternalBtnClick(isMiddleClick)"
                         />
                         <button t-if="hasBarcodeButton"
                                 aria-label="Scan barcode"
