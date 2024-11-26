@@ -520,8 +520,10 @@ class HolidaysAllocation(models.Model):
                 if allocation.nextcall == carryover_date:
                     if current_level.action_with_unused_accruals in ['lost', 'maximum']:
                         allocated_days_left = allocation.number_of_days - leaves_taken
-                        postpone_max_days = current_level.postpone_max_days if current_level.added_value_type == 'day' else current_level.postpone_max_days / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
-                        allocation_max_days = min(postpone_max_days, allocated_days_left)
+                        allocation_max_days = 0 # default if unused_accrual are lost
+                        if current_level.action_with_unused_accruals == 'maximum':
+                            postpone_max_days = current_level.postpone_max_days if current_level.added_value_type == 'day' else current_level.postpone_max_days / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
+                            allocation_max_days = min(postpone_max_days, allocated_days_left)
                         allocation.number_of_days = min(allocation.number_of_days, allocation_max_days) + leaves_taken
 
                 allocation.lastcall = allocation.nextcall
