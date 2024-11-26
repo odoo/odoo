@@ -88,16 +88,7 @@ export class VideoSelector extends Component {
             }
         });
 
-        onMounted(async () => {
-            await Promise.all(this.props.vimeoPreviewIds.map(async (videoId) => {
-                const { thumbnail_url: thumbnailSrc } = await this.http.get(`https://vimeo.com/api/oembed.json?url=http%3A//vimeo.com/${encodeURIComponent(videoId)}`);
-                this.state.vimeoPreviews.push({
-                    id: videoId,
-                    thumbnailSrc,
-                    src: `https://player.vimeo.com/video/${encodeURIComponent(videoId)}`
-                });
-            }));
-        });
+        onMounted(async () => this.prepareVimeoPreviews());
 
         useAutofocus();
 
@@ -226,6 +217,20 @@ export class VideoSelector extends Component {
             div.querySelector('iframe').src = video.src;
             return div;
         });
+    }
+
+    /**
+     * Based on the config vimeo ids, prepare the vimeo previews.
+     */
+    async prepareVimeoPreviews() {
+        return Promise.all(this.props.vimeoPreviewIds.map(async (videoId) => {
+            const { thumbnail_url: thumbnailSrc } = await this.http.get(`https://vimeo.com/api/oembed.json?url=http%3A//vimeo.com/${encodeURIComponent(videoId)}`);
+            this.state.vimeoPreviews.push({
+                id: videoId,
+                thumbnailSrc,
+                src: `https://player.vimeo.com/video/${encodeURIComponent(videoId)}`
+            });
+        }));
     }
 }
 VideoSelector.mediaSpecificClasses = ['media_iframe_video'];
