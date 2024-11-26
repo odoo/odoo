@@ -39,15 +39,19 @@ class IrUiMenu(models.Model):
                     "backgroundImage": menu.get('backgroundImage'),
                 }
             else:
-                action = menu['action']
+                action_id = menu['action_id']
+                action_model = menu['action_model']
+                action_path = menu['action_path']
                 web_icon = menu['web_icon']
                 web_icon_data = menu['web_icon_data']
 
                 if menu['id'] == menu['app_id']:
                     # if it's an app take action of first (sub)child having one defined
                     child = menu
-                    while child and not action:
-                        action = child['action']
+                    while child and not action_id:
+                        action_id = child['action_id']
+                        action_model = child['action_model']
+                        action_path = child['action_path']
                         child = menus[child['children'][0]] if child['children'] else False
 
                     webIcon = menu.get('web_icon', '')
@@ -65,13 +69,6 @@ class IrUiMenu(models.Model):
                         web_icon = ",".join([iconClass or "", color or "", backgroundColor])
                     else:
                         web_icon_data = '/web/static/img/default_icon_app.png'
-
-                action_model, action_id = action.split(',') if action else (False, False)
-                action_id = int(action_id) if action_id else False
-                if action_model and action_id:
-                    action_path = self.env[action_model].browse(action_id).sudo().path
-                else:
-                    action_path = False
 
                 web_menus[menu['id']] = {
                     "id": menu['id'],
