@@ -121,3 +121,7 @@ class LeaveReportCalendar(models.Model):
 
     def action_refuse(self):
         self.leave_id.action_refuse()
+
+    @api.model
+    def _search_name(self, operator, value):
+        return ['|', '|', ('employee_id', operator, value), ('leave_id.holiday_status_id', operator, value), ('leave_id.duration_display', operator, value)]
