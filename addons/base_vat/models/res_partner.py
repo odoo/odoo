@@ -180,6 +180,7 @@ class ResPartner(models.Model):
             return
 
         for partner in self:
+
             # Skip checks when only one character is used. Some users like to put '/' or other as VAT to differentiate between
             # A partner for which they didn't input VAT, and the one not subject to VAT
             if not partner.vat or len(partner.vat) == 1:
@@ -225,27 +226,28 @@ class ResPartner(models.Model):
         # OVERRIDE account
         check_result = None
 
-        # First check with country code as prefix of the TIN
-        vat_country_code, vat_number_split = self._split_vat(vat_number)
-
-        if vat_country_code == 'eu' and default_country not in self.env.ref('base.europe').country_ids:
+        if len(vat_number) > 2 and vat_number[:2].lower() == 'eu' and default_country not in self.env.ref('base.europe').country_ids:
             # Foreign companies that trade with non-enterprises in the EU
             # may have a VATIN starting with "EU" instead of a country code.
             return True
 
-        vat_has_legit_country_code = self.env['res.country'].search([('code', '=', vat_country_code.upper())], limit=1)
-        if not vat_has_legit_country_code:
-            vat_has_legit_country_code = vat_country_code.lower() in _region_specific_vat_codes
-        if vat_has_legit_country_code:
-            check_result = self.simple_vat_check(vat_country_code, vat_number_split)
-            if check_result:
-                return vat_country_code
+        country_code_to_check = default_country and default_country.code.lower()
+        vat_number_split = vat_number
+        if default_country and default_country in self.env.ref('base.europe').country_ids | self.env.ref('base.jp'):
+            # First check with country code as prefix of the TIN
+            vat_country_code, vat_number_split_maybe = self._split_vat(vat_number)
+            vat_has_legit_country_code = self.env['res.country'].search([('code', '=', vat_country_code.upper())],
+                                                                        limit=1)
+            if not vat_has_legit_country_code:
+                vat_has_legit_country_code = vat_country_code.lower() in _region_specific_vat_codes
+            if vat_has_legit_country_code:
+                country_code_to_check = vat_country_code
+                vat_number_split = vat_number_split_maybe
 
-        # If it fails, check with default_country (if it exists)
-        if default_country:
-            check_result = self.simple_vat_check(default_country.code.lower(), vat_number)
+        if country_code_to_check:
+            check_result = self.simple_vat_check(country_code_to_check, vat_number_split)
             if check_result:
-                return default_country.code.lower()
+                return country_code_to_check
 
         # We allow any number if it doesn't start with a country code and the partner has no country.
         # This is necessary to support an ORM limitation: setting vat and country_id together on a company
@@ -267,6 +269,7 @@ class ResPartner(models.Model):
 
         expected_format = _ref_vat.get(country_code, "'CC##' (CC=Country Code, ##=VAT Number)")
 
+        print(country_code)
         # Catch use case where the record label is about the public user (name: False)
         if 'False' not in record_label:
             return '\n' + _(
@@ -666,34 +669,52 @@ class ResPartner(models.Model):
         return stdnum_vat_format('SM' + vat)[2:]
 
     def _fix_vat_number(self, vat, country_id):
-        code = self.env['res.country'].browse(country_id).code if country_id else False
-        vat_country, vat_number = self._split_vat(vat)
-        if code and code.lower() != vat_country:
+        if not country_id or not vat:
             return vat
-        stdnum_vat_fix_func = getattr(stdnum.util.get_cc_module(vat_country, 'vat'), 'compact', None)
-        #If any localization module need to define vat fix method for it's country then we give first priority to it.
-        format_func_name = 'format_vat_' + vat_country
+        country = self.env['res.country'].browse(country_id)
+        vat_country = False
+        if country in self.env.ref('base.europe').country_ids:
+            vat_country, vat_number = self._split_vat(vat)
+            if not vat_country.isalpha():
+                vat_country = False
+            else:
+                vat = vat_number
+        to_check_country = vat_country or country.code.lower()
+        stdnum_vat_fix_func = getattr(stdnum.util.get_cc_module(to_check_country, 'vat'), 'compact', None)
+        # If any localization module needs to define vat fix method for its country then we give first priority to it.
+        format_func_name = 'format_vat_' + to_check_country
         format_func = getattr(self, format_func_name, None) or stdnum_vat_fix_func
         if format_func:
-            vat_number = format_func(vat_number)
-        return vat_country.upper() + vat_number
+            vat = format_func(vat)
+        return vat_country.upper() + vat if vat_country else vat
 
     @api.model_create_multi
     def create(self, vals_list):
         for values in vals_list:
-            if values.get('vat'):
-                country_id = values.get('country_id')
-                values['vat'] = self._fix_vat_number(values['vat'], country_id)
+            if values.get('vat') and values.get('country_id'):
+                values['vat'] = self._fix_vat_number(values['vat'], values['country_id'])
         res = super().create(vals_list)
         if self.env.context.get('import_file'):
             res.env.remove_to_compute(self._fields['vies_valid'], res)
         return res
 
     def write(self, values):
-        if values.get('vat') and len(self.mapped('country_id')) == 1:
-            country_id = values.get('country_id', self.country_id.id)
-            values['vat'] = self._fix_vat_number(values['vat'], country_id)
-        res = super().write(values)
+        if self and (values.get('vat') or values.get('country_id')):
+            multi_country_case = values.get('vat') and not values.get('country_id') and len(self.mapped('country_id')) > 1
+            multi_vat_case = values.get('country_id') and not values.get('vat') and len(self.mapped('vat')) > 1
+            grouping_key = 'country_id' if multi_country_case else 'vat'
+            if not (multi_vat_case or multi_country_case):
+                grouping_key = 'country_id' if not values.get('country_id') else 'vat'
+            split_self = self.grouped(grouping_key)
+            res = True
+            for ss, partners in split_self.items():
+                country_id = ss.id if grouping_key == 'country' and not values.get('country_id') else values.get('country_id')
+                vat = ss if grouping_key == 'vat' and not values.get('vat') else values.get('vat')
+                values['vat'] = partners._fix_vat_number(vat, country_id)
+                res = res and super(ResPartner, partners).write(values)
+        else:
+            res = super().write(values)
+
         if self.env.context.get('import_file'):
             self.env.remove_to_compute(self._fields['vies_valid'], self)
         return res
