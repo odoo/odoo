@@ -98,6 +98,25 @@ class TestAccountAccount(TestAccountMergeCommon):
         account_copy_3.write({'code_mapping_ids': [Command.create({'company_id': company_3.id, 'code': '180026'})]})
         self.assertRecordValues(account_copy_3.with_company(company_3), [{'code': '180026'}])
 
+    def test_write_on_code_from_branch(self):
+        """ Ensure that when writing on account.code from a company, the old code isn't erroneously kept
+        on other companies that share the same root_id """
+        branch = self.env['res.company'].create([{
+            'name': "My Test Branch",
+            'parent_id': self.company_data['company'].id,
+        }])
+
+        account = self.env['account.account'].create([{
+            'name': 'My Test Account',
+            'code': '180001',
+        }])
+
+        # Change the code from the branch
+        account.with_company(branch).code = '180002'
+
+        # Ensure it's changed from the perspective of the root company
+        self.assertRecordValues(account, [{'code': '180002'}])
+
     def test_ensure_code_unique(self):
         ''' Test the `_ensure_code_unique` check method.
 
