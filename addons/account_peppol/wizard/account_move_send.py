@@ -120,6 +120,14 @@ class AccountMoveSend(models.TransientModel):
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
 
+    @api.model
+    def _get_mail_layout(self):
+        # EXTENDS 'account'
+        # TODO remove the fallback in master
+        if self.env.ref('account_peppol.mail_notification_layout_with_responsible_signature_and_peppol', raise_if_not_found=False):
+            return 'account_peppol.mail_notification_layout_with_responsible_signature_and_peppol'
+        return super()._get_mail_layout()
+
     def action_send_and_print(self, force_synchronous=False, allow_fallback_pdf=False, **kwargs):
         # Extends 'account' to force ubl xml checkbox if sending via peppol
         self.ensure_one()
