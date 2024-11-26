@@ -67,6 +67,9 @@ export function clickDisplayedProduct(
     if (isCheckNeed) {
         step.push(...selectedOrderlineHas(name, nextQuantity, nextPrice));
     }
+    if (isCheckNeed && nextQuantity) {
+        step.push(...productCardQtyIs(name, nextQuantity));
+    }
 
     return step;
 }
@@ -455,6 +458,16 @@ export function cashDifferenceIs(val) {
         },
     ];
 }
+export function productCardQtyIs(productName, qty) {
+    qty = `${Number.parseFloat(Number.parseFloat(qty).toFixed(2))}`;
+    return [
+        {
+            content: `'${productName}' should have '${qty}' quantity`,
+            trigger: `article.product .product-content:has(.product-name:contains("${productName}")):has(.product-cart-qty:contains("${qty}"))`,
+        },
+    ];
+}
+
 // Temporarily put it here. It should be in the utility methods for the backend views.
 export function lastClosingCashIs(val) {
     return [

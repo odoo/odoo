@@ -47,6 +47,12 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
                 ...ProductScreen.selectedOrderlineHasDirect("Desk Organizer", "123.0", "627.3"),
                 ...[".", "5"].map(Numpad.click),
                 ...ProductScreen.selectedOrderlineHasDirect("Desk Organizer", "123.5", "629.85"),
+            ]),
+            // Check effects of numpad on product card quantity
+            ProductScreen.productCardQtyIs("Desk Organizer", "123.5"),
+            inLeftSide([
+                // Re-select the order line after switching to the product screen
+                { ...ProductScreen.clickLine("Desk Organizer", "123.5")[0], isActive: ["mobile"] },
                 Numpad.click("Price"),
                 Numpad.isActive("Price"),
                 Numpad.click("1"),
@@ -324,7 +330,6 @@ registry.category("web_tour.tours").add("CheckProductInformation", {
             },
             {
                 trigger: ".section-product-info-title:not(:contains('On hand:'))",
-                run: () => {},
             },
         ].flat(),
 });

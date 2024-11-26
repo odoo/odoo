@@ -23,8 +23,7 @@
                             </button>
                             <t t-set-slot="content">
                                 <t t-foreach="collapsedBreadcrumbs" t-as="breadcrumb" t-key="breadcrumb.jsId">
-                                    <DropdownItem onSelected="breadcrumb.onSelected"
-                                                  attrs="{ href: breadcrumb.url, 'data-tooltip': 'Back to &quot;' + breadcrumb.name + '&quot;' + (breadcrumb.isFormView ? ' form' : '')}">
+                                    <DropdownItem onSelected="breadcrumb.onSelected" attrs="{ href: breadcrumb.url, 'data-tooltip': getBreadcrumbTooltip(breadcrumb)}">
                                         <t t-call="web.Breadcrumb.Name"/>
                                     </DropdownItem>
                                 </t>

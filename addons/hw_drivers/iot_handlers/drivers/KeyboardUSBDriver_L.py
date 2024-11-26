@@ -91,9 +91,8 @@ class KeyboardUSBDriver(Driver):
             server = server + '/iot/keyboard_layouts'
             try:
                 pm.request('POST', server, fields={'available_layouts': json.dumps(cls.available_layouts)})
-            except Exception as e:
-                _logger.error('Could not reach configured server')
-                _logger.error('A error encountered : %s ' % e)
+            except Exception:
+                _logger.exception('Could not reach configured server to send available layouts')
 
     @classmethod
     def load_layouts_list(cls):
