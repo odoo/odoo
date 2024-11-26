@@ -13,9 +13,9 @@ import { defineWebsiteModels, setupWebsiteBuilder } from "../helpers";
 
 defineWebsiteModels();
 
-function getSnippetStructure({ name, content, keywords = [], groupName }) {
+function getSnippetStructure({ name, content, keywords = [], groupName, imagePreview = "" }) {
     keywords = keywords.join(", ");
-    return `<div name="${name}" data-oe-snippet-id="123" data-oe-keywords="${keywords}" data-o-group="${groupName}">${content}</div>`;
+    return `<div name="${name}" data-oe-snippet-id="123" data-o-image-preview="${imagePreview}" data-oe-keywords="${keywords}" data-o-group="${groupName}">${content}</div>`;
 }
 
 function getBasicSection(content) {
@@ -126,6 +126,113 @@ test("open add snippet dialog + switch snippet category", async () => {
             (el) => el.innerHTML
         )
     ).toEqual(snippetsDescription.filter((s) => s.groupName === "b").map((s) => s.content));
+});
+
+test("search snippet in add snippet dialog", async () => {
+    const snippetsDescription = [
+        {
+            name: "gravy",
+            groupName: "a",
+            content: getBasicSection("content 1"),
+            keywords: ["jumper"],
+        },
+        {
+            name: "bandage",
+            groupName: "a",
+            content: getBasicSection("content 2"),
+            keywords: ["order"],
+        },
+        {
+            name: "banana",
+            groupName: "b",
+            content: getBasicSection("content 3"),
+            keywords: ["grape", "orange"],
+        },
+    ];
+
+    await setupWebsiteBuilder("<div><p>Text</p></div>", {
+        snippets: {
+            snippet_groups: [
+                '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
+                '<div name="B" data-oe-thumbnail="b.svg" data-oe-snippet-id="123" data-o-snippet-group="b"><section data-snippet="s_snippet_group"></section></div>',
+            ],
+            snippet_structure: snippetsDescription.map((snippetDesc) =>
+                getSnippetStructure(snippetDesc)
+            ),
+        },
+    });
+    await click(queryFirst(`.o-snippets-menu [data-category="snippet_groups"] div`));
+    await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe", { timeout: 500 });
+    expect("aside .list-group .list-group-item").toHaveCount(2);
+    expect(
+        queryAll(".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap").map(
+            (el) => el.innerHTML
+        )
+    ).toEqual(snippetsDescription.filter((s) => s.groupName === "a").map((s) => s.content));
+
+    // Search base on snippet name
+    await contains(".o_add_snippet_dialog aside input[type='search']").edit("ban");
+    expect("aside .list-group .list-group-item").toHaveCount(0);
+    expect(
+        queryAll(".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap").map(
+            (el) => el.innerHTML
+        )
+    ).toEqual([snippetsDescription[1], snippetsDescription[2]].map((s) => s.content));
+
+    // Search base on snippet name and keywords
+    await contains(".o_add_snippet_dialog aside input[type='search']").edit("gra");
+    expect("aside .list-group .list-group-item").toHaveCount(0);
+    expect(
+        queryAll(".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap").map(
+            (el) => el.innerHTML
+        )
+    ).toEqual([snippetsDescription[0], snippetsDescription[2]].map((s) => s.content));
+
+    // Search base on keywords
+    await contains(".o_add_snippet_dialog aside input[type='search']").edit("or");
+    expect("aside .list-group .list-group-item").toHaveCount(0);
+    expect(
+        queryAll(".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap").map(
+            (el) => el.innerHTML
+        )
+    ).toEqual([snippetsDescription[1], snippetsDescription[2]].map((s) => s.content));
+});
+
+test("add snippet dialog with imagePreview", async () => {
+    const snippetsDescription = [
+        {
+            name: "gravy",
+            groupName: "a",
+            content: getBasicSection("content 1"),
+        },
+        {
+            name: "banana",
+            groupName: "a",
+            content: getBasicSection("content 2"),
+            imagePreview: "banana.png",
+        },
+    ];
+
+    await setupWebsiteBuilder("<div><p>Text</p></div>", {
+        snippets: {
+            snippet_groups: [
+                '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
+                '<div name="B" data-oe-thumbnail="b.svg" data-oe-snippet-id="123" data-o-snippet-group="b"><section data-snippet="s_snippet_group"></section></div>',
+            ],
+            snippet_structure: snippetsDescription.map((snippetDesc) =>
+                getSnippetStructure(snippetDesc)
+            ),
+        },
+    });
+    await click(queryFirst(`.o-snippets-menu [data-category="snippet_groups"] div`));
+    const previewSnippetIframeSelector =
+        ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap";
+    await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe", { timeout: 500 });
+    expect(`${previewSnippetIframeSelector}`).toHaveCount(2);
+    expect(`${previewSnippetIframeSelector}:first`).toHaveInnerHTML(snippetsDescription[0].content);
+    expect(
+        `${previewSnippetIframeSelector}:nth-child(1) .s_dialog_preview_image img`
+    ).toHaveAttribute("data-src", snippetsDescription[1].imagePreview);
 });
 
 test("insert snippet structure", async () => {
