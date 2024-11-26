@@ -515,6 +515,26 @@ patch(PosStore.prototype, {
             [...el.classList].find((c) => c.includes("tableId")).split("-")[1]
         );
     },
+    startTransferOrder() {
+        this.isOrderTransferMode = true;
+        const orderUuid = this.getOrder().uuid;
+        this.getOrder().setBooked(true);
+        this.showScreen("FloorScreen");
+        document.addEventListener(
+            "click",
+            async (ev) => {
+                this.isOrderTransferMode = false;
+                const tableElement = ev.target.closest(".table");
+                if (!tableElement) {
+                    return;
+                }
+                const table = this.getTableFromElement(tableElement);
+                await this.transferOrder(orderUuid, table);
+                this.setTableFromUi(table);
+            },
+            { once: true }
+        );
+    },
     prepareOrderTransfer(order, destinationTable) {
         const originalTable = order.table_id;
         this.loadingOrderState = false;

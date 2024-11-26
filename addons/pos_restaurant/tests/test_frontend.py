@@ -336,3 +336,7 @@ class TestFrontend(TestFrontendCommon):
         assert_payment(1, 4.4)
         self.start_pos_tour('PoSPaymentSyncTour3')
         assert_payment(2, 6.6)
+
+    def test_15_split_bill_screen_actions(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('SplitBillScreenTour5Actions')
