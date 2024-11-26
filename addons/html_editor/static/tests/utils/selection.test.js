@@ -1,9 +1,14 @@
-import { DIRECTIONS } from "@html_editor/utils/position";
-import { ensureFocus, getCursorDirection } from "@html_editor/utils/selection";
+import { DIRECTIONS, nodeSize } from "@html_editor/utils/position";
+import {
+    ensureFocus,
+    getAdjacentCharacter,
+    getCursorDirection,
+} from "@html_editor/utils/selection";
 import { describe, expect, test } from "@odoo/hoot";
 import { dispatch } from "@odoo/hoot-dom";
 import { insertText, setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
+import { setSelection } from "../_helpers/selection";
 
 function getProcessSelection(selection) {
     const { anchorNode, anchorOffset, focusNode, focusOffset } = selection;
@@ -899,5 +904,16 @@ describe("getSelectedNodes", () => {
                 expect(result).toEqual([cd, b, e]);
             },
         });
+    });
+});
+
+describe("getAdjacentCharacter", () => {
+    test("should return the ZWS character before the cursor", async () => {
+        const { editor, el } = await setupEditor("<p><span>abc</span>\u200b</p>");
+        const p = el.firstChild;
+        // Place the cursor at the end of the P (not in a leaf node)
+        setSelection({ anchorNode: p, anchorOffset: nodeSize(p) });
+        const selection = editor.document.getSelection();
+        expect(getAdjacentCharacter(selection, "previous", el)).toBe("\u200b");
     });
 });
