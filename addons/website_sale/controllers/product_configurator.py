@@ -3,9 +3,7 @@
 from odoo.http import request, route
 from odoo.tools import float_is_zero
 
-from odoo.addons.sale.controllers.product_configurator import (
-    SaleProductConfiguratorController,
-)
+from odoo.addons.sale.controllers.product_configurator import SaleProductConfiguratorController
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 
@@ -195,7 +193,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         # Second, try to use `compare_list_price` as the strikethrough price.
         # Don't apply taxes since this price should always be displayed as is.
         if (
-            request.env.user.has_group('website_sale.group_product_price_comparison')
+            request.env['res.groups']._is_feature_enabled('website_sale.group_product_price_comparison')
             and product_or_template.compare_list_price
         ):
             compare_list_price = product_or_template.currency_id._convert(

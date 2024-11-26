@@ -264,11 +264,17 @@
                                         <td class="align-middle o_wish_price" t-else="">
                                             <t t-out="combination_info['price']"
                                                t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-                                            <small t-if="combination_info['base_unit_price']" class="cart_product_base_unit_price d-block text-muted" groups="website_sale.group_show_uom_price">
-                                                <t t-call='website_sale.base_unit_price'><t t-set='product' t-value='wish.product_id' /></t>
+                                            <small
+                                                t-if="combination_info.get('base_unit_price')"
+                                                class="cart_product_base_unit_price d-block text-muted"
+                                            >
+                                                <t t-call="website_sale.base_unit_price">
+                                                    <t t-set="product" t-value="wish.product_id"/>
+                                                    <t t-set="base_unit_price" t-value="combination_info.get('base_unit_price')"/>
+                                                </t>
                                             </small>
                                         </td>
-                                        <td class='text-center td-wish-btn align-middle'>
+                                        <td class="text-center td-wish-btn align-middle">
                                             <input
                                                 name="product_template_id"
                                                 t-att-value="wish.product_id.product_tmpl_id.id"

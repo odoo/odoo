@@ -16,12 +16,12 @@ class ResConfigSettings(models.TransientModel):
         string="Base Unit Price",
         default=False,
         implied_group="website_sale.group_show_uom_price",
-        group='base.group_portal,base.group_user,base.group_public',
+        group='base.group_user',
     )
     group_product_price_comparison = fields.Boolean(
         string="Comparison Price",
         implied_group="website_sale.group_product_price_comparison",
-        group='base.group_portal,base.group_user,base.group_public',
+        group='base.group_user',
         help="Add a strikethrough price to your /shop and product pages for comparison purposes."
              "It will not be displayed if pricelists apply."
     )

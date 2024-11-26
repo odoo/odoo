@@ -1,10 +1,12 @@
-from odoo import api, fields, models, tools, _, Command
-from odoo.exceptions import UserError, ValidationError
-from odoo.fields import Domain
-from odoo.osv import expression
-from odoo.tools import SetDefinitions
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections.abc import Collection
+
+from odoo import SUPERUSER_ID, _, api, fields, models, tools
+from odoo.exceptions import UserError, ValidationError
+from odoo.fields import Command, Domain
+from odoo.osv import expression
+from odoo.tools import SetDefinitions
 
 
 class ResGroups(models.Model):
@@ -301,3 +303,7 @@ class ResGroups(models.Model):
             for group in groups
         }
         return SetDefinitions(data)
+
+    @api.model
+    def _is_feature_enabled(self, group_reference):
+        return self.env['res.users'].sudo().browse(SUPERUSER_ID)._has_group(group_reference)
