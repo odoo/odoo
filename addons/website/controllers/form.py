@@ -21,7 +21,7 @@ _lt = LazyTranslate(__name__)
 
 class WebsiteForm(http.Controller):
 
-    @http.route('/website/form', type='http', auth="public", methods=['POST'], multilang=False)
+    @http.route('/website/form', type='http', auth="public", methods=['POST'], multilang=False, readonly=True)
     def website_form_empty(self, **kwargs):
         # This is a workaround to don't add language prefix to <form action="/website/form/" ...>
         return ""

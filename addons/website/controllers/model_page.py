@@ -13,7 +13,7 @@ class ModelPageController(Controller):
         "/model/<string:page_name_slugified>",
         "/model/<string:page_name_slugified>/page/<int:page_number>",
         "/model/<string:page_name_slugified>/<string:record_slug>",
-    ], website=True, auth="public")
+    ], website=True, auth="public", readonly=True)
     def generic_model(self, page_name_slugified=None, page_number=1, record_slug=None, **searches):
         if not page_name_slugified:
             raise werkzeug.exceptions.NotFound()
