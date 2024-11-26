@@ -325,15 +325,14 @@
         ...wTourUtils.clickOnSave(),
         {
             content: "Check 'products' field is visible.",
-            trigger: `iframe .s_website_form:has(${triggerFieldByLabel("Products")}:visible)`,
-            isCheck: true,
+            trigger: `:iframe .s_website_form:has(${triggerFieldByLabel("Products")}:visible)`,
         }, {
             content: "choose the option 'Mitchell Admin' of partner.",
-            trigger: "iframe .checkbox:has(label:contains('Mitchell Admin')) input[type='checkbox']",
+            trigger: ":iframe .checkbox:has(label:contains('Mitchell Admin')) input[type='checkbox']",
+            run: "click",
         }, {
             content: "Check 'products' field is not visible.",
-            trigger: "iframe .s_website_form" +`:has(${triggerFieldByLabel("Products")}:not(:visible))`,
-            isCheck: true,
+            trigger: ":iframe .s_website_form" +`:has(${triggerFieldByLabel("Products")}:not(:visible))`,
         },
         ...wTourUtils.clickOnEditAndWaitEditMode(),
 
