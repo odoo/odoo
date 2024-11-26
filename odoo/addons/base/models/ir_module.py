@@ -566,7 +566,7 @@ class IrModuleModule(models.Model):
         if not self.env.registry.ready or self.env.registry._init:
             raise UserError(_('The method _button_immediate_install cannot be called on init or non loaded registries. Please use button_install instead.'))
 
-        if getattr(threading.current_thread(), 'testing', False):
+        if modules.module.current_test:
             raise RuntimeError(
                 "Module operations inside tests are not transactional and thus forbidden.\n"
                 "If you really need to perform module operations to test a specific behavior, it "

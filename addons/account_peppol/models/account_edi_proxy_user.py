@@ -214,7 +214,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                         # Only acknowledge when we saved the document somewhere
                         proxy_acks.append(uuid)
 
-                if not tools.config['test_enable']:
+                if not modules.module.current_test:
                     self.env.cr.commit()
                 if proxy_acks:
                     edi_user._make_request(
@@ -316,7 +316,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             # so that the invoices are acknowledged
             self._cron_peppol_get_message_status()
             self._cron_peppol_get_new_documents()
-            if not tools.config['test_enable'] and not modules.module.current_test:
+            if not modules.module.current_test:
                 self.env.cr.commit()
 
         if self.company_id.account_peppol_proxy_state != 'not_registered':

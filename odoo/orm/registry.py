@@ -158,7 +158,7 @@ class Registry(Mapping):
         self.models: dict[str, type[BaseModel]] = {}    # model name/model instance mapping
         self._init = True
         self._database_translated_fields = ()  # names of translated fields in database
-        if config['test_enable'] or config['test_file']:
+        if config.is_testing:
             from odoo.tests.result import OdooTestResult  # noqa: PLC0415
             self._assertion_report = OdooTestResult()
         else:
@@ -176,7 +176,7 @@ class Registry(Mapping):
         self.db_name = db_name
         self._db = odoo.sql_db.db_connect(db_name, readonly=False)
         self._db_readonly = None
-        if config['db_replica_host'] is not False or config['test_enable']:  # by default, only use readonly pool if we have a db_replica_host defined. Allows to have an empty replica host for testing
+        if config['db_replica_host'] is not False or config.is_testing:  # by default, only use readonly pool if we have a db_replica_host defined. Allows to have an empty replica host for testing
             self._db_readonly = odoo.sql_db.db_connect(db_name, readonly=True)
 
         # cursor for test mode; None means "normal" mode
