@@ -49,6 +49,8 @@ test("can invite users in channel from chat window", async () => {
         channel_type: "channel",
     });
     await start();
+    // dropdown requires an extra delay before click (because handler is registered in useEffect)
+    await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
     await click(".o-dropdown-item", { text: "Invite People" });
     await contains(".o-discuss-ChannelInvitation");

@@ -272,6 +272,8 @@ test("Scrolling at the bottom should trigger the search to load more gif, even a
     await start();
     await openDiscuss(channelId);
     await click("button[title='Add GIFs']");
+    // gif picker quires extra delay before click (to give time to load initial state)
+    await contains(".o-discuss-GifPicker");
     await click(".o-discuss-GifPicker div[aria-label='list-item']", { text: "Favorites" });
     await click("i[aria-label='back']");
     await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");

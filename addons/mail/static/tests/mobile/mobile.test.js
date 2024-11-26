@@ -59,6 +59,8 @@ test("can leave channel in mobile", async () => {
     patchUiSize({ size: SIZES.SM });
     await start();
     await openDiscuss(channelId);
+    // dropdown requires an extra delay before click (because handler is registered in useEffect)
+    await contains(".o-mail-ChatWindow-command", { text: "General" });
     await click(".o-mail-ChatWindow-command", { text: "General" });
     await contains(".o-dropdown-item", { text: "Leave" });
 });
