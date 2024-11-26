@@ -600,6 +600,9 @@ class SaleOrderLine(models.Model):
         :return: A python dictionary.
         """
         self.ensure_one()
+        quantity = self.product_uom_qty
+        if self.product_id.invoice_policy == 'delivery':
+            quantity = max(quantity, self.qty_delivered)
         return self.env['account.tax']._convert_to_tax_base_line_dict(
             self,
             partner=self.order_id.partner_id,
@@ -607,7 +610,7 @@ class SaleOrderLine(models.Model):
             product=self.product_id,
             taxes=self.tax_id,
             price_unit=self.price_unit,
-            quantity=self.product_uom_qty,
+            quantity=quantity,
             discount=self.discount,
             price_subtotal=self.price_subtotal,
             **kwargs,

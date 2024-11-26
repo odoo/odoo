@@ -1942,3 +1942,23 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
 
         validate_picking(return_2)
         self.assertEqual(so.order_line[0].qty_delivered, 0)
+
+    def test_add_product_on_delivery_price_unit_on_sale(self):
+        """ Adding a product directly on a sale order's delivery (when it's invoiced on delivered
+        quantity) should update the order total.
+        """
+        product = self.product_a
+        product.invoice_policy = 'delivery'
+        product.type = 'product'
+        sale_order = self._get_new_sale_order(product=product)
+        sale_order.action_confirm()
+
+        delivery = sale_order.picking_ids[0]
+        with Form(delivery) as delivery_form:
+            with delivery_form.move_ids_without_package.new() as move:
+                move.product_id = product
+                move.product_uom_qty = 10
+        delivery.move_ids.quantity = 10
+        delivery.button_validate()
+        self.assertEqual(len(sale_order.order_line), 2)
+        self.assertAlmostEqual(sale_order.amount_total, 23000.0)
