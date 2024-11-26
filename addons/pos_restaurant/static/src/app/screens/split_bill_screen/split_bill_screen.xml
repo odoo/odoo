@@ -5,8 +5,8 @@
         <div class="splitbill-screen screen h-100 bg-200">
             <div class="contents d-flex flex-column flex-nowrap h-100 my-0 mx-auto">
                 <div class="top-content d-flex align-items-center p-2 border-bottom text-center bg-view">
-                    <button  t-if="!this.ui.isSmall" class="button back back-button btn btn-secondary lh-lg" t-on-click="back">
-                        <i class="oi oi-chevron-left fa-fw"/> Back
+                    <button class="button back back-button btn btn-secondary lh-lg" t-on-click="back">
+                        <i class="oi oi-chevron-left fa-fw"/><t t-if="!this.ui.isSmall" t-esc="' Back'"/>
                     </button>
                     <div class="top-content-center flex-grow-1" t-att-class="{'pe-5':!this.ui.isSmall}">
                         <h4 class="mb-0">Bill Splitting</h4>
@@ -39,14 +39,22 @@
                         </div>
 
                         <div class="pay-button" t-att-class="{'d-flex flex-row bg-white p-2 gap-2 rounded-3':this.ui.isSmall}">
-                            <button class="button btn btn-lg btn-primary py-3 py-lg-5 w-100"
+                            <button class="button btn btn-lg btn-primary py-3 py-lg-5"
+                                t-att-class="(this.ui.isSmall ? 'w-50' : 'w-100')"
                                 t-att-disabled="!this.getNumberOfProducts()"
                                 t-on-click="createSplittedOrder">
-                                <span>Split Order</span>
+                                Split Order
                             </button>
-                            <button t-if="this.ui.isSmall" class="button back back-button btn btn-secondary btn-lg lh-lg w-100" t-on-click="back">
-                                <span>Back</span>
-                            </button>
+                            <div class="d-flex gap-2 w-100">
+                                <button class="btn btn-lg py-3 py-lg-5 w-100" t-att-class="(this.ui.isSmall ? 'btn-secondary' : 'mt-2 btn-light')"
+                                    t-on-click="paySplittedOrder">
+                                    Pay
+                                </button>
+                                <button class="btn btn-lg py-3 py-lg-5 w-100" t-att-class="(this.ui.isSmall ? 'btn-secondary' : 'mt-2 btn-light')"
+                                    t-on-click="transferSplittedOrder">
+                                    Transfer
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
