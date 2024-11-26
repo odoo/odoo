@@ -69,25 +69,45 @@ class AccountMove(models.Model):
             else:
                 move.l10n_in_state_id = False
 
-    @api.depends('l10n_in_state_id')
+    @api.depends('l10n_in_state_id', 'l10n_in_gst_treatment')
     def _compute_fiscal_position_id(self):
-        other_country = None
-        in_moves = self.filtered(lambda move: move.country_code == 'IN' and move.is_sale_document(include_receipts=True))
+        in_moves = self.filtered(lambda move: move.country_code == 'IN' and move.is_invoice(include_receipts=True))
+        computed_ids = []
         for move in in_moves:
-            state_id = move.l10n_in_state_id.id
-            country_id = move.l10n_in_state_id.country_id.id
-            if move.l10n_in_state_id.l10n_in_tin == '96':  # Foreign Country
-                other_country = other_country or self.env['res.country'].search([('code', '!=', 'IN')], limit=1)
-                country_id = other_country.id
-                state_id = False
-            virtual_partner = self.env['res.partner'].new({
-                'state_id': state_id,
-                'country_id': country_id,
-            })
-            move.fiscal_position_id = self.env['account.fiscal.position'].with_company(
-                move.company_id
-            )._get_fiscal_position(virtual_partner)
-        super(AccountMove, self - in_moves)._compute_fiscal_position_id()
+            dummy_state_id = (
+                move.l10n_in_gst_treatment in ['overseas', 'special_economic_zone']
+                and self.env.ref('l10n_in.state_in_oc')
+                or False
+            )
+            # If move type is sale, compare place of supply with company state
+            if not dummy_state_id and move.is_sale_document(include_receipts=True):
+                dummy_state_id = move.l10n_in_state_id
+            # If move type is purchase, compare place of supply with vendor state
+            elif (
+                not dummy_state_id
+                and move.is_purchase_document(include_receipts=True)
+                and move.partner_id.country_id.code == 'IN'
+            ):
+                pos_state_id = move.l10n_in_state_id
+                # Vendor's place of supply is within his home state and not same as the company state
+                if pos_state_id == move.partner_id.state_id != move.company_id.state_id:
+                    dummy_state_id = move.company_id.state_id
+                # Vendor and Company are in same state but place of supply is other state
+                elif (
+                    pos_state_id != move.partner_id.state_id == move.company_id.state_id
+                    or pos_state_id.l10n_in_tin == '96'
+                ):
+                    dummy_state_id = pos_state_id
+            if dummy_state_id:
+                virtual_partner = self.env['res.partner'].new({
+                    'state_id': dummy_state_id.id,
+                    'country_id': dummy_state_id.country_id.id,
+                })
+                move.fiscal_position_id = self.env['account.fiscal.position'].with_company(
+                    move.company_id
+                )._get_fiscal_position(virtual_partner)
+                computed_ids.append(move.id)
+        return super(AccountMove, self - self.browse(computed_ids))._compute_fiscal_position_id()
 
     @api.onchange('name')
     def _onchange_name_warning(self):
