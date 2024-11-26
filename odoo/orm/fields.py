@@ -1136,18 +1136,19 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
         :param records:
         :param value: a value in any format
         """
-        # discard recomputation of self on records
-        records.env.remove_to_compute(self, records)
+        if self.store:
+            # discard recomputation of self on records
+            records.env.remove_to_compute(self, records)
 
-        # discard the records that are not modified
         cache = records.env.cache
         cache_value = self.convert_to_cache(value, records)
-        records = cache.get_records_different_from(records, self, cache_value)
-        if not records:
-            return
-
-        # update the cache
         dirty = self.store and any(records._ids)
+        if dirty:
+            # discard the records that are not modified only if matters
+            records = cache.get_records_different_from(records, self, cache_value)
+            if not records:
+                return
+        # update the cache
         cache.update(records, self, itertools.repeat(cache_value), dirty=dirty)
 
     ############################################################################

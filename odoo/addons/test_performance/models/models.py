@@ -101,3 +101,9 @@ class Test_PerformanceSimpleMinded(models.Model):
     parent_id = fields.Many2one('test_performance.simple.minded')
 
     child_ids = fields.One2many('test_performance.simple.minded', 'parent_id')
+
+    simple_compute = fields.Char(compute='_compute_simple_compute')
+
+    def _compute_simple_compute(self):
+        for rec in self:
+            rec.simple_compute = rec.name
