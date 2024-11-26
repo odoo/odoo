@@ -46,13 +46,7 @@ class RazorpayController(Controller):
 
         # Request and set the OAuth tokens on the provider.
         action = request.env.ref('payment.action_payment_provider')
-        url_params = {
-            'model': provider_sudo._name,
-            'id': provider_sudo.id,
-            'action': action.id,
-            'view_type': 'form',
-        }
-        redirect_url = f'/web#{urlencode(url_params)}'  # TODO: change to /odoo in saas-17.2!
+        redirect_url = f'/odoo/action-{action.id}/{int(provider_sudo.id)}'
         try:
             response_content = provider_sudo._razorpay_make_proxy_request(
                 '/get_access_token', payload={'authorization_code': authorization_code}
