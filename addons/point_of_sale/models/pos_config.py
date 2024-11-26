@@ -112,7 +112,7 @@ class PosConfig(models.Model):
     customer_display_bg_img = fields.Image(string='Background Image', max_width=1920, max_height=1920)
     customer_display_bg_img_name = fields.Char(string='Background Image Name')
     restrict_price_control = fields.Boolean(string='Restrict Price Modifications to Managers',
-        help="Only users with Manager access rights for PoS app can modify the product prices on orders.")
+        help="Only advance right users can modify the product prices on orders.")
     is_margins_costs_accessible_to_every_user = fields.Boolean(string='Margins & Costs', default=False,
         help='When disabled, only PoS manager can view the margin and cost of product among the Product info.')
     cash_control = fields.Boolean(string='Advanced Cash Control', compute='_compute_cash_control', help="Check the amount of the cashbox at opening and closing.")
