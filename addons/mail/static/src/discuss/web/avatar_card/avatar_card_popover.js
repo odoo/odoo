@@ -53,8 +53,8 @@ export class AvatarCardPopover extends Component {
         this.props.close();
     }
 
-    async onClickViewProfile() {
+    async onClickViewProfile(newWindow) {
         const action = await this.getProfileAction();
-        this.actionService.doAction(action);
+        this.actionService.doAction(action, { newWindow });
     }
 }
