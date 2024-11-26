@@ -6,7 +6,7 @@ import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../helpers"
 
 defineWebsiteModels();
 
-test("Open custom tab with options", async () => {
+test.debug("Open custom tab with options", async () => {
     addOption({
         selector: ".test-options-target",
         template: xml`
@@ -14,9 +14,10 @@ test("Open custom tab with options", async () => {
             Test
         </WeRow>`,
     });
-    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await setupWebsiteBuilder(`<div class="test-options-target" data-name="Yop">b</div>`);
     await contains(":iframe .test-options-target").click();
     expect(".options-container").toBeDisplayed();
+    expect(".options-container div:first()").toHaveText("Yop");
 });
 
 test("basic multi options containers", async () => {
