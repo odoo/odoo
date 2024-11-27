@@ -131,6 +131,14 @@ function parsePreview(opts) {
 
 function customParsePreview(opts, { fields, headers, rowCount, matches, preview }) {
     totalRows = rowCount;
+    const errorValues = ["#NULL!", "#DIV/0!", "#VALUE!", "#REF!", "#NAME?", "#NUM!", "#N/A"];
+    const error = preview.flat().find((cell) => errorValues.includes(cell));
+    if (error) {
+        return {
+            preview: undefined,
+            error: `Invalid cell value: ${error}`,
+        };
+    }
 
     return Promise.resolve({
         advanced_mode: opts.advanced,
@@ -484,6 +492,101 @@ QUnit.module("Base Import Tests", (hooks) => {
             target,
             ".o_import_data_content tbody td:nth-child(3) .alert-info",
             "no comments are shown"
+        );
+    });
+
+    QUnit.test("Import view: preview error on loading second sheet", async function (assert) {
+        registerFakeHTTPService((route, params) => {
+            assert.strictEqual(route, "/base_import/set_file");
+            assert.strictEqual(
+                params.ufile[0].name,
+                "fake_file.xlsx",
+                "file is correctly uploaded to the server"
+            );
+        });
+
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+        });
+
+        let currentSheet = "Template"; // Track the current sheet being parsed
+        await createImportAction({
+            "partner/get_import_templates": (route, args) => {
+                assert.step(route);
+                return Promise.resolve([]);
+            },
+            "base_import.import/parse_preview": (route, args) => {
+                assert.step(route);
+
+                // Determine preview data based on the selected sheet
+                const fakePreviewData =
+                    currentSheet === "Template"
+                        ? [
+                              ["Foo", "Deco addict", "Azure Interior", "Brandon Freeman"],
+                              ["Bar", "1", "1", "0"],
+                              ["Display name", "Azure Interior"],
+                          ]
+                        : [
+                              ["Foo", "Deco addict", "Azure Interior", "Brandon Freeman"],
+                              ["Bar", "1", "1", "0"],
+                              ["Display name", "#N/A"],
+                          ];
+
+                return customParsePreview(args[1], {
+                    fields: getFieldsTree(serverData),
+                    headers: args[1].has_headers ? fakePreviewData.map((col) => col[0]) : null,
+                    rowCount: fakePreviewData[0].length,
+                    matches: args[1].has_headers
+                        ? getMatches(
+                              serverData,
+                              fakePreviewData.map((col) => col[0])
+                          )
+                        : null,
+                    preview: args[1].has_headers
+                        ? fakePreviewData.map((col) => col.slice(1))
+                        : fakePreviewData,
+                });
+            },
+            "base_import.import/create": (route, args) => {
+                assert.step(route);
+                return Promise.resolve(11);
+            },
+        });
+
+        // Simulate uploading a file
+        const file = new File(["fake_file"], "fake_file.xlsx", { type: "text/plain" });
+        await editInput(target, ".o_control_panel_main_buttons input[type='file']", file);
+        assert.verifySteps([
+            "partner/get_import_templates",
+            "base_import.import/create",
+            "base_import.import/parse_preview",
+        ]);
+
+        // Check the initial state after parsing the first sheet
+        assert.containsOnce(
+            target,
+            ".o_import_action .o_import_data_sidepanel",
+            "side panel is visible"
+        );
+        assert.containsOnce(
+            target,
+            ".o_import_action .o_import_data_content",
+            "content panel is visible"
+        );
+
+        // Change to the second sheet
+        currentSheet = "Template 2"; // Update the current sheet
+        await editSelect(target, ".o_import_data_sidepanel [name=o_import_sheet]", "Template 2");
+        assert.verifySteps(
+            ["base_import.import/parse_preview"],
+            "parse_preview is triggered for second sheet"
+        );
+
+        // Verify the error for second sheet preview
+        assert.strictEqual(
+            target.querySelector(".o_import_data_content p").textContent,
+            ' Import preview failed due to: " Invalid cell value: #N/A ". ',
+            "preview error is displayed for second sheet"
         );
     });
 
