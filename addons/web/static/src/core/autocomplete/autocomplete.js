@@ -71,7 +71,9 @@ export class AutoComplete extends Component {
         }
         const [sourceIndex, optionIndex] = this.state.activeSourceOption;
         const source = this.sources[sourceIndex];
-        return `${this.props.id || "autocomplete"}_${sourceIndex}_${source.isLoading ? "loading" : optionIndex}`;
+        return `${this.props.id || "autocomplete"}_${sourceIndex}_${
+            source.isLoading ? "loading" : optionIndex
+        }`;
     }
 
     get isOpened() {
@@ -244,7 +246,7 @@ export class AutoComplete extends Component {
     }
     onInputClick() {
         if (!this.isOpened) {
-            this.open(this.inputRef.el.value.trim() !== this.props.value);
+            this.open(this.inputRef.el.value.trim() !== this.props.value.trim());
         } else {
             this.close();
         }
