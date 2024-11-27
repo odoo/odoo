@@ -1998,6 +1998,10 @@ class SnippetsMenu extends Component {
         useBus(this.props.bus, "CLEAN_FOR_SAVE", ({ detail }) => {
             detail.proms.push(this.cleanForSave());
         });
+
+        useBus(this.props.bus, "UPDATE_SCROLLING_ELEMENT", ({ detail }) => {
+            this.draggableComponent?.update({ scrollingElement: detail.scrollingElement });
+        });
     }
     /**
      * By default, the SnippetCache is only invalidated when the browser is
