@@ -170,7 +170,7 @@ export class ProjectRightSidePanel extends Component {
     _getStatButtonRecordParams() {
         return {
             resId: this.projectId,
-            context: JSON.stringify(this.context),
+            context: this.context,
             resModel: 'project.project',
         };
     }
