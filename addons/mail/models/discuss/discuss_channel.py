@@ -77,7 +77,7 @@ class DiscussChannel(models.Model):
              "if necessary.")
     # access
     uuid = fields.Char('UUID', size=50, default=_generate_random_token, copy=False)
-    group_public_id = fields.Many2one('res.groups', string='Authorized Group', compute='_compute_group_public_id', readonly=False, store=True)
+    group_public_id = fields.Many2one('res.groups', string='Authorized Group', compute='_compute_group_public_id', recursive=True, readonly=False, store=True)
     invitation_url = fields.Char('Invitation URL', compute='_compute_invitation_url')
     allow_public_upload = fields.Boolean(default=False)
     _channel_type_not_null = models.Constraint(
@@ -87,10 +87,6 @@ class DiscussChannel(models.Model):
     _from_message_id_unique = models.Constraint(
         'UNIQUE(from_message_id)',
         'Messages can only be linked to one sub-channel',
-    )
-    _sub_channel_no_group_public_id = models.Constraint(
-        'CHECK(parent_channel_id IS NULL OR group_public_id IS NULL)',
-        'Group public id should not be set on sub-channels as access is based on parent channel',
     )
     _uuid_unique = models.Constraint(
         'UNIQUE(uuid)',
@@ -241,12 +237,14 @@ class DiscussChannel(models.Model):
         for channel in self:
             channel.member_count = member_count_by_channel_id.get(channel.id, 0)
 
-    @api.depends('channel_type')
+    @api.depends("channel_type", "parent_channel_id.group_public_id")
     def _compute_group_public_id(self):
-        channels = self.filtered(lambda channel: channel.channel_type == 'channel')
-        channels.filtered(
-            lambda channel: not channel.parent_channel_id and not channel.group_public_id
-        ).group_public_id = self.env.ref("base.group_user")
+        channels = self.filtered(lambda channel: channel.channel_type == "channel")
+        for channel in channels:
+            if channel.parent_channel_id:
+                channel.group_public_id = channel.parent_channel_id.group_public_id
+            elif not channel.group_public_id:
+                channel.group_public_id = self.env.ref("base.group_user")
         (self - channels).group_public_id = None
 
     @api.depends('uuid')
@@ -328,6 +326,15 @@ class DiscussChannel(models.Model):
                     channels=format_list(self.env, self.mapped("name")),
                 )
             )
+        if "group_public_id" in vals:
+            if failing_channels := self.filtered(lambda channel: channel.parent_channel_id):
+                raise UserError(
+                    self.env._(
+                        "Cannot change authorized group of sub-channel: %(channels)s.",
+                        channels=format_list(self.env, failing_channels.mapped("name")),
+                    )
+                )
+
         old_vals = {channel: channel._channel_basic_info() for channel in self}
         result = super().write(vals)
         for channel in self:
