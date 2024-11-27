@@ -31,3 +31,7 @@ Celina Devigili ced@adhoc.com.ar https://github.com/ced-adhoc
 Matías Velazquez mav@adhoc.com.ar https://github.com/mav-adhoc
 Felipe García Suez feg@adhoc.com.ar https://github.com/feg-adhoc
 Franco Leyes lef@adhoc.com.ar https://github.com/lef-adhoc
+Juan Ignacio Rivero jr@adhoc.com.ar https://github.com/JrAdhoc
+Matías Nahuel Peralta mnp@adhoc.com.ar https://github.com/matiasperalta1
+Lara Rita Valeri lav@adhoc.com.ar https://github.com/lav-adhoc
+Manuela Cepeda cem@adhoc.com.ar https://github.com/cem-adhoc
