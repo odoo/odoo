@@ -60,6 +60,15 @@ VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
         }
     }
 
+    combination.has_max_combo_quantity = 'max_combo_quantity' in combination
+    if (combination.product_type === 'combo' && combination.has_max_combo_quantity) {
+        $addQtyInput.data('max', combination.max_combo_quantity || 1);
+        if (combination.max_combo_quantity < 1) {
+            ctaWrapper.classList.replace('d-flex', 'd-none');
+            ctaWrapper.classList.add('out_of_stock');
+        }
+    }
+
     // needed xml-side for formatting of remaining qty
     combination.formatQuantity = (qty) => {
         if (Number.isInteger(qty)) {

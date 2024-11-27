@@ -3,12 +3,12 @@ import { ProductProduct } from '@sale/js/models/product_product';
 
 patch(ProductProduct.prototype, {
     /**
-     * @param {number} free_qty
+     * @param {number} max_quantity
      * @param args Super's parameter list.
      */
-    setup({free_qty, ...args}) {
+    setup({max_quantity, ...args}) {
         super.setup(args);
-        this.free_qty = free_qty;
+        this.max_quantity = max_quantity;
     },
 
     /**
@@ -18,6 +18,6 @@ patch(ProductProduct.prototype, {
      * @return {Boolean} Whether the product quantity can be added to the cart.
      */
     isQuantityAllowed(quantity) {
-        return this.free_qty === undefined || this.free_qty >= quantity;
+        return this.max_quantity === undefined || this.max_quantity >= quantity;
     },
 });
