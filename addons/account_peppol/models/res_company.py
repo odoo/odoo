@@ -195,6 +195,7 @@ class ResCompany(models.Model):
 
     @api.model
     def _sanitize_peppol_endpoint(self, vals, eas=False, endpoint=False):
+        # TODO: remove in master
         if not (peppol_eas := vals.get('peppol_eas', eas)) or not (peppol_endpoint := vals.get('peppol_endpoint', endpoint)):
             return vals
 
@@ -203,13 +204,23 @@ class ResCompany(models.Model):
 
         return vals
 
+    @api.model
+    def _sanitize_peppol_endpoint_in_values(self, values):
+        eas = values.get('peppol_eas')
+        endpoint = values.get('peppol_endpoint')
+        if not eas or not endpoint:
+            return
+        if sanitizer := PEPPOL_ENDPOINT_SANITIZERS.get(eas):
+            new_endpoint = sanitizer(endpoint)
+            if new_endpoint:
+                values['peppol_endpoint'] = new_endpoint
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            vals = self._sanitize_peppol_endpoint(vals)
+            self._sanitize_peppol_endpoint_in_values(vals)
         return super().create(vals_list)
 
     def write(self, vals):
-        for company in self:
-            vals = self._sanitize_peppol_endpoint(vals, company.peppol_eas, company.peppol_endpoint)
+        self._sanitize_peppol_endpoint_in_values(vals)
         return super().write(vals)
