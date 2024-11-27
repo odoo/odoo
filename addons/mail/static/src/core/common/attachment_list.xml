@@ -14,7 +14,7 @@
                 'justify-content-end': isInChatWindowAndIsAlignedRight and !env.inComposer,
                         }" role="menu" >
                 <div t-foreach="images" t-as="attachment" t-key="attachment.id"
-                     t-att-aria-label="attachment.filename"
+                     t-att-aria-label="attachment.name"
                      class="o-mail-AttachmentImage d-flex position-relative flex-shrink-0 mw-100 mb-1 me-1 rounded o-viewable"
                      t-att-title="attachment.name"
                      t-att-class="{ 'o-isUploading': attachment.uploading }"

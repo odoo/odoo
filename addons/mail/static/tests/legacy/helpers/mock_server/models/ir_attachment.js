@@ -24,7 +24,6 @@ patch(MockServer.prototype, {
             const res = {
                 create_date: attachment.create_date,
                 checksum: attachment.checksum,
-                filename: attachment.name,
                 id: attachment.id,
                 mimetype: attachment.mimetype,
                 name: attachment.name,
