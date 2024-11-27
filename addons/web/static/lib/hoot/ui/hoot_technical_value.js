@@ -10,6 +10,7 @@ import {
 } from "@odoo/owl";
 import { isNode, toSelector } from "@web/../lib/hoot-dom/helpers/dom";
 import { isIterable } from "@web/../lib/hoot-dom/hoot_dom_utils";
+import { logger } from "../core/logger";
 import { getTypeOf, Markup, stringify, toExplicitString } from "../hoot_utils";
 
 /**
@@ -24,7 +25,6 @@ import { getTypeOf, Markup, stringify, toExplicitString } from "../hoot_utils";
 
 const {
     Object: { keys: $keys },
-    console: { log: $log },
 } = globalThis;
 
 //-----------------------------------------------------------------------------
@@ -212,7 +212,7 @@ export class HootTechnicalValue extends Component {
             return;
         }
         this.logged = true;
-        $log(this.value);
+        logger.debug(this.value);
     }
 
     wrapPromiseValue(promise) {
