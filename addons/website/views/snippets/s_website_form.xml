@@ -159,7 +159,7 @@
                 <we-button data-custom-field="url">Url</we-button>
                 <we-button data-custom-field="integer">Number</we-button>
                 <we-button data-custom-field="float">Decimal Number</we-button>
-                <we-button data-custom-field="boolean">Checkbox</we-button>
+                <we-button data-custom-field="boolean" data-name="checkbox_opt">Checkbox</we-button>
                 <we-button data-custom-field="one2many">Multiple Checkboxes</we-button>
                 <we-button data-custom-field="selection">Radio Buttons</we-button>
                 <we-button data-custom-field="many2one">Selection</we-button>
@@ -203,6 +203,10 @@
                 <we-button title="Right"
                            data-select-label-position="right"
                            data-img="/website/static/src/img/snippets_options/pos_right.svg"/>
+                <we-button title="After"
+                           data-select-label-position="after"
+                           data-dependencies="checkbox_opt"
+                           data-img="/website/static/src/img/snippets_options/pos_right_alt.svg"/>
             </we-button-group>
             <we-checkbox string="Description" data-toggle-description="true" data-no-preview="true"/>
             <we-input string="Placeholder" class="o_we_large"
