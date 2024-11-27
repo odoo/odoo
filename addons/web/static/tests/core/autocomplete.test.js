@@ -646,3 +646,30 @@ test("autocomplete always closes on click away", async () => {
     await contains(document.body).click();
     expect(".o-autocomplete--dropdown-item").toHaveCount(0);
 });
+
+test("autocomplete trim spaces for search", async () => {
+    class Parent extends Component {
+        static template = xml`
+            <AutoComplete value="state.value" sources="sources" onSelect="() => {}"/>
+        `;
+        static props = ["*"];
+        static components = { AutoComplete };
+        setup() {
+            this.state = useState({ value: " World" });
+        }
+        get sources() {
+            return [
+                {
+                    options(search) {
+                        return [{ label: "World" }, { label: "Hello" }].filter(({ label }) =>
+                            label.startsWith(search)
+                        );
+                    },
+                },
+            ];
+        }
+    }
+    await mountWithCleanup(Parent);
+    await contains(`.o-autocomplete input`).click();
+    expect(queryAllTexts(`.o-autocomplete--dropdown-item`)).toEqual(["World", "Hello"]);
+});
