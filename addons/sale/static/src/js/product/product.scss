@@ -17,18 +17,20 @@
     }
 }
 
-.o_sale_product_configurator_qty {
-    width: 64px;
-
-    @include media-breakpoint-up(md) {
+@include media-breakpoint-up(md) {
+    .o_sale_product_configurator_qty,
+    .o_sale_product_configurator_price {
         width: 160px;
     }
 }
 
-.o_sale_product_configurator_price {
-    width: 100px;
+.product_name_description {
+    max-width: 8rem;
+}
 
-    @include media-breakpoint-up(md) {
-        width: 160px;
+@include media-breakpoint-down(lg) {
+    .impossible_combination_alert {
+        margin-left: -3rem;
+        margin-right: -9rem;
     }
 }
