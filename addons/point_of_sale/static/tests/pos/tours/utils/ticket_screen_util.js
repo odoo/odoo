@@ -196,7 +196,6 @@ export function receiptChangeIs(amount) {
     return [
         {
             trigger: `.receipt-screen .receipt-change:contains("${amount}")`,
-            run: () => {},
         },
     ];
 }
