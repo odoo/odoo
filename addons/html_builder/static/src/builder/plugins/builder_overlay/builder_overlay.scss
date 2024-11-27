@@ -186,7 +186,24 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
             }
         }
 
-        .o_column_handle.o_side_y:hover, .o_column_handle.o_side_y:active {
+        // HANDLES - ACTIVE AND HOVER STATES
+        // By using `o_handlers_idle` class, we can avoid hovering another
+        // handle when we're already dragging another one.
+        &.o_handlers_idle .o_handle:hover, .o_handle:active {
+
+            .o_handle_indicator {
+                outline-color: $o-we-handles-accent-color;
+            }
+        }
+
+        &.o_handlers_idle .o_corner_handle:hover, .o_corner_handle:active {
+
+            .o_handle_indicator {
+                transform: scale(1.25);
+            }
+        }
+
+        &.o_handlers_idle .o_column_handle.o_side_y:hover, .o_column_handle.o_side_y:active {
             background: repeating-linear-gradient(
                             45deg,
                             rgba($o-we-handles-accent-color, .1),
@@ -196,15 +213,7 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
                         );
         }
 
-        // HANDLES - ACTIVE AND HOVER STATES
-        .o_handle:hover, .o_handle:active {
-
-            .o_handle_indicator {
-                outline-color: $o-we-handles-accent-color;
-            }
-        }
-
-        .o_side_x:hover, .o_side_x:active {
+        &.o_handlers_idle .o_side_x:hover, .o_side_x:active {
 
             &::before {
                 width: $o-we-handle-border-width * 2;
@@ -214,7 +223,7 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
             }
         }
 
-        .o_side_y:hover, .o_side_y:active {
+        &.o_handlers_idle .o_side_y:hover, .o_side_y:active {
 
             &::before {
                 height: $o-we-handle-border-width * 2;
@@ -224,4 +233,14 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
             }
         }
     }
+}
+
+@each $cursor in (nesw-resize, nwse-resize, ns-resize, ew-resize, move) {
+    .#{$cursor}-important * {
+        cursor: $cursor !important;
+    }
+}
+
+.o_resizing {
+    pointer-events: none;
 }
