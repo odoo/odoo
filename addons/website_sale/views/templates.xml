@@ -1880,7 +1880,7 @@
         <t t-set="description_lines" t-value="line.get_description_following_lines()"/>
         <div t-if="description_lines" t-attf-class="text-muted small">
             <t t-foreach="description_lines" t-as="name_line">
-                <span t-if="name_line" class="d-block" t-out="name_line"/>
+                <span t-if="name_line" class="d-block overflow-hidden text-truncate" t-out="name_line"/>
             </t>
         </div>
     </template>
@@ -1927,9 +1927,9 @@
                             }"
                         />
                     </div>
-                    <div class="flex-grow-1 text-overflow-ellipsis">
+                    <div class="flex-grow-1 overflow-hidden">
                         <t t-call="website_sale.cart_line_product_link">
-                            <h6 t-field="line.name_short" class="d-inline align-top h6 fw-bold"/>
+                            <h6 t-field="line.name_short" class="d-block align-top h6 fw-bold overflow-hidden text-truncate"/>
                         </t>
                         <t t-call="website_sale.cart_line_description_following_lines"/>
                         <div name="o_wsale_cart_line_button_container">

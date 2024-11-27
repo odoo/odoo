@@ -17,18 +17,31 @@
     }
 }
 
-.o_sale_product_configurator_qty {
-    width: 64px;
-
-    @include media-breakpoint-up(md) {
+@include media-breakpoint-up(md) {
+    .o_sale_product_configurator_qty {
         width: 160px;
     }
 }
 
-.o_sale_product_configurator_price {
-    width: 100px;
-
-    @include media-breakpoint-up(md) {
+@include media-breakpoint-up(md) {
+    .o_sale_product_configurator_price {
         width: 160px;
+    }
+}
+
+.product_name_description {
+    max-width: 8rem;
+}
+
+@include media-breakpoint-down(lg) {
+    .alert-mobile-margins {
+        margin-left: -3rem;
+        margin-right: -9rem;
+    }
+}
+
+@include media-breakpoint-down(md) {
+    .hide-border-on-mobile{
+        border-style: none;
     }
 }
