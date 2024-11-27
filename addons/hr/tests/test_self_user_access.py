@@ -172,7 +172,11 @@ class TestSelfAccessRights(TestHrCommon):
             if v.type == 'char' or v.type == 'text':
                 val = '0000' if f == 'pin' else 'dummy'
             if val is not None:
-                self.richard.with_user(self.richard).write({f: val})
+                if f in ['pin', 'employee_type', 'barcode']:
+                    with self.assertRaises(AccessError):
+                        self.richard.with_user(self.richard).write({f: val})
+                else:
+                    self.richard.with_user(self.richard).write({f: val})
 
     def testWriteSelfUserPreferencesEmployee(self):
         # self should always be able to update non hr.employee fields if
