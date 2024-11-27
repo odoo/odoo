@@ -1,0 +1,25 @@
+.quantity_alignment {
+    @media (max-width: 768px) {
+        text-align: end;
+    }
+
+    @media (min-width: 769px) {
+        text-align: center;
+    }
+}
+
+.fixed_border_for_block_display {
+    border-bottom: solid;
+    border-bottom-width: 1px;
+    border-color: inherit;
+
+    & > td {
+        border-style: none;
+    }
+}
+
+.hide-if-mobile {
+    @media (max-width: 768px) {
+        display: none;
+    }
+}

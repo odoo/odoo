@@ -17,18 +17,48 @@
     }
 }
 
-.o_sale_product_configurator_qty {
-    width: 64px;
+@media (min-width: 769px) {
+    .o_sale_product_configurator_qty {
+        width: 64px;
 
-    @include media-breakpoint-up(md) {
-        width: 160px;
+        @include media-breakpoint-up(md) {
+            width: 160px;
+        }
     }
 }
 
-.o_sale_product_configurator_price {
-    width: 100px;
+@media (min-width: 769px) {
+    .o_sale_product_configurator_price {
+        width: 100px;
 
-    @include media-breakpoint-up(md) {
-        width: 160px;
+        @include media-breakpoint-up(md) {
+            width: 160px;
+        }
+    }
+}
+
+.product_table_min_column_width > td {
+    min-width: 50px;
+}
+
+.product_row_hidden_border {
+    border-top-style: hidden;
+    padding-bottom: 0;
+}
+
+.mobile_product_name_description {
+    max-width: 8rem;
+}
+
+@media (max-width: 768px) {
+    .d_block_mobile {
+        display: block;
+    }
+}
+
+@media (max-width: 768px) {
+    .alert-mobile-margins {
+        margin-left: -4rem;
+        margin-right: -8rem;
     }
 }

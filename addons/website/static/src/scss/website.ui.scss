@@ -146,4 +146,10 @@ body {
         scrollbar-color: $-foreground-color $-background-color;
         scrollbar-width: thin;
     }
+
+    @media (max-width: 768px) {
+        &:has(.modal-open) {
+            scrollbar-width: none;
+        }
+    }
 }
