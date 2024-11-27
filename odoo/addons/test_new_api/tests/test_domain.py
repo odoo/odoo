@@ -541,12 +541,12 @@ class TestDomainOptimize(TransactionCase):
             Domain('discussion', 'not in', OrderedSet([False])),
             "Matching anything in relation",
         )
-        query = model.discussion._search([('display_name', 'like', 'ok')])
-        domain = Domain('discussion', 'like', 'ok').optimize(model, full=True)
+        domain = Domain('discussion', 'like', 'ok').optimize(model)
         self.assertEqual(domain.operator, 'any')
-        self.assertEqual(domain.value.select().code, query.select().code)
+        self.assertIsInstance(domain.value, Domain)
+        self.assertEqual(domain.value.field_expr, 'display_name')
 
-        domain = Domain('discussion', 'not like', 'ok').optimize(model, full=True)
+        domain = Domain('discussion', 'not like', 'ok').optimize(model)
         self.assertEqual(
             domain.operator, 'not any',
             f"Always use positive operator when searching on display_name; in {domain}"
