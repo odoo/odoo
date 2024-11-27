@@ -18,7 +18,7 @@ class TestAccountEdiUblCiiTaxExtension(AccountTestInvoicingCommon):
         cls.prod_tax = cls.company_data['default_tax_sale'].copy({'name': 'Production tax', 'ubl_cii_tax_category_code': 'M'})
         cls.free_export_tax = cls.company_data['default_tax_sale'].copy({'name': 'Free export tax', 'ubl_cii_tax_category_code': 'G', 'ubl_cii_tax_exemption_reason_code': 'VATEX-EU-132-1G'})
 
-    def test_classified_tax_category_codes(self):
+    def test_tax_subtotal(self):
         ubl_taxes = (self.reverse_charge_tax + self.zero_rated_tax + self.prod_tax + self.free_export_tax)
         # test tax by tax then with multiple taxes
         tax_list = list(ubl_taxes) + [ubl_taxes]
@@ -31,6 +31,6 @@ class TestAccountEdiUblCiiTaxExtension(AccountTestInvoicingCommon):
             invoice.action_post()
             xml = self.env['account.edi.xml.ubl_bis3']._export_invoice(invoice)[0]
             root = etree.fromstring(xml)
-            for tax, node in zip(taxes, root.findall('.//{*}Item/{*}ClassifiedTaxCategory')):
+            for tax, node in zip(taxes, root.findall('.//{*}TaxTotal/{*}TaxSubtotal/{*}TaxCategory')):
                 self.assertEqual(node.findtext('.//{*}ID') or False, tax.ubl_cii_tax_category_code)
                 self.assertEqual(node.findtext('.//{*}TaxExemptionReasonCode') or False, tax.ubl_cii_tax_exemption_reason_code)
