@@ -211,7 +211,7 @@ export class MassMailingHtmlField extends HtmlField {
      * @private
      */
     _updateIframe() {
-        const iframe = this.wysiwyg.$iframe[0];
+        const iframe = this.wysiwyg?.$iframe?.[0];
         if (!iframe || !iframe.contentDocument) {
             return;
         }
