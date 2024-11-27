@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <t t-name="sale.QuantityButtons">
-        <div name="quantity_buttons_wrapper" class="input-group justify-content-center">
+        <div name="quantity_buttons_wrapper" class="input-group justify-content-end justify-content-md-center">
             <button
-                t-attf-class="btn btn-secondary {{ props.btnClasses or 'd-none d-md-inline-block' }}"
+                t-attf-class="px-2 px-md-3 btn btn-secondary {{ props.btnClasses or 'd-md-inline-block' }}"
                 name="sale_quantity_button_minus"
                 aria-label="Remove one"
                 t-att-disabled="props.isMinusButtonDisabled"
@@ -17,7 +17,7 @@
                 t-att-value="props.quantity"
                 t-on-change="setQuantity"/>
             <button
-                t-attf-class="btn btn-secondary {{ props.btnClasses or 'd-none d-md-inline-block' }}"
+                t-attf-class="px-2 px-md-3 btn btn-secondary {{ props.btnClasses or 'd-md-inline-block' }}"
                 name="sale_quantity_button_plus"
                 aria-label="Add one"
                 t-att-disabled="props.isPlusButtonDisabled"
