@@ -227,20 +227,16 @@ export class FormatPlugin extends Plugin {
             }
         }
 
-        // Get selected nodes within td to handle non-p elements like h1, h2...
-        // Targeting <br> to ensure span stays inside its corresponding block node.
-        const selectedNodesInTds = [...this.editable.querySelectorAll(".o_selected_td")].map(
-            (node) => node.querySelector("br")
-        );
         const selectedNodes = /** @type { Text[] } **/ (
             this.dependencies.selection
                 .getSelectedNodes()
                 .filter(
                     (n) =>
-                        isTextNode(n) && isContentEditable(n) && (isVisibleTextNode(n) || isZWS(n))
+                        ((isTextNode(n) && (isVisibleTextNode(n) || isZWS(n))) ||
+                            n.nodeName === "BR") &&
+                        isContentEditable(n)
                 )
         );
-        const selectedTextNodes = selectedNodes.length ? selectedNodes : selectedNodesInTds;
 
         const selectedFieldNodes = new Set(
             this.dependencies.selection
@@ -249,11 +245,11 @@ export class FormatPlugin extends Plugin {
                 .filter(Boolean)
         );
         const formatSpec = formatsSpecs[formatName];
-        for (const selectedTextNode of selectedTextNodes) {
+        for (const node of selectedNodes) {
             const inlineAncestors = [];
             /** @type { Node } */
-            let currentNode = selectedTextNode;
-            let parentNode = selectedTextNode.parentElement;
+            let currentNode = node;
+            let parentNode = node.parentElement;
 
             // Remove the format on all inline ancestors until a block or an element
             // with a class that is not related to font size (in case the formatting
@@ -291,24 +287,24 @@ export class FormatPlugin extends Plugin {
             const firstBlockOrClassHasFormat = formatSpec.isFormatted(parentNode, formatProps);
             if (firstBlockOrClassHasFormat && !applyStyle) {
                 formatSpec.addNeutralStyle &&
-                    formatSpec.addNeutralStyle(getOrCreateSpan(selectedTextNode, inlineAncestors));
+                    formatSpec.addNeutralStyle(getOrCreateSpan(node, inlineAncestors));
             } else if (!firstBlockOrClassHasFormat && applyStyle) {
                 const tag = formatSpec.tagName && this.document.createElement(formatSpec.tagName);
                 if (tag) {
-                    selectedTextNode.after(tag);
-                    tag.append(selectedTextNode);
+                    node.after(tag);
+                    tag.append(node);
 
                     if (!formatSpec.isFormatted(tag, formatProps)) {
-                        tag.after(selectedTextNode);
+                        tag.after(node);
                         tag.remove();
                         formatSpec.addStyle(
-                            getOrCreateSpan(selectedTextNode, inlineAncestors),
+                            getOrCreateSpan(node, inlineAncestors),
                             formatProps
                         );
                     }
                 } else if (formatName !== "fontSize" || formatProps.size !== undefined) {
                     formatSpec.addStyle(
-                        getOrCreateSpan(selectedTextNode, inlineAncestors),
+                        getOrCreateSpan(node, inlineAncestors),
                         formatProps
                     );
                 }
@@ -327,8 +323,8 @@ export class FormatPlugin extends Plugin {
             const siblings = [...zws.parentElement.childNodes];
             if (
                 !isBlock(zws.parentElement) &&
-                selectedTextNodes.includes(siblings[0]) &&
-                selectedTextNodes.includes(siblings[siblings.length - 1])
+                selectedNodes.includes(siblings[0]) &&
+                selectedNodes.includes(siblings[siblings.length - 1])
             ) {
                 zws.parentElement.setAttribute("data-oe-zws-empty-inline", "");
             } else {
@@ -339,11 +335,11 @@ export class FormatPlugin extends Plugin {
             }
         }
 
-        if (selectedTextNodes[0] && selectedTextNodes[0].textContent === "\u200B") {
-            this.dependencies.selection.setCursorStart(selectedTextNodes[0]);
-        } else if (selectedTextNodes.length) {
-            const firstNode = selectedTextNodes[0];
-            const lastNode = selectedTextNodes[selectedTextNodes.length - 1];
+        if (selectedNodes[0] && selectedNodes[0].textContent === "\u200B") {
+            this.dependencies.selection.setCursorStart(selectedNodes[0]);
+        } else if (selectedNodes.length) {
+            const firstNode = selectedNodes[0];
+            const lastNode = selectedNodes[selectedNodes.length - 1];
             let newSelection;
             if (selection.direction === DIRECTIONS.RIGHT) {
                 newSelection = {
