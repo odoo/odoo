@@ -571,6 +571,8 @@ class BaseAutomation(models.Model):
         }
         if payload is not None:
             eval_context['payload'] = payload
+        if headers is not None:
+            eval_context['headers'] = headers
         return eval_context
 
     def _get_cron_interval(self, automations=None):
