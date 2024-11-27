@@ -40,7 +40,7 @@
                     debounceMillis="500"
                     getRef="(ref) => this.inputRef = ref"
                     t-if="pos.showSearchButton()" />
-                    <button class="btn btn-light btn-lg lh-lg" t-if="isBarcodeScannerSupported() and pos.mainScreen.component.name == 'ProductScreen' and !ui.isSmall" t-on-click="onClickScan">
+                    <button class="btn btn-light btn-lg lh-lg" t-if="isBarcodeScannerSupported() and ['ProductScreen', 'TicketScreen'].includes(pos.mainScreen.component.name) and !ui.isSmall" t-on-click="onClickScan">
                         <i class="fa fa-fw fa-lg fa-barcode" /><span t-if="this.pos.scanning" class="ms-1">Stop</span>
                     </button>
                     <div t-if="this.pos.data.network.offline or this.pos.data.network.loading" class="oe_status btn btn-light btn-lg lh-lg h-100 pe-none">
