@@ -86,7 +86,6 @@ class IrAttachment(models.Model):
                 "mimetype",
                 "name",
                 "res_name",
-                "size",
                 "thread",
                 "type",
                 "url",
@@ -100,7 +99,7 @@ class IrAttachment(models.Model):
         )
         for attachment in self:
             data = attachment._read_format(
-                [field for field in fields if field not in ["filename", "size", "thread"]],
+                [field for field in fields if field not in ["filename", "thread"]],
                 load=False,
             )[0]
             if "filename" in fields:
@@ -112,8 +111,6 @@ class IrAttachment(models.Model):
                 and "video" in attachment.mimetype
             ):
                 data["mimetype"] = "application/octet-stream"
-            if "size" in fields:
-                data["size"] = attachment.file_size
             if "thread" in fields:
                 data["thread"] = (
                     Store.one(
