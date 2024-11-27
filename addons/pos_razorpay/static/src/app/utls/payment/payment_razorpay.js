@@ -105,9 +105,9 @@ export class PaymentRazorpay extends PaymentInterface {
             amount: line.amount,
             referenceId: localStorage.getItem("referenceId"),
         };
-        return this._callRazorpay(data, "razorpay_make_payment_request").then((data) => {
-            return this._razorpayHandleResponse(data);
-        });
+        return this._callRazorpay(data, "razorpay_make_payment_request").then((data) =>
+            this._razorpayHandleResponse(data)
+        );
     }
 
     /**

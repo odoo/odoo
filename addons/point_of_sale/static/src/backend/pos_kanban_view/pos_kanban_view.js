@@ -39,21 +39,22 @@ export class PosKanbanRenderer extends KanbanRenderer {
         this.orm = useService("orm");
         this.action = useService("action");
         this.posState = useState(this.props.initialPosState);
-        this.loadScenario = useTrackedAsync(async ({ functionName, isRestaurant }) => {
-            return await this.callWithViewUpdate(async () => {
-                let isInstalledWithDemo = false;
-                if (isRestaurant && !this.posState.is_restaurant_installed) {
-                    const result = await this.orm.call("pos.config", "install_pos_restaurant");
-                    isInstalledWithDemo = result.installed_with_demo;
-                }
-                if (
-                    !isInstalledWithDemo ||
-                    (isInstalledWithDemo && !this.posState.is_main_company)
-                ) {
-                    await this.orm.call("pos.config", functionName);
-                }
-            });
-        });
+        this.loadScenario = useTrackedAsync(
+            async ({ functionName, isRestaurant }) =>
+                await this.callWithViewUpdate(async () => {
+                    let isInstalledWithDemo = false;
+                    if (isRestaurant && !this.posState.is_restaurant_installed) {
+                        const result = await this.orm.call("pos.config", "install_pos_restaurant");
+                        isInstalledWithDemo = result.installed_with_demo;
+                    }
+                    if (
+                        !isInstalledWithDemo ||
+                        (isInstalledWithDemo && !this.posState.is_main_company)
+                    ) {
+                        await this.orm.call("pos.config", functionName);
+                    }
+                })
+        );
 
         onWillRender(() => this.checkDisplayedResult());
         onWillStart(async () => {

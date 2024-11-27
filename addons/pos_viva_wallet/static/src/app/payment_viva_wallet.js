@@ -90,9 +90,9 @@ export class PaymentVivaWallet extends PaymentInterface {
             maxInstalments: 0,
             tipAmount: 0,
         };
-        return this._call_viva_wallet(data, "viva_wallet_send_payment_request").then((data) => {
-            return this._viva_wallet_handle_response(data);
-        });
+        return this._call_viva_wallet(data, "viva_wallet_send_payment_request").then((data) =>
+            this._viva_wallet_handle_response(data)
+        );
     }
 
     async _viva_wallet_cancel(order, uuid) {

@@ -94,9 +94,7 @@ export class FloorScreen extends Component {
         this.floorScrollBox = useRef("floor-map-scroll");
         this.map = useRef("map");
         this.alert = useService("alert");
-        const getTableElem = (table) => {
-            return this.map.el.querySelector(`.tableId-${table.id}`);
-        };
+        const getTableElem = (table) => this.map.el.querySelector(`.tableId-${table.id}`);
         const findIntersectingTableElem = (tableElem) => {
             const table = this.getPosTable(tableElem);
             return [...tableElem.parentElement.getElementsByClassName("table")].find(
@@ -909,9 +907,7 @@ export class FloorScreen extends Component {
         // Since we wanted to disable the selected table after deletion, we should be
         //   setting the selectedTableId to null. However, we only do this if nothing
         //   else is selected during the rpc call.
-        const equalsCheck = (a, b) => {
-            return JSON.stringify(a) === JSON.stringify(b);
-        };
+        const equalsCheck = (a, b) => JSON.stringify(a) === JSON.stringify(b);
         if (equalsCheck(this.state.selectedTableIds, originalSelectedTableIds)) {
             this.state.selectedTableIds = [];
         }
