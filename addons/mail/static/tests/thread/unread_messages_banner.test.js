@@ -138,33 +138,26 @@ test("scroll to unread notification", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
     const bobUserId = pyEnv["res.users"].create({ name: "Bob", partner_id: bobPartnerId });
-    let lastMessageId;
     for (let i = 0; i < 60; ++i) {
-        lastMessageId = pyEnv["mail.message"].create({
+        pyEnv["mail.message"].create({
             author_id: serverState.partnerId,
             body: `message ${i}`,
             model: "discuss.channel",
             res_id: channelId,
         });
     }
-    const [memberId] = pyEnv["discuss.channel.member"].search([
-        ["partner_id", "=", serverState.partnerId],
-        ["channel_id", "=", channelId],
-    ]);
-    pyEnv["discuss.channel.member"].write([memberId], { new_message_separator: lastMessageId + 1 });
     await start();
+    await openDiscuss(channelId);
+    await click("span", {
+        text: "Mark as Read",
+        parent: ["span", { text: "60 new messagesMark as Read" }],
+    });
+    await contains("span", { count: 0, text: "60 new messagesMark as Read" });
     await withUser(bobUserId, () => {
         getService("orm").call("discuss.channel", "add_members", [[channelId]], {
             partner_ids: [bobPartnerId],
         });
     });
-    await openDiscuss(channelId);
-    await contains(".o-mail-Thread-newMessage ~ .o-mail-NotificationMessage", {
-        text: "Bob joined the channel",
-    });
-    await tick(); // wait for the scroll to first unread to complete
-    await contains(".o-mail-Thread", { scroll: "bottom" });
-    await scroll(".o-mail-Thread", 0);
     await click("span", {
         text: "1 new message",
         parent: ["span", { text: "1 new messageMark as Read" }],
