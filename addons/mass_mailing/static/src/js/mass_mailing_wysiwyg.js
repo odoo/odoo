@@ -74,6 +74,46 @@ export class MassMailingWysiwyg extends Wysiwyg {
     }
 
     /**
+     * Add or remove a class on the iframe body depending on the snippets menu
+     * folding state, in order to add/remove enough blank space for it.
+     *
+     * @override
+     */
+    handleSnippetsDisplay() {
+        super.handleSnippetsDisplay();
+        const iframe = this.$iframe?.[0];
+        if (!iframe || !iframe.isConnected) {
+            return;
+        }
+        const body = iframe.contentWindow.document.body;
+        body.classList.toggle(
+            "o_mass_mailing_iframe_body_with_snippets_sidebar",
+            this.state.showSnippetsMenu && !this.state.snippetsMenuFolded
+        );
+    }
+
+    /**
+     * Apply style changes necessary to display the wysiwyg in fullscreen.
+     * The scrolling element used when dragging snippets must be changed
+     * because the form view scrollbar should not be used in fullscreen.
+     *
+     * @override
+     * @param {Boolean} isFullscreen
+     */
+    onToggleFullscreen(isFullscreen) {
+        super.onToggleFullscreen(isFullscreen);
+        const iframe = this.$iframe?.[0];
+        if (iframe && iframe.isConnected) {
+            const body = iframe.contentWindow.document.body;
+            const scrollingElement = isFullscreen ? body : iframe;
+            body.classList.toggle("o_mass_mailing_iframe_body_fullscreen", isFullscreen);
+            this.snippetsMenuBus.trigger("UPDATE_SCROLLING_ELEMENT", {
+                scrollingElement,
+            });
+        }
+    }
+
+    /**
      * @override
      */
     openMediaDialog() {
@@ -128,6 +168,14 @@ export class MassMailingWysiwyg extends Wysiwyg {
             }
         }
         return {...options, commands};
+    }
+    /**
+     * @override
+     */
+    _loadIframe() {
+        const promise = super._loadIframe();
+        this.$iframe[0].setAttribute("scrolling", "no");
+        return promise;
     }
     /**
      * @override
