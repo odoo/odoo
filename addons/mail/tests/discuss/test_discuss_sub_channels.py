@@ -133,3 +133,23 @@ class TestDiscussSubChannels(HttpCase):
         self.assertIn(bob_user.partner_id, parent_1_sub_channel_2.channel_member_ids.partner_id)
         self.assertIn(baz_user.partner_id, parent_2_sub_channel.channel_member_ids.partner_id)
         self.assertIn(bob_user.partner_id, parent_3_sub_channel.channel_member_ids.partner_id)
+
+    def test_08_group_public_id_synced_with_parent(self):
+        parent = self.env["discuss.channel"].create({"name": "General"})
+        parent._create_sub_channel()
+        sub_channel = parent.sub_channel_ids[0]
+        self.assertEqual(parent.group_public_id, self.env.ref("base.group_user"))
+        self.assertEqual(sub_channel.group_public_id, parent.group_public_id)
+        parent.group_public_id = self.env.ref("base.group_system")
+        self.assertEqual(parent.group_public_id, self.env.ref("base.group_system"))
+        self.assertEqual(sub_channel.group_public_id, parent.group_public_id)
+        parent.group_public_id = None
+        self.assertEqual(parent.group_public_id, self.env["res.groups"])
+        self.assertEqual(sub_channel.group_public_id, parent.group_public_id)
+
+    def test_09_cannot_change_group_public_id_of_sub_channel(self):
+        parent = self.env["discuss.channel"].create({"name": "General"})
+        parent._create_sub_channel()
+        sub_channel = parent.sub_channel_ids[0]
+        with self.assertRaises(UserError):
+            sub_channel.group_public_id = self.env.ref("base.group_system")
