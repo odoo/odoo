@@ -330,6 +330,29 @@ class CustomerPortal(Controller):
             error["email"] = 'error'
             error_message.append(_('Invalid Email! Please enter a valid email address.'))
 
+        # country and state validation
+        country_id = data.get("country_id")
+
+        if country_id and country_id.isdigit():
+            country_id = request.env['res.country'].browse(int(country_id))
+
+            if not country_id:
+                error["country_id"] = 'error'
+                error_message.append(_('Invalid Country! Please select a valid country.'))
+        else:
+            error["country_id"] = 'error'
+            error_message.append(_('Country ID is missing or invalid.'))
+
+        state_id = data.get("state_id")
+
+        if state_id and state_id.isdigit():
+            if int(state_id) not in country_id.state_ids.ids:
+                error["state_id"] = 'error'
+                error_message.append(_('Invalid State / Province. Please select a valid State or Province.'))
+        elif country_id and country_id.state_required:
+            error["state_id"] = 'error'
+            error_message.append(_('Some required fields are empty.'))
+
         # vat validation
         partner = request.env.user.partner_id
         if data.get("vat") and partner and partner.vat != data.get("vat"):
