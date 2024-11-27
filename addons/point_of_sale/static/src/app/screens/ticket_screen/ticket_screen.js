@@ -23,6 +23,7 @@ import { PosOrderLineRefund } from "@point_of_sale/app/models/pos_order_line_ref
 import { fuzzyLookup } from "@web/core/utils/search";
 import { parseUTCString } from "@point_of_sale/utils";
 import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
+import { BarcodeVideoScanner } from "@web/core/barcode/barcode_video_scanner";
 
 const NBR_BY_PAGE = 30;
 
@@ -38,6 +39,7 @@ export class TicketScreen extends Component {
         SearchBar,
         Numpad,
         BackButton,
+        BarcodeVideoScanner,
     };
     static props = {
         destinationOrder: { type: Object, optional: true },
@@ -113,6 +115,25 @@ export class TicketScreen extends Component {
             { value: "price", text: _t("Price"), disabled: true },
             BACKSPACE,
         ]);
+    }
+    async onClickScanOrder(qrcode) {
+        if (qrcode) {
+            const ref = new URL(qrcode).searchParams.get("order_uuid");
+            const [order] = await this.pos.data.searchRead("pos.order", [["uuid", "=", ref]]);
+            if (order) {
+                this.onFilterSelected("SYNCED");
+                this.state.selectedOrder = order;
+                this.pos.scanning = !this.pos.scanning;
+            } else {
+                this.env.services.notification.add(_t("Invalid QR Code! Please, Scan again!"), {
+                    type: "warning",
+                });
+            }
+        } else {
+            this.env.services.notification.add(_t("Please, Scan again!"), {
+                type: "warning",
+            });
+        }
     }
     async onSearch(search) {
         this.state.search = search;

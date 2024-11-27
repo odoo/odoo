@@ -277,7 +277,7 @@ export class PosOrder extends Base {
             pos_qr_code:
                 this.company.point_of_sale_use_ticket_qr_code &&
                 this.finalized &&
-                qrCodeSrc(`${baseUrl}/pos/ticket/`),
+                qrCodeSrc(`${baseUrl}/pos/ticket?order_uuid=${this.uuid}`),
             ticket_code: this.ticket_code,
             base_url: baseUrl,
             footer: this.config.receipt_footer,

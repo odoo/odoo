@@ -106,7 +106,7 @@ class PosController(PortalAccount):
         return request.make_response(pdf, headers=pdfhttpheaders)
 
     @http.route(['/pos/ticket'], type='http', auth="public", website=True, sitemap=False)
-    def invoice_request_screen(self, **kwargs):
+    def invoice_request_screen(self, order_uuid='', **kwargs):
         errors = {}
         form_values = {}
         if request.httprequest.method == 'POST':
@@ -137,6 +137,7 @@ class PosController(PortalAccount):
             'errors': errors,
             'banner_error': " ".join(errors.values()),
             'form_values': form_values,
+            'ref': order_uuid,
         })
 
     @http.route(['/pos/ticket/validate'], type='http', auth="public", website=True, sitemap=False)
