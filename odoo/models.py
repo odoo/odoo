@@ -6446,6 +6446,15 @@ class BaseModel(metaclass=MetaModel):
                         result[name] = []
                         continue
 
+                    if name == 'product_uom_qty':
+                        print("####### other.get({}) self[{}]".format(other.get(name), self[name]))
+                        print("###########################")
+                        '''
+                            The next line will compare two floats values using the '==' operator.
+                            Should we use float_expr instead? This results in a error, because the value
+                            stored in the database is "434.40" and the value computed by the "fetch" method is
+                            "434.4000000003".
+                        '''
                     if not force and other.get(name) == self[name]:
                         continue
                     if field.type not in ('one2many', 'many2many'):

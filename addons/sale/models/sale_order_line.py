@@ -375,6 +375,8 @@ class SaleOrderLine(models.Model):
                 continue
             packaging_uom = line.product_packaging_id.product_uom_id
             qty_per_packaging = line.product_packaging_id.qty
+            # Here is when the issue starts. The `_compute_quantity` calls `float_round` internally.
+            # However, the rounding is not applied. It results in a onchange issue.
             product_uom_qty = packaging_uom._compute_quantity(
                 line.product_packaging_qty * qty_per_packaging, line.product_uom)
             if float_compare(product_uom_qty, line.product_uom_qty, precision_rounding=line.product_uom.rounding) != 0:
@@ -431,6 +433,11 @@ class SaleOrderLine(models.Model):
                     date=line.order_id.date_order,
                 )
 
+    '''
+        This method should not be called. It's just called because the system
+        identifies a change on `product_uom_qty`, resulting in reset the price_unit
+        defined by the user.
+    '''
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
     def _compute_price_unit(self):
         for line in self:
