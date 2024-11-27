@@ -49,7 +49,7 @@ class ServerActions(models.Model):
         super()._check_model_coherency()
         for action in self:
             if action.state == 'sms' and (action.model_id.transient or not action.model_id.is_mail_thread):
-                raise ValidationError(_("Sending SMS can only be done on a mail.thread or a transient model"))
+                raise ValidationError(_("Sending SMS can only be done on a not transient mail.thread model"))
 
     def _run_action_sms_multi(self, eval_context=None):
         # TDE CLEANME: when going to new api with server action, remove action
