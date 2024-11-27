@@ -3095,26 +3095,41 @@ test("quick create when first column is folded", async () => {
     });
 
     expect(".o_kanban_group:first-child").not.toHaveClass("o_column_folded");
+    expect(".o_kanban_group:nth-child(2)").not.toHaveClass("o_column_folded");
 
     // fold the first column
     let clickColumnAction = await toggleKanbanColumnActions(0);
     await clickColumnAction("Fold");
 
     expect(".o_kanban_group:first-child").toHaveClass("o_column_folded");
+    expect(".o_kanban_group:nth-child(2)").not.toHaveClass("o_column_folded");
 
-    // click on 'Create' to open the quick create in the first column
+    expect(".o_kanban_quick_create").toHaveCount(0);
+
+    // click on 'Create' to open the quick create in the first non-folded column (second column)
     await createKanbanRecord();
 
-    expect(".o_kanban_group:first-child").not.toHaveClass("o_column_folded");
+    expect(".o_kanban_group:first-child").toHaveClass("o_column_folded");
+    expect(".o_kanban_group:nth-child(2)").not.toHaveClass("o_column_folded");
 
-    expect(".o_kanban_group:first-child .o_kanban_quick_create").toHaveCount(1);
+    expect(".o_kanban_group:nth-child(2) .o_kanban_quick_create").toHaveCount(1);
 
-    // fold again the first column
-    clickColumnAction = await toggleKanbanColumnActions(0);
+    // fold again the second column
+    clickColumnAction = await toggleKanbanColumnActions(1);
     await clickColumnAction("Fold");
 
     expect(".o_kanban_group:first-child").toHaveClass("o_column_folded");
+    expect(".o_kanban_group:nth-child(2)").toHaveClass("o_column_folded");
+
     expect(".o_kanban_quick_create").toHaveCount(0);
+
+    // click on 'Create' to open the quick create in the first column since all columns are folded
+    await createKanbanRecord();
+
+    expect(".o_kanban_group:first-child").not.toHaveClass("o_column_folded");
+    expect(".o_kanban_group:nth-child(2)").toHaveClass("o_column_folded");
+
+    expect(".o_kanban_group:first-child .o_kanban_quick_create").toHaveCount(1);
 });
 
 test("quick create record: cancel when not dirty", async () => {
