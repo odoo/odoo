@@ -15,14 +15,15 @@ class ProductTemplate(models.Model):
 
     def _load_pos_self_data(self, data):
         domain = self._load_pos_data_domain(data)
+        config_id = data['pos.config'][0]['id']
 
         # Add custom fields for 'formula' taxes.
-        fields = set(self._load_pos_data_fields(data['pos.config'][0]['id']))
+        fields = set(self._load_pos_data_fields(config_id))
         taxes = self.env['account.tax'].search(self.env['account.tax']._load_pos_data_domain(data))
         product_fields = taxes._eval_taxes_computation_prepare_product_fields()
         fields = list(fields.union(product_fields))
 
-        config = self.env['pos.config'].browse(data['pos.config'][0]['id'])
+        config = self.env['pos.config'].browse(config_id)
         products = self.search_read(
             domain,
             fields,
@@ -34,7 +35,24 @@ class ProductTemplate(models.Model):
         data['pos.config'][0]['_product_default_values'] = \
             self.env['account.tax']._eval_taxes_computation_prepare_product_default_values(product_fields)
 
+        self._compute_product_price_with_pricelist(products, config_id)
         return products
+
+    def _compute_product_price_with_pricelist(self, products, config_id):
+        config = self.env['pos.config'].browse(config_id)
+        pricelist = config.pricelist_id
+
+        product_ids = [product['id'] for product in products]
+        product_objs = self.env['product.product'].browse(product_ids)
+
+        product_map = {product.id: product for product in product_objs}
+
+        for product in products:
+            product_obj = product_map.get(product['id'])
+            if product_obj:
+                product['lst_price'] = pricelist._get_product_price(
+                    product_obj, 1.0, currency=config.currency_id
+                )
 
     @api.model
     def _load_pos_self_data_fields(self, config_id):
