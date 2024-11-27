@@ -182,7 +182,8 @@
                         </div>
                     </t>
                     <t t-else="">
-                        <CenteredIcon icon="'fa-shopping-cart fa-4x'" text.translate="'Select an order'" class="'bg-100 h-100'"/>
+                        <BarcodeVideoScanner t-if="this.pos.scanning" onError.bind="()=>{}" onResult.bind="onClickScanOrder" facingMode="'environment'"/>
+                        <CenteredIcon t-if="!this.pos.scanning" icon="'fa-shopping-cart fa-4x'" text.translate="Select an order or scan QR code" class="'bg-100 h-100'"/>
                         <BackButton t-if="ui.isSmall" onClick="() => pos.onClickBackButton()"/>
                     </t>
                 </div>

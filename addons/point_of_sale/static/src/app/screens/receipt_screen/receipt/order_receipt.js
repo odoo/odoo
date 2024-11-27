@@ -34,7 +34,7 @@ export class OrderReceipt extends Component {
         return (
             this.order.company.point_of_sale_use_ticket_qr_code &&
             this.order.finalized &&
-            qrCodeSrc(`${baseUrl}/pos/ticket/`)
+            qrCodeSrc(`${baseUrl}/pos/ticket?order_uuid=${this.order.uuid}`)
         );
     }
 
