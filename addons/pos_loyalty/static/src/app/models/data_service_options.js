@@ -7,11 +7,10 @@ patch(DataServiceOptions.prototype, {
             ...super.databaseTable,
             "loyalty.card": {
                 key: "id",
-                condition: (record) => {
-                    return record["<-pos.order.line.coupon_id"].find(
+                condition: (record) =>
+                    record["<-pos.order.line.coupon_id"].find(
                         (l) => l.order_id?.finalized && typeof l.order_id.id === "number"
-                    );
-                },
+                    ),
             },
         };
     },

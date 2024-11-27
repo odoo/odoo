@@ -54,9 +54,10 @@ export class SelfOrderRouter extends Reactive {
         const { route } = this.registeredRoutes[routeName];
         const url = new URL(browser.location.href);
 
-        url.pathname = route.replace(/\{\w+:(\w+)\}/g, (match, paramName) => {
-            return routeParams[paramName];
-        });
+        url.pathname = route.replace(
+            /\{\w+:(\w+)\}/g,
+            (match, paramName) => routeParams[paramName]
+        );
 
         history.pushState({}, "", url);
         this.path = window.location.pathname;

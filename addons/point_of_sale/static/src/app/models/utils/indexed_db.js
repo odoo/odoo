@@ -56,9 +56,7 @@ export default class IndexedDB {
             });
         });
 
-        return Promise.allSettled(promises).then((results) => {
-            return results;
-        });
+        return Promise.allSettled(promises).then((results) => results);
     }
     getNewTransaction(dbStore) {
         try {
@@ -113,15 +111,15 @@ export default class IndexedDB {
                 })
         );
 
-        return Promise.allSettled(promises).then((results) => {
-            return results.reduce((acc, result) => {
+        return Promise.allSettled(promises).then((results) =>
+            results.reduce((acc, result) => {
                 if (result.status === "fulfilled") {
                     return { ...acc, ...result.value };
                 } else {
                     return acc;
                 }
-            }, {});
-        });
+            }, {})
+        );
     }
 
     delete(storeName, uuids) {

@@ -33,30 +33,21 @@ export const contextualUtilsService = {
             floatRegex = new RegExp(`^-?(?:\\d+)?(?:${escapedDecimalPoint}\\d*)?$`);
         }
 
-        const formatProductQty = (qty) => {
-            return formatFloat(qty, { digits: [true, productUoMDecimals] });
-        };
+        const formatProductQty = (qty) => formatFloat(qty, { digits: [true, productUoMDecimals] });
 
-        const formatCurrency = (value, hasSymbol = true) => {
-            return webFormatCurrency(value, res_currency.id, {
+        const formatCurrency = (value, hasSymbol = true) =>
+            webFormatCurrency(value, res_currency.id, {
                 noSymbol: !hasSymbol,
             });
-        };
-        const floatIsZero = (value) => {
-            return genericFloatIsZero(value, res_currency.decimal_places);
-        };
+        const floatIsZero = (value) => genericFloatIsZero(value, res_currency.decimal_places);
 
-        const roundCurrency = (value) => {
-            return roundDecimals(value, res_currency.decimal_places);
-        };
+        const roundCurrency = (value) => roundDecimals(value, res_currency.decimal_places);
 
-        const isValidFloat = (inputValue) => {
-            return ![decimalPoint, "-"].includes(inputValue) && floatRegex.test(inputValue);
-        };
+        const isValidFloat = (inputValue) =>
+            ![decimalPoint, "-"].includes(inputValue) && floatRegex.test(inputValue);
 
-        const parseValidFloat = (inputValue) => {
-            return isValidFloat(inputValue) ? parseFloat(inputValue) : 0;
-        };
+        const parseValidFloat = (inputValue) =>
+            isValidFloat(inputValue) ? parseFloat(inputValue) : 0;
 
         env.utils = {
             formatCurrency,

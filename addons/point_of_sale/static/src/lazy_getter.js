@@ -30,12 +30,7 @@ function getGetters(Class) {
             if (name.startsWith("__") && name.endsWith("__")) {
                 continue;
             }
-            getters.set(name, [
-                `__lazy_${name}`,
-                (obj) => {
-                    return func.call(obj);
-                },
-            ]);
+            getters.set(name, [`__lazy_${name}`, (obj) => func.call(obj)]);
         }
         classGetters.set(Class, getters);
     }

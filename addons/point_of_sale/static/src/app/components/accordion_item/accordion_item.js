@@ -37,9 +37,10 @@ export class AccordionItem extends Component {
 
     calculateFullHeight() {
         const children = Array.from(this.content.el.getElementsByClassName("accordion-content"));
-        const fullHeight = children.reduce((accumulator, child) => {
-            return accumulator + Math.min(this.getHiddenHeight(child), 100);
-        }, 0);
+        const fullHeight = children.reduce(
+            (accumulator, child) => accumulator + Math.min(this.getHiddenHeight(child), 100),
+            0
+        );
         return fullHeight;
     }
 

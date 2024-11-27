@@ -600,9 +600,9 @@ patch(PosOrder.prototype, {
                     // In this case we count the points per rule
                     if (rule.reward_point_mode === "unit") {
                         splitPoints.push(
-                            ...Array.apply(null, Array(totalProductQty)).map((_) => {
-                                return { points: rule.reward_point_amount };
-                            })
+                            ...Array.apply(null, Array(totalProductQty)).map((_) => ({
+                                points: rule.reward_point_amount,
+                            }))
                         );
                     } else if (rule.reward_point_mode === "money") {
                         for (const line of orderLines) {
@@ -711,19 +711,15 @@ patch(PosOrder.prototype, {
 
         const allCouponPrograms = Object.values(this.uiState.couponPointChanges)
             .filter((pe) => !excludedCouponIds.includes(pe.coupon_id))
-            .map((pe) => {
-                return {
-                    program_id: pe.program_id,
-                    coupon_id: pe.coupon_id,
-                };
-            })
+            .map((pe) => ({
+                program_id: pe.program_id,
+                coupon_id: pe.coupon_id,
+            }))
             .concat(
-                this._code_activated_coupon_ids.map((coupon) => {
-                    return {
-                        program_id: coupon.program_id.id,
-                        coupon_id: coupon.id,
-                    };
-                })
+                this._code_activated_coupon_ids.map((coupon) => ({
+                    program_id: coupon.program_id.id,
+                    coupon_id: coupon.id,
+                }))
             );
         const result = [];
         const totalWithTax = this.getTotalWithTax();
@@ -1442,13 +1438,12 @@ patch(PosOrder.prototype, {
     removeOrderline(lineToRemove) {
         if (lineToRemove.is_reward_line) {
             // Remove any line that is part of that same reward aswell.
-            const linesToRemove = this.getOrderlines().filter((line) => {
-                return (
+            const linesToRemove = this.getOrderlines().filter(
+                (line) =>
                     line.reward_id === lineToRemove.reward_id &&
                     line.coupon_id === lineToRemove.coupon_id &&
                     line.reward_identifier_code === lineToRemove.reward_identifier_code
-                );
-            });
+            );
             for (const line of linesToRemove) {
                 line.delete();
             }
