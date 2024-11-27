@@ -38,15 +38,23 @@ async function testPropertyFieldAvatarOpenChat(propertyType) {
     await start();
     const partnerId = pyEnv["res.partner"].create({ name: "Partner Test" });
     const userId = pyEnv["res.users"].create({ name: "User Test", partner_id: partnerId });
-    const parentId = pyEnv["mail.test.properties"].create({ name: "Parent" });
+    const propertyDefinition = {
+        type: propertyType,
+        comodel: "res.users",
+        name: "user",
+        string: "user",
+    };
+    const parentId = pyEnv["mail.test.properties"].create({
+        name: "Parent",
+        definition_properties: [propertyDefinition],
+    });
     const value = propertyType === "many2one" ? [userId, "User Test"] : [[userId, "User Test"]];
     const childId = pyEnv["mail.test.properties"].create({
         name: "Test",
         parent_id: parentId,
-        properties: [
-            { type: propertyType, comodel: "res.users", name: "user", string: "user", value },
-        ],
+        properties: [{ ...propertyDefinition, value }],
     });
+
     await openFormView("mail.test.properties", childId);
     await assertSteps([]);
     await click(

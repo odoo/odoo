@@ -41,11 +41,7 @@ export class TableUIPlugin extends Plugin {
                     if (this.config.direction === "rtl") {
                         // position from the right instead of the left as it is needed
                         // to ensure the expand animation is properly done
-                        if (left < 0) {
-                            picker.style.right = `${-popperRect.width - left}px`;
-                        } else {
-                            picker.style.right = `${window.innerWidth - left - popperRect.width}px`;
-                        }
+                        picker.style.right = `${window.innerWidth - left - popperRect.width}px`;
                         picker.style.removeProperty("left");
                     }
                 },

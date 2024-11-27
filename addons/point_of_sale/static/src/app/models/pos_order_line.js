@@ -145,7 +145,7 @@ export class PosOrderline extends Base {
         const lotLinesToRemove = [];
 
         for (const lotLine of this.pack_lot_ids) {
-            const modifiedLotName = modifiedPackLotLines[lotLine.uuid];
+            const modifiedLotName = modifiedPackLotLines[lotLine.id];
             if (modifiedLotName) {
                 lotLine.lot_name = modifiedLotName;
             } else {
@@ -352,6 +352,9 @@ export class PosOrderline extends Base {
     merge(orderline) {
         this.order_id.assert_editable();
         this.set_quantity(this.get_quantity() + orderline.get_quantity());
+        this.update({
+            pack_lot_ids: [["link", ...orderline.pack_lot_ids]],
+        });
     }
 
     set_unit_price(price) {

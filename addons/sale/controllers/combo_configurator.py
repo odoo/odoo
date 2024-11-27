@@ -57,7 +57,7 @@ class SaleComboConfiguratorController(Controller):
             'quantity': quantity,
             'price': product_template._get_configurator_display_price(
                 product_template, quantity, date, currency, pricelist, **kwargs
-            ),
+            )[0],
             'combos': [{
                 'id': combo.id,
                 'name': combo.name,
@@ -114,7 +114,7 @@ class SaleComboConfiguratorController(Controller):
 
         return product_template._get_configurator_display_price(
             product_template, quantity, date, currency, pricelist, **kwargs
-        )
+        )[0]
 
     def _get_combo_item_data(
         self, combo, combo_item, selected_combo_item, date, currency, pricelist, **kwargs

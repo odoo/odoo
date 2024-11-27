@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { stepUtils } from '@web_tour/tour_service/tour_utils';
 
 registry.category("web_tour.tours").add('test_stock_picking_batch_sm_to_sml_synchronization', {
     steps: () => [
@@ -100,6 +99,9 @@ registry.category("web_tour.tours").add('test_stock_picking_batch_sm_to_sml_sync
             trigger: ".modal .o_form_button_save",
             run: "click",
         },
-        ...stepUtils.saveForm(),
+        {
+            content: "wait for save completion",
+            trigger: ".o_form_readonly, .o_form_saved",
+        },
     ]
 });

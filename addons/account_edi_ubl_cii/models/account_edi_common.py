@@ -5,7 +5,7 @@ from odoo.addons.base.models.res_bank import sanitize_account_number
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_repr, format_list
 from odoo.tools.float_utils import float_round
-from odoo.tools.misc import formatLang, html_escape
+from odoo.tools.misc import clean_context, formatLang, html_escape
 from odoo.tools.xml_utils import find_xml_value
 
 # -------------------------------------------------------------------------
@@ -388,17 +388,19 @@ class AccountEdiCommon(models.AbstractModel):
 
     def _import_partner_bank(self, invoice, bank_details):
         """ Retrieve the bank account, if no matching bank account is found, create it """
-        bank_details = map(sanitize_account_number, bank_details)
+        # clear the context, because creation of partner when importing should not depend on the context default values
+        ResPartnerBank = self.env['res.partner.bank'].with_env(self.env(context=clean_context(self.env.context)))
+        bank_details = list(map(sanitize_account_number, bank_details))
         partner = self.env.company.partner_id if invoice.is_inbound() else invoice.partner_id
         banks_to_create = []
         acc_number_partner_bank_dict = {
             bank.sanitized_acc_number: bank
-            for bank in self.env['res.partner.bank'].search(
+            for bank in ResPartnerBank.search(
                 [('company_id', 'in', [False, invoice.company_id.id]), ('acc_number', 'in', bank_details)]
             )
         }
         for account_number in bank_details:
-            partner_bank = acc_number_partner_bank_dict.get(account_number, self.env['res.partner.bank'])
+            partner_bank = acc_number_partner_bank_dict.get(account_number, ResPartnerBank)
             if partner_bank.partner_id == partner:
                 invoice.partner_bank_id = partner_bank
                 return
@@ -408,7 +410,7 @@ class AccountEdiCommon(models.AbstractModel):
                     'partner_id': partner.id,
                 })
         if banks_to_create:
-            invoice.partner_bank_id = self.env['res.partner.bank'].create(banks_to_create)[0]
+            invoice.partner_bank_id = ResPartnerBank.create(banks_to_create)[0]
 
     def _import_document_allowance_charges(self, tree, record, tax_type, qty_factor=1):
         logs = []

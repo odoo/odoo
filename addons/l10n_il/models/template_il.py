@@ -31,6 +31,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'income_currency_exchange_account_id': 'il_account_201000',
                 'expense_currency_exchange_account_id': 'il_account_202100',
                 'account_sale_tax_id': 'il_vat_sales_17',
-                'account_purchase_tax_id': 'il_vat_self_inv_purchase',
+                'account_purchase_tax_id': 'il_vat_inputs_17',
             },
         }

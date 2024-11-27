@@ -165,7 +165,6 @@ const addImageToSection = (sectionName, pageName, backend) => {
 }, {
     content: 'eLearning: ensure that the preview is displayed which means that data is loaded and can be submitted',
     trigger: `${prefix}#slide-image[src*="data:"]`,
-    run: "click",
 }, {
     content: 'eLearning: create and publish slide',
     trigger: `${prefix}footer.modal-footer button:contains("Publish")`,
@@ -174,7 +173,13 @@ const addImageToSection = (sectionName, pageName, backend) => {
     content: 'eLearning: launch content',
     trigger: `${prefix}a.o_wslides_js_slides_list_slide_link:contains("Overview")`,
     run: "click",
-}, {
+},
+{
+    isActive: [":iframe:has(a[aria-label=Fullscreen])"],
+    trigger: ":iframe a[aria-label=Fullscreen]",
+    run: "click",
+},
+{
     content: 'eLearning: check uploaded image presence and perform comparison',
     trigger: prefix + '.o_wslides_fs_player img',
     run: async () => {
@@ -239,7 +244,13 @@ const addPdfToSection = function (sectionName, pageName, backend) {
     content: 'eLearning: launch content',
     trigger: `${prefix}a.o_wslides_js_slides_list_slide_link:contains("Exercise")`,
     run: "click",
-}, {
+},
+{
+    isActive: [":iframe:has(a[aria-label=Fullscreen])"],
+    trigger: ":iframe a[aria-label=Fullscreen]",
+    run: "click",
+},
+{
     content: 'eLearning: check uploaded pdf presence and perform comparison',
     trigger: (backend ? '.o_iframe:iframe ' : '') + '.o_wslides_fs_content',
     run: async () => {

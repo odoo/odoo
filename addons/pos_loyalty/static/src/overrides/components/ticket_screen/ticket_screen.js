@@ -42,13 +42,6 @@ patch(TicketScreen.prototype, {
         );
     },
     _isEWalletGiftCard(orderline) {
-        const linkedProgramIds = this.pos.models["loyalty.program"].getBy(
-            "trigger_product_ids",
-            orderline.product_id.id
-        );
-        if (linkedProgramIds) {
-            return linkedProgramIds.length > 0;
-        }
         if (orderline.is_reward_line) {
             const reward = orderline.reward_id;
             const program = reward && reward.program_id;

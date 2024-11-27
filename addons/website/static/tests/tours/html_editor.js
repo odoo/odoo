@@ -96,7 +96,7 @@ registerWebsitePreviewTour('test_html_editor_scss', {
             trigger: ":iframe h1:contains(contact us)",
         },
         {
-            trigger: ":iframe input[name=company]:value(yourcompany)",
+            trigger: ":iframe input[name=company]",
         },
         {
             content: "open site menu",

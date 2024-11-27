@@ -20,6 +20,7 @@ class SaleOrder(models.Model):
         string="Headers/Footers",
         comodel_name='quotation.document',
         readonly=False,
+        check_company=True,
     )
     customizable_pdf_form_fields = fields.Json(
         string="Customizable PDF Form Fields",
@@ -32,7 +33,8 @@ class SaleOrder(models.Model):
     def _compute_available_product_document_ids(self):
         for order in self:
             order.available_product_document_ids = self.env['quotation.document'].search(
-                [], order='sequence'
+                self.env['quotation.document']._check_company_domain(self.company_id),
+                order='sequence',
             ).filtered(lambda doc:
                 self.sale_order_template_id in doc.quotation_template_ids
                 or not doc.quotation_template_ids

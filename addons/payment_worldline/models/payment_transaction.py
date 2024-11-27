@@ -19,6 +19,34 @@ _logger = logging.getLogger(__name__)
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
+    def _get_specific_processing_values(self, processing_values):
+        """ Override of `payment` to redirect failed token-flow transactions.
+
+        If the financial institution insists on user authentication,
+        this override will reset the transaction, and switch the flow to redirect.
+
+        Note: self.ensure_one() from `_get_processing_values`.
+
+        :param dict processing_values: The generic processing values of the transaction.
+        :return: The dict of provider-specific processing values.
+        :rtype: dict
+        """
+        res = super()._get_specific_processing_values(processing_values)
+        if (
+            self.provider_code == 'worldline'
+            and self.operation == 'online_token'
+            and self.state == 'error'
+            and self.state_message.endswith('AUTHORIZATION_REQUESTED')
+        ):
+            # Tokenized payment failed due to 3-D Secure authentication request.
+            # Reset transaction to draft and switch to redirect flow.
+            self.write({
+                'state': 'draft',
+                'operation': 'online_redirect',
+            })
+            res['force_flow'] = 'redirect'
+        return res
+
     def _get_specific_rendering_values(self, processing_values):
         """ Override of `payment` to return Worldline-specific processing values.
 
@@ -225,13 +253,21 @@ class PaymentTransaction(models.Model):
 
         # Update the payment state.
         status = payment_data.get('status')
+        has_token_data = 'token' in payment_method_data
         if not status:
             raise ValidationError("Worldline: " + _("Received data with missing payment state."))
 
         if status in const.PAYMENT_STATUS_MAPPING['pending']:
-            self._set_pending()
+            if status == 'AUTHORIZATION_REQUESTED':
+                self._set_error("Worldline: " + status)
+            elif self.operation == 'validation' \
+                 and status in {'PENDING_CAPTURE', 'CAPTURE_REQUESTED'} \
+                 and has_token_data:
+                    self._worldline_tokenize_from_notification_data(payment_method_data)
+                    self._set_done()
+            else:
+                self._set_pending()
         elif status in const.PAYMENT_STATUS_MAPPING['done']:
-            has_token_data = 'token' in payment_method_data
             if self.tokenize and has_token_data:
                 self._worldline_tokenize_from_notification_data(payment_method_data)
             self._set_done()

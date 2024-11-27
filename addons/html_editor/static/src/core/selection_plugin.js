@@ -142,6 +142,7 @@ export class SelectionPlugin extends Plugin {
         "resetActiveSelection",
         "focusEditable",
         // "collapseIfZWS",
+        "isSelectionInEditable",
     ];
     resources = {
         user_commands: { id: "selectAll", run: this.selectAll.bind(this) },

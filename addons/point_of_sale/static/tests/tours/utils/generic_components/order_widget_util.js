@@ -106,6 +106,6 @@ export function hasTax(amount) {
 export function hasNoTax() {
     return {
         content: "order has not tax",
-        trigger: ".order-summary .tax:empty",
+        trigger: ".order-summary .tax:empty:not(:visible)",
     };
 }

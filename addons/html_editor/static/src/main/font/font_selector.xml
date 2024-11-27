@@ -6,7 +6,7 @@
             </button>
             <t t-set-slot="content">
                 <t t-foreach="items" t-as="item" t-key="item_index">
-                    <DropdownItem class="'user-select-none'" onSelected="() => this.onSelected(item)">
+                    <DropdownItem onSelected="() => this.onSelected(item)" t-on-pointerdown.prevent="() => {}">
                         <t t-esc="item.name"/>
                     </DropdownItem>
                 </t>

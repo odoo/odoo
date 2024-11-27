@@ -142,4 +142,10 @@ patch(PosStore.prototype, {
         }
         return super.shouldShowOpeningControl(...arguments);
     },
+    async allowProductCreation() {
+        if (this.config.module_pos_hr) {
+            return this.employeeIsAdmin;
+        }
+        return await super.allowProductCreation();
+    },
 });

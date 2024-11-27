@@ -25,8 +25,8 @@
                             <div class="position-relative overflow-x-auto d-inline-block">
                                 <div class="o-mail-Message-bubble rounded-end-3 rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100"
                                     t-att-class="{
-                                        'bg-success-light border border-success opacity-25': !props.scheduledMessage.is_note and props.scheduledMessage.isSelfAuthored,
-                                        'bg-info-light border border-info opacity-25': !props.scheduledMessage.is_note and !props.scheduledMessage.isSelfAuthored 
+                                        'bg-success-light opacity-25': !props.scheduledMessage.is_note and props.scheduledMessage.isSelfAuthored,
+                                        'bg-info-light opacity-25': !props.scheduledMessage.is_note and !props.scheduledMessage.isSelfAuthored 
                                     }"/>
                                 <div t-on-click="onClick"
                                     t-attf-class="position-relative text-break o-mail-Message-body #{props.scheduledMessage.is_note ? 'p-1' : 'mb-0 py-2 px-3 align-self-start'}">

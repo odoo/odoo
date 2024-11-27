@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.2alpha1\n"
+"Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-26 09:14+0000\n"
-"PO-Revision-Date: 2024-02-26 09:14+0000\n"
+"POT-Creation-Date: 2024-11-25 06:57+0000\n"
+"PO-Revision-Date: 2024-11-25 06:57+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,18 +16,48 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_in
+#: model:ir.model.fields,help:l10n_in.field_account_bank_statement_line__l10n_in_journal_type
+#: model:ir.model.fields,help:l10n_in.field_account_move__l10n_in_journal_type
+msgid ""
+"\n"
+"        Select 'Sale' for customer invoices journals.\n"
+"        Select 'Purchase' for vendor bills journals.\n"
+"        Select 'Cash', 'Bank' or 'Credit Card' for journals that are used in customer or vendor payments.\n"
+"        Select 'General' for miscellaneous operations journals.\n"
+"        "
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model.fields.selection,name:l10n_in.selection__res_company__l10n_in_hsn_code_digit__4
-msgid "4 Digits"
+msgid "4 Digits (turnover < 5 CR.)"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/account_invoice.py:0
+msgid "4 digits, 6 digits or 8 digits"
 msgstr ""
 
 #. module: l10n_in
 #: model:ir.model.fields.selection,name:l10n_in.selection__res_company__l10n_in_hsn_code_digit__6
-msgid "6 Digits"
+msgid "6 Digits (turnover > 5 CR.)"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/account_invoice.py:0
+msgid "6 digits or 8 digits"
 msgstr ""
 
 #. module: l10n_in
 #: model:ir.model.fields.selection,name:l10n_in.selection__res_company__l10n_in_hsn_code_digit__8
 msgid "8 Digits"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/account_invoice.py:0
+msgid "8 digits"
 msgstr ""
 
 #. module: l10n_in
@@ -41,17 +71,21 @@ msgid "Account Chart Template"
 msgstr ""
 
 #. module: l10n_in
-#: model_terms:res.company,invoice_terms_html:l10n_in.demo_company_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
 msgid ""
-"All our contractual relations will be governed exclusively by India law."
+"Activate this to start using Indian services in the production environment."
 msgstr ""
 
 #. module: l10n_in
 #. odoo-python
-#: code:addons/l10n_in/models/product_template.py:0
-msgid ""
-"As per your HSN/SAC code validation, minimum %s digits HSN/SAC code is "
-"required."
+#: code:addons/l10n_in/models/res_partner.py:0
+msgid "As per GSTN the country should be other than India, so it's recommended to"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/res_partner.py:0
+msgid "As per GSTN the state should be %s, so it's recommended to"
 msgstr ""
 
 #. module: l10n_in
@@ -100,19 +134,6 @@ msgid "BASE STATE CESS"
 msgstr ""
 
 #. module: l10n_in
-#: model:account.report.column,name:l10n_in.tcs_report_balance
-#: model:account.report.column,name:l10n_in.tds_report_balance
-msgid "Balance"
-msgstr ""
-
-#. module: l10n_in
-#: model_terms:res.company,invoice_terms_html:l10n_in.demo_company_in
-msgid ""
-"Below text serves as a suggestion and doesn’t engage Odoo S.A. "
-"responsibility."
-msgstr ""
-
-#. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.invoice_form_inherit_l10n_in
 msgid "Bill of Entry Date"
 msgstr ""
@@ -123,8 +144,14 @@ msgid "Bill of Entry Number"
 msgstr ""
 
 #. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
+msgid "Buy credits"
+msgstr ""
+
+#. module: l10n_in
 #: model:account.account.tag,name:l10n_in.cess_tag_account
 #: model:account.account.tag,name:l10n_in.tax_tag_cess
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
 msgid "CESS"
 msgstr ""
 
@@ -136,6 +163,7 @@ msgstr ""
 #. module: l10n_in
 #: model:account.account.tag,name:l10n_in.cgst_tag_account
 #: model:account.account.tag,name:l10n_in.tax_tag_cgst
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
 msgid "CGST"
 msgstr ""
 
@@ -155,15 +183,20 @@ msgid "Cancelled Credit Note"
 msgstr ""
 
 #. module: l10n_in
-#: model_terms:res.company,invoice_terms_html:l10n_in.demo_company_in
-msgid ""
-"Certain countries apply withholding at source on the amount of invoices, in "
-"accordance with their internal legislation. Any withholding at source will "
-"be paid by the client to the tax authorities. Under no circumstances can IN "
-"Company become involved in costs related to a country's legislation. The "
-"amount of the invoice will therefore be due to IN Company in its entirety "
-"and does not include any costs relating to the legislation of the country in"
-" which the client is located."
+#. odoo-python
+#: code:addons/l10n_in/models/account_invoice.py:0
+msgid "Check %s"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__module_l10n_in_gstin_status
+#: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
+msgid "Check GST Number Status"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.account.tag,name:l10n_in.account_tag_closing_stock
+msgid "Closing Stock"
 msgstr ""
 
 #. module: l10n_in
@@ -200,6 +233,13 @@ msgid "Contact"
 msgstr ""
 
 #. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
+msgid ""
+"Costs 1 credit per transaction. Free 200 credits will be available for the "
+"first time."
+msgstr ""
+
+#. module: l10n_in
 #. odoo-javascript
 #: code:addons/l10n_in/static/src/components/hsn_autocomplete/hsn_autocomplete.js:0
 msgid "Could not contact API"
@@ -226,6 +266,11 @@ msgid "Credit Note"
 msgstr ""
 
 #. module: l10n_in
+#: model:iap.service,unit_name:l10n_in.iap_service_l10n_in_edi
+msgid "Credits"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model.fields.selection,name:l10n_in.selection__account_move__l10n_in_gst_treatment__deemed_export
 #: model:ir.model.fields.selection,name:l10n_in.selection__res_partner__l10n_in_gst_treatment__deemed_export
 msgid "Deemed Export"
@@ -234,6 +279,12 @@ msgstr ""
 #. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_port_code__display_name
 msgid "Display Name"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_res_partner__display_pan_warning
+#: model:ir.model.fields,field_description:l10n_in.field_res_users__display_pan_warning
+msgid "Display pan warning"
 msgstr ""
 
 #. module: l10n_in
@@ -272,8 +323,26 @@ msgid "EXEMPT"
 msgstr ""
 
 #. module: l10n_in
+#: model:ir.model.fields,help:l10n_in.field_res_company__l10n_in_edi_production_env
+#: model:ir.model.fields,help:l10n_in.field_res_config_settings__l10n_in_edi_production_env
+msgid "Enable the use of production credentials"
+msgstr ""
+
+#. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
-msgid "Enable HSN/SAC Validation"
+msgid ""
+"Enable this to activate Tax Deduction Source and Tax Collection Source."
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
+msgid "Enable this to check the GST Number status"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/account_invoice.py:0
+msgid "Ensure that the HSN/SAC Code consists either %s in invoice lines"
 msgstr ""
 
 #. module: l10n_in
@@ -282,9 +351,14 @@ msgid "Export India"
 msgstr ""
 
 #. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/template_in.py:0
+msgid "Export/SEZ"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_gst_treatment
 #: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_gst_treatment
-#: model:ir.model.fields,field_description:l10n_in.field_account_payment__l10n_in_gst_treatment
 #: model:ir.model.fields,field_description:l10n_in.field_res_partner__l10n_in_gst_treatment
 #: model:ir.model.fields,field_description:l10n_in.field_res_users__l10n_in_gst_treatment
 msgid "GST Treatment"
@@ -293,13 +367,15 @@ msgstr ""
 #. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_gstin
 #: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_gstin
-#: model:ir.model.fields,field_description:l10n_in.field_account_payment__l10n_in_gstin
 msgid "GSTIN"
 msgstr ""
 
 #. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
 msgid "GSTIN:"
+msgstr ""
+
+#. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
 msgid ""
 "Generate Vendor Payment Order file(csv file), upload to your bank to make "
@@ -318,9 +394,20 @@ msgid "Group By"
 msgstr ""
 
 #. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_product_product__l10n_in_hsn_warning
+#: model:ir.model.fields,field_description:l10n_in.field_product_template__l10n_in_hsn_warning
+msgid "HSC/SAC warning"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_res_company__l10n_in_hsn_code_digit
 #: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__l10n_in_hsn_code_digit
 msgid "HSN Code Digit"
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
+msgid "HSN Summary"
 msgstr ""
 
 #. module: l10n_in
@@ -342,12 +429,6 @@ msgid "HSN/SAC Code"
 msgstr ""
 
 #. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_product_product__l10n_in_hsn_description
-#: model:ir.model.fields,field_description:l10n_in.field_product_template__l10n_in_hsn_description
-msgid "HSN/SAC Description"
-msgstr ""
-
-#. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
 msgid ""
 "HSN/SAC Digit Validation for GST Compliance based on your Aggregate Annual "
@@ -355,9 +436,8 @@ msgid ""
 msgstr ""
 
 #. module: l10n_in
-#: model:ir.model.fields,help:l10n_in.field_product_product__l10n_in_hsn_description
-#: model:ir.model.fields,help:l10n_in.field_product_template__l10n_in_hsn_description
-msgid "HSN/SAC description is required if HSN/SAC code is not provided."
+#: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
+msgid "HSN/SAC Validation"
 msgstr ""
 
 #. module: l10n_in
@@ -372,6 +452,11 @@ msgid "Harmonized System Nomenclature/Services Accounting Code"
 msgstr ""
 
 #. module: l10n_in
+#: model:ir.model,name:l10n_in.model_iap_account
+msgid "IAP Account"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_port_code__id
 msgid "ID"
 msgstr ""
@@ -379,6 +464,7 @@ msgstr ""
 #. module: l10n_in
 #: model:account.account.tag,name:l10n_in.igst_tag_account
 #: model:account.account.tag,name:l10n_in.tax_tag_igst
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
 msgid "IGST"
 msgstr ""
 
@@ -388,35 +474,8 @@ msgid "IGST (RC)"
 msgstr ""
 
 #. module: l10n_in
-#: model_terms:res.company,invoice_terms_html:l10n_in.demo_company_in
-msgid ""
-"IN Company undertakes to do its best to supply performant services in due "
-"time in accordance with the agreed timeframes. However, none of its "
-"obligations can be considered as being an obligation to achieve results. IN "
-"Company cannot under any circumstances, be required by the client to appear "
-"as a third party in the context of any claim for damages filed against the "
-"client by an end consumer."
-msgstr ""
-
-#. module: l10n_in
-#: model_terms:res.company,invoice_terms_html:l10n_in.demo_company_in
-msgid ""
-"If a payment is still outstanding more than sixty (60) days after the due "
-"payment date, IN Company reserves the right to call on the services of a "
-"debt recovery company. All legal expenses will be payable by the client."
-msgstr ""
-
-#. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.invoice_form_inherit_l10n_in
 msgid "Import India"
-msgstr ""
-
-#. module: l10n_in
-#: model_terms:res.company,invoice_terms_html:l10n_in.demo_company_in
-msgid ""
-"In order for it to be admissible, IN Company must be notified of any claim "
-"by means of a letter sent by recorded delivery to its registered office "
-"within 8 days of the delivery of the goods or the provision of the services."
 msgstr ""
 
 #. module: l10n_in
@@ -452,8 +511,31 @@ msgid "Indian Integration"
 msgstr ""
 
 #. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_res_company__l10n_in_edi_production_env
+#: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__l10n_in_edi_production_env
+msgid "Indian Production Environment"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__module_l10n_in_withholding
+msgid "Indian TDS and TCS"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model,name:l10n_in.model_l10n_in_port_code
 msgid "Indian port code"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/template_in.py:0
+msgid "Inter State"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/template_in.py:0
+msgid "Intra State"
 msgstr ""
 
 #. module: l10n_in
@@ -473,10 +555,39 @@ msgid "Journal Item"
 msgstr ""
 
 #. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/account_invoice.py:0
+msgid "Journal Items(s)"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_journal_type
 #: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_journal_type
-#: model:ir.model.fields,field_description:l10n_in.field_account_payment__l10n_in_journal_type
 msgid "Journal Type"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_res_company__l10n_in_gst_state_warning
+#: model:ir.model.fields,field_description:l10n_in.field_res_partner__l10n_in_gst_state_warning
+#: model:ir.model.fields,field_description:l10n_in.field_res_users__l10n_in_gst_state_warning
+msgid "L10N In Gst State Warning"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_account_tax__l10n_in_tax_type
+msgid "L10N In Tax Type"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_warning
+#: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_warning
+msgid "L10N In Warning"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/template_in.py:0
+msgid "LUT - Export/SEZ"
 msgstr ""
 
 #. module: l10n_in
@@ -569,7 +680,6 @@ msgstr ""
 #. module: l10n_in
 #: model:ir.model.fields,help:l10n_in.field_account_bank_statement_line__l10n_in_reseller_partner_id
 #: model:ir.model.fields,help:l10n_in.field_account_move__l10n_in_reseller_partner_id
-#: model:ir.model.fields,help:l10n_in.field_account_payment__l10n_in_reseller_partner_id
 msgid "Only Registered Reseller"
 msgstr ""
 
@@ -634,26 +744,21 @@ msgid "Other NON ITC SGST (RC)"
 msgstr ""
 
 #. module: l10n_in
-#: model_terms:res.company,invoice_terms_html:l10n_in.demo_company_in
-msgid ""
-"Our invoices are payable within 21 working days, unless another payment "
-"timeframe is indicated on either the invoice or the order. In the event of "
-"non-payment by the due date, IN Company reserves the right to request a "
-"fixed interest payment amounting to 10% of the sum remaining due. IN Company"
-" will be authorized to suspend any provision of services without prior "
-"warning in the event of late payment."
-msgstr ""
-
-#. module: l10n_in
 #: model:ir.model.fields.selection,name:l10n_in.selection__account_move__l10n_in_gst_treatment__overseas
 #: model:ir.model.fields.selection,name:l10n_in.selection__res_partner__l10n_in_gst_treatment__overseas
 msgid "Overseas"
 msgstr ""
 
 #. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_res_company__l10n_in_pan
 #: model:ir.model.fields,field_description:l10n_in.field_res_partner__l10n_in_pan
 #: model:ir.model.fields,field_description:l10n_in.field_res_users__l10n_in_pan
 msgid "PAN"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_res_company__l10n_in_pan_type
+msgid "PAN Type"
 msgstr ""
 
 #. module: l10n_in
@@ -663,6 +768,20 @@ msgid ""
 "PAN enables the department to link all transactions of the person with the department.\n"
 "These transactions include taxpayments, TDS/TCS credits, returns of income/wealth/gift/FBT, specified transactions, correspondence, and so on.\n"
 "Thus, PAN acts as an identifier for the person with the tax department."
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,help:l10n_in.field_res_company__l10n_in_pan
+msgid ""
+"PAN enables the department to link all transactions of the person with the department.\n"
+"These transactions include taxpayments, TDS/TCS credits, returns of income/wealth/gift/FBT,specified transactions, correspondence, and so on.\n"
+"Thus, PAN acts as an identifier for the person with the tax department."
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_view_partner_form
+msgid ""
+"PAN number is not same as the 3rd to 12th characters of the GST number."
 msgstr ""
 
 #. module: l10n_in
@@ -676,13 +795,20 @@ msgstr ""
 #. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_state_id
 #: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_state_id
-#: model:ir.model.fields,field_description:l10n_in.field_account_payment__l10n_in_state_id
 msgid "Place of supply"
 msgstr ""
 
 #. module: l10n_in
-#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
+#: model_terms:ir.ui.view,arch_db:l10n_in.place_of_supply
 msgid "Place of supply:"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/res_config_settings.py:0
+msgid ""
+"Please ensure that at least one Indian service and production environment is"
+" enabled, and save the configuration to proceed with purchasing credits."
 msgstr ""
 
 #. module: l10n_in
@@ -705,7 +831,6 @@ msgstr ""
 #. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_shipping_port_code_id
 #: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_shipping_port_code_id
-#: model:ir.model.fields,field_description:l10n_in.field_account_payment__l10n_in_shipping_port_code_id
 msgid "Port code"
 msgstr ""
 
@@ -718,6 +843,26 @@ msgstr ""
 #. module: l10n_in
 #: model:ir.model,name:l10n_in.model_uom_uom
 msgid "Product Unit of Measure"
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
+msgid "Production Environment"
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.view_move_line_tree_hsn_l10n_in
+msgid "Products"
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
+msgid "Quantity"
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
+msgid "Rate %"
 msgstr ""
 
 #. module: l10n_in
@@ -735,7 +880,6 @@ msgstr ""
 #. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_reseller_partner_id
 #: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_reseller_partner_id
-#: model:ir.model.fields,field_description:l10n_in.field_account_payment__l10n_in_reseller_partner_id
 msgid "Reseller"
 msgstr ""
 
@@ -747,17 +891,13 @@ msgstr ""
 #. module: l10n_in
 #: model:account.account.tag,name:l10n_in.sgst_tag_account
 #: model:account.account.tag,name:l10n_in.tax_tag_sgst
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
 msgid "SGST"
 msgstr ""
 
 #. module: l10n_in
 #: model:account.account.tag,name:l10n_in.tax_tag_sgst_rc
 msgid "SGST (RC)"
-msgstr ""
-
-#. module: l10n_in
-#: model_terms:res.company,invoice_terms_html:l10n_in.demo_company_in
-msgid "STANDARD TERMS AND CONDITIONS OF SALE"
 msgstr ""
 
 #. module: l10n_in
@@ -772,288 +912,19 @@ msgid "Searching..."
 msgstr ""
 
 #. module: l10n_in
-#: model:account.report.line,name:l10n_in.tds_report_line_section_192
-msgid "Section 192: Payment of salary"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tds_report_line_section_192a
-msgid ""
-"Section 192A: Payment of accumulated balance of provident fund which is "
-"taxable in the hands of an employee"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tds_report_line_section_193
-msgid "Section 193: Interest on securities"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tds_report_line_section_194i
-msgid "Section 194-I: Rent"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tds_report_line_section_194ia
-msgid ""
-"Section 194-IA: Payment on transfer of certain immovable property other than"
-" agricultural land"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tds_report_line_section_194ib
-msgid ""
-"Section 194-IB: Payment of rent by individual or HUF not liable to tax audit"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tds_report_line_section_194ic
-msgid ""
-"Section 194-IC: Payment of monetary consideration under Joint Development "
-"Agreements"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tds_report_line_section_194o
-msgid ""
-"Section 194-O: Payment or credit of amount by the e-commerce operator to "
-"e-commerce participant"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tds_report_line_section_194
-msgid "Section 194: Income by way of dividend"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tds_report_line_section_194a
-msgid ""
-"Section 194A: Income by way of interest other than \"Interest on "
-"securities\""
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tds_report_line_section_194b
-msgid ""
-"Section 194B: Income by way of winnings from lotteries, crossword puzzles, "
-"card games and other games of any sort"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tds_report_line_section_194bb
-msgid "Section 194BB: Income by way of winnings from horse races"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tds_report_line_section_194c
-msgid "Section 194C: Payment to contractor/sub-contractor"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tds_report_line_section_194d
-msgid "Section 194D: Insurance commission"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tds_report_line_section_194da
-msgid "Section 194DA: Payment in respect of life insurance policy"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tds_report_line_section_194e
-msgid "Section 194E: Payment to non-resident sportsmen/sports association"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tds_report_line_section_194ee
-msgid ""
-"Section 194EE: Payment in respect of deposit under National Savings scheme"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tds_report_line_section_194f
-msgid ""
-"Section 194F: Payment on account of repurchase of unit by Mutual Fund or "
-"Unit Trust of India"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tds_report_line_section_194g
-msgid "Section 194G: Commission, etc., on sale of lottery tickets"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tds_report_line_section_194h
-msgid "Section 194H: Commission or brokerage"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tds_report_line_section_194j
-msgid "Section 194J: Fees for professional or technical services"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tds_report_line_section_194k
-msgid "Section 194K: Income in respect of units payable to resident person"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tds_report_line_section_194la
-msgid ""
-"Section 194LA: Payment of compensation on acquisition of certain immovable "
-"property"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tds_report_line_section_194lb
-msgid "Section 194LB: Payment of interest on infrastructure debt fund"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tds_report_line_section_194lba
-msgid ""
-"Section 194LBA(1): Business trust shall deduct tax while distributing, any "
-"interest received or receivable by it from a SPV or any income received from"
-" renting or leasing or letting out any real estate asset owned directly by "
-"it, to its unit holders."
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tds_report_line_section_194lbb
-msgid ""
-"Section 194LBB: Investment fund paying an income to a unit holder [other "
-"than income which is exempt under Section 10(23FBB)]"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tds_report_line_section_194lbc
-msgid ""
-"Section 194LBC: Income in respect of investment made in a securitisation "
-"trust (specified in Explanation of section115TCA)"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tds_report_line_section_194m
-msgid ""
-"Section 194M: Payment of commission (not being insurance commission), "
-"brokerage, contractual fee, professional fee to a resident person by an "
-"Individual or a HUF who are not liable to deduct TDS under section 194C, "
-"194H, or 194J."
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tds_report_line_section_194n
-msgid ""
-"Section 194N: Cash withdrawal during the previous year from one or more "
-"account maintained by a person with a banking company, co-operative society "
-"engaged in business of banking or a post office"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tds_report_line_section_194q
-msgid "Section 194Q: Purchase of goods"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tds_report_line_section_195
-msgid "Section 195: Payment of any other sum to a Non -resident"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tcs_report_line_section_206c_1_alfhc
-msgid "Section 206C(1): Alcoholic Liquor for human consumption"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tcs_report_line_section_206c_1_aofpnbtotl
-msgid ""
-"Section 206C(1): Any other forest produce not being timber or tendu leaves"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tcs_report_line_section_206c_1_mbcoloio
-msgid "Section 206C(1): Minrals, being coal or lignite or iron ore"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tcs_report_line_section_206c_1_s
-msgid "Section 206C(1): Scrap"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tcs_report_line_section_206c_1_tl
-msgid "Section 206C(1): Tendu leaves"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tcs_report_line_section_206c_1_tobaotuafl
-msgid ""
-"Section 206C(1): Timber obtained by any mode other than under a forest lease"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tcs_report_line_section_206c_1_touafl
-msgid "Section 206C(1): Timber obtained under a forest lease"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tcs_report_line_section_206c_1c_maq
-msgid "Section 206C(1C): Mining and quarrying"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tcs_report_line_section_206c_1c_pl
-msgid "Section 206C(1C): Parking lot"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tcs_report_line_section_206c_1c_tp
-msgid "Section 206C(1C): Toll plaza"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tcs_report_line_section_206c_1f_mv
-msgid "Section 206C(1F): Motor Vehicle"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tcs_report_line_section_206c_1g_soaotpp
-msgid "Section 206C(1G): Seller of an overseas tour program package"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tcs_report_line_section_206c_1g_som
-msgid ""
-"Section 206C(1G): Sum of money (above 7 lakhs) for remittance out of India"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report.line,name:l10n_in.tcs_report_line_section_206c_1h_sog
-msgid "Section 206C(1H): Sale of Goods"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.fields,help:l10n_in.field_account_bank_statement_line__l10n_in_journal_type
-#: model:ir.model.fields,help:l10n_in.field_account_move__l10n_in_journal_type
-#: model:ir.model.fields,help:l10n_in.field_account_payment__l10n_in_journal_type
-msgid ""
-"Select 'Sale' for customer invoices journals.\n"
-"Select 'Purchase' for vendor bills journals.\n"
-"Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
-"Select 'General' for miscellaneous operations journals."
+#: model:iap.service,description:l10n_in.iap_service_l10n_in_edi
+msgid "Send electronic document to Indian government"
 msgstr ""
 
 #. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_shipping_bill_date
 #: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_shipping_bill_date
-#: model:ir.model.fields,field_description:l10n_in.field_account_payment__l10n_in_shipping_bill_date
 msgid "Shipping bill date"
 msgstr ""
 
 #. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_shipping_bill_number
 #: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_shipping_bill_number
-#: model:ir.model.fields,field_description:l10n_in.field_account_payment__l10n_in_shipping_bill_number
 msgid "Shipping bill number"
 msgstr ""
 
@@ -1070,13 +941,8 @@ msgid "State"
 msgstr ""
 
 #. module: l10n_in
-#: model:account.report,name:l10n_in.tcs_report
-msgid "TCS Report"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report,name:l10n_in.tds_report
-msgid "TDS Report"
+#: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
+msgid "TDS and TCS"
 msgstr ""
 
 #. module: l10n_in
@@ -1095,17 +961,19 @@ msgid "Tax"
 msgstr ""
 
 #. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
+msgid "Taxable Value"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model.constraint,message:l10n_in.constraint_l10n_in_port_code_code_uniq
 msgid "The Port Code must be unique!"
 msgstr ""
 
 #. module: l10n_in
-#: model_terms:res.company,invoice_terms_html:l10n_in.demo_company_in
-msgid ""
-"The client explicitly waives its own standard terms and conditions, even if "
-"these were drawn up after these standard terms and conditions of sale. In "
-"order to be valid, any derogation must be expressly agreed to in advance in "
-"writing."
+#. odoo-python
+#: code:addons/l10n_in/models/company.py:0
+msgid "The entered PAN seems invalid. Please enter a valid PAN."
 msgstr ""
 
 #. module: l10n_in
@@ -1164,13 +1032,20 @@ msgid "Vendor Credit Note"
 msgstr ""
 
 #. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__module_l10n_in_enet
+#: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__module_l10n_in_enet_batch_payment
 msgid "Vendor Payment"
 msgstr ""
 
 #. module: l10n_in
-#: model_terms:res.company,invoice_terms_html:l10n_in.demo_company_in
-msgid "You should update this document to reflect your T&amp;C."
+#. odoo-python
+#: code:addons/l10n_in/models/account_invoice.py:0
+msgid "View %s"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/template_in.py:0
+msgid "Within %s"
 msgstr ""
 
 #. module: l10n_in
@@ -1187,12 +1062,50 @@ msgid "ZERO-RATED"
 msgstr ""
 
 #. module: l10n_in
+#: model:ir.model.fields.selection,name:l10n_in.selection__account_tax__l10n_in_tax_type__cess
+msgid "cess"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields.selection,name:l10n_in.selection__account_tax__l10n_in_tax_type__cgst
+msgid "cgst"
+msgstr ""
+
+#. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_view_partner_form
 msgid "e.g. ABCTY1234D"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/product_template.py:0
+msgid "either 4, 6 or 8"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/product_template.py:0
+msgid "either 6 or 8"
 msgstr ""
 
 #. module: l10n_in
 #. odoo-javascript
 #: code:addons/l10n_in/static/src/components/hsn_autocomplete/hsn_autocomplete.js:0
 msgid "hsn description field"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields.selection,name:l10n_in.selection__account_tax__l10n_in_tax_type__igst
+msgid "igst"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields.selection,name:l10n_in.selection__account_tax__l10n_in_tax_type__sgst
+msgid "sgst"
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_view_partner_form
+#: model_terms:ir.ui.view,arch_db:l10n_in.view_company_form
+msgid "update it"
 msgstr ""

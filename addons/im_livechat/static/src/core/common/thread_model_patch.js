@@ -8,7 +8,9 @@ patch(Thread.prototype, {
         super.setup();
         this.operator = Record.one("Persona");
     },
-
+    get autoOpenChatWindowOnNewMessage() {
+        return this.channel_type === "livechat" || super.autoOpenChatWindowOnNewMessage;
+    },
     get typesAllowingCalls() {
         return super.typesAllowingCalls.concat(["livechat"]);
     },

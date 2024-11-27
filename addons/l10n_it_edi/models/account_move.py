@@ -292,7 +292,7 @@ class AccountMove(models.Model):
 
             # Discount.
             discount_list = it_values['sconto_maggiorazione_list'] = []
-            delta_discount = base_line['discount_amount'] - base_line['discount_amount_before_dispatching']
+            delta_discount = base_line.get('discount_amount', 0.0) - base_line.get('discount_amount_before_dispatching', 0.0)
             if discount:
                 discount_list.append({
                     'tipo': 'SC' if discount > 0 else 'MG',
@@ -443,6 +443,7 @@ class AccountMove(models.Model):
         AccountTax = self.env['account.tax']
         AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
 
+        downpayment_lines = []
         # Prepare for '_dispatch_negative_lines'
         for base_line in base_lines:
             tax_details = base_line['tax_details']
@@ -470,8 +471,15 @@ class AccountMove(models.Model):
                     tax_data['base_amount'] *= 0.5
                     tax_data['base_amount_currency'] *= 0.5
 
+            if not is_downpayment:
+                # Negative lines linked to down payment should stay negative
+                line = base_line['record']
+                if line.price_subtotal < 0 and line._get_downpayment_lines():
+                    downpayment_lines.append(base_line)
+                    base_lines.remove(base_line)
+
         dispatched_results = self.env['account.tax']._dispatch_negative_lines(base_lines)
-        base_lines = dispatched_results['result_lines'] + dispatched_results['orphan_negative_lines']
+        base_lines = dispatched_results['result_lines'] + dispatched_results['orphan_negative_lines'] + downpayment_lines
         AccountTax._round_base_lines_tax_details(base_lines, self.company_id, tax_lines=tax_lines)
         base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, self._l10n_it_edi_grouping_function_base_lines)
         self._l10n_it_edi_add_base_lines_xml_values(base_lines_aggregated_values, is_downpayment)

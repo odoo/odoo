@@ -86,9 +86,12 @@ export class CollaborationOdooPlugin extends Plugin {
 
         const collaborativeTrigger = this.config.collaboration.collaborativeTrigger;
         this.joinPeerToPeer = this.joinPeerToPeer.bind(this);
-        if (collaborativeTrigger === "start" || typeof collaborativeTrigger === "undefined") {
+        if (collaborativeTrigger === "start") {
             this.joinPeerToPeer();
-        } else if (collaborativeTrigger === "focus") {
+        } else if (
+            collaborativeTrigger === "focus" ||
+            typeof collaborativeTrigger === "undefined"
+        ) {
             // Wait until editor is focused to join the peer to peer network.
             this.editable.addEventListener("focus", this.joinPeerToPeer);
         }
@@ -555,7 +558,7 @@ export class CollaborationOdooPlugin extends Plugin {
     }
 
     getLastHistoryStepId(value) {
-        const matchId = value.match(/data-last-history-steps="(?:[0-9]+,)*([0-9]+)"/);
+        const matchId = value.match(/data-last-history-steps="[0-9,]*?([0-9]+)"/);
         return matchId && matchId[1];
     }
 

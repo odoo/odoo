@@ -125,9 +125,10 @@ registry.category("web_tour.tours").add("PosSettleOrderNotGroupable", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             PosSale.settleNthOrder(1),
-            ProductScreen.totalAmountIs(32.2), // 3.5 * 8 * 1.15
+            ProductScreen.totalAmountIs(28.98), // 3.5 * 8 * 1.15 * 90%
             ProductScreen.selectedOrderlineHas("Product A", "0.50"),
             ProductScreen.checkOrderlinesNumber(4),
+            ProductScreen.selectedOrderlineHas("Product A", "0.5", "4.14"),
         ].flat(),
 });
 

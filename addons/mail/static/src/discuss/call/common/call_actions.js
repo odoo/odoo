@@ -55,7 +55,7 @@ callActionsRegistry
         isActive: (component) => component.rtc.selfSession?.raisingHand,
         icon: "fa-hand-paper-o",
         select: (component) => component.rtc.raiseHand(!component.rtc.selfSession.raisingHand),
-        sequence: 40,
+        sequence: 50,
     })
     .add("share-screen", {
         condition: (component) => component.rtc && !isMobileOS(),
@@ -66,7 +66,7 @@ callActionsRegistry
         isActive: (component) => component.rtc.selfSession?.isScreenSharingOn,
         icon: "fa-desktop",
         select: (component) => component.rtc.toggleVideo("screen"),
-        sequence: 50,
+        sequence: 40,
     })
     .add("fullscreen", {
         condition: (component) => component.props && component.props.fullscreen,

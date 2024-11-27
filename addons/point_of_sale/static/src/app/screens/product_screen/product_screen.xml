@@ -37,6 +37,7 @@
                             imageUrl="pos.config.show_product_images and this.getProductImage(product)"
                             onClick.bind="() => this.addProductToOrder(product)"
                             productInfo="true"
+                            productCartQty="this.state.quantityByProductTmplId[product.raw.product_tmpl_id]"
                             onProductInfoClick.bind="() => this.onProductInfoClick(product)" />
                     </div>
                     <div t-else="" class="flex-grow-1 text-center mt-5">

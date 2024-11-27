@@ -10,7 +10,7 @@
     </t>
     
     <t t-name="mail.MessageReactionList.button">
-        <button class="position-relative o-mail-MessageReaction btn d-flex p-0 border rounded-2 mb-1 fs-4 px-1 gap-1 align-items-center" t-on-click="() => this.onClickReaction(props.reaction)" t-on-contextmenu="onContextMenu" t-on-mouseenter="loadEmoji" t-ref="reactionButton" t-att-class="{
+        <button class="position-relative o-mail-MessageReaction btn d-flex p-0 border rounded-2 mb-1 fs-5 px-1 gap-1 align-items-center" t-on-click="() => this.onClickReaction(props.reaction)" t-on-contextmenu="onContextMenu" t-on-mouseenter="loadEmoji" t-ref="reactionButton" t-att-class="{
             'o-selfReacted border-primary text-primary fw-bold': hasSelfReacted(props.reaction),
             'bg-view': !hasSelfReacted(props.reaction),
             'ms-1': env.inChatWindow and env.alignedRight,

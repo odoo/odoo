@@ -327,6 +327,10 @@ class TestIrModel(TransactionCase):
                 'field_id': fields_value,
             })
 
+        # ensure we can order by a stored field via inherits
+        user_model = self.env['ir.model'].search([('model', '=', 'res.users')])
+        user_model._check_order()  # must not raise
+
     def test_model_order_search(self):
         """Check that custom orders are applied when querying a model."""
         ORDERS = {

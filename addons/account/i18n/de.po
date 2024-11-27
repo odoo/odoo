@@ -6,6 +6,7 @@
 # Martin Trigaux, 2024
 # Felix Schubert <felix.schubert@go-erp.com>, 2024
 # Wil Odoo, 2024
+# Max-Milan Stoyanov, 2024
 # Larissa Manderfeld, 2024
 # 
 msgid ""
@@ -830,7 +831,7 @@ msgid ""
 "                                    <span class=\"d-none d-md-inline\"> Reversed</span>"
 msgstr ""
 "<i class=\"fa fa-fw fa-check\" aria-label=\"Reversed\" title=\"Reversed\" role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> Storniert</span>"
+"                                    <span class=\"d-none d-md-inline\"> Gutgeschrieben</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -5660,13 +5661,13 @@ msgstr "Beendigung"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Cut-off {label}"
-msgstr "Beendigung {label}"
+msgstr "Abgrenzung {label}"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Cut-off {label} {percent}%"
-msgstr "Beendigung {label} {percent}%"
+msgstr "Abgrenzung {label} {percent}%"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DAP
@@ -8820,7 +8821,8 @@ msgstr ""
 #: code:addons/account/models/account_report.py:0
 msgid ""
 "Invalid domain for expression '%(label)s' of line '%(line)s': %(formula)s"
-msgstr "Ungültige Domain für Ausdruck „%(label)s“ der Zeile „%(line)s“: %s"
+msgstr ""
+"Ungültige Domain für Ausdruck „%(label)s“ der Zeile „%(line)s“: %(formula)s"
 
 #. module: account
 #. odoo-python
@@ -11958,7 +11960,7 @@ msgstr "Zahlungsbetrag:"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Payment Communication:"
-msgstr "Zahlungsmitteilung:"
+msgstr "Zahlungsreferenz:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -16581,7 +16583,7 @@ msgstr "Der Eintrag wurde dupliziert aus %s"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This entry has been reversed from %s"
-msgstr "Der Eintrag wurde storniert von %s"
+msgstr "Der Eintrag wurde von %s gutgeschrieben"
 
 #. module: account
 #. odoo-python

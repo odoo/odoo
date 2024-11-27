@@ -18,8 +18,6 @@
         flex: 1 0 50px;
 
         .o_input {
-            --o-input-background-color: transparent;
-
             height: 100%;
             border: none;
         }
@@ -45,6 +43,12 @@
 
     .dropdown-item-selected > a {
         font-weight: bold !important;
+    }
+}
+
+.o_field_widget.o_field_many2many_tags, .o_field_widget.o_field_many2many_tags_avatar {
+    .o_field_many2many_selection .o_input {
+        --o-input-background-color: transparent;
     }
 }
 

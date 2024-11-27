@@ -160,6 +160,7 @@ function sanitizeNode(node, root) {
         && !node.hasAttributes()
         && !hasPseudoElementContent(node, "::before")
         && !hasPseudoElementContent(node, "::after")
+        && !node.querySelector(".oe_currency_value")
     ) {
         // Unwrap the contents of SPAN and FONT elements without attributes.
         getDeepRange(root, { select: true });

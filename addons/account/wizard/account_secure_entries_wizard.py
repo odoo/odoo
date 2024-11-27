@@ -87,7 +87,7 @@ class AccountSecureEntries(models.TransientModel):
         for journal, journal_moves in moves.grouped('journal_id').items():
             for chain_moves in journal_moves.grouped('sequence_prefix').values():
                 chain_info = chain_moves._get_chain_info(force_hash=True)
-                if chain_info is False:
+                if not chain_info:
                     continue
 
                 last_move_hashed = chain_info['last_move_hashed']

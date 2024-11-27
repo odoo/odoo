@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Daye Jeong, 2024
 # Sarah Park, 2024
+# Daye Jeong, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Sarah Park, 2024\n"
+"Last-Translator: Daye Jeong, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -139,7 +139,7 @@ msgstr "%(name)s 시퀀스 패킹"
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "%(name)s Sequence picking"
-msgstr ""
+msgstr "%(name)s 시퀀스 피킹"
 
 #. module: stock
 #. odoo-python
@@ -497,8 +497,8 @@ msgstr "<br><b>%s</b>에서 필요가 제기되고 이를 이행하기 위한 �
 #: code:addons/stock/models/stock_rule.py:0
 msgid ""
 "<br>If the products are not available in <b>%s</b>, a rule will be triggered"
-" to bring products in this location."
-msgstr "<br><b>%s</b>에서 품목을 사용할 수 없는 경우 이 위치로 품목을 가져오는 규칙이 진행됩니다."
+" to bring the missing quantity in this location."
+msgstr "<br><b>%s</b>에서 제품을 사용할 수 없는 경우 이 위치에서 누락된 수량을 채우기 위한 규칙이 활성화됩니다. "
 
 #. module: stock
 #. odoo-python
@@ -9259,6 +9259,8 @@ msgid ""
 "created. However, it is possible to change it afterwards or that the routes "
 "use another one by default."
 msgstr ""
+"이 작업을 수동으로 생성할 때 설정되는 기본 목적지 위치입니다. 나중에 변경하거나 경로가 기본적으로 다른 위치를 사용하도록 수정할 수 "
+"있습니다."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_src_id
@@ -9267,6 +9269,8 @@ msgid ""
 " However, it is possible to change it afterwards or that the routes use "
 "another one by default."
 msgstr ""
+"이 작업을 수동으로 생성할 때 설정되는 기본 원 위치입니다. 나중에 변경하거나 경로가 기본적으로 다른 위치를 사용하도록 수정할 수 "
+"있습니다."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__owner_id

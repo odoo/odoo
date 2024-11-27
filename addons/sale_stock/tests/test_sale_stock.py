@@ -122,6 +122,16 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         and whatever other model there is in stock with "invoice on order" products
         """
         # let's cheat and put all our products to "invoice on order"
+        product_list = (
+                    self.company_data['product_order_no'],
+                    self.company_data['product_service_delivery'],
+                    self.company_data['product_service_order'],
+                    self.company_data['product_delivery_no'],
+                )
+
+        for product in product_list:
+            product.invoice_policy = 'order'
+
         self.so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
@@ -132,17 +142,10 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
                 'product_uom_qty': 2,
                 'product_uom': p.uom_id.id,
                 'price_unit': p.list_price,
-                }) for p in (
-                    self.company_data['product_order_no'],
-                    self.company_data['product_service_delivery'],
-                    self.company_data['product_service_order'],
-                    self.company_data['product_delivery_no'],
-                )],
+                }) for p in product_list],
             'pricelist_id': self.company_data['default_pricelist'].id,
             'picking_policy': 'direct',
         })
-        for sol in self.so.order_line:
-            sol.product_id.invoice_policy = 'order'
         # confirm our standard so, check the picking
         self.so.order_line._compute_product_updatable()
         self.assertTrue(self.so.order_line.sorted()[0].product_updatable)

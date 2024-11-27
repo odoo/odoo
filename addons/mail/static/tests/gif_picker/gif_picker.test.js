@@ -126,6 +126,37 @@ test("Open a GIF category trigger the search for the category", async () => {
     await contains("input[placeholder='Search for a GIF']", { value: "cry" });
 });
 
+test("Can have GIF categories with same name", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
+    onRpc("/discuss/gif/categories", () => {
+        return {
+            locale: "en",
+            tags: [
+                {
+                    searchterm: "duplicate",
+                    path: "/v2/search?q=duplicate&locale=en&component=categories&contentfilter=low",
+                    image: "https://media.tenor.com/BiseY2UXovAAAAAM/duplicate.gif",
+                    name: "#duplicate",
+                },
+                {
+                    searchterm: "duplicate",
+                    path: "/v2/search?q=duplicate&locale=en&component=categories&contentfilter=low",
+                    image: "https://media.tenor.com/BiseY2UXovAAAAAM/duplicate.gif",
+                    name: "#duplicate",
+                },
+            ],
+        };
+    });
+    onRpc("/discuss/gif/search", () => rpc.search);
+    await start();
+    await openDiscuss(channelId);
+    await click("button[aria-label='GIFs']");
+    await contains("img[data-src='https://media.tenor.com/BiseY2UXovAAAAAM/duplicate.gif']", {
+        count: 2,
+    });
+});
+
 test("Reopen GIF category list when going back", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });

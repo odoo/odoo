@@ -267,6 +267,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             author_id=self.users[2].partner_id.id,
             partner_ids=self.users[0].partner_id.ids,
         )
+        members = self.channel_channel_public_1.channel_member_ids
+        member = members.filtered(lambda m: m.partner_id == self.users[0].partner_id).with_user(self.users[0])
+        member._mark_as_read(message_0.id)
         # add star
         message_0.toggle_message_starred()
         self.env.company.sudo().name = 'YourCompany'

@@ -150,14 +150,9 @@ class Partner extends models.Model {
             company_type: "individual",
             ref: "product,41",
             parent_id: 1,
-            properties: [
-                {
-                    name: "my_char",
-                    string: "My Char",
-                    type: "char",
-                    value: "aaa",
-                },
-            ],
+            properties: {
+                my_char: "aaa",
+            },
         },
         {
             id: 3,
@@ -170,14 +165,9 @@ class Partner extends models.Model {
             company_type: "company",
             ref: "customer,1",
             parent_id: 1,
-            properties: [
-                {
-                    name: "my_char",
-                    string: "My Char",
-                    type: "char",
-                    value: "bbb",
-                },
-            ],
+            properties: {
+                my_char: "bbb",
+            },
         },
         {
             id: 4,

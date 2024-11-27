@@ -35,16 +35,20 @@ class PosSession(models.Model):
         self.message_post(body=plaintext2html(_('Closed Register')), author_id=author_id.id)
 
     def _aggregate_payments_amounts_by_employee(self, payments):
-        payments_by_employee = {}
+        payments_by_employee = []
 
-        for employee, payments in payments.grouped('employee_id').items():
-            payments_by_employee[employee.id] = {
-                'id': employee.id,
-                'name': employee.name,
-                'amount': sum(payments.mapped('amount')),
-            }
+        for employee, payments_group in payments.grouped('employee_id').items():
+            payments_by_employee.append({
+                'id': employee.id if employee else 'others',
+                'name': employee.name if employee else _('Others'),
+                'amount': sum(payments_group.mapped('amount')),
+            })
 
-        return sorted(payments_by_employee.values(), key=lambda p: p['name'])
+        # Sort such that "Others" is always the last item
+        return sorted(
+            payments_by_employee,
+            key=lambda p: (p['id'] == 'others', p['name'])
+        )
 
     def _aggregate_moves_by_employee(self):
         moves_per_employee = {}

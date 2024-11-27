@@ -3213,7 +3213,7 @@ class MailThread(models.AbstractModel):
             )
             for user in users:
                 user._bus_send_store(
-                    message.with_user(user).with_context(allowed_company_ids=None),
+                    message.with_user(user).with_context(allowed_company_ids=[]),
                     msg_vals=msg_vals,
                     for_current_user=True,
                     add_followers=True,

@@ -4,7 +4,7 @@ import logging
 
 from odoo import api, fields, models
 from odoo.osv import expression
-from odoo.tools import float_compare, float_is_zero, is_html_empty
+from odoo.tools import float_is_zero, is_html_empty
 from odoo.tools.translate import html_translate
 
 from odoo.addons.website.models import ir_http
@@ -283,17 +283,16 @@ class ProductTemplate(models.Model):
                     pricelist_price, currency, product_taxes, taxes, template, website=website,
                 ),
             }
-            if pricelist_rule_id:  # If a rule was applied, there might be a discount
-                # For ecommerce flows, the base price is always the product sales price
-                # which can be computed by calling `_compute_base_price` without a pricelist rule
-                pricelist_base_price = template.env['product.pricelist.item']._compute_base_price(
+            pricelist_item = template.env['product.pricelist.item'].browse(pricelist_rule_id)
+            if pricelist_item._show_discount_on_shop():
+                pricelist_base_price = pricelist_item._compute_price_before_discount(
                     product=template,
                     quantity=1.0,
                     date=date,
                     uom=template.uom_id,
                     currency=currency,
                 )
-                if float_compare(pricelist_base_price, pricelist_price, precision_rounding=currency.rounding) > 0:
+                if currency.compare_amounts(pricelist_base_price, pricelist_price) == 1:
                     base_price = pricelist_base_price
                     template_price_vals['base_price'] = self._apply_taxes_to_price(
                         base_price, currency, product_taxes, taxes, template, website=website,
@@ -467,10 +466,9 @@ class ProductTemplate(models.Model):
         )
 
         price_before_discount = pricelist_price
-        if pricelist_rule_id:  # If a rule was applied, there might be a discount
-            # For ecommerce flows, the base price is always the product sales price
-            # which can be computed by calling `_compute_base_price` without a pricelist rule
-            price_before_discount = self.env['product.pricelist.item']._compute_base_price(
+        pricelist_item = self.env['product.pricelist.item'].browse(pricelist_rule_id)
+        if pricelist_item._show_discount_on_shop():
+            price_before_discount = pricelist_item._compute_price_before_discount(
                 product=product_or_template,
                 quantity=quantity or 1.0,
                 date=date,
@@ -865,10 +863,10 @@ class ProductTemplate(models.Model):
         :param res.currency currency: The currency to use to compute the price.
         :param product.pricelist pricelist: The pricelist to use to compute the price.
         :param dict kwargs: Locally unused data passed to `super`.
-        :rtype: float
-        :return: The specified product's display price.
+        :rtype: tuple(float, int or False)
+        :return: The specified product's display price (and the applied pricelist rule)
         """
-        price = super()._get_configurator_display_price(
+        price, pricelist_rule_id = super()._get_configurator_display_price(
             product_or_template, quantity, date, currency, pricelist, **kwargs
         )
 
@@ -881,8 +879,8 @@ class ProductTemplate(models.Model):
                 taxes = fiscal_position.map_tax(product_taxes)
                 return self._apply_taxes_to_price(
                     price, currency, product_taxes, taxes, product_or_template, website=website
-                )
-        return price
+                ), pricelist_rule_id
+        return price, pricelist_rule_id
 
     @api.model
     def _get_additional_configurator_data(

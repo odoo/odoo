@@ -584,24 +584,18 @@ class PricelistItem(models.Model):
         :returns: base price, expressed in provided pricelist currency
         :rtype: float
         """
-        pricelist_rule = self
-        pricelist_show_discount = pricelist_rule._show_discount()
-        if pricelist_rule and pricelist_show_discount:
-            pricelist_item = pricelist_rule
-            # Find the lowest pricelist rule whose pricelist is configured to show the discount
-            # to the customer.
-            while pricelist_item.base == 'pricelist':
-                rule_id = pricelist_item.base_pricelist_id._get_product_rule(*args, **kwargs)
-                rule_pricelist_item = self.env['product.pricelist.item'].browse(rule_id)
-                rule_show_discount = rule_pricelist_item._show_discount()
-                if rule_pricelist_item and rule_show_discount:
-                    pricelist_item = rule_pricelist_item
-                else:
-                    break
+        pricelist_item = self
+        # Find the lowest pricelist rule whose pricelist is configured to show the discount to the
+        # customer.
+        while pricelist_item.base == 'pricelist':
+            rule_id = pricelist_item.base_pricelist_id._get_product_rule(*args, **kwargs)
+            rule_pricelist_item = self.env['product.pricelist.item'].browse(rule_id)
+            if rule_pricelist_item and rule_pricelist_item.compute_price == 'percentage':
+                pricelist_item = rule_pricelist_item
+            else:
+                break
 
-            pricelist_rule = pricelist_item
-
-        return pricelist_rule._compute_base_price(*args, **kwargs)
+        return pricelist_item._compute_base_price(*args, **kwargs)
 
     @api.model
     def _is_discount_feature_enabled(self):
@@ -609,5 +603,8 @@ class PricelistItem(models.Model):
         return superuser.has_group('sale.group_discount_per_so_line')
 
     def _show_discount(self):
-        self and self.ensure_one()
+        if not self:
+            return False
+
+        self.ensure_one()
         return self._is_discount_feature_enabled() and self.compute_price == 'percentage'

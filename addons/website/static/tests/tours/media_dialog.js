@@ -148,3 +148,38 @@ registerWebsitePreviewTour("website_media_dialog_image_shape", {
         trigger: ":iframe .s_text_image .fa-heart:not([data-shape])",
     },
 ]);
+
+registerWebsitePreviewTour("website_media_dialog_insert_media", {
+    url: "/",
+    edition: true,
+}, () => [
+    ...insertSnippet({
+        id: "s_text_block",
+        name: "Text",
+        groupName: "Text",
+    }),
+    {
+        content: "Click on the first paragraph",
+        trigger: ":iframe .s_text_block p",
+        run: "click",
+    },
+    {
+        content: "Click on the toolbar's 'insert media' button",
+        trigger: ".oe-toolbar #media-insert",
+        run: "click",
+    },
+    {
+        content: "Search for an illustration/image",
+        trigger: ".o_select_media_dialog .o_we_search",
+        run: "edit a",
+    },
+    {
+        content: "Click on the first illustration/image",
+        trigger: ".o_select_media_dialog img.o_we_attachment_highlight",
+        run: "click",
+    },
+    {
+        content: "Verify that the illustration/image was inserted",
+        trigger: ":iframe .s_text_block p > img",
+    },
+]);

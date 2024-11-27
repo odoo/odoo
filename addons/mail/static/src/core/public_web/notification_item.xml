@@ -7,13 +7,13 @@
             'o-important': props.muted === 0,
             'text-muted border-transparent': props.muted === 1,
             'opacity-50 border-transparent': props.muted === 2,
-            'py-3 o-small': ui.isSmall,
+            'py-2 o-small': ui.isSmall,
             'border-top-0': props.first,
             'px-3 py-2': !ui.isSmall,
             'o-active': props.isActive,
         }">
             <span class="o-mail-NotificationItem-unreadIndicator position-absolute" t-att-class="{ 'opacity-0': props.muted, 'opacity-50': !props.muted }"><i class="fa fa-circle"/></span>
-            <div class="position-relative bg-inherit m-1 flex-shrink-0" style="width:40px;height:40px;">
+            <div class="o-mail-NotificationItem-avatarContainer position-relative bg-inherit flex-shrink-0" t-att-class="{ 'o-small': ui.isSmall }" style="width:40px;height:40px;">
                 <img class="o_avatar w-100 h-100 rounded" alt="Notification Item Image" t-att-src="props.iconSrc"/>
                 <t t-slot="icon"/>
             </div>

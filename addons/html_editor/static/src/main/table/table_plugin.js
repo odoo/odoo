@@ -475,6 +475,9 @@ export class TablePlugin extends Plugin {
     hanldeFirefoxSelection(ev = null) {
         const selection = this.document.getSelection();
         if (isBrowserFirefox()) {
+            if (!this.dependencies.selection.isSelectionInEditable(selection)) {
+                return false;
+            }
             if (selection.rangeCount > 1) {
                 // In Firefox, selecting multiple cells within a table using the mouse can create multiple ranges.
                 // This behavior can cause the original selection (where the selection started) to be lost.

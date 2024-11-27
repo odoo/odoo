@@ -84,9 +84,8 @@ class AccountMove(models.Model):
 
     def button_cancel(self):
         # EXTENDS account
-        # We need to override this method to unlink the move from the expenses paid by an employee, else we cannot reimburse them anymore.
+        # We need to override this method to remove the link with the move, else we cannot reimburse them anymore.
         # And cancelling the move != cancelling the expense
         res = super().button_cancel()
-        own_expense_moves = self.filtered(lambda move: move.expense_sheet_id.payment_mode == 'own_account')
-        own_expense_moves.write({'expense_sheet_id': False, 'ref': False})
+        self.write({'expense_sheet_id': False, 'ref': False})
         return res

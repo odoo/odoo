@@ -56,12 +56,6 @@ class AccountEdiXmlUBLPINTSG(models.AbstractModel):
             vals['tax_scheme_vals'] = {'id': 'GST'}
         return vals_list
 
-    def _get_customization_ids(self):
-        # EXTENDS account_edi_ubl_cii
-        vals = super()._get_customization_ids()
-        vals['pint_sg'] = 'urn:peppol:pint:billing-1@sg-1'
-        return vals
-
     def _export_invoice_vals(self, invoice):
         # EXTENDS account_edi_ubl_cii
         vals = super()._export_invoice_vals(invoice)

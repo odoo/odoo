@@ -26,7 +26,6 @@ registry.category("web_tour.tours").add('order_lunch_tour', {
 },
 {
     trigger: '.lunch_location input:value("Farm 1")',
-    run: () => {},  // wait for article to be correctly loaded
 },
 {
     trigger: ".o_kanban_record",
@@ -50,4 +49,8 @@ registry.category("web_tour.tours").add('order_lunch_tour', {
     content: _t("Validate your order"),
     tooltipPosition: 'left',
     run: 'click',
+}, {
+    trigger: '.o_lunch_widget_lines .badge:contains("Ordered")',
+    content: 'Check that order is ordered',
+    run: () => {}
 }]});

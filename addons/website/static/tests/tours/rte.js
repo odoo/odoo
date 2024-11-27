@@ -67,7 +67,7 @@ registerWebsitePreviewTour('rte_translator', {
     run: "click",
 }, {
     content: "click on Use this template",
-    trigger: ".o_page_template .o_button_area",
+    trigger: ".o_page_template .o_button_area:not(:visible)",
     run: "click",
 }, {
     content: "insert file name",
@@ -99,7 +99,7 @@ registerWebsitePreviewTour('rte_translator', {
     run: "click",
 }, {
     content: "click on Use this template",
-    trigger: ".o_page_template .o_button_area",
+    trigger: ".o_page_template .o_button_area:not(:visible)",
     run: "click",
 }, {
     content: "insert page name",

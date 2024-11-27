@@ -2063,8 +2063,11 @@ input[value*="data-oe-translation-source-sha"] {
     visibility: visible;
 }
 .o_wanim_overflow_xy_hidden {
-    overflow-x: hidden !important;
-
+    // "overflow-x: hidden" is added to the "body" and not to "html" because if
+    // it's added to "html", when a popup opens, the page scrolls to the top.
+    > body {
+        overflow-x: hidden !important;
+    }
     &.o_rtl, .o_rtl {
         // Fix for Chrome and Edge bug: resolves slow/stuck scrolling during
         // left-overflowing animations on RTL web pages. Note: using overflow on
@@ -2881,4 +2884,19 @@ input[value*="data-oe-translation-source-sha"] {
 .o_nav_link_btn {
     border-radius: $btn-border-radius;
     padding: $btn-padding-y $btn-padding-x;
+}
+
+// o_facebook_page (Facebook page plugin)
+
+// Since October 2024, the Facebook mobile site (m.facebook.com) uses an
+// 'X-Frame-Options' header set to 'deny', preventing iframe embedding across
+// different domains. This header enforces a security policy restricting
+// cross-origin access to the content.
+// Meta has not provided any communication regarding this change. Until it is
+// resolved, we have no choice but to hide the iframe on mobile to prevent users
+// from seeing a "unavailable content" icon.
+@include media-breakpoint-down(md) {
+    .o_facebook_page {
+        display: none;
+    }
 }

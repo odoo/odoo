@@ -949,6 +949,7 @@ class HrExpense(models.Model):
             'partner_id': self.vendor_id.id,
             'currency_id': self.currency_id.id,
             'payment_method_line_id': payment_method_line.id,
+            'company_id': self.company_id.id,
         }
         move_vals = {
             **self.sheet_id._prepare_move_vals(),

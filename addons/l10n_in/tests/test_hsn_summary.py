@@ -26,13 +26,15 @@ class TestHSNsummary(TestTaxCommon):
             'property_account_income_id': cls.company_data['default_account_revenue'].id,
         })
 
-        cls.gst_5 = cls.env['account.chart.template'].ref('sgst_sale_5')
-        cls.gst_18 = cls.env['account.chart.template'].ref('sgst_sale_18')
-        cls.igst_0 = cls.env['account.chart.template'].ref('igst_sale_0')
-        cls.igst_5 = cls.env['account.chart.template'].ref('igst_sale_5')
-        cls.igst_18 = cls.env['account.chart.template'].ref('igst_sale_18')
-        cls.cess_5_plus_1591 = cls.env['account.chart.template'].ref('cess_5_plus_1591_sale')
-        cls.exempt_0 = cls.env['account.chart.template'].ref('exempt_sale')
+        ChartTemplate = cls.env['account.chart.template']
+        cls.gst_5 = ChartTemplate.ref('sgst_sale_5')
+        cls.gst_18 = ChartTemplate.ref('sgst_sale_18')
+        cls.igst_0 = ChartTemplate.ref('igst_sale_0')
+        cls.igst_5 = ChartTemplate.ref('igst_sale_5')
+        cls.igst_18 = ChartTemplate.ref('igst_sale_18')
+        cls.cess_5_plus_1591 = ChartTemplate.ref('cess_5_plus_1591_sale')
+        cls.exempt_0 = ChartTemplate.ref('exempt_sale')
+        cls.igst_18_rc = ChartTemplate.ref('igst_sale_18_rc')
 
     def _jsonify_tax(self, tax):
         values = super()._jsonify_tax(tax)
@@ -597,6 +599,36 @@ class TestHSNsummary(TestTaxCommon):
                         'uom_name': self.uom_unit.name,
                         'rate': 0.0,
                         'amount_untaxed': 90.0,
+                        'tax_amount_igst': 0.0,
+                        'tax_amount_cgst': 0.0,
+                        'tax_amount_sgst': 0.0,
+                        'tax_amount_cess': 0.0,
+                    },
+                ],
+            },
+        )
+        self._run_js_tests()
+
+    def test_l10n_in_hsn_summary_6(self):
+        """ Test with Sale RC tax. """
+        base_lines = [
+            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 100.0, 0.0, self.uom_unit, self.igst_18_rc),
+        ]
+        self.assert_l10n_in_hsn_summary(
+            base_lines,
+            {
+                'has_igst': True,
+                'has_gst': False,
+                'has_cess': False,
+                'nb_columns': 6,
+                'display_uom': False,
+                'items': [
+                    {
+                        'l10n_in_hsn_code': self.test_hsn_code_1,
+                        'quantity': 1.0,
+                        'uom_name': self.uom_unit.name,
+                        'rate': 18.0,
+                        'amount_untaxed': 100.0,
                         'tax_amount_igst': 0.0,
                         'tax_amount_cgst': 0.0,
                         'tax_amount_sgst': 0.0,

@@ -76,7 +76,6 @@ registerWebsitePreviewTour("snippet_popup_and_animations", {
     {
         content: "Wait for the page to be scrolled to the top.",
         trigger: ":iframe .s_three_columns .row > :last-child:not(.o_animating)",
-        /* task-4185877
         run() {
             // If the column has been animated successfully, the animation delay
             // should be set to approximately zero when it is not visible.
@@ -86,7 +85,6 @@ registerWebsitePreviewTour("snippet_popup_and_animations", {
                 throw new Error("The scroll animation in the page did not end properly with the cookies bar open.");
             }
         },
-        */
     },
     {
         content: "Close the Cookies Bar.",

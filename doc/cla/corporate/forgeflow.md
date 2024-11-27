@@ -21,3 +21,4 @@ Hector Villarreal hector.villarreal@forgeflow.com https://github.com/HviorForgeF
 Bernat Puig bernat.puig@forgeflow.com https://github.com/BernatPForgeFlow
 Joan Sisquella joan.sisquella@forgeflow.com https://github.com/JoanSForgeFlow
 Guillem Casassas guillem.casassas@forgeflow.com https://github.com/GuillemCForgeFlow
+Arnau Cruz arnau.cruz@forgeflow.com https://github.com/ArnauCForgeFlow

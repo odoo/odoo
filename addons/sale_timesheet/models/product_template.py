@@ -59,7 +59,7 @@ class ProductTemplate(models.Model):
             elif record._origin.uom_id:
                 record.uom_id = record._origin.uom_id
             else:
-                record.uom_id = self._get_default_uom_id()
+                record.uom_id = self.default_get(['uom_id']).get('uom_id')
             record.uom_po_id = record.uom_id
 
     def _get_service_to_general_map(self):

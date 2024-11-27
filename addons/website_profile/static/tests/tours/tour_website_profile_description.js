@@ -6,7 +6,7 @@ registry.category("web_tour.tours").add('website_profile_description', {
     url: "/profile/users",
     steps: () => [{
         content: "Click on one user profile card",
-        trigger: "div[onclick]",
+        trigger: "div[onclick]:contains(\"test_user\")",
         run: "click",
     }, {
         content: "Edit profile",

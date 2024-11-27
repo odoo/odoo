@@ -2,6 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { cookie } from "@web/core/browser/cookie";
 
 import { markup } from "@odoo/owl";
 import { omit } from "@web/core/utils/objects";
@@ -529,7 +530,7 @@ export function switchWebsite(websiteId, websiteName) {
     },
     {
         content: `Switch to website '${websiteName}'`,
-        trigger: `.o-dropdown--menu .dropdown-item:contains("${websiteName}")`,
+        trigger: `.o-dropdown--menu .dropdown-item[data-website-id="${websiteId}"]:contains("${websiteName}")`,
         run: "click",
     }, {
         content: "Wait for the iframe to be loaded",
@@ -538,6 +539,20 @@ export function switchWebsite(websiteId, websiteName) {
         timeout: 20000,
         trigger: `:iframe html[data-website-id="${websiteId}"]`,
     }];
+}
+
+/**
+* Switches to a different website by clicking on the website switcher.
+* This function can only be used during test tours as it requires
+* specific cookies to properly function.
+*
+* @param {string} websiteName - The name of the website to switch to.
+* @returns {Array} - The steps required to perform the website switch.
+*/
+export function testSwitchWebsite(websiteName) {
+   const websiteIdMapping = JSON.parse(cookie.get('websiteIdMapping') || '{}');
+   const websiteId = websiteIdMapping[websiteName];
+   return switchWebsite(websiteId, websiteName)
 }
 
 /**

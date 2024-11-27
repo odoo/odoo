@@ -90,7 +90,7 @@ msgstr "<span>Unité de mesure</span>"
 #. module: mrp_account
 #: model:ir.model.constraint,message:mrp_account.constraint_mrp_account_wip_accounting_line_check_debit_credit
 msgid "A single line cannot be both credit and debit."
-msgstr ""
+msgstr "Une même ligne ne peut être à la fois créditrice et débitrice."
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__account_id
@@ -106,6 +106,8 @@ msgstr "Ligne d'écriture comptable"
 #: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting_line
 msgid "Account move line to be created when posting WIP account move"
 msgstr ""
+"Ligne d'écriture comptable à créer lors de la comptabilisation d'un "
+"transfert de compte d'encours de fabrication"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -299,7 +301,7 @@ msgstr "Rapport de vue d'ensemble des OF"
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "Manual Entry"
-msgstr ""
+msgstr "Écriture manuelle"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_production
@@ -326,7 +328,7 @@ msgstr "Nombre d'ordres de fabrication"
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "Manufacturing WIP - %(orders_list)s"
-msgstr ""
+msgstr "Encours de fabrication - %(orders_list)s"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__mo_ids
@@ -344,21 +346,23 @@ msgstr "Ligne de compte analytique OF"
 msgid ""
 "Please make sure the total credit amount equals the total debit amount."
 msgstr ""
+"Veuillez vous assurer que le montant total du crédit est égal au montant "
+"total du débit."
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
 msgid "Post Manufacturing WIP"
-msgstr ""
+msgstr "Comptabiliser l'encours de fabrication"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
 msgid "Post WIP"
-msgstr ""
+msgstr "Comptabiliser TEC"
 
 #. module: mrp_account
 #: model:ir.actions.act_window,name:mrp_account.action_wip_accounting
 msgid "Post WIP Accounting Entry"
-msgstr ""
+msgstr "Enregistrer Écriture Comptable TEC"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_template
@@ -399,7 +403,7 @@ msgstr "Référence"
 #: model:ir.model.fields,field_description:mrp_account.field_account_bank_statement_line__wip_production_ids
 #: model:ir.model.fields,field_description:mrp_account.field_account_move__wip_production_ids
 msgid "Relevant WIP MOs"
-msgstr ""
+msgstr "Ordre de fabrication pertinent pour les TEC"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__reversal_date
@@ -411,6 +415,7 @@ msgstr "Date d'extourne"
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "Reversal date must be after the posting date."
 msgstr ""
+"La date d'extourne doit être postérieure à la date de comptabilisation."
 
 #. module: mrp_account
 #. odoo-python
@@ -435,6 +440,8 @@ msgid ""
 "The MOs that this WIP entry was based on. Expected to be set at time of WIP "
 "entry creation."
 msgstr ""
+"Les ordres de fabrication sur lesquels cet encours est basé. Doit être "
+"défini au moment de la création de l'encours de fabrication."
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__expense_account_id
@@ -475,39 +482,39 @@ msgstr "Unités"
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "WIP - Component Value"
-msgstr ""
+msgstr "TEC - Valeur des composants"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "WIP - Overhead"
-msgstr ""
+msgstr "TEC - Frais généraux"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/models/account_move.py:0
 msgid "WIP MOs of %s"
-msgstr ""
+msgstr "TEC Ordres de fabrication de %s"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "WIP Report for"
-msgstr "Rapport des travaux en cours pour"
+msgstr "Rapport TEC pour"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__line_ids
 msgid "WIP accounting lines"
-msgstr ""
+msgstr "Lignes comptables TEC"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__wip_accounting_id
 msgid "WIP accounting wizard"
-msgstr ""
+msgstr "Assistant comptabilité TEC"
 
 #. module: mrp_account
 #: model:ir.actions.report,name:mrp_account.wip_report
 msgid "WIP report"
-msgstr "Rapport des travaux en cours"
+msgstr "Rapport TEC"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__wc_analytic_account_line_ids
@@ -517,7 +524,7 @@ msgstr "Ligne de compte analytique poste de travail"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting
 msgid "Wizard to post Manufacturing WIP account move"
-msgstr ""
+msgstr "Assistant pour enregistrer les écritures comptables des TEC"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter

@@ -534,9 +534,10 @@ export class Composer extends Component {
             mentionedChannels: this.props.composer.mentionedChannels,
             mentionedPartners: this.props.composer.mentionedPartners,
         });
+        const default_body = await prettifyMessageContent(body, validMentions);
         const context = {
             default_attachment_ids: attachmentIds,
-            default_body: await prettifyMessageContent(body, validMentions),
+            default_body: "<div>" + default_body + "</div>", // as to not wrap in <p> by html_sanitize,
             default_model: this.thread.model,
             default_partner_ids:
                 this.props.type === "note"

@@ -17,7 +17,7 @@ class FleetVehicleLogContract(models.Model):
         start_date = fields.Date.from_string(strdate)
         return fields.Date.to_string(start_date + oneyear)
 
-    vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle', required=True, check_company=True)
+    vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle', required=True, check_company=True, tracking=True)
     cost_subtype_id = fields.Many2one('fleet.service.type', 'Type', help='Cost type purchased with this cost', domain=[('category', '=', 'contract')])
     amount = fields.Monetary('Cost', tracking=True)
     date = fields.Date(help='Date when the cost has been executed')
@@ -31,11 +31,12 @@ class FleetVehicleLogContract(models.Model):
         default=lambda self: self.env['fleet.vehicle'].browse(self._context.get('active_id')).manager_id,
         index=True)
     start_date = fields.Date(
-        'Contract Start Date', default=fields.Date.context_today,
+        'Contract Start Date', default=fields.Date.context_today, tracking=True,
         help='Date when the coverage of the contract begins')
     expiration_date = fields.Date(
         'Contract Expiration Date', default=lambda self:
         self.compute_next_year_date(fields.Date.context_today(self)),
+        tracking=True,
         help='Date when the coverage of the contract expirates (by default, one year after begin date)')
     days_left = fields.Integer(compute='_compute_days_left', string='Warning Date')
     expires_today = fields.Boolean(compute='_compute_days_left')
@@ -60,7 +61,7 @@ class FleetVehicleLogContract(models.Model):
         ('weekly', 'Weekly'),
         ('monthly', 'Monthly'),
         ('yearly', 'Yearly')
-        ], 'Recurring Cost Frequency', default='monthly', required=True)
+        ], 'Recurring Cost Frequency', default='monthly', required=True, tracking=True)
     service_ids = fields.Many2many('fleet.service.type', string="Included Services")
 
     @api.depends('vehicle_id.name', 'cost_subtype_id')

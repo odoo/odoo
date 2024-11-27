@@ -61,13 +61,13 @@ class AccountTax(models.Model):
                 rounding_method='round_per_line',
                 product=product,
             )
-
             # Rate.
-            rate = sum(
-                tax_data['tax'].amount
+            unique_taxes_data = set(
+                tax_data['tax']
                 for tax_data in taxes_computation['taxes_data']
                 if tax_data['tax']['l10n_in_tax_type'] in ('igst', 'cgst', 'sgst')
             )
+            rate = sum(tax.amount for tax in unique_taxes_data)
 
             key = frozendict({
                 'l10n_in_hsn_code': l10n_in_hsn_code,

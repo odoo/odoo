@@ -64,6 +64,7 @@
 
 .o-mail-Composer-bg {
     background-color: var(--mail-Composer-bg, $o-view-background-color);
+    --border-opacity: .5;
 }
 
 .o-mail-Composer-inputStyle {
@@ -127,7 +128,6 @@
 }
 
 .o-mail-Composer-compactContainer {
-    --border-opacity: 0.75;
 
     &.o-iosPwa:not(:focus-within) {
         margin-bottom: map-get($spacers, 5) !important;

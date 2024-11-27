@@ -422,7 +422,8 @@
                                                     'quantity': product_uom_qty,
                                                     'pricelist': parent.pricelist_id,
                                                     'uom': product_uom,
-                                                    'company_id': parent.company_id
+                                                    'company_id': parent.company_id,
+                                                    'default_uom_id': product_uom,
                                                 }"
                                                 readonly="not product_updatable"
                                                 required="not display_type and not is_downpayment"
@@ -533,6 +534,7 @@
                                         'uom':product_uom,
                                         'company_id': parent.company_id,
                                         'default_lst_price': price_unit,
+                                        'default_uom_id': product_uom,
                                     }"
                                     options="{
                                         'no_open': True,
@@ -551,6 +553,7 @@
                                         'uom':product_uom,
                                         'company_id': parent.company_id,
                                         'default_list_price': price_unit,
+                                        'default_uom_id': product_uom,
                                     }"
                                     options="{
                                         'no_open': True,
