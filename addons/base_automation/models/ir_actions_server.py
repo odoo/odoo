@@ -4,6 +4,7 @@ from odoo.tools.json import scriptsafe as json_scriptsafe
 
 from odoo import api, exceptions, fields, models, _
 
+from .base_automation import get_webhook_request_headers
 from .base_automation import get_webhook_request_payload
 
 class ServerAction(models.Model):
@@ -89,6 +90,9 @@ class ServerAction(models.Model):
         if action and action.state == "code":
             eval_context['json'] = json_scriptsafe
             payload = get_webhook_request_payload()
+            headers = get_webhook_request_headers()
             if payload:
                 eval_context["payload"] = payload
+            if headers:
+                eval_context["headers"] = headers
         return eval_context
