@@ -4,7 +4,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
 from odoo.tests.common import tagged, Form
-from odoo import fields
+from odoo import fields, Command
 
 class TestAccountMoveStockCommon(AccountTestInvoicingCommon):
     @classmethod
@@ -335,3 +335,34 @@ class TestAccountMove(TestAccountMoveStockCommon):
         in_picking.button_validate()
         self.assertEqual(sm.state, 'done')
         self.assertEqual(sm.account_move_ids.company_id, self.env.company)
+
+    def test_cogs_analytic_accounting(self):
+        """Check analytic distribution is correctly propagated to COGS lines"""
+        self.env.company.anglo_saxon_accounting = True
+        default_plan = self.env['account.analytic.plan'].create({
+            'name': 'Default',
+        })
+        analytic_account = self.env['account.analytic.account'].create({
+            'name': 'Account 1',
+            'plan_id': default_plan.id,
+            'company_id': False,
+        })
+
+        move = self.env['account.move'].create({
+            'move_type': 'out_refund',
+            'invoice_date': fields.Date.from_string('2019-01-01'),
+            'partner_id': self.partner_a.id,
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_A.id,
+                    'analytic_distribution': {
+                        analytic_account.id: 100,
+                    },
+                }),
+            ]
+        })
+        move.action_post()
+
+        cogs_line = move.line_ids.filtered(lambda l: l.account_id == self.product_A.property_account_expense_id)
+        self.assertEqual(cogs_line.analytic_distribution, {str(analytic_account.id): 100})
