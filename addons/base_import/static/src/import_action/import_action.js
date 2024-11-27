@@ -149,8 +149,12 @@ export class ImportAction extends Component {
         const result = await this.model.setOption(name, value, fieldName);
         if (result) {
             const { res, error } = result;
-            if (!error && res.num_rows) {
+            if (!res.error && res.num_rows) {
                 this.state.numRows = res.num_rows;
+                this.state.previewError = undefined;
+            }
+            else {
+                this.state.previewError = error;
             }
         }
         this.model.unblock();
