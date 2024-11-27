@@ -19,9 +19,10 @@ export class ProductListPage extends Component {
         this.categoryList = useRef("categoryList");
         this.currentProductCard = useChildRef();
         this.categoryButton = Object.fromEntries(
-            this.selfOrder.productCategories.map((category) => {
-                return [category.id, useRef(`category_${category.id}`)];
-            })
+            this.selfOrder.productCategories.map((category) => [
+                category.id,
+                useRef(`category_${category.id}`),
+            ])
         );
 
         useEffect(

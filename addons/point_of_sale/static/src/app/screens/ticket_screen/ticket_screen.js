@@ -330,8 +330,8 @@ export class TicketScreen extends Component {
             orders = fuzzyLookup(this.state.search.searchTerm, orders, repr);
         }
 
-        const sortOrders = (orders, ascending = false) => {
-            return orders.sort((a, b) => {
+        const sortOrders = (orders, ascending = false) =>
+            orders.sort((a, b) => {
                 const dateA = parseUTCString(a.date_order, "yyyy-MM-dd HH:mm:ss");
                 const dateB = parseUTCString(b.date_order, "yyyy-MM-dd HH:mm:ss");
 
@@ -343,7 +343,6 @@ export class TicketScreen extends Component {
                     return ascending ? nameA - nameB : nameB - nameA;
                 }
             });
-        };
 
         if (this.state.filter === "SYNCED") {
             return sortOrders(orders).slice(

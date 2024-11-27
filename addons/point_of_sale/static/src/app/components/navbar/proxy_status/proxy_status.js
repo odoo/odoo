@@ -41,9 +41,10 @@ export class ProxyStatus extends Component {
                     enabled: iface_electronic_scale,
                 },
             ];
-            const disconnectedDevices = devices.filter(({ enabled, driver }) => {
-                return enabled && !["connected", "connecting"].includes(driver?.status);
-            });
+            const disconnectedDevices = devices.filter(
+                ({ enabled, driver }) =>
+                    enabled && !["connected", "connecting"].includes(driver?.status)
+            );
             if (disconnectedDevices.length) {
                 return `${disconnectedDevices.map((d) => d.name).join(" & ")} ${_t("Offline")}`;
             }

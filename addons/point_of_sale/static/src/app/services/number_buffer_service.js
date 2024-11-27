@@ -231,9 +231,7 @@ class NumberBuffer extends EventBus {
      * @param {String} input valid input
      */
     _updateBuffer(input) {
-        const isEmpty = (val) => {
-            return val === "" || val === null;
-        };
+        const isEmpty = (val) => val === "" || val === null;
         if (input === undefined || input === null) {
             return;
         }
