@@ -275,11 +275,7 @@ class DiscussChannelMember(models.Model):
             bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
         for member in self:
             data = member._read_format(
-                [
-                    field
-                    for field in fields
-                    if field not in ["channel", "fetched_message_id", "seen_message_id", "persona"]
-                ],
+                [field for field in fields if field not in ["channel", "persona"]],
                 load=False,
             )[0]
             if "channel" in fields:
@@ -294,10 +290,6 @@ class DiscussChannelMember(models.Model):
                 if member.guest_id:
                     # sudo: mail.guest - reading guest related to a member is considered acceptable
                     data["persona"] = Store.one(member.guest_id.sudo(), fields=fields["persona"])
-            if "fetched_message_id" in fields:
-                data["fetched_message_id"] = Store.one(member.fetched_message_id, only_id=True)
-            if "seen_message_id" in fields:
-                data["seen_message_id"] = Store.one(member.seen_message_id, only_id=True)
             if "message_unread_counter" in fields:
                 data["message_unread_counter_bus_id"] = bus_last_id
             store.add(member, data)

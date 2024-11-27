@@ -133,14 +133,7 @@ export class DiscussChannelMember extends models.ServerModel {
             const [data] = this._read_format(
                 member.id,
                 Object.keys(fields).filter(
-                    (field) =>
-                        ![
-                            "channel",
-                            "fetched_message_id",
-                            "message_unread_counter",
-                            "seen_message_id",
-                            "persona",
-                        ].includes(field)
+                    (field) => !["channel", "message_unread_counter", "persona"].includes(field)
                 ),
                 makeKwArgs({ load: false })
             );
@@ -165,18 +158,6 @@ export class DiscussChannelMember extends models.ServerModel {
                         makeKwArgs({ fields: fields["persona"] })
                     );
                 }
-            }
-            if ("fetched_message_id" in fields) {
-                data.fetched_message_id = mailDataHelpers.Store.one(
-                    this.env["mail.message"].browse(member.fetched_message_id),
-                    makeKwArgs({ only_id: true })
-                );
-            }
-            if ("seen_message_id" in fields) {
-                data.seen_message_id = mailDataHelpers.Store.one(
-                    this.env["mail.message"].browse(member.seen_message_id),
-                    makeKwArgs({ only_id: true })
-                );
             }
             if ("message_unread_counter" in fields) {
                 data.message_unread_counter = this._compute_message_unread_counter([member.id]);
