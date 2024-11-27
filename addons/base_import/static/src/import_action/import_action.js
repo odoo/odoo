@@ -151,6 +151,9 @@ export class ImportAction extends Component {
             const { res, error } = result;
             if (!error && res.num_rows) {
                 this.state.numRows = res.num_rows;
+                this.state.previewError = undefined;
+            } else {
+                this.state.previewError = error;
             }
         }
         this.model.unblock();
