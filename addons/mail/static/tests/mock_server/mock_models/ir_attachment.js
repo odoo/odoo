@@ -47,7 +47,6 @@ export class IrAttachment extends webModels.IrAttachment {
                 "mimetype",
                 "name",
                 "res_name",
-                "size",
                 "thread",
                 "type",
                 "url",
@@ -57,14 +56,11 @@ export class IrAttachment extends webModels.IrAttachment {
         for (const attachment of this.browse(ids)) {
             const [data] = this._read_format(
                 attachment.id,
-                fields.filter((field) => !["filename", "size", "thread"].includes(field)),
+                fields.filter((field) => !["filename", "thread"].includes(field)),
                 makeKwArgs({ load: false })
             );
             if (fields.includes("filename")) {
                 data.filename = attachment.name;
-            }
-            if (fields.includes("size")) {
-                data.size = attachment.file_size;
             }
             if (fields.includes("thread")) {
                 data.thread =
