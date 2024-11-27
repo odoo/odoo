@@ -80,7 +80,7 @@ class IrActionsServer(models.Model):
 
         if self.state == 'sms':
             if self.model_id.transient or not self.model_id.is_mail_thread:
-                warnings.append(_("Sending SMS can only be done on a mail.thread or a transient model"))
+                warnings.append(_("Sending SMS can only be done on a not transient mail.thread model"))
 
             if self.sms_template_id and self.sms_template_id.model_id != self.model_id:
                 warnings.append(
