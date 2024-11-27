@@ -87,7 +87,7 @@ class AutomationDecantingOrdersProcess(models.Model):
                 'default_container_id': self.container_id.id,
                 'default_crate_barcode': self.crate_barcode,
                 'default_picking_id': self.picking_id.id,
-                'default_count_lines': self.count_lines,
+                'default_updated_count_lines': self.count_lines,
             }
         }
 
@@ -263,7 +263,6 @@ class AutomationDecantingOrdersProcess(models.Model):
         headers = {
             'Content-Type': 'application/json'
         }
-
         try:
             # Send the data to the Automation Putaway URL
             response_putaway = requests.post(url_automation_putaway, headers=headers, data=json_data)
@@ -329,14 +328,21 @@ class AutomationDecantingOrdersProcessLine(models.Model):
         # new_record.onchange_quantity()
         return new_record
 
-    @api.depends('automation_decanting_process_id.crate_barcode', 'partition_code')
+    @api.depends('automation_decanting_process_id.crate_barcode', 'partition_code',
+                 'automation_decanting_process_id.site_code_id')
     def _compute_bin_code(self):
-        """Compute the bin_code as a combination of crate_barcode and partition_code."""
+        """Compute the bin_code based on site_code_id and other factors."""
         for line in self:
-            crate_barcode = line.automation_decanting_process_id.crate_barcode
+            process = line.automation_decanting_process_id
+            crate_barcode = process.crate_barcode
             partition_code = line.partition_code
+            site_code = process.site_code_id.name
+
             if crate_barcode and partition_code:
-                line.bin_code = f"{crate_barcode}F{partition_code}"
+                if site_code == 'FC3':  # Special logic for site_code_id == 'FC3'
+                    line.bin_code = f"{crate_barcode}F0{partition_code}"
+                else:  # Default logic for other site codes
+                    line.bin_code = f"{crate_barcode}F{partition_code}"
             else:
                 line.bin_code = False
 
