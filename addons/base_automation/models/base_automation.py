@@ -64,6 +64,15 @@ TIME_TRIGGERS = [
 ]
 
 
+def get_webhook_request_headers():
+    if not request:
+        return None
+    try:
+        headers = request.get_request_headers()
+    except:
+        headers = []
+    return headers
+
 def get_webhook_request_payload():
     if not request:
         return None
