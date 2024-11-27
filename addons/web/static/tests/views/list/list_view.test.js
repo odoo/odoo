@@ -6832,7 +6832,6 @@ test(`groupby node with edit button`, async () => {
                 res_model: "res.currency",
                 type: "ir.actions.act_window",
                 views: [[false, "form"]],
-                flags: { mode: "edit" },
             });
         },
     });

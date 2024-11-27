@@ -1636,60 +1636,6 @@ test.tags("desktop")("execute action with unknown view type", async () => {
     );
 });
 
-test("flags field of ir.actions.act_window is used", async () => {
-    // more info about flags field : https://github.com/odoo/odoo/commit/c9b133813b250e89f1f61816b0eabfb9bee2009d
-    defineActions([
-        {
-            id: 43,
-            name: "Partners",
-            res_id: 1,
-            res_model: "partner",
-            type: "ir.actions.act_window",
-            flags: {
-                mode: "edit",
-            },
-            views: [[false, "form"]],
-        },
-        {
-            id: 44,
-            name: "Partners",
-            res_id: 1,
-            res_model: "partner",
-            type: "ir.actions.act_window",
-            flags: {
-                mode: "readonly",
-            },
-            views: [[false, "form"]],
-        },
-    ]);
-
-    stepAllNetworkCalls();
-
-    await mountWithCleanup(WebClient);
-
-    // action 43 -> form in edit mode
-    await getService("action").doAction(43);
-    expect(".o_form_view .o_form_editable").toHaveCount(1, {
-        message: "should display the form view in edit mode",
-    });
-
-    // action 44 -> form in readonly mode
-    await getService("action").doAction(44);
-    expect(".o_form_view .o_form_readonly").toHaveCount(1, {
-        message: "should display the form view in readonly mode",
-    });
-    expect.verifySteps([
-        "/web/webclient/translations",
-        "/web/webclient/load_menus",
-        "/web/action/load",
-        "get_views",
-        "web_read",
-        "/web/action/load",
-        "get_views",
-        "web_read",
-    ]);
-});
-
 test.tags("desktop")("save current search", async () => {
     expect.assertions(4);
 
