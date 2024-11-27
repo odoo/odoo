@@ -23,13 +23,6 @@ export function clickMenuDropdownOption(name) {
         run: "click",
     };
 }
-export function isCashMoveButtonHidden() {
-    return [
-        {
-            trigger: ".pos-topheader:not(:contains(Cash In/Out))",
-        },
-    ];
-}
 export function endTour() {
     return {
         content: "Last tour step that avoids error mentioned in commit 443c209",
