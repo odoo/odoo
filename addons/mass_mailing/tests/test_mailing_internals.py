@@ -777,7 +777,7 @@ class TestMailingHeaders(MassMailCommon, HttpCase):
 
             # check outgoing email headers (those are put into outgoing email
             # not in the mail.mail record)
-            email = self._find_sent_mail_wemail(contact.email)
+            email = self._find_sent_email_wemail(contact.email)
             headers = email.get("headers")
             unsubscribe_oneclick_url = test_mailing._get_unsubscribe_oneclick_url(contact.email, contact.id)
             self.assertTrue(headers, "Mass mailing emails should have headers for unsubscribe")
