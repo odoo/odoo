@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import functools
 import logging
+import re
 import typing
 from collections import defaultdict, deque
 from collections.abc import Mapping
@@ -15,20 +16,27 @@ from pprint import pformat
 from weakref import ref as weakref
 from zoneinfo import ZoneInfo
 
-from odoo.exceptions import AccessError, UserError, CacheMiss
+from odoo.exceptions import AccessError, CacheMiss, UserError
 from odoo.sql_db import BaseCursor
-from odoo.tools import clean_context, frozendict, reset_cached_properties, OrderedSet, SQL
-from odoo.tools.translate import get_translation, get_translated_module, LazyGettext
-from odoo.tools.misc import StackMap, SENTINEL
+from odoo.tools import (
+    SQL,
+    OrderedSet,
+    clean_context,
+    frozendict,
+    reset_cached_properties,
+)
+from odoo.tools.misc import SENTINEL, StackMap
+from odoo.tools.translate import LazyGettext, get_translated_module, get_translation
 
-from .registry import Registry
 from .query import Query
+from .registry import Registry
 from .utils import SUPERUSER_ID
 
 if typing.TYPE_CHECKING:
     from collections.abc import Collection, Iterable, Iterator, MutableMapping
     from datetime import tzinfo
     from weakref import ReferenceType
+
     from .identifiers import IdType, NewId
     from .types import BaseModel, Field
 
@@ -99,6 +107,17 @@ class Environment(Mapping[str, "BaseModel"]):
     def __getitem__(self, model_name: str) -> BaseModel:
         """ Return an empty recordset from the given model. """
         return self.registry[model_name](self, (), ())
+
+    def __dir__(self):
+        return [k.replace('_', '__').replace('.', '_') for k in self.registry.keys()]
+
+    def __getattr__(self, name):
+        """ If the attribute is not in the class, search the registry """
+        if name not in self and name in self.__dir__():
+            backward = re.sub('([^_])_([^_])', r'\1.\2', name)
+            backward = re.sub(r'__', '_', backward)
+            return self.__getitem__(backward)
+        return super().__getattr__(name)
 
     def __iter__(self):
         """ Return an iterator on model names. """
