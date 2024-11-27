@@ -790,12 +790,6 @@ export class HierarchyModel extends Model {
         if (!this.env.searchModel) {
             return true;
         }
-        if (this.env.searchModel.display?.searchPanel) {
-            const searchPanelDomain = this.env.searchModel._getSearchPanelDomain();
-            if (searchPanelDomain.toList(this.env.searchModel.context).length) {
-                return false;
-            }
-        }
         const isDisabledOptionalSearchMenuType = (type) => {
             return (
                 ["filter", "groupBy", "favorite"].includes(type) &&
