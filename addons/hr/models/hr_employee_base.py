@@ -272,11 +272,6 @@ class HrEmployeeBase(models.AbstractModel):
             employee.is_flexible = employee.is_fully_flexible or employee.resource_calendar_id.flexible_hours
 
     @api.model
-    def search_panel_select_range(self, field_name, **kwargs):
-        # make sure all the companies/departments accessible by the current user are visible in the search panel since the user can see employees in other companies.
-        return super(HrEmployeeBase, self.with_context(allowed_company_ids=self.env.user._get_company_ids())).search_panel_select_range(field_name, **kwargs)
-
-    @api.model
     def _get_employee_working_now(self):
         working_now = []
         # We loop over all the employee tz and the resource calendar_id to detect working hours in batch.
