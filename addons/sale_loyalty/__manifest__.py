@@ -25,7 +25,7 @@
     ],
     'assets': {
         'web.assets_frontend': [
-            'sale_loyalty/static/src/portal/loyalty_card_dialog.xml',
+            'sale_loyalty/static/src/portal/*',
         ],
         'web.assets_backend': [
             'sale_loyalty/static/src/**/*',
