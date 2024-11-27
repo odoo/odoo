@@ -1627,6 +1627,9 @@ class Request:
         """
         return self.best_lang or DEFAULT_LANG
 
+    def get_request_headers(self):
+        return self.httprequest.headers
+
     def get_http_params(self):
         """
         Extract key=value pairs from the query string and the forms
