@@ -86,6 +86,7 @@
         'web.assets_unit_tests': [
             # for the related_models.test.js
             'point_of_sale/static/src/app/models/related_models.js',
+
             # for the data_service.test.js
             'point_of_sale/static/src/app/models/utils/indexed_db.js',
             'point_of_sale/static/src/app/models/data_service_options.js',
@@ -93,7 +94,14 @@
             'point_of_sale/static/src/proxy_trap.js',
             'point_of_sale/static/src/lazy_getter.js',
             'point_of_sale/static/src/app/services/data_service.js',
+
             'point_of_sale/static/tests/unit/**/*',
+
+            'point_of_sale/static/src/app/components/odoo_logo/*',
+            'point_of_sale/static/src/app/components/centered_icon/*',
+            'point_of_sale/static/src/app/components/inputs/**/*',
+            'point_of_sale/static/tests/generic_components/**/*',
+
         ],
 
         # PoS assets
