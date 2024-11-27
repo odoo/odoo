@@ -75,29 +75,27 @@ class ProjectProject(models.Model):
         return action_window
 
     def action_profitability_items(self, section_name, domain=None, res_id=False):
-        if section_name == 'purchase_order':
-            action = {
-                'name': self.env._('Purchase Order Items'),
+        if section_name != 'purchase_order':
+            return super().action_profitability_items(section_name, domain, res_id)
+        context = {'create': False, 'edit': False}
+        if res_id:
+            return {
+                'name': self.env._('Purchase Orders'),
                 'type': 'ir.actions.act_window',
-                'res_model': 'purchase.order.line',
-                'views': [[False, 'list'], [False, 'form']],
-                'domain': domain,
-                'context': {
-                    'create': False,
-                    'edit': False,
-                },
+                'res_model': 'purchase.order',
+                'views': [[False, 'form']],
+                'view_mode': 'form',
+                'res_id': self.env['purchase.order'].search([('order_line', '=', res_id)], limit=1).id,
+                'context': context,
             }
-            if res_id:
-                action['res_id'] = res_id
-                if 'views' in action:
-                    action['views'] = [
-                        (view_id, view_type)
-                        for view_id, view_type in action['views']
-                        if view_type == 'form'
-                    ] or [False, 'form']
-                action['view_mode'] = 'form'
-            return action
-        return super().action_profitability_items(section_name, domain, res_id)
+        return {
+            'name': self.env._('Purchase Order Items'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'purchase.order.line',
+            'views': [[False, 'list'], [False, 'form']],
+            'domain': domain,
+            'context': context,
+        }
 
     # ----------------------------
     #  Project Updates
