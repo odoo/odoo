@@ -176,7 +176,6 @@ export class AttachmentUploadService {
 
     _makeAttachmentData(upload, tmpId, thread, tmpUrl) {
         const attachmentData = {
-            filename: upload.title,
             id: tmpId,
             mimetype: upload.type,
             name: upload.title,

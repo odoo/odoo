@@ -65,7 +65,7 @@ class AbstractAttachmentView extends Component {
     }
 
     get displayName() {
-        return this.state.thread.mainAttachment.filename;
+        return this.state.thread.mainAttachment.name;
     }
 
     onClickPopout() {}

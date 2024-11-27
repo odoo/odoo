@@ -12,7 +12,7 @@
                         <i t-if="state.file.isVideo" class="fa fa-video-camera" role="img" title="Video"/>
                     </div>
                     <div class="d-flex align-items-center ms-4 overflow-auto">
-                        <span class="text-truncate" t-out="state.file.displayName"/>
+                        <span class="text-truncate" t-out="state.file.name"/>
                     </div>
                     <div class="flex-grow-1"/>
                     <div class="o-FileViewer-download o-FileViewer-headerButton d-flex align-items-center px-3 cursor-pointer" role="button" title="Download" t-on-click.stop="">
