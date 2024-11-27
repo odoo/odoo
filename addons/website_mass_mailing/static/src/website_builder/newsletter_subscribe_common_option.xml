@@ -8,4 +8,18 @@
 
 </t>
 
+<t t-name="website_mass_mailing.NewsletterMailingListsCheckboxes">
+    <t t-foreach="mailingLists" t-as="record" t-key="record_index">
+        <div class="checkbox col-12">
+            <div class="form-check">
+                <input type="checkbox" class="s_website_form_input form-check-input" name="list_ids"
+                    t-attf-id="mailing_list_#{record.id}" t-att-checked="mailingLists.length &lt;= 1" t-att-value="record.id" required="1"/>
+                <label class="form-check-label s_website_form_check_label" t-attf-for="mailing_list_#{record.id}">
+                    <t t-out="record.name"/>
+                </label>
+            </div>
+        </div>
+    </t>
+</t>
+
 </templates>
