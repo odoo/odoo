@@ -378,9 +378,6 @@ class IrActionsAct_Window(models.Model):
         return super()._get_readable_fields() | {
             "context", "mobile_view_mode", "domain", "filter", "groups_id", "limit",
             "res_id", "res_model", "search_view_id", "target", "view_id", "view_mode", "views", "embedded_action_ids",
-            # `flags` is not a real field of ir.actions.act_window but is used
-            # to give the parameters to generate the action
-            "flags",
             # this is used by frontend, with the document layout wizard before send and print
             "close_on_report_download",
         }

@@ -210,5 +210,4 @@ class StockPackage_Level(models.Model):
             'view_id': view.id,
             'target': 'new',
             'res_id': self.id,
-            'flags': {'mode': 'readonly'},
         }

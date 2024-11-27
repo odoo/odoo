@@ -34,7 +34,6 @@ viewRegistry.addValidation({
 /** @typedef {Object} Config
  *  @property {integer|false} actionId
  *  @property {string|false} actionType
- *  @property {Object} actionFlags
  *  @property {() => []} breadcrumbs
  *  @property {() => string} getDisplayName
  *  @property {(string) => void} setDisplayName
@@ -57,7 +56,6 @@ export function getDefaultConfig() {
         embeddedActions: [],
         currentEmbeddedActionId: false,
         parentActionId: false,
-        actionFlags: {},
         breadcrumbs: reactive([
             {
                 get name() {

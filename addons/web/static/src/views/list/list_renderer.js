@@ -450,7 +450,6 @@ export class ListRenderer extends Component {
             res_id: resId,
             type: "ir.actions.act_window",
             views: [[false, "form"]],
-            flags: { mode: "edit" },
         });
     }
 

@@ -565,7 +565,6 @@ export function makeActionManager(env, router = _router) {
             config: {
                 actionId: action.id,
                 actionType: "ir.actions.client",
-                actionFlags: action.flags,
             },
             displayName: action.display_name || action.name || "",
         };
@@ -660,9 +659,6 @@ export function makeActionManager(env, router = _router) {
                     };
                 }
             }
-            if (action.flags && "mode" in action.flags) {
-                viewProps.mode = action.flags.mode;
-            }
         }
 
         const specialKeys = ["help", "useSampleModel", "limit", "count"];
@@ -718,7 +714,6 @@ export function makeActionManager(env, router = _router) {
                 embeddedActions,
                 parentActionId,
                 currentEmbeddedActionId,
-                actionFlags: action.flags,
                 views: action.views,
                 viewSwitcherEntries,
             },
