@@ -24,7 +24,6 @@ export class LocationSelectorDialog extends Component {
     };
 
     setup() {
-        this.title = _t("Choose a pick-up point");
         this.state = useState({
             locations: [],
             error: false,
@@ -145,6 +144,14 @@ export class LocationSelectorDialog extends Component {
     get mobileComponent() {
         if (this.state.viewMode === 'map') return MapContainer;
         return LocationList;
+    }
+
+    get title() {
+        return _t("Choose a pick-up point");
+    }
+
+    get validationButtonLabel() {
+        return _t("Choose this location");
     }
 
     /**
