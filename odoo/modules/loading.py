@@ -112,8 +112,15 @@ def force_demo(env):
         "SELECT name FROM ir_module_module WHERE state IN ('installed', 'to upgrade', 'to remove')"
     )
     module_list = [name for (name,) in env.cr.fetchall()]
+    # DEBUG
+    if 'stock' in module_list and 'sale' in module_list:
+        module_list.remove('stock')
+        graph.add_modules(env.cr, module_list, ['demo'])
+        module_list.append('stock')
     graph.add_modules(env.cr, module_list, ['demo'])
 
+    for key in ('account_edi_ubl_cii', 'account_invoice_extract', 'account_payment', 'sale'):
+        graph[key].depth = 7  # force sale to be loaded first (same-level as stock)
     for package in graph:
         load_demo(env, package, {}, 'init')
 
