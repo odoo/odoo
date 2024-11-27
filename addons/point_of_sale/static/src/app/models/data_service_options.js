@@ -11,8 +11,15 @@ export class DataServiceOptions {
             {
                 name: "pos.order.line",
                 key: "uuid",
-                condition: (record) =>
-                    record.order_id?.finalized && typeof record.order_id.id === "number",
+                condition: (record) => {
+                    if (record.order_id?.finalized && typeof record.order_id.id === "number") {
+                        return (
+                            record.refund_orderline_ids.length === 0 ||
+                            !record.refund_orderline_ids.some((ol) => typeof ol.id === "string")
+                        );
+                    }
+                    return false;
+                },
             },
             {
                 name: "pos.payment",

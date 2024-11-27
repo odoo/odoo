@@ -76,6 +76,7 @@ export default class IndexedDB {
         }
 
         const promises = arrData.map((data) => {
+            data = JSON.parse(JSON.stringify(data));
             return new Promise((resolve, reject) => {
                 const request = transaction.objectStore(storeName)[method](data);
                 request.onsuccess = () => resolve();
