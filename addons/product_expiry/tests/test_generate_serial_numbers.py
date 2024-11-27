@@ -4,6 +4,7 @@ from datetime import datetime
 from freezegun import freeze_time
 
 from odoo.addons.stock.tests.test_generate_serial_numbers import StockGenerateCommon
+from odoo.addons.stock.tests.test_picking_tours import TestStockPickingTour
 from odoo.tools.misc import get_lang
 
 
@@ -238,3 +239,33 @@ class TestStockLot(StockGenerateCommon):
             self.assertEqual(move.move_line_ids.lot_name, "lot-001")
             self.assertEqual(move.move_line_ids.quantity, 20)
             self.assertEqual(move.move_line_ids.expiration_date, datetime(day=4, month=8, year=2048))
+
+
+class TestProductExpiryTour(TestStockPickingTour):
+
+    @freeze_time("2025-06-01")
+    def test_generate_serial_with_expiration(self):
+        """
+        Ensure that serial/lot numbers generated using the 'Generate Serials/Lots' button in Detailed
+        Operations have expiration dates set.
+        """
+        product_exp = self.env['product.product'].create({
+            'name': 'Product Exp',
+            'is_storable': True,
+            'tracking': 'serial',
+            'use_expiration_date': True,
+            'expiration_time': 2,
+        })
+
+        self.env['stock.move'].create({
+            'name': product_exp.name,
+            'product_id': product_exp.id,
+            'product_uom_qty': 2,
+            'product_uom': product_exp.uom_id.id,
+            'picking_id': self.receipt.id,
+        })
+
+        self.receipt.action_confirm()
+        url = self._get_picking_url(self.receipt.id)
+
+        self.start_tour(url, 'test_generate_serial_with_expiration', login='admin')
