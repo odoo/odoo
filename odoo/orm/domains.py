@@ -1024,43 +1024,6 @@ def nary_condition_optimization(operators: Collection[str], field_types: Collect
 # --------------------------------------------------
 
 
-def _value_to_ids(
-    value: typing.Any,
-    model: BaseModel,
-    operator: str,
-    extra_domain: Domain = Domain.TRUE,  # when searching using display_name
-) -> OrderedSet[int] | Query | SQL:
-    """For relational fields, transform a value into a set of ids or query."""
-    if isinstance(value, ANY_TYPES):
-        if isinstance(value, Domain):
-            return model._search(value)
-        return value
-    if isinstance(value, int):
-        return OrderedSet((value,)) if value else OrderedSet()
-    # make a collection of names
-    if isinstance(value, str):
-        value = (value,)
-    elif not isinstance(value, COLLECTION_TYPES):
-        raise TypeError(f"Invalid argument to get ids from {model._name}: {value!r}")
-    # split by type
-    int_values, values = partition(lambda v: isinstance(v, int), value)
-    if not values:
-        # only int, return an OrderedSet
-        return value if isinstance(value, OrderedSet) else OrderedSet(value)
-    # search using the display_name
-    if operator == 'in':
-        domain: Domain = DomainCondition('display_name', 'in', OrderedSet(values))
-    else:
-        domain = Domain.OR(
-            Domain('display_name', operator, v)
-            for v in values
-        )
-    if int_values:
-        domain |= DomainCondition('id', 'in', OrderedSet(int_values))
-    domain &= extra_domain
-    return model._search(domain)
-
-
 @operator_optimization(['=?'])
 def _operator_equal_if_value(condition, _):
     """a =? b  <=>  not b or a = b"""
@@ -1201,45 +1164,45 @@ def _optimize_like_str(condition, model):
     return DomainCondition(condition.field_expr, condition.operator, str(value))
 
 
-@field_type_optimization(['many2one', 'one2many', 'many2many'], OptimizationLevel.FULL)
+@field_type_optimization(['many2one', 'one2many', 'many2many'])
 def _optimize_relational_name_search(condition, model):
-    """Search using display_name; see _value_to_ids."""
+    """Search relational using `display_name`.
+    
+    When a relational field is compared to a string, we actually want to make
+    a condition on the `display_name` field.
+    Negative conditions are translated into a "not any" for consistency.
+    """
     operator = condition.operator
     value = condition.value
-    # Inequality not supported
+    positive_operator = NEGATIVE_CONDITION_OPERATORS.get(operator, operator)
+    any_operator = 'any' if positive_operator == operator else 'not any'
+    # Handle like operator
+    if operator.endswith('like'):
+        return DomainCondition(
+            condition.field_expr,
+            any_operator,
+            DomainCondition('display_name', positive_operator, value),
+        )
+    # Handle inequality as not supported
     if operator[0] in ('<', '>') and isinstance(value, str):
         condition._raise("Inequality not supported for relational field using a string", error=TypeError)
-    # Handle only: like operator, equality with str values
-    if not (
-        operator.endswith('like')
-        or (
-            operator in ('in', 'not in')
-            and isinstance(value, COLLECTION_TYPES)
-            and any(isinstance(v, str) for v in value)
-        )
-    ):
+    # Handle equality with str values
+    if positive_operator != 'in' or not isinstance(value, COLLECTION_TYPES):
         return condition
-    # operator
-    positive_operator = NEGATIVE_CONDITION_OPERATORS.get(operator, operator)
-    positive = operator == positive_operator
-    # get the comodel
-    field = condition._field(model)
-    comodel = model.env[field.comodel_name]
-    # access rules will be checked by the _search method (in _value_to_ids),
-    # we can just return the values if we have a list of ids
-    if field.type == 'many2one':
-        # for many2one, search also the archived records
-        comodel = comodel.with_context(active_test=False)
-        value = _value_to_ids(value, comodel, positive_operator)
-    else:
-        comodel = comodel.with_context(**field.context)
-        additional_domain = field.get_comodel_domain(model)
-        value = _value_to_ids(value, comodel, positive_operator, additional_domain)
-    if isinstance(value, OrderedSet):
-        any_operator = 'in' if positive else 'not in'
-    else:
-        any_operator = 'any' if positive else 'not any'
-    return DomainCondition(condition.field_expr, any_operator, value)
+    str_values, other_values = partition(lambda v: isinstance(v, str), value)
+    if not str_values:
+        return condition
+    domain = DomainCondition(
+        condition.field_expr,
+        any_operator,
+        DomainCondition('display_name', positive_operator, str_values),
+    )
+    if other_values:
+        if positive_operator == operator:
+            domain |= DomainCondition(condition.field_expr, operator, other_values)
+        else:
+            domain &= DomainCondition(condition.field_expr, operator, other_values)
+    return domain
 
 
 @field_type_optimization(['boolean'])
@@ -1422,11 +1385,23 @@ def _operator_hierarchy(condition, model):
         if field.type == 'many2one':
             field = model._fields['id']
     # Get the initial ids and bind them to comodel_sudo before resolving the hierarchy
-    cooperator = 'ilike' if isinstance(value, str) else 'in'
-    coids = _value_to_ids(value, comodel, cooperator)
-    if field.type == 'many2many' or isinstance(coids, (SQL, Query)):
+    if isinstance(value, (int, str)):
+        value = [value]
+    elif not isinstance(value, COLLECTION_TYPES):
+        condition._raise(f"Value of type {type(value)} is not supported")
+    coids, other_values = partition(lambda v: isinstance(v, int), value)
+    search_domain = _FALSE_DOMAIN
+    if field.type == 'many2many':
         # always search for many2many
-        coids = comodel.search(Domain('id', 'in', coids), order='id').ids
+        search_domain |= DomainCondition('id', 'in', coids)
+        coids = []
+    if other_values:
+        # search for strings
+        search_domain |= Domain.OR(
+            Domain('display_name', 'ilike', v)
+            for v in other_values
+        )
+    coids += comodel.search(search_domain, order='id').ids
     if not coids:
         return _FALSE_DOMAIN
     result = hierarchy(comodel_sudo.browse(coids), parent)
