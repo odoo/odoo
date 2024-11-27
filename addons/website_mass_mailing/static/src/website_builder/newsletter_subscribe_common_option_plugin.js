@@ -22,6 +22,7 @@ class NewsletterSubscribeCommonOptionPlugin extends Plugin {
                     ".s_newsletter_box .s_newsletter_list",
                     ".s_newsletter_centered .s_newsletter_list",
                     ".s_newsletter_grid .s_newsletter_list",
+                    ".s_newsletter_aside .s_newsletter_list",
                 ].join(", "),
             }),
             withSequence(NEWSLETTER_SELECT, {
