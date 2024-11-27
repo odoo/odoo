@@ -1,4 +1,4 @@
-import { Component, EventBus, onMounted, useRef, useSubEnv } from "@odoo/owl";
+import { Component, EventBus, useRef, useSubEnv } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { basicContainerWeWidgetProps, useWeComponent } from "../builder_helpers";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -17,10 +17,6 @@ export class WeSelect extends Component {
         const button = useRef("button");
         useWeComponent();
         this.dropdown = useDropdownState();
-        this.firstRender = true;
-        onMounted(() => {
-            this.firstRender = false;
-        });
         useSubEnv({
             weSelectBus: new EventBus(),
             weSetSelectLabel: (labelHtml) => {

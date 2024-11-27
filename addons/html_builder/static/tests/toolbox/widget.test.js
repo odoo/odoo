@@ -282,7 +282,7 @@ describe("WeSelectItem", () => {
         // The function `apply` should be called twice (on hover (for preview), then, on click).
         expect.verifySteps(["customAction myParam myValue", "customAction myParam myValue"]);
     });
-    test("set the label of the select from the active select item", async () => {
+    test("set the label of the select from the active select item and be updated on undo/redo", async () => {
         addOption({
             selector: ".test-options-target",
             template: xml`
@@ -301,6 +301,10 @@ describe("WeSelectItem", () => {
         expect(".we-bg-options-container .dropdown").toHaveText("B");
         await animationFrame();
         expect(".o-overlay-item [data-attribute-action-value-id='b']").not.toBeDisplayed();
+        await contains(".o-snippets-top-actions .fa-undo").click();
+        expect(".we-bg-options-container .dropdown").toHaveText("A");
+        await contains(".o-snippets-top-actions .fa-repeat").click();
+        expect(".we-bg-options-container .dropdown").toHaveText("B");
     });
 });
 describe("WeColorpicker", () => {
