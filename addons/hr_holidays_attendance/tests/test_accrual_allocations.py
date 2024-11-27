@@ -23,6 +23,10 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
             'allocation_validation_type': 'hr',
         })
 
+        if 'hr.contract' in cls.env:
+            # Days are accrued based on the working schedules set on the employee's contracts
+            super()._add_employee_emp_contract()
+
     def test_frequency_hourly_attendance(self):
         with freeze_time("2017-12-5"):
             accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({

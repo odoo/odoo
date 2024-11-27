@@ -24,6 +24,10 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
             'allocation_validation_type': 'no_validation',
         })
 
+        if 'hr.contract' in cls.env:
+            # Days are accrued based on the working schedules set on the employee's contracts
+            super()._add_employee_emp_contract()
+
     @users('enguerran')
     def test_no_carried_over_leaves(self):
         """
