@@ -97,20 +97,14 @@ export class CustomContentKanbanLikeWidget extends Component {
     async saveQuotationDocument(docId, isSelected) {
         if (isSelected) {
             await this.props.record.update({
-                quotation_document_ids: [
+                selected_document_ids: [
                     x2ManyCommands.link(docId),
-                ],
-                ignored_default_ids: [
-                    x2ManyCommands.unlink(docId),
                 ],
             });
         } else {
             await this.props.record.update({
-                quotation_document_ids: [
+                selected_document_ids: [
                     x2ManyCommands.unlink(docId),
-                ],
-                ignored_default_ids: [
-                    x2ManyCommands.link(docId),
                 ],
             });
         }

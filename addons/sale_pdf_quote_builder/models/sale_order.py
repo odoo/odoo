@@ -19,15 +19,15 @@ class SaleOrder(models.Model):
     quotation_document_ids = fields.Many2many(
         string="Headers/Footers",
         comodel_name='quotation.document',
+        compute='_compute_quotation_document_ids',
         readonly=False,
     )
     customizable_pdf_form_fields = fields.Json(
         string="Customizable PDF Form Fields",
         readonly=False,
     )
-    ignored_default_ids = fields.Many2many(
-        string="Default Quotation Document To Ignore",
-        relation='ignore_default_relation',
+    selected_document_ids = fields.Many2many(
+        string="Selected Quotation Documents",
         comodel_name='quotation.document',
     )
 
@@ -35,19 +35,13 @@ class SaleOrder(models.Model):
 
     @api.depends('sale_order_template_id')
     def _compute_available_product_document_ids(self):
-        default_quotes = self.env['quotation.document'].search([('default', '=', True)])
         for order in self:
             order.available_product_document_ids = self.env['quotation.document'].search(
                 [], order='sequence'
             ).filtered(lambda doc:
                 self.sale_order_template_id in doc.quotation_template_ids
                 or not doc.quotation_template_ids
-            )
-            order.quotation_document_ids &= order.available_product_document_ids
-            order.quotation_document_ids |= (
-                (default_quotes - order.ignored_default_ids)
-                & order.available_product_document_ids
-            )
+                       )
 
     @api.depends('available_product_document_ids', 'order_line', 'order_line.available_product_document_ids')
     def _compute_is_pdf_quote_builder_available(self):
@@ -57,17 +51,22 @@ class SaleOrder(models.Model):
                 or order.order_line.available_product_document_ids
             )
 
+    @api.depends('available_product_document_ids', 'selected_document_ids')
+    def _compute_quotation_document_ids(self):
+        for order in self:
+            order.quotation_document_ids = (
+                order.selected_document_ids
+                & order.available_product_document_ids
+            )
+
     # === CRUD METHODS === #
 
     @api.model_create_multi
     def create(self, vals_list):
         orders = super().create(vals_list)
-        default_quotes = self.env['quotation.document'].search([('default', '=', True)])
-        for order in self:
-            order.quotation_document_ids |= default_quotes & order.available_product_document_ids
-            order.ignored_default_ids = (
-                order.available_product_document_ids - order.quotation_document_ids
-            )
+        default_quotes = self.env['quotation.document'].search([('add_by_default', '=', True)])
+        for order in orders:
+            order.selected_document_ids |= default_quotes
         return orders
 
     # === ACTION METHODS === #
