@@ -1559,7 +1559,7 @@ class PosSession(models.Model):
         if not sessions:
             raise UserError(_("There is no cash payment method for this PoS Session"))
 
-        self.env['account.bank.statement.line'].create([
+        self.env['account.bank.statement.line'].sudo().create([
             {
                 'pos_session_id': session.id,
                 'journal_id': session.cash_journal_id.id,
