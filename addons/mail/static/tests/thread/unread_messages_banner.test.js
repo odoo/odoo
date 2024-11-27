@@ -65,7 +65,31 @@ test("mark thread as read from unread messages banner", async () => {
         text: "Mark as Read",
         parent: ["span", { text: "30 new messagesMark as Read" }],
     });
-    await contains(".o-mail-Thread-jumpToUnread", { count: 0 });
+});
+
+test("reset new message separator from unread messages banner", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    for (let i = 0; i < 30; ++i) {
+        pyEnv["mail.message"].create({
+            author_id: serverState.partnerId,
+            body: `message ${i}`,
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+    }
+    onRpc("/discuss/channel/mark_as_read", () => asyncStep("mark_as_read"));
+    await start();
+    await openDiscuss(channelId);
+    await waitForSteps(["mark_as_read"]);
+    await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", {
+        text: "message 0",
+    });
+    await click("span", {
+        text: "Mark as Read",
+        parent: ["span", { text: "30 new messagesMark as Read" }],
+    });
+    await contains("span", { text: "30 new messagesMark as Read", count: 0 });
 });
 
 test("scroll to the first unread message (slow ref registration)", async () => {
