@@ -281,3 +281,6 @@ class HrEmployeeBase(models.AbstractModel):
             ])
             allocations.write(hr_vals)
         return res
+
+    def _get_timezone(self):
+        return self.resource_calendar_id.tz or self.tz or self.company_id.resource_calendar_id.tz

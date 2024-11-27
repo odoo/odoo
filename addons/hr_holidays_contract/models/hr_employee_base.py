@@ -11,3 +11,6 @@ class HrEmployeeBase(models.AbstractModel):
         # employee. When this module is enabled the resource calendar of
         # leaves are determined by those of the contracts.
         return super(HrEmployeeBase, self.with_context(no_leave_resource_calendar_update=True)).write(vals)
+
+    def _get_timezone(self):
+        return self.sudo().contract_id.resource_calendar_id.tz or super()._get_timezone()
