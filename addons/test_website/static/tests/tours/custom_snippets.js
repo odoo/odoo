@@ -10,7 +10,8 @@ const wTourUtils = require('website.tour_utils');
  * -> drag a banner into page content
  * -> customize banner (set text)
  * -> save banner as custom snippet
- * -> confirm save
+ * -> rename custom snippet
+ * -> check if auto save works and rename snippet
  * -> ensure custom snippet is available
  * -> drag custom snippet
  * -> ensure block appears as banner
@@ -61,13 +62,17 @@ wTourUtils.registerWebsitePreviewTour('test_custom_snippet', {
         extra_trigger: ".oe_snippet[name='Custom Banner'] .oe_snippet_thumbnail:not(.o_we_already_dragging)",
     },
     {
-        content: "set name",
+        content: "set name of custom snippet",
         trigger: ".oe_snippet[name='Custom Banner'] input",
-        run: "text Bruce Banner",
+        run: function () {
+            const inputEl = document.querySelector("input.text-start");
+            inputEl.value = "Bruce Banner";
+            inputEl.dispatchEvent(new Event("focusout"));
+        },
     },
     {
-        content: "confirm rename",
-        trigger: ".oe_snippet[name='Custom Banner'] we-button.o_we_confirm_btn",
+        content: "check if the snippet is auto-saved when the focus is removed from the input field",
+        trigger: ".oe_snippet[name='Bruce Banner']",
     },
     {
         content: "drop custom snippet",
