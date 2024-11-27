@@ -118,9 +118,7 @@ export class PaymentAdyen extends PaymentInterface {
         var data = this._adyenPayData();
         var line = order.payment_ids.find((paymentLine) => paymentLine.uuid === uuid);
         line.setTerminalServiceId(this.most_recent_service_id);
-        return this._callAdyen(data).then((data) => {
-            return this._adyenHandleResponse(data);
-        });
+        return this._callAdyen(data).then((data) => this._adyenHandleResponse(data));
     }
 
     _adyenCancel(ignore_error) {
@@ -260,9 +258,9 @@ export class PaymentAdyen extends PaymentInterface {
         const payment_response = notification.SaleToPOIResponse.PaymentResponse;
         const payment_result = payment_response.PaymentResult;
 
-        const cashier_receipt = payment_response.PaymentReceipt.find((receipt) => {
-            return receipt.DocumentQualifier == "CashierReceipt";
-        });
+        const cashier_receipt = payment_response.PaymentReceipt.find(
+            (receipt) => receipt.DocumentQualifier == "CashierReceipt"
+        );
 
         if (cashier_receipt) {
             line.setCashierReceipt(
@@ -270,9 +268,9 @@ export class PaymentAdyen extends PaymentInterface {
             );
         }
 
-        const customer_receipt = payment_response.PaymentReceipt.find((receipt) => {
-            return receipt.DocumentQualifier == "CustomerReceipt";
-        });
+        const customer_receipt = payment_response.PaymentReceipt.find(
+            (receipt) => receipt.DocumentQualifier == "CustomerReceipt"
+        );
 
         if (customer_receipt) {
             line.setReceiptInfo(

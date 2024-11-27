@@ -81,8 +81,8 @@ patch(PosStore.prototype, {
         if (order.finalized) {
             return;
         }
-        updateRewardsMutex.exec(() => {
-            return this.orderUpdateLoyaltyPrograms().then(async () => {
+        updateRewardsMutex.exec(() =>
+            this.orderUpdateLoyaltyPrograms().then(async () => {
                 // Try auto claiming rewards
                 const claimableRewards = order.getClaimableRewards(false, false, true);
                 let changed = false;
@@ -102,8 +102,8 @@ patch(PosStore.prototype, {
                     await this.orderUpdateLoyaltyPrograms();
                 }
                 order._updateRewardLines();
-            });
-        });
+            })
+        );
     },
     async couponForProgram(program) {
         const order = this.getOrder();
@@ -171,9 +171,9 @@ patch(PosStore.prototype, {
             if (pointsAdded.length < oldChanges.length) {
                 const removedIds = oldChanges.map((pe) => pe.coupon_id);
                 order.uiState.couponPointChanges = Object.fromEntries(
-                    Object.entries(order.uiState.couponPointChanges).filter(([k, pe]) => {
-                        return !removedIds.includes(pe.coupon_id);
-                    })
+                    Object.entries(order.uiState.couponPointChanges).filter(
+                        ([k, pe]) => !removedIds.includes(pe.coupon_id)
+                    )
                 );
             } else if (pointsAdded.length > oldChanges.length) {
                 const pointsCount = pointsAdded.reduce((acc, pointObj) => {
@@ -239,9 +239,10 @@ patch(PosStore.prototype, {
     },
     async activateCode(code) {
         const order = this.getOrder();
-        const rule = this.models["loyalty.rule"].find((rule) => {
-            return rule.mode === "with_code" && (rule.promo_barcode === code || rule.code === code);
-        });
+        const rule = this.models["loyalty.rule"].find(
+            (rule) =>
+                rule.mode === "with_code" && (rule.promo_barcode === code || rule.code === code)
+        );
         let claimableRewards = null;
         let coupon = null;
         if (rule) {
@@ -469,19 +470,15 @@ patch(PosStore.prototype, {
     getPotentialFreeProductRewards() {
         const order = this.getOrder();
         const allCouponPrograms = Object.values(order.uiState.couponPointChanges)
-            .map((pe) => {
-                return {
-                    program_id: pe.program_id,
-                    coupon_id: pe.coupon_id,
-                };
-            })
+            .map((pe) => ({
+                program_id: pe.program_id,
+                coupon_id: pe.coupon_id,
+            }))
             .concat(
-                order._code_activated_coupon_ids.map((coupon) => {
-                    return {
-                        program_id: coupon.program_id.id,
-                        coupon_id: coupon.id,
-                    };
-                })
+                order._code_activated_coupon_ids.map((coupon) => ({
+                    program_id: coupon.program_id.id,
+                    coupon_id: coupon.id,
+                }))
             );
         const result = [];
         for (const couponProgram of allCouponPrograms) {

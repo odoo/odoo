@@ -188,9 +188,9 @@ export class SelfOrder extends Reactive {
             .sort((a, b) => a.sequence - b.sequence);
 
         this.categoryList = new Set(availableCategories);
-        this.availableCategories = availableCategories.filter((c) => {
-            return now > c.hour_after && now < c.hour_until;
-        });
+        this.availableCategories = availableCategories.filter(
+            (c) => now > c.hour_after && now < c.hour_until
+        );
         this.currentCategory = this.productCategories[0] || null;
     }
 
@@ -293,9 +293,7 @@ export class SelfOrder extends Reactive {
                     ]),
                     custom_attribute_value_ids: Object.entries(
                         comboItem.attribute_custom_values
-                    ).map(([id, cus]) => {
-                        return ["create", cus];
-                    }),
+                    ).map(([id, cus]) => ["create", cus]),
                 },
             ]);
         }
@@ -415,9 +413,9 @@ export class SelfOrder extends Reactive {
             return existingOrder;
         }
 
-        const fiscalPosition = this.models["account.fiscal.position"].find((fp) => {
-            return fp.id === this.config.default_fiscal_position_id?.id;
-        });
+        const fiscalPosition = this.models["account.fiscal.position"].find(
+            (fp) => fp.id === this.config.default_fiscal_position_id?.id
+        );
 
         const newOrder = this.models["pos.order"].create({
             company_id: this.company,
