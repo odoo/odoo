@@ -3575,7 +3575,7 @@ class SnippetsMenu extends Component {
         if (!$scrollingElement[0]) {
             $scrollingElement = $(this.ownerDocument).find('.o_editable');
         }
-        const oNotebook = this.ownerDocument.querySelector(".o_notebook:not(.o_fullscreen_ancestor)");
+        const oNotebook = this.ownerDocument.querySelector(".o_notebook");
         if (oNotebook) {
             $scrollingElement = $(oNotebook);
         }
