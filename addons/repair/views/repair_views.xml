@@ -429,13 +429,13 @@
         />
 
         <menuitem id="repair_order_menu" name="Orders" action="action_repair_order_tree" groups="stock.group_stock_user"
-                  parent="menu_repair_order"/>
+                  parent="menu_repair_order" sequence="10"/>
 
-        <menuitem id="repair_menu_reporting" name="Reporting" parent="menu_repair_order" groups="stock.group_stock_manager"/>
+        <menuitem id="repair_menu_reporting" name="Reporting" parent="menu_repair_order" groups="stock.group_stock_manager" sequence="15"/>
 
         <menuitem id="repair_menu" name="Repairs" parent="repair_menu_reporting" action="action_repair_order_graph"/>
 
-        <menuitem id="repair_menu_config" name="Configuration" parent="menu_repair_order" groups="stock.group_stock_manager"/>
+        <menuitem id="repair_menu_config" name="Configuration" parent="menu_repair_order" groups="stock.group_stock_manager" sequence="20"/>
 
         <menuitem id="repair_menu_tag" name="Repair Orders Tags" parent="repair_menu_config" action="action_repair_order_tag" sequence="1"/>
         <menuitem id="repair_menu_product_template" name="Products" action="stock.product_template_action_product"
