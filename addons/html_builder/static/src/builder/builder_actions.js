@@ -48,7 +48,10 @@ registry.category("website-builder-actions").add("styleAction", {
 registry.category("website-builder-actions").add("attributeAction", {
     isActive: ({ editingElement, param: attributeName, value }) => {
         if (value) {
-            return editingElement.hasAttribute(attributeName);
+            return (
+                editingElement.hasAttribute(attributeName) &&
+                editingElement.getAttribute(attributeName) === value
+            );
         } else {
             return !editingElement.hasAttribute(attributeName);
         }

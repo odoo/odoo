@@ -6,7 +6,7 @@ import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../helpers"
 
 defineWebsiteModels();
 
-test.debug("Open custom tab with options", async () => {
+test("Open custom tab with options", async () => {
     addOption({
         selector: ".test-options-target",
         template: xml`

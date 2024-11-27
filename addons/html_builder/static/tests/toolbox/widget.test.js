@@ -296,9 +296,8 @@ describe("WeSelectItem", () => {
         await contains(":iframe .test-options-target").click();
         expect(".options-container").toBeDisplayed();
         expect(".we-bg-options-container .dropdown").toHaveText("A");
-        await click(".we-bg-options-container .dropdown");
-        await animationFrame();
-        await click(".o-overlay-item [data-attribute-action-value-id='b']");
+        await contains(".we-bg-options-container .dropdown").click();
+        await contains(".o-overlay-item [data-attribute-action-value-id='b']").click();
         expect(".we-bg-options-container .dropdown").toHaveText("B");
         await animationFrame();
         expect(".o-overlay-item [data-attribute-action-value-id='b']").not.toBeDisplayed();
