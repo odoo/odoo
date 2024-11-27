@@ -79,6 +79,7 @@ class NumberBuffer extends EventBus {
      * @param {String} val
      */
     set(val) {
+        this.state.lastSet = val;
         this.state.buffer = !isNaN(parseFloat(val)) ? val : "";
         this.trigger("buffer-update", this.state.buffer);
     }
@@ -296,6 +297,10 @@ class NumberBuffer extends EventBus {
             if (this.state.toStartOver) {
                 // when we want to erase the current buffer for a new value
                 this.state.buffer = "";
+            }
+            if (this.state.buffer === this.state.lastSet) {
+                this.state.buffer = "";
+                this.state.lastSet = false;
             }
             if (isFirstInput) {
                 this.state.buffer = "" + input;

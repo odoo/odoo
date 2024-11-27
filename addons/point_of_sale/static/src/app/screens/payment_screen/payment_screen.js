@@ -146,7 +146,7 @@ export class PaymentScreen extends Component {
             this._displayPopupErrorPaymentlinesRounding();
         }
         if (result) {
-            this.numberBuffer.reset();
+            this.numberBuffer.set(result.amount.toString());
             if (paymentMethod.use_payment_terminal) {
                 const newPaymentLine = this.paymentLines.at(-1);
                 this.sendPaymentRequest(newPaymentLine);
