@@ -5,7 +5,7 @@ import { BuilderOverlay } from "./builder_overlay";
 
 export class BuilderOverlayPlugin extends Plugin {
     static id = "builderOverlay";
-    static dependencies = ["selection", "localOverlay"];
+    static dependencies = ["selection", "localOverlay", "history"];
     resources = {
         step_added_handlers: this._update.bind(this),
         change_current_options_containers_listeners: this.openBuilderOverlay.bind(this),
@@ -68,6 +68,7 @@ export class BuilderOverlayPlugin extends Plugin {
         optionsContainer.forEach((option) => {
             const overlay = new BuilderOverlay(option.element, {
                 overlayContainer: this.overlayContainer,
+                addStep: this.dependencies.history.addStep,
             });
             this.overlays.push(overlay);
             this.overlayContainer.append(overlay.overlayElement);
@@ -95,7 +96,10 @@ export class BuilderOverlayPlugin extends Plugin {
     }
 
     removeBuilderOverlay() {
-        this.overlays.forEach((overlay) => overlay.overlayElement.remove());
+        this.overlays.forEach((overlay) => {
+            overlay.destroy();
+            overlay.overlayElement.remove();
+        });
         this.overlays = [];
         // this.resizeObserver?.disconnect();
     }
