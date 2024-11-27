@@ -82,6 +82,12 @@ class StockMove(models.Model):
         if to_set_moves:
             super(StockMove, to_set_moves)._set_quantity()
 
+    def _update_quantity(self, new_qty):
+        if self.raw_material_production_id.subcontractor_id:
+            self._set_quantity_done(new_qty)
+        else:
+            super()._update_quantity(new_qty)
+
     def _auto_record_components(self, qty):
         self.ensure_one()
         subcontracted_productions = self._get_subcontract_production()
