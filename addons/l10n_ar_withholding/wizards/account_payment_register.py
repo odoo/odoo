@@ -36,6 +36,10 @@ class AccountPaymentRegister(models.TransientModel):
 
     def _create_payment_vals_from_wizard(self, batch_result):
         payment_vals = super()._create_payment_vals_from_wizard(batch_result)
+
+        if not self.l10n_ar_withholding_ids:
+            return payment_vals  # Nothing to do if we are not working with withholding taxes.
+
         payment_vals['amount'] = self.l10n_ar_net_amount
         conversion_rate = self._get_conversion_rate()
         sign = 1
