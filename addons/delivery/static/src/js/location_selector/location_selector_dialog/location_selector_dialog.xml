@@ -99,9 +99,8 @@
                         class="btn btn-primary w-100"
                         t-att-disabled="!this.state.selectedLocationId"
                         t-on-click="validateSelection"
-                    >
-                        Choose this location
-                    </button>
+                        t-out="validationButtonLabel"
+                    />
                 </div>
             </t>
         </Dialog>
@@ -112,7 +111,7 @@
             <input
                 class="search-query form-control oe_search_box border-0 text-bg-light"
                 t-model.lazy="this.state.zipCode"
-                placeholder="Your postal code"
+                t-att-placeholder="postalCodePlaceholder"
             />
             <button
                 t-on-click="() => this.debouncedSearchButton(this.state.zipCode)"
