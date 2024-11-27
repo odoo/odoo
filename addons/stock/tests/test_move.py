@@ -6287,32 +6287,50 @@ class StockMove(TransactionCase):
         self.assertEqual(list(warning.keys())[0], 'warning', 'Warning message was not returned')
 
     def test_move_sn_redirect(self):
-        lot1 = self.env['stock.lot'].create({
-            'name': 'serial1',
-            'product_id': self.product_serial.id,
-            'company_id': self.env.company.id,
-        })
+        """
+        Check that lots can be changed on assigned moves and that sublocations
+        are correclty taken into account.
+        """
+        lots = self.env['stock.lot'].create([
+            {
+                'name': f"SN00{i+1}",
+                'product_id': self.product_serial.id,
+                'company_id': self.env.company.id,
+            } for i in range(5)
+        ])
         shelf = self.env['stock.location'].create({
             'name': 'shelf',
             'usage': 'internal',
             'location_id': self.stock_location.id,
         })
-        self.env['stock.quant']._update_available_quantity(self.product_serial, shelf, 1, lot_id=lot1)
-
+        for i in range(5):
+            if i in [0,3]:
+                self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_location, 1, lot_id=lots[i])
+            else:
+                self.env['stock.quant']._update_available_quantity(self.product_serial, shelf, 1, lot_id=lots[i])
         move = self.env['stock.move'].create({
             'name': 'test sn',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product_serial.id,
             'product_uom': self.uom_unit.id,
-            'product_uom_qty': 0.0,
+            'product_uom_qty': 2.0,
         })
-        move.lot_ids = lot1
+        move._action_confirm()
+        move._action_assign()
+        self.assertRecordValues(move.move_line_ids.sorted('lot_id'), [
+            {'lot_id': lots[0].id, 'location_id': self.stock_location.id},
+            {'lot_id': lots[1].id, 'location_id': shelf.id},
+        ])
+        move.lot_ids = lots[2:]
         warning = move._onchange_lot_ids()
 
         self.assertFalse(warning, 'Warning should not trigger for sublocation')
-        self.assertTrue(move.move_line_ids, 'A stock.move.line should be created for the SN')
-        self.assertEqual(move.move_line_ids.location_id, shelf, 'The stock.move.line should be prefilled with the lot location')
+        self.assertRecordValues(move.move_line_ids.sorted('lot_id'), [
+            {'lot_id': lots[2].id, 'location_id': shelf.id},
+            {'lot_id': lots[3].id, 'location_id': self.stock_location.id},
+            {'lot_id': lots[4].id, 'location_id': shelf.id},
+        ])
 
     def test_forecast_availability(self):
         """ Make an outgoing picking in dozens for a product stored in units.
