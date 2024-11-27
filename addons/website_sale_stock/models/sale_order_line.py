@@ -14,5 +14,15 @@ class SaleOrderLine(models.Model):
         )
         return self.shop_warning
 
+    def _get_max_line_qty(self):
+        max_quantity = self._get_max_available_qty()
+        return self.product_uom_qty + max_quantity if (max_quantity is not None) else None
+
     def _get_max_available_qty(self):
-        return self.product_id.free_qty - self.product_id._get_cart_qty()
+        lines_to_consider = self.linked_line_ids if self.product_type == 'combo' else self
+        website = self.order_id.website_id
+        max_quantities = [
+            max_quantity for product in lines_to_consider.product_id
+            if (max_quantity := product._get_max_quantity(website)) is not None
+        ]
+        return min(max_quantities, default=None)
