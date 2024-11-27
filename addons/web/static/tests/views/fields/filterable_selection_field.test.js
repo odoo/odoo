@@ -34,7 +34,7 @@ test(`FilterableSelectionField test whitelist`, async () => {
         `,
         resId: 1,
     });
-    expect(`select option`).toHaveCount(3);
+    expect(`select option`).toHaveCount(2);
     expect(`.o_field_widget[name="type"] select option[value='"coupon"']`).toHaveCount(1);
     expect(`.o_field_widget[name="type"] select option[value='"promotion"']`).toHaveCount(1);
 });
@@ -50,7 +50,7 @@ test(`FilterableSelectionField test blacklist`, async () => {
         `,
         resId: 1,
     });
-    expect(`select option`).toHaveCount(3);
+    expect(`select option`).toHaveCount(2);
     expect(`.o_field_widget[name="type"] select option[value='"coupon"']`).toHaveCount(1);
     expect(`.o_field_widget[name="type"] select option[value='"promotion"']`).toHaveCount(1);
 });
@@ -67,13 +67,13 @@ test(`FilterableSelectionField test with invalid value`, async () => {
         `,
         resId: 2,
     });
-    expect(`select option`).toHaveCount(4);
+    expect(`select option`).toHaveCount(3);
     expect(`.o_field_widget[name="type"] select option[value='"gift_card"']`).toHaveCount(1);
     expect(`.o_field_widget[name="type"] select option[value='"coupon"']`).toHaveCount(1);
     expect(`.o_field_widget[name="type"] select option[value='"promotion"']`).toHaveCount(1);
 
     await contains(`.o_field_widget[name="type"] select`).select(`"coupon"`);
-    expect(`select option`).toHaveCount(3);
+    expect(`select option`).toHaveCount(2);
     expect(`.o_field_widget[name="type"] select option[value='"gift_card"']`).toHaveCount(0);
     expect(`.o_field_widget[name="type"] select option[value='"coupon"']`).toHaveCount(1);
     expect(`.o_field_widget[name="type"] select option[value='"promotion"']`).toHaveCount(1);
@@ -91,7 +91,7 @@ test(`FilterableSelectionField test whitelist_fname`, async () => {
         `,
         resId: 1,
     });
-    expect(`select option`).toHaveCount(3);
+    expect(`select option`).toHaveCount(2);
     expect(`.o_field_widget[name="type"] select option[value='"coupon"']`).toHaveCount(1);
     expect(`.o_field_widget[name="type"] select option[value='"promotion"']`).toHaveCount(1);
 });

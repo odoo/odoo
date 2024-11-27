@@ -6,19 +6,22 @@
             <span t-esc="string" t-att-raw-value="value" />
         </t>
         <t t-else="">
+            <t t-set="isPlaceholder" t-value="false === value" />
             <select
-                class="o_input pe-3"
+                t-attf-class="o_input pe-3 {{isPlaceholder ? 'o_selected_placeholder' : ''}}"
                 t-on-change="onChange"
                 t-on-click.stop="() =&gt; {}"
                 t-att-id="props.id">
                 <option
-                    t-att-selected="false === value"
+                    t-if="!props.required || !value"
+                    t-attf-class="o_select_placeholder {{isPlaceholder ? 'd-none' : ''}}"
+                    t-att-selected="isPlaceholder"
                     t-att-value="stringify(false)"
-                    t-esc="this.props.placeholder || ''"
-                    t-attf-style="{{ props.required ? 'display:none' : '' }}"
+                    t-esc="isPlaceholder and this.props.placeholder || ''"
                 />
                 <t t-foreach="options" t-as="option" t-key="option[0]">
                     <option
+                        class="text-black"
                         t-att-selected="option[0] === value"
                         t-att-value="stringify(option[0])"
                         t-esc="option[1]"
