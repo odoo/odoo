@@ -65,6 +65,7 @@ callActionsRegistry
                 : _t("Share Screen"),
         isActive: (component) => component.rtc.selfSession?.is_screen_sharing_on,
         icon: "fa-desktop",
+        activeClass: "text-success",
         select: (component) => component.rtc.toggleVideo("screen"),
         sequence: 40,
     })
