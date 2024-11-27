@@ -277,7 +277,17 @@ export class MassMailingHtmlField extends HtmlField {
         const sidebar = document.querySelector("#oe_snippets");
         if (!sidebar) {
             return;
-        } else if (!this._isFullScreen()) {
+        } else if (this._isFullScreen()) {
+            sidebar.style.height = "";
+            sidebar.style.top = "0";
+        } else if (this.env.inDialog) {
+            const scrollableY = closestScrollableY(sidebar);
+            if (scrollableY) {
+                const rect = scrollableY.getBoundingClientRect();
+                sidebar.style.height = `${rect.height}px`;
+                sidebar.style.top = "0";
+            }
+        } else {
             const scrollableY = closestScrollableY(sidebar);
             const top = scrollableY
                 ? `${-1 * (parseInt(getComputedStyle(scrollableY).paddingTop) || 0)}px`
@@ -286,9 +296,6 @@ export class MassMailingHtmlField extends HtmlField {
             const offsetHeight = window.innerHeight - document.querySelector(".o_content").getBoundingClientRect().y;
             sidebar.style.height = `${Math.min(maxHeight, offsetHeight)}px`;
             sidebar.style.top = top;
-        } else {
-            sidebar.style.height = "";
-            sidebar.style.top = "0";
         }
     }
 
