@@ -15,9 +15,7 @@
                         </button>
                         <a t-attf-href="/web/content/#{attachment.id}?download=true&amp;access_token=#{attachment.access_token}" target="_blank">
                             <div class='oe_attachment_embedded o_image' t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype"/>
-                            <div class='o_portal_chatter_attachment_name'>
-                                <t t-out='attachment.filename'/>
-                            </div>
+                            <div class="o_portal_chatter_attachment_name" t-out="attachment.name"/>
                         </a>
                     </div>
                 </div>

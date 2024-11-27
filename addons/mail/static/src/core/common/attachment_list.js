@@ -99,7 +99,7 @@ export class AttachmentList extends Component {
             return this.props.unlinkAttachment(attachment);
         }
         this.dialog.add(ConfirmationDialog, {
-            body: _t('Do you really want to delete "%s"?', attachment.filename),
+            body: _t('Do you really want to delete "%s"?', attachment.name),
             cancel: () => {},
             confirm: () => this.onConfirmUnlink(attachment),
         });
