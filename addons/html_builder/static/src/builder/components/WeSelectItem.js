@@ -1,5 +1,6 @@
 import { Component, onMounted, useRef } from "@odoo/owl";
 import { clickableWeWidgetProps, useClickableWeWidget } from "../builder_helpers";
+import { useBus } from "@web/core/utils/hooks";
 
 export class WeSelectItem extends Component {
     static template = "html_builder.WeSelectItem";
@@ -17,6 +18,7 @@ export class WeSelectItem extends Component {
                 this.env.weSetSelectLabel?.(item.el.innerHTML);
             }
         };
+        useBus(this.env.editorBus, "STEP_ADDED", setSelectLabel);
         onMounted(setSelectLabel);
 
         this.state = state;
