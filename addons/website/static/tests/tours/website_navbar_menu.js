@@ -6,13 +6,23 @@ registry.category("web_tour.tours").add("website_navbar_menu", {
     test: true,
     url: "/",
     steps: () => [
-    {
-        content: "Ensure menus are in DOM",
-        trigger: '.top_menu .nav-item a:contains("Test Tour Menu")',
-        run: function () {}, // it's a check
-    }, {
-        content: "Ensure menus loading is done (so they are actually visible)",
-        trigger: 'body:not(:has(.o_menu_loading))',
-        run: function () {}, // it's a check
-    }
-]});
+        {
+            content: "Ensure menus are in DOM",
+            trigger: '.top_menu .nav-item a:contains("Test Tour Menu")',
+            run: function () {}, // it's a check
+        },
+        {
+            content: "Ensure menus loading is done (so they are actually visible)",
+            trigger: "body:not(:has(.o_menu_loading))",
+            run: function () {}, // it's a check
+        },
+        {
+            trigger: `.o_main_nav a[role="menuitem"]:contains(test tour menu)`,
+            run: "click",
+        },
+        {
+            trigger: `main:contains(We couldn't find the page you're looking for!)`,
+            run: function () {}, // it's a check
+        },
+    ],
+});
