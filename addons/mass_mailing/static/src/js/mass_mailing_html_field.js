@@ -446,8 +446,6 @@ export class MassMailingHtmlField extends HtmlField {
 
             const isSnippetsFolded = uiUtils.isSmall() || themeName === 'basic';
             this.wysiwyg.setSnippetsMenuFolded(isSnippetsFolded);
-            // Inform the iframe content of the snippets menu visibility
-            this.wysiwyg.$iframeBody.closest('body').toggleClass("has_snippets_sidebar", !isSnippetsFolded);
 
             const $editable = this.wysiwyg.$editable.find('.o_editable');
             this.$editorMessageElements = $editable
