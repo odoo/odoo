@@ -152,6 +152,9 @@ export class ImportAction extends Component {
             if (!error && res.num_rows) {
                 this.state.numRows = res.num_rows;
             }
+            else {
+                this.state.previewError = error;
+            }
         }
         this.model.unblock();
     }
