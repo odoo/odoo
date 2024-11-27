@@ -65,16 +65,13 @@ export function useCashierSelector({ exclusive, onScan } = { onScan: () => {}, e
             return;
         }
 
-        const prepareList = (employees) => {
-            return employees.map((employee) => {
-                return {
-                    id: employee.id,
-                    item: employee,
-                    label: employee.name,
-                    isSelected: false,
-                };
-            });
-        };
+        const prepareList = (employees) =>
+            employees.map((employee) => ({
+                id: employee.id,
+                item: employee,
+                label: employee.name,
+                isSelected: false,
+            }));
 
         const wrongPinNotification = () => {
             notification.add(_t("PIN not found"), {

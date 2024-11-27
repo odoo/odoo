@@ -54,9 +54,8 @@ const renderService = {
             await new Promise((r) => (resolver = r));
             return elem;
         };
-        const toCanvas = async (component, props, options) => {
-            return htmlToCanvas(await toHtml(component, props), options);
-        };
+        const toCanvas = async (component, props, options) =>
+            htmlToCanvas(await toHtml(component, props), options);
         const toJpeg = async (component, props, options) => {
             const canvas = await toCanvas(component, props, options);
             return canvas.toDataURL("image/jpeg").replace("data:image/jpeg;base64,", "");
@@ -99,13 +98,12 @@ export const htmlToCanvas = async (el, options) => {
     return await applyWhenMounted({
         el,
         container: document.querySelector(".render-container"),
-        callback: async (el) => {
-            return toCanvas(el, {
+        callback: async (el) =>
+            toCanvas(el, {
                 backgroundColor: "#ffffff",
                 height: Math.ceil(el.clientHeight),
                 width: Math.ceil(el.clientWidth),
                 pixelRatio: 1,
-            });
-        },
+            }),
     });
 };
