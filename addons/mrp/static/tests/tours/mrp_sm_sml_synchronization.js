@@ -25,7 +25,7 @@ registry.category("web_tour.tours").add('test_manufacturing_and_byproduct_sm_to_
             run: 'text 27',
         },
         { trigger: ".o_form_button_save" },
-        { trigger: ".o_data_row > td:contains('43')" },
+        { trigger: ".o_data_row > td:contains('27')" },
         {
             trigger: ".o_field_widget[name=quantity] input",
             run: 'text 7',
@@ -52,7 +52,7 @@ registry.category("web_tour.tours").add('test_manufacturing_and_byproduct_sm_to_
             run: 'text 7',
         },
         { trigger: ".o_form_button_save" },
-        { trigger: ".o_data_row > td:contains('10')" },
+        { trigger: ".o_data_row > td:contains('7')" },
         {
             trigger: ".o_field_widget[name=quantity] input",
             run: 'text 8',

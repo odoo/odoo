@@ -35,7 +35,7 @@ registry.category("web_tour.tours").add('test_stock_picking_batch_sm_to_sml_sync
             run: 'text 27',
         },
         { trigger: ".o_form_button_save" },
-        { trigger: ".o_data_row > td:contains('47')" },
+        { trigger: ".o_data_row > td:contains('27')" },
         {
             trigger: ".o_field_widget[name=quantity] input",
             run: 'text 7',

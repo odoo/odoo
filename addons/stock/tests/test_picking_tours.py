@@ -170,12 +170,12 @@ class TestStockPickingTour(HttpCase):
         product_a, product_b = self.env["product.product"].create([
             {
                 'name': 'Product a',
-                'is_storable': True,
+                'type': 'product',
                 'tracking': 'serial',
             },
             {
                 'name': 'Product b',
-                'is_storable': True,
+                'type': 'product',
                 'tracking': 'serial',
             }
         ])

@@ -232,8 +232,7 @@ class TestMrpOrder(TestMrpCommon):
         details_operation_form.save()
 
         self.assertEqual(len(mo.move_raw_ids), 2)
-        self.assertEqual(len(mo.move_raw_ids.mapped('move_line_ids')), 2)
-        self.assertEqual(mo.move_raw_ids[0].move_line_ids.mapped('quantity'), [0])
+        self.assertEqual(len(mo.move_raw_ids.mapped('move_line_ids')), 1)
         self.assertEqual(mo.move_raw_ids[1].move_line_ids.mapped('quantity'), [5])
         self.assertEqual(mo.move_raw_ids[0].quantity, 0)
         self.assertEqual(mo.move_raw_ids[1].quantity, 5)
@@ -574,6 +573,48 @@ class TestMrpOrder(TestMrpCommon):
         production = mo_form.save()
         self.assertEqual(production.move_raw_ids[0].quantity, 16, 'Should use half-up rounding when producing')
         self.assertEqual(production.move_raw_ids[1].quantity, 34, 'Should use half-up rounding when producing')
+
+    def test_reserve_qty_producing(self):
+        """ Checks updating the quantity to produce reserve the components the production wizard contains lines even for untracked products. """
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+        mo, bom, p_final, p1, p2 = self.generate_mo()
+
+        child_loc = self.stock_location.child_ids
+
+        self.env['stock.quant']._update_available_quantity(p1, child_loc[0], 6)
+        self.env['stock.quant']._update_available_quantity(p1, child_loc[1], 6)
+        self.env['stock.quant']._update_available_quantity(p1, child_loc[2], 6)
+        self.env['stock.quant']._update_available_quantity(p1, child_loc[3], 6)
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 5)
+
+        mo.action_assign()
+
+        # change the quantity producing
+        mo_form = Form(mo)
+        mo_form.qty_producing = 1
+        mo = mo_form.save()
+
+        self.assertRecordValues(mo.move_raw_ids.move_line_ids.filtered(lambda x: x.product_id == p1), [
+            {'quantity': 4, 'location_id': child_loc[0].id}
+        ])
+
+        mo_form = Form(mo)
+        mo_form.qty_producing = 2
+        mo = mo_form.save()
+
+        self.assertRecordValues(mo.move_raw_ids.move_line_ids.filtered(lambda x: x.product_id == p1), [
+            {'quantity': 6, 'location_id': child_loc[0].id},
+            {'quantity': 2, 'location_id': child_loc[1].id}
+        ])
+
+        mo_form = Form(mo)
+        mo_form.qty_producing = 3
+        mo = mo_form.save()
+
+        self.assertRecordValues(mo.move_raw_ids.move_line_ids.filtered(lambda x: x.product_id == p1), [
+            {'quantity': 6, 'location_id': child_loc[0].id},
+            {'quantity': 6, 'location_id': child_loc[1].id}
+        ])
 
     def test_product_produce_1(self):
         """ Checks the production wizard contains lines even for untracked products. """
@@ -4615,4 +4656,4 @@ class TestMrpSynchronization(HttpCase):
         self.assertEqual(mo.move_raw_ids.quantity, 7)
         self.assertEqual(mo.move_raw_ids.move_line_ids.quantity, 7)
         self.assertEqual(mo.move_byproduct_ids.quantity, 8)
-        self.assertEqual(len(mo.move_byproduct_ids.move_line_ids), 2)
+        self.assertEqual(len(mo.move_byproduct_ids.move_line_ids), 1)
