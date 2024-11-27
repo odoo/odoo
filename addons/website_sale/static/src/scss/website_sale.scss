@@ -993,8 +993,16 @@ a.no-decoration {
     display: none;
 }
 
-.text-overflow-ellipsis {
+.overflow-hidden {
     overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+}
+
+@include media-breakpoint-down(md) {
+    .css_quantity > a {
+        --btn-padding-x: 0.6rem;
+    }
+}
+
+body.modal-open:has(.js_sale.o_wsale_product_page) {
+    overflow: hidden;
 }
