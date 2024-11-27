@@ -306,15 +306,15 @@ describe("WeSelectItem", () => {
 describe("WeColorpicker", () => {
     test("should apply color to the editing element", async () => {
         addOption({
-            selector: ".test-toolbox-target",
+            selector: ".test-options-target",
             template: xml`<WeColorpicker/>`,
         });
-        await setupWebsiteBuilder(`<div class="test-toolbox-target">b</div>`);
-        await contains(":iframe .test-toolbox-target").click();
+        await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+        await contains(":iframe .test-options-target").click();
         expect(".options-container").toBeDisplayed();
         await click(".we-bg-options-container .dropdown");
         await animationFrame();
         await click(".o-overlay-item [data-color='o-color-1']");
-        expect(":iframe .test-toolbox-target").toHaveClass("test-toolbox-target bg-o-color-1");
+        expect(":iframe .test-options-target").toHaveClass("test-options-target bg-o-color-1");
     });
 });
