@@ -1017,3 +1017,40 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         pickings.move_ids.quantity = 1
         pickings.button_validate()
         self.assertEqual(sale_order.order_line[0].qty_delivered, 1)
+
+    def test_downpayment_invoice(self):
+        """This test check that users that don't have the pos user group can invoice downpayments"""
+        self.env['res.partner'].create({'name': 'Test Partner AAA'})
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner BBB'}).id,
+            'order_line': [(0, 0, {
+                'product_id': self.product_a.id,
+                'name': self.product_a.name,
+                'product_uom_qty': 1,
+                'price_unit': 100,
+                'tax_id': False,
+            })],
+        })
+        sale_order.action_confirm()
+
+        context = {
+            'active_model': 'sale.order',
+            'active_ids': [sale_order.id],
+            'active_id': sale_order.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id,
+        }
+
+        payment = self.env['sale.advance.payment.inv'].with_context(context).create({
+            'advance_payment_method': 'fixed',
+            'fixed_amount': 100,
+        })
+        payment.create_invoices()
+        all_groups = self.user.groups_id
+        self.user.groups_id = self.env.ref('account.group_account_manager') + self.env.ref('sales_team.group_sale_salesman_all_leads')
+
+        downpayment_line = sale_order.order_line.filtered(lambda l: l.is_downpayment and not l.display_type)
+        downpayment_invoice = downpayment_line.order_id.order_line.invoice_lines.move_id
+        downpayment_invoice.action_post()
+        self.user.groups_id = all_groups
+        self.assertEqual(downpayment_line.price_unit, 100)
