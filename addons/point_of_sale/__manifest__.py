@@ -99,6 +99,12 @@
             'point_of_sale/static/src/app/utils/html-to-image.js',
             'point_of_sale/static/src/app/services/render_service.js',
             'point_of_sale/static/tests/unit/**/*',
+
+            'point_of_sale/static/src/app/components/odoo_logo/*',
+            'point_of_sale/static/src/app/components/centered_icon/*',
+            'point_of_sale/static/src/app/components/inputs/**/*',
+            'point_of_sale/static/tests/generic_components/**/*',
+
         ],
 
         # PoS assets
