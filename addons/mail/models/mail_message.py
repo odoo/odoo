@@ -598,6 +598,25 @@ class Message(models.Model):
         self.sudo(False).check_access_rights(operation)
         return True
 
+    @api.model
+    def _get_with_access(self, message_id, operation):
+        """Return the message with the given id if it exists and if the current
+        user can access it for the given operation."""
+        message = self.browse(message_id).exists()
+        if not message:
+            return self.browse()
+        try:
+            if not self.env.user._is_public() or not self.env["mail.guest"]._get_guest_from_context():
+                # Don't check_access_rights for public user with a guest, as the rules are
+                # incorrect due to historically having no reason to allow operations on messages to
+                # public user before the introduction of guests. Even with ignoring the rights,
+                # check_access_rule and its sub methods are already covering all the cases properly.
+                message.sudo(False).check_access_rights(operation)
+            message.sudo(False).check_access_rule(operation)
+            return message
+        except AccessError:
+            return self.browse()
+
     @api.model_create_multi
     def create(self, values_list):
         tracking_values_list = []
