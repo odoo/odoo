@@ -7,7 +7,7 @@ from odoo.http import request
 
 class WebsiteMail(http.Controller):
 
-    @http.route(['/website_mail/follow'], type='jsonrpc', auth="public", website=True, captcha='website_mail_follow')
+    @http.route(['/website_mail/follow'], type='jsonrpc', auth="public", website=True)
     def website_message_subscribe(self, id=0, object=None, message_is_follower="on", email=False, **post):
         # TDE FIXME: check this method with new followers
         res_id = int(id)
@@ -25,6 +25,7 @@ class WebsiteMail(http.Controller):
             # mail_thread method
             partner_ids = [p.id for p in request.env['mail.thread'].sudo()._mail_find_partner_from_emails([email], records=record.sudo()) if p]
             if not partner_ids or not partner_ids[0]:
+                self.env['ir.http']._verify_request_recaptcha_token('website_mail_follow')
                 name = email.split('@')[0]
                 partner_ids = request.env['res.partner'].sudo().create({'name': name, 'email': email}).ids
         # add or remove follower
