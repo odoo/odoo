@@ -441,3 +441,13 @@ class AccountAnalyticLine(models.Model):
         Determine if we show timesheet information in the portal. Meant to be overriden in website_timesheet.
         """
         return True
+
+    def action_open_timesheet_view_portal(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'res_id': self.id,
+            'res_model': 'account.analytic.line',
+            'views': [(self.env.ref('hr_timesheet.timesheet_view_form_portal_user').id, 'form')],
+            'context': self._context,
+        }
