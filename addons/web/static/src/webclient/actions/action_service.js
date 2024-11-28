@@ -158,8 +158,7 @@ export function makeActionManager(env, router = _router) {
      *
      * @returns {Promise<object[]>} an array of virtual controllers
      */
-    async function _controllersFromState() {
-        const state = router.current;
+    async function _controllersFromState(state) {
         if (!state?.actionStack?.length) {
             return [];
         }
@@ -1620,9 +1619,9 @@ export function makeActionManager(env, router = _router) {
      *
      * @returns {Promise<boolean>} true if doAction was performed
      */
-    async function loadState() {
-        const newStack = await _controllersFromState();
-        const actionParams = _getActionParams();
+    async function loadState(state = router.current, _options = {}) {
+        const newStack = await _controllersFromState(state);
+        const actionParams = _getActionParams(state);
         if (actionParams) {
             // Params valid => performs a "doAction"
             const { actionRequest, options } = actionParams;
@@ -1632,7 +1631,7 @@ export function makeActionManager(env, router = _router) {
             } else {
                 options.newStack = newStack;
             }
-            await doAction(actionRequest, options);
+            await doAction(actionRequest, { ...options, ..._options });
             return true;
         }
     }
