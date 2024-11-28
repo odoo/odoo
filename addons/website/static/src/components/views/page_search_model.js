@@ -13,6 +13,7 @@ export class PageSearchModel extends SearchModel {
 
         this.pagesState = useState({
             websiteDomain: false,
+            currentWebsite: undefined,
         });
         onWillStart(async () => {
             // Before the searchModel performs its DB search call, append the
@@ -60,6 +61,23 @@ export class PageSearchModel extends SearchModel {
     }
 
     /**
+     * @override
+     */
+    _getFacets() {
+        const facets = super._getFacets();
+        let selectedWebsiteName = "All Websites";
+        if (this.pagesState.currentWebsite) {
+            selectedWebsiteName = this.pagesState.currentWebsite.name;
+        }
+        facets.unshift({
+            icon: "fa fa-globe",
+            type: "unremovable",
+            values: [selectedWebsiteName],
+        });
+        return facets;
+    }
+
+    /**
      * Updates the website domain state and notifies the change. That domain
      * state will be appended to the base SearchModel domain.
      *
@@ -82,6 +100,7 @@ export class PageSearchModel extends SearchModel {
             }
         }
         this.pagesState.websiteDomain = websiteDomain;
+        this.pagesState.currentWebsite = this.website.websites.find((w) => w.id === websiteId);
         this._notify();
     }
 
