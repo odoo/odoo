@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
+from odoo.fields import Datetime
 from odoo.tests import Form, HttpCase, new_test_user, tagged
 from odoo.exceptions import UserError
 
@@ -1257,3 +1258,34 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
             so2.order_line.project_id,
             "The project of `so1` should be set to the project that was generated at SO confirmation."
         )
+
+    def test_group_expand_sales_order(self):
+        """
+        1. Create a sale order "Test Order" and a linked project task "Test Task."
+        2. Set context with `gantt_start_date` and `gantt_scale`.
+        3. Call `_group_expand_sales_order` and assert no sale orders are displayed without scheduled tasks.
+        4. Call `_group_expand_sales_order` with "Test" and assert the matching sale order is displayed.
+        """
+        order = self.env['sale.order'].create({'name': 'Test Order', 'partner_id': self.partner.id})
+        self.env['project.task'].create({
+            'name': 'Test Task',
+            'project_id': self.project_global.id,
+            'sale_order_id': order.id,
+        })
+        domain = [
+            ('planned_date_begin', '>=', Datetime.to_datetime('2023-01-01')),
+            ('date_deadline', '<=', Datetime.to_datetime('2023-01-04')),
+        ]
+        Task = self.env['project.task'].with_context({
+            'gantt_start_date': Datetime.to_datetime('2023-01-01'),
+            'gantt_scale': 'month',
+        })
+
+        displayed_sale_order = Task._group_expand_sales_order(None, domain)
+        self.assertFalse(
+            displayed_sale_order,
+            'Sale orders without scheduled tasks should not be displayed in the Gantt view',
+        )
+
+        displayed_sale_order = Task._group_expand_sales_order(None, [('sale_order_id', 'ilike', 'Test')] + domain)
+        self.assertEqual(order, displayed_sale_order, 'The matching sale order should be displayed in the Gantt view')
