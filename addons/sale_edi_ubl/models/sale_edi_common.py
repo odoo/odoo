@@ -34,13 +34,19 @@ class SaleEdiCommon(models.AbstractModel):
                     Markup().join(Markup("<li>%s</li>") % l for l in logs)
             order.message_post(body=body)
 
-        # Only re-compute lines with product having same uom
-        lines_to_recompute = order.order_line.filtered(
-            lambda line: line.product_id and line.product_uom_id == line.product_id.uom_id
+        lines_with_products = order.order_line.filtered('product_id')
+        lines_with_same_uom = lines_with_products.filtered(
+            lambda line: line.product_uom_id == line.product_id.uom_id
         )
         # Recompute product price and discount according to sale price
-        lines_to_recompute._compute_price_unit()
-        lines_to_recompute._compute_discount()
+        lines_with_same_uom._compute_price_unit()
+        for line in (lines_with_products - lines_with_same_uom):
+            line.with_context(
+                uom=line.product_uom,
+                quantity=line.product_uom_qty,
+            )._compute_price()
+
+        lines_with_products._compute_discount()
 
         return True
 
