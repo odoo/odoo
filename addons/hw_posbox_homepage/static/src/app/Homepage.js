@@ -94,8 +94,18 @@ export class Homepage extends Component {
                 <h4 class="text-center m-0">IoT Box - <t t-esc="state.data.hostname" /></h4>
             </div>
             <div t-if="this.store.advanced" class="alert alert-warning" role="alert">
-                <p class="m-0 fw-bold">HTTPS certificate</p>
-                <small>Error code: <t t-esc="state.data.certificate_details" /></small>
+                <p class="m-0 fw-bold">
+                    <t t-if="state.data.is_certificate_ok === true" t-esc="'HTTPS Certificate'"/>
+                    <t t-else="" t-esc="'No subscription linked to your IOT'"/>
+                </p>
+                <small>
+                    <t t-if="state.data.is_certificate_ok">
+                        Status: <t t-esc="state.data.certificate_details" />
+                    </t>
+                    <t t-else="">
+                        Please contact your account manager to take advantage of your IOT's full potential
+                    </t>
+                </small>
             </div>
             <SingleData name="'Name'" value="state.data.hostname" icon="'fa-id-card'">
 				<t t-set-slot="button">
