@@ -384,23 +384,3 @@ class ChatbotScriptStep(models.Model):
             if "is_last" in fields:
                 data["isLast"] = step._is_last_step()
             store.add("chatbot.script.step", data)
-
-    # --------------------------
-    # Tooling / Misc
-    # --------------------------
-
-    def _format_for_frontend(self):
-        """ Small utility method that formats the step into a dict usable by the frontend code. """
-        self.ensure_one()
-
-        return {
-            'id': self.id,
-            'answers': [{
-                'id': answer.id,
-                "name": answer.name,
-                "redirect_link": answer.redirect_link,
-            } for answer in self.answer_ids],
-            'message': plaintext2html(self.message) if not is_html_empty(self.message) else False,
-            'isLast': self._is_last_step(),
-            'type': self.step_type
-        }
