@@ -31,6 +31,7 @@ Then it can be made specific at the product level.
     'auto_install': True,
     'assets': {
         'web.assets_frontend': [
+            ('before', 'website_sale/static/src/js/website_sale.js', 'website_sale_stock/static/src/js/variant_mixin.js'),
             'website_sale_stock/static/src/js/**/*',
             'website_sale_stock/static/src/xml/**/*',
         ],
