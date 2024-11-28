@@ -201,7 +201,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         vals_list = super()._get_tax_category_list(customer, supplier, taxes)
 
         for vals in vals_list:
-            vals.pop('name')
+            vals.pop('name', None)
 
         return vals_list
 
