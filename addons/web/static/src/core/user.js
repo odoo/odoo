@@ -123,12 +123,18 @@ export function _makeUser(session) {
          *                          companies are those sent by the server in the session info.
          * @param {*} value - specified value
          * @returns {boolean}
-         * returns a boolean indicating whether there's a company with id in `ids` for which
-         * `field` matches the given `value`.
+         * Returns True if there is a company with an ID in ids where:
+         * field contains value (if field is an array), or
+         * field is equal to value (if field is a single value).
+         * Otherwise, returns False.
          */
         has: (ids, field, value) => {
             ids = typeof ids === "number" ? [ids] : ids || [];
-            return allowedCompanies.some((c) => ids.includes(c.id) && c[field] === value);
+            return allowedCompanies.some((c) =>
+                ids.includes(c.id) && (Array.isArray(c[field])
+                    ? c[field].includes(value)
+                    : c[field] === value)
+            );
         },
     };
 

@@ -18,16 +18,16 @@ class TestPerfSessionInfo(common.HttpCase):
         self.authenticate(user.login, "info")
 
         self.env.registry.clear_all_caches()
-        # cold ormcache (only web: 42, all module: 116)
-        with self.assertQueryCount(116):
+        # cold ormcache (only web: 42, all module: 117)
+        with self.assertQueryCount(117):
             self.url_open(
                 "/web/session/get_session_info",
                 data=json.dumps({'jsonrpc': "2.0", 'method': "call", 'id': str(uuid4())}),
                 headers={"Content-Type": "application/json"},
             )
 
-        # cold fields cache - warm ormcache (only web: 6, all module: 25)
-        with self.assertQueryCount(25):
+        # cold fields cache - warm ormcache (only web: 6, all module: 27)
+        with self.assertQueryCount(27):
             self.url_open(
                 "/web/session/get_session_info",
                 data=json.dumps({'jsonrpc': "2.0", 'method': "call", 'id': str(uuid4())}),

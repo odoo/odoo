@@ -1069,8 +1069,10 @@ class Companies:
         return len(self.__env.companies) > 1
 
     def has(self, ids: int|list[int], field_name: str, value) -> bool:
-        """ Return a boolean indicating whether there is a company with id in
-        `ids` for which `field_name` matches the given `value`.
+        """Returns True if there is a company with an ID in ids where:
+        field contains value (if field is a list), or
+        field is equal to value (if field is a single value).
+        Otherwise, returns False.
         """
         ids = [ids] if isinstance(ids, int) else ids
         user_companies = self.__env['res.company'].sudo().browse(self.allowed_ids)
@@ -1083,6 +1085,9 @@ class Companies:
             for company in all_companies - user_companies
         }
         return any(
-            company_info[id_].get(field_name) == value
+            (
+                value in field_value if isinstance((field_value := company_info[id_].get(field_name)), list)
+                else field_value == value
+            )
             for id_ in ids if id_ in company_info
         )

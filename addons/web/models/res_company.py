@@ -23,4 +23,5 @@ class ResCompany(models.Model):
             'sequence': self.sequence,
             'child_ids': (self.child_ids & allowed_companies).ids,
             'parent_id': self.parent_id.id,
+            'country_group_codes': self.country_id.country_group_ids.mapped('code'),
         }
