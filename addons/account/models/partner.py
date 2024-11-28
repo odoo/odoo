@@ -893,6 +893,7 @@ class ResPartner(models.Model):
 
     @api.model
     def _retrieve_partner_with_phone_email(self, phone, email, extra_domain):
+        # TDE FIXME: use mail tools
         domains = []
         if phone:
             domains.append([('phone', '=', phone)])

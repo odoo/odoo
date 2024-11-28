@@ -191,8 +191,7 @@ class TestModeration(TestMailListCommon):
                                        fields_values={
                                         'email_from': self.email_from_unknown,
                                         'subject': 'New email',
-                                       },
-                                       mail_message=new_email_message.mail_message_id)
+                                       })
 
         self.assertEqual(new_email_message.moderation_status, 'accepted', 'Should have accepted the message')
         self.assertEqual(old_email_message.moderation_status, 'pending_moderation', 'Should not have touched other message of the same author')
@@ -212,7 +211,7 @@ class TestModeration(TestMailListCommon):
                 subject='Old email', target_model='mail.group')
 
             self.format_and_process(
-                GROUP_TEMPLATE, self.email_from_unknown, self.test_group.alias_id.display_name,
+                GROUP_TEMPLATE.replace("Or not.", "For real."), self.email_from_unknown, self.test_group.alias_id.display_name,
                 subject='New email', target_model='mail.group')
 
         # find messages
@@ -246,19 +245,17 @@ class TestModeration(TestMailListCommon):
         self.assertEqual(len(self._new_mails), 8)
         for email in self.test_group_valid_members.mapped('email'):
             self.assertMailMailWEmails([email], 'outgoing',
-                                       content="This should be posted on a mail.group. Or not.",
+                                       content="This should be posted on a mail.group. For real.",
                                        fields_values={
                                         'email_from': self.email_from_unknown,
                                         'subject': 'New email',
-                                       },
-                                       mail_message=new_email_message.mail_message_id)
+                                       })
             self.assertMailMailWEmails([email], 'outgoing',
                                        content="This should be posted on a mail.group. Or not.",
                                        fields_values={
                                         'email_from': self.email_from_unknown,
                                         'subject': 'Old email',
-                                       },
-                                       mail_message=old_email_message.mail_message_id)
+                                       })
 
         # Send a second email with the same FROM, but with a different name
         with self.mock_mail_gateway():
