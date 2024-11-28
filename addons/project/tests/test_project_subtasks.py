@@ -3,7 +3,7 @@
 from lxml import etree
 from psycopg2.errors import CheckViolation
 
-from odoo import Command
+from odoo import Command, _
 from odoo.addons.project.tests.test_project_base import TestProjectCommon
 from odoo.tests import Form, tagged
 from odoo.tools import mute_logger
@@ -514,3 +514,41 @@ class TestProjectSubtasks(TestProjectCommon):
             subtask_form.parent_id = self.env['project.task']
 
         self.assertTrue(invisible_subtask.display_in_project)
+
+    def test_convert_tasks_to_subtask(self):
+        """
+        Check if the parent task is linked with the subtask through the 'Convert to Subtask' wizard.
+
+        Steps:
+            - Open the subtask wizard
+            - Choose the parent task
+            - Check the parent and subtask
+        """
+        with Form(self.task_1, view="project.project_task_convert_to_subtask_view_form") as subtask:
+            subtask.parent_id = self.task_2
+        self.assertTrue(self.task_2 in self.task_1.parent_id, "Task2 should have Task1 as its parent.")
+        self.assertTrue(self.task_1 in self.task_2.child_ids, "Task1 should have Task2 as its child.")
+
+    def test_action_convert_to_subtask_on_private_task(self):
+        """
+        Check if a warning is triggered when the user selects a private task as a subtask.
+
+        Steps:
+            - Create a private task
+            - Perform the action convert_to_subtask
+            - Check the returned action result
+        """
+        private_task = self.env['project.task'].create({
+            'name': 'Private task',
+            'project_id': False,
+        })
+
+        private_task_notification = private_task.action_convert_to_subtask()
+        self.assertDictEqual(private_task_notification, {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'danger',
+                'message': 'Private tasks cannot be converted into sub-tasks. Please set a project on the task to gain access to this feature.',
+            },
+        })

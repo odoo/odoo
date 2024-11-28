@@ -764,3 +764,45 @@ class TestTimesheet(TestCommonTimesheet):
                 'project_id': self.project_customer.id,
                 'employee_id': self.empl_employee.id,
             })
+
+    def test_project_update_reflects_task_allocated_hours_and_timesheet(self):
+        """
+        Check if the project update is according to the project's allocated hours and timesheet.
+        Step:
+          1) set 10 allocated hours in the project_customer
+          2) add timesheet 2 hour in task1
+          3) create project update and verfity
+          4) repeat step 1 but allocated hour 12
+          5) add timesheet 3 hour in task2
+          6) repeat step 4
+          8) add timesheet 10 hour in task2
+          9) repeat step 4
+        """
+        def create_timesheet(task, hours):
+            self.env['account.analytic.line'].create({
+                'name': 'Timesheet',
+                'task_id': task.id,
+                'unit_amount': hours,
+                'employee_id': self.empl_employee.id,
+            })
+
+        def create_project_update():
+            update_form = Form(self.env['project.update'].with_context({'default_project_id': self.project_customer.id}))
+            update_form.name = "Test"
+            update_project = update_form.save()
+
+            return [update_project.allocated_time, update_project.timesheet_time, update_project.timesheet_percentage]
+
+        self.project_customer.allocated_hours = 10
+        create_timesheet(self.task1, 2)
+        project_update_vals_list = create_project_update()
+        self.assertListEqual(project_update_vals_list, [10, 2, 20])
+
+        self.project_customer.allocated_hours = 12
+        create_timesheet(self.task2, 3)
+        project_update_vals_list = create_project_update()
+        self.assertListEqual(project_update_vals_list, [12, 5, 42])
+
+        create_timesheet(self.task2, 10)
+        project_update_vals_list = create_project_update()
+        self.assertListEqual(project_update_vals_list, [12, 15, 125])
