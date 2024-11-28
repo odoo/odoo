@@ -68,6 +68,29 @@
                     <field name="module_l10n_in_enet_batch_payment" widget="upgrade_boolean"/>
                 </setting>
             </block>
+
+            <!-- Hide settings which are irrelevant for l10n_in -->
+            <xpath expr="//setting[@id='intrastat_statistics']" position="attributes">
+                <attribute name="invisible">country_code == 'IN'</attribute>
+            </xpath>
+            <xpath expr="//setting[@id='collect_customer_payment']" position="attributes">
+                <attribute name="invisible">country_code == 'IN'</attribute>
+            </xpath>
+            <xpath expr="//setting[@id='display_invoice_tax_company_currency']" position="attributes">
+                <attribute name="invisible">country_code == 'IN'</attribute>
+            </xpath>
+            <xpath expr="//block[@id='accounting_reports']" position="attributes">
+                <attribute name="groups">base.group_no_one</attribute>
+            </xpath>
+            <xpath expr="//setting[@id='eu_service']" position="attributes">
+                <attribute name="invisible">country_code == 'IN'</attribute>
+            </xpath>
+            <xpath expr="//setting[@id='vies_service_setting']" position="attributes">
+                <attribute name="invisible">country_code == 'IN'</attribute>
+            </xpath>
+            <xpath expr="//setting[@id='sepa_payments']" position="attributes">
+                <attribute name="invisible">country_code == 'IN'</attribute>
+            </xpath>
         </field>
     </record>
 </odoo>
