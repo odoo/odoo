@@ -9,7 +9,7 @@ import pytz
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
-from odoo.addons.resource.models.utils import string_to_datetime, Intervals
+from odoo.addons.resource.models.utils import string_to_datetime
 from odoo.osv import expression
 from odoo.tools import ormcache, format_list
 from odoo.exceptions import UserError
@@ -212,7 +212,10 @@ class HrContract(models.Model):
                 for leave_interval in [(leave[0], leave[1], interval[2]) for leave in leaves_over_interval]:
                     leave_entry_type = self.env['resource.calendar.leaves']._get_interval_leave_work_entry_type(
                         interval, leaves, contract.employee_id, bypassing_work_entry_type_codes)
-                    interval_leaves = [leave for leave in leaves if leave[2].work_entry_type_id.id == leave_entry_type.id]
+                    interval_leaves = self.env['resource.calendar.leaves']
+                    for leave in leaves:
+                        if leave[2].work_entry_type_id.id == leave_entry_type.id:
+                            interval_leaves |= leave[2]
                     interval_start = leave_interval[0].astimezone(pytz.utc).replace(tzinfo=None)
                     interval_stop = leave_interval[1].astimezone(pytz.utc).replace(tzinfo=None)
                     contract_vals += [dict([
@@ -224,7 +227,7 @@ class HrContract(models.Model):
                         ('company_id', contract.company_id.id),
                         ('state', 'draft'),
                         ('contract_id', contract.id),
-                    ] + contract._get_more_vals_leave_interval(interval, interval_leaves))]
+                    ] + interval_leaves._get_more_vals_leave_interval(interval, leave_interval))]
         return contract_vals
 
     def _get_work_entries_values(self, date_start, date_stop):
