@@ -8,7 +8,7 @@
             forceSmall="ui.isSmall and !env.inDialog"
         >
             <t t-set="order" t-value="scope.item" />
-            <div id="floating-order-container" class="position-relative">
+            <div class="floating-order-container position-relative">
                 <button t-esc="order.getName()"
                     t-att-class="{ 'active': pos.getOrder()?.id === order.id }"
                     class="btn btn-lg btn-secondary text-truncate mx-1"
