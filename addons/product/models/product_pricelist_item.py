@@ -131,8 +131,10 @@ class PricelistItem(models.Model):
 
     price_markup = fields.Float(
         string="Markup",
-        default=0,
         digits=(16, 2),
+        compute='_compute_price_markup',
+        inverse='_inverse_price_markup',
+        store=True,
         help="You can apply a mark-up on the cost")
 
     price_min_margin = fields.Float(
@@ -173,7 +175,7 @@ class PricelistItem(models.Model):
 
     @api.depends(
         'compute_price', 'fixed_price', 'pricelist_id', 'percent_price', 'price_discount',
-        'price_surcharge', 'base', 'base_pricelist_id',
+        'price_markup', 'price_surcharge', 'base', 'base_pricelist_id',
     )
     def _compute_price_label(self):
         for item in self:
@@ -229,8 +231,19 @@ class PricelistItem(models.Model):
                     extra=extra_fee_str,
                 )
 
+    @api.depends('price_discount')
+    def _compute_price_markup(self):
+        for item in self:
+            item.price_markup = -item.price_discount
+
+    def _inverse_price_markup(self):
+        for item in self:
+            item.price_discount = -item.price_markup
+
     @api.depends_context('lang')
-    @api.depends('compute_price', 'price_discount', 'price_surcharge', 'base', 'price_round')
+    @api.depends(
+        'base', 'compute_price', 'price_discount', 'price_markup', 'price_round', 'price_surcharge',
+    )
     def _compute_rule_tip(self):
         base_selection_vals = {elem[0]: elem[1] for elem in self._fields['base']._description_selection(self.env)}
         self.rule_tip = False
@@ -238,7 +251,8 @@ class PricelistItem(models.Model):
             if item.compute_price != 'formula':
                 continue
             base_amount = 100
-            discount_factor = (100 - item.price_discount) / 100
+            discount = item.price_discount if item.base != 'standard_price' else -item.price_markup
+            discount_factor = (100 - discount) / 100
             discounted_price = base_amount * discount_factor
             if item.price_round:
                 discounted_price = tools.float_round(discounted_price, precision_rounding=item.price_round)
@@ -356,8 +370,7 @@ class PricelistItem(models.Model):
 
     @api.onchange('price_markup')
     def _onchange_price_markup(self):
-        for item in self:
-            item.price_discount = -item.price_markup
+        pass  # TODO: remove in master
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
@@ -522,7 +535,8 @@ class PricelistItem(models.Model):
             base_price = self._compute_base_price(product, quantity, uom, date, currency)
             # complete formula
             price_limit = base_price
-            price = (base_price - (base_price * (self.price_discount / 100))) or 0.0
+            discount = self.price_discount if self.base != 'standard_price' else -self.price_markup
+            price = base_price - (base_price * (discount / 100))
             if self.price_round:
                 price = tools.float_round(price, precision_rounding=self.price_round)
 
