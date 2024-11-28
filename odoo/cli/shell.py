@@ -60,7 +60,7 @@ class Shell(Command):
 
         group = optparse.OptionGroup(config.parser, "Shell options")
         group.add_option(
-            '--shell-file', dest='shell_file', type='string', default='', my_default='',
+            '--shell-file', dest='shell_file', type='string', my_default='',
             help="Specify a python script to be run after the start of the shell. "
                  "Overrides the env variable PYTHONSTARTUP."
         )
