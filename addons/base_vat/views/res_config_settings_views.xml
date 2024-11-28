@@ -11,7 +11,8 @@
                          help="Verify VAT numbers using the European VIES service"
                          company_dependent="1"
                          title="If this checkbox is ticked, the default fiscal position that applies will depend upon the output of the verification by the European VIES Service."
-                         documentation="/applications/finance/accounting/taxation/taxes/vat_validation.html">
+                         documentation="/applications/finance/accounting/taxation/taxes/vat_validation.html"
+                         invisible="'EU' not in company_country_group_codes">
                     <field name="vat_check_vies"/>
                 </setting>
             </setting>

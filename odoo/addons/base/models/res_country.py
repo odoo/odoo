@@ -65,6 +65,7 @@ class ResCountry(models.Model):
     phone_code = fields.Integer(string='Country Calling Code')
     country_group_ids = fields.Many2many('res.country.group', 'res_country_res_country_group_rel',
                          'res_country_id', 'res_country_group_id', string='Country Groups')
+    country_group_codes = fields.Json(compute='_compute_country_group_codes')
     state_ids = fields.One2many('res.country.state', 'country_id', string='States')
     name_position = fields.Selection([
             ('before', 'Before Address'),
@@ -140,6 +141,14 @@ class ResCountry(models.Model):
                 code = FLAG_MAPPING.get(country.code, country.code.lower())
                 country.image_url = "/base/static/img/country_flags/%s.png" % code
 
+    @api.depends('country_group_ids')
+    def _compute_country_group_codes(self):
+        '''If a country has no associated country groups, assign [''] to country_group_codes.
+        This prevents iterating over a non-iterable (False) value.
+        '''
+        for country in self:
+            country.country_group_codes = country.country_group_ids.mapped('code') or ['']
+
     @api.constrains('address_format')
     def _check_address_format(self):
         for record in self:
@@ -150,15 +159,42 @@ class ResCountry(models.Model):
                 except (ValueError, KeyError):
                     raise UserError(_('The layout contains an invalid format key'))
 
+    def belongs_to_country_group(self, country_group):
+        """This method is used to determine if a country belongs to a given country group.
+
+        param country_group: the country group's code
+        return: True if the country belongs to the given country group, False otherwise.
+        """
+        if not self:
+            return False
+        self.ensure_one()
+        return country_group in self.country_group_ids.mapped('code')
 
 class ResCountryGroup(models.Model):
     _name = 'res.country.group'
     _description = "Country Group"
 
     name = fields.Char(required=True, translate=True)
+    code = fields.Char(string="Country Group Code", help="The country group code.")
     country_ids = fields.Many2many('res.country', 'res_country_res_country_group_rel',
                                    'res_country_group_id', 'res_country_id', string='Countries')
 
+    _check_code_uniq = models.Constraint(
+        'unique(code)',
+        "The country group code must be unique!",
+    )
+
+    def _sanitize_vals(self, vals):
+        if code := vals.get('code'):
+            vals['code'] = code.upper()
+        return vals
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        return super().create([self._sanitize_vals(vals) for vals in vals_list])
+
+    def write(self, vals):
+        return super().write(self._sanitize_vals(vals))
 
 class ResCountryState(models.Model):
     _name = 'res.country.state'
