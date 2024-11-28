@@ -289,7 +289,9 @@ class Location(models.Model):
         putaway_rules = putaway_rules.sorted(lambda rule: (rule.package_type_ids,
                                                            rule.product_id,
                                                            rule.category_id == categs[:1],  # same categ, not a parent
-                                                           rule.category_id),
+                                                           rule.category_id,
+                                                           rule.sequence,
+                                                           rule.id),
                                              reverse=True)
 
         putaway_location = None
