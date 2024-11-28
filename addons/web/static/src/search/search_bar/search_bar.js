@@ -32,6 +32,7 @@ export class SearchBar extends Component {
             shape: {
                 default: { optional: true },
                 "search-bar-additional-menu": { optional: true },
+                "search-bar-additional-facets": { optional: true },
             },
         },
         toggler: {
