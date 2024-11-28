@@ -3648,8 +3648,8 @@ test("selection box is properly displayed (multi pages) on mobile", async () => 
     await animationFrame();
 
     expect(".o_list_selection_box").toHaveCount(1);
-    expect(".o_list_selection_box .o_list_select_domain").toHaveCount(0);
-    expect(".o_list_selection_box").toHaveText("1\nselected");
+    expect(".o_list_selection_box .o_list_select_domain").toHaveCount(1);
+    expect(".o_list_selection_box").toHaveText("1\nselected\nAll");
     expect(".o_list_selection_box").toHaveCount(1);
     expect("div.o_control_panel .o_cp_action_menus").toHaveCount(1);
 
@@ -17500,9 +17500,9 @@ test("selection is properly displayed (single page) on mobile", async () => {
     // select a record
     await contains(".o_data_row:nth-child(1)").drag();
     expect(".o_list_selection_box").toHaveCount(1);
-    expect(".o_list_selection_box .o_list_select_domain").toHaveCount(0);
+    expect(".o_list_selection_box .o_list_select_domain").toHaveCount(1);
     expect(".o_control_panel .o_cp_searchview").toHaveCount(0);
-    expect(queryFirst(".o_list_selection_box")).toHaveText("1\nselected");
+    expect(queryFirst(".o_list_selection_box")).toHaveText("1\nselected\nAll");
 
     // unselect a record
     await contains(".o_data_row:nth-child(1)").drag();
@@ -17511,7 +17511,7 @@ test("selection is properly displayed (single page) on mobile", async () => {
     // select 2 records
     await contains(".o_data_row:nth-child(1)").drag();
     await contains(".o_data_row:nth-child(2)").drag();
-    expect(queryFirst(".o_list_selection_box")).toHaveText("2\nselected");
+    expect(queryFirst(".o_list_selection_box")).toHaveText("2\nselected\nAll");
 
     expect("div.o_control_panel .o_cp_action_menus").toHaveCount(1);
 
