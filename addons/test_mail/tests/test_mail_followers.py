@@ -891,7 +891,7 @@ class UnfollowFromInboxTest(MailCommon, HttpCase):
                     "message_type": "notification",
                     "model": "mail.test.simple",
                     "needaction": True,
-                    "notifications": [notif.id],
+                    "notification_ids": [notif.id],
                     "pinned_at": False,
                     "rating_id": False,
                     "reactions": [],
@@ -911,7 +911,7 @@ class UnfollowFromInboxTest(MailCommon, HttpCase):
                 {
                     "failure_type": False,
                     "id": notif.id,
-                    "message": message.id,
+                    "mail_message_id": message.id,
                     "notification_status": "sent",
                     "notification_type": "inbox",
                     "persona": {"id": self.env.user.partner_id.id, "type": "partner"},

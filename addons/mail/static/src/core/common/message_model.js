@@ -101,7 +101,7 @@ export class Message extends Record {
          */
         sort: (r1, r2) => r1.sequence - r2.sequence,
     });
-    notifications = Record.many("mail.notification", { inverse: "message" });
+    notification_ids = Record.many("mail.notification", { inverse: "mail_message_id" });
     recipients = Record.many("Persona");
     thread = Record.one("Thread");
     threadAsNeedaction = Record.one("Thread", {
@@ -316,7 +316,7 @@ export class Message extends Record {
     }
 
     get failureNotifications() {
-        return this.notifications.filter((notification) => notification.isFailure);
+        return this.notification_ids.filter((notification) => notification.isFailure);
     }
 
     get scheduledDateSimple() {

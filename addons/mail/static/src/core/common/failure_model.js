@@ -28,23 +28,25 @@ export class Failure extends Record {
         },
     });
     get modelName() {
-        return this.notifications?.[0]?.message?.thread?.modelName;
+        return this.notifications?.[0]?.mail_message_id?.thread?.modelName;
     }
     get resModel() {
-        return this.notifications?.[0]?.message?.thread?.model;
+        return this.notifications?.[0]?.mail_message_id?.thread?.model;
     }
     get resIds() {
         return new Set([
-            ...this.notifications.map((notif) => notif.message?.thread?.id).filter((id) => !!id),
+            ...this.notifications
+                .map((notif) => notif.mail_message_id?.thread?.id)
+                .filter((id) => !!id),
         ]);
     }
     lastMessage = Record.one("mail.message", {
         /** @this {import("models").Failure} */
         compute() {
-            let lastMsg = this.notifications[0]?.message;
+            let lastMsg = this.notifications[0]?.mail_message_id;
             for (const notification of this.notifications) {
-                if (lastMsg?.id < notification.message?.id) {
-                    lastMsg = notification.message;
+                if (lastMsg?.id < notification.mail_message_id?.id) {
+                    lastMsg = notification.mail_message_id;
                 }
             }
             return lastMsg;

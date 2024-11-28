@@ -292,7 +292,7 @@ patch(MockServer.prototype, {
                 link_preview_ids: linkPreviewsFormatted,
                 reactions: reactionGroups,
                 needaction_partner_ids: needactionPartnerIds,
-                notifications,
+                notification_ids: notifications,
                 parentMessage: message.parent_id
                     ? this._mockMailMessageMessageFormat([message.parent_id])[0]
                     : false,

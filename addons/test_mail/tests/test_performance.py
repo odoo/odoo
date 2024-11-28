@@ -1384,7 +1384,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "message_type": "comment",
                                     "model": "mail.test.simple",
                                     "needaction": True,
-                                    "notifications": [notif_1.id, notif_2.id],
+                                    "notification_ids": [notif_1.id, notif_2.id],
                                     "pinned_at": False,
                                     "rating_id": False,
                                     "reactions": [],
@@ -1404,7 +1404,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                 {
                                     "failure_type": False,
                                     "id": notif_1.id,
-                                    "message": message.id,
+                                    "mail_message_id": message.id,
                                     "notification_status": "sent",
                                     "notification_type": "inbox",
                                     "persona": {
@@ -1415,7 +1415,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                 {
                                     "failure_type": False,
                                     "id": notif_2.id,
-                                    "message": message.id,
+                                    "mail_message_id": message.id,
                                     "notification_status": "sent",
                                     "notification_type": "inbox",
                                     "persona": {
@@ -1487,7 +1487,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "message_type": "comment",
                                     "model": "mail.test.simple",
                                     "needaction": True,
-                                    "notifications": [notif_1.id, notif_2.id],
+                                    "notification_ids": [notif_1.id, notif_2.id],
                                     "pinned_at": False,
                                     "rating_id": False,
                                     "reactions": [],
@@ -1507,7 +1507,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                 {
                                     "failure_type": False,
                                     "id": notif_1.id,
-                                    "message": message.id,
+                                    "mail_message_id": message.id,
                                     "notification_status": "sent",
                                     "notification_type": "inbox",
                                     "persona": {
@@ -1518,7 +1518,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                 {
                                     "failure_type": False,
                                     "id": notif_2.id,
-                                    "message": message.id,
+                                    "mail_message_id": message.id,
                                     "notification_status": "sent",
                                     "notification_type": "inbox",
                                     "persona": {
