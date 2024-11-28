@@ -717,6 +717,7 @@ export class Configurator extends Component {
     setup() {
         this.orm = useService('orm');
         this.action = useService('action');
+        this.website = useService("website");
 
         // Using the back button must update the router state.
         useExternalListener(window, "popstate", (ev) => {
@@ -871,11 +872,13 @@ export class Configurator extends Component {
     }
 
     async skipConfigurator() {
-        await this.orm.call('website', 'configurator_skip');
+        this.website.showLoader({ showTips: true });
+        const redirectUrl = await this.orm.call("website", "configurator_skip");
         this.clearStorage();
-        this.action.doAction('website.theme_install_kanban_action', {
-            clearBreadcrumbs: true,
-        });
+        // Here the website service goToWebsite method is not used because
+        // the web client needs to be reloaded after the new modules have
+        // been installed.
+        await this.action.doAction(redirectUrl);
     }
 }
 
