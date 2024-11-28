@@ -317,10 +317,8 @@ class TestVariants(ProductVariantsCommon):
         })
         self.assertEqual(len(template.product_variant_ids), 1)
         self.assertEqual(template.barcode, 'test')
-
         template.product_variant_ids.action_archive()
         self.assertFalse(template.active)
-        template.invalidate_model(['barcode'])
         self.assertEqual(template.barcode, 'test')
         template.product_variant_ids.action_unarchive()
         template.action_unarchive()
@@ -343,11 +341,9 @@ class TestVariants(ProductVariantsCommon):
         variant_2.barcode = 'v2_barcode'
 
         variant_1.action_archive()
-        template.invalidate_model(['barcode'])
         self.assertEqual(template.barcode, variant_2.barcode)  # 1 active variant --> barcode on template
 
         variant_1.action_unarchive()
-        template.invalidate_model(['barcode'])
         self.assertFalse(template.barcode)  # 2 active variants --> no barcode on template
 
     @mute_logger('odoo.models.unlink')
