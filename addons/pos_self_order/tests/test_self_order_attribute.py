@@ -132,7 +132,8 @@ class TestSelfOrderAttribute(SelfOrderCommonTest):
             'pos_categ_ids': [(4, pos_categ_misc.id)],
             'public_description': 'Nice Product'
         })
-
+        self.pos_config.limit_categories = True
+        self.pos_config.iface_available_categ_ids = [(4, pos_categ_misc.id)]
         self.pos_config.with_user(self.pos_user).open_ui()
         self_route = self.pos_config._get_self_order_route()
 
