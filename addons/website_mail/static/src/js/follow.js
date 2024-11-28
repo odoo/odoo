@@ -131,12 +131,17 @@ publicWidget.registry.follow = publicWidget.Widget.extend({
                 });
                 return false;
             }
+
+            const turnstileCaptcha = $("input[name='turnstile_captcha']");
+            const turnstile = turnstileCaptcha[0] ? turnstileCaptcha[0].value : "";
+
             rpc("/website_mail/follow", {
                 "id": +$jsFollow.data("id"),
                 "object": $jsFollow.data("object"),
                 "message_is_follower": $jsFollow.attr("data-follow") || "off",
                 "email": email,
-                "recaptcha_token_response": token
+                "recaptcha_token_response": token,
+                "turnstile_captcha": turnstile,
             }).then(function(follow) {
                 self._toggleSubscription(follow, email, $jsFollow);
             });

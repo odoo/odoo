@@ -33,16 +33,16 @@
                             <h4 class="modal-title">Subscribe</h4>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </header>
-                        <main class="modal-body">
+                        <form class="modal-body" data-captcha="website_mail_follow">
                             <p t-if="object == question">Get notified when there's activity on this post</p>
                             <p t-if="object == tag">Get notified when this tag is used</p>
                             <input type="email" name="email"
                                    class="js_follow_email form-control mb-2"
                                    placeholder="your email..."
                                    groups="base.group_public"/>
-                            <button href="#" t-attf-class="btn btn-primary js_follow_btn">Subscribe</button>
+                            <button type="submit" href="#" t-attf-class="btn btn-primary js_follow_btn">Subscribe</button>
                             <button href="#" t-attf-class="btn btn-secondary js_unfollow_btn"><i class="fa fa-fw fa-check me-1"/>Following</button>
-                        </main>
+                        </form>
                     </div>
                 </div>
             </div>
