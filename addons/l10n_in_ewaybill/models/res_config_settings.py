@@ -3,7 +3,7 @@
 from odoo import models, fields, _
 from odoo.exceptions import UserError
 from odoo.tools import html_escape
-from odoo.addons.l10n_in_ewaybill.tools.ewaybill_api import EWayBillApi
+from odoo.addons.l10n_in_ewaybill.tools.ewaybill_api import EWayBillApi, EWayBillError
 
 
 class ResConfigSettings(models.TransientModel):
@@ -23,13 +23,12 @@ class ResConfigSettings(models.TransientModel):
     def l10n_in_ewaybill_test(self):
         self._l10n_in_check_gst_number()
         ewaybill_api = EWayBillApi(self.company_id)
-        response = ewaybill_api._ewaybill_authenticate()
-        response = {}
-        if response.get('error') or not self.company_id._l10n_in_ewaybill_token_is_valid():
-            error_message = _("Incorrect username or password, or the GST number on company does not match.")
-            if response.get('error'):
-                error_message = "\n".join([html_escape('[%s] %s' % (e.get('code'), e.get('message'))) for e in response['error']])
-            raise UserError(error_message)
+        try:
+            ewaybill_api._ewaybill_authenticate()
+        except EWayBillError as e:
+            raise UserError(e.get_all_error_message())
+        if not self.company_id.sudo()._l10n_in_ewaybill_token_is_valid():
+            raise UserError(_("Incorrect username or password, or the GST number on company does not match."))
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
