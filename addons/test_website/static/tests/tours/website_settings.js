@@ -7,6 +7,7 @@ const websiteName = "Website Test Settings";
 
 registry.category("web_tour.tours").add("website_settings_m2o_dirty", {
     url: "/odoo",
+    checkDelay: 500,
     steps: () => [
         stepUtils.showAppsMenuItem(),
         {
