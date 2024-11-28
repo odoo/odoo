@@ -401,7 +401,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
         if not partner._l10n_es_is_foreign() and partner.vat:
             recipient_values['nif'] = partner.vat[2:] if partner.vat.startswith('ES') else partner.vat
 
-        elif partner.country_id in self.env.ref('base.europe').country_ids:
+        elif partner.country_id and 'EU' in partner.country_id.country_group_codes:
             recipient_values['alt_id_type'] = '02'
 
         else:

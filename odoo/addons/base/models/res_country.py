@@ -64,6 +64,7 @@ class ResCountry(models.Model):
     phone_code = fields.Integer(string='Country Calling Code')
     country_group_ids = fields.Many2many('res.country.group', 'res_country_res_country_group_rel',
                          'res_country_id', 'res_country_group_id', string='Country Groups')
+    country_group_codes = fields.Json(compute="_compute_country_group_codes")
     state_ids = fields.One2many('res.country.state', 'country_id', string='States')
     name_position = fields.Selection([
             ('before', 'Before Address'),
@@ -149,14 +150,41 @@ class ResCountry(models.Model):
                 except (ValueError, KeyError):
                     raise UserError(_('The layout contains an invalid format key'))
 
+    @api.depends('country_group_ids')
+    def _compute_country_group_codes(self):
+        '''If a country has no associated country groups, assign [''] to country_group_codes.
+        This prevents storing [] as False, which helps avoid iteration over a False value and
+        maintains a valid structure.
+        '''
+        for country in self:
+            country.country_group_codes = country.country_group_ids.mapped('code') or ['']
+
 
 class ResCountryGroup(models.Model):
     _name = 'res.country.group'
     _description = "Country Group"
 
     name = fields.Char(required=True, translate=True)
+    code = fields.Char(string="Code")
     country_ids = fields.Many2many('res.country', 'res_country_res_country_group_rel',
                                    'res_country_group_id', 'res_country_id', string='Countries')
+
+    _check_code_uniq = models.Constraint(
+        'unique(code)',
+        'The country group code must be unique!',
+    )
+
+    def _sanitize_vals(self, vals):
+        if code := vals.get('code'):
+            vals['code'] = code.upper()
+        return vals
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        return super().create([self._sanitize_vals(vals) for vals in vals_list])
+
+    def write(self, vals):
+        return super().write(self._sanitize_vals(vals))
 
 
 class ResCountryState(models.Model):

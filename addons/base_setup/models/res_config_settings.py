@@ -42,6 +42,7 @@ class ResConfigSettings(models.TransientModel):
     company_name = fields.Char(related="company_id.display_name", string="Company Name")
     company_informations = fields.Text(compute="_compute_company_informations")
     company_country_code = fields.Char(related="company_id.country_id.code", string="Company Country Code", readonly=True)
+    company_country_group_codes = fields.Json(related="company_id.country_id.country_group_codes")
     profiling_enabled_until = fields.Datetime("Profiling enabled until", config_parameter='base.profiling_enabled_until')
 
     def open_company(self):
