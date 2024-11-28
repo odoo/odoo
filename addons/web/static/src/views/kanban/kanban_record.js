@@ -176,7 +176,7 @@ export class KanbanRecord extends Component {
         "Compiler?",
         "forceGlobalClick?",
         "group?",
-        "list",
+        "groupByField?",
         "deleteRecord?",
         "archiveRecord?",
         "openRecord?",
@@ -229,11 +229,11 @@ export class KanbanRecord extends Component {
      * @param {Object} props
      */
     createWidget(props) {
-        const { archInfo, list } = props;
+        const { archInfo, groupByField } = props;
         const { activeActions } = archInfo;
         // Widget
         const deletable =
-            activeActions.delete && (!list.groupByField || list.groupByField.type !== "many2many");
+            activeActions.delete && (!groupByField || groupByField.type !== "many2many");
         const editable = activeActions.edit;
         this.dataState.widget = {
             deletable,
@@ -260,7 +260,7 @@ export class KanbanRecord extends Component {
             const value = record.data[archInfo.cardColorField];
             classes.push(`o_kanban_color_${getColorIndex(value)}`);
         }
-        if (!this.props.list.isGrouped) {
+        if (!this.props.groupByField) {
             classes.push("flex-grow-1 flex-md-shrink-1 flex-shrink-0");
         }
         classes.push(archInfo.cardClassName);
