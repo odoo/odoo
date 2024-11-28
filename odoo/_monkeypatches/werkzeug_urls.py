@@ -1041,8 +1041,7 @@ def url_join(
 
 
 def patch_werkzeug():
-    # This loads the whole ..tools before it should.
-    from ..tools.json import scriptsafe  # noqa: PLC0415
+    from odoo.required import scriptsafe  # noqa: PLC0415
     Request.json_module = Response.json_module = scriptsafe
 
     FileStorage.save = lambda self, dst, buffer_size=(1 << 20): copyfileobj(self.stream, dst, buffer_size)

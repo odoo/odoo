@@ -40,6 +40,7 @@ from lxml import etree, objectify
 
 import odoo
 import odoo.addons
+from odoo.required import ReadonlyDict  # noqa: F401
 from odoo._monkeypatches.xlwt import xlwt  # noqa: F401
 from odoo._monkeypatches.xlsxwriter import xlsxwriter  # noqa: F401
 # get_encodings, ustr and exception_to_unicode were originally from tools.misc.
@@ -1597,40 +1598,6 @@ def format_duration(value: float) -> str:
 
 
 consteq = hmac_lib.compare_digest
-
-
-class ReadonlyDict(Mapping[K, T], typing.Generic[K, T]):
-    """Helper for an unmodifiable dictionary, not even updatable using `dict.update`.
-
-    This is similar to a `frozendict`, with one drawback and one advantage:
-
-    - `dict.update` works for a `frozendict` but not for a `ReadonlyDict`.
-    - `json.dumps` works for a `frozendict` by default but not for a `ReadonlyDict`.
-
-    This comes from the fact `frozendict` inherits from `dict`
-    while `ReadonlyDict` inherits from `collections.abc.Mapping`.
-
-    So, depending on your needs,
-    whether you absolutely must prevent the dictionary from being updated (e.g., for security reasons)
-    or you require it to be supported by `json.dumps`, you can choose either option.
-
-        E.g.
-          data = ReadonlyDict({'foo': 'bar'})
-          data['baz'] = 'xyz' # raises exception
-          data.update({'baz', 'xyz'}) # raises exception
-          dict.update(data, {'baz': 'xyz'}) # raises exception
-    """
-    def __init__(self, data):
-        self.__data = dict(data)
-
-    def __getitem__(self, key: K) -> T:
-        return self.__data[key]
-
-    def __len__(self):
-        return len(self.__data)
-
-    def __iter__(self):
-        return iter(self.__data)
 
 
 class DotDict(dict):
