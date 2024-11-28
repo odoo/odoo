@@ -5,66 +5,69 @@ import { OdooChart } from "./odoo_chart";
 const { chartRegistry } = registries;
 
 const {
-    getPieChartDatasets,
+    getRadarChartDatasets,
     CHART_COMMON_OPTIONS,
-    getPieChartLayout,
-    getPieChartTooltip,
+    getBarChartLayout,
     getChartTitle,
-    getPieChartLegend,
     getChartShowValues,
+    getRadarChartScales,
+    getRadarChartLegend,
+    getRadarChartTooltip,
     truncateLabel,
 } = chartHelpers;
 
-export class OdooPieChart extends OdooChart {
+export class OdooRadarChart extends OdooChart {
     constructor(definition, sheetId, getters) {
         super(definition, sheetId, getters);
-        this.isDoughnut = definition.isDoughnut;
+        this.fillArea = definition.fillArea;
     }
 
     getDefinition() {
         return {
             ...super.getDefinition(),
-            isDoughnut: this.isDoughnut,
+            fillArea: this.fillArea,
         };
     }
 }
 
-chartRegistry.add("odoo_pie", {
-    match: (type) => type === "odoo_pie",
-    createChart: (definition, sheetId, getters) => new OdooPieChart(definition, sheetId, getters),
+chartRegistry.add("odoo_radar", {
+    match: (type) => type === "odoo_radar",
+    createChart: (definition, sheetId, getters) => new OdooRadarChart(definition, sheetId, getters),
     getChartRuntime: createOdooChartRuntime,
     validateChartDefinition: (validator, definition) =>
-        OdooPieChart.validateChartDefinition(validator, definition),
-    transformDefinition: (definition) => OdooPieChart.transformDefinition(definition),
-    getChartDefinitionFromContextCreation: () => OdooPieChart.getDefinitionFromContextCreation(),
-    name: _t("Pie"),
+        OdooRadarChart.validateChartDefinition(validator, definition),
+    transformDefinition: (definition) => OdooRadarChart.transformDefinition(definition),
+    getChartDefinitionFromContextCreation: () => OdooRadarChart.getDefinitionFromContextCreation(),
+    name: _t("Radar"),
 });
 
 function createOdooChartRuntime(chart, getters) {
     const background = chart.background || "#FFFFFF";
     const { datasets, labels } = chart.dataSource.getData();
+
     const definition = chart.getDefinition();
-    definition.dataSets = datasets.map(() => ({ trend: definition.trend }));
+    const locale = getters.getLocale();
 
     const chartData = {
         labels,
         dataSetsValues: datasets.map((ds) => ({ data: ds.data, label: ds.label })),
-        locale: getters.getLocale(),
+        locale,
     };
 
     const config = {
-        type: definition.isDoughnut ? "doughnut" : "pie",
+        type: "radar",
         data: {
             labels: chartData.labels.map(truncateLabel),
-            datasets: getPieChartDatasets(definition, chartData),
+            datasets: getRadarChartDatasets(definition, chartData),
         },
         options: {
             ...CHART_COMMON_OPTIONS,
-            layout: getPieChartLayout(definition),
+            layout: getBarChartLayout(definition),
+            scales: getRadarChartScales(definition, chartData),
             plugins: {
                 title: getChartTitle(definition),
-                legend: getPieChartLegend(definition, chartData),
-                tooltip: getPieChartTooltip(definition, chartData),
+                legend: getRadarChartLegend(definition, chartData),
+                tooltip: getRadarChartTooltip(definition, chartData),
                 chartShowValuesPlugin: getChartShowValues(definition, chartData),
             },
             ...getters.getChartDatasetActionCallbacks(chart),

@@ -6,6 +6,11 @@ const { ChartJsComponent } = spreadsheet.components;
 chartComponentRegistry.add("odoo_bar", ChartJsComponent);
 chartComponentRegistry.add("odoo_line", ChartJsComponent);
 chartComponentRegistry.add("odoo_pie", ChartJsComponent);
+chartComponentRegistry.add("odoo_radar", ChartJsComponent);
+chartComponentRegistry.add("odoo_waterfall", ChartJsComponent);
+chartComponentRegistry.add("odoo_pyramid", ChartJsComponent);
+chartComponentRegistry.add("odoo_scatter", ChartJsComponent);
+chartComponentRegistry.add("odoo_combo", ChartJsComponent);
 
 import { OdooChartCorePlugin } from "./plugins/odoo_chart_core_plugin";
 import { ChartOdooMenuPlugin } from "./plugins/chart_odoo_menu_plugin";

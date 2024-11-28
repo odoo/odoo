@@ -74,27 +74,18 @@ export class OdooChartUIPlugin extends OdooUIPlugin {
     handle(cmd) {
         switch (cmd.type) {
             case "CREATE_CHART": {
-                switch (cmd.definition.type) {
-                    case "odoo_pie":
-                    case "odoo_bar":
-                    case "odoo_line":
-                        this._setupChartDataSource(cmd.id);
-                        break;
+                if (cmd.definition.type.startsWith("odoo_")) {
+                    this._setupChartDataSource(cmd.id);
                 }
                 break;
             }
             case "UPDATE_CHART": {
-                switch (cmd.definition.type) {
-                    case "odoo_pie":
-                    case "odoo_bar":
-                    case "odoo_line": {
-                        if (this.shouldChartUpdateReloadDataSource) {
-                            this._resetChartDataSource(cmd.id);
-                            this.shouldChartUpdateReloadDataSource = false;
-                        }
-                        this._setChartDataSource(cmd.id);
-                        break;
+                if (cmd.definition.type.startsWith("odoo_")) {
+                    if (this.shouldChartUpdateReloadDataSource) {
+                        this._resetChartDataSource(cmd.id);
+                        this.shouldChartUpdateReloadDataSource = false;
                     }
+                    this._setChartDataSource(cmd.id);
                 }
                 break;
             }

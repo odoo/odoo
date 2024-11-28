@@ -5,48 +5,52 @@ import { OdooChart } from "./odoo_chart";
 const { chartRegistry } = registries;
 
 const {
-    getBarChartDatasets,
+    getComboChartDatasets,
     CHART_COMMON_OPTIONS,
     getBarChartLayout,
     getBarChartScales,
     getBarChartTooltip,
     getChartTitle,
-    getBarChartLegend,
+    getComboChartLegend,
     getChartShowValues,
     getTrendDatasetForBarChart,
     truncateLabel,
 } = chartHelpers;
 
-export class OdooBarChart extends OdooChart {
+export class OdooComboChart extends OdooChart {
     constructor(definition, sheetId, getters) {
         super(definition, sheetId, getters);
-        this.verticalAxisPosition = definition.verticalAxisPosition;
-        this.stacked = definition.stacked;
         this.axesDesign = definition.axesDesign;
-        this.horizontal = definition.horizontal;
     }
 
     getDefinition() {
         return {
             ...super.getDefinition(),
-            verticalAxisPosition: this.verticalAxisPosition,
-            stacked: this.stacked,
             axesDesign: this.axesDesign,
-            trend: this.trend,
-            horizontal: this.horizontal,
         };
+    }
+
+    get dataSets() {
+        const dataSets = super.dataSets;
+        if (dataSets.every((ds) => !ds.type)) {
+            return dataSets.map((ds, index) => ({
+                ...ds,
+                type: index === 0 ? "bar" : "line",
+            }));
+        }
+        return dataSets;
     }
 }
 
-chartRegistry.add("odoo_bar", {
-    match: (type) => type === "odoo_bar",
-    createChart: (definition, sheetId, getters) => new OdooBarChart(definition, sheetId, getters),
+chartRegistry.add("odoo_combo", {
+    match: (type) => type === "odoo_combo",
+    createChart: (definition, sheetId, getters) => new OdooComboChart(definition, sheetId, getters),
     getChartRuntime: createOdooChartRuntime,
     validateChartDefinition: (validator, definition) =>
-        OdooBarChart.validateChartDefinition(validator, definition),
-    transformDefinition: (definition) => OdooBarChart.transformDefinition(definition),
-    getChartDefinitionFromContextCreation: () => OdooBarChart.getDefinitionFromContextCreation(),
-    name: _t("Bar"),
+        OdooComboChart.validateChartDefinition(validator, definition),
+    transformDefinition: (definition) => OdooComboChart.transformDefinition(definition),
+    getChartDefinitionFromContextCreation: () => OdooComboChart.getDefinitionFromContextCreation(),
+    name: _t("Combo"),
 });
 
 function createOdooChartRuntime(chart, getters) {
@@ -72,16 +76,15 @@ function createOdooChartRuntime(chart, getters) {
         type: "bar",
         data: {
             labels: chartData.labels.map(truncateLabel),
-            datasets: getBarChartDatasets(definition, chartData),
+            datasets: getComboChartDatasets(definition, chartData),
         },
         options: {
             ...CHART_COMMON_OPTIONS,
-            indexAxis: chart.horizontal ? "y" : "x",
             layout: getBarChartLayout(definition),
             scales: getBarChartScales(definition, chartData),
             plugins: {
                 title: getChartTitle(definition),
-                legend: getBarChartLegend(definition, chartData),
+                legend: getComboChartLegend(definition, chartData),
                 tooltip: getBarChartTooltip(definition, chartData),
                 chartShowValuesPlugin: getChartShowValues(definition, chartData),
             },

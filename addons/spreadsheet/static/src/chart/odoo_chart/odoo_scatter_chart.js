@@ -5,84 +5,82 @@ import { OdooChart } from "./odoo_chart";
 const { chartRegistry } = registries;
 
 const {
-    getBarChartDatasets,
+    getScatterChartDatasets,
     CHART_COMMON_OPTIONS,
-    getBarChartLayout,
-    getBarChartScales,
-    getBarChartTooltip,
+    getLineChartLayout,
+    getScatterChartScales,
+    getLineChartTooltip,
     getChartTitle,
-    getBarChartLegend,
+    getScatterChartLegend,
     getChartShowValues,
-    getTrendDatasetForBarChart,
+    getTrendDatasetForLineChart,
     truncateLabel,
 } = chartHelpers;
 
-export class OdooBarChart extends OdooChart {
+export class OdooScatterChart extends OdooChart {
     constructor(definition, sheetId, getters) {
         super(definition, sheetId, getters);
         this.verticalAxisPosition = definition.verticalAxisPosition;
-        this.stacked = definition.stacked;
         this.axesDesign = definition.axesDesign;
-        this.horizontal = definition.horizontal;
     }
 
     getDefinition() {
         return {
             ...super.getDefinition(),
             verticalAxisPosition: this.verticalAxisPosition,
-            stacked: this.stacked,
             axesDesign: this.axesDesign,
-            trend: this.trend,
-            horizontal: this.horizontal,
         };
     }
 }
 
-chartRegistry.add("odoo_bar", {
-    match: (type) => type === "odoo_bar",
-    createChart: (definition, sheetId, getters) => new OdooBarChart(definition, sheetId, getters),
+chartRegistry.add("odoo_scatter", {
+    match: (type) => type === "odoo_scatter",
+    createChart: (definition, sheetId, getters) =>
+        new OdooScatterChart(definition, sheetId, getters),
     getChartRuntime: createOdooChartRuntime,
     validateChartDefinition: (validator, definition) =>
-        OdooBarChart.validateChartDefinition(validator, definition),
-    transformDefinition: (definition) => OdooBarChart.transformDefinition(definition),
-    getChartDefinitionFromContextCreation: () => OdooBarChart.getDefinitionFromContextCreation(),
-    name: _t("Bar"),
+        OdooScatterChart.validateChartDefinition(validator, definition),
+    transformDefinition: (definition) => OdooScatterChart.transformDefinition(definition),
+    getChartDefinitionFromContextCreation: () =>
+        OdooScatterChart.getDefinitionFromContextCreation(),
+    name: _t("Scatter"),
 });
 
 function createOdooChartRuntime(chart, getters) {
     const background = chart.background || "#FFFFFF";
     const { datasets, labels } = chart.dataSource.getData();
+
     const definition = chart.getDefinition();
+    const locale = getters.getLocale();
 
     const trendDataSetsValues = datasets.map((dataset, index) => {
         const trend = definition.dataSets[index]?.trend;
-        return !trend?.display || chart.horizontal
+        return !trend?.display
             ? undefined
-            : getTrendDatasetForBarChart(trend, dataset.data);
+            : getTrendDatasetForLineChart(trend, dataset.data, labels, "category", locale);
     });
 
     const chartData = {
         labels,
         dataSetsValues: datasets.map((ds) => ({ data: ds.data, label: ds.label })),
-        locale: getters.getLocale(),
+        locale,
         trendDataSetsValues,
     };
 
     const config = {
-        type: "bar",
+        type: "line",
         data: {
             labels: chartData.labels.map(truncateLabel),
-            datasets: getBarChartDatasets(definition, chartData),
+            datasets: getScatterChartDatasets(definition, chartData),
         },
         options: {
             ...CHART_COMMON_OPTIONS,
-            indexAxis: chart.horizontal ? "y" : "x",
-            layout: getBarChartLayout(definition),
-            scales: getBarChartScales(definition, chartData),
+            layout: getLineChartLayout(definition),
+            scales: getScatterChartScales(definition, chartData),
             plugins: {
                 title: getChartTitle(definition),
-                legend: getBarChartLegend(definition, chartData),
-                tooltip: getBarChartTooltip(definition, chartData),
+                legend: getScatterChartLegend(definition, chartData),
+                tooltip: getLineChartTooltip(definition, chartData),
                 chartShowValuesPlugin: getChartShowValues(definition, chartData),
             },
             ...getters.getChartDatasetActionCallbacks(chart),

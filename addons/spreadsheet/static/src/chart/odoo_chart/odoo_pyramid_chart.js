@@ -5,67 +5,67 @@ import { OdooChart } from "./odoo_chart";
 const { chartRegistry } = registries;
 
 const {
-    getBarChartDatasets,
     CHART_COMMON_OPTIONS,
+    getBarChartDatasets,
     getBarChartLayout,
-    getBarChartScales,
-    getBarChartTooltip,
     getChartTitle,
-    getBarChartLegend,
     getChartShowValues,
-    getTrendDatasetForBarChart,
+    getPyramidChartScales,
+    getBarChartLegend,
+    getPyramidChartTooltip,
     truncateLabel,
 } = chartHelpers;
 
-export class OdooBarChart extends OdooChart {
+export class OdooPyramidChart extends OdooChart {
     constructor(definition, sheetId, getters) {
         super(definition, sheetId, getters);
-        this.verticalAxisPosition = definition.verticalAxisPosition;
-        this.stacked = definition.stacked;
         this.axesDesign = definition.axesDesign;
-        this.horizontal = definition.horizontal;
     }
 
     getDefinition() {
         return {
             ...super.getDefinition(),
-            verticalAxisPosition: this.verticalAxisPosition,
-            stacked: this.stacked,
             axesDesign: this.axesDesign,
-            trend: this.trend,
-            horizontal: this.horizontal,
+            horizontal: true,
+            stacked: true,
         };
     }
 }
 
-chartRegistry.add("odoo_bar", {
-    match: (type) => type === "odoo_bar",
-    createChart: (definition, sheetId, getters) => new OdooBarChart(definition, sheetId, getters),
+chartRegistry.add("odoo_pyramid", {
+    match: (type) => type === "odoo_pyramid",
+    createChart: (definition, sheetId, getters) =>
+        new OdooPyramidChart(definition, sheetId, getters),
     getChartRuntime: createOdooChartRuntime,
     validateChartDefinition: (validator, definition) =>
-        OdooBarChart.validateChartDefinition(validator, definition),
-    transformDefinition: (definition) => OdooBarChart.transformDefinition(definition),
-    getChartDefinitionFromContextCreation: () => OdooBarChart.getDefinitionFromContextCreation(),
-    name: _t("Bar"),
+        OdooPyramidChart.validateChartDefinition(validator, definition),
+    transformDefinition: (definition) => OdooPyramidChart.transformDefinition(definition),
+    getChartDefinitionFromContextCreation: () =>
+        OdooPyramidChart.getDefinitionFromContextCreation(),
+    name: _t("Pyramid"),
 });
 
 function createOdooChartRuntime(chart, getters) {
     const background = chart.background || "#FFFFFF";
     const { datasets, labels } = chart.dataSource.getData();
-    const definition = chart.getDefinition();
 
-    const trendDataSetsValues = datasets.map((dataset, index) => {
-        const trend = definition.dataSets[index]?.trend;
-        return !trend?.display || chart.horizontal
-            ? undefined
-            : getTrendDatasetForBarChart(trend, dataset.data);
-    });
+    const pyramidDatasets = [];
+    if (datasets[0]) {
+        const pyramidData = datasets[0].data.map((value) => (value > 0 ? value : 0));
+        pyramidDatasets.push({ ...datasets[0], data: pyramidData });
+    }
+    if (datasets[1]) {
+        const pyramidData = datasets[1].data.map((value) => (value > 0 ? -value : 0));
+        pyramidDatasets.push({ ...datasets[1], data: pyramidData });
+    }
+
+    const definition = chart.getDefinition();
+    const locale = getters.getLocale();
 
     const chartData = {
         labels,
-        dataSetsValues: datasets.map((ds) => ({ data: ds.data, label: ds.label })),
-        locale: getters.getLocale(),
-        trendDataSetsValues,
+        dataSetsValues: pyramidDatasets.map((ds) => ({ data: ds.data, label: ds.label })),
+        locale,
     };
 
     const config = {
@@ -76,13 +76,13 @@ function createOdooChartRuntime(chart, getters) {
         },
         options: {
             ...CHART_COMMON_OPTIONS,
-            indexAxis: chart.horizontal ? "y" : "x",
+            indexAxis: "y",
             layout: getBarChartLayout(definition),
-            scales: getBarChartScales(definition, chartData),
+            scales: getPyramidChartScales(definition, chartData),
             plugins: {
                 title: getChartTitle(definition),
                 legend: getBarChartLegend(definition, chartData),
-                tooltip: getBarChartTooltip(definition, chartData),
+                tooltip: getPyramidChartTooltip(definition, chartData),
                 chartShowValuesPlugin: getChartShowValues(definition, chartData),
             },
             ...getters.getChartDatasetActionCallbacks(chart),
