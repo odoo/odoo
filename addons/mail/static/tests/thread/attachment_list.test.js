@@ -68,51 +68,48 @@ test("layout with card details and filename and extension", async () => {
     await contains(".o-mail-AttachmentCard small", { text: "txt" });
 });
 
-test(
-    "link-type attachment should have open button instead of download button",
-    async () => {
-        const pyEnv = await startServer();
-        const channelId = pyEnv["discuss.channel"].create({
-            channel_type: "channel",
-            name: "channel1",
-        });
-        const attachment_ids = pyEnv["ir.attachment"].create([
-            {
-                name: "url.example",
-                mimetype: "text/plain",
-                type: "url",
-                url: "https://www.odoo.com",
-            },
-            {
-                name: "test.txt",
-                mimetype: "text/plain",
-            },
-        ]);
-        pyEnv["mail.message"].create({
-            attachment_ids,
-            body: "<p>Test</p>",
-            model: "discuss.channel",
-            res_id: channelId,
-            message_type: "comment",
-        });
-        await start();
-        await openDiscuss(channelId);
-        await contains(".o-mail-AttachmentCard", { count: 2 });
-        await contains(":nth-child(1 of .o-mail-AttachmentCard)", { text: "url.example" });
-        await contains(":nth-child(2 of .o-mail-AttachmentCard)", { text: "test.txt" });
-        await contains(
-            ":nth-child(1 of .o-mail-AttachmentCard) .o-mail-AttachmentCard-aside a[title='Open Link']"
-        );
-        await contains(
-            ":nth-child(1 of .o-mail-AttachmentCard) .o-mail-AttachmentCard-aside button[title='Download']",
-            { count: 0 }
-        );
-        await contains(
-            ":nth-child(2 of .o-mail-AttachmentCard) .o-mail-AttachmentCard-aside button[title='Download']"
-        );
-        await contains(`.o-mail-AttachmentCard-aside a[title='Open Link'][target='_blank']`);
-    }
-);
+test("link-type attachment should have open button instead of download button", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "channel1",
+    });
+    const attachment_ids = pyEnv["ir.attachment"].create([
+        {
+            name: "url.example",
+            mimetype: "text/plain",
+            type: "url",
+            url: "https://www.odoo.com",
+        },
+        {
+            name: "test.txt",
+            mimetype: "text/plain",
+        },
+    ]);
+    pyEnv["mail.message"].create({
+        attachment_ids,
+        body: "<p>Test</p>",
+        model: "discuss.channel",
+        res_id: channelId,
+        message_type: "comment",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-AttachmentCard", { count: 2 });
+    await contains(":nth-child(1 of .o-mail-AttachmentCard)", { text: "url.example" });
+    await contains(":nth-child(2 of .o-mail-AttachmentCard)", { text: "test.txt" });
+    await contains(
+        ":nth-child(1 of .o-mail-AttachmentCard) .o-mail-AttachmentCard-aside a[title='Open Link']"
+    );
+    await contains(
+        ":nth-child(1 of .o-mail-AttachmentCard) .o-mail-AttachmentCard-aside button[title='Download']",
+        { count: 0 }
+    );
+    await contains(
+        ":nth-child(2 of .o-mail-AttachmentCard) .o-mail-AttachmentCard-aside button[title='Download']"
+    );
+    await contains(`.o-mail-AttachmentCard-aside a[title='Open Link'][target='_blank']`);
+});
 
 test("clicking on the delete attachment button multiple times should do the rpc only once", async () => {
     const pyEnv = await startServer();
@@ -164,6 +161,36 @@ test("view attachment", async () => {
     await contains(".o-mail-AttachmentImage img");
     await click(".o-mail-AttachmentImage");
     await contains(".o-FileViewer");
+});
+
+test("can view pdf url", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "channel1",
+    });
+    const attachmentId = pyEnv["ir.attachment"].create({
+        name: "url.pdf.example",
+        mimetype: "application/pdf",
+        type: "url",
+        url: "https://pdfobject.com/pdf/sample.pdf",
+    });
+    pyEnv["mail.message"].create({
+        attachment_ids: [attachmentId],
+        body: "<p>Test</p>",
+        model: "discuss.channel",
+        res_id: channelId,
+        message_type: "comment",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-AttachmentCard", { text: "url.pdf.example" });
+    await contains(".o-FileViewer");
+    await contains(
+        `iframe.o-FileViewer-view[data-src="/web/static/lib/pdfjs/web/viewer.html?file=${encodeURIComponent(
+            `${getOrigin()}/web/content/${attachmentId}?filename=url.pdf.example`
+        )}#pagemode=none"]`
+    );
 });
 
 test("close attachment viewer", async () => {
@@ -376,5 +403,30 @@ test("img file has proper src in discuss.channel", async () => {
     await openDiscuss(channelId);
     await contains(
         `.o-mail-AttachmentImage[title='test.png'] img[data-src='${getOrigin()}/discuss/channel/${channelId}/image/${attachmentId}?filename=test.png&width=1920&height=300']`
+    );
+});
+
+test("download url of non-viewable binary file", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "channel1",
+    });
+    const attachmentId = pyEnv["ir.attachment"].create({
+        name: "test.o",
+        mimetype: "application/octet-stream",
+        type: "binary",
+    });
+    pyEnv["mail.message"].create({
+        attachment_ids: [attachmentId],
+        body: "<p>Test</p>",
+        model: "discuss.channel",
+        res_id: channelId,
+        message_type: "comment",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(
+        `button[data-download-url="${getOrigin()}/web/content/${attachmentId}?filename=test.o&download=true"]`
     );
 });
