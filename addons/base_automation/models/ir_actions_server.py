@@ -4,8 +4,7 @@ from odoo.tools.json import scriptsafe as json_scriptsafe
 
 from odoo import api, exceptions, fields, models, _
 
-from .base_automation import get_webhook_request_headers
-from .base_automation import get_webhook_request_payload
+from .base_automation import get_webhook_request_headers, get_webhook_request_payload
 
 class ServerAction(models.Model):
     _inherit = "ir.actions.server"
