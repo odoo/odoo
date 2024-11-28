@@ -659,8 +659,21 @@ class ProcurementGroup(models.Model):
     @api.model
     def _get_rule_domain(self, locations, values):
         location_ids = locations.ids
+<<<<<<< saas-17.4
         # If the method is called to find rules towards the Inter-company location, also add the 'Customer' location in the domain.
         # This is to avoid having to duplicate every rules that deliver to Customer to have the Inter-company part.
+||||||| 26a108a2baaa458ea3ac268c715e3ac2241ae774
+    def _get_rule_domain(self, location, values):
+        domain = ['&', ('location_dest_id', '=', location.id), ('action', '!=', 'push')]
+        # If the method is called to find rules towards the Inter-company location, also add the 'Customer' location in the domain.
+        # This is to avoid having to duplicate every rules that deliver to Customer to have the Inter-company part.
+        if self.env.user.has_group('base.group_multi_company') and location.usage == 'transit':
+            inter_comp_location = self.env.ref('stock.stock_location_inter_company', raise_if_not_found=False)
+            if inter_comp_location and location.id == inter_comp_location.id:
+                customers_location = self.env.ref('stock.stock_location_customers', raise_if_not_found=False)
+                domain = expression.OR([domain, ['&', ('location_dest_id', '=', customers_location.id), ('action', '!=', 'push')]])
+=======
+>>>>>>> f503912f3ad1e7f540aade0ca5af59f1c736d821
         if self._check_intercomp_location(locations):
             location_ids.append(self.env.ref('stock.stock_location_customers', raise_if_not_found=False).id)
         domain = ['&', ('location_dest_id', 'in', location_ids), ('action', '!=', 'push')]
