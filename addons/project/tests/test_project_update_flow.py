@@ -111,3 +111,37 @@ class TestProjectUpdate(TestProjectCommon):
             .execute()
         panel_data = self.project_pigs.get_panel_data()
         self.assertNotIn('milestones', panel_data, 'Since the "Milestones" feature is globally disabled, the "Milestones" section is not loaded.')
+
+    def test_project_update_values(self):
+        # Function to create a project update and validate counts
+        def validate_update(expected_closed_count, expected_percentage):
+            with Form(self.env['project.update'].with_context({'default_project_id': self.project_pigs.id})) as update_form:
+                update_form.name = "Test"
+            update = update_form.save()
+            self.assertEqual(
+                update.task_count,
+                self.project_pigs.task_count,
+                "Task count should match project task count"
+            )
+            self.assertEqual(
+                update.closed_task_count,
+                expected_closed_count,
+                "Closed task count should match"
+            )
+            self.assertEqual(
+                update.closed_task_percentage,
+                expected_percentage,
+                "Closed task percentage should match"
+            )
+
+        # Initial validation: No tasks are closed
+        validate_update(0, 0)
+
+        # Mark task_1 as done and validate closed task counts and percentage
+        self.task_1.state = '1_done'
+        validate_update(1, 50)
+
+        # Mark task_2 as canceled and crete task_3 to the project, then validate again
+        self.task_2.state = '1_canceled'
+        self.env['project.task'].create({'name': 'Task 3', 'project_id': self.project_pigs.id})
+        validate_update(2, 67)
