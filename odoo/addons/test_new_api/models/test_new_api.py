@@ -464,6 +464,12 @@ class Test_New_ApiRelated(models.Model):
     foo_bar_sudo_id = fields.Many2one(string='foo_bar_sudo_id', related='foo_id.bar_id', related_sudo=True)
     foo_bar_sudo_id_name = fields.Char('foo_bar_sudo_id_name', related='foo_bar_sudo_id.name', related_sudo=False)
 
+    foo_name_custom_search = fields.Char('foo_name_custom_search', related='foo_id.name', search='_search_foo_name_custom_search')
+
+    def _search_foo_name_custom_search(self, operator, value):
+        # Searches on self.name instead
+        return [('name', operator, value)]
+
 
 class Test_New_ApiRelated_Foo(models.Model):
     _name = 'test_new_api.related_foo'
