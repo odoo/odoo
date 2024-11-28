@@ -2,13 +2,14 @@ import { CountryFlag } from "@mail/core/common/country_flag";
 import { ImStatus } from "@mail/core/common/im_status";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { discussSidebarItemsRegistry } from "@mail/core/public_web/discuss_sidebar";
-import { useHover } from "@mail/utils/common/hooks";
+import { useHover, useLoadMore } from "@mail/utils/common/hooks";
 
-import { Component, useState, useSubEnv } from "@odoo/owl";
+import { Component, onMounted, useState, useSubEnv } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { markEventHandled } from "@web/core/utils/misc";
@@ -147,8 +148,8 @@ export class DiscussSidebarChannel extends Component {
     }
 }
 
-export class DiscussSidebarCategory extends Component {
-    static template = "mail.DiscussSidebarCategory";
+export class DiscussSidebarCategoryHeader extends Component {
+    static template = "mail.DiscussSidebarCategoryHeader";
     static props = ["category"];
     static components = { Dropdown };
 
@@ -177,11 +178,53 @@ export class DiscussSidebarCategory extends Component {
     }
 
     toggle() {
-        if (this.store.channels.status === "fetching") {
-            return;
-        }
         this.category.open = !this.category.open;
         this.discusscorePublicWebService.broadcastCategoryState(this.category);
+    }
+}
+
+export class DiscussSidebarCategory extends Component {
+    static template = "mail.DiscussSidebarCategory";
+    static props = ["category"];
+    static components = { DiscussSidebarCategoryHeader, DiscussSidebarChannel, Dropdown };
+
+    setup() {
+        super.setup();
+        this.store = useState(useService("mail.store"));
+        this.state = useState({ allLoaded: false });
+        this.lastLoad = { offset: undefined, from_important: undefined, all_loaded: false };
+        this.loadMore = useLoadMore("load-more", {
+            fn: () => this.load(),
+            ready: false,
+        });
+        onMounted(() => this.load().then(() => (this.loadMore.ready = true)));
+    }
+
+    get channel_types() {
+        switch (this.props.category.id) {
+            case "channels":
+                return ["channel"];
+            case "chats":
+                return ["group", "chat"];
+            case "whatsapp":
+                return ["whatsapp"];
+            default:
+                return ["livechat"];
+        }
+    }
+
+    async load() {
+        const { storeData, ...otherData } = await rpc("/discuss/pinned_channels/load", {
+            offset: this.lastLoad.offset,
+            from_important: this.lastLoad.from_important,
+            channel_types: this.channel_types,
+            by_name: true,
+        });
+        this.lastLoad = { ...otherData };
+        if (this.lastLoad.all_loaded) {
+            this.state.allLoaded = true;
+        }
+        this.store.insert(storeData, { html: true });
     }
 }
 
@@ -194,7 +237,6 @@ export class DiscussSidebarCategories extends Component {
     static props = {};
     static components = {
         DiscussSidebarCategory,
-        DiscussSidebarChannel,
         Dropdown,
     };
 
