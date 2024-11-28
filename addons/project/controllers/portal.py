@@ -144,9 +144,6 @@ class ProjectCustomerPortal(CustomerPortal):
         session_info.update(
             cache_hashes=cache_hashes,
             action_name="project.project_sharing_project_task_action",
-            action_context={
-                'allow_milestones': project.allow_milestones,
-            },
             project_id=project.id,
             project_name=project.name,
             user_companies={
@@ -161,6 +158,7 @@ class ProjectCustomerPortal(CustomerPortal):
             # FIXME: See if we prefer to give only the currency that the portal user just need to see the correct information in project sharing
             currencies=request.env['ir.http'].get_currencies(),
         )
+        session_info['user_context']['allow_milestones'] = project.allow_milestones
         return session_info
 
     @http.route(['/my/projects/<int:project_id>/project_sharing', '/my/projects/<int:project_id>/project_sharing/<path:subpath>'], type='http', auth='user', methods=['GET'])
