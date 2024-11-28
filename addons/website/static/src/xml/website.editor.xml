@@ -216,8 +216,8 @@
                 </div>
             </div>
             <t t-set-slot="footer">
-                <button t-on-click="onClickSave" class="btn btn-primary">Save</button>
-                <button class="btn" t-on-click="() => this.props.close()">Cancel</button>
+                <button t-on-click="onClickSave" class="btn btn-primary" data-hotkey="q">Save</button>
+                <button class="btn" t-on-click="() => this.props.close()" data-hotkey="x">Cancel</button>
             </t>
         </Dialog>
     </t>
@@ -237,8 +237,8 @@
                         onChange.bind="onCodeChange"
                         value="this.state.value"/>
             <t t-set-slot="footer">
-                <button class="btn btn-primary" t-on-click="onConfirm">Save</button>
-                <button class="btn" t-on-click="this.props.close">Discard</button>
+                <button class="btn btn-primary" t-on-click="onConfirm" data-hotkey="q">Save</button>
+                <button class="btn" t-on-click="this.props.close" data-hotkey="x">Discard</button>
             </t>
         </Dialog>
     </t>
