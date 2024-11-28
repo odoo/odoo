@@ -47,6 +47,19 @@ from .config import config
 from .float_utils import float_round
 from .which import which
 
+# xlwt and xlsxwriter are monkeypatched if they are installed
+# if they're not installed, don't break on import
+try:
+    import xlwt
+except ImportError:
+    xlwt = None
+
+try:
+    import xlsxwriter
+except ImportError:
+    xlsxwriter = None
+
+
 K = typing.TypeVar('K')
 T = typing.TypeVar('T')
 if typing.TYPE_CHECKING:
@@ -126,17 +139,6 @@ NON_BREAKING_SPACE = u'\N{NO-BREAK SPACE}'
 
 # ensure we have a non patched time for query times when using freezegun
 real_time = time.time.__call__  # type: ignore
-
-# Configure csv
-class UNIX_LINE_TERMINATOR(csv.excel):
-    lineterminator = '\n'
-
-
-# the default limit for CSV fields in the module is 128KiB, which is not
-# quite sufficient to import images to store in attachment. 500MiB is a
-# bit overkill, but better safe than sorry I guess
-csv.field_size_limit(500 * 1024 * 1024)
-csv.register_dialect("UNIX", UNIX_LINE_TERMINATOR)
 
 
 class Sentinel(enum.Enum):
@@ -430,49 +432,6 @@ def merge_sequences(*iterables: Iterable[T]) -> list[T]:
                 deps[item].append(prev)
             prev = item
     return topological_sort(deps)
-
-
-try:
-    import xlwt
-
-    # add some sanitization to respect the excel sheet name restrictions
-    # as the sheet name is often translatable, can not control the input
-    class PatchedWorkbook(xlwt.Workbook):
-        def add_sheet(self, name, cell_overwrite_ok=False):
-            # invalid Excel character: []:*?/\
-            name = re.sub(r'[\[\]:*?/\\]', '', name)
-
-            # maximum size is 31 characters
-            name = name[:31]
-            return super(PatchedWorkbook, self).add_sheet(name, cell_overwrite_ok=cell_overwrite_ok)
-
-    xlwt.Workbook = PatchedWorkbook
-
-except ImportError:
-    xlwt = None
-
-try:
-    import xlsxwriter
-
-    # add some sanitization to respect the excel sheet name restrictions
-    # as the sheet name is often translatable, can not control the input
-    class PatchedXlsxWorkbook(xlsxwriter.Workbook):
-
-        # TODO when xlsxwriter bump to 0.9.8, add worksheet_class=None parameter instead of kw
-        def add_worksheet(self, name=None, **kw):
-            if name:
-                # invalid Excel character: []:*?/\
-                name = re.sub(r'[\[\]:*?/\\]', '', name)
-
-                # maximum size is 31 characters
-                name = name[:31]
-            return super(PatchedXlsxWorkbook, self).add_worksheet(name, **kw)
-
-    xlsxwriter.Workbook = PatchedXlsxWorkbook
-
-except ImportError:
-    xlsxwriter = None
-
 
 def get_iso_codes(lang: str) -> str:
     if lang.find('_') != -1:
