@@ -174,17 +174,13 @@
                                 </tr>
                                 <tr>
                                     <td t-if="len(attrib_categories)" class='td-top-left border-top-0'/>
-                                    <td t-foreach="products" t-as="product" class="border-top-0">
+                                    <td t-foreach="products" t-as="product" class="border-top-0 align-top">
                                         <t t-set="combination_info" t-value="product._get_combination_info_variant()"/>
                                         <div class='product_summary'>
                                             <a class="o_product_comparison_table" t-att-href="product.website_url">
                                                 <span t-esc="combination_info['display_name']"></span><br/>
                                             </a>
-
-                                            <span class="o_comparison_price" t-if="combination_info['prevent_zero_price_sale']">
-                                                <strong t-field="website.prevent_zero_price_sale_text"/>
-                                            </span>
-                                            <span class="o_comparison_price" t-else="">
+                                            <span class="o_comparison_price" t-if="not combination_info['prevent_zero_price_sale']">
                                                 <strong>Price:</strong>
                                                 <span t-out="combination_info['price']"
                                                       t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
@@ -218,7 +214,7 @@
                                                     t-att-value="product.id"
                                                 />
                                                 <a t-if="combination_info['prevent_zero_price_sale']"
-                                                   t-att-href="website.contact_us_button_url"
+                                                   t-att-href="website.contact_us_button_url + '?subject=' + combination_info['display_name']"
                                                    class="btn btn-primary btn_cta">
                                                    Contact Us
                                                 </a>
@@ -296,7 +292,6 @@
                              t-esc="combination_info['list_price']"
                              t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                     </div>
-                    <div t-attf-class="{{'' if combination_info['prevent_zero_price_sale'] else 'd-none'}}" t-field="website.prevent_zero_price_sale_text"/>
                 </h6>
             </div>
             <div class="col-1 text-end">

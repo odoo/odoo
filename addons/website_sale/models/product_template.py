@@ -835,8 +835,7 @@ class ProductTemplate(models.Model):
 
     def _search_render_results_prices(self, mapping, combination_info):
         if combination_info.get('prevent_zero_price_sale'):
-            website = self.env['website'].get_current_website()
-            return website.prevent_zero_price_sale_text, None
+            return None, None
 
         monetary_options = {'display_currency': mapping['detail']['display_currency']}
         price = self.env['ir.qweb.field.monetary'].value_to_html(
