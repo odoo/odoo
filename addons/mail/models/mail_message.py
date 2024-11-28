@@ -1028,7 +1028,7 @@ class MailMessage(models.Model):
                 "thread": Store.one(record, as_thread=True, only_id=True),
             }
             if self.env.user._is_internal():
-                vals["notifications"] = Store.many(message.notification_ids._filtered_for_web_client())
+                vals["notification_ids"] = Store.many(message.notification_ids._filtered_for_web_client())
             if for_current_user:
                 # sudo: mail.message - filtering allowed tracking values
                 displayed_tracking_ids = message.sudo().tracking_value_ids._filter_has_field_access(
@@ -1089,7 +1089,7 @@ class MailMessage(models.Model):
                 "date": message.date,
                 "message_type": message.message_type,
                 "body": message.body,
-                "notifications": Store.many(message.notification_ids._filtered_for_web_client()),
+                "notification_ids": Store.many(message.notification_ids._filtered_for_web_client()),
                 "thread": (
                     Store.one(
                         self.env[message.model].browse(message.res_id) if message.model else False,
