@@ -849,18 +849,13 @@ class MrpProduction(models.Model):
         self.ensure_one()
         sn = sn or self.lot_producing_id
         if self.product_id.tracking == 'serial' and sn:
-            message, dummy = self.env['stock.quant'].sudo()._check_serial_number(self.product_id, sn, self.company_id)
+            message, recommended_location = self.env['stock.quant'].sudo()._check_serial_number(self.product_id, sn, self.company_id)
+            is_reproducing = self.lot_producing_id and self.lot_producing_id.id in self.move_raw_ids.lot_ids.ids
+            if is_reproducing and not recommended_location:
+                return True
             if message:
                 return {'warning': {'title': _('Warning'), 'message': message}}
         return True
-
-    @api.onchange('product_id', 'move_raw_ids', 'never_product_template_attribute_value_ids')
-    def _onchange_product_id(self):
-        for move in self.move_raw_ids:
-            if self.product_id == move.product_id:
-                message = _("The component %s should not be the same as the product to produce.", self.product_id.display_name)
-                self.move_raw_ids = self.move_raw_ids - move
-                return {'warning': {'title': _('Warning'), 'message': message}}
 
     @api.constrains('move_finished_ids')
     def _check_byproducts(self):
@@ -2574,6 +2569,8 @@ class MrpProduction(models.Model):
 
     def _check_sn_uniqueness(self):
         """ Alert the user if the serial number as already been consumed/produced """
+        if self.lot_producing_id and self.lot_producing_id.id in self.move_raw_ids.lot_ids.ids:
+            return
         if self.product_tracking == 'serial' and self.lot_producing_id:
             if self._is_finished_sn_already_produced(self.lot_producing_id):
                 raise UserError(_('This serial number for product %s has already been produced', self.product_id.name))
