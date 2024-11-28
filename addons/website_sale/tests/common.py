@@ -5,8 +5,6 @@ from odoo.fields import Command
 from odoo.addons.delivery.tests.common import DeliveryCommon
 from odoo.addons.product.tests.common import ProductCommon
 
-# from odoo.addons.website.tests.common import WebsiteCommon
-
 
 class WebsiteSaleCommon(ProductCommon, DeliveryCommon):
     # Not based on SaleCommon as there is no need for SalesTeamCommon nor standard SaleCommon data
@@ -15,9 +13,7 @@ class WebsiteSaleCommon(ProductCommon, DeliveryCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.website = cls.env.company.website_id
-        if not cls.website:
-            pass # TODO WebsiteCommon
+        cls.website = cls.env['website'].get_current_website()
 
         cls.public_user = cls.website.user_id
         cls.public_partner = cls.public_user.partner_id
