@@ -395,6 +395,8 @@ var VariantMixin = {
             contactUsButton.removeClass('d-flex').addClass('d-none');
             product_unavailable.removeClass('d-flex').addClass('d-none');
         }
+        const url = contactUsButton.find('a').attr('data-url');
+        contactUsButton.find('a').attr('href', `${url}?subject=${combination.display_name}`);
 
         const self = this;
         const $price = $parent.find(".oe_price:first .oe_currency_value");

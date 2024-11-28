@@ -28,11 +28,11 @@
                                 <t t-set="rating_count" t-value="record.rating_count"/>
                             </t>
                         </div>
-                        <div class="w-100 d-flex flex-wrap flex-md-column flex-lg-row align-items-center align-self-end justify-content-between mt-3">
+                        <div class="w-100 d-flex flex-wrap flex-md-column flex-lg-row align-items-center align-self-end justify-content-between">
                             <div class="py-2">
                                 <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
                             </div>
-                            <div class="o_dynamic_snippet_btn_wrapper" t-if="record._website_show_quick_add()">
+                            <div class="o_dynamic_snippet_btn_wrapper mt-3" t-if="record._website_show_quick_add()">
                                 <button
                                     type="button"
                                     role="button"
@@ -438,10 +438,7 @@
             </t>
         </template>
         <template id="price_dynamic_filter_template_product_product" name="Dynamic Product Filter Price">
-            <t t-if="data.get('prevent_zero_price_sale')">
-                <span t-field="website.prevent_zero_price_sale_text"/>
-            </t>
-            <t t-elif="not data.get('is_sample')">
+            <t t-if="not data.get('prevent_zero_price_sale') and not data.get('is_sample')">
                 <span t-esc="data['price']"
                       class="fw-bold"
                       name="product_price"
