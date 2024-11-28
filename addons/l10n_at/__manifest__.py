@@ -35,7 +35,6 @@ Austrian charts of accounts (Einheitskontenrahmen 2010).
         "l10n_din5008",
     ],
     "data": [
-        'data/res.country.state.csv',
         'data/account_account_tag.xml',
         'data/account_account_template.xml',
         'data/account_chart_template.xml',
