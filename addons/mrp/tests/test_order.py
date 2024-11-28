@@ -5376,6 +5376,57 @@ class TestMrpOrder(TestMrpCommon):
         wos_to_set.write({ 'date_start': date_start, 'date_finished': date_finished })
         self.assertTrue(mo.workorder_ids[-1].show_json_popover)
 
+    def test_final_product_as_component(self):
+        """ Test the production of a product with itself as a component """
+        self.productA.tracking = 'serial'
+        serial_number = self.env['stock.lot'].create({
+            'name': 'SAME-SN',
+            'product_id': self.productA.id,
+        })
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1, lot_id=serial_number)
+
+        # Producing the product with another component
+        with Form(self.env['mrp.production']) as mo_form:
+            mo_form.product_id = self.productA
+            mo_form.product_qty = 1
+            with mo_form.move_raw_ids.new() as move:
+                move.product_id = self.productB
+                move.product_uom_qty = 1
+            mo = mo_form.save()
+        self.assertTrue(mo.show_generate_bom)
+
+        # Change the component to the end product
+        with Form(mo) as mo_form:
+            with mo_form.move_raw_ids.edit(0) as move:
+                move.product_id = self.productA
+        self.assertFalse(mo.show_generate_bom)
+
+        mo.action_confirm()
+        self.assertEqual(mo.move_raw_ids.lot_ids, serial_number)
+        mo.lot_producing_id = serial_number
+        mo.move_raw_ids.picked = True
+
+        mo.button_mark_done()
+        self.assertEqual(mo.lot_producing_id, mo.move_raw_ids.lot_ids)
+        qty_final = self.env['stock.quant']._get_available_quantity(
+            self.productA, self.stock_location, lot_id=serial_number
+        )
+        self.assertEqual(qty_final, 1, "We consumed 1 product (-1) and we produced 1 product (+1)")
+
+        # Doing it again so that it becomes a "problematic" id for the `_check_sn_uniqueness`, as the sn was already consumed once
+        with Form(self.env['mrp.production']) as mo_form:
+            mo_form.product_id = self.productA
+            mo_form.product_qty = 1
+            with mo_form.move_raw_ids.new() as move:
+                move.product_id = self.productA
+                move.product_uom_qty = 1
+            mo = mo_form.save()
+        mo.action_confirm()
+        mo.lot_producing_id = serial_number
+        mo.move_raw_ids.picked = True
+        mo.button_mark_done()
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, self.stock_location, lot_id=serial_number), 1)
+
 
 @tagged('-at_install', 'post_install')
 class TestTourMrpOrder(HttpCase):
