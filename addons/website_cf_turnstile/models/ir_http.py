@@ -30,11 +30,6 @@ class IrHttp(models.AbstractModel):
             If no recaptcha private key is set the recaptcha verification
             is considered inactive and this method will return True.
         """
-        res = super()._verify_request_recaptcha_token(action)
-
-        if not res:  # check result of google_recaptcha
-            return res
-
         super()._verify_request_recaptcha_token(action)
         ip_addr = request.httprequest.remote_addr
         token = request.params.pop('turnstile_captcha', False)
