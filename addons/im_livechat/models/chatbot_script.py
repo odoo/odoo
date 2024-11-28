@@ -186,15 +186,13 @@ class ChatbotScript(models.Model):
 
     def _to_store(self, store: Store, /, *, fields=None, **kwargs):
         if fields is None:
-            fields = ["title", "operator_partner_id", "welcome_steps"]
+            fields = ["title", "operator_partner_id"]
         for script in self:
             data = script._read_format(
-                [f for f in fields if f not in {"operator_partner_id", "welcome_steps"}], load=False
+                [f for f in fields if f not in {"operator_partner_id"}], load=False
             )[0]
             if "operator_partner_id" in fields:
                 data["operator_partner_id"] = Store.one(script.operator_partner_id, fields=["name"])
-            if "welcome_steps" in fields:
-                data["welcome_steps"] = Store.many(script._get_welcome_steps())
             store.add(script, data)
 
     def _validate_email(self, email_address, discuss_channel):

@@ -54,7 +54,7 @@ class DiscussChannel(models.Model):
                     and m.mail_message_id.author_id == chatbot_script.operator_partner_id
                 ), None) if channel.chatbot_current_step_id.sudo().step_type != 'forward_operator' else None
                 current_step = {
-                    'scriptStep': current_step_sudo._format_for_frontend(),
+                    'scriptStep': current_step_sudo.id,
                     "message": Store.one_id(step_message),
                     'operatorFound': current_step_sudo.step_type == 'forward_operator' and len(channel.channel_member_ids) > 2,
                 }
@@ -63,6 +63,7 @@ class DiscussChannel(models.Model):
                     'steps': [current_step],
                     'currentStep': current_step,
                 }
+                store.add(current_step_sudo)
                 store.add(chatbot_script)
             channel_info['anonymous_name'] = channel.anonymous_name
             channel_info['anonymous_country'] = {
