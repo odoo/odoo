@@ -1,11 +1,39 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, click, fill, hover, queryFirst } from "@odoo/hoot-dom";
+import { animationFrame, click, fill, hover, queryFirst, waitFor } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 import { addActionOption, addOption, defineWebsiteModels, setupWebsiteBuilder } from "../helpers";
 
 defineWebsiteModels();
 
+describe("WeRow", () => {
+    test("show row title", async () => {
+        addOption({
+            selector: ".test-options-target",
+            template: xml`<WeRow label="'my label'">row text</WeRow>`,
+        });
+        await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+        await contains(":iframe .test-options-target").click();
+        expect(".options-container").toBeDisplayed();
+        expect(".hb-row .text-nowrap").toHaveText("my label");
+    });
+    test("show row tooltip", async () => {
+        addOption({
+            selector: ".test-options-target",
+            template: xml`<WeRow label="'my label'" tooltip="'my tooltip'">row text</WeRow>`,
+        });
+        await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+        await contains(":iframe .test-options-target").click();
+        expect(".options-container").toBeDisplayed();
+        expect(".hb-row .text-nowrap").toHaveText("my label");
+        expect(".o-tooltip").not.toBeDisplayed();
+        await hover(".hb-row .text-nowrap");
+        await waitFor(".o-tooltip", { timeout: 1000 });
+        expect(".o-tooltip").toHaveText("my tooltip");
+        await hover(":iframe .test-options-target");
+        expect(".o-tooltip").not.toBeDisplayed();
+    });
+});
 describe("WeButton", () => {
     test("call a specific action with some params and value", async () => {
         addActionOption({
