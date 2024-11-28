@@ -26,14 +26,6 @@ registry.category("web_tour.tours").add('skip_website_configurator', {
         run: "click",
     },
     {
-        content: "Install a theme",
-        trigger: ".o_theme_preview_top",
-        run: "hover && click button[name=button_choose_theme]",
-    },
-    {
-        trigger: ".o_menu_systray .o_user_menu",
-    },
-    {
         content: "Check that the homepage is loaded",
         trigger: ".o_website_preview[data-view-xmlid='website.homepage']",
         timeout: 30000,
