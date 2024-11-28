@@ -39,7 +39,7 @@ class SaleProjectCustomerPortal(ProjectCustomerPortal):
 
     def _prepare_project_sharing_session_info(self, project):
         session_info = super()._prepare_project_sharing_session_info(project)
-        session_info['action_context'].update({
+        session_info['user_context'].update({
             'allow_billable': project.allow_billable,
         })
         return session_info
