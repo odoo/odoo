@@ -9,7 +9,7 @@ const turnStile = {
         const cf = new URLSearchParams(window.location.search).get("cf");
         const mode = cf == "show" ? "always" : "interaction-only";
         const turnstileEl = document.createElement("div");
-        turnstileEl.className = "s_turnstile cf-turnstile float-end";
+        turnstileEl.className = "s_turnstile cf-turnstile";
         turnstileEl.dataset.action = action;
         turnstileEl.dataset.appearance = mode;
         turnstileEl.dataset.responseFieldName = "turnstile_captcha";
@@ -88,7 +88,7 @@ publicWidget.registry.s_website_form.include({
                 `.${this.uniq} .s_website_form_send,.${this.uniq} .o_website_form_send`,
             );
             const formSendEl = this.el.querySelector(".s_website_form_send, .o_website_form_send");
-            formSendEl.parentNode.insertBefore(turnstileEl, formSendEl.nextSibling);
+            formSendEl.parentNode.insertBefore(turnstileEl, formSendEl);
             formSendEl.parentNode.insertBefore(script1El, formSendEl.nextSibling);
             formSendEl.parentNode.insertBefore(script2El, formSendEl.nextSibling);
         }
