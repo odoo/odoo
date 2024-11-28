@@ -6,6 +6,9 @@
         <t t-set-slot="search-bar-additional-menu">
             <t t-call="website.RecordFilter"/>
         </t>
+        <t t-set-slot="search-bar-additional-facets">
+            <t t-call="website.ActiveWebsiteFacet"/>
+        </t>
     </xpath>
 </t>
 
