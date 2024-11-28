@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
 from unittest.mock import patch
 
 from odoo.exceptions import UserError, ValidationError
@@ -9,6 +10,9 @@ from odoo.tests import tagged
 from odoo.addons.base.tests.common import BaseUsersCommon
 from odoo.addons.product.tests.common import ProductAttributesCommon
 from odoo.addons.website.tools import MockRequest
+from odoo.addons.website_sale.controllers.combo_configurator import (
+    WebsiteSaleComboConfiguratorController,
+)
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website_sale.controllers.payment import PaymentPortal
 from odoo.addons.website_sale.models.product_template import ProductTemplate
@@ -397,3 +401,31 @@ class TestWebsiteSaleCart(BaseUsersCommon, ProductAttributesCommon, WebsiteSaleC
                 })
             ]
             self.WebsiteSaleController.shop_checkout()
+
+    def test_add_to_cart_company_branch(self):
+        """Test that a product/website from a company branch
+        can be added to the cart."""
+        branch_a = self.env["res.company"].create(
+            {
+                "name": "Branch A",
+                "parent_id": self.env.company.id,
+            }
+        )
+        website = self.env["website"].create(
+            {
+                "name": "Branch A Website",
+                "company_id": branch_a.id,
+            }
+        )
+        self.product.company_id = branch_a
+        with MockRequest(
+            self.product.with_user(website.user_id).env,
+            website=website.with_user(website.user_id),
+        ):
+            branch_a.invalidate_recordset()
+            data = WebsiteSaleComboConfiguratorController().website_sale_combo_configurator_get_data(
+                date=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                product_tmpl_id=self.product.product_tmpl_id.id,
+                quantity=1,
+            )
+            self.assertEqual(data["quantity"], 1)
