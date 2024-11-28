@@ -475,7 +475,7 @@ class BaseAutomation(models.Model):
         defaults.update(**values)
         return defaults
 
-    def _execute_webhook(self, payload):
+    def _execute_webhook(self, payload, headers):
         """ Execute the webhook for the given payload.
         The payload is a dictionnary that can be used by the `record_getter` to
         identify the record on which the automation should be run.
@@ -493,7 +493,7 @@ class BaseAutomation(models.Model):
         record = self.env[self.model_name]
         if self.record_getter:
             try:
-                record = safe_eval.safe_eval(self.record_getter, self._get_eval_context(payload=payload))
+                record = safe_eval.safe_eval(self.record_getter, self._get_eval_context(payload=payload, headers=headers))
             except Exception as e: # noqa: BLE001
                 msg = "Webhook #%s could not be triggered because the record_getter failed:\n%s"
                 msg_args = (self.id, traceback.format_exc())
@@ -555,7 +555,7 @@ class BaseAutomation(models.Model):
         automations = self.with_context(active_test=True).sudo().search(domain)
         return automations.with_env(self.env)
 
-    def _get_eval_context(self, payload=None):
+    def _get_eval_context(self, payload=None, headers=None):
         """ Prepare the context used when evaluating python code
             :returns: dict -- evaluation context given to safe_eval
         """
