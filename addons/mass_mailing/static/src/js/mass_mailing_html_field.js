@@ -287,13 +287,33 @@ export class MassMailingHtmlField extends HtmlField {
             }
         } else {
             const scrollableY = closestScrollableY(sidebar);
+            let stickyHeight = 0;
+            let stickyZindex = 0;
+            if (scrollableY) {
+                const statusBar = scrollableY.querySelector(".o_form_statusbar");
+                if (statusBar) {
+                    const statusBarStyle = getComputedStyle(statusBar);
+                    if (statusBarStyle.position === "sticky") {
+                        stickyHeight += statusBar.getBoundingClientRect().height;
+                    }
+                    stickyZindex = parseInt(statusBarStyle.zIndex) || 0;
+                }
+            }
             const top = scrollableY
-                ? `${-1 * (parseInt(getComputedStyle(scrollableY).paddingTop) || 0)}px`
-                : "0";
+                ? `${
+                      -1 * (parseInt(getComputedStyle(scrollableY).paddingTop) || 0) + stickyHeight
+                  }px`
+                : `${stickyHeight}px`;
             const maxHeight = this.iframe.parentNode.getBoundingClientRect().height;
-            const offsetHeight = window.innerHeight - document.querySelector(".o_content").getBoundingClientRect().y;
+            const offsetHeight =
+                window.innerHeight -
+                stickyHeight -
+                document.querySelector(".o_content").getBoundingClientRect().y;
             sidebar.style.height = `${Math.min(maxHeight, offsetHeight)}px`;
             sidebar.style.top = top;
+            if (stickyZindex > 0) {
+                sidebar.style.zIndex = `${stickyZindex - 1}`;
+            }
         }
     }
 
