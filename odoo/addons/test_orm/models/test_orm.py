@@ -480,6 +480,12 @@ class TestOrmRelated(models.Model):
     foo_binary_bin = fields.Binary(related='foo_id.binary_bin', related_sudo=False)
     foo_binary_bin_sudo = fields.Binary(related='foo_id.binary_bin', related_sudo=True, string='Binary Bin Sudo')
 
+    foo_name_custom_search = fields.Char('foo_name_custom_search', related='foo_id.name', search='_search_foo_name_custom_search')
+
+    def _search_foo_name_custom_search(self, operator, value):
+        # Searches on self.name instead
+        return [('name', operator, value)]
+
 
 class TestOrmRelated_Foo(models.Model):
     _name = 'test_orm.related_foo'

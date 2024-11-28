@@ -482,6 +482,20 @@ class TestSearchRelated(TransactionCase):
         """]):
             model.search([('foo_name', '=', 'a')])
 
+    def test_related_custom_search(self):
+        model = self.env['test_new_api.related']
+
+        # warmup
+        model.search([('foo_name_custom_search', '=', 'a')])
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_related"."id"
+            FROM "test_new_api_related"
+            WHERE "test_new_api_related"."name" IN %s
+            ORDER BY "test_new_api_related"."id"
+        """]):
+            model.search([('foo_name_custom_search', '=', 'a')])
+
     def test_related_many2one(self):
         model = self.env['test_orm.related'].with_user(self.env.ref('base.user_admin'))
 
