@@ -124,6 +124,16 @@ class AccountMove(models.Model):
                 raise ValidationError(_('Cannot reset to draft or cancel invoice %s because an electronic document was already sent to NAV!', move.name))
 
     # === Computes === #
+    @api.depends('delivery_date')
+    def _compute_invoice_currency_rate(self):
+        # In Hungary, the currency rate should be based on the delivery date.
+        super()._compute_invoice_currency_rate()
+
+    def _get_invoice_currency_rate_date(self):
+        self.ensure_one()
+        if self.country_code == 'HU' and self.delivery_date:
+            return self.delivery_date
+        return super()._get_invoice_currency_rate_date()
 
     @api.depends('l10n_hu_edi_messages')
     def _compute_message_html(self):
@@ -1035,19 +1045,3 @@ class AccountMove(models.Model):
         )
 
         return tax_totals
-
-
-class AccountMoveLine(models.Model):
-    _inherit = 'account.move.line'
-
-    @api.depends('move_id.delivery_date')
-    def _compute_currency_rate(self):
-        super()._compute_currency_rate()
-        # In Hungary, the currency rate should be based on the delivery date.
-        for line in self.filtered(lambda l: l.move_id.country_code == 'HU' and l.currency_id):
-            line.currency_rate = self.env['res.currency']._get_conversion_rate(
-                from_currency=line.company_currency_id,
-                to_currency=line.currency_id,
-                company=line.company_id,
-                date=line.move_id.delivery_date or line.move_id.invoice_date or line.move_id.date or fields.Date.context_today(line),
-            )
