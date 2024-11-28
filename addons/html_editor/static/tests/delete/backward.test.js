@@ -485,6 +485,14 @@ describe("Selection collapsed", () => {
                 contentAfter: `<div contenteditable="false"><div contenteditable="true"><p>abc[]def</p></div></div>`,
             });
         });
+
+        test("should not remove preceding character with U+0020 whitespace", async () => {
+            await testEditor({
+                contentBefore: `<p>abcd\u0020[]</p>`,
+                stepFunction: deleteBackward,
+                contentAfter: `<p>abcd[]</p>`,
+            });
+        });
     });
 
     describe("Line breaks", () => {
