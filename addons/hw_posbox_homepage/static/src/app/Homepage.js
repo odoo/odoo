@@ -93,6 +93,14 @@ export class Homepage extends Component {
             <div class="d-flex mb-4 flex-column align-items-center justify-content-center">
                 <h4 class="text-center m-0">IoT Box - <t t-esc="state.data.hostname" /></h4>
             </div>
+            <div t-if="!this.store.advanced and !state.data.is_certificate_ok" class="alert alert-warning" role="alert">
+                <p class="m-0 fw-bold">
+                    No subscription linked to your IoT Box.
+                </p>
+                <small>
+                    Please contact your account manager to take advantage of your IoT Box's full potential.
+                </small>
+            </div>
             <div t-if="this.store.advanced" class="alert alert-warning" role="alert">
                 <p class="m-0 fw-bold">HTTPS certificate</p>
                 <small>Error code: <t t-esc="state.data.certificate_details" /></small>
