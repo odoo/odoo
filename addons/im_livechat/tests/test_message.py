@@ -106,7 +106,7 @@ class TestImLivechatMessage(HttpCase, MailCommon):
                         "reactions": [],
                         "model": "discuss.channel",
                         "needaction": False,
-                        "notifications": [],
+                        "notification_ids": [],
                         "thread": {"id": channel_livechat_1.id, "model": "discuss.channel"},
                         "parentMessage": False,
                         "pinned_at": False,

@@ -158,7 +158,7 @@ export class MailMessage extends models.ServerModel {
                 link_preview_ids: mailDataHelpers.Store.many(
                     MailLinkPreview.browse(message.link_preview_ids)
                 ),
-                notifications: mailDataHelpers.Store.many(
+                notification_ids: mailDataHelpers.Store.many(
                     notifications.filter(
                         (notification) => notification.mail_message_id == message.id
                     )
@@ -506,7 +506,7 @@ export class MailMessage extends models.ServerModel {
                 body: message.body,
                 date: message.date,
                 message_type: message.message_type,
-                notifications: mailDataHelpers.Store.many(
+                notification_ids: mailDataHelpers.Store.many(
                     MailNotification._filtered_for_web_client(
                         MailNotification.search([["mail_message_id", "=", message.id]])
                     )
