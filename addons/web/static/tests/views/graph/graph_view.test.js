@@ -3896,3 +3896,128 @@ test("apply default filter label", async () => {
     checkLabels(view, ["xphone / red", "xphone / None", "xpad / None"]);
     checkLegend(view, ["xphone / red", "xphone / None", "xpad / None"]);
 });
+
+test("missing property field definition is fetched", async function () {
+    Foo._fields.properties_definition = fields.PropertiesDefinition();
+    Foo._fields.parent_id = fields.Many2one({ relation: "foo" });
+    Foo._fields.properties = fields.Properties({
+        definition_record: "parent_id",
+        definition_record_field: "properties_definition",
+    });
+    onRpc(({ method, kwargs }) => {
+        if (method === "web_read_group" && kwargs.groupby?.includes("properties.my_char")) {
+            expect.step(JSON.stringify(kwargs.groupby));
+            return {
+                groups: [
+                    {
+                        "properties.my_char": false,
+                        __domain: [["properties.my_char", "=", false]],
+                        __count: 2,
+                    },
+                    {
+                        "properties.my_char": "aaa",
+                        __domain: [["properties.my_char", "=", "aaa"]],
+                        __count: 1,
+                    },
+                ],
+                length: 2,
+            };
+        } else if (method === "get_property_definition") {
+            return {
+                name: "my_char",
+                type: "char",
+            };
+        }
+    });
+    const view = await mountView({
+        type: "graph",
+        resModel: "foo",
+        arch: `<graph/>`,
+        irFilters: [
+            {
+                user_id: [2, "Mitchell Admin"],
+                name: "My Filter",
+                id: 5,
+                context: `{"group_by": ['properties.my_char']}`,
+                sort: "[]",
+                domain: "[]",
+                is_default: true,
+                model_id: "foo",
+                action_id: false,
+            },
+        ],
+    });
+    expect.verifySteps([`["properties.my_char"]`]);
+    checkLabels(view, ["None", "aaa"]);
+    checkDatasets(
+        view,
+        ["data", "label"],
+        [
+            {
+                data: [2, 1],
+                label: "Count",
+            },
+        ]
+    );
+});
+
+test("missing deleted property field definition is created", async function () {
+    Foo._fields.properties_definition = fields.PropertiesDefinition();
+    Foo._fields.parent_id = fields.Many2one({ relation: "foo" });
+    Foo._fields.properties = fields.Properties({
+        definition_record: "parent_id",
+        definition_record_field: "properties_definition",
+    });
+    onRpc(({ method, kwargs }) => {
+        if (method === "web_read_group" && kwargs.groupby?.includes("properties.my_char")) {
+            expect.step(JSON.stringify(kwargs.groupby));
+            return {
+                groups: [
+                    {
+                        "properties.my_char": false,
+                        __domain: [["properties.my_char", "=", false]],
+                        __count: 2,
+                    },
+                    {
+                        "properties.my_char": "aaa",
+                        __domain: [["properties.my_char", "=", "aaa"]],
+                        __count: 1,
+                    },
+                ],
+                length: 2,
+            };
+        } else if (method === "get_property_definition") {
+            return {};
+        }
+    });
+    const view = await mountView({
+        type: "graph",
+        resModel: "foo",
+        arch: `<graph/>`,
+        irFilters: [
+            {
+                user_id: [2, "Mitchell Admin"],
+                name: "My Filter",
+                id: 5,
+                context: `{"group_by": ['properties.my_char']}`,
+                sort: "[]",
+                domain: "[]",
+                is_default: true,
+                model_id: "foo",
+                action_id: false,
+            },
+        ],
+    });
+    expect.verifySteps([`["properties.my_char"]`]);
+    checkLabels(view, ["None", "aaa"]);
+    checkDatasets(
+        view,
+        ["data", "label"],
+        [
+            {
+                data: [2, 1],
+                label: "Count",
+            },
+        ]
+    );
+});

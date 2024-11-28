@@ -623,9 +623,9 @@ export class FormController extends Component {
     async afterExecuteActionButton(clickParams) {}
 
     async create() {
-        const canProceed = await this.model.root.save({
-            onError: this.onSaveError.bind(this),
-        });
+        const dirty = await this.model.root.isDirty();
+        const onError = this.onSaveError.bind(this);
+        const canProceed = !dirty || (await this.model.root.save({ onError }));
         // FIXME: disable/enable not done in onPagerUpdate
         if (canProceed) {
             await executeButtonCallback(this.ui.activeElement, () =>
