@@ -26,9 +26,9 @@
                         <td>Order Deadline:</td>
                         <td><t t-out="o.date_order" t-options="{'widget': 'date'}"/></td>
                     </tr>
-                    <tr t-if="o.incoterm_id">
-                        <td>Incoterm:</td>
-                        <td><t t-out="o.incoterm_id"/></td>
+                    <tr t-if="o.incoterms_id">
+                        <td>Incoterms:</td>
+                        <td><t t-out="o.incoterms_id"/></td>
                     </tr>
                 </table>
             </div>

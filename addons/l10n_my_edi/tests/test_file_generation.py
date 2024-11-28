@@ -172,7 +172,7 @@ class L10nMyEDITestSubmission(AccountTestInvoicingCommon):
             'out_invoice', amounts=[100], currency=self.other_currency
         )
         basic_invoice.write({
-            'invoice_incoterm_id': self.env.ref('account.incoterm_CFR').id,
+            'invoice_incoterms_id': self.env.ref('account.incoterms_CFR').id,
             'l10n_my_edi_custom_form_reference': 'E12345678912',
         })
 
@@ -188,11 +188,11 @@ class L10nMyEDITestSubmission(AccountTestInvoicingCommon):
         root = etree.fromstring(file)
 
         # We test a few values that are optional, yet mandatory in some cases (we leave it up to the user)
-        # AdditionalDocumentReference => incoterm and customs
+        # AdditionalDocumentReference => incoterms and customs
         self._assert_node_values(
             root,
             'cac:AdditionalDocumentReference[not(descendant::*[local-name() = "DocumentType"])]/cbc:ID',
-            basic_invoice.invoice_incoterm_id.code,
+            basic_invoice.invoice_incoterms_id.code,
         )
         self._assert_node_values(
             root,

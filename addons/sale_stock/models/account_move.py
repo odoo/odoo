@@ -124,14 +124,14 @@ class AccountMove(models.Model):
                 move.delivery_date = effective_date_res
 
     @api.depends('line_ids.sale_line_ids.order_id')
-    def _compute_incoterm_location(self):
-        super()._compute_incoterm_location()
+    def _compute_incoterms_location(self):
+        super()._compute_incoterms_location()
         for move in self:
-            sale_locations = move.line_ids.sale_line_ids.order_id.mapped('incoterm_location')
-            incoterm_res = next((incoterm for incoterm in sale_locations if incoterm), False)
-            # if multiple purchase order we take an incoterm that is not false
-            if incoterm_res:
-                move.incoterm_location = incoterm_res
+            sale_locations = move.line_ids.sale_line_ids.order_id.mapped('incoterms_location')
+            incoterms_res = next((incoterms for incoterms in sale_locations if incoterms), False)
+            # if multiple purchase order we take incoterms that is not false
+            if incoterms_res:
+                move.incoterms_location = incoterms_res
 
     def _get_anglo_saxon_price_ctx(self):
         ctx = super()._get_anglo_saxon_price_ctx()

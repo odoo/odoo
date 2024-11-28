@@ -37,9 +37,9 @@
                             <td>Salesperson:</td>
                             <td><div t-field="doc.user_id.name"/></td>
                         </tr>
-                        <tr t-if="'incoterm' in doc._fields and doc.incoterm">
-                            <td>Incoterm:</td>
-                            <td><div t-field="doc.incoterm.code"/></td>
+                        <tr t-if="'incoterms' in doc._fields and doc.incoterms">
+                            <td>Incoterms:</td>
+                            <td><div t-field="doc.incoterms.code"/></td>
                         </tr>
                     </table>
                 </div>

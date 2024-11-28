@@ -91,7 +91,7 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             'issue_time': datetime.now(tz=UTC).strftime("%H:%M:%SZ"),
             # Exchange rate information must be provided if applicable
             'tax_exchange_rate': self._l10n_my_edi_get_tax_exchange_rate(invoice),
-            'invoice_incoterm_code': invoice.invoice_incoterm_id.code,
+            'invoice_incoterms_code': invoice.invoice_incoterms_id.code,
             'custom_form_reference': invoice.l10n_my_edi_custom_form_reference,
         })
 
@@ -376,10 +376,10 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
     def _import_fill_invoice_form(self, invoice, tree, qty_factor):
         # EXTENDS 'account_edi_ubl_cii'
         logs = super()._import_fill_invoice_form(invoice, tree, qty_factor)
-        # We get the incoterm
-        incoterm_code = self._find_value('./cac:AdditionalDocumentReference[not(descendant::cbc:DocumentType)]/cbc:ID', tree)
-        if incoterm_code is not None:
-            invoice.invoice_incoterm_id = self.env['account.incoterms'].search([('code', '=', incoterm_code)], limit=1)
+        # We get the incoterms
+        incoterms_code = self._find_value('./cac:AdditionalDocumentReference[not(descendant::cbc:DocumentType)]/cbc:ID', tree)
+        if incoterms_code is not None:
+            invoice.invoice_incoterms_id = self.env['account.incoterms'].search([('code', '=', incoterms_code)], limit=1)
         custom_form_ref = self._find_value('./cac:AdditionalDocumentReference[descendant::cbc:DocumentType[text()="CustomsImportForm"]]/cbc:ID', tree)
         invoice.l10n_my_edi_custom_form_reference = custom_form_ref
 

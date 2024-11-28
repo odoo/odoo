@@ -13,12 +13,12 @@ class AccountIncoterms(models.Model):
         help="Incoterms are series of sales terms. They are used to divide transaction costs and responsibilities between buyer and seller and reflect state-of-the-art transportation practices.")
     code = fields.Char(
         'Code', size=3, required=True,
-        help="Incoterm Standard Code")
+        help="Incoterms Standard Code")
     active = fields.Boolean(
         'Active', default=True,
-        help="By unchecking the active field, you may hide an INCOTERM you will not use.")
+        help="By unchecking the active field, you may hide INCOTERMS you will not use.")
 
     @api.depends('code')
     def _compute_display_name(self):
-        for incoterm in self:
-            incoterm.display_name = '%s%s' % (incoterm.code and '[%s] ' % incoterm.code or '', incoterm.name)
+        for incoterms in self:
+            incoterms.display_name = '%s%s' % (incoterms.code and '[%s] ' % incoterms.code or '', incoterms.name)

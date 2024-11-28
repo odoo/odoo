@@ -166,11 +166,11 @@ class AccountMove(models.Model):
         return rslt
 
     @api.depends('purchase_id')
-    def _compute_incoterm_location(self):
-        super()._compute_incoterm_location()
+    def _compute_incoterms_location(self):
+        super()._compute_incoterms_location()
         for move in self:
-            purchase_locations = move.line_ids.purchase_line_id.order_id.mapped('incoterm_location')
-            incoterm_res = next((incoterm for incoterm in purchase_locations if incoterm), False)
-            # if multiple purchase order we take an incoterm that is not false
-            if incoterm_res:
-                move.incoterm_location = incoterm_res
+            purchase_locations = move.line_ids.purchase_line_id.order_id.mapped('incoterms_location')
+            incoterms_res = next((incoterms for incoterms in purchase_locations if incoterms), False)
+            # if multiple purchase order we take incoterms that is not false
+            if incoterms_res:
+                move.incoterms_location = incoterms_res

@@ -92,13 +92,13 @@
                                 <strong>Reference</strong>
                                 <div t-field="o.ref">INV/2023/00001</div>
                             </div>
-                            <div class="col" t-if="o.invoice_incoterm_id" name="incoterm_id">
-                                <strong>Incoterm</strong>
-                                <div t-if="o.incoterm_location">
-                                    <span t-field="o.invoice_incoterm_id.code"/> <br/>
-                                    <span t-field="o.incoterm_location"/>
+                            <div class="col" t-if="o.invoice_incoterms_id" name="incoterms_id">
+                                <strong>Incoterms</strong>
+                                <div t-if="o.incoterms_location">
+                                    <span t-field="o.invoice_incoterms_id.code"/> <br/>
+                                    <span t-field="o.incoterms_location"/>
                                 </div>
-                                <div t-else="" t-field="o.invoice_incoterm_id.code" class="m-0"/>
+                                <div t-else="" t-field="o.invoice_incoterms_id.code" class="m-0"/>
                             </div>
                         </div>
 

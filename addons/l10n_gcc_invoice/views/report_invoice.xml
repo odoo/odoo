@@ -529,17 +529,17 @@
                     </div>
                 </p>
                 
-                <p name="incoterm" t-if="0"></p>
-                <div class="row" t-if="o.invoice_incoterm_id" name="incoterm">
+                <p name="incoterms" t-if="0"></p>
+                <div class="row" t-if="o.invoice_incoterms_id" name="incoterms">
                     <div class="col-2 offset-6">
-                        <strong>Incoterm:</strong>
+                        <strong>Incoterms:</strong>
                     </div>
                     <div class="col-2 text-nowrap">
-                        <span t-out="o.invoice_incoterm_id.code"/>
+                        <span t-out="o.invoice_incoterms_id.code"/>
                         -
-                        <span t-out="o.invoice_incoterm_id.name"/>
+                        <span t-out="o.invoice_incoterms_id.name"/>
                         -
-                        <span t-if="o.incoterm_location" t-out="o.incoterm_location"/>
+                        <span t-if="o.incoterms_location" t-out="o.incoterms_location"/>
                     </div>
                     <div class="col-2 text-end">
                         <strong>:شرط تجاري</strong>

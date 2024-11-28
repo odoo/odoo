@@ -104,10 +104,10 @@
                 <span t-out="o.invoice_date_due" t-options='{"widget": "date"}'/>
                 <br/>
 
-                <t t-if="o.invoice_incoterm_id">
+                <t t-if="o.invoice_incoterms_id">
                     <br/>
-                    <strong>Incoterm:</strong>
-                    <span t-field="o.invoice_incoterm_id.name"/>
+                    <strong>Incoterms:</strong>
+                    <span t-field="o.invoice_incoterms_id.name"/>
                 </t>
 
                 <t t-if="o.partner_shipping_id and o.partner_id not in o.partner_shipping_id" >

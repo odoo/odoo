@@ -10,8 +10,8 @@
                     <cbc:SourceCurrencyCode t-out="vals.get('document_currency_code')"/>
                     <cbc:TargetCurrencyCode>MYR</cbc:TargetCurrencyCode>
                 </cac:TaxExchangeRate>
-                <cac:AdditionalDocumentReference t-if="vals.get('invoice_incoterm_code')">
-                    <cbc:ID t-out="vals['invoice_incoterm_code']"/>
+                <cac:AdditionalDocumentReference t-if="vals.get('invoice_incoterms_code')">
+                    <cbc:ID t-out="vals['invoice_incoterms_code']"/>
                 </cac:AdditionalDocumentReference>
                 <cac:AdditionalDocumentReference t-if="vals.get('custom_form_reference')">
                     <cbc:ID t-out="vals['custom_form_reference']"/>

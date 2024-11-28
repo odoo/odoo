@@ -698,12 +698,12 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         invoice_values['narration'] = self._import_description(tree, xpaths=['./{*}Note', './{*}PaymentTerms/{*}Note'])
         invoice_values['payment_reference'] = tree.findtext('./{*}PaymentMeans/{*}PaymentID')
 
-        # ==== invoice_incoterm_id ====
-        incoterm_code = tree.findtext('./{*}TransportExecutionTerms/{*}DeliveryTerms/{*}ID')
-        if incoterm_code:
-            incoterm = self.env['account.incoterms'].search([('code', '=', incoterm_code)], limit=1)
-            if incoterm:
-                invoice_values['invoice_incoterm_id'] = incoterm.id
+        # ==== invoice_incoterms_id ====
+        incoterms_code = tree.findtext('./{*}TransportExecutionTerms/{*}DeliveryTerms/{*}ID')
+        if incoterms_code:
+            incoterms = self.env['account.incoterms'].search([('code', '=', incoterms_code)], limit=1)
+            if incoterms:
+                invoice_values['invoice_incoterms_id'] = incoterms.id
 
         # ==== Document level AllowanceCharge, Prepaid Amounts, Invoice Lines ====
         allowance_charges_line_vals, allowance_charges_logs = self._import_document_allowance_charges(tree, invoice, invoice.journal_id.type, qty_factor)

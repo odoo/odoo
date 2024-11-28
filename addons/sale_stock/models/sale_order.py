@@ -14,10 +14,10 @@ _logger = logging.getLogger(__name__)
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    incoterm = fields.Many2one(
-        'account.incoterms', 'Incoterm',
+    incoterms = fields.Many2one(
+        'account.incoterms', 'Incoterms',
         help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
-    incoterm_location = fields.Char(string='Incoterm Location')
+    incoterms_location = fields.Char(string='Incoterms Location')
     picking_policy = fields.Selection([
         ('direct', 'As soon as possible'),
         ('one', 'When all products are ready')],
@@ -262,7 +262,7 @@ class SaleOrder(models.Model):
 
     def _prepare_invoice(self):
         invoice_vals = super(SaleOrder, self)._prepare_invoice()
-        invoice_vals['invoice_incoterm_id'] = self.incoterm.id
+        invoice_vals['invoice_incoterms_id'] = self.incoterms.id
         return invoice_vals
 
     def _log_decrease_ordered_quantity(self, documents, cancel=False):

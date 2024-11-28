@@ -80,7 +80,7 @@
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
         <field name="move_type">out_invoice</field>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-03'"/>
-        <field name="invoice_incoterm_id" ref="account.incoterm_EXW"/>
+        <field name="invoice_incoterms_id" ref="account.incoterms_EXW"/>
         <field name="invoice_line_ids" eval="[
             (0, 0, {'product_id': ref('product.product_product_27'), 'price_unit': 642.0, 'quantity': 5}),
             (0, 0, {'product_id': ref('product_product_telefonia'), 'price_unit': 250.0, 'quantity': 1}),
@@ -99,7 +99,7 @@
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
         <field name="move_type">out_invoice</field>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-03'"/>
-        <field name="invoice_incoterm_id" ref="account.incoterm_EXW"/>
+        <field name="invoice_incoterms_id" ref="account.incoterms_EXW"/>
         <field name="invoice_line_ids" eval="[
             (0, 0, {'product_id': ref('product.product_product_27'), 'price_unit': 642.0, 'quantity': 5}),
             (0, 0, {'product_id': ref('product_product_telefonia'), 'price_unit': 250.0, 'quantity': 1}),
@@ -196,7 +196,7 @@
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
         <field name="move_type">out_invoice</field>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-20'"/>
-        <field name="invoice_incoterm_id" ref="account.incoterm_EXW"/>
+        <field name="invoice_incoterms_id" ref="account.incoterms_EXW"/>
         <field name="invoice_line_ids" eval="[
             (0, 0, {'product_id': ref('product.product_product_27'), 'price_unit': 642.0, 'quantity': 5}),
         ]"/>
@@ -210,7 +210,7 @@
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
         <field name="move_type">out_invoice</field>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-20'"/>
-        <field name="invoice_incoterm_id" ref="account.incoterm_EXW"/>
+        <field name="invoice_incoterms_id" ref="account.incoterms_EXW"/>
         <field name="invoice_line_ids" eval="[
             (0, 0, {'product_id': ref('product_product_telefonia'), 'price_unit': 250.0, 'quantity': 1}),
         ]"/>
@@ -225,7 +225,7 @@
         <field name="move_type">out_invoice</field>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-22'"/>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
-        <field name="invoice_incoterm_id" ref="account.incoterm_EXW"/>
+        <field name="invoice_incoterms_id" ref="account.incoterms_EXW"/>
         <field name="invoice_line_ids" eval="[
             (0, 0, {'product_id': ref('product.product_product_27'), 'price_unit': 642.0, 'quantity': 5}),
         ]"/>

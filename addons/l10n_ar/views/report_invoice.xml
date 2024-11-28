@@ -218,14 +218,14 @@
                     <!-- (18) REMITOS -->
                     <!-- We do not have remitos implement yet. print here the remito number when we have it -->
 
-                    <t t-if="o.invoice_incoterm_id">
+                    <t t-if="o.invoice_incoterms_id">
                         <br/>
-                        <strong>Incoterm:</strong>
-                        <p t-if="o.incoterm_location">
-                            <span t-field="o.invoice_incoterm_id.code"/> <br/>
-                            <span t-field="o.incoterm_location"/>
+                        <strong>Incoterms:</strong>
+                        <p t-if="o.incoterms_location">
+                            <span t-field="o.invoice_incoterms_id.code"/> <br/>
+                            <span t-field="o.incoterms_location"/>
                         </p>
-                        <p t-else="" t-field="o.invoice_incoterm_id.name" class="m-0"/>
+                        <p t-else="" t-field="o.invoice_incoterms_id.name" class="m-0"/>
                     </t>
 
                 </div>

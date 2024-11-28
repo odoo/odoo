@@ -1410,8 +1410,8 @@
                                            name="accounting_info_group"
                                            invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')">
                                         <field name="company_id" groups="base.group_multi_company"/>
-                                        <field name="invoice_incoterm_id"/>
-                                        <field name="incoterm_location"/>
+                                        <field name="invoice_incoterms_id"/>
+                                        <field name="incoterms_location"/>
                                         <field name="fiscal_position_id" readonly="state in ['cancel', 'posted']"/>
                                         <field name="secured" groups="account.group_account_secured,base.group_no_one"/>
                                         <field name="preferred_payment_method_line_id"

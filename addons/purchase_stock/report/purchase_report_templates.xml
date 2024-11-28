@@ -14,13 +14,13 @@
             </t>
         </xpath>
         <xpath expr="//div[@t-if='o.date_planned']" position="after">
-            <div t-if="o.incoterm_id" class="col-2 bm-2">
-                <strong>Incoterm:</strong>
-                <p t-if="o.incoterm_location">
-                    <span t-field="o.incoterm_id.code"/> <br/>
-                    <span t-field="o.incoterm_location"/>
+            <div t-if="o.incoterms_id" class="col-2 bm-2">
+                <strong>Incoterms:</strong>
+                <p t-if="o.incoterms_location">
+                    <span t-field="o.incoterms_id.code"/> <br/>
+                    <span t-field="o.incoterms_location"/>
                 </p>
-                <p t-else="" t-field="o.incoterm_id.code" class="m-0"/>
+                <p t-else="" t-field="o.incoterms_id.code" class="m-0"/>
             </div>
         </xpath>
     </template>
@@ -39,13 +39,13 @@
         </xpath>
         <xpath expr="//span[@t-field='o.name']/.." position="after">
             <div id="informations" class="row mt16 mb16">
-                <div t-if="o.incoterm_id" class="col-3 bm-2">
-                    <strong>Incoterm:</strong>
-                    <p t-if="o.incoterm_location">
-                        <span t-field="o.incoterm_id.code"/> <br/>
-                        <span t-field="o.incoterm_location"/>
+                <div t-if="o.incoterms_id" class="col-3 bm-2">
+                    <strong>Incoterms:</strong>
+                    <p t-if="o.incoterms_location">
+                        <span t-field="o.incoterms_id.code"/> <br/>
+                        <span t-field="o.incoterms_location"/>
                     </p>
-                    <p t-else="" t-field="o.incoterm_id.code" class="m-0"/>
+                    <p t-else="" t-field="o.incoterms_id.code" class="m-0"/>
                 </div>
             </div>
         </xpath>

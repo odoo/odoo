@@ -125,7 +125,7 @@ class ResCompany(models.Model):
                 ('account_type', '=', 'expense')]")
     anglo_saxon_accounting = fields.Boolean(string="Use anglo-saxon accounting")
     bank_journal_ids = fields.One2many('account.journal', 'company_id', domain=[('type', '=', 'bank')], string='Bank Journals')
-    incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm',
+    incoterms_id = fields.Many2one('account.incoterms', string='Default incoterms',
         help='International Commercial Terms are a series of predefined commercial terms used in international transactions.')
 
     qr_code = fields.Boolean(string='Display QR-code on invoices')

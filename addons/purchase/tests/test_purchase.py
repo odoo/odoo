@@ -855,8 +855,8 @@ class TestPurchase(AccountTestInvoicingCommon):
         user_2 = self.env['res.users'].search([])[1]
         payment_term_id_1 = self.env['account.payment.term'].search([])[0]
         payment_term_id_2 = self.env['account.payment.term'].search([])[1]
-        incoterm_id_1 = self.env['account.incoterms'].search([])[0]
-        incoterm_id_2 = self.env['account.incoterms'].search([])[1]
+        incoterms_id_1 = self.env['account.incoterms'].search([])[0]
+        incoterms_id_2 = self.env['account.incoterms'].search([])[1]
 
         po_1 = Form(PurchaseOrder)
         po_1.partner_id = self.partner_a
@@ -869,7 +869,7 @@ class TestPurchase(AccountTestInvoicingCommon):
             po_line.product_qty = 1
             po_line.price_unit = 100
         po_1 = po_1.save()
-        po_1.incoterm_id = incoterm_id_1
+        po_1.incoterms_id = incoterms_id_1
 
         po_2 = Form(PurchaseOrder)
         po_2.partner_id = self.partner_a
@@ -887,7 +887,7 @@ class TestPurchase(AccountTestInvoicingCommon):
             po_line_2.product_qty = 5
             po_line_2.price_unit = 500
         po_2 = po_2.save()
-        po_2.incoterm_id = incoterm_id_2
+        po_2.incoterms_id = incoterms_id_2
 
         with self.assertRaises(UserError) as context:
             PurchaseOrder.browse([po_1.id]).action_merge()
@@ -901,4 +901,4 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertEqual(po_1.origin, "s0003, s0004")
         self.assertEqual(po_1.user_id, user_1)
         self.assertEqual(po_1.payment_term_id, payment_term_id_1)
-        self.assertEqual(po_1.incoterm_id, incoterm_id_1)
+        self.assertEqual(po_1.incoterms_id, incoterms_id_1)

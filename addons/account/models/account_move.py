@@ -617,16 +617,16 @@ class AccountMove(models.Model):
         tracking=True,
         help="The document(s) that generated the invoice.",
     )
-    invoice_incoterm_id = fields.Many2one(
+    invoice_incoterms_id = fields.Many2one(
         comodel_name='account.incoterms',
-        string='Incoterm',
-        default=lambda self: self.env.company.incoterm_id,
+        string='Incoterms',
+        default=lambda self: self.env.company.incoterms_id,
         help='International Commercial Terms are a series of predefined commercial '
              'terms used in international transactions.',
     )
-    incoterm_location = fields.Char(
-        string='Incoterm Location',
-        compute='_compute_incoterm_location',
+    incoterms_location = fields.Char(
+        string='Incoterms Location',
+        compute='_compute_incoterms_location',
         readonly=False,
         store=True,
     )
@@ -1885,7 +1885,7 @@ class AccountMove(models.Model):
         for move in self:
             move[attachment_field] = move_vals.get(move._origin.id, False)
 
-    def _compute_incoterm_location(self):
+    def _compute_incoterms_location(self):
         pass
 
     @api.depends('partner_id', 'invoice_date', 'amount_total')

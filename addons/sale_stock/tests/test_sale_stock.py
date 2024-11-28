@@ -1451,17 +1451,17 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
             {'location_id': out_location.id, 'location_dest_id': customer_location.id, 'product_uom_qty': 6.0, 'quantity': 6.0, 'state': 'done'},
         ])
 
-    def test_incoterm_in_advance_payment(self):
-        """When generating a advance payment invoice from a SO, this invoice incoterm should be the same as the SO"""
+    def test_incoterms_in_advance_payment(self):
+        """When generating a advance payment invoice from a SO, this invoice incoterms should be the same as the SO"""
 
-        incoterm = self.env['account.incoterms'].create({
-            'name': 'Test Incoterm',
+        incoterms = self.env['account.incoterms'].create({
+            'name': 'Test Incoterms',
             'code': 'TEST',
         })
 
         so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
-            'incoterm': incoterm.id,
+            'incoterms': incoterms.id,
             'order_line': [(0, 0, {
                 'name': self.product_a.name,
                 'product_id': self.product_a.id,
@@ -1479,7 +1479,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         act = adv_wiz.with_context(open_invoices=True).create_invoices()
         invoice = self.env['account.move'].browse(act['res_id'])
 
-        self.assertEqual(invoice.invoice_incoterm_id.id, incoterm.id)
+        self.assertEqual(invoice.invoice_incoterms_id.id, incoterms.id)
 
     def test_exception_delivery_partial_multi(self):
         """

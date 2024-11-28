@@ -320,7 +320,7 @@ class TestAr(AccountTestInvoicingCommon):
         """ Create in the unit tests the same invoices created in demo data """
         payment_term_id = self.env.ref("account.account_payment_term_end_following_month")
         invoice_user_id = self.env.user
-        incoterm = self.env.ref("account.incoterm_EXW")
+        incoterms = self.env.ref("account.incoterms_EXW")
 
         decimal_price = self.env.ref('product.decimal_price')
         decimal_price.digits = 4
@@ -398,7 +398,7 @@ class TestAr(AccountTestInvoicingCommon):
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-03",
                 "company_id": self.company_ri,
-                "invoice_incoterm_id": incoterm,
+                "invoice_incoterms_id": incoterms,
                 "invoice_line_ids": [
                     {'product_id': self.product_iva_105, 'price_unit': 642.0, 'quantity': 5},
                     {'product_id': self.service_iva_27, 'price_unit': 250.0, 'quantity': 1},
@@ -416,7 +416,7 @@ class TestAr(AccountTestInvoicingCommon):
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-03",
                 "company_id": self.company_ri,
-                "invoice_incoterm_id": incoterm,
+                "invoice_incoterms_id": incoterms,
                 "invoice_line_ids": [
                     {'product_id': self.product_iva_105, 'price_unit': 642.0, 'quantity': 5},
                     {'product_id': self.service_iva_27, 'price_unit': 250.0, 'quantity': 1},
@@ -503,7 +503,7 @@ class TestAr(AccountTestInvoicingCommon):
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-20",
                 "company_id": self.company_ri,
-                "invoice_incoterm_id": incoterm,
+                "invoice_incoterms_id": incoterms,
                 "invoice_line_ids": [
                     {'product_id': self.product_iva_105, 'price_unit': 642.0, 'quantity': 5},
                 ],
@@ -516,7 +516,7 @@ class TestAr(AccountTestInvoicingCommon):
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-20",
                 "company_id": self.company_ri,
-                "invoice_incoterm_id": incoterm,
+                "invoice_incoterms_id": incoterms,
                 "invoice_line_ids": [
                     {'product_id': self.service_iva_27, 'price_unit': 250.0, 'quantity': 1},
                 ],
@@ -529,7 +529,7 @@ class TestAr(AccountTestInvoicingCommon):
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-22",
                 "company_id": self.company_ri,
-                "invoice_incoterm_id": incoterm,
+                "invoice_incoterms_id": incoterms,
                 "invoice_line_ids": [
                     {'product_id': self.product_iva_105, 'price_unit': 642.0, 'quantity': 5},
                 ],
@@ -580,8 +580,8 @@ class TestAr(AccountTestInvoicingCommon):
                 invoice_form.invoice_payment_term_id = values['invoice_payment_term_id']
                 if not use_current_date:
                     invoice_form.invoice_date = values['invoice_date']
-                if values.get('invoice_incoterm_id'):
-                    invoice_form.invoice_incoterm_id = values['invoice_incoterm_id']
+                if values.get('invoice_incoterms_id'):
+                    invoice_form.invoice_incoterms_id = values['invoice_incoterms_id']
                 for line in values['invoice_line_ids']:
                     with invoice_form.invoice_line_ids.new() as line_form:
                         line_form.product_id = line.get('product_id')
@@ -634,8 +634,8 @@ class TestAr(AccountTestInvoicingCommon):
                 invoice_form.l10n_latam_document_type_id = data.get('document_type')
             if data.get('document_number'):
                 invoice_form.l10n_latam_document_number = data.get('document_number')
-            if data.get('incoterm'):
-                invoice_form.invoice_incoterm_id = data.get('incoterm')
+            if data.get('incoterms'):
+                invoice_form.invoice_incoterms_id = data.get('incoterms')
             if data.get('currency'):
                 invoice_form.currency_id = data.get('currency')
             for line in data.get('lines', [{}]):
