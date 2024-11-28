@@ -30,10 +30,6 @@ export class Attachment extends FileModelMixin(Record) {
     message = Record.one("Message");
     /** @type {luxon.DateTime} */
     create_date = Record.attr(undefined, { type: "datetime" });
-    /** @type {'binary'|'url'} */
-    type;
-    /** @type {string} */
-    url;
 
     get isDeletable() {
         return true;

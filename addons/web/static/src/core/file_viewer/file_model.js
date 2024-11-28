@@ -9,10 +9,16 @@ export const FileModelMixin = (T) =>
         id;
         mimetype;
         name;
+        /** @type {"binary"|"url"} */
         type;
         /** @type {string} */
         tmpUrl;
-        /** @type {string} */
+        /**
+         * This URL should not be used as the URL to serve the file. `urlRoute` should be used
+         * instead. The server will properly redirect to the correct URL when necessary.
+         *
+         * @type {string}
+         */
         url;
         /** @type {boolean} */
         uploading;
@@ -119,9 +125,6 @@ export const FileModelMixin = (T) =>
          * @returns {string}
          */
         get urlRoute() {
-            if (this.isUrl) {
-                return this.url;
-            }
             if (this.uploading && this.tmpUrl) {
                 return this.tmpUrl;
             }
