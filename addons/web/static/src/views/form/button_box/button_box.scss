@@ -43,6 +43,11 @@
         padding-top: 0;
         padding-bottom: 0;
         height: $-stat-button-height;
+        min-width: 0;
+
+        &:not(.dropdown) {
+            overflow: hidden;
+        }
 
         @include media-breakpoint-up(md) {
             min-width: 7.5em; // Arbitrary
