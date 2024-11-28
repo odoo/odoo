@@ -88,11 +88,11 @@ class AccountMove(models.Model):
         )
         return super().button_draft()
 
-    def action_post(self):
+    def _post(self, soft=True):
         # EXTENDS 'account'
         for invoice in self.filtered('l10n_jo_edi_is_needed'):
             invoice.l10n_jo_edi_state = 'to_send'
-        return super().action_post()
+        return super()._post(soft)
 
     def _get_name_invoice_report(self):
         # EXTENDS account
