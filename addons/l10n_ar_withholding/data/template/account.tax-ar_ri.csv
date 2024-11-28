@@ -1,405 +1,405 @@
-id,name,type_tax_use,amount_type,description,active,sequence,tax_group_id,l10n_ar_withholding_payment_type,l10n_ar_scale_id,l10n_ar_tax_type,l10n_ar_code,l10n_ar_state_id,amount,l10n_ar_non_taxable_amount,repartition_line_ids/factor_percent,repartition_line_ids/repartition_type,repartition_line_ids/document_type,repartition_line_ids/account_id,name@es,description@es
-ri_tax_withholding_vat_incurred,VAT WTH  I,none,percent,Withholding VAT incurred,True,4,tax_group_withholding,customer,,,,,0,,,base,invoice,,"""Ret IVA S",Retención IVA Sufrida
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_iva_sufrida,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_iva_sufrida,,
-ri_tax_withholding_suss_incurred,WTH SUSS I,none,percent,SUSS Withholding incurred,True,10,tax_group_withholding,customer,,,,,0,,,,,,Ret SUSS S,Retención SUSS Sufrida
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,base_retencion_suss_sufrida,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,base_retencion_suss_sufrida,,
-ri_tax_withholding_ganancias_incurred,Earnings WTH  I,none,percent,Earnings withholding incurred,True,4,tax_group_withholding,customer,,,,,0,,,,,,Ret Ganancias S,Retención Ganancias Sufrida
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,base_retencion_ganancias_sufrida,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,base_retencion_ganancias_sufrida,,
-ri_tax_withholding_iibb_caba_incurred,IIBB WTH CABA,none,percent,IIBB withholding Ciudad Autónoma Bs As,True,4,tax_group_withholding,customer,,iibb_untaxed,,base.state_ar_c,0,,,,,,Ret IIBB CABA,Retención IIBB Ciudad Autónoma Bs As
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,base_retencion_iibb_caba_sufrida,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,base_retencion_iibb_caba_sufrida,,
-ri_tax_withholding_iibb_ba_incurred,IIBB WTH BA,none,percent,IIBB withholding Buenos Aires,True,4,tax_group_withholding,customer,,iibb_untaxed,,base.state_ar_b,0,,,,,,Ret IIBB BA,Retención IIBB Buenos Aires
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,base_retencion_iibb_ba_sufrida,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,base_retencion_iibb_ba_sufrida,,
-ri_tax_withholding_iibb_ca_incurred,IIBB WTH C,none,percent,IIBB withholding Catamarca,True,4,tax_group_withholding,customer,,iibb_untaxed,,base.state_ar_k,0,,,,,,Ret IIBB C,Retención IIBB Catamarca
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,base_retencion_iibb_ca_sufrida,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,base_retencion_iibb_ca_sufrida,,
-ri_tax_withholding_iibb_co_incurred,IIBB WTH CBA,none,percent,IIBB withholding Córdoba,True,4,tax_group_withholding,customer,,iibb_untaxed,,base.state_ar_x,0,,,,,,Ret IIBB CBA,Retención IIBB Córdoba
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,base_retencion_iibb_co_sufrida,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,base_retencion_iibb_co_sufrida,,
-ri_tax_withholding_iibb_rr_incurred,IIBB WTH CTS,none,percent,IIBB withholding Corrientes,True,4,tax_group_withholding,customer,,iibb_untaxed,,base.state_ar_w,0,,,,,,Ret IIBB CTS,Retención IIBB Corrientes
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,base_retencion_iibb_rr_sufrida,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,base_retencion_iibb_rr_sufrida,,
-ri_tax_withholding_iibb_er_incurred,IIBB WTH ER,none,percent,IIBB withholding Entre Ríos,True,4,tax_group_withholding,customer,,iibb_untaxed,,base.state_ar_e,0,,,,,,Ret IIBB ER,Retención IIBB Entre Ríos
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,base_retencion_iibb_er_sufrida,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,base_retencion_iibb_er_sufrida,,
-ri_tax_withholding_iibb_ju_incurred,IIBB WTH J,none,percent,IIBB withholding Jujuy,True,4,tax_group_withholding,customer,,iibb_untaxed,,base.state_ar_y,0,,,,,,Ret IIBB J,Retención IIBB Jujuy
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,base_retencion_iibb_ju_sufrida,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,base_retencion_iibb_ju_sufrida,,
-ri_tax_withholding_iibb_za_incurred,IIBB WTH MZA,none,percent,IIBB withholding Mendoza,True,4,tax_group_withholding,customer,,iibb_untaxed,,base.state_ar_m,0,,,,,,Ret IIBB MZA,Retención IIBB Mendoza
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,base_retencion_iibb_za_sufrida,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,base_retencion_iibb_za_sufrida,,
-ri_tax_withholding_iibb_lr_incurred,IIBB WTH LR,none,percent,IIBB withholding La Rioja,True,4,tax_group_withholding,customer,,iibb_untaxed,,base.state_ar_f,0,,,,,,Ret IIBB LR,Retención IIBB La Rioja
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,base_retencion_iibb_lr_sufrida,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,base_retencion_iibb_lr_sufrida,,
-ri_tax_withholding_iibb_sa_incurred,IIBB WTH S,none,percent,IIBB withholding Salta,True,4,tax_group_withholding,customer,,iibb_untaxed,,base.state_ar_a,0,,,,,,Ret IIBB S,Retención IIBB Salta
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,base_retencion_iibb_sa_sufrida,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,base_retencion_iibb_sa_sufrida,,
-ri_tax_withholding_iibb_nn_incurred,IIBB WTH SJ,none,percent,IIBB withholding San Juan,True,4,tax_group_withholding,customer,,iibb_untaxed,,base.state_ar_j,0,,,,,,Ret IIBB SJ,Retención IIBB San Juan
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,base_retencion_iibb_nn_sufrida,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,base_retencion_iibb_nn_sufrida,,
-ri_tax_withholding_iibb_sl_incurred,IIBB WTH SL,none,percent,IIBB withholding San Luis,True,4,tax_group_withholding,customer,,iibb_untaxed,,base.state_ar_d,0,,,,,,Ret IIBB SL,Retención IIBB San Luis
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,base_retencion_iibb_sl_sufrida,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,base_retencion_iibb_sl_sufrida,,
-ri_tax_withholding_iibb_sf_incurred,IIBB WTH SF,none,percent,IIBB withholding Santa Fe,True,4,tax_group_withholding,customer,,iibb_untaxed,,base.state_ar_s,0,,,,,,Ret IIBB SF,Retención IIBB Santa Fe
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,base_retencion_iibb_sf_sufrida,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,base_retencion_iibb_sf_sufrida,,
-ri_tax_withholding_iibb_se_incurred,IIBB WTH SE,none,percent,IIBB withholding Santiago del Estero,True,4,tax_group_withholding,customer,,iibb_untaxed,,base.state_ar_g,0,,,,,,Ret IIBB SE,Retención IIBB Santiago del Estero
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,base_retencion_iibb_se_sufrida,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,base_retencion_iibb_se_sufrida,,
-ri_tax_withholding_iibb_tn_incurred,IIBB WTH T,none,percent,IIBB withholding Tucumán,True,4,tax_group_withholding,customer,,iibb_untaxed,,base.state_ar_t,0,,,,,,Ret IIBB T,Retención IIBB Tucumán
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,base_retencion_iibb_tn_sufrida,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,base_retencion_iibb_tn_sufrida,,
-ri_tax_withholding_iibb_ha_incurred,IIBB WTH CHO,none,percent,IIBB withholding Chaco,True,4,tax_group_withholding,customer,,iibb_untaxed,,base.state_ar_h,0,,,,,,Ret IIBB CHO,Retención IIBB Chaco
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,base_retencion_iibb_ha_sufrida,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,base_retencion_iibb_ha_sufrida,,
-ri_tax_withholding_iibb_ct_incurred,IIBB WTH CHT,none,percent,IIBB withholding Chubut,True,4,tax_group_withholding,customer,,iibb_untaxed,,base.state_ar_u,0,,,,,,Ret IIBB CHT,Retención IIBB Chubut
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,base_retencion_iibb_ct_sufrida,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,base_retencion_iibb_ct_sufrida,,
-ri_tax_withholding_iibb_fo_incurred,IIBB WTH F,none,percent,IIBB withholding Formosa,True,4,tax_group_withholding,customer,,iibb_untaxed,,base.state_ar_p,0,,,,,,Ret IIBB F,Retención IIBB Formosa
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,base_retencion_iibb_fo_sufrida,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,base_retencion_iibb_fo_sufrida,,
-ri_tax_withholding_iibb_mi_incurred,IIBB WTH MS,none,percent,IIBB withholding Misiones,True,4,tax_group_withholding,customer,,iibb_untaxed,,base.state_ar_n,0,,,,,,Ret IIBB MS,Retención IIBB Misiones
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,base_retencion_iibb_mi_sufrida,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,base_retencion_iibb_mi_sufrida,,
-ri_tax_withholding_iibb_ne_incurred,IIBB WTH N,none,percent,IIBB withholding Neuquén,True,4,tax_group_withholding,customer,,iibb_untaxed,,base.state_ar_q,0,,,,,,Ret IIBB N,Retención IIBB Neuquén
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,base_retencion_iibb_ne_sufrida,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,base_retencion_iibb_ne_sufrida,,
-ri_tax_withholding_iibb_lp_incurred,IIBB WTH LP,none,percent,IIBB withholding La Pampa,True,4,tax_group_withholding,customer,,iibb_untaxed,,base.state_ar_l,0,,,,,,Ret IIBB LP,Retención IIBB La Pampa
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,base_retencion_iibb_lp_sufrida,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,base_retencion_iibb_lp_sufrida,,
-ri_tax_withholding_iibb_rn_incurred,IIBB WTH RN,none,percent,IIBB withholding Río Negro,True,4,tax_group_withholding,customer,,iibb_untaxed,,base.state_ar_r,0,,,,,,Ret IIBB RN,Retención IIBB Río Negro
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,base_retencion_iibb_rn_sufrida,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,base_retencion_iibb_rn_sufrida,,
-ri_tax_withholding_iibb_az_incurred,IIBB WTH SC,none,percent,IIBB withholding Santa Cruz,True,4,tax_group_withholding,customer,,iibb_untaxed,,base.state_ar_z,0,,,,,,Ret IIBB SC,Retención IIBB Santa Cruz
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,base_retencion_iibb_az_sufrida,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,base_retencion_iibb_az_sufrida,,
-ri_tax_withholding_iibb_tf_incurred,IIBB WTH TAIS,none,percent,IIBB withholding Tierra del Fuego,True,4,tax_group_withholding,customer,,iibb_untaxed,,base.state_ar_v,0,,,,,,Ret IIBB TAIS,Retención IIBB Tierra del Fuego
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,base_retencion_iibb_tf_sufrida,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,base_retencion_iibb_tf_sufrida,,
-ri_tax_withholding_iibb_caba_applied,IIBB WTH CABA,none,percent,IIBB withholding Ciudad Autónoma Bs As,True,4,tax_group_withholding,supplier,,iibb_untaxed,,base.state_ar_c,0,,,,,,Ret IIBB CABA,Retención IIBB Ciudad Autónoma Bs As
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_iibb_caba_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_iibb_caba_aplicada,,
-ri_tax_withholding_iibb_ba_applied,IIBB WTH BA,none,percent,IIBB withholding Buenos Aires,True,4,tax_group_withholding,supplier,,iibb_untaxed,,base.state_ar_b,3,,,,,,Ret IIBB BA,Retención IIBB Buenos Aires
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_iibb_ba_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_iibb_ba_aplicada,,
-ri_tax_withholding_iibb_ca_applied,IIBB WTH C,none,percent,IIBB withholding Catamarca,True,4,tax_group_withholding,supplier,,iibb_untaxed,,base.state_ar_k,0,,,,,,Ret IIBB C,Retención IIBB Catamarca
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_iibb_ca_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_iibb_ca_aplicada,,
-ri_tax_withholding_iibb_co_applied,IIBB WTH CBA,none,percent,IIBB withholding Córdoba,True,4,tax_group_withholding,supplier,,iibb_total,,base.state_ar_x,0,,,,,,Ret IIBB CBA,Retención IIBB Córdoba
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_iibb_co_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_iibb_co_aplicada,,
-ri_tax_withholding_iibb_rr_applied,IIBB WTH CTS,none,percent,IIBB withholding Corrientes,True,4,tax_group_withholding,supplier,,iibb_untaxed,,base.state_ar_w,0,,,,,,Ret IIBB CTS,Retención IIBB Corrientes
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_iibb_rr_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_iibb_rr_aplicada,,
-ri_tax_withholding_iibb_er_applied,IIBB WTH ER,none,percent,IIBB withholding Entre Ríos,True,4,tax_group_withholding,supplier,,iibb_untaxed,,base.state_ar_e,0,,,,,,Ret IIBB ER,Retención IIBB Entre Ríos
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_iibb_er_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_iibb_er_aplicada,,
-ri_tax_withholding_iibb_ju_applied,IIBB WTH J,none,percent,IIBB withholding Jujuy,True,4,tax_group_withholding,supplier,,iibb_untaxed,,base.state_ar_y,0,,,,,,Ret IIBB J,Retención IIBB Jujuy
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_iibb_ju_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_iibb_ju_aplicada,,
-ri_tax_withholding_iibb_za_applied,IIBB WTH MZA,none,percent,IIBB withholding Mendoza,True,4,tax_group_withholding,supplier,,iibb_untaxed,,base.state_ar_m,0,,,,,,Ret IIBB MZA,Retención IIBB Mendoza
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_iibb_za_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_iibb_za_aplicada,,
-ri_tax_withholding_iibb_lr_applied,IIBB WTH LR,none,percent,IIBB withholding La Rioja,True,4,tax_group_withholding,supplier,,iibb_untaxed,,base.state_ar_f,0,,,,,,Ret IIBB LR,Retención IIBB La Rioja
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_iibb_lr_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_iibb_lr_aplicada,,
-ri_tax_withholding_iibb_sa_applied,IIBB WTH S,none,percent,IIBB withholding Salta,True,4,tax_group_withholding,supplier,,iibb_untaxed,,base.state_ar_a,0,,,,,,Ret IIBB S,Retención IIBB Salta
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_iibb_sa_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_iibb_sa_aplicada,,
-ri_tax_withholding_iibb_nn_applied,IIBB WTH SJ,none,percent,IIBB withholding San Juan,True,4,tax_group_withholding,supplier,,iibb_untaxed,,base.state_ar_j,0,,,,,,Ret IIBB SJ,Retención IIBB San Juan
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_iibb_nn_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_iibb_nn_aplicada,,
-ri_tax_withholding_iibb_sl_applied,IIBB WTH SL,none,percent,IIBB withholding San Luis,True,4,tax_group_withholding,supplier,,iibb_untaxed,,base.state_ar_d,0,,,,,,Ret IIBB SL,Retención IIBB San Luis
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_iibb_sl_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_iibb_sl_aplicada,,
-ri_tax_withholding_iibb_sf_applied,IIBB WTH SF,none,percent,IIBB withholding Santa Fe,True,4,tax_group_withholding,supplier,,iibb_untaxed,,base.state_ar_s,0,,,,,,Ret IIBB SF,Retención IIBB Santa Fe
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_iibb_sf_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_iibb_sf_aplicada,,
-ri_tax_withholding_iibb_se_applied,IIBB WTH SE,none,percent,IIBB withholding Santiago del Estero,True,4,tax_group_withholding,supplier,,iibb_untaxed,,base.state_ar_g,0,,,,,,Ret IIBB SE,Retención IIBB Santiago del Estero
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_iibb_se_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_iibb_se_aplicada,,
-ri_tax_withholding_iibb_tn_applied,IIBB WTH T,none,percent,IIBB withholding Tucumán,True,4,tax_group_withholding,supplier,,iibb_untaxed,,base.state_ar_t,0,,,,,,Ret IIBB T,Retención IIBB Tucumán
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_iibb_tn_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_iibb_tn_aplicada,,
-ri_tax_withholding_iibb_ha_applied,IIBB WTH CHO,none,percent,IIBB withholding Chaco,True,4,tax_group_withholding,supplier,,iibb_untaxed,,base.state_ar_h,0,,,,,,Ret IIBB CHO,Retención IIBB Chaco
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_iibb_ha_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_iibb_ha_aplicada,,
-ri_tax_withholding_iibb_ct_applied,IIBB WTH CHT,none,percent,IIBB withholding Chubut,True,4,tax_group_withholding,supplier,,iibb_untaxed,,base.state_ar_u,0,,,,,,Ret IIBB CHT,Retención IIBB Chubut
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_iibb_ct_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_iibb_ct_aplicada,,
-ri_tax_withholding_iibb_fo_applied,IIBB WTH F,none,percent,IIBB withholding Formosa,True,4,tax_group_withholding,supplier,,iibb_untaxed,,base.state_ar_p,0,,,,,,Ret IIBB F,Retención IIBB Formosa
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_iibb_fo_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_iibb_fo_aplicada,,
-ri_tax_withholding_iibb_mi_applied,IIBB WTH MS,none,percent,IIBB withholding Misiones,True,4,tax_group_withholding,supplier,,iibb_untaxed,,base.state_ar_n,0,,,,,,Ret IIBB MS,Retención IIBB Misiones
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_iibb_mi_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_iibb_mi_aplicada,,
-ri_tax_withholding_iibb_ne_applied,IIBB WTH N,none,percent,IIBB withholding Neuquén,True,4,tax_group_withholding,supplier,,iibb_untaxed,,base.state_ar_q,0,,,,,,Ret IIBB N,Retención IIBB Neuquén
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_iibb_ne_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_iibb_ne_aplicada,,
-ri_tax_withholding_iibb_lp_applied,IIBB WTH LP,none,percent,IIBB withholding La Pampa,True,4,tax_group_withholding,supplier,,iibb_untaxed,,base.state_ar_l,0,,,,,,Ret IIBB LP,Retención IIBB La Pampa
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_iibb_lp_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_iibb_lp_aplicada,,
-ri_tax_withholding_iibb_rn_applied,IIBB WTH RN,none,percent,IIBB withholding Río Negro,True,4,tax_group_withholding,supplier,,iibb_untaxed,,base.state_ar_r,0,,,,,,Ret IIBB RN,Retención IIBB Río Negro
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_iibb_rn_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_iibb_rn_aplicada,,
-ri_tax_withholding_iibb_az_applied,IIBB WTH SC,none,percent,IIBB withholding Santa Cruz,True,4,tax_group_withholding,supplier,,iibb_untaxed,,base.state_ar_z,0,,,,,,Ret IIBB SC,Retención IIBB Santa Cruz
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_iibb_az_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_iibb_az_aplicada,,
-ri_tax_withholding_iibb_tf_applied,IIBB WTH TAIS,none,percent,IIBB withholding Tierra del Fuego,True,4,tax_group_withholding,supplier,,iibb_untaxed,,base.state_ar_v,0,,,,,,Ret IIBB TAIS,Retención IIBB Tierra del Fuego
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_iibb_tf_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_iibb_tf_aplicada,,
-ri_tax_withholding_vat_applied,VAT WTH  A,none,percent,IVA withholding applied,True,4,tax_group_withholding,supplier,,,,,4.1,,,,,,Ret IVA A,Retención IVA Aplicada
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_iva_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_iva_aplicada,,
-ri_tax_withholding_earnings_incurred_group_19_insc,Earnings WTH I group 19 inscripto,none,percent,"Intereses por operaciones realizadas en entidades financieras. Ley N° 21.526, y sus modificaciones o agentes de bolsa o mercado abierto.",True,4,tax_group_withholding,supplier,,earnings,19,,3,0,,,,,Retenciones de ganancias sufridas grupo 19 inscripto,Retenciones de ganancias sufridas grupo 19 inscripto
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_ganancias_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_ganancias_aplicada,,
-ri_tax_withholding_earnings_incurred_group_21_insc,Earnings WTH I group 21 inscripto,none,percent,Intereses originados en operaciones no comprendidas en el punto 1.,True,4,tax_group_withholding,supplier,,earnings,21,,6,7870,,,,,Retenciones de ganancias sufridas grupo 21 inscripto,Retenciones de ganancias sufridas grupo 21 inscripto
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_ganancias_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_ganancias_aplicada,,
-ri_tax_withholding_earnings_incurred_group_30_insc,Earnings WTH I group 30 inscripto,none,percent,Alquileres o arrendamientos de bienes muebles.,True,4,tax_group_withholding,supplier,,earnings,30,,6,11200,,,,,Retenciones de ganancias sufridas grupo 30 inscripto,Retenciones de ganancias sufridas grupo 30 inscripto
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_ganancias_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_ganancias_aplicada,,
-ri_tax_withholding_earnings_incurred_group_31_insc,Earnings WTH I group 31 inscripto,none,percent,"Bienes Inmuebles Urbanos, incluidos los efectuados bajo la modalidad de leasing - incluye suburbanos-",True,4,tax_group_withholding,supplier,,earnings,31,,6,11200,,,,,Retenciones de ganancias sufridas grupo 31 inscripto,Retenciones de ganancias sufridas grupo 31 inscripto
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_ganancias_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_ganancias_aplicada,,
-ri_tax_withholding_earnings_incurred_group_32_insc,Earnings WTH I group 32 inscripto,none,percent,"Bienes Inmuebles Rurales, incluidos los efectuados bajo la modalidad de leasing - incluye subrurales-",True,4,tax_group_withholding,supplier,,earnings,32,,6,11200,,,,,Retenciones de ganancias sufridas grupo 32 inscripto,Retenciones de ganancias sufridas grupo 32 inscripto
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_ganancias_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_ganancias_aplicada,,
-ri_tax_withholding_earnings_incurred_group_35_insc,Earnings WTH I group 35 inscripto,none,percent,Regalías,True,4,tax_group_withholding,supplier,,earnings,35,,6,7870,,,,,Retenciones de ganancias sufridas grupo 35 inscripto,Retenciones de ganancias sufridas grupo 35 inscripto
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_ganancias_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_ganancias_aplicada,,
-ri_tax_withholding_earnings_incurred_group_43_insc,Earnings WTH I group 43 inscripto,none,percent,"Interés accionario, excedentes y retornos distribuidos entre asociados, cooperativas, -excepto consumo-.",True,4,tax_group_withholding,supplier,,earnings,43,,6,7870,,,,,Retenciones de ganancias sufridas grupo 43 inscripto,Retenciones de ganancias sufridas grupo 43 inscripto
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_ganancias_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_ganancias_aplicada,,
-ri_tax_withholding_earnings_incurred_group_51_insc,Earnings WTH I group 51 inscripto,none,percent,"Obligaciones de no hacer, o por abandono o no ejercicio de una actividad.",True,4,tax_group_withholding,supplier,,earnings,51,,6,7870,,,,,Retenciones de ganancias sufridas grupo 51 inscripto,Retenciones de ganancias sufridas grupo 51 inscripto
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_ganancias_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_ganancias_aplicada,,
-ri_tax_withholding_earnings_incurred_group_78_insc,Earnings WTH I group 78 inscripto,none,percent,Enajenación de bienes muebles y bienes de cambio.,True,4,tax_group_withholding,supplier,,earnings,78,,2,224000,,,,,Retenciones de ganancias sufridas grupo 78 inscripto,Retenciones de ganancias sufridas grupo 78 inscripto
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_ganancias_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_ganancias_aplicada,,
-ri_tax_withholding_earnings_incurred_group_86_insc,Earnings WTH I group 86 inscripto,none,percent,"Transferencia temporaria o definitiva de derechos de llave, marcas, patentes de invención, regalías, concesiones y similares.",True,4,tax_group_withholding,supplier,,earnings,86,,2,224000,,,,,Retenciones de ganancias sufridas grupo 86 inscripto,Retenciones de ganancias sufridas grupo 86 inscripto
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_ganancias_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_ganancias_aplicada,,
-ri_tax_withholding_earnings_incurred_group_110_insc,Earnings WTH I group 110 inscripto,none,percent,Explotación de derechos de autor (Ley N° 11.723).,True,4,tax_group_withholding,supplier,l10n_ar_withholding.normal_scale,earnings_scale,110,,-1,10000,,,,,Retenciones de ganancias sufridas grupo 110 inscripto,Retenciones de ganancias sufridas grupo 110 inscripto
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_ganancias_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_ganancias_aplicada,,
-ri_tax_withholding_earnings_incurred_group_94_insc,Earnings WTH I group 94 inscripto,none,percent,Locaciones de obra y/o servicios no ejecutados en relación de dependencia no mencionados expresamente en otros incisos.,True,4,tax_group_withholding,supplier,,earnings,94,,2,67170,,,,,Retenciones de ganancias sufridas grupo 94 inscripto,Retenciones de ganancias sufridas grupo 94 inscripto
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_ganancias_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_ganancias_aplicada,,
-ri_tax_withholding_earnings_incurred_group_25_insc,Earnings WTH I group 25 inscripto,none,percent,"Comisiones u otras retribuciones derivadas de la actividad de comisionista, rematador, consignatario y demás auxiliares de comercio a que se refiere el inciso c) del artículo 49 de la Ley de Impuesto a las Ganancias, texto ordenado en 1997 y sus modificaciones.",True,4,tax_group_withholding,supplier,l10n_ar_withholding.normal_scale,earnings_scale,25,,-1,16830,,,,,Retenciones de ganancias sufridas grupo 25 inscripto,Retenciones de ganancias sufridas grupo 25 inscripto
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_ganancias_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_ganancias_aplicada,,
-ri_tax_withholding_earnings_incurred_group_116I_insc,Earnings WTH I group 116I inscripto,none,percent,"Honorarios de director de sociedades anónimas,  síndico fiduciario,  consejero de sociedades cooperativas integrante de consejos de vigilancia y socios administradores de las sociedades de responsabilidad limitada, en comandita simple y en comandita por acciones.",True,4,tax_group_withholding,supplier,l10n_ar_withholding.normal_scale,earnings_scale,116 I,,-1,67170,,,,,Retenciones de ganancias sufridas grupo 116I inscripto,Retenciones de ganancias sufridas grupo 116I inscripto
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_ganancias_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_ganancias_aplicada,,
-ri_tax_withholding_earnings_incurred_group_116II_insc,Earnings WTH I group 116II inscripto,none,percent,"Albacea, mandatario, gestor de negocio.",True,4,tax_group_withholding,supplier,l10n_ar_withholding.normal_scale,earnings_scale,116 II,,-1,16830,,,,,Retenciones de ganancias sufridas grupo 116II inscripto,Retenciones de ganancias sufridas grupo 116II inscripto
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_ganancias_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_ganancias_aplicada,,
-ri_tax_withholding_earnings_incurred_group_119_insc,Earnings WTH I group 119 inscripto,none,percent,"Profesionales liberales, oficios",True,4,tax_group_withholding,supplier,l10n_ar_withholding.scale_119,earnings_scale,119,,-1,160000,,,,,Retenciones de ganancias sufridas grupo 119 inscripto,Retenciones de ganancias sufridas grupo 119 inscripto
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_ganancias_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_ganancias_aplicada,,
-ri_tax_withholding_earnings_incurred_group_124_insc,Earnings WTH I group 124 inscripto,none,percent,"Corredor, viajante de comercio y despachante de aduana.",True,4,tax_group_withholding,supplier,l10n_ar_withholding.normal_scale,earnings_scale,124,,-1,16830,,,,,Retenciones de ganancias sufridas grupo 124 inscripto,Retenciones de ganancias sufridas grupo 124 inscripto
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_ganancias_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_ganancias_aplicada,,
-ri_tax_withholding_earnings_incurred_group_95_insc,Earnings WTH I group 95 inscripto,none,percent,Operaciones de transporte de carga nacional e internacional.,True,4,tax_group_withholding,supplier,,earnings,95,,0.25,67170,,,,,Retenciones de ganancias sufridas grupo 95 inscripto,Retenciones de ganancias sufridas grupo 95 inscripto
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_ganancias_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_ganancias_aplicada,,
-ri_tax_withholding_earnings_incurred_group_53_insc,Earnings WTH I group 53 inscripto,none,percent,Operaciones realizadas por intermedio de mercados de cereales a término que se resuelvan en el curso del término (arbitrajes) y de mercados de futuros y opciones.,True,4,tax_group_withholding,supplier,,earnings,53,,0.5,0,,,,,Retenciones de ganancias sufridas grupo 53 inscripto,Retenciones de ganancias sufridas grupo 53 inscripto
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_ganancias_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_ganancias_aplicada,,
-ri_tax_withholding_earnings_incurred_group_55_insc,Earnings WTH I group 55 inscripto,none,percent,Distribución de películas . Transmisión de programación. Televisión vía satelital.,True,4,tax_group_withholding,supplier,,earnings,55,,0.5,0,,,,,Retenciones de ganancias sufridas grupo 55 inscripto,Retenciones de ganancias sufridas grupo 55 inscripto
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_ganancias_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_ganancias_aplicada,,
-ri_tax_withholding_earnings_incurred_group_60_insc,Earnings WTH I group 60 inscripto,none,percent,Dividendos y utilidades asimilables. Art. 90.3 de la ley. Alícuota 7%.,True,4,tax_group_withholding,supplier,,earnings,60,,7,0,,,,,Retenciones de ganancias sufridas grupo 60 inscripto,Retenciones de ganancias sufridas grupo 60 inscripto
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_ganancias_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_ganancias_aplicada,,
-ri_tax_withholding_earnings_incurred_group_61_insc,Earnings WTH I group 61 inscripto,none,percent,Dividendos y utilidades asimilables. Art. 90.3 de la ley. Alícuota 13%.,True,4,tax_group_withholding,supplier,,earnings,61,,13,0,,,,,Retenciones de ganancias sufridas grupo 61 inscripto,Retenciones de ganancias sufridas grupo 61 inscripto
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_ganancias_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_ganancias_aplicada,,
-ri_tax_withholding_earnings_incurred_group_111_insc,Earnings WTH I group 111 inscripto,none,percent,"Cualquier otra cesión o locación de derechos, excepto las que correspondan a operaciones realizadas por intermedio de mercados de cereales a término que se resuelvan en el curso del término (arbitrajes) y de mercados de futuros y opciones.",True,4,tax_group_withholding,supplier,,earnings,111,,0.5,0,,,,,Retenciones de ganancias sufridas grupo 111 inscripto,Retenciones de ganancias sufridas grupo 111 inscripto
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_ganancias_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_ganancias_aplicada,,
-ri_tax_withholding_earnings_incurred_group_112_insc,Earnings WTH I group 112 inscripto,none,percent,"Beneficios provenientes del cumplimiento de los requisitos de los planes de seguro de retiro privados administrados por entidades sujetas al control de la Superintendencia de Seguros de la Nación, establecidos por el inciso d) del artículo 45 y el inciso d) del artículo 79 de la Ley del Impuesto a las Ganancias, texto ordenado en 1997 y sus modificaciones -excepto cuando se encuentren alcanzados por el régimen de retención establecido por la Resolución General Nº 1261, sus modificatorias y complementarias-.",True,4,tax_group_withholding,supplier,,earnings,112,,3,16830,,,,,Retenciones de ganancias sufridas grupo 112 inscripto,Retenciones de ganancias sufridas grupo 112 inscripto
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_ganancias_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_ganancias_aplicada,,
-ri_tax_withholding_earnings_incurred_group_113_insc,Earnings WTH I group 113 inscripto,none,percent,"Rescates -totales o parciales- por desistimiento  de los planes de seguro de retiro a que se refiere el inciso o), excepto que sea de aplicación lo normado en el artículo 101 de la Ley del Impuesto a las Ganancias, texto ordenado en 1997 y sus modificaciones.",True,4,tax_group_withholding,supplier,,earnings,113,,3,16830,,,,,Retenciones de ganancias sufridas grupo 113 inscripto,Retenciones de ganancias sufridas grupo 113 inscripto
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_ganancias_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_ganancias_aplicada,,
-ri_tax_withholding_earnings_incurred_group_779_insc,Earnings WTH I group 779 inscripto,none,percent,"Subsidios abonados por los estados Nacional, provinciales, municipales o el Gobierno de la Ciudad Autónoma de Buenos Aires, en concepto de enajenación de bienes muebles y bienes de cambio, en la medida que una ley general o especial no establezca la exención de los mismos en el impuesto a las ganancias.",True,4,tax_group_withholding,supplier,,earnings,779,,2,76140,,,,,Retenciones de ganancias sufridas grupo 779 inscripto,Retenciones de ganancias sufridas grupo 779 inscripto
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_ganancias_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_ganancias_aplicada,,
-ri_tax_withholding_earnings_incurred_group_780_insc,Earnings WTH I group 780 inscripto,none,percent,"Subsidios abonados por los estados Nacional, provinciales, municipales o el Gobierno de la Ciudad Autónoma de Buenos Aires, en concepto de locaciones de obra y/o servicios, no ejecutados en relación de dependencia, en la medida que una ley general o especial no establezca la exención de los mismos en el impuesto a las ganancias.",True,4,tax_group_withholding,supplier,,earnings,780,,2,31460,,,,,Retenciones de ganancias sufridas grupo 780 inscripto,Retenciones de ganancias sufridas grupo 780 inscripto
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_ganancias_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_ganancias_aplicada,,
-ri_tax_withholding_earnings_incurred_group_99_insc,Earnings WTH I group 99 inscripto,none,percent,Factura M - Ganancias - Emisión de comprobantes con discriminación del gravamen.,True,4,tax_group_withholding,supplier,,earnings,99,,6,0,,,,,Retenciones de ganancias sufridas grupo 99 inscripto,Retenciones de ganancias sufridas grupo 99 inscripto
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_ganancias_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_ganancias_aplicada,,
-ri_tax_withholding_earnings_incurred_group_965_insc,Earnings WTH I group 965 inscripto,none,percent,"Factura ""A"" con leyenda ""OPERACIÓN SUJETA A RETENCIÓN"" - Ganancias - Emisión de comprobantes con discriminación del gravamen.",True,4,tax_group_withholding,supplier,,earnings,965,,3,0,,,,,Retenciones de ganancias sufridas grupo 965 inscripto,Retenciones de ganancias sufridas grupo 965 inscripto
-,,,,,,,,,,,,,,,,base,invoice,,,
-,,,,,,,,,,,,,,,,tax,invoice,ri_retencion_ganancias_aplicada,,
-,,,,,,,,,,,,,,,,base,refund,,,
-,,,,,,,,,,,,,,,,tax,refund,ri_retencion_ganancias_aplicada,,
+"id","name","type_tax_use","amount_type","description","active","sequence","tax_group_id","l10n_ar_withholding_payment_type","l10n_ar_scale_id","l10n_ar_tax_type","l10n_ar_code","l10n_ar_state_id","amount","l10n_ar_non_taxable_amount","repartition_line_ids/factor_percent","repartition_line_ids/repartition_type","repartition_line_ids/document_type","repartition_line_ids/account_id","name@es","description@es"
+"ri_tax_withholding_vat_incurred","VAT WTH","none","percent","Withholding VAT","True","4","tax_group_withholding","customer","","","","","0","","","base","invoice","","Ret IVA","Retención IVA"
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_iva_sufrida","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_iva_sufrida","",""
+"ri_tax_withholding_suss_incurred","WTH SUSS","none","percent","SUSS Withholding","True","10","tax_group_withholding","customer","","","","","0","","","","","","Ret SUSS","Retención SUSS"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","base_retencion_suss_sufrida","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","base_retencion_suss_sufrida","",""
+"ri_tax_withholding_ganancias_incurred","Profits WTH","none","percent","Profits withholding","True","4","tax_group_withholding","customer","","","","","0","","","","","","Ret Ganancias","Retención Ganancias"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","base_retencion_ganancias_sufrida","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","base_retencion_ganancias_sufrida","",""
+"ri_tax_withholding_iibb_caba_incurred","IIBB WTH CABA","none","percent","IIBB withholding Ciudad Autónoma Bs As","True","4","tax_group_withholding","customer","","iibb_untaxed","","base.state_ar_c","0","","","","","","Ret IIBB CABA","Retención IIBB Ciudad Autónoma Bs As"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","base_retencion_iibb_caba_sufrida","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","base_retencion_iibb_caba_sufrida","",""
+"ri_tax_withholding_iibb_ba_incurred","IIBB WTH BA","none","percent","IIBB withholding Buenos Aires","True","4","tax_group_withholding","customer","","iibb_untaxed","","base.state_ar_b","0","","","","","","Ret IIBB BA","Retención IIBB Buenos Aires"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","base_retencion_iibb_ba_sufrida","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","base_retencion_iibb_ba_sufrida","",""
+"ri_tax_withholding_iibb_ca_incurred","IIBB WTH C","none","percent","IIBB withholding Catamarca","True","4","tax_group_withholding","customer","","iibb_untaxed","","base.state_ar_k","0","","","","","","Ret IIBB C","Retención IIBB Catamarca"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","base_retencion_iibb_ca_sufrida","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","base_retencion_iibb_ca_sufrida","",""
+"ri_tax_withholding_iibb_co_incurred","IIBB WTH CBA","none","percent","IIBB withholding Córdoba","True","4","tax_group_withholding","customer","","iibb_untaxed","","base.state_ar_x","0","","","","","","Ret IIBB CBA","Retención IIBB Córdoba"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","base_retencion_iibb_co_sufrida","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","base_retencion_iibb_co_sufrida","",""
+"ri_tax_withholding_iibb_rr_incurred","IIBB WTH CTS","none","percent","IIBB withholding Corrientes","True","4","tax_group_withholding","customer","","iibb_untaxed","","base.state_ar_w","0","","","","","","Ret IIBB CTS","Retención IIBB Corrientes"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","base_retencion_iibb_rr_sufrida","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","base_retencion_iibb_rr_sufrida","",""
+"ri_tax_withholding_iibb_er_incurred","IIBB WTH ER","none","percent","IIBB withholding Entre Ríos","True","4","tax_group_withholding","customer","","iibb_untaxed","","base.state_ar_e","0","","","","","","Ret IIBB ER","Retención IIBB Entre Ríos"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","base_retencion_iibb_er_sufrida","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","base_retencion_iibb_er_sufrida","",""
+"ri_tax_withholding_iibb_ju_incurred","IIBB WTH J","none","percent","IIBB withholding Jujuy","True","4","tax_group_withholding","customer","","iibb_untaxed","","base.state_ar_y","0","","","","","","Ret IIBB J","Retención IIBB Jujuy"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","base_retencion_iibb_ju_sufrida","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","base_retencion_iibb_ju_sufrida","",""
+"ri_tax_withholding_iibb_za_incurred","IIBB WTH MZA","none","percent","IIBB withholding Mendoza","True","4","tax_group_withholding","customer","","iibb_untaxed","","base.state_ar_m","0","","","","","","Ret IIBB MZA","Retención IIBB Mendoza"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","base_retencion_iibb_za_sufrida","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","base_retencion_iibb_za_sufrida","",""
+"ri_tax_withholding_iibb_lr_incurred","IIBB WTH LR","none","percent","IIBB withholding La Rioja","True","4","tax_group_withholding","customer","","iibb_untaxed","","base.state_ar_f","0","","","","","","Ret IIBB LR","Retención IIBB La Rioja"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","base_retencion_iibb_lr_sufrida","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","base_retencion_iibb_lr_sufrida","",""
+"ri_tax_withholding_iibb_sa_incurred","IIBB WTH S","none","percent","IIBB withholding Salta","True","4","tax_group_withholding","customer","","iibb_untaxed","","base.state_ar_a","0","","","","","","Ret IIBB S","Retención IIBB Salta"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","base_retencion_iibb_sa_sufrida","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","base_retencion_iibb_sa_sufrida","",""
+"ri_tax_withholding_iibb_nn_incurred","IIBB WTH SJ","none","percent","IIBB withholding San Juan","True","4","tax_group_withholding","customer","","iibb_untaxed","","base.state_ar_j","0","","","","","","Ret IIBB SJ","Retención IIBB San Juan"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","base_retencion_iibb_nn_sufrida","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","base_retencion_iibb_nn_sufrida","",""
+"ri_tax_withholding_iibb_sl_incurred","IIBB WTH SL","none","percent","IIBB withholding San Luis","True","4","tax_group_withholding","customer","","iibb_untaxed","","base.state_ar_d","0","","","","","","Ret IIBB SL","Retención IIBB San Luis"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","base_retencion_iibb_sl_sufrida","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","base_retencion_iibb_sl_sufrida","",""
+"ri_tax_withholding_iibb_sf_incurred","IIBB WTH SF","none","percent","IIBB withholding Santa Fe","True","4","tax_group_withholding","customer","","iibb_untaxed","","base.state_ar_s","0","","","","","","Ret IIBB SF","Retención IIBB Santa Fe"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","base_retencion_iibb_sf_sufrida","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","base_retencion_iibb_sf_sufrida","",""
+"ri_tax_withholding_iibb_se_incurred","IIBB WTH SE","none","percent","IIBB withholding Santiago del Estero","True","4","tax_group_withholding","customer","","iibb_untaxed","","base.state_ar_g","0","","","","","","Ret IIBB SE","Retención IIBB Santiago del Estero"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","base_retencion_iibb_se_sufrida","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","base_retencion_iibb_se_sufrida","",""
+"ri_tax_withholding_iibb_tn_incurred","IIBB WTH T","none","percent","IIBB withholding Tucumán","True","4","tax_group_withholding","customer","","iibb_untaxed","","base.state_ar_t","0","","","","","","Ret IIBB T","Retención IIBB Tucumán"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","base_retencion_iibb_tn_sufrida","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","base_retencion_iibb_tn_sufrida","",""
+"ri_tax_withholding_iibb_ha_incurred","IIBB WTH CHO","none","percent","IIBB withholding Chaco","True","4","tax_group_withholding","customer","","iibb_untaxed","","base.state_ar_h","0","","","","","","Ret IIBB CHO","Retención IIBB Chaco"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","base_retencion_iibb_ha_sufrida","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","base_retencion_iibb_ha_sufrida","",""
+"ri_tax_withholding_iibb_ct_incurred","IIBB WTH CHT","none","percent","IIBB withholding Chubut","True","4","tax_group_withholding","customer","","iibb_untaxed","","base.state_ar_u","0","","","","","","Ret IIBB CHT","Retención IIBB Chubut"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","base_retencion_iibb_ct_sufrida","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","base_retencion_iibb_ct_sufrida","",""
+"ri_tax_withholding_iibb_fo_incurred","IIBB WTH F","none","percent","IIBB withholding Formosa","True","4","tax_group_withholding","customer","","iibb_untaxed","","base.state_ar_p","0","","","","","","Ret IIBB F","Retención IIBB Formosa"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","base_retencion_iibb_fo_sufrida","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","base_retencion_iibb_fo_sufrida","",""
+"ri_tax_withholding_iibb_mi_incurred","IIBB WTH MS","none","percent","IIBB withholding Misiones","True","4","tax_group_withholding","customer","","iibb_untaxed","","base.state_ar_n","0","","","","","","Ret IIBB MS","Retención IIBB Misiones"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","base_retencion_iibb_mi_sufrida","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","base_retencion_iibb_mi_sufrida","",""
+"ri_tax_withholding_iibb_ne_incurred","IIBB WTH N","none","percent","IIBB withholding Neuquén","True","4","tax_group_withholding","customer","","iibb_untaxed","","base.state_ar_q","0","","","","","","Ret IIBB N","Retención IIBB Neuquén"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","base_retencion_iibb_ne_sufrida","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","base_retencion_iibb_ne_sufrida","",""
+"ri_tax_withholding_iibb_lp_incurred","IIBB WTH LP","none","percent","IIBB withholding La Pampa","True","4","tax_group_withholding","customer","","iibb_untaxed","","base.state_ar_l","0","","","","","","Ret IIBB LP","Retención IIBB La Pampa"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","base_retencion_iibb_lp_sufrida","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","base_retencion_iibb_lp_sufrida","",""
+"ri_tax_withholding_iibb_rn_incurred","IIBB WTH RN","none","percent","IIBB withholding Río Negro","True","4","tax_group_withholding","customer","","iibb_untaxed","","base.state_ar_r","0","","","","","","Ret IIBB RN","Retención IIBB Río Negro"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","base_retencion_iibb_rn_sufrida","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","base_retencion_iibb_rn_sufrida","",""
+"ri_tax_withholding_iibb_az_incurred","IIBB WTH SC","none","percent","IIBB withholding Santa Cruz","True","4","tax_group_withholding","customer","","iibb_untaxed","","base.state_ar_z","0","","","","","","Ret IIBB SC","Retención IIBB Santa Cruz"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","base_retencion_iibb_az_sufrida","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","base_retencion_iibb_az_sufrida","",""
+"ri_tax_withholding_iibb_tf_incurred","IIBB WTH TAIS","none","percent","IIBB withholding Tierra del Fuego","True","4","tax_group_withholding","customer","","iibb_untaxed","","base.state_ar_v","0","","","","","","Ret IIBB TAIS","Retención IIBB Tierra del Fuego"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","base_retencion_iibb_tf_sufrida","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","base_retencion_iibb_tf_sufrida","",""
+"ri_tax_withholding_iibb_caba_applied","IIBB WTH CABA 0%","none","percent","IIBB withholding Ciudad Autónoma Bs As","True","4","tax_group_withholding","supplier","","iibb_untaxed","","base.state_ar_c","0","","","","","","Ret IIBB CABA 0%","Retención IIBB Ciudad Autónoma Bs As"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_iibb_caba_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_iibb_caba_aplicada","",""
+"ri_tax_withholding_iibb_ba_applied","IIBB WTH BA 0%","none","percent","IIBB withholding Buenos Aires","True","4","tax_group_withholding","supplier","","iibb_untaxed","","base.state_ar_b","3","","","","","","Ret IIBB BA 0%","Retención IIBB Buenos Aires"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_iibb_ba_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_iibb_ba_aplicada","",""
+"ri_tax_withholding_iibb_ca_applied","IIBB WTH C 0%","none","percent","IIBB withholding Catamarca","True","4","tax_group_withholding","supplier","","iibb_untaxed","","base.state_ar_k","0","","","","","","Ret IIBB C 0%","Retención IIBB Catamarca"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_iibb_ca_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_iibb_ca_aplicada","",""
+"ri_tax_withholding_iibb_co_applied","IIBB WTH CBA 0%","none","percent","IIBB withholding Córdoba","True","4","tax_group_withholding","supplier","","iibb_total","","base.state_ar_x","0","","","","","","Ret IIBB CBA 0%","Retención IIBB Córdoba"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_iibb_co_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_iibb_co_aplicada","",""
+"ri_tax_withholding_iibb_rr_applied","IIBB WTH CTS 0%","none","percent","IIBB withholding Corrientes","True","4","tax_group_withholding","supplier","","iibb_untaxed","","base.state_ar_w","0","","","","","","Ret IIBB CTS 0%","Retención IIBB Corrientes"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_iibb_rr_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_iibb_rr_aplicada","",""
+"ri_tax_withholding_iibb_er_applied","IIBB WTH ER 0%","none","percent","IIBB withholding Entre Ríos","True","4","tax_group_withholding","supplier","","iibb_untaxed","","base.state_ar_e","0","","","","","","Ret IIBB ER 0%","Retención IIBB Entre Ríos"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_iibb_er_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_iibb_er_aplicada","",""
+"ri_tax_withholding_iibb_ju_applied","IIBB WTH J 0%","none","percent","IIBB withholding Jujuy","True","4","tax_group_withholding","supplier","","iibb_untaxed","","base.state_ar_y","0","","","","","","Ret IIBB J 0%","Retención IIBB Jujuy"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_iibb_ju_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_iibb_ju_aplicada","",""
+"ri_tax_withholding_iibb_za_applied","IIBB WTH MZA 0%","none","percent","IIBB withholding Mendoza","True","4","tax_group_withholding","supplier","","iibb_untaxed","","base.state_ar_m","0","","","","","","Ret IIBB MZA 0%","Retención IIBB Mendoza"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_iibb_za_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_iibb_za_aplicada","",""
+"ri_tax_withholding_iibb_lr_applied","IIBB WTH LR 0%","none","percent","IIBB withholding La Rioja","True","4","tax_group_withholding","supplier","","iibb_untaxed","","base.state_ar_f","0","","","","","","Ret IIBB LR 0%","Retención IIBB La Rioja"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_iibb_lr_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_iibb_lr_aplicada","",""
+"ri_tax_withholding_iibb_sa_applied","IIBB WTH S 0%","none","percent","IIBB withholding Salta","True","4","tax_group_withholding","supplier","","iibb_untaxed","","base.state_ar_a","0","","","","","","Ret IIBB S 0%","Retención IIBB Salta"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_iibb_sa_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_iibb_sa_aplicada","",""
+"ri_tax_withholding_iibb_nn_applied","IIBB WTH SJ 0%","none","percent","IIBB withholding San Juan","True","4","tax_group_withholding","supplier","","iibb_untaxed","","base.state_ar_j","0","","","","","","Ret IIBB SJ 0%","Retención IIBB San Juan"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_iibb_nn_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_iibb_nn_aplicada","",""
+"ri_tax_withholding_iibb_sl_applied","IIBB WTH SL 0%","none","percent","IIBB withholding San Luis","True","4","tax_group_withholding","supplier","","iibb_untaxed","","base.state_ar_d","0","","","","","","Ret IIBB SL 0%","Retención IIBB San Luis"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_iibb_sl_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_iibb_sl_aplicada","",""
+"ri_tax_withholding_iibb_sf_applied","IIBB WTH SF 0%","none","percent","IIBB withholding Santa Fe","True","4","tax_group_withholding","supplier","","iibb_untaxed","","base.state_ar_s","0","","","","","","Ret IIBB SF 0%","Retención IIBB Santa Fe"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_iibb_sf_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_iibb_sf_aplicada","",""
+"ri_tax_withholding_iibb_se_applied","IIBB WTH SE 0%","none","percent","IIBB withholding Santiago del Estero","True","4","tax_group_withholding","supplier","","iibb_untaxed","","base.state_ar_g","0","","","","","","Ret IIBB SE 0%","Retención IIBB Santiago del Estero"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_iibb_se_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_iibb_se_aplicada","",""
+"ri_tax_withholding_iibb_tn_applied","IIBB WTH T 0%","none","percent","IIBB withholding Tucumán","True","4","tax_group_withholding","supplier","","iibb_untaxed","","base.state_ar_t","0","","","","","","Ret IIBB T 0%","Retención IIBB Tucumán"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_iibb_tn_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_iibb_tn_aplicada","",""
+"ri_tax_withholding_iibb_ha_applied","IIBB WTH CHO 0%","none","percent","IIBB withholding Chaco","True","4","tax_group_withholding","supplier","","iibb_untaxed","","base.state_ar_h","0","","","","","","Ret IIBB CHO 0%","Retención IIBB Chaco"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_iibb_ha_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_iibb_ha_aplicada","",""
+"ri_tax_withholding_iibb_ct_applied","IIBB WTH CHT 0%","none","percent","IIBB withholding Chubut","True","4","tax_group_withholding","supplier","","iibb_untaxed","","base.state_ar_u","0","","","","","","Ret IIBB CHT 0%","Retención IIBB Chubut"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_iibb_ct_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_iibb_ct_aplicada","",""
+"ri_tax_withholding_iibb_fo_applied","IIBB WTH F 0%","none","percent","IIBB withholding Formosa","True","4","tax_group_withholding","supplier","","iibb_untaxed","","base.state_ar_p","0","","","","","","Ret IIBB F 0%","Retención IIBB Formosa"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_iibb_fo_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_iibb_fo_aplicada","",""
+"ri_tax_withholding_iibb_mi_applied","IIBB WTH MS 0%","none","percent","IIBB withholding Misiones","True","4","tax_group_withholding","supplier","","iibb_untaxed","","base.state_ar_n","0","","","","","","Ret IIBB MS 0%","Retención IIBB Misiones"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_iibb_mi_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_iibb_mi_aplicada","",""
+"ri_tax_withholding_iibb_ne_applied","IIBB WTH N 0%","none","percent","IIBB withholding Neuquén","True","4","tax_group_withholding","supplier","","iibb_untaxed","","base.state_ar_q","0","","","","","","Ret IIBB N 0%","Retención IIBB Neuquén"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_iibb_ne_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_iibb_ne_aplicada","",""
+"ri_tax_withholding_iibb_lp_applied","IIBB WTH LP 0%","none","percent","IIBB withholding La Pampa","True","4","tax_group_withholding","supplier","","iibb_untaxed","","base.state_ar_l","0","","","","","","Ret IIBB LP 0%","Retención IIBB La Pampa"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_iibb_lp_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_iibb_lp_aplicada","",""
+"ri_tax_withholding_iibb_rn_applied","IIBB WTH RN 0%","none","percent","IIBB withholding Río Negro","True","4","tax_group_withholding","supplier","","iibb_untaxed","","base.state_ar_r","0","","","","","","Ret IIBB RN 0%","Retención IIBB Río Negro"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_iibb_rn_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_iibb_rn_aplicada","",""
+"ri_tax_withholding_iibb_az_applied","IIBB WTH SC 0%","none","percent","IIBB withholding Santa Cruz","True","4","tax_group_withholding","supplier","","iibb_untaxed","","base.state_ar_z","0","","","","","","Ret IIBB SC 0%","Retención IIBB Santa Cruz"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_iibb_az_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_iibb_az_aplicada","",""
+"ri_tax_withholding_iibb_tf_applied","IIBB WTH TAIS 0%","none","percent","IIBB withholding Tierra del Fuego","True","4","tax_group_withholding","supplier","","iibb_untaxed","","base.state_ar_v","0","","","","","","Ret IIBB TAIS 0%","Retención IIBB Tierra del Fuego"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_iibb_tf_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_iibb_tf_aplicada","",""
+"ri_tax_withholding_vat_applied","VAT WTH  A","none","percent","IVA withholding applied","True","4","tax_group_withholding","supplier","","","","","4.1","","","","","","Ret IVA","Retención IVA"
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_iva_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_iva_aplicada","",""
+"ri_tax_withholding_earnings_incurred_group_19_insc","Profits WTH regimen 19 inscripto","none","percent","Intereses por operaciones realizadas en entidades financieras. Ley N° 21.526, y sus modificaciones o agentes de bolsa o mercado abierto.","True","4","tax_group_withholding","supplier","","earnings","19","","3","0","","","","","Retenciones de ganancias regimen 19 inscripto",""
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_ganancias_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_ganancias_aplicada","",""
+"ri_tax_withholding_earnings_incurred_group_21_insc","Profits WTH regimen 21 inscripto","none","percent","Intereses originados en operaciones no comprendidas en el punto 1.","True","4","tax_group_withholding","supplier","","earnings","21","","6","7870","","","","","Retenciones de ganancias regimen 21 inscripto",""
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_ganancias_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_ganancias_aplicada","",""
+"ri_tax_withholding_earnings_incurred_group_30_insc","Profits WTH regimen 30 inscripto","none","percent","Alquileres o arrendamientos de bienes muebles.","True","4","tax_group_withholding","supplier","","earnings","30","","6","11200","","","","","Retenciones de ganancias regimen 30 inscripto",""
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_ganancias_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_ganancias_aplicada","",""
+"ri_tax_withholding_earnings_incurred_group_31_insc","Profits WTH regimen 31 inscripto","none","percent","Bienes Inmuebles Urbanos, incluidos los efectuados bajo la modalidad de leasing - incluye suburbanos-","True","4","tax_group_withholding","supplier","","earnings","31","","6","11200","","","","","Retenciones de ganancias regimen 31 inscripto",""
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_ganancias_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_ganancias_aplicada","",""
+"ri_tax_withholding_earnings_incurred_group_32_insc","Profits WTH regimen 32 inscripto","none","percent","Bienes Inmuebles Rurales, incluidos los efectuados bajo la modalidad de leasing - incluye subrurales-","True","4","tax_group_withholding","supplier","","earnings","32","","6","11200","","","","","Retenciones de ganancias regimen 32 inscripto",""
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_ganancias_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_ganancias_aplicada","",""
+"ri_tax_withholding_earnings_incurred_group_35_insc","Profits WTH regimen 35 inscripto","none","percent","Regalías","True","4","tax_group_withholding","supplier","","earnings","35","","6","7870","","","","","Retenciones de ganancias regimen 35 inscripto",""
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_ganancias_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_ganancias_aplicada","",""
+"ri_tax_withholding_earnings_incurred_group_43_insc","Profits WTH regimen 43 inscripto","none","percent","Interés accionario, excedentes y retornos distribuidos entre asociados, cooperativas, -excepto consumo-.","True","4","tax_group_withholding","supplier","","earnings","43","","6","7870","","","","","Retenciones de ganancias regimen 43 inscripto",""
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_ganancias_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_ganancias_aplicada","",""
+"ri_tax_withholding_earnings_incurred_group_51_insc","Profits WTH regimen 51 inscripto","none","percent","Obligaciones de no hacer, o por abandono o no ejercicio de una actividad.","True","4","tax_group_withholding","supplier","","earnings","51","","6","7870","","","","","Retenciones de ganancias regimen 51 inscripto",""
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_ganancias_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_ganancias_aplicada","",""
+"ri_tax_withholding_earnings_incurred_group_78_insc","Profits WTH regimen 78 inscripto","none","percent","Enajenación de bienes muebles y bienes de cambio.","True","4","tax_group_withholding","supplier","","earnings","78","","2","224000","","","","","Retenciones de ganancias regimen 78 inscripto",""
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_ganancias_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_ganancias_aplicada","",""
+"ri_tax_withholding_earnings_incurred_group_86_insc","Profits WTH regimen 86 inscripto","none","percent","Transferencia temporaria o definitiva de derechos de llave, marcas, patentes de invención, regalías, concesiones y similares.","True","4","tax_group_withholding","supplier","","earnings","86","","2","224000","","","","","Retenciones de ganancias regimen 86 inscripto",""
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_ganancias_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_ganancias_aplicada","",""
+"ri_tax_withholding_earnings_incurred_group_110_insc","Profits WTH regimen 110 inscripto","none","percent","Explotación de derechos de autor (Ley N° 11.723).","True","4","tax_group_withholding","supplier","l10n_ar_withholding.normal_scale","earnings_scale","110","","-1","10000","","","","","Retenciones de ganancias regimen 110 inscripto",""
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_ganancias_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_ganancias_aplicada","",""
+"ri_tax_withholding_earnings_incurred_group_94_insc","Profits WTH regimen 94 inscripto","none","percent","Locaciones de obra y/o servicios no ejecutados en relación de dependencia no mencionados expresamente en otros incisos.","True","4","tax_group_withholding","supplier","","earnings","94","","2","67170","","","","","Retenciones de ganancias regimen 94 inscripto",""
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_ganancias_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_ganancias_aplicada","",""
+"ri_tax_withholding_earnings_incurred_group_25_insc","Profits WTH regimen 25 inscripto","none","percent","Comisiones u otras retribuciones derivadas de la actividad de comisionista, rematador, consignatario y demás auxiliares de comercio a que se refiere el inciso c) del artículo 49 de la Ley de Impuesto a las Ganancias, texto ordenado en 1997 y sus modificaciones.","True","4","tax_group_withholding","supplier","l10n_ar_withholding.normal_scale","earnings_scale","25","","-1","16830","","","","","Retenciones de ganancias regimen 25 inscripto",""
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_ganancias_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_ganancias_aplicada","",""
+"ri_tax_withholding_earnings_incurred_group_116I_insc","Profits WTH regimen 116I inscripto","none","percent","Honorarios de director de sociedades anónimas, síndico fiduciario,  consejero de sociedades cooperativas integrante de consejos de vigilancia y socios administradores de las sociedades de responsabilidad limitada, en comandita simple y en comandita por acciones.","True","4","tax_group_withholding","supplier","l10n_ar_withholding.normal_scale","earnings_scale","116 I","","-1","67170","","","","","Retenciones de ganancias regimen 116I inscripto",""
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_ganancias_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_ganancias_aplicada","",""
+"ri_tax_withholding_earnings_incurred_group_116II_insc","Profits WTH regimen 116II inscripto","none","percent","Albacea, mandatario, gestor de negocio.","True","4","tax_group_withholding","supplier","l10n_ar_withholding.normal_scale","earnings_scale","116 II","","-1","16830","","","","","Retenciones de ganancias regimen 116II inscripto",""
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_ganancias_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_ganancias_aplicada","",""
+"ri_tax_withholding_earnings_incurred_group_119_insc","Profits WTH regimen 119 inscripto","none","percent","Profesionales liberales, oficios","True","4","tax_group_withholding","supplier","l10n_ar_withholding.scale_119","earnings_scale","119","","-1","160000","","","","","Retenciones de ganancias regimen 119 inscripto",""
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_ganancias_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_ganancias_aplicada","",""
+"ri_tax_withholding_earnings_incurred_group_124_insc","Profits WTH regimen 124 inscripto","none","percent","Corredor, viajante de comercio y despachante de aduana.","True","4","tax_group_withholding","supplier","l10n_ar_withholding.normal_scale","earnings_scale","124","","-1","16830","","","","","Retenciones de ganancias regimen 124 inscripto",""
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_ganancias_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_ganancias_aplicada","",""
+"ri_tax_withholding_earnings_incurred_group_95_insc","Profits WTH regimen 95 inscripto","none","percent","Operaciones de transporte de carga nacional e internacional.","True","4","tax_group_withholding","supplier","","earnings","95","","0.25","67170","","","","","Retenciones de ganancias regimen 95 inscripto",""
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_ganancias_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_ganancias_aplicada","",""
+"ri_tax_withholding_earnings_incurred_group_53_insc","Profits WTH regimen 53 inscripto","none","percent","Operaciones realizadas por intermedio de mercados de cereales a término que se resuelvan en el curso del término (arbitrajes) y de mercados de futuros y opciones.","True","4","tax_group_withholding","supplier","","earnings","53","","0.5","0","","","","","Retenciones de ganancias regimen 53 inscripto",""
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_ganancias_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_ganancias_aplicada","",""
+"ri_tax_withholding_earnings_incurred_group_55_insc","Profits WTH regimen 55 inscripto","none","percent","Distribución de películas . Transmisión de programación. Televisión vía satelital.","True","4","tax_group_withholding","supplier","","earnings","55","","0.5","0","","","","","Retenciones de ganancias regimen 55 inscripto",""
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_ganancias_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_ganancias_aplicada","",""
+"ri_tax_withholding_earnings_incurred_group_60_insc","Profits WTH regimen 60 inscripto","none","percent","Dividendos y utilidades asimilables. Art. 90.3 de la ley. Alícuota 7%.","True","4","tax_group_withholding","supplier","","earnings","60","","7","0","","","","","Retenciones de ganancias regimen 60 inscripto",""
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_ganancias_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_ganancias_aplicada","",""
+"ri_tax_withholding_earnings_incurred_group_61_insc","Profits WTH regimen 61 inscripto","none","percent","Dividendos y utilidades asimilables. Art. 90.3 de la ley. Alícuota 13%.","True","4","tax_group_withholding","supplier","","earnings","61","","13","0","","","","","Retenciones de ganancias regimen 61 inscripto",""
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_ganancias_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_ganancias_aplicada","",""
+"ri_tax_withholding_earnings_incurred_group_111_insc","Profits WTH regimen 111 inscripto","none","percent","Cualquier otra cesión o locación de derechos, excepto las que correspondan a operaciones realizadas por intermedio de mercados de cereales a término que se resuelvan en el curso del término (arbitrajes) y de mercados de futuros y opciones.","True","4","tax_group_withholding","supplier","","earnings","111","","0.5","0","","","","","Retenciones de ganancias regimen 111 inscripto",""
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_ganancias_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_ganancias_aplicada","",""
+"ri_tax_withholding_earnings_incurred_group_112_insc","Profits WTH regimen 112 inscripto","none","percent","Beneficios provenientes del cumplimiento de los requisitos de los planes de seguro de retiro privados administrados por entidades sujetas al control de la Superintendencia de Seguros de la Nación, establecidos por el inciso d) del artículo 45 y el inciso d) del artículo 79 de la Ley del Impuesto a las Ganancias, texto ordenado en 1997 y sus modificaciones -excepto cuando se encuentren alcanzados por el régimen de retención establecido por la Resolución General Nº 1261, sus modificatorias y complementarias-.","True","4","tax_group_withholding","supplier","","earnings","112","","3","16830","","","","","Retenciones de ganancias regimen 112 inscripto",""
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_ganancias_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_ganancias_aplicada","",""
+"ri_tax_withholding_earnings_incurred_group_113_insc","Profits WTH regimen 113 inscripto","none","percent","Rescates -totales o parciales- por desistimiento  de los planes de seguro de retiro a que se refiere el inciso o), excepto que sea de aplicación lo normado en el artículo 101 de la Ley del Impuesto a las Ganancias, texto ordenado en 1997 y sus modificaciones.","True","4","tax_group_withholding","supplier","","earnings","113","","3","16830","","","","","Retenciones de ganancias regimen 113 inscripto",""
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_ganancias_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_ganancias_aplicada","",""
+"ri_tax_withholding_earnings_incurred_group_779_insc","Profits WTH regimen 779 inscripto","none","percent","Subsidios abonados por los estados Nacional, provinciales, municipales o el Gobierno de la Ciudad Autónoma de Buenos Aires, en concepto de enajenación de bienes muebles y bienes de cambio, en la medida que una ley general o especial no establezca la exención de los mismos en el impuesto a las ganancias.","True","4","tax_group_withholding","supplier","","earnings","779","","2","76140","","","","","Retenciones de ganancias regimen 779 inscripto",""
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_ganancias_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_ganancias_aplicada","",""
+"ri_tax_withholding_earnings_incurred_group_780_insc","Profits WTH regimen 780 inscripto","none","percent","Subsidios abonados por los estados Nacional, provinciales, municipales o el Gobierno de la Ciudad Autónoma de Buenos Aires, en concepto de locaciones de obra y/o servicios, no ejecutados en relación de dependencia, en la medida que una ley general o especial no establezca la exención de los mismos en el impuesto a las ganancias.","True","4","tax_group_withholding","supplier","","earnings","780","","2","31460","","","","","Retenciones de ganancias regimen 780 inscripto",""
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_ganancias_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_ganancias_aplicada","",""
+"ri_tax_withholding_earnings_incurred_group_99_insc","Profits WTH regimen 99 inscripto","none","percent","Factura M - Ganancias - Emisión de comprobantes con discriminación del gravamen.","True","4","tax_group_withholding","supplier","","earnings","99","","6","0","","","","","Retenciones de ganancias regimen 99 inscripto",""
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_ganancias_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_ganancias_aplicada","",""
+"ri_tax_withholding_earnings_incurred_group_965_insc","Profits WTH regimen 965 inscripto","none","percent",""Factura ""A"" con leyenda ""OPERACIÓN SUJETA A RETENCIÓN"" - Ganancias - Emisión de comprobantes con discriminación del gravamen.","True","4","tax_group_withholding","supplier","","earnings","965","","3","0","","","","","Retenciones de ganancias regimen 965 inscripto",""
+"","","","","","","","","","","","","","","","","base","invoice","","",""
+"","","","","","","","","","","","","","","","","tax","invoice","ri_retencion_ganancias_aplicada","",""
+"","","","","","","","","","","","","","","","","base","refund","","",""
+"","","","","","","","","","","","","","","","","tax","refund","ri_retencion_ganancias_aplicada","",""
