@@ -182,7 +182,6 @@ export class KanbanRecord extends Component {
         "openRecord?",
         "readonly?",
         "record",
-        "templates",
         "progressBarState?",
     ];
     static Compiler = KanbanCompiler;
@@ -197,8 +196,9 @@ export class KanbanRecord extends Component {
         this.dialog = useService("dialog");
         this.notification = useService("notification");
 
-        const { Compiler, templates } = this.props;
+        const { Compiler, archInfo } = this.props;
         const ViewCompiler = Compiler || this.constructor.Compiler;
+        const { templateDocs: templates } = archInfo;
 
         this.templates = useViewCompiler(ViewCompiler, templates);
 

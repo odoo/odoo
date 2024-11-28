@@ -15,7 +15,6 @@ export class HierarchyRenderer extends Component {
         model: Object,
         openRecord: Function,
         archInfo: Object,
-        templates: Object,
     };
     static template = "web_hierarchy.HierarchyRenderer";
 
