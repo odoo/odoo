@@ -1,0 +1,60 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+<!--
+    <record model="ir.ui.view" id="recursos_humanos.list">
+      <field name="name">RecursosHumanos list</field>
+      <field name="model">recursos_humanos.recursos_humanos</field>
+      <field name="arch" type="xml">
+        <list>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </list>
+      </field>
+    </record>
+-->
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="recursos_humanos.action_window">
+      <field name="name">RecursosHumanos window</field>
+      <field name="res_model">recursos_humanos.recursos_humanos</field>
+      <field name="view_mode">list,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="recursos_humanos.action_server">
+      <field name="name">RecursosHumanos server</field>
+      <field name="model_id" ref="model_recursos_humanos_recursos_humanos"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "list,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="RecursosHumanos" id="recursos_humanos.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="recursos_humanos.menu_1" parent="recursos_humanos.menu_root"/>
+    <menuitem name="Menu 2" id="recursos_humanos.menu_2" parent="recursos_humanos.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="recursos_humanos.menu_1_list" parent="recursos_humanos.menu_1"
+              action="recursos_humanos.action_window"/>
+    <menuitem name="Server to list" id="recursos_humanos" parent="recursos_humanos.menu_2"
+              action="recursos_humanos.action_server"/>
+-->
+  </data>
+</odoo>
