@@ -439,7 +439,7 @@ export class SelectionPlugin extends Plugin {
         const selection = this.document.getSelection();
         const documentSelectionIsInEditable = selection && this.isSelectionInEditable(selection);
         if (selection) {
-            if (documentSelectionIsInEditable) {
+            if (documentSelectionIsInEditable || selection.anchorNode === null) {
                 if (
                     selection.anchorNode !== anchorNode ||
                     selection.focusNode !== focusNode ||
@@ -500,6 +500,7 @@ export class SelectionPlugin extends Plugin {
      * @returns {Cursors}
      */
     preserveSelection() {
+        const hadSelection = this.document.getSelection().anchorNode !== null;
         const selectionData = this.getSelectionData();
         const selection = selectionData.editableSelection;
         const anchor = { node: selection.anchorNode, offset: selection.anchorOffset };
@@ -507,6 +508,9 @@ export class SelectionPlugin extends Plugin {
 
         return {
             restore: () => {
+                if (!hadSelection) {
+                    return;
+                }
                 this.setSelection(
                     {
                         anchorNode: anchor.node,
