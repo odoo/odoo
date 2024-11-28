@@ -1579,6 +1579,17 @@ class TestUi(TestPointOfSaleHttpCommon):
             self.main_pos_config.with_user(self.pos_user).open_ui()
             self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'SearchMoreCustomer', login="pos_user")
 
+    def test_pos_save_orderlines_IndexedDB(self):
+        """ Test that the orderlines are saved in the IndexedDB """
+        self.env['product.product'].create({
+            'name': 'Test Product 1',
+            'available_in_pos': True,
+            'list_price': 1,
+            'taxes_id': False,
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('PosSaveOrderlinesIndexedDB')
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):

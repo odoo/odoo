@@ -13,6 +13,7 @@ import {
     selectButton,
     scan_barcode,
     negateStep,
+    refresh,
 } from "@point_of_sale/../tests/tours/utils/common";
 import * as ProductConfiguratorPopup from "@point_of_sale/../tests/tours/utils/product_configurator_util";
 import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
@@ -448,5 +449,18 @@ registry.category("web_tour.tours").add("ProductSearchTour", {
             ProductScreen.searchProduct("TESTPROD2"),
             ProductScreen.productIsDisplayed("Test Product 1").map(negateStep),
             ProductScreen.productIsDisplayed("Test Product 2"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosSaveOrderlinesIndexedDB", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Test Product 1"),
+            ProductScreen.selectedOrderlineHas("Test Product 1", "1.0"),
+            refresh(),
+            inLeftSide(ProductScreen.orderLineHas("Test Product 1", "1.0")),
         ].flat(),
 });
