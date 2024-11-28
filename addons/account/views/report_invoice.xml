@@ -389,10 +389,31 @@
         <template id="document_tax_totals" inherit_id="account.document_tax_totals_template" primary="True"></template>
 
         <template id="document_tax_totals_company_currency_template">
+<<<<<<< 18.0
             <t t-set="currency" t-value="o.company_currency_id"/>
             <t t-set="same_tax_base" t-value="tax_totals['same_tax_base']"/>
             <div class="mb-2 mt-3 border p-2 avoid-page-break-inside totals_taxes_company_currency">
                 <table class="o_total_table table table-borderless mb-0">
+||||||| 8b21d0ccc80d8822acd75e4e7cb1b4b68a246fad
+            <t t-set="show_company_taxes"
+               t-value="o.company_id.display_invoice_tax_company_currency
+                        and o.company_id.currency_id != o.currency_id
+                        and o.amount_tax != 0
+                        and o.move_type in ['out_invoice', 'out_refund']"/>
+            <div t-if="not show_company_taxes" class="oe_structure"></div>
+            <div class="mb-2 mt-3 border p-2 avoid-page-break-inside totals_taxes_company_currency"
+                 t-else="">
+                <table class="table table-sm table-borderless mb-0">
+=======
+            <t t-set="show_company_taxes"
+               t-value="o.company_id.display_invoice_tax_company_currency
+                        and o.company_id.currency_id != o.currency_id
+                        and o.move_type in ['out_invoice', 'out_refund']"/>
+            <div t-if="not show_company_taxes" class="oe_structure"></div>
+            <div class="mb-2 mt-3 border p-2 avoid-page-break-inside totals_taxes_company_currency"
+                 t-else="">
+                <table class="table table-sm table-borderless mb-0">
+>>>>>>> 71975f3743c8efd174b28179f5b45cf54ae95216
                     <p class="tax_computation_company_currency">
                         Taxes <span t-field="o.company_currency_id"/>
                     </p>
