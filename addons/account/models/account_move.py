@@ -308,6 +308,8 @@ class AccountMove(models.Model):
         copy=False,
         store=True,
         compute='_compute_delivery_date',
+        precompute=True,
+        readonly=False,
     )
     show_delivery_date = fields.Boolean(compute='_compute_show_delivery_date')
     invoice_payment_term_id = fields.Many2one(
@@ -958,6 +960,10 @@ class AccountMove(models.Model):
             )
             invoice.currency_id = currency
 
+    def _get_invoice_currency_rate_date(self):
+        self.ensure_one()
+        return self.invoice_date or fields.Date.context_today(self)
+
     @api.depends('currency_id', 'company_currency_id', 'company_id', 'invoice_date')
     def _compute_invoice_currency_rate(self):
         for move in self:
@@ -967,7 +973,7 @@ class AccountMove(models.Model):
                         from_currency=move.company_currency_id,
                         to_currency=move.currency_id,
                         company=move.company_id,
-                        date=move.invoice_date or fields.Date.context_today(move),
+                        date=move._get_invoice_currency_rate_date(),
                     )
                 else:
                     move.invoice_currency_rate = 1
