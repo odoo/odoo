@@ -258,6 +258,7 @@ class MrpProduction(models.Model):
         help='Technical Field used to decide whether the button "Allocation" should be displayed.')
     allow_workorder_dependencies = fields.Boolean('Allow Work Order Dependencies')
     show_produce = fields.Boolean(compute='_compute_show_produce', help='Technical field to check if produce button can be shown')
+    show_generate_bom = fields.Boolean('Show Generate BOM', compute='_compute_show_generate_bom')
     show_produce_all = fields.Boolean(compute='_compute_show_produce', help='Technical field to check if produce all button can be shown')
     is_outdated_bom = fields.Boolean("Outdated BoM", help="The BoM has been updated since creation of the MO")
     is_delayed = fields.Boolean(compute='_compute_is_delayed', search='_search_is_delayed')
@@ -794,6 +795,12 @@ class MrpProduction(models.Model):
                     Command.delete(move.id) for move in production.move_finished_ids if move.bom_line_id
                 ]
 
+    @api.depends('product_id', 'move_raw_ids.product_id')
+    def _compute_show_generate_bom(self):
+        for record in self:
+            record.show_generate_bom = not record.bom_id and record.product_id and\
+                record.move_raw_ids and record.product_id not in record.move_raw_ids.product_id
+
     @api.depends('state', 'product_qty', 'qty_producing')
     def _compute_show_produce(self):
         for production in self:
@@ -848,19 +855,11 @@ class MrpProduction(models.Model):
     def _can_produce_serial_number(self, sn=None):
         self.ensure_one()
         sn = sn or self.lot_producing_id
-        if self.product_id.tracking == 'serial' and sn:
+        if self.product_id.tracking == 'serial' and sn and sn.id not in self.move_raw_ids.lot_ids.ids:
             message, dummy = self.env['stock.quant'].sudo()._check_serial_number(self.product_id, sn, self.company_id)
             if message:
                 return {'warning': {'title': _('Warning'), 'message': message}}
         return True
-
-    @api.onchange('product_id', 'move_raw_ids', 'never_product_template_attribute_value_ids')
-    def _onchange_product_id(self):
-        for move in self.move_raw_ids:
-            if self.product_id == move.product_id:
-                message = _("The component %s should not be the same as the product to produce.", self.product_id.display_name)
-                self.move_raw_ids = self.move_raw_ids - move
-                return {'warning': {'title': _('Warning'), 'message': message}}
 
     @api.constrains('move_finished_ids')
     def _check_byproducts(self):
@@ -2576,7 +2575,7 @@ class MrpProduction(models.Model):
 
     def _check_sn_uniqueness(self):
         """ Alert the user if the serial number as already been consumed/produced """
-        if self.product_tracking == 'serial' and self.lot_producing_id:
+        if self.product_tracking == 'serial' and self.lot_producing_id and self.lot_producing_id.id not in self.move_raw_ids.lot_ids.ids:
             if self._is_finished_sn_already_produced(self.lot_producing_id):
                 raise UserError(_('This serial number for product %s has already been produced', self.product_id.name))
 
@@ -2637,6 +2636,10 @@ class MrpProduction(models.Model):
         for sn_id in problematic_sn_ids:
             consumed_qty = consumed_qties[sn_id]
             cancelled_qty = cancelled_qties[sn_id]
+
+            if sn_id == self.lot_producing_id.id and consumed_qty - cancelled_qty <= 1:
+                continue
+
             if consumed_qty - cancelled_qty > 0:
                 raise UserError(sn_error_msg[sn_id])
 
