@@ -1,6 +1,14 @@
+:root {
+    --odoo-purple: #714B67
+} 
+
+.color-primary {
+    color: var(--odoo-purple);
+}
+
 .btn.btn-primary {
-    background-color: #714B67 !important;
-    border-color: #714B67 !important;
+    background-color: var(--odoo-purple) !important;
+    border-color: var(--odoo-purple) !important;
 }
 
 .alert.alert-secondary {
@@ -10,8 +18,8 @@
 }
 
 .odoo-bg-primary, .bg-primary, .form-check-input:checked, .nav-pills .nav-link.active {
-    background-color: #714B67 !important;
-    border-color: #714B67 !important;
+    background-color: var(--odoo-purple) !important;
+    border-color: var(--odoo-purple) !important;
 }
 
 .odoo-bg-secondary, .bg-secondary {
@@ -29,6 +37,6 @@
 }
 
 .link-primary {
-    color: #714B67 !important;
+    color: var(--odoo-purple) !important;
     font-size: 12px;
 }
