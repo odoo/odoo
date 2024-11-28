@@ -133,7 +133,7 @@
                     <i class="oi oi-close"/>
                 </button>
             </span>
-            <button t-if="env.isSmall and !isDomainSelected and isPageSelected and (!model.root.isRecordCountTrustable or nbTotal > nbSelected)"
+            <button t-if="env.isSmall and !isDomainSelected and (!model.root.isRecordCountTrustable or nbTotal > nbSelected)"
                 class="o_list_select_domain btn btn-info shadow"
                 title="Select all records matching the search"
                 t-on-click="onSelectDomain">
