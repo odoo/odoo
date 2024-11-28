@@ -3201,6 +3201,12 @@ var SnippetsMenu = Widget.extend({
      * @param {jQuery}
      */
     _patchForComputeSnippetTemplates($html) {
+        // TODO: Remove in master and add it in template s_website_form
+        const websiteFormEditorOptionsEl = $html.find('[data-js="WebsiteFormEditor"]')[0];
+        if (websiteFormEditorOptionsEl) {
+            websiteFormEditorOptionsEl.dataset.dropExcludeAncestor = "form";
+        }
+
         // TODO: Remove in master and add it back in the template.
         const $vAlignOption = $html.find("#row_valign_snippet_option");
         $vAlignOption[0].dataset.js = "vAlignment";

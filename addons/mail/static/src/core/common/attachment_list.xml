@@ -76,13 +76,14 @@
                             <i class="fa fa-trash" role="img" aria-label="Remove"/>
                         </button>
                         <t t-if="attachment.type === 'url'">
-                            <a class="btn d-flex align-items-center justify-content-center w-100 h-100 rounded-0" t-attf-class="{{ bg-300 }}" t-att-href="attachment.url" target='_blank' title="Open Link">
+                            <a class="btn d-flex align-items-center justify-content-center w-100 h-100 rounded-0" t-attf-class="bg-300" t-att-href="attachment.url" target='_blank' title="Open Link">
                                 <i class="fa fa-external-link" role="img" aria-label="Open Link"/>
                             </a>
                         </t>
                         <!-- t-attf-class overridden in extensions -->
                         <button t-elif="canDownload(attachment)" class="btn d-flex align-items-center justify-content-center w-100 h-100 rounded-0"
-                                t-attf-class="{{ bg-300 }}"
+                                t-attf-class="bg-300"
+                                t-att-data-download-url="attachment.downloadUrl"
                                 t-on-click.stop="() => this.onClickDownload(attachment)" title="Download"
                         >
                             <i class="fa fa-download" role="img" aria-label="Download"/>

@@ -804,6 +804,13 @@ class TestMailAliasMixin(TestMailAliasCommon):
         with self.assertRaises(exceptions.ValidationError):
             record.write({'alias_defaults': "{'custom_field': brokendict"})
 
+        rec = self.env['mail.test.container'].create({
+            'name': 'Test Record2',
+            'alias_name': 'alias.test',
+            'alias_domain_id': self.mail_alias_domain_c2.id,
+        })
+        self.assertEqual(rec.alias_id.alias_domain_id, self.mail_alias_domain_c2, "Should use the provided alias domain in priority")
+
     @users('erp_manager')
     def test_alias_mixin_alias_email(self):
         """ Test 'alias_email' mixin field computation and search capability """

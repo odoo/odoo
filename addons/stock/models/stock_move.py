@@ -536,7 +536,7 @@ Please change the quantity done or the rounding precision of your unit of measur
                         }))
                         mls_without_lots -= move_line
                     else:  # No line without serial number, creates a new one.
-                        reserved_quants = self.env['stock.quant']._get_reserve_quantity(move.product_id, move.location_id, 1.0, lot)
+                        reserved_quants = self.env['stock.quant']._get_reserve_quantity(move.product_id, move.location_id, 1.0, lot_id=lot)
                         if reserved_quants:
                             move_line_vals = self._prepare_move_line_vals(quantity=0, reserved_quant=reserved_quants[0][0])
                         else:
@@ -1022,13 +1022,14 @@ Please change the quantity done or the rounding precision of your unit of measur
         :return: Recordset of moves passed to this method. If some of the passed moves were merged
         into another existing one, return this one and not the (now unlinked) original.
         """
-        distinct_fields = self._prepare_merge_moves_distinct_fields()
 
         candidate_moves_set = set()
         if not merge_into:
             self._update_candidate_moves_list(candidate_moves_set)
         else:
             candidate_moves_set.add(merge_into | self)
+
+        distinct_fields = (self | self.env['stock.move'].concat(*candidate_moves_set))._prepare_merge_moves_distinct_fields()
 
         # Move removed after merge
         moves_to_unlink = self.env['stock.move']
