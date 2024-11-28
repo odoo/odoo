@@ -89,6 +89,20 @@ export class OdooPivotModel extends PivotModel {
     }
 
     async load(searchParams) {
+        if (
+            this.metaData.activeMeasures.find(
+                (fieldName) => fieldName !== "__count" && !this.metaData.fields[fieldName]
+            )
+        ) {
+            throw new Error(
+                _t(
+                    "Some measures are not available: %s",
+                    this.metaData.activeMeasures
+                        .filter((fieldName) => !this.metaData.fields[fieldName])
+                        .join(", ")
+                )
+            );
+        }
         searchParams.groupBy = [];
         searchParams.orderBy = [];
         await super.load(searchParams);
@@ -334,6 +348,15 @@ export class OdooPivotModel extends PivotModel {
             );
         }
         return displayName;
+    }
+
+    _normalize(groupBy) {
+        const [fieldName] = groupBy.split(":");
+        const field = this.metaData.fields[fieldName];
+        if (!field) {
+            throw new EvaluationError(_t("Field %s does not exist", fieldName));
+        }
+        return super._normalize(groupBy);
     }
 
     /**

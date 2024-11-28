@@ -109,7 +109,7 @@ test("Only necessary requests are made when creating a new chat", async () => {
             temporary_id: -1,
             persisted: true,
         })}`,
-        `/mail/action - ${JSON.stringify({
+        `/mail/data - ${JSON.stringify({
             init_messaging: {
                 channel_types: ["livechat"],
             },

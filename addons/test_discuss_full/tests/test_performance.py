@@ -457,7 +457,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "model": "mail.box",
                 },
                 "initChannelsUnreadCounter": 2,
-                "odoobotOnboarding": False,
             },
         }
 
