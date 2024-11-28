@@ -110,6 +110,13 @@ registry.category("web_tour.tours").add("ChromeTour", {
             PaymentScreen.clickInvoiceButton(),
             PaymentScreen.clickValidate(),
             ReceiptScreen.isShown(),
+
+            // Cancelling a floating order should remove it from the floating orders list.
+            ReceiptScreen.clickNextOrder(),
+            Chrome.hasFloatingOrder("007"),
+            ProductScreen.clickReview(),
+            ProductScreen.clickControlButton("Cancel Order"),
+            Chrome.noFloatingOrder("007"),
         ].flat(),
 });
 

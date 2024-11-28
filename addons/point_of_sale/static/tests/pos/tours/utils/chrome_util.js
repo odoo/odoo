@@ -72,3 +72,39 @@ export function fillTextArea(target, value) {
 export function createFloatingOrder() {
     return { trigger: ".pos-leftheader .list-plus-btn", run: "click" };
 }
+
+function _hasFloatingOrder(name, yes) {
+    const negateIfNecessary = (trigger) => (yes ? trigger : negate(trigger));
+    return [
+        {
+            isActive: ["desktop"],
+            trigger: negateIfNecessary(
+                `.pos-topheader .floating-order-container:contains('${name}')`
+            ),
+        },
+        {
+            isActive: ["mobile"],
+            trigger: ".pos-leftheader button.fa-caret-down",
+            run: "click",
+        },
+        {
+            isActive: ["mobile"],
+            trigger: negateIfNecessary(
+                `.modal-header:contains(Choose an order) ~ .modal-body .floating-order-container:contains('${name}')`
+            ),
+        },
+        {
+            isActive: ["mobile"],
+            trigger: ".oi-arrow-left",
+            run: "click",
+        },
+    ];
+}
+
+export function hasFloatingOrder(name) {
+    return _hasFloatingOrder(name, true);
+}
+
+export function noFloatingOrder(name) {
+    return _hasFloatingOrder(name, false);
+}

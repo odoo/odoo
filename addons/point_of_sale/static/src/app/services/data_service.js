@@ -147,7 +147,7 @@ export class PosData extends Reactive {
 
         const preLoadData = await this.preLoadData(data);
         const missing = await this.missingRecursive(preLoadData);
-        const results = this.models.loadData(missing, [], true);
+        const results = this.models.loadData(this.models, missing, [], true);
         for (const data of Object.values(results)) {
             for (const record of data) {
                 if (record.raw.JSONuiState) {
@@ -243,8 +243,8 @@ export class PosData extends Reactive {
         delete data["pos.order"];
         delete data["pos.order.line"];
 
-        this.models.loadData(data, this.modelToLoad);
-        this.models.loadData({ "pos.order": order, "pos.order.line": orderlines });
+        this.models.loadData(this.models, data, this.modelToLoad);
+        this.models.loadData(this.models, { "pos.order": order, "pos.order.line": orderlines });
     }
 
     async loadFieldsAndRelations() {
@@ -451,7 +451,7 @@ export class PosData extends Reactive {
             if (this.models[model] && this.opts.autoLoadedOrmMethods.includes(type)) {
                 const data = await this.missingRecursive({ [model]: result });
                 this.synchronizeServerDataInIndexedDB(data);
-                const results = this.models.loadData(data);
+                const results = this.models.loadData(this.models, data);
                 result = results[model];
             } else if (type === "write") {
                 const baseData = Object.assign(this.baseData[model][ids[0]], values);
@@ -646,7 +646,7 @@ export class PosData extends Reactive {
 
     async callRelated(model, method, args = [], kwargs = {}, queue = true) {
         const data = await this.execute({ type: "call", model, method, args, kwargs, queue });
-        const results = this.models.loadData(data, [], true);
+        const results = this.models.loadData(this.models, data, [], true);
         return results;
     }
 
