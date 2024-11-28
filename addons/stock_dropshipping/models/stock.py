@@ -26,8 +26,8 @@ class ProcurementGroup(models.Model):
     _inherit = "procurement.group"
 
     @api.model
-    def _get_rule_domain(self, location, values):
-        domain = super()._get_rule_domain(location, values)
+    def _get_rule_domain(self, locations, values):
+        domain = super()._get_rule_domain(locations, values)
         if 'sale_line_id' in values and values.get('company_id'):
             domain = expression.AND([domain, [('company_id', '=', values['company_id'].id)]])
         return domain
