@@ -136,7 +136,7 @@ class PortalAccount(CustomerPortal):
             'page_name': 'invoice',
             'pager': {  # vals to define the pager.
                 "url": url,
-                "url_args": {'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby},
+                "url_args": {'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'filterby': filterby},
                 "total": AccountInvoice.search_count(domain) if AccountInvoice.has_access('read') else 0,
                 "page": page,
                 "step": self._items_per_page,
