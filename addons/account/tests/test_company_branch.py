@@ -253,3 +253,13 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
         })
         self.env['account.chart.template'].try_loading('generic_coa', company=root_company.child_ids[0], install_demo=False)
         self.assertEqual(root_company.currency_id, root_company.child_ids[0].currency_id)
+
+    def test_branch_user_tax_methods(self):
+        # give only access to Branch A
+        self.env.user.company_id = self.branch_a
+        self.env.user.company_ids = self.branch_a
+        self.env.user.groups_id -= (
+            self.env.ref('base.group_erp_manager') + self.env.ref('base.group_system')
+        )
+
+        self.env['account.tax'].search([])._filter_taxes_by_company(self.branch_a)
