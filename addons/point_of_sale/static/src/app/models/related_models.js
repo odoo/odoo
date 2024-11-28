@@ -1,4 +1,4 @@
-import { reactive, toRaw } from "@odoo/owl";
+import { toRaw } from "@odoo/owl";
 import { uuidv4 } from "@point_of_sale/utils";
 import { TrapDisabler } from "@point_of_sale/proxy_trap";
 import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
@@ -321,7 +321,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
 
     // object: model -> key -> keyval -> record
     const indexedRecords = mapObj(processedModelDefs, (model) => {
-        const container = reactive({});
+        const container = {};
 
         // We always want an index by id
         if (!indexes[model]) {
@@ -483,6 +483,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
 
     const create = withoutProxyTrap(_create);
     function _create(
+        crud,
         model,
         vals,
         ignoreRelations = false,
@@ -493,7 +494,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             vals["id"] = uuid(model);
         }
 
-        let record = instantiateModel(model, { models, records });
+        const record = instantiateModel(model, { models, records: crud.records });
 
         const id = vals["id"];
         record.id = id;
@@ -507,7 +508,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         }
 
         record._raw = baseData[model][id];
-        records[model].set(id, record);
+        crud.records[model].set(id, record);
 
         const fields = getFields(model);
         for (const name in fields) {
@@ -542,14 +543,14 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                         const ids = vals[name];
                         for (const id of ids) {
                             if (exists(comodelName, id)) {
-                                connect(field, record, records[comodelName].get(id));
+                                connect(field, record, crud.records[comodelName].get(id));
                             }
                         }
                     } else {
                         for (const [command, ...items] of vals[name]) {
                             if (command === "create") {
                                 const newRecords = items.map((_vals) => {
-                                    const result = create(comodelName, _vals);
+                                    const result = create(crud, comodelName, _vals);
                                     makeRecordsAvailable(
                                         { [comodelName]: [result] },
                                         { [comodelName]: [_vals] }
@@ -573,7 +574,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                     const val = vals[name];
                     if (fromSerialized) {
                         if (exists(comodelName, val)) {
-                            connect(field, record, records[comodelName].get(val));
+                            connect(field, record, crud.records[comodelName].get(val));
                         }
                     } else {
                         if (val instanceof Base) {
@@ -581,7 +582,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                                 connect(field, record, val);
                             }
                         } else if (models[field.relation]) {
-                            const newRecord = create(comodelName, val);
+                            const newRecord = create(crud, comodelName, val);
                             connect(field, record, newRecord);
                         } else {
                             record[name] = val;
@@ -595,20 +596,19 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
 
         // Delayed setup is usefull when using loadData method.
         // Some records must be linked to other records before it can configure itself.
-        record = reactive(record);
         if (!delayedSetup) {
             record.setup(vals);
         }
 
-        return record;
+        return crud.records[model].get(id);
     }
 
-    function deserialize(model, vals) {
-        return create(model, vals, false, true);
+    function deserialize(crud, model, vals) {
+        return create(crud, model, vals, false, true);
     }
 
     const update = withoutProxyTrap(_update);
-    function _update(model, record, vals) {
+    function _update(crud, model, record, vals) {
         const fields = getFields(model);
         Object.assign(baseData[model][record.id], vals);
 
@@ -631,7 +631,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                             disconnect(field, record, record2);
                         }
                     } else if (type === "create") {
-                        const newRecords = items.map((vals) => create(comodelName, vals));
+                        const newRecords = items.map((vals) => create(crud, comodelName, vals));
                         for (const record2 of newRecords) {
                             connect(field, record, record2);
                         }
@@ -652,7 +652,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                     if (exist) {
                         connect(field, record, vals[name]);
                     } else if (models[field.relation]) {
-                        const newRecord = create(comodelName, vals[name]);
+                        const newRecord = create(crud, comodelName, vals[name]);
                         connect(field, record, newRecord);
                     } else {
                         record[name] = vals[name];
@@ -672,7 +672,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
     }
 
     const delete_ = withoutProxyTrap(_delete);
-    function _delete(model, record, opts = {}) {
+    function _delete(crud, model, record, opts = {}) {
         const id = record.id;
         const fields = getFields(model);
         const handleCommand = (inverse, field, record, backend = false) => {
@@ -701,15 +701,15 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
 
         const key = database[model]?.key || "id";
         models[model].triggerEvents("delete", { key: record[key] });
-        records[model].delete(id);
+        crud.records[model].delete(id);
         for (const key of indexes[model] || []) {
             const keyVal = record.raw[key];
             if (Array.isArray(keyVal)) {
                 for (const val of keyVal) {
-                    indexedRecords[model][key][val].delete(record.id);
+                    crud.indexedRecords[model][key][val].delete(record.id);
                 }
             } else {
-                delete indexedRecords[model][key][keyVal];
+                delete crud.indexedRecords[model][key][keyVal];
             }
         }
 
@@ -718,14 +718,14 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
 
     function createCRUD(model, fields) {
         return {
-            // We need to read these object from this to keep
+            // We need to read these object from `this` to keep
             // the reactivity. Otherwise, we read the fields on
             // reactive with no callback.
             get records() {
                 return records;
             },
             get orderedRecords() {
-                return Array.from(records[model].values());
+                return Array.from(this.records[model].values());
             },
             get indexedRecords() {
                 return indexedRecords;
@@ -740,31 +740,38 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 return getFields(this.modelName);
             },
             create(vals, ignoreRelations = false, fromSerialized = false, delayedSetup = false) {
-                const record = create(model, vals, ignoreRelations, fromSerialized, delayedSetup);
+                const record = create(
+                    this,
+                    model,
+                    vals,
+                    ignoreRelations,
+                    fromSerialized,
+                    delayedSetup
+                );
                 makeRecordsAvailable({ [model]: [record] }, { [model]: [vals] });
                 return record;
             },
             deserialize(vals) {
-                return deserialize(model, vals);
+                return deserialize(this, model, vals);
             },
             createMany(valsList) {
                 const result = [];
                 for (const vals of valsList) {
-                    result.push(create(model, vals));
+                    result.push(create(this, model, vals));
                 }
                 return result;
             },
             update(record, vals) {
-                return update(model, record, vals);
+                return update(this, model, record, vals);
             },
             delete(record, opts = {}) {
-                return delete_(model, record, opts);
+                return delete_(this, model, record, opts);
             },
-            deleteMany(records) {
+            deleteMany(toDelete) {
                 const result = [];
                 let mustBreak = 0;
-                while (records.length) {
-                    result.push(delete_(model, records[records.length - 1]));
+                while (toDelete.length) {
+                    result.push(delete_(this, model, toDelete[toDelete.length - 1]));
                     mustBreak += 1;
 
                     if (mustBreak > 1000) {
@@ -816,7 +823,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 return record;
             },
             readMany(ids) {
-                if (!(model in records)) {
+                if (!(model in this.records)) {
                     return [];
                 }
                 return ids.map((value) => this.read(value));
@@ -928,7 +935,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
      * @param {*} rawData
      */
     const loadData = withoutProxyTrap(_loadData);
-    function _loadData(rawData, load = [], fromSerialized = false) {
+    function _loadData(models, rawData, load = [], fromSerialized = false) {
         const results = {};
         const oldStates = {};
 
@@ -962,7 +969,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
 
                 baseData[model][record.id] = record;
 
-                const oldRecord = indexedRecords[model][modelKey][record[modelKey]];
+                const oldRecord = models[model].indexedRecords[model][modelKey][record[modelKey]];
                 if (oldRecord) {
                     oldStates[model][oldRecord[modelKey]] = oldRecord.serializeState();
                     for (const [f, p] of Object.entries(modelClasses[model]?.extraFields || {})) {
@@ -974,7 +981,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                     }
                 }
 
-                const result = create(model, record, true, false, true);
+                const result = create(models[model], model, record, true, false, true);
                 if (oldRecord && oldRecord.id !== result.id) {
                     oldRecord.delete();
                 }
