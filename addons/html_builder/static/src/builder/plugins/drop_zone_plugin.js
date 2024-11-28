@@ -82,6 +82,7 @@ export class DropZonePlugin extends Plugin {
                   y: window.innerHeight / 2,
               });
         if (!dropZone) {
+            this.clearDropZone();
             return () => {};
         }
         let target = dropZone.previousSibling;

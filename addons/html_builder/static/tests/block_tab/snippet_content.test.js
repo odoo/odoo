@@ -81,3 +81,19 @@ test("drag & drop inner content block + undo/redo", async () => {
     expect(".o-website-snippetsmenu .fa-undo").not.toBeEnabled();
     expect(".o-website-snippetsmenu .fa-repeat").toBeEnabled();
 });
+
+test("drag inner content & drop in outside of a dropzone", async () => {
+    const { getEditor } = await setupWebsiteBuilder("<div><p>Text</p></div>", {
+        snippets,
+    });
+    const editor = getEditor();
+    expect(editor.editable).toHaveInnerHTML(`<div><p>Text</p></div>`);
+
+    const { drop } = await contains(".o-website-snippetsmenu [name='Button A']").drag();
+    expect(editor.editable).toHaveInnerHTML(
+        `<div><div class="oe_drop_zone oe_insert"></div><p>Text</p><div class="oe_drop_zone oe_insert"></div></div>`
+    );
+
+    await drop(editor.editable.querySelector(".o-website-snippetsmenu"));
+    expect(editor.editable).toHaveInnerHTML(`<div><p>Text</p></div>`);
+});
