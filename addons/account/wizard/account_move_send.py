@@ -147,9 +147,9 @@ class AccountMoveSend(models.TransientModel):
             partners |= self.env['res.partner'].sudo().browse(partner_ids).exists()
         return partners
 
-    def _get_default_mail_attachments_widget(self, move, mail_template):
+    def _get_default_mail_attachments_widget(self, move, mail_template, pdf_template=None):
         return self._get_placeholder_mail_attachments_data(move) \
-            + self._get_placeholder_mail_template_dynamic_attachments_data(move, mail_template) \
+            + self._get_placeholder_mail_template_dynamic_attachments_data(move, mail_template, pdf_template=pdf_template) \
             + self._get_invoice_extra_attachments_data(move) \
             + self._get_mail_template_attachments_data(mail_template)
 
@@ -176,13 +176,14 @@ class AccountMoveSend(models.TransientModel):
         mail_template_id = move.send_and_print_values and move.send_and_print_values.get('mail_template_id')
         mail_template = wizard and wizard.mail_template_id or self.env['mail.template'].browse(mail_template_id)
         mail_lang = self._get_default_mail_lang(move, mail_template)
+        pdf_template = wizard and wizard.pdf_template_id or self._get_default_pdf_template_id()
         return {
             'mail_template_id': mail_template,
             'mail_lang': mail_lang,
             'mail_body': wizard and wizard.mail_body or self._get_default_mail_body(move, mail_template, mail_lang),
             'mail_subject': wizard and wizard.mail_subject or self._get_default_mail_subject(move, mail_template, mail_lang),
             'mail_partner_ids': wizard and wizard.mail_partner_ids or self._get_default_mail_partner_ids(move, mail_template, mail_lang),
-            'mail_attachments_widget': wizard and wizard.mail_attachments_widget or self._get_default_mail_attachments_widget(move, mail_template),
+            'mail_attachments_widget': wizard and wizard.mail_attachments_widget or self._get_default_mail_attachments_widget(move, mail_template, pdf_template=pdf_template),
         }
 
     def _get_placeholder_mail_attachments_data(self, move):
@@ -207,8 +208,8 @@ class AccountMoveSend(models.TransientModel):
         }]
 
     @api.model
-    def _get_placeholder_mail_template_dynamic_attachments_data(self, move, mail_template):
-        invoice_template = self.pdf_template_id
+    def _get_placeholder_mail_template_dynamic_attachments_data(self, move, mail_template, pdf_template=None):
+        invoice_template = pdf_template or self._get_default_pdf_template_id()
         extra_mail_templates = mail_template.report_template_ids - invoice_template
         filename = move._get_invoice_report_filename()
         return [
@@ -356,8 +357,12 @@ class AccountMoveSend(models.TransientModel):
             if wizard.mode == 'invoice_single':
                 manual_attachments_data = [x for x in wizard.mail_attachments_widget or [] if x.get('manual')]
                 wizard.mail_attachments_widget = (
-                        wizard._get_default_mail_attachments_widget(wizard.move_ids, wizard.mail_template_id)
-                        + manual_attachments_data
+                    wizard._get_default_mail_attachments_widget(
+                        wizard.move_ids,
+                        wizard.mail_template_id,
+                        pdf_template=wizard.pdf_template_id,
+                    )
+                    + manual_attachments_data
                 )
             else:
                 wizard.mail_attachments_widget = []
