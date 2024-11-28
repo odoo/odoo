@@ -167,17 +167,21 @@ export class Record extends Component {
         "onWillSaveRecord?",
     ];
     setup() {
-        if (this.props.fields) {
-            this.fields = this.props.fields;
+        const { activeFields, fieldNames, fields, resModel } = this.props;
+        if (!activeFields && !fieldNames) {
+            throw Error(`Record props should have either a "resModel" key or a "fieldNames" key`);
+        }
+        if (!fields && (!fieldNames || !resModel)) {
+            throw Error(
+                `Record props should have either a "fields" key or a "fieldNames" and a "resModel" key`
+            );
+        }
+        if (fields) {
+            this.fields = fields;
         } else {
             const orm = useService("orm");
             onWillStart(async () => {
-                this.fields = await orm.call(
-                    this.props.resModel,
-                    "fields_get",
-                    [this.props.fieldNames],
-                    {}
-                );
+                this.fields = await orm.call(resModel, "fields_get", [fieldNames], {});
             });
         }
     }
