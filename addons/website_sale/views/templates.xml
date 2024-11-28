@@ -271,8 +271,6 @@
                               t-if="template_price_vals['price_reduce'] or not website.prevent_zero_price_sale"
                               t-out="template_price_vals['price_reduce']"
                               t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-                        <span class="h6 mb-0" t-elif="any(ptav.price_extra for ptav in product.attribute_line_ids.product_template_value_ids)">&amp;nbsp;</span>
-                        <span class="h6 mb-0" t-else="" t-field="website.prevent_zero_price_sale_text"/>
                         <t
                             t-if="'base_price' in template_price_vals and (template_price_vals['base_price'] &gt; template_price_vals['price_reduce']) and (template_price_vals['price_reduce'] or not website.prevent_zero_price_sale)"
                             name="product_base_price"
@@ -1639,6 +1637,26 @@
                                                 Add to cart
                                             </a>
                                         </div>
+                                        <div
+                                            id="contact_us_wrapper"
+                                            t-attf-class="{{'d-flex' if combination_info['prevent_zero_price_sale'] else 'd-none'}} oe_structure oe_structure_solo mb-2 #{_div_classes}"
+                                        >
+                                            <section
+                                                class="s_text_block"
+                                                data-snippet="s_text_block"
+                                                data-name="Text"
+                                            >
+                                                <div class="container">
+                                                    <a
+                                                        t-att-href="website.contact_us_button_url"
+                                                        t-att-data-url="website.contact_us_button_url"
+                                                        class="btn btn-primary btn_cta"
+                                                    >
+                                                        Contact Us
+                                                    </a>
+                                                </div>
+                                            </section>
+                                        </div>
                                         <div id="product_option_block" class="d-flex flex-wrap w-100"/>
                                     </div>
                                     <t
@@ -1659,25 +1677,6 @@
                                 This product has no valid combination.
                             </p>
                             <t t-call="website_sale.product_accordion"/>
-                            <div
-                                id="contact_us_wrapper"
-                                t-attf-class="{{'d-flex' if combination_info['prevent_zero_price_sale'] else 'd-none'}} oe_structure oe_structure_solo mb-1 #{_div_classes}"
-                            >
-                                <section
-                                    class="s_text_block"
-                                    data-snippet="s_text_block"
-                                    data-name="Text"
-                                >
-                                    <div class="container">
-                                        <a
-                                            t-att-href="website.contact_us_button_url"
-                                            class="btn btn-primary btn_cta"
-                                        >
-                                            Contact Us
-                                        </a>
-                                    </div>
-                                </section>
-                            </div>
                             <div
                                 t-if="not is_view_active('website_sale_comparison.accordion_specs_item')"
                                 id="product_attributes_simple"
@@ -2024,7 +2023,7 @@
             </small>
         </div>
         <div id="product_unavailable" t-attf-class="{{'d-flex' if combination_info['prevent_zero_price_sale'] else 'd-none'}}">
-            <h3 class="fst-italic" t-field="website.prevent_zero_price_sale_text"/>
+            <br/>
         </div>
     </template>
 

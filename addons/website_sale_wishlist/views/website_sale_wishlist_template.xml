@@ -260,7 +260,7 @@
                                             <button type="button" class="btn btn-link o_wish_rm no-decoration"><small><i class='fa fa-trash-o'></i> Remove</small></button>
                                         </td>
                                         <td class="align-middle" t-if="combination_info['prevent_zero_price_sale']">
-                                            <span t-field="website.prevent_zero_price_sale_text"/>
+                                            <br/>
                                         </td>
                                         <td class="align-middle o_wish_price" t-else="">
                                             <t t-out="combination_info['price']"
@@ -293,7 +293,7 @@
                                             />
                                             <a
                                                 t-if="combination_info['prevent_zero_price_sale']"
-                                                t-att-href="website.contact_us_button_url"
+                                                t-att-href="website.contact_us_button_url + '?subject=' + combination_info['display_name']"
                                                 class="btn btn-primary btn_cta"
                                             >
                                                 Contact Us
