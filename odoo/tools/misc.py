@@ -1821,6 +1821,44 @@ def verify_hash_signed(env, scope, payload):
     return None
 
 
+def binary_token(record, field_name, timestamp=None):
+    """Generate a token granting access for at least 14 days from the binary
+    routes (/web/content or /web/image) to the given record and field_name.
+    The token is deterministic within a 14-day period (even across different
+    days/months/years) to allow browser caching, and expires after maximum 28
+    days to prevent infinite access. Different record/field combinations will
+    expire at different times to prevent thundering herd problems."""
+    record.ensure_one()
+    if not timestamp:
+        now = datetime.datetime.now()
+        epoch = datetime.datetime(1970, 1, 1)
+        start_of_period = epoch + datetime.timedelta(days=((now - epoch).days // 14) * 14)
+        unique_str = f"{record._name}-{str(record.id)}-{field_name}"
+        days_offset = int(hashlib.sha256(f"d-{unique_str}".encode()).hexdigest(), 16)
+        seconds_offset = int(hashlib.sha256(f"s-{unique_str}".encode()).hexdigest(), 16)
+        date = start_of_period + datetime.timedelta(
+            days=days_offset % 14, seconds=seconds_offset % (24 * 60 * 60)
+        )
+        while date - datetime.timedelta(days=14) < now:
+            date += datetime.timedelta(days=14)
+        timestamp = hex(int(date.timestamp()))
+    token = hmac(record.env(su=True), "binary", (record._name, record.id, field_name, timestamp))
+    return f"{token}o{timestamp}"
+
+
+def verify_binary_token(record, field_name, access_token):
+    """Verify that the given access_token grants access to the given record and
+    field_name. In particular, the token must have the right format, must be
+    valid for the given record, and must not have expired."""
+    now = datetime.datetime.now()
+    parts = access_token.rsplit("o", 1)
+    return (
+        len(parts) == 2
+        and consteq(access_token, binary_token(record, field_name, parts[1]))
+        and now < datetime.datetime.fromtimestamp(int(parts[1], 16))
+    )
+
+
 ADDRESS_REGEX = re.compile(r'^(.*?)(\s[0-9][0-9\S]*)?(?: - (.+))?$', flags=re.DOTALL)
 def street_split(street):
     match = ADDRESS_REGEX.match(street or '')

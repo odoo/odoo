@@ -4,9 +4,12 @@
 import io
 import base64
 
+from datetime import datetime, timedelta
+from freezegun import freeze_time
 from PIL import Image
 from werkzeug.urls import url_unquote_plus
 
+from odoo.tools.misc import binary_token
 from odoo.tests.common import HttpCase, tagged
 
 
@@ -157,3 +160,114 @@ class TestImage(HttpCase):
         assert_filenames(f'/web/image/{att.id}/4wzb_!!63148-0-t1.jpg_360x1Q75.jpg_.webp',
             r"""4wzb_!!63148-0-t1.jpg_360x1Q75.jpg_.webp""",
         )
+
+    def test_05_web_image_access_token(self):
+        """Tests that valid access tokens grant access to binary data."""
+
+        def get_datetime_from_token(token):
+            return datetime.fromtimestamp(int(token.rsplit("o", 1)[1], 16))
+
+        attachment = self.env["ir.attachment"].create(
+            {
+                "datas": b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
+                "name": "test.gif",
+                "mimetype": "image/gif",
+            }
+        )
+        # no token: ko
+        res = self.url_open(f"/web/image/{attachment.id}")
+        res.raise_for_status()
+        self.assertEqual(res.headers["Content-Disposition"], "inline; filename=placeholder.png")
+        # invalid token: ko
+        res = self.url_open(f"/web/image/{attachment.id}?access_token=invalid_token")
+        res.raise_for_status()
+        self.assertEqual(res.headers["Content-Disposition"], "inline; filename=placeholder.png")
+        # valid token: ok
+        token = binary_token(attachment, "raw")
+        res = self.url_open(f"/web/image/{attachment.id}?access_token={token}")
+        res.raise_for_status()
+        self.assertEqual(res.headers["Content-Disposition"], "inline; filename=test.gif")
+        # token about to expire: ok
+        with freeze_time(get_datetime_from_token(token) - timedelta(seconds=1)):
+            res = self.url_open(f"/web/image/{attachment.id}?access_token={token}")
+            res.raise_for_status()
+            self.assertEqual(res.headers["Content-Disposition"], "inline; filename=test.gif")
+        # expired token: ko
+        with freeze_time(get_datetime_from_token(token)):
+            res = self.url_open(f"/web/image/{attachment.id}?access_token={token}")
+            res.raise_for_status()
+            self.assertEqual(res.headers["Content-Disposition"], "inline; filename=placeholder.png")
+        # a token is valid at least 14 days
+        base_result = datetime(2021, 3, 24, 1, 13, 43)
+        with freeze_time(datetime(2021, 3, 1, 1, 2, 3)):
+            self.assertEqual(
+                get_datetime_from_token(binary_token(self.env["ir.attachment"].browse(2), "raw")),
+                base_result,
+            )
+        # within a 14-day period, the same token is generated
+        with freeze_time(datetime(2021, 3, 9, 2, 3, 4)):
+            self.assertEqual(
+                get_datetime_from_token(binary_token(self.env["ir.attachment"].browse(2), "raw")),
+                base_result,
+            )
+        # when the token would not be valid for at least 14 days, another token is generated,
+        # valid for exactly 14 extra days from the previous token
+        with freeze_time(datetime(2021, 3, 11, 5, 6, 7)):
+            self.assertEqual(
+                get_datetime_from_token(binary_token(self.env["ir.attachment"].browse(2), "raw")),
+                base_result + timedelta(days=14),
+            )
+        # within a following 14-day period, the same token is generated
+        with freeze_time(datetime(2021, 3, 23, 8, 9, 10)):
+            self.assertEqual(
+                get_datetime_from_token(binary_token(self.env["ir.attachment"].browse(2), "raw")),
+                base_result + timedelta(days=14),
+            )
+        # when a following token would not be valid for at least 14 days, another token is
+        # generated, valid for exactly 14 extra days from the previous token
+        with freeze_time(datetime(2021, 3, 25)):
+            self.assertEqual(
+                get_datetime_from_token(binary_token(self.env["ir.attachment"].browse(2), "raw")),
+                base_result + timedelta(days=2 * 14),
+            )
+        # within a 14-day period, the same other token is generated, even across month change
+        with freeze_time(datetime(2021, 4, 7)):
+            self.assertEqual(
+                get_datetime_from_token(binary_token(self.env["ir.attachment"].browse(2), "raw")),
+                base_result + timedelta(days=2 * 14),
+            )
+        # when a following token would not be valid for at least 14 days, another token is
+        # generated, valid for exactly 14 extra days from the previous token,
+        # even across month change
+        with freeze_time(datetime(2021, 4, 8)):
+            self.assertEqual(
+                get_datetime_from_token(binary_token(self.env["ir.attachment"].browse(2), "raw")),
+                base_result + timedelta(days=3 * 14),
+            )
+        # the validity of new token is still multiple of 14 days even many month later
+        with freeze_time(datetime(2021, 6, 12)):
+            self.assertEqual(
+                get_datetime_from_token(binary_token(self.env["ir.attachment"].browse(2), "raw")),
+                base_result + timedelta(days=7 * 14),
+            )
+        with freeze_time(datetime(2021, 3, 1, 1, 2, 3)):
+            # at the same time...
+            self.assertEqual(
+                get_datetime_from_token(binary_token(self.env["ir.attachment"].browse(2), "raw")),
+                datetime(2021, 3, 24, 1, 13, 43),
+            )
+            # a different record generates a different token
+            self.assertEqual(
+                get_datetime_from_token(binary_token(self.env["ir.attachment"].browse(3), "raw")),
+                datetime(2021, 3, 15, 8, 22, 31),
+            )
+            # a different field generates a different token
+            self.assertEqual(
+                get_datetime_from_token(binary_token(self.env["ir.attachment"].browse(3), "datas")),
+                datetime(2021, 3, 25, 11, 16, 16),
+            )
+            # a different model generates a different token
+            self.assertEqual(
+                get_datetime_from_token(binary_token(self.env["res.partner"].browse(3), "raw")),
+                datetime(2021, 3, 24, 20, 43, 8),
+            )

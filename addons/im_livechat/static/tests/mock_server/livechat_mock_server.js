@@ -73,7 +73,7 @@ async function get_session(request) {
             name: channelVals["name"],
             operator: mailDataHelpers.Store.one(
                 ResPartner.browse(channelVals.livechat_operator_id),
-                makeKwArgs({ fields: ["user_livechat_username", "write_date"] })
+                makeKwArgs({ fields: ["avatar_128", "user_livechat_username"] })
             ),
             scrollUnread: false,
             state: "open",
