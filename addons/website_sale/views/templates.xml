@@ -1382,6 +1382,7 @@
                                     <div class="container">
                                         <a
                                             t-att-href="website.contact_us_button_url"
+                                            t-att-data-url="website.contact_us_button_url"
                                             class="btn btn-primary btn_cta"
                                         >
                                             Contact Us
@@ -1728,7 +1729,7 @@
             </h3>
         </div>
         <div id="product_unavailable" t-attf-class="{{'d-flex' if combination_info['prevent_zero_price_sale'] else 'd-none'}}">
-            <h3 class="fst-italic" t-field="website.prevent_zero_price_sale_text"/>
+            <h3 class="small text-primary" t-field="website.prevent_zero_price_sale_text"/>
         </div>
     </template>
 
