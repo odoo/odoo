@@ -263,6 +263,7 @@
                 <filter string="At Work" name="nocheckout" domain="[('check_out', '=', False)]" />
                 <filter string="Errors" name="errors"
                         domain="['|', ('worked_hours', '&gt;=', 16), '&amp;', ('check_out', '=', False), ('check_in', '&lt;=',  (context_today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Absent" name="absent_employees" domain="[('absent_employees', '=', True)]" />
                 <filter string="Automatically Checked-Out" name="auto_check"
                         domain="[('out_mode', '=', 'auto_check_out')]"/>
                 <separator/>
@@ -284,6 +285,7 @@
                     )]"/>
                 <group expand="0" string="Group By">
                     <filter string="Employee" name="employee" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Weekday" name="weekday_group" context="{'group_by': 'weekday'}"/>
                     <filter string="Departement" name="departement" context="{'group_by': 'department_id'}"/>
                     <filter string="Manager" name="manager" context="{'group_by': 'manager_id'}"/>
                     <filter string="Method" name="groupby_mode_in" context="{'group_by': 'in_mode'}"/>

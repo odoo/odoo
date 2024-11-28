@@ -15,8 +15,8 @@ from odoo import models, fields, api, exceptions, _
 from odoo.addons.resource.models.utils import Intervals
 from odoo.osv.expression import AND, OR
 from odoo.tools.float_utils import float_is_zero
-from odoo.exceptions import AccessError
-from odoo.tools import convert, format_duration, format_time, format_datetime
+from odoo.exceptions import AccessError, UserError
+from odoo.tools import SQL, convert, format_duration, format_time, format_datetime
 
 def get_google_maps_url(latitude, longitude):
     return "https://maps.google.com?q=%s,%s" % (latitude, longitude)
@@ -77,6 +77,61 @@ class HrAttendance(models.Model):
                                 readonly=True,
                                 default='manual')
     expected_hours = fields.Float(compute="_compute_expected_hours", store=True, aggregator="sum")
+    weekday = fields.Selection(selection=[
+            ('1', 'Monday'),
+            ('2', 'Tuesday'),
+            ('3', 'Wednesday'),
+            ('4', 'Thursday'),
+            ('5', 'Friday'),
+            ('6', 'Saturday'),
+            ('7', 'Sunday'),
+        ],
+        store=False, search="_search_weekday"
+    )
+    absent_employees = fields.Many2one('hr.employee', store=False, search="_search_absent_employees")
+
+    def _search_weekday(self, operator, value):
+        attendance_ids = [r[0] for r in self.env.execute_query(SQL(
+            """
+                SELECT DISTINCT id FROM hr_attendance
+                WHERE EXTRACT(dow FROM check_in) in %(day_list)s
+            """,
+            day_list=tuple(value)))]
+        return [('id', 'in', attendance_ids)]
+
+    def _get_absent_employees_ids(self):
+        user_tz = self.env.user.tz or self.env.context.get('tz')
+        user_pytz = pytz.timezone(user_tz) if user_tz else pytz.utc
+        today = user_pytz.localize(fields.Datetime.now().replace(hour=0, minute=0, second=0)).astimezone(pytz.utc)
+        end_today = user_pytz.localize(fields.Datetime.now().replace(hour=23, minute=59, second=59)).astimezone(pytz.utc)
+        employee_ids = self.env['hr.attendance'].search([
+            ('check_in', '>=', today),
+            '|',
+                ('check_out', '=', False),
+                ('check_out', '<=', end_today)
+        ]).employee_id.ids
+
+        calendar_per_employees = self.env['hr.employee'].search([
+            ('company_id', 'in', self.env.context.get('allowed_company_ids', [])),
+            ('id', 'not in', employee_ids)
+        ])._get_calendars()
+        employees_per_calendar = defaultdict(list)
+        for employee, calendar in calendar_per_employees.items():
+            employees_per_calendar[calendar].append(employee)
+        for calendar, employees in employees_per_calendar.items():
+            work_intervals_by_employees = calendar._work_intervals_batch(today, end_today, resources=self.env['hr.employee'].browse(employees), tz=timezone(calendar.tz))
+            for employee_id, work_intervals in work_intervals_by_employees.items():
+                if not work_intervals._items:
+                    employee_ids.append(employee_id)
+
+        return self.env['hr.employee']._search([
+            ('company_id', 'in', self.env.context.get('allowed_company_ids', [])),
+            ('id', 'not in', employee_ids)
+        ])
+
+    def _search_absent_employees(self, operator, value):
+        #  operator = "=" and value = True
+        return [('employee_id', 'in', self._get_absent_employees_ids())]
 
     @api.depends("worked_hours", "overtime_hours")
     def _compute_expected_hours(self):
@@ -684,7 +739,9 @@ class HrAttendance(models.Model):
             for leaf in user_domain:
                 if len(leaf) == 3 and leaf[0] == 'employee_id':
                     employee_name_domain.append([('name', leaf[1], leaf[2])])
-            return resources | self.env['hr.employee'].search(AND([OR(employee_name_domain), employee_domain]))
+                if len(leaf) == 3 and leaf[0] == "absent_employees" and leaf[1] == "=" and leaf[2]:
+                    employee_name_domain.append([('id', 'in', self._get_absent_employees_ids())])
+            return resources | self.env['hr.employee'].search(AND([AND(employee_name_domain), employee_domain]))
 
     def action_approve_overtime(self):
         self.write({
