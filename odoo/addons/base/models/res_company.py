@@ -64,6 +64,7 @@ class ResCompany(models.Model):
     country_id = fields.Many2one('res.country', compute='_compute_address', inverse='_inverse_country', string="Country")
     # Technical field to hide country specific fields in company form view
     country_code = fields.Char(related='country_id.code', depends=['country_id'])
+    country_group_codes = fields.Char(related="country_id.country_group_codes", depends=['country_id'])
     email = fields.Char(related='partner_id.email', store=True, readonly=False)
     phone = fields.Char(related='partner_id.phone', store=True, readonly=False)
     mobile = fields.Char(related='partner_id.mobile', store=True, readonly=False)
