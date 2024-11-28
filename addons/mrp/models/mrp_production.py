@@ -257,6 +257,7 @@ class MrpProduction(models.Model):
         help='Technical Field used to decide whether the button "Allocation" should be displayed.')
     allow_workorder_dependencies = fields.Boolean('Allow Work Order Dependencies')
     show_produce = fields.Boolean(compute='_compute_show_produce', help='Technical field to check if produce button can be shown')
+    show_generate_bom = fields.Boolean('Show Generate BOM', compute='_compute_show_generate_bom')
     show_produce_all = fields.Boolean(compute='_compute_show_produce', help='Technical field to check if produce all button can be shown')
     is_outdated_bom = fields.Boolean("Outdated BoM", help="The BoM has been updated since creation of the MO")
     is_delayed = fields.Boolean(compute='_compute_is_delayed', search='_search_is_delayed')
@@ -801,6 +802,14 @@ class MrpProduction(models.Model):
                     Command.delete(move.id) for move in production.move_finished_ids if move.bom_line_id
                 ]
 
+    @api.depends('bom_id', 'product_id', 'move_raw_ids.product_id', 'workorder_ids')
+    def _compute_show_generate_bom(self):
+        for production in self:
+            production.show_generate_bom = not production.bom_id and production.product_id and (
+                (production.move_raw_ids and production.product_id not in production.move_raw_ids.product_id)
+                or (not production.move_raw_ids and production.workorder_ids)
+            )
+
     @api.depends('state', 'product_qty', 'qty_producing')
     def _compute_show_produce(self):
         for production in self:
@@ -855,19 +864,11 @@ class MrpProduction(models.Model):
     def _can_produce_serial_number(self, sn=None):
         self.ensure_one()
         sn = sn or self.lot_producing_id
-        if self.product_id.tracking == 'serial' and sn:
+        if self.product_id.tracking == 'serial' and sn and sn.id not in self.move_raw_ids.lot_ids.ids:
             message, dummy = self.env['stock.quant'].sudo()._check_serial_number(self.product_id, sn, self.company_id)
             if message:
                 return {'warning': {'title': _('Warning'), 'message': message}}
         return True
-
-    @api.onchange('product_id', 'move_raw_ids', 'never_product_template_attribute_value_ids')
-    def _onchange_product_id(self):
-        for move in self.move_raw_ids:
-            if self.product_id == move.product_id:
-                message = _("The component %s should not be the same as the product to produce.", self.product_id.display_name)
-                self.move_raw_ids = self.move_raw_ids - move
-                return {'warning': {'title': _('Warning'), 'message': message}}
 
     @api.constrains('move_finished_ids')
     def _check_byproducts(self):
@@ -2612,7 +2613,8 @@ class MrpProduction(models.Model):
 
     def _check_sn_uniqueness(self):
         """ Alert the user if the serial number as already been consumed/produced """
-        if self.product_tracking == 'serial' and self.lot_producing_id:
+        self.ensure_one()
+        if self.product_tracking == 'serial' and self.lot_producing_id and self.lot_producing_id.id not in self.move_raw_ids.lot_ids.ids:
             if self._is_finished_sn_already_produced(self.lot_producing_id):
                 raise UserError(_('This serial number for product %s has already been produced', self.product_id.name))
 
@@ -2665,7 +2667,11 @@ class MrpProduction(models.Model):
             ('quantity', '=', 1),
             ('state', '=', 'done'),
             ('location_id.usage', '=', 'production'),
-            ('move_id.production_id', '=', False),
+            '|',
+                ('move_id.production_id', '=', False),
+                '&',
+                    ('move_id.production_id', '!=', False),
+                    ('move_id.production_id.product_id', '=', self.product_id.id),
         ], ['lot_id'], ['quantity:sum'])
         cancelled_qties = defaultdict(float, {lot.id: qty for lot, qty in cancelled_sml_groups})
 
@@ -2949,9 +2955,6 @@ class MrpProduction(models.Model):
             self._update_catalog_line_quantity(new_line, quantity, **kwargs)
 
         return self.env['product.product'].browse(product_id).standard_price
-
-    def _get_product_catalog_domain(self):
-        return Domain.AND([super()._get_product_catalog_domain(), [('id', '!=', self.product_id.id)]])
 
     def _update_catalog_line_quantity(self, line, quantity, **kwargs):
         line.product_uom_qty = quantity
