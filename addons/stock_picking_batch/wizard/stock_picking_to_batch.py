@@ -41,4 +41,5 @@ class StockPickingToBatch(models.TransientModel):
             'res_model': 'stock.picking.batch',
             'type': 'ir.actions.act_window',
             'res_id': batch.id,
+            'context': {'show_partner_name_in_display': True},
         }
