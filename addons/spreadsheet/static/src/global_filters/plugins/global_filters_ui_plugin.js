@@ -44,7 +44,8 @@ const MONTHS = {
     december: { value: 12, granularity: "month" },
 };
 
-const { UuidGenerator, createEmptyExcelSheet, createEmptySheet, toXC, toNumber } = helpers;
+const { UuidGenerator, createEmptyExcelSheet, createEmptySheet, toXC, toNumber, toBoolean } =
+    helpers;
 const uuidGenerator = new UuidGenerator();
 
 export class GlobalFiltersUIPlugin extends OdooUIPlugin {
@@ -176,6 +177,8 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
                 return this._getDateDomain(filter, fieldMatching);
             case "relation":
                 return this._getRelationDomain(filter, fieldMatching);
+            case "boolean":
+                return this._getBooleanDomain(filter, fieldMatching);
         }
     }
 
@@ -202,6 +205,9 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
             return this._getValueOfCurrentPeriod(filterId);
         }
         if (filter.type === "relation" && preventAutomaticValue) {
+            return [];
+        }
+        if (filter.type === "boolean" && preventAutomaticValue) {
             return [];
         }
         if (filter.type === "relation" && isEmpty(value) && defaultValue === "current_user") {
@@ -234,6 +240,7 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
                         value.to)
                 );
             case "relation":
+            case "boolean":
                 return value && value.length;
         }
     }
@@ -256,6 +263,8 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
         }
         const value = this.getGlobalFilterValue(filter.id);
         switch (filter.type) {
+            case "boolean":
+                return [[{ value: value.length ? value.join(", ") : "" }]];
             case "text":
                 return [[{ value: value || "" }]];
             case "date": {
@@ -431,6 +440,9 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
             case "relation":
                 value = { preventAutomaticValue: true };
                 break;
+            case "boolean":
+                value = { preventAutomaticValue: true };
+                break;
         }
         this.values[id] = {
             value,
@@ -555,6 +567,21 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
         const field = fieldMatching.chain;
         const operator = filter.includeChildren ? "child_of" : "in";
         return new Domain([[field, operator, values]]);
+    }
+
+    _getBooleanDomain(filter, fieldMatching) {
+        const value = this.getGlobalFilterValue(filter.id);
+        if (!value || !value.length || !fieldMatching.chain) {
+            return new Domain();
+        }
+        const field = fieldMatching.chain;
+        if (value.length === 1) {
+            return new Domain([[field, "=", toBoolean(value[0])]]);
+        }
+        return Domain.or([
+            [[field, "=", toBoolean(value[0])]],
+            [[field, "=", toBoolean(value[1])]],
+        ]);
     }
 
     /**

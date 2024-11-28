@@ -11,10 +11,17 @@ import { useService } from "@web/core/utils/hooks";
 import { Domain } from "@web/core/domain";
 import { user } from "@web/core/user";
 import { TextFilterValue } from "../filter_text_value/filter_text_value";
+import { BooleanMultiSelector } from "../boolean_multi_selector/boolean_multi_selector";
 
 export class FilterValue extends Component {
     static template = "spreadsheet_edition.FilterValue";
-    static components = { DateFilterValue, DateFromToValue, MultiRecordSelector, TextFilterValue };
+    static components = {
+        DateFilterValue,
+        DateFromToValue,
+        MultiRecordSelector,
+        TextFilterValue,
+        BooleanMultiSelector,
+    };
     static props = {
         filter: Object,
         model: Object,
@@ -51,6 +58,10 @@ export class FilterValue extends Component {
     }
 
     onTextInput(id, value) {
+        this.props.model.dispatch("SET_GLOBAL_FILTER_VALUE", { id, value });
+    }
+
+    onBooleanInput(id, value) {
         this.props.model.dispatch("SET_GLOBAL_FILTER_VALUE", { id, value });
     }
 
