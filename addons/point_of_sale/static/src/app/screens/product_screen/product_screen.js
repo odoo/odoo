@@ -112,21 +112,23 @@ export class ProductScreen extends Component {
     }
 
     getCategoriesList(list, allParents, depth) {
-        return list.map((category) => {
-            if (category.id === allParents[depth]?.id && category.child_ids?.length) {
-                return [
-                    category,
-                    this.getCategoriesList(category.child_ids, allParents, depth + 1),
-                ];
-            }
-            return category;
-        });
+        return list
+            .sort((a, b) => a.sequence - b.sequence)
+            .map((category) => {
+                if (category.id === allParents[depth]?.id && category.child_ids?.length) {
+                    return [
+                        category,
+                        this.getCategoriesList(category.child_ids, allParents, depth + 1),
+                    ];
+                }
+                return category;
+            });
     }
 
     getCategoriesAndSub() {
-        const rootCategories = this.pos.models["pos.category"].filter(
-            (category) => !category.parent_id
-        );
+        const rootCategories = this.pos.models["pos.category"]
+            .filter((category) => !category.parent_id)
+            .sort((a, b) => a.sequence - b.sequence);
         const selected = this.pos.selectedCategory ? [this.pos.selectedCategory] : [];
         const allParents = selected.concat(this.pos.selectedCategory?.allParents || []).reverse();
         return this.getCategoriesList(rootCategories, allParents, 0)
