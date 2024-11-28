@@ -10,6 +10,5 @@ export class ChatbotScript extends Record {
     title;
     isLivechatTourRunning = false;
     operator_partner_id = Record.one("Persona");
-    welcome_steps = Record.many("chatbot.script.step");
 }
 ChatbotScript.register();

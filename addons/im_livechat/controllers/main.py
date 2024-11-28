@@ -145,6 +145,15 @@ class LivechatController(http.Controller):
         if not channel_vals:
             return False
         if not persisted:
+            chatbot_data = None
+            if chatbot_script:
+                welcome_steps = chatbot_script._get_welcome_steps()
+                chatbot_data = {
+                    "script": chatbot_script.id,
+                    "steps": welcome_steps.mapped(lambda s: {"scriptStep": s.id}),
+                }
+                store.add(chatbot_script)
+                store.add(welcome_steps)
             channel_info = {
                 "id": -1,  # only one temporary thread at a time, id does not matter.
                 "isLoaded": True,
@@ -156,18 +165,8 @@ class LivechatController(http.Controller):
                 "scrollUnread": False,
                 "state": "open",
                 "channel_type": "livechat",
-                "chatbot": (
-                    {
-                        "script": chatbot_script.id,
-                        "steps": chatbot_script._get_welcome_steps().mapped(
-                            lambda s: {"scriptStep": {"id": s.id}}
-                        ),
-                    }
-                    if chatbot_script
-                    else None
-                ),
+                "chatbot": chatbot_data,
             }
-            store.add(chatbot_script)
             store.add("discuss.channel", channel_info)
         else:
             channel = request.env['discuss.channel'].with_context(
