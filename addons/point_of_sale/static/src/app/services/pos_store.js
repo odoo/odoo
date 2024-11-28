@@ -1149,7 +1149,7 @@ export class PosStore extends WithLazyGetterTrap {
                 context,
             });
             const missingRecords = await this.data.missingRecursive(data);
-            const newData = this.models.loadData(missingRecords);
+            const newData = this.models.loadData(this.models, missingRecords);
 
             for (const line of newData["pos.order.line"]) {
                 const refundedOrderLine = line.refunded_orderline_id;
