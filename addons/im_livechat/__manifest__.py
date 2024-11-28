@@ -98,7 +98,6 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/src/embed/common/**/*',
         ],
         'im_livechat.assets_embed_external': [
-            'im_livechat/static/src/embed/common/scss/bootstrap_overridden.scss',
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_backend_helpers'),
             'web/static/src/scss/pre_variables.scss',
