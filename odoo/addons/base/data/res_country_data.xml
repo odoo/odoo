@@ -1607,6 +1607,7 @@
 
         <record id="europe" model="res.country.group">
             <field name="name">European Union</field>
+            <field name="code">EU</field>
             <field name="country_ids" eval="[Command.set([
                 ref('at'),ref('be'),ref('bg'),ref('hr'),ref('cy'),
                 ref('cz'),ref('dk'),ref('ee'),ref('fi'),ref('fr'),
@@ -1618,6 +1619,7 @@
 
         <record id="south_america" model="res.country.group">
             <field name="name">South America</field>
+            <field name="code">SA</field>
             <field name="country_ids" eval="[Command.set([
                 ref('ar'),ref('bo'),ref('br'),ref('cl'),ref('co'),
                 ref('ec'),ref('fk'),ref('gs'),ref('gf'),ref('gy'),
@@ -1626,6 +1628,7 @@
 
         <record id="sepa_zone" model="res.country.group">
             <field name="name">SEPA Countries</field>
+            <field name="code">SEPA</field>
             <field name="country_ids" eval="[Command.set([
                 ref('ad'),ref('at'),ref('ax'),ref('be'),ref('bg'),
                 ref('bl'),ref('ch'),ref('cy'),ref('cz'),ref('de'),
@@ -1641,17 +1644,29 @@
 
         <record id="gulf_cooperation_council" model="res.country.group">
             <field name="name">Gulf Cooperation Council (GCC)</field>
+            <field name="code">GCC</field>
             <field name="country_ids" eval="[(6,0, [ref('base.sa'), ref('base.ae'), ref('base.bh'), ref('base.om'), ref('base.qa'), ref('base.kw')])]"/>
         </record>
 
         <record id="eurasian_economic_union" model="res.country.group">
             <field name="name">Eurasian Economic Union</field>
+            <field name="code">EEU</field>
             <field name="country_ids" eval="[(6, 0, [ref('ru'),ref('by'),ref('am'),ref('kg'),ref('kz')])]"/>
         </record>
 
         <record id="ch_and_li" model="res.country.group">
             <field name="name">Switzerland and Liechtenstein</field>
+            <field name="code">CH-LI</field>
             <field name="country_ids" eval="[Command.set([ref('ch'), ref('li')])]"/>
+        </record>
+
+        <record id="dom-tom" model="res.country.group">
+            <field name="name">DOM-TOM</field>
+            <field name="code">DOM-TOM</field>
+            <field name="country_ids" eval="[Command.set([
+                ref('yt'),ref('gp'),ref('mq'),ref('gf'),ref('re'),
+                ref('pf'),ref('pm'),ref('mf'),ref('bl'),ref('nc'),
+            ])]"/>
         </record>
     </data>
 </odoo>
