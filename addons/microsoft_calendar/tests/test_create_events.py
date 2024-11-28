@@ -634,19 +634,34 @@ class TestCreateEvents(TestCommon):
         Otherwise, the event ownership will be lost to the attendee and it could generate duplicates in
         Odoo, as well cause problems in the future the synchronization of that event for the original owner.
         """
-        # Ensure that the calendar synchronization of user A is active. Deactivate user B synchronization.
-        self.assertTrue(self.env['calendar.event'].with_user(self.organizer_user)._check_microsoft_sync_status())
-        self.attendee_user.microsoft_synchronization_stopped = True
+        with self.mock_datetime_and_now('2021-09-20 10:00:00'):
+            # Ensure that the calendar synchronization of the attendee is active. Deactivate organizer's synchronization.
+            self.attendee_user.microsoft_calendar_token_validity = datetime.now() + timedelta(minutes=60)
+            self.assertTrue(self.env['calendar.event'].with_user(self.attendee_user)._check_microsoft_sync_status())
+            self.organizer_user.microsoft_synchronization_stopped = True
 
-        # Create an event with user B (not synchronized) as organizer and invite user A.
-        self.simple_event_values['user_id'] = self.attendee_user.id
-        self.simple_event_values['partner_ids'] = [Command.set([self.organizer_user.partner_id.id, self.attendee_user.partner_id.id])]
-        event = self.env['calendar.event'].with_user(self.attendee_user).create(self.simple_event_values)
-        self.assertTrue(event, "The event for the not synchronized owner must be created in Odoo.")
+            # Create an event with the organizer not synchronized and invite the synchronized attendee.
+            self.simple_event_values['user_id'] = self.organizer_user.id
+            self.simple_event_values['partner_ids'] = [Command.set([self.organizer_user.partner_id.id, self.attendee_user.partner_id.id])]
+            event = self.env['calendar.event'].with_user(self.organizer_user).create(self.simple_event_values)
+            self.assertTrue(event, "The event for the not synchronized owner must be created in Odoo.")
 
-        # Synchronize the calendar of user A, then make sure insert was not called.
-        event.with_user(self.organizer_user).sudo()._sync_odoo2microsoft()
-        mock_insert.assert_not_called()
+            # Synchronize the attendee's calendar, then make sure insert was not called.
+            event.with_user(self.attendee_user).sudo()._sync_odoo2microsoft()
+            mock_insert.assert_not_called()
+
+            # Prepare mock return for the insertion.
+            event_id = "123"
+            event_iCalUId = "456"
+            mock_insert.return_value = (event_id, event_iCalUId)
+
+            # Activate the synchronization of the organizer and ensure that the event is now inserted.
+            self.organizer_user.microsoft_synchronization_stopped = False
+            self.organizer_user.microsoft_calendar_token_validity = datetime.now() + timedelta(minutes=60)
+            self.organizer_user.with_user(self.organizer_user).restart_microsoft_synchronization()
+            event.with_user(self.organizer_user).sudo()._sync_odoo2microsoft()
+            self.call_post_commit_hooks()
+            mock_insert.assert_called()
 
     @patch.object(MicrosoftCalendarService, 'get_events')
     @patch.object(MicrosoftCalendarService, 'insert')
