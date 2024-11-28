@@ -562,6 +562,8 @@ class ProcurementGroup(models.Model):
         locations if it could not be found.
         """
         result = self.env['stock.rule']
+        if not location_id:
+            return result
         locations = location_id
         # Get the location hierarchy, starting from location_id up to its root location.
         while locations[-1].location_id:
