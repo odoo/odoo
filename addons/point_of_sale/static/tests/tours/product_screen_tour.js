@@ -12,6 +12,7 @@ import {
     inLeftSide,
     selectButton,
     scan_barcode,
+    refresh,
 } from "@point_of_sale/../tests/tours/utils/common";
 import * as ProductConfiguratorPopup from "@point_of_sale/../tests/tours/utils/product_configurator_util";
 
@@ -383,5 +384,18 @@ registry.category("web_tour.tours").add("PosCategoriesOrder", {
             {
                 trigger: '.category-button:eq(3) > span:contains("AAY")',
             },
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosSaveOrderlinesIndexedDB", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.clickDisplayedProduct("Test Product 1"),
+            ProductScreen.selectedOrderlineHas("Test Product 1", "1.0"),
+            refresh(),
+            ProductScreen.selectedOrderlineHas("Test Product 1", "1.0"),
+            Chrome.endTour(),
         ].flat(),
 });

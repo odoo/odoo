@@ -744,10 +744,11 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                     }
 
                     if (field.type === "many2one") {
-                        result[name] = record[name]?.id || (!orm && record.raw[name]) || false;
+                        result[name] =
+                            record[name]?.id || (!orm && toRaw(record.raw[name])) || false;
                     } else if (X2MANY_TYPES.has(field.type)) {
                         const ids = [...record[name]].map((record) => record.id);
-                        result[name] = ids.length ? ids : (!orm && record.raw[name]) || [];
+                        result[name] = ids.length ? ids : (!orm && toRaw(record.raw[name])) || [];
                     } else if (typeof record[name] === "object") {
                         result[name] = JSON.stringify(record[name]);
                     } else {
