@@ -74,7 +74,8 @@ def patch_init():
     patch_module('codecs')
     patch_module('win32')
     for name in (
-        'ast', 'email', 'mimetypes', 'num2words', 'pytz', 'stdnum', 'urllib3',
-        'werkzeug', 'zeep',
+        'ast', 'csv', 'email', 'literal_eval', 'mimetypes',
+        'num2words', 'pytz', 're', 'stdnum', 'urllib3', 'werkzeug',
+        'xlwt', 'xlsxwriter', 'zeep',
     ):
         HOOK_IMPORT.add_hook(name, functools.partial(patch_module, name))
