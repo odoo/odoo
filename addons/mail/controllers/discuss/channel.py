@@ -59,7 +59,7 @@ class ChannelController(http.Controller):
         ]
         res = request.env["mail.message"]._message_fetch(domain, **(fetch_params or {}))
         messages = res.pop("messages")
-        if not request.env.user._is_public() and not (fetch_params or {}).get("around"):
+        if not request.env.user._is_public():
             messages.set_message_done()
         return {
             **res,
