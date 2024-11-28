@@ -1,9 +1,10 @@
 // SearchBar Menu
 // ============================================================================
-.o_search_bar_menu {
-    $-menu-max-width: calc(100vw - #{map-get($spacers, 3) * 2 });
+$o-search-bar-menu-max-width: calc(100vw - #{map-get($spacers, 3) * 2 });
 
-    max-width: $-menu-max-width;
+.o_search_bar_menu {
+
+    max-width: $o-search-bar-menu-max-width;
     .o_dropdown_container {
         border-color: $dropdown-divider-bg !important;
         min-width: 200px;
@@ -17,7 +18,7 @@
 
     @include media-breakpoint-up(lg) {
         .o_dropdown_container {
-            max-width: calc(#{$-menu-max-width} / 6);
+            max-width: calc(#{$o-search-bar-menu-max-width} / 6);
         }
     }
 }
