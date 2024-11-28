@@ -74,7 +74,7 @@ will update the cost of every lot/serial number in stock."),
                     ._svl_empty_stock(description, product_template=product_template)
                 out_stock_valuation_layers = SVL.create(out_svl_vals_list)
                 if product_template.valuation == 'real_time':
-                    move_vals_list += Product._svl_empty_stock_am(out_stock_valuation_layers)
+                    move_vals_list += Product.with_context(products_orig_quantity_svl=products_orig_quantity_svl)._svl_empty_stock_am(out_stock_valuation_layers)
                 impacted_templates[product_template] = (products, description, products_orig_quantity_svl)
 
         if 'lot_valuated' in vals:
@@ -745,12 +745,12 @@ will update the cost of every lot/serial number in stock."),
 
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             orig_qtys = self.env.context.get('products_orig_quantity_svl')
-            if orig_qtys and float_compare(orig_qtys[product.id], 0, precision_digits=precision) == 1:
-                debit_account_id = stock_input_account.id
-                credit_account_id = product_accounts[product.id]['stock_valuation'].id
-            else:
+            if orig_qtys and float_compare(orig_qtys[product.id], 0, precision_digits=precision) < 1:
                 debit_account_id = product_accounts[product.id]['stock_valuation'].id
                 credit_account_id = product_accounts[product.id]['stock_output'].id
+            else:
+                debit_account_id = stock_input_account.id
+                credit_account_id = product_accounts[product.id]['stock_valuation'].id
             value = out_stock_valuation_layer.value
             move_vals = {
                 'journal_id': product_accounts[product.id]['stock_journal'].id,
@@ -1034,7 +1034,8 @@ class ProductCategory(models.Model):
                     ._svl_empty_stock(description, product_category=product_category)
                 out_stock_valuation_layers = SVL.sudo().create(out_svl_vals_list)
                 if product_category.property_valuation == 'real_time':
-                    move_vals_list += Product.with_context(product_orig_quantity_svl=products_orig_quantity_svl)._svl_empty_stock_am(out_stock_valuation_layers)
+
+                    move_vals_list += Product.with_context(products_orig_quantity_svl=products_orig_quantity_svl)._svl_empty_stock_am(out_stock_valuation_layers)
                 impacted_categories[product_category] = (products, description, products_orig_quantity_svl)
 
         res = super(ProductCategory, self).write(vals)

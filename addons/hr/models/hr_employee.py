@@ -658,11 +658,11 @@ class HrEmployeePrivate(models.Model):
 
     def _get_marital_status_selection(self):
         return [
-            ('single', 'Single'),
-            ('married', 'Married'),
-            ('cohabitant', 'Legal Cohabitant'),
-            ('widower', 'Widower'),
-            ('divorced', 'Divorced')
+            ('single', _('Single')),
+            ('married', _('Married')),
+            ('cohabitant', _('Legal Cohabitant')),
+            ('widower', _('Widower')),
+            ('divorced', _('Divorced')),
         ]
 
     def _load_scenario(self):
