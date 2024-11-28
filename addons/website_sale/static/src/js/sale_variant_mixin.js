@@ -378,7 +378,7 @@ var VariantMixin = {
             $product.trigger('view_item_event', combination['product_tracking_info']);
         }
         const addToCart = $parent.find('#add_to_cart_wrap');
-        const contactUsButton = $parent.find('#contact_us_wrapper');
+        const contactUsButton = $parent.closest('#product_details').find('#contact_us_wrapper');
         const productPrice = $parent.find('.product_price');
         const quantity = $parent.find('.css_quantity');
         const product_unavailable = $parent.find('#product_unavailable');
@@ -395,6 +395,8 @@ var VariantMixin = {
             contactUsButton.removeClass('d-flex').addClass('d-none');
             product_unavailable.removeClass('d-flex').addClass('d-none');
         }
+        const url = contactUsButton.find('a').attr('data-url');
+        contactUsButton.find('a').attr('href', `${url}?subject=${combination.display_name}`);
 
         const self = this;
         const $price = $parent.find(".oe_price:first .oe_currency_value");

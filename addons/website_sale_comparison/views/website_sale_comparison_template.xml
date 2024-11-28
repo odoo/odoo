@@ -203,7 +203,7 @@
                                             </a>
 
                                             <span class="o_comparison_price" t-if="combination_info['prevent_zero_price_sale']">
-                                                <strong t-field="website.prevent_zero_price_sale_text"/>
+                                            <br/>
                                             </span>
                                             <span class="o_comparison_price" t-else="">
                                                 <strong>Price:</strong>
@@ -316,7 +316,6 @@
                              t-esc="combination_info['list_price']"
                              t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                     </div>
-                    <div t-attf-class="{{'' if combination_info['prevent_zero_price_sale'] else 'd-none'}}" t-field="website.prevent_zero_price_sale_text"/>
                 </h6>
             </div>
             <div class="col-1 text-end">
