@@ -1041,6 +1041,7 @@ def url_join(
 
 
 def patch_werkzeug():
+    # This loads the whole ..tools before it should.
     from ..tools.json import scriptsafe  # noqa: PLC0415
     Request.json_module = Response.json_module = scriptsafe
 

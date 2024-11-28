@@ -40,6 +40,8 @@ from lxml import etree, objectify
 
 import odoo
 import odoo.addons
+from odoo._monkeypatches.xlwt import xlwt  # noqa: F401
+from odoo._monkeypatches.xlsxwriter import xlsxwriter  # noqa: F401
 # get_encodings, ustr and exception_to_unicode were originally from tools.misc.
 # There are moved to loglevels until we refactor tools.
 from odoo.loglevels import exception_to_unicode, get_encodings, ustr  # noqa: F401
@@ -47,6 +49,7 @@ from odoo.loglevels import exception_to_unicode, get_encodings, ustr  # noqa: F4
 from .config import config
 from .float_utils import float_round
 from .which import which
+
 
 K = typing.TypeVar('K')
 T = typing.TypeVar('T')
@@ -417,48 +420,6 @@ def merge_sequences(*iterables: Iterable[T]) -> list[T]:
                 deps[item].append(prev)
             prev = item
     return topological_sort(deps)
-
-
-try:
-    import xlwt
-
-    # add some sanitization to respect the excel sheet name restrictions
-    # as the sheet name is often translatable, can not control the input
-    class PatchedWorkbook(xlwt.Workbook):
-        def add_sheet(self, name, cell_overwrite_ok=False):
-            # invalid Excel character: []:*?/\
-            name = re.sub(r'[\[\]:*?/\\]', '', name)
-
-            # maximum size is 31 characters
-            name = name[:31]
-            return super(PatchedWorkbook, self).add_sheet(name, cell_overwrite_ok=cell_overwrite_ok)
-
-    xlwt.Workbook = PatchedWorkbook
-
-except ImportError:
-    xlwt = None
-
-try:
-    import xlsxwriter
-
-    # add some sanitization to respect the excel sheet name restrictions
-    # as the sheet name is often translatable, can not control the input
-    class PatchedXlsxWorkbook(xlsxwriter.Workbook):
-
-        # TODO when xlsxwriter bump to 0.9.8, add worksheet_class=None parameter instead of kw
-        def add_worksheet(self, name=None, **kw):
-            if name:
-                # invalid Excel character: []:*?/\
-                name = re.sub(r'[\[\]:*?/\\]', '', name)
-
-                # maximum size is 31 characters
-                name = name[:31]
-            return super(PatchedXlsxWorkbook, self).add_worksheet(name, **kw)
-
-    xlsxwriter.Workbook = PatchedXlsxWorkbook
-
-except ImportError:
-    xlsxwriter = None
 
 
 def get_iso_codes(lang: str) -> str:
