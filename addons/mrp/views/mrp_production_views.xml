@@ -315,7 +315,7 @@
                                     readonly="state != 'draft'"/>
                                 <button name="action_generate_bom" type="object" icon="fa-plus"
                                     title="Generate a new BoM from this Manufacturing Order" groups="mrp.group_mrp_manager"
-                                    invisible="bom_id or not product_id or (not move_raw_ids and not workorder_ids)">
+                                    invisible="not show_generate_bom">
                                     <span>Generate BOM</span>
                                 </button>
                                 <button name="action_update_bom" string="Update BoM" type="object"
@@ -407,7 +407,7 @@
                                         <create string="Add a line"/>
                                         <button name="action_add_from_catalog_raw" string="Catalog" type="object" class="px-4 btn-link" context="{'order_id': parent.id}"/>
                                     </control>
-                                    <field name="product_id" force_save="1" context="{'default_is_storable': True}" required="1" readonly="move_lines_count &gt; 0 or state == 'cancel' or (state != 'draft' and not additional)" domain="['&amp;', ('type', '=', 'consu'), ('id', '!=', parent.product_id)]"/>
+                                    <field name="product_id" force_save="1" context="{'default_is_storable': True}" required="1" readonly="move_lines_count &gt; 0 or state == 'cancel' or (state != 'draft' and not additional)" domain="[('type', '=', 'consu')]"/>
                                     <field name="forecast_availability" column_invisible="parent.state in ['done', 'cancel']" string="" widget="forecast_widget"/>
                                     <field name="location_id" string="From" readonly="1" force_save="1" groups="stock.group_stock_multi_locations" optional="hide"/>
                                     <!-- test_immediate_validate_uom_2, test_product_produce_different_uom -->
