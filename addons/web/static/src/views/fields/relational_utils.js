@@ -3,6 +3,7 @@ import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { makeContext } from "@web/core/context";
 import { Dialog } from "@web/core/dialog/dialog";
 import { Domain } from "@web/core/domain";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { RPCError } from "@web/core/network/rpc";
 import { Cache } from "@web/core/utils/cache";
 import {
@@ -546,6 +547,10 @@ export class X2ManyFieldDialog extends Component {
         delete: { optional: true },
         deleteButtonLabel: { optional: true },
         config: Object,
+        controls: { type: Array, optional: true },
+    };
+    static defaultProps = {
+        controls: [],
     };
     setup() {
         this.actionService = useService("action");
@@ -625,6 +630,13 @@ export class X2ManyFieldDialog extends Component {
             };
         }
         return props;
+    }
+
+    get displayDeleteButton() {
+        const deleteControl = this.props.controls.find((control) => control.type === "delete");
+        return (
+            !deleteControl || !evaluateBooleanExpr(deleteControl.invisible, this.record.evalContext)
+        );
     }
 
     async beforeExecuteActionButton(clickParams) {
@@ -739,7 +751,7 @@ export function useOpenX2ManyRecord({
     const addDialog = useOwnedDialogs();
     const viewMode = activeField.viewMode;
 
-    async function openRecord({ record, mode, context, title, onClose }) {
+    async function openRecord({ record, mode, context, title, controls, onClose }) {
         if (!title) {
             title = record
                 ? _t("Open: %s", activeField.string)
@@ -785,6 +797,7 @@ export function useOpenX2ManyRecord({
                 config: env.config,
                 archInfo,
                 record,
+                controls,
                 addNew: () => {
                     return getList().extendRecord(params);
                 },

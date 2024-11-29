@@ -111,9 +111,10 @@ export class ListRenderer extends Component {
          */
         this.preventReorder = false;
 
-        this.creates = this.props.archInfo.creates.length
-            ? this.props.archInfo.creates
+        this.controls = this.props.archInfo.controls.length
+            ? this.props.archInfo.controls
             : [{ type: "create", string: _t("Add a line") }];
+        this.deleteControl = this.controls.find((control) => control.type === "delete") || {};
 
         this.cellToFocus = null;
         this.activeRowId = null;
@@ -875,6 +876,10 @@ export class ListRenderer extends Component {
         return this.isX2Many && this.canCreate;
     }
 
+    displayDeleteIcon(record) {
+        return !evaluateBooleanExpr(this.deleteControl.invisible, record.evalContext);
+    }
+
     // Group headers logic:
     // if there are aggregates, the first th spans until the first
     // aggregate column then all cells between aggregates are rendered
@@ -1383,7 +1388,7 @@ export class ListRenderer extends Component {
                             return false;
                         }
                         // add a line
-                        const { context } = this.creates[0];
+                        const { context } = this.controls[0];
                         this.add({ context });
                     } else if (
                         this.canCreate &&
