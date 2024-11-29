@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <record id="employee_al_bank_account" model="res.partner.bank">
-            <field name="acc_number">123456789</field>
-            <field name="partner_id" ref="hr.work_contact_al"/>
-            <field name="bank_id" ref="base.bank_bnp"/>
-        </record>
-        <record id="hr.employee_al" model="hr.employee">
-            <field name="bank_account_id" ref="employee_al_bank_account"/>
-        </record>
         <!-- Expense Sheet -->
         <record id="transportation_expense_sheet" model="hr.expense.sheet">
             <field name="name">Transportation Expense</field>
