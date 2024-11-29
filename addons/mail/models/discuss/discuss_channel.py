@@ -994,9 +994,6 @@ class DiscussChannel(models.Model):
             store.add(channel, info)
 
     # User methods
-    @api.model
-    def channel_get(self, partners_to, pin=True, force_open=False):
-        return Store(self._channel_get(partners_to, pin, force_open)).get_result()
 
     @api.model
     def _channel_get(self, partners_to, pin=True, force_open=False):
@@ -1138,10 +1135,6 @@ class DiscussChannel(models.Model):
         self.add_members(self.env.user.partner_id.ids)
 
     @api.model
-    def channel_create(self, name, group_id):
-        return Store(self._channel_create(name, group_id)).get_result()
-
-    @api.model
     def _channel_create(self, name, group_id):
         """ Create a channel and add the current partner, broadcast it (to make the user directly
             listen to it when polling)
@@ -1161,10 +1154,6 @@ class DiscussChannel(models.Model):
         new_channel.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
         self.env.user._bus_send_store(new_channel)
         return new_channel
-
-    @api.model
-    def create_group(self, partners_to, default_display_mode=False, name=''):
-        return Store(self._create_group(partners_to, default_display_mode, name)).get_result()
 
     @api.model
     def _create_group(self, partners_to, default_display_mode=False, name=''):

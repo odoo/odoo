@@ -8,9 +8,10 @@ import {
     models,
     serverState,
     unmakeKwArgs,
+    Command,
 } from "@web/../tests/web_test_helpers";
 import { Domain } from "@web/core/domain";
-import { serializeDateTime } from "@web/core/l10n/dates";
+import { serializeDateTime, today } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 import { groupBy } from "@web/core/utils/arrays";
 
@@ -260,6 +261,109 @@ async function channel_call_leave(request) {
         ]);
     }
     BusBus._sendmany(notifications);
+}
+
+registerRoute("/discuss/channel/get", discuss_channel_get);
+/** @type {RouteCallback} */
+async function discuss_channel_get(request) {
+    const { partners_to } = await parseRequestParams(request);
+
+    /** @type {import("mock_models").DiscussChannel} */
+    const DiscussChannel = this.env["discuss.channel"];
+    /** @type {import("mock_models").DiscussChannelMember} */
+    const DiscussChannelMember = this.env["discuss.channel.member"];
+    /** @type {import("mock_models").ResPartner} */
+    const ResPartner = this.env["res.partner"];
+
+    if (!partners_to.includes(this.env.user.partner_id)) {
+        partners_to.push(this.env.user.partner_id);
+    }
+    const partners = ResPartner.browse(partners_to);
+    const channels = DiscussChannel.search_read([["channel_type", "=", "chat"]]);
+    for (const channel of channels) {
+        const channelMemberIds = DiscussChannelMember.search([
+            ["channel_id", "=", channel.id],
+            ["partner_id", "in", partners_to],
+        ]);
+        if (
+            channelMemberIds.length === partners.length &&
+            channel.channel_member_ids.length === partners.length
+        ) {
+            return new mailDataHelpers.Store(DiscussChannel.browse(channel.id)).get_result();
+        }
+    }
+    const id = DiscussChannel.create({
+        channel_member_ids: partners.map((partner) =>
+            Command.create({
+                partner_id: partner.id,
+                unpin_dt:
+                    partner.id == serverState.partnerId ? false : serializeDateTime(today()),
+            })
+        ),
+        channel_type: "chat",
+        name: partners.map((partner) => partner.name).join(", "),
+    });
+    DiscussChannel._broadcast(
+        [id],
+        partners.map(({ id }) => id)
+    );
+    return new mailDataHelpers.Store(DiscussChannel.browse(id)).get_result();
+}
+
+registerRoute("/discuss/channel/create", discuss_channel_create);
+/** @type {RouteCallback} */
+async function discuss_channel_create(request) {
+    const { name, group_id } = await parseRequestParams(request);
+
+    /** @type {import("mock_models").DiscussChannel} */
+    const DiscussChannel = this.env["discuss.channel"];
+    /** @type {import("mock_models").ResPartner} */
+    const ResPartner = this.env["res.partner"];
+
+    const id = DiscussChannel.create({
+        channel_member_ids: [Command.create({ partner_id: this.env.user.partner_id })],
+        channel_type: "channel",
+        name,
+        group_public_id: group_id,
+    });
+    DiscussChannel.write([id], { group_public_id: group_id });
+    DiscussChannel.message_post(
+        id,
+        makeKwArgs({
+            body: `<div class="o_mail_notification">created <a href="#" class="o_channel_redirect" data-oe-id="${id}">#${name}</a></div>`,
+            message_type: "notification",
+        })
+    );
+    const [partner] = ResPartner.read(this.env.user.partner_id);
+    DiscussChannel._broadcast([id], [partner]);
+    return new mailDataHelpers.Store(DiscussChannel.browse(id)).get_result();
+}
+
+registerRoute("/discuss/channel/create_group", discuss_create_group);
+/** @type {RouteCallback} */
+async function discuss_create_group(request) {
+    const kwargs = await parseRequestParams(request);
+    const partners_to = kwargs.partners_to || [];
+    const name = kwargs.name || "";
+
+    /** @type {import("mock_models").DiscussChannel} */
+    const DiscussChannel = this.env["discuss.channel"];
+    /** @type {import("mock_models").ResPartner} */
+    const ResPartner = this.env["res.partner"];
+
+    const partners = ResPartner.browse(partners_to);
+    const id = DiscussChannel.create({
+        channel_type: "group",
+        channel_member_ids: partners.map((partner) =>
+            Command.create({ partner_id: partner.id })
+        ),
+        name,
+    });
+    DiscussChannel._broadcast(
+        [id],
+        partners.map((partner) => partner.id)
+    );
+    return new mailDataHelpers.Store(DiscussChannel.browse(id)).get_result();
 }
 
 registerRoute("/discuss/channel/fold", discuss_channel_fold);
