@@ -635,6 +635,7 @@ class AccountMove(models.Model):
     invoice_cash_rounding_id = fields.Many2one(
         comodel_name='account.cash.rounding',
         string='Cash Rounding Method',
+        compute='_compute_invoice_cash_rounding_id', store=True, readonly=False,
         help='Defines the smallest coinage of the currency that can be used to pay by cash.',
     )
     sending_data = fields.Json(copy=False)
@@ -1922,6 +1923,49 @@ class AccountMove(models.Model):
     def _compute_incoterm_location(self):
         pass
 
+    @api.depends('currency_id.name')
+    def _compute_invoice_cash_rounding_id(self):
+        """
+        Computes the default cash rounding method of the move, based on the existing ``ir.default`` records,
+        or the company's currency ISO code following the ISO-4217 standard.
+        Some exceptions from the standard for some currencies are saved in ``ir.default`` by default:
+
+            - IDR from 0.01 to 1.0
+            - INR from 0.01 to 1.0
+            - CHF from 0.01 to 0.05
+
+        If the user wish to add more exception for any currency, they should create a new ``ir.default`` record
+        for ``invoice_cash_rounding_id`` field with ``currency=<currency_name>`` (e.g. "currency=USD") set in the condition field.
+        """
+        if not self.env.user.has_group('account.group_cash_rounding'):
+            # If the cash rounding setting is deactivated, don't set any cash rounding value
+            self.invoice_cash_rounding_id = False
+            return
+
+        for move in self:
+            # If any of the currency is unset (e.g. from the form view), prevent raising error and just set the cash rounding to False
+            if not move.currency_id:
+                move.invoice_cash_rounding_id = False
+
+            # If the field has been set, don't change it.
+            elif move.invoice_cash_rounding_id:
+                move.invoice_cash_rounding_id = move.invoice_cash_rounding_id
+
+            # Try to find an existing `ir.default` record with a currency condition set
+            elif ir_default_cash_rounding_id := self.env['ir.default']._get(self._name, 'invoice_cash_rounding_id', condition=f'currency={move.currency_id.name}'):
+                move.invoice_cash_rounding_id = ir_default_cash_rounding_id
+
+            # Set the rounding according to the current standard of ISO-4217 for each currency.
+            else:
+                if move.currency_id.name in ('BIF', 'CLP', 'DJF', 'GNF', 'ISK', 'JPY', 'KMF', 'KRW', 'PYG',
+                                             'RWF', 'UGX', 'UYI', 'VND', 'VUV', 'XAF', 'XOF', 'XPF'):
+                    move.invoice_cash_rounding_id = self.env.ref('account.cash_rounding_1_0', False)
+                elif move.currency_id.name in ('BHD', 'IQD', 'JOD', 'KWD', 'LYD', 'OMR', 'TND'):
+                    move.invoice_cash_rounding_id = self.env.ref('account.cash_rounding_0_001', False)
+                else:
+                    # Most currencies have 2 decimal separators; use the 0.01 rounding by default
+                    move.invoice_cash_rounding_id = self.env.ref('account.cash_rounding_0_01', False)
+
     @api.depends('partner_id', 'invoice_date', 'amount_total')
     def _compute_abnormal_warnings(self):
         """Assign warning fields based on historical data.
@@ -3132,6 +3176,12 @@ class AccountMove(models.Model):
             if field.inverse or (field.compute and not field.readonly):
                 protected.update(self.pool.field_computed.get(field, [field]))
         return [(protected, rec) for rec in records]
+
+    def default_get(self, fields_list):
+        # Remove invoice_cash_rounding_id from the default list so that we can compute its value manually.
+        defaults = super().default_get(fields_list)
+        defaults.pop('invoice_cash_rounding_id', None)
+        return defaults
 
     @api.model_create_multi
     def create(self, vals_list):
