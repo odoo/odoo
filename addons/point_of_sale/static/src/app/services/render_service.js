@@ -29,7 +29,7 @@ export class RenderContainer extends Component {
  * In order to obtain the html code that represents a component, we need to
  * actually mount the respective component in the dom.
  */
-const renderService = {
+export const renderService = {
     dependencies: [],
     start() {
         const toBeRenderedComponentData = reactive({});

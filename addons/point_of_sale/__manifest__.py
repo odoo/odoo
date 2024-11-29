@@ -94,6 +94,9 @@
             'point_of_sale/static/src/proxy_trap.js',
             'point_of_sale/static/src/lazy_getter.js',
             'point_of_sale/static/src/app/services/data_service.js',
+
+            'point_of_sale/static/src/app/utils/html-to-image.js',
+            'point_of_sale/static/src/app/services/render_service.js',
             'point_of_sale/static/tests/unit/**/*',
         ],
 
