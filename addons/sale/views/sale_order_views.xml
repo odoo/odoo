@@ -328,6 +328,16 @@
                         invisible="invoice_count == 0">
                         <field name="invoice_count" widget="statinfo" string="Invoices"/>
                     </button>
+                    <button
+                        name="action_view_payment_transaction"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-money"
+                        invisible="not transaction_ids"
+                        groups="base.group_no_one"
+                    >
+                        <field name="transaction_ids" widget="statinfo" string="Payments"/>
+                    </button>
                 </div>
                 <div class="badge rounded-pill text-bg-secondary float-end fs-6 border-0"
                     invisible="not locked">
