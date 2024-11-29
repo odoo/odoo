@@ -696,7 +696,7 @@ test("See records when clicking on a bar chart bar", async () => {
         },
         loadAction(actionRequest) {
             expect.step("load-action");
-            expect(actionRequest).toEqual("test.my_action");
+            expect(actionRequest).toBe("test.my_action");
             return action;
         },
     };

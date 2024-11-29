@@ -6,6 +6,7 @@ import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { getContent, getSelection, setContent } from "./selection";
 import { animationFrame } from "@odoo/hoot-mock";
 import { dispatchCleanForSave } from "./dispatch";
+import { fixInvalidHTML } from "@html_editor/utils/sanitize";
 
 export const Direction = {
     BACKWARD: "BACKWARD",
@@ -23,7 +24,7 @@ class TestEditor extends Component {
 
     setup() {
         const props = this.props;
-        const content = props.content;
+        const content = fixInvalidHTML(props.content);
         this.wysiwygProps = Object.assign({}, this.props.wysiwygProps);
         const iframe = this.props.wysiwygProps.iframe;
         const oldOnLoad = this.wysiwygProps.onLoad;
@@ -33,14 +34,13 @@ class TestEditor extends Component {
                 // @todo @phoenix move it to setupMultiEditor
                 if (iframe) {
                     // el is here the body
-                    const content = props.content || "";
-                    var html = `<div>${content}</div><style>${props.styleContent}</style>`;
+                    var html = `<div>${content || ""}</div><style>${props.styleContent}</style>`;
                     el.innerHTML = html;
                     el = el.firstChild;
                 }
-                if (props.content) {
+                if (content) {
                     el.setAttribute("contenteditable", true); // so we can focus it if needed
-                    const configSelection = getSelection(el, props.content);
+                    const configSelection = getSelection(el, content);
                     if (configSelection) {
                         el.focus();
                     }

@@ -1152,3 +1152,32 @@ describe("History steps Ids", () => {
         editor.destroy();
     });
 });
+
+describe("Selection", () => {
+    test("Selection should be updated for peer after delete backward", async () => {
+        const pool = await createPeers(["p1", "p2"]);
+        // editor content : <p>a</p>
+        const peers = pool.peers;
+        await peers.p1.focus(); // <p>a[]</p>
+        await peers.p2.focus();
+        await peers.p1.openDataChannel(peers.p2);
+        await animationFrame();
+        await new Promise((resolve) => setTimeout(resolve));
+        expect(
+            peers.p2.plugins.collaborationSelectionAvatar.selectionInfos.get("p1").selection
+                .anchorOffset
+        ).toBe(1);
+        expect(
+            peers.p2.plugins.collaborationSelection.selectionInfos.get("p1").selection.anchorOffset
+        ).toBe(1);
+        peers.p1.plugins.delete.delete("backward", "character");
+        advanceTime(100);
+        expect(
+            peers.p2.plugins.collaborationSelectionAvatar.selectionInfos.get("p1").selection
+                .anchorOffset
+        ).toBe(0);
+        expect(
+            peers.p2.plugins.collaborationSelection.selectionInfos.get("p1").selection.anchorOffset
+        ).toBe(0);
+    });
+});

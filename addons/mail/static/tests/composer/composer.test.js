@@ -536,7 +536,8 @@ test("composer text input placeholder should contain correspondent name when thr
     await contains("textarea.o-mail-Composer-input[placeholder='Message Marc Demo…']");
 });
 
-test.tags("focus required")("quick edit last self-message from UP arrow", async () => {
+test.tags("focus required");
+test("quick edit last self-message from UP arrow", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     pyEnv["mail.message"].create({
@@ -694,7 +695,8 @@ test("composer: paste attachments", async () => {
     await contains(".o-mail-AttachmentList .o-mail-AttachmentCard");
 });
 
-test.tags("focus required")("Replying on a channel should focus composer initially", async () => {
+test.tags("focus required");
+test("Replying on a channel should focus composer initially", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",

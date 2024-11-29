@@ -44,7 +44,8 @@ test("Folded chat windows are displayed as chat bubbles", async () => {
     await contains(".o-mail-ChatWindow", { count: 1 });
 });
 
-test.tags("focus required")("'New message' chat window can only be open", async () => {
+test.tags("focus required");
+test("'New message' chat window can only be open", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John" });
     pyEnv["res.users"].create({ partner_id: partnerId });

@@ -39,11 +39,11 @@ const debugRegistry = registry.category("debug");
 
 onRpc(async (args) => {
     if (args.method === "has_access") {
-        return Promise.resolve(true);
+        return true;
     }
     if (args.route === "/web/dataset/call_kw/ir.attachment/regenerate_assets_bundles") {
         expect.step("ir.attachment/regenerate_assets_bundles");
-        return Promise.resolve(true);
+        return true;
     }
 });
 
@@ -54,7 +54,8 @@ beforeEach(() => {
     clearRegistry(debugRegistry.category("custom"));
 });
 
-describe.tags("desktop")("DebugMenu", () => {
+describe.tags("desktop");
+describe("DebugMenu", () => {
     test("can be rendered", async () => {
         debugRegistry
             .category("default")

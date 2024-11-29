@@ -46,7 +46,8 @@ test("toolbar is only visible when selection is not collapsed in desktop", async
     expect(".o-we-toolbar").toHaveCount(0);
 });
 
-test.tags("mobile")("toolbar is also visible when selection is collapsed in mobile", async () => {
+test.tags("mobile");
+test("toolbar is also visible when selection is collapsed in mobile", async () => {
     const { el } = await setupEditor("<p>test</p>");
 
     // set a non-collapsed selection to open toolbar
@@ -85,7 +86,8 @@ test("toolbar works: can format bold", async () => {
     expect(getContent(el)).toBe("<p><strong>[test]</strong></p>");
 });
 
-test.tags("iframe")("toolbar in an iframe works: can format bold", async () => {
+test.tags("iframe");
+test("toolbar in an iframe works: can format bold", async () => {
     const { el } = await setupEditor("<p>test</p>", { props: { iframe: true } });
     expect("iframe").toHaveCount(1);
     expect(getContent(el)).toBe("<p>test</p>");
@@ -219,6 +221,7 @@ test("toolbar works: show the right font name", async () => {
     await waitFor(".o-we-toolbar");
     for (const item of fontItems) {
         await contains(".o-we-toolbar [name='font'] .dropdown-toggle").click();
+        await animationFrame();
         const name = item.name.toString();
         let selector = `.o_font_selector_menu .dropdown-item:contains('${name}')`;
         for (const tempItem of fontItems) {
@@ -232,8 +235,28 @@ test("toolbar works: show the right font name", async () => {
             }
         }
         await contains(selector).click();
+        await animationFrame();
         expect(".o-we-toolbar [name='font']").toHaveText(name);
     }
+});
+
+test("toolbar works: show the right font name after undo", async () => {
+    const { el } = await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+    expect(".o-we-toolbar [name='font']").toHaveText("Normal");
+
+    await contains(".o-we-toolbar [name='font'] .dropdown-toggle").click();
+    await contains(".o_font_selector_menu .dropdown-item:contains('Header 2')").click();
+    expect(getContent(el)).toBe("<h2>[test]</h2>");
+    expect(".o-we-toolbar [name='font']").toHaveText("Header 2");
+    await press(["ctrl", "z"]);
+    await animationFrame();
+    expect(getContent(el)).toBe("<p>[test]</p>");
+    expect(".o-we-toolbar [name='font']").toHaveText("Normal");
+    await press(["ctrl", "y"]);
+    await animationFrame();
+    expect(getContent(el)).toBe("<h2>[test]</h2>");
+    expect(".o-we-toolbar [name='font']").toHaveText("Header 2");
 });
 
 test("toolbar works: can select font size", async () => {
@@ -273,7 +296,8 @@ test("toolbar works: can select font size", async () => {
     expect(".o-we-toolbar [name='font-size']").toHaveText(oSmallSize);
 });
 
-test.tags("desktop")("toolbar works: display correct font size on select all", async () => {
+test.tags("desktop");
+test("toolbar works: display correct font size on select all", async () => {
     const { el } = await setupEditor("<p>test</p>");
     expect(getContent(el)).toBe("<p>test</p>");
 
@@ -300,7 +324,8 @@ test.tags("desktop")("toolbar works: display correct font size on select all", a
     expect(".o-we-toolbar [name='font-size']").toHaveText(`${h1Size}`);
 });
 
-test.tags("desktop")("toolbar should not open on keypress tab inside table", async () => {
+test.tags("desktop");
+test("toolbar should not open on keypress tab inside table", async () => {
     const contentBefore = unformat(`
         <table>
             <tbody>
@@ -329,7 +354,8 @@ test.tags("desktop")("toolbar should not open on keypress tab inside table", asy
     expect(".o-we-toolbar").toHaveCount(0);
 });
 
-test.tags("desktop")("toolbar should close on keypress tab inside table", async () => {
+test.tags("desktop");
+test("toolbar should close on keypress tab inside table", async () => {
     const contentBefore = unformat(`
         <table>
             <tbody>
@@ -601,7 +627,8 @@ test("close the toolbar if the selection contains any nodes (traverseNode = [], 
     expect(".o-we-toolbar").toHaveCount(0);
 });
 
-describe.tags("desktop")("toolbar open and close on user interaction", () => {
+describe.tags("desktop");
+describe("toolbar open and close on user interaction", () => {
     describe("mouse", () => {
         test("toolbar should not open while mousedown (only after mouseup)", async () => {
             const { el } = await setupEditor("<p>test</p>");

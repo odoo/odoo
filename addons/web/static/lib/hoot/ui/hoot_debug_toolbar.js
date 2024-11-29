@@ -14,7 +14,7 @@ import { HootTestResult } from "./hoot_test_result";
  *  test: Test;
  * }} HootDebugToolBarProps
  *
- * @typedef {import("../core/expect").TestResult} TestResult
+ * @typedef {import("../core/expect").CaseResult} CaseResult
  */
 
 /** @extends {Component<HootDebugToolBarProps, import("../hoot").Environment>} */

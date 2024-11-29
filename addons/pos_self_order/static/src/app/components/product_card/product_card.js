@@ -94,7 +94,7 @@ export class ProductCard extends Component {
 
         if (product.isCombo()) {
             this.router.navigate("combo_selection", { id: product.id });
-        } else if (product.needToConfigure()) {
+        } else if (product.isConfigurable()) {
             this.router.navigate("product", { id: product.id });
         } else {
             if (!this.selfOrder.ordering) {

@@ -80,7 +80,8 @@ test("RemainingDaysField on a date field in list view", async () => {
     ]);
 });
 
-test.tags("desktop")("RemainingDaysField on a date field in multi edit list view", async () => {
+test.tags("desktop");
+test("RemainingDaysField on a date field in multi edit list view", async () => {
     mockDate("2017-10-08 15:35:11"); // October 8 2017, 15:35:11
 
     Partner._records = [

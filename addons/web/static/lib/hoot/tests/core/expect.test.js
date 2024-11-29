@@ -1,9 +1,9 @@
 /** @odoo-module */
 
-import { describe, expect, makeExpect, mountOnFixture, test } from "@odoo/hoot";
-import { check, tick } from "@odoo/hoot-dom";
+import { describe, expect, makeExpect, test } from "@odoo/hoot";
+import { check, manuallyDispatchProgrammaticEvent, tick } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
-import { parseUrl } from "../local_helpers";
+import { mountForTest, parseUrl } from "../local_helpers";
 
 import { Test } from "../../core/test";
 
@@ -142,7 +142,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("'expect' results contain the correct informations", async () => {
-        await mountOnFixture(/* xml */ `
+        await mountForTest(/* xml */ `
             <label style="color: #f00">
                 Checkbox
                 <input class="cb" type="checkbox" />
@@ -349,22 +349,22 @@ describe(parseUrl(import.meta.url), () => {
 
         test("verifyErrors", async () => {
             expect.assertions(1);
-            expect.errors(2);
+            expect.errors(3);
 
-            const asyncBoom = async () => {
-                throw new Error("rejection");
+            const boom = (msg) => {
+                throw new Error(msg);
             };
 
-            const boom = () => {
-                throw new Error("error");
-            };
+            // Timeout
+            setTimeout(() => boom("timeout"));
+            // Promise
+            Promise.resolve().then(() => boom("async"));
+            // Event
+            manuallyDispatchProgrammaticEvent(window, "error", { message: "event" });
 
-            asyncBoom();
-            setTimeout(boom);
-            await tick();
             await tick();
 
-            expect.verifyErrors(["error", "rejection"]);
+            expect.verifyErrors(["event", "async", "timeout"]);
         });
 
         test("verifySteps", () => {
@@ -386,7 +386,7 @@ describe(parseUrl(import.meta.url), () => {
 
     describe("DOM matchers", () => {
         test("toBeChecked", async () => {
-            await mountOnFixture(/* xml */ `
+            await mountForTest(/* xml */ `
                 <input type="checkbox" />
                 <input type="checkbox" checked="" />
             `);
@@ -396,7 +396,7 @@ describe(parseUrl(import.meta.url), () => {
         });
 
         test("toHaveAttribute", async () => {
-            await mountOnFixture(/* xml */ `
+            await mountForTest(/* xml */ `
                 <input type="number" disabled="" />
             `);
 
@@ -406,7 +406,7 @@ describe(parseUrl(import.meta.url), () => {
         });
 
         test("toHaveCount", async () => {
-            await mountOnFixture(/* xml */ `
+            await mountForTest(/* xml */ `
                 <ul>
                     <li>milk</li>
                     <li>eggs</li>
@@ -424,7 +424,7 @@ describe(parseUrl(import.meta.url), () => {
         });
 
         test("toHaveProperty", async () => {
-            await mountOnFixture(/* xml */ `
+            await mountForTest(/* xml */ `
                 <input type="search" readonly="" />
             `);
 
@@ -444,7 +444,7 @@ describe(parseUrl(import.meta.url), () => {
                 nbsp = "\u00a0";
             }
 
-            await mountOnFixture(TextComponent);
+            await mountForTest(TextComponent);
 
             expect(".with").toHaveText("With nbsp");
             expect(".with").toHaveText("With\u00a0nbsp", { raw: true });
@@ -456,7 +456,7 @@ describe(parseUrl(import.meta.url), () => {
         });
 
         test("toHaveInnerHTML", async () => {
-            await mountOnFixture(/* xml */ `
+            await mountForTest(/* xml */ `
                 <div class="parent">
                     <p>
                         abc<strong>def</strong>ghi
@@ -472,7 +472,7 @@ describe(parseUrl(import.meta.url), () => {
         });
 
         test("toHaveOuterHTML", async () => {
-            await mountOnFixture(/* xml */ `
+            await mountForTest(/* xml */ `
                 <div class="parent">
                     <p>
                         abc<strong>def</strong>ghi

@@ -1,6 +1,6 @@
-import { afterEach, expect, test } from "@odoo/hoot";
+import { expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, mockDate, runAllTimers } from "@odoo/hoot-mock";
+import { Deferred, animationFrame, mockDate } from "@odoo/hoot-mock";
 import { onRendered } from "@odoo/owl";
 import {
     contains,
@@ -28,9 +28,9 @@ import {
     checkDatasets,
     checkLabels,
     checkLegend,
-    checkYTicks,
     checkModeIs,
     checkTooltip,
+    checkYTicks,
     clickOnDataset,
     clickOnLegend,
     clickSort,
@@ -42,6 +42,7 @@ import {
     getScaleY,
     getYAxisLabel,
     selectMode,
+    setupChartJsForTests,
 } from "./graph_test_helpers";
 
 import { DEFAULT_BG, getBorderWhite, getColors, lightenColor } from "@web/core/colors/colors";
@@ -174,7 +175,7 @@ class Foo extends models.Model {
 
 defineModels([Foo, Color, Product]);
 
-afterEach(runAllTimers);
+setupChartJsForTests();
 
 test("simple bar chart rendering", async () => {
     const view = await mountView({ type: "graph", resModel: "foo" });
@@ -2777,7 +2778,8 @@ test("not use a many2one as a measure by default", async () => {
     expect(queryAllTexts(".o-dropdown--menu .o_menu_item")).toEqual(["Foo", "Revenue", "Count"]);
 });
 
-test.tags("desktop")("graph view crash when moving from search view using Down key", async () => {
+test.tags("desktop");
+test("graph view crash when moving from search view using Down key", async () => {
     await mountView({ type: "graph", resModel: "foo" });
 
     await contains(".o_searchview input").press("ArrowDown");
@@ -3384,7 +3386,8 @@ test("empty graph view without sample data after filter", async () => {
     expect(".o_view_nocontent").toHaveCount(1);
 });
 
-test.tags("desktop")("reload chart with switchView button keep internal state", async () => {
+test.tags("desktop");
+test("reload chart with switchView button keep internal state", async () => {
     Foo._views.list = /* xml */ `<list />`;
 
     await mountWithCleanup(WebClient);

@@ -877,7 +877,8 @@ test("[technical] Opening thread without needaction messages should not mark all
     await assertSteps([]);
 });
 
-test.tags("focus required")("can be marked as read while loading", async () => {
+test.tags("focus required");
+test("can be marked as read while loading", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["discuss.channel"].create({

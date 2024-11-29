@@ -25,6 +25,7 @@ import {
     Command,
     getService,
     patchWithCleanup,
+    preloadBundle,
     serverState,
     withUser,
 } from "@web/../tests/web_test_helpers";
@@ -34,6 +35,7 @@ import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();
+preloadBundle("web.assets_emoji");
 
 test("Mobile: chat window shouldn't open automatically after receiving a new message", async () => {
     const pyEnv = await startServer();
@@ -457,7 +459,8 @@ test("ESC cancels thread rename", async () => {
     await contains(".o-mail-ChatWindow-command", { text: "General" });
 });
 
-test.tags("focus required")("open 2 different chat windows: enough screen width", async () => {
+test.tags("focus required");
+test("open 2 different chat windows: enough screen width", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([{ name: "Channel_1" }, { name: "Channel_2" }]);
     patchUiSize({ width: 1920 });
@@ -527,7 +530,8 @@ test("focus next visible chat window when closing current chat window with ESCAP
     });
 });
 
-test.tags("focus required")("chat window: switch on TAB", async () => {
+test.tags("focus required");
+test("chat window: switch on TAB", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([{ name: "channel1" }, { name: "channel2" }]);
     patchUiSize({ width: 1920 });
@@ -564,7 +568,8 @@ test.tags("focus required")("chat window: switch on TAB", async () => {
     });
 });
 
-test.tags("focus required")("chat window: TAB cycle with 3 open chat windows", async () => {
+test.tags("focus required");
+test("chat window: TAB cycle with 3 open chat windows", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([
         {
