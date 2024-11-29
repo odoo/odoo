@@ -43,13 +43,15 @@ class AutomationBulkManual(models.Model):
         """
         Dynamically filter location_dest_id based on parent_location_id.
         """
-        if self.parent_location_id:
+        if self.parent_location_id and self.automation_manual == 'manual':
             return {
                 'domain': {
                     'location_dest_id': [('location_id', '=', self.parent_location_id.id),
                                          ('filled', '=',False)]
                 }
             }
+        else:
+            self.location_dest_id = self.parent_location_id
         return {
             'domain': {
                 'location_dest_id': []
