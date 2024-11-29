@@ -50,10 +50,10 @@ export class X2ManyField extends Component {
             : ["o_field_x2many"];
         this.className = computeViewClassName(this.props.viewMode, this.archInfo.xmlDoc, classes);
 
-        const { activeActions, creates } = this.archInfo;
+        const { activeActions, controls } = this.archInfo;
         if (this.props.viewMode === "kanban") {
-            this.creates = creates.length
-                ? creates
+            this.controls = controls.length
+                ? controls
                 : [
                       {
                           type: "create",
@@ -95,6 +95,7 @@ export class X2ManyField extends Component {
             const activeElement = document.activeElement;
             openRecord({
                 ...params,
+                controls: this.controls,
                 onClose: () => {
                     if (activeElement) {
                         activeElement.focus();

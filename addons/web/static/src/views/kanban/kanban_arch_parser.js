@@ -39,7 +39,7 @@ export class KanbanArchParser {
         const openAction = action && type ? { action, type } : null;
         const templateDocs = {};
         let headerButtons = [];
-        const creates = [];
+        const controls = [];
         let button_id = 0;
         // Root level of the template
         visitXML(xmlDoc, (node) => {
@@ -60,15 +60,20 @@ export class KanbanArchParser {
             } else if (node.tagName === "control") {
                 for (const childNode of node.children) {
                     if (childNode.tagName === "button") {
-                        creates.push({
+                        controls.push({
                             type: "button",
                             ...processButton(childNode),
                         });
                     } else if (childNode.tagName === "create") {
-                        creates.push({
+                        controls.push({
                             type: "create",
                             context: childNode.getAttribute("context"),
                             string: childNode.getAttribute("string"),
+                            invisible: childNode.getAttribute("invisible"),
+                        });
+                    } else if (childNode.tagName === "delete") {
+                        controls.push({
+                            type: "delete",
                             invisible: childNode.getAttribute("invisible"),
                         });
                     }
@@ -144,7 +149,7 @@ export class KanbanArchParser {
             cardClassName,
             cardColorField: xmlDoc.getAttribute("highlight_color"),
             className,
-            creates,
+            controls,
             fieldNodes,
             widgetNodes,
             handleField,
