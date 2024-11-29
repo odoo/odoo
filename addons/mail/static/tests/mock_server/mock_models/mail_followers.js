@@ -20,7 +20,6 @@ export class MailFollowers extends models.ServerModel {
                 email: true,
                 is_active: true,
                 name: true,
-                partner_id: true,
                 partner: null,
                 thread: [],
             };
