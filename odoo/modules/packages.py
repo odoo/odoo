@@ -4,11 +4,11 @@
 
 from __future__ import annotations
 
-import functools
 import logging
 import typing
 
-import odoo.tools as tools
+from odoo.tools import lazy_property, OrderedSet
+from odoo.tools.sql import column_exists
 
 from .module import get_manifest
 
@@ -76,7 +76,7 @@ _logger = logging.getLogger(__name__)
 # In summary:
 # phase 0: base
 # phase odd: (modules: 1. don't need init; 2. all depends modules have been loaded or going to be loaded in this phase)
-# phase even: (models: 1. need init; 2. all depends modules have been loaded or going to be loaded in this phase)
+# phase even: (modules: 1. need init; 2. all depends modules have been loaded or going to be loaded in this phase)
 #
 #
 # Corner case
@@ -116,40 +116,13 @@ _logger = logging.getLogger(__name__)
 # phase 3: module4
 
 
-class lazy_recursive_property(tools.lazy_property):
-    """
-    a non-thread-safe lazy recursive property
-    """
-    
-    def __get__(self, obj: Any | None, cls: type) -> Any:
-        if obj is None:
-            return self
-        _visited = f'_{self.fget.__name__}_visited'
-        if getattr(obj, _visited, False):
-            raise RecursionError()
-        setattr(obj, _visited, True)
-        value = self.fget(obj)
-        delattr(obj, _visited)
-        setattr(obj, self.fget.__name__, value)
-        return value
-    
-
-@functools.lru_cache(maxsize=1)
-def _imported_modules(cr: BaseCursor) -> list[str]:
-    result = ['studio_customization']
-    if tools.sql.column_exists(cr, 'ir_module_module', 'imported'):
-        cr.execute('SELECT name FROM ir_module_module WHERE imported')
-        result += [m[0] for m in cr.fetchall()]
-    return result
-
-
 class Package:
     """
     Python package for the Odoo module with the same name
     """
     def __init__(self, name: str, package_graph: PackageGraph) -> None:
         # manifest data
-        self.name :str = name
+        self.name:str = name
         self.manifest :dict = get_manifest(name) or {}
 
         # ir_module_module data                     # column_name
@@ -163,17 +136,17 @@ class Package:
         self.load_version :str | None = None        # the version when loaded to packages
 
         # dependency
-        self.depends: set[Package] = set()
+        self.depends: OrderedSet[Package] = OrderedSet()
         self.package_graph :PackageGraph = package_graph
 
-    @lazy_recursive_property
+    @lazy_property
     def depth(self) -> int:
         """ Return the longest distance from self to module 'base' along dependencies. """
         return max(package.depth for package in self.depends) + 1 if self.depends else 0
 
-    @lazy_recursive_property
+    @lazy_property
     def phase(self) -> int:
-        if not self.depends:  # base
+        if self.name == 'base':
             return 0
 
         if self.package_graph.mode == 'load':
@@ -227,22 +200,30 @@ class PackageGraph:
         for name in names:
             package = self._packages[name] = Package(name, self)
             if not package.manifest.get('installable'):
-                message = None if name in _imported_modules(self._cr) else 'not_installable'
+                message = None if name in self._imported_modules else 'not_installable'
                 self._remove(name, message)
 
-        self._check_depends(names)
-        self._check_depth(names)
+        self._update_depends(names)
+        self._update_depth(names)
         self._update_from_database(names)
 
-    def _check_depends(self, names: Iterable[str]) -> None:
+    @lazy_property
+    def _imported_modules(self) -> OrderedSet[str]:
+        result = ['studio_customization']
+        if column_exists(self._cr, 'ir_module_module', 'imported'):
+            self._cr.execute('SELECT name FROM ir_module_module WHERE imported')
+            result += [m[0] for m in self._cr.fetchall()]
+        return OrderedSet(result)
+
+    def _update_depends(self, names: Iterable[str]) -> None:
         for name in names:
             if package := self._packages.get(name):
                 try:
-                    package.depends = set(self._packages[dep] for dep in package.manifest['depends'])
+                    package.depends = OrderedSet(self._packages[dep] for dep in package.manifest['depends'])
                 except KeyError:
                     self._remove(name, 'missing_depends')
 
-    def _check_depth(self, names: Iterable[str]) -> None:
+    def _update_depth(self, names: Iterable[str]) -> None:
         for name in names:
             if package := self._packages.get(name):
                 try:
