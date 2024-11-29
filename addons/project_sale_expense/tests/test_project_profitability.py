@@ -28,17 +28,11 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
             'name': 'Foreign Employee address',
             'company_id': foreign_company.id,
         })
-        foreign_bank_account = self.env['res.partner.bank'].create({
-            'acc_number': '123456789',
-            'partner_id': foreign_company.partner_id.id,
-            'acc_type': 'bank',
-        })
         foreign_employee = self.env['hr.employee'].create({
             'name': 'foreign_employee',
             'company_id': foreign_company.id,
             'work_contact_id': foreign_partner.id,
             'work_email': 'email@email',
-            'bank_account_id': foreign_bank_account.id,
         })
 
         expense = self.env['hr.expense'].create({
