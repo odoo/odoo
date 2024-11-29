@@ -89,17 +89,17 @@ test("should transform url followed by punctuation characters after space", asyn
     await testEditor({
         contentBefore: "<p>test.com...[]</p>",
         stepFunction: (editor) => insertSpace(editor),
-        contentAfter: '<p><a href="http://test.com">test.com</a>... []</p>',
+        contentAfter: '<p><a href="https://test.com">test.com</a>... []</p>',
     });
     await testEditor({
         contentBefore: "<p>test.com,[]</p>",
         stepFunction: (editor) => insertSpace(editor),
-        contentAfter: '<p><a href="http://test.com">test.com</a>, []</p>',
+        contentAfter: '<p><a href="https://test.com">test.com</a>, []</p>',
     });
     await testEditor({
         contentBefore: "<p>test.com,hello[]</p>",
         stepFunction: (editor) => insertSpace(editor),
-        contentAfter: '<p><a href="http://test.com">test.com</a>,hello []</p>',
+        contentAfter: '<p><a href="https://test.com">test.com</a>,hello []</p>',
     });
     await testEditor({
         contentBefore: "<p>http://test.com[]</p>",
@@ -166,12 +166,12 @@ test("transform text url into link and undo it", async () => {
     const { el, editor } = await setupEditor(`<p>[]</p>`);
     await insertText(editor, "www.abc.jpg ");
     expect(cleanLinkArtifacts(getContent(el))).toBe(
-        '<p><a href="http://www.abc.jpg">www.abc.jpg</a> []</p>'
+        '<p><a href="https://www.abc.jpg">www.abc.jpg</a> []</p>'
     );
 
     undo(editor);
     expect(cleanLinkArtifacts(getContent(el))).toBe(
-        '<p><a href="http://www.abc.jpg">www.abc.jpg</a>[]</p>'
+        '<p><a href="https://www.abc.jpg">www.abc.jpg</a>[]</p>'
     );
 
     undo(editor);
