@@ -208,7 +208,6 @@ export class OrderSummary extends Component {
         selectedLine.set_quantity(newQuantity);
         if (newQuantity == 0) {
             selectedLine.delete();
-            this.currentOrder._unlinkOrderline(selectedLine);
         }
         return decreaseQuantity;
     }
