@@ -9,6 +9,14 @@ from odoo.tests import Form, tagged
 
 @tagged('post_install', '-at_install')
 class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.project_plan, _other_plans = cls.env['account.analytic.plan']._get_all_plans()
+        cls.analytic_account = cls.env['account.analytic.account'].create({
+            'name': 'Analytic Account',
+            'plan_id': cls.project_plan.id,
+        })
 
     def test_analytic_account_expense_policy(self):
         product_form = Form(self.product_a.product_tmpl_id)
@@ -44,22 +52,15 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
         # Set the expense policy to 'sales_price' to make the 'sale_order_id' field visible on the form view
         self.product_c.expense_policy = 'sales_price'
 
-        self.analytic_plan_2 = self.env['account.analytic.plan'].create({'name': 'Other Plan Test'})
-        self.analytic_account_3 = self.env['account.analytic.account'].create({
-            'name': 'analytic_account_3',
-            'plan_id': self.analytic_plan_2.id,
-        })
-
         # Project Will use another analytic plan than the product
         project = self.env['project.project'].create({'name': 'SO Project'})
-        project.account_id = self.analytic_account_3
+        project.account_id = self.analytic_account
 
         # Set an analytic distribution using account_1 on the product that will be used on the expense
-        self.env['account.analytic.distribution.model'].create([{
+        distribution = self.env['account.analytic.distribution.model'].create([{
             'product_id': self.product_c.id,
             'analytic_distribution': {str(self.analytic_account_1.id): 100}
         }])
-
         so_values = {
             'partner_id': self.partner_a.id,
             'order_line': [Command.create({
@@ -82,7 +83,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
 
         self.assertEqual(
             expense.analytic_distribution,
-            {str(self.analytic_account_1.id): 100, str(self.analytic_account_3.id): 100},
+            {str(self.analytic_account_1.id): 100, str(self.analytic_account.id): 100},
             "The analytic distribution of the expense should be set to the account of the project and the one from the sale order.",
         )
 
@@ -100,14 +101,26 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
             "The analytic distribution of the expense should be the one from the sale order only",
         )
 
-        # The analytic_account_2 has the same plan as the one from the sale order
-        project.account_id = self.analytic_account_2
+        # unlink the previous distribution, and create a new one with an account using the plan 'project_plan'. The
+        # account of the project has to be set on the 'account_id' field to be taken into account during the
+        # distribution computation.
+        distribution.unlink()
+        self.env['account.analytic.distribution.model'].create([{
+            'product_id': self.product_c.id,
+            'analytic_distribution': {str(self.analytic_account.id): 100}
+        }])
+        analytic_account_3 = self.env['account.analytic.account'].create({
+            'name': 'analytic_account_3',
+            'plan_id': self.analytic_account.plan_id.id,
+        })
         so3 = self.env['sale.order'].create(so_values)
+        project.account_id = analytic_account_3
+
         with Form(expense) as exp_form:
             exp_form.sale_order_id = so3
         self.assertEqual(
             expense.analytic_distribution,
-            {str(self.analytic_account_2.id): 100},
+            {str(analytic_account_3.id): 100},
             "The analytic distribution of the expense should keep only the one from the project when the so and project share the same plan",
         )
 
