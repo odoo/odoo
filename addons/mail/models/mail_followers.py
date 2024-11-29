@@ -526,7 +526,6 @@ GROUP BY fol.id%s%s""" % (
                 "email": True,
                 "is_active": True,
                 "name": True,
-                "partner_id": True,
                 "partner": None,
                 "thread": [],
             }
