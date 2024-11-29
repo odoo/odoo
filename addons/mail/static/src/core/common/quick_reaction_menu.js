@@ -1,8 +1,7 @@
 import { Component, onMounted, onPatched, useRef, useState } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
-import { EmojiPicker, loadEmoji, loader } from "@web/core/emoji_picker/emoji_picker";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { usePopover } from "@web/core/popover/popover_hook";
+import { loadEmoji, loader, useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { useService } from "@web/core/utils/hooks";
 
 /**
@@ -27,13 +26,17 @@ export class QuickReactionMenu extends Component {
     setup() {
         this.toggle = useRef("toggle");
         this.store = useState(useService("mail.store"));
-        this.picker = usePopover(EmojiPicker, {
-            position: "bottom-end",
-            popoverClass: "o-mail-QuickReactionMenu-pickerPopover shadow-sm",
-            animation: false,
-            onPositioned: (el, { direction, variant }) =>
-                el.classList.add(`o-popover--${direction[0]}${variant[0]}`),
-        });
+        this.picker = useEmojiPicker(
+            null,
+            { onSelect: this.toggleReaction.bind(this) },
+            {
+                arrow: false,
+                position: "bottom-start",
+                popoverClass: "o-mail-QuickReactionMenu-pickerPopover",
+                onPositioned: (el, { direction, variant }) =>
+                    el.classList.add(`o-popover--${direction[0]}${variant[0]}`),
+            }
+        );
         this.dropdown = useState(useDropdownState());
         this.frequentEmojiService = useState(useService("web.frequent.emoji"));
         this.state = useState({ emojiLoaded: Boolean(loader.loaded) });
@@ -51,7 +54,7 @@ export class QuickReactionMenu extends Component {
 
     openPicker() {
         this.dropdown.close();
-        this.picker.open(this.toggle.el, { onSelect: this.toggleReaction.bind(this) });
+        this.picker.open(this.toggle);
     }
 
     getEmojiShortcode(emoji) {
