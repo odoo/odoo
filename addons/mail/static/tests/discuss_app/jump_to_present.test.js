@@ -16,7 +16,7 @@ import { describe, expect, test } from "@odoo/hoot";
 
 import { PRESENT_VIEWPORT_THRESHOLD } from "@mail/core/common/thread";
 import { serverState } from "@web/../tests/web_test_helpers";
-import { press, queryFirst } from "@odoo/hoot-dom";
+import { press, queryFirst, tick } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -157,7 +157,7 @@ test("Jump to old reply should prompt jump to present (RPC small delay)", async 
     pyEnv["discuss.channel.member"].write([selfMember.id], {
         new_message_separator: newestMessageId + 1,
     });
-    onRpcBefore("/discuss/channel/messages", async () => await new Promise(setTimeout)); // small delay
+    onRpcBefore("/discuss/channel/messages", tick); // small delay
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 30 });

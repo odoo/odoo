@@ -210,7 +210,8 @@ describe("DateTimeInput (date)", () => {
         expect(".o_datetime_input").toHaveValue("1997/01/09");
     });
 
-    test.tags("mobile")("popover should have enough space to be displayed", async () => {
+    test.tags("mobile");
+    test("popover should have enough space to be displayed", async () => {
         class Root extends Component {
             static components = { DateTimeInput };
             static template = xml`<div class="d-flex"><DateTimeInput t-props="props" /></div>`;

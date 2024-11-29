@@ -46,7 +46,8 @@ test("toolbar is only visible when selection is not collapsed in desktop", async
     expect(".o-we-toolbar").toHaveCount(0);
 });
 
-test.tags("mobile")("toolbar is also visible when selection is collapsed in mobile", async () => {
+test.tags("mobile");
+test("toolbar is also visible when selection is collapsed in mobile", async () => {
     const { el } = await setupEditor("<p>test</p>");
 
     // set a non-collapsed selection to open toolbar
@@ -85,7 +86,8 @@ test("toolbar works: can format bold", async () => {
     expect(getContent(el)).toBe("<p><strong>[test]</strong></p>");
 });
 
-test.tags("iframe")("toolbar in an iframe works: can format bold", async () => {
+test.tags("iframe");
+test("toolbar in an iframe works: can format bold", async () => {
     const { el } = await setupEditor("<p>test</p>", { props: { iframe: true } });
     expect("iframe").toHaveCount(1);
     expect(getContent(el)).toBe("<p>test</p>");
@@ -273,7 +275,8 @@ test("toolbar works: can select font size", async () => {
     expect(".o-we-toolbar [name='font-size']").toHaveText(oSmallSize);
 });
 
-test.tags("desktop")("toolbar should not open on keypress tab inside table", async () => {
+test.tags("desktop");
+test("toolbar should not open on keypress tab inside table", async () => {
     const contentBefore = unformat(`
         <table>
             <tbody>
@@ -302,7 +305,8 @@ test.tags("desktop")("toolbar should not open on keypress tab inside table", asy
     expect(".o-we-toolbar").toHaveCount(0);
 });
 
-test.tags("desktop")("toolbar should close on keypress tab inside table", async () => {
+test.tags("desktop");
+test("toolbar should close on keypress tab inside table", async () => {
     const contentBefore = unformat(`
         <table>
             <tbody>
@@ -574,7 +578,8 @@ test("close the toolbar if the selection contains any nodes (traverseNode = [], 
     expect(".o-we-toolbar").toHaveCount(0);
 });
 
-describe.tags("desktop")("toolbar open and close on user interaction", () => {
+describe.tags("desktop");
+describe("toolbar open and close on user interaction", () => {
     describe("mouse", () => {
         test("toolbar should not open while mousedown (only after mouseup)", async () => {
             const { el } = await setupEditor("<p>test</p>");

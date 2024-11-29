@@ -2119,8 +2119,7 @@ test(`any operator (edit) with invalid domain as value`, async () => {
     expect(SELECTORS.valueEditor).toHaveCount(1);
     expect(SELECTORS.clearNotSupported).toHaveCount(1);
     await contains(SELECTORS.clearNotSupported).click();
-    const rows = queryAll(SELECTORS.connector);
-    expect(rows[1].textContent).toBe("all records");
+    expect(`${SELECTORS.connector}:eq(1)`).toHaveText("all records");
 });
 
 test(`any operator (edit) test getDefaultPath`, async () => {

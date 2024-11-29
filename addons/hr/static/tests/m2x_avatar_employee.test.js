@@ -1,9 +1,9 @@
+import { defineHrModels } from "@hr/../tests/hr_test_helpers";
 import { start } from "@mail/../tests/mail_test_helpers";
-import { contains, mountView, onRpc, makeMockServer } from "@web/../tests/web_test_helpers";
-import { getOrigin } from "@web/core/utils/urls";
 import { describe, expect, test } from "@odoo/hoot";
 import { waitFor } from "@odoo/hoot-dom";
-import { defineHrModels } from "@hr/../tests/hr_test_helpers";
+import { contains, makeMockServer, mountView, onRpc } from "@web/../tests/web_test_helpers";
+import { getOrigin } from "@web/core/utils/urls";
 
 describe.current.tags("desktop");
 defineHrModels();
@@ -134,7 +134,7 @@ test("many2one: click on an employee not associated with a user", async () => {
         resId: avatarId,
         arch: `<form><field name="employee_id" widget="many2one_avatar_employee"/></form>`,
     });
-    await contains(".o_field_widget[name=employee_id] input", { value: "Mario" });
+    await waitFor(".o_field_widget[name=employee_id] input:value(Mario)");
     await contains(".o_m2o_avatar > img").click();
     expect.verifySteps([`web_read m2x.avatar.employee ${avatarId}`]);
 });

@@ -723,7 +723,8 @@ test("last status bar button have a border radius (no arrow shape) on the right 
     expect(".o_statusbar_status button[data-value='3']").toHaveClass("o_first");
 });
 
-test.tags("desktop")("correctly load statusbar when dynamic domain changes", async () => {
+test.tags("desktop");
+test("correctly load statusbar when dynamic domain changes", async () => {
     class Stage extends models.Model {
         name = fields.Char();
         folded = fields.Boolean({ default: false });
@@ -784,7 +785,8 @@ test.tags("desktop")("correctly load statusbar when dynamic domain changes", asy
     expect.verifySteps([]);
 });
 
-test.tags("mobile")("statusbar is rendered correctly on small devices", async () => {
+test.tags("mobile");
+test("statusbar is rendered correctly on small devices", async () => {
     Partner._records = [
         { id: 1, name: "first record", trululu: 4 },
         { id: 2, name: "second record", trululu: 1 },
@@ -819,7 +821,8 @@ test.tags("mobile")("statusbar is rendered correctly on small devices", async ()
     expect(".o-dropdown--menu .dropdown-item").toHaveCount(1);
 });
 
-test.tags("mobile")("statusbar with no status on extra small screens", async () => {
+test.tags("mobile");
+test("statusbar with no status on extra small screens", async () => {
     Partner._records = [
         { id: 1, name: "first record", trululu: 4 },
         { id: 2, name: "second record", trululu: 1 },
@@ -846,7 +849,8 @@ test.tags("mobile")("statusbar with no status on extra small screens", async () 
     expect(".o_statusbar_status button.dropdown-toggle:visible:disabled").toHaveText("...");
 });
 
-test.tags("mobile")("clickable statusbar widget on mobile view", async () => {
+test.tags("mobile");
+test("clickable statusbar widget on mobile view", async () => {
     Partner._records = [
         { id: 1, name: "first record", trululu: 4 },
         { id: 2, name: "second record", trululu: 1 },

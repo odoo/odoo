@@ -186,7 +186,8 @@ test("DropdownGroup: when one is open, then non-sibling toggled, siblings must n
     expect(".two-menu").toHaveCount(0);
 });
 
-test.tags("desktop")("DropdownGroup: toggler focused on mouseenter", async () => {
+test.tags("desktop");
+test("DropdownGroup: toggler focused on mouseenter", async () => {
     class Parent extends Component {
         static components = { Dropdown, DropdownGroup };
         static props = [];

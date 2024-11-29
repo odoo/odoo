@@ -80,17 +80,16 @@ defineModels([Partner, Instrument, Badassery, Product, SaleOrderLine]);
 
 beforeEach(() => onRpc("has_group", () => true));
 
-test.tags("desktop")(
-    "SelectCreateDialog use domain, group_by and search default on desktop",
-    async () => {
-        expect.assertions(3);
-        Partner._views["list"] = /* xml */ `
+test.tags("desktop");
+test("SelectCreateDialog use domain, group_by and search default on desktop", async () => {
+    expect.assertions(3);
+    Partner._views["list"] = /* xml */ `
         <list string="Partner">
             <field name="name"/>
             <field name="foo"/>
         </list>
     `;
-        Partner._views["search"] = /* xml */ `
+    Partner._views["search"] = /* xml */ `
         <search>
             <field name="foo" filter_domain="[('name','ilike',self), ('foo','ilike',self)]"/>
             <group expand="0" string="Group By">
@@ -98,12 +97,44 @@ test.tags("desktop")(
             </group>
         </search>
     `;
-        let search = 0;
-        onRpc("web_read_group", ({ kwargs }) => {
+    let search = 0;
+    onRpc("web_read_group", ({ kwargs }) => {
+        expect(kwargs).toEqual(
+            {
+                context: {
+                    allowed_company_ids: [1],
+                    lang: "en",
+                    tz: "taht",
+                    uid: 7,
+                }, // not part of the test, may change
+                domain: [
+                    "&",
+                    ["name", "like", "a"],
+                    "&",
+                    ["name", "ilike", "piou"],
+                    ["foo", "ilike", "piou"],
+                ],
+                fields: [],
+                groupby: ["bar"],
+                orderby: "",
+                lazy: true,
+                limit: 80,
+                offset: 0,
+            },
+            {
+                message:
+                    "should search with the complete domain (domain + search), and group by 'bar'",
+            }
+        );
+    });
+    onRpc("web_search_read", ({ kwargs }) => {
+        if (search === 0) {
             expect(kwargs).toEqual(
                 {
                     context: {
                         allowed_company_ids: [1],
+                        bin_size: true,
+                        current_company_id: 1,
                         lang: "en",
                         tz: "taht",
                         uid: 7,
@@ -115,94 +146,60 @@ test.tags("desktop")(
                         ["name", "ilike", "piou"],
                         ["foo", "ilike", "piou"],
                     ],
-                    fields: [],
-                    groupby: ["bar"],
-                    orderby: "",
-                    lazy: true,
+                    specification: { name: {}, foo: {} },
                     limit: 80,
                     offset: 0,
+                    order: "",
+                    count_limit: 10001,
                 },
                 {
-                    message:
-                        "should search with the complete domain (domain + search), and group by 'bar'",
+                    message: "should search with the complete domain (domain + search)",
                 }
             );
-        });
-        onRpc("web_search_read", ({ kwargs }) => {
-            if (search === 0) {
-                expect(kwargs).toEqual(
-                    {
-                        context: {
-                            allowed_company_ids: [1],
-                            bin_size: true,
-                            current_company_id: 1,
-                            lang: "en",
-                            tz: "taht",
-                            uid: 7,
-                        }, // not part of the test, may change
-                        domain: [
-                            "&",
-                            ["name", "like", "a"],
-                            "&",
-                            ["name", "ilike", "piou"],
-                            ["foo", "ilike", "piou"],
-                        ],
-                        specification: { name: {}, foo: {} },
-                        limit: 80,
-                        offset: 0,
-                        order: "",
-                        count_limit: 10001,
-                    },
-                    {
-                        message: "should search with the complete domain (domain + search)",
-                    }
-                );
-            } else if (search === 1) {
-                expect(kwargs).toEqual(
-                    {
-                        context: {
-                            allowed_company_ids: [1],
-                            bin_size: true,
-                            current_company_id: 1,
-                            lang: "en",
-                            tz: "taht",
-                            uid: 7,
-                        }, // not part of the test, may change
-                        domain: [["name", "like", "a"]],
-                        specification: { name: {}, foo: {} },
-                        limit: 80,
-                        offset: 0,
-                        order: "",
-                        count_limit: 10001,
-                    },
-                    {
-                        message: "should search with the domain",
-                    }
-                );
-            }
-            search++;
-        });
-        await mountWithCleanup(WebClient);
-        getService("dialog").add(SelectCreateDialog, {
-            noCreate: true,
-            resModel: "partner",
-            domain: [["name", "like", "a"]],
-            context: {
-                search_default_groupby_bar: true,
-                search_default_foo: "piou",
-            },
-        });
-        await animationFrame();
-        await removeFacet("Bar");
-        await removeFacet("Foo piou");
-    }
-);
+        } else if (search === 1) {
+            expect(kwargs).toEqual(
+                {
+                    context: {
+                        allowed_company_ids: [1],
+                        bin_size: true,
+                        current_company_id: 1,
+                        lang: "en",
+                        tz: "taht",
+                        uid: 7,
+                    }, // not part of the test, may change
+                    domain: [["name", "like", "a"]],
+                    specification: { name: {}, foo: {} },
+                    limit: 80,
+                    offset: 0,
+                    order: "",
+                    count_limit: 10001,
+                },
+                {
+                    message: "should search with the domain",
+                }
+            );
+        }
+        search++;
+    });
+    await mountWithCleanup(WebClient);
+    getService("dialog").add(SelectCreateDialog, {
+        noCreate: true,
+        resModel: "partner",
+        domain: [["name", "like", "a"]],
+        context: {
+            search_default_groupby_bar: true,
+            search_default_foo: "piou",
+        },
+    });
+    await animationFrame();
+    await removeFacet("Bar");
+    await removeFacet("Foo piou");
+});
 
-test.tags("mobile")(
-    "SelectCreateDialog use domain, group_by and search default on mobile",
-    async () => {
-        expect.assertions(3);
-        Partner._views["search"] = /* xml */ `
+test.tags("mobile");
+test("SelectCreateDialog use domain, group_by and search default on mobile", async () => {
+    expect.assertions(3);
+    Partner._views["search"] = /* xml */ `
         <search>
             <field name="foo" filter_domain="[('name','ilike',self), ('foo','ilike',self)]"/>
             <group expand="0" string="Group By">
@@ -210,15 +207,47 @@ test.tags("mobile")(
             </group>
         </search>
     `;
-        Partner._views[
-            "kanban"
-        ] = /* xml */ `<kanban><templates><t t-name="card"><field name="name"/><field name="foo"/></t></templates></kanban>`;
-        let search = 0;
-        onRpc("web_read_group", ({ kwargs }) => {
+    Partner._views[
+        "kanban"
+    ] = /* xml */ `<kanban><templates><t t-name="card"><field name="name"/><field name="foo"/></t></templates></kanban>`;
+    let search = 0;
+    onRpc("web_read_group", ({ kwargs }) => {
+        expect(kwargs).toEqual(
+            {
+                context: {
+                    allowed_company_ids: [1],
+                    lang: "en",
+                    tz: "taht",
+                    uid: 7,
+                }, // not part of the test, may change
+                domain: [
+                    "&",
+                    ["name", "like", "a"],
+                    "&",
+                    ["name", "ilike", "piou"],
+                    ["foo", "ilike", "piou"],
+                ],
+                fields: [],
+                groupby: ["bar"],
+                lazy: true,
+                limit: Number.MAX_SAFE_INTEGER, // kanban have no limit for groupsLimit
+                offset: 0,
+                orderby: "",
+            },
+            {
+                message:
+                    "should search with the complete domain (domain + search), and group by 'bar'",
+            }
+        );
+    });
+    onRpc("web_search_read", ({ kwargs }) => {
+        if (search === 0) {
             expect(kwargs).toEqual(
                 {
                     context: {
                         allowed_company_ids: [1],
+                        bin_size: true,
+                        current_company_id: 1,
                         lang: "en",
                         tz: "taht",
                         uid: 7,
@@ -230,88 +259,55 @@ test.tags("mobile")(
                         ["name", "ilike", "piou"],
                         ["foo", "ilike", "piou"],
                     ],
-                    fields: [],
-                    groupby: ["bar"],
-                    lazy: true,
-                    limit: Number.MAX_SAFE_INTEGER, // kanban have no limit for groupsLimit
+                    specification: { name: {}, foo: {} },
+                    limit: 40,
                     offset: 0,
-                    orderby: "",
+                    order: "",
+                    count_limit: 10001,
                 },
                 {
-                    message:
-                        "should search with the complete domain (domain + search), and group by 'bar'",
+                    message: "should search with the complete domain (domain + search)",
                 }
             );
-        });
-        onRpc("web_search_read", ({ kwargs }) => {
-            if (search === 0) {
-                expect(kwargs).toEqual(
-                    {
-                        context: {
-                            allowed_company_ids: [1],
-                            bin_size: true,
-                            current_company_id: 1,
-                            lang: "en",
-                            tz: "taht",
-                            uid: 7,
-                        }, // not part of the test, may change
-                        domain: [
-                            "&",
-                            ["name", "like", "a"],
-                            "&",
-                            ["name", "ilike", "piou"],
-                            ["foo", "ilike", "piou"],
-                        ],
-                        specification: { name: {}, foo: {} },
-                        limit: 40,
-                        offset: 0,
-                        order: "",
-                        count_limit: 10001,
-                    },
-                    {
-                        message: "should search with the complete domain (domain + search)",
-                    }
-                );
-            } else if (search === 1) {
-                expect(kwargs).toEqual(
-                    {
-                        context: {
-                            allowed_company_ids: [1],
-                            bin_size: true,
-                            current_company_id: 1,
-                            lang: "en",
-                            tz: "taht",
-                            uid: 7,
-                        }, // not part of the test, may change
-                        domain: [["name", "like", "a"]],
-                        specification: { name: {}, foo: {} },
-                        limit: 40,
-                        offset: 0,
-                        order: "",
-                        count_limit: 10001,
-                    },
-                    {
-                        message: "should search with the domain",
-                    }
-                );
-            }
-            search++;
-        });
-        await mountWithCleanup(WebClient);
-        getService("dialog").add(SelectCreateDialog, {
-            noCreate: true,
-            resModel: "partner",
-            domain: [["name", "like", "a"]],
-            context: {
-                search_default_groupby_bar: true,
-                search_default_foo: "piou",
-            },
-        });
-        await animationFrame();
-        await removeFacet("Bar");
-        await removeFacet("Foo piou");
-    }
-);
+        } else if (search === 1) {
+            expect(kwargs).toEqual(
+                {
+                    context: {
+                        allowed_company_ids: [1],
+                        bin_size: true,
+                        current_company_id: 1,
+                        lang: "en",
+                        tz: "taht",
+                        uid: 7,
+                    }, // not part of the test, may change
+                    domain: [["name", "like", "a"]],
+                    specification: { name: {}, foo: {} },
+                    limit: 40,
+                    offset: 0,
+                    order: "",
+                    count_limit: 10001,
+                },
+                {
+                    message: "should search with the domain",
+                }
+            );
+        }
+        search++;
+    });
+    await mountWithCleanup(WebClient);
+    getService("dialog").add(SelectCreateDialog, {
+        noCreate: true,
+        resModel: "partner",
+        domain: [["name", "like", "a"]],
+        context: {
+            search_default_groupby_bar: true,
+            search_default_foo: "piou",
+        },
+    });
+    await animationFrame();
+    await removeFacet("Bar");
+    await removeFacet("Foo piou");
+});
 
 test("SelectCreateDialog correctly evaluates domains", async () => {
     expect.assertions(1);
@@ -340,7 +336,8 @@ test("SelectCreateDialog correctly evaluates domains", async () => {
     await animationFrame();
 });
 
-test.tags("desktop")("SelectCreateDialog list view in readonly", async () => {
+test.tags("desktop");
+test("SelectCreateDialog list view in readonly", async () => {
     Partner._views["list"] = /* xml */ `
         <list string="Partner" editable="bottom">
             <field name="name"/>
@@ -364,7 +361,8 @@ test.tags("desktop")("SelectCreateDialog list view in readonly", async () => {
     });
 });
 
-test.tags("desktop")("SelectCreateDialog cascade x2many in create mode on desktop", async () => {
+test.tags("desktop");
+test("SelectCreateDialog cascade x2many in create mode on desktop", async () => {
     expect.assertions(5);
 
     Partner._views["form"] = /* xml */ `
@@ -444,7 +442,8 @@ test.tags("desktop")("SelectCreateDialog cascade x2many in create mode on deskto
     await clickSave({ index: 1 });
 });
 
-test.tags("mobile")("SelectCreateDialog cascade x2many in create mode on mobile", async () => {
+test.tags("mobile");
+test("SelectCreateDialog cascade x2many in create mode on mobile", async () => {
     expect.assertions(5);
 
     Partner._views["form"] = /* xml */ `
@@ -531,7 +530,8 @@ test.tags("mobile")("SelectCreateDialog cascade x2many in create mode on mobile"
     await clickSave({ index: 1 });
 });
 
-test.tags("desktop")("SelectCreateDialog: save current search on desktop", async () => {
+test.tags("desktop");
+test("SelectCreateDialog: save current search on desktop", async () => {
     expect.assertions(5);
     Partner._views["list"] = /* xml */ `<list><field name="name"/> </list>`;
     Partner._views[
@@ -589,7 +589,8 @@ test.tags("desktop")("SelectCreateDialog: save current search on desktop", async
     await saveFavorite();
 });
 
-test.tags("mobile")("SelectCreateDialog: save current search on mobile", async () => {
+test.tags("mobile");
+test("SelectCreateDialog: save current search on mobile", async () => {
     expect.assertions(5);
     Partner._views[
         "kanban"
@@ -649,59 +650,56 @@ test.tags("mobile")("SelectCreateDialog: save current search on mobile", async (
     await saveFavorite();
 });
 
-test.tags("desktop")(
-    "SelectCreateDialog calls on_selected with every record matching the domain",
-    async () => {
-        expect.assertions(1);
+test.tags("desktop");
+test("SelectCreateDialog calls on_selected with every record matching the domain", async () => {
+    expect.assertions(1);
 
-        Partner._views["list"] = /* xml */ `
+    Partner._views["list"] = /* xml */ `
         <list limit="2" string="Partner">
             <field name="name"/>
             <field name="foo"/>
         </list>
     `;
-        Partner._views["search"] = /* xml */ `<search><field name="foo"/></search>`;
+    Partner._views["search"] = /* xml */ `<search><field name="foo"/></search>`;
 
-        await mountWithCleanup(WebClient);
-        getService("dialog").add(SelectCreateDialog, {
-            resModel: "partner",
-            onSelected: (records) => expect(records.join(",")).toBe("1,2,3"),
-        });
-        await animationFrame();
+    await mountWithCleanup(WebClient);
+    getService("dialog").add(SelectCreateDialog, {
+        resModel: "partner",
+        onSelected: (records) => expect(records.join(",")).toBe("1,2,3"),
+    });
+    await animationFrame();
 
-        await contains("thead .o_list_record_selector input").click();
-        await contains(".o_list_selection_box .o_list_select_domain").click();
-        await clickModalButton({ text: "Select" });
-    }
-);
+    await contains("thead .o_list_record_selector input").click();
+    await contains(".o_list_selection_box .o_list_select_domain").click();
+    await clickModalButton({ text: "Select" });
+});
 
-test.tags("desktop")(
-    "SelectCreateDialog calls on_selected with every record matching without selecting a domain",
-    async () => {
-        expect.assertions(1);
-        Partner._views["list"] = /* xml */ `
+test.tags("desktop");
+test("SelectCreateDialog calls on_selected with every record matching without selecting a domain", async () => {
+    expect.assertions(1);
+    Partner._views["list"] = /* xml */ `
         <list limit="2" string="Partner">
             <field name="name"/>
             <field name="foo"/>
         </list>
     `;
-        Partner._views["search"] = /* xml */ `<search><field name="foo"/></search>`;
+    Partner._views["search"] = /* xml */ `<search><field name="foo"/></search>`;
 
-        await mountWithCleanup(WebClient);
+    await mountWithCleanup(WebClient);
 
-        getService("dialog").add(SelectCreateDialog, {
-            resModel: "partner",
-            onSelected: (records) => expect(records.join(",")).toBe("1,2"),
-        });
-        await animationFrame();
+    getService("dialog").add(SelectCreateDialog, {
+        resModel: "partner",
+        onSelected: (records) => expect(records.join(",")).toBe("1,2"),
+    });
+    await animationFrame();
 
-        await contains("thead .o_list_record_selector input").click();
-        await contains(".o_list_selection_box").click();
-        await clickModalButton({ text: "Select", index: 1 });
-    }
-);
+    await contains("thead .o_list_record_selector input").click();
+    await contains(".o_list_selection_box").click();
+    await clickModalButton({ text: "Select", index: 1 });
+});
 
-test.tags("desktop")("SelectCreateDialog: multiple clicks on record", async () => {
+test.tags("desktop");
+test("SelectCreateDialog: multiple clicks on record", async () => {
     Partner._views["list"] = /* xml */ `<list><field name="name"/></list>`;
     Partner._views["search"] = /* xml */ `<search><field name="foo"/></search>`;
 
@@ -721,7 +719,8 @@ test.tags("desktop")("SelectCreateDialog: multiple clicks on record", async () =
     expect.verifySteps(["select record 1"]);
 });
 
-test.tags("desktop")("SelectCreateDialog: default props, create a record on desktop", async () => {
+test.tags("desktop");
+test("SelectCreateDialog: default props, create a record on desktop", async () => {
     Partner._views["list"] = /* xml */ `<list><field name="name"/></list>`;
     Partner._views["search"] = /* xml */ `
         <search>
@@ -757,7 +756,8 @@ test.tags("desktop")("SelectCreateDialog: default props, create a record on desk
     expect.verifySteps(["onSelected 4"]);
 });
 
-test.tags("mobile")("SelectCreateDialog: default props, create a record on mobile", async () => {
+test.tags("mobile");
+test("SelectCreateDialog: default props, create a record on mobile", async () => {
     Partner._views["search"] = /* xml */ `
         <search>
             <filter name="bar" help="Bar" domain="[('bar', '=', True)]"/>
@@ -794,7 +794,8 @@ test.tags("mobile")("SelectCreateDialog: default props, create a record on mobil
     expect.verifySteps(["onSelected 4"]);
 });
 
-test.tags("desktop")("SelectCreateDialog empty list, default no content helper", async () => {
+test.tags("desktop");
+test("SelectCreateDialog empty list, default no content helper", async () => {
     Partner._records = [];
     Partner._views["list"] = /* xml */ `
         <list>
@@ -813,7 +814,8 @@ test.tags("desktop")("SelectCreateDialog empty list, default no content helper",
         `<div class="o_nocontent_help"><p>No record found</p><p>Adjust your filters or create a new record.</p></div>`
     );
 });
-test.tags("mobile")("SelectCreateDialog empty kanban, default no content helper", async () => {
+test.tags("mobile");
+test("SelectCreateDialog empty kanban, default no content helper", async () => {
     Partner._records = [];
     Partner._views[
         "kanban"
@@ -830,7 +832,8 @@ test.tags("mobile")("SelectCreateDialog empty kanban, default no content helper"
     );
 });
 
-test.tags("desktop")("SelectCreateDialog empty list, noContentHelp props", async () => {
+test.tags("desktop");
+test("SelectCreateDialog empty list, noContentHelp props", async () => {
     Partner._records = [];
     Partner._views["list"] = /* xml */ `
         <list>
@@ -859,7 +862,8 @@ test.tags("desktop")("SelectCreateDialog empty list, noContentHelp props", async
     );
 });
 
-test.tags("mobile")("SelectCreateDialog empty kanban, noContentHelp props", async () => {
+test.tags("mobile");
+test("SelectCreateDialog empty kanban, noContentHelp props", async () => {
     Partner._records = [];
     Partner._views[
         "kanban"
@@ -885,7 +889,8 @@ test.tags("mobile")("SelectCreateDialog empty kanban, noContentHelp props", asyn
     );
 });
 
-test.tags("mobile")("SelectCreateDialog: clear selection on mobile", async () => {
+test.tags("mobile");
+test("SelectCreateDialog: clear selection on mobile", async () => {
     expect.assertions(3);
     SaleOrderLine._views[
         "kanban"
@@ -933,7 +938,8 @@ test.tags("mobile")("SelectCreateDialog: clear selection on mobile", async () =>
     await clickSave();
 });
 
-test.tags("mobile")("SelectCreateDialog: selection_mode should be true", async () => {
+test.tags("mobile");
+test("SelectCreateDialog: selection_mode should be true", async () => {
     expect.assertions(3);
     Product._views["kanban"] = /* xml */ `
             <kanban>
@@ -976,7 +982,8 @@ test.tags("mobile")("SelectCreateDialog: selection_mode should be true", async (
     expect.verifySteps([]);
 });
 
-test.tags("mobile")("SelectCreateDialog: default props, create a record", async () => {
+test.tags("mobile");
+test("SelectCreateDialog: default props, create a record", async () => {
     Product._views["form"] = /* xml */ `<form><field name="name"/></form>`;
     Product._views[
         "kanban"

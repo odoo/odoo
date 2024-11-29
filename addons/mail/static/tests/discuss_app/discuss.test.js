@@ -67,7 +67,8 @@ test("sanity check", async () => {
     await contains("h4:contains(Your inbox is empty)");
 });
 
-test.tags("focus required")("can change the thread name of #general", async () => {
+test.tags("focus required");
+test("can change the thread name of #general", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
@@ -104,7 +105,8 @@ test("can active change thread from messaging menu", async () => {
     await contains(".o-mail-DiscussSidebar-item:contains(team)");
 });
 
-test.tags("focus required")("can change the thread description of #general", async () => {
+test.tags("focus required");
+test("can change the thread description of #general", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
@@ -1016,7 +1018,8 @@ test("starred: unstar all", async () => {
     await contains("button:disabled", { text: "Unstar all" });
 });
 
-test.tags("focus required")("auto-focus composer on opening thread", async () => {
+test.tags("focus required");
+test("auto-focus composer on opening thread", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo User" });
     pyEnv["discuss.channel"].create([

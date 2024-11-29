@@ -223,7 +223,8 @@ test("should type in bold", async () => {
     expect(getContent(el)).toBe(`<p>ab${strong("xy")}z[]cd</p>`);
 });
 
-test.tags("desktop")("create bold with shortcut + selected with arrow", async () => {
+test.tags("desktop");
+test("create bold with shortcut + selected with arrow", async () => {
     const { editor, el } = await setupEditor("<p>ab[]cd</p>");
     await press(["control", "b"]);
     expect(getContent(el)).toBe(`<p>ab${strong("[]\u200B", "first")}cd</p>`);
