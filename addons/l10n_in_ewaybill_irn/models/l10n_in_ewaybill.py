@@ -35,21 +35,19 @@ class L10nInEwaybill(models.Model):
         }
 
     def _compute_content(self):
-        for ewaybill in self:
-            if ewaybill.is_process_through_irn:
-                ewaybill_json = ewaybill._ewaybill_generate_irn_json()
-            else:
-                ewaybill_json = ewaybill._ewaybill_generate_direct_json()
+        irn_ewaybill = self.filtered('is_process_through_irn')
+        for ewaybill in irn_ewaybill:
+            ewaybill_json = ewaybill._ewaybill_generate_irn_json()
             ewaybill.content = base64.b64encode(json.dumps(ewaybill_json).encode())
+        super(L10nInEwaybill, self - irn_ewaybill)._compute_content()
 
-    def generate_ewaybill(self):
-        for ewaybill in self:
+    def action_generate_ewaybill(self):
+        irn_ewaybill = self.filtered('is_process_through_irn')
+        for ewaybill in irn_ewaybill:
             if errors := ewaybill._check_configuration():
                 raise UserError('\n'.join(errors))
-            if ewaybill.is_process_through_irn:
-                ewaybill._generate_ewaybill_by_irn()
-            else:
-                ewaybill._generate_ewaybill()
+            ewaybill._generate_ewaybill_by_irn()
+        super(L10nInEwaybill, self - irn_ewaybill).action_generate_ewaybill()
 
     def _generate_ewaybill_by_irn(self):
         self.ensure_one()
@@ -73,7 +71,7 @@ class L10nInEwaybill(models.Model):
             'ewaybill_expiry_date': self._indian_timezone_to_odoo_utc(
                 response_data.get('EwbValidTill')
             ),
-            **self._l10n_in_ewaybill_stock_handle_zero_distance_alert_if_present(response_data)
+            **self._l10n_in_ewaybill_handle_zero_distance_alert_if_present(response_data)
         })
         self._cr.commit()
 
