@@ -36,3 +36,15 @@ class AccountEdiXmlUBLDE(models.AbstractModel):
         })
 
         return constraints
+
+    def _get_partner_party_vals(self, partner, role):
+        # EXTENDS account.edi.xml.ubl_bis3
+        vals = super()._get_partner_party_vals(partner, role)
+
+        if not vals.get('endpoint_id') and partner.email:
+            vals.update({
+                'endpoint_id': partner.email,
+                'endpoint_id_attrs': {'schemeID': 'EM'},
+            })
+
+        return vals
