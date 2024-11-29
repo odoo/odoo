@@ -1229,14 +1229,6 @@ class TestExpenses(TestExpenseCommon):
                 'name': "Test Employee1"
             },
         ])
-        # Employee bank account must be set before approval
-        employee_bank_account = self.env['res.partner.bank'].create({
-            'acc_number': '123456789',
-            'partner_id': employee.work_contact_id.id,
-        })
-        employee.write({
-            'bank_account_id': employee_bank_account.id,
-        })
         # Create an expense with the above created employees
         expense = self.create_expense({'employee_id': employee.id})
         sheet = expense._create_sheets_from_expense()
