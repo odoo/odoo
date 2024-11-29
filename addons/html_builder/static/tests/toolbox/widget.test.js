@@ -2,21 +2,21 @@ import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, click, fill, hover, queryFirst } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
-import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../helpers";
+import { addActionOption, addOption, defineWebsiteModels, setupWebsiteBuilder } from "../helpers";
 
 defineWebsiteModels();
 
 describe("WeButton", () => {
     test("call a specific action with some params and value", async () => {
-        addOption({
-            selector: ".test-options-target",
-            actions: {
-                customAction: {
-                    apply: ({ param, value }) => {
-                        expect.step(`customAction ${param} ${value}`);
-                    },
+        addActionOption({
+            customAction: {
+                apply: ({ param, value }) => {
+                    expect.step(`customAction ${param} ${value}`);
                 },
             },
+        });
+        addOption({
+            selector: ".test-options-target",
             template: xml`<WeButton action="'customAction'" actionParam="'myParam'" actionValue="'myValue'">MyAction</WeButton>`,
         });
         await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
@@ -39,16 +39,16 @@ describe("WeButton", () => {
         expect(":iframe .test-options-target").toHaveClass("my-custom-class");
     });
     test("call a shorthand action and a specific action", async () => {
-        addOption({
-            selector: ".test-options-target",
-            actions: {
-                customAction: {
-                    apply: ({ editingElement }) => {
-                        expect.step(`customAction`);
-                        editingElement.innerHTML = "c";
-                    },
+        addActionOption({
+            customAction: {
+                apply: ({ editingElement }) => {
+                    expect.step(`customAction`);
+                    editingElement.innerHTML = "c";
                 },
             },
+        });
+        addOption({
+            selector: ".test-options-target",
             template: xml`<WeButton action="'customAction'" classAction="'my-custom-class'"/>`,
         });
         await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
@@ -61,16 +61,16 @@ describe("WeButton", () => {
         expect(":iframe .test-options-target").toHaveInnerHTML("c");
     });
     test("preview a shorthand action and a specific action", async () => {
-        addOption({
-            selector: ".test-options-target",
-            actions: {
-                customAction: {
-                    apply: ({ editingElement }) => {
-                        expect.step(`customAction`);
-                        editingElement.innerHTML = "c";
-                    },
+        addActionOption({
+            customAction: {
+                apply: ({ editingElement }) => {
+                    expect.step(`customAction`);
+                    editingElement.innerHTML = "c";
                 },
             },
+        });
+        addOption({
+            selector: ".test-options-target",
             template: xml`<WeButton action="'customAction'" classAction="'my-custom-class'"/>`,
         });
         await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
@@ -122,15 +122,15 @@ describe("WeButton", () => {
 });
 describe("WeButtonGroup", () => {
     test("change the editingElement of sub widget through `applyTo` prop", async () => {
-        addOption({
-            selector: ".test-options-target",
-            actions: {
-                customAction: {
-                    apply: ({ editingElement }) => {
-                        expect.step(`customAction ${editingElement.className}`);
-                    },
+        addActionOption({
+            customAction: {
+                apply: ({ editingElement }) => {
+                    expect.step(`customAction ${editingElement.className}`);
                 },
             },
+        });
+        addOption({
+            selector: ".test-options-target",
             template: xml`
                     <WeButtonGroup applyTo="'.a'">
                         <WeButton action="'customAction'"/>
@@ -147,15 +147,15 @@ describe("WeButtonGroup", () => {
         expect.verifySteps(["customAction a"]);
     });
     test("should propagate actionParam in the context", async () => {
-        addOption({
-            selector: ".test-options-target",
-            actions: {
-                customAction: {
-                    apply: ({ param }) => {
-                        expect.step(`customAction ${param}`);
-                    },
+        addActionOption({
+            customAction: {
+                apply: ({ param }) => {
+                    expect.step(`customAction ${param}`);
                 },
             },
+        });
+        addOption({
+            selector: ".test-options-target",
             template: xml`
                     <WeButtonGroup actionParam="'myParam'">
                         <WeButton action="'customAction'"/>
@@ -174,18 +174,18 @@ describe("WeButtonGroup", () => {
 });
 describe("WeNumberInput", () => {
     test("should get the initial value of the input", async () => {
-        addOption({
-            selector: ".test-options-target",
-            actions: {
-                customAction: {
-                    getValue: ({ editingElement }) => {
-                        return editingElement.innerHTML;
-                    },
-                    apply: ({ param }) => {
-                        expect.step(`customAction ${param}`);
-                    },
+        addActionOption({
+            customAction: {
+                getValue: ({ editingElement }) => {
+                    return editingElement.innerHTML;
+                },
+                apply: ({ param }) => {
+                    expect.step(`customAction ${param}`);
                 },
             },
+        });
+        addOption({
+            selector: ".test-options-target",
             template: xml`<WeNumberInput action="'customAction'"/>`,
         });
         await setupWebsiteBuilder(`
@@ -197,19 +197,19 @@ describe("WeNumberInput", () => {
         expect(input).toHaveValue("10");
     });
     test("should preview changes", async () => {
-        addOption({
-            selector: ".test-options-target",
-            actions: {
-                customAction: {
-                    getValue: ({ editingElement }) => {
-                        return editingElement.innerHTML;
-                    },
-                    apply: ({ editingElement, value }) => {
-                        expect.step(`customAction ${value}`);
-                        editingElement.innerHTML = value;
-                    },
+        addActionOption({
+            customAction: {
+                getValue: ({ editingElement }) => {
+                    return editingElement.innerHTML;
+                },
+                apply: ({ editingElement, value }) => {
+                    expect.step(`customAction ${value}`);
+                    editingElement.innerHTML = value;
                 },
             },
+        });
+        addOption({
+            selector: ".test-options-target",
             template: xml`<WeNumberInput action="'customAction'"/>`,
         });
         await setupWebsiteBuilder(`
@@ -225,19 +225,19 @@ describe("WeNumberInput", () => {
         expect(".o-snippets-top-actions .fa-repeat").not.toBeEnabled();
     });
     test("should commit changes", async () => {
-        addOption({
-            selector: ".test-options-target",
-            actions: {
-                customAction: {
-                    getValue: ({ editingElement }) => {
-                        return editingElement.innerHTML;
-                    },
-                    apply: ({ editingElement, value }) => {
-                        expect.step(`customAction ${value}`);
-                        editingElement.innerHTML = value;
-                    },
+        addActionOption({
+            customAction: {
+                getValue: ({ editingElement }) => {
+                    return editingElement.innerHTML;
+                },
+                apply: ({ editingElement, value }) => {
+                    expect.step(`customAction ${value}`);
+                    editingElement.innerHTML = value;
                 },
             },
+        });
+        addOption({
+            selector: ".test-options-target",
             template: xml`<WeNumberInput action="'customAction'"/>`,
         });
         await setupWebsiteBuilder(`
@@ -258,15 +258,15 @@ describe("WeNumberInput", () => {
 });
 describe("WeSelectItem", () => {
     test("call a specific action with some params and value (WeSelectItem)", async () => {
-        addOption({
-            selector: ".test-options-target",
-            actions: {
-                customAction: {
-                    apply: ({ param, value }) => {
-                        expect.step(`customAction ${param} ${value}`);
-                    },
+        addActionOption({
+            customAction: {
+                apply: ({ param, value }) => {
+                    expect.step(`customAction ${param} ${value}`);
                 },
             },
+        });
+        addOption({
+            selector: ".test-options-target",
             template: xml`
                     <WeSelect>
                         <WeSelectItem action="'customAction'" actionParam="'myParam'" actionValue="'myValue'">MyAction</WeSelectItem>

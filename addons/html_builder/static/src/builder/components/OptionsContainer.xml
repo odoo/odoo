@@ -7,7 +7,10 @@
             <t t-out="title"/>
         </div>
         <div class="we-bg-options-container">
-            <t t-slot="default"/>
+            <t t-foreach="props.options" t-as="option" t-key="option_index">
+                <t t-if="option.OptionComponent" t-component="option.OptionComponent"></t>
+                <t t-else="" t-call="{{option.template}}"/>
+            </t>
         </div>
     </div>
 </t>
