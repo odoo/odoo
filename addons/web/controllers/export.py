@@ -228,7 +228,7 @@ class ExportXlsxWriter:
                 # fails note that you can't export
                 cell_value = cell_value.decode()
             except UnicodeDecodeError:
-                raise UserError(request.env._("Binary fields can not be exported to Excel unless their content is base64-encoded. That does not seem to be the case for %s.", self.field_names)[column]) from None
+                raise UserError(request.env._("Binary fields can not be exported to Excel unless their content is base64-encoded. That does not seem to be the case for %s.", self.columns_headers[column])) from None
         elif isinstance(cell_value, (list, tuple, dict)):
             cell_value = str(cell_value)
 
