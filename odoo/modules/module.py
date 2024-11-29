@@ -65,7 +65,7 @@ _DEFAULT_MANIFEST = {
     'data': [],
     'demo': [],
     'demo_xml': [],
-    'depends': ['base'],
+    'depends': [],
     'description': '',
     'external_dependencies': {},
     #icon: f'/{module}/static/description/icon.png',  # automatic
@@ -311,7 +311,7 @@ def load_manifest(module: str, mod_path: str | None = None) -> dict:
         manifest['depends'] = []
     elif not manifest['depends']:
         # prevent the hack `'depends': []` except 'base' module
-        manifest['depends'] = _DEFAULT_MANIFEST['depends'].copy()
+        manifest['depends'] = ['base']
 
     depends = manifest['depends']
     assert isinstance(depends, Collection)
