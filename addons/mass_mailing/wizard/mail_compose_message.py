@@ -51,6 +51,7 @@ class MailComposeMessage(models.TransientModel):
                         mail_values['body_html'] = body
 
                 trace_vals = {
+                    'message_id': mail_values['message_id'],
                     'model': self.model,
                     'res_id': res_id,
                     'mass_mailing_id': mass_mailing.id,
