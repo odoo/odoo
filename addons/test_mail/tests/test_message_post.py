@@ -15,7 +15,7 @@ from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE_PLAINTEXT
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.addons.test_mail.tests.common import TestRecipients
-from odoo.api import call_kw
+from odoo.service.model import call_kw
 from odoo.exceptions import AccessError
 from odoo.tests import tagged
 from odoo.tools import mute_logger, formataddr
@@ -1744,15 +1744,16 @@ class TestMessagePostGlobal(TestMessagePostCommon):
 
     @users('employee')
     def test_message_post_return(self):
-        """ Ensures calling message_post through RPC always return an ID. """
+        """ Ensures calling message_post through RPC always return a list with one ID. """
         test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
 
         # Use call_kw as shortcut to simulate a RPC call.
-        message_id = call_kw(self.env['mail.test.simple'],
-                             'message_post',
-                             [test_record.id],
-                             {'body': 'test'})
-        self.assertTrue(isinstance(message_id, int))
+        result = call_kw(
+            self.env['mail.test.simple'],
+            'message_post',
+            [test_record.id],
+            {'body': 'test'})
+        self.assertTrue(tools.misc.has_list_types(result, (int,)))
 
 
 @tagged('mail_post', 'multi_lang')

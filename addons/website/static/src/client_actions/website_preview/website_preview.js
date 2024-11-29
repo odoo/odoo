@@ -7,7 +7,6 @@ import { redirect } from "@web/core/utils/urls";
 import { ResourceEditor } from '../../components/resource_editor/resource_editor';
 import { WebsiteEditorComponent } from '../../components/editor/editor';
 import { WebsiteTranslator } from '../../components/translator/translator';
-import { unslugHtmlDataObject } from '../../services/website_service';
 import {OptimizeSEODialog} from '@website/components/dialog/seo';
 import { WebsiteDialog } from "@website/components/dialog/dialog";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
@@ -69,12 +68,12 @@ export class WebsitePreview extends Component {
         useExternalListener(window, "keydown", this._onKeydownRefresh.bind(this));
 
         onWillStart(async () => {
-            const [backendWebsiteRepr] = await Promise.all([
+            const [backendCurrentWebsite] = await Promise.all([
                 this.orm.call('website', 'get_current_website'),
                 this.websiteService.fetchWebsites(),
                 this.websiteService.fetchUserGroups(),
             ]);
-            this.backendWebsiteId = unslugHtmlDataObject(backendWebsiteRepr).id;
+            this.backendWebsiteId = backendCurrentWebsite[0];
 
             const encodedPath = encodeURIComponent(this.path);
             if (this.websiteDomain && !wUtils.isHTTPSorNakedDomainRedirection(this.websiteDomain, window.location.origin)) {

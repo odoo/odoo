@@ -332,7 +332,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             "/im_livechat/visitor_leave_session", {"channel_id": inactive_livechat.id}
         )
         guest = inactive_livechat.channel_member_ids.filtered(lambda m: m.guest_id).guest_id
-        non_livechat_channel = self.env['discuss.channel'].channel_create(name="General", group_id=None)
+        non_livechat_channel = self.env['discuss.channel']._channel_create(name="General", group_id=None)
         non_livechat_channel.add_members(guest_ids=guest.ids)
         non_livechat_channel.channel_member_ids.fold_state = "open"
         active_livechat = self.env["discuss.channel"].browse(
