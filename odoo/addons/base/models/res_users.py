@@ -693,7 +693,7 @@ class ResUsers(models.Model):
         return super()._has_field_access(field, operation) or (
             self == self.env.user
             and operation == 'read'
-            and (field.name in self.SELF_READABLE_FIELDS or field.name.startswith('context_'))
+            and field.name in self.SELF_READABLE_FIELDS
         )
 
     @api.model
@@ -769,7 +769,7 @@ class ResUsers(models.Model):
         if self == self.env.user:
             writeable = self.SELF_WRITEABLE_FIELDS
             for key in list(values):
-                if not (key in writeable or key.startswith('context_')):
+                if key not in writeable:
                     break
             else:
                 if 'company_id' in values:
@@ -835,7 +835,7 @@ class ResUsers(models.Model):
         # clear_cache/clear_caches methods pretty much just end up calling
         # Registry.clear_cache
         invalidation_fields = self._get_invalidation_fields()
-        if (invalidation_fields & values.keys()) or any(key.startswith('context_') for key in values):
+        if invalidation_fields & values.keys():
             self.env.registry.clear_cache()
 
         return res
@@ -886,25 +886,14 @@ class ResUsers(models.Model):
     @api.model
     @tools.ormcache('self._uid')
     def context_get(self):
-        user = self.env.user
-        # determine field names to read
-        name_to_key = {
-            name: name[8:] if name.startswith('context_') else name
-            for name in self._fields
-            if name.startswith('context_') or name in ('lang', 'tz')
-        }
         # use read() to not read other fields: this must work while modifying
         # the schema of models res.users or res.partner
         try:
-            values = user.read(list(name_to_key), load=False)[0]
+            context = self.env.user.read(['lang', 'tz'], load=False)[0]
         except IndexError:
             # user not found, no context information
             return frozendict()
-
-        context = {
-            key: values[name]
-            for name, key in name_to_key.items()
-        }
+        context.pop('id')
 
         # ensure lang is set and available
         # context > request > company > english > any lang installed
