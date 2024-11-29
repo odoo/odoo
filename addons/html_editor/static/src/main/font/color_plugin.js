@@ -30,7 +30,7 @@ import { withSequence } from "@html_editor/utils/resource";
 export class ColorPlugin extends Plugin {
     static id = "color";
     static dependencies = ["selection", "split", "history", "format"];
-    static shared = ["colorElement", "getPropsForColorSelector"];
+    static shared = ["colorElement", "getPropsForColorSelector", "removeAllColor"];
     resources = {
         user_commands: [
             {

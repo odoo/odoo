@@ -88,7 +88,7 @@ describe("range collapsed", () => {
             stepFunction: async (editor) => {
                 deleteBackward(editor);
             },
-            contentAfter: '<p>a<a href="http://hellomoto.com">hello[]moto.com</a></p>',
+            contentAfter: '<p>a<a href="https://hellomoto.com">hello[]moto.com</a></p>',
         });
     });
 

@@ -37,6 +37,8 @@ import {
  * @property { Node } commonAncestorContainer
  * @property { boolean } isCollapsed
  * @property { boolean } direction
+ * @property { () => string } textContent
+ * @property { (node: Node) => boolean } intersectsNode
  */
 
 /**

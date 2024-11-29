@@ -37,6 +37,36 @@ describe("should open a popover", () => {
         await waitUntil(() => !queryFirst(".o-we-linkpopover"), { timeout: 1500 });
         expect(".o-we-linkpopover").toHaveCount(0);
     });
+    test("should open a popover when the selection is inside a link and stay open if selection move in the same link", async () => {
+        const { el } = await setupEditor('<p>this []is a <a href="exist">l<b>in</b>k</a></p>');
+        expect(".o-we-linkpopover").toHaveCount(0);
+        // selection inside a link
+        const aNode = queryOne("a");
+        setSelection({
+            anchorNode: aNode,
+            anchorOffset: 3,
+            focusNode: aNode,
+            focusOffset: 3,
+        });
+        await waitFor(".o-we-linkpopover");
+        expect(".o-we-linkpopover").toHaveCount(1);
+        // FEFF is taken into account in the index
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p>this is a <a href="exist">l<b>in</b>[]k</a></p>'
+        );
+        // Another selection in the same link
+        setSelection({
+            anchorNode: aNode,
+            anchorOffset: 0,
+            focusNode: aNode,
+            focusOffset: 0,
+        });
+        await animationFrame();
+        expect(".o-we-linkpopover").toHaveCount(1);
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p>this is a <a href="exist">[]l<b>in</b>k</a></p>'
+        );
+    });
     test("link popover should have input field for href when the link doesn't have href", async () => {
         await setupEditor("<p>this is a <a>li[]nk</a></p>");
         await waitFor(".o-we-linkpopover");
@@ -101,7 +131,10 @@ describe("popover should switch UI depending on editing state", () => {
     test("after clicking on apply button, the popover should be with the non editing mode, e.g. with three buttons", async () => {
         await setupEditor("<p>this is a <a>li[]nk</a></p>");
         await waitFor(".o-we-linkpopover");
+        // This changes the selection to outside the editor.
         await click(".o_we_href_input_link");
+        await tick();
+        await fill("test-href.com");
         await click(".o_we_apply_link");
         await waitFor(".o_we_edit_link");
         expect(".o-we-linkpopover").toHaveCount(1);
@@ -119,6 +152,29 @@ describe("popover should edit,copy,remove the link", () => {
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p>this is a <a href="http://test.com/">li[]nk</a></p>'
         );
+    });
+    test("after apply empty url on a link, the link element should not have href (1)", async () => {
+        const { el } = await setupEditor("<p>this is a <a>li[]nk</a></p>");
+        await waitFor(".o-we-linkpopover");
+        await contains(".o-we-linkpopover input.o_we_href_input_link").edit("");
+        await click(".o_we_apply_link");
+        expect(cleanLinkArtifacts(getContent(el))).toBe("<p>this is a <a>li[]nk</a></p>");
+    });
+    test("after apply empty url on a link, the link element should not have href (2)", async () => {
+        const { el } = await setupEditor('<p>this is a <a href="">li[]nk</a></p>');
+        await waitFor(".o-we-linkpopover");
+        await click(".o_we_edit_link");
+        await contains(".o-we-linkpopover input.o_we_href_input_link").edit("");
+        await click(".o_we_apply_link");
+        expect(cleanLinkArtifacts(getContent(el))).toBe("<p>this is a <a>li[]nk</a></p>");
+    });
+    test("after apply empty url on a link, the link element should not have href (3)", async () => {
+        const { el } = await setupEditor('<p>this is a <a href="exiting">li[]nk</a></p>');
+        await waitFor(".o-we-linkpopover");
+        await click(".o_we_edit_link");
+        await contains(".o-we-linkpopover input.o_we_href_input_link").edit("");
+        await click(".o_we_apply_link");
+        expect(cleanLinkArtifacts(getContent(el))).toBe("<p>this is a <a>li[]nk</a></p>");
     });
     test("after clicking on remove button, the link element should be unwrapped", async () => {
         const { el } = await setupEditor('<p>this is a <a href="http://test.com/">li[]nk</a></p>');
@@ -211,6 +267,22 @@ describe("Link creation", () => {
                 '<p><a href="http://google.co.in">http://google.co.in</a> []</p>'
             );
         });
+        test("typing valid URL without protocol + space should convert to https link", async () => {
+            const { editor, el } = await setupEditor("<p>[]</p>");
+            await insertText(editor, "google.com");
+            await insertText(editor, " ");
+            expect(cleanLinkArtifacts(getContent(el))).toBe(
+                '<p><a href="https://google.com">google.com</a> []</p>'
+            );
+        });
+        test("typing valid http URL + space should convert to http link", async () => {
+            const { editor, el } = await setupEditor("<p>[]</p>");
+            await insertText(editor, "http://google.com");
+            await insertText(editor, " ");
+            expect(cleanLinkArtifacts(getContent(el))).toBe(
+                '<p><a href="http://google.com">http://google.com</a> []</p>'
+            );
+        });
         test("typing invalid URL + space should not convert to link", async () => {
             const { editor, el } = await setupEditor("<p>[]</p>");
             await insertText(editor, "www.odoo");
@@ -219,14 +291,14 @@ describe("Link creation", () => {
         });
     });
     describe("Creation by powerbox", () => {
-        test("click on link command in powerbox should create a link element and open the linkpopover", async () => {
+        test("click on link command in powerbox should not (yet) create a link element and open the linkpopover", async () => {
             const { editor, el } = await setupEditor("<p>ab[]</p>");
             await insertText(editor, "/link");
             await animationFrame();
             expect(".active .o-we-command-name").toHaveText("Link");
 
             await click(".o-we-command-name:first");
-            expect(cleanLinkArtifacts(getContent(el))).toBe("<p>ab<a>[]</a></p>");
+            expect(cleanLinkArtifacts(getContent(el))).toBe("<p>ab[]</p>");
             await waitFor(".o-we-linkpopover");
             expect(".o-we-linkpopover").toHaveCount(1);
             expect(getActiveElement()).toBe(queryOne(".o-we-linkpopover input.o_we_label_link"), {
@@ -241,8 +313,8 @@ describe("Link creation", () => {
             await click(".o-we-command-name:first");
             await waitFor(".o-we-linkpopover");
             expect(".o-we-linkpopover").toHaveCount(1);
-            expect(cleanLinkArtifacts(getContent(el))).toBe("<p>ab<a></a></p>");
-
+            expect(cleanLinkArtifacts(getContent(el))).toBe("<p>ab</p>");
+            // simulate click outside
             const pNode = queryOne("p");
             setSelection({
                 anchorNode: pNode,
@@ -253,7 +325,20 @@ describe("Link creation", () => {
             await animationFrame();
             expect(cleanLinkArtifacts(getContent(el))).toBe("<p>[]ab</p>");
         });
-        test("when create a new link by powerbox and only input the URL, the link should be created with corrected URL", async () => {
+        test("when create a new link by powerbox and not input anything, then validate, the link should be removed", async () => {
+            const { editor, el } = await setupEditor("<p>ab[]</p>");
+            await insertText(editor, "/link");
+            await animationFrame();
+            await click(".o-we-command-name:first");
+            await waitFor(".o-we-linkpopover");
+            expect(".o-we-linkpopover").toHaveCount(1);
+            expect(cleanLinkArtifacts(getContent(el))).toBe("<p>ab</p>");
+            // simulate click validate
+            await click(".o-we-linkpopover .o_we_apply_link");
+            await animationFrame();
+            expect(cleanLinkArtifacts(getContent(el))).toBe("<p>ab[]</p>");
+        });
+        test("when create a new link by powerbox and only input the URL, the link should be created with corrected https URL", async () => {
             const { editor, el } = await setupEditor("<p>ab[]</p>");
             await insertText(editor, "/link");
             await animationFrame();
@@ -261,7 +346,7 @@ describe("Link creation", () => {
 
             await contains(".o-we-linkpopover input.o_we_href_input_link").fill("test.com");
             expect(cleanLinkArtifacts(getContent(el))).toBe(
-                '<p>ab<a href="http://test.com">test.com[]</a></p>'
+                '<p>ab<a href="https://test.com">test.com[]</a></p>'
             );
         });
         test("Should be able to insert link on empty p", async () => {
@@ -272,6 +357,19 @@ describe("Link creation", () => {
 
             await contains(".o-we-linkpopover input.o_we_href_input_link").fill("#");
             expect(cleanLinkArtifacts(getContent(el))).toBe('<p><a href="#">#[]</a></p>');
+        });
+        test("Should keep http protocol on valid http url", async () => {
+            const { editor, el } = await setupEditor("<p>[]</p>");
+            await insertText(editor, "/link");
+            await animationFrame();
+            await click(".o-we-command-name:first");
+
+            await contains(".o-we-linkpopover input.o_we_href_input_link").fill(
+                "http://google.com"
+            );
+            expect(cleanLinkArtifacts(getContent(el))).toBe(
+                '<p><a href="http://google.com">http://google.com[]</a></p>'
+            );
         });
         test("should insert a link and preserve spacing", async () => {
             const { editor, el } = await setupEditor("<p>a []&nbsp;&nbsp;b</p>");
@@ -345,14 +443,81 @@ describe("Link creation", () => {
             );
             expect(cleanLinkArtifacts(getContent(el))).toBe('<p><a href="#">Hello[]</a></p>');
         });
+        test("should convert valid url to https link", async () => {
+            const { el } = await setupEditor("<p>[Hello]</p>");
+            await waitFor(".o-we-toolbar");
+            await click(".o-we-toolbar .fa-link");
+            await contains(".o-we-linkpopover input.o_we_href_input_link", { timeout: 1500 }).edit(
+                "google.com"
+            );
+            expect(cleanLinkArtifacts(getContent(el))).toBe(
+                '<p><a href="https://google.com">Hello[]</a></p>'
+            );
+        });
+        test("should convert valid http url to http link", async () => {
+            const { el } = await setupEditor("<p>[Hello]</p>");
+            await waitFor(".o-we-toolbar");
+            await click(".o-we-toolbar .fa-link");
+            await contains(".o-we-linkpopover input.o_we_href_input_link", { timeout: 1500 }).edit(
+                "http://google.com"
+            );
+            expect(cleanLinkArtifacts(getContent(el))).toBe(
+                '<p><a href="http://google.com">Hello[]</a></p>'
+            );
+        });
+        test("should convert all selected text to link and keep style except color", async () => {
+            const { el } = await setupEditor(
+                '<p>Hello this is [a <b>new</b> <u>link</u> <span style="color:red">keeping</span> style]!</p>'
+            );
+            await waitFor(".o-we-toolbar");
+            click(".o-we-toolbar .fa-link");
+            await contains(".o-we-linkpopover input.o_we_href_input_link").edit("#");
+            expect(cleanLinkArtifacts(getContent(el))).toBe(
+                '<p>Hello this is <a href="#">a <b>new</b> <u>link</u> keeping style[]</a>!</p>'
+            );
+        });
+        test("should convert all selected text to link and keep style except bgclor", async () => {
+            const { el } = await setupEditor(
+                '<p>Hello this is [a <b>new</b> <u>link</u> <span style="background-color:red">keeping</span> style]!</p>'
+            );
+            await waitFor(".o-we-toolbar");
+            click(".o-we-toolbar .fa-link");
+            await contains(".o-we-linkpopover input.o_we_href_input_link").edit("#");
+            expect(cleanLinkArtifacts(getContent(el))).toBe(
+                '<p>Hello this is <a href="#">a <b>new</b> <u>link</u> keeping style[]</a>!</p>'
+            );
+        });
+        test("should convert all selected text to link and keep style except color (2)", async () => {
+            const { el } = await setupEditor(
+                '<p>Hello this is a <b>ne[w</b> <u>link</u> <span style="color:red">keep]ing</span> style!</p>'
+            );
+            await waitFor(".o-we-toolbar");
+            click(".o-we-toolbar .fa-link");
+            await contains(".o-we-linkpopover input.o_we_href_input_link").edit("#");
+            expect(cleanLinkArtifacts(getContent(el))).toBe(
+                '<p>Hello this is a <b>ne</b><a href="#"><b>w</b> <u>link</u> keep[]</a><span style="color:red">ing</span> style!</p>'
+            );
+        });
         test("should set the link on two existing characters", async () => {
             const { el } = await setupEditor("<p>H[el]lo</p>");
             await waitFor(".o-we-toolbar");
+            // link button should be enabled
+            expect('.o-we-toolbar button[title="link"]').not.toHaveClass("disabled");
+            expect('.o-we-toolbar button[title="link"]').not.toHaveAttribute("disabled");
             await click(".o-we-toolbar .fa-link");
             await contains(".o-we-linkpopover input.o_we_href_input_link", { timeout: 1500 }).edit(
                 "#"
             );
             expect(cleanLinkArtifacts(getContent(el))).toBe('<p>H<a href="#">el[]</a>lo</p>');
+        });
+        test("should not allow to create a link if selection span multiple block", async () => {
+            const { el } = await setupEditor("<p>H[ello</p><p>wor]ld</p>");
+            await waitFor(".o-we-toolbar");
+            // link button should be disabled
+            expect('.o-we-toolbar button[title="Link"]').toHaveClass("disabled");
+            expect('.o-we-toolbar button[title="Link"]').toHaveAttribute("disabled");
+            await click('.o-we-toolbar button[title="Link"]');
+            expect(getContent(el)).toBe("<p>H[ello</p><p>wor]ld</p>");
         });
         test("when you open link popover with a label, url input should be focus by default ", async () => {
             const { el } = await setupEditor("<p>[Hello]</p>");
@@ -366,7 +531,7 @@ describe("Link creation", () => {
             await fill("test.com");
             await click(".o_we_apply_link");
             expect(cleanLinkArtifacts(getContent(el))).toBe(
-                '<p><a href="http://test.com">Hello[]</a></p>'
+                '<p><a href="https://test.com">Hello[]</a></p>'
             );
         });
         test("should be correctly unlink/link", async () => {
@@ -427,19 +592,6 @@ describe("Link creation", () => {
                 '<p>a<a href="http://test.com/">bcde[]</a>f</p>'
             );
         });
-        test("when selection includes another block and the link extending stays inside of the block", async () => {
-            const { el } = await setupEditor(
-                '<p>a[b<a href="http://test.com/">cd</a>ef</p><p>gh]</p>'
-            );
-            await waitFor(".o-we-toolbar");
-
-            await click(".o-we-toolbar .fa-link");
-            await waitFor(".o-we-linkpopover", { timeout: 1500 });
-            expect(".o-we-linkpopover").toHaveCount(1);
-            expect(cleanLinkArtifacts(getContent(el))).toBe(
-                '<p>a<a href="http://test.com/">bcdef[]</a></p><p>gh</p>'
-            );
-        });
         test("when create a link on selection which doesn't include a link, it should create a new one", async () => {
             await setupEditor(
                 '<p><strong>abc<a href="http://test.com/">de</a>te[st</strong> m]e</p>'
@@ -451,10 +603,12 @@ describe("Link creation", () => {
             expect(".o_we_label_link").toHaveValue("st m");
             expect(".o_we_href_input_link").toHaveValue("");
         });
-        test("create a link and undo it", async () => {
+        test("create a link and undo it (1)", async () => {
             const { el, editor } = await setupEditor("<p>[Hello]</p>");
             await waitFor(".o-we-toolbar");
             await click(".o-we-toolbar .fa-link");
+            // not validated link shouldn't affect the DOM yet
+            expect(cleanLinkArtifacts(getContent(el))).toBe("<p>[Hello]</p>");
             await contains(".o-we-linkpopover input.o_we_href_input_link", { timeout: 1500 }).edit(
                 "#"
             );
@@ -462,6 +616,19 @@ describe("Link creation", () => {
 
             undo(editor);
             expect(cleanLinkArtifacts(getContent(el))).toBe("<p>[Hello]</p>");
+        });
+        test("create a link and undo it (2)", async () => {
+            const { el, editor } = await setupEditor("<p><b>[Hello]</b></p>");
+            await waitFor(".o-we-toolbar");
+            await click(".o-we-toolbar .fa-link");
+            // not validated link shouldn't affect the DOM yet
+            expect(cleanLinkArtifacts(getContent(el))).toBe("<p><b>[Hello]</b></p>");
+            await contains(".o-we-linkpopover input.o_we_href_input_link").edit("#");
+            expect(cleanLinkArtifacts(getContent(el))).toBe(
+                '<p><b><a href="#">Hello[]</a></b></p>'
+            );
+            undo(editor);
+            expect(cleanLinkArtifacts(getContent(el))).toBe("<p><b>[Hello]</b></p>");
         });
         test("extend a link on selection and undo it", async () => {
             const { el, editor } = await setupEditor(
@@ -585,26 +752,32 @@ describe("shortcut", () => {
         await animationFrame();
         expect(queryText(".o_command_name:first")).toBe("Create link");
     });
+    test.tags("desktop");
     test("create a link with shortcut", async () => {
         const { el } = await setupEditor(`<p>[]</p>`);
-
+        // open odoo command bar
         await press(["ctrl", "k"]);
-        await animationFrame();
+        await waitFor('.o_command span[title="Create link"]');
+        // open link tool
         await click(".o_command_name:first");
+        await waitFor(".o-we-linkpopover");
         await contains(".o-we-linkpopover input.o_we_href_input_link").edit("test.com");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
-            '<p><a href="http://test.com">test.com[]</a></p>'
+            '<p><a href="https://test.com">test.com[]</a></p>'
         );
     });
+    test.tags("desktop");
     test("should be able to create link with ctrl+k and ctrl+k", async () => {
         const { el } = await setupEditor(`<p>[]</p>`);
-
+        // Open odoo global command bar
         await press(["ctrl", "k"]);
-        await animationFrame();
+        await waitFor('.o_command span[title="Create link"]');
+        // Choose the "create link" command to create a link in the editor
         await press(["ctrl", "k"]);
+        await waitFor(".o-we-linkpopover");
         await contains(".o-we-linkpopover input.o_we_href_input_link").edit("test.com");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
-            '<p><a href="http://test.com">test.com[]</a></p>'
+            '<p><a href="https://test.com">test.com[]</a></p>'
         );
     });
     test("should be able to create link with ctrl+k , and should make link on two existing characters", async () => {
@@ -615,7 +788,7 @@ describe("shortcut", () => {
         await press(["ctrl", "k"]);
         await contains(".o-we-linkpopover input.o_we_href_input_link").edit("test.com");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
-            '<p>H<a href="http://test.com">el[]</a>lo</p>'
+            '<p>H<a href="https://test.com">el[]</a>lo</p>'
         );
     });
     test("Press enter to apply when create a link", async () => {
@@ -624,19 +797,17 @@ describe("shortcut", () => {
         await contains(".o-we-linkpopover input.o_we_href_input_link").fill("test.com");
         await press("Enter");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
-            '<p><a href="http://test.com">li[]nk</a></p>'
+            '<p><a href="https://test.com">li[]nk</a></p>'
         );
     });
 });
 
 describe("link preview", () => {
     test("test internal link preview", async () => {
-        onRpc("/html_editor/link_preview_internal", () => {
-            return {
-                description: markup("Test description"),
-                link_preview_name: "Task name | Project name",
-            };
-        });
+        onRpc("/html_editor/link_preview_internal", () => ({
+            description: markup("Test description"),
+            link_preview_name: "Task name | Project name",
+        }));
         onRpc("/odoo/project/1/tasks/8", () => new Response("", { status: 200 }));
         const { editor, el } = await setupEditor(`<p>[]</p>`);
         await insertText(editor, "/link");
@@ -657,17 +828,15 @@ describe("link preview", () => {
         expect(cleanLinkArtifacts(el.textContent)).toBe("Task name | Project name");
     });
     test("test external link preview", async () => {
-        onRpc("/html_editor/link_preview_external", () => {
-            return {
-                og_description:
-                    "From ERP to CRM, eCommerce and CMS. Download Odoo or use it in the cloud. Grow Your Business.",
-                og_image: "https://www.odoo.com/web/image/41207129-1abe7a15/homepage-seo.png",
-                og_title: "Open Source ERP and CRM | Odoo",
-                og_type: "website",
-                og_site_name: "Odoo",
-                source_url: "http://odoo.com/",
-            };
-        });
+        onRpc("/html_editor/link_preview_external", () => ({
+            og_description:
+                "From ERP to CRM, eCommerce and CMS. Download Odoo or use it in the cloud. Grow Your Business.",
+            og_image: "https://www.odoo.com/web/image/41207129-1abe7a15/homepage-seo.png",
+            og_title: "Open Source ERP and CRM | Odoo",
+            og_type: "website",
+            og_site_name: "Odoo",
+            source_url: "http://odoo.com/",
+        }));
         const { editor } = await setupEditor(`<p>[]</p>`);
         await insertText(editor, "/link");
         await animationFrame();
@@ -746,8 +915,6 @@ describe("link preview", () => {
         setSelection({
             anchorNode: pNode,
             anchorOffset: 1,
-            focusNode: pNode,
-            focusOffset: 1,
         });
         await waitUntil(() => !queryFirst(".o-we-linkpopover"), { timeout: 1500 });
 
@@ -755,8 +922,6 @@ describe("link preview", () => {
         setSelection({
             anchorNode: linkNode,
             anchorOffset: 1,
-            focusNode: linkNode,
-            focusOffset: 1,
         });
         await waitFor(".o-we-linkpopover");
         expect.verifySteps([]);
@@ -901,7 +1066,7 @@ describe("readonly mode", () => {
 describe("upload file via link popover", () => {
     test("should display upload button when url input is empty", async () => {
         const { editor } = await setupEditor("<p>[]<br></p>");
-        execCommand(editor, "toggleLinkTools");
+        execCommand(editor, "openLinkTools");
         await waitFor(".o-we-linkpopover");
         // Upload button should be visible
         expect("button:contains('Upload File')").toHaveCount(1);
@@ -929,7 +1094,7 @@ describe("upload file via link popover", () => {
     test("can create a link to an uploaded file", async () => {
         const { editor, el } = await setupEditor("<p>[]<br></p>");
         const mockedUpload = patchUpload(editor);
-        execCommand(editor, "toggleLinkTools");
+        execCommand(editor, "openLinkTools");
         await waitFor(".o-we-linkpopover");
         await click("button:contains('Upload File')");
         await mockedUpload;
@@ -943,14 +1108,14 @@ describe("upload file via link popover", () => {
         await animationFrame();
         // Created link has the correct href and label
         expect(cleanLinkArtifacts(getContent(el))).toBe(
-            `<p><a href="${expectedUrl}">file.txt[]</a><br></p>`
+            `<p><a href="${expectedUrl}">file.txt[]</a></p>`
         );
     });
 
     test("label input does not get filled on file upload if it is already filled", async () => {
         const { editor } = await setupEditor("<p>[]<br></p>");
         const mockedUpload = patchUpload(editor);
-        execCommand(editor, "toggleLinkTools");
+        execCommand(editor, "openLinkTools");
         await waitFor(".o-we-linkpopover");
         // Fill label input
         await contains(".o-we-linkpopover input.o_we_label_link").fill("label");
@@ -963,9 +1128,9 @@ describe("upload file via link popover", () => {
     });
 
     test("popover in preview mode should display the file's mimetype as favicon", async () => {
-        onRpc("/web/dataset/call_kw/ir.attachment/read", () => {
-            return [{ name: "file.txt", mimetype: "text/plain" }];
-        });
+        onRpc("/web/dataset/call_kw/ir.attachment/read", () => [
+            { name: "file.txt", mimetype: "text/plain" },
+        ]);
         await setupEditor(
             '<p><a href="/web/content/1?download=true&unique=123">file.txt[]</a></p>'
         );
