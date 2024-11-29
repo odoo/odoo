@@ -1,5 +1,4 @@
 import { describe, test } from "@odoo/hoot";
-import { press } from "@odoo/hoot-dom";
 import { tick } from "@odoo/hoot-mock";
 import { testEditor } from "../_helpers/editor";
 import { insertText, splitBlock } from "../_helpers/user_actions";
@@ -488,15 +487,12 @@ describe("Selection collapsed", () => {
         test("should insert a paragraph break outside the ending edge of an anchor", async () => {
             await testEditor({
                 contentBefore: "<p><a>ab[]</a></p>",
-                stepFunction: async (editor) => {
-                    splitBlock(editor);
-                    await press("enter");
-                    editor.shared.selection.focusEditable();
-                    await tick();
-                },
-                contentAfterEdit: `<p>\ufeff<a href="">\ufeffab\ufeff</a>\ufeff</p><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`,
-                contentAfter: `<p><a href="">ab</a></p><p>[]<br></p>`,
+                stepFunction: splitBlockA,
+                contentAfterEdit: `<p>\ufeff<a>\ufeffab\ufeff</a>\ufeff</p><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`,
+                contentAfter: `<p><a>ab</a></p><p>[]<br></p>`,
             });
+        });
+        test("should insert a paragraph break outside the ending edge of an anchor (2)", async () => {
             await testEditor({
                 contentBefore: "<p><a>ab[]</a>cd</p>",
                 stepFunction: splitBlockA,
