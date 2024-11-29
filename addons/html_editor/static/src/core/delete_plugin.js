@@ -187,6 +187,7 @@ export class DeletePlugin extends Plugin {
             this.includeEndOrStartBlock,
         ]);
         range = this.deleteRange(range);
+        this.document.getSelection()?.removeAllRanges();
         this.setCursorFromRange(range, { collapseToEnd: true });
     }
 

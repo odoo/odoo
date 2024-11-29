@@ -78,6 +78,10 @@ export function fillAdressForm(
     }
 ) {
     const steps = [];
+    steps.push({
+        trigger: "#o_country_id",
+        run: "selectByLabel Belgium",
+    });
     for (const arg of ["name", "phone", "email", "street", "city", "zip"]) {
         steps.push({
             content: `Address filling ${arg}`,
@@ -85,10 +89,6 @@ export function fillAdressForm(
             run: `edit ${adressParams[arg]}`,
         });
     }
-    steps.push({
-        trigger: "#o_country_id",
-        run: "selectByLabel Belgium",
-    });
     steps.push({
         content: "Continue checkout",
         trigger: "#save_address",

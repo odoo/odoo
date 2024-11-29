@@ -190,7 +190,7 @@ class Field(models.AbstractModel):
 
     @api.model
     def from_html(self, model, field, element):
-        return self.value_from_string(element.text_content().strip())
+        return self.value_from_string(element.text_content().strip()) or False
 
 
 class Integer(models.AbstractModel):

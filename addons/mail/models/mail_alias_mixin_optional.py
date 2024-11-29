@@ -68,7 +68,7 @@ class AliasMixinOptional(models.AbstractModel):
                 alias_vals, record_vals = self._alias_filter_fields(vals)
                 # generate record-agnostic base alias values
                 alias_vals.update(self.env[self._name].with_context(
-                    default_alias_domain_id=company.alias_domain_id.id,
+                    default_alias_domain_id=alias_vals.get('alias_domain_id', company.alias_domain_id.id),
                 )._alias_get_creation_values())
                 alias_vals_list.append(alias_vals)
                 record_vals_list.append(record_vals)
