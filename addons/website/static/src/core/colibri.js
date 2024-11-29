@@ -200,6 +200,7 @@ export class Colibri {
         if (this.isDestroyed || !this.isReady) {
             throw new Error("Cannot update content of an interaction that is not ready or is destroyed");
         }
+        const errors = [];
         const interaction = this.interaction;
         for (const [nodes, attr, fn] of this.dynamicAttrs) {
             for (const node of nodes) {
@@ -207,7 +208,7 @@ export class Colibri {
                     const value = fn.call(interaction, node);
                     this.applyAttr(node, attr, value);
                 } catch (e) {
-                    throw Error(`Error during updateContent of ${attr} with function ${fn}`, { cause: e });
+                    errors.push({ error: e, attribute: attr });
                 }
             }
         }
@@ -216,6 +217,11 @@ export class Colibri {
                 this.applyTOut(node, fn.call(interaction, node));
             }
         }
+        if (errors.length) {
+            const { attribute, error } = errors[0];
+            throw Error(`An error occured while updating dynamic attribute '${attribute}' (in interaction '${this.interaction.constructor.name}')`, { cause: error });
+        }
+
     }
 
     destroy() {

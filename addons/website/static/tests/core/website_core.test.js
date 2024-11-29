@@ -83,6 +83,51 @@ test("start interactions even if there is a crash", async () => {
     expect.verifySteps(["destroy notboom"])
 });
 
+test("recover from error as much as possible when applying dynamiccontent", async () => {
+    let a = "a";
+    let b = "b";
+    let c = "c";
+    let interaction = null;
+
+    class Test extends Interaction {
+        static selector = ".test";
+        dynamicContent = {
+            "_root": {
+                "t-att-a": () => a,
+                "t-att-b": () => {
+                    if (b === "boom") {
+                        throw new Error("boom");
+                    }
+                    return b;
+                },
+                "t-att-c": () => c,
+            }
+        }
+        setup() {
+            interaction = this;
+        }
+    }
+
+    const { el } = await startInteraction(Test, `<div class="test"></div>`);
+    
+    expect(el.querySelector(".test").outerHTML).toBe(`<div class="test" a="a" b="b" c="c"></div>`);
+
+    a = "aa";
+    b = "boom";
+    c = "cc";
+    let error;
+    try {
+        interaction.updateContent();
+    } catch (e) {
+        error = e;
+    }
+    expect(error.message).toBe("An error occured while updating dynamic attribute 'b' (in interaction 'Test')")
+
+    expect(el.querySelector(".test").outerHTML).toBe(`<div class="test" a="aa" b="b" c="cc"></div>`);
+
+});
+
+
 test("interactions are stopped in reverse order", async () => {
     let n = 1;
     class Test extends Interaction {
