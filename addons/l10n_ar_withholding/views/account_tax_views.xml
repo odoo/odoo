@@ -9,7 +9,7 @@
                 <attribute name="invisible" separator="or" add="country_code == 'AR'"/>
             </field>
             <field name="amount_type" position="attributes">
-                <attribute name="invisible" separator="or" add="(not l10n_ar_withholding_payment_type or l10n_ar_tax_type == 'earnings_scale')"/>
+                <attribute name="invisible" separator="or" add="not l10n_ar_withholding_payment_type or l10n_ar_tax_type == 'earnings_scale'"/>
             </field>
             <label for="amount" position="attributes">
                 <attribute name="invisible" separator="or" add="l10n_ar_tax_type == 'earnings_scale'"/>
