@@ -31,7 +31,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_sale_tax_id': 'l10n_kz_tax_vat_12_sale',
                 'account_purchase_tax_id': 'l10n_kz_tax_vat_12_purchase',
                 'income_account_id': 'kz6010',
-                'expense_account_id': 'kz1330',
+                'expense_account_id': 'kz7010',
             },
         }
 
