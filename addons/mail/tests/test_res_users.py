@@ -4,7 +4,6 @@
 from psycopg2 import IntegrityError
 from unittest.mock import patch
 
-from odoo import Command
 from odoo.addons.base.models.res_users import Users
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
@@ -75,20 +74,19 @@ class TestUser(MailCommon):
 
         # Change the internal user to portal, and make sure it automatically converts from inbox to email notifications
         user.write({'groups_id': [
-            Command.unlink(self.env.ref('base.group_user').id),
-            Command.link(self.env.ref('base.group_portal').id),
+            (3, self.env.ref('base.group_user').id),
+            (4, self.env.ref('base.group_portal').id),
         ]})
         self.assertEqual(user.notification_type, 'email')
         self.assertNotIn(self.env.ref('mail.group_mail_notification_type_inbox'), user.groups_id)
 
 
 @tagged('-at_install', 'post_install')
-class TestUserModifyOwnProfile(HttpCaseWithUserDemo):
+class TestUserTours(HttpCaseWithUserDemo):
 
     def test_user_modify_own_profile(self):
         """" A user should be able to modify their own profile.
         Even if that user does not have access rights to write on the res.users model. """
-
         if 'hr.employee' in self.env and not self.user_demo.employee_id:
             self.env['hr.employee'].create({
                 'name': 'Marc Demo',
