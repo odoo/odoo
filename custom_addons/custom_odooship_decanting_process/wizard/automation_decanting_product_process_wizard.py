@@ -29,6 +29,7 @@ class AutomationDecantingProductProcess(models.TransientModel):
         ('fully_filled', 'Fully Filled')
     ], string='Crate Status', default='open')
     count_lines = fields.Integer(string='Count Lines', default=0,compute='_compute_count_lines',store=True)
+    updated_count_lines = fields.Integer(string='Updated Count Lines')
     # Product lines
     line_ids = fields.One2many('automation.decanting.product.process.wizard.line', 'wizard_id', string='Product Lines')
 
@@ -39,7 +40,10 @@ class AutomationDecantingProductProcess(models.TransientModel):
         Compute the count of lines based on the number of product lines in the wizard.
         """
         for wizard in self:
-            wizard.count_lines = len(wizard.line_ids.filtered(lambda line: line.product_id))
+            if wizard.updated_count_lines:
+                wizard.count_lines = wizard.updated_count_lines + len(wizard.line_ids.filtered(lambda line: line.product_id))
+            else:
+                wizard.count_lines = len(wizard.line_ids.filtered(lambda line: line.product_id))
 
     @api.depends('line_ids', 'container_partition')
     def _compute_crate_status(self):
@@ -64,7 +68,7 @@ class AutomationDecantingProductProcess(models.TransientModel):
             line_count = len(wizard.line_ids)
             if line_count == 0:
                 wizard.crate_status = 'open'
-            elif line_count >= wizard.container_partition:
+            elif line_count == wizard.container_partition:
                 wizard.crate_status = 'fully_filled'
             else:
                 wizard.crate_status = 'partially_filled'
@@ -137,7 +141,6 @@ class AutomationDecantingProductProcess(models.TransientModel):
         self._compute_crate_status()
         self.automation_decanting_process_id.crate_status = self.crate_status
         self.automation_decanting_process_id.count_lines = self.count_lines
-
         return {'type': 'ir.actions.act_window_close'}
 
 
