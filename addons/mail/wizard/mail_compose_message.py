@@ -445,6 +445,16 @@ class MailComposer(models.TransientModel):
                     {'model': 'mail.message', 'res_id': 0}
                 )['attachment_ids']
 
+                # generate message_id directly; instead of letting mail_message create
+                # method doing it. Then use it to craft references, allowing to keep
+                # a trace of message_id even when email providers override it.
+                # Note that if 'auto_delete' and 'auto_delete_message' are True,
+                # mail.message is removed and parent finding based on messageID
+                # may be broken, tough life
+                message_id = self.env['mail.message']._get_message_id(mail_values)
+                mail_values['message_id'] = message_id
+                mail_values['references'] = message_id
+
             results[res_id] = mail_values
 
         results = self._process_state(results)

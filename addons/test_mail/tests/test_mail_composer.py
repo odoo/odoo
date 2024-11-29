@@ -1865,6 +1865,8 @@ class TestComposerResultsMass(TestMailComposer):
                                             ],
                                             'body_content': exp_body,
                                             'email_from': self.partner_employee_2.email_formatted,
+                                            # profit from this test to check references are set to message_id in mailing emails
+                                            'references_message_id_check': True,
                                             'subject': exp_subject,
                                         },
                                         fields_values={
