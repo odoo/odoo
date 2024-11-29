@@ -52,18 +52,21 @@ export class EditorOverlay extends Component {
         }
 
         const rootRef = useRef("root");
-        const resizeObserver = new ResizeObserver(() => {
-            position.unlock();
-        });
-        useEffect(
-            (root) => {
-                resizeObserver.observe(root);
-                return () => {
-                    resizeObserver.unobserve(root);
-                };
-            },
-            () => [rootRef.el]
-        );
+
+        if (this.props.positionOptions?.updatePositionOnResize ?? true) {
+            const resizeObserver = new ResizeObserver(() => {
+                position.unlock();
+            });
+            useEffect(
+                (root) => {
+                    resizeObserver.observe(root);
+                    return () => {
+                        resizeObserver.unobserve(root);
+                    };
+                },
+                () => [rootRef.el]
+            );
+        }
 
         if (this.props.closeOnPointerdown) {
             const editableDocument = this.props.editable.ownerDocument;
