@@ -20,12 +20,23 @@ export function useCustomDropzone(targetRef, dropzoneComponent, dropzoneComponen
     useExternalListener(document, "dragleave", onDragLeave, { capture: true });
     // Prevents the browser to open or download the file when it is dropped
     // outside of the dropzone.
-    useExternalListener(window, "dragover", (ev) => ev.preventDefault());
-    useExternalListener(window, "drop", (ev) => {
-        ev.preventDefault();
-        dragCount = 0;
-        updateDropzone();
-    }, { capture: true });
+    useExternalListener(window, "dragover", (ev) => {
+        if (ev.dataTransfer && ev.dataTransfer.types.includes("Files")) {
+            ev.preventDefault();
+        }
+    });
+    useExternalListener(
+        window,
+        "drop",
+        (ev) => {
+            if (ev.dataTransfer && ev.dataTransfer.types.includes("Files")) {
+                ev.preventDefault();
+            }
+            dragCount = 0;
+            updateDropzone();
+        },
+        { capture: true }
+    );
 
     function updateDropzone() {
         const hasDropzone = !!removeDropzone;
