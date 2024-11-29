@@ -107,6 +107,11 @@ class TestMailGroupMessage(TestMailListCommon):
         self.test_group.access_group_id = user_group
         self.test_group.access_mode = 'groups'
 
+        # As such, the code below crashes because base.group_partner_manager
+        # implies base.group_user, which is disjoint from base.group_portal.
+        # Does it make any sense (a portal user being a partner manager) ?
+        user_group.implied_ids -= self.env.ref('base.group_user')
+
         # Message pending
         with self.assertRaises(AccessError, msg='Portal should not have access to pending messages'):
             self.test_group_msg_1_pending.with_user(self.user_portal).check_access('read')
