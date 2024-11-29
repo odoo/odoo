@@ -30,7 +30,7 @@ test("can create a new channel", async () => {
     onRpcBefore((route, args) => {
         if (
             route.startsWith("/mail") ||
-            route.startsWith("/discuss/channel/create") ||
+            route.startsWith("/discuss/channel/create_channel") ||
             route.startsWith("/discuss/channel/messages") ||
             route.startsWith("/discuss/search")
         ) {
@@ -68,7 +68,7 @@ test("can create a new channel", async () => {
         ["partner_id", "=", serverState.partnerId],
     ]);
     await waitForSteps([
-        `/discuss/channel/create - ${JSON.stringify({
+        `/discuss/channel/create_channel - ${JSON.stringify({
             name: "abc"
         })}`,
         `/discuss/channel/messages - {"channel_id":${channelId},"fetch_params":{"limit":60,"around":${selfMember.new_message_separator}}}`,
@@ -124,7 +124,7 @@ test("can make a DM chat", async () => {
     await waitForSteps([
         `/discuss/search - {"term":""}`,
         `/discuss/search - {"term":"mario"}`,
-        `/discuss/channel/get - ${JSON.stringify({
+        `/discuss/channel/get_or_create_chat - ${JSON.stringify({
             partners_to: [partnerId],
             force_open: false,
         })}`,

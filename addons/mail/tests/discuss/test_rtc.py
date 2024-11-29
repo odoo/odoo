@@ -139,7 +139,7 @@ class TestChannelRTC(MailCommon):
     @mute_logger('odoo.models.unlink')
     def test_10_start_call_in_chat_should_invite_all_members_to_call(self):
         test_user = self.env['res.users'].sudo().create({'name': "Test User", 'login': 'test'})
-        channel = self.env['discuss.channel']._channel_get(partners_to=(self.user_employee.partner_id + test_user.partner_id).ids)
+        channel = self.env['discuss.channel']._channel_get_or_create_chat(partners_to=(self.user_employee.partner_id + test_user.partner_id).ids)
         channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
         channel_member_test_user = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == test_user.partner_id)
         channel_member._rtc_join_call()
