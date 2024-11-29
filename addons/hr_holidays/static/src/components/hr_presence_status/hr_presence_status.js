@@ -1,19 +1,38 @@
 import { patch } from "@web/core/utils/patch";
 
 import { HrPresenceStatus } from "@hr/components/hr_presence_status/hr_presence_status";
-import { HrPresenceStatusPrivate, hrPresenceStatusPrivate } from "@hr/components/hr_presence_status_private/hr_presence_status_private";
+import {
+    HrPresenceStatusPrivate,
+    hrPresenceStatusPrivate,
+} from "@hr/components/hr_presence_status_private/hr_presence_status_private";
 
 const patchHrPresenceStatus = () => ({
     get icon() {
-        if (this.value.startsWith("presence_holiday")) {
+        if (
+            this.status &&
+            (this.status.startsWith("presence_holiday") || this.status.startsWith("leave_"))
+        ) {
             return "fa-plane";
         }
         return super.icon;
     },
 
     get color() {
-        if (this.value.startsWith("presence_holiday")) {
-            return `${this.value === "presence_holiday_present" ? "text-success" : "o_icon_employee_absent"}`;
+        if (this.status && this.status.startsWith("presence_holiday")) {
+            return `${
+                this.value === "presence_holiday_present"
+                    ? "text-success"
+                    : "o_icon_employee_absent"
+            }`;
+        } else if (this.status && this.status?.startsWith("leave_")) {
+            switch (this.status) {
+                case "leave_online":
+                    return "text-success";
+                case "leave_away":
+                    return "text-warning";
+                case "leave_offline":
+                    return "text-700";
+            }
         }
         return super.color;
     },
@@ -29,12 +48,12 @@ patch(HrPresenceStatusPrivate.prototype, {
         return this.props.record.data.current_leave_id
             ? this.props.record.data.current_leave_id[1]
             : super.label;
-    }
+    },
 });
 
 Object.assign(hrPresenceStatusPrivate, {
     fieldDependencies: [
         ...(hrPresenceStatusPrivate.fieldDependencies || []),
-        { name: "current_leave_id", type:"many2one"}
+        { name: "current_leave_id", type: "many2one" },
     ],
 });

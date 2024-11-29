@@ -16,23 +16,21 @@ export class HrPresenceStatus extends Component {
 
     get classNames() {
         const classNames = ["fa"];
-        classNames.push(
-            this.icon,
-            "fa-fw",
-            "o_button_icon",
-            "hr_presence",
-            "align-middle",
-            this.color,
-        )
+        classNames.push(this.icon, "fa-fw", "o_button_icon", "align-middle", this.color);
         return classNames.join(" ");
     }
 
     get color() {
         switch (this.value) {
+            case "online":
+            case "bot":
             case "presence_present":
                 return "text-success";
             case "presence_absent":
                 return "o_icon_employee_absent";
+            case "offline":
+                return "text-700";
+            case "away":
             case "presence_out_of_working_hour":
             case "presence_archive":
                 return "text-muted";
@@ -42,13 +40,40 @@ export class HrPresenceStatus extends Component {
     }
 
     get icon() {
-        return `fa-circle${this.value.startsWith("presence_archive") ? "-o" : ""}`;
+        switch (this.status) {
+            case "online":
+            case "presence_present":
+            case "presence_to_define":
+                return "fa-circle";
+            case "offline":
+            case "presence_absent":
+            case "presence_absent_active":
+                return "fa-circle-o";
+            case "bot":
+                return "fa-heart";
+            default:
+                return "fa-question-circle";
+        }
     }
 
     get label() {
-        return this.value !== false
-            ? this.options.find(([value, label]) => value === this.value)[1]
-            : "";
+        if (!this.im_status) {
+            return this.value && this.value !== false
+                ? this.options.find(([value, label]) => value === this.value)[1]
+                : "";
+        }
+        switch (this.status) {
+            case "online":
+                return "User is online";
+            case "away":
+                return "User is idle";
+            case "offline":
+                return "User is offline";
+            case "bot":
+                return "User is a bot";
+            default:
+                return "No IM status available";
+        }
     }
 
     get options() {
@@ -60,6 +85,14 @@ export class HrPresenceStatus extends Component {
     get value() {
         return this.props.record.data[this.props.name];
     }
+
+    get im_status() {
+        return this.props.record.data.im_status;
+    }
+
+    get status() {
+        return this.im_status || this.value;
+    }
 }
 
 export const hrPresenceStatus = {
@@ -70,6 +103,7 @@ export const hrPresenceStatus = {
             tag: viewType === "kanban" ? "span" : "small",
         };
     },
+    fieldDependencies: [{ name: "im_status", type: "char" }],
 };
 
-registry.category("fields").add("hr_presence_status", hrPresenceStatus)
+registry.category("fields").add("hr_presence_status", hrPresenceStatus);

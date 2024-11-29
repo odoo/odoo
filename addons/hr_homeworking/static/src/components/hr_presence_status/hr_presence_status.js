@@ -31,7 +31,7 @@ const patchHrPresenceStatus = () => ({
     },
 
     get location() {
-        let location = this.value?.split("_")[1] || "";
+        let location = this.status && this.status.split("_")[1] || "";
         if (location && !['home', 'office', 'other'].includes(location)) {
             location = "";
         }

@@ -118,15 +118,45 @@ test("many2one: click on an employee not associated with a user", async () => {
     const avatarId = env["m2x.avatar.employee"].create({ employee_id: employeeId });
     onRpc("web_read", (args) => {
         expect.step(`web_read ${args.model} ${args.args[0]}`);
-        expect(args.kwargs.specification).toEqual({
-            employee_id: {
-                fields: {
-                    display_name: {},
+        if (args.model === 'm2x.avatar.employee') {
+            expect(args.kwargs.specification).toEqual({
+                employee_id: {
+                    fields: {
+                        display_name: {},
+                    },
                 },
-            },
-            display_name: {},
-        });
+                display_name: {},
+            });
+        } else if (args.model === 'hr.employee.public') {
+            expect(args.kwargs.specification).toEqual({
+                name: {},
+                user_id: {
+                    fields: {
+                        name: {},
+                        email: {},
+                        phone: {},
+                        im_status: {},
+                        share: {},
+                        partner_id: {}
+                    }
+                },
+                work_phone: {},
+                work_email: {},
+                work_location_name: {},
+                work_location_type: {},
+                job_title: {},
+                department_id: {
+                    fields: {
+                        display_name: {}
+                    }
+                },
+                show_hr_icon_display: {},
+                hr_icon_display: {},
+                im_status: {}
+                });
+        }
     });
+
     onRpc("has_group", () => false);
     await mountView({
         type: "form",
@@ -136,7 +166,7 @@ test("many2one: click on an employee not associated with a user", async () => {
     });
     await contains(".o_field_widget[name=employee_id] input", { value: "Mario" });
     await contains(".o_m2o_avatar > img").click();
-    expect.verifySteps([`web_read m2x.avatar.employee ${avatarId}`]);
+    expect.verifySteps([`web_read m2x.avatar.employee ${avatarId}`, `web_read hr.employee.public ${avatarId}`]);
 });
 
 test("many2one with hr group widget in kanban view", async () => {
@@ -307,9 +337,6 @@ test("many2one with hr group widget in form view", async () => {
     onRpc("web_read", (args) => {
         expect.step(`web_read ${args.model} ${args.args[0]}`);
     });
-    onRpc("read", (args) => {
-        expect.step(`read ${args.model} ${args.args[0]}`);
-    });
     await mountView({
         type: "form",
         resId: avatarId_1,
@@ -325,8 +352,8 @@ test("many2one with hr group widget in form view", async () => {
     await contains(".o_field_many2many_avatar_employee .o_tag .o_m2m_avatar:eq(1)").click();
     expect.verifySteps([
         `web_read m2x.avatar.employee ${avatarId_1}`,
-        `read hr.employee ${employeeId_1}`,
-        `read hr.employee ${employeeId_2}`,
+        `web_read hr.employee ${employeeId_1}`,
+        `web_read hr.employee ${employeeId_2}`,
     ]);
 });
 
