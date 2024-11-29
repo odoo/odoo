@@ -180,4 +180,131 @@ export class OrderSummary extends Component {
         }
         return false;
     }
+<<<<<<< master
+||||||| 79f688a757935f34e9dfde598f6547c998642328
+    async handleDecreaseUnsavedLine(newQuantity) {
+        const selectedLine = this.currentOrder.get_selected_orderline();
+        const decreaseQuantity = selectedLine.get_quantity() - newQuantity;
+        selectedLine.set_quantity(newQuantity);
+        if (newQuantity == 0) {
+            selectedLine.delete();
+            this.currentOrder._unlinkOrderline(selectedLine);
+        }
+        return decreaseQuantity;
+    }
+    async handleDecreaseLine(newQuantity) {
+        const selectedLine = this.currentOrder.get_selected_orderline();
+        let current_saved_quantity = 0;
+        for (const line of this.currentOrder.lines) {
+            if (line === selectedLine) {
+                current_saved_quantity += line.saved_quantity;
+            } else if (
+                line.product_id.id === selectedLine.product_id.id &&
+                line.get_unit_price() === selectedLine.get_unit_price()
+            ) {
+                current_saved_quantity += line.qty;
+            }
+        }
+        const newLine = this.getNewLine();
+        const decreasedQuantity = current_saved_quantity - newQuantity;
+        if (decreasedQuantity != 0) {
+            newLine.set_quantity(-decreasedQuantity + newLine.get_quantity(), true);
+        }
+        if (newLine !== selectedLine && selectedLine.saved_quantity != 0) {
+            selectedLine.set_quantity(selectedLine.saved_quantity);
+        }
+        return decreasedQuantity;
+    }
+    getNewLine() {
+        const selectedLine = this.currentOrder.get_selected_orderline();
+        const sign = selectedLine.get_quantity() > 0 ? 1 : -1;
+        let newLine = selectedLine;
+        if (selectedLine.saved_quantity != 0) {
+            for (const line of selectedLine.order_id.lines) {
+                if (
+                    line.product_id.id === selectedLine.product_id.id &&
+                    line.get_unit_price() === selectedLine.get_unit_price() &&
+                    line.get_quantity() * sign < 0 &&
+                    line !== selectedLine
+                ) {
+                    return line;
+                }
+            }
+            const data = selectedLine.serialize();
+            delete data.uuid;
+            newLine = this.pos.models["pos.order.line"].create(
+                {
+                    ...data,
+                    refunded_orderline_id: selectedLine.refunded_orderline_id,
+                },
+                false,
+                true
+            );
+            newLine.set_quantity(0);
+        }
+        return newLine;
+    }
+=======
+    async handleDecreaseUnsavedLine(newQuantity) {
+        const selectedLine = this.currentOrder.get_selected_orderline();
+        const decreaseQuantity = selectedLine.get_quantity() - newQuantity;
+        selectedLine.set_quantity(newQuantity);
+        if (newQuantity == 0) {
+            selectedLine.delete();
+        }
+        return decreaseQuantity;
+    }
+    async handleDecreaseLine(newQuantity) {
+        const selectedLine = this.currentOrder.get_selected_orderline();
+        let current_saved_quantity = 0;
+        for (const line of this.currentOrder.lines) {
+            if (line === selectedLine) {
+                current_saved_quantity += line.saved_quantity;
+            } else if (
+                line.product_id.id === selectedLine.product_id.id &&
+                line.get_unit_price() === selectedLine.get_unit_price()
+            ) {
+                current_saved_quantity += line.qty;
+            }
+        }
+        const newLine = this.getNewLine();
+        const decreasedQuantity = current_saved_quantity - newQuantity;
+        if (decreasedQuantity != 0) {
+            newLine.set_quantity(-decreasedQuantity + newLine.get_quantity(), true);
+        }
+        if (newLine !== selectedLine && selectedLine.saved_quantity != 0) {
+            selectedLine.set_quantity(selectedLine.saved_quantity);
+        }
+        return decreasedQuantity;
+    }
+    getNewLine() {
+        const selectedLine = this.currentOrder.get_selected_orderline();
+        const sign = selectedLine.get_quantity() > 0 ? 1 : -1;
+        let newLine = selectedLine;
+        if (selectedLine.saved_quantity != 0) {
+            for (const line of selectedLine.order_id.lines) {
+                if (
+                    line.product_id.id === selectedLine.product_id.id &&
+                    line.get_unit_price() === selectedLine.get_unit_price() &&
+                    line.get_quantity() * sign < 0 &&
+                    line !== selectedLine
+                ) {
+                    return line;
+                }
+            }
+            const data = selectedLine.serialize();
+            delete data.uuid;
+            newLine = this.pos.models["pos.order.line"].create(
+                {
+                    ...data,
+                    refunded_orderline_id: selectedLine.refunded_orderline_id,
+                },
+                false,
+                true
+            );
+            newLine.set_quantity(0);
+        }
+        return newLine;
+    }
+>>>>>>> 7d64e4b78fc427cfb39cc9cc4e794a6cd246863d
 }
