@@ -245,7 +245,7 @@ export class DiscussChannel extends models.ServerModel {
                 "name",
                 "uuid",
             ],
-            makeKwArgs({ load: false })
+            false
         );
         const [channel] = this.browse(ids);
         const [group_public_id] = ResGroups.browse(channel.group_public_id);

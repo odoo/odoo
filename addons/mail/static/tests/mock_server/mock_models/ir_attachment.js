@@ -56,7 +56,7 @@ export class IrAttachment extends webModels.IrAttachment {
             const [data] = this._read_format(
                 attachment.id,
                 fields.filter((field) => field !== "thread"),
-                makeKwArgs({ load: false })
+                false
             );
             if (fields.includes("thread")) {
                 data.thread =

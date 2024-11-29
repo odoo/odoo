@@ -18,7 +18,6 @@ import { serverState } from "../mock_server_state.hoot";
 import { fetchModelDefinitions, registerModelToFetch } from "../module_set.hoot";
 import { DEFAULT_FIELD_VALUES, FIELD_SYMBOL } from "./mock_fields";
 import {
-    FIELD_NOT_FOUND,
     MockServerError,
     getRecordQualifier,
     makeKwArgs,
@@ -799,38 +798,36 @@ export class MockServer {
             }
         }
 
-        // Compute functions
+        // Computed & related fields
         for (const model of models) {
-            for (const field of Object.values(model._fields)) {
-                /** @type {(this: Model) => void} */
-                let computeFn = field.compute;
-                if (typeof computeFn === "string") {
-                    if (typeof model[computeFn] !== "function") {
+            for (const { compute, name, related } of Object.values(model._fields)) {
+                if (!compute) {
+                    if (related) {
+                        // Related field
+                        model._computes = {
+                            [name]: model._compute_related_field, // `related`: first
+                            ...model._computes,
+                        };
+                    }
+                    continue;
+                }
+
+                // Computed field
+                /** @type {(this: Model, fieldName: string) => void} */
+                let computeFn = compute;
+                if (typeof computeFn !== "function") {
+                    computeFn = model[computeFn];
+                    if (typeof computeFn !== "function") {
                         throw new MockServerError(
                             `could not find compute function "${computeFn}" on model "${model._name}"`
                         );
                     }
-                    computeFn = model[computeFn];
-                } else if (field.related) {
-                    const relatedFieldName = field.name;
-                    const fieldNames = safeSplit(field.related, ".");
-                    computeFn = function () {
-                        for (const record of this) {
-                            const relatedValue = this._followRelation(record, fieldNames);
-                            if (relatedValue === FIELD_NOT_FOUND) {
-                                // The related field is not found on the record, so we
-                                // remove the compute function.
-                                model._computes.delete(computeFn);
-                                return;
-                            } else {
-                                record[relatedFieldName] = relatedValue;
-                            }
-                        }
-                    };
                 }
-                if (typeof computeFn === "function") {
-                    model._computes.add(computeFn);
-                }
+
+                model._computes = {
+                    ...model._computes,
+                    [name]: computeFn, // `compute`: last
+                };
             }
         }
     }

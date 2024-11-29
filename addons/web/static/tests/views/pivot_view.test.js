@@ -39,60 +39,33 @@ async function removeFacet() {
 
 class Partner extends models.Model {
     _name = "partner";
-    foo = fields.Integer({ string: "Foo", searchable: true, aggregator: "sum", groupable: false });
-    bar = fields.Boolean({ string: "bar", store: true, sortable: true, groupable: true });
-    date = fields.Date({ string: "Date", store: true, groupable: true, sortable: true });
-    product_id = fields.Many2one({
-        string: "Product",
-        relation: "product",
-        store: true,
-        sortable: true,
-        groupable: true,
-    });
-    other_product_id = fields.Many2one({
-        string: "Other Product",
-        relation: "product",
-        store: true,
-        sortable: true,
-        groupable: true,
-    });
-    non_stored_m2o = fields.Many2one({
-        string: "Non Stored M2O",
-        relation: "product",
-        groupable: false,
-    });
-    customer = fields.Many2one({
-        string: "Customer",
-        store: true,
-        relation: "customer",
-        sortable: true,
-        groupable: true,
-    });
+
+    foo = fields.Integer({ groupable: false });
+    bar = fields.Boolean({ string: "bar" });
+    date = fields.Date();
+    product_id = fields.Many2one({ relation: "product" });
+    other_product_id = fields.Many2one({ relation: "product" });
+    non_stored_m2o = fields.Many2one({ relation: "product", groupable: false });
+    customer = fields.Many2one({ relation: "customer" });
     computed_field = fields.Integer({
         string: "Computed and not stored",
-        compute: true,
+        compute: () => 1,
         aggregator: "sum",
         groupable: false,
     });
     company_type = fields.Selection({
-        string: "Company Type",
         selection: [
             ["company", "Company"],
             ["individual", "individual"],
         ],
-        searchable: true,
-        sortable: true,
-        store: true,
-        groupable: true,
     });
-    price_nonaggregatable = fields.Monetary({
-        string: "Price non-aggregatable",
+    price_nonaggregable = fields.Monetary({
+        string: "Price non-aggregable",
         aggregator: undefined,
-        store: true,
         currency_field: this.currency_id,
         groupable: false,
     });
-    ref = fields.Reference({
+    reference = fields.Reference({
         string: "Reference",
         selection: [
             ["product", "Product"],
@@ -100,23 +73,16 @@ class Partner extends models.Model {
         ],
         aggregator: "count_distinct",
     });
+    parent_id = fields.Many2one({ relation: "partner", groupable: false });
     properties = fields.Properties({
-        string: "Properties",
         definition_record: "parent_id",
         definition_record_field: "properties_definition",
     });
-    parent_id = fields.Many2one({ string: "Parent", relation: "partner", groupable: false });
     properties_definition = fields.PropertiesDefinition({ string: "Properties", groupable: false });
-    display_name = fields.Char({ string: "Displayed name", groupable: false });
 
-    create_date = fields.Datetime({
-        groupable: false,
-        string: "Created on",
-    });
-    write_date = fields.Datetime({
-        string: "Last Modified on",
-        groupable: false,
-    });
+    display_name = fields.Char({ groupable: false });
+    create_date = fields.Datetime({ groupable: false });
+    write_date = fields.Datetime({ groupable: false });
 
     _records = [
         {
@@ -126,9 +92,8 @@ class Partner extends models.Model {
             date: "2016-12-14",
             product_id: 37,
             customer: 1,
-            computed_field: 19,
             company_type: "company",
-            ref: "product,37",
+            reference: "product,37",
             properties_definition: [
                 {
                     name: "my_char",
@@ -144,9 +109,8 @@ class Partner extends models.Model {
             date: "2016-10-26",
             product_id: 41,
             customer: 2,
-            computed_field: 23,
             company_type: "individual",
-            ref: "product,41",
+            reference: "product,41",
             parent_id: 1,
             properties: {
                 my_char: "aaa",
@@ -159,9 +123,8 @@ class Partner extends models.Model {
             date: "2016-12-15",
             product_id: 41,
             customer: 2,
-            computed_field: 26,
             company_type: "company",
-            ref: "customer,1",
+            reference: "customer,1",
             parent_id: 1,
             properties: {
                 my_char: "bbb",
@@ -174,9 +137,8 @@ class Partner extends models.Model {
             date: "2016-04-11",
             product_id: 41,
             customer: 1,
-            computed_field: 19,
             company_type: "individual",
-            ref: "customer,2",
+            reference: "customer,2",
         },
     ];
 }
@@ -295,7 +257,7 @@ test("pivot rendering with widget", async () => {
 });
 
 test("pivot rendering with string attribute on field", async () => {
-    Partner._fields.foo = fields.Integer({ string: "Foo", store: true, aggregator: "sum" });
+    Partner._fields.foo = fields.Integer();
 
     await mountView({
         type: "pivot",
@@ -353,9 +315,8 @@ test("Pivot with integer col group by with 0 as header", async () => {
 
 test("pivot rendering with string attribute on non stored field", async () => {
     Partner._fields.fubar = fields.Integer({
-        string: "Fubar",
-        store: false,
         aggregator: "sum",
+        store: false,
     });
     await mountView({
         type: "pivot",
@@ -371,11 +332,11 @@ test("pivot rendering with string attribute on non stored field", async () => {
 
 test("pivot rendering with invisible attribute on field", async () => {
     // when invisible, a field should neither be an active measure nor be a selectable measure
-    Partner._fields.foo = fields.Integer({ string: "Foo", store: true, aggregator: "sum" });
-    Partner._fields.foo2 = fields.Integer({ string: "Foo2", store: true, aggregator: "sum" });
+    Partner._fields.foo = fields.Integer();
+    Partner._fields.foo2 = fields.Integer();
     Partner._fields.computed_field = fields.Integer({
         string: "Computed and not stored",
-        compute: true,
+        compute: () => 1,
         aggregator: null,
     });
 
@@ -438,11 +399,11 @@ test("pivot view do not add number field without aggregator", async () => {
         resModel: "partner",
         arch: `
 			<pivot>
-				<field name="price_nonaggregatable"/>
+				<field name="price_nonaggregable"/>
 			</pivot>`,
     });
     await contains(".o_pivot_buttons button.dropdown-toggle").click();
-    expect(".dropdown-item:contains(Price non-aggregatable)").toHaveCount(0);
+    expect(".dropdown-item:contains(Price non-aggregable)").toHaveCount(0);
 });
 
 test("clicking on a cell triggers a doAction", async () => {
@@ -611,10 +572,9 @@ test("pivot view grouped by date field", async () => {
 test("without measures, pivot view uses __count by default", async () => {
     Partner._fields.computed_field = fields.Integer({
         string: "Computed and not stored",
-        compute: false,
         aggregator: null,
     });
-    Partner._fields.foo = fields.Integer({ string: "Foo", searchable: true, aggregator: null });
+    Partner._fields.foo = fields.Integer({ aggregator: null });
     expect.assertions(4);
 
     onRpc("read_group", ({ kwargs }) => {
@@ -696,9 +656,14 @@ test.tags("desktop")("basic folding/unfolding", async () => {
     // click on closed header to open dropdown
     await contains("tbody .o_pivot_header_cell_closed").click();
     expect(".o-dropdown--menu").toHaveCount(1);
-    expect(queryText(".o-dropdown--menu").replace(/\s/g, "")).toBe(
-        "CompanyTypeCustomerDateOtherProductProductbarAddCustomGroupCompanyTypeCustomerDateOtherProductProductbar"
-    );
+    expect(queryAllTexts(".o-dropdown--menu .o-dropdown-item")).toEqual([
+        "Company type",
+        "Customer",
+        "Date",
+        "Other product",
+        "Product",
+        "bar",
+    ]);
     // open the Date sub dropdown
     await contains(".o-dropdown--menu .dropdown-toggle.o_menu_item").hover();
     const subDropdownMenu = getDropdownMenu(".o-dropdown--menu .dropdown-toggle.o_menu_item");
@@ -809,10 +774,10 @@ test("pivot renders group dropdown same as search groupby dropdown if group bys 
     expect(".o_add_custom_group_menu option:not([disabled])").toHaveCount(6);
     const optionDescriptions = queryAllTexts(".o_add_custom_group_menu option:not([disabled])");
     expect(optionDescriptions).toEqual([
-        "Company Type",
+        "Company type",
         "Customer",
         "Date",
-        "Other Product",
+        "Other product",
         "Product",
         "bar",
     ]);
@@ -952,10 +917,7 @@ test("pivot view do not show custom group selection if there are no groupable fi
 
     // Keep product_id but make it ungroupable
     Partner._fields.product_id = fields.Many2one({
-        string: "Product",
         relation: "product",
-        store: true,
-        sortable: true,
         groupable: false,
     });
 
@@ -964,7 +926,6 @@ test("pivot view do not show custom group selection if there are no groupable fi
             id: 1,
             foo: 12,
             product_id: 37,
-            computed_field: 19,
         },
     ];
 
@@ -1408,16 +1369,9 @@ test.tags("desktop")("correctly remove pivot_ keys from the context", async () =
 
     // in this test, we use "foo" as a measure
     Partner._fields.foo = fields.Integer({
-        string: "Foo",
-        searchable: true,
-        aggregator: "sum",
         groupable: false,
-        store: true,
     });
-    Partner._fields.amount = fields.Float({
-        string: "Amount",
-        aggregator: "sum",
-    });
+    Partner._fields.amount = fields.Float();
 
     let expectedContext;
 
@@ -1916,16 +1870,9 @@ test("Empty results keep groupbys", async () => {
 test("correctly uses pivot_ keys from the context", async () => {
     // in this test, we use "foo" as a measure
     Partner._fields.foo = fields.Integer({
-        string: "Foo",
-        searchable: true,
-        aggregator: "sum",
         groupable: false,
-        store: true,
     });
-    Partner._fields.amount = fields.Float({
-        string: "Amount",
-        aggregator: "sum",
-    });
+    Partner._fields.amount = fields.Float();
 
     await mountView({
         type: "pivot",
@@ -2044,16 +1991,9 @@ test("correctly group data after flip (2)", async () => {
 test("correctly uses pivot_ keys from the context (at reload)", async () => {
     // in this test, we use "foo" as a measure
     Partner._fields.foo = fields.Integer({
-        string: "Foo",
-        searchable: true,
-        aggregator: "sum",
         groupable: false,
-        store: true,
     });
-    Partner._fields.amount = fields.Float({
-        string: "Amount",
-        aggregator: "sum",
-    });
+    Partner._fields.amount = fields.Float();
 
     await mountView({
         type: "pivot",
@@ -2114,10 +2054,7 @@ test("correctly use group_by key from the context", async () => {
 });
 
 test("correctly uses pivot_row_groupby key with default groupBy from the context", async () => {
-    Partner._fields.amount = fields.Float({
-        string: "Amount",
-        aggregator: "sum",
-    });
+    Partner._fields.amount = fields.Float();
 
     await mountView({
         type: "pivot",
@@ -2150,15 +2087,12 @@ test("pivot still handles __count__ measure", async () => {
     Partner._fields.computed_field = fields.Integer({
         string: "Computed and not stored",
         aggregator: null,
-        compute: true,
+        compute: () => 1,
         groupable: false,
     });
     Partner._fields.foo = fields.Integer({
-        string: "Foo",
-        searchable: true,
         aggregator: null,
         groupable: false,
-        store: true,
     });
 
     // for retro-compatibility reasons, the pivot view still handles
@@ -2189,13 +2123,11 @@ test("not use a many2one as a measure by default", async () => {
 
     Partner._fields.computed_field = fields.Integer({
         string: "Computed and not stored",
-        compute: true,
+        compute: () => 1,
         aggregator: null,
         groupable: false,
     });
     Partner._fields.foo = fields.Integer({
-        string: "Foo",
-        searchable: true,
         aggregator: null,
         groupable: false,
     });
@@ -2235,7 +2167,7 @@ test("pivot view with reference field as a measure", async () => {
         resModel: "partner",
         arch: `
 			<pivot>
-				<field name="ref" type="measure"/>
+				<field name="reference" type="measure"/>
 				<field name="date" interval="month" type="col"/>
 			</pivot>`,
     });
@@ -2348,15 +2280,15 @@ test("pivot measures should be alphabetically sorted", async () => {
     Partner._fields.computed_field = fields.Integer({
         string: "Computed and not stored",
         aggregator: null,
-        compute: true,
+        compute: () => 1,
         groupable: false,
     });
 
     // It's important to compare capitalized and lowercased words
     // to be sure the sorting is effective with both of them
-    Partner._fields.bouh = fields.Integer({ string: "bouh", aggregator: "sum" });
-    Partner._fields.modd = fields.Integer({ string: "modd", aggregator: "sum" });
-    Partner._fields.zip = fields.Integer({ string: "Zip", aggregator: "sum" });
+    Partner._fields.bouh = fields.Integer({ string: "bouh" });
+    Partner._fields.modd = fields.Integer({ string: "modd" });
+    Partner._fields.zip = fields.Integer({ string: "Zip" });
 
     await mountView({
         type: "pivot",
@@ -2536,10 +2468,7 @@ test("correctly compute group domain when a date field has false value", async (
 });
 
 test("Does not identify 'false' with false as keys when creating group trees", async () => {
-    Partner._fields.favorite_animal = fields.Char({
-        string: "Favorite animal",
-        store: true,
-    });
+    Partner._fields.favorite_animal = fields.Char();
     Partner._records[0].favorite_animal = "Dog";
     Partner._records[1].favorite_animal = "false";
     Partner._records[2].favorite_animal = "None";
@@ -2662,9 +2591,6 @@ test("Server order is kept by default", async () => {
 
 test("pivot rendering with boolean field", async () => {
     Partner._fields.bar = fields.Boolean({
-        string: "bar",
-        store: true,
-        searchable: true,
         aggregator: "bool_or",
     });
     Partner._records = [
@@ -2944,11 +2870,7 @@ test.tags("desktop")("correctly handle concurrent reloads", async () => {
 test("consecutively toggle several measures", async () => {
     let def;
     Partner._fields.foo2 = fields.Integer({
-        string: "Foo2",
-        searchable: true,
-        aggregator: "sum",
         groupable: false,
-        store: true,
     });
     onRpc("read_group", () => def);
     await mountView({
@@ -3440,9 +3362,8 @@ test("favorite pivot_measures should be used even if found also in global contex
     // Computed and not stored displayed in "Measures" menu
     Partner._fields.computed_field = fields.Integer({
         string: "Computed and not stored",
-        compute: true,
+        compute: () => 1,
         store: true,
-        aggregator: "sum",
         groupable: false,
     });
 
@@ -3511,13 +3432,6 @@ test.tags("desktop")("filter -> sort -> unfilter should not crash", async () => 
 });
 
 test("no class 'o_view_sample_data' when real data are presented", async () => {
-    Partner._fields.foo = fields.Integer({
-        string: "Foo",
-        searchable: true,
-        aggregator: "sum",
-        groupable: false,
-        store: true,
-    });
     Partner._records = [];
     await mountView({
         type: "pivot",
