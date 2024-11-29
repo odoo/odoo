@@ -58,33 +58,6 @@
         <field name="perm_create" eval="True"/>
         <field name="perm_unlink" eval="True"/>
     </record>
-    <record id="website_page_rule_public" model="ir.rule">
-        <field name="name">website.page: portal/public: read published pages</field>
-        <field name="model_id" ref="website.model_website_page"/>
-        <field name="domain_force">[('website_published', '=', True)]</field>
-        <field name="groups" eval="[(4, ref('base.group_portal')), (4, ref('base.group_public'))]"/>
-    </record>
-
-    <record id="view_rule_visibility_public" model="ir.rule">
-        <field name="name">Website View Visibility Public</field>
-        <field name="model_id" ref="base.model_ir_ui_view"/>
-        <field name="domain_force">['|', ('type', '!=', 'qweb'), ('visibility', 'in', ('public', False))]</field>
-        <field name="perm_read" eval="True"/>
-        <field name="perm_write" eval="False"/>
-        <field name="perm_create" eval="False"/>
-        <field name="perm_unlink" eval="False"/>
-        <field name="groups" eval="[(4, ref('base.group_public'))]"/>
-    </record>
-    <record id="view_rule_visibility_connected" model="ir.rule">
-        <field name="name">Website View Visibility Connected</field>
-        <field name="model_id" ref="base.model_ir_ui_view"/>
-        <field name="domain_force">['|', ('type', '!=', 'qweb'), ('visibility', 'in', ('public', 'connected', False))]</field>
-        <field name="perm_read" eval="True"/>
-        <field name="perm_write" eval="False"/>
-        <field name="perm_create" eval="False"/>
-        <field name="perm_unlink" eval="False"/>
-        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
-    </record>
 
     </data>
 
