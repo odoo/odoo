@@ -4,7 +4,6 @@ import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { defineMailModels, startServer } from "@mail/../tests/mail_test_helpers";
 import { after } from "@odoo/hoot";
 import { advanceTime, animationFrame, click, queryOne } from "@odoo/hoot-dom";
-import { Component } from "@odoo/owl";
 import {
     defineModels,
     getService,
@@ -16,8 +15,6 @@ import { loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { uniqueId } from "@web/core/utils/functions";
 import { WebClient } from "@web/webclient/webclient";
-import { OptionsContainer } from "../src/builder/components/OptionsContainer";
-import { defaultOptionComponents } from "../src/builder/components/defaultComponents";
 import { getWebsiteSnippets } from "./snippets_getter.hoot";
 
 class Website extends models.Model {
@@ -93,25 +90,23 @@ export function getEditable(inWrap) {
 
 const actionsRegistry = registry.category("website-builder-actions");
 
-export function addOption({ selector, template, actions = {} }) {
-    class TestOption extends Component {
-        static template = template;
-        static props = {};
-        static components = {
-            OptionsContainer,
-            ...defaultOptionComponents,
-        };
-    }
+export function addOption({ selector, template, Component }) {
     const optionId = uniqueId("test-option");
     registry.category("sidebar-element-option").add(optionId, {
-        OptionComponent: TestOption,
+        OptionComponent: Component,
+        template,
         selector,
     });
+    after(() => {
+        registry.category("sidebar-element-option").remove(optionId);
+    });
+}
+
+export function addActionOption(actions = {}) {
     for (const [name, action] of Object.entries(actions)) {
         actionsRegistry.add(name, action);
     }
     after(() => {
-        registry.category("sidebar-element-option").remove(optionId);
         for (const [name] of Object.entries(actions)) {
             actionsRegistry.remove(name);
         }

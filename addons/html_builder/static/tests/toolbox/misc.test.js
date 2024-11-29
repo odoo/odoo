@@ -1,12 +1,13 @@
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
-import { xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../helpers";
+import { defaultOptionComponents } from "../../src/builder/components/defaultComponents";
 
 defineWebsiteModels();
 
-test("Open custom tab with options", async () => {
+test("Open custom tab with template option", async () => {
     addOption({
         selector: ".test-options-target",
         template: xml`
@@ -17,7 +18,25 @@ test("Open custom tab with options", async () => {
     await setupWebsiteBuilder(`<div class="test-options-target" data-name="Yop">b</div>`);
     await contains(":iframe .test-options-target").click();
     expect(".options-container").toBeDisplayed();
-    expect(".options-container div:first()").toHaveText("Yop");
+    expect(queryAllTexts(".options-container > div")).toEqual(["Yop", "Row 1\nTest"]);
+});
+
+test("Open custom tab with Component option", async () => {
+    class TestOption extends Component {
+        static template = xml`
+            <WeRow label="'Row 1'">
+                Test
+            </WeRow>`;
+        static components = { ...defaultOptionComponents };
+    }
+    addOption({
+        selector: ".test-options-target",
+        Component: TestOption,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target" data-name="Yop">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    expect(".options-container").toBeDisplayed();
+    expect(queryAllTexts(".options-container > div")).toEqual(["Yop", "Row 1\nTest"]);
 });
 
 test("basic multi options containers", async () => {
