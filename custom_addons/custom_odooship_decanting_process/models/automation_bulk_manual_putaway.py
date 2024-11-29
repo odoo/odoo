@@ -19,7 +19,9 @@ class AutomationBulkManual(models.Model):
     site_code_id = fields.Many2one('site.code.configuration', related='picking_id.site_code_id', string='Site Code', store=True)
     parent_location_id = fields.Many2one('stock.location',string='Source location')
     location_dest_id = fields.Many2one('stock.location',string='Destination location',domain="[('location_id', '=', parent_location_id)]")
-    source_document = fields.Char(store=True)
+    confirmed_location_id = fields.Many2one('stock.location', string='Scanned Location', store=True,
+                                            help="User-scanned location to confirm destination")
+    source_document = fields.Char(string='Source Document',store=True)
     box_pallet = fields.Selection([('box', 'Box'), ('pallet', 'Pallet')], string="Box/Pallet")
     state = fields.Selection([('draft', 'Draft'), ('done', 'Done')], default='draft', string="State")
     automation_manual = fields.Selection([('automation', 'Automation'), ('automation_bulk', 'Automation Bulk'), ('manual', 'Manual')], string='Automation Manual')
@@ -31,9 +33,11 @@ class AutomationBulkManual(models.Model):
         """
             Check empty location
         """
-        if self.location_dest_id.filled == True:
-            raise ValidationError(
-                "The selected location is already in use and cannot be assigned. Please choose a different available location.")
+        if self.automation_manual == 'manual':
+            if self.location_dest_id.filled == True:
+                raise ValidationError(
+                    "The selected location is already in use and cannot be assigned. Please choose a different available location.")
+
     @api.onchange('parent_location_id')
     def _onchange_parent_location_id(self):
         """
@@ -65,50 +69,51 @@ class AutomationBulkManual(models.Model):
                     vals['name'] = self.env['ir.sequence'].next_by_code('manual.putaway') or _('New')
         return super(AutomationBulkManual, self).create(vals_list)
 
-    def _get_next_available_location(self):
-        """
-        Finds the next available manual location under the parent location.
-        Filters locations where location_id matches the parent_location_id.
-        """
-        if not self.parent_location_id:
-            raise ValidationError(
-                _("The source location (parent location) is not defined. Please set the source location for this operation.")
-            )
-
-        parent_location = self.parent_location_id
-
-        # Fetch child locations under the parent location
-        free_locations = self.env['stock.location'].search([
-            ('location_id', '=', parent_location.id),  # Filter locations with location_id matching parent_location_id
-            ('filled', '=', False)  # Ensure the location is not filled
-        ], order='name')
-
-        if not free_locations:
-            raise ValidationError(_("No available manual locations under '%s'." % parent_location.name))
-
-        # Return the first available location
-        return free_locations[0]
+    # def _get_next_available_location(self):
+    #     """
+    #     Finds the next available manual location under the parent location.
+    #     Filters locations where location_id matches the parent_location_id.
+    #     """
+    #     if not self.parent_location_id:
+    #         raise ValidationError(
+    #             _("The source location (parent location) is not defined. Please set the source location for this operation.")
+    #         )
+    #
+    #     parent_location = self.parent_location_id
+    #
+    #     # Fetch child locations under the parent location
+    #     free_locations = self.env['stock.location'].search([
+    #         ('location_id', '=', parent_location.id),  # Filter locations with location_id matching parent_location_id
+    #         ('filled', '=', False)  # Ensure the location is not filled
+    #     ], order='name')
+    #
+    #     if not free_locations:
+    #         raise ValidationError(_("No available manual locations under '%s'." % parent_location.name))
+    #
+    #     # Return the first available location
+    #     return free_locations[0]
 
     @api.onchange('license_plate_ids')
     def _onchange_license_plate_ids(self):
         """
+        Validate license plates and auto-populate free locations for manual type.
         Ensure all selected license plates belong to the same picking_id and DRD.
-        Assign the next free location for each product if manual is selected.
+        Auto-assign free locations for manual processes and handle product lines.
         """
         if self.license_plate_ids:
-            # Clear automation_bulk_manual_putaway_line_ids to prevent duplication
+            # Clear existing product lines to prevent duplication
             self.automation_bulk_manual_putaway_line_ids = [(5, 0, 0)]
 
+            # Use the first license plate for validation reference
             first_picking_id = self.license_plate_ids[0].picking_id
             first_drd = self.license_plate_ids[0].delivery_receipt_order_id
             first_selection_type = self.license_plate_ids[0].automation_manual
-            first_location_dest_id = self.license_plate_ids[0].location_dest_id
-            first_source_document = self.picking_id.origin
 
             # Validation for license plates
             for license_plate in self.license_plate_ids:
+                # Validate if all license plates belong to the same picking_id and DRD
                 if license_plate.picking_id != first_picking_id or license_plate.delivery_receipt_order_id != first_drd:
-                    self.license_plate_ids = [(5,0,0)]
+                    self.license_plate_ids = [(5, 0, 0)]
                     self.picking_id = False
                     self.delivery_receipt_order_id = False
                     self.parent_location_id = False
@@ -116,12 +121,13 @@ class AutomationBulkManual(models.Model):
                     self.automation_bulk_manual_putaway_line_ids = [(5, 0, 0)]
                     return {
                         'warning': {
-                            'title': _("Invalid Operation"),
+                            'title': _("Invalid License Plates"),
                             'message': _("All selected License Plates must belong to the same Picking Order and DRD. "
-                              "License Plate '%s' does not match." % license_plate.name),
+                                         "License Plate '%s' does not match." % license_plate.name),
                         }
                     }
 
+                # Validate that all license plates are of the same type
                 if license_plate.automation_manual != first_selection_type:
                     self.license_plate_ids = [(5, 0, 0)]
                     self.picking_id = False
@@ -131,12 +137,15 @@ class AutomationBulkManual(models.Model):
                     self.automation_bulk_manual_putaway_line_ids = [(5, 0, 0)]
                     return {
                         'warning': {
-                            'title': _("Invalid Operation"),
-                            'message': _("All selected License Plates must be of the same type (Automation Bulk or Manual Bulk). "
-                  "License Plate '%s' has a different type." % license_plate.name),
+                            'title': _("Invalid Type"),
+                            'message': _(
+                                "All selected License Plates must be of the same type (Manual or Automation Bulk). "
+                                "License Plate '%s' has a different type." % license_plate.name),
                         }
                     }
-                if license_plate.automation_manual not in  ['automation_bulk', 'manual']:
+
+                # Ensure only 'manual' or 'automation_bulk' types are allowed
+                if license_plate.automation_manual not in ['automation_bulk', 'manual']:
                     self.license_plate_ids = [(5, 0, 0)]
                     self.picking_id = False
                     self.delivery_receipt_order_id = False
@@ -147,44 +156,70 @@ class AutomationBulkManual(models.Model):
                         'warning': {
                             'title': _("Invalid Selection"),
                             'message': _(
-                                "Invalid selection: The automation_manual type must be either 'Manual' or 'Automation Bulk', not 'Automation'."),
-                            'sticky':False,
+                                "Invalid selection: The automation_manual type must be either 'Manual' or 'Automation Bulk'."),
+                            'sticky': False,
                         }
                     }
-            # Set fields based on the first license plate
+
+            # Assign fields based on the first license plate
             self.picking_id = first_picking_id
             self.delivery_receipt_order_id = first_drd
             self.automation_manual = first_selection_type
-            self.parent_location_id = first_location_dest_id
-            self.source_document = first_source_document
+            self.parent_location_id = self.license_plate_ids[0].location_dest_id
 
+            # Handle free location assignment for manual putaways
+            if self.automation_manual == 'manual':
+                free_locations = self.env['stock.location'].search([
+                    ('location_id', '=', self.parent_location_id.id),
+                    ('filled', '=', False)
+                ], limit=1)
+                if free_locations:
+                    self.location_dest_id = free_locations[0].id
+
+            # Populate product lines based on license plate content
             product_lines = []
             for license_plate in self.license_plate_ids:
                 for line in license_plate.license_plate_order_line_ids:
-                    location_dest_id = False
-                    if self.automation_manual == 'manual':
-                        # Find the next available manual location
-                        current_location = self.parent_location_id
-                        # location_dest = self._get_next_available_location(current_location)
-                        # self.location_dest_id = location_dest_id.id
-
-                        # Mark the location as filled
-                        self.location_dest_id.filled = True
-                    if self.automation_manual == 'automation_bulk':
-                        self.location_dest_id = self.parent_location_id
-
+                    location_dest_id = self.location_dest_id.id if self.automation_manual == 'manual' else False
                     product_lines.append((0, 0, {
                         'product_id': line.product_id.id,
                         'quantity': line.quantity,
                         'location_dest_id': location_dest_id,
                     }))
             self.automation_bulk_manual_putaway_line_ids = product_lines
+
         else:
+            # Clear fields if no license plates are selected
             self.picking_id = False
             self.delivery_receipt_order_id = False
-            self.parent_location_id= False
+            self.parent_location_id = False
             self.location_dest_id = False
             self.automation_bulk_manual_putaway_line_ids = False
+
+    @api.onchange('confirmed_location_id')
+    def _onchange_confirmed_location_id(self):
+        """
+        Automatically send manual putaway if the confirmed location matches the destination location.
+        Raise a validation error if the locations do not match.
+        """
+        if self.automation_manual == 'manual':
+            if not self.location_dest_id:
+                raise ValidationError(
+                    _("Destination location is not set. Please ensure the destination location is assigned before proceeding."))
+            if self.confirmed_location_id == self.location_dest_id:
+                # Automatically trigger manual putaway
+                self.update_manual_bulk_location()
+                return {
+                    'warning': {
+                        'title': _("Location Matched"),
+                        'message': _(
+                            "The scanned location matches the destination location. The putaway process has been completed."),
+                    }
+                }
+            else:
+                # Raise error if locations do not match
+                raise ValidationError(
+                    _("Scanned location does not match the assigned destination location. Please scan the correct location."))
 
     def update_manual_bulk_location(self):
         """
@@ -228,16 +263,19 @@ class AutomationBulkManual(models.Model):
 
         # Confirm and reserve quantities
         internal_transfer.action_confirm()
+        internal_transfer.action_assign()
         for move in internal_transfer.move_ids_without_package:
-            move._action_assign()  # Ensure quantities are reserved
+            # move._action_confirm()
+            # move._action_assign()  # Ensure quantities are reserved
+            # move.button_validate()
             for move_line in move.move_line_ids:
                 move_line.quantity = line.quantity  # Set the quantities as done
 
         # Validate the transfer
-        # try:
-        #     internal_transfer.button_validate()
-        # except ValidationError as e:
-        #     raise ValidationError(_("Transfer validation failed: %s. Please ensure quantities are reserved." % str(e)))
+        try:
+            internal_transfer.button_validate()
+        except ValidationError as e:
+            raise ValidationError(_("Transfer validation failed: %s. Please ensure quantities are reserved." % str(e)))
 
         # Update the state to 'done'
         self.state = 'done'
@@ -316,13 +354,6 @@ class AutomationBulkManual(models.Model):
             raise UserError(f"Error sending message: {str(e)}")
 
         return {'type': 'ir.actions.act_window_close'}
-
-
-    # def assign_to_free_location(self):
-    #     free_location = self.env['stock.location'].search([('is_free', '=', True)], limit=1)
-    #     if free_location:
-    #         self.location_id = free_location
-
 
 
 
