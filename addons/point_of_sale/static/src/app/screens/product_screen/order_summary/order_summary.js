@@ -180,7 +180,6 @@ export class OrderSummary extends Component {
         selectedLine.set_quantity(newQuantity);
         if (newQuantity == 0) {
             selectedLine.delete();
-            this.currentOrder._unlinkOrderline(selectedLine);
         }
         return decreaseQuantity;
     }
@@ -205,7 +204,6 @@ export class OrderSummary extends Component {
                 selectedLine.set_quantity(newQuantity, true);
             } else {
                 newLine.set_quantity(-decreasedQuantity, true);
-                this.pos.addLineToCurrentOrder(newLine.serialize());
             }
         }
         if (newLine !== selectedLine && selectedLine.saved_quantity != 0) {

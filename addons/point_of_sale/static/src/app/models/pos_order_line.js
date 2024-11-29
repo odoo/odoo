@@ -27,6 +27,7 @@ export class PosOrderline extends Base {
         this.uiState = {
             hasChange: true,
         };
+        this.saved_quantity = 0;
     }
 
     set_full_product_name() {
