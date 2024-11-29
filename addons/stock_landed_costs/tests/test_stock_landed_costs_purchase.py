@@ -8,6 +8,7 @@ from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounti
 from odoo import fields
 from odoo.fields import Command, Date
 from odoo.tests import tagged, Form
+from odoo import Command, fields
 
 
 @tagged('post_install', '-at_install')
@@ -492,6 +493,64 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         for move in receipt2.move_ids:
             move.quantity = move.product_qty
             move.picked = True
+        receipt2.button_validate()
+        self.assertEqual(self.product1.standard_price, 1.5)
+        self.assertEqual(product2.standard_price, 3.5)
+
+    def test_lc_with_avco_ordered_qty_backorder(self):
+        """ Make sure the landed cost added in invoices are taken into account to compute product
+        cost even in 'Ordered Quantity' invoice policy. """
+        self.env.company.anglo_saxon_accounting = True
+        self.landed_cost.split_method_landed_cost = 'by_quantity'
+        self.product1.purchase_method = 'purchase'
+        self.product1.categ_id.write({
+            'property_stock_account_input_categ_id': self.company_data['default_account_stock_in'].id,
+            'property_stock_account_output_categ_id': self.company_data['default_account_stock_out'].id,
+            'property_stock_valuation_account_id': self.company_data['default_account_stock_valuation'].id,
+            'property_valuation': 'real_time',
+            'property_cost_method': 'average',
+        })
+        product2 = self.product1.with_context(create_product_product=True).copy({"name": "product2"})
+
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product1.id,
+                'product_qty': 100000,
+                'price_unit': 1,
+            }), Command.create({
+                'product_id': product2.id,
+                'product_qty': 50000,
+                'price_unit': 3,
+            })],
+        })
+        purchase_order.button_confirm()
+        purchase_order.action_create_invoice()
+        bill = purchase_order.invoice_ids[0]
+        receipt = purchase_order.picking_ids[0]
+        receipt.picking_type_id.create_backorder = 'always'
+        receipt.move_ids[0].quantity = 50000
+        receipt.move_ids[1].quantity = 25000
+        receipt.button_validate()
+        self.assertEqual(self.product1.standard_price, 1)
+        self.assertEqual(product2.standard_price, 3)
+
+        bill.invoice_date = fields.Date.today()
+        with Form(bill) as bill_form:
+            with bill_form.invoice_line_ids.new() as inv_line:
+                inv_line.product_id = self.landed_cost
+                inv_line.price_unit = 75000
+                inv_line.is_landed_costs_line = True
+        bill.action_post()
+        action = bill.button_create_landed_costs()
+        lc_form = Form(self.env[action['res_model']].browse(action['res_id']))
+        lc_form.picking_ids.add(receipt)
+        lc = lc_form.save()
+        lc.button_validate()
+        self.assertEqual(self.product1.standard_price, 2)
+        self.assertEqual(product2.standard_price, 4)
+
+        receipt2 = purchase_order.picking_ids.filtered(lambda p: p.state == 'assigned')
         receipt2.button_validate()
         self.assertEqual(self.product1.standard_price, 1.5)
         self.assertEqual(product2.standard_price, 3.5)
