@@ -87,7 +87,7 @@
                         </group>
                         <group>
                             <field name="new_until"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
                         </group>
                         <label for="description"/>
                         <field name='description'/>
@@ -214,7 +214,7 @@
                         </h1>
                     </div>
                     <label for="company_id" groups="base.group_multi_company"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
                 </sheet>
             </form>
         </field>

@@ -153,7 +153,7 @@
                         <group>
                             <field name="is_based_on_worked_time" readonly="accrued_gain_time == 'start'"/>
                             <field name="transition_mode" widget="radio" invisible="not show_transition_mode"/>
-                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" placeholder="Visible to all"/>
                         </group>
                     </group>
                     <span class="oe_grey" invisible="1">
