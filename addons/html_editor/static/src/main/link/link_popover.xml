@@ -12,10 +12,10 @@
                 <div t-else="" class="d-flex">
                     <div class="col p-2" style="max-width: 250px;">
                         <div class="input-group mb-1">
-                            <input t-ref="label" class="o_we_label_link form-control form-control-sm" t-model="state.label" title="Label" placeholder="Type your link label"/>
+                            <input t-ref="label" class="o_we_label_link form-control form-control-sm" t-model="state.label" title="Label" placeholder="Add a label for your link"/>
                         </div>
                         <div class="input-group mb-1">
-                            <input t-ref="url" class="o_we_href_input_link form-control form-control-sm" t-model="state.url" title="URL" placeholder="Type your URL" t-on-keydown="onKeydownEnter"/>
+                            <input t-ref="url" class="o_we_href_input_link form-control form-control-sm" t-model="state.url" title="URL" placeholder="Paste or type your URL" t-on-keydown="onKeydownEnter"/>
                             <span class="ms-1" t-if="props.canUpload and !state.url">
                                 or <button class="btn btn-secondary btn-sm" t-on-click="uploadFile">Upload File</button>
                             </span>
@@ -109,7 +109,7 @@
                         </span>
                     </div>
                 </div>
-                <div t-if="state.urlTitle and ((state.url === state.label and state.urlTitle !== state.label ) || (state.url === state.label+'/' and state.urlTitle !== state.label+'/'))" class="d-flex align-items-baseline" style="background-color: var(--primary);">
+                <div t-if="!state.isImage and state.urlTitle and state.label === ''" class="d-flex align-items-baseline" style="background-color: var(--primary);">
                     <i class="fa fa-magic fa-fw m-1" style="color: var(--o-cc1-btn-primary-text);"></i>
                     <span class="me-2 flex-grow-1" style="color: var(--o-cc1-btn-primary-text);font-size: smaller;">Replace URL with its title?</span>
                     <button class=" btn btn-sm btn-primary o_we_replace_title_btn" style="margin: 1px;font-size: smaller;" t-on-click="onClickReplaceTitle">Yes</button>
