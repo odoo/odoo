@@ -19,9 +19,11 @@ export class AceField extends Component {
         onWillStart(async () => {
             await loadJS("/web/static/lib/ace/ace.js");
             const jsLibs = [
+                "/web/static/lib/ace/javascript_highlight_rules.js",
                 "/web/static/lib/ace/mode-python.js",
                 "/web/static/lib/ace/mode-xml.js",
                 "/web/static/lib/ace/mode-qweb.js",
+                "/web/static/lib/ace/mode-sql.js",
             ];
             const proms = jsLibs.map((url) => loadJS(url));
             return Promise.all(proms);
