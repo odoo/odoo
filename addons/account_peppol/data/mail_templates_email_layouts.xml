@@ -16,8 +16,10 @@
                         <p style="min-width: 590px;">
                             PS: <b style="color: $o-enterprise-action-color;">We did not send your invoice on Peppol.</b>
                             <t t-if="peppol_info['peppol_country'] == 'BE'">
-                                In Belgium, electronic invoicing will be
-                                <a target="_blank" href="https://finance.belgium.be/en/enterprises/vat/e-invoicing/mandatory-use-structured-electronic-invoices-2026">mandatory as of January 2026</a>.
+                                In Belgium, electronic invoicing will be <u>mandatory as of January 2026</u>.
+                                <a target="_blank" href="https://finance.belgium.be/en/enterprises/vat/e-invoicing/mandatory-use-structured-electronic-invoices-2026" style="text-decoration: none;">
+                                    &#x1F517;
+                                </a>
                             </t>
                             <br/>
                             If you need a Peppol compliant software, we recommend <a target="_blank" href="https://www.odoo.com/app/invoicing?utm_source=db&amp;utm_medium=email&amp;utm_campaign=einvoicing" style="color: $o-enterprise-color;">Odoo</a>.
