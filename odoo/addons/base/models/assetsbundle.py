@@ -197,7 +197,12 @@ class AssetsBundle(object):
         # avoid to invalidate cache if it's already empty (mainly useful for test)
 
         if attachments:
+<<<<<<< 17.0
             _logger.info('Deleting attachments %s (matching %s) because it was replaced with %s', attachments.ids, to_clean_pattern, keep_url)
+||||||| 185012b275c768d9bd3acf9d7574b4550b7040c7
+=======
+            _logger.info('Deleting ir.attachment %s (from bundle %s)', attachments.ids, self.name)
+>>>>>>> 5c89f86d6a4235b03f38022986f6b0ee2c39a58c
             self._unlink_attachments(attachments)
             # clear_cache was removed
 
@@ -232,6 +237,24 @@ class AssetsBundle(object):
                 AND public = true
            GROUP BY name
            ORDER BY name
+<<<<<<< 17.0
+||||||| 185012b275c768d9bd3acf9d7574b4550b7040c7
+         """, [SUPERUSER_ID, url_pattern])
+
+        attachment_ids = [r[0] for r in self.env.cr.fetchall()]
+        return self.env['ir.attachment'].sudo().browse(attachment_ids)
+
+    def add_post_rollback(self):
+=======
+         """, [SUPERUSER_ID, url_pattern])
+
+        attachment_ids = [r[0] for r in self.env.cr.fetchall()]
+        if not attachment_ids:
+            _logger.info('Failed to find attachment for assets %s', url_pattern)
+        return self.env['ir.attachment'].sudo().browse(attachment_ids)
+
+    def add_post_rollback(self):
+>>>>>>> 5c89f86d6a4235b03f38022986f6b0ee2c39a58c
         """
         self.env.cr.execute(query, [SUPERUSER_ID, url_pattern])
 
