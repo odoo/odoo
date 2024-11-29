@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from markupsafe import Markup
+from odoo import Command, SUPERUSER_ID
 from odoo.addons.base.tests.test_ir_actions import TestServerActionsBase
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests import tagged
@@ -117,6 +119,61 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
         self.assertEqual(len(self.test_partner.message_ids), 3,
                          '2 new messages produced')
         self.assertEqual(self.test_partner.message_partner_ids, self.test_partner)
+
+    def test_action_discuss_post(self):
+        template = self.env["discuss.template"].create({
+            "name": "Testing Discuss Template",
+            "subject": "Test Subject: Partner {{object.name}}",
+            "body": 'City: <b><t t-out="object.city"/>, <t t-out="object.country_id.code"/></b>',
+            "model_id": self.action.model_id.id,
+        })
+        # Post to channel
+        test_channel = self.env["discuss.channel"].create({
+            "name": "Administrators (test)",
+            "channel_partner_ids": [Command.link(self.partner_admin.id)],
+        })
+        self.action.write({
+            "state": "discuss_post",
+            "partner_ids": [Command.clear()],
+            "discuss_template_id": template.id,
+            "discuss_post_type": "channel",
+            "discuss_channel_ids": test_channel.ids,
+        })
+        with self.assertPostNotifications([
+            {
+                "notif": [],
+                "message_type": "comment",
+                "subtype": "mail.mt_comment",
+                "message_values": {
+                    "subject": "Test Subject: Partner {}".format(self.test_partner.name),
+                    "body": "<p>City: <b>{}, {}</b></p>".format(self.test_partner.city, self.test_partner.country_id.code),
+                    "author_id": self.env["res.users"].browse(SUPERUSER_ID).partner_id,
+                    "record_name": test_channel.name,
+                },
+            },
+        ]):
+            self.action.with_context(self.context).run()
+
+        # Send to user
+        self.action.write({
+            "discuss_post_type": "user",
+            "discuss_channel_ids": [Command.clear()],
+            "partner_ids": [Command.set([self.user_employee.partner_id.id])],
+        })
+        with self.assertPostNotifications([
+            {
+                "notif": [],
+                "message_type": "comment",
+                "subtype": "mail.mt_comment",
+                "message_values": {
+                    "subject": "Test Subject: Partner {}".format(self.test_partner.name),
+                    "body": "<p>City: <b>{}, {}</b></p>".format(self.test_partner.city, self.test_partner.country_id.code),
+                    "author_id": self.env["res.users"].browse(SUPERUSER_ID).partner_id,
+                    "record_name": "{}, {}".format(self.user_employee.name, self.env["res.users"].browse(SUPERUSER_ID).partner_id.name),
+                },
+            },
+        ]):
+            self.action.with_context(self.context).run()
 
     def test_action_next_activity(self):
         self.action.write({

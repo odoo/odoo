@@ -34,6 +34,37 @@
                     </group>
                     <field name="activity_note" class="oe-bordered-editor" placeholder="Add a description to your activity..." invisible="state != 'next_activity'"/>
                 </xpath>
+                <xpath expr="//group[@name='action_content']" position="inside">
+                    <field name="discuss_template_id"
+                           placeholder="Choose a template..."
+                           invisible="state != 'discuss_post'"
+                           required="state == 'discuss_post'"
+                           context="{'default_model': model_name, 'no_create': False}"/>
+                    <label for="discuss_post_type" invisible="state != 'discuss_post'"/>
+                    <div class="d-flex" invisible="state != 'discuss_post'">
+                        <field name="discuss_post_type"/>
+                        <span class="px-2">:</span>
+                        <field
+                            name="partner_ids"
+                            class="flex-shrink-0 w-75"
+                            placeholder="Select one or more user..."
+                            invisible="discuss_post_type != 'user'"
+                            required="state == 'discuss_post' and discuss_post_type == 'user'"
+                            domain="[('user_id', '!=', False)]"
+                            widget="many2many_tags_avatar"
+                            options="{'no_create': True, 'no_create_edit': True}"
+                        />
+                        <field
+                            name="discuss_channel_ids"
+                            class="flex-shrink-0 w-75"
+                            placeholder="Select one or more channel..."
+                            invisible="discuss_post_type != 'channel'"
+                            required="state == 'discuss_post' and discuss_post_type == 'channel'"
+                            widget="many2many_tags_avatar"
+                            options="{'no_create': True, 'no_create_edit': True}"
+                        />
+                    </div>
+                </xpath>
                 <xpath expr="//field[@name='link_field_id']" position="after">
                     <!-- Add/Remove Followers -->
                     <field name="followers_type"

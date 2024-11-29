@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="discuss_template_view_form" model="ir.ui.view">
+            <field name="name">discuss.template.view.form</field>
+            <field name="model">discuss.template</field>
+            <field name="arch" type="xml">
+                <form string="Discuss Templates">
+                    <header>
+                        <field name="template_fs" invisible="1"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" name="%(discuss_template_preview_action)d" icon="fa-search-plus" type="action" target="new">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_text">Preview</span>
+                                </div>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <label for="name" string="Discuss Template"/>
+                            <h1><field name="name" placeholder="e.g. Calendar Reminder" required="1"/></h1>
+                            <group>
+                                <field name="model_id" placeholder="e.g. Contact" required="1" options="{'no_create': True}"/>
+                                <field name="model" invisible="1"/>
+                                <field name="lang" groups="base.group_no_one" placeholder="e.g. en_US or {{ object.partner_id.lang }}"/>
+                            </group>
+                        </div>
+                        <notebook>
+                            <page string="Content" name="content">
+                                <group>
+                                    <field name="render_model" invisible="1"/>
+                                    <field name="subject"/>
+                                    <field name="body" widget="html_mail" class="oe-bordered-editor" options="{'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': 'render_model'}"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="discuss_template_view_tree" model="ir.ui.view">
+            <field name="name">discuss.template.view.list</field>
+            <field name="model">discuss.template</field>
+            <field name="arch" type="xml">
+                <list string="Discuss Templates">
+                    <field name="name"/>
+                    <field name="model_id"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="discuss_template_view_search" model="ir.ui.view">
+            <field name="name">discuss.template.view.search</field>
+            <field name="model">discuss.template</field>
+            <field name="arch" type="xml">
+                <search string="Search Discuss Templates">
+                    <field name="name"/>
+                    <field name="model_id"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="discuss_template_action" model="ir.actions.act_window">
+            <field name="name">Templates</field>
+            <field name="res_model">discuss.template</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <menuitem id="discuss_template_menu"
+            name="Discuss Templates"
+            parent="mail.mail_menu_technical"
+            action="discuss_template_action"/>
+
+    </data>
+</odoo>

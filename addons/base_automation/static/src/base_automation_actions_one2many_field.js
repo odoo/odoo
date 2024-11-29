@@ -11,6 +11,7 @@ class ActionsOne2ManyField extends Component {
         object_create: _t("Create a new Record"),
         object_write: _t("Update the Record"),
         multi: _t("Execute several actions"),
+        discuss_post: _t("Send message"),
         mail_post: _t("Send email"),
         followers: _t("Add followers"),
         remove_followers: _t("Remove followers"),

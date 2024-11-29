@@ -283,11 +283,11 @@ class BaseAutomation(models.Model):
                     _('"On live update" automation rules can only be used with "Execute Python Code" action type.')
                 )
             mail_actions = record.action_server_ids.filtered(
-                lambda a: a.state in ['mail_post', 'followers', 'next_activity']
+                lambda a: a.state in ['discuss_post', 'mail_post', 'followers', 'remove_followers', 'next_activity']
             )
             if record.trigger == 'on_unlink' and mail_actions:
                 raise exceptions.ValidationError(
-                    _('Email, follower or activity action types cannot be used when deleting records, '
+                    _('Email, follower, message or activity action types cannot be used when deleting records, '
                       'as there are no more records to apply these changes to!')
                 )
 
