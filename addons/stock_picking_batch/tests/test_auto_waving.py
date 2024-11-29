@@ -196,10 +196,11 @@ class TestAutoWaving(TransactionCase):
                     'product_id': cls.product_2.id,
                     'product_uom_qty': 2,
                     'product_uom': cls.product_2.uom_id.id,
-                    'location_id': cls.sibling_location.id,
+                    'location_id': cls.stock_location.id,
                 })
             ]
         })
+        cls.picking_5.move_ids[2].location_id = cls.sibling_location.id
         cls.all_pickings = cls.picking_1 | cls.picking_2 | cls.picking_3 | cls.picking_4 | cls.picking_5
 
     def test_group_by_partner_and_location(self):

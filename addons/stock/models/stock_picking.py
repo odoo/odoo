@@ -603,11 +603,11 @@ class Picking(models.Model):
     json_popover = fields.Char('JSON data for the popover widget', compute='_compute_json_popover')
     location_id = fields.Many2one(
         'stock.location', "Source Location",
-        compute="_compute_location_id", store=True, precompute=True, readonly=False,
+        compute="_compute_location_id", store=True, precompute=True, readonly=False, inverse="_set_location_id",
         check_company=True, required=True)
     location_dest_id = fields.Many2one(
         'stock.location', "Destination Location",
-        compute="_compute_location_id", store=True, precompute=True, readonly=False,
+        compute="_compute_location_id", store=True, precompute=True, readonly=False, inverse="_set_location_dest_id",
         check_company=True, required=True)
     move_ids = fields.One2many('stock.move', 'picking_id', string="Stock Moves", copy=True)
     move_ids_without_package = fields.One2many(
@@ -948,20 +948,27 @@ class Picking(models.Model):
                 continue
             picking = picking.with_company(picking.company_id)
             if picking.picking_type_id:
-                # To be removed in 17.3+, as default location src/dest are now required.
-                location_dest, location_src = self.env['stock.warehouse']._get_partner_locations()
-                if picking.picking_type_id.default_location_src_id:
-                    location_src = picking.picking_type_id.default_location_src_id
+
+                location_src = picking.picking_type_id.default_location_src_id
                 if location_src.usage == 'supplier' and picking.partner_id:
                     location_src = picking.partner_id.property_stock_supplier
 
-                if picking.picking_type_id.default_location_dest_id:
-                    location_dest = picking.picking_type_id.default_location_dest_id
+                location_dest = picking.picking_type_id.default_location_dest_id
                 if location_dest.usage == 'customer' and picking.partner_id:
                     location_dest = picking.partner_id.property_stock_customer
 
                 picking.location_id = location_src.id
                 picking.location_dest_id = location_dest.id
+
+    def _set_location_id(self):
+        for picking in self:
+            moves = picking.move_ids.filtered(lambda m: not m.scrapped and not m.location_id._child_of(picking.location_id))
+            moves.write({'location_id': picking.location_id.id})
+
+    def _set_location_dest_id(self):
+        for picking in self:
+            moves = picking.move_ids.filtered(lambda m: not m.scrapped and not m.location_dest_id._child_of(picking.location_dest_id))
+            moves.write({'location_dest_id': picking.location_dest_id.id})
 
     @api.depends('return_ids')
     def _compute_return_count(self):
@@ -1122,16 +1129,8 @@ class Picking(models.Model):
         if vals.get('signature'):
             for picking in self:
                 picking._attach_sign()
-        # Change locations of moves if those of the picking change
-        after_vals = {}
-        if vals.get('location_id'):
-            after_vals['location_id'] = vals['location_id']
-        if vals.get('location_dest_id'):
-            after_vals['location_dest_id'] = vals['location_dest_id']
         if 'partner_id' in vals:
-            after_vals['partner_id'] = vals['partner_id']
-        if after_vals:
-            self.move_ids.filtered(lambda move: not move.scrapped).write(after_vals)
+            self.move_ids.filtered(lambda move: not move.scrapped).write({'partner_id': vals['partner_id']})
         if vals.get('move_ids') or vals.get('move_ids_without_package'):
             self._autoconfirm_picking()
 

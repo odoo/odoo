@@ -183,8 +183,8 @@ class TestReturnPicking(TestStockCommon):
         # Create a stock picking with moves
         picking = self.PickingObj.create({
             'picking_type_id': self.picking_type_in,
-            'location_id': self.stock_location,
-            'location_dest_id': self.customer_location,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
             'move_ids': [(0, 0, {
                 'name': product_serial.name,
                 'product_id': product_serial.id,

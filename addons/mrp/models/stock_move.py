@@ -229,6 +229,18 @@ class StockMove(models.Model):
             elif not move.manual_consumption:
                 move.manual_consumption = move._is_manual_consumption()
 
+    @api.depends('raw_material_production_id.location_src_id', 'production_id.location_src_id')
+    def _compute_location_id(self):
+        ids_to_super = set()
+        for move in self:
+            if move.production_id:
+                move.location_id = move.product_id.with_company(move.company_id).property_stock_production.id
+            elif move.raw_material_production_id:
+                move.location_id = move.raw_material_production_id.location_src_id
+            else:
+                ids_to_super.add(move.id)
+        return super(StockMove, self.browse(ids_to_super))._compute_location_id()
+
     @api.depends('raw_material_production_id', 'raw_material_production_id.location_dest_id', 'production_id', 'production_id.location_dest_id')
     def _compute_location_dest_id(self):
         ids_to_super = set()
@@ -434,6 +446,9 @@ class StockMove(models.Model):
             # context no_procurement means we don't want the qty update to modify stock i.e create new pickings
             # ex. when spliting MO to backorders we don't want to move qty from pre prod to stock in 2/3 step config
             self.filtered(lambda m: m.raw_material_production_id.state == 'confirmed')._run_procurement(old_demand)
+        elif 'location_id' in vals and 'picking_type_id' in vals:
+            self._do_unreserve()
+            self._action_assign()
         return res
 
     def _run_procurement(self, old_qties=False):
