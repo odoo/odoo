@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
+    <record id="group_analytic_accounting" model="res.groups">
+        <field name="name">Analytic Accounting</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
 <data noupdate="1">
 
     <record id="analytic_comp_rule" model="ir.rule">
@@ -29,12 +35,5 @@
         <field eval="True" name="global"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id', 'parent_of', company_ids)]</field>
     </record>
-</data>
-<data noupdate="0">
-
-    <record id="group_analytic_accounting" model="res.groups">
-        <field name="name">Analytic Accounting</field>
-    </record>
-
 </data>
 </odoo>
