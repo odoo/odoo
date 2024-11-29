@@ -1530,6 +1530,7 @@ export class PosStore extends Reactive {
     }
     async sendOrderInPreparationUpdateLastChange(o, cancelled = false) {
         this.addPendingOrder([o.id]);
+<<<<<<< 18.0
         const uuid = o.uuid;
         const orders = await this.syncAllOrders();
         const order = orders.find((order) => order.uuid === uuid);
@@ -1540,6 +1541,22 @@ export class PosStore extends Reactive {
             this.addPendingOrder([order.id]);
             await this.syncAllOrders();
         }
+||||||| 4704e842ba78774e5d469f727582930fca62a8f2
+        await this.syncAllOrders({ cancel_table_notification: true });
+
+        const order = this.models["pos.order"].find((order) => order.uuid === uuid);
+        await this.sendOrderInPreparation(order, cancelled);
+        order.updateLastOrderChange();
+        await this.syncAllOrders();
+=======
+        await this.syncAllOrders({ cancel_table_notification: true });
+        const getOrder = (uuid) => this.models["pos.order"].getBy("uuid", uuid);
+        const order = getOrder(uuid);
+        await this.sendOrderInPreparation(order, cancelled);
+        order.updateLastOrderChange();
+        await this.syncAllOrders();
+        getOrder(uuid).updateSavedQuantity();
+>>>>>>> 1b8a5bda5b3571fbea0cbcc00fb021dd1c80cbb7
     }
 
     async printChanges(order, orderChange) {

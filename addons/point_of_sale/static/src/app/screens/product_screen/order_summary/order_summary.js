@@ -208,7 +208,6 @@ export class OrderSummary extends Component {
         selectedLine.set_quantity(newQuantity);
         if (newQuantity == 0) {
             selectedLine.delete();
-            this.currentOrder._unlinkOrderline(selectedLine);
         }
         return decreaseQuantity;
     }
@@ -228,7 +227,22 @@ export class OrderSummary extends Component {
         const newLine = this.getNewLine();
         const decreasedQuantity = current_saved_quantity - newQuantity;
         if (decreasedQuantity != 0) {
+<<<<<<< 18.0
             newLine.set_quantity(-decreasedQuantity + newLine.get_quantity(), true);
+||||||| 4704e842ba78774e5d469f727582930fca62a8f2
+            if (newLine === selectedLine) {
+                selectedLine.set_quantity(newQuantity, true);
+            } else {
+                newLine.set_quantity(-decreasedQuantity, true);
+                this.pos.addLineToCurrentOrder(newLine.serialize());
+            }
+=======
+            if (newLine === selectedLine) {
+                selectedLine.set_quantity(newQuantity, true);
+            } else {
+                newLine.set_quantity(-decreasedQuantity, true);
+            }
+>>>>>>> 1b8a5bda5b3571fbea0cbcc00fb021dd1c80cbb7
         }
         if (newLine !== selectedLine && selectedLine.saved_quantity != 0) {
             selectedLine.set_quantity(selectedLine.saved_quantity);
