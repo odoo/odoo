@@ -8,11 +8,14 @@
         <field name="arch" type="xml">
             <group name="provider_credentials" position="inside">
                 <group invisible="code != 'mercado_pago'">
-                    <field name="mercado_pago_access_token"
-                           string="Access Token"
-                           required="code == 'mercado_pago' and state != 'disabled'"
-                           password="True"/>
+                    <button
+                        string="Connect"
+                        type="object"
+                        name="action_mercado_pago_redirect_to_oauth_url"
+                        class="btn-primary"
+                    />
                 </group>
+
             </group>
         </field>
     </record>

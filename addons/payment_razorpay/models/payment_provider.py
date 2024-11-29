@@ -99,12 +99,10 @@ class PaymentProvider(models.Model):
                 _("Other Payment Providers"),
             )
 
-        params = {
-            'return_url': f'{self.get_base_url()}{RazorpayController.OAUTH_RETURN_URL}',
-            'provider_id': self.id,
-            'csrf_token': request.csrf_token(),
-        }
-        authorization_url = f'{const.OAUTH_URL}/authorize?{urlencode(params)}'
+        authorization_url = self._get_oauth_url(
+            proxy_url=const.OAUTH_URL,
+            return_endpoint=RazorpayController.OAUTH_RETURN_URL
+        )
         return {
             'type': 'ir.actions.act_url',
             'url': authorization_url,

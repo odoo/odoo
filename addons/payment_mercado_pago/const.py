@@ -5,6 +5,7 @@ from odoo.tools import LazyTranslate
 
 _lt = LazyTranslate(__name__)
 
+OAUTH_URL = 'https://mercadopago.api.odoo.com/api/mercado_pago'
 
 # Currency codes of the currencies supported by Mercado Pago in ISO 4217 format.
 # See https://api.mercadopago.com/currencies. Last seen online: 2024-10-29.
@@ -47,6 +48,7 @@ DEFAULT_PAYMENT_METHOD_CODES = {
     # Primary payment methods.
     'card',
     # Brand payment methods.
+    'amex',
     'visa',
     'mastercard',
     'argencard',
@@ -69,6 +71,7 @@ DEFAULT_PAYMENT_METHOD_CODES = {
 PAYMENT_METHODS_MAPPING = {
     'card': 'debit_card,credit_card,prepaid_card',
     'paypal': 'digital_wallet',
+    'mastercard': 'master',
 }
 
 # Mapping of transaction states to Mercado Pago payment statuses.
