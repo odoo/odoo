@@ -60,7 +60,7 @@ export class ListArchParser {
             fields: {},
         };
         let headerButtons = [];
-        const creates = [];
+        const controls = [];
         const groupListArchParser = new GroupListArchParser();
         let buttonGroup;
         let handleField = null;
@@ -168,15 +168,20 @@ export class ListArchParser {
             } else if (node.tagName === "control") {
                 for (const childNode of node.children) {
                     if (childNode.tagName === "button") {
-                        creates.push({
+                        controls.push({
                             type: "button",
                             ...processButton(childNode),
                         });
                     } else if (childNode.tagName === "create") {
-                        creates.push({
+                        controls.push({
                             type: "create",
                             context: childNode.getAttribute("context"),
                             string: childNode.getAttribute("string"),
+                            invisible: childNode.getAttribute("invisible"),
+                        });
+                    } else if (childNode.tagName === "delete") {
+                        controls.push({
+                            type: "delete",
                             invisible: childNode.getAttribute("invisible"),
                         });
                     }
@@ -229,7 +234,7 @@ export class ListArchParser {
         }
 
         return {
-            creates,
+            controls,
             headerButtons,
             fieldNodes,
             widgetNodes,

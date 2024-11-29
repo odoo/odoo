@@ -120,26 +120,26 @@
                     class="o_field_x2many_list_row_add"
                     t-on-keydown="(ev) => this.onCellKeydown(ev, null)"
                 >
-                    <t t-foreach="creates" t-as="create" t-key="create_index">
+                    <t t-foreach="controls" t-as="control" t-key="control_index">
                         <a
-                            t-if="create.type === 'create' and !evalColumnInvisible(create.invisible)"
+                            t-if="control.type === 'create' and !evalColumnInvisible(control.invisible)"
                             href="#"
                             role="button"
-                            t-att-class="create_index !== 0 ? 'ml16' : ''"
-                            t-att-tabindex="editedRecord ? '-1' : '0'"
-                            t-on-click.stop.prevent="() => this.add({ context: create.context })"
+                            t-att-class="control_index !== 0 ? 'ml16' : ''"
+                            t-att-tabindex="props.list.editedRecord ? '-1' : '0'"
+                            t-on-click.stop.prevent="() => this.add({ context: control.context })"
                         >
-                            <t t-esc="create.string"/>
+                            <t t-esc="control.string"/>
                         </a>
                         <ViewButton
-                            t-if="create.type === 'button' and !evalColumnInvisible(create.invisible)"
-                            className="`${create.className} ${create_index !== 0 ? 'ml16' : ''}`"
-                            clickParams="create.clickParams"
-                            icon="create.icon"
+                            t-if="control.type === 'button' and !evalColumnInvisible(control.invisible)"
+                            className="`${control.className} ${control_index !== 0 ? 'ml16' : ''}`"
+                            clickParams="control.clickParams"
+                            icon="control.icon"
                             record="props.list"
-                            string="create.string"
-                            title="create.title"
-                            tabindex="editedRecord ? '-1' : '0'"
+                            string="control.string"
+                            title="control.title"
+                            tabindex="props.list.editedRecord ? '-1' : '0'"
                         />
                     </t>
                 </td>
@@ -308,6 +308,7 @@
                         tabindex="-1"
                     >
                         <button class="fa d-print-none"
+                            t-if="this.displayDeleteIcon(record)"
                             t-att-class="{
                                 'fa-trash-o': !useUnlink and activeActions.delete,
                                 'fa-times': useUnlink and activeActions.unlink,

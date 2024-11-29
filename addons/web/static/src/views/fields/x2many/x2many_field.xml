@@ -6,24 +6,24 @@
             <div class="o_x2m_control_panel d-empty-none mt-1 mb-4">
                 <t t-if="displayControlPanelButtons">
                     <div class="o_cp_buttons gap-1" role="toolbar" aria-label="Control panel buttons" t-ref="buttons">
-                        <t t-foreach="creates" t-as="create" t-key="create_index">
+                        <t t-foreach="controls" t-as="control" t-key="control_index">
                             <button
-                                t-if="create.type === 'create' and !evalInvisible(create.invisible)"
+                                t-if="control.type === 'create' and !evalInvisible(control.invisible)"
                                 type="button"
                                 class="btn btn-secondary"
-                                t-att-class="create.class"
-                                t-on-click.stop.prevent="() => this.onAdd({ context: create.context })"
+                                t-att-class="control.class"
+                                t-on-click.stop.prevent="() => this.onAdd({ context: control.context })"
                             >
-                                <t t-esc="create.string"/>
+                                <t t-esc="control.string"/>
                             </button>
                             <ViewButton
-                                t-if="create.type === 'button' and !evalInvisible(create.invisible)"
-                                className="`${create.className}`"
-                                clickParams="create.clickParams"
-                                icon="create.icon"
+                                t-if="control.type === 'button' and !evalInvisible(control.invisible)"
+                                className="`${control.className}`"
+                                clickParams="control.clickParams"
+                                icon="control.icon"
                                 record="props.record.data[props.name]"
-                                string="create.string"
-                                title="create.title"
+                                string="control.string"
+                                title="control.title"
                             />
                         </t>
                     </div>
