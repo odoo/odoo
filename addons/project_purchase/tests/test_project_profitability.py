@@ -291,7 +291,7 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
         other_analytic_account = self.env['account.analytic.account'].create({
             'name': 'Not important',
             'code': 'KO-1234',
-            'plan_id': self.analytic_plan.id,
+            'plan_id': self.project_plan.id,
         })
         # create a new purchase order
         purchase_order = self.env['purchase.order'].create({
