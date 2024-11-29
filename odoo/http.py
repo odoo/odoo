@@ -227,6 +227,7 @@ DEFAULT_LANG = 'en_US'
 def get_default_session():
     return {
         'context': {},  # 'lang': request.default_lang()  # must be set at runtime
+        'create_time': time.time(),
         'db': None,
         'debug': '',
         'login': None,
@@ -290,6 +291,11 @@ if parse_version(werkzeug.__version__) >= parse_version('2.0.2'):
 # server-side as well with a threshold that can be set via an optional
 # config parameter `sessions.max_inactivity_seconds` (default: SESSION_LIFETIME)
 SESSION_LIFETIME = 60 * 60 * 24 * 7
+
+# The default duration (8h) before a session is rotated, changing the
+# session id (also on the cookie) but keeping the same content. Can be
+# set via an optional config parameter `sessions.rotation_seconds`.
+SESSION_ROTATION = 60 * 60 * 8
 
 # The cache duration for static content from the filesystem, one week.
 STATIC_CACHE = 60 * 60 * 24 * 7
@@ -395,6 +401,20 @@ def dispatch_rpc(service_name, method, params):
 
         dispatch = rpc_dispatchers[service_name]
         return dispatch(method, params)
+
+
+def get_session_rotation_interval(request):
+    if not request.db or not request.env or request.env.cr._closed:
+        return SESSION_ROTATION
+
+    ICP = request.env['ir.config_parameter'].sudo()
+    rotation_time = ICP.get_param('sessions.rotation_seconds', SESSION_ROTATION)
+
+    try:
+        return int(rotation_time)
+    except ValueError:
+        _logger.warning("Invalid value for 'sessions.rotation_seconds', using default value.")
+        return SESSION_ROTATION
 
 
 def get_session_max_inactivity(env):
@@ -1839,6 +1859,9 @@ class Request:
 
         if not sess.can_save:
             return
+
+        if time.time() > self.session['create_time'] + get_session_rotation_interval(self):
+            self.session.should_rotate = True
 
         if sess.should_rotate:
             root.session_store.rotate(sess, self.env)  # it saves
