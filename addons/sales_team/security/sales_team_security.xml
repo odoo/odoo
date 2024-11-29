@@ -8,7 +8,7 @@
         <record id="group_sale_salesman" model="res.groups">
             <field name="name">User: Own Documents Only</field>
             <field name="category_id" ref="base.module_category_sales_sales"/>
-            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user')), (4, ref('account.group_account_invoice'))]"/>
             <field name="comment">the user will have access to his own data in the sales application.</field>
         </record>
 
