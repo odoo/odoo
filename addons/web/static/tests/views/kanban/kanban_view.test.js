@@ -13387,3 +13387,43 @@ test.tags("mobile")("Should load grouped kanban with folded column", async () =>
     expect(".o_kanban_load_more").toHaveCount(0, { message: "Shouldn't have a load more button" });
     expect(".o_kanban_record").toHaveCount(4, { message: "Should have 4 loaded record" });
 });
+
+test("display 'None' for empty char field values in grouped Kanban view", async () => {
+    Partner._records[0].foo = false;
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        groupBy: ["foo"],
+    });
+
+    expect(".o_kanban_group:first-child .o_column_title").toHaveText("None\n(1)");
+});
+
+test("display 'None' for empty int field values in grouped Kanban view", async () => {
+    Partner._records[0].int_field = 0;
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="int_field"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        groupBy: ["int_field"],
+    });
+
+    expect(".o_kanban_group:first-child .o_column_title").toHaveText("None\n(1)");
+});

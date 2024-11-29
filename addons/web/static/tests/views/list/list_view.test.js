@@ -11479,7 +11479,7 @@ test(`grouped lists with expand attribute and a lot of groups`, async () => {
     expect(`.o_pager`).toHaveCount(1); // has a pager
     expect(queryAllTexts(`.o_group_name`)).toEqual([
         "-4 (1)",
-        "0 (1)",
+        "None (1)",
         "1 (1)",
         "2 (1)",
         "3 (1)",
@@ -16476,4 +16476,37 @@ test("open record, with invalid record in list", async () => {
     await contains(".o_data_cell").click();
 
     expect(".o_form_view").toHaveCount(1);
+});
+
+test(`display 'None' for empty char field values in grouped list view`, async () => {
+    Foo._records[0].foo = false;
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list open_form_view="True">
+                <field name="foo"/>
+            </list>
+        `,
+        groupBy: ["foo"],
+    });
+
+    expect(`tbody tr:nth-child(3)`).toHaveText("None (1)");
+});
+
+test(`display 'None' for empty int field values in grouped list view`, async () => {
+    Foo._records[0].int_field = 0;
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list expand="1">
+                <field name="foo"/>
+            </list>`,
+        groupBy: ["int_field"],
+    });
+
+    expect(`tbody tr:nth-child(3)`).toHaveText("None (1)");
 });
