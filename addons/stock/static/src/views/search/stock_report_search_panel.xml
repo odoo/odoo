@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="stock.StockReportSearchPanel.Regular" t-inherit="web.SearchPanel.Regular">
+    <xpath expr="//div/section[1]" position="before">
+        <section t-if="warehouses.length > 1" class="o_search_panel_section o_search_panel_warehouse">
+            <header class="o_search_panel_section_header pt-4 pb-2 text-uppercase o_cursor_default">
+                <i t-attf-class="fa fa-filter o_search_panel_section_icon text-warning me-2"/>
+                <b>Warehouses</b>
+            </header>
+            <ul class="list-group d-block o_search_panel_field">
+                <li class="o_search_panel_filter_value list-group-item p-0 mb-1 border-0 o_cursor_pointer">
+                    <span t-on-click="ev => this.clearWarehouseContext(ev)" t-att-class="{'fw-bolder': !selectedWarehouse, 'o_search_panel_label_title':true}">All Warehouses</span>
+                </li>
+                <li class="o_search_panel_filter_value list-group-item p-0 mb-1 border-0 o_cursor_pointer"
+                    t-foreach="warehouses" t-as="warehouse" t-key="warehouse.id">
+                    <div t-out="warehouse.name"
+                        t-on-click="ev => this.applyWarehouseContext(warehouse.id, ev)"
+                        t-att-class="{'fw-bolder': selectedWarehouse === warehouse.id, 'o_search_panel_label_title':true,
+                        'bg-info-subtle': selectedWarehouse === warehouse.id}"/>
+                </li>
+            </ul>
+        </section>
+    </xpath>
+</t>
+
+<t t-name="stock.StockReportSearchPanel" t-inherit="web.SearchPanel" t-inherit-mode="primary">
+    <xpath expr="//t[@t-call='web.SearchPanel.Regular']" position="attributes">
+        <attribute name="t-call">stock.StockReportSearchPanel.Regular</attribute>
+    </xpath>
+</t>
+
+</templates>

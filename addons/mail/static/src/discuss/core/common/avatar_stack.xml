@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.AvatarStack">
+        <div t-if="props.personas.length > 0">
+            <div class="d-flex" t-att-class="{'flex-column': props.direction === 'v'}">
+                <t t-foreach="props.personas.slice(0, props.max)" t-as="persona" t-key="persona.localId">
+                    <img t-att-src="persona.avatarUrl" t-att-title="persona.name" class="rounded-circle" t-attf-class="{{props.avatarClass(persona)}}" t-attf-style="{{getStyle(persona_index)}}"/>
+                </t>
+                <span t-if="props.personas.length > props.max" class="rounded-circle bg-secondary smaller d-flex justify-content-center align-items-center user-select-none" t-attf-style="{{getStyle(props.personas.length)}}">+<t t-esc="props.personas.length - props.max"/></span>
+            </div>
+        </div>
+    </t>
+</templates>

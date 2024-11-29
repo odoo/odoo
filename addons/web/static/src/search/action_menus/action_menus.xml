@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ActionMenus">
+        <div class="o_cp_action_menus d-flex pe-2 gap-1">
+            <div t-if="props.items.print?.length" class="d-inline-block">
+                <Dropdown beforeOpen.bind="loadPrintItems">
+                    <button class="btn btn-secondary" data-hotkey="shift+u">
+                        <i class="fa fa-print me-1"/>
+                        <span class="o_dropdown_title" t-out="props.printDropdownTitle"/>
+                    </button>
+                    <t t-set-slot="content">
+                        <t t-foreach="state.printItems" t-as="item" t-key="item.key">
+                            <DropdownItem
+                                    class="item.class"
+                                    onSelected="() => this.onItemSelected(item)"
+                                    t-out="item.description"
+                            />
+                        </t>
+                    </t>
+                </Dropdown>
+            </div>
+
+            <div t-if="actionItems.length" class="d-inline-block">
+                <Dropdown>
+                    <button class="btn btn-secondary" data-hotkey="u">
+                        <i class="fa fa-cog me-1"/>
+                        <span class="o_dropdown_title">Actions</span>
+                    </button>
+                    <t t-set-slot="content">
+                        <t t-foreach="actionItems" t-as="item" t-key="item.key">
+                            <t t-if="currentGroup !== null and currentGroup !== item.groupNumber">
+                                <div role="separator" class="dropdown-divider"/>
+                            </t>
+                            <t t-if="item.Component" t-component="item.Component" t-props="item.props" />
+                            <DropdownItem t-else="" class="'o_menu_item'" onSelected="() => this.onItemSelected(item)">
+                                <i t-if="item.icon" t-att-class="item.icon + ' me-1 fa-fw oi-fw'"/>
+                                <t t-esc="item.description"/>
+                            </DropdownItem>
+                            <t t-set="currentGroup" t-value="item.groupNumber"/>
+                        </t>
+                    </t>
+                </Dropdown>
+        </div>
+        </div>
+    </t>
+
+</templates>

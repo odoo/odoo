@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="mail_act_test_todo" model="mail.activity.type">
+        <field name="name">Do Stuff</field>
+        <field name="summary">Really?! Wow! A superpowers drug you can just rub onto your skin?</field>
+        <field name="category">default</field>
+        <field name="res_model">mail.test.activity</field>
+    </record>
+    <record id="mail_act_test_meeting" model="mail.activity.type">
+        <field name="name">Meet People</field>
+        <field name="summary">You'd think it would be something you'd have to freebase. Noooooo!</field>
+        <field name="category">default</field>
+        <field name="res_model">mail.test.activity</field>
+    </record>
+    <record id="mail_act_test_call" model="mail.activity.type">
+        <field name="name">Call People</field>
+        <field name="summary">Then throw her in the laundry room, which will hereafter be referred to as "the brig".</field>
+        <field name="category">default</field>
+        <field name="res_model">mail.test.activity</field>
+    </record>
+    <record id="mail_act_test_chained_2" model="mail.activity.type">
+        <field name="name">Step 2</field>
+        <field name="summary">Take the second step.</field>
+        <field name="category">default</field>
+        <field name="res_model">mail.test.activity</field>
+        <field name="delay_count">10</field>
+        <field name="delay_from">current_date</field>
+        <field name="delay_unit">days</field>
+    </record>
+    <record id="mail_act_test_chained_1" model="mail.activity.type">
+        <field name="name">Step 1</field>
+        <field name="summary">Take the first step.</field>
+        <field name="category">default</field>
+        <field name="res_model">mail.test.activity</field>
+        <field name="chaining_type">trigger</field>
+        <field name="triggered_next_type_id" ref="test_mail.mail_act_test_chained_2"/>
+    </record>
+    <record id="mail_act_test_upload_document" model="mail.activity.type">
+        <field name="name">Upload Document</field>
+        <field name="delay_count">5</field>
+        <field name="category">upload_file</field>
+        <field name="res_model">mail.test.activity</field>
+    </record>
+
+</odoo>

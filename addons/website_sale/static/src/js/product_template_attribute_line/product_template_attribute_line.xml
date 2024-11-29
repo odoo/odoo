@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-inherit="sale.ProductTemplateAttributeLine" t-inherit-mode="extension">
+        <div name="ptal" position="attributes">
+            <attribute name="t-if">
+                this.env.isMainProductConfigurable
+                    || this.env.mainProductTmplId !== this.props.productTmplId
+            </attribute>
+            <attribute name="class" remove="o_input" separator=" "/>
+        </div>
+        <div name="ptal" position="after">
+            <t t-elif="isSelectedPTAVCustom() || this.props.create_variant === 'no_variant'">
+                <div t-out="getPtalDisplayName()" class="text-muted small"/>
+            </t>
+        </div>
+    </t>
+
+    <t t-inherit="sale.ptav_select" t-inherit-mode="extension">
+        <select position="attributes">
+            <attribute name="class" add="form-select" separator=" "/>
+        </select>
+    </t>
+</templates>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="loyalty_report">
+        <t t-call="web.internal_layout">
+            <div class="card">
+                <div class="card-body">
+                    <div class="page">
+                        <div class="oe_structure"></div>
+                        <div class="row text-center">
+                            <div class="o_offer col-lg-12">
+                                <h4 t-if="o._mail_get_customer().name">
+                                    Congratulations
+                                    <span t-out="o._mail_get_customer().name">John Doe</span>,
+                                </h4>
+                                <t t-set="text">on your next order</t>
+                                <h4>Here is your reward from <span t-out="o.program_id.company_id.name">Odoo</span>.</h4>
+                                <div class="oe_structure"></div>
+                                <t t-foreach="range(len(o.program_id.reward_ids))" t-as="reward_idx">
+                                    <t t-set="reward" t-value="o.program_id.reward_ids[reward_idx]"/>
+                                    <strong><span t-out="reward.description">loyalty Reward</span></strong>
+                                    <br/>
+                                    <t t-if="reward_idx &lt; (len(o.program_id.reward_ids) - 1)">
+                                        <span class="text-center">OR</span>
+                                        <br/>
+                                    </t>
+                                </t>
+                                <h1 class="fw-bold" style="font-size: 34px"><span t-out="text">DEMO_TEXT</span></h1>
+                                <br/>
+                                <h4 t-if="o.expiration_date">
+                                    Use this promo code before
+                                    <span t-field="o.expiration_date" t-options='{"format": "yyyy-MM-d"}'>2023-08-20</span>
+                                </h4>
+                                <h2 class="mt-4">
+                                    <strong class="bg-light"><span t-out="o.code">DEMO_CODE</span></strong>
+                                </h2>
+                                <t t-set="rule" t-value="o.program_id.rule_ids[:1]"/>
+                                <h4 t-if="rule.minimum_qty > 1">
+                                    <span>Minimum purchase of</span>
+                                    <strong t-out="rule.minimum_qty">5</strong> <span>products</span>
+                                </h4>
+                                <h4 t-if="rule.minimum_amount">
+                                    <span>Valid for purchase above</span>
+                                    <strong t-out="rule.minimum_amount" t-options="{'widget': 'monetary', 'display_currency': rule.currency_id}">$100</strong>
+                                </h4>
+                                <div class="oe_structure"></div>
+                                <br/>
+                                <span t-field="o.code" t-options="{'widget': 'barcode', 'width': 600, 'height': 100}">ABCDE12345</span>
+                                <div class="oe_structure"></div>
+                                <br/><br/>
+                                <h4>Thank you,</h4>
+                                <div class="oe_structure"></div>
+                                <br/>
+                                <div class="mt32">
+                                    <div class="text-center">
+                                        <img alt="Logo" t-att-src="'/logo?company=%d' % (o.program_id.company_id)" t-att-alt="'%s' % (o.program_id.company_id.name)" style="border:0 solid transparent;" height="50"/>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="text-center d-inline-block">
+                                        <span t-field="o.program_id.company_id.partner_id"
+                                            t-options='{"widget": "contact", "fields": ["address", "email"], "no_marker": True}'>John Doe</span>
+                                    </div>
+                                </div>
+                                <div class="oe_structure"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="loyalty_report_i18n">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="o" t-value="o.with_context(lang=o._mail_get_customer().lang or o.env.lang)"/>
+                <t t-call="loyalty.loyalty_report" t-lang="o._mail_get_customer().lang or o.env.lang"/>
+            </t>
+        </t>
+    </template>
+
+    <template id="gift_card_report">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="oe_structure"></div>
+                <div style="margin:0px; font-size:24px; font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:36px; color:#333333; text-align: center">
+                    Here is your gift card!
+                </div>
+                <div class="oe_structure"></div>
+                <div style="padding-top:20px; padding-bottom:20px">
+                    <img src="/loyalty/static/img/gift_card.png" style="display:block; border:0; outline:none; text-decoration:none; margin:auto;" width="300"/>
+                </div>
+                <div class="oe_structure"></div>
+                <div style="padding:0; margin:0px; padding-top:35px; padding-bottom:35px; text-align:center;">
+                    <h3 style="margin:0px; line-height:48px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:40px; font-style:normal; font-weight:normal; color:#333333; text-align:center">
+                        <strong><span t-out="o.points" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}">1000</span></strong>
+                    </h3>
+                </div>
+                <div class="oe_structure"></div>
+                <div style="padding:0; margin:0px; padding-top:35px; padding-bottom:35px; background-color:#efefef; text-align:center;">
+                    <p style="margin:0px; font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:21px; color:#333333">
+                        <strong>Gift Card Code</strong>
+                    </p>
+                    <p style="margin:0px; font-size:25px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:38px; color:#A9A9A9">
+                        <span t-field="o.code">ABCDE12345</span>
+                    </p>
+                </div>
+                <div class="oe_structure"></div>
+                <div t-if="o.expiration_date" style="padding:0; margin:0px; padding-top:10px; padding-bottom:10px; text-align:center;">
+                    <h3 style="margin:0px; line-height:17px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:14px; font-style:normal; font-weight:normal; color:#A9A9A9; text-align:center">
+                        Card expires <span t-field="o.expiration_date">2023-12-31</span>
+                    </h3>
+                </div>
+                <div class="oe_structure"></div>
+                <div style="padding:0; margin:0px; padding-top:10px; padding-bottom:10px; text-align:center;">
+                    <img t-att-src="'/report/barcode/Code128/'+o.code" style="width:400px;height:75px" alt="Barcode"/>
+                </div>
+                <div class="oe_structure"></div>  
+            </t>
+        </t>
+    </template>
+
+    <template id="gift_card_report_i18n">
+        <t t-call="web.html_container">
+            <div class="oe_structure"></div>
+            <t t-foreach="docs" t-as="o">
+                <t t-set="o" t-value="o.with_context(lang=o._mail_get_customer().lang or o.env.lang)"/>
+                <t t-call="loyalty.gift_card_report" t-lang="o._mail_get_customer().lang or o.env.lang"/>
+            </t>
+            <div class="oe_structure"></div>
+        </t>
+    </template>
+</odoo>

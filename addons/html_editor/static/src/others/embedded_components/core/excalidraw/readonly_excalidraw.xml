@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="html_editor.ReadonlyEmbeddedExcalidraw">
+        <div class="pb-4 d-flex justify-content-center">
+            <div t-if="displayState.hasError"
+            class="d-flex flex-column flex-grow-1 position-relative pb-3 align-items-center
+                justify-content-center bg-white border">
+                    <p class="o_view_nocontent_empty_folder m-0"></p>
+                    <p class="display-6">Something went wrong!</p>
+                    <p>The Excalidraw URL is not valid.</p>
+            </div>
+            <div t-else="" t-ref="drawContainer" t-attf-style="width: {{ templateState.width }}; height: {{ templateState.height }};"
+                t-attf-class="{{ this.displayState.isResizing ? 'pe-none' : '' }} d-flex flex-row o_embedded_draw_container position-relative">
+                <div t-if="!isMobile" t-on-mousedown.prevent="onHandleMouseDown"
+                    t-attf-class="{{ this.displayState.isResizing ? 'visible' : '' }} o_embedded_draw_handle o_embedded_draw_handle_left fa fa-arrows-h align-self-end position-absolute bottom-0 start-0"/>
+                <iframe class="flex-grow-1 position-relative" t-att-src="templateState.source" allowfullscreen="true"/>
+                <div t-if="!isMobile" t-on-mousedown.prevent="onHandleMouseDown"
+                    t-attf-class="{{ this.displayState.isResizing ? 'visible' : '' }} o_embedded_draw_handle o_embedded_draw_handle_right fa fa-arrows-h align-self-end position-absolute bottom-0 end-0"/>
+                <a title="Open in new Window" t-att-href="templateState.source" target="_blank" role="button" class="fa fa-external-link end-0 top-0 position-absolute pe-3 pt-3"/>
+            </div>
+        </div>
+    </t>
+</templates>

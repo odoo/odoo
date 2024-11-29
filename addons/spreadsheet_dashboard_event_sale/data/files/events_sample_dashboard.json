@@ -1,0 +1,584 @@
+{
+    "version": 21,
+    "sheets": [
+        {
+            "id": "sheet1",
+            "name": "Dashboard",
+            "colNumber": 5,
+            "rowNumber": 49,
+            "rows": {
+                "6": {
+                    "size": 40
+                },
+                "22": {
+                    "size": 40
+                },
+                "23": {
+                    "size": 40
+                },
+                "24": {
+                    "size": 29
+                },
+                "25": {
+                    "size": 29
+                },
+                "26": {
+                    "size": 29
+                },
+                "27": {
+                    "size": 29
+                },
+                "28": {
+                    "size": 29
+                },
+                "29": {
+                    "size": 29
+                },
+                "30": {
+                    "size": 29
+                },
+                "31": {
+                    "size": 29
+                },
+                "32": {
+                    "size": 29
+                },
+                "33": {
+                    "size": 29
+                },
+                "35": {
+                    "size": 40
+                },
+                "36": {
+                    "size": 40
+                },
+                "37": {
+                    "size": 29
+                },
+                "38": {
+                    "size": 29
+                },
+                "39": {
+                    "size": 29
+                },
+                "40": {
+                    "size": 29
+                },
+                "41": {
+                    "size": 29
+                },
+                "42": {
+                    "size": 29
+                },
+                "43": {
+                    "size": 29
+                },
+                "44": {
+                    "size": 29
+                },
+                "45": {
+                    "size": 29
+                },
+                "46": {
+                    "size": 29
+                }
+            },
+            "cols": {
+                "0": {
+                    "size": 374
+                },
+                "1": {
+                    "size": 100
+                },
+                "2": {
+                    "size": 50
+                },
+                "3": {
+                    "size": 375
+                },
+                "4": {
+                    "size": 100
+                }
+            },
+            "merges": [],
+            "cells": {
+                "A7": {
+                    "content": "[Events Status](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"stage_id\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"stage_id\"]},\"modelName\":\"event.event\",\"views\":[[false,\"kanban\"],[false,\"calendar\"],[false,\"list\"],[false,\"form\"],[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Events\"})"
+                },
+                "A23": {
+                    "content": "[Top Venues](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"address_id\",\"!=\",false]],\"context\":{\"group_by\":[\"address_id\"],\"pivot_measures\":[\"__count\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"address_id\"]},\"modelName\":\"event.event\",\"views\":[[false,\"kanban\"],[false,\"calendar\"],[false,\"list\"],[false,\"form\"],[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Events\"})"
+                },
+                "A24": {
+                    "content": "=_t(\"Venue\")"
+                },
+                "A36": {
+                    "content": "[Top Tags](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"tag_ids\",\"!=\",false]],\"context\":{\"group_by\":[\"tag_ids\"],\"pivot_measures\":[\"__count\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"tag_ids\"]},\"modelName\":\"event.event\",\"views\":[[false,\"kanban\"],[false,\"calendar\"],[false,\"list\"],[false,\"form\"],[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Events\"})"
+                },
+                "A37": {
+                    "content": "=_t(\"Tag\")"
+                },
+                "B24": {
+                    "content": "=_t(\"Events\")"
+                },
+                "B37": {
+                    "content": "=_t(\"Events\")"
+                },
+                "D7": {
+                    "content": "[Registration Status](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"state\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"state\"]},\"modelName\":\"event.registration\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"kanban\"],[false,\"list\"],[false,\"form\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Attendees\"})"
+                },
+                "D23": {
+                    "content": "[Top Templates](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"event_type_id\",\"!=\",false]],\"context\":{\"group_by\":[\"event_type_id\"],\"pivot_measures\":[\"__count\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"event_type_id\"]},\"modelName\":\"event.event\",\"views\":[[false,\"kanban\"],[false,\"calendar\"],[false,\"list\"],[false,\"form\"],[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Events\"})"
+                },
+                "D24": {
+                    "content": "=_t(\"Template\")"
+                },
+                "D36": {
+                    "content": "[Top Organizers](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"organizer_id\",\"!=\",false]],\"context\":{\"group_by\":[\"organizer_id\"],\"pivot_measures\":[\"__count\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"organizer_id\"]},\"modelName\":\"event.event\",\"views\":[[false,\"kanban\"],[false,\"calendar\"],[false,\"list\"],[false,\"form\"],[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Events\"})"
+                },
+                "D37": {
+                    "content": "=_t(\"Organizer\")"
+                },
+                "E24": {
+                    "content": "=_t(\"Events\")"
+                },
+                "E37": {
+                    "content": "=_t(\"Events\")"
+                }
+            },
+            "styles": {
+                "A7": 1,
+                "A23": 1,
+                "A36": 1,
+                "D7": 1,
+                "D23": 1,
+                "D36": 1,
+                "A24": 2,
+                "A37": 2,
+                "D24": 2,
+                "D37": 2,
+                "B24": 3,
+                "B37": 3,
+                "E24": 3,
+                "E37": 3
+            },
+            "formats": {},
+            "borders": {
+                "A7:B7": 1,
+                "A23:B23": 1,
+                "A36:B36": 1,
+                "D7:E7": 1,
+                "D23:E23": 1,
+                "D36:E36": 1,
+                "A8:B8": 2,
+                "A24:B24": 2,
+                "A37:B37": 2,
+                "D8:E8": 2,
+                "D24:E24": 2,
+                "D37:E37": 2,
+                "A25": 3,
+                "A38": 3,
+                "D25": 3,
+                "D38": 3,
+                "A26:A34": 4,
+                "A39:A43": 4,
+                "A45:A47": 4,
+                "D26:D34": 4,
+                "D39:D43": 4,
+                "D45:D47": 4,
+                "A35:B35": 5,
+                "A48:B48": 5,
+                "D35:E35": 5,
+                "D48:E48": 5,
+                "A44:B44": 6,
+                "D44:E44": 6,
+                "B25": 7,
+                "B38": 7,
+                "E25": 7,
+                "E38": 7,
+                "B26:B34": 8,
+                "B39:B43": 8,
+                "B45:B47": 8,
+                "E26:E34": 8,
+                "E39:E43": 8,
+                "E45:E47": 8
+            },
+            "conditionalFormats": [],
+            "figures": [
+                {
+                    "id": "18361546-49c2-4212-88eb-b2ee50127d41",
+                    "x": 0,
+                    "y": 9,
+                    "width": 200,
+                    "height": 105,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "percentage",
+                        "title": {
+                            "text": "Events",
+                            "bold": true,
+                            "color": "#434343"
+                        },
+                        "type": "scorecard",
+                        "background": "#EFF6FF",
+                        "baseline": "Data!E3",
+                        "baselineDescr": "since last period",
+                        "keyValue": "Data!D3",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "98d2b15d-9117-4ecf-9732-dc62df949dc1",
+                    "x": 210,
+                    "y": 9,
+                    "width": 200,
+                    "height": 105,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "percentage",
+                        "title": {
+                            "text": "Revenue",
+                            "bold": true,
+                            "color": "#434343"
+                        },
+                        "type": "scorecard",
+                        "background": "#FFF7ED",
+                        "baseline": "Data!E4",
+                        "baselineDescr": "since last period",
+                        "keyValue": "Data!D4",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "6510bff8-7b28-42c6-af4b-c750bed2205c",
+                    "x": 420,
+                    "y": 9,
+                    "width": 200,
+                    "height": 105,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "percentage",
+                        "title": {
+                            "text": "Attendees",
+                            "bold": true,
+                            "color": "#434343"
+                        },
+                        "type": "scorecard",
+                        "background": "#EFF6FF",
+                        "baseline": "Data!E2",
+                        "baselineDescr": "since last period",
+                        "keyValue": "Data!D2",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "9757f293-3703-437c-985c-208b91aaa8f1",
+                    "x": 0,
+                    "y": 188,
+                    "width": 472,
+                    "height": 335,
+                    "tag": "chart",
+                    "data": {
+                        "type": "bar",
+                        "dataSetsHaveTitle": false,
+                        "dataSets": [
+                            {
+                                "dataRange": "Data!B7:B8",
+                                "yAxisId": "y"
+                            }
+                        ],
+                        "legendPosition": "none",
+                        "labelRange": "Data!A7:A8",
+                        "title": {},
+                        "stacked": false,
+                        "aggregated": false
+                    }
+                },
+                {
+                    "id": "9b287910-b65f-4392-889a-52aafce81a3e",
+                    "x": 523,
+                    "y": 178,
+                    "width": 476,
+                    "height": 345,
+                    "tag": "chart",
+                    "data": {
+                        "type": "bar",
+                        "dataSetsHaveTitle": false,
+                        "dataSets": [
+                            {
+                                "dataRange": "Data!B11:B12",
+                                "yAxisId": "y"
+                            }
+                        ],
+                        "legendPosition": "none",
+                        "labelRange": "Data!A11:A12",
+                        "title": {},
+                        "stacked": false,
+                        "aggregated": false
+                    }
+                }
+            ],
+            "tables": [],
+            "areGridLinesVisible": true,
+            "isVisible": true,
+            "headerGroups": {
+                "ROW": [],
+                "COL": []
+            },
+            "dataValidationRules": [],
+            "comments": {}
+        },
+        {
+            "id": "3fad37db-0a40-46e9-bcc8-967eebf0bca4",
+            "name": "Data",
+            "colNumber": 26,
+            "rowNumber": 101,
+            "rows": {},
+            "cols": {},
+            "merges": [],
+            "cells": {
+                "A1": {
+                    "content": "=_t(\"KPI\")"
+                },
+                "A2": {
+                    "content": "=_t(\"Attendees\")"
+                },
+                "A3": {
+                    "content": "=_t(\"Events\")"
+                },
+                "A4": {
+                    "content": "=_t(\"Revenue\")"
+                },
+                "A7": {
+                    "content": "=_t(\"Booked\")"
+                },
+                "A8": {
+                    "content": "=_t(\"Ended\")"
+                },
+                "A11": {
+                    "content": "=_t(\"Attended\")"
+                },
+                "A12": {
+                    "content": "=_t(\"Registered\")"
+                },
+                "B1": {
+                    "content": "=_t(\"Current\")"
+                },
+                "B2": {
+                    "content": "478"
+                },
+                "B3": {
+                    "content": "56"
+                },
+                "B4": {
+                    "content": "15497"
+                },
+                "B7": {
+                    "content": "4656"
+                },
+                "B8": {
+                    "content": "435"
+                },
+                "B11": {
+                    "content": "134354"
+                },
+                "B12": {
+                    "content": "32345"
+                },
+                "C1": {
+                    "content": "=_t(\"Previous\")"
+                },
+                "C2": {
+                    "content": "344"
+                },
+                "C3": {
+                    "content": "43"
+                },
+                "C4": {
+                    "content": "11345"
+                },
+                "D1": {
+                    "content": "=_t(\"Current\")"
+                },
+                "D2": {
+                    "content": "=FORMAT.LARGE.NUMBER(B2)"
+                },
+                "D3": {
+                    "content": "=FORMAT.LARGE.NUMBER(B3)"
+                },
+                "D4": {
+                    "content": "=FORMAT.LARGE.NUMBER(B4)"
+                },
+                "E1": {
+                    "content": "=_t(\"Previous\")"
+                },
+                "E2": {
+                    "content": "=FORMAT.LARGE.NUMBER(C2)"
+                },
+                "E3": {
+                    "content": "=FORMAT.LARGE.NUMBER(C3)"
+                },
+                "E4": {
+                    "content": "=FORMAT.LARGE.NUMBER(C4)"
+                }
+            },
+            "styles": {
+                "A1:C1": 4,
+                "D1:E1": 5,
+                "D2:E4": 6
+            },
+            "formats": {
+                "B2:C3": 1,
+                "B4:E4": 2
+            },
+            "borders": {},
+            "conditionalFormats": [],
+            "figures": [],
+            "tables": [],
+            "areGridLinesVisible": true,
+            "isVisible": true,
+            "headerGroups": {
+                "ROW": [],
+                "COL": []
+            },
+            "dataValidationRules": [],
+            "comments": {}
+        }
+    ],
+    "styles": {
+        "1": {
+            "textColor": "#01666b",
+            "fontSize": 16,
+            "bold": true
+        },
+        "2": {
+            "textColor": "#434343",
+            "bold": true,
+            "fontSize": 11
+        },
+        "3": {
+            "textColor": "#434343",
+            "bold": true,
+            "fontSize": 11,
+            "align": "center"
+        },
+        "4": {
+            "bold": true
+        },
+        "5": {
+            "bold": true,
+            "fillColor": "#f2f2f2"
+        },
+        "6": {
+            "fillColor": "#f2f2f2"
+        }
+    },
+    "formats": {
+        "1": "0",
+        "2": "[$$]#,##0"
+    },
+    "borders": {
+        "1": {
+            "bottom": {
+                "style": "thin",
+                "color": "#CCCCCC"
+            }
+        },
+        "2": {
+            "top": {
+                "style": "thin",
+                "color": "#CCCCCC"
+            }
+        },
+        "3": {
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "4": {
+            "top": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "5": {
+            "top": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "6": {
+            "top": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "7": {
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "8": {
+            "top": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        }
+    },
+    "revisionId": "START_REVISION",
+    "uniqueFigureIds": true,
+    "settings": {
+        "locale": {
+            "name": "English (US)",
+            "code": "en_US",
+            "thousandsSeparator": ",",
+            "decimalSeparator": ".",
+            "dateFormat": "mm/dd/yyyy",
+            "timeFormat": "hh:mm:ss",
+            "formulaArgSeparator": ",",
+            "weekStart": 7
+        }
+    },
+    "pivots": {},
+    "pivotNextId": 11,
+    "customTableStyles": {},
+    "odooVersion": 12,
+    "globalFilters": [],
+    "lists": {},
+    "listNextId": 1
+}

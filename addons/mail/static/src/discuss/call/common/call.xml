@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="discuss.Call">
+        <PttAdBanner/>
+        <div class="o-discuss-Call user-select-none d-flex" t-att-class="{'o-fullscreen fixed-top vw-100 vh-100': state.isFullscreen, 'o-compact': props.compact,'o-minimized': minimized, 'position-relative': !state.isFullscreen }">
+            <div class="o-discuss-Call-main d-flex flex-grow-1 flex-column align-items-center justify-content-center position-relative overflow-auto" t-on-mouseleave="onMouseleaveMain">
+                <div
+                    class="o-discuss-Call-mainCards d-flex align-items-center overflow-hidden h-100 w-100 flex-wrap justify-content-center"
+                    t-attf-style="--height:{{state.tileHeight}}px; --width:{{state.tileWidth}}px;"
+                    t-on-click="() => this.showOverlay()"
+                    t-on-mousemove="onMousemoveMain"
+                    t-ref="grid"
+                >
+                    <CallParticipantCard t-foreach="visibleMainCards.slice(0,6)" t-as="cardData" t-key="cardData.key"
+                        cardData="cardData"
+                        className="'o-discuss-Call-mainCardStyle'"
+                        minimized="minimized"
+                        thread="props.thread"
+                    />
+                    <span t-if="env.inChatWindow and visibleMainCards.length > 6" class="fa fa-ellipsis-h ps-1 pe-1"/>
+                    <CallParticipantCard t-if="!env.inChatWindow" t-foreach="visibleMainCards.slice(6)" t-as="cardData" t-key="cardData.key"
+                        cardData="cardData"
+                        className="'o-discuss-Call-mainCardStyle'"
+                        minimized="minimized"
+                        thread="props.thread"
+                    />
+                </div>
+
+                <!-- Buttons -->
+                <t t-if="hasSidebarButton">
+                    <i t-if="state.sidebar" class="o-discuss-Call-sidebarToggler p-2 fs-5 cursor-pointer position-absolute oi oi-arrow-right" title="Hide sidebar" t-on-click="() => this.state.sidebar = false"/>
+                    <i t-else="" class="o-discuss-Call-sidebarToggler p-2 fs-5 cursor-pointer position-absolute oi oi-arrow-left" title="Show sidebar" t-on-click="() => this.state.sidebar = true"/>
+                </t>
+                <div t-if="state.overlay or !isControllerFloating" class="o-discuss-Call-overlay d-flex justify-content-center w-100 pb-1" t-att-class="{ 'o-isFloating position-absolute bottom-0 pb-3': isControllerFloating }">
+                    <div t-on-mousemove="onMousemoveOverlay">
+                        <CallActionList thread="props.thread" compact="props.compact" fullscreen="{ isActive: state.isFullscreen, enter: () => this.enterFullScreen(), exit: () => this.exitFullScreen() }"/>
+                    </div>
+                </div>
+                <div t-if="hasCallNotifications" class="position-absolute d-flex flex-column-reverse start-0 bottom-0" t-att-class="{ 'ps-5 pb-5': state.isFullscreen, 'ps-2 pb-2': !state.isFullscreen }">
+                    <span class="text-bg-800 shadow-lg rounded-1 m-1" t-att-class="{ 'p-4 fs-4': state.isFullscreen, 'p-2': !state.isFullscreen }" t-foreach="rtc.notifications.values()" t-as="notification" t-key="notification.id" t-esc="notification.text"/>
+                </div>
+            </div>
+            <div t-if="state.sidebar and props.thread.activeRtcSession" class="o-discuss-Call-sidebar d-flex align-items-center h-100 flex-column">
+                <CallParticipantCard t-foreach="visibleCards" t-as="cardData" t-key="cardData.key"
+                    cardData="cardData"
+                    className="'o-discuss-Call-sidebarCard w-100'"
+                    thread="props.thread"
+                />
+            </div>
+            <CallParticipantCard
+                t-if="props.thread.videoCount > 0 and state.insetCard"
+                cardData="state.insetCard"
+                className="'o-discuss-Call-mainCardStyle'"
+                thread="props.thread"
+                inset.bind="setInset"
+            />
+        </div>
+    </t>
+
+</templates>

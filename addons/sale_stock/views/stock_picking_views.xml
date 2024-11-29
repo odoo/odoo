@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="sale_stock_help_message_template" inherit_id="stock.help_message_template">
+        <xpath expr="//p[@name='top_help_message']/t[@name='delivery_message']" position="replace">
+            <t t-if="picking_type_code == 'outgoing'">
+                No delivery yet! Automate them with sales orders.
+            </t>
+        </xpath>
+        <xpath expr="//p[@name='bottom_help_message']/t[@name='delivery_message']" position="replace">
+            <t t-if="picking_type_code == 'outgoing'">
+                Reduce back orders with reservations, locations management, smart
+                replenishment propositions, shipping connectors, barcode scanner, etc.
+            </t>
+        </xpath>
+        <xpath expr="//p[@name='bottom_help_message']" position="after">
+            <a t-if="picking_type_code == 'outgoing'" class="btn btn-secondary" name="sale.action_orders" type="action">Sales Orders</a>
+        </xpath>
+    </template>
+    <record model="ir.ui.view" id="view_picking_form">
+    <field name="name">sale.stock.view.picking.form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"></field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='group_id']" position="after">
+                <field name="sale_id"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

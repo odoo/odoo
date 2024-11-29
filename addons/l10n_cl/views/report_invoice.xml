@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- this header can be used on any Chilean report -->
+    <template id="custom_header">
+
+        <t t-set="report_date" t-value="o.invoice_date"/>
+        <t t-set="report_number" t-value="int(o.l10n_latam_document_number)"/>
+        <t t-set="pre_printed_report" t-value="report_type == 'pdf'"/>
+        <t t-set="report_name" t-value="o.l10n_latam_document_type_id.name"/>
+        <t t-set="header_address" t-value="o.company_id.partner_id"/>
+        <t t-set="custom_footer">
+            <t t-call="l10n_cl.custom_footer"/>
+        </t>
+
+        <div>
+            <div class="row">
+                <div name="left-upper-side" class="col-8">
+                    <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)"
+                         style="max-height: 45px;" alt="Logo"/>
+                    <br/>
+                    <strong>
+                        <span t-field="o.company_id.partner_id.name"/>
+                    </strong>
+                    <br/>
+                    <span name="company_activity" class="fst-italic" t-field="o.company_id.report_header"/>
+                    <div/>
+                    <t t-out="' - '.join([item for item in [
+                        ', '.join([item for item in [header_address.street, header_address.street2] if item]),
+                        header_address.city,
+                        header_address.state_id and header_address.state_id.name,
+                        header_address.zip,
+                        header_address.country_id and header_address.country_id.name] if item])"/>
+                    <span t-if="header_address.phone">
+                        <br/>
+                    </span>
+                    <span t-if="header_address.phone" style="white-space: nowrap;"
+                          t-out="'Tel: ' + header_address.phone"/>
+                    <span t-if="header_address.website">
+                        <span t-att-style="'color: %s;' % o.company_id.primary_color"
+                              t-out="'- Web: %s' %' - '.join([item for item in [header_address.website.replace('https://', '').replace('http://', ''), header_address.email] if item])"/>
+                    </span>
+                </div>
+                <div name="right-upper-side" class="col-4">
+                    <div class="row">
+                        <div name="right-upper-side" class="col-12">
+                            <div class="row border border-4 border-dark" style="max-width: 100%;">
+                                <div class="col-12 text-center">
+                                    <h6 style="color: black;">
+                                        <strong>
+                                            <br/>
+                                            <span style="font-family:arial; line-height: 180%;">RUT:</span>
+                                            <t t-if="o.company_id.partner_id.vat">
+                                                <span style="font-family:arial;" t-out="o.company_id.partner_id._format_dotted_vat_cl(o.company_id.partner_id.vat)"/>
+                                            </t>
+                                            <br/>
+                                            <span style="font-family:arial;" class="text-uppercase" t-out="report_name"/>
+                                            <br/>
+                                            <span>Nº:</span>
+                                            <span style="font-family:arial;line-height: 200%;" t-out="report_number"/>
+                                        </strong>
+                                    </h6>
+                                </div>
+                            </div>
+                            <div class="row text-center">
+                                <div class="col-12 text-center" t-att-style="'color: %s;' % o.company_id.primary_color"
+                                     name="regional-office"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </template>
+
+
+    <template id="informations">
+        <div id="informations" class="row mt8 mb8">
+            <div class="col-6">
+                <strong>
+                    <span t-att-style="'color: %s;' % o.company_id.secondary_color">Date:</span>
+                </strong>
+                <span t-out="o.invoice_date" t-options='{"widget": "date"}'/>
+                <br/>
+
+                <strong>Customer:</strong>
+                <span t-out="o.partner_id.commercial_partner_id.name or o.partner_id.name"/>
+                <br/>
+
+                <t t-if="o.partner_id.vat and o.partner_id.l10n_latam_identification_type_id">
+                    <strong>
+                        <t t-out="o.partner_id.l10n_latam_identification_type_id.name or o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>:
+                    </strong>
+                    <span t-out="o.partner_id.vat"/>
+                    <br/>
+                </t>
+                <strong>Address:</strong>
+                <span t-out="o.partner_id._display_address(without_company=True)"/>
+            </div>
+            <div class="col-6">
+                <strong>Due Date:</strong>
+                <span t-out="o.invoice_date_due" t-options='{"widget": "date"}'/>
+                <br/>
+
+                <t t-if="o.invoice_incoterm_id">
+                    <br/>
+                    <strong>Incoterm:</strong>
+                    <span t-field="o.invoice_incoterm_id.name"/>
+                </t>
+
+                <t t-if="o.partner_shipping_id and o.partner_id not in o.partner_shipping_id" >
+                    <br/>
+                    <strong>Delivery Address:</strong>
+                    <span t-out="o.partner_shipping_id._display_address(without_company=True)"/>
+                </t>
+                <br/>
+                <strong>GIRO:</strong>
+                <span t-out="o.partner_id.industry_id.name or ''"/>
+            </div>
+        </div>
+        <div id="references" class="row">
+            <div name="references" class="col-12 text-center"/>
+        </div>
+    </template>
+
+    <template id="custom_footer">
+        <div name="footer_left_column" class="col-8 text-center"/>
+    </template>
+
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
+
+        <t t-set="o" position="after">
+            <t t-set="custom_header" t-value="'l10n_cl.custom_header'"/>
+        </t>
+
+        <!-- remove default partner address -->
+        <xpath expr="//div[@name='address_not_same_as_shipping']" position="replace">
+            <div name="address_not_same_as_shipping"/>
+        </xpath>
+        <xpath expr="//div[@name='address_same_as_shipping']" position="replace">
+            <div name="address_same_as_shipping"/>
+        </xpath>
+        <xpath expr="//div[@name='no_shipping']" position="replace">
+            <div name="no_shipping"/>
+        </xpath>
+
+        <xpath expr="//t[@t-set='layout_document_title']" position="replace"/>
+
+        <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" position="before">
+            <t t-set="line_amounts" t-value="line._l10n_cl_get_line_amounts()"/>
+        </t>
+
+        <xpath expr="//span[@t-field='line.price_unit']" position="before">
+            <t t-if="'second_currency' in line_amounts" t-set="line_second_currency_round" t-value="line_amounts['second_currency']['round_currency']"/>
+        </xpath>
+
+        <xpath expr="//span[@t-field='line.price_unit']" position="attributes">
+            <attribute name="t-field"></attribute>
+            <attribute name="t-out">line_amounts['price_item_document']</attribute>
+            <attribute name="t-options">{"widget": "float", "precision": 2}</attribute>
+        </xpath>
+
+        <xpath expr="//th[@name='th_discount']" position="after">
+            <th name="th_discount_currency" t-if="display_discount" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                <span>Disc.</span>
+            </th>
+        </xpath>
+
+        <td name="td_discount" t-if="display_discount" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}" position="after">
+            <td name="td_discount_currency" t-if="display_discount" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}" position="after">
+                <span class="text-nowrap" t-out="line_amounts['total_discount']" t-options="{'widget': 'monetary', 'display_currency': line_amounts['main_currency']}"/>
+            </td>
+        </td>
+
+
+        <xpath expr="//span[@id='line_tax_ids']" position="attributes">
+            <attribute name="t-out">', '.join(map(lambda x: (x.description or x.name), line.tax_lines))</attribute>
+        </xpath>
+
+        <span t-field="line.price_subtotal" position="attributes">
+            <attribute name="t-field"/>
+            <attribute name="t-out">line_amounts['price_line_document']</attribute>
+            <attribute name="t-options">{"widget": "monetary", "display_currency": line_amounts['main_currency']}</attribute>
+        </span>
+
+        <xpath expr="//th[@name='th_taxes']" position="replace"/>
+        <xpath expr="//span[@id='line_tax_ids']/.." position="replace"/>
+
+        <!-- To remove? <div name="payment_term" position="replace"/>-->
+        <xpath expr="//span[@t-field='o.payment_reference']/../.." position="replace"/>
+
+        <!-- replace information section and usage chilean style -->
+        <div id="informations" position="replace">
+            <t t-call="l10n_cl.informations"/>
+        </div>
+
+        <xpath expr="//div[@id='right-elements']" position="after">
+            <div name="stamp" class="col-6 text-center"/>
+        </xpath>
+
+        <xpath expr="//div[@id='right-elements']" position="inside">
+            <div class="row">
+                <div class="col-12 text-center" t-if="o.l10n_latam_document_type_id.code == '39'" name="vat_boleta">
+                    The VAT tax of this boleta is: <span t-out="o._l10n_cl_get_amounts()['vat_amount']" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>.
+                </div>
+                <div name="transferable-table" class="col-6"/>
+                <div name="transferable-legend" class="col-6 text-end"/>
+            </div>
+        </xpath>
+
+        <xpath expr="//span[@t-field='line.name']" position="replace">
+            <t t-set="all_taxes" t-value="'all_taxes'"/>
+            <t t-if="'second_currency' in line_amounts" t-set="line_second_currency_round" t-value="line_amounts['second_currency']['round_currency']"/>
+            <span t-out="line_amounts['line_description']" t-options="{'widget': 'text'}"/>
+        </xpath>
+
+        <t t-call="account.document_tax_totals" position="attributes">
+            <attribute name="t-call">l10n_cl.tax_totals_widget</attribute>
+        </t>
+
+    </template>
+
+    <!-- FIXME: Temp fix to allow fetching invoice_documemt in Studio Reports with localisation -->
+    <template id="report_invoice" inherit_id="account.report_invoice">
+        <xpath expr="//t[@t-call='account.report_invoice_document']" position="after">
+            <t t-if="o._get_name_invoice_report() == 'l10n_cl.report_invoice_document'"
+                t-call="l10n_cl.report_invoice_document" t-lang="lang"/>
+        </xpath>
+
+    </template>
+
+    <template id="tax_totals_widget" inherit_id="account.document_tax_totals" primary="True">
+        <t t-foreach="tax_totals['subtotals']" t-as="subtotal" position="replace">
+            <t t-set="subtotal_amounts" t-value="o._l10n_cl_get_amounts()"/>
+            <t t-set="withholdings" t-value="o._l10n_cl_get_withholdings()"/>
+            <t t-if="subtotal_amounts['subtotal_amount_taxable'] != 0.0">
+                <tr class="border-black is-subtotal"><td><strong>Net Amount</strong></td><td class="text-end oe_subtotal_footer_separator" t-out="subtotal_amounts['subtotal_amount_taxable']" t-options="{'widget': 'monetary', 'display_currency': subtotal_amounts['main_currency']}"/></tr>
+            </t>
+            <t t-if="subtotal_amounts['subtotal_amount_exempt'] != 0.0">
+                <tr class="border-black is-subtotal">
+                    <td><strong>Exempt Amount</strong></td>
+                    <td class="text-end oe_subtotal_footer_separator" t-out="subtotal_amounts['subtotal_amount_exempt']"
+                        t-options="{'widget': 'monetary', 'display_currency': subtotal_amounts['main_currency']}"/>
+                </tr>
+            </t>
+            <t t-if="subtotal_amounts['vat_amount'] != 0.0">
+                <tr>
+                    <td t-out="'VAT %s' % subtotal_amounts['vat_percent']"/>
+                    <td class="text-end" t-out="subtotal_amounts['vat_amount']"
+                        t-options="{'widget': 'monetary', 'display_currency': subtotal_amounts['main_currency']}"/></tr>
+            </t>
+            <t t-foreach="withholdings" t-as="wh">
+                <tr>
+                    <td t-out="'%s (base %s)' % (wh['tax_name'], o._format_lang_totals(wh['tax_base'], subtotal_amounts['main_currency']))"/>
+                    <td class="text-end" t-out="wh['tax_amount']" t-options="{'widget': 'monetary', 'display_currency': subtotal_amounts['main_currency']}"/></tr>
+            </t>
+        </t>
+        <tr class="o_total" position="replace">
+            <tr class="o_total">
+                <td><strong>Total</strong></td>
+                <td class="text-end">
+                    <span t-out="subtotal_amounts['total_amount']" t-options="{'widget': 'monetary', 'display_currency': subtotal_amounts['main_currency']}"/>
+                </td>
+            </tr>
+        </tr>
+    </template>
+
+</odoo>

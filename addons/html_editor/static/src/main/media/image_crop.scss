@@ -1,0 +1,61 @@
+
+.o_we_crop_widget {
+    background-color: rgba(128, 128, 128, 0.5);
+    @include o-position-absolute(0, 0, 0, 0);
+    /* This value must be higher than dialog z-index in bootstrap */
+    z-index: 1056;
+    overflow: auto;
+
+    .o_we_cropper_wrapper {
+        position: absolute;
+    }
+
+    .o_we_crop_buttons {
+        margin-top: 0.5rem;
+        display: flex;
+        flex-wrap: wrap;
+        bottom: 1rem;
+
+        input[type=radio] {
+            display: none;
+        }
+
+        .btn-group {
+            border-radius: 0.25rem;
+            margin: 0.1rem;
+        }
+
+        button, label {
+            cursor: pointer !important;
+            padding: 0.2rem 0.3rem;
+        }
+
+        label {
+            display: flex;
+            align-items: center;
+
+            &.active {
+                background-color: $o-we-bg-darkest;
+            }
+        }
+
+        button:not(.btn), label {
+            margin: 0;
+            border: none;
+            border-right: 1px solid $o-we-bg;
+            background-color: $o-we-bg;
+            color: $o-we-color;
+
+            &:first-child {
+                border-top-left-radius: 0.25rem;
+                border-bottom-left-radius: 0.25rem;
+            }
+
+            &:last-child {
+                border-top-right-radius: 0.25rem;
+                border-bottom-right-radius: 0.25rem;
+                border-right: none;
+            }
+        }
+    }
+}

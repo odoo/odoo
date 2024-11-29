@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem name="eLearning"
+        id="website_slides_menu_root"
+        web_icon="website_slides,static/description/icon.png"
+        groups="website_slides.group_website_slides_officer"
+        action="slide_channel_action_overview"
+        sequence="100"/>
+
+    <!-- Main top menu elements -->
+    <menuitem name="Courses"
+        id="website_slides_menu_courses"
+        parent="website_slides_menu_root"
+        sequence="1"/>
+    <menuitem name="Reporting"
+        id="website_slides_menu_report"
+        parent="website_slides_menu_root"
+        groups="website_slides.group_website_slides_manager"
+        sequence="9"/>
+    <menuitem name="Configuration"
+        id="website_slides_menu_configuration"
+        parent="website_slides_menu_root"
+        sequence="99"/>
+    
+    <!-- Courses sub-menu -->
+    <menuitem name="Courses"
+        id="website_slides_menu_courses_courses"
+        parent="website_slides_menu_courses"
+        sequence="1"
+        action="slide_channel_action_overview"/>
+    <menuitem name="Contents"
+        id="website_slides_menu_courses_content"
+        parent="website_slides_menu_courses"
+        sequence="2"
+        action="slide_slide_action"/>
+
+    <!-- Reporting sub-menu -->
+    <menuitem name="Courses"
+        id="website_slides_menu_report_courses"
+        parent="website_slides_menu_report"
+        sequence="1"
+        action="slide_channel_action_report"/>
+    <menuitem name="Contents"
+        id="website_slides_menu_report_contents"
+        parent="website_slides_menu_report"
+        sequence="2"
+        action="slide_slide_action_report"/>
+    <menuitem name="Attendees"
+        id="website_slides_menu_report_attendees"
+        parent="website_slides_menu_report"
+        sequence="5"
+        action="slide_channel_partner_action_report"/>
+    <menuitem name="Reviews"
+        id="website_slides_menu_report_reviews"
+        parent="website_slides_menu_report"
+        sequence="10"
+        action="rating_rating_action_slide_channel"/>
+    <menuitem name="Quizzes"
+        id="website_slides_menu_report_quizzes"
+        parent="website_slides_menu_report"
+        sequence="15"
+        action="slide_question_action_report"/>
+
+    <!-- Settings sub-menu -->
+    <menuitem name="Settings"
+        id="website_slides_menu_config_settings"
+        parent="website_slides_menu_configuration"
+        sequence="1"
+        action="website_slides_action_settings"
+        groups="base.group_system"/>
+    <menuitem name="Course Groups"
+        id="website_slides_menu_config_course_groups"
+        parent="website_slides_menu_configuration"
+        sequence="2"
+        action="slide_channel_tag_group_action"/>
+    <menuitem name="Content Tags"
+        id="website_slides_menu_config_content_tags"
+        parent="website_slides_menu_configuration"
+        sequence="3"
+        action="action_slide_tag"/>
+
+</odoo>

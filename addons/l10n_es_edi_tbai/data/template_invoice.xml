@@ -1,0 +1,269 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <template id="template_invoice_main_post">
+            <T:TicketBai xmlns:T="urn:ticketbai:emision">
+                <t t-call="l10n_es_edi_tbai.template_invoice_bundle"/>
+            </T:TicketBai>
+        </template>
+
+        <template id="template_invoice_main_cancel">
+            <T:AnulaTicketBai xmlns:T="urn:ticketbai:anulacion">
+                <t t-call="l10n_es_edi_tbai.template_invoice_bundle"/>
+            </T:AnulaTicketBai>
+        </template>
+
+        <template id="template_invoice_bundle">
+            <Cabecera>
+                <IDVersionTBAI t-out="tbai_version"/>
+            </Cabecera>
+            <t t-if="is_emission">
+                <Sujetos>
+                    <t t-call="l10n_es_edi_tbai.template_invoice_sujetos"/>
+                </Sujetos>
+                <Factura>
+                    <t t-call="l10n_es_edi_tbai.template_invoice_factura"/>
+                </Factura>
+            </t>
+            <t t-else="">
+                <IDFactura>
+                    <t t-call="l10n_es_edi_tbai.template_invoice_sujetos"/>
+                    <t t-call="l10n_es_edi_tbai.template_invoice_factura"/>
+                </IDFactura>
+            </t>
+            <HuellaTBAI>
+                <EncadenamientoFacturaAnterior t-if="chain_prev_document">
+                    <t t-set="seq_and_num" t-value="chain_prev_document._get_tbai_sequence_and_number()"/>
+                    <SerieFacturaAnterior t-out="seq_and_num[0]"/>
+                    <NumFacturaAnterior t-out="seq_and_num[1]"/>
+                    <t t-set="sig_and_date" t-value="chain_prev_document._get_tbai_signature_and_date()"/>
+                    <FechaExpedicionFacturaAnterior t-out="format_date(sig_and_date[1])"/>
+                    <SignatureValueFirmaFacturaAnterior t-out="sig_and_date[0][:100]"/>
+                </EncadenamientoFacturaAnterior>
+                <Software>
+                    <LicenciaTBAI t-out="license_number"/>
+                    <EntidadDesarrolladora>
+                        <NIF t-out="license_nif"/>
+                    </EntidadDesarrolladora>
+                    <Nombre t-out="software_name"/>
+                    <Version t-out="software_version"/>
+                </Software>
+                <NumSerieDispositivo>TEST-DEVICE-001</NumSerieDispositivo>
+            </HuellaTBAI>
+        </template>
+
+        <template id="template_invoice_sujetos">
+            <Emisor>
+                <NIF t-out="sender_vat"/>
+                <ApellidosNombreRazonSocial t-out="sender.name"/>
+            </Emisor>
+            <Destinatarios t-if="is_emission and recipient">
+                <IDDestinatario>
+                    <NIF t-if="recipient.get('nif')" t-out="recipient['nif']"/>
+                    <IDOtro t-else="">
+                        <CodigoPais t-if="recipient.get('alt_id_country')" t-out="recipient['alt_id_country']"/>
+                        <IDType t-out="recipient['alt_id_type']"/>
+                        <ID t-out="recipient['alt_id_number']"/>
+                    </IDOtro>
+                    <t t-set="partner" t-value="recipient['partner']"/>
+                    <ApellidosNombreRazonSocial t-out="partner.name"/>
+                    <CodigoPostal t-out="partner.zip"/>
+                    <Direccion t-out="recipient['partner_address']"/>
+                </IDDestinatario>
+            </Destinatarios>
+            <VariosDestinatarios t-if="is_emission">N</VariosDestinatarios> <!-- Odoo does not support multi-recipient invoices (TBAI does)-->
+            <EmitidaPorTercerosODestinatario t-if="is_emission">N</EmitidaPorTercerosODestinatario>
+        </template>
+
+        <template id="template_invoice_factura">
+            <CabeceraFactura>
+                <t t-set="seq_and_num" t-value="doc._get_tbai_sequence_and_number()"/>
+                <SerieFactura t-out="seq_and_num[0]"/>
+                <NumFactura t-out="seq_and_num[1]"/>
+                <t t-if="is_emission">
+                    <FechaExpedicionFactura t-out="format_date(datetime_now)"/>
+                    <HoraExpedicionFactura t-out="format_time(datetime_now)"/>
+                    <FacturaSimplificada t-out="'S' if is_simplified else 'N'"/>
+                </t>
+                <FechaExpedicionFactura t-else="" t-out="format_date(post_doc._get_tbai_signature_and_date()[1])"/>
+                <t t-if="is_refund and is_emission">
+                    <FacturaEmitidaSustitucionSimplificada t-out="'S' if (is_simplified and recipient) else 'N'"/>
+                    <FacturaRectificativa>
+                        <Codigo t-out="refund_reason"/>
+                        <Tipo>I</Tipo>
+                        <!-- NOTE: could also allow credit note Tipo 'S' (optional, tipo I already supported by SII)
+                        <ImporteRectificacionSustitutiva>
+                            <BaseRectificada>180.00</BaseRectificada>
+                            <CuotaRectificada>20.21</CuotaRectificada>
+                        </ImporteRectificacionSustitutiva> -->
+                    </FacturaRectificativa>
+                    <FacturasRectificadasSustituidas>
+                        <IDFacturaRectificadaSustituida>
+                            <!-- NOTE: could support issuing a single credit note for multiple invoices (optional) -->
+                            <t t-set="seq_and_num" t-value="refunded_doc._get_tbai_sequence_and_number()"/>
+                            <SerieFactura t-out="seq_and_num[0]"/>
+                            <NumFactura t-out="seq_and_num[1]"/>
+                            <FechaExpedicionFactura t-out="format_date(refunded_doc.xml_attachment_id and refunded_doc._get_tbai_signature_and_date()[1] or refunded_doc_invoice_date)"/>
+                        </IDFacturaRectificadaSustituida>
+                    </FacturasRectificadasSustituidas>
+                </t>
+            </CabeceraFactura>
+            <DatosFactura t-if="is_emission">
+                <FechaOperacion t-if="delivery_date" t-out="format_date(delivery_date)"/>
+                <DescripcionFactura t-out="origin or 'manual'"/>
+                <DetallesFactura>
+                    <IDDetalleFactura t-foreach="base_lines" t-as="base_line">
+                        <DescripcionDetalle t-out="base_line['description']"/>
+                        <Cantidad t-out="format_float(base_line['quantity'], precision_digits=8)"/>
+                        <ImporteUnitario t-out="format_float(base_line['gross_price_unit'], precision_digits=8)"/>
+                        <Descuento t-out="format_float(base_line['discount_amount'], precision_digits=8)"/>
+                        <ImporteTotal t-out="format_float(base_line['price_total'], precision_digits=8)"/>
+                    </IDDetalleFactura>
+                </DetallesFactura>
+                <ImporteTotalFactura t-out="format_float(total_amount)"/>
+                <RetencionSoportada t-if="total_retention" t-out="format_float(-total_retention)"/>
+                <!-- <BaseImponibleACoste/> NOTE (only applicable with ClaveRegimenIvaOpTrascendencia 06, not supported yet) -->
+                <Claves>
+                    <IDClave t-foreach="regime_key" t-as="key">
+                        <ClaveRegimenIvaOpTrascendencia t-out="key"/>
+                    </IDClave>
+                </Claves>
+            </DatosFactura>
+            <TipoDesglose t-if="is_emission">
+                <DesgloseFactura t-if="'DesgloseFactura' in invoice_info">
+                    <t t-call="l10n_es_edi_tbai.template_invoice_desglose">
+                        <t t-set="desglose" t-value="invoice_info['DesgloseFactura']"/>
+                    </t>
+                </DesgloseFactura>
+                <DesgloseTipoOperacion t-else="">
+                    <t t-set="invoice_info" t-value="invoice_info['DesgloseTipoOperacion']"/>
+                    <PrestacionServicios t-if="invoice_info.get('PrestacionServicios')">
+                        <t t-call="l10n_es_edi_tbai.template_invoice_desglose">
+                            <t t-set="desglose" t-value="invoice_info['PrestacionServicios']"/>
+                        </t>
+                    </PrestacionServicios>
+                    <Entrega t-if="invoice_info.get('Entrega')">
+                        <t t-call="l10n_es_edi_tbai.template_invoice_desglose">
+                            <t t-set="desglose" t-value="invoice_info['Entrega']"/>
+                        </t>
+                    </Entrega>
+                </DesgloseTipoOperacion>
+            </TipoDesglose>
+        </template>
+
+        <template id="template_invoice_desglose">
+            <Sujeta t-if="desglose.get('Sujeta')">
+                <t t-set="sujeta" t-value="desglose['Sujeta']"/>
+                <Exenta t-if="sujeta.get('Exenta')">
+                    <DetalleExenta t-foreach="sujeta['Exenta']['DetalleExenta']" t-as="exenta">
+                        <CausaExencion t-out="exenta['CausaExencion']"/>
+                        <BaseImponible t-out="format_float(exenta['BaseImponible'])"/>
+                    </DetalleExenta>
+                </Exenta>
+                <NoExenta t-if="sujeta.get('NoExenta')">
+                    <DetalleNoExenta t-if="desglose['S1']">
+                        <TipoNoExenta t-out="'S1'"/>
+                        <DesgloseIVA>
+                            <DetalleIVA t-foreach="desglose['S1']" t-as="detalle">
+                                <BaseImponible t-out="format_float(detalle['BaseImponible'])"/>
+                                <TipoImpositivo t-out="format_float(detalle['TipoImpositivo'])"/>
+                                <CuotaImpuesto t-out="format_float(detalle['CuotaRepercutida'])"/>
+                                <TipoRecargoEquivalencia t-if="detalle.get('TipoRecargoEquivalencia')" t-out="format_float(detalle['TipoRecargoEquivalencia'])"/>
+                                <CuotaRecargoEquivalencia t-if="detalle.get('CuotaRecargoEquivalencia')" t-out="format_float(detalle['CuotaRecargoEquivalencia'])"/>
+                                <OperacionEnRecargoDeEquivalenciaORegimenSimplificado t-out="'S' if is_simplified else 'N'"/>
+                            </DetalleIVA>
+                        </DesgloseIVA>
+                    </DetalleNoExenta>
+                    <DetalleNoExenta t-if="desglose['S2']">
+                        <TipoNoExenta t-out="'S2'"/>
+                        <DesgloseIVA>
+                            <DetalleIVA t-foreach="desglose['S2']" t-as="detalle">
+                                <BaseImponible t-out="format_float(detalle['BaseImponible'])"/>
+                            </DetalleIVA>
+                        </DesgloseIVA>
+                    </DetalleNoExenta>
+                </NoExenta>
+            </Sujeta>
+            <NoSujeta t-if="desglose.get('NoSujeta')">
+                <t t-set="no_sujeta" t-value="desglose['NoSujeta']"/>
+                <DetalleNoSujeta>
+                    <Causa t-out="nosujeto_causa"/>
+                    <!-- NOTE: Causa should be 
+                        'OT' if 'the' ClaveRegimenIvaOpTrascendencia == 10
+                        'RL' if 'some' ClaveRegimenIvaOpTrascendencia == 08
+                    BUT those are not supported yet-->
+                    <Importe t-out="no_sujeta.get('ImportePorArticulos7_14_Otros')"/>
+                    <Importe t-out="no_sujeta.get('ImporteTAIReglasLocalizacion')"/>
+                </DetalleNoSujeta>
+            </NoSujeta>
+        </template>
+
+        <template id="template_digital_signature">
+            <ds:Signature t-att-Id="dsig['signature_id']" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+                <ds:SignedInfo>
+                    <ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+                    <ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+                    <ds:Reference t-att-Id="dsig['reference_uri']" Type="http://www.w3.org/2000/09/xmldsig#Object" URI="">
+                        <ds:Transforms>
+                            <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                        </ds:Transforms>
+                        <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                        <ds:DigestValue></ds:DigestValue>
+                    </ds:Reference>
+                    <ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" t-attf-URI="##{dsig['sigproperties_id']}">
+                        <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                        <ds:DigestValue></ds:DigestValue>
+                    </ds:Reference>
+                    <ds:Reference t-attf-URI="##{dsig['keyinfo_id']}">
+                        <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                        <ds:DigestValue></ds:DigestValue>
+                    </ds:Reference>
+                </ds:SignedInfo>
+                <ds:SignatureValue></ds:SignatureValue>
+                <ds:KeyInfo t-att-Id="dsig['keyinfo_id']">
+                    <ds:X509Data>
+                        <ds:X509Certificate t-out="dsig['x509_certificate']"/>
+                    </ds:X509Data>
+                    <ds:KeyValue>
+                        <ds:RSAKeyValue>
+                            <ds:Modulus t-out="dsig['public_modulus']"/>
+                            <ds:Exponent t-out="dsig['public_exponent']"/>
+                        </ds:RSAKeyValue>
+                    </ds:KeyValue>
+                </ds:KeyInfo>
+                <ds:Object>
+                    <xades:QualifyingProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" t-attf-Target="##{dsig['signature_id']}">
+                        <xades:SignedProperties t-att-Id="dsig['sigproperties_id']">
+                            <xades:SignedSignatureProperties>
+                                <xades:SigningTime t-out="dsig['iso_now']"/>
+                                <xades:SigningCertificateV2>
+                                    <xades:Cert>
+                                        <xades:CertDigest>
+                                            <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                                            <ds:DigestValue t-out="dsig['sigcertif_digest']"/>
+                                        </xades:CertDigest>
+                                        <xades:IssuerSerial>
+                                            <ds:X509IssuerName t-out="dsig['x509_issuer_description']"/>
+                                            <ds:X509SerialNumber t-out="dsig['x509_serial_number']"/>
+                                        </xades:IssuerSerial>
+                                    </xades:Cert>
+                                </xades:SigningCertificateV2>
+                                <xades:SignaturePolicyIdentifier>
+                                    <xades:SignaturePolicyId>
+                                        <xades:SigPolicyId>
+                                            <xades:Identifier t-out="dsig['sigpolicy_url']"/>
+                                        </xades:SigPolicyId>
+                                        <xades:SigPolicyHash>
+                                            <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                                            <ds:DigestValue t-out="dsig['sigpolicy_digest']"/>
+                                        </xades:SigPolicyHash>
+                                    </xades:SignaturePolicyId>
+                                </xades:SignaturePolicyIdentifier>
+                            </xades:SignedSignatureProperties>
+                        </xades:SignedProperties>
+                    </xades:QualifyingProperties>
+                </ds:Object>
+            </ds:Signature>
+        </template>
+    </data>
+</odoo>

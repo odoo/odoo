@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="project.ProjectTaskNameWithSubtaskCountCharField" t-inherit="web.CharField" t-inherit-mode="primary">
+        <xpath expr="//span[@t-esc='formattedValue']" position="after">
+            <span class="text-muted ms-2 fw-normal">
+                <t t-if="props.record.data.subtask_count">
+                    (<t t-out="props.record.data.closed_subtask_count"/>/<t t-out="props.record.data.subtask_count"/> sub-tasks)
+                </t>
+            </span>
+        </xpath>
+    </t>
+
+</templates>

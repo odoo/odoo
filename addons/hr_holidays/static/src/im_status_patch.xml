@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.ImStatus" t-inherit-mode="extension">
+        <xpath expr="//*[@name='icon']" position="replace">
+            <i t-if="persona.im_status === 'leave_online'" class="fa fa-plane text-success" title="Online" role="img" aria-label="User is online"/>
+            <i t-elif="persona.im_status === 'leave_away'" class="fa fa-plane o-away" title="Idle" role="img" aria-label="User is idle"/>
+            <i t-elif="persona.im_status === 'leave_offline'" class="fa fa-plane text-700" title="Out of office" role="img" aria-label="User is out of office"/>
+            <t t-else="">$0</t>
+        </xpath>
+    </t>
+</templates>

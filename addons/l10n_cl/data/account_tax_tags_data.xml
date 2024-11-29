@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="tag_cl_sale_mnt_iva" model="account.account.tag">
+            <!-- TotMntIVA -->
+            <field name="name">Ventas - Amount VAT</field>
+            <field name="applicability">taxes</field>
+            <field name="country_id" ref="base.cl"/>
+        </record>
+
+        <record id="tag_cl_sale_mnt_fuera_plazo" model="account.account.tag">
+            <!-- TotIVAFueraPlazo -->
+            <field name="name">Sales - VAT Out of Time</field>
+            <field name="applicability">taxes</field>
+            <field name="country_id" ref="base.cl"/>
+        </record>
+
+        <record id="tag_cl_sale_iva_propio" model="account.account.tag">
+            <!-- TotIVAPropio -->
+            <field name="name">Sales - Own VAT</field>
+            <field name="applicability">taxes</field>
+            <field name="country_id" ref="base.cl"/>
+        </record>
+
+        <record id="tag_cl_sale_iva_terceros" model="account.account.tag">
+            <!-- TotIVATerceros -->
+            <field name="name">Ventas - IVA Terceros</field>
+            <field name="applicability">taxes</field>
+            <field name="country_id" ref="base.cl"/>
+        </record>
+
+        <record id="tag_cl_sale_iva_18211" model="account.account.tag">
+            <!-- TotLey18211 -->
+            <field name="name">Sales - VAT Law 18211</field>
+            <field name="applicability">taxes</field>
+            <field name="country_id" ref="base.cl"/>
+        </record>
+
+        <record id="tag_cl_sale_otros_imp" model="account.account.tag">
+            <!-- TotOtrosImp -->
+            <field name="name">Sales - Other Taxes</field>
+            <field name="applicability">taxes</field>
+            <field name="country_id" ref="base.cl"/>
+        </record>
+
+        <record id="tag_cl_sale_iva_ret_total" model="account.account.tag">
+            <!-- TotIVARetTotal -->
+            <field name="name">Ventas - IVA Retenido Total</field>
+            <field name="applicability">taxes</field>
+            <field name="country_id" ref="base.cl"/>
+        </record>
+
+        <record id="tag_cl_sale_iva_ret_parcial" model="account.account.tag">
+            <!-- TotIVARetParcial -->
+            <field name="name">Ventas - IVA Retenido Parcial</field>
+            <field name="applicability">taxes</field>
+            <field name="country_id" ref="base.cl"/>
+        </record>
+
+        <record id="tag_cl_sale_cred_ec" model="account.account.tag">
+            <!-- TotCredEC -->
+            <field name="name">Sales - Special Credit 65% Construction Companies</field>
+            <field name="applicability">taxes</field>
+            <field name="country_id" ref="base.cl"/>
+        </record>
+
+        <record id="tag_cl_sale_dep_env" model="account.account.tag">
+            <!-- TotDepEnvase -->
+            <field name="name">Sales - Container Depot</field>
+            <field name="applicability">taxes</field>
+            <field name="country_id" ref="base.cl"/>
+        </record>
+
+        <record id="tag_cl_sale_iva_comisiones" model="account.account.tag">
+            <!-- TotValComIVA -->
+            <field name="name">Sales - VAT Commissions and Other Charges</field>
+            <field name="applicability">taxes</field>
+            <field name="country_id" ref="base.cl"/>
+        </record>
+
+        <record id="tag_cl_sale_iva_no_retenido" model="account.account.tag">
+            <!-- TotOpIVANoRetenido -->
+            <field name="name">Ventas - IVA No Retenido</field>
+            <field name="applicability">taxes</field>
+            <field name="country_id" ref="base.cl"/>
+        </record>
+
+        <record id="tag_cl_purchase_mnt_iva" model="account.account.tag">
+            <!-- TotMntIVA -->
+            <field name="name">Purchases - Amount of Recoverable VAT</field>
+            <field name="applicability">taxes</field>
+            <field name="country_id" ref="base.cl"/>
+        </record>
+
+        <record id="tag_cl_purchase_mnt_iva_actf" model="account.account.tag">
+            <!-- TotMntIVAActivoFijo -->
+            <field name="name">Purchases - Fixed VAT Amount</field>
+            <field name="applicability">taxes</field>
+            <field name="country_id" ref="base.cl"/>
+        </record>
+
+        <record id="tag_cl_purchase_mnt_iva_actf_uso_comun" model="account.account.tag">
+            <!-- TotMntIVAActivoFijo -->
+            <field name="name">Purchases - Amount of Active Fixed VAT (Common Use)</field>
+            <field name="applicability">taxes</field>
+            <field name="country_id" ref="base.cl"/>
+        </record>
+
+        <record id="tag_cl_purchase_mnt_iva_actf_no_recup" model="account.account.tag">
+            <!-- TotMntIVAActivoFijo -->
+            <field name="name">Purchases - Amount of Active Fixed VAT (Non Deductible)</field>
+            <field name="applicability">taxes</field>
+            <field name="country_id" ref="base.cl"/>
+        </record>
+
+
+        <record id="tag_cl_purchase_mnt_iva_no_rec" model="account.account.tag">
+            <!-- TotMntIVANoRec -->
+            <field name="name">Purchases - Non Recoverable VAT Amount</field>
+            <field name="applicability">taxes</field>
+            <field name="country_id" ref="base.cl"/>
+        </record>
+
+        <record id="tag_cl_purchase_mnt_iva_uso_comun" model="account.account.tag">
+            <!-- TotMntIVANoRec -->
+            <field name="name">Purchases - Amount VAT Commun Use</field>
+            <field name="applicability">taxes</field>
+            <field name="country_id" ref="base.cl"/>
+        </record>
+
+        <record id="tag_cl_purchase_mnt_iva_supermercado" model="account.account.tag">
+            <field name="name">Shopping - VAT amount for Supermarket purchases</field>
+            <field name="applicability">taxes</field>
+            <field name="country_id" ref="base.cl"/>
+        </record>
+
+        <record id="tag_cl_purchase_mnt_otros_imp" model="account.account.tag">
+            <!-- TotOtrosImp -->
+            <field name="name">Purchases - Amount Other Taxes</field>
+            <field name="applicability">taxes</field>
+            <field name="country_id" ref="base.cl"/>
+        </record>
+
+        <record id="tag_cl_purchase_imp_sin_credito" model="account.account.tag">
+            <!-- TotImpSinCredito -->
+            <field name="name">Purchases - Taxes Without Credit</field>
+            <field name="applicability">taxes</field>
+            <field name="country_id" ref="base.cl"/>
+        </record>
+
+        <record id="tag_cl_purchase_iva_no_ret" model="account.account.tag">
+            <!-- TotIVANoRetenido -->
+            <field name="name">Purchases - VAT Not Withheld Purchasing fac</field>
+            <field name="applicability">taxes</field>
+            <field name="country_id" ref="base.cl"/>
+        </record>
+
+        <record id="tag_cl_purchase_imp_42" model="account.account.tag">
+            <!-- TotCredImp -->
+            <field name="name">Purchases - Credit Imp Art 42</field>
+            <field name="applicability">taxes</field>
+            <field name="country_id" ref="base.cl"/>
+        </record>
+
+        <record id="tag_cl_purchase_imp_sin_cred" model="account.account.tag">
+            <!-- TotImpSinCredito -->
+            <field name="name">Purchases - Tax No Credit</field>
+            <field name="applicability">taxes</field>
+            <field name="country_id" ref="base.cl"/>
+        </record>
+
+        <record id="tag_cl_purchase_iva_no_reten" model="account.account.tag">
+            <!-- TotIVANoRetenido -->
+            <field name="name">Purchases - VAT Not Withheld</field>
+            <field name="applicability">taxes</field>
+            <field name="country_id" ref="base.cl"/>
+        </record>
+
+        <record id="tag_cl_purchase_imp_vehic" model="account.account.tag">
+            <!-- TotImpVehiculo -->
+            <field name="name">Purchases - Motor Vehicle Tax</field>
+            <field name="applicability">taxes</field>
+            <field name="country_id" ref="base.cl"/>
+        </record>
+
+    </data>
+</odoo>

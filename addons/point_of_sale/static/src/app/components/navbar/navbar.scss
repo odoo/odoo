@@ -1,0 +1,46 @@
+.pos-leftheader, .pos-rightheader {
+    width: 45%;
+    &.pos-nav-small {
+        width: auto;
+    }
+}
+
+.navbar-height {
+    height: $navbar-height;
+}
+
+.pos-centerheader {
+    width: 10%;
+}
+
+.status-buttons {
+    .avatar {
+        height: 24px;
+    }
+}
+
+.menu {
+    z-index: $zindex-dropdown;
+}
+
+.sub-menu {
+    top: $navbar-height * 2/3;
+    right: $navbar-height * -1/3 ;
+}
+
+.dropdown-menu {
+    padding: 0;
+}
+
+.o-dropdown-item {
+    padding: map-get($spacers, 2);
+    border-radius: $border-radius;
+
+    &:hover {
+        background-color: $o-gray-200;
+    }
+}
+
+.o-dropdown--menu .dropdown-item.focus {
+    background-color: $o-gray-200;
+}

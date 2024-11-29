@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+
+    <record id="event_7_track_1_quiz" model="event.quiz">
+        <field name="name">What This Event Is All About</field>
+        <field name="event_track_id" ref="website_event_track.event_7_track_1"/>
+    </record>
+
+    <record id="event_7_track_1_question_0" model="event.quiz.question">
+        <field name="name">What will we talk about during this event?</field>
+        <field name="sequence">1</field>
+        <field name="quiz_id" ref="website_event_track_quiz.event_7_track_1_quiz"/>
+    </record>
+    <record id="event_7_track_1_question_0_0" model="event.quiz.answer">
+        <field name="text_value">Wood</field>
+        <field name="sequence">1</field>
+        <field name="awarded_points">1</field>
+        <field name="is_correct" eval="True"/>
+        <field name="comment">You're really smart!</field>
+        <field name="question_id" ref="event_7_track_1_question_0"/>
+    </record>
+    <record id="event_7_track_1_question_0_1" model="event.quiz.answer">
+        <field name="text_value">Music</field>
+        <field name="sequence">2</field>
+        <field name="comment">Even if there will be some.</field>
+        <field name="question_id" ref="event_7_track_1_question_0"/>
+    </record>
+    <record id="event_7_track_1_question_0_2" model="event.quiz.answer">
+        <field name="text_value">Open Source Apps</field>
+        <field name="sequence">3</field>
+        <field name="comment">OpenWood is not an Open Source congres about Apps.</field>
+        <field name="question_id" ref="event_7_track_1_question_0"/>
+    </record>
+    <record id="event_7_track_1_question_1" model="event.quiz.question">
+        <field name="name">Where does lumber comes from?</field>
+        <field name="sequence">2</field>
+        <field name="quiz_id" ref="website_event_track_quiz.event_7_track_1_quiz"/>
+    </record>
+    <record id="event_7_track_1_question_1_0" model="event.quiz.answer">
+        <field name="text_value">Trees!</field>
+        <field name="sequence">1</field>
+        <field name="awarded_points">1</field>
+        <field name="is_correct" eval="True"/>
+        <field name="question_id" ref="event_7_track_1_question_1"/>
+    </record>
+    <record id="event_7_track_1_question_1_1" model="event.quiz.answer">
+        <field name="text_value">Stores!</field>
+        <field name="sequence">2</field>
+        <field name="comment">Lumbers need first to be cut from trees!</field>
+        <field name="question_id" ref="event_7_track_1_question_1"/>
+    </record>
+
+    <record id="event_7_track_5_quiz" model="event.quiz">
+        <field name="name">Securing your Lumber during transport</field>
+        <field name="event_track_id" ref="website_event_track.event_7_track_5"/>
+    </record>
+
+    <record id="event_7_track_5_question_0" model="event.quiz.question">
+        <field name="name">Transporting lumber from stores to your house is safe.</field>
+        <field name="sequence">1</field>
+        <field name="quiz_id" ref="website_event_track_quiz.event_7_track_5_quiz"/>
+    </record>
+    <record id="event_7_track_5_question_0_0" model="event.quiz.answer">
+        <field name="text_value">Yes</field>
+        <field name="sequence">1</field>
+        <field name="comment">In order to avoid accident, you need to secure any product of this kind during transportation!</field>
+        <field name="question_id" ref="event_7_track_5_question_0"/>
+    </record>
+    <record id="event_7_track_5_question_0_1" model="event.quiz.answer">
+        <field name="text_value">No</field>
+        <field name="sequence">2</field>
+        <field name="awarded_points">1</field>
+        <field name="is_correct" eval="True"/>
+        <field name="comment">Even if you have a big trunk, some long products need to be secured.</field>
+        <field name="question_id" ref="event_7_track_5_question_0"/>
+    </record>
+    <record id="event_7_track_5_question_1" model="event.quiz.question">
+        <field name="name">What kind of tool are needed to secure your lumber?</field>
+        <field name="sequence">2</field>
+        <field name="quiz_id" ref="website_event_track_quiz.event_7_track_5_quiz"/>
+    </record>
+    <record id="event_7_track_5_question_1_0" model="event.quiz.answer">
+        <field name="text_value">Hammer</field>
+        <field name="sequence">1</field>
+        <field name="comment">Hammer won't be of any help here!</field>
+        <field name="question_id" ref="event_7_track_5_question_1"/>
+    </record>
+    <record id="event_7_track_5_question_1_1" model="event.quiz.answer">
+        <field name="text_value">Tie-down straps and other wooden blocks</field>
+        <field name="sequence">2</field>
+        <field name="awarded_points">1</field>
+        <field name="is_correct" eval="True"/>
+        <field name="question_id" ref="event_7_track_5_question_1"/>
+    </record>
+        <record id="event_7_track_5_question_1_2" model="event.quiz.answer">
+        <field name="text_value">Scotch tape</field>
+        <field name="sequence">3</field>
+        <field name="comment">Well, it could work but you will need a lot of tape!</field>
+        <field name="question_id" ref="event_7_track_5_question_1"/>
+    </record>
+
+    <record id="event_7_track_13_quiz" model="event.quiz">
+        <field name="name">Pretty. Ugly. Lovely.</field>
+        <field name="event_track_id" ref="website_event_track.event_7_track_13"/>
+    </record>
+
+    <record id="event_7_track_13_question_0" model="event.quiz.question">
+        <field name="name">What kind of wall is transformed here?</field>
+        <field name="sequence">1</field>
+        <field name="quiz_id" ref="website_event_track_quiz.event_7_track_13_quiz"/>
+    </record>
+    <record id="event_7_track_13_question_0_0" model="event.quiz.answer">
+        <field name="text_value">Concrete Blocks Wall</field>
+        <field name="sequence">1</field>
+        <field name="awarded_points">1</field>
+        <field name="is_correct" eval="True"/>
+        <field name="question_id" ref="event_7_track_13_question_0"/>
+    </record>
+    <record id="event_7_track_13_question_0_1" model="event.quiz.answer">
+        <field name="text_value">Steel Wall</field>
+        <field name="sequence">2</field>
+        <field name="question_id" ref="event_7_track_13_question_0"/>
+    </record>
+    <record id="event_7_track_13_question_0_2" model="event.quiz.answer">
+        <field name="text_value">Mud Wall</field>
+        <field name="sequence">3</field>
+        <field name="question_id" ref="event_7_track_13_question_0"/>
+    </record>
+
+    <record id="event.event_7" model="event.event">
+        <field name="community_menu" eval="True"/>
+    </record>
+
+    <record id="event_track_visitor_admin_event_7_track_1" model="event.track.visitor">
+        <field name="track_id" ref="website_event_track.event_7_track_1"/>
+        <field name="visitor_id" ref="website.website_visitor_0"/>
+        <field name="quiz_completed" eval="True"/>
+        <field name="quiz_points">3</field>
+    </record>
+
+    <record id="event_track_visitor_demo_event_7_track_1" model="event.track.visitor">
+        <field name="track_id" ref="website_event_track.event_7_track_1"/>
+        <field name="visitor_id" ref="website.website_visitor_1"/>
+        <field name="quiz_completed" eval="True"/>
+        <field name="quiz_points">2</field>
+    </record>
+
+    <record id="event_track_visitor_portal_event_7_track_1" model="event.track.visitor">
+        <field name="track_id" ref="website_event_track.event_7_track_1"/>
+        <field name="visitor_id" ref="website.website_visitor_2"/>
+        <field name="quiz_completed" eval="True"/>
+        <field name="quiz_points">1</field>
+    </record>
+
+</data></odoo>

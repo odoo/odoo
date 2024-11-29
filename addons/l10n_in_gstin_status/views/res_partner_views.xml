@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="l10n_in_view_partner_base_vat_form" model="ir.ui.view">
+            <field name="name">l10n.in.gstin.status.view.partner.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base_vat.view_partner_base_vat_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='vies_valid']" position="after">
+                    <span invisible="country_code != 'IN' or not vat">
+                        <span invisible="not l10n_in_gstin_verified_date or not l10n_in_gstin_verified_status"
+                            class="oe_inline text-success">Active</span>
+                        <span invisible="not l10n_in_gstin_verified_date or l10n_in_gstin_verified_status"
+                            class="oe_inline text-danger">Inactive</span>
+                        <span invisible="not l10n_in_gstin_verified_date and not l10n_in_gstin_verified_status" class="text-muted">
+                            (
+                            <field name="l10n_in_gstin_verified_date" widget="remaining_days" class="oe_inline" readonly="1" />
+                            <button name="action_l10n_in_verify_gstin_status" type="object" icon="fa-refresh"
+                                class="oe_link p-0 ps-2" title="Reverify GSTIN status" />
+                            )
+                        </span>
+                        <button string="Check Status" name="action_l10n_in_verify_gstin_status" type="object"
+                            icon="fa-check" class="oe_link p-0" title="Check GSTIN status"
+                            invisible="l10n_in_gstin_verified_date" />
+                    </span>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

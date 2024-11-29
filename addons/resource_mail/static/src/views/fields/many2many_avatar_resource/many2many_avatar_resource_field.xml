@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="resource_mail.AvatarResourceMany2XAutocomplete" t-inherit="web.AvatarMany2XAutocomplete">
+        <xpath expr="//span[hasclass('o_avatar_many2x_autocomplete')]/img" position="before">
+            <i t-if="option.resourceType === 'material'" class="o_material_resource fa fa-wrench rounded text-center me-1"/>
+        </xpath>
+        <xpath expr="//span[hasclass('o_avatar_many2x_autocomplete')]/img" position="attributes">
+            <attribute name="t-if" add="&amp;&amp; option.resourceType !== 'material'" separator=" "/>
+        </xpath>
+    </t>
+
+    <t t-name="resource_mail.Many2ManyAvatarResourceTagsList" t-inherit="mail.Many2ManyAvatarUserTagsList">
+        <xpath expr="//span[hasclass('o_tag')]/i" position="attributes">
+            <attribute name="t-on-click.stop.prevent">tag.onImageClicked</attribute>
+        </xpath>
+    </t>
+</templates>

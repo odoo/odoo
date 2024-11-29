@@ -1,0 +1,1389 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_hu_edi
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.4alpha1+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-06-07 13:56+0000\n"
+"PO-Revision-Date: 2024-06-07 13:56+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,help:l10n_hu_edi.field_res_company__l10n_hu_edi_server_mode
+#: model:ir.model.fields,help:l10n_hu_edi.field_res_config_settings__l10n_hu_edi_server_mode
+msgid ""
+"\n"
+"            - Production: Sends invoices to the NAV's production system.\n"
+"            - Test: Sends invoices to the NAV's test system.\n"
+"            - Demo: Mocks the NAV system (does not require credentials).\n"
+"        "
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,help:l10n_hu_edi.field_account_bank_statement_line__l10n_hu_invoice_chain_index
+#: model:ir.model.fields,help:l10n_hu_edi.field_account_move__l10n_hu_invoice_chain_index
+#: model:ir.model.fields,help:l10n_hu_edi.field_account_payment__l10n_hu_invoice_chain_index
+msgid ""
+"\n"
+"            Index in the chain of modification invoices:\n"
+"                -1 for a base invoice;\n"
+"                1, 2, 3, ... for modification invoices;\n"
+"                0 for rejected/cancelled invoices or if it has not yet been set.\n"
+"            "
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.product_template_form_view_l10n_hu_edi
+msgid "<span class=\"oe_inline o_form_label mx-3\"> : </span>"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.report_invoice_document
+msgid "<strong>Customer:</strong>"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.report_invoice_document
+msgid "<strong>Payment Mode:</strong>"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.report_invoice_document
+msgid "<strong>Shipping Address:</strong>"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.report_invoice_document
+msgid "<strong>Supplier:</strong>"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.document_tax_totals
+msgid "<strong>Total VAT amount in HUF</strong>"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_tax__l10n_hu_tax_type__aam
+msgid "AAM - Personal tax exemption"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_tax.py:0
+msgid "AAM Tax exempt"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__product_template__l10n_hu_product_code_type__ahk
+msgid "AHK - e-TKO Excise Duty Code"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_tax__l10n_hu_tax_type__antiques
+msgid "ANTIQUES - Profit-margin based regime for antique sales"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_tax__l10n_hu_tax_type__artwork
+msgid "ARTWORK - Profit-margin based regime for artwork sales"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_tax__l10n_hu_tax_type__atk
+msgid "ATK - Outside the scope of VAT"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_tax.py:0
+msgid "ATK Outside the scope of VAT - VAT tv.2-3.§"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model,name:l10n_hu_edi.model_account_chart_template
+msgid "Account Chart Template"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model,name:l10n_hu_edi.model_account_move_reversal
+msgid "Account Move Reversal"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model,name:l10n_hu_edi.model_account_move_send
+msgid "Account Move Send"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid ""
+"All advance invoices must be paid and sent to NAV before the final invoice "
+"is issued."
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_cancellation__code
+msgid "Annulment Code"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_cancellation__reason
+msgid "Annulment Reason"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.res_config_settings_form_inherit_l10n_hu_edi
+msgid "Authentication with NAV 3.0 successful."
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.report_invoice_document
+msgid "Bank Account:"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__l10n_hu_edi_tax_audit_export__selection_mode__date
+msgid "By date"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__l10n_hu_edi_tax_audit_export__selection_mode__name
+msgid "By serial number"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__product_template__l10n_hu_product_code_type__csk
+msgid "CSK - Packaging Catalogue Code"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid "Cancellation request failed."
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_move__l10n_hu_edi_state__cancel_pending
+msgid "Cancellation request pending"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_move__l10n_hu_edi_state__cancel_sent
+msgid "Cancellation request sent"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid "Cancellation request submitted, waiting for response."
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid ""
+"Cancellation request timed out. Please wait at least 6 minutes, then update "
+"the status."
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_move__l10n_hu_edi_state__cancelled
+msgid "Cancelled"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid ""
+"Cannot reset to draft or cancel invoice %s because an electronic document "
+"was already sent to NAV!"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__uom_uom__l10n_hu_edi_code__carton
+msgid "Carton"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_move__l10n_hu_payment_mode__cash
+msgid "Cash"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__res_company__l10n_hu_tax_regime__ca
+msgid "Cash Accounting"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,help:l10n_hu_edi.field_uom_uom__l10n_hu_edi_code
+msgid "Choose the corresponding code, or leave blank if none correspond."
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.l10n_hu_edi_cancellation_form
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.l10n_hu_edi_tax_audit_export_form
+msgid "Close"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model,name:l10n_hu_edi.model_res_company
+msgid "Companies"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model,name:l10n_hu_edi.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_move__l10n_hu_edi_state__confirmed
+msgid "Confirmed"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_move__l10n_hu_edi_state__confirmed_warning
+msgid "Confirmed with warnings"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/l10n_hu_edi_connection.py:0
+msgid "Connection to NAV servers timed out."
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model,name:l10n_hu_edi.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid ""
+"Could not acquire lock on invoices - is another user performing operations "
+"on them?"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid "Could not authenticate with NAV. Check your credentials and try again."
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid ""
+"Could not match NAV transaction_code %(code)s, index %(index)s to an invoice"
+" in Odoo"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/l10n_hu_edi_connection.py:0
+msgid "Could not parse time of previous transaction"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/__init__.py:0
+msgid ""
+"Could not set NAV tax types on taxes because some taxes from l10n_hu are missing.\n"
+"You should set the type manually or reload the CoA before sending invoices to NAV."
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_cancellation__create_uid
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_tax_audit_export__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_cancellation__create_date
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_tax_audit_export__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_move__l10n_hu_payment_mode__card
+msgid "Credit/debit card"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__uom_uom__l10n_hu_edi_code__cubic_meter
+msgid "Cubic meter"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_tax__l10n_hu_tax_type__domestic_reverse
+msgid "DOMESTIC_REVERSE - Domestic reverse-charge regime"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_tax_audit_export__date_from
+msgid "Date From"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_tax_audit_export__date_to
+msgid "Date To"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__uom_uom__l10n_hu_edi_code__day
+msgid "Day"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__res_company__l10n_hu_edi_server_mode__demo
+msgid "Demo"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_cancellation__display_name
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_tax_audit_export__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_tax__l10n_hu_tax_type__eam
+msgid ""
+"EAM - tax-exempt, extra-Community sales of goods (export of goods to a non-"
+"EU country)"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_tax.py:0
+msgid "EAM Product export to 3rd country - VAT tv.98-109.§"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__product_template__l10n_hu_product_code_type__ej
+msgid "EJ - Building Registry Number"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__l10n_hu_edi_cancellation__code__erratic_data
+msgid "ERRATIC_DATA - Erroneous data"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__l10n_hu_edi_cancellation__code__erratic_invoice_issue_date
+msgid "ERRATIC_INVOICE_ISSUE_DATE - Erroneous issue date"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__l10n_hu_edi_cancellation__code__erratic_invoice_number
+msgid "ERRATIC_INVOICE_NUMBER - Erroneous invoice number"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.report_invoice_document
+msgid "EU Tax ID:"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_tax__l10n_hu_tax_type__eue
+msgid "EUE - Non-reverse charge transaction performed in another Member State"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_tax.py:0
+msgid "EUE Sales made in a 2nd EU country"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_tax__l10n_hu_tax_type__eufad37
+msgid ""
+"EUFAD37 - Based on section 37 of the VAT Act, a reverse charge transaction "
+"carried out in another Member State"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_tax.py:0
+msgid "EUFAD37 § 37 (1) Reverse VAT in another EU country"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_tax__l10n_hu_tax_type__eufade
+msgid ""
+"EUFADE - Reverse charge transaction carried out in another Member State, not"
+" subject to Section 37 of the VAT Act"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_tax.py:0
+msgid ""
+"EUFADE Reverse charge of VAT in another EU country not VAT tv. § 37 (1)"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.res_config_settings_form_inherit_l10n_hu_edi
+msgid "Enter your e-invoicing credentials given by the Hungarian Authority."
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/l10n_hu_edi_connection.py:0
+msgid "Error during decryption of ExchangeToken."
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/res_company.py:0
+msgid "Error listing transactions while attempting transaction recovery."
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/res_company.py:0
+msgid "Error querying transaction while attempting transaction recovery."
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.l10n_hu_edi_tax_audit_export_form
+msgid "Export"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_tax_audit_export__filename
+msgid "File name"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_tax_audit_export__export_file
+msgid "Generated File"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.report_invoice_document
+msgid "Group Member Tax ID:"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_res_company__l10n_hu_group_vat
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_res_partner__l10n_hu_group_vat
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_res_users__l10n_hu_group_vat
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.report_invoice_document
+msgid "Group Tax ID"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_tax__l10n_hu_tax_type__ho
+msgid "HO - Transaction in a third country"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_tax.py:0
+msgid "HO Service to 3rd country"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.view_move_form_inherit_l10n_hu_edi
+msgid "Hide this message"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__uom_uom__l10n_hu_edi_code__hour
+msgid "Hour"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.res_config_settings_form_inherit_l10n_hu_edi
+msgid "Hungarian Electronic Invoicing"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.ui.menu,name:l10n_hu_edi.menu_finance_reports_hu
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.product_template_form_view_l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.view_partner_form_l10n_hu_edi
+msgid "Hungary"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_cancellation__id
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_tax_audit_export__id
+msgid "ID"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,help:l10n_hu_edi.field_res_company__l10n_hu_group_vat
+#: model:ir.model.fields,help:l10n_hu_edi.field_res_partner__l10n_hu_group_vat
+#: model:ir.model.fields,help:l10n_hu_edi.field_res_users__l10n_hu_group_vat
+msgid ""
+"If this company belongs to a VAT group, indicate the group's VAT number "
+"here."
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,help:l10n_hu_edi.field_product_product__l10n_hu_product_code
+#: model:ir.model.fields,help:l10n_hu_edi.field_product_template__l10n_hu_product_code
+msgid ""
+"If your product has a code in a standard nomenclature, you can indicate its "
+"code here."
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,help:l10n_hu_edi.field_product_product__l10n_hu_product_code_type
+#: model:ir.model.fields,help:l10n_hu_edi.field_product_template__l10n_hu_product_code_type
+msgid ""
+"If your product has a code in a standard nomenclature, you can indicate "
+"which nomenclature here."
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/res_company.py:0
+msgid ""
+"Incorrect NAV Credentials! Check that your company VAT number is set correctly. \n"
+"Error details: %s"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_bank_statement_line__l10n_hu_edi_batch_upload_index
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move__l10n_hu_edi_batch_upload_index
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_payment__l10n_hu_edi_batch_upload_index
+msgid "Index of invoice within a batch upload"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__res_company__l10n_hu_tax_regime__ie
+msgid "Individual Exemption"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/l10n_hu_edi_connection.py:0
+msgid "Invalid NAV response!"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_bank_statement_line__l10n_hu_invoice_chain_index
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move__l10n_hu_invoice_chain_index
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_payment__l10n_hu_invoice_chain_index
+msgid "Invoice Chain Index"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/l10n_hu_edi_connection.py:0
+msgid "Invoice Upload failed: NAV did not return a Transaction ID."
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_bank_statement_line__l10n_hu_edi_attachment
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move__l10n_hu_edi_attachment
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_payment__l10n_hu_edi_attachment
+msgid "Invoice XML file"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_bank_statement_line__l10n_hu_edi_attachment_filename
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move__l10n_hu_edi_attachment_filename
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_payment__l10n_hu_edi_attachment_filename
+msgid "Invoice XML filename"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid "Invoice submission failed."
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid ""
+"Invoice submission timed out. Please wait at least 6 minutes, then update "
+"the status."
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid "Invoice submitted, waiting for response."
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_cancellation__invoice_id
+msgid "Invoice to cancel"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_bank_statement_line__l10n_hu_edi_send_time
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move__l10n_hu_edi_send_time
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_payment__l10n_hu_edi_send_time
+msgid "Invoice upload time"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/wizard/account_move_send.py:0
+msgid ""
+"Invoices issued in Hungary must, with few exceptions, be reported to the "
+"NAV's Online-Invoice system!"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model,name:l10n_hu_edi.model_account_move
+msgid "Journal Entry"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model,name:l10n_hu_edi.model_account_move_line
+msgid "Journal Item"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_tax__l10n_hu_tax_type__kbaet
+msgid "KBAET - intra-Community exempt supply, without new means of transport"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_tax.py:0
+msgid "KBAET sale to EU - VAT tv.§ 89."
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_tax__l10n_hu_tax_type__kbauk
+msgid "KBAUK - tax-exempt, intra-Community sales of new means of transport"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_tax.py:0
+msgid "KBAUK New means of transport within the EU - VAT tv.§ 89.§(2)"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__product_template__l10n_hu_product_code_type__kn
+msgid "KN - Combined Nomenclature Code"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__product_template__l10n_hu_product_code_type__kt
+msgid "KT - Environmental Product Code"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__uom_uom__l10n_hu_edi_code__kilogram
+msgid "Kilogram"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__uom_uom__l10n_hu_edi_code__kilometer
+msgid "Kilometer"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__uom_uom__l10n_hu_edi_code__kwh
+msgid "Kilowatt hour"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move_send__l10n_hu_edi_enable_nav_30
+msgid "L10N Hu Edi Enable Nav 30"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_res_config_settings__l10n_hu_edi_is_active
+msgid "L10N Hu Edi Is Active"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_cancellation__write_uid
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_tax_audit_export__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_cancellation__write_date
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_tax_audit_export__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_res_company__l10n_hu_edi_last_transaction_recovery
+msgid "Last transaction recovery (in production mode)"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__uom_uom__l10n_hu_edi_code__linear_meter
+msgid "Linear meter"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__uom_uom__l10n_hu_edi_code__litre
+msgid "Litre"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.custom_header
+msgid "Logo"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,help:l10n_hu_edi.field_account_tax__l10n_hu_tax_reason
+msgid ""
+"May be used to provide support for the use of a VAT-exempt VAT tax type."
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__uom_uom__l10n_hu_edi_code__meter
+msgid "Meter"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__uom_uom__l10n_hu_edi_code__minute
+msgid "Minute"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/res_company.py:0
+msgid "Missing NAV credentials for company %s"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/l10n_hu_edi_connection.py:0
+msgid "Missing token in response from NAV."
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.res_config_settings_form_inherit_l10n_hu_edi
+msgid "Mode"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/l10n_hu_edi_connection.py:0
+msgid "Mode should be Production or Test!"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__uom_uom__l10n_hu_edi_code__month
+msgid "Month"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_tax__l10n_hu_tax_type__nam
+msgid ""
+"NAM - tax-exempt on other grounds related to international transactions"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_tax.py:0
+msgid "NAM other export transaction VAT law § 110-118"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move_send__l10n_hu_edi_checkbox_nav_30
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.view_move_form_inherit_l10n_hu_edi
+msgid "NAV 3.0"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_bank_statement_line__l10n_hu_edi_state
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move__l10n_hu_edi_state
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_payment__l10n_hu_edi_state
+msgid "NAV 3.0 status"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.actions.server,name:l10n_hu_edi.ir_cron_update_status_ir_actions_server
+msgid "NAV 3.0: Update status of pending invoices"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.res_config_settings_form_inherit_l10n_hu_edi
+msgid "NAV Credentials"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/res_company.py:0
+msgid ""
+"NAV Credentials: Please set the hungarian vat number on the company first!"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_res_company__l10n_hu_edi_password
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_res_config_settings__l10n_hu_edi_password
+msgid "NAV Password"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_res_company__l10n_hu_edi_replacement_key
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_res_config_settings__l10n_hu_edi_replacement_key
+msgid "NAV Replacement Key"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_res_company__l10n_hu_edi_signature_key
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_res_config_settings__l10n_hu_edi_signature_key
+msgid "NAV Signature Key"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_res_company__l10n_hu_tax_regime
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_res_config_settings__l10n_hu_tax_regime
+msgid "NAV Tax Regime"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_uom_uom__l10n_hu_edi_code
+msgid "NAV UoM code"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_res_company__l10n_hu_edi_username
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_res_config_settings__l10n_hu_edi_username
+msgid "NAV Username"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_tax__l10n_hu_tax_reason
+msgid "NAV VAT Tax Exemption Reason"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_tax__l10n_hu_tax_type
+msgid "NAV VAT Tax Type"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,help:l10n_hu_edi.field_account_bank_statement_line__l10n_hu_payment_mode
+#: model:ir.model.fields,help:l10n_hu_edi.field_account_move__l10n_hu_payment_mode
+#: model:ir.model.fields,help:l10n_hu_edi.field_account_payment__l10n_hu_payment_mode
+msgid "NAV expected payment mode of the invoice."
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/l10n_hu_edi_connection.py:0
+msgid "NAV replied with non-OK funcCode: %s"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_tax__l10n_hu_tax_type__nonrefundable_vat
+msgid ""
+"NONREFUNDABLE_VAT - VAT incurred under sections 11 or 14, with an agreement "
+"from the beneficiary to reimburse VAT"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_tax_audit_export__name_from
+msgid "Name From"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_tax_audit_export__name_to
+msgid "Name To"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/wizard/l10n_hu_edi_tax_audit_export.py:0
+msgid "No invoice to export!"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_tax__l10n_hu_tax_type__vat
+msgid "Normal VAT (percent based)"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid "Open Accounting Settings"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_move__l10n_hu_payment_mode__other
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__product_template__l10n_hu_product_code_type__other
+msgid "Other"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.report_invoice_document
+msgid "Other Product Code"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__uom_uom__l10n_hu_edi_code__pack
+msgid "Package"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.res_config_settings_form_inherit_l10n_hu_edi
+msgid "Password"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_bank_statement_line__l10n_hu_payment_mode
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move__l10n_hu_payment_mode
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_payment__l10n_hu_payment_mode
+msgid "Payment mode"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__uom_uom__l10n_hu_edi_code__piece
+msgid "Piece"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid "Please create a sales tax with type ATK (outside the scope of the VAT Act)."
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid ""
+"Please enter the Hungarian VAT (and/or Group VAT) number in 12345678-1-12 "
+"format!"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid "Please set NAV credentials in the Accounting Settings!"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid "Please set any VAT taxes to be 'Affected by previous taxes'!"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid ""
+"Please set any non-VAT (excise) taxes to be 'Included in Price' and 'Affects"
+" subsequent taxes'!"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid "Please set company Country, Zip, City and Street!"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid "Please set company VAT number!"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid "Please set exactly one VAT tax on each invoice line!"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid "Please set invoice date to today!"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid "Please set partner Country, Zip, City and Street!"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid "Please set partner Tax ID on company partners!"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid "Please use HUF as company currency!"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,help:l10n_hu_edi.field_account_tax__l10n_hu_tax_type
+msgid "Precise identification of the VAT tax for the Hungarian authority."
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model,name:l10n_hu_edi.model_product_template
+msgid "Product"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.product_template_form_view_l10n_hu_edi
+msgid "Product Code"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_product_product__l10n_hu_product_code_type
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_product_template__l10n_hu_product_code_type
+msgid "Product Code Type"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_product_product__l10n_hu_product_code
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_product_template__l10n_hu_product_code
+msgid "Product Code Value"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model,name:l10n_hu_edi.model_uom_uom
+msgid "Product Unit of Measure"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__res_company__l10n_hu_edi_server_mode__production
+msgid "Production"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_tax__l10n_hu_tax_type__refundable_vat
+msgid ""
+"REFUNDABLE_VAT - VAT incurred under sections 11 or 14, without an agreement "
+"from the beneficiary to reimburse VAT"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_move__l10n_hu_edi_state__rejected
+msgid "Rejected"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.res_config_settings_form_inherit_l10n_hu_edi
+msgid "Replacement Key"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.l10n_hu_edi_cancellation_form
+msgid "Request Annulment"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:account.cash.rounding,name:l10n_hu_edi.cash_rounding_1_huf
+msgid "Rounding to 1.00"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_tax__l10n_hu_tax_type__second_hand
+msgid "SECOND_HAND - Profit-margin based regime for second-hand sales"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_tax_audit_export__selection_mode
+msgid "Selection mode"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_move__l10n_hu_edi_state__sent
+msgid "Sent, waiting for response"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_res_company__l10n_hu_edi_server_mode
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_res_config_settings__l10n_hu_edi_server_mode
+msgid "Server Mode"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.res_config_settings_form_inherit_l10n_hu_edi
+msgid "Signature Key"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__res_company__l10n_hu_tax_regime__sb
+msgid "Small Business"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_tax__l10n_hu_tax_type__tam
+msgid ""
+"TAM - tax-exempt activity or tax-exempt due to being in public interest or "
+"special in nature"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_tax.py:0
+msgid "TAM Exempt property"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__product_template__l10n_hu_product_code_type__teszor
+msgid "TESZOR - CPA 2.1 Code"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_tax__l10n_hu_tax_type__travel_agency
+msgid "TRAVEL_AGENCY - Profit-margin based regime for travel agencies"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model,name:l10n_hu_edi.model_account_tax
+msgid "Tax"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.actions.act_window,name:l10n_hu_edi.action_l10n_hu_edi_tax_audit_export_form
+#: model:ir.model,name:l10n_hu_edi.model_l10n_hu_edi_tax_audit_export
+#: model:ir.ui.menu,name:l10n_hu_edi.menu_hu_tax_audit_export
+msgid "Tax audit export - Adóhatósági Ellenőrzési Adatszolgáltatás"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid "Technical Annulment"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model,name:l10n_hu_edi.model_l10n_hu_edi_cancellation
+msgid "Technical Annulment Wizard"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.l10n_hu_edi_cancellation_form
+msgid ""
+"Technical Annulment should only be used when an error in the software caused an incorrect data report.<br/>\n"
+"                    To cancel an invoice / credit note in a normal business flow, please create a credit note / debit note."
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__res_company__l10n_hu_edi_server_mode__test
+msgid "Test"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid ""
+"The annulment request has been approved by the user on the OnlineSzámla "
+"portal."
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid ""
+"The annulment request is pending, please confirm it on the OnlineSzámla "
+"portal."
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid ""
+"The annulment request was received by the NAV, but has not been confirmed "
+"yet."
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid "The annulment request was rejected by NAV."
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid ""
+"The annulment request was rejected by the user on the OnlineSzámla portal."
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid ""
+"The annulment was sent to the NAV, but there was an error querying its "
+"status."
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid "The cancellation request could not be performed."
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid ""
+"The following invoices appear to be earlier in the chain, but have not yet "
+"been sent. Please send them first."
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid ""
+"The invoice was accepted by the NAV, but warnings were reported. To reverse,"
+" create a credit note / debit note."
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid "The invoice was received by the NAV, but has not been confirmed yet."
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid "The invoice was rejected by the NAV."
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid ""
+"The invoice was sent to the NAV, but there was an error querying its status."
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid "The invoice was successfully accepted by the NAV."
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.report_invoice_document
+msgid "The issuer of the invoice is <u>Cash accounting</u>."
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.report_invoice_document
+msgid "The issuer of the invoice is <u>Exempt from VAT</u>."
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.report_invoice_document
+msgid "The issuer of the invoice is <u>Small taxpayer</u>."
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_move__l10n_hu_edi_state__cancel_timeout
+msgid "Timeout when requesting cancellation"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_move__l10n_hu_edi_state__send_timeout
+msgid "Timeout when sending"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__uom_uom__l10n_hu_edi_code__ton
+msgid "Ton"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_bank_statement_line__l10n_hu_edi_transaction_code
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move__l10n_hu_edi_transaction_code
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_payment__l10n_hu_edi_transaction_code
+msgid "Transaction Code"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_bank_statement_line__l10n_hu_edi_message_html
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move__l10n_hu_edi_message_html
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_payment__l10n_hu_edi_message_html
+msgid "Transaction messages"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_bank_statement_line__l10n_hu_edi_messages
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move__l10n_hu_edi_messages
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_payment__l10n_hu_edi_messages
+msgid "Transaction messages (JSON)"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_move__l10n_hu_payment_mode__transfer
+msgid "Transfer"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.view_move_form_inherit_l10n_hu_edi
+msgid "Update Status"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.res_config_settings_form_inherit_l10n_hu_edi
+msgid "Username"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_tax__l10n_hu_tax_type__no_vat
+msgid "VAT not applicable pursuant to section 17 of the VAT Act"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__product_template__l10n_hu_product_code_type__vtsz
+msgid "VTSZ - Customs Code"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid "View Company/ies"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid "View advance invoice(s)"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid "View invoice(s)"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid "View partner(s)"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid "View tax(es)"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_move__l10n_hu_payment_mode__voucher
+msgid "Voucher"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.res_config_settings_form_inherit_l10n_hu_edi
+msgid ""
+"Your company's specific tax arrangements, if any of these apply to your "
+"company."
+msgstr ""

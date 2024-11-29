@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.TranslationButton">
+        <t t-if="isMultiLang">
+            <button class="o_field_translate btn btn-link" t-on-click.prevent="onClick">
+                <t t-esc="lang" />
+            </button>
+        </t>
+    </t>
+
+</templates>

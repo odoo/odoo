@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<odoo>
+    <record id="view_product_form_expiry" model="ir.ui.view">
+            <field name="name">product.template.inherit.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="stock.view_template_property_form" />
+            <field name="arch" type="xml">
+                <group name="traceability" position="attributes">
+                    <attribute name="invisible">tracking == "none"</attribute>
+                </group>
+                <group name="traceability" position="inside">
+                    <field name="use_expiration_date" string="Expiration Date" invisible="tracking == 'none'"/>
+                </group>
+                <group name="stock_property" position="after">
+                    <group string="Dates" name="expiry_and_lots" groups="stock.group_production_lot"
+                        invisible="tracking == 'none' or not use_expiration_date">
+                        <label for="expiration_time"/>
+                        <div>
+                            <field name="expiration_time" class="oe_inline"/>
+                            <span> days after receipt</span>
+                        </div>
+                        <label for="use_time"/>
+                        <div>
+                            <field name="use_time" class="oe_inline"/>
+                            <span> days before expiration date</span>
+                        </div>
+                        <label for="removal_time"/>
+                        <div>
+                            <field name="removal_time" class="oe_inline"/>
+                            <span> days before expiration date</span>
+                        </div>
+                        <label for="alert_time"/>
+                        <div>
+                            <field name="alert_time" class="oe_inline"/>
+                            <span> days before expiration date</span>
+                        </div>
+                    </group>
+                </group>
+            </field>
+        </record>
+</odoo>

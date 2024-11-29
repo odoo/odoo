@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.SearchMessageResult">
+        <div class="o-mail-SearchMessageResult">
+            <p t-if="MESSAGE_FOUND" class="o-mail-SearchMessagesPanel-title py-1 mb-0 fw-bolder text-center text-uppercase text-muted">
+                <t t-out="MESSAGE_FOUND" />
+            </p>
+            <MessageCardList 
+                messages="props.messageSearch.messages" 
+                thread="props.thread" 
+                mode="'search'" 
+                messageSearch="props.messageSearch" 
+                showEmpty="props.messageSearch.messages.length === 0 and props.messageSearch.searched" 
+                onClickJump="() => this.props.onClickJump?.()" 
+                loadMore="props.messageSearch.loadMore" 
+                onLoadMoreVisible.bind="onLoadMoreVisible" 
+            />    
+        </div>
+    </t>
+</templates>

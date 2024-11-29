@@ -1,0 +1,509 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* website_payment
+#
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2024-01-30 15:14+0400\n"
+"Last-Translator: \n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
+msgid ""
+".\n"
+"                        <br/>\n"
+"                        We appreciate your support for our organization as such.\n"
+"                        <br/>\n"
+"                        Regards."
+msgstr ""
+".\n"
+"                       <br/>\n"
+"                        Мы ценим вашу поддержку нашей организации как таковой.\n"
+"                       <br/>\n"
+"                        С уважением."
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
+msgid "<b>Comment:</b>"
+msgstr "<b>Комментарий:</b>"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
+msgid "<b>Donation Date:</b>"
+msgstr "<b>Дата пожертвования:</b>"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
+msgid "<b>Donor Email:</b>"
+msgstr "<b>Электронная почта донора:</b>"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
+msgid "<b>Donor Name:</b>"
+msgstr "<b>Имя донора:</b>"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
+msgid "<b>Payment ID:</b>"
+msgstr "<b>Платежный идентификатор:</b>"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
+msgid "<b>Payment Method:</b>"
+msgstr "<b>Способ оплаты:</b>"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
+msgid "<option value=\"\">Country...</option>"
+msgstr "<option value=\"\">Страна...</option>"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
+msgid ""
+"<strong>No suitable payment option could be found.</strong><br/>\n"
+"                                If you believe that it is an error, please contact the website administrator."
+msgstr ""
+"<strong>Не удалось найти подходящий вариант оплаты.</strong><br/>\n"
+"                                Если вы считаете, что это ошибка, пожалуйста, свяжитесь с администратором сайта."
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
+msgid "<strong>Warning</strong> The currency is missing or incorrect."
+msgstr "<strong>Предупреждение</strong> Валюта отсутствует или неверна."
+
+#. module: website_payment
+#. odoo-python
+#: code:addons/website_payment/models/payment_transaction.py:0
+msgid "A donation has been made on your website"
+msgstr "На вашем сайте было сделано пожертвование"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
+msgid "A year of cultural awakening."
+msgstr "Год культурного пробуждения."
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid "Activate Payments"
+msgstr "Активировать платежи"
+
+#. module: website_payment
+#: model:ir.actions.server,name:website_payment.action_activate_stripe
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid "Activate Stripe"
+msgstr "Активировать Stripe"
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/snippets/s_donation/options.js:0
+msgid "Add a description here"
+msgstr "Добавьте описание здесь"
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/snippets/s_donation/options.js:0
+msgid "Add new pre-filled option"
+msgstr "Добавить новую опцию предварительного заполнения"
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
+msgid "Amount"
+msgstr "Сумма"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
+msgid "Amount ("
+msgstr ""
+"%(base)s со скидкой %(discount)s %% и %(surcharge)s дополнительная плата\n"
+"Пример: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
+msgid "Amount("
+msgstr ""
+"%(base)s со скидкой %(discount)s %% и %(surcharge)s дополнительная плата\n"
+"Пример: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
+msgid "Caring for a baby for 1 month."
+msgstr "Уход за младенцем в течение 1 месяца."
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
+msgid "Choose Your Amount"
+msgstr "Выберите сумму"
+
+#. module: website_payment
+#: model:ir.model,name:website_payment.model_res_config_settings
+msgid "Config Settings"
+msgstr "Параметры конфигурации"
+
+#. module: website_payment
+#. odoo-python
+#: code:addons/website_payment/models/res_config_settings.py:0
+msgid "Configure %s"
+msgstr "Настроить %s"
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/js/payment_form.js:0
+#: model:ir.model,name:website_payment.model_res_country
+msgid "Country"
+msgstr "Страна"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
+msgid ""
+"Country\n"
+"                    <span class=\"s_website_form_mark\"> *</span>"
+msgstr ""
+"Страна\n"
+"                    <span class=\"s_website_form_mark\"> *</span>"
+
+#. module: website_payment
+#. odoo-python
+#: code:addons/website_payment/controllers/portal.py:0
+msgid "Country is required."
+msgstr "Країна обов'язкова для заповнення."
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_input
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+msgid "Custom Amount"
+msgstr "Пользовательская сумма"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
+msgid "Dear"
+msgstr "Дорогой"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+msgid "Default Amount"
+msgstr "Стандартная величина"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+msgid "Descriptions"
+msgstr "Описания"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+msgid "Display Options"
+msgstr "Показать варианты"
+
+#. module: website_payment
+#. odoo-python
+#: code:addons/website_payment/controllers/portal.py:0
+msgid "Donate"
+msgstr "Пожертвовать"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
+msgid "Donate Now"
+msgstr "Пожертвовать сейчас"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
+#: model_terms:ir.ui.view,arch_db:website_payment.snippets
+msgid "Donation"
+msgstr "Пожертвование"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.snippets
+msgid "Donation Button"
+msgstr "Кнопка Пожертвования"
+
+#. module: website_payment
+#. odoo-python
+#: code:addons/website_payment/controllers/portal.py:0
+msgid "Donation amount must be at least %.2f."
+msgstr "Сумма пожертвования должна быть не менее %.2f."
+
+#. module: website_payment
+#. odoo-python
+#: code:addons/website_payment/models/payment_transaction.py:0
+msgid "Donation confirmation"
+msgstr "Подтверждение пожертвования"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
+msgid "Donation notification"
+msgstr "Уведомление о пожертвовании"
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/js/payment_form.js:0
+msgid "Email"
+msgstr "Email"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
+msgid ""
+"Email\n"
+"                    <span class=\"s_website_form_mark\"> *</span>"
+msgstr ""
+"Электронная почта\n"
+"                    <span class=\"s_website_form_mark\"> *</span>"
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/js/payment_form.js:0
+msgid "Email is invalid"
+msgstr "Адрес электронной почты недействителен"
+
+#. module: website_payment
+#. odoo-python
+#: code:addons/website_payment/controllers/portal.py:0
+msgid "Email is required."
+msgstr "Email обязателен."
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/js/payment_form.js:0
+msgid "Field '%s' is mandatory"
+msgstr "Поле '%s' является обязательным"
+
+#. module: website_payment
+#: model:ir.model.fields,field_description:website_payment.field_res_config_settings__first_provider_label
+msgid "First Provider Label"
+msgstr "Первая этикетка поставщика"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+msgid "Input"
+msgstr "Ввод"
+
+#. module: website_payment
+#: model:ir.model.fields,field_description:website_payment.field_account_payment__is_donation
+msgid "Is Donation"
+msgstr "Пожертвование"
+
+#. module: website_payment
+#: model:ir.model.fields,field_description:website_payment.field_res_config_settings__is_stripe_supported_country
+#: model:ir.model.fields,field_description:website_payment.field_res_country__is_stripe_supported_country
+msgid "Is Stripe Supported Country"
+msgstr "Поддерживается ли страна Stripe"
+
+#. module: website_payment
+#: model:ir.model.fields,field_description:website_payment.field_payment_transaction__is_donation
+msgid "Is donation"
+msgstr "Является ли пожертвование"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation
+msgid "Make a Donation"
+msgstr "Сделать пожертвование"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+msgid "Maximum"
+msgstr "Максимум"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+msgid "Minimum"
+msgstr "Минимум"
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/js/payment_form.js:0
+msgid "Name"
+msgstr "Имя"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
+msgid ""
+"Name\n"
+"                    <span class=\"s_website_form_mark\"> *</span>"
+msgstr ""
+"Имя\n"
+"                    <span class=\"s_website_form_mark\"> *</span>"
+
+#. module: website_payment
+#. odoo-python
+#: code:addons/website_payment/controllers/portal.py:0
+msgid "Name is required."
+msgstr "Требуется указать имя."
+
+#. module: website_payment
+#: model:ir.model.fields.selection,name:website_payment.selection__res_config_settings__providers_state__none
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+msgid "None"
+msgstr "Нет"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
+msgid "One year in elementary school."
+msgstr "Один год в начальной школе."
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
+msgid "One year in high school."
+msgstr "Один год в средней школе."
+
+#. module: website_payment
+#: model:ir.model.fields.selection,name:website_payment.selection__res_config_settings__providers_state__other_than_paypal
+msgid "Other than Paypal"
+msgstr "Кроме Paypal"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
+msgid "Payment Details"
+msgstr "Детали оплаты"
+
+#. module: website_payment
+#: model:ir.model,name:website_payment.model_payment_provider
+msgid "Payment Provider"
+msgstr "Поставщик платежей"
+
+#. module: website_payment
+#: model:ir.model,name:website_payment.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "платеж"
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/js/payment_form.js:0
+msgid "Payment processing failed"
+msgstr "Обработка платежа не удалась"
+
+#. module: website_payment
+#. odoo-python
+#: code:addons/website_payment/models/payment_transaction.py:0
+msgid "Payment received from donation with following details:"
+msgstr "Оплата получена за пожертвование со следующими реквизитами:"
+
+#. module: website_payment
+#: model:ir.model,name:website_payment.model_account_payment
+msgid "Payments"
+msgstr "Платежи"
+
+#. module: website_payment
+#: model:ir.model.fields.selection,name:website_payment.selection__res_config_settings__providers_state__paypal_only
+msgid "Paypal Only"
+msgstr "Только Paypal"
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/snippets/s_donation/000.js:0
+msgid "Please select or enter an amount"
+msgstr "Пожалуйста, выберите или введите сумму"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+msgid "Pre-filled Options"
+msgstr "Предварительно заполненные опции"
+
+#. module: website_payment
+#: model:ir.model.fields,field_description:website_payment.field_res_config_settings__providers_state
+msgid "Providers State"
+msgstr "Поставщики Государство"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+msgid "Recipient Email"
+msgstr "Электронная почта получателя"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid "Shop - Payment"
+msgstr "Магазин - Оплата"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+msgid "Slider"
+msgstr "Слайдер"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation
+msgid "Small or large, your contribution is essential."
+msgstr "Маленький или большой, ваш вклад очень важен."
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/js/payment_form.js:0
+msgid "Some information is missing to process your payment."
+msgstr "Для обработки вашего платежа не хватает некоторой информации."
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+msgid "Step"
+msgstr "Шаг"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid "Stripe Connect is not available in your country, please use another payment provider."
+msgstr "Stripe Connect недоступен в вашей стране, пожалуйста, воспользуйтесь другим платежным провайдером."
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid "Support most payment methods; Visa, Mastercard, Maestro, Google Pay, Apple Pay, etc. as well as recurring charges."
+msgstr "Поддержка большинства способов оплаты: Visa, Mastercard, Maestro, Google Pay, Apple Pay и т. д., а также периодические платежи."
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
+msgid "Thank you for your donation of"
+msgstr "Благодарим вас за пожертвование"
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/snippets/s_donation/000.js:0
+msgid "The minimum donation amount is %s%s%s"
+msgstr "Минимальная сумма пожертвования составляет %s%s%s"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
+msgid "There is nothing to pay."
+msgstr "Не нужно ничего платить."
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid "View Alternatives"
+msgstr "Посмотреть альтернативы"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid "View other providers"
+msgstr "Посмотреть других поставщиков"
+
+#. module: website_payment
+#: model:ir.model.fields,field_description:website_payment.field_payment_provider__website_id
+msgid "Website"
+msgstr "Сайт"
+
+#. module: website_payment
+#: model:mail.template,name:website_payment.mail_template_donation
+msgid "Website: Donation"
+msgstr "Сайт: Пожертвования"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
+msgid "Write us a comment"
+msgstr "Напишите нам комментарий"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
+msgid "Your comment"
+msgstr "Ваш комментарий"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
+msgid "made on"
+msgstr "сделанный на"

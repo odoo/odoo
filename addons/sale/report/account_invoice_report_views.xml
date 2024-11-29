@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_invoice_report_search_inherit" model="ir.ui.view">
+        <field name="name">account.invoice.report.search.inherit</field>
+        <field name="model">account.invoice.report</field>
+        <field name="inherit_id" ref="account.view_account_invoice_report_search"/>
+        <field name="arch" type="xml">
+            <filter name="user" position="after">
+                <filter string="Sales Team" name="sales_channel" context="{'group_by':'team_id'}"/>
+            </filter>
+            <field name="invoice_user_id" position="after">
+                <field name="team_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="account_invoice_report_view_tree" model="ir.ui.view">
+        <field name="name">account.invoice.report.view.list.inherit.sale</field>
+        <field name="model">account.invoice.report</field>
+        <field name="inherit_id" ref="account.account_invoice_report_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="invoice_user_id" position="after">
+                <field name="team_id" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="action_account_invoice_report_salesteam" model="ir.actions.act_window">
+        <field name="name">Invoices Analysis</field>
+        <field name="res_model">account.invoice.report</field>
+        <field name="view_mode">graph</field>
+        <field name="domain">[('state', 'not in', ['draft', 'cancel'])]</field>
+        <field name="context">{'search_default_month':1, 'search_default_team_id': [active_id]}</field>
+        <field name="help">From this report, you can have an overview of the amount invoiced to your customer. The search tool can also be used to personalise your Invoices reports and so, match this analysis to your needs.</field>
+    </record>
+</odoo>

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="menu_shop" model="website.menu">
+            <field name="name">Shop</field>
+            <field name="url">/shop</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">20</field>
+        </record>
+        <record id="action_open_website" model="ir.actions.act_url">
+            <field name="name">Website Shop</field>
+            <field name="target">self</field>
+            <field name="url">/shop</field>
+        </record>
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_open_website"/>
+            <field name="state">open</field>
+        </record>
+
+        <record id="product_attribute_brand" model="product.attribute">
+            <field name="name">Brand</field>
+            <field name="sequence">0</field>
+        </record>
+
+        <record id="website_sale.sale_ribbon" model="product.ribbon">
+            <field name="name">Sale</field>
+            <field name="position">left</field>
+            <field name="text_color">#FFFFFF</field>
+            <field name="bg_color">#0CA725</field>
+        </record>
+
+        <record id="website_sale.sold_out_ribbon" model="product.ribbon">
+            <field name="name">Sold out</field>
+            <field name="position">left</field>
+            <field name="text_color">#FFFFFF</field>
+            <field name="bg_color">#d9534f</field>
+        </record>
+
+        <record id="website_sale.out_of_stock_ribbon" model="product.ribbon">
+            <field name="name">Out of stock</field>
+            <field name="position">left</field>
+            <field name="text_color">#FFFFFF</field>
+            <field name="bg_color">#ffc107</field>
+        </record>
+
+        <record id="website_sale.new_ribbon" model="product.ribbon">
+            <field name="name">New!</field>
+            <field name="position">left</field>
+            <field name="text_color">#FFFFFF</field>
+            <field name="bg_color">#0275d8</field>
+        </record>
+
+        <record id="sales_team.salesteam_website_sales" model="crm.team">
+            <field name="active" eval="True"/>
+        </record>
+
+        <record model="website" id="website.default_website">
+            <field name="salesteam_id" ref="sales_team.salesteam_website_sales"/>
+        </record>
+
+        <record id="delivery.free_delivery_carrier" model="delivery.carrier">
+            <field name="is_published" eval="True"/>
+        </record>
+
+    </data>
+    <data>
+        <!-- Filters for Dynamic Filter -->
+        <record id="dynamic_snippet_newest_products_filter" model="ir.filters">
+            <field name="name">Newest Products</field>
+            <field name="model_id">product.product</field>
+            <field name="user_id" eval="False" />
+            <field name="domain">[('website_published', '=', True)]</field>
+            <field name="context">{'display_default_code': False, 'add2cart_rerender': False}</field>
+            <field name="sort">["create_date desc"]</field>
+            <field name="action_id" ref="website.action_website"/>
+        </record>
+        <!-- Action Server for Dynamic Filter -->
+        <record id="dynamic_snippet_latest_sold_products_action" model="ir.actions.server">
+            <field name="name">Recently Sold Products</field>
+            <field name="model_id" ref="model_product_product"/>
+            <field name="state">code</field>
+            <field name="code">
+DynamicFilter = model.env['website.snippet.filter']
+response = DynamicFilter._get_products('latest_sold')
+            </field>
+        </record>
+        <record id="dynamic_snippet_latest_viewed_products_action" model="ir.actions.server">
+            <field name="name">Recently Viewed Products</field>
+            <field name="model_id" ref="model_product_product"/>
+            <field name="state">code</field>
+            <field name="code">
+DynamicFilter = model.env['website.snippet.filter']
+res_products = DynamicFilter._get_products('latest_viewed')
+for data in res_products:
+    data['_latest_viewed'] = True
+response = res_products
+            </field>
+        </record>
+        <record id="dynamic_snippet_accessories_action" model="ir.actions.server">
+            <field name="name">Product Accessories</field>
+            <field name="model_id" ref="model_product_product"/>
+            <field name="state">code</field>
+            <field name="code">
+DynamicFilter = model.env['website.snippet.filter']
+response = DynamicFilter._get_products('accessories', product_template_id=request.params.get('productTemplateId'))
+            </field>
+        </record>
+        <record id="dynamic_snippet_recently_sold_with_action" model="ir.actions.server">
+            <field name="name">Products Recently Sold With</field>
+            <field name="model_id" ref="model_product_product"/>
+            <field name="state">code</field>
+            <field name="code">
+DynamicFilter = model.env['website.snippet.filter']
+response = DynamicFilter._get_products('recently_sold_with', product_template_id=request.params.get('productTemplateId'))
+            </field>
+        </record>
+        <record id="dynamic_snippet_alternative_products" model="ir.actions.server">
+            <field name="name">Alternative Products</field>
+            <field name="model_id" ref="model_product_product"/>
+            <field name="state">code</field>
+            <field name="code">
+DynamicFilter = model.env['website.snippet.filter']
+response = DynamicFilter._get_products('alternative_products', product_template_id=request.params.get('productTemplateId'))
+            </field>
+        </record>
+        <!-- Dynamic Filter -->
+        <record id="dynamic_filter_newest_products" model="website.snippet.filter">
+            <field name="filter_id" ref="website_sale.dynamic_snippet_newest_products_filter"/>
+            <field name="field_names">display_name,description_sale,image_512</field>
+            <field name="limit" eval="16"/>
+            <field name="name">Newest Products</field>
+        </record>
+        <record id="dynamic_filter_latest_sold_products" model="website.snippet.filter">
+            <field name="action_server_id" ref="website_sale.dynamic_snippet_latest_sold_products_action"/>
+            <field name="field_names">display_name,description_sale,image_512</field>
+            <field name="limit" eval="16"/>
+            <field name="name">Recently Sold Products</field>
+        </record>
+        <record id="dynamic_filter_latest_viewed_products" model="website.snippet.filter">
+            <field name="action_server_id" ref="website_sale.dynamic_snippet_latest_viewed_products_action"/>
+            <field name="field_names">display_name,description_sale,image_512</field>
+            <field name="limit" eval="16"/>
+            <field name="name">Recently Viewed Products</field>
+        </record>
+        <record id="dynamic_filter_cross_selling_accessories" model="website.snippet.filter">
+            <field name="action_server_id" ref="website_sale.dynamic_snippet_accessories_action"/>
+            <field name="field_names">display_name,description_sale,image_512</field>
+            <field name="limit" eval="16"/>
+            <field name="name">Accessories for Product</field>
+            <field name="product_cross_selling">True</field>
+        </record>
+        <record id="dynamic_filter_cross_selling_recently_sold_with" model="website.snippet.filter">
+            <field name="action_server_id" ref="website_sale.dynamic_snippet_recently_sold_with_action"/>
+            <field name="field_names">display_name,description_sale,image_512</field>
+            <field name="limit" eval="16"/>
+            <field name="name">Products Recently Sold With Product</field>
+            <field name="product_cross_selling">True</field>
+        </record>
+        <record id="dynamic_filter_cross_selling_alternative_products" model="website.snippet.filter">
+            <field name="action_server_id" ref="website_sale.dynamic_snippet_alternative_products"/>
+            <field name="field_names">display_name,description_sale,image_512</field>
+            <field name="limit" eval="16"/>
+            <field name="name">Alternative Products</field>
+            <field name="product_cross_selling">True</field>
+        </record>
+
+        <function model="ir.model.fields" name="formbuilder_whitelist">
+            <value>sale.order</value>
+            <value eval="[
+                'client_order_ref',
+            ]"/>
+        </function>
+
+        <record id="base.model_res_partner" model="ir.model">
+            <field name="website_form_key">create_customer</field>
+            <field name="website_form_access">True</field>
+            <field name="website_form_label">Create a Customer</field>
+        </record>
+        <function model="ir.model.fields" name="formbuilder_whitelist">
+            <value>res.partner</value>
+            <value eval="[
+                'name', 'phone', 'email',
+                'city', 'zip', 'street', 'street2', 'state_id', 'country_id',
+                'vat', 'company_name'
+            ]"/>
+        </function>
+    </data>
+</odoo>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="product_document_form" model="ir.ui.view">
+        <field name="name">product.document.form.sale</field>
+        <field name="model">product.document</field>
+        <field name="inherit_id" ref="product.product_document_form"/>
+        <field name="arch" type="xml">
+            <field name="datas" position="after">
+                <button
+                    name="action_open_pdf_form_fields"
+                    type="object"
+                    string="Configure dynamic fields"
+                    help="Configure the path to fill the form fields."
+                    class="btn btn-link"
+                    icon="fa-pencil"
+                    groups="base.group_system"
+                />
+            </field>
+            <field name="company_id" position="before">
+                <field name="form_field_ids" widget="many2many_tags"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

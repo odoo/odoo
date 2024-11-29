@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('pos-receipt-contact')]" position="after">
+            <t t-if="props.data.is_gcc_country">
+                <br/>
+                <br/>
+                <div class="pos-receipt-header">
+                    <span id="title_english" t-translation="off">Tax Invoice</span>
+                </div>
+                <div class="pos-receipt-header">
+                    <span id="title_arabic" t-translation="off">الفاتورة الضريبية</span>
+                </div>
+            </t>
+        </xpath>
+
+        <xpath expr="//div[@t-esc='props.data.cashier']/.." position="attributes">
+            <attribute name="t-if">!props.data.is_gcc_country</attribute>
+        </xpath>
+        <xpath expr="//div[@t-esc='props.data.cashier']/.." position="after">
+            <div t-if="props.data.is_gcc_country" t-translation="off">
+                <div>Served by / خدم بواسطة <t t-esc="props.data.cashier"/></div>
+            </div>
+        </xpath>
+    </t>
+
+    <t t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+        <xpath expr="//span[@t-esc='props.formatCurrency(props.data.amount_total)']/.." position="attributes">
+            <attribute name="t-if">!props.data.is_gcc_country</attribute>
+        </xpath>
+        <xpath expr="//span[@t-esc='props.formatCurrency(props.data.amount_total)']/.." position="after">
+            <div t-if="props.data.is_gcc_country" class="pos-receipt-amount pos-receipt-amount-arabic" t-translation="off">
+                TOTAL / اﻹجمالي
+                <span t-esc="props.formatCurrency(props.data.amount_total)" class="pos-receipt-right-align"/>
+            </div>
+        </xpath>
+
+        <xpath expr="//t[@t-if='props.data.rounding_applied']" position="attributes">
+            <attribute name="t-if" add=" and !props.data.is_gcc_country" separator=" "/>
+        </xpath>
+        <xpath expr="//t[@t-if='props.data.rounding_applied and !props.data.is_gcc_country']" position="after">
+            <t t-elif="props.data.rounding_applied and props.data.is_gcc_country">
+                <div class="pos-receipt-amount pos-receipt-amount-arabic" t-translation="off">
+                    Rounding / التقريب
+                    <span t-esc="props.formatCurrency(props.data.rounding_applied)" class="pos-receipt-right-align"/>
+                </div>
+                <div class="pos-receipt-amount">
+                    To Pay
+                    <span t-esc="props.formatCurrency(props.data.amount_total + props.data.rounding_applied)" class="pos-receipt-right-align"/>
+                </div>
+            </t>
+        </xpath>
+
+        <xpath expr="//span[@t-esc='props.formatCurrency(props.data.change)']/.." position="attributes">
+            <attribute name="t-if">!props.data.is_gcc_country</attribute>
+        </xpath>
+        <xpath expr="//span[@t-esc='props.formatCurrency(props.data.change)']/.." position="after">
+            <div t-if="props.data.is_gcc_country" class="pos-receipt-amount receipt-change pos-receipt-amount-arabic" t-translation="off">
+                CHANGE / الباقي
+                <span t-esc="props.formatCurrency(props.data.change)" class="pos-receipt-right-align"/>
+            </div>
+        </xpath>
+
+        <xpath expr="//span[@t-esc='props.formatCurrency(props.data.total_discount)']/.." position="attributes">
+            <attribute name="t-if">!props.data.is_gcc_country</attribute>
+        </xpath>
+        <xpath expr="//span[@t-esc='props.formatCurrency(props.data.total_discount)']/.." position="after">
+            <div t-if="props.data.is_gcc_country" t-translation="off">
+                Discounts / الخصومات
+                <span t-esc="props.formatCurrency(props.data.total_discount)" class="pos-receipt-right-align"/>
+            </div>
+        </xpath>
+    </t>
+</templates>

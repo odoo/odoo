@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template name="Steps" id="s_process_steps">
+    <section class="s_process_steps pt72 pb72 s_process_steps_connector_line" data-vcss="002" data-vxml="002">
+        <svg class="s_process_step_svg_defs position-absolute">
+            <defs>
+                <marker class="s_process_steps_arrow_head" markerWidth="15" markerHeight="10" refX="6" refY="6" orient="auto">
+                    <path d="M 2,2 L10,6 L2,10 L6,6 L2,2" vector-effect="non-scaling-size"/>
+                </marker>
+            </defs>
+        </svg>
+        <div class="container">
+            <h2 class="mb-4 text-center h3-fs">Our process in four easy steps</h2>
+            <div class="row g-0">
+                <div class="col-lg-3 s_process_step position-relative pt24 pb24">
+                    <svg class="s_process_step_connector position-absolute z-index-1" viewBox="0 0 100 20" preserveAspectRatio="none">
+                        <path d="M 0 10 L 100 10" vector-effect="non-scaling-stroke"/>
+                    </svg>
+                    <div class="s_process_step_number d-flex align-items-center justify-content-center mx-auto rounded-circle bg-primary-light" data-name="Step Number">
+                        <h3 class="mb-0 text-primary text-center">1</h3>
+                    </div>
+                    <div class="s_process_step_content mt-3 px-3 text-center">
+                        <h3 class="h4-fs">Add to cart</h3>
+                        <p>Let your customers understand your process.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 s_process_step position-relative pt24 pb24">
+                    <svg class="s_process_step_connector position-absolute z-index-1" viewBox="0 0 100 20" preserveAspectRatio="none">
+                        <path d="M 0 10 L 100 10" vector-effect="non-scaling-stroke"/>
+                    </svg>
+                    <div class="s_process_step_number d-flex align-items-center justify-content-center mx-auto rounded-circle bg-primary-light" data-name="Step Number">
+                        <h3 class="mb-0 text-primary text-center">2</h3>
+                    </div>
+                    <div class="s_process_step_content mt-3 px-3 text-center">
+                        <h3 class="h4-fs">Sign in</h3>
+                        <p>Click on the number to adapt it to your purpose.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 s_process_step position-relative pt24 pb24">
+                    <svg class="s_process_step_connector position-absolute z-index-1" viewBox="0 0 100 20" preserveAspectRatio="none">
+                        <path d="M 0 10 L 100 10" vector-effect="non-scaling-stroke"/>
+                    </svg>
+                    <div class="s_process_step_number d-flex align-items-center justify-content-center mx-auto rounded-circle bg-primary-light" data-name="Step Number">
+                        <h3 class="mb-0 text-primary text-center">3</h3>
+                    </div>
+                    <div class="s_process_step_content mt-3 px-3 text-center">
+                        <h3 class="h4-fs">Pay</h3>
+                        <p>Duplicate blocks to add more steps.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 s_process_step position-relative pt24 pb24">
+                    <svg class="s_process_step_connector position-absolute z-index-1" viewBox="0 0 100 20" preserveAspectRatio="none">
+                        <path d="M 0 10 L 100 10" vector-effect="non-scaling-stroke"/>
+                    </svg>
+                    <div class="s_process_step_number d-flex align-items-center justify-content-center mx-auto rounded-circle bg-primary-light" data-name="Step Number">
+                        <h3 class="mb-0 text-primary text-center">4</h3>
+                    </div>
+                    <div class="s_process_step_content mt-3 px-3 text-center">
+                        <h3 class="h4-fs">Get Delivered</h3>
+                        <p>Select and delete blocks to remove some steps.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_process_steps_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <div data-js="StepsConnector" data-selector=".s_process_steps">
+            <we-row string="Connector">
+                <we-select data-name="connector_type">
+                    <we-button data-select-class="" data-name="no_connector_opt">None</we-button>
+                    <we-button data-select-class="s_process_steps_connector_line">Line</we-button>
+                    <we-button data-select-class="s_process_steps_connector_arrow">Straight arrow</we-button>
+                    <we-button data-select-class="s_process_steps_connector_curved_arrow">Curved arrow</we-button>
+                </we-select>
+                <we-colorpicker
+                    data-select-style="true"
+                    data-name="connector_color_opt"
+                    data-dependencies="!no_connector_opt"
+                    data-apply-to=".s_process_step_connector path"
+                    data-css-property="stroke" data-change-color="true"/>
+            </we-row>
+        </div>
+        <t t-call="website.snippet_options_background_options">
+            <t t-set="selector" t-value="'.s_process_step .s_process_step_number'"/>
+            <t t-set="with_colors" t-value="True"/>
+            <t t-set="with_images" t-value="False"/>
+            <t t-set="with_color_combinations" t-value="False"/>
+            <t t-set="with_gradients" t-value="True"/>
+        </t>
+    </xpath>
+</template>
+
+<record id="website.s_process_steps_000_scss" model="ir.asset">
+    <field name="name">Process steps 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_process_steps/000.scss</field>
+    <field name="active" eval="False"/>
+</record>
+
+<record id="website.s_process_steps_001_scss" model="ir.asset">
+    <field name="name">Process steps 001 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_process_steps/001.scss</field>
+    <field name="active" eval="False"/>
+</record>
+
+<record id="website.s_process_steps_002_scss" model="ir.asset">
+    <field name="name">Process steps 002 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_process_steps/002.scss</field>
+    <field name="active" eval="True"/>
+</record>
+
+</odoo>

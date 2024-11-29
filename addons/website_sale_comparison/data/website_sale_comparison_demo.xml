@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_attribute_category_duration" model="product.attribute.category">
+        <field name="name">Duration</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="product.product_attribute_3" model="product.attribute">
+        <field name="category_id" ref="product_attribute_category_duration"/>
+    </record>
+
+
+    <record id="product_attribute_category_2" model="product.attribute.category">
+        <field name="name">Dimensions</field>
+        <field name="sequence">7</field>
+    </record>
+
+    <record id="product.product_attribute_1" model="product.attribute">
+        <field name="category_id" ref="product_attribute_category_general_features"/>
+    </record>
+    <record id="product.product_attribute_2" model="product.attribute">
+        <field name="category_id" ref="product_attribute_category_general_features"/>
+    </record>
+
+    <record id="website_sale.product_attribute_brand" model="product.attribute">
+        <field name="category_id" ref="product_attribute_category_general_features"/>
+    </record>
+    <record id="product_attribute_value_1" model="product.attribute.value">
+        <field name="name">Apple</field>
+        <field name="attribute_id" ref="website_sale.product_attribute_brand"/>
+    </record>
+
+    <record id="product_attribute_7" model="product.attribute">
+        <field name="name">Weight</field>
+        <field name="category_id" ref="product_attribute_category_2"/>
+    </record>
+    <record id="product_attribute_value_7" model="product.attribute.value">
+        <field name="name">308 g</field>
+        <field name="attribute_id" ref="product_attribute_7"/>
+    </record>
+
+    <record id="product_attribute_8" model="product.attribute">
+        <field name="name">Dimensions</field>
+        <field name="category_id" ref="product_attribute_category_2"/>
+    </record>
+    <record id="product_attribute_value_8" model="product.attribute.value">
+        <field name="name">134.7 x 200 x 7.2 mm</field>
+        <field name="attribute_id" ref="product_attribute_8"/>
+    </record>
+
+    <record id="product_6_attribute_1_product_template_attribute_line" model="product.template.attribute.line">
+        <field name="product_tmpl_id" ref="product.product_product_6_product_template"/>
+        <field name="attribute_id" ref="website_sale.product_attribute_brand"/>
+        <field name="value_ids" eval="[(6,0,[ref('website_sale_comparison.product_attribute_value_1')])]"/>
+    </record>
+    <record id="product_6_attribute_7_product_template_attribute_line" model="product.template.attribute.line">
+        <field name="product_tmpl_id" ref="product.product_product_6_product_template"/>
+        <field name="attribute_id" ref="product_attribute_7"/>
+        <field name="value_ids" eval="[(6,0,[ref('product_attribute_value_7')])]"/>
+    </record>
+    <record id="product_6_attribute_8_template_attribute_line" model="product.template.attribute.line">
+         <field name="product_tmpl_id" ref="product.product_product_6_product_template"/>
+        <field name="attribute_id" ref="product_attribute_8"/>
+        <field name="value_ids" eval="[(6,0,[ref('product_attribute_value_8')])]"/>
+    </record>
+
+</odoo>

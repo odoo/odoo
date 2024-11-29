@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.DiscussSidebarCallParticipants">
+        <t t-if="sessions.length gt 0">
+            <Dropdown t-if="compact" state="floating" position="'right-start'" manual="true" menuClass="'py-0'">
+                <t t-call="mail.DiscussSidebarCallParticipants.main"/>
+                <t t-set-slot="content">
+                    <div class="p-2" t-ref="floating"><t t-call="mail.DiscussSidebarCallParticipants.list"/></div>
+                </t>
+            </Dropdown>
+            <t t-else="" t-call="mail.DiscussSidebarCallParticipants.main"/>
+        </t>
+    </t>
+
+    <t t-name="mail.DiscussSidebarCallParticipants.main">
+        <div class="o-mail-DiscussSidebarCallParticipants d-flex py-1" t-att-class="{ 'justify-content-center': compact, 'ps-3 pe-2 mx-2': props.compact === undefined and !compact, 'px-2': props.compact === false, 'rounded-3': props.compact === undefined }" t-ref="root">
+            <button class="btn btn-link p-0 align-self-start" t-if="!compact">
+                <i class="oi smaller me-1" t-att-class="{'oi-chevron-down': !state.expanded, 'oi-chevron-right': state.expanded}" t-att-title="title" t-on-click="() => state.expanded = !state.expanded"/>
+            </button>
+            <AvatarStack
+                t-if="!state.expanded"
+                direction="compact ? 'v' : 'h'"
+                avatarClass="(p) => this.avatarClass(p)"
+                max="compact ? 1 : 4"
+                personas="sessions.map((s) => s.channel_member_id.persona)"
+            />
+            <t t-else="" t-call="mail.DiscussSidebarCallParticipants.list"/>
+        </div>
+    </t>
+
+    <t t-name="mail.DiscussSidebarCallParticipants.list">
+        <div class="d-flex flex-column gap-1">
+            <div class="d-flex align-items-center" t-foreach="sessions" t-as="session" t-key="session.localId">
+                <t t-set="persona" t-value="session.persona"/>
+                <img t-att-src="persona?.avatarUrl" class="rounded-circle" t-att-title="persona?.name" t-att-class="{'o-mail-DiscussSidebarCallParticipants-avatar o-isTalking': session.isActuallyTalking}" style="width:24px;height:24px"/>
+                <span class="mx-1 text-truncate fw-bolder smaller" t-esc="persona?.name"/>
+                <span t-if="session.isMute" class="px-1 fa" t-att-class="callActionsRegistry.get('mute').icon"/>
+                <span t-if="session.is_deaf" class="px-1 fa position-relative" t-att-class="callActionsRegistry.get('deafen').icon" style="top: -2px;"/>
+                <span t-if="session.is_screen_sharing_on" class="badge bg-danger o-text-white" style="font-size: 0.6rem;">LIVE</span>
+            </div>
+        </div>
+    </t>
+
+</templates>

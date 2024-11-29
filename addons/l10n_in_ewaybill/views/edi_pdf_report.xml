@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_in_ewaybill_report_invoice_document_inherit" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[@id='informations']" position="inside">
+            <div id="l10n_in_ewaybill_informations"
+                 name="ewaybill_number"
+                 class="col"
+                 t-if="o.l10n_in_ewaybill_ids and o.country_code == 'IN'">
+                <strong>E-waybill:</strong>
+                <p t-if="o.l10n_in_ewaybill_name" class="m-0" t-out="o.l10n_in_ewaybill_name"/>
+                Until: 
+                <t t-if="o.l10n_in_ewaybill_expiry_date"
+                   class="m-0"
+                   t-out="o.l10n_in_ewaybill_expiry_date"/>
+            </div>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="privacy_lookup_wizard_view_form" model="ir.ui.view">
+        <field name="name">privacy.lookup.wizard.view.form</field>
+        <field name="model">privacy.lookup.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Privacy Lookup">
+                <header>
+                    <button string="Lookup" name="action_lookup" type="object" class="oe_highlight" data-hotkey="q" invisible="line_ids"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="action_open_lines"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-file-text-o">
+                            <field name="line_count" string="References" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="email" readonly="line_ids"/>
+                            <field name="name" readonly="line_ids"/>
+                            <field name="records_description" invisible="1"/>
+                            <field name="execution_details" invisible="execution_details == ''"/>
+                            <field name="log_id" invisible="1"/>
+                        </group>
+                        <field name="line_ids" options="{'no_open': True, 'no_create': True}" invisible="1"/>
+                    </group>
+                </sheet>
+           </form>
+        </field>
+    </record>
+
+    <record id="action_privacy_lookup_wizard" model="ir.actions.act_window">
+        <field name="name">Privacy Lookup</field>
+        <field name="res_model">privacy.lookup.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="privacy_lookup_wizard_view_form"/>
+        <field name="target">current</field>
+    </record>
+
+    <record id="privacy_lookup_wizard_line_view_tree" model="ir.ui.view">
+        <field name="name">privacy.lookup.wizard.line.view.list</field>
+        <field name="model">privacy.lookup.wizard.line</field>
+        <field name="arch" type="xml">
+            <list create="0">
+                <field name="res_model_id"/>
+                <field name="res_name" column_invisible="True"/>
+                <field name="res_model" column_invisible="True"/>
+                <field name="resource_ref" options="{'model_field': 'res_model_id', 'no_create': True}" invisible="not resource_ref"/>
+                <button name="action_open_record" type="object" icon="fa-external-link" invisible="not resource_ref" title="Open Record"/>
+                <field name="res_id" string="ID"/>
+                <field name="has_active" column_invisible="True"/>
+                <field name="execution_details" column_invisible="True"/>
+                <field name="is_active" widget="boolean_toggle" invisible="is_unlinked or not has_active"/>
+                <field name="is_unlinked" column_invisible="True"/>
+                <button name="action_unlink" string="Delete" type="object" icon="fa-trash" invisible="is_unlinked" confirm="This operation is irreversible. Do you wish to proceed to the record deletion?"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="privacy_lookup_wizard_line_view_search" model="ir.ui.view">
+        <field name="name">privacy.lookup.wizard.line.view.search</field>
+        <field name="model">privacy.lookup.wizard.line</field>
+        <field name="arch" type="xml">
+            <search string="Search References">
+                <field name="res_model_id"/>
+                <field name="has_active" invisible="1"/>
+                <field name="is_active" invisible="1"/>
+                <filter string="Can be archived" name="can_be_archived" domain="[('has_active', '=', True)]"/>
+                <filter string="Archived" name="archived" domain="[('is_active', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Model" name="group_by_res_model_id" domain="[]" context="{'group_by': 'res_model_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_privacy_lookup_wizard_line" model="ir.actions.act_window">
+        <field name="name">Privacy Lookup Line</field>
+        <field name="res_model">privacy.lookup.wizard.line</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="privacy_lookup_wizard_line_view_tree"/>
+        <field name="context">{'search_default_group_by_res_model_id': 1, 'no_create_edit': True}</field>
+        <field name="target">current</field>
+    </record>
+
+    <record id="ir_action_server_action_privacy_lookup_partner" model="ir.actions.server">
+        <field name="name">Privacy Lookup</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_view_types">form</field>
+        <field name="state">code</field>
+        <field name="code">
+action = record.action_privacy_lookup()
+        </field>
+    </record>
+
+    <record id="ir_action_server_action_privacy_lookup_user" model="ir.actions.server">
+        <field name="name">Privacy Lookup</field>
+        <field name="model_id" ref="base.model_res_users"/>
+        <field name="binding_model_id" ref="base.model_res_users"/>
+        <field name="binding_view_types">form</field>
+        <field name="state">code</field>
+        <field name="code">
+action = record.partner_id.action_privacy_lookup()
+        </field>
+    </record>
+</odoo>

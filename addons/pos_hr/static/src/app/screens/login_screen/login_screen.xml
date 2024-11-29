@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_hr.LoginScreen" t-inherit="point_of_sale.LoginScreen" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('screen-login')]" position="attributes">
+            <attribute name="t-if">!this.pos.config.module_pos_hr || !this.pos.login</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('screen-login')]" position="after">
+            <div t-if="this.pos.config.module_pos_hr and this.pos.login" class="screen-login flex-grow-1 d-flex align-items-center justify-content-center">
+                <div class="d-flex bg-white p-3 gap-2 rounded">
+                    <input t-model="this.state.pin"
+                        t-ref="autofocus"
+                        type="password"
+                        class="form-control form-control-lg rounded flex-grow-1"
+                        placeholder="Enter your PIN" />
+                    <button class="select-cashier btn btn-secondary px-4" t-on-click="() => this.selectCashier(false, true)">
+                        <i class="fa fa-users" aria-hidden="true"></i>
+                    </button>
+                    <button class="btn btn-secondary mobile-scanner px-4" t-if="this.pos.config.module_pos_hr">
+                        <i class="fa fa-barcode" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//button[hasclass('open-register-btn')]/span" position="replace">
+            <span t-if="this.pos.session.state !== 'opened'" class="d-flex flex-grow-1 align-items-center">Open Register</span>
+            <span t-else="" class="d-flex flex-grow-1 align-items-center">Unlock Register</span>
+        </xpath>
+    </t>
+</templates>

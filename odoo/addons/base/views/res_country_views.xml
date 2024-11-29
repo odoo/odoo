@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--
+        Country
+        -->
+        <record id="view_country_tree" model="ir.ui.view">
+            <field name="name">res.country.list</field>
+            <field name="model">res.country</field>
+            <field name="arch" type="xml">
+                <list string="Country" create="0" delete="0">
+                    <field name="name"/>
+                    <field name="code"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_country_form" model="ir.ui.view">
+            <field name="name">res.country.form</field>
+            <field name="model">res.country</field>
+            <field name="arch" type="xml">
+                <form create="0" delete="0">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                        </div>
+                        <field name="image_url" widget="image_url" class="oe_avatar" options="{'size': [128,128]}"/>
+                        <group name="main_group">
+                            <group name="country_details">
+                                <field name="name"/>
+                                <field name="currency_id"/>
+                                <field name="code"/>
+                            </group>
+                            <group name="phone_vat_settings">
+                                <field name="phone_code" options="{'format': false}"/>
+                                <field name="vat_label"/>
+                                <field name="zip_required"/>
+                                <field name="state_required"/>
+                            </group>
+                        </group>
+                        <group name="advanced_address_formatting" string="Advanced Address Formatting" groups="base.group_no_one">
+                            <label for="address_view_id"/>
+                            <div class="o_row">
+                                <field name="address_view_id"/>
+                                <div class="text-muted ms-2">Choose a subview of partners that includes only address fields, to change the way users can input addresses.</div>
+                            </div>
+                            <label for="address_format"/>
+                            <div class="o_row">
+                                <field name="address_format" placeholder="Address format..."/>
+                                <div name="div_address_format ms-2" class="text-muted">Change the way addresses are displayed in reports</div>
+                            </div>
+                            <field name="name_position" class="oe_inline"/>
+                        </group>
+                        <label for="state_ids"/>
+                        <field name="state_ids">
+                            <list editable="bottom">
+                                <field name="name"/>
+                                <field name="code"/>
+                            </list>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_country_search" model="ir.ui.view">
+            <field name="name">res.country.search</field>
+            <field name="model">res.country</field>
+            <field name="arch" type="xml">
+                <search string="Countries">
+                    <field name="name" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
+                    <field name="phone_code"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_country" model="ir.actions.act_window">
+            <field name="name">Countries</field>
+            <field name="res_model">res.country</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Country Found!
+                </p><p>
+                    Manage the list of countries that can be set on your contacts.
+                </p>
+            </field>
+        </record>
+
+        <record id="view_country_group_tree" model="ir.ui.view">
+            <field name="name">res.country.group.list</field>
+            <field name="model">res.country.group</field>
+            <field name="arch" type="xml">
+                <list string="Country Group">
+                    <field name="name"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_country_group_form" model="ir.ui.view">
+            <field name="name">res.country.group.form</field>
+            <field name="model">res.country.group</field>
+            <field name="arch" type="xml">
+                <form string="Country Group">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" string="Group Name"/>
+                            <h1><field name="name" placeholder="e.g. Europe"/></h1>
+                        </div>
+                        <group name="country_group">
+                            <field name="country_ids" widget="many2many_tags" options="{'no_open': True, 'no_create': True}"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_country_group" model="ir.actions.act_window">
+            <field name="name">Country Group</field>
+            <field name="res_model">res.country.group</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a Country Group
+                </p><p>
+                    Use groups to organize countries that are frequently selected together (e.g. "LATAM", "BeNeLux", "ASEAN").
+                </p>
+            </field>
+        </record>
+
+        <!-- State -->
+        <record id="view_country_state_tree" model="ir.ui.view">
+            <field name="name">res.country.state.list</field>
+            <field name="model">res.country.state</field>
+            <field name="arch" type="xml">
+                <list string="State" editable="bottom">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="country_id" options="{'no_create': True, 'no_open': True}"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_country_state_form" model="ir.ui.view">
+            <field name="name">res.country.state.form</field>
+            <field name="model">res.country.state</field>
+            <field name="arch" type="xml">
+                <form string="State">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="country_id" options='{"no_open": True, "no_create": True}'/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_country_state_search" model="ir.ui.view">
+            <field name="name">res.country.state.search</field>
+            <field name="model">res.country.state</field>
+            <field name="arch" type="xml">
+                <search string="Country">
+                    <field name="name"/>
+                    <field name="country_id"/>
+                    <group string="Group By">
+                        <filter name="groupby_country" string="Country" context="{'group_by': 'country_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_country_state" model="ir.actions.act_window">
+            <field name="name">Fed. States</field>
+            <field name="res_model">res.country.state</field>
+            <field name="view_id" ref="view_country_state_tree"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a State
+                </p><p>
+                    Federal States belong to countries and are part of your contacts' addresses.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

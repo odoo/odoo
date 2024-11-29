@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <!--=================-->
+    <!-- Base components -->
+    <!--=================-->
+
+    <!-- Editor toolbar -->
+    <t t-name="web_editor.toolbar">
+        <div id="toolbar" class="oe-toolbar oe-floating d-print-none">
+            <div t-if="props.showStyle" id="style" t-attf-class="btn-group {{ props.dropDirection }}">
+                <button type="button" class="btn dropdown-toggle"
+                    data-bs-toggle="dropdown" data-bs-original-title="Text style" tabindex="-1" aria-expanded="false">
+                    <span title="Text style">Normal</span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li id="display-1-dropdown-item">
+                        <a class="dropdown-item" href="#" id="display-1" data-call="setTag" data-arg1="h1,display-1">Header 1 Display 1</a>
+                    </li>
+                    <li id="display-2-dropdown-item">
+                        <a class="dropdown-item" href="#" id="display-2" data-call="setTag" data-arg1="h1,display-2" data-extended-text-style="">Header 1 Display 2</a>
+                    </li>
+                    <li id="display-3-dropdown-item">
+                        <a class="dropdown-item" href="#" id="display-3" data-call="setTag" data-arg1="h1,display-3" data-extended-text-style="">Header 1 Display 3</a>
+                    </li>
+                    <li id="display-4-dropdown-item">
+                        <a class="dropdown-item" href="#" id="display-4" data-call="setTag" data-arg1="h1,display-4" data-extended-text-style="">Header 1 Display 4</a>
+                    </li>
+                    <li t-if="props.showHeading1" id="heading1-dropdown-item">
+                        <a class="dropdown-item" href="#" id="heading1" data-call="setTag" data-arg1="h1">Header 1</a>
+                    </li>
+                    <li t-if="props.showHeading2" id="heading2-dropdown-item">
+                        <a class="dropdown-item" href="#" id="heading2" data-call="setTag" data-arg1="h2">Header 2</a>
+                    </li>
+                    <li t-if="props.showHeading3" id="heading3-dropdown-item">
+                        <a class="dropdown-item" href="#" id="heading3" data-call="setTag" data-arg1="h3">Header 3</a>
+                    </li>
+                    <li t-if="props.showHeading4" id="heading4-dropdown-item">
+                        <a class="dropdown-item" href="#" id="heading4" data-call="setTag" data-arg1="h4">Header 4</a>
+                    </li>
+                    <li t-if="props.showHeading5" id="heading5-dropdown-item">
+                        <a class="dropdown-item" href="#" id="heading5" data-call="setTag" data-arg1="h5">Header 5</a>
+                    </li>
+                    <li t-if="props.showHeading6" id="heading6-dropdown-item">
+                        <a class="dropdown-item" href="#" id="heading6" data-call="setTag" data-arg1="h6">Header 6</a>
+                    </li>
+                    <li id="paragraph-dropdown-item">
+                        <a class="dropdown-item" href="#" id="paragraph" data-call="setTag" data-arg1="p">Normal</a>
+                    </li>
+                    <li id="light-dropdown-item">
+                        <a class="dropdown-item" href="#" id="light" data-call="setTag" data-arg1="p,lead" data-extended-text-style="">Light</a>
+                    </li>
+                    <li id="small-dropdown-item">
+                        <a class="dropdown-item" href="#" id="small" data-call="setTag" data-arg1="p,o_small" data-extended-text-style="">Small</a>
+                    </li>
+                    <li id="pre-dropdown-item">
+                        <a class="dropdown-item" href="#" id="pre" data-call="setTag" data-arg1="pre">Code</a>
+                    </li>
+                    <li id="blockquote-dropdown-item">
+                        <a class="dropdown-item" href="#" id="blockquote" data-call="setTag" data-arg1="blockquote">Quote</a>
+                    </li>
+                </ul>
+            </div>
+
+            <t t-if="this.isSmall()">
+                <button type="button" class="btn dropdown-toggle"
+                    data-bs-toggle="dropdown" title="Decoration" tabindex="-1"
+                    data-bs-original-title="Decoration" data-bs-auto-close="outside" aria-expanded="false">
+                    <i class="fa fa-bold"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <div id="decoration" class="btn-group">
+                        <div id="bold" data-call="bold" title="Toggle bold" class="btn fa fa-bold fa-fw"></div>
+                        <div id="italic" data-call="italic" title="Toggle italic" class="btn fa fa-italic fa-fw"></div>
+                        <div id="underline" data-call="underline" title="Toggle underline" class="btn fa fa-underline fa-fw"></div>
+                        <div id="strikethrough" data-call="strikeThrough" title="Toggle strikethrough" class="btn fa fa-strikethrough fa-fw"></div>
+                    </div>
+
+                    <div t-if="props.showColors" id="colorInputButtonGroup" class="btn-group">
+                        <div class="colorpicker-group note-fore-color-preview" data-name="color" t-ref="textColorpickerDropdown" data-color-type="text">
+                            <div id="oe-text-color" class="btn color-button dropdown-toggle editor-ignore"
+                                data-bs-toggle="dropdown" tabindex="-1">
+                                <i class="fa fa-font color-indicator fore-color" title="Font Color"></i>
+                            </div>
+                            <ul class="dropdown-menu colorpicker-menu">
+                                <li><ColorPalette t-props="props.textColorPaletteProps" /></li>
+                            </ul>
+                        </div>
+                        <div class="colorpicker-group note-back-color-preview" data-name="color" t-ref="backgroundColorpaletteDropdown" data-color-type="background">
+                            <button id="oe-fore-color" type="button" class="btn dropdown-toggle editor-ignore"
+                                data-bs-toggle="dropdown" tabindex="-1">
+                                <i class="fa fa-paint-brush color-indicator hilite-color" title="Background Color"></i>
+                            </button>
+                            <ul class="dropdown-menu colorpicker-menu">
+                                <li><ColorPalette t-props="props.backgroundColorPaletteProps" /></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div id="removeFormat" data-call="removeFormat" title="Remove format" class="btn fa fa-eraser fa-fw" t-att-class="{ 'd-none': !props.showRemoveFormat }"></div>
+            </t>
+            <t t-else="">
+                <div id="decoration" class="btn-group">
+                    <div id="bold" data-call="bold" title="Toggle bold" class="btn fa fa-bold fa-fw"></div>
+                    <div id="italic" data-call="italic" title="Toggle italic" class="btn fa fa-italic fa-fw"></div>
+                    <div id="underline" data-call="underline" title="Toggle underline" class="btn fa fa-underline fa-fw"></div>
+                    <div id="strikethrough" data-call="strikeThrough" title="Toggle strikethrough" class="btn fa fa-strikethrough fa-fw"></div>
+                    <div id="removeFormat" data-call="removeFormat" title="Remove format" class="btn fa fa-eraser fa-fw" t-att-class="{ 'd-none': !props.showRemoveFormat }"></div>
+                </div>
+
+                <div t-if="props.showColors" id="colorInputButtonGroup" class="btn-group">
+                    <div class="colorpicker-group note-fore-color-preview" data-name="color" t-ref="textColorpickerDropdown" data-color-type="text">
+                        <div id="oe-text-color" class="btn color-button dropdown-toggle editor-ignore"
+                            data-bs-toggle="dropdown" tabindex="-1">
+                            <i class="fa fa-font color-indicator fore-color" title="Font Color"></i>
+                        </div>
+                        <ul class="dropdown-menu colorpicker-menu">
+                            <li><ColorPalette t-props="props.textColorPaletteProps" /></li>
+                        </ul>
+                    </div>
+                    <div class="colorpicker-group note-back-color-preview" data-name="color" t-ref="backgroundColorpaletteDropdown" data-color-type="background">
+                        <button id="oe-fore-color" type="button" class="btn dropdown-toggle editor-ignore"
+                            data-bs-toggle="dropdown" tabindex="-1">
+                            <i class="fa fa-paint-brush color-indicator hilite-color" title="Background Color"></i>
+                        </button>
+                        <ul class="dropdown-menu colorpicker-menu">
+                            <li><ColorPalette t-props="props.backgroundColorPaletteProps" /></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div t-if="props.useFontSizeInput or props.showFontSize" id="font-size" t-attf-class="btn-group {{ props.dropDirection }}">
+                    <button type="button" class="btn dropdown-toggle"
+                        data-bs-toggle="dropdown" tabindex="-1"
+                        data-bs-original-title="Font Size" aria-expanded="false">
+                        <div id="font-size-input-container">
+                            <input type="text" id="fontSizeCurrentValue" title="Font size" value="13" t-att-readonly= "props.showFontSize" t-att-class="props.showFontSize ? 'cursor-pointer' : ''"></input>
+                        </div>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <!-- See `FONT_SIZE_CLASSES` -->
+                        <li><a class="dropdown-item d-flex justify-content-between align-items-center" data-dynamic-value="display-1-font-size" data-apply-class="display-1-fs" href="#">? <span class="d-none o_we_font_size_badge badge rounded-pill text-bg-dark ms-4">Display 1</span></a></li>
+                        <li><a class="dropdown-item d-flex justify-content-between align-items-center" data-dynamic-value="display-2-font-size" data-apply-class="display-2-fs" href="#">? <span class="d-none o_we_font_size_badge badge rounded-pill text-bg-dark ms-4">Display 2</span></a></li>
+                        <li><a class="dropdown-item d-flex justify-content-between align-items-center" data-dynamic-value="display-3-font-size" data-apply-class="display-3-fs" href="#">? <span class="d-none o_we_font_size_badge badge rounded-pill text-bg-dark ms-4">Display 3</span></a></li>
+                        <li><a class="dropdown-item d-flex justify-content-between align-items-center" data-dynamic-value="display-4-font-size" data-apply-class="display-4-fs" href="#">? <span class="d-none o_we_font_size_badge badge rounded-pill text-bg-dark ms-4">Display 4</span></a></li>
+                        <li><a class="dropdown-item d-flex justify-content-between align-items-center" data-dynamic-value="h1-font-size" data-apply-class="h1-fs" href="#">? <span class="d-none o_we_font_size_badge badge rounded-pill text-bg-dark ms-4">Heading 1</span></a></li>
+                        <li><a class="dropdown-item d-flex justify-content-between align-items-center" data-dynamic-value="h2-font-size" data-apply-class="h2-fs" href="#">? <span class="d-none o_we_font_size_badge badge rounded-pill text-bg-dark ms-4">Heading 2</span></a></li>
+                        <li><a class="dropdown-item d-flex justify-content-between align-items-center" data-dynamic-value="h3-font-size" data-apply-class="h3-fs" href="#">? <span class="d-none o_we_font_size_badge badge rounded-pill text-bg-dark ms-4">Heading 3</span></a></li>
+                        <li><a class="dropdown-item d-flex justify-content-between align-items-center" data-dynamic-value="h4-font-size" data-apply-class="h4-fs" href="#">? <span class="d-none o_we_font_size_badge badge rounded-pill text-bg-dark ms-4">Heading 4</span></a></li>
+                        <li><a class="dropdown-item d-flex justify-content-between align-items-center" data-dynamic-value="h5-font-size" data-apply-class="h5-fs" href="#">? <span class="d-none o_we_font_size_badge badge rounded-pill text-bg-dark ms-4">Heading 5</span></a></li>
+                        <li><a class="dropdown-item d-flex justify-content-between align-items-center" data-dynamic-value="h6-font-size" data-apply-class="h6-fs" href="#">? <span class="d-none o_we_font_size_badge badge rounded-pill text-bg-dark ms-4">Heading 6</span></a></li>
+                        <li><a class="dropdown-item d-flex justify-content-between align-items-center" data-dynamic-value="font-size-base" data-apply-class="base-fs" href="#">? <span class="d-none o_we_font_size_badge badge rounded-pill text-bg-dark ms-4">Normal</span></a></li>
+                        <li><a class="dropdown-item d-flex justify-content-between align-items-center" data-dynamic-value="small-font-size" data-apply-class="o_small-fs" href="#">? <span class="d-none o_we_font_size_badge badge rounded-pill text-bg-dark ms-4">Small</span></a></li>
+                    </ul>
+                </div>
+            </t>
+
+            <div t-if="props.showJustify" id="justify" t-attf-class="btn-group {{ props.dropDirection }}">
+                <button type="button" class="btn dropdown-toggle"
+                    data-bs-toggle="dropdown" tabindex="-1" data-bs-original-title="Paragraph" aria-expanded="false">
+                    <i id="paragraphDropdownButton" class="fa fa-align-left fa-fw" title="Text align"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <div class="btn-group">
+                        <div class="btn" id="justifyLeft" data-call='justifyLeft'><i class="fa fa-align-left fa-fw"></i></div>
+                        <div class="btn" id="justifyCenter" data-call='justifyCenter'><i class="fa fa-align-center fa-fw"></i></div>
+                        <div class="btn" id="justifyRight" data-call='justifyRight'><i class="fa fa-align-right fa-fw"></i></div>
+                        <div class="btn" id="justifyFull" data-call='justifyFull'><i class="fa fa-align-justify fa-fw"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <t t-if="this.isSmall()">
+                <button type="button" class="btn dropdown-toggle"
+                    data-bs-toggle="dropdown" title="List" tabindex="-1"
+                    data-bs-original-title="List" aria-expanded="false">
+                    <i class="fa fa-list fa-fw"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <div t-if="props.showList" id="list" class="btn-group">
+                        <div id="unordered" data-call="toggleList" data-arg1="UL" title="Toggle unordered list" class="oe-toggle-unordered fa fa-list-ul fa-fw btn"></div>
+                        <div id="ordered" data-call="toggleList" data-arg1="OL" title="Toggle ordered list" class="oe-toggle-ordered fa fa-list-ol fa-fw btn"></div>
+                        <div t-if="props.showChecklist" id="checklist" data-call="toggleList" data-arg1="CL" title="Toggle checklist" class="oe-toggle-checklist btn fa fa-fw">
+                            <div class="small">
+                                <div class="fa fa-square-o d-block small"/>
+                                <div class="fa fa-check-square d-block small"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+            <t t-else="">
+                <div t-if="props.showList" id="list" class="btn-group">
+                    <div id="unordered" data-call="toggleList" data-arg1="UL" title="Toggle unordered list" class="oe-toggle-unordered fa fa-list-ul fa-fw btn"></div>
+                    <div id="ordered" data-call="toggleList" data-arg1="OL" title="Toggle ordered list" class="oe-toggle-ordered fa fa-list-ol fa-fw btn"></div>
+                    <div t-if="props.showChecklist" id="checklist" data-call="toggleList" data-arg1="CL" title="Toggle checklist" class="oe-toggle-checklist btn fa fa-fw">
+                        <div class="small">
+                            <div class="fa fa-square-o d-block small"/>
+                            <div class="fa fa-check-square d-block small"/>
+                        </div>
+                    </div>
+                </div>
+            </t>
+
+            <div id="image-preview" class="btn-group">
+                <div id="image-fullscreen" title="Full screen" class="fa fa-search-plus btn editor-ignore"></div>
+            </div>
+
+            <div t-if="props.showLink" id="link" class="btn-group">
+                <div id="media-insert" title="Insert media" class="fa fa-file-image-o fa-fw btn editor-ignore"></div>
+                <!--
+                Unlink button is visually last but thanks through the order-1
+                class. Indeed the create-link button needs to be last in the DOM
+                for the border-radius to be right when unlink is not shown, e.g.
+                in website.
+                TODO this should be done another way (split web_editor/website
+                to review).
+                -->
+                <div id="unlink" data-call="unlink" title="Remove link" class="fa fa-unlink fa-fw btn order-1"></div>
+                <div id="create-link" title="Insert or edit link" class="fa fa-link fa-fw btn editor-ignore"></div>
+                <a id="media-description" href="#" title="Edit media description" class="btn editor-ignore">Description</a>
+            </div>
+
+            <div id="chatgpt" class="btn-group">
+                <div id="open-chatgpt" title="Generate or transform content with AI" class="btn editor-ignore">
+                    <span class="fa fa-magic fa-fw"></span>
+                </div>
+            </div>
+            <div id="translate" t-attf-class="btn-group {{ props.dropDirection }}">
+                <div t-if="state.languages.length === 1" class="btn lang" title="Translate with AI" t-att-data-value="state.languages[0][1]">
+                    Translate
+                </div>
+                <t t-elif="state.languages.length > 1">
+                    <button type="button" class="btn dropdown-toggle"
+                        data-bs-toggle="dropdown" data-bs-original-title="Translate with AI" tabindex="-1" aria-expanded="false">
+                        <span title="Translate with AI">Translate</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <t t-foreach="state.languages" t-as="language" t-key="language[0]">
+                            <li><a class="dropdown-item lang" t-att-data-value="language[1]" href="#">to <t t-out="language[1]" /></a></li>
+                        </t>
+                    </ul>
+                </t>
+            </div>
+
+            <div  t-if="props.showImageShape" id="image-shape" class="btn-group">
+                <div id="rounded" title="Shape: Rounded" class="fa fa-square fa-fw btn editor-ignore"></div>
+                <div id="rounded-circle" title="Shape: Circle" class="fa fa-circle-o fa-fw btn editor-ignore"></div>
+                <div id="shadow" title="Shadow" class="fa fa-sun-o fa-fw btn editor-ignore"></div>
+                <div id="img-thumbnail" title="Shape: Thumbnail" class="fa fa-picture-o fa-fw btn editor-ignore"></div>
+            </div>
+
+            <div  t-if="props.showImagePadding" id="image-padding" t-attf-class="btn-group {{ props.dropDirection }}">
+                <button type="button" class="btn dropdown-toggle"
+                    data-bs-toggle="dropdown" tabindex="-1" aria-expanded="false">
+                    <span class="fa fa-plus-square-o" title="Image padding"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item editor-ignore" href="#" data-class="">None</a></li>
+                    <li><a class="dropdown-item editor-ignore" href="#" data-class="padding-small">Small</a></li>
+                    <li><a class="dropdown-item editor-ignore" href="#" data-class="padding-medium">Medium</a></li>
+                    <li><a class="dropdown-item editor-ignore" href="#" data-class="padding-large">Large</a></li>
+                    <li><a class="dropdown-item editor-ignore" href="#" data-class="padding-xl">XL</a></li>
+                </ul>
+            </div>
+
+            <div  t-if="props.showImageWidth" id="image-width" class="btn-group">
+                <div title="Resize Default" class="btn editor-ignore">Default</div>
+                <div id="100%" title="Resize Full" class="btn editor-ignore">100%</div>
+                <div id="50%" title="Resize Half" class="btn editor-ignore">50%</div>
+                <div id="25%" title="Resize Quarter" class="btn editor-ignore">25%</div>
+            </div>
+
+            <div  t-if="props.showImageEdit" id="image-edit" class="btn-group">
+                <div id="image-crop" title="Crop Image" class="btn fa fa-crop editor-ignore"></div>
+                <div id="image-transform" class="btn editor-ignore fa fa-object-ungroup"
+                    title="Transform the picture (click twice to reset transformation)"></div>
+                <span class="oe-toolbar-separator d-flex"/>
+                <div id="media-replace" title="Replace media" class="btn o_we_bg_success editor-ignore">Replace</div>
+                <span class="oe-toolbar-separator d-flex"/>
+                <div id="image-delete" class="btn btn-link text-danger editor-ignore fa fa-trash" title="Remove (DELETE)"></div>
+            </div>
+
+            <div id="fa-resize" class="btn-group only_fa">
+                <div class="editor-ignore btn" title="Icon size 1x" data-value="1">1x</div>
+                <div class="editor-ignore btn" title="Icon size 2x" data-value="2">2x</div>
+                <div class="editor-ignore btn" title="Icon size 3x" data-value="3">3x</div>
+                <div class="editor-ignore btn" title="Icon size 4x" data-value="4">4x</div>
+                <div class="editor-ignore btn" title="Icon size 5x" data-value="5">5x</div>
+            </div>
+
+            <div class="btn-group only_fa">
+                <div id="fa-spin" title="Toggle icon spin" class="editor-ignore btn fa fa-play"></div>
+            </div>
+
+            <div t-if="props.showHistory" id="history" class="btn-group">
+                <div id="undo" data-call="undo" class="btn fa fa-undo"/>
+                <div id="redo" data-call="redo" class="btn fa fa-repeat"/>
+            </div>
+
+            <t t-slot="default"/>
+        </div>
+    </t>
+
+    <!-- Editor Toolbar -->
+    <!-- <t t-inherit="web_editor.toolbar" t-inherit-mode="extension">
+        <xpath expr="//div[@id='checklist']" position="replace">aoeu</xpath>
+        <xpath expr="//div[@id='list']" position="inside">
+            <div title="Animate text" class="btn fa fa-play fa-fw o_we_animate_text"/>coucou4
+        </xpath>
+    </t> -->
+
+    <t t-name="web_editor.toolbar.table-options">
+        <we-customizeblock-options id="o-we-editor-table-container">
+            <we-title>
+                <span>Table Options</span>
+                <div id="oe-table-delete-table" data-call="deleteTable" class="o_we_hover_danger">
+                    <i class="fa fa-trash"/>
+                </div>
+            </we-title>
+            <div id="oe-table-options">
+                <div class="oe-table-row">
+                    <span class="oe-table-label">Add Column</span>
+                    <div class="w-100">
+                        <div class="oe-table-selection btn-group w-100">
+                            <button class="btn w-50" data-call="addColumn" data-arg1="before">
+                                <i class="small fa fa-fw fa-step-backward"/> Left
+                            </button>
+                            <button class="btn w-50" data-call="addColumn" data-arg1="after">
+                                Right <i class="small fa fa-fw fa-step-forward"/>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="oe-table-row">
+                    <span class="oe-table-label">Add Row</span>
+                    <div class="w-100">
+                        <div class="oe-table-selection btn-group w-100">
+                            <button class="btn w-50" data-call="addRow" data-arg1="before">
+                                <i class="small fa fa-fw fa-step-backward fa-rotate-90"/> Above
+                            </button>
+                            <button class="btn w-50" data-call="addRow" data-arg1="after">
+                                Below <i class="small fa fa-fw fa-step-forward fa-rotate-90"/>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="oe-table-row mt-3">
+                    <span class="oe-table-label">Remove Current</span>
+                    <div class="w-100">
+                        <div class="oe-table-selection btn-group w-100">
+                            <button class="btn w-50" data-call="removeColumn">
+                                <i class="small fa fa-fw fa-columns"/> Column
+                            </button>
+                            <button class="btn w-50" data-call="removeRow">
+                                <i class="small fa fa-fw fa-bars"/> Row
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                 <div class="oe-table-row mt-3">
+                    <span class="oe-table-label"></span>
+                    <div class="w-100">
+                        <div class="oe-table-selection btn-group w-100">
+                            <button class="btn w-50" data-call="resetSize">
+                                <i class="small fa fa-fw fa-table"/> Reset Size
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </we-customizeblock-options>
+    </t>
+
+    <!--=================-->
+    <!-- Snippet options -->
+    <!--=================-->
+
+    <!-- Background position option overlay -->
+    <t t-name="web_editor.background_position_overlay">
+        <div class="o_we_background_position_overlay oe_overlay">
+            <div class="o_we_overlay_content position-absolute">
+                <div class="o_overlay_background"/>
+                <div class="o_we_overlay_buttons position-absolute d-flex m-1" style="top: 0">
+                    <button class="btn btn-primary me-1 o_btn_apply">Apply</button>
+                    <button class="btn btn-danger o_btn_discard">Discard</button>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.CashierName">
+        <button t-att-class="cssClass" class="cashier-name btn btn-light btn-lg lh-lg d-flex align-items-center gap-2 flex-shrink-0 h-100">
+            <img t-att-src="avatar" t-att-alt="username" class="avatar rounded-3"/>
+            <span t-if="!ui.isSmall" t-esc="username" class="username d-none d-xl-inline-block text-truncate"/>
+        </button>
+    </t>
+
+</templates>

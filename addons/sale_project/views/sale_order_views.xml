@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_order_form_inherit_sale_project" model="ir.ui.view">
+        <field name="name">sale.order.form.sale.project</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_view_invoice']" position="before">
+                <field name="show_task_button" invisible="1"/>
+                <field name="show_project_button" invisible="1"/>
+                <field name="show_create_project_button" invisible="1"/>
+                <field name="project_ids" invisible="1"/>
+                <field name="is_product_milestone" invisible="1"/>
+                <button type="object" name="action_view_project_ids" class="oe_stat_button" icon="fa-puzzle-piece" invisible="not show_project_button" groups="project.group_project_user">
+                    <field name="project_count" widget="statinfo" string="Projects"/>
+                </button>
+                <button class="oe_stat_button" name="action_view_milestone" type="object" icon="fa-check-square-o" invisible="not is_product_milestone or not project_ids or state == 'draft'" groups="project.group_project_milestone">
+                    <field name="milestone_count" widget="statinfo" string="Milestones"/>
+                </button>
+                <button type="object" name="action_view_task" class="oe_stat_button" icon="fa-check" invisible="not show_task_button" groups="project.group_project_user">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">Tasks</span>
+                        <span class="o_stat_value">
+                            <field name="closed_task_count"/> / <field name="tasks_count"/>
+                            (<field name="completed_task_percentage" widget="percentage" options="{'digits': [1, 0]}"/>)
+                        </span>
+                    </div>
+                </button>
+            </xpath>
+            <field name="journal_id" position="before">
+                <field name="project_id" groups="project.group_project_user"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_sales_order_filter_inherit_sale_project" model="ir.ui.view">
+        <field name="name">sale.order.list.select.inherit.sale_project</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="arch" type="xml">
+            <field name="order_line" position="after">
+                <field name="project_id" groups="project.group_project_user"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="model_sale_order_action_create_project" model="ir.actions.server">
+        <field name="name">Create Project</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_view_types">form</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_create_project()</field>
+    </record>
+
+</odoo>

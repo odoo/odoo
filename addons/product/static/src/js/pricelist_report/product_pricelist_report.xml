@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+
+    <t t-name="product.ProductPricelistReport">
+        <div class="o_action">
+            <Layout display="{ controlPanel: {} }">
+                <t t-set-slot="control-panel-always-buttons">
+                    <button t-on-click="onClickPrint" type="button" class="btn btn-primary" title="Print">Print</button>
+                    <select name="formats" id="formats" class="form-select border-1 w-auto">
+                        <option value="pdf">pdf</option>
+                        <option value="csv">csv</option>
+                        <option value="xlsx">xlsx</option>
+                    </select>
+                </t>
+                <t t-set-slot="layout-actions">
+                    <form class="o_pricelist_report_form d-flex flex-row gap-1">
+                        <div class="d-flex align-items-center gap-3 w-100">
+                            <label class="visually-hidden" for="pricelists">Username</label>
+                            <div class="input-group w-auto">
+                                <div class="input-group-text fw-bold">Pricelist</div>
+                                <select
+                                    name="pricelists"
+                                    id="pricelists"
+                                    class="o_select form-select border-0"
+                                    t-on-change="onSelectPricelist"
+                                >
+                                    <option t-out="selectedPricelist.name" t-att-value="selectedPricelist.id"/>
+                                    <t t-foreach="pricelists" t-as="pricelist" t-key="pricelist.id">
+                                        <t t-if="pricelist.id != selectedPricelist.id">
+                                            <option t-out="pricelist.name" t-att-value="pricelist.id"/>
+                                        </t>
+                                    </t>
+                                </select>
+                            </div>
+                            <div class="form-check w-auto">
+                                <input class="o_display_pricelist_title form-check-input ms-0 me-2"
+                                    id="display_pricelist_title"
+                                    type="checkbox"
+                                    t-att-checked="displayPricelistTitle"
+                                    t-on-click="onToggleDisplayPricelist"/>
+                                <label for="display_pricelist_title" class="form-check-label">Show Name</label>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-3 w-100">
+                            <div class="input-group d-flex flex-nowrap w-50" style="min-width:210px;">
+                                <span class="input-group-text fw-bold">
+                                    Quantities
+                                </span>
+                                <input type="number"
+                                    class="form-control add-quantity-input"
+                                    value="1"
+                                    min="1"/>
+                                <button class="o_add_qty btn btn-primary fa fa-plus"
+                                        type="submit"
+                                        t-on-click="onClickAddQty"
+                                        title="Add a quantity"/>
+                            </div>
+                            <div class="d-flex align-items-center w-50">
+                                <span class="o_badges_list d-flex">
+                                    <t t-foreach="quantities" t-as="qty" t-key="qty">
+                                        <span class="o_field_badge o_remove_qty badge rounded-pill me-2 py-1 border " t-att-value="qty">
+                                            <t class="me-2" t-esc="qty"/>
+                                            <i class="oi oi-close ms-1 opacity-50 opacity-100-hover text-900 cursor-pointer"
+                                            title="Remove quantity"
+                                            t-on-click="onClickRemoveQty"/>
+                                        </span>
+                                    </t>
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                    <div style="margin-left:300px;">
+                        <button t-on-click="onClickAddProducts" string="All Products" class="btn btn-link">
+                            <i class="fa fa-pencil"/>
+                            Add Products
+                        </button>
+                    </div>
+                </t>
+                <div t-on-click="onClickLink">
+                    <t t-out="html"/>
+                </div>
+                <t t-if="noProducts">
+                    <div class="o_view_nocontent" role="alert">
+                        <div class="o_nocontent_help">
+                            <p class="o_view_nocontent_smiling_face">
+                                No products found in the report
+                            </p>
+                            <p class="fs-5">
+                                Add products using the "Add Products" button at the top right to
+                                include them in the report.
+                            </p>
+                        </div>
+                    </div>
+                </t>
+           </Layout>
+        </div>
+    </t>
+
+</templates>

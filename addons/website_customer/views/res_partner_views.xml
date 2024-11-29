@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<odoo>
+        <record id="view_partners_form_website" model="ir.ui.view">
+            <field name="name">view.res.partner.form.website.tags</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="website_partner.view_partners_form_website" />
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='website_id']" position="after">
+                        <field name="website_tag_ids" widget="many2many_tags" string="Website Tags"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="view_partner_tag_form" model="ir.ui.view">
+            <field name="name">Website Tags</field>
+            <field name="model">res.partner.tag</field>
+            <field name="arch" type="xml">
+                <form string="Partner Tag">
+                <sheet>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="classname"/>
+                        <field name="is_published"/>
+                        <field name="active" widget="boolean_toggle"/>
+                    </group>
+                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_partner_tag_list" model="ir.ui.view">
+            <field name="name">Website Tags</field>
+            <field name="model">res.partner.tag</field>
+            <field eval="6" name="priority"/>
+            <field name="arch" type="xml">
+                <list string="Website Tags" editable="bottom">
+                    <field name="name"/>
+                    <field name="classname"/>
+                    <field name="is_published"/>
+                    <field name="active" column_invisible="True"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="res_partner_tag_view_search" model="ir.ui.view">
+            <field name="name">res.partner.tag.view.search</field>
+            <field name="model">res.partner.tag</field>
+            <field name="arch" type="xml">
+                <search string="Search Partner Tag">
+                    <field name="name"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_partner_tag_form" model="ir.actions.act_window">
+            <field name="name">Website Tags</field>
+            <field name="res_model">res.partner.tag</field>
+            <field name="search_view_id" ref="res_partner_tag_view_search"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new contact tag
+              </p><p>
+                Manage contact tags to better classify them for tracking and analysis purposes.
+              </p>
+            </field>
+        </record>
+
+        <menuitem
+            action="action_partner_tag_form"
+            id="menu_partner_tag_form"
+            name="Website Tags"
+            sequence="2"
+            parent="contacts.res_partner_menu_config"
+        />
+
+</odoo>

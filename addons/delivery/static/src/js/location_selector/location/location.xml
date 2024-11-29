@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="delivery.locationSelector.location">
+        <button
+            t-attf-id="location-{{this.props.id}}"
+            class="list-group-item list-group-item-action collapsed d-flex gap-2 gap-lg-3"
+            t-att-class="{'text-bg-light': props.isSelected}"
+            t-on-click="() => props.setSelectedLocation(props.id)"
+            type="button"
+            t-attf-data-bs-target="#collapseHours_{{props.id}}"
+            aria-expanded="false"
+            t-attf-aria-controls="collapseHours_{{props.id}}"
+            data-bs-toggle="collapse"
+        >
+            <span
+                class="position-absolute top-0 start-0 h-100 ps-1 bg-primary transition-base"
+                t-attf-class="#{props.isSelected ? 'ms-0' : 'ms-n1' }"
+            />
+            <strong t-out="props.number" class="o_location_selector_number fw-bold text-center"/>
+            <span class="d-flex flex-column gap-1 gap-md-0 w-100">
+                <span class="d-flex flex-column">
+                    <strong t-out="props.name" class="fw-bold"/>
+                    <small class="opacity-75" t-out="props.street"/>
+                    <small class="opacity-75" t-out="this.getCityAndZipCode()"/>
+                </span>
+                <small name="location_opening_hours" class="d-flex d-md-none align-items-center gap-1 fw-bold">
+                    <i class="fa fa-clock-o" role="img"/>
+                    Opening hours
+                    <i class="o_location_selector_hours_caret fa fa-caret-up ms-auto transition-base"/>
+                </small>
+
+                <!-- Schedule -->
+                <span
+                    class="collapse d-md-none"
+                    t-attf-id="collapseHours_{{props.id}}"
+                    data-bs-parent="#o_location_selector_list_view"
+                  >
+                    <LocationSchedule openingHours="props.openingHours"/>
+                </span>
+            </span>
+        </button>
+    </t>
+</templates>

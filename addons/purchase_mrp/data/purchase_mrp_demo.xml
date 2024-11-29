@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="mrp.product_product_computer_desk_leg" model="product.product">
+            <field name="route_ids" eval="[Command.link(ref('purchase_stock.route_warehouse0_buy'))]"></field>
+        </record>
+    </data>
+</odoo>

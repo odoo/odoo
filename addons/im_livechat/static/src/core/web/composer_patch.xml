@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="im_livechat.Composer" t-inherit="mail.Composer" t-inherit-mode="extension">
+        <xpath expr="//Typing" position="replace">
+            <div class="d-flex justify-content-between align-items-center w-100">
+                <div class="d-flex">$0</div>
+                <span t-if="displayNextLivechatHint() and !env.inChatWindow" class="text-muted fst-italic form-text">Tab to next livechat</span>
+            </div>
+        </xpath>
+    </t>
+</templates>

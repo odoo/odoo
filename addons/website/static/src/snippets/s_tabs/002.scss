@@ -1,0 +1,92 @@
+// Tabs
+.s_tabs[data-vcss="002"] {
+    --tabs-bg-color: #{$gray-100};
+    --tabs-link-color: #{$body-color};
+
+    .s_tabs_content {
+        &.s_tabs_slide_up, &.s_tabs_slide_down, &.s_tabs_slide_left, &.s_tabs_slide_right {
+            > .tab-pane.fade {
+                transition: all 0.2s;
+            }
+            > .tab-pane.fade.show {
+                transform: translateX(0rem) translateY(0rem);
+            }
+        }
+        &.s_tabs_slide_up > .tab-pane.fade {
+            transform: translateY(-1rem);
+        }
+        &.s_tabs_slide_down > .tab-pane.fade {
+            transform: translateY(1rem);
+        }
+        &.s_tabs_slide_left > .tab-pane.fade {
+            transform: translateX(-1rem);
+        }
+        &.s_tabs_slide_right > .tab-pane.fade {
+            transform: translateX(1rem);
+        }
+    }
+
+    .s_tabs_main {
+        --card-cap-bg: initial;
+
+        .nav-tabs{
+            --nav-tabs-link-hover-border-color: transparent;
+        }
+
+        .s_tabs_nav:has(.nav-tabs), .s_tabs_nav:has(.nav-buttons) {
+            background: var(--tabs-bg-color, $gray-100);
+
+            .nav .nav-item a.nav-link{
+                color: var(--tabs-link-color, $body-color);
+            }
+        }
+
+        .nav-tabs a.active {
+            color: $body-color;
+        }
+
+        .nav-underline {
+            border-bottom: 1px solid $border-color;
+
+            .nav-link {
+                margin-bottom: -1px;
+
+                &:not(.active) {
+                    border: 0;
+                }
+            }
+        }
+
+        &.row .nav-underline {
+            @include media-breakpoint-up(sm) {
+                border-bottom: 0;
+                border-left: 1px solid $border-color;
+
+                .nav-link {
+                    margin-left: -1px;
+                    padding: map-get($spacers, 1) map-get($spacers, 3);
+
+                    &.active {
+                        border-left: 2px solid $link-color;
+                        border-bottom: 0;
+                    }
+                }
+            }
+        }
+
+        .s_tabs_nav:has(.nav-buttons.nav-justified),
+        .s_tabs_nav:has(.nav-buttons.nav-fill) {
+            &, .nav-buttons {
+                width: 100%;
+            }
+        }
+
+        .nav-buttons {
+            & .active {
+                color: color-contrast($white);
+                background-color: $white;
+                box-shadow: $box-shadow-sm;
+            }
+        }
+    }
+}

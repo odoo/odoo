@@ -1,0 +1,111 @@
+.o-mail-LinkPreviewCard {
+    max-width: $o-mail-LinkPreview-width;
+
+    .row {
+        min-height: $o-mail-LinkPreviewCard-height;
+    }
+}
+
+.o-mail-LinkPreviewCard-description {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.o-mail-LinkPreviewCard-imageLinkWrap {
+    border-right: 1px solid $card-border-color;
+}
+
+.o-mail-LinkPreviewImage img {
+    max-height: $o-mail-LinkPreview-height;
+    max-width: $o-mail-LinkPreview-width;
+}
+
+.o-mail-ChatWindow .o-mail-LinkPreviewImage img {
+    max-width: 100%;
+}
+
+.o-mail-LinkPreviewVideo {
+    max-width: $o-mail-LinkPreview-width;
+
+    .row {
+        min-height: $o-mail-LinkPreviewCard-height;
+    }
+}
+
+.o-mail-LinkPreviewVideo-hasDescription {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+
+    &.o-mail-LinkPreviewVideo-description {
+        -webkit-line-clamp: 2;
+    }
+    &.o-mail-LinkPreviewVideo-title {
+        -webkit-line-clamp: 3;
+    }
+}
+
+.o-mail-LinkPreviewVideo-play {
+    background: #535353;
+
+    &:hover {
+        background: #777777;
+    }
+
+    i {
+        color: #cac6c6;
+    }
+}
+
+.o-mail-LinkPreviewVideo-container {
+    position: relative;
+    aspect-ratio: 16 / 9;
+
+    & iframe, .o-mail-LinkPreviewVideo-videoWrap {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+}
+
+$o-mail-LinkPreviewVideo-providerBorderWidth: 4px;
+
+.o-mail-LinkPreviewVideo-embed {
+    max-width: 400px;
+    transition: max-width 0.6s cubic-bezier(.215, .610, .355, 1);
+    border: 0;
+
+    &.o-mail-LinkPreviewVideo-started {
+        max-width: 550px;
+    }
+
+    &[data-provider=youtube] {
+        border-left: $o-mail-LinkPreviewVideo-providerBorderWidth solid;
+        border-left-color: #FF0000;
+    }
+    &[data-provider=google-drive]::before {
+        // Using before pseudo element to make border radius work with
+        // border-image.
+        content: '';
+        position: absolute;
+        z-index: 1;
+        width: $o-mail-LinkPreviewVideo-providerBorderWidth;
+        height: 100%;
+        background: linear-gradient(to bottom, #FBBC05 33.33%, #34A853 33.33%, #34A853 66.66%, #4285F4 66.66%);
+    }
+
+    & .o-mail-LinkPreviewVideo-overlay {
+        border-bottom-left-radius: 0 !important;
+    }
+}
+
+@media (hover: hover) {
+    .o-mail-LinkPreview-aside {
+        display: none;
+    }
+    .o-mail-LinkPreviewCard:hover, .o-mail-LinkPreviewImage:hover, .o-mail-LinkPreviewVideo:hover {
+        .o-mail-LinkPreview-aside {
+            display: block;
+        }
+    }
+}

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="mail.Many2OneAvatarUserField" t-inherit="web.Many2OneAvatarField" t-inherit-mode="primary">
+        <xpath expr="//span[hasclass('o_m2o_avatar')]" position="attributes">
+            <attribute name="t-on-click.stop.prevent">onClickAvatar</attribute>
+        </xpath>
+    </t>
+    
+    <t t-name="mail.KanbanMany2OneAvatarUserField" t-inherit="web.KanbanMany2OneAvatarField" t-inherit-mode="primary">
+        <xpath expr="//span[hasclass('o_m2o_avatar')]" position="attributes">
+            <attribute name="t-on-click.stop.prevent">onClickAvatar</attribute>
+        </xpath>
+        <xpath expr="//t[@t-call='web.Many2OneField']" position="attributes">
+            <attribute name="t-if">props.readonly and props.displayAvatarName</attribute>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,25 @@
+.o_view_nocontent {
+    .o_nocontent_help:has(> .bill_guide_container) {
+        min-width: 65vw;
+    }
+}
+
+.bill_guide_container {
+    @include media-breakpoint-up(sm) {
+      min-width: 400px;
+    }
+
+    .bill_guide_left, .bill_guide_right {
+      width: 45%;
+    }
+
+    .separator_wrapper {
+      width: 10%;
+    }
+}
+
+.account_drag_drop_btn {
+    border-style: dashed !important;
+    border-color: $o-brand-primary;
+    background-color: #F2EDF0;
+}

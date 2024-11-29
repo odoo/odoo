@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="group_mail_group_manager" model="res.groups">
+        <field name="name">Mail Group Administrator</field>
+        <field name="category_id" ref="base.module_category_usability"/>
+    </record>
+    <record id="base.group_system" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('mail_group.group_mail_group_manager'))]"/>
+    </record>
+</odoo>

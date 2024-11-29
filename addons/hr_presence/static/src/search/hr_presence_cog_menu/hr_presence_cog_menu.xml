@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr_presence.cogmenu" t-inherit="web.FormCogMenu" t-inherit-mode="primary">
+        <xpath expr="//t[@t-if='state.printItems.length']" position="after">
+            <t t-if="PresenceActionItems.length">
+                <t t-call="hr_presence.menu">
+                    <t t-set="is_actionmenu" t-value="''"/>
+                </t>
+            </t>
+        </xpath>
+    </t>
+
+    <t t-name="hr_presence.menu">
+        <Dropdown>
+            <button t-attf-class="{{ is_actionmenu ? 'btn btn-secondary' : '' }}">
+                <i class="fa fa-clock-o me-1"/>
+                <span class="o_dropdown_title">Presence Control</span>
+            </button>
+            <t t-set-slot="content">
+                <t t-foreach="PresenceActionItems" t-as="item" t-key="item.key">
+                    <t t-if="currentGroup !== null and currentGroup !== item.groupNumber">
+                        <div role="separator" class="dropdown-divider"/>
+                    </t>
+                    <DropdownItem class="'o_menu_item'" onSelected="() => this.onItemSelected(item)">
+                        <t t-esc="item.description"/>
+                    </DropdownItem>
+                    <t t-set="currentGroup" t-value="item.groupNumber"/>
+                </t>
+            </t>
+        </Dropdown>
+    </t>
+
+</templates>

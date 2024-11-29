@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_line_tree_detailed_wave" model="ir.ui.view">
+        <field name="name">stock_picking_wave.move.line.list.wave</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_move_line_tree_detailed"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <header>
+                    <button name="action_open_add_to_wave" type="object" string="Add to Wave"/>
+                </header>
+            </xpath>
+            <xpath expr="//field[@name='picking_id']" position="after">
+                <field name="batch_id" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_picking_internal_search_inherit" model="ir.ui.view">
+        <field name="name">stock.picking.internal.search.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+        <field name="arch" type="xml">
+            <filter name="picking_type" position="after">
+                <filter string="Batch Transfer" name="batch" domain="[]" context="{'group_by': 'batch_id'}"/>
+            </filter>
+        </field>
+    </record>
+</odoo>

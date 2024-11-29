@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="website_sale.ProductImageViewer">
+        <div class="o_dialog" t-att-id="id" t-att-class="{ o_inactive_modal: !data.isActive }">
+            <div role="dialog" class="modal" t-ref="modalRef">
+                <div class="o_wsale_image_viewer flex-column align-items-center d-flex w-100 h-100" t-on-mousemove="onGlobalMousemove">
+                    <!-- Header -->
+                    <div class="o_wsale_image_viewer_header d-flex w-100 text-white">
+                        <div class="flex-grow-1"/>
+                        <div class="d-flex align-items-center mb-0 px-3 h4 text-reset cursor-pointer">
+                            <span class="fa fa-times" t-on-click="data.close"/>
+                        </div>
+                    </div>
+                    <!-- Content -->
+                    <div class="o_wsale_image_viewer_image position-absolute top-0 bottom-0 start-0 end-0 align-items-center justify-content-center d-flex o_with_img overflow-hidden">
+                        <div class="o_wsale_image_viewer_void position-absolute align-items-center justify-content-center d-flex w-100 h-100" t-ref="imageContainer" t-att-style="imageContainerStyle">
+                            <img class="mw-100 mh-100 bg-black transition-base" t-att-src="selectedImage.src" draggable="false" alt="Viewer" t-att-style="imageStyle" t-on-wheel.stop="onWheelImage" t-on-mousedown="onMousedownImage"/>
+                        </div>
+                    </div>
+                    <t t-if="images.length > 1">
+                        <!-- Footer -->
+                        <div class="o_wsale_image_viewer_carousel position-absolute bottom-0 d-flex" role="toolbar">
+                            <ol class="d-flex justify-content-start ps-0 pt-2 pt-lg-0 mx-auto my-0 text-start">
+                                <t t-foreach="images" t-as="image" t-key="image.thumbnailSrc">
+                                    <li t-attf-class="align-top position-relative px-1 pb-1 {{image === selectedImage ? 'active' : ''}}" t-on-click="() => this.selectedImage = image">
+                                        <div>
+                                            <img
+                                                t-att-src="image.thumbnailSrc"
+                                                class="img o_wsale_image_viewer_thumbnail bg-body object-fit-contain"
+                                                t-att-class="{'active': image === selectedImage}"
+                                                t-att-alt="props.title"
+                                                loading="lazy"
+                                            />
+                                        </div>
+                                    </li>
+                                </t>
+                            </ol>
+                        </div>
+                        <!-- Controls -->
+                        <div class="o_wsale_image_viewer_control position-absolute d-flex align-items-center me-2 h-100 w-100">
+                            <a
+                                class="carousel-control-prev"
+                                t-on-click="previousImage"
+                                title="Previous (Left-Arrow)"
+                                role="button"
+                            >
+                                <i
+                                    class="oi oi-chevron-left border bg-white text-900"
+                                    role="img"
+                                    aria-label="Previous"
+                                    title="Previous"
+                                />
+                            </a>
+                        </div>
+                        <div class="o_wsale_image_viewer_control position-absolute d-flex align-items-center me-2 h-100 w-100">
+                            <a
+                                class="carousel-control-next"
+                                t-on-click="nextImage"
+                                title="Next (Right-Arrow)"
+                                role="button"
+                            >
+                                <i
+                                    class="oi oi-chevron-right border bg-white text-900"
+                                    role="img"
+                                    aria-label="Next"
+                                    title="Next"
+                                />
+                            </a>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

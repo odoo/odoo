@@ -1,0 +1,14 @@
+<templates>
+
+    <t t-name="web.ActionInstallKioskPWA">
+        <div class="text-center my-3">
+            <div class="fs-2 mb-2">From your Kiosk, open this URL:</div>
+            <i class="fa fa-share-square-o me-1 mb-3"/><a t-att-href="url" target="_blank" t-esc="url"></a>
+        </div>
+        <footer class="border-top d-flex p-3 justify-content-center justify-content-md-end flex-wrap gap-1 w-100">
+            <button class="btn btn-secondary" special="cancel" t-on-click="() => this.dialog.closeAll()">Close</button>
+            <a class="btn btn-primary" t-att-href="installURL" target="_blank">Install App</a>
+        </footer>
+    </t>
+
+</templates>

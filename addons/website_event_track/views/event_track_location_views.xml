@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <!-- EVENTS/CONFIGURATION/EVENT locations -->
+    <record model="ir.ui.view" id="view_event_location_form">
+        <field name="name">Event Locations</field>
+        <field name="model">event.track.location</field>
+        <field name="arch" type="xml">
+            <form string="Event Locations">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="sequence"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_event_location_tree">
+        <field name="name">Event Location</field>
+        <field name="model">event.track.location</field>
+        <field name="arch" type="xml">
+            <list string="Event Location" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name" placeholder='e.g. "Main Conference Room"'/>
+            </list>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_event_track_location">
+        <field name="name">Event Locations</field>
+        <field name="res_model">event.track.location</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Track Location
+            </p><p>
+                Manage from here the places where you organize your tracks (e.g. Rooms, Channels, ...).
+            </p>
+        </field>
+    </record>
+
+</odoo>

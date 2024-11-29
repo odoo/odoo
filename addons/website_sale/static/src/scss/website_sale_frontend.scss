@@ -1,0 +1,43 @@
+//## Website Sale frontent design
+//## ----------------------------
+
+.o_wsale_image_viewer {
+    z-index: -1;
+
+    .o_wsale_image_viewer_header {
+        height: 40px;
+        z-index: 1;
+    }
+
+    .o_wsale_image_viewer_image {
+        .o_wsale_image_viewer_void {
+            padding-top: 64px;
+            padding-bottom: 156px;
+        }
+
+        img {
+            cursor: zoom-in;
+        }
+    }
+
+    .o_wsale_image_viewer_carousel {
+        z-index:1;
+
+        ol {
+            list-style: none;
+
+            .o_wsale_image_viewer_thumbnail {
+                aspect-ratio: 1/1;
+                width: 128px;
+            }
+
+            li img{
+                border: 1px solid #CED4DA;
+
+                &.active {
+                    border-color: #35979c;
+                }
+            }
+        }
+    }
+}

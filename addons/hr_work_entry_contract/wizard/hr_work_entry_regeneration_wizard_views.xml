@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_work_entry_regeneration_wizard" model="ir.ui.view">
+        <field name="name">hr_work_entry_regeneration_wizard</field>
+        <field name="model">hr.work.entry.regeneration.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Regenerate Employee Work Entries">
+                <group>
+                    <group>
+                        <field name="employee_ids" widget="many2many_avatar_user"/>
+                        <label for="date_from"></label>
+                        <div name="date_from">
+                            <div class="text-info" invisible="earliest_available_date_message == ''">
+                                <i class="fa fa-info-circle me-1" title="Hint"/>
+                                <field name="earliest_available_date_message" nolabel="1"/>
+                            </div >
+                            <field name="date_from"/>
+                        </div>
+                        <label for="date_to"></label>
+                        <div name="date_to">
+                            <div class="text-info" invisible="latest_available_date_message == ''">
+                                <i class="fa fa-info-circle me-1" title="Hint"/>
+                                <field name="latest_available_date_message" nolabel="1"/>
+                            </div>
+                            <field name="date_to"/>
+                        </div>
+                    </group>
+                </group>
+                <div>
+                    <span class="text-muted">Warning: The work entry regeneration will delete all manual changes on the selected period.</span>
+                </div>
+                <field name="search_criteria_completed" invisible="1"/>
+                <field name="valid" invisible="1"/>
+                <div invisible="not search_criteria_completed or valid">
+                    <div class="text-danger"><i class="fa fa-exclamation-triangle me-1" title="Warning"/>You are not allowed to regenerate validated work entries</div>
+                    <field name="validated_work_entry_ids" widget="many2many" nolabel="1">
+                        <list string="Work Entries"
+                              default_order = "date_start"
+
+                              editable="bottom"
+                              no_open="1" decoration-danger="state == 'validated'">
+                            <field name="state" column_invisible="True"/>
+                            <field name="date_start"/>
+                            <field name="date_stop"/>
+                            <field name="work_entry_type_id"/>
+                            <field name="state"/>
+                        </list>
+                    </field>
+                </div>
+                <footer>
+                    <button name="regenerate_work_entries"
+                            string="Regenerate Work Entries" data-hotkey="q"
+                            class="btn btn-primary oe_highlight"
+                            type="object"
+                            invisible="not search_criteria_completed or not valid"/>
+                    <button name="regenerate_work_entries_disabled"
+                            string="Regenerate Work Entries"
+                            class="btn btn-primary disabled"
+                            invisible="search_criteria_completed and valid"/>
+                    <button name="cancel_button" string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="hr_work_entry_regeneration_wizard_action" model="ir.actions.act_window">
+        <field name="name">Work Entry Regeneration</field>
+        <field name="res_model">hr.work.entry.regeneration.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

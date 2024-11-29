@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_users_identitycheck_view_form_passkey" model="ir.ui.view">
+        <field name="model">res.users.identitycheck</field>
+        <field name="inherit_id" ref="base.res_users_identitycheck_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="js_class">auth_passkey_identity_check_view_form</attribute>
+            </xpath>
+            <xpath expr="//sheet" position="inside">
+                <div invisible="auth_method != 'webauthn'">
+                    <h3><strong>Use your passkey to authenticate</strong></h3>
+                    <p class="mb-0 mt-3">Or choose a different method:</p>
+                    <button type="object" name="action_use_password" class="btn btn-link" role="button">Use password</button>
+                </div>
+            </xpath>
+            <xpath expr="//footer/button[@id='password_confirm']" position="before">
+                <button string="Use Passkey" type="object" name="run_check" class="btn btn-primary" data-hotkey="q" invisible="auth_method != 'webauthn'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

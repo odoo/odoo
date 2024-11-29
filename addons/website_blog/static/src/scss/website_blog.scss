@@ -1,0 +1,297 @@
+// ======= VARIABLES =======
+$o-wblog-sidebar-width: 280px;
+$o-wblog-loader-size: 50px;
+
+// ======= ANIMATIONS =======
+// Generic fade-in
+@keyframes o-wblog-fade-In {
+    0%   { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes o-wblog-loader {
+    0%, 100% {
+        animation-timing-function: cubic-bezier(0.5, 0, 1, 0.5);
+    }
+    0% {
+        transform: rotateY(0deg);
+    }
+    50% {
+        transform: rotateY(1800deg);
+        animation-timing-function: cubic-bezier(0, 0.5, 0.5, 1);
+    }
+    100% {
+        transform: rotateY(3600deg);
+    }
+}
+
+
+// ======== MIXINS =========
+// Create easing-linear-gradients. Compared to the standards liner-gradients
+// these are smoother and blends into their context increasing readability when
+// acts as background for text placed over images.
+// based on: https://css-tricks.com/easing-linear-gradients/
+@mixin o-wbblog-scrim-gradient($colorFrom, $colorTo) {
+    $scrimStops: 0% 0%, 26.2% 19%, 45.9% 34%, 61.8% 47%, 72.2% 56.5%, 80.6% 65%, 87.4% 73%, 92.5% 80.2%, 95.8% 86.1%, 97.9% 91%, 99.2% 95.2%, 99.8% 98.2%, 100% 100%;
+    $stops: ();
+    @each $scrimStop in $scrimStops {
+        $stops: append($stops, mix($colorTo, $colorFrom, nth($scrimStop, 1)) nth($scrimStop, 2), comma)
+    }
+
+    background-image: linear-gradient(#{$stops});
+}
+
+//------------------------------------------------------------------------------
+// Website Blog
+//------------------------------------------------------------------------------
+.website_blog {
+
+    .o_wblog_page_cards_bg {
+        // To be applied to the main container when 'card design' option is
+        // enabled. Provide a slight darker bg that will blend the background
+        // color chosen by the user, visually increasing the contrast in case of
+        // brights (or white) backgrounds.
+        // It shouldn't be noticeable on dark backgrounds.
+        background-color: rgba(black, 0.005);
+    }
+
+    .o_wblog_read_with_sidebar {
+        max-width: map-get($container-max-widths, md) + $o-wblog-sidebar-width;
+    }
+
+    // This option class is assigned to the post's content using the "Customize"
+    // menu. The aim is to be able to write simple articles on the fly,
+    // achieving a good design without being forced to use snippets.
+    .o_wblog_read_text {
+        @include font-size(18px);
+        font-weight: 300;
+    }
+
+    .o_wblog_author_avatar {
+        width: 1.2em;
+        height: 1.2em;
+        max-width: none;
+        object-fit: cover;
+    }
+
+    .o_wblog_author_avatar_date {
+        // Resize in order to double the current font-size and accommodate
+        // two text lines, name and date.
+        width: 2em;
+        height: 2em;
+        max-width: none;
+        object-fit: cover;
+    }
+
+    .o_wblog_social_links > a {
+        width: 3em;
+        height: 3em;
+        > i {
+            @include font-size(1.3em);
+        }
+    }
+
+    // Blog Post Page
+    // ==============================================
+    #o_wblog_post_content {
+        min-height: 350px !important;
+
+        a.oe_mail_expand:after {
+            content: " →";
+        }
+        a.oe_mail_expand {
+            font-weight: bold;
+        }
+    }
+
+    #o_wblog_post_comments {
+        .o_portal_chatter > hr {
+            display: none;
+        }
+    }
+
+    // Blog Post Page Cover
+    // ==============================================
+    .o_wblog_post_page_cover {
+        // "Latest Blog" Tag
+        .o_wblog_post_title > .h4 {
+            color: var(--o-cc3-btn-secondary-text);
+        }
+
+        // Cover sizes
+        // ==============================================
+        &.cover_auto {
+            padding: 3rem 0;
+            // The actual height will always be 'auto'. The following
+            // min-height rule is set to trigger the page transition only.
+            min-height: 1px;
+        }
+
+        // "Regular Cover" design sizes
+        // ==============================================
+        &.o_wblog_post_page_cover_regular {
+            &.o_full_screen_height {
+                min-height: 70vh !important;
+            }
+
+            &.o_half_screen_height {
+                min-height: 40vh !important;
+            }
+
+            &.cover_auto {
+                min-height: 150px;
+                padding: 0;
+            }
+        }
+
+        // If a cover image is defined, adapt inner typography
+        &.o_record_has_cover {
+            .o_record_cover_image:after {
+                content: "";
+                display: block;
+                @include o-position-absolute(0,0,50%,0);
+                @include o-wbblog-scrim-gradient(rgba(black, 0.5), transparent);
+            }
+
+            .o_wblog_post_title {
+                color: white;
+            }
+
+            &.o_wblog_post_page_cover_regular {
+                .o_record_cover_image:after {
+                    visibility: hidden;
+                }
+            }
+        }
+
+    }
+
+    // Blog Post Specific
+    // ==============================================
+    .o_wblog_post_title {
+        #o_wblog_post_name {
+            font-weight: $display-font-weight;
+            line-height: $display-line-height;
+            // Default font-size.
+            @include font-size(map-get($display-font-sizes, 4));
+        }
+
+        #o_wblog_post_subtitle {
+            font-weight: $lead-font-weight;
+            // Default font-size.
+            @include font-size($lead-font-size);
+        }
+    }
+
+    // Refine multi-lines titles when using 'regular' cover
+    .o_wblog_regular_cover_container #o_wblog_post_name {
+        line-height: 1;
+        padding-bottom: 0.5rem;
+    }
+
+    .o_wblog_post_page_cover_footer {
+        min-height: 33vh;
+        // Emulate native jQuery 'swing' easing to match js code
+        transition: all 0.3s cubic-bezier(.02, .01, .47, 1);
+    }
+
+    #o_wblog_next_container {
+        background-color: $body-bg;
+        cursor: pointer;
+
+        .o_wblog_next_loader {
+            transform: translateZ(1px);
+
+            div {
+                width: $o-wblog-loader-size;
+                height: $o-wblog-loader-size;
+                background: rgba(black, 0.15);
+                animation: o-wblog-loader 2.4s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+            }
+        }
+
+        .o_wblog_next_fake_btn {
+            height: $o-wblog-loader-size;
+        }
+    }
+
+    #o_wblog_post_main.o_wblog_post_main_transition {
+        animation: o-wblog-fade-In 1s cubic-bezier(.02, .01, .47, 1);
+    }
+
+    // Blog Index Pages
+    // ==============================================
+    #o_wblog_posts_loop {
+        .o_record_cover_container {
+            box-shadow: inset 0 0 0 1px rgba(white, 0.3);
+
+            padding-top: 33%;
+            height: auto!important;
+            // This is mandatory as we do not want the CoverProperties
+            // sizing classes to be applied here
+            min-height: auto!important;
+
+            &:hover .o_record_cover_image {
+                opacity: 0.8;
+            }
+        }
+
+        .o_wblog_normalize_font {
+            // normalize fonts
+            @include font-size(13px);
+            line-height: 1.45;
+        }
+
+        .o_wblog_post_list_author {
+            @include o-wbblog-scrim-gradient(transparent, rgba(black, 0.5));
+        }
+
+        &.o_wblog_list_view {
+            .o_record_cover_container {
+                padding-top: 20%;
+            }
+            .o_wblog_post_cover_nocard .o_record_cover_container {
+                padding-top: 33%;
+            }
+
+            @include media-breakpoint-down(md) {
+                > .row {
+                    margin-left: 0;
+                    margin-right: 0;
+                }
+            }
+        }
+
+    }
+
+    //  Editor Helpers
+    // ==============================================
+    body.editor_enable & {
+        // Make empty covers visible in edit mode
+        .o_record_cover_container.o_wblog_post_page_cover:not(.o_record_has_cover) {
+            padding: 30px 0;
+        }
+
+        // Hide the big "DRAG BUILDING BLOCKS HERE" box when inside a sidebar.
+        // The purple lines are enough to help the user dropping snippets.
+        #o_wblog_sidebar .oe_structure:empty {
+            display: none;
+        }
+
+        // Prevent users from using the select in the sidebar during edit.
+        .o_wblog_sidebar_block select[name="archive"] {
+            pointer-events: none;
+        }
+    }
+}
+
+#o_wblog_post_content_jump {
+    @extend .o_scroll_button;
+    width: $o-wblog-loader-size;
+    height: $o-wblog-loader-size;
+    background-color: rgba(black, 0.5);
+
+    &:hover {
+        background-color: rgba(black, 0.7);
+    }
+}

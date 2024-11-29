@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="discuss.Typing">
+        <t t-if="props.member ? props.member.isTyping : props.channel.hasOtherMembersTyping">
+            <div class="o-discuss-Typing-icon d-flex align-items-center" t-attf-class="{{ className }}" t-att-title="text">
+                <span class="o-discuss-Typing-dot d-flex flex-shrink-0 rounded-pill bg-500"
+                      t-att-class="{
+                             'o-sizeMedium': props.size === 'medium',
+                             'o-sizeSmall': props.size === 'small',
+                             }"
+                />
+                <span class="flex-grow-1 flex-shrink-0"/>
+                <span class="o-discuss-Typing-dot o-discuss-Typing-dot2 d-flex flex-shrink-0 rounded-pill bg-500"
+                      t-att-class="{
+                             'o-sizeMedium': props.size === 'medium',
+                             'o-sizeSmall': props.size === 'small',
+                             }"
+                />
+                <span class="flex-grow-1 flex-shrink-0"/>
+                <span class="o-discuss-Typing-dot o-discuss-Typing-dot3 d-flex flex-shrink-0 rounded-pill bg-500"
+                      t-att-class="{
+                             'o-sizeMedium': props.size === 'medium',
+                             'o-sizeSmall': props.size === 'small',
+                             }"
+                />
+            </div>
+            <t t-if="props.displayText">
+                <span class="ms-1"/>
+                <span class="text-truncate smaller" t-out="text"/>
+            </t>
+        </t>
+    </t>
+
+</templates>

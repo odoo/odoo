@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+
+        <record id="view_bank_statement_tree" model="ir.ui.view">
+            <field name="name">account.bank.statement.list</field>
+            <field name="model">account.bank.statement</field>
+            <field name="arch" type="xml">
+                <list decoration-danger="journal_id and not is_complete or not is_valid"
+                      decoration-muted="not journal_id"
+                      create="false"
+                      string="Statements">
+                    <field name="name"/>
+                    <field name="date"/>
+                    <field name="journal_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="balance_start"/>
+                    <field name="balance_end_real"/>
+                    <field name="balance_end" column_invisible="True"/>
+                    <field name="currency_id" column_invisible="True"/>
+                    <field name="is_complete" column_invisible="True"/>
+                    <field name="is_valid" column_invisible="True"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_bank_statement_search" model="ir.ui.view">
+            <field name="name">account.bank.statement.search</field>
+            <field name="model">account.bank.statement</field>
+            <field name="arch" type="xml">
+                <search string="Search Statements">
+                    <field name="name" string="Statement"/>
+                    <field name="date"/>
+                    <filter string="Empty" name="empty" domain="[('line_ids','=',False)]"/>
+                    <filter name="invalid" string="Invalid"
+                            domain="['|', ('is_valid', '=', False),('is_complete', '=', False)]"/>
+                    <separator/>
+                    <filter name="filter_date" date="date"/>
+                    <field name="journal_id" domain="[('type', 'in', ('bank', 'cash', 'credit'))]" />
+                    <group expand="0" string="Group By">
+                        <filter string="Journal" name="journal" context="{'group_by': 'journal_id'}"/>
+                        <filter string="Date" name="date" context="{'group_by': 'date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+
+        <record id="action_bank_statement_tree" model="ir.actions.act_window">
+            <field name="name">Bank Statements</field>
+            <field name="res_model">account.bank.statement</field>
+            <field name="view_mode">list,pivot,graph,form</field>
+            <field name="domain">[('journal_id.type', '=', 'bank')]</field>
+            <field name="context">{'journal_type':'bank'}</field>
+            <field name="search_view_id" ref="view_bank_statement_search"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Register a bank statement
+              </p><p>
+                A bank statement is a summary of all financial transactions
+                occurring over a given period of time on a bank account. You
+                should receive this periodically from your bank.
+              </p><p>
+                Odoo allows you to reconcile a statement line directly with
+                the related sale or purchase invoices.
+              </p>
+            </field>
+        </record>
+
+        <record id="action_credit_statement_tree" model="ir.actions.act_window">
+            <field name="name">Credit Statements</field>
+            <field name="res_model">account.bank.statement</field>
+            <field name="view_mode">list,pivot,graph</field>
+            <field name="domain">[('journal_id.type', '=', 'credit')]</field>
+            <field name="context">{'journal_type': 'credit'}</field>
+            <field name="search_view_id" ref="view_bank_statement_search"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Register a bank statement
+              </p><p>
+                A credit statement is a summary of all financial transactions
+                occurring over a given period of time on a credit account. You
+                should receive this periodically from your bank.
+              </p><p>
+                Odoo allows you to reconcile a statement line directly with
+                the related sale or purchase invoices.
+              </p>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_bank_statement_tree_bank">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">list</field>
+            <field name="view_id" ref="view_bank_statement_tree"/>
+            <field name="act_window_id" ref="action_bank_statement_tree"/>
+        </record>
+
+        <record id="account_bank_statement_pivot" model="ir.ui.view">
+            <field name="name">account.bank.statement.pivot</field>
+            <field name="model">account.bank.statement</field>
+            <field name="arch" type="xml">
+                <pivot string="Account Statistics" sample="1">
+                    <field name="date" type="row"/>
+                    <field name="balance_start" type="measure"/>
+                    <field name="balance_end" type="measure"/>
+                </pivot>
+            </field>
+         </record>
+
+        <record id="account_bank_statement_graph" model="ir.ui.view">
+            <field name="name">account.bank.statement.graph</field>
+            <field name="model">account.bank.statement</field>
+            <field name="arch" type="xml">
+                <graph string="Account Statistics" sample="1">
+                    <field name="date"/>
+                    <field name="balance_start" operator="+"/>
+                    <field name="balance_end" operator="+"/>
+                </graph>
+            </field>
+         </record>
+
+        <record id="action_view_bank_statement_tree" model="ir.actions.act_window">
+            <field name="name">Cash Registers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.bank.statement</field>
+            <field name="view_mode">list,pivot,graph</field>
+            <field name="view_id" ref="view_bank_statement_tree"/>
+            <field name="search_view_id" ref="view_bank_statement_search"/>
+            <field name="domain">[('journal_id.type', '=', 'cash')]</field>
+            <field name="context">{'journal_type':'cash'}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new cash log
+              </p><p>
+                A Cash Register allows you to manage cash entries in your cash
+                journals. This feature provides an easy way to follow up cash
+                payments on a daily basis.
+              </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

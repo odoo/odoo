@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="product_category_form_view" model="ir.ui.view">
+        <field name="name">product.category.form</field>
+        <field name="model">product.category</field>
+        <field name="arch" type="xml">
+            <form class="oe_form_configuration">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button"
+                            name="%(product_template_action_all)d"
+                            icon="fa-th-list"
+                            type="action"
+                            context="{'search_default_categ_id': id, 'default_categ_id': id, 'group_expand': True}">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value"><field name="product_count"/></span>
+                                <span class="o_stat_text"> Products</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" string="Category"/>
+                        <h1><field name="name" placeholder="e.g. Lamps"/></h1>
+                    </div>
+                    <group name="first" col="2">
+                        <field name="parent_id" class="oe_inline"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="product_category_list_view" model="ir.ui.view">
+        <field name="name">product.category.list</field>
+        <field name="model">product.category</field>
+        <field name="priority">1</field>
+        <field name="arch" type="xml">
+            <list string="Product Categories">
+                <field name="display_name" string="Product Category"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="product_category_search_view" model="ir.ui.view">
+        <field name="name">product.category.search</field>
+        <field name="model">product.category</field>
+        <field name="arch" type="xml">
+            <search string="Product Categories">
+                <field name="name" string="Product Categories"/>
+                <field name="parent_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="product_category_action_form" model="ir.actions.act_window">
+        <field name="name">Product Categories</field>
+        <field name="res_model">product.category</field>
+        <field name="search_view_id" ref="product_category_search_view"/>
+        <field name="view_id" ref="product_category_list_view"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,55 @@
+.o-toolbar-above-keyboard {
+    position: fixed;
+    width: 100%;
+    z-index: 2000;
+    bottom: 0;
+}
+
+.o-we-toolbar {
+    height: 40px;
+    padding: 0 2px;
+    border-bottom: 1px solid lightgrey;
+    
+
+    .btn-group {
+        padding: 0 2px;
+        border-radius: 0;
+
+        .btn {
+            white-space: nowrap;
+            padding-left: 4px;
+            padding-right: 4px;
+            height: 33px;
+
+            &:not(:first-child) {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+            }
+            
+            &:not(:last-child) {
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+
+            &.disabled {
+                pointer-events: auto;
+                cursor: auto;
+                &:active {
+                    border-color: var(--btn-disabled-border-color);
+                    background-color: var(--btn-disabled-bg);;
+                    color: var(--btn-disabled-color);
+                }
+            }
+        }
+    }
+
+
+    .o-we-toolbar-vertical-seperator:not(:first-child) {
+        margin: unset;
+        padding: unset;
+        height: 70%;
+        border-left: 1px solid lightgrey;
+
+    }
+
+}

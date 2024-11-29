@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="google_calendar.GoogleCalendarController" t-inherit="calendar.AttendeeCalendarController" t-inherit-mode="extension">
+        <!-- Credentials configured: show 'Google' button concatenated with the 'Synchronize with' label. -->
+        <xpath expr="//div[@id='header_synchronization_settings']//h5[@id='synchronize_with']" position="after">
+            <div t-if="model.googleCredentialsSet and !model.googleIsSync and !model.googleIsPaused" id="google_calendar_sync" class="mx-1 d-inline-flex">
+                <button type="button" id="google_sync_pending" class="btn btn-primary text-nowrap" t-on-click="onGoogleSyncCalendar">
+                    <b>Google</b>
+                </button>
+            </div>
+        </xpath>
+    </t>
+</templates>

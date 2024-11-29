@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="link_tracker_view_tree" model="ir.ui.view">
+        <field name="name">link.tracker.view.list.inherit.website.links</field>
+        <field name="model">link.tracker</field>
+        <field name="inherit_id" ref="link_tracker.link_tracker_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_visit_page']" position="after">
+                <button name="action_visit_page_statistics" type="object" string="Statistics" icon="fa-bar-chart"/>
+            </xpath>
+        </field>
+    </record>
+
+    <menuitem id="menu_link_tracker"
+        name="Link Tracker"
+        sequence="25"
+        parent="website.menu_current_page"
+        action="website.website_preview"/>
+</odoo>

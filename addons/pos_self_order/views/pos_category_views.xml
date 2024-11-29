@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_self_order_product_pos_category_form_view" model="ir.ui.view">
+        <field name="name">pos.self.pos.category.form.view</field>
+        <field name="model">pos.category</field>
+        <field name="inherit_id" ref="point_of_sale.product_pos_category_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='sequence']" position="after">
+                <div class="row col-lg-12">
+                    <span class="text-900 fw-bold">Available between
+                        <span class="col-lg-4 o_light_label">
+                            <a class="o-tooltip"><sup title="Only works for kiosk and mobile">?</sup></a>
+                        </span>
+                        <field name="hour_after" class="oe_inline text-center" widget="float_time"/> and <field name="hour_until" class="oe_inline text-center" widget="float_time"/></span>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

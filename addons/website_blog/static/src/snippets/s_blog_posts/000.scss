@@ -1,0 +1,224 @@
+.s_dynamic {
+    --Avatar-size: 1.5em;
+
+    .s_blog_posts_post_teaser {
+        @include o-line-clamp(2);
+
+        @include media-breakpoint-up(md) {
+            @include o-line-clamp(4);
+        }
+    }
+
+    .s_blog_posts_post_subtitle {
+        @include o-line-clamp(2);
+    }
+
+    &.s_blog_post_list {
+        .s_blog_posts_post_author + small.s_blog_posts_post_date::before {
+            content: "•";
+            margin: 0 map-get($spacers, 1);
+        }
+
+        .s_blog_posts_post:hover {
+            background-color: color-mix(in srgb, currentColor 10%, transparent);
+        }
+    }
+
+    &.s_blog_post_big_picture {
+        .s_blog_posts_post_cover {
+            @include media-breakpoint-up(lg) {
+                --aspect-ratio: 75%;
+            }
+        }
+
+        &.s_blog_posts_post_picture_size_small {
+            .s_blog_posts_post_cover {
+                @include media-breakpoint-up(md) {
+                    --aspect-ratio: 66%;
+                }
+
+                @include media-breakpoint-up(xl) {
+                    --aspect-ratio: 50%;
+                }
+            }
+        }
+
+        &:not([class*="s_blog_posts_effect"]) .s_blog_post_big_picture_infos {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-around;
+        }
+
+        &.s_blog_posts_effect_marley, &.s_blog_posts_effect_chico {
+            .s_dynamic_snippet_content {
+                text-align: center;
+            }
+        }
+
+        &.s_blog_posts_effect_marley, &.s_blog_posts_effect_dexter, &.s_blog_posts_effect_chico {
+
+            // Define shared animations for effects, to be triggered under specific circumstances
+            // (eg. screen breakpoint, image size...).
+            @mixin -big-picture-animate-compact() {
+                .s_blog_posts_post_author {
+                    font-size: $font-size-lg;
+                }
+
+                .s_blog_posts_post:hover {
+                    .s_blog_post_big_picture_title {
+                        transform: translateY(50%);
+                        opacity: 0;
+                    }
+
+                    .s_blog_posts_post_cover_hidden {
+                        transform: translateY(-50%);
+                    }
+                }
+            }
+
+            @mixin -big-picture-animate-extended() {
+                .s_blog_posts_post_author {
+                    font-size: $font-size-base;
+                }
+
+                .s_blog_posts_post:hover {
+                    .s_blog_post_big_picture_title {
+                        transform: translateY(-25%);
+                        opacity: 1;
+                    }
+
+                    .s_blog_posts_post_cover_hidden {
+                        transform: translateY(0);
+                    }
+                }
+            }
+
+            // Base design applicable to all types of effects.
+            .s_blog_posts_post_cover_header, .s_blog_posts_post_cover_hidden {
+                height: 50%;
+            }
+
+            .s_blog_post_big_picture_title, .s_blog_posts_post_cover_hidden {
+                transform: translateY(50%);
+                transition: $transition-base;
+            }
+
+            .s_blog_post_big_picture_infos::before {
+                @include o-position-absolute(0, 0, 0, 0);
+                background-color: rgba($black, .3);
+                transition: $transition-fade;
+                opacity: 0;
+                content: "";
+            }
+
+            .s_blog_posts_post_cover_hidden, .s_blog_post_big_picture_infos::before {
+                opacity: 0;
+            }
+
+            .s_blog_posts_post:hover {
+                .s_blog_posts_post_cover_hidden, .s_blog_post_big_picture_infos:before {
+                    opacity: 1;
+                }
+            }
+
+            // "Bind" base animations.
+            &.s_blog_posts_post_picture_size_default {
+                @include -big-picture-animate-extended();
+                @include media-breakpoint-only(lg) {
+                    @include -big-picture-animate-compact();
+                }
+            }
+
+            &.s_blog_posts_post_picture_size_small {
+                @include -big-picture-animate-compact();
+            }
+        }
+
+        &.s_blog_posts_effect_dexter {
+            .s_blog_posts_post::before {
+                content: "";
+                @include o-position-absolute(1rem, 1rem);
+                border-top: $border-width * 2 solid $white;
+                border-right: $border-width * 2 solid $white;
+                padding: 1rem;
+                transition: $transition-base;
+                transform: scale3d(0, 0, 0);
+                transform-origin: top right;
+                opacity: 0;
+                z-index: 1;
+            }
+
+            .s_blog_posts_post:hover::before {
+                opacity: 1;
+                transform: scale3d(1, 1, 1);
+            }
+        }
+
+        &.s_blog_posts_effect_chico {
+            .s_blog_posts_post::before, .o_record_cover_image {
+                transition: $transition-base;
+                transform: scale3d(1.12, 1.12, 1.12);
+            }
+
+            .s_blog_posts_post::before {
+                @include o-position-absolute(1rem, 1rem, 1rem, 1rem);
+                border: $border-width solid $white;
+                border-radius: $border-radius;
+                opacity: 0;
+                z-index: 1;
+                content: "";
+                pointer-events: none;
+            }
+
+            .s_blog_posts_post:hover {
+                .o_record_cover_image, &::before {
+                    opacity: 1;
+                    transform: scale3d(1, 1, 1);
+                }
+            }
+        }
+    }
+
+    &.s_blog_post_horizontal {
+        &.s_blog_posts_post_picture_size_default .s_blog_posts_post_cover_col {
+            @include media-breakpoint-down(md) {
+                min-height: 12rem;
+            }
+
+            // Taking the freedom to use arbitrary values as they are confortable sizes
+            // for an image inside a card.
+            @include media-breakpoint-up(md) {
+                flex: 0 0 MIN(26rem, 33%);
+            }
+        }
+
+        &.s_blog_posts_post_picture_size_small .s_blog_posts_post_cover_col {
+            @include media-breakpoint-down(md) {
+                min-height: 8rem;
+            }
+
+            @include media-breakpoint-up(md) {
+                flex: 0 0 MIN(26rem, 25%);
+            }
+        }
+
+        .o_container_small .s_blog_posts_post_cover_col {
+            display: none;
+        }
+    }
+
+    &.s_blog_post_card {
+        &.s_blog_posts_post_picture_size_small .s_blog_posts_post_cover {
+            --aspect-ratio: 40%;
+        }
+    }
+
+    &.s_dynamic_snippet_carousel.s_blog_post_big_picture .s_blog_posts_post_cover {
+        @include media-breakpoint-up(sm) {
+            --aspect-ratio: 50%;
+        }
+        @include media-breakpoint-up(lg) {
+            --aspect-ratio: 100%;
+        }
+    }
+}

@@ -1,0 +1,50 @@
+.popover .o-EmojiPicker {
+    width: 285px;
+    height: 350px;
+}
+
+.o-EmojiPicker {
+    --o-emoji-picker-active: #{$gray-200};
+    .o-active {
+        background-color: var(--o-emoji-picker-active) !important;
+    }
+
+    .o-Emoji {
+        width: 30px;
+        font-size: 0.8rem;
+        &:hover {
+            background-color: var(--o-emoji-picker-active) !important;
+        }
+    }
+
+
+    .o-EmojiPicker-navbar {
+        .o-Emoji {
+            filter: grayscale(1);
+        }
+    }
+
+    .o-EmojiPicker-sectionIcon {
+        filter: grayscale(1);
+    }
+
+    .o-EmojiPicker-empty {
+        font-size: 5rem !important;
+        filter: grayscale(0.25);
+    }
+}
+
+.o-EmojiPicker-category:before {
+    // invisible character so that category has constant height, regardless of text content.
+    content: "\200b"; /* unicode zero width space character */
+}
+
+.o-EmojiPicker-search {
+    input {
+        &:not(:focus) {
+            & + .oi-search {
+                color: $text-muted;
+            }
+        }
+    }
+}

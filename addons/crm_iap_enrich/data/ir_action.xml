@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="action_enrich_mail" model="ir.actions.server" >
+            <field name="name">Enrich</field>
+            <field name="model_id" ref="model_crm_lead"/>
+            <field name="binding_model_id" ref="crm.model_crm_lead"/>
+            <field name="state">code</field>
+            <field name="code">   
+    if records:
+        records.iap_enrich()
+            </field>
+        </record>
+
+    </data>
+</odoo>

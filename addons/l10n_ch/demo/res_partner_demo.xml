@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_ch_qr" model="res.partner">
+        <field name="name">Easy Clean Lausanne</field>
+        <field eval="[Command.set([ref('base.res_partner_category_11')])]" name="category_id"/>
+        <field name="is_company">1</field>
+        <field name="city">Lausanne</field>
+        <field name="zip">1004</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="street">Rte de Prilly 18, 1004 Lausanne, Suisse</field>
+        <field name="email">info@easycleanlausanne.ch</field>
+        <field name="phone">+41 21 796 73 24</field>
+        <field name="website">http://www.easycleanlausanne.ch</field>
+        <field name='vat'>CHE-123.456.788 TVA</field>
+    </record>
+
+    <record id="bank_iban_main_partner_ch" model="res.partner.bank">
+            <field name="acc_type">iban</field>
+            <field name="acc_number">CH11 3000 5228 1308 3501 F</field>
+            <field name="partner_id" ref="l10n_ch.res_partner_ch_qr"/>
+    </record>
+</odoo>

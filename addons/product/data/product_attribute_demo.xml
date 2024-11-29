@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+
+    <record id="product_attribute_1" model="product.attribute">
+        <field name="name">Legs</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="product_attribute_value_1" model="product.attribute.value">
+        <field name="name">Steel</field>
+        <field name="attribute_id" ref="product_attribute_1"/>
+        <field name="sequence">1</field>
+    </record>
+    <record id="product_attribute_value_2" model="product.attribute.value">
+        <field name="name">Aluminium</field>
+        <field name="attribute_id" ref="product_attribute_1"/>
+        <field name="sequence">2</field>
+    </record>
+
+    <record id="product_attribute_2" model="product.attribute">
+        <field name="name">Color</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="product_attribute_value_color_wood" model="product.attribute.value">
+        <field name="name">Wood</field>
+        <field name="attribute_id" ref="product_attribute_2"/>
+        <field name="sequence">0</field>
+        <field name="image" type="base64" file="product/static/img/wood.jpg"/>
+    </record>
+    <record id="product_attribute_value_3" model="product.attribute.value">
+        <field name="name">White</field>
+        <field name="attribute_id" ref="product_attribute_2"/>
+        <field name="sequence">1</field>
+    </record>
+    <record id="product_attribute_value_4" model="product.attribute.value">
+        <field name="name">Black</field>
+        <field name="attribute_id" ref="product_attribute_2"/>
+        <field name="sequence">2</field>
+    </record>
+
+    <record id="product_attribute_3" model="product.attribute">
+        <field name="name">Duration</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="product_attribute_value_5" model="product.attribute.value">
+        <field name="name">1 year</field>
+        <field name="attribute_id" ref="product_attribute_3"/>
+    </record>
+    <record id="product_attribute_value_6" model="product.attribute.value">
+        <field name="name">2 year</field>
+        <field name="attribute_id" ref="product_attribute_3"/>
+    </record>
+
+    <record id="pa_extra_options" model="product.attribute">
+        <field name="name">Extra Options</field>
+        <field name="display_type">multi</field>
+        <field name="create_variant">no_variant</field>
+        <field name="sequence">40</field>
+    </record>
+    <record id="pav_warranty" model="product.attribute.value">
+        <field name="name">1 year warranty extension</field>
+        <field name="default_extra_price">50</field>
+        <field name="attribute_id" ref="pa_extra_options"/>
+    </record>
+    <record id="pav_cleaning_kit" model="product.attribute.value">
+        <field name="name">Cleaning kit</field>
+        <field name="default_extra_price">5</field>
+        <field name="attribute_id" ref="pa_extra_options"/>
+    </record>
+    <record id="pav_protection_kit" model="product.attribute.value">
+        <field name="name">Protection kit</field>
+        <field name="default_extra_price">10</field>
+        <field name="attribute_id" ref="pa_extra_options"/>
+    </record>
+
+    <record id="size_attribute" model="product.attribute">
+        <field name="name">Size</field>
+        <field name="sequence">30</field>
+        <field name="display_type">radio</field>
+        <field name="create_variant">no_variant</field>
+    </record>
+    <record id="size_attribute_s" model="product.attribute.value">
+        <field name="name">S</field>
+        <field name="sequence">1</field>
+        <field name="attribute_id" ref="size_attribute"/>
+    </record>
+    <record id="size_attribute_m" model="product.attribute.value">
+        <field name="name">M</field>
+        <field name="sequence">2</field>
+        <field name="attribute_id" ref="size_attribute"/>
+    </record>
+    <record id="size_attribute_l" model="product.attribute.value">
+        <field name="name">L</field>
+        <field name="sequence">3</field>
+        <field name="attribute_id" ref="size_attribute"/>
+    </record>
+
+    <record id="fabric_attribute" model="product.attribute">
+        <field name="name">Fabric</field>
+        <field name="sequence">40</field>
+        <field name="display_type">select</field>
+        <field name="create_variant">no_variant</field>
+    </record>
+    <record id="fabric_attribute_plastic" model="product.attribute.value">
+        <field name="name">Plastic</field>
+        <field name="sequence">1</field>
+        <field name="attribute_id" ref="fabric_attribute"/>
+    </record>
+    <record id="fabric_attribute_leather" model="product.attribute.value">
+        <field name="name">Leather</field>
+        <field name="sequence">2</field>
+        <field name="attribute_id" ref="fabric_attribute"/>
+    </record>
+    <record id="fabric_attribute_custom" model="product.attribute.value">
+        <field name="name">Custom</field>
+        <field name="sequence">3</field>
+        <field name="attribute_id" ref="fabric_attribute"/>
+        <field name="is_custom">True</field>
+    </record>
+
+</odoo>

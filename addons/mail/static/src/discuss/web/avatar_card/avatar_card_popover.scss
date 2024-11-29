@@ -1,0 +1,26 @@
+.o_card_avatar {
+    img {
+        height: 60px;
+        aspect-ratio: 1;
+    }
+
+    .o_card_avatar_im_status {
+        bottom: -4px;
+        right: -4px;
+        border-radius: 2rem;
+        background-color: white;
+        height: 18px;
+        width: 18px;
+    }
+}
+
+.o_avatar_card {
+    max-width: 380px;
+    @media screen  and (max-width: 480px) {
+        max-width: 90vw;
+    }
+
+    .card-body {
+        padding: $card-spacer-y $card-spacer-x;
+    }
+}

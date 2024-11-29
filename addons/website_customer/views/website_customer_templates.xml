@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="index" name="Our References">
+    <t t-call="website.layout">
+        <div id="wrap">
+            <div class="container my-4">
+                <div class="o_wcrm_filters_top d-flex d-print-none align-items-center justify-content-end flex-wrap gap-2 w-100">
+                    <h4 class="my-0 me-auto pe-sm-4">Our references</h4>
+                    <div class="o_wcrm_search d-flex w-100 w-lg-auto">
+                        <form action="" method="get" class="flex-grow-1">
+                            <div class="input-group" role="search">
+                                <input type="text" name="search" class="search-query form-control border-0 bg-light" placeholder="Search" t-att-value="post.get('search', '')"/>
+                                <button type="submit" aria-label="Search" title="Search" class="oe_search_button btn btn-light">
+                                    <i class="oi oi-search"/>
+                                </button>
+                            </div>
+                        </form>
+                        <button class="btn btn-light position-relative ms-2 d-lg-none"
+                            data-bs-toggle="offcanvas"
+                            data-bs-target="#o_wc_offcanvas">
+                            <i class="fa fa-sliders"/>
+                        </button>
+                    </div>
+                </div>
+                <!-- Off canvas filters on mobile-->
+                <div id="o_wc_offcanvas" class="o_website_offcanvas offcanvas offcanvas-end d-lg-none p-0 overflow-visible">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title">Filters</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
+                    </div>
+                    <div class="offcanvas-body p-0">
+                        <div class="accordion accordion-flush">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button border-top collapsed"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target=".o_wc_offcanvas_industry"
+                                        aria-expanded="false"
+                                        aria-controls="wc_offcanvas_industry">
+                                        Filter by Industry
+                                    </button>
+                                </h2>
+                                <div class="o_wc_offcanvas_industry accordion-collapse collapse">
+                                    <div class="accordion-body pt-0">
+                                        <ul class="list-group list-group-flush">
+                                            <t t-foreach="industries" t-as="industry_dict">
+                                                <t t-if="industry_dict['industry_id']">
+                                                    <li class="list-group-item d-flex justify-content-between align-items-center ps-0 pb-0 border-0">
+                                                        <a t-attf-href="/customers/#{ industry_dict['industry_id'][0] and 'industry/%s/' % slug(industry_dict['industry_id']) or '' }#{ current_country_id and 'country/%s' % current_country_id or '' }#{ search_path }" 
+                                                            class="text-reset" aria-label="See industries filters">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input pe-none" type="radio" t-attf-name="#{industry_dict['industry_id'][1]}" t-att-checked="industry_dict['industry_id'][0] == current_industry_id and true or false"/>
+                                                                <label class="form-check-label" t-attf-for="#{industry_dict['industry_id'][1]}" t-out="industry_dict['industry_id'][1]"/>
+                                                            </div>
+                                                        </a>
+                                                    </li>
+                                                </t>
+                                            </t>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button border-top collapsed"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target=".o_wc_offcanvas_country"
+                                        aria-expanded="false"
+                                        aria-controls="offcanvas_country">
+                                        Filter by Country
+                                    </button>
+                                </h2>
+                                <div class="o_wc_offcanvas_country accordion-collapse collapse">
+                                    <div class="accordion-body pt-0">
+                                        <ul class="list-group list-group-flush ">
+                                            <t t-foreach="countries" t-as="country_dict">
+                                                <t t-if="country_dict['country_id']">
+                                                    <li class="list-group-item d-flex justify-content-between align-items-center ps-0 pb-0 border-0">
+                                                        <a t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ country_dict['country_id'][0] and 'country/%s' % slug(country_dict['country_id']) or '' }#{ search_path }"
+                                                            class="text-reset" aria-label="See countries filters">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input pe-none" type="radio" t-attf-name="{country_dict['country_id'][1]}" t-att-checked="country_dict['country_id'][0] == current_country_id and true or false"/>
+                                                                <label class="form-check-label" t-attf-for="{country_dict['country_id'][1]}" t-out="country_dict['country_id'][1]"/>
+                                                            </div>
+                                                        </a>
+                                                    </li>
+                                                </t>
+                                            </t>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item" t-if="len(tags)">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button border-top collapsed"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target=".o_wc_offcanvas_tags"
+                                        aria-expanded="false"
+                                        aria-controls="o_wc_offcanvas_tags">
+                                        Filter by Tags
+                                    </button>
+                                </h2>
+                                <div class="o_wc_offcanvas_tags accordion-collapse collapse">
+                                    <div class="accordion-body">
+                                        <div class="d-flex flex-wrap align-items-center gap-1 mb-4" t-if="len(tags)">
+                                            <a class="badge text-bg-info" t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ current_country_id and 'country/%s' % slug(current_country) or '' }">
+                                                <span class="fa fa-1x fa-tags"/> All </a>
+                                            <t t-foreach="tags" t-as="o_tag">
+                                                <a t-attf-class="badge text-bg-#{o_tag.classname}" t-out="o_tag.name" t-att-style="tag and tag.id==o_tag.id and 'text-decoration: underline'"
+                                                t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ current_country_id and 'country/%s' % slug(current_country) or '' }?tag_id=#{slug(o_tag)}"/>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="my-5 py-5 text-center" t-if="not partners">
+                        <h5>No results found for "<span t-out="post.get('search', '')"/>"</h5>
+                        <a href="/customers">See all customers</a>
+                    </div>
+                    <div t-elif="fallback_all_countries" class="alert alert-primary alert-dismissible fade show" role="alert">
+                        <i class="fa fa-info-circle me-2"/>
+                        There are no matching customers found for the selected country. Displaying results across all countries instead.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <t t-foreach="partners" t-as="partner">
+                        <div class="col-md-4 col-xl-3 col-12 mb-4">
+                            <div class="card h-100 text-decoration-none">
+                                <a class="text-decoration-none" t-attf-href="/customers/#{slug(partner)}" aria-label="Go to customer">
+                                    <div t-field="partner.avatar_1920"
+                                        class="card-img-top border-bottom"
+                                        t-options='{"widget": "image", "qweb_img_responsive": False, "class": "img img-fluid h-100 w-100 mw-100 object-fit-cover", "style": "max-height: 208px; object-fit: cover"}'
+                                    />
+                                    <div class="card-body">
+                                        <h5 class="card-title" t-field="partner.display_name"/>
+                                        <small class="o_wcrm_short_description text-muted overflow-hidden" t-field="partner.website_short_description"/>
+                                        <small t-if="not partner.website_short_description" class="css_editable_mode_hidden text-muted fst-italic" groups="website.group_website_restricted_editor">
+                                            Enter a short description
+                                        </small>
+                                        <t t-if="partner.industry_id">
+                                            <a class="badge mt-3 text-bg-secondary" t-attf-href="/customers/#{ 'industry/%s/' % slug(partner.industry_id) }#{ current_country_id and 'country/%s' % slug(current_country) or '' }" t-out="partner.industry_id.name"/>
+                                        </t>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+                <div class="navbar">
+                    <t t-call="website.pager">
+                        <t t-set="classname" t-value="'mx-auto'"/>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>
+
+<!-- Option: top filters: World Map -->
+<template id="opt_country" inherit_id="website_customer.index" name="Show Map">
+    <xpath expr="//div[hasclass('o_wcrm_search')]" position="inside">
+        <t t-if="google_maps_api_key">
+            <!-- modal for large map -->
+            <div role="dialog" class="modal fade customer_map_modal" tabindex="-1">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <header class="modal-header">
+                        <h4 class="modal-title">World Map</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
+                    </header>
+                    <iframe loading="lazy" t-attf-src="/google_map?width=898&amp;height=485&amp;dom=website_customer.customers&amp;current_industry=#{current_industry_id}&amp;current_country=#{current_country_id}&amp;partner_url=/customers/&amp;limit=1000"
+                    style="height:485px;"/>
+                </div>
+              </div>
+            </div>
+            <!-- modal end -->
+            <div class="btn-group ms-2">
+                <button class="btn btn-light border-primary active">
+                    <i class="fa fa-th-large"/>
+                </button>
+                <button class="btn btn-light" data-bs-toggle="modal" data-bs-target=".customer_map_modal">
+                    <i class="fa fa-map-marker" role="img" aria-label="Open map" title="Open map"/>
+                </button>
+            </div>
+        </t>
+    </xpath>
+</template>
+
+<template id="opt_industry_list" inherit_id="website_customer.index" name="Filter on Industry" priority="20">
+    <xpath expr="//div[hasclass('o_wcrm_search')]" position="before">
+        <div class="dropdown d-none d-lg-block">
+            <a role="button" href="#" data-bs-toggle="dropdown" t-attf-class="dropdown-toggle btn btn-light" aria-expanded="true" aria-label="Open industries dropdown">
+                <t t-foreach="industries" t-as="industry_dict">
+                    <label class="cursor-pointer" t-if="industry_dict['industry_id'] and industry_dict['industry_id'][0] == current_industry_id and true or false" t-out="industry_dict['industry_id'][1]"/>
+                </t>
+            </a>
+            <div class="dropdown-menu">
+                <t t-foreach="industries" t-as="industry_dict">
+                    <t t-if="industry_dict['industry_id']">
+                        <a t-attf-href="/customers/#{ industry_dict['industry_id'][0] and 'industry/%s/' % slug(industry_dict['industry_id']) or '' }#{ current_country_id and 'country/%s' % current_country_id or '' }#{ search_path }"
+                        class="dropdown-item" t-out="industry_dict['industry_id'][1]"/>
+                    </t>
+                </t>
+            </div>
+        </div>
+    </xpath>
+</template>
+
+<template id="opt_country_list" inherit_id="website_customer.index" name="Filter on Countries" priority="30">
+    <xpath expr="//div[hasclass('o_wcrm_search')]" position="before">
+        <div class="dropdown d-none d-lg-block">
+            <a role="button" href="#" data-bs-toggle="dropdown" t-attf-class="dropdown-toggle btn btn-light" aria-expanded="true" aria-label="Open countries dropdown">
+                <t t-foreach="countries" t-as="country_dict">
+                    <label class="cursor-pointer" t-if="country_dict['country_id'] and current_country_id == country_dict['country_id'][0]">
+                        <t t-out="country_dict['country_id'][1]"/>
+                    </label>
+                </t>
+            </a>
+            <div class="dropdown-menu">
+                <t t-foreach="countries" t-as="country_dict">
+                    <t t-if="country_dict['country_id']">
+                        <a t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ country_dict['country_id'][0] and 'country/%s' % slug(country_dict['country_id']) or '' }#{ search_path }"
+                        class="dropdown-item" t-out="country_dict['country_id'][1]"/>
+                    </t>
+                </t>
+            </div>
+        </div>
+    </xpath>
+</template>
+
+
+<template id="opt_tag_list" inherit_id="website_customer.index" name="Filter on Tags" priority="40">
+    <xpath expr="//div[hasclass('o_wcrm_filters_top')]" position="after">
+        <div class="d-flex align-items-center gap-2 my-4" t-if="len(tags)">
+            <a class="badge text-bg-info" t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ current_country_id and 'country/%s' % slug(current_country) or '' }">
+                <span class="fa fa-1x fa-tags"/> All
+            </a>
+            <t t-foreach="tags" t-as="o_tag">
+                <a t-attf-class="text-bg-#{o_tag.classname} badge" t-out="o_tag.name" t-att-style="tag and tag.id==o_tag.id and 'text-decoration: underline'"
+                t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ current_country_id and 'country/%s' % slug(current_country) or '' }?tag_id=#{slug(o_tag)}"/>
+            </t>
+        </div>
+    </xpath>
+</template>
+
+<template id="details" name="Customer Detail">
+  <t t-call="website.layout">
+    <div id="wrap">
+        <t t-set="editor_message">DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL CUSTOMERS</t>
+        <div class="oe_structure oe_empty" id="oe_structure_website_customer_details_1" t-att-data-editor-message="editor_message"/>
+        <div class="container my-4">
+            <div class="row">
+                <div class="mb-3" t-if="not edit_page">
+                    <a t-attf-href="/customers" aria-label="Back to references list"><i class="fa fa-chevron-left me-2"/>Back to references</a>
+                </div>
+                <t t-call="website_partner.partner_detail">
+                    <t t-set="right_column">
+                        <div id="right_column"><t t-call="website_customer.references_block"/></div>
+                    </t>
+                </t>
+            </div>
+        </div>
+        <div class="oe_structure oe_empty" id="oe_structure_website_customer_details_2" t-att-data-editor-message="editor_message"/>
+    </div>
+  </t>
+</template>
+
+<template id="partner_details" inherit_id="website_partner.partner_page" name="Partner Detail Columns">
+ <xpath expr="//t[@t-call='website_partner.partner_detail']" position="inside">
+    <t t-set="left_column"><div id="left_column"><t t-call="website_customer.implemented_by_block"/></div></t>
+    <t t-set="right_column"><div id="right_column"><t t-call="website_customer.references_block"/></div></t>
+ </xpath>
+</template>
+
+<template id="partner_detail" inherit_id="website_partner.partner_detail" name="Partner Details">
+    <xpath expr="//div[hasclass('o_wcrm_contact_details')]" position="inside">
+        <t t-if="partner.industry_id">
+            <span class="badge text-bg-secondary"><t t-out="partner.industry_id.name"/></span>
+        </t>
+    </xpath>
+</template>
+
+<template id="implemented_by_block" name="Partner Implemented By Block">
+        <t t-if="partner.assigned_partner_id and partner.assigned_partner_id.website_published">
+            <div class="d-flex align-items-center">
+                <div>
+                    <a t-attf-href="/partners/#{slug(partner.assigned_partner_id)}"
+                    t-field="partner.assigned_partner_id.avatar_128"
+                    class="d-block me-2 p-1 border rounded-circle shadow-sm"
+                    style="width: 42px; height: 42px"
+                    t-options='{"widget": "image", "qweb_img_responsive": False, "class": "img-fluid h-100 w-100 rounded-circle"}'
+                    />
+                </div>
+                <div>
+                    <span class="small text-muted">Implemented by</span>
+                    <div>
+                        <a t-attf-href="/partners/#{slug(partner.assigned_partner_id)}">
+                            <span t-field="partner.assigned_partner_id"/>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </t>
+</template>
+
+<template id="references_block" name="Partner References Block">
+        <t t-if="any(p.website_published for p in partner.implemented_partner_ids)">
+            <h3 id="references">References</h3>
+            <div t-foreach="partner.implemented_partner_ids" t-as="reference" class="card mt-3 border-0">
+                <t t-if="reference.website_published">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <span t-field="reference.avatar_128"
+                                class="d-flex justify-content-center"
+                                t-options='{"widget": "image", "qweb_img_responsive": False, "class": "img-fluid rounded mw-100"}'/>
+                        </div>
+                        <div class="card-body col-md-10">
+                            <a t-attf-href="/customers/#{slug(reference)}">
+                                <span t-field="reference.self"/>
+                            </a>
+                            <t t-if="reference.industry_id">
+                                <span class="badge ms-1 text-bg-secondary"><t t-out="reference.industry_id.name"/></span>
+                            </t>
+                            <div t-field='reference.website_short_description'/>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </t>
+</template>
+
+<template id="references_block_href" inherit_id="website_crm_partner_assign.references_block" name="Partner References Block">
+    <xpath expr="//div/span" position="replace">
+        <a t-attf-href="/customers/#{slug(reference)}">$0</a>
+    </xpath>
+    <xpath expr="//div[hasclass('card-body')]/span" position="replace">
+        <a t-attf-href="/customers/#{slug(reference)}">$0</a>
+    </xpath>
+</template>
+
+</odoo>

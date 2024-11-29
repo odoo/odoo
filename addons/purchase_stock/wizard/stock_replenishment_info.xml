@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <record id="product_supplierinfo_replenishment_tree_view" model="ir.ui.view">
+        <field name="name">product.supplierinfo.replenishment.list.view</field>
+        <field name="model">product.supplierinfo</field>
+        <field name="inherit_id" ref="product.product_supplierinfo_tree_view"/>
+        <field name="mode">primary</field>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <field name="delay" position="after">
+                <field name="show_set_supplier_button" column_invisible="True"/>
+                <field name="last_purchase_date"/>
+                <button name="action_set_supplier" type="object" string="Set as Supplier" class="btn btn-link"
+                        invisible="not show_set_supplier_button"/>
+            </field>
+            <xpath expr="//list" position="attributes">
+                <attribute name="decoration-bf">parent.supplierinfo_id == id</attribute>
+            </xpath>
+            <field name="min_qty" position="attributes">
+                <attribute name="decoration-danger">min_qty &gt; parent.qty_to_order</attribute>
+            </field>
+            <field name="company_id" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </field>
+            <field name="delay" position="attributes">
+                <attribute name="optional">show</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_stock_replenishment_info_stock_purchase_inherit" model="ir.ui.view">
+        <field name="name">stock.replenishment.information.purchase.stock.inherit</field>
+        <field name="model">stock.replenishment.info</field>
+        <field name="inherit_id" ref="stock.view_stock_replenishment_info"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page" position="before">
+                <page string="Vendors" name="page_vendors">
+                    <field name="supplierinfo_id" invisible="1"/>
+                    <field name="supplierinfo_ids" readonly="1" context="{'list_view_ref': 'purchase_stock.product_supplierinfo_replenishment_tree_view', 'stock_replenishment_info_id': id, 'orderpoint_id': orderpoint_id}"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

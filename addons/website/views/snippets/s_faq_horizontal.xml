@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_faq_horizontal" name="Topics List">
+    <section class="s_faq_horizontal">
+        <div class="container">
+            <div class="row">
+                <div data-name="Heading" class="col-lg-6 offset-lg-3 pt48 pb48">
+                    <h2 style="text-align:center;">Topic Walkthrough</h2>
+                    <p style="text-align:center;">Learn how to quickly set up and start using our services with our step-by-step onboarding process.</p>
+                </div>
+            </div>
+            <div class="row s_col_no_resize">
+                <div data-name="Topic" class="s_faq_horizontal_entry col-12 mb-2 pt16 pb32">
+                    <article class="row">
+                        <hgroup class="col-lg-4" role="heading" aria-level="3">
+                            <div class="s_faq_horizontal_entry_title position-lg-sticky pb-lg-3 transition-base overflow-auto" style="top: 16px">
+                                <h3 class="h5-fs">Getting Started</h3>
+                                <p class="o_small text-muted">Getting started with our product is a breeze, thanks to our well-structured and comprehensive onboarding process.</p>
+                            </div>
+                        </hgroup>
+                        <span class="col-lg-7 offset-lg-1 d-block">
+                            <p>We understand that the initial setup can be daunting, especially if you are new to our platform, so we have designed a step-by-step guide to walk you through every stage, ensuring that you can hit the ground running.<br/></p>
+                            <img src="/web/image/website.s_faq_horizontal_default_image_1" class="img img-fluid rounded" style="width: 100% !important" alt=""/>
+                            <p><br/>The first step in the onboarding process is <b>account creation</b>. This involves signing up on our platform using your email address or social media accounts. Once you’ve created an account, you will receive a confirmation email with a link to activate your account. Upon activation, you’ll be prompted to complete your profile, which includes setting up your preferences, adding any necessary payment information, and selecting the initial features or modules you wish to use.</p>
+                            <p>Next, you will be introduced to our <b>setup wizard</b>, which is designed to guide you through the basic configuration of the platform. The wizard will help you configure essential settings such as language, time zone, and notifications.</p>
+                            <p><a href="#">Read More <i class="fa fa-angle-right" role="img"/></a></p>
+                        </span>
+                    </article>
+                </div>
+                <div data-name="Topic" class="s_faq_horizontal_entry col-12 mb-2 pt16 pb32">
+                    <article class="row">
+                        <hgroup class="col-lg-4" role="heading" aria-level="3">
+                            <div class="s_faq_horizontal_entry_title position-lg-sticky pb-lg-3 transition-base overflow-auto" style="top: 16px">
+                                <h3 class="h5-fs">Updates and Improvements</h3>
+                                <p class="o_small text-muted">We are committed to continuous improvement, regularly releasing updates and new features based on user feedback and technological advancements.</p>
+                            </div>
+                        </hgroup>
+                        <span class="col-lg-7 offset-lg-1 d-block">
+                            <p>Our development team works tirelessly to enhance the platform's performance, security, and functionality, ensuring it remains at the cutting edge of innovation.</p>
+                            <p>Each update is thoroughly tested to guarantee compatibility and reliability, and we provide detailed release notes to keep you informed of new features and improvements. </p>
+                            <div data-snippet="s_chart" data-name="Chart" class="s_chart o_draggable" data-type="line" data-legend-position="top" data-tooltip-display="true" data-stacked="false" data-border-width="1" data-data='{"labels":["v15","v16","v17","v18"],"datasets":[{"label":"Improvements","data":["12","24","48","200"],"backgroundColor":"o-color-1","borderColor":"o-color-1"}]}' data-max-value="250" data-ticks-min="NaN" data-ticks-max="250">
+                                <canvas height="0"/>
+                            </div>
+                            <!-- Graph's preview: removed automatically on drop  -->
+                            <img src="/website/static/src/img/snippets_previews/s_faq_horizontal_2_preview.jpg" class="s_dialog_preview w-100" alt=""/>
+                            <!-- ==============================================  -->
+                            <p><br/>Users can participate in beta testing programs, providing feedback on upcoming releases and influencing the future direction of the platform. By staying current with updates, you can take advantage of the latest tools and features, ensuring your business remains competitive and efficient.</p>
+                        </span>
+                    </article>
+                </div>
+                <div data-name="Topic" class="s_faq_horizontal_entry col-12 mb-2 pt16 pb32">
+                    <article class="row">
+                        <hgroup class="col-lg-4" role="heading" aria-level="3">
+                            <div class="s_faq_horizontal_entry_title position-lg-sticky pb-lg-3 transition-base overflow-auto" style="top: 16px">
+                                <h3 class="h5-fs">Support and Resources</h3>
+                                <p class="o_small text-muted">We are committed to providing exceptional support and resources to help you succeed with our platform.</p>
+                            </div>
+                        </hgroup>
+                        <span class="col-lg-7 offset-lg-1 d-block">
+                            <p>Our support team is available 24/7 to assist with any issues or questions you may have, ensuring that help is always within reach.</p>
+                            <p>Additionally, we offer a comprehensive knowledge base, including detailed documentation, video tutorials, and community forums where you can connect with other users and share insights.</p>
+                            <p>We also provide regular updates and new features based on user feedback, ensuring that our platform continues to evolve to meet your needs.</p>
+                            <p><a href="#" class="btn btn-secondary">Documentation</a></p>
+                        </span>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_faq_horizontal_options" inherit_id="website.snippet_options">
+    <xpath expr="//t[@t-call='website.snippet_options_background_options']" position="before">
+        <div data-js="faqHorizontalMultipleItems" data-selector=".s_faq_horizontal">
+            <we-row string="Topics">
+                <we-button data-add-item=""
+                        data-item=".s_faq_horizontal_entry:last"
+                        data-select-item="true"
+                        data-apply-to="> :has(.s_faq_horizontal_entry)"
+                        data-no-preview="true"
+                        class="o_we_bg_success">
+                    Add New
+                </we-button>
+            </we-row>
+        </div>
+
+        <div data-js="sizing_y" data-selector=".s_faq_horizontal .s_faq_horizontal_entry"/>
+    </xpath>
+</template>
+
+<record id="website.s_faq_horizontal_000_js" model="ir.asset">
+    <field name="name">Faq Horizontal 000 JS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_faq_horizontal/000.js</field>
+</record>
+
+</odoo>

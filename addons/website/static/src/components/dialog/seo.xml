@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+<t t-name="website.MetaImage">
+    <div t-att-class="props.active ? 'o_active_image o_meta_img m-1' : 'o_meta_img m-1'" t-on-click="() => props.selectImage(props.src)">
+        <span t-if="props.custom" class="o-custom-label w-100 text-white text-center">Custom</span>
+        <img t-att-src="props.src"/>
+    </div>
+</t>
+
+<t t-name="website.ImageSelector">
+    <section>
+        <div class="o_seo_og_image">
+            <h4><small>Select an image for social share</small></h4>
+            <div class="row">
+                <div class="col-lg-6">
+                    <t t-foreach="state.images" t-as="image" t-key="image.src">
+                        <MetaImage active="image.active" custom="image.custom" src="image.src" selectImage="src => this.selectImage(src)"/>
+                    </t>
+                    <div class="o_meta_img_upload m-1" title="Click to choose more images" t-on-click="openMediaDialog">
+                        <i class="fa fa-upload"/>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card p-0 mb16">
+                        <div class="card-header">Social Preview</div>
+                        <img class="card-img-top o_meta_active_img" t-att-src="activeMetaImage"/>
+                        <div class="card-body px-3 py-2">
+                            <h6 class="text-primary card-title mb0"><t t-esc="title"/></h6>
+                            <small class="card-subtitle text-muted"><t t-esc="props.url"/></small>
+                            <p t-esc="description"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</t>
+
+<t t-name="website.Keyword">
+    <tr>
+        <td t-esc="props.keyword"/>
+        <td class="text-center"><i t-if="usedInH1" class="fa fa-check" t-att-title="props.keyword + ' is used in page first level heading'"/></td>
+        <td class="text-center"><i t-if="usedInH2" class="fa fa-check" t-att-title="props.keyword + ' is used in page second level heading'"/></td>
+        <td class="text-center"><i t-if="usedInTitle" class="fa fa-check" t-att-title="props.keyword + ' is used in page title'"/></td>
+        <td class="text-center"><i t-if="usedInDescription" class=" fa fa-check" t-att-title="props.keyword + ' is used in page description'"/></td>
+        <td class="text-center"><i t-if="usedInContent" class="fa fa-check" t-att-title="props.keyword + ' is used in page content'"/></td>
+        <td class="o_seo_keyword_suggestion">
+            <ul class="list-inline mb0">
+                <span t-if="!state.suggestions.length">Loading...</span>
+                <t t-foreach="state.suggestions" t-as="suggestion" t-key="suggestion">
+                    <li class="list-inline-item" t-on-click="() => props.addKeyword(suggestion)">
+                        <span class="o_seo_suggestion badge text-bg-info" t-att-title="'Add ' + suggestion" t-esc="suggestion"/>
+                    </li>
+                </t>
+            </ul>
+        </td>
+        <td class="text-center" t-on-click="() => props.removeKeyword(props.keyword)"><a href="#" class="oe_remove" t-att-title="'Remove ' + props.keyword"><i class="fa fa-trash"/></a></td>
+    </tr>
+</t>
+
+<t t-name="website.MetaKeywords">
+    <section>
+        <label for="website_meta_keywords">
+            Keywords
+        </label>
+        <div class="d-flex" role="form">
+            <div class="input-group w-auto">
+                <input t-model="state.keyword" type="text" class="form-control" t-att-placeholder="isFull ? 'Remove a keyword first' : 'Keyword'" t-att-readonly="isFull" maxlength="30" t-on-keyup="onKeyup"/>
+                <select title="The language of the keyword and related keywords."
+                        t-model="state.language" class="btn btn-outline-primary pe-5 form-select">
+                    <t t-foreach="languages" t-as="lang" t-key="lang[0]">
+                        <option t-att-value="lang[0]"><t t-esc="lang[2]"/></option>
+                    </t>
+                </select>
+                <button t-on-click="() => this.addKeyword(state.keyword)" t-att-disabled="isFull" class="btn btn-primary" type="button">Add</button>
+            </div>
+        </div>
+        <div t-if="seoContext.keywords.length" class="table-responsive mt16">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Keyword</th>
+                        <th class="text-center" title="Used in page first level heading">H1</th>
+                        <th class="text-center" title="Used in page second level heading">H2</th>
+                        <th class="text-center" title="Used in page title">T</th>
+                        <th class="text-center" title="Used in page description">D</th>
+                        <th class="text-center" title="Used in page content">C</th>
+                        <th title="Most searched topics related to your keyword, ordered by importance">Related keywords</th>
+                        <th class="text-center"></th>
+                    </tr>
+                </thead>
+                <t t-foreach="seoContext.keywords" t-as="keyword" t-key="keyword">
+                    <Keyword language="state.language" keyword="keyword" addKeyword="(keyword) => this.addKeyword(keyword)" removeKeyword="(keyword) => this.removeKeyword(keyword)"/>
+                </t>
+            </table>
+        </div>
+    </section>
+</t>
+
+<t t-name="website.SEOPreview">
+    <div class="oe_seo_preview_g">
+        <div class="rc">
+            <t t-if="props.isIndexed">
+                <div class="r"><t t-esc="props.title"/></div>
+                <div class="s">
+                    <div class="kv mb-1 text-muted"><t t-esc="props.url"/></div>
+                    <div class="st text-black"><t t-esc="description"/></div>
+                </div>
+            </t>
+            <t t-else="">
+                <div class="s">
+                    <div class="st">You have hidden this page from search results. It won't be indexed by search engines.</div>
+                </div>
+            </t>
+        </div>
+    </div>
+</t>
+
+<t t-name="website.TitleDescription">
+    <section>
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="mb-3">
+                    <label for="website_meta_title">
+                        Title <i class="fa fa-question-circle-o" title="The title will take a default value unless you specify one."/>
+                    </label>
+                    <input type="text" t-model="seoContext.title" t-att-disabled="!props.canEditTitle" class="form-control" placeholder="Keep empty to use default value" maxlength="70" size="70" t-ref="autofocus"/>
+                </div>
+                <div class="mb-3">
+                    <label for="website_meta_description">
+                        Description <i class="fa fa-question-circle-o" t-att-title="props.previewDescription"/>
+                    </label>
+                    <textarea t-model="seoContext.description" t-att-disabled="!props.canEditDescription" name="website_meta_description" placeholder="Keep empty to use default value" class="form-control"/>
+                    <div t-if="descriptionWarning.length" class="alert alert-warning mt16 mb0 small">
+                        <span t-esc="descriptionWarning"/>
+                    </div>
+                </div>
+                <div class="mb-3" t-if='props.canEditUrl'>
+                    <label for="website_seo_name">
+                        Custom Url <i class="fa fa-question-circle-o" t-att-title="props.seoNameHelp" />
+                    </label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text seo_name_pre" t-esc="seoNamePre"/>
+                        </div>
+                        <input type="text" class="form-control" t-att-placeholder="props.seoNameDefault"
+                               t-on-input="_updateInputValue" t-att-value="seoContext.seoName"/>
+                        <div class="input-group-append" title="Unalterable unique identifier">
+                            <span class="input-group-text seo_name_post" t-esc="seoNamePost"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card-header">Preview</div>
+                <div class="card mb0 p-0">
+                    <div class="card-body">
+                        <SEOPreview isIndexed="props.isIndexed" title="title" description="description" url="url"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</t>
+
+<t t-name="website.OptimizeSEODialog">
+    <WebsiteDialog close="props.close"
+        title="title"
+        size="size"
+        primaryClick="() => this.save()"
+        primaryTitle="saveButton"
+        showFooter="canEditSeo"
+        contentClass="contentClass">
+        <div t-if="!canEditSeo" class="alert alert-warning" role="alert">
+            You don't have permissions to edit this record.
+        </div>
+        <TitleDescription canEditDescription="canEditDescription"
+            canEditUrl="canEditUrl"
+            canEditTitle="canEditTitle"
+            seoNameHelp="seoNameHelp"
+            seoNameDefault="seoNameDefault"
+            isIndexed="isIndexed"
+            defaultTitle="defaultTitle"
+            previewDescription="previewDescription"
+            url="url"/>
+        <MetaKeywords t-if="canEditSeo"/>
+        <ImageSelector t-if="canEditSeo" previewDescription="socialPreviewDescription"
+            defaultTitle="defaultTitle"
+            hasSocialDefaultImage="hasSocialDefaultImage"
+            pageImages="pageImages"
+            url="url"/>
+    </WebsiteDialog>
+</t>
+</templates>

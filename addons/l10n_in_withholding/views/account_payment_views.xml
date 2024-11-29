@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_payment_form_inherit_l10n_in_withholding" model="ir.ui.view">
+        <field name="name">account.payment.form.inherit.l10n_in_withholding</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="%(l10n_in_withholding_entry_form_action)d" string="TDS Entry" type="action" class="btn btn-secondary float-end"
+                        invisible="country_code != 'IN' or state != 'in_process' or is_reconciled"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_l10n_in_withholding_entries"
+                        class="oe_stat_button"
+                        type="object"
+                        icon="fa-list-alt"
+                        invisible="not l10n_in_withhold_move_ids">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">TDS</span>
+                        <span class="o_stat_value"><field name="l10n_in_total_withholding_amount"/></span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

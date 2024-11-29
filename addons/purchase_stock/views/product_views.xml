@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_category_property_form" model="ir.ui.view">
+        <field name="name">product.category.property.form.inherit.purchase.stock</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="account.view_category_property_form"/>
+        <field name="arch" type="xml">
+            <field name="property_account_income_categ_id" position="before">
+                <field name="property_account_creditor_price_difference_categ"
+                    domain="[('deprecated','=',False)]" groups="account.group_account_readonly"
+                    invisible="property_valuation == 'manual_periodic'"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_template_form_view" model="ir.ui.view">
+        <field name="name">product.normal.form.inherit.purchase.stock</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="account.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <field name="property_account_expense_id" position="after">
+                <field name="property_account_creditor_price_difference" domain="[('deprecated','=',False)]" groups="account.group_account_readonly"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_view_kanban_catalog_purchase_only" model="ir.ui.view">
+        <field name="name">product.view.kanban.catalog.purchase_stock</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_view_kanban_catalog"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <div name="o_kanban_qty_available" position="after">
+                <div t-if="record.is_storable.raw_value"
+                     name="o_kanban_qty_forecasted">
+                    <span>Forecasted: </span>
+                    <field name="virtual_available"/>
+                    <field name="uom_id" class="ms-1" groups="uom.group_uom"/>
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>

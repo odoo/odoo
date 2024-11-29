@@ -1,0 +1,59 @@
+.o-tooltip {
+    --#{$variable-prefix}tooltip-max-width: #{$tooltip-max-width};
+    --#{$variable-prefix}tooltip-padding-x: #{$tooltip-padding-x};
+    --#{$variable-prefix}tooltip-padding-y: #{$tooltip-padding-y};
+    --#{$variable-prefix}tooltip-color: #{$tooltip-color};
+    --#{$variable-prefix}tooltip-bg: #{$tooltip-bg};
+    --#{$variable-prefix}tooltip-border-radius: #{$tooltip-border-radius};
+
+    @include reset-text();
+    @include font-size($tooltip-font-size);
+
+    // Note: Not cross-browser but not such a big deal since it's
+    // needed for minor aesthetic adaptations only.
+    &:has(.o-tooltip--technical) {
+        max-width: $tooltip-max-width * 2;
+
+        .o-tooltip--help {
+            background-color: $info;
+            color: color-contrast($info);
+        }
+
+        .o-tooltip--string, .o-tooltip--help {
+            max-width: MIN($tooltip-max-width, 100%);
+        }
+    }
+
+    .o-tooltip--string, .o-tooltip--technical--title {
+        padding:  map-get($spacers, 1) 0;
+        font-weight: $font-weight-bold;
+    }
+
+    .o-tooltip--help, .o-tooltip--technical {
+        margin: map-get($spacers, 1) map-get($spacers, 2) map-get($spacers, 2);
+    }
+
+    .o-tooltip--help {
+        white-space: pre-line;
+        padding: 0 map-get($spacers, 2);
+    }
+
+    .o-tooltip--technical {
+        padding-left: 1.3em;
+        font-family: $o-font-family-monospace;
+        font-size: $o-font-size-base-smaller;
+        list-style-type: disc;
+
+        .o-tooltip--technical--title {
+            margin-right: map-get($spacers, 1);
+        }
+    }
+
+    + .popover-arrow {
+        --#{$variable-prefix}popover-bg: #{$tooltip-bg};
+
+        @include media-only(print) {
+            display: none;
+        }
+    }
+}

@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+        <record id="discuss_channel_view_search" model="ir.ui.view">
+            <field name="name">discuss.channel.search</field>
+            <field name="model">discuss.channel</field>
+            <field name="arch" type="xml">
+                <search string="Search history">
+                    <field name="name" string="Participant"/>
+                    <filter name="filter_my_sessions" domain="[('is_member', '=', True)]" string="My Sessions"/>
+                    <separator/>
+                    <filter name="filter_session_date" date="create_date" string="Session Date"/>
+                    <separator/>
+                    <filter name="filter_session_bad_rating" domain="[('rating_ids', '!=', False), ('rating_avg', '&lt;', 2.5)]" string="Bad Ratings"/>
+                    <filter name="filter_session_good_rating" domain="[('rating_ids', '!=', False), ('rating_avg', '&gt;=', 2.5)]" string="Good Ratings"/>
+                    <filter name="fiter_session_unrated" domain="[('rating_ids', '=', False)]" string="Unrated"/>
+                    <group expand="0" string="Group By...">
+                        <filter name="group_by_channel" string="Channel" domain="[]" context="{'group_by':'livechat_channel_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter name="group_by_month" string="Session Date" domain="[]" context="{'group_by':'create_date:month'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="discuss_channel_view_tree" model="ir.ui.view">
+            <field name="name">discuss.channel.list</field>
+            <field name="model">discuss.channel</field>
+            <field name="arch" type="xml">
+                <list js_class="im_livechat.discuss_channel_list" string="History" create="false" default_order="create_date desc">
+                    <field name="is_member" column_invisible="True"/>
+                    <field name="create_date" string="Session Date"/>
+                    <field name="name" string="Participants"/>
+                    <field name="country_id"/>
+                    <field name="duration" widget="float_time" options="{'displaySeconds': True}"/>
+                    <field name="message_ids" string="# Messages"/>
+                    <field name="rating_last_image" string="Rating" widget="image" options='{"size": [20, 20]}' class="bg-view"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="discuss_channel_view_kanban" model="ir.ui.view">
+            <field name="name">discuss.channel.kanban</field>
+            <field name="model">discuss.channel</field>
+            <field name="arch" type="xml">
+                <kanban js_class="im_livechat.discuss_channel_kanban" class="o_kanban_mobile" sample="1" quick_create="false">
+                    <templates>
+                        <t t-name="card">
+                            <div class="d-flex">
+                                <div class="d-flex flex-column">
+                                    <field class="fw-bolder" name="name"/>
+                                    <span class="fw-bold">Duration: <field class="d-inline fw-normal" name="duration" widget="float_time" options="{'displaySeconds': True}"/></span>
+                                    <span class="fw-bold">Date: <field name="create_date" class="fw-normal"/></span>
+                                </div>
+                                <field name="rating_last_image" string="Rating" widget="image" options='{"size": [40, 40]}' class="ms-auto"/>
+                            </div>
+                            <footer class="pt-0">
+                                <t t-if="record.country_id.raw_value">
+                                    <span class="fw-bold">Country: </span><field string="Country" name="country_id"/>
+                                </t>
+                                <field name="livechat_operator_id" widget="many2one_avatar_user" class="ms-auto me-1"/>
+                            </footer>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="discuss_channel_view_form" model="ir.ui.view">
+            <field name="name">discuss.channel.form</field>
+            <field name="model">discuss.channel</field>
+            <field name="arch" type="xml">
+                <form string="Session Form" create="false" edit="false">
+                    <sheet>
+                        <div style="width:50%" class="float-end">
+                            <field name="rating_last_image" widget="image" class="float-end bg-view" readonly="1" nolabel="1"/>
+                            <field name="rating_last_feedback" nolabel="1"/>
+                        </div>
+                        <div style="width:50%" class="float-start">
+                            <group>
+                                <field name="name" string="Participants"/>
+                                <field name="create_date" readonly="1" string="Session Date"/>
+                            </group>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="discuss_channel_action" model="ir.actions.act_window">
+            <field name="name">History</field>
+            <field name="res_model">discuss.channel</field>
+            <field name="view_mode">kanban,list,form</field>
+            <field name="search_view_id" ref="im_livechat.discuss_channel_view_search"/>
+            <field name="domain">[('livechat_channel_id', '!=', None)]</field>
+            <field name="context">{'search_default_session_not_empty': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_empty_folder">
+                    Your chatter history is empty
+                </p><p>
+                    Create a channel and start chatting to fill up your history.
+                </p>
+            </field>
+        </record>
+        <record id="discuss_channel_action_kanban" model="ir.actions.act_window.view">
+            <field name="sequence">1</field>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="im_livechat.discuss_channel_view_kanban"/>
+            <field name="act_window_id" ref="im_livechat.discuss_channel_action"/>
+        </record>
+
+        <record id="discuss_channel_action_tree" model="ir.actions.act_window.view">
+            <field name="sequence">2</field>
+            <field name="view_mode">list</field>
+            <field name="view_id" ref="im_livechat.discuss_channel_view_tree"/>
+            <field name="act_window_id" ref="im_livechat.discuss_channel_action"/>
+        </record>
+
+        <record id="discuss_channel_action_form" model="ir.actions.act_window.view">
+            <field name="sequence">3</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="im_livechat.discuss_channel_view_form"/>
+            <field name="act_window_id" ref="im_livechat.discuss_channel_action"/>
+        </record>
+
+        <record id="discuss_channel_action_from_livechat_channel" model="ir.actions.act_window">
+            <field name="name">Sessions</field>
+            <field name="res_model">discuss.channel</field>
+            <field name="view_mode">kanban,list,form</field>
+            <field name="domain">[('livechat_channel_id', 'in', [active_id])]</field>
+            <field name="context">{
+                'search_default_livechat_channel_id': [active_id],
+                'default_livechat_channel_id': active_id,
+            }</field>
+            <field name="search_view_id" ref="discuss_channel_view_search"/>
+        </record>
+        <record id="discuss_channel_action_livechat_kanban" model="ir.actions.act_window.view">
+            <field name="sequence">1</field>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="im_livechat.discuss_channel_view_kanban"/>
+            <field name="act_window_id" ref="im_livechat.discuss_channel_action_from_livechat_channel"/>
+        </record>
+        <record id="discuss_channel_action_livechat_tree" model="ir.actions.act_window.view">
+            <field name="sequence">2</field>
+            <field name="view_mode">list</field>
+            <field name="view_id" ref="im_livechat.discuss_channel_view_tree"/>
+            <field name="act_window_id" ref="im_livechat.discuss_channel_action_from_livechat_channel"/>
+        </record>
+
+        <record id="discuss_channel_action_livechat_form" model="ir.actions.act_window.view">
+            <field name="sequence">3</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="im_livechat.discuss_channel_view_form"/>
+            <field name="act_window_id" ref="im_livechat.discuss_channel_action_from_livechat_channel"/>
+        </record>
+
+    </data>
+</odoo>

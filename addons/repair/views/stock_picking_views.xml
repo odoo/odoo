@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="repair_view_picking_type_form" model="ir.ui.view">
+        <field name="name">stock.picking.type.inherit.repair</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.view_picking_type_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@name='default_location_src_id_label']" position="before">
+                <field name="default_product_location_src_id" options="{'no_create': True}" invisible="code != 'repair_operation'" required="code == 'repair_operation'"/>
+                <field name="default_product_location_dest_id" options="{'no_create': True}" invisible="code != 'repair_operation'" required="code == 'repair_operation'"/>
+            </xpath>
+            <xpath expr="//label[@name='default_location_src_id_label']" position="replace">
+                <label for="default_location_src_id" name="default_location_src_id_label" invisible="code == 'repair_operation'"/>
+                <label for="default_location_src_id" string="Component Source Location" invisible="code != 'repair_operation'"/>
+            </xpath>
+            <xpath expr="//label[@name='default_location_dest_id_label']" position="replace">
+                <label for="default_location_dest_id" name="default_location_dest_id_label" invisible="code == 'repair_operation'"/>
+                <label for="default_location_dest_id" string="Component Destination Location" invisible="code != 'repair_operation'"/>
+            </xpath>
+            <xpath expr="//div[@name='default_location_dest_id_div']" position="after">
+                <field name="default_remove_location_dest_id" options="{'no_create': True}" invisible="code != 'repair_operation'" required="code == 'repair_operation'"/>
+                <field name="default_recycle_location_dest_id" options="{'no_create': True}" invisible="code != 'repair_operation'" required="code == 'repair_operation'"/>
+            </xpath>
+            <xpath expr="//group[@name='locations']" position="after">
+                <field name="return_type_of_ids" invisible="1"/>
+                <group string="Repairs" invisible="not return_type_of_ids">
+                    <field name="is_repairable"/>
+                </group>
+            </xpath>
+            <field name="create_backorder" position="attributes">
+                <attribute name="invisible">code == 'repair_operation'</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="repair_view_picking_form" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit.repair</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='%(stock.act_stock_return_picking)d']" position="after">
+                <field name="is_repairable" invisible="1"/>
+                <button string="Repair" name="action_repair_return" type="object" invisible="not is_repairable" data-hotkey="shift+k"/>
+            </xpath>
+            <xpath expr="//button[@name='action_see_packages']" position="after">
+                <field name="repair_ids" invisible="1"/>
+                <button name="action_view_repairs" type="object"
+                        class="oe_stat_button" icon="fa-wrench"
+                        invisible="nbr_repairs == 0">
+                        <field name="nbr_repairs" string="Repair Orders" widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="stock_repair_type_kanban" model="ir.ui.view">
+        <field name="name">stock.picking.type.kanban</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.stock_picking_type_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//t[@t-name='menu']" position="inside">
+                <div class="container" t-if="record.code.raw_value == 'repair_operation'">
+                        <div class="row">
+                            <div class="col-6" name="picking_left_manage_pane">
+                                <h5 role="menuitem" class="o_kanban_card_manage_title">
+                                    <span>Orders</span>
+                                </h5>
+                                <div role="menuitem">
+                                    <a name="get_repair_stock_picking_action_picking_type" type="object">All</a>
+                                </div>
+                                <div role="menuitem">
+                                    <a name="get_repair_stock_picking_action_picking_type" context="{'search_default_ready': 1}" type="object">Ready</a>
+                                </div>
+                            </div>
+                            <div name="kanban_menu_section" class="col-6">
+                                <h5 role="menuitem" class="o_kanban_card_manage_title">
+                                    <a name="%(action_repair_order_form)d" type="action" context="{'default_picking_type_id': id}">New</a>
+                                </h5>
+                                <div role="menuitem">
+                                    <a name="get_action_picking_type_moves_analysis" type="object">Reporting</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
+                            <div role="menuitem" aria-haspopup="true" class="col-8">
+                                <field name="color" widget="kanban_color_picker"/>
+                            </div>
+                        </div>
+
+                        <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
+                            <field name="is_favorite" widget="boolean_favorite" class="col-6"/>
+                            <div role="menuitem" class="col-6 text-end">
+                                <a class="dropdown-item" role="menuitem" type="open">Configuration</a>
+                            </div>
+                        </div>
+                    </div>
+            </xpath>
+            <xpath expr='//div[@name="stock_picking"]' position="after">
+                <div t-if="record.code.raw_value == 'repair_operation'" class="px-2">
+                    <a t-if="!selection_mode" type="object" name="get_repair_stock_picking_action_picking_type">
+                        <field name="name" class="fw-bold fs-4"/>
+                    </a>
+                    <field t-if="selection_mode" name="name" class="fw-bold fs-4"/>
+                    <field class="d-block"  name="warehouse_id"  groups="stock.group_stock_multi_warehouses"/>
+                    <div t-if="!selection_mode" class="row mt-3">
+                        <div class="col-6">
+                            <button class="btn btn-primary" name="get_repair_stock_picking_action_picking_type" context="{'search_default_ready': 1}" type="object">
+                                <span t-if="record.count_repair_ready.raw_value > 0">
+                                    <field name="count_repair_ready"/> To Repair
+                                </span>
+                                <span t-else="">Open</span>
+                            </button>
+                        </div>
+                        <div class="col-6 stock-overview-links">
+                            <div t-if="record.count_repair_late.raw_value > 0" class="row">
+                                <a class="col-8 offset-4 text-truncate" name="get_repair_stock_picking_action_picking_type" context="{'search_default_filter_late': 1}" type="object">
+                                    <div class="row">
+                                        <span class="col-6">Late</span>
+                                        <field class="col-2 text-end" name="count_repair_late"/>
+                                    </div>
+                                </a>
+                            </div>
+                            <div t-if="record.count_repair_confirmed.raw_value > 0" class="row">
+                                <a class="col-8 offset-4 text-truncate" name="get_repair_stock_picking_action_picking_type" context="{'search_default_filter_confirmed': 1}" type="object">
+                                    <div class="row">
+                                        <span class="col-6">Confirmed</span>
+                                        <field class="col-2 text-end" name="count_repair_confirmed"/>
+                                    </div>
+                                </a>
+                            </div>
+                            <div t-if="record.count_repair_under_repair.raw_value > 0" class="row">
+                                <a class="col-8 offset-4 text-truncate" name="get_repair_stock_picking_action_picking_type" context="{'search_default_filter_under_repair': 1}" type="object">
+                                    <div class="row">
+                                        <span class="col-6">Under Repair</span>
+                                        <field class="col-2 text-end" name="count_repair_under_repair"/>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <field t-if="!selection_mode" class="mt-auto" name="kanban_dashboard_graph" graph_type="bar" widget="picking_type_dashboard_graph"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

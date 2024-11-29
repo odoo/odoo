@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product.product_combo_view_form" model="ir.ui.view">
+        <field name="name">product.combo.form</field>
+        <field name="model">product.combo</field>
+        <field name="arch" type="xml">
+            <form string="Combo Choice">
+                <div class="oe_title">
+                    <label for="name" string="Combo Choice"/>
+                    <h1>
+                        <field
+                            name="name"
+                            placeholder="e.g. Burger Choice"
+                            widget="text"
+                            options="{'line_breaks': False}"
+                            class="text-break"
+                        />
+                    </h1>
+                </div>
+                <group>
+                    <field
+                        name="company_id"
+                        placeholder="Visible to all"
+                        groups="base.group_multi_company"
+                        options="{'no_create': True}"
+                        class="oe_inline"
+                    />
+                </group>
+                <field name="combo_item_ids">
+                    <list editable="bottom">
+                        <field name="currency_id" column_invisible="True"/>
+                        <field name="product_id"/>
+                        <field
+                            name="lst_price"
+                            widget="monetary"
+                            options="{'field_digits': True}"
+                        />
+                        <field
+                            name="extra_price"
+                            widget="monetary"
+                            options="{'field_digits': True}"
+                        />
+                    </list>
+                </field>
+            </form>
+        </field>
+    </record>
+
+    <record id="product.product_combo_view_tree" model="ir.ui.view">
+        <field name="name">product.combo.list</field>
+        <field name="model">product.combo</field>
+        <field name="arch" type="xml">
+            <list string="Combo Choices">
+                <field name="currency_id" column_invisible="True"/>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="base_price" widget="monetary" options="{'field_digits': True}"/>
+                <field name="combo_item_count"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="product.product_combo_action" model="ir.actions.act_window">
+        <field name="name">Combo Choices</field>
+        <field name="res_model">product.combo</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

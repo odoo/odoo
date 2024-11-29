@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="test_model_publish" model="ir.rule">
+            <field name="name">Public user: read only website published</field>
+            <field name="model_id" ref="test_website.model_test_model"/>
+            <field name="groups" eval="[(4, ref('base.group_public'))]"/>
+            <field name="domain_force">[('website_published','=', True)]</field>
+            <field name="perm_read" eval="True"/>
+        </record>
+
+        <!-- SOME DEFAULT TEST.MODEL RECORDS WITH DIFFERENT WEBSITE_ID -->
+        <record id="test_tag_generic" model="test.tag">
+            <field name="name">Test Tag</field>
+        </record>
+        <record id="test_tag_2" model="test.tag">
+            <field name="name">Test Tag #2</field>
+        </record>
+        <record id="test_tag_3" model="test.tag">
+            <field name="name">Test Tag #3</field>
+        </record>
+        <record id="test_model_generic" model="test.model">
+            <field name="name">Test Model</field>
+            <field name="tag_id" ref="test_website.test_tag_generic"/>
+        </record>
+        <record id="test_submodel_generic" model="test.submodel">
+            <field name="name">Test Submodel</field>
+            <field name="test_model_id" ref="test_website.test_model_generic"/>
+            <field name="tag_id" ref="test_website.test_tag_generic"/>
+        </record>
+        <record id="test_model_multi_generic" model="test.model.multi.website">
+            <field name="name">Test Multi Model Generic</field>
+        </record>
+        <record id="test_model_multi_website_1" model="test.model.multi.website">
+            <field name="name">Test Multi Model Website 1</field>
+            <field name="website_id" ref="website.default_website"/>
+        </record>
+
+        <!-- RECORDS FOR RESET VIEWS TESTS -->
+        <record id="test_view" model="ir.ui.view">
+            <field name="name">Test View</field>
+            <field name="type">qweb</field>
+            <field name="key">test_website.test_view</field>
+            <field name="arch" type="xml">
+                <t name="Test View" priority="29" t-name="test_website.test_view">
+                    <t t-call="website.layout">
+                        <p>Test View</p>
+                        <p>placeholder</p>
+                    </t>
+                </t>
+            </field>
+        </record>
+        <record id="test_page_view" model="ir.ui.view">
+            <field name="name">Test Page View</field>
+            <field name="type">qweb</field>
+            <field name="key">test_website.test_page_view</field>
+            <field name="arch" type="xml">
+                <t name="Test Page View" priority="29" t-name="test_website.test_page_view">
+                    <t t-call="website.layout">
+                        <div id="oe_structure_test_website_page" class="oe_structure oe_empty"/>
+                        <p>Test Page View</p>
+                        <p>placeholder</p>
+                    </t>
+                </t>
+            </field>
+        </record>
+        <record id="test_error_view" model="ir.ui.view">
+            <field name="name">Test Error View</field>
+            <field name="type">qweb</field>
+            <field name="key">test_website.test_error_view</field>
+            <field name="arch" type="xml">
+                <t name="Test Error View" t-name="test_website.test_error_view">
+                    <t t-call="website.layout">
+                    <div class="container">
+                        <h1>Test Error View</h1>
+                        <div class="row">
+                            <ul class="list-group http_error col-6">
+                                <li class="list-group-item list-group-item-primary"><h2>http Errors</h2></li>
+                                <li class="list-group-item"><a href="/test_user_error_http">http UserError (400)</a></li>
+                                <li class="list-group-item"><a href="/test_validation_error_http">http ValidationError (400)</a></li>
+                                <li class="list-group-item"><a href="/test_missing_error_http">http MissingError (400)</a></li>
+                                <li class="list-group-item"><a href="/test_access_error_http">http AccessError (403)</a></li>
+                                <li class="list-group-item"><a href="/test_access_denied_http">http AccessDenied (403)</a></li>
+                                <li class="list-group-item"><a href="/test_internal_error_http">http InternalServerError (500)</a></li>
+                                <li class="list-group-item"><a href="/test_not_found_http">http NotFound (404)</a></li>
+                            </ul>
+                            <ul class="list-group rpc_error col-6">
+                                <li class="list-group-item list-group-item-primary"><h2>rpc Warnings</h2></li>
+                                <li class="list-group-item"><a href="/test_user_error_json">rpc UserError</a></li>
+                                <li class="list-group-item"><a href="/test_validation_error_json">rpc ValidationError</a></li>
+                                <li class="list-group-item"><a href="/test_missing_error_json">rpc MissingError</a></li>
+                                <li class="list-group-item"><a href="/test_access_error_json">rpc AccessError</a></li>
+                                <li class="list-group-item"><a href="/test_access_denied_json">rpc AccessDenied</a></li>
+                                <li class="list-group-item list-group-item-primary"><h2>rpc Errors</h2></li>
+                                <li class="list-group-item"><a href="/test_internal_error_json">rpc InternalServerError</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    </t>
+                </t>
+            </field>
+        </record>
+        <record id="test_page" model="website.page">
+            <field name="is_published">True</field>
+            <field name="url">/test_page_view</field>
+            <field name="view_id" ref="test_page_view"/>
+            <field name="website_indexed" eval="False"/>
+        </record>
+        <record id="test_view_to_be_t_called" model="ir.ui.view">
+            <field name="name">Test View To Be t-called</field>
+            <field name="type">qweb</field>
+            <field name="key">test_website.test_view_to_be_t_called</field>
+            <field name="arch" type="xml">
+                <t name="Test View To Be t-called" priority="29" t-name="test_website.test_view_to_be_t_called">
+                    <p>Test View To Be t-called</p>
+                    <p>placeholder</p>
+                </t>
+            </field>
+        </record>
+        <template id="test_view_child_broken" inherit_id="test_website.test_view" active="False">
+            <xpath expr="//p[last()]" position="replace">
+                <p>Test View Child Broken</p>
+                <p>placeholder</p>
+            </xpath>
+        </template>
+
+        <!-- RECORDS FOR MODULE OPERATION TESTS -->
+        <template id="update_module_base_view">
+            <div>I am a base view</div>
+        </template>
+
+        <!-- RECORDS FOR REDIRECT TESTS -->
+        <template id="test_redirect_view">
+            <t t-esc="country.name"/>
+            <t t-if="not request.env.user._is_public()" t-esc="'Logged In'"/>
+            <!-- `href` is send through `url_for` for non editor users -->
+            <a href="/test_website/country/andorra-1">I am a link</a>
+        </template>
+        <template id="test_redirect_view_qs">
+            <a href="/empty_controller_test?a=a">Home</a>
+        </template>
+
+        <record id="test_image_progress" model="website.page">
+            <field name="name">Test Image Progress</field>
+            <field name="url">/test_image_progress</field>
+            <field name="type">qweb</field>
+            <field name="key">test_website.test_image_progress</field>
+            <field name="arch" type="xml">
+                <t t-call="website.layout">
+                    <div id="wrap" class="oe_structure oe_empty"/>
+                </t>
+            </field>
+            <field name="website_indexed" eval="False"/>
+        </record>
+
+    </data>
+</odoo>

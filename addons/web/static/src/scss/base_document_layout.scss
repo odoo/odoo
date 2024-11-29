@@ -1,0 +1,51 @@
+.o_document_layout {
+    display: flex;
+    height: 100%;
+    .o_content{
+        height: inherit;
+        .o_form_renderer {
+            padding: 0;
+            height: 100%;
+            .o_group {
+                --gutter-x: 0px;
+                display: flex;
+                height: inherit;
+                .o_document_layout_company {
+                    flex: 5;
+                    padding: 24px 0 0 32px;
+
+                    img {
+                        max-height: 100px;
+                    }
+                    .o_custom_colors {
+                        .o-checkbox {
+                            @include o-position-absolute(0, 0, 0, 0);
+                            width: 100%;
+                        }
+                    }
+
+                    select.o_input {
+                        height: 25px;
+                    }
+                }
+                .o_preview {
+                    height: inherit;
+                    padding: 0;
+                    .preview_document_layout {
+                        height: inherit;
+
+                        .o_preview_iframe {
+                            padding: 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 620px) {
+    .o_document_layout .o_group {
+        flex-direction: column;
+    }
+}

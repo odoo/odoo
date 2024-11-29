@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record model="ir.ui.view" id="project_tags_search_view">
+            <field name="name">Tags</field>
+            <field name="model">project.tags</field>
+            <field name="arch" type="xml">
+                <search string="Issue Version">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="project_tags_form_view">
+            <field name="name">Tags</field>
+            <field name="model">project.tags</field>
+            <field name="arch" type="xml">
+                <form string="Tags">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="color" widget="color_picker"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="project_tags_tree_view">
+            <field name="name">Tags</field>
+            <field name="model">project.tags</field>
+            <field name="arch" type="xml">
+                <list string="Tags" editable="top" sample="1" multi_edit="1" default_order="name">
+                    <field name="name"/>
+                    <field name="color" widget="color_picker" optional="show"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="project_tags_action" model="ir.actions.act_window">
+            <field name="name">Tags</field>
+            <field name="res_model">project.tags</field>
+            <field name="path">task-tags</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                No tags found. Let's create one!
+              </p>
+              <p>
+                  Use tags to categorize your tasks.
+              </p>
+            </field>
+        </record>
+</odoo>

@@ -1,0 +1,26 @@
+$padding-pre: map-get($spacers, 2) map-get($spacers, 3);
+
+pre {    
+    padding: $padding-pre;
+    border: $border-width solid $border-color;
+    border-radius: $border-radius;
+    background-color: $gray-100;
+    color: $gray-900;
+
+    &.o-we-hint::after {
+        padding: $padding-pre;
+    }
+}
+
+$padding-blockquote: $spacer/2 $spacer;
+
+blockquote {
+    padding: $padding-blockquote;
+    border-left: 5px solid;
+    border-color: map-get($grays, '300');
+    font-style: italic;
+
+    &.o-we-hint::after {
+        padding: $padding-blockquote;
+    }
+}

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_move_send_batch_wizard_form" model="ir.ui.view">
+        <field name="name">account.move.send.batch.wizard.form</field>
+        <field name="model">account.move.send.batch.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="move_ids" invisible="1"/>
+
+                <!-- Warnings -->
+                <div class="m-0" id="alerts" invisible="not alerts">
+                    <field name="alerts" class="o_field_html" widget="actionable_errors"/>
+                </div>
+
+                <!-- Summary -->
+                <field name="summary_data" widget="account_batch_sending_summary" nolabel="1"/>
+
+                <footer>
+                    <button string="Print &amp; Send"
+                            data-hotkey="q"
+                            name="action_send_and_print"
+                            type="object"
+                            class="print btn-primary o_mail_send">
+                    </button>
+                    <button string="Cancel"
+                            data-hotkey="x"
+                            special="cancel"
+                            class="btn-secondary"/>
+                </footer>
+
+            </form>
+        </field>
+    </record>
+
+</odoo>

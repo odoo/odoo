@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_holidays.MandatoryDayCalendarYearPopover.body">
+        <t t-foreach="recordGroups" t-as="recordGroup" t-key="recordGroup.title">
+            <div class="fw-bold mt-2" t-esc="recordGroup.title" />
+            <t t-foreach="recordGroup.records" t-as="record" t-key="record.id">
+                <t t-if="record.id &lt; 0">
+                    <p class="">
+                        <t t-if="record.startHour"><t t-esc="record.startHour" /> </t>
+                        <t t-esc="record.title"/>
+                    </p>
+                </t>
+                <t t-else="">
+                    <t t-call="{{ constructor.subTemplates.record }}" />
+                </t>
+            </t>
+        </t>
+    </t>
+</templates>

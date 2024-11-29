@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_hu_edi_tax_audit_export_form" model="ir.ui.view">
+        <field name="name">l10n_hu_edi.tax_audit_export.form</field>
+        <field name="model">l10n_hu_edi.tax_audit_export</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="selection_mode" widget="radio"/>
+                    <group>
+                        <field name="date_from" invisible="selection_mode != 'date'"/>
+                        <field name="name_from" invisible="selection_mode != 'name'"/>
+                    </group>
+                    <group>
+                        <field name="date_to" invisible="selection_mode != 'date'"/>
+                        <field name="name_to" invisible="selection_mode != 'name'"/>
+                    </group>
+                </group>
+                <div invisible="not export_file">
+                    <field name="export_file" widget="binary" filename="filename" readonly="1"/>
+                    <field name="filename" invisible="1"/>
+                </div>
+                <footer>
+                    <button string="Export" name="action_export" type="object" default_focus="1" class="btn-primary"/>
+                    <button string="Close" special="cancel" default_focus="1" class="btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_l10n_hu_edi_tax_audit_export_form" model="ir.actions.act_window">
+        <field name="name">Tax audit export - Adóhatósági Ellenőrzési Adatszolgáltatás</field>
+        <field name="res_model">l10n_hu_edi.tax_audit_export</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="l10n_hu_edi.l10n_hu_edi_tax_audit_export_form"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_finance_reports_hu" name="Hungary" parent="account.menu_finance_reports" sequence="30"/>
+    <menuitem id="menu_hu_tax_audit_export"
+              name="Tax audit export - Adóhatósági Ellenőrzési Adatszolgáltatás"
+              parent="menu_finance_reports_hu"
+              sequence="40"
+              action="action_l10n_hu_edi_tax_audit_export_form"/>
+
+</odoo>

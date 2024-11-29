@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_picking_form_mrp_subcontracting" model="ir.ui.view">
+        <field name="name">stock.picking.inherited.form.mrp.subcontracting</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button 
+                    class="oe_stat_button" name="action_view_subcontracting_source_purchase" 
+                    type="object" icon="fa-credit-card" invisible="subcontracting_source_purchase_count == 0" groups="stock.group_stock_user">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value"><field name="subcontracting_source_purchase_count"/></span>
+                        <span class="o_stat_text">Source PO</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

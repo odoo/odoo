@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.ClosePosPopup">
+        <Dialog contentClass="'close-pos-popup'">
+            <t t-set-slot="header">
+                <div class="d-flex flex-grow-1 justify-content-between">
+                    <h4 class="align-middle my-1">Closing Register</h4>
+                    <div class="total-orders fw-bolder align-middle my-1">
+                        <t t-esc="props.orders_details.quantity"/> orders:
+                        <span class="amount" t-esc="env.utils.formatCurrency(props.orders_details.amount)"/>
+                    </div>
+                </div>
+            </t>
+                <div class="payment-methods-overview">
+                    <div t-if="pos.config.cash_control" class="w-100 mb-3">
+                        <t t-set="diff" t-value="getDifference(props.default_cash_details.id)" />
+                        <t t-set="counted" t-value="state.payments[props.default_cash_details.id]?.counted || '0'" />
+                        <div class="d-flex align-items-center justify-content-between fs-3">
+                            <span t-esc="props.default_cash_details.name" />
+                            <span t-esc="env.utils.formatCurrency(props.default_cash_details.amount)" />
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between text-muted border-start ps-2">
+                            <span>Opening</span>
+                            <span t-esc="env.utils.formatCurrency(props.default_cash_details.opening)" />
+                        </div>
+                        <div t-if="props.default_cash_details.payment_amount" class="d-flex align-items-center justify-content-between text-muted border-start ps-2">
+                            <span>Payments in <t t-esc="props.default_cash_details.name"/></span>
+                            <span class="align-top" t-esc="env.utils.formatCurrency(Math.abs(props.default_cash_details.payment_amount))"/>
+                        </div>
+                        <t t-set="moveData" t-value="cashMoveData"/>
+                        <PaymentMethodBreakdown title.translate="Cash In / Out" total_amount="cashMoveData.total" transactions="cashMoveData.moves"/>
+                        <div class="d-flex align-items-center justify-content-between text-muted border-start ps-2">
+                            <span>Counted</span>
+                            <span t-esc="env.utils.formatCurrency(env.utils.parseValidFloat(counted))" />
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between text-muted border-start ps-2" t-att-class="{'text-danger fw-bold': diff}">
+                            <span>Difference</span>
+                            <span class="cash-difference" t-esc="env.utils.formatCurrency(diff)" />
+                        </div>
+                    </div>
+                    <div class="w-100 mb-3" t-foreach="props.non_cash_payment_methods" t-as="pm" t-key="pm.id">
+                        <t t-set="_showDiff" t-value="pm.type === 'bank' and pm.number !== 0" />
+                        <t t-set="diff" t-value="_showDiff ? getDifference(pm.id) : 0" />
+                        <t t-set="counted" t-value="_showDiff ? env.utils.parseValidFloat(state.payments[pm.id].counted) : 0" />
+                        <div class="d-flex align-items-center justify-content-between fs-3">
+                            <span t-esc="pm.name" />
+                            <span t-esc="env.utils.formatCurrency(pm.amount)" />
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between text-muted border-start ps-2">
+                            <span>Counted</span>
+                            <span t-esc="env.utils.formatCurrency(counted)" />
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between text-muted border-start ps-2" t-att-class="{'text-danger fw-bold': diff}">
+                            <span>Difference</span>
+                            <span t-esc="env.utils.formatCurrency(diff)" />
+                        </div>
+                    </div>
+                </div>
+                <hr/>
+                <div t-if="pos.config.cash_control" class="mb-3">
+                    <label class="form-label">Cash Count</label>
+                    <div class="d-flex w-100 gap-2 mt-1">
+                        <Input tModel="[state.payments[props.default_cash_details.id], 'counted']"
+                            callback.bind="(value) =>  this.setManualCashInput(value)"
+                            isValid.bind="env.utils.isValidFloat" class="'cash-input w-100'"/>
+                        <button class="icon fa fa-money btn btn-secondary" t-on-click="openDetailsPopup" />
+                        <button class="icon fa fa-clone btn btn-secondary" t-on-click="autoFillCashCount" />
+                    </div>
+                </div>
+                <div class="w-100 mb-3" t-foreach="props.non_cash_payment_methods" t-as="pm" t-key="pm.id">
+                    <t t-set="_showDiff" t-value="pm.type === 'bank' and pm.number !== 0" />
+                    <t t-if="_showDiff">
+                        <span><t t-esc="pm.name" /> Count</span>
+                        <Input tModel="[state.payments[pm.id], 'counted']"
+                            isValid.bind="env.utils.isValidFloat" />
+                    </t>
+                </div>
+                <div class="notes-container d-flex flex-column flex-sm-row gap-3 pt-3">
+                    <div class="opening-notes-container d-flex flex-column flex-grow-1 align-items-start" t-if="props.opening_notes" >
+                        <label class="form-label" for="props.opening_notes">Opening note</label>
+                        <textarea class="opening-notes form-control" rows="7" id="props.opening_notes" style="height: 60px">
+                            <t t-esc="props.opening_notes"/>
+                        </textarea>
+                    </div>
+                    <div class="closing-notes-container d-flex flex-column flex-grow-1 align-items-start">
+                        <label class="form-label" for="closingNotes">Closing note</label>
+                        <textarea class="closing-notes form-control" style="height: 60px" rows="7" id="closingNotes" placeholder="Add a closing note..." t-model="state.notes"/>
+                    </div>
+                </div>
+            <t t-set-slot="footer">
+                <div class="w-100 d-flex flex-wrap justify-content-between gap-2" t-att-class="{'container-fluid row p-0': this.ui.isSmall}">
+                    <!-- First line of buttons -->
+                    <div t-att-class="{'col-12 col-md-6 p-0': this.ui.isSmall}" class="d-flex gap-2">
+                        <button class="button highlight btn btn-primary" t-att-disabled="!canConfirm()" t-on-click="confirm" t-att-class="this.ui.isSmall ? 'w-100' : 'btn-lg'">Close Register</button>
+                        <button class="button btn btn-secondary" t-att-disabled="!canCancel()" t-on-click="cancel" t-att-class="this.ui.isSmall ? 'w-100' : 'btn-lg'">Discard</button>
+                    </div>
+
+                    <!-- Second line of buttons -->
+                    <div t-att-class="{'col-12 col-md-6 p-0': this.ui.isSmall}" class=" d-flex gap-2">
+                        <button class="button btn btn-secondary" t-att-class="this.ui.isSmall ? 'w-100' : 'btn-lg'" t-on-click="() => this.cashMove()">Cash In/Out</button>
+                        <button class="button icon btn btn-secondary"
+                            t-on-click="downloadSalesReport"
+                            t-att-class="this.ui.isSmall ? 'w-100' : 'btn-lg ms-auto'"
+                            title="Download a report with all the sales of the current PoS Session">
+                                Daily Sale
+                                <i t-if="!this.ui.isSmall" class="fa fa-download" role="img"/>
+                        </button>
+                        <button t-if="hardwareProxy.printer" class="button icon btn btn-secondary" t-att-class="{'btn-lg': !this.ui.isSmall}">
+                            <SaleDetailsButton/>
+                        </button>
+                    </div>
+                </div>
+            </t>
+        </Dialog>
+    </t>
+</templates>

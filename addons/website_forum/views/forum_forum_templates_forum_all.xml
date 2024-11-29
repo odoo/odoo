@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+<!-- All Forums Layout -->
+<template id="forum_all" name="Forum Navigation">
+
+    <t t-set="col_class" t-valuef="col-md col-xl-3 col-xxl-2 mb-3"/>
+    <t t-set="img_class" t-valuef="col-md-4"/>
+    <t t-set="content_class" t-valuef="col-md-8"/>
+
+    <t t-call="website.layout">
+        <t t-set="pageName" t-value="'website_forum'"/>
+        <div id="wrap">
+            <div class="oe_structure oe_empty" id="oe_structure_forum_all_top"/>
+            <div id="o_wforum_forums_index_list" class="container pt-lg-4 pb-5">
+                <div class="row justify-content-center">
+                    <t t-if="forums" t-call="website_forum.forum_all_all_entries">
+                        <t t-set="_forums" t-value="forums"/>
+                    </t>
+                    <div t-else="" class="alert alert-info">No forum is available yet.</div>
+                </div>
+            </div>
+            <div class="oe_structure oe_empty" id="oe_structure_forum_all_bottom"/>
+        </div>
+    </t>
+</template>
+
+<template id="forum_all_all_entries">
+    <!-- Check if at least one forum without description exist -->
+    <t t-set="no_description_exist" t-value="bool(_forums.filtered(lambda f: not f.description))"/>
+    <t t-set="sorted_forums" t-value="_forums.sorted(lambda f: (not f.description, f.sequence, f.id))"/>
+
+    <!-- First, list all forums (those with descriptions first) -->
+    <t t-foreach="sorted_forums" t-as="forum">
+        <t t-set="has_desc" t-value="forum.description"/>
+        <div t-attf-class="#{col_class}">
+            <a t-attf-href="/forum/#{slug(forum)}"
+                class="card oe_img_bg h-100 justify-content-end shadow-sm border-0 p-3 pt-5 text-reset text-decoration-none transition-base"
+                t-attf-style="background-image: url('#{website.image_url(forum, 'image_1920') if forum.image_1920 else ''}')"
+            >
+                <div class="o_we_bg_filter o_wforum_background_gradient"/>
+                <div t-if="forum_badge" class="badge position-absolute top-0 end-0 m-3 text-bg-secondary" t-out="forum_badge"></div>
+                <div class="mt-5 pt-5">
+                    <h3 class="mb-0 fw-bold" t-field="forum.name"/>
+                    <t t-if="is_view_active('website_forum.opt_post_count')">
+                        <span t-if="forum.total_posts > 0" class="badge text-bg-info">
+                            <span t-out="forum.total_posts" class="me-1"/>
+                            <t t-if="forum.total_posts > 1">posts</t>
+                            <t t-else="">post</t>
+                        </span>
+                        <span t-else="" class="badge text-bg-dark">No posts yet</span>
+                    </t>
+                    <div t-if="is_view_active('website_forum.opt_last_post') and forum.last_post_id" class="text-truncate">
+                        <span class="badge bg-dark me-1">Last post:</span>
+                        <object>
+                            <a
+                                t-attf-href="/forum/#{slug(forum)}/#{slug(forum.last_post_id)}"
+                                t-out="forum.last_post_id.name"
+                            />
+                        </object>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </t>
+</template>
+
+<!-- (Options) Forum : List View
+    Display forums as a list  -->
+<template name="List View" id="website_forum.opt_list_view" inherit_id="website_forum.forum_all" active="False">
+    <xpath expr="//t[@t-set='col_class']" position="attributes">
+        <attribute name="t-valuef">col-8 mb-3</attribute>
+    </xpath>
+    <xpath expr="//t[@t-set='img_class']" position="attributes">
+        <attribute name="t-valuef">col-md-3</attribute>
+    </xpath>
+    <xpath expr="//t[@t-set='content_class']" position="attributes">
+        <attribute name="t-valuef">col-md-9</attribute>
+    </xpath>
+</template>
+
+<!-- (Options) Forum : Show Post Count
+    Show the number of post a forum has  -->
+<template name="Show Post Count" id="website_forum.opt_post_count" inherit_id="website_forum.forum_all" active="False"/>
+
+<!-- (Options) Forum : Show Last Post
+    Show the title of the latest post in each forum  -->
+<template name="Show Last Post" id="website_forum.opt_last_post" inherit_id="website_forum.forum_all" active="False"/>
+
+<!-- Default content for the "All Forums Layout" header above -->
+<!-- (simulate an oe_structure edition) -->
+<template id="forum_all_oe_structure_forum_all_top" inherit_id="website_forum.forum_all" name="Forum Navigation (oe_structure_forum_all_top)">
+    <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_forum_all_top']" position="replace">
+        <div class="oe_structure oe_empty" id="oe_structure_forum_all_top">
+            <section class="s_cover o_colored_level s_parallax_no_overflow_hidden pt96 pb48" data-scroll-background-ratio="0" data-snippet="s_cover" data-name="Cover">
+                <div class="s_allow_columns container">
+                    <h1 class="display-3" style="text-align: center; font-weight: bold;">Community Forums</h1>
+                    <p class="lead" style="text-align: center;">Tap into the collective knowledge of our community by asking your questions in our forums,<br/> where helpful members are ready to assist you.</p>
+                    <p style="text-align: center;">
+                        <a class="mb-2" t-attf-href="/profile/users?forum_origin=#{request.httprequest.path}" data-bs-original-title="" title="" target="_blank">Meet our community members</a>
+                    </p>
+                </div>
+            </section>
+        </div>
+    </xpath>
+</template>
+
+    </data>
+</odoo>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="registry_vat_external_layout">
+        <li t-if="company.company_registry and company.account_fiscal_country_id.code == 'CZ'">
+            Company ID: <span t-field="company.company_registry"/>
+        </li>
+        <li t-if="company.vat and company.account_fiscal_country_id.code == 'CZ'">
+            <t t-out="company.country_id.vat_label or 'Tax ID'"/>:
+            <span t-out="company.vat"/>
+        </li>
+    </template>
+
+    <template id="l10n_cz_external_layout_standard" inherit_id="web.external_layout_standard">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <t t-call="l10n_cz.registry_vat_external_layout"/>
+        </xpath>
+    </template>
+
+    <template id="l10n_cz_external_layout_bold" inherit_id="web.external_layout_bold">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <t t-call="l10n_cz.registry_vat_external_layout"/>
+        </xpath>
+    </template>
+
+    <template id="l10n_cz_external_layout_boxed" inherit_id="web.external_layout_boxed">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <t t-call="l10n_cz.registry_vat_external_layout"/>
+        </xpath>
+    </template>
+
+    <template id="l10n_cz_external_layout_striped" inherit_id="web.external_layout_striped">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <t t-call="l10n_cz.registry_vat_external_layout"/>
+        </xpath>
+    </template>
+
+    <template id="l10n_cz_external_layout_bubble" inherit_id="web.external_layout_bubble">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <t t-call="l10n_cz.registry_vat_external_layout"/>
+        </xpath>
+    </template>
+
+    <template id="l10n_cz_external_layout_wave" inherit_id="web.external_layout_wave">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <t t-call="l10n_cz.registry_vat_external_layout"/>
+        </xpath>
+    </template>
+
+    <template id="l10n_cz_external_layout_folder" inherit_id="web.external_layout_folder">
+        <xpath expr="//div[hasclass('o_folder_company_info')]" position="after">
+            <div t-if="company.company_registry and company.account_fiscal_country_id.code == 'CZ'">
+                Company ID: <span t-field="company.company_registry"/>
+            </div>
+            <div t-if="company.vat and company.account_fiscal_country_id.code == 'CZ'">
+                <t t-out="company.country_id.vat_label or 'Tax ID'"/>:
+                <span t-out="company.vat"/>
+            </div>
+        </xpath>
+    </template>
+</odoo>

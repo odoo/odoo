@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.OrderWidget">
+        <div
+            class="page-buttons d-flex flex-nowrap justify-content-between py-2 px-3 gap-2 gap-md-3 bg-view z-1"
+            t-att-class="{
+                'shadow-lg border-top' : !props.removeTopClasses
+            }">
+            <button t-attf-class="btn btn-secondary btn-lg h-auto w-auto opacity-75 px-4 d-sm-none" t-att-class="leftButton.icon" t-on-click="onClickleftButton">
+                <span class="px-1"/><!-- Spacer -->
+            </button>
+            <button t-attf-class="btn btn-secondary btn-lg d-none d-sm-inline text-nowrap btn-back btn-cancel" t-on-click="onClickleftButton" t-esc="leftButton.name" />
+            <div class="d-flex align-items-center justify-content-end flex-grow-1 w-100 w-md-auto">
+                <div class="to-order">
+                    <span>Your Order</span>
+                    <div class="d-flex align-items-center">
+                        <span class="o-so-tabular-nums badge text-bg-secondary rounded" t-esc="lineNotSend.count"/>
+                        <span class="o-so-tabular-nums mx-2" t-esc="selfOrder.formatMonetary(lineNotSend.price)" />
+                    </div>
+                </div>
+            </div>
+            <button t-attf-class="cart btn btn-primary btn-lg flex-grow-1 flex-md-grow-0 {{ buttonToShow.disabled ? 'disabled' : '' }}" t-on-click="props.action" t-esc="buttonToShow.label"/>
+        </div>
+    </t>
+</templates>

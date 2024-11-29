@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.DebugMenu.SetDefaultDialog">
+        <Dialog title.translate="Set Default Values">
+            <table style="width: 100%">
+                <tr>
+                    <td>
+                        <label for="formview_default_fields"
+                            class="oe_label oe_align_right">
+                            Default:
+                        </label>
+                    </td>
+                    <td class="oe_form_required">
+                        <select id="formview_default_fields" class="o_input" t-model="state.fieldToSet">
+                            <option value=""/>
+                            <option t-foreach="defaultFields" t-as="field" t-att-value="field.name" t-key="field.name">
+                                <t t-esc="field.string"/> = <t t-esc="field.displayed"/>
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+                <tr t-if="conditions.length">
+                    <td>
+                        <label for="formview_default_conditions"
+                            class="oe_label oe_align_right">
+                            Condition:
+                        </label>
+                    </td>
+                    <td>
+                        <select id="formview_default_conditions" class="o_input" t-model="state.condition">
+                            <option value=""/>
+                            <option t-foreach="conditions" t-as="cond" t-att-value="cond.name + '=' + cond.value" t-key="cond.name">
+                                <t t-esc="cond.string"/>=<t t-esc="cond.displayed"/>
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input type="radio" id="formview_default_self"
+                            value="self" name="scope" t-model="state.scope"/>
+                        <label for="formview_default_self" class="oe_label"
+                            style="display: inline;">
+                            Only you
+                        </label>
+                        <br/>
+                        <input type="radio" id="formview_default_all"
+                            value="all" name="scope" t-model="state.scope"/>
+                        <label for="formview_default_all" class="oe_label"
+                            style="display: inline;">
+                            All users
+                        </label>
+                    </td>
+                </tr>
+            </table>
+            <t t-set-slot="footer">
+                <button class="btn btn-secondary" t-on-click="props.close">Close</button>
+                <button class="btn btn-secondary" t-on-click="saveDefault">Save default</button>
+            </t>
+        </Dialog>
+    </t>
+
+    <t t-name="web.DebugMenu.GetMetadataDialog">
+        <Dialog title.translate="Metadata">
+            <table class="table table-sm table-striped">
+                <tr>
+                    <th>ID:</th>
+                    <td><t t-esc="state.id"/></td>
+                </tr>
+                <tr>
+                    <th>XML ID:</th>
+                    <td>
+                        <t t-if='state.xmlids.length > 1'>
+                            <t t-foreach="state.xmlids" t-as="imd" t-key="imd['xmlid']">
+                                <div
+                                    t-att-class='"p-0 " + (imd["xmlid"] === state.xmlid ? "fw-bolder " : "") + (imd["noupdate"] === true ? "fst-italic " : "")'
+                                    t-esc="imd['xmlid']" />
+                            </t>
+                        </t>
+                        <t t-elif="state.xmlid" t-esc="state.xmlid"/>
+                        <t t-else="">
+                            / <a t-on-click="onClickCreateXmlid"> (create)</a>
+                        </t>
+                    </td>
+                </tr>
+                <tr>
+                    <th>No Update:</th>
+                    <td>
+                        <t t-esc="state.noupdate"/>
+                        <t t-if="state.xmlid">
+                            <a t-on-click="toggleNoupdate"> (change)</a>
+                        </t>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Creation User:</th>
+                    <td><t t-esc="state.creator"/></td>
+                </tr>
+                <tr>
+                    <th>Creation Date:</th>
+                    <td><t t-esc="state.createDate"/></td>
+                </tr>
+                <tr>
+                    <th>Latest Modification by:</th>
+                    <td><t t-esc="state.lastModifiedBy"/></td>
+                </tr>
+                <tr>
+                    <th>Latest Modification Date:</th>
+                    <td><t t-esc="state.writeDate"/></td>
+                </tr>
+            </table>
+        </Dialog>
+    </t>
+
+    <t t-name="web.DebugMenu.GetViewDialog">
+        <Dialog title.translate="Get View">
+            <pre t-esc="props.arch"/>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary o-default-button" t-on-click="() => props.close()">Close</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>
