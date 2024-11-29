@@ -633,6 +633,7 @@ class AccountMove(models.Model):
     invoice_cash_rounding_id = fields.Many2one(
         comodel_name='account.cash.rounding',
         string='Cash Rounding Method',
+        compute='_compute_invoice_cash_rounding_id', store=True, readonly=False,
         help='Defines the smallest coinage of the currency that can be used to pay by cash.',
     )
     sending_data = fields.Json(copy=False)
@@ -1888,6 +1889,29 @@ class AccountMove(models.Model):
     def _compute_incoterm_location(self):
         pass
 
+    @api.depends('currency_id.name', 'partner_id.default_cash_rounding_id')
+    def _compute_invoice_cash_rounding_id(self):
+        """
+        Computes the default value for the invoice cash rounding field based on the partner's default cash rounding field value.
+        """
+        if not self.env.user.has_group('account.group_cash_rounding'):
+            # If the cash rounding setting is deactivated, don't set any cash rounding value
+            self.invoice_cash_rounding_id = False
+            return
+
+        for move in self:
+            # If the currency is unset (e.g. from the form view), prevent raising error and just set the cash rounding to False
+            if not move.currency_id:
+                move.invoice_cash_rounding_id = False
+
+            # If the field has been set, don't change it.
+            elif move.invoice_cash_rounding_id:
+                move.invoice_cash_rounding_id = move.invoice_cash_rounding_id
+
+            # Use the default rounding preference on the move's partner
+            else:
+                move.invoice_cash_rounding_id = move.partner_id.default_cash_rounding_id
+
     @api.depends('partner_id', 'invoice_date', 'amount_total')
     def _compute_abnormal_warnings(self):
         """Assign warning fields based on historical data.
@@ -3111,6 +3135,12 @@ class AccountMove(models.Model):
             if field.inverse or (field.compute and not field.readonly):
                 protected.update(self.pool.field_computed.get(field, [field]))
         return [(protected, rec) for rec in records]
+
+    def default_get(self, fields_list):
+        # Remove invoice_cash_rounding_id from the default list so that we can compute its value manually.
+        defaults = super().default_get(fields_list)
+        defaults.pop('invoice_cash_rounding_id', None)
+        return defaults
 
     @api.model_create_multi
     def create(self, vals_list):

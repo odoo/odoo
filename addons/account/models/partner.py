@@ -557,6 +557,11 @@ class ResPartner(models.Model):
     contract_ids = fields.One2many('account.analytic.account', 'partner_id', string='Partner Contracts', readonly=True)
     bank_account_count = fields.Integer(compute='_compute_bank_count', string="Bank")
     trust = fields.Selection([('good', 'Good Debtor'), ('normal', 'Normal Debtor'), ('bad', 'Bad Debtor')], string='Degree of trust you have in this debtor', company_dependent=True)
+    default_cash_rounding_id = fields.Many2one(
+        comodel_name='account.cash.rounding',
+        string='Default Cash Rounding',
+        compute='_compute_default_cash_rounding_id', store=True, readonly=False,
+    )
     ignore_abnormal_invoice_date = fields.Boolean(company_dependent=True)
     ignore_abnormal_invoice_amount = fields.Boolean(company_dependent=True)
     invoice_warn = fields.Selection(WARNING_MESSAGE, 'Invoice', help=WARNING_HELP, default="no-message")
@@ -636,6 +641,40 @@ class ResPartner(models.Model):
             domain = expression.AND([domain, [('company_id', 'in', (False, self.company_id.id))]])
         domain = expression.AND([domain, [('partner_id', '!=', self._origin.id)]])
         return self.env['res.partner.bank'].search(domain)
+
+    @api.depends('currency_id')
+    def _compute_default_cash_rounding_id(self):
+        """
+        Computes the default cash rounding method of the partner, based on the existing ``ir.default`` records,
+        or the partner's currency ISO code following the ISO-4217 standard.
+        Some exceptions from the standard for some currencies are saved in ``ir.default`` by default:
+
+            - IDR from 0.01 to 1.0
+            - INR from 0.01 to 1.0
+            - CHF from 0.01 to 0.05
+
+        If the user wish to add more exception for any currency, they should create a new ``ir.default`` record
+        for ``account_move.invoice_cash_rounding_id`` field with ``currency=<currency_name>`` (e.g. "currency=USD") set in the condition field.
+        """
+        for partner in self:
+            # Try to find an existing `ir.default` record with a currency condition for the cash rounding value
+            if ir_default_cash_rounding_id := self.env['ir.default']._get(
+                    model_name='account.move',
+                    field_name='invoice_cash_rounding_id',
+                    condition=f'currency={partner.currency_id.name}',
+            ):
+                partner.default_cash_rounding_id = ir_default_cash_rounding_id
+
+            # Set the rounding according to the current standard of ISO-4217 for each currency.
+            else:
+                if partner.currency_id.name in ('BIF', 'CLP', 'DJF', 'GNF', 'ISK', 'JPY', 'KMF', 'KRW', 'PYG',
+                                                'RWF', 'UGX', 'UYI', 'VND', 'VUV', 'XAF', 'XOF', 'XPF'):
+                    partner.default_cash_rounding_id = self.env.ref('account.cash_rounding_1_0', False)
+                elif partner.currency_id.name in ('BHD', 'IQD', 'JOD', 'KWD', 'LYD', 'OMR', 'TND'):
+                    partner.default_cash_rounding_id = self.env.ref('account.cash_rounding_0_001', False)
+                else:
+                    # Most currencies have 2 decimal separators; use the 0.01 rounding by default
+                    partner.default_cash_rounding_id = self.env.ref('account.cash_rounding_0_01', False)
 
     @api.depends_context('company')
     def _compute_invoice_edi_format(self):
