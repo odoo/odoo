@@ -70,7 +70,8 @@ class PaymentProvider(models.Model):
     #=== BUSINESS METHODS ===#
 
     def _paypal_make_request(
-        self, endpoint, data=None, json_payload=None, auth=None, is_refresh_token_request=False
+        self, endpoint, data=None, json_payload=None, auth=None, is_refresh_token_request=False,
+        idempotency_key=None,
     ):
         """ Make a request to Paypal API at the specified endpoint.
 
@@ -82,12 +83,15 @@ class PaymentProvider(models.Model):
         :param tuple auth: The authentication data.
         :param bool is_refresh_token_request: Whether the request is for refreshing the access
                                               token.
+        :param str idempotency_key: The idempotency key to pass in the request.
         :return: The JSON-formatted content of the response.
         :rtype: dict
         :raise ValidationError: If an HTTP error occurs.
         """
         url = self._paypal_get_api_url() + endpoint
         headers = {'Content-Type': 'application/json'}  # PayPal always wants JSON content-type.
+        if idempotency_key:
+            headers['PayPal-Request-Id'] = idempotency_key
         if not is_refresh_token_request:
             headers['Authorization'] = f'Bearer {self._paypal_fetch_access_token()}'
         try:
