@@ -7,8 +7,6 @@ import { rpc, RPCError } from '@web/core/network/rpc';
 import paymentForm from '@payment/js/payment_form';
 
 paymentForm.include({
-    inlineFormValues: undefined,
-    paypalColor: 'blue',
     selectedOptionId: undefined,
     paypalData: undefined,
 
@@ -69,20 +67,22 @@ paymentForm.include({
         else if (!currentPayPalData) {
             this.paypalData[paymentOptionId] = {}
             const radio = document.querySelector('input[name="o_payment_radio"]:checked');
+            let inlineFormValues
+            let paypalColor = 'blue'
             if (radio) {
-                this.inlineFormValues = JSON.parse(radio.dataset['paypalInlineFormValues']);
-                this.paypalColor = radio.dataset['paypalColor']
+                inlineFormValues = JSON.parse(radio.dataset['paypalInlineFormValues']);
+                paypalColor = radio.dataset['paypalColor']
             }
 
             // https://developer.paypal.com/sdk/js/configuration/#link-queryparameters
-            const { client_id, currency_code } = this.inlineFormValues
+            const { client_id, currency_code } = inlineFormValues
             const paypalSDKURL = `https://www.paypal.com/sdk/js?client-id=${
                 client_id}&components=buttons&currency=${currency_code}&intent=capture`
             await loadJS(paypalSDKURL);
             const paypalButton = paypal.Buttons({ // https://developer.paypal.com/sdk/js/reference
                 fundingSource: paypal.FUNDING.PAYPAL,
                 style: { // https://developer.paypal.com/sdk/js/reference/#link-style
-                    color: this.paypalColor,
+                    color: paypalColor,
                     label: 'paypal',
                     disableMaxWidth: true,
                     borderRadius: 6,
@@ -118,6 +118,7 @@ paymentForm.include({
             return;
         }
         this.paypalData[paymentOptionId].paypalOrderId = processingValues['order_id'];
+        this.paypalData[paymentOptionId].paypalTxRef = processingValues['reference'];
     },
 
     /**
@@ -129,11 +130,10 @@ paymentForm.include({
      */
     async _paypalOnApprove(data) {
         const orderID = data.orderID;
-        const { provider_id } = this.inlineFormValues
 
         await rpc('/payment/paypal/complete_order', {
-            'provider_id': provider_id,
             'order_id': orderID,
+            'reference': this.paypalData[this.selectedOptionId].paypalTxRef,
         }).then(() => {
             // Close the PayPal buttons that were rendered
             this.paypalData[this.selectedOptionId]['paypalButton'].close();
