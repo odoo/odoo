@@ -2548,7 +2548,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertEqual(payment_term_line.name, 'test')
         with Form(self.invoice) as move_form:
             move_form.payment_reference = False
-        self.assertEqual(payment_term_line.name, '', 'Payment term line was not changed')
+        self.assertEqual(payment_term_line.name, False, 'Payment term line was not changed')
 
     def test_taxes_onchange_product_uom_and_price_unit(self):
         """
