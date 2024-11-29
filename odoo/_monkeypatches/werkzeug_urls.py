@@ -1040,7 +1040,7 @@ def url_join(
     return url_unparse((scheme, netloc, path, query, fragment))
 
 
-def patch_werkzeug():
+def patch():
     from odoo.required import scriptsafe  # noqa: PLC0415
     Request.json_module = Response.json_module = scriptsafe
 

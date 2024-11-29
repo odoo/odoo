@@ -122,7 +122,7 @@ _tz_mapping = {
 original_pytz_timezone = pytz.timezone
 
 
-def patch_pytz():
+def patch():
     def timezone(name):
         if name not in pytz.all_timezones_set and name in _tz_mapping:
             name = _tz_mapping[name]

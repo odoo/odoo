@@ -7,7 +7,7 @@ except ImportError:
     xlwt = None
 
 
-def patch_xlwt():
+def patch():
     if xlwt:
         # add some sanitization to respect the excel sheet name restrictions
         # as the sheet name is often translatable, can not control the input

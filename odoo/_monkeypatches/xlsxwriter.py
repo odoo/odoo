@@ -7,7 +7,7 @@ except ImportError:
     xlsxwriter = None
 
 
-def patch_xlsxwriter():
+def patch():
     if xlsxwriter:
         # add some sanitization to respect the excel sheet name restrictions
         # as the sheet name is often translatable, can not control the input

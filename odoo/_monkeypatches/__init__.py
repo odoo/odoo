@@ -1,43 +1,34 @@
-# ruff: noqa: F401, PLC0415
-# ignore import not at top of the file
 import os
 import time
-from .evented import patch_evented
+from pathlib import Path
+
+from odoo.modules.migration import load_script
+from . import evented  # noqa: F401
+
+modules = {}
 
 
 def set_timezone_utc():
-    os.environ['TZ'] = 'UTC'  # Set the timezone
+    os.environ['TZ'] = 'UTC'
     if hasattr(time, 'tzset'):
         time.tzset()
 
 
 def patch_all():
-    patch_evented()
     set_timezone_utc()
 
-    from .codecs import patch_codecs
-    patch_codecs()
-    from .csv import patch_csv
-    patch_csv()
-    from .literal_eval import patch_literal_eval
-    patch_literal_eval()
-    from .mimetypes import patch_mimetypes
-    patch_mimetypes()
-    from .num2words import patch_num2words
-    patch_num2words()
-    from .pytz import patch_pytz
-    patch_pytz()
-    from .stdnum import patch_stdnum
-    patch_stdnum()
-    from .re import patch_re
-    patch_re()
-    from .werkzeug_urls import patch_werkzeug
-    patch_werkzeug()
-    from .win32 import patch_win32
-    patch_win32()
-    from .xlwt import patch_xlwt
-    patch_xlwt()
-    from .xlsxwriter import patch_xlsxwriter
-    patch_xlsxwriter()
-    from .zeep import patch_zeep
-    patch_zeep()
+    # Import all modules in this folder
+    for path in __path__:
+        for file in Path(path).glob('*.py'):
+            module_name = file.stem
+            fq_name = f"{__name__}.{module_name}"
+            if fq_name not in os.sys.modules:
+                patcher_module = load_script(path, fq_name)
+
+                # Apply the patch on the original module
+                patcher_module.patch()
+
+            # Save some info on the patched module for runtime inspection
+            if module := os.sys.modules.get(module_name):
+                module._patched = patcher_module
+                modules[module_name] = module
