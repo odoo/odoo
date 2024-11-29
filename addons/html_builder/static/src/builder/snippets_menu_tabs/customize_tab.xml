@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.CustomizeTab">
+    <t t-if="!props.currentOptionsContainers.length">
+        <div class="text-center pt-5">
+            Select a block on your page to style it.
+        </div>
+    </t>
+    <t t-else="">
+        <t t-foreach="props.currentOptionsContainers" t-as="optionsContainer" t-key="optionsContainer.id">
+            <WithSubEnv env="{editingElement: optionsContainer.element, weContext: {}}">
+            <OptionsContainer>
+                <t t-foreach="optionsContainer.options" t-as="option" t-key="option_index">
+                    <t t-component="option.OptionComponent" />
+                </t>
+            </OptionsContainer>
+            </WithSubEnv>
+        </t>
+    </t>
+</t>
+
+</templates>

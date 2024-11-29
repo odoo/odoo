@@ -155,10 +155,11 @@ export class FontPlugin extends Plugin {
             {
                 id: "font",
                 groupId: "font",
-                title: _t("Font style"),
                 Component: FontSelector,
                 props: {
+                    title: _t("Font style"),
                     getItems: () => fontItems,
+                    getSelection: () => this.dependencies.selection.getEditableSelection(),
                     onSelected: (item) => {
                         this.dependencies.dom.setTag({
                             tagName: item.tagName,
@@ -170,10 +171,11 @@ export class FontPlugin extends Plugin {
             {
                 id: "font-size",
                 groupId: "font-size",
-                title: _t("Font size"),
                 Component: FontSelector,
                 props: {
+                    title: _t("Font size"),
                     getItems: () => this.fontSizeItems,
+                    getSelection: () => this.dependencies.selection.getEditableSelection(),
                     onSelected: (item) =>
                         this.dependencies.format.formatSelection("setFontSizeClassName", {
                             formatProps: { className: item.className },

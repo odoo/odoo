@@ -24,7 +24,6 @@ export class Toolbar extends Component {
                                         const base = {
                                             id: String,
                                             groupId: String,
-                                            title: String,
                                             isAvailable: { type: Function, optional: true },
                                         };
                                         if (button.Component) {
@@ -38,6 +37,7 @@ export class Toolbar extends Component {
                                                 ...base,
                                                 run: Function,
                                                 icon: { type: String, optional: true },
+                                                title: String,
                                                 text: { type: String, optional: true },
                                                 isActive: { type: Function, optional: true },
                                                 isDisabled: { type: Function, optional: true },
@@ -87,8 +87,3 @@ export class Toolbar extends Component {
         this.props.toolbar.focusEditable();
     }
 }
-
-export const toolbarButtonProps = {
-    title: String,
-    getSelection: Function,
-};

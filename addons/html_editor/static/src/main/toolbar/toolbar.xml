@@ -8,9 +8,7 @@
                         <t t-if="state.buttonsAvailableState[button.id]">
                             <t t-if="button.Component">
                                 <t t-component="button.Component"
-                                    t-props="button.props"
-                                    title="button.title"
-                                    getSelection.bind="props.toolbar.getSelection"/>
+                                    t-props="button.props" />
                             </t>
                             <button t-else=""
                                 class="btn btn-light"

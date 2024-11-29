@@ -30,7 +30,7 @@ import { withSequence } from "@html_editor/utils/resource";
 export class ColorPlugin extends Plugin {
     static id = "color";
     static dependencies = ["selection", "split", "history", "format"];
-    static shared = ["colorElement", "getPropsForColorSelector"];
+    static shared = ["colorElement", "getPropsForColorSelector", "getElementColors"];
     resources = {
         user_commands: [
             {
@@ -45,14 +45,12 @@ export class ColorPlugin extends Plugin {
             {
                 id: "forecolor",
                 groupId: "color",
-                title: _t("Font Color"),
                 Component: ColorSelector,
                 props: this.getPropsForColorSelector("foreground"),
             },
             {
                 id: "backcolor",
                 groupId: "color",
-                title: _t("Background Color"),
                 Component: ColorSelector,
                 props: this.getPropsForColorSelector("background"),
             },
@@ -75,6 +73,7 @@ export class ColorPlugin extends Plugin {
      */
     getPropsForColorSelector(type) {
         const mode = type === "foreground" ? "color" : "background";
+        const title = type === "foreground" ? _t("Font Color") : _t("Background Color");
         return {
             type,
             getUsedCustomColors: () => this.getUsedCustomColors(mode),
@@ -83,6 +82,7 @@ export class ColorPlugin extends Plugin {
             applyColorPreview: this.applyColorPreview.bind(this),
             applyColorResetPreview: this.applyColorResetPreview.bind(this),
             focusEditable: () => this.dependencies.selection.focusEditable(),
+            title,
         };
     }
 
@@ -95,17 +95,23 @@ export class ColorPlugin extends Plugin {
         if (!el) {
             return;
         }
-        const elStyle = getComputedStyle(el);
+
+        Object.assign(this.selectedColors, this.getElementColors(el));
+    }
+
+    getElementColors(element) {
+        const elStyle = getComputedStyle(element);
         const backgroundImage = elStyle.backgroundImage;
         const hasGradient = isColorGradient(backgroundImage);
-        const hasTextGradientClass = el.classList.contains("text-gradient");
+        const hasTextGradientClass = element.classList.contains("text-gradient");
 
-        this.selectedColors.color =
-            hasGradient && hasTextGradientClass ? backgroundImage : rgbToHex(elStyle.color);
-        this.selectedColors.backgroundColor =
-            hasGradient && !hasTextGradientClass
-                ? backgroundImage
-                : rgbToHex(elStyle.backgroundColor);
+        return {
+            color: hasGradient && hasTextGradientClass ? backgroundImage : rgbToHex(elStyle.color),
+            backgroundColor:
+                hasGradient && !hasTextGradientClass
+                    ? backgroundImage
+                    : rgbToHex(elStyle.backgroundColor),
+        };
     }
 
     /**

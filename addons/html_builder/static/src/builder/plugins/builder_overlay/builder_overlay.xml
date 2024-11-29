@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BuilderOverlay">
+    <div t-ref="root" class="border border-info pe-none border-2" t-attf-style="width: {{size.width}}px; height:{{size.height}}px;">
+        <div class="o_handles" t-attf-style="height: {{size.height}}px">
+            <div class="o_handle o_column_handle o_side o_side_y top o_handle_start" t-attf-style="height: {{size.paddingTop}};">
+                <span class="o_handle_indicator"></span>
+            </div>
+            <div class="o_handle o_column_handle o_side o_side_y bottom o_handle_start" t-attf-style="height: {{size.paddingBottom}};">
+                <span class="o_handle_indicator"></span>
+            </div>
+            <div class="o_handle o_column_handle o_side o_side_x end o_handle_start" >
+                <span class="o_handle_indicator"></span>
+            </div>
+            <div class="o_handle o_column_handle o_side o_side_x start o_handle_start">
+                <span class="o_handle_indicator"></span>
+            </div>
+        </div>
+    </div>
+</t>
+
+</templates>
