@@ -7,6 +7,13 @@
         <field name="category_id" ref="base.module_category_human_resources"/>
     </record>
 
+    <record id="hr.access_hr_job_user" model="ir.model.access">
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
     <record id="hr_applicant_comp_rule" model="ir.rule">
         <field name="name">Applicant multi company rule</field>
         <field name="model_id" ref="model_hr_applicant"/>
