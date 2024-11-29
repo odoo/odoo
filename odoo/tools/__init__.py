@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-# ruff: noqa: F401
+# ruff: noqa:  E402, F401, F403
 
 from . import constants
 from .parse_version import parse_version
@@ -12,6 +12,12 @@ from .func import *
 from .i18n import format_list, py_to_js_locale
 from .image import image_process
 from .json import json_default
+
+# Monkeypatch -- werkzeug_urls requires json_default
+# and is needed by modules below, i.e. `mail.validate_url`
+from odoo._monkeypatches import Monkeypatch
+Monkeypatch.patch_module('werkzeug.urls')
+
 from .mail import *
 from .misc import *
 from .query import Query

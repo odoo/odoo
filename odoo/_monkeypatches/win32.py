@@ -5,7 +5,7 @@ import time
 import datetime
 
 
-def patch_win32():
+def patch():
     if not hasattr(locale, 'D_FMT'):
         locale.D_FMT = 1
 
@@ -29,3 +29,4 @@ def patch_win32():
                     format_time = format_time.replace(x, y)
                 return format_time
         locale.nl_langinfo = nl_langinfo
+    return {'locale': locale}

@@ -40,8 +40,7 @@ from lxml import etree, objectify
 
 import odoo
 import odoo.addons
-from odoo._monkeypatches.xlwt import xlwt  # noqa: F401
-from odoo._monkeypatches.xlsxwriter import xlsxwriter  # noqa: F401
+from odoo._monkeypatches import Monkeypatch
 # get_encodings, ustr and exception_to_unicode were originally from tools.misc.
 # There are moved to loglevels until we refactor tools.
 from odoo.loglevels import exception_to_unicode, get_encodings, ustr  # noqa: F401
@@ -49,7 +48,6 @@ from odoo.loglevels import exception_to_unicode, get_encodings, ustr  # noqa: F4
 from .config import config
 from .float_utils import float_round
 from .which import which
-
 
 K = typing.TypeVar('K')
 T = typing.TypeVar('T')
@@ -421,7 +419,8 @@ def merge_sequences(*iterables: Iterable[T]) -> list[T]:
             prev = item
     return topological_sort(deps)
 
-
+xlwt = Monkeypatch.modules.get('xlwt')
+xlsxwriter = Monkeypatch.modules.get('xlsxwriter')
 def get_iso_codes(lang: str) -> str:
     if lang.find('_') != -1:
         if lang.split('_')[0] == lang.split('_')[1].lower():

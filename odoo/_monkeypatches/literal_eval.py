@@ -28,5 +28,6 @@ def literal_eval(expr):
     return orig_literal_eval(expr)
 
 
-def patch_literal_eval():
+def patch():
     ast.literal_eval = literal_eval
+    return {'ast': ast}
