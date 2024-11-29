@@ -5,33 +5,56 @@ from odoo.tools import LazyTranslate
 
 _lt = LazyTranslate(__name__)
 
+PROXY_URL = 'https://mercadopago.api.odoo.com/api/mercado_pago/1'
 
-# Currency codes of the currencies supported by Mercado Pago in ISO 4217 format.
-# See https://api.mercadopago.com/currencies. Last seen online: 2024-10-29.
-SUPPORTED_CURRENCIES = [
-    'ARS',  # Argentinian Peso
-    'BOB',  # Boliviano
-    'BRL',  # Real
-    'CLF',  # Fomento Unity
-    'CLP',  # Chilean Peso
-    'COP',  # Colombian Peso
-    'CRC',  # Colon
-    'CUC',  # Cuban Convertible Peso
-    'CUP',  # Cuban Peso
-    'DOP',  # Dominican Peso
-    'EUR',  # Euro
-    'GTQ',  # Guatemalan Quetzal
-    'HNL',  # Lempira
-    'MXN',  # Mexican Peso
-    'NIO',  # Cordoba
-    'PAB',  # Balboa
-    'PEN',  # Sol
-    'PYG',  # Guarani
-    'USD',  # US Dollars
-    'UYU',  # Uruguayan Peso
-    'VEF',  # Strong Bolivar
-    'VES',  # Sovereign Bolivar
-]
+PAYMENT_RETURN_ROUTE = '/payment/mercado_pago/return'
+OAUTH_RETURN_ROUTE = '/payment/mercado_pago/oauth/return'
+WEBHOOK_ROUTE = '/payment/mercado_pago/webhook'
+
+
+# The countries supported by Mercado Pago.
+SUPPORTED_COUNTRIES = {
+    'AR',
+    'BO',
+    'BR',
+    'CL',
+    'CO',
+    'CR',
+    'DO',
+    'EC',
+    'GT',
+    'HN',
+    'MX',
+    'NI',
+    'PA',
+    'PY',
+    'PE',
+    'SV',
+    'UY',
+    'VE',
+}
+
+# Mapping of country codes to corresponding currency codes.
+CURRENCY_MAPPING = {
+    'AR': 'ARS',  # Argentina - Argentine Peso
+    'BO': 'BOB',  # Bolivia - Boliviano
+    'BR': 'BRL',  # Brazil - Brazilian Real
+    'CL': 'CLP',  # Chile - Chilean Peso
+    'CO': 'COP',  # Colombia - Colombian Peso
+    'CR': 'CRC',  # Costa Rica - Costa Rican Colón
+    'DO': 'DOP',  # Dominican Republic - Dominican Peso
+    'EC': 'USD',  # Ecuador - United States Dollar
+    'GT': 'GTQ',  # Guatemala - Guatemalan Quetzal
+    'HN': 'HNL',  # Honduras - Honduran Lempira
+    'MX': 'MXN',  # Mexico - Mexican Peso
+    'NI': 'NIO',  # Nicaragua - Nicaraguan Córdoba
+    'PA': 'PAB',  # Panama - Panamanian Balboa (also uses USD)
+    'PY': 'PYG',  # Paraguay - Paraguayan Guaraní
+    'PE': 'PEN',  # Peru - Peruvian Sol
+    'SV': 'USD',  # El Salvador - United States Dollar
+    'UY': 'UYU',  # Uruguay - Uruguayan Peso
+    'VE': 'VES'   # Venezuela - Venezuelan Bolívar
+}
 
 # Set of currencies where Mercado Pago's minor units deviates from the ISO 4217 standard.
 # See https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xls
@@ -47,6 +70,7 @@ DEFAULT_PAYMENT_METHOD_CODES = {
     # Primary payment methods.
     'card',
     # Brand payment methods.
+    'amex',
     'visa',
     'mastercard',
     'argencard',
@@ -69,6 +93,8 @@ DEFAULT_PAYMENT_METHOD_CODES = {
 PAYMENT_METHODS_MAPPING = {
     'card': 'debit_card,credit_card,prepaid_card',
     'paypal': 'digital_wallet',
+    'mastercard': 'master',
+    'mercado_pago_wallet': 'mercado_pago',
 }
 
 # Mapping of transaction states to Mercado Pago payment statuses.

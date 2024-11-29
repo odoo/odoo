@@ -22,25 +22,25 @@ class TestPaymentTransaction(MercadoPagoCommon, PaymentHttpCommon):
         webhook_url = self._build_url('/payment/mercado_pago/webhook')
         sanitized_reference = url_quote(tx.reference)
         self.assertDictEqual(request_payload, {
+            'external_reference': tx.reference,
+            'notification_url': f'{webhook_url}/{sanitized_reference}',
             'auto_return': 'all',
             'back_urls': {
                 'failure': return_url,
                 'pending': return_url,
                 'success': return_url,
             },
-            'external_reference': tx.reference,
             'items': [{
                 'currency_id': tx.currency_id.name,
                 'quantity': 1,
                 'title': tx.reference,
                 'unit_price': tx.amount,
             }],
-            'notification_url': f'{webhook_url}/{sanitized_reference}',
             'payer': {
-                'address': {'street_name': tx.partner_address, 'zip_code': tx.partner_zip},
-                'email': tx.partner_email,
                 'name': tx.partner_name,
+                'email': tx.partner_email,
                 'phone': {'number': tx.partner_phone},
+                'address': {'street_name': tx.partner_address, 'zip_code': tx.partner_zip},
             },
         })
 

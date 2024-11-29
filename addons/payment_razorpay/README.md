@@ -8,9 +8,10 @@ version `1`
 ## Supported features
 
 - Direct payment flow
-- Webhook notifications
+- Tokenization
 - Full manual capture
 - Partial refunds
+- OAuth authentication
 
 ## Not implemented features
 
@@ -21,6 +22,7 @@ version `1`
 - `17.0`
   - The previous Hosted Checkout API that allowed for redirect payments is replaced by the Recurring
     Payments API that supports direct payments and tokenization. odoo/odoo#143525
+  - OAuth support is added in addition to the credentials-based authentication. odoo/odoo#158578
 - `16.0`
   - The first version of the module is merged. odoo/odoo#92848
 
