@@ -16,7 +16,7 @@ class MercadoPagoController(http.Controller):
     _webhook_url = '/payment/mercado_pago/webhook'
 
     @http.route(_return_url, type='http', methods=['GET'], auth='public')
-    def mercado_pago_return_from_checkout(self, **data):
+    def mercado_pago_return_from_checkout(self, **data): #will probably not need it
         """ Process the notification data sent by Mercado Pago after redirection from checkout.
 
         :param dict data: The notification data.

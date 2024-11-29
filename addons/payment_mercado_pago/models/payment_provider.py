@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import json
 import logging
 import pprint
 
@@ -10,7 +10,6 @@ from odoo import _, fields, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.payment_mercado_pago import const
-
 
 _logger = logging.getLogger(__name__)
 
@@ -92,3 +91,15 @@ class PaymentProvider(models.Model):
         if self.code != 'mercado_pago':
             return default_codes
         return const.DEFAULT_PAYMENT_METHOD_CODES
+
+    def _mercado_pago_get_inline_form_values(self, amount=None):
+        self.ensure_one()
+
+        inline_form_values = {
+            'amount': amount,
+            'preferenceId':'',
+            'payer': {'firtName': 'Dupa',
+                      'lastName': 'Dupa,',
+                      'email': 'dupa@dupa.pl'},
+        }
+        return json.dumps(inline_form_values)
