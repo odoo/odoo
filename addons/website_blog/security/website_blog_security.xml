@@ -8,7 +8,7 @@
 
     <record id="group_website_blog_manager" model="res.groups">
         <field name="name">Blog Manager</field>
-        <field name="implied_ids" eval="[(4, ref('website.group_website_restricted_editor'))]"/>
+        <field name="implied_ids" eval="[(4, ref('website.group_website_restricted_editor')), (4, ref('base.group_user'))]"/>
         <field name="privilege_id" ref="res_groups_privilege_blog"/>
         <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
     </record>
