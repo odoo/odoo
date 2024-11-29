@@ -66,7 +66,8 @@ _logger = logging.getLogger(__name__)
 #
 # If there are some modules need update(init/upgrade)
 # For example,
-# 'installed' : base, module1, module2, module3, module4, module6
+# 'installed' : base, module1, module2, module3
+# 'to upgrade': module4, module6
 # 'to install': module5
 # the updating order is
 # phase 0: base
