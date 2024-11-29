@@ -135,7 +135,7 @@ export class DiscussChannelMember extends models.ServerModel {
                 Object.keys(fields).filter(
                     (field) => !["channel", "message_unread_counter", "persona"].includes(field)
                 ),
-                makeKwArgs({ load: false })
+                false
             );
             if ("channel" in fields) {
                 data.thread = mailDataHelpers.Store.one(

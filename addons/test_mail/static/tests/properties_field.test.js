@@ -4,7 +4,7 @@ import {
     openFormView,
     registerArchs,
     start,
-    startServer
+    startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { defineTestMailModels } from "@test_mail/../tests/test_mail_test_helpers";
@@ -35,7 +35,7 @@ async function testPropertyFieldAvatarOpenChat(propertyType) {
     onRpc("res.users", "search_read", () => [{ id: userId, name: "User Test" }]);
     await start();
     const partnerId = pyEnv["res.partner"].create({ name: "Partner Test" });
-    const userId = pyEnv["res.users"].create({ name: "User Test", partner_id: partnerId });
+    const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     const propertyDefinition = {
         type: propertyType,
         comodel: "res.users",
@@ -46,11 +46,10 @@ async function testPropertyFieldAvatarOpenChat(propertyType) {
         name: "Parent",
         definition_properties: [propertyDefinition],
     });
-    const value = propertyType === "many2one" ? [userId, "User Test"] : [[userId, "User Test"]];
     const childId = pyEnv["mail.test.properties"].create({
         name: "Test",
         parent_id: parentId,
-        properties: [{ ...propertyDefinition, value }],
+        properties: [{ ...propertyDefinition, value: [userId] }],
     });
 
     await openFormView("mail.test.properties", childId);

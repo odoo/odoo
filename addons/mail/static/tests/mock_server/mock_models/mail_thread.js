@@ -604,7 +604,7 @@ export class MailThread extends models.ServerModel {
             fields = [];
         }
         const [thread] = this.env[this._name].browse(id);
-        const [res] = this._read_format(thread.id, fields, makeKwArgs({ load: false }));
+        const [res] = this._read_format(thread.id, fields, false);
         if (request_list) {
             res.hasReadAccess = true;
             res.hasWriteAccess = thread.hasWriteAccess ?? true; // mimic user with write access by default

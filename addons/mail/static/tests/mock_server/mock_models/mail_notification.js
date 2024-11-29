@@ -39,7 +39,7 @@ export class MailNotification extends models.ServerModel {
             const [data] = this._read_format(
                 notification.id,
                 ["failure_type", "mail_message_id", "notification_status", "notification_type"],
-                makeKwArgs({ load: false })
+                false
             );
             data.persona = mailDataHelpers.Store.one(
                 ResPartner.browse(notification.res_partner_id),

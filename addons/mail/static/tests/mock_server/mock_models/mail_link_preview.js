@@ -1,4 +1,4 @@
-import { makeKwArgs, models } from "@web/../tests/web_test_helpers";
+import { models } from "@web/../tests/web_test_helpers";
 
 export class MailLinkPreview extends models.ServerModel {
     _name = "mail.link.preview";
@@ -18,7 +18,7 @@ export class MailLinkPreview extends models.ServerModel {
                     "og_type",
                     "source_url",
                 ],
-                makeKwArgs({ load: false })
+                false
             );
             store.add(this.browse(linkPreview.id), data);
         }
