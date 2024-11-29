@@ -138,6 +138,38 @@
             <field name="payment_type">outbound</field>
         </record>
 
+        <!-- Cash Rounding Method -->
+        <record id="cash_rounding_1_0" model="account.cash.rounding">
+            <field name="name">Rounding to 1</field>
+            <field name="rounding">1.0</field>
+            <field name="strategy">biggest_tax</field>
+        </record>
+        <record id="cash_rounding_0_1" model="account.cash.rounding">
+            <field name="name">Rounding to 0.1</field>
+            <field name="rounding">0.1</field>
+            <field name="strategy">biggest_tax</field>
+        </record>
+        <record id="cash_rounding_0_01" model="account.cash.rounding">
+            <field name="name">Rounding to 0.01</field>
+            <field name="rounding">0.01</field>
+            <field name="strategy">biggest_tax</field>
+        </record>
+        <record id="cash_rounding_0_05" model="account.cash.rounding">
+            <field name="name">Rounding to 0.05</field>
+            <field name="rounding">0.05</field>
+            <field name="strategy">biggest_tax</field>
+        </record>
+        <record id="cash_rounding_0_001" model="account.cash.rounding">
+            <field name="name">Rounding to 0.001</field>
+            <field name="rounding">0.001</field>
+            <field name="strategy">biggest_tax</field>
+        </record>
+
+        <!-- By default, set rounding exceptions for IDR, INR, and CHF -->
+        <function model="ir.default" name="set" eval="('account.move', 'invoice_cash_rounding_id', obj().env.ref('account.cash_rounding_1_0').id, False, False, 'currency=IDR')"/>
+        <function model="ir.default" name="set" eval="('account.move', 'invoice_cash_rounding_id', obj().env.ref('account.cash_rounding_1_0').id, False, False, 'currency=INR')"/>
+        <function model="ir.default" name="set" eval="('account.move', 'invoice_cash_rounding_id', obj().env.ref('account.cash_rounding_0_05').id, False, False, 'currency=CHF')"/>
+
         <!-- Partner Trust Property -->
         <function model="ir.default" name="set" eval="('res.partner', 'trust', 'normal')"/>
 

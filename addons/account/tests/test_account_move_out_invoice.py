@@ -4456,3 +4456,50 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         move_form = Form(move)
         move_form.currency_id = self.env['res.currency']
         self.assertTrue(move.currency_id)
+
+    def test_compute_invoice_cash_rounding_id(self):
+        """
+        Ensure the computation of invoice_cash_rounding_id to run correctly.
+        We have to create new move everytime we test the cash rounding field because once the value for the field is set, it can not change
+        """
+        # Delete all default moves to make switching the company's currency easier.
+        self.env['account.move'].search([('company_id', '=', self.env.company.id)]).unlink()
+
+        rounding_to_1_0 = self.env.ref('account.cash_rounding_1_0')
+        rounding_to_0_1 = self.env.ref('account.cash_rounding_0_1')
+        rounding_to_0_01 = self.env.ref('account.cash_rounding_0_01')
+        rounding_to_0_05 = self.env.ref('account.cash_rounding_0_05')
+        rounding_to_0_001 = self.env.ref('account.cash_rounding_0_001')
+
+        def get_new_move_cash_rounding():
+            return self.init_invoice('out_invoice').invoice_cash_rounding_id
+
+        # Without the cash rounding group activated, invoice_cash_rounding_id must be False
+        self.assertFalse(get_new_move_cash_rounding())
+
+        # Activate the cash rounding feature
+        self.env.user.groups_id += self.env.ref('account.group_cash_rounding')
+
+        # Depending on the company currency, new cash rounding fields should by default be set to a rounding that follows the ISO-4217 standard.
+        self.assertEqual(get_new_move_cash_rounding(), rounding_to_0_01, "USD should round to 0.01")  # USD (default currency) rounds to 0.01
+        self.env.company.currency_id = self.env.ref('base.CLP')
+        self.assertEqual(get_new_move_cash_rounding(), rounding_to_1_0, "CLP should round to 1")
+        self.env.company.currency_id = self.env.ref('base.JOD')
+        self.assertEqual(get_new_move_cash_rounding(), rounding_to_0_001, "JOD should round to 0.001")
+
+        # By default, these 3 currencies should have an `ir.default` that sets them differently from the ISO-4217 standard
+        self.env.company.currency_id = self.env.ref('base.IDR')
+        self.assertEqual(get_new_move_cash_rounding(), rounding_to_1_0, "IDR should round to 1 with the default `ir.default` value")
+        self.env.company.currency_id = self.env.ref('base.CHF')
+        self.assertEqual(get_new_move_cash_rounding(), rounding_to_0_05, "CHF should round to 0.05 with the default `ir.default` value")
+        self.env.company.currency_id = self.env.ref('base.INR')
+        self.assertEqual(get_new_move_cash_rounding(), rounding_to_1_0, "INR should round to 1 with the default `ir.default` value")
+
+        # The computation searching for the relevant `ir.default` to apply (instead of ISO-4217) should be done based on priority
+        self.env.company.currency_id = self.env.ref('base.EUR')
+        self.env['ir.default'].set('account.move', 'invoice_cash_rounding_id', rounding_to_0_001.id, company_id=True)
+        self.assertEqual(get_new_move_cash_rounding(), rounding_to_0_001, "With the new `ir.default` record, the cash rounding should be set to 0.001")
+        self.env['ir.default'].set('account.move', 'invoice_cash_rounding_id', rounding_to_0_05.id, condition="currency=EUR")
+        self.assertEqual(get_new_move_cash_rounding(), rounding_to_0_05, "With the new `ir.default` record, the cash rounding should be set to 0.05")
+        self.env['ir.default'].set('account.move', 'invoice_cash_rounding_id', rounding_to_0_1.id, company_id=True, condition="currency=EUR")
+        self.assertEqual(get_new_move_cash_rounding(), rounding_to_0_1, "With the new `ir.default` record, the cash rounding should be set to 0.1")
