@@ -5,9 +5,9 @@ import { uniqueId } from "@web/core/utils/functions";
 export class BuilderOptionsPlugin extends Plugin {
     static id = "builder-options";
     static dependencies = ["selection", "overlay"];
-    static resources = (p) => ({
-        onSelectionChange: p.onSelectionChange.bind(p),
-    });
+    resources = {
+        selectionchange_handlers: this.onSelectionChange.bind(this),
+    };
 
     setup() {
         // todo: use resources instead of registry

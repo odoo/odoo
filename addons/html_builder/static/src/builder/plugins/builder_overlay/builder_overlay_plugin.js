@@ -4,9 +4,9 @@ import { BuilderOverlay } from "./builder_overlay";
 export class BuilderOverlayPlugin extends Plugin {
     static id = "builder_overlay";
     static dependencies = ["selection", "overlay"];
-    static resources = (p) => ({
-        change_current_options_containers_listeners: p.openBuilderOverlay.bind(p),
-    });
+    resources = {
+        change_current_options_containers_listeners: this.openBuilderOverlay.bind(this),
+    };
 
     setup() {
         this.overlay = this.dependencies.overlay.createOverlay(BuilderOverlay, {
