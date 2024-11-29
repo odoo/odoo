@@ -5,7 +5,7 @@ from datetime import datetime
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 from odoo.http import request
@@ -126,21 +126,30 @@ class SaleOrder(models.Model):
         return expression.distribute_not(['!'] + abandoned_domain)  # negative domain
 
     def _compute_user_id(self):
-        """ Do not assign self.env.user as salesman for e-commerce orders.
+        """Do not assign self.env.user as salesman for e-commerce orders.
 
         Leave salesman empty if no salesman is specified on partner or website.
-
-        c/p of the logic in Website._prepare_sale_order_values
         """
         website_orders = self.filtered('website_id')
         super(SaleOrder, self - website_orders)._compute_user_id()
         for order in website_orders:
+            if order.state == 'draft' and not order.env.context.get('force_user_recomputation'):
+                # Do not assign any salesman to draft carts to avoid useless notifications/pings/...
+                # It'll be assigned on confirmation (see action_confirm)
+                continue
             if not order.user_id:
                 order.user_id = (
                     order.website_id.salesperson_id
                     or order.partner_id.parent_id.user_id.id
                     or order.partner_id.user_id.id
                 )
+
+    def _compute_team_id(self):
+        website_orders = self.filtered('website_id')
+        super(SaleOrder, self - website_orders)._compute_team_id()
+        for order in website_orders:
+            if not order.team_id and (team := order.website_id.salesteam_id):
+                order.team_id = team.id
 
     #=== CRUD METHODS ===#
 
@@ -207,6 +216,15 @@ class SaleOrder(models.Model):
         return template or self.env['mail.template']
 
     #=== BUSINESS METHODS ===#
+
+    def action_confirm(self):
+        carts = self.filtered('website_id')
+        if self.env.su:
+            carts = carts.with_user(SUPERUSER_ID)
+        # Assign the salesman to carts on confirmation, as SUPERUSER to send the
+        # 'You have been assigned to SOOOO' with OdooBot (and not public/logged in user).
+        carts.with_context(force_user_recomputation=True)._compute_user_id()
+        return super().action_confirm()
 
     @api.model
     def _get_note_url(self):
