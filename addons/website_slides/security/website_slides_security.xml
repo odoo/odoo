@@ -8,7 +8,7 @@
             <field name="name">Officer</field>
             <field name="sequence">10</field>
             <field name="category_id" ref="base.module_category_website_elearning"/>
-            <field name="implied_ids" eval="[(4, ref('website.group_website_restricted_editor'))]"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user')), (4, ref('website.group_website_restricted_editor'))]"/>
         </record>
 
         <record id="group_website_slides_manager" model="res.groups">
