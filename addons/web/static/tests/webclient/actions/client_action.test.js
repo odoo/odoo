@@ -206,7 +206,8 @@ test("'CLEAR-UNCOMMITTED-CHANGES' is not triggered for function client actions",
     expect.verifySteps(["my_action"]);
 });
 
-test.tags("desktop")("ClientAction receives breadcrumbs and exports title", async () => {
+test.tags("desktop");
+test("ClientAction receives breadcrumbs and exports title", async () => {
     expect.assertions(4);
 
     class ClientAction extends Component {

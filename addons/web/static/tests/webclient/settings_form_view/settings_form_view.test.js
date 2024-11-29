@@ -1,5 +1,14 @@
 import { after, beforeEach, expect, getFixture, test } from "@odoo/hoot";
-import { click, edit, queryAllProperties, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
+import {
+    click,
+    edit,
+    manuallyDispatchProgrammaticEvent,
+    on,
+    queryAllProperties,
+    queryAllTexts,
+    queryFirst,
+    resize,
+} from "@odoo/hoot-dom";
 import { animationFrame, Deferred, mockSendBeacon, mockTouch, runAllTimers } from "@odoo/hoot-mock";
 import {
     clickModalButton,
@@ -14,8 +23,8 @@ import {
     mockService,
     models,
     mountView,
-    mountWithCleanup,
     mountWebClient,
+    mountWithCleanup,
     onRpc,
     patchWithCleanup,
     serverState,
@@ -27,9 +36,9 @@ import {
 import { browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
 import { pick } from "@web/core/utils/objects";
-import { WebClient } from "@web/webclient/webclient";
-import { SettingsFormCompiler } from "@web/webclient/settings_form_view/settings_form_compiler";
 import { redirect } from "@web/core/utils/urls";
+import { SettingsFormCompiler } from "@web/webclient/settings_form_view/settings_form_compiler";
+import { WebClient } from "@web/webclient/webclient";
 
 const MOCK_IMAGE =
     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z9DwHwAGBQKA3H7sNwAAAABJRU5ErkJggg==";
@@ -86,7 +95,8 @@ beforeEach(() => {
     });
 });
 
-test.tags("desktop")("change setting on nav bar click in base settings on desktop", async () => {
+test.tags("desktop");
+test("change setting on nav bar click in base settings on desktop", async () => {
     await mountView({
         type: "form",
         resModel: "res.config.settings",
@@ -234,7 +244,8 @@ test.tags("desktop")("change setting on nav bar click in base settings on deskto
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(0);
 });
 
-test.tags("mobile")("change setting on nav bar click in base settings on mobile", async () => {
+test.tags("mobile");
+test("change setting on nav bar click in base settings on mobile", async () => {
     await mountView({
         type: "form",
         resModel: "res.config.settings",
@@ -566,29 +577,28 @@ test("hide / show setting tips properly", async () => {
     });
 });
 
-test.tags("desktop")(
-    "settings views does not read existing id when coming back in breadcrumbs",
-    async () => {
-        expect.assertions(4);
-        onRpc("has_group", () => true);
-        defineActions([
-            {
-                id: 1,
-                name: "Settings view",
-                res_model: "res.config.settings",
-                type: "ir.actions.act_window",
-                views: [[1, "form"]],
-            },
-            {
-                id: 4,
-                name: "Other action",
-                res_model: "task",
-                type: "ir.actions.act_window",
-                views: [[2, "list"]],
-            },
-        ]);
+test.tags("desktop");
+test("settings views does not read existing id when coming back in breadcrumbs", async () => {
+    expect.assertions(4);
+    onRpc("has_group", () => true);
+    defineActions([
+        {
+            id: 1,
+            name: "Settings view",
+            res_model: "res.config.settings",
+            type: "ir.actions.act_window",
+            views: [[1, "form"]],
+        },
+        {
+            id: 4,
+            name: "Other action",
+            res_model: "task",
+            type: "ir.actions.act_window",
+            views: [[2, "list"]],
+        },
+    ]);
 
-        ResConfigSettings._views.form = /* xml */ `
+    ResConfigSettings._views.form = /* xml */ `
         <form string="Settings" js_class="base_settings">
             <app string="CRM" name="crm">
                 <block>
@@ -600,38 +610,37 @@ test.tags("desktop")(
             </app>
         </form>
     `;
-        Task._views.list = /* xml */ `
+    Task._views.list = /* xml */ `
         <list>
             <field name="display_name"/>
         </list>
     `;
-        ResConfigSettings._views.search = /* xml */ `<search/>`;
-        Task._views.search = /* xml */ `<search/>`;
-        onRpc(({ method }) => {
-            if (method && method !== "has_group") {
-                expect.step(method);
-            }
-        });
+    ResConfigSettings._views.search = /* xml */ `<search/>`;
+    Task._views.search = /* xml */ `<search/>`;
+    onRpc(({ method }) => {
+        if (method && method !== "has_group") {
+            expect.step(method);
+        }
+    });
 
-        await mountWithCleanup(WebClient);
-        await getService("action").doAction(1);
-        expect(".o_field_boolean input").toHaveProperty("disabled", false);
-        await click("button[name='4']");
-        await animationFrame();
-        expect(".breadcrumb").toHaveText("Settings");
-        await click(".o_control_panel .breadcrumb-item a");
-        await animationFrame();
-        expect(".o_field_boolean input").toHaveProperty("disabled", false);
-        expect.verifySteps([
-            "get_views", // initial setting action
-            "onchange", // this is a setting view => new record transient record
-            "web_save", // create the record before doing the action
-            "get_views", // for other action in breadcrumb,
-            "web_search_read", // with a searchread
-            "onchange", // when we come back, we want to restart from scratch
-        ]);
-    }
-);
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    expect(".o_field_boolean input").toHaveProperty("disabled", false);
+    await click("button[name='4']");
+    await animationFrame();
+    expect(".breadcrumb").toHaveText("Settings");
+    await click(".o_control_panel .breadcrumb-item a");
+    await animationFrame();
+    expect(".o_field_boolean input").toHaveProperty("disabled", false);
+    expect.verifySteps([
+        "get_views", // initial setting action
+        "onchange", // this is a setting view => new record transient record
+        "web_save", // create the record before doing the action
+        "get_views", // for other action in breadcrumb,
+        "web_search_read", // with a searchread
+        "onchange", // when we come back, we want to restart from scratch
+    ]);
+});
 
 test("resIds should contains only 1 id", async () => {
     expect.assertions(1);
@@ -643,13 +652,13 @@ test("resIds should contains only 1 id", async () => {
     serverState.multiLang = true;
 
     onRpc("get_installed", () => {
-        return Promise.resolve([
+        return [
             ["en_US", "English"],
             ["fr_BE", "French (Belgium)"],
-        ]);
+        ];
     });
     onRpc("get_field_translations", () => {
-        return Promise.resolve([
+        return [
             [
                 {
                     lang: "en_US",
@@ -666,7 +675,7 @@ test("resIds should contains only 1 id", async () => {
                 translation_type: "char",
                 translation_show_source: true,
             },
-        ]);
+        ];
     });
     onRpc("execute", ({ args }) => {
         expect(args[0].length).toBe(1);
@@ -848,7 +857,7 @@ test("Auto save: don't save on closing tab/browser", async () => {
         message: "checkbox should be checked",
     });
 
-    window.dispatchEvent(new Event("beforeunload"));
+    manuallyDispatchProgrammaticEvent(window, "beforeunload");
     await animationFrame();
     expect.verifySteps([]);
 });
@@ -954,7 +963,8 @@ test("settings views does not write the id on the url", async () => {
     expect(browser.location.pathname).toBe("/odoo/settings");
 });
 
-test.tags("desktop")("settings views can search when coming back in breadcrumbs", async () => {
+test.tags("desktop");
+test("settings views can search when coming back in breadcrumbs", async () => {
     onRpc("has_group", () => true);
     defineActions([
         {
@@ -1529,39 +1539,38 @@ test("settings view shows a message if there are changes even if the save failed
     });
 });
 
-test.tags("desktop")(
-    "execute action from settings view with several actions in the breadcrumb",
-    async () => {
-        onRpc("has_group", () => true);
-        // This commit fixes a race condition, that's why we artificially slow down a read rpc
-        expect.assertions(4);
+test.tags("desktop");
+test("execute action from settings view with several actions in the breadcrumb", async () => {
+    onRpc("has_group", () => true);
+    // This commit fixes a race condition, that's why we artificially slow down a read rpc
+    expect.assertions(4);
 
-        defineActions([
-            {
-                id: 1,
-                name: "First action",
-                res_model: "task",
-                type: "ir.actions.act_window",
-                views: [[1, "list"]],
-            },
-            {
-                id: 2,
-                name: "Settings view",
-                res_model: "res.config.settings",
-                type: "ir.actions.act_window",
-                views: [[2, "form"]],
-            },
-            {
-                id: 3,
-                name: "Other action",
-                res_model: "task",
-                type: "ir.actions.act_window",
-                views: [[3, "list"]],
-            },
-        ]);
+    defineActions([
+        {
+            id: 1,
+            name: "First action",
+            res_model: "task",
+            type: "ir.actions.act_window",
+            views: [[1, "list"]],
+        },
+        {
+            id: 2,
+            name: "Settings view",
+            res_model: "res.config.settings",
+            type: "ir.actions.act_window",
+            views: [[2, "form"]],
+        },
+        {
+            id: 3,
+            name: "Other action",
+            res_model: "task",
+            type: "ir.actions.act_window",
+            views: [[3, "list"]],
+        },
+    ]);
 
-        Task._views[["list", 1]] = /* xml */ `<list><field name="display_name"/></list>`;
-        ResConfigSettings._views[["form", 2]] = /* xml */ `
+    Task._views[["list", 1]] = /* xml */ `<list><field name="display_name"/></list>`;
+    ResConfigSettings._views[["form", 2]] = /* xml */ `
         <form string="Settings" js_class="base_settings">
             <app string="CRM" name="crm">
                 <block title="Title of group">
@@ -1572,33 +1581,32 @@ test.tags("desktop")(
             </app>
         </form>
     `;
-        Task._views[["list", 3]] = /* xml */ `<list><field name="display_name"/></list>`;
-        ResConfigSettings._views.search = /* xml */ `<search/>`;
-        Task._views.search = /* xml */ `<search/>`;
+    Task._views[["list", 3]] = /* xml */ `<list><field name="display_name"/></list>`;
+    ResConfigSettings._views.search = /* xml */ `<search/>`;
+    Task._views.search = /* xml */ `<search/>`;
 
-        let def;
-        onRpc("web_save", async () => {
-            await def; // slow down reload of settings view
-        });
+    let def;
+    onRpc("web_save", async () => {
+        await def; // slow down reload of settings view
+    });
 
-        await mountWithCleanup(WebClient);
+    await mountWithCleanup(WebClient);
 
-        await getService("action").doAction(1);
-        expect(".o_breadcrumb").toHaveText("First action");
+    await getService("action").doAction(1);
+    expect(".o_breadcrumb").toHaveText("First action");
 
-        await getService("action").doAction(2);
-        expect(".o_breadcrumb").toHaveText("First action\nSettings");
+    await getService("action").doAction(2);
+    expect(".o_breadcrumb").toHaveText("First action\nSettings");
 
-        def = new Deferred();
-        await click('button[name="3"]');
-        await animationFrame();
-        expect(".o_breadcrumb").toHaveText("First action\nSettings");
+    def = new Deferred();
+    await click('button[name="3"]');
+    await animationFrame();
+    expect(".o_breadcrumb").toHaveText("First action\nSettings");
 
-        def.resolve();
-        await animationFrame();
-        expect(".o_breadcrumb").toHaveText("First action\nSettings\nOther action");
-    }
-);
+    def.resolve();
+    await animationFrame();
+    expect(".o_breadcrumb").toHaveText("First action\nSettings\nOther action");
+});
 
 test("settings can contain one2many fields", async () => {
     await mountView({
@@ -1921,16 +1929,15 @@ test("highlight Element with inner html/fields", async () => {
     );
 });
 
-test.tags("desktop")("settings form doesn't autofocus", async () => {
+test.tags("desktop");
+test("settings form doesn't autofocus", async () => {
     ResConfigSettings._fields.textField = fields.Char();
 
     const onFocusIn = (ev) => {
         expect.step(`focusin: ${ev.target.outerHTML}`);
     };
-    document.addEventListener("focusin", onFocusIn);
-    after(() => {
-        document.removeEventListener("focusin", onFocusIn);
-    });
+
+    getFixture().addEventListener("focusin", onFocusIn);
 
     await mountView({
         type: "form",
@@ -1954,13 +1961,9 @@ test.tags("desktop")("settings form doesn't autofocus", async () => {
     ]);
 });
 
-test.tags("desktop")("settings form keeps scrolling by app", async () => {
-    const target = getFixture();
-    const oldHeight = target.style.getPropertyValue("height");
-    target.style.setProperty("height", "200px");
-    after(() => {
-        target.style.setProperty("height", oldHeight);
-    });
+test.tags("desktop");
+test("settings form keeps scrolling by app", async () => {
+    await resize({ height: 200 });
 
     await mountView({
         type: "form",
@@ -2072,8 +2075,7 @@ test("BinaryField is correctly rendered in Settings form view", async () => {
             message: "we should download the correct data",
         });
 
-        const responseBody = new Blob([body.get("data")], { type: "text/plain" });
-        return new Response(responseBody, { status: 200 });
+        return new Blob([body.get("data")], { type: "text/plain" });
     });
 
     await mountView({
@@ -2108,22 +2110,16 @@ test("BinaryField is correctly rendered in Settings form view", async () => {
 
     // Testing the download button in the field
     // We must avoid the browser to download the file effectively
-    const prom = new Deferred();
-    const downloadOnClick = (ev) => {
-        const target = ev.target;
-        if (target.tagName === "A" && "download" in target.attributes) {
+    const def = new Deferred();
+    const onDownloadClick = (ev) => {
+        if (ev.target.tagName === "A" && "download" in ev.target.attributes) {
             ev.preventDefault();
-            document.removeEventListener("click", downloadOnClick);
-            prom.resolve();
+            def.resolve();
         }
     };
-    document.addEventListener("click", downloadOnClick);
-    after(() => {
-        document.removeEventListener("click", downloadOnClick);
-    });
+    after(on(document, "click", onDownloadClick));
     await click(".fa-download");
-    await animationFrame();
-    await prom;
+    await def;
 
     await click(".o_field_binary .o_clear_file_button");
     await animationFrame();
@@ -2216,7 +2212,8 @@ test("Open settings from url, with setting id anchor", async () => {
     expect(".o_setting_highlight").toHaveCount(0);
 });
 
-test.tags("mobile")("swipe settings in mobile", async () => {
+test.tags("mobile");
+test("swipe settings in mobile", async () => {
     mockTouch(true);
     await mountView({
         type: "form",
@@ -2255,7 +2252,8 @@ test.tags("mobile")("swipe settings in mobile", async () => {
     });
 });
 
-test.tags("desktop")("swipe settings on larger screen sizes has no effect", async () => {
+test.tags("desktop");
+test("swipe settings on larger screen sizes has no effect", async () => {
     mockTouch(true);
     await mountView({
         type: "form",

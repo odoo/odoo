@@ -49,7 +49,8 @@ beforeEach(async () => {
     });
 });
 
-test.tags("desktop")("Signature widget renders a Sign button on desktop", async () => {
+test.tags("desktop");
+test("Signature widget renders a Sign button on desktop", async () => {
     patchWithCleanup(NameAndSignature.prototype, {
         setup() {
             super.setup();
@@ -85,7 +86,8 @@ test.tags("desktop")("Signature widget renders a Sign button on desktop", async 
     });
 });
 
-test.tags("mobile")("Signature widget renders a Sign button on mobile", async () => {
+test.tags("mobile");
+test("Signature widget renders a Sign button on mobile", async () => {
     patchWithCleanup(NameAndSignature.prototype, {
         setup() {
             super.setup();
@@ -122,7 +124,8 @@ test.tags("mobile")("Signature widget renders a Sign button on mobile", async ()
     });
 });
 
-test.tags("desktop")("Signature widget: full_name option on desktop", async () => {
+test.tags("desktop");
+test("Signature widget: full_name option on desktop", async () => {
     patchWithCleanup(NameAndSignature.prototype, {
         setup() {
             super.setup();
@@ -149,7 +152,8 @@ test.tags("desktop")("Signature widget: full_name option on desktop", async () =
     expect.verifySteps(["Pop's Chock'lit"]);
 });
 
-test.tags("mobile")("Signature widget: full_name option on mobile", async () => {
+test.tags("mobile");
+test("Signature widget: full_name option on mobile", async () => {
     patchWithCleanup(NameAndSignature.prototype, {
         setup() {
             super.setup();
@@ -178,7 +182,8 @@ test.tags("mobile")("Signature widget: full_name option on mobile", async () => 
     expect.verifySteps(["Pop's Chock'lit"]);
 });
 
-test.tags("desktop")("Signature widget: highlight option on desktop", async () => {
+test.tags("desktop");
+test("Signature widget: highlight option on desktop", async () => {
     await mountView({
         type: "form",
         resModel: "partner",
@@ -201,7 +206,8 @@ test.tags("desktop")("Signature widget: highlight option on desktop", async () =
     expect(".modal .modal-body a.o_web_sign_auto_button").toHaveCount(0);
 });
 
-test.tags("mobile")("Signature widget: highlight option on mobile", async () => {
+test.tags("mobile");
+test("Signature widget: highlight option on mobile", async () => {
     await mountView({
         type: "form",
         resModel: "partner",
@@ -225,7 +231,8 @@ test.tags("mobile")("Signature widget: highlight option on mobile", async () => 
     expect(".modal .modal-body a.o_web_sign_auto_button").toHaveCount(0);
 });
 
-test.tags("mobile")("Signature widget works inside of a dropdown", async () => {
+test.tags("mobile");
+test("Signature widget works inside of a dropdown", async () => {
     patchWithCleanup(SignatureWidget.prototype, {
         async onClickSignature() {
             await super.onClickSignature(...arguments);

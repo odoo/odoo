@@ -1,5 +1,13 @@
 import { describe, expect, getFixture, test } from "@odoo/hoot";
-import { click, press, queryAll, queryAllTexts, queryOne, scroll } from "@odoo/hoot-dom";
+import {
+    click,
+    middleClick,
+    press,
+    queryAll,
+    queryAllTexts,
+    queryOne,
+    scroll,
+} from "@odoo/hoot-dom";
 import { Deferred, animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import {
@@ -3785,9 +3793,7 @@ test("external_button opens a new tab when middle clicked or ctrl+click", async 
     await selectFieldDropdownItem("trululu", "first record");
     await contains(".o_external_button", { visible: false }).click({ ctrlKey: true });
     expect.verifySteps(["opened in a new window"]);
-    getFixture()
-        .querySelector(".o_external_button")
-        .dispatchEvent(new PointerEvent("auxclick", { button: 1 }));
+    await middleClick(".o_external_button");
     await animationFrame();
     expect.verifySteps(["opened in a new window"]);
 });

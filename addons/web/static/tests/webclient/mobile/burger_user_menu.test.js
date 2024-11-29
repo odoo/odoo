@@ -16,7 +16,8 @@ const userMenuRegistry = registry.category("user_menuitems");
 
 beforeEach(() => clearRegistry(userMenuRegistry));
 
-test.tags("mobile")("can be rendered", async () => {
+test.tags("mobile");
+test("can be rendered", async () => {
     userMenuRegistry.add("bad_item", () => ({
         type: "item",
         id: "bad",
@@ -92,7 +93,8 @@ test.tags("mobile")("can be rendered", async () => {
     ]);
 });
 
-test.tags("mobile")("can execute the callback of settings", async () => {
+test.tags("mobile");
+test("can execute the callback of settings", async () => {
     onRpc("action_get", () => ({
         name: "Change My Preferences",
         res_id: 0,
