@@ -6,7 +6,6 @@ from __future__ import annotations
 
 import logging
 import typing
-import warnings
 from collections.abc import Mapping
 from inspect import signature
 
@@ -17,13 +16,8 @@ except ImportError:
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable
-    from .types import BaseModel, ValuesType
+    from .types import ValuesType
 
-    # not sure Self can work outside of a class?
-    S = typing.TypeVar("S", bound=BaseModel)
-    CreateCaller = Callable[[S, ValuesType | list[ValuesType]], S]
-    CreateCallee = Callable[[S, list[ValuesType]], S]
-    CreateLegacyCallee = Callable[[S, ValuesType], S]
     T = typing.TypeVar('T')
 
 _logger = logging.getLogger('odoo.api')
@@ -263,7 +257,7 @@ def model(method: T) -> T:
 
     """
     if method.__name__ == 'create':
-        return model_create_single(method)
+        return model_create_multi(method)
     method._api = 'model'
     return method
 
@@ -280,45 +274,17 @@ def readonly(method: T) -> T:
     method._readonly = True
     return method
 
-_create_logger = logging.getLogger(__name__ + '.create')
-
 
 @decorator
-def _model_create_single(create: CreateLegacyCallee[S], self: S, arg: ValuesType | list[ValuesType]) -> S:
-    # 'create' expects a dict and returns a record
-    if isinstance(arg, Mapping):
-        return create(self, arg)
-    if len(arg) > 1:
-        _create_logger.debug("%s.create() called with %d dicts", self, len(arg))
-    return self.browse().concat(*(create(self, vals) for vals in arg))
-
-
-def model_create_single(method: CreateLegacyCallee[S]) -> CreateCaller[S]:
-    """ Decorate a method that takes a dictionary and creates a single record.
-        The method may be called with either a single dict or a list of dicts::
-
-            record = model.create(vals)
-            records = model.create([vals, ...])
-    """
-    warnings.warn(
-        f"Since 18.0, `create` must be batched, an override in {method.__module__} is in single mode",
-        DeprecationWarning,
-        stacklevel=3,
-    )
-    wrapper = typing.cast('CreateCaller[S]', _model_create_single(method))  # pylint: disable=no-value-for-parameter
-    wrapper._api = 'model_create'
-    return wrapper
-
-
-@decorator
-def _model_create_multi(create: CreateCallee[S], self: S, arg: ValuesType | list[ValuesType]) -> S:
+def _model_create_multi(create: Callable[[T, list[ValuesType]], T], self: T, arg: ValuesType | list[ValuesType]) -> T:
     # 'create' expects a list of dicts and returns a recordset
+    # make it accept a dict as a parameter
     if isinstance(arg, Mapping):
         return create(self, [arg])
     return create(self, arg)
 
 
-def model_create_multi(method: CreateCallee[S]) -> CreateCaller[S]:
+def model_create_multi(method: Callable[[T, list[ValuesType]], T]) -> Callable[[T, list[ValuesType] | ValuesType], T]:
     """ Decorate a method that takes a list of dictionaries and creates multiple
         records. The method may be called with either a single dict or a list of
         dicts::
@@ -326,6 +292,6 @@ def model_create_multi(method: CreateCallee[S]) -> CreateCaller[S]:
             record = model.create(vals)
             records = model.create([vals, ...])
     """
-    wrapper = typing.cast('CreateCaller[S]', _model_create_multi(method))  # pylint: disable=no-value-for-parameter
+    wrapper = _model_create_multi(method)
     wrapper._api = 'model_create'
     return wrapper
