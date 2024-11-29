@@ -122,6 +122,13 @@ export class InvalidButtonParamsError extends Error {}
 // regex that matches context keys not to forward from an action to another
 const CTX_KEY_REGEX =
     /^(?:(?:default_|search_default_|show_).+|.+_view_ref|group_by|active_id|active_ids|orderedBy)$/;
+// keys added to the context for the embedded actions feature
+const EMBEDDED_ACTIONS_CTX_KEYS = [
+    "current_embedded_action_id",
+    "parent_action_embedded_actions",
+    "parent_action_id",
+    "from_embedded_action",
+];
 
 // only register this template once for all dynamic classes ControllerComponent
 const ControllerComponentTemplate = xml`<t t-component="Component" t-props="componentProps"/>`;
@@ -1429,11 +1436,20 @@ export function makeActionManager(env, router = _router) {
      * 'ir.actions.act_window_close' is executed.
      *
      * @param {DoActionButtonParams} params
+     * @params {Object} [options={}]
+     * @params {boolean} [options.isEmbeddedAction] set to true if the action request is an
+     *  embedded action. This allows to do the necessary context cleanup and avoid infinite
+     *  recursion.
      * @returns {Promise<void>}
      */
-    async function doActionButton(params, { newWindow } = {}) {
+    async function doActionButton(params, { isEmbeddedAction, newWindow } = {}) {
         // determine the action to execute according to the params
         let action;
+        if (!isEmbeddedAction) {
+            for (const key of EMBEDDED_ACTIONS_CTX_KEYS) {
+                delete params.context?.[key];
+            }
+        }
         const context = makeContext([params.context, params.buttonContext]);
         const blockUi = exprToBoolean(params["block-ui"]);
         if (blockUi) {
@@ -1512,17 +1528,20 @@ export function makeActionManager(env, router = _router) {
                     parent_action_embedded_actions: embeddedActions,
                     parent_action_id: action.id,
                 };
-                await this.doActionButton({
-                    name:
-                        embeddedAction.python_method ||
-                        embeddedAction.action_id[0] ||
-                        embeddedAction.action_id,
-                    resId: params.resId,
-                    context,
-                    type: embeddedAction.python_method ? "object" : "action",
-                    resModel: embeddedAction.parent_res_model,
-                    viewType: embeddedAction.default_view_mode,
-                });
+                await this.doActionButton(
+                    {
+                        name:
+                            embeddedAction.python_method ||
+                            embeddedAction.action_id[0] ||
+                            embeddedAction.action_id,
+                        resId: params.resId,
+                        context,
+                        type: embeddedAction.python_method ? "object" : "action",
+                        resModel: embeddedAction.parent_res_model,
+                        viewType: embeddedAction.default_view_mode,
+                    },
+                    { isEmbeddedAction: true }
+                );
                 return;
             }
         }
