@@ -3,6 +3,8 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.osv import expression
+from odoo.exceptions import ValidationError
 
 
 class AccountAnalyticAccount(models.Model):
@@ -40,3 +42,12 @@ class AccountAnalyticAccount(models.Model):
             result['views'] = [(False, "form")]
             result['res_id'] = self.project_ids.id
         return result
+
+    @api.constrains('plan_id')
+    def _ensure_project_plan_consistency(self):
+        domain = expression.OR([
+            [(fnames, 'in', self.ids)] for fnames in self.env['project.project']._get_plan_fnames()
+        ])
+        project = self.env['project.project'].search(domain, limit=1)
+        if project:
+            raise ValidationError(_("At least one of the account is linked to a project. Unlink it from its project(s) before updating its plan."))
