@@ -9001,6 +9001,83 @@ test("one2many kanban with custom control with invisible modifier using context"
     expect(".o_cp_buttons button:contains(D)").toHaveCount(1);
 });
 
+test("one2many list with delete control with invisible modifier", async () => {
+    Partner._records[1].p = [1, 2];
+    Partner._records[0].bar = false;
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 2,
+        arch: `
+            <form>
+                <field name="bar"/>
+                <field class="first" name="p">
+                    <list>
+                        <control>
+                            <delete invisible="parent.bar and bar"/>
+                        </control>
+                        <field name="name"/>
+                        <field name="bar"/>
+                    </list>
+                </field>
+                <field class="second" name="p">
+                    <list>
+                        <control>
+                            <delete invisible="not parent.bar"/>
+                        </control>
+                        <field name="name"/>
+                        <field name="bar"/>
+                    </list>
+                </field>
+            </form>`,
+    });
+
+    expect(".first .o_data_row").toHaveCount(2);
+    expect(".first .o_data_row:eq(0) .o_list_record_remove button").toHaveCount(1);
+    expect(".first .o_data_row:eq(1) .o_list_record_remove button").toHaveCount(0);
+    expect(".second .o_data_row").toHaveCount(2);
+    expect(".second .o_data_row .o_list_record_remove button").toHaveCount(2);
+});
+
+test("one2many kanban with delete control with invisible modifier", async () => {
+    Partner._records[1].p = [1, 2];
+    Partner._records[0].bar = false;
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 2,
+        arch: `
+            <form>
+                <field name="bar"/>
+                <field name="p">
+                    <kanban>
+                        <control>
+                            <delete invisible="parent.bar and bar"/>
+                        </control>
+                        <templates>
+                            <t t-name="card">
+                                <field name="name"/>
+                                <field name="bar"/>
+                            </t>
+                        </templates>
+                    </kanban>
+                </field>
+            </form>`,
+    });
+
+    await contains(".o_kanban_record:eq(0)").click();
+    expect(".o_dialog .o_form_view").toHaveCount(1);
+    expect(".o_dialog footer .o_btn_remove").toHaveCount(1);
+
+    await contains(".o_dialog footer .o_form_button_cancel").click();
+    await contains(".o_kanban_record:eq(1)").click();
+    expect(".o_dialog .o_form_view").toHaveCount(1);
+    expect(".o_dialog footer .o_btn_remove").toHaveCount(0);
+
+    await contains(".o_dialog .o_form_view .o_field_widget[name=bar] input").click();
+    expect(".o_dialog footer .o_btn_remove").toHaveCount(1);
+});
+
 test("o2m button with parent in context", async () => {
     onRpc("test_button", (args) => {
         expect.step("test_button");
