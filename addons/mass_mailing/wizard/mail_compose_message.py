@@ -80,6 +80,7 @@ class MailComposeMessage(models.TransientModel):
             trace_vals = {
                 'email': email,
                 'mass_mailing_id': self.mass_mailing_id.id,
+                'message_id': mail_values['message_id'],
                 'model': self.model,
                 'res_id': res_id,
             }
